@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NYTXW Add Prev Next Buttons
 // @namespace    https://github.com/seeshanty
-// @version      2025-09-21.2
+// @version      2026-01-10
 // @description  Add Previous, 📆, and Next buttons to the New York Times Crossword Puzzle webpage for easier navigation around the calendar
 // @author       seeshanty
 // @license      CC0-1.0
@@ -26,8 +26,8 @@
     // BOOKMARK FUNCTIONALITY FOR WORKING THROUGH THE ARCHIVE FROM MAIN /daily PUZZLE (LATEST PUZZLE)
     // When set to true, the calendar button on the latest puzzle will send you to whatever month you set here
     const useArchiveBookmark = true;
-    const archiveBookmarkYear = 2024;
-    const archiveBookmarkMonth = 9;
+    const archiveBookmarkYear = 2025;
+    const archiveBookmarkMonth = 6;
 
     // STYLE PARAMETERS
     const navBtnWidth = "100px";

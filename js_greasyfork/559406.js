@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ListenBrainz: Extended Controls
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      1.1.5
+// @version      1.1.6
 // @tag          ai-created
 // @description  Allows customizing which actions are shown in listen controls cards, moving "Open in Music Service" links to the main controls area, displaying source info, and auto-copying text in the "Link Listen" modal.
 // @author       chaban
@@ -337,9 +337,9 @@ function makeHarmonyUrl(albumUrl) {
             const client = info.submission_client;
             const serviceFriendly = getFriendlyServiceName(info);
             const tooltipLines = [];
+            if (serviceFriendly) tooltipLines.push(`Service: ${serviceFriendly}`);
             if (player) tooltipLines.push(`Player: ${player}`);
             if (client && client !== player) tooltipLines.push(`Client: ${client}`);
-            if (serviceFriendly) tooltipLines.push(`Service: ${serviceFriendly}`);
 
             if (tooltipLines.length > 0) {
                 indicator = el('button', {

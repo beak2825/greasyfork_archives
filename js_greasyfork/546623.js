@@ -3,7 +3,7 @@
 // @description  Automatically claims 10 minute reloads on Stake.com by sequentially clicking VIP Reward → Claim Reload → Return to Rewards. The script starts after a short page-load delay, mimics human behavior with user customizable random delays, occasional skipped cycles, and subtle mouse/scroll movements. WANT MORE STAKE BONUS CODE AUTO-CLAIM TOOLS? GO TO https://codestats.gg
 // @author       CHUBB
 // @namespace    https://codestats.gg
-// @version      1.1.2
+// @version      1.1.3
 // @match        https://stake.com/*
 // @match        https://stake.us/*
 // @match        https://stake.ac/*
@@ -144,7 +144,7 @@ function setupHUD() {
 
     hud.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <b><a href="https://codestats.gg" target="_blank" rel="noopener noreferrer" style="color: #0f0; text-decoration: underline;">CodeStats.gg</a> Stake Reload Bot v1.1.2</b>
+            <b><a href="https://codestats.gg" target="_blank" rel="noopener noreferrer" style="color: #0f0; text-decoration: underline;">CodeStats.gg</a> Stake Reload Bot v1.1.3</b>
             <button id="minimizeBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">−</button>
         </div>
         <div id="mainContent">
@@ -243,8 +243,8 @@ function toggleMinimize() {
     } else {
         // Minimize
         mainContent.style.display = "none";
-        hud.style.width = "200px";
-        hud.style.maxHeight = "40px";
+        hud.style.width = "350px";
+        hud.style.maxHeight = "50px";
         minimizeBtn.textContent = "+";
     }
 }

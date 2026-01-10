@@ -83,7 +83,7 @@
 // @description:zh-TW   結合低音增強、1000%音量、智能廣告攔截加速、Picture-in-Picture和Shorts支持
 
 // @namespace    http://tampermonkey.net/
-// @version      1.5.2
+// @version      1.6
 // @author       Pascal
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon_144x144.png
@@ -169,69 +169,172 @@
         });
     }
 
-    // --- DOWNLOADER ---
+    // --- DOWNLOADER (FLOATING DROPDOWN) ---
     function setupDownloader() {
-        const btnContainer = document.querySelector("#owner");
-        if (!btnContainer) return;
+    const videoId = (new URLSearchParams(window.location.search)).get('v');
+    if (!videoId) return;
 
-        const videoId = (new URLSearchParams(window.location.search)).get('v');
-        if (!videoId) return;
-
-        let downloadBtn = document.querySelector("#dwnldBtn");
-        if (!downloadBtn) {
-            downloadBtn = document.createElement('a');
-            downloadBtn.id = 'dwnldBtn';
-            downloadBtn.target = '_blank';
-            downloadBtn.innerText = 'Download';
-            downloadBtn.style.cssText = "background-color: #F1F1F1; color: #191919; border-radius: 18px; padding: 0 16px; margin-left: 8px; font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; height: 36px; border: 1px solid rgba(0,0,0,0.1);";
-            btnContainer.appendChild(downloadBtn);
+    const findActions = () => {
+        const selectors = [
+            'ytd-watch-metadata #actions-inner #top-level-buttons-computed',
+            'ytd-watch-metadata #top-level-buttons-computed',
+            '#top-level-buttons-computed',
+            '#actions'
+        ];
+        for (const s of selectors) {
+            const el = document.querySelector(s);
+            if (el && el.offsetWidth > 0) return el; // Sicherstellen, dass Element sichtbar ist
         }
+        return null;
+    };
 
-        // Link Update
-        const currentUrl = SETTINGS.punisherYT + videoId;
-        if (downloadBtn.href !== currentUrl) {
-            downloadBtn.href = currentUrl;
-        }
+    const actions = findActions();
+    if (!actions) return;
+
+    // Button finden (Sprachunabhängig über Icon oder ARIA)
+    const shareBtn = [...actions.querySelectorAll('ytd-button-renderer, button, yt-button-shape')]
+        .find(n => /teilen|share/i.test(n.textContent || n.getAttribute('aria-label') || '') || n.querySelector('yt-icon[icon="share"]'));
+
+    if (!shareBtn) return;
+
+    let mainBtn = document.querySelector("#dwnldBtn");
+    if (!mainBtn) {
+        mainBtn = document.createElement('div');
+        mainBtn.id = 'dwnldBtn';
+        mainBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 6px; fill: currentColor;"><path d="M17 18V19H7V18H17ZM12.5 3V15.58L15.85 12.23L16.56 12.94L12 17.5L7.44 12.94L8.15 12.23L11.5 15.58V3H12.5Z"></path></svg>
+            <span>Download</span>
+        `;
+        mainBtn.style.cssText = `
+            background: rgba(255, 255, 255, 0.1); color: #F1F1F1; margin-left: 8px;
+            padding: 0 16px; border-radius: 18px; font-family: Roboto, Arial; font-size: 14px;
+            font-weight: 500; display: inline-flex; align-items: center; justify-content: center;
+            height: 36px; cursor: pointer; transition: background 0.2s ease;
+        `;
+        mainBtn.onmouseover = () => { mainBtn.style.background = "rgba(255, 255, 255, 0.2)"; };
+        mainBtn.onmouseout = () => { mainBtn.style.background = "rgba(255, 255, 255, 0.1)"; };
+        shareBtn.insertAdjacentElement('afterend', mainBtn);
     }
 
-    // --- AD BLOCKER ---
-    function handleAds() {
-        const video = document.querySelector('video');
-        const ad = document.querySelector('.ad-showing, .ad-interrupting');
-        const overlay = document.querySelector('ytd-enforcement-message-view-model, tp-yt-iron-overlay-backdrop');
+    let menu = document.querySelector("#dwnldMenu");
+    if (!menu) {
+        menu = document.createElement('div');
+        menu.id = 'dwnldMenu';
+        menu.style.cssText = `
+            display: none; position: fixed; background: #282828; border-radius: 12px;
+            min-width: 180px; box-shadow: 0 8px 24px rgba(0,0,0,0.8); z-index: 2147483647;
+            padding: 8px 0; border: 1px solid rgba(255,255,255,0.1);
+        `;
+        document.body.appendChild(menu);
+    }
 
-        if (overlay) {
-            overlay.remove();
-            document.body.style.overflow = "auto";
-            if (video && video.paused) video.play();
+    const updateMenuPos = () => {
+        const rect = mainBtn.getBoundingClientRect();
+        menu.style.left = rect.left + "px";
+
+        // Prüfen ob oben genug Platz ist, sonst unten anzeigen
+        const spaceAbove = rect.top;
+        if (spaceAbove < 300) {
+            menu.style.top = (rect.bottom + 5) + "px";
+        } else {
+            menu.style.top = (rect.top - menu.offsetHeight - 5) + "px";
         }
+    };
 
-        if (video && ad) {
-            if (!isAdActive) { isAdActive = true; adStartedAt = Date.now(); }
-            video.muted = true;
-            const timeElapsed = Date.now() - adStartedAt;
-            const timeLeft = video.duration - video.currentTime;
+    mainBtn.onmouseenter = () => {
+        const sources = [
+            { name: '🎞️ MP3 / MP4 (Y2Mate)', url: 'https://evdfrance.fr/convert/?id=' + videoId },
+            { name: '🎶 MP3 (YTMP3)', url: 'https://ytmp3.as/#' + videoId + '/mp3' },
+            { name: '🚀 4K Video (Loader)', url: 'https://loader.to/api/card/?url=https://www.youtube.com/watch?v=' + videoId },
+            { name: '🟢 MP4 (SaveFrom)', url: 'https://ssyoutube.com/watch?v=' + videoId },
+            { name: '✂️ DVR / Edit (Dirpy)', url: 'https://dirpy.com/studio?url=https://www.youtube.com/watch?v=' + videoId },
+            { name: '📺 Multi-Format (noTube)', url: 'https://notube.net/convert/de?url=https://www.youtube.com/watch?v=' + videoId },
+            { name: '🛡️ Cobalt (No Ads)', url: 'https://cobalt.tools/' }
+        ];
 
-            if (video.duration < 10) {
-                video.playbackRate = SETTINGS.turboSpeedShort;
+        menu.innerHTML = "";
+        sources.forEach(src => {
+            const item = document.createElement('a');
+            item.href = src.url;
+            item.target = "_blank";
+            item.innerText = src.name;
+            item.style.cssText = "display: block; padding: 10px 16px; color: #EEE; text-decoration: none; font-size: 13px; font-family: Roboto, Arial; transition: background 0.1s; white-space: nowrap;";
+            item.onmouseover = () => { item.style.background = "rgba(255,255,255,0.1)"; };
+            item.onmouseout = () => { item.style.background = "transparent"; };
+            item.onclick = () => { menu.style.display = 'none'; };
+            menu.appendChild(item);
+        });
+
+        menu.style.display = 'block';
+        updateMenuPos();
+    };
+
+    // Schließen Logik
+    let hideTimeout;
+    const startHide = () => { hideTimeout = setTimeout(() => { menu.style.display = 'none'; }, 300); };
+    const cancelHide = () => { clearTimeout(hideTimeout); };
+
+    mainBtn.onmouseleave = startHide;
+    menu.onmouseenter = cancelHide;
+    menu.onmouseleave = startHide;
+}
+
+// Wichtig: Intervall starten!
+setInterval(setupDownloader, 2000);
+
+    // --- AD BLOCKER (ORIGINAL SPEED + SKIP FIX + GLOW) ---
+function handleAds() {
+    const video = document.querySelector('video');
+    const ad = document.querySelector('.ad-showing, .ad-interrupting');
+    const overlay = document.querySelector('ytd-enforcement-message-view-model, tp-yt-iron-overlay-backdrop');
+
+    if (overlay) {
+        overlay.remove();
+        document.body.style.overflow = "auto";
+        if (video && video.paused) video.play();
+    }
+
+    if (video && ad) {
+        if (!isAdActive) { isAdActive = true; adStartedAt = Date.now(); }
+        video.muted = true;
+
+        const timeElapsed = Date.now() - adStartedAt;
+        const timeLeft = video.duration - video.currentTime;
+
+        // --- DEINE ORIGINAL SPEED-LOGIK ---
+        if (video.duration < 10) {
+            video.playbackRate = SETTINGS.turboSpeedShort;
+        } else {
+            if (timeElapsed < SETTINGS.startDelayMs) {
+                video.playbackRate = 1.0;
+            } else if (timeLeft > 7.0) {
+                video.playbackRate = SETTINGS.fastSpeed;
             } else {
-                if (timeElapsed < SETTINGS.startDelayMs) {
-                    video.playbackRate = 1.0;
-                } else if (timeLeft > 7.0) {
-                    video.playbackRate = SETTINGS.fastSpeed;
-                } else {
-                    video.playbackRate = 1.0;
-                }
+                video.playbackRate = 1.0;
             }
-            const skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button');
-            if (skipBtn) skipBtn.click();
-        } else if (video && isAdActive) {
-            isAdActive = false;
-            video.playbackRate = 1.0;
-            video.muted = false;
         }
-    }
 
+        // --- DER SKIP-BUTTON FIX + STYLE ---
+        const skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, [id^="skip-button:"]');
+
+        if (skipBtn && skipBtn.offsetParent !== null) {
+            // Visuelles Feedback: Grüner Rahmen und Leuchten
+            skipBtn.style.border = "3px solid #00FF00";
+            skipBtn.style.boxShadow = "0 0 15px #00FF00";
+            skipBtn.style.borderRadius = "8px";
+
+            // Klick-Logik: 10s Dauer und 3s Wartezeit
+            if (video.duration > 10 && timeElapsed > 3000) {
+                skipBtn.click();
+            }
+        }
+
+    } else if (video && isAdActive) {
+        isAdActive = false;
+        video.playbackRate = 1.0;
+        video.muted = false;
+    }
+}
     // --- UI CONTROLS ---
     function createControlPair(color, title) {
         const $container = document.createElement('span');
@@ -385,104 +488,88 @@
     }, true);
 
    // --- MAIN LOOP ---
-    function runChecks() {
-        applyPremiumLogo(); // Jetzt global aktiv
-        handleAds();
+   function runChecks() {
+    applyPremiumLogo(); // Jetzt global aktiv
+    handleAds();
 
-        const isShorts = window.location.pathname.startsWith('/shorts');
-        const isWatch = window.location.pathname.startsWith('/watch');
-        const video = document.querySelector('video');
-        const $sSlider = document.querySelector('.' + shortsSliderClassname);
+    const isShorts = window.location.pathname.startsWith('/shorts');
+    const isWatch = window.location.pathname.startsWith('/watch');
+    const video = document.querySelector('video');
+    const $sSlider = document.querySelector('.' + shortsSliderClassname);
 
-        if (isWatch) {
-            if (!document.getElementById('dwnldBtn')) setupDownloader();
-            if (!document.querySelector('.' + tripleControlClass)) setupUI();
-        }
-
-        if (isShorts) {
-            setupShortsUI();
-            if ($sSlider) $sSlider.style.display = 'block';
-        } else if ($sSlider) {
-            $sSlider.style.display = 'none';
-        }
-
-        if (video && video.paused && !video.ended && !isAdActive) {
-            const confirmDialog = document.querySelector('yt-confirm-dialog-renderer, ytd-enforcement-message-view-model, .yt-player-error-message-renderer');
-            if (confirmDialog) {
-                confirmDialog.remove();
-                video.play().catch(() => {});
-            }
-        }
+    if (isWatch) {
+        if (!document.getElementById('dwnldBtn')) setupDownloader();
+        if (!document.querySelector('.' + tripleControlClass)) setupUI();
     }
 
-    setInterval(runChecks, SETTINGS.checkInterval);
+    if (isShorts) {
+        setupShortsUI();
+        if ($sSlider) $sSlider.style.display = 'block';
+    } else if ($sSlider) {
+        $sSlider.style.display = 'none';
+    }
 
-    // RADIKALER FIX: Wir machen ALLES über der Suche "unsichtbar" für Klicks
+    if (video && video.paused && !video.ended && !isAdActive) {
+        const confirmDialog = document.querySelector('yt-confirm-dialog-renderer, ytd-enforcement-message-view-model, .yt-player-error-message-renderer');
+        if (confirmDialog) {
+            confirmDialog.remove();
+            video.play().catch(() => {});
+        }
+    }
+}
+
+setInterval(runChecks, SETTINGS.checkInterval);
+
+    // VISUELLE ANPASSUNG
     GM_addStyle(`
-        /* Suche und Header radikal nach vorne holen */
-        ytd-masthead, #masthead-container {
-            z-index: 50000 !important;
-            pointer-events: auto !important;
-        }
 
-        /* Das Suchfeld selbst muss ALLES überlagern */
-        #search-form, yt-searchbox, .ytSearchboxComponentInputBox, input.ytSearchboxComponentInput {
-            z-index: 60000 !important;
-            pointer-events: auto !important;
-            position: relative !important;
-        }
+    ytd-masthead, #masthead-container {
+        z-index: 50000 !important;
+    }
 
-        /* Overlays, die YouTube oft drüberlegt, deaktivieren */
-        .ytp-ad-overlay-container,
-        tp-yt-iron-overlay-backdrop,
-        #interaction-overlay {
-            display: none !important;
-            pointer-events: none !important;
-        }
-    `);
+    #search-form, yt-searchbox, .ytSearchboxComponentInputBox, input.ytSearchboxComponentInput {
+        z-index: 60000 !important;
+        position: relative !important;
+    }
 
-    // GHOST-CLICK: Schickt Klicks durch Overlays direkt ans Suchfeld
-    document.addEventListener('mousedown', (e) => {
-        // Wir prüfen, ob der Klick an der POSITION des Suchfelds passiert ist
-        const searchBox = document.querySelector('input.ytSearchboxComponentInput, #search-form input');
-        if (!searchBox) return;
+    .ytp-ad-overlay-container,
+    tp-yt-iron-overlay-backdrop,
+    #interaction-overlay {
+        display: none !important;
+        pointer-events: none !important;
+    }
 
-        const rect = searchBox.getBoundingClientRect();
-        const isInSearchX = e.clientX >= rect.left && e.clientX <= rect.right;
-        const isInSearchY = e.clientY >= rect.top && e.clientY <= rect.bottom;
+    ytd-ad-slot-renderer, #masthead-ad, .ytp-ad-overlay-container, #player-ads,
+    ytd-rich-item-renderer:has(.ytd-display-ad-renderer), ytd-download-button-renderer {
+        display: none !important;
+    }
+`);
 
-        if (isInSearchX && isInSearchY) {
-            // Wenn wir hier sind, hat der User auf das Suchfeld geklickt,
-            // aber vielleicht hat ein Overlay den Klick abgefangen.
-            searchBox.focus();
-            e.stopPropagation();
-        }
-    }, true);
-
+    // PiP-Funktion bleibt (Tastatur-Shortcut 'p')
     document.addEventListener('keydown', (e) => {
-        const isSearchField = e.target.tagName === 'INPUT' || e.target.closest('yt-searchbox');
-        if (isSearchField) return;
-        if (e.key.toLowerCase() === 'p') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (typeof togglePiP === "function") togglePiP();
+    const isSearchField = e.target.tagName === 'INPUT' || e.target.closest('yt-searchbox');
+    if (isSearchField) return;
+    if (e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (typeof togglePiP === "function") togglePiP();
+    }
+}, { capture: true });
+
+const togglePiP = async () => {
+    const video = document.querySelector('video');
+    if (!video) return;
+    try {
+        if (document.pictureInPictureElement) {
+            await document.exitPictureInPicture();
+        } else {
+            video.disablePictureInPicture = false;
+            await video.requestPictureInPicture();
         }
-    }, { capture: true });
+    } catch (error) { console.error('[PiP] Fehler:', error); }
+};
 
-    const togglePiP = async () => {
-        const video = document.querySelector('video');
-        if (!video) return;
-        try {
-            if (document.pictureInPictureElement) {
-                await document.exitPictureInPicture();
-            } else {
-                video.disablePictureInPicture = false;
-                await video.requestPictureInPicture();
-            }
-        } catch (error) { console.error('[PiP] Fehler:', error); }
-    };
-
-    window.addEventListener('beforeunload', () => { if(audioCtx) audioCtx.close(); });
+window.addEventListener('beforeunload', () => { if(typeof audioCtx !== "undefined" && audioCtx) audioCtx.close(); });
 
     GM_addStyle(`
         ytd-ad-slot-renderer, #masthead-ad, .ytp-ad-overlay-container, #player-ads,

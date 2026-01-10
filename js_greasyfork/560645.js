@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SillyTavern Mobile Suite (Smart Selector + Gemini Manager)
+// @name         SillyTavern Mobile Suite (Manual Only + Gemini Manager)
 // @namespace    http://tampermonkey.net/
-// @version      28
-// @description  Tích hợp: Chọn Char/Scene, Quản lý Key Gemini & Auto Set First Message (Clean & Stable Code). Bổ sung hỗ trợ OpenRouter.
+// @version      31
+// @description  Tích hợp: Chọn Char (Manual Name) / Scene (Raw), Quản lý Key Gemini & Auto Set First Message. (No AI Analysis - Fast & Lightweight)
 // @author       You
 // @match        http://127.0.0.1:8000/*
 // @match        https://aistudio.google.com/*
@@ -11,24 +11,17 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
 // @grant        GM_addStyle
-// @grant        GM_xmlhttpRequest
-// @connect      api.cohere.com
-// @connect      openrouter.ai
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/560645/SillyTavern%20Mobile%20Suite%20%28Smart%20Selector%20%2B%20Gemini%20Manager%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/560645/SillyTavern%20Mobile%20Suite%20%28Smart%20Selector%20%2B%20Gemini%20Manager%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560645/SillyTavern%20Mobile%20Suite%20%28Manual%20Only%20%2B%20Gemini%20Manager%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/560645/SillyTavern%20Mobile%20Suite%20%28Manual%20Only%20%2B%20Gemini%20Manager%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // --- KIỂM TRA MÔI TRƯỜNG ---
     const isST = location.href.includes('127.0.0.1:8000');
     const isGoogle = location.href.includes('aistudio.google.com');
 
-    // =================================================================================
-    // PHẦN 1: GEMINI KEY SNIFFER (CHỈ CHẠY TRÊN GOOGLE AI STUDIO)
-    // =================================================================================
     if (isGoogle) {
         console.log('💎 [Gemini Suite] Sniffer Active...');
         const DB_KEYS = 'tm_st_keys_v18';
@@ -78,7 +71,6 @@
             const tempMapping = [];
             const mappedSuffixes = new Set();
 
-            // Quét DOM để tìm tên key tương ứng với suffix
             document.querySelectorAll('tr, div[role="row"]').forEach(row => {
                 const text = row.innerText;
                 const suffixMatch = text.match(/\.\.\.([0-9A-Za-z-_]{4})/);
@@ -93,7 +85,6 @@
                 }
             });
 
-            // Những key không tìm thấy tên trên giao diện thì đặt tên mặc định
             rawKeys.forEach(k => {
                 const suffix = k.slice(-4);
                 if (!mappedSuffixes.has(suffix)) {
@@ -118,358 +109,111 @@
         return;
     }
 
-    // =================================================================================
-    // PHẦN 2: SILLY TAVERN INTEGRATION (CHẠY TRÊN ST)
-    // =================================================================================
     if (isST) {
-        // --- CONSTANTS & CONFIG ---
-        const DEFAULT_COHERE_KEY = "G8bhf4y7cgSeOExs0MTwfLAXm4MRn1kR1C9J7VeH";
-        const DEFAULT_COHERE_MODEL = "command-a-03-2025";
-        const DEFAULT_OPENROUTER_KEY = "";
-        const DEFAULT_OPENROUTER_MODEL = "";
-        const KEY_PROVIDER = "st_provider";
-        const KEY_COHERE_KEY = "st_cohere_key";
-        const KEY_COHERE_MODEL = "st_cohere_model";
-        const KEY_OPENROUTER_KEY = "st_openrouter_key";
-        const KEY_OPENROUTER_MODEL = "st_openrouter_model";
-        const KEY_MODE = "st_mobile_mode";
         const KEY_MANUAL_NAME = "st_mobile_manual_name";
-        const KEY_CACHE_NAME = "st_mobile_cache_name";
+        const KEY_IGNORE_LIST = "st_ignore_list";
 
-        // Trạng thái chọn Char/Scene
         const selState = {
             char: { content: null, domElement: null },
             scene: { content: null, domElement: null },
             isRunning: false
         };
 
-        // --- UTILS ---
-        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
 
         function showSelectorToast(msg, type = 'info') {
-            let toast = document.getElementById('st-mobile-toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'st-mobile-toast';
-                document.body.appendChild(toast);
-            }
-            const colors = {
-                success: '#2e7d32',
-                error: '#c62828',
-                warn: '#ef6c00',
-                process: '#1565c0',
-                analyzing: '#8e44ad',
-                info: '#333'
-            };
+            let toast = document.getElementById('st-mobile-toast') || document.createElement('div');
+            toast.id = 'st-mobile-toast';
+            document.body.appendChild(toast);
+            const colors = { success: '#2e7d32', error: '#c62828', warn: '#ef6c00', process: '#1565c0', info: '#333' };
             toast.textContent = msg;
             toast.style.backgroundColor = colors[type] || '#333';
             toast.className = 'show';
-
-            if (toast.timeout) clearTimeout(toast.timeout);
-            toast.timeout = setTimeout(() => {
-                toast.className = '';
-            }, 3000);
+            clearTimeout(toast.timeout);
+            toast.timeout = setTimeout(() => toast.className = '', 3000);
         }
 
-        // --- API EXTRACTION ---
-        async function callExtraction(text) {
-            const provider = GM_getValue(KEY_PROVIDER, 'cohere');
-            const prompt = `You are a smart analyzer. Extract a Name or Title from the TEXT, distinguishing clearly between single character, multiple characters, and scenario.
-RULES:
-- If TEXT describes a SINGLE CHARACTER: Return only the character's name (e.g., "Alice").
-- If TEXT describes MULTIPLE CHARACTERS: Join their names with " - " (e.g., "Alice - Bob").
-- If TEXT is a SCENARIO or BACKGROUND without specific characters: Return a short descriptive title (max 5 words, e.g., "Mysterious Forest Adventure").
-- IMPORTANT: Ignore the name "Lnas" completely - it is the user's character and may appear in the TEXT, but do not include it in the output.
-- Focus only on the main subjects in the TEXT, excluding any mentions of Lnas.
-OUTPUT: ONLY the string. No quotes, no explanations.
-TEXT: ${text.substring(0, 4000)}`;
-
-            let apiKey, model, url, headers, body;
-            if (provider === 'cohere') {
-                apiKey = GM_getValue(KEY_COHERE_KEY, DEFAULT_COHERE_KEY);
-                model = GM_getValue(KEY_COHERE_MODEL, DEFAULT_COHERE_MODEL);
-                url = "https://api.cohere.com/v2/chat";
-                headers = {
-                    "Authorization": `Bearer ${apiKey}`,
-                    "Content-Type": "application/json",
-                    "Client-Name": "ST_Userscript_Smart"
-                };
-                body = {
-                    model: model,
-                    messages: [{ role: "user", content: prompt }],
-                    temperature: 0.2,
-                    max_tokens: 50
-                };
-            } else if (provider === 'openrouter') {
-                apiKey = GM_getValue(KEY_OPENROUTER_KEY, DEFAULT_OPENROUTER_KEY);
-                model = GM_getValue(KEY_OPENROUTER_MODEL, DEFAULT_OPENROUTER_MODEL);
-                if (!apiKey || !model) {
-                    throw new Error("Chưa thiết lập OpenRouter Key hoặc Model");
-                }
-                url = "https://openrouter.ai/api/v1/chat/completions";
-                headers = {
-                    "Authorization": `Bearer ${apiKey}`,
-                    "Content-Type": "application/json"
-                };
-                body = {
-                    model: model,
-                    messages: [{ role: "user", content: prompt }],
-                    temperature: 0.2,
-                    max_tokens: 50
-                };
-            } else {
-                throw new Error("Provider không hợp lệ");
-            }
-
-            return new Promise((resolve, reject) => {
-                GM_xmlhttpRequest({
-                    method: "POST",
-                    url: url,
-                    headers: headers,
-                    data: JSON.stringify(body),
-                    onload: function(response) {
-                        if (response.status >= 200 && response.status < 300) {
-                            try {
-                                const json = JSON.parse(response.responseText);
-                                let result;
-                                if (provider === 'cohere') {
-                                    result = json.message?.content?.[0]?.text?.trim();
-                                } else {
-                                    result = json.choices?.[0]?.message?.content?.trim();
-                                }
-                                resolve(result || "Unknown");
-                            } catch (e) {
-                                reject("Lỗi Parse JSON");
-                            }
-                        } else {
-                            reject(`Lỗi HTTP ${response.status}`);
-                        }
-                    },
-                    onerror: function(err) {
-                        reject("Lỗi kết nối API");
-                    }
-                });
-            });
-        }
-
-        async function fetchModels() {
-            const provider = GM_getValue(KEY_PROVIDER, 'cohere');
-            let apiKey, url, headers;
-            if (provider === 'cohere') {
-                apiKey = GM_getValue(KEY_COHERE_KEY, DEFAULT_COHERE_KEY);
-                url = "https://api.cohere.com/v1/models";
-                headers = {
-                    "Authorization": `Bearer ${apiKey}`,
-                    "Content-Type": "application/json"
-                };
-            } else if (provider === 'openrouter') {
-                apiKey = GM_getValue(KEY_OPENROUTER_KEY, DEFAULT_OPENROUTER_KEY);
-                if (!apiKey) throw new Error("Chưa có OpenRouter Key");
-                url = "https://openrouter.ai/api/v1/models";
-                headers = {
-                    "Authorization": `Bearer ${apiKey}`,
-                    "Content-Type": "application/json"
-                };
-            }
-
-            return new Promise((resolve, reject) => {
-                GM_xmlhttpRequest({
-                    method: "GET",
-                    url: url,
-                    headers: headers,
-                    onload: (res) => {
-                        if (res.status === 200) {
-                            try {
-                                const data = JSON.parse(res.responseText);
-                                let models;
-                                if (provider === 'cohere') {
-                                    models = data.models.sort((a, b) => a.name.localeCompare(b.name));
-                                } else {
-                                    models = data.data
-                                        .filter(m => m.id.endsWith(':free'))
-                                        .sort((a, b) => a.name.localeCompare(b.name));
-                                }
-                                resolve(models);
-                            } catch (e) { reject("Lỗi parse list models"); }
-                        } else {
-                            reject(`Lỗi lấy models: ${res.status}`);
-                        }
-                    },
-                    onerror: (err) => reject("Lỗi mạng")
-                });
-            });
-        }
-
-        // --- UI & STYLES ---
         GM_addStyle(`
             #st-mobile-toast {
                 position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
                 padding: 10px 20px; border-radius: 20px; color: white; font-weight: bold;
                 font-family: sans-serif; font-size: 14px; z-index: 99999;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.3s ease;
-                max-width: 90%; text-align: center; pointer-events: none;
+                max-width: 90%; text-align: center; pointer-events: none; word-break: break-word;
             }
             #st-mobile-toast.show { transform: translateX(-50%) translateY(0); }
 
-            /* Button Styles */
             .st-btn-custom {
-                cursor: pointer;
-                display: inline-flex; justify-content: center; align-items: center;
-                transition: color 0.2s, transform 0.1s;
-                margin-right: 2px;
+                cursor: pointer; display: inline-flex; justify-content: center; align-items: center;
+                transition: color 0.2s, transform 0.1s; margin-right: 2px;
             }
             .st-btn-custom:hover { color: #fff; text-shadow: 0 0 5px white; }
             .st-btn-custom:active { transform: scale(0.9); }
 
             .st-active-char { color: #4caf50 !important; text-shadow: 0 0 8px #4caf50; }
             .st-active-scene { color: #ff9800 !important; text-shadow: 0 0 8px #ff9800; }
-            .st-analyzing { color: #d500f9 !important; animation: st-spin 1s infinite linear; }
-            @keyframes st-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-            /* Logic ẩn hiện nút theo ngữ cảnh */
             body.st-mode-chat .st-grp-creator { display: none !important; }
             body.st-mode-creator .st-btn-chat { display: none !important; }
             .mes_buttons .st-grp-creator { display: inline-flex; gap: 5px; margin-right: 5px; border-right: 1px solid #444; padding-right: 5px; }
-
-            /* Modal Style */
-            #st-model-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
-            .st-modal-box { background: #1e1e1e; border: 1px solid #444; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; width: 400px; max-height: 80vh; box-shadow: 0 10px 40px #000; }
-            .st-modal-header { padding: 15px; border-bottom: 1px solid #333; font-weight: bold; color: #fff; background: #252525; display: flex; justify-content: space-between; align-items: center; }
-            .st-modal-list { overflow-y: auto; flex-grow: 1; }
-            .st-model-item { padding: 14px 15px; border-bottom: 1px solid #2a2a2a; color: #ccc; cursor: pointer; font-family: sans-serif; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-            .st-model-item:active { background: #333; }
-            .st-model-item.active { color: #fff; font-weight: bold; background: #2e7d32; border-bottom-color: #1b5e20; }
-            .st-modal-close { cursor: pointer; color: #ff5252; font-size: 18px; padding: 0 5px; }
         `);
 
-        // --- MODEL SELECTOR UI ---
-        function showModelSelector(models) {
-            const old = document.getElementById('st-model-modal');
-            if (old) old.remove();
-
-            const provider = GM_getValue(KEY_PROVIDER, 'cohere');
-            const currentModel = GM_getValue(provider === 'cohere' ? KEY_COHERE_MODEL : KEY_OPENROUTER_MODEL, '');
-            const modal = document.createElement('div');
-            modal.id = 'st-model-modal';
-
-            let listHtml = '';
-            models.forEach(m => {
-                const modelValue = provider === 'cohere' ? m.name : m.id;
-                const modelDisplay = provider === 'cohere' ? m.name : m.name;
-                const isActive = modelValue === currentModel ? 'active' : '';
-                listHtml += `<div class="st-model-item ${isActive}" data-name="${modelValue}"><span>${modelDisplay}</span></div>`;
-            });
-
-            modal.innerHTML = `
-                <div class="st-modal-box">
-                    <div class="st-modal-header"><span>Chọn ${provider.toUpperCase()} Model</span><div class="st-modal-close">✕</div></div>
-                    <div class="st-modal-list">${listHtml}</div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            modal.querySelector('.st-modal-close').onclick = () => modal.remove();
-            modal.querySelectorAll('.st-model-item').forEach(item => {
-                item.onclick = () => {
-                    const name = item.getAttribute('data-name');
-                    GM_setValue(provider === 'cohere' ? KEY_COHERE_MODEL : KEY_OPENROUTER_MODEL, name);
-                    showSelectorToast(`✅ Đã lưu: ${name}`, 'success');
-                    modal.remove();
-                };
-            });
-        }
-
-        // --- MASTER MENU ---
         let registeredMenuIds = [];
         function rebuildMasterMenu() {
-            registeredMenuIds.forEach(id => GM_unregisterMenuCommand(id));
+            registeredMenuIds.forEach(GM_unregisterMenuCommand);
             registeredMenuIds = [];
-
-            const currentMode = GM_getValue(KEY_MODE, 'auto');
-            const currentProvider = GM_getValue(KEY_PROVIDER, 'cohere');
-
-            registeredMenuIds.push(GM_registerMenuCommand(
-                currentMode === 'auto' ? "🔄 Chế độ: AUTO (AI)" : "🔄 Chế độ: THỦ CÔNG",
-                () => {
-                    GM_setValue(KEY_MODE, currentMode === 'auto' ? 'manual' : 'auto');
-                    rebuildMasterMenu();
-                    showSelectorToast(`Đã chuyển: ${currentMode === 'auto' ? 'MANUAL' : 'AUTO'}`, 'info');
-                }
-            ));
-
-            registeredMenuIds.push(GM_registerMenuCommand("✏️ Nhập tên (Manual)", () => {
-                const newName = prompt("Nhập tên nhân vật:", GM_getValue(KEY_MANUAL_NAME, ''));
-                if (newName !== null) GM_setValue(KEY_MANUAL_NAME, newName.trim());
-            }));
-
-            registeredMenuIds.push(GM_registerMenuCommand(
-                currentProvider === 'cohere' ? "🔄 Provider: COHERE" : "🔄 Provider: OPENROUTER",
-                () => {
-                    GM_setValue(KEY_PROVIDER, currentProvider === 'cohere' ? 'openrouter' : 'cohere');
-                    rebuildMasterMenu();
-                    showSelectorToast(`Đã chuyển: ${currentProvider === 'cohere' ? 'OPENROUTER' : 'COHERE'}`, 'info');
-                }
-            ));
-
-            const providerUpper = currentProvider.toUpperCase();
-            registeredMenuIds.push(GM_registerMenuCommand(`🔑 ${providerUpper} API Key`, () => {
-                const defaultKey = currentProvider === 'cohere' ? DEFAULT_COHERE_KEY : DEFAULT_OPENROUTER_KEY;
-                const newKey = prompt(`Nhập ${providerUpper} API Key:`, GM_getValue(currentProvider === 'cohere' ? KEY_COHERE_KEY : KEY_OPENROUTER_KEY, defaultKey));
-                if (newKey !== null) GM_setValue(currentProvider === 'cohere' ? KEY_COHERE_KEY : KEY_OPENROUTER_KEY, newKey.trim());
-            }));
-
-            registeredMenuIds.push(GM_registerMenuCommand(`⚙️ ${providerUpper} Model`, async () => {
-                showSelectorToast("⏳ Đang tải models...", 'process');
-                try {
-                    const models = await fetchModels();
-                    showModelSelector(models);
-                } catch (err) {
-                    showSelectorToast("❌ " + err, 'error');
+            registeredMenuIds.push(GM_registerMenuCommand("✏️ Đặt tên Nhân vật (Manual)", () => {
+                const current = GM_getValue(KEY_MANUAL_NAME, '');
+                const newName = prompt("Nhập tên nhân vật mặc định:", current);
+                if (newName !== null) {
+                    GM_setValue(KEY_MANUAL_NAME, newName.trim());
+                    showSelectorToast(`✅ Đã lưu: ${newName.trim()}`, 'success');
                 }
             }));
-
+            registeredMenuIds.push(GM_registerMenuCommand("🛑 Set Ignore List (cách nhau ;)", () => {
+                const current = GM_getValue(KEY_IGNORE_LIST, '');
+                const newList = prompt("Nhập các từ/câu cần bỏ qua (cách nhau bằng ;):", current);
+                if (newList !== null) {
+                    GM_setValue(KEY_IGNORE_LIST, newList.trim());
+                    showSelectorToast(`✅ Đã lưu Ignore List: ${newList.trim()}`, 'success');
+                }
+            }));
             registeredMenuIds.push(GM_registerMenuCommand("🔑 Gemini Manager", toggleGeminiManager));
         }
 
-        // --- LOGIC: DOM WATCHER ---
         function startDynamicVisibilityLoop() {
             setInterval(() => {
                 const nameH2 = document.querySelector('h2.interactable');
-                let currentName = '';
-                if (nameH2) {
-                    currentName = nameH2.innerText.trim().toLowerCase();
-                } else {
+                let currentName = nameH2 ? nameH2.innerText.trim().toLowerCase() : '';
+                if (!currentName) {
                     const navName = document.querySelector('#right-nav-panel .ch_name');
-                    if (navName) currentName = navName.innerText.trim().toLowerCase();
+                    currentName = navName ? navName.innerText.trim().toLowerCase() : '';
                 }
-
                 const isCreator = currentName === 'char creator';
                 document.body.classList.toggle('st-mode-creator', isCreator);
                 document.body.classList.toggle('st-mode-chat', !isCreator);
             }, 500);
         }
 
-        function getTargetName() {
-            const mode = GM_getValue(KEY_MODE, 'auto');
-            if (mode === 'manual') {
-                const name = GM_getValue(KEY_MANUAL_NAME, '').trim();
-                return name ? { name: name, source: 'manual' } : { name: null, error: "Chưa nhập tên thủ công!" };
+        function getManualName() {
+            let name = GM_getValue(KEY_MANUAL_NAME, '').trim();
+            if (!name) {
+                const input = prompt("Chưa thiết lập tên Nhân vật.\nHãy nhập tên ngay:");
+                if (input) {
+                    name = input.trim();
+                    GM_setValue(KEY_MANUAL_NAME, name);
+                }
             }
-            const cached = GM_getValue(KEY_CACHE_NAME, null);
-            return cached ? { name: cached, source: 'cache' } : { name: null, error: "Chưa chọn Char!" };
+            return name;
         }
 
-        // --- HELPER: GET RAW TEXT FROM MESSAGE ---
         async function getRawContentFromMessage(mesDiv) {
-            // 1. Nếu textarea đã mở sẵn
             const existingArea = mesDiv.querySelector('textarea.edit_textarea');
             if (existingArea) return existingArea.value;
 
-            // 2. Tìm nút Edit
             const editBtn = mesDiv.querySelector('.mes_edit');
             if (!editBtn) return mesDiv.querySelector('.mes_text')?.innerText || "";
 
-            // 3. Click Edit và chờ
             editBtn.click();
             const area = await new Promise(resolve => {
                 let i = 0;
@@ -483,7 +227,6 @@ TEXT: ${text.substring(0, 4000)}`;
             if (!area) return "";
             const val = area.value;
 
-            // 4. Đóng Edit lại
             const btnContainer = mesDiv.querySelector('.mes_edit_buttons');
             if (btnContainer) {
                 let cancelBtn = Array.from(btnContainer.querySelectorAll('.mes_button')).find(b =>
@@ -497,88 +240,48 @@ TEXT: ${text.substring(0, 4000)}`;
             return val;
         }
 
-        // --- BUTTON ACTIONS ---
-        async function forceAnalyzeName(iconBtn, content) {
-            if (selState.isRunning) return;
-            iconBtn.classList.add('st-analyzing');
-            showSelectorToast("🧠 Đang phân tích tên...", "analyzing");
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
 
-            try {
-                const name = await callExtraction(content);
-                if (name && name !== "Unknown") {
-                    GM_setValue(KEY_CACHE_NAME, name);
-                    showSelectorToast(`✅ Đã nhận diện: ${name}`, 'success');
-                } else {
-                    showSelectorToast("⚠️ Không tìm thấy tên!", 'warn');
-                }
-            } catch (e) {
-                showSelectorToast("❌ Lỗi API! " + e.message, 'error');
-            } finally {
-                iconBtn.classList.remove('st-analyzing');
-            }
+        function filterContent(content) {
+            const ignoreStr = GM_getValue(KEY_IGNORE_LIST, '').trim();
+            if (!ignoreStr) return content;
+            const ignoreList = ignoreStr.split(';').map(s => s.trim()).filter(Boolean);
+            ignoreList.forEach(ignore => {
+                const regex = new RegExp(escapeRegex(ignore), 'gi');
+                content = content.replace(regex, '');
+            });
+            return content;
         }
 
         async function handleSelection(type, iconBtn, content) {
             if (selState.isRunning) return;
 
-            // Logic Toggle (Bật/Tắt)
             if (selState[type].domElement === iconBtn) {
                 iconBtn.classList.remove(type === 'char' ? 'st-active-char' : 'st-active-scene');
-                iconBtn.classList.remove('st-analyzing');
                 selState[type].content = null;
                 selState[type].domElement = null;
                 showSelectorToast(`Đã bỏ chọn ${type}`, 'info');
                 return;
             }
 
-            // Reset nút cũ nếu có
             if (selState[type].domElement) {
                 selState[type].domElement.classList.remove(type === 'char' ? 'st-active-char' : 'st-active-scene');
-                selState[type].domElement.classList.remove('st-analyzing');
             }
 
-            selState[type].content = content;
-            selState[type].domElement = iconBtn;
+            content = filterContent(content);
 
             if (type === 'char') {
-                const mode = GM_getValue(KEY_MODE, 'auto');
-
-                // Manual Mode
-                if (mode === 'manual') {
-                    iconBtn.classList.add('st-active-char');
-                    showSelectorToast(`✅ Manual: ${GM_getValue(KEY_MANUAL_NAME)}`, 'success');
-                    return;
-                }
-
-                // Auto Mode - Check Cache First
-                const cached = GM_getValue(KEY_CACHE_NAME, null);
-                if (cached) {
-                    iconBtn.classList.add('st-active-char');
-                    showSelectorToast(`✅ Cache: ${cached}`, 'success');
-                    return;
-                }
-
-                // Auto Mode - Call API
-                iconBtn.classList.add('st-analyzing');
-                showSelectorToast("🧠 AI đang tìm tên...", "analyzing");
-                try {
-                    const name = await callExtraction(content);
-                    if (name && name !== "Unknown") {
-                        GM_setValue(KEY_CACHE_NAME, name);
-                        iconBtn.classList.remove('st-analyzing');
-                        iconBtn.classList.add('st-active-char');
-                        showSelectorToast(`✅ Đã định danh: ${name}`, 'success');
-                    } else {
-                        iconBtn.classList.remove('st-analyzing');
-                        iconBtn.classList.add('st-active-char');
-                        showSelectorToast("⚠️ AI không tìm thấy tên!", 'warn');
-                    }
-                } catch (e) {
-                    iconBtn.classList.remove('st-analyzing');
-                    showSelectorToast("❌ Lỗi API " + e.message, 'error');
-                }
+                const name = getManualName();
+                if (!name) return showSelectorToast("⚠️ Bạn chưa nhập tên!", 'warn');
+                selState[type].content = content;
+                selState[type].domElement = iconBtn;
+                iconBtn.classList.add('st-active-char');
+                showSelectorToast(`✅ Đã chọn cho: ${name}`, 'success');
             } else {
-                // Scene Mode
+                selState[type].content = content;
+                selState[type].domElement = iconBtn;
                 iconBtn.classList.add('st-active-scene');
                 showSelectorToast("✅ Đã lấy Scene (Raw)", 'success');
             }
@@ -586,55 +289,51 @@ TEXT: ${text.substring(0, 4000)}`;
 
         async function runAutomation() {
             if (selState.isRunning) return;
-            const target = getTargetName();
-            if (!target.name) return showSelectorToast("❌ " + target.error, 'error');
+            const targetName = GM_getValue(KEY_MANUAL_NAME, '').trim();
+
+            if (!targetName) return showSelectorToast("❌ Chưa có tên (Manual Name)!", 'error');
             if (!selState.char.content && !selState.scene.content) return showSelectorToast("⚠️ Chưa chọn nội dung!", 'warn');
 
             selState.isRunning = true;
-            showSelectorToast(`⏳ Import: "${target.name}"...`, 'process');
+            showSelectorToast(`⏳ Import: "${targetName}"...`, 'process');
 
             try {
-                // 1. Mở Panel Character
                 document.getElementById('rightNavDrawerIcon')?.click(); await sleep(300);
                 document.getElementById('rm_button_characters')?.click(); await sleep(400);
 
-                // 2. Tìm hoặc Tạo nhân vật
                 let found = false;
-                const items = document.querySelectorAll('.character_select');
-                for (const item of items) {
-                    if (item.querySelector('.ch_name')?.innerText.trim().toLowerCase() === target.name.toLowerCase()) {
-                        item.click(); found = true; break;
+                document.querySelectorAll('.character_select').forEach(item => {
+                    if (item.querySelector('.ch_name')?.innerText.trim().toLowerCase() === targetName.toLowerCase()) {
+                        item.click(); found = true;
                     }
-                }
+                });
 
                 if (!found) {
-                    showSelectorToast(`➕ Tạo mới: ${target.name}`, 'process');
+                    showSelectorToast(`➕ Tạo mới: ${targetName}`, 'process');
                     document.getElementById('rm_button_create')?.click(); await sleep(500);
                     const inp = document.getElementById('character_name_pole');
                     if (inp) {
-                        Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set.call(inp, target.name);
+                        inp.value = targetName;
                         inp.dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 }
                 await sleep(600);
 
-                // 3. Điền nội dung
                 if (selState.char.content) {
                     const area = document.getElementById('description_textarea');
                     if (area) {
-                        Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set.call(area, selState.char.content);
+                        area.value = selState.char.content;
                         area.dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 }
                 if (selState.scene.content) {
                     const area = document.getElementById('firstmessage_textarea');
                     if (area) {
-                        Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set.call(area, selState.scene.content);
+                        area.value = selState.scene.content;
                         area.dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 }
 
-                // 4. Lưu lại
                 if (!found) {
                     await sleep(500);
                     document.getElementById('create_button_label')?.click();
@@ -642,11 +341,10 @@ TEXT: ${text.substring(0, 4000)}`;
 
                 showSelectorToast(`✅ Xong!`, 'success');
 
-                // Reset State
                 if (selState.char.domElement) selState.char.domElement.classList.remove('st-active-char');
                 if (selState.scene.domElement) selState.scene.domElement.classList.remove('st-active-scene');
-                selState.char.content = null; selState.scene.content = null;
-                selState.char.domElement = null; selState.scene.domElement = null;
+                selState.char = { content: null, domElement: null };
+                selState.scene = { content: null, domElement: null };
 
             } catch (e) {
                 console.error(e);
@@ -656,7 +354,6 @@ TEXT: ${text.substring(0, 4000)}`;
             }
         }
 
-        // --- BUTTON GENERATOR ---
         function addButtons(mesDiv) {
             const mesButtons = mesDiv.querySelector('.mes_buttons');
             if (!mesButtons || mesButtons.querySelector('.st-custom-group')) return;
@@ -669,59 +366,38 @@ TEXT: ${text.substring(0, 4000)}`;
             const creatorGroup = document.createElement('div');
             creatorGroup.className = 'st-grp-creator';
 
-            // Hàm tạo nút icon
             const createIconBtn = (cls, icon, title, onClick) => {
                 const btn = document.createElement('div');
                 btn.className = `mes_button st-btn-custom ${cls} fa-solid ${icon} interactable`;
                 btn.title = title;
                 btn.setAttribute('data-i18n', `[title]${title}`);
-                btn.onclick = (e) => { e.stopPropagation(); onClick(btn); };
+                btn.onclick = e => { e.stopPropagation(); onClick(btn); };
                 return btn;
             };
 
-            // Nút: Re-analyze
-            const btnRe = createIconBtn('st-btn-re', 'fa-rotate', 'Re-analyze Name', (btn) => {
-                const text = mesDiv.querySelector('.mes_text').innerText.trim();
-                forceAnalyzeName(btn, text);
-            });
-
-            // Nút: Select Character
-            const btnChar = createIconBtn('st-btn-char', 'fa-user-tag', 'Select as Character', (btn) => {
-                const text = mesDiv.querySelector('.mes_text').innerText.trim();
+            const btnChar = createIconBtn('st-btn-char', 'fa-user-tag', 'Select as Character (Manual)', btn => {
+                let text = mesDiv.querySelector('.mes_text').innerText.trim();
                 handleSelection('char', btn, text);
             });
 
-            // Nút: Select Scene
-            const btnScene = createIconBtn('st-btn-scene', 'fa-scroll', 'Select as Scene (Raw)', async (btn) => {
-                if (selState.scene.domElement === btn) {
-                    handleSelection('scene', btn, null);
-                    return;
-                }
-                btn.classList.add('st-analyzing');
+            const btnScene = createIconBtn('st-btn-scene', 'fa-scroll', 'Select as Scene (Raw)', async btn => {
+                if (selState.scene.domElement === btn) return handleSelection('scene', btn, null);
                 const raw = await getRawContentFromMessage(mesDiv);
-                btn.classList.remove('st-analyzing');
                 if (raw) handleSelection('scene', btn, raw);
                 else showSelectorToast("Lỗi lấy Raw Text", "warn");
             });
 
-            // Nút: Import
             const btnImport = createIconBtn('st-btn-import', 'fa-file-import', 'Run Import', () => runAutomation());
 
-            creatorGroup.append(btnRe, btnChar, btnScene, btnImport);
+            creatorGroup.append(btnChar, btnScene, btnImport);
 
-            // =========================================================================
-            //  NÚT: SET FIRST MESSAGE (KHÔNG RESET NỮA)
-            // =========================================================================
             const btnFirst = createIconBtn('st-btn-chat', 'fa-quote-left', 'Set First Message', async () => {
-                // Bước 1: Lấy nội dung Raw
-                const text = await getRawContentFromMessage(mesDiv);
+                let text = await getRawContentFromMessage(mesDiv);
                 if (!text) return;
-
-                // Bước 2: Điền vào ô First Message Input
+                text = filterContent(text);
                 const area = document.getElementById('firstmessage_textarea');
                 if (area) {
-                    const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
-                    setter.call(area, text);
+                    area.value = text;
                     area.dispatchEvent(new Event('input', { bubbles: true }));
                     showSelectorToast("✅ Đã set First Message thành công!", 'success');
                 } else {
@@ -729,19 +405,13 @@ TEXT: ${text.substring(0, 4000)}`;
                 }
             });
 
-            // Gắn các nhóm nút vào container
-            container.appendChild(creatorGroup);
-            container.appendChild(btnFirst);
+            container.append(creatorGroup, btnFirst);
 
-            // Chèn vào đầu danh sách nút hoặc trước nút Edit
             const editBtn = mesButtons.querySelector('.mes_edit');
             if (editBtn) mesButtons.insertBefore(container, editBtn);
             else mesButtons.appendChild(container);
         }
 
-        // =============================================================================
-        // PHẦN 3: GEMINI MANAGER
-        // =============================================================================
         const DB = { KEYS: 'tm_st_keys_v18', IDX: 'tm_st_idx_v18', LIMITS: 'tm_st_limits_v18' };
         let gemKeys = [], gemIdx = 0, gemLimits = {}, gemIsLocked = false, gemIsGenerating = false;
         const TARGET_SOURCE = 'makersuite';
@@ -768,26 +438,22 @@ TEXT: ${text.substring(0, 4000)}`;
 
                 GemUI.status("🎬 Đang nạp key...", "yellow");
                 try {
-                    // Mở bảng nhập key
-                    const setBtn = document.querySelector('div[data-key="api_key_makersuite"]');
-                    if (setBtn) setBtn.click();
+                    document.querySelector('div[data-key="api_key_makersuite"]')?.click();
                     await sleep(500);
 
-                    // Xóa key cũ nếu có
                     const del = document.querySelector('button[data-action="delete-secret"]');
                     if (del) {
                         del.click();
                         await sleep(400);
-                        const y = this.findBtn("Yes"); if (y) y.click();
+                        this.findBtn("Yes")?.click();
                         await sleep(400);
-                        const o = this.findBtn("OK"); if (o) o.click();
+                        this.findBtn("OK")?.click();
                         await sleep(400);
                     }
 
-                    // Nhập key mới
-                    const input = document.querySelector('#api_key_makersuite');
+                    const input = document.getElementById('api_key_makersuite');
                     if (input) {
-                        Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set.call(input, apiKey);
+                        input.value = apiKey;
                         input.dispatchEvent(new Event('input', { bubbles: true }));
                         await sleep(100);
                         input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -852,13 +518,13 @@ TEXT: ${text.substring(0, 4000)}`;
                 `;
                 document.body.appendChild(p);
 
-                document.getElementById('tm-btn-close').onclick = () => { document.getElementById('tm-manager').style.display = 'none'; };
-                document.getElementById('tm-btn-refresh').onclick = () => { loadGeminiData(); GemUI.render(); GemUI.status("Đã cập nhật!"); };
+                document.getElementById('tm-btn-close').onclick = () => p.style.display = 'none';
+                document.getElementById('tm-btn-refresh').onclick = () => { loadGeminiData(); this.render(); this.status("Đã cập nhật!"); };
                 document.getElementById('tm-btn-clear').onclick = () => {
-                    if(confirm("Xóa toàn bộ key?")) { GM_setValue(DB.KEYS, []); loadGeminiData(); GemUI.render(); }
+                    if (confirm("Xóa toàn bộ key?")) { GM_setValue(DB.KEYS, []); loadGeminiData(); this.render(); }
                 };
                 document.getElementById('tm-btn-run').onclick = () => {
-                    if(gemKeys[gemIdx]) { gemIsLocked = false; GemCore.connect(gemKeys[gemIdx].key); }
+                    if (gemKeys[gemIdx]) { gemIsLocked = false; GemCore.connect(gemKeys[gemIdx].key); }
                 };
             },
             render() {
@@ -867,7 +533,7 @@ TEXT: ${text.substring(0, 4000)}`;
                 box.innerHTML = '';
                 if (badge) badge.textContent = gemKeys.length;
 
-                if (gemKeys.length === 0) {
+                if (!gemKeys.length) {
                     box.innerHTML = '<div style="padding:15px;text-align:center;color:#666;font-size:12px;">Chưa có key.<br>Hãy sang AI Studio để đồng bộ.</div>';
                     return;
                 }
@@ -877,13 +543,11 @@ TEXT: ${text.substring(0, 4000)}`;
                     item.className = `tm-item ${i === gemIdx ? 'active' : ''}`;
                     const tags = (gemLimits[k.key] || []).map(t => `<span class="tm-tag">${t}</span>`).join('');
                     item.innerHTML = `<div><b>${k.name}</b><br><small style="opacity:0.5">...${k.suffix}</small></div><div>${tags}</div>`;
-                    item.onclick = () => {
-                        gemIdx = i; saveGeminiData(); GemUI.render(); gemIsGenerating = false;
-                    };
+                    item.onclick = () => { gemIdx = i; saveGeminiData(); this.render(); gemIsGenerating = false; };
                     box.appendChild(item);
                 });
             },
-            status(msg, color="#888") {
+            status(msg, color = "#888") {
                 const s = document.getElementById('tm-status-text');
                 if (s) { s.textContent = msg; s.style.color = color; }
             }
@@ -891,8 +555,7 @@ TEXT: ${text.substring(0, 4000)}`;
 
         const GemAuto = {
             init() {
-                // Lắng nghe sự kiện click Gửi/Regenerate
-                document.addEventListener('click', (e) => {
+                document.addEventListener('click', e => {
                     if (document.getElementById('chat_completion_source')?.value !== TARGET_SOURCE) return;
                     if (e.target.closest('#send_but, #regenerate_but, .fa-paper-plane')) {
                         gemIsGenerating = true;
@@ -900,8 +563,7 @@ TEXT: ${text.substring(0, 4000)}`;
                     }
                 }, true);
 
-                // Giám sát DOM để phát hiện tin nhắn mới hoặc Lỗi
-                new MutationObserver((mutations) => {
+                new MutationObserver(mutations => {
                     if (document.getElementById('chat_completion_source')?.value !== TARGET_SOURCE) return;
 
                     if (gemIsGenerating && !gemIsLocked) {
@@ -932,10 +594,9 @@ TEXT: ${text.substring(0, 4000)}`;
                 const k = gemKeys[gemIdx].key;
                 const m = document.getElementById('model_google_select')?.value || 'unknown';
 
-                // Nếu key hiện tại từng bị đánh dấu limit ở model này, nhưng giờ chạy được -> Xóa limit
                 if (gemLimits[k]?.includes(m)) {
                     gemLimits[k] = gemLimits[k].filter(x => x !== m);
-                    if(!gemLimits[k].length) delete gemLimits[k];
+                    if (!gemLimits[k].length) delete gemLimits[k];
                     saveGeminiData();
                     GemUI.render();
                 }
@@ -948,14 +609,10 @@ TEXT: ${text.substring(0, 4000)}`;
                 const m = document.getElementById('model_google_select')?.value || 'unknown';
                 const k = gemKeys[gemIdx].key;
 
-                // Đánh dấu key hiện tại bị lỗi với model này
                 if (!gemLimits[k]) gemLimits[k] = [];
-                if (!gemLimits[k].includes(m)) {
-                    gemLimits[k].push(m);
-                    saveGeminiData();
-                }
+                if (!gemLimits[k].includes(m)) gemLimits[k].push(m);
+                saveGeminiData();
 
-                // Chuyển sang key tiếp theo
                 gemIdx = (gemIdx + 1) % gemKeys.length;
                 saveGeminiData();
                 GemUI.render();
@@ -963,7 +620,6 @@ TEXT: ${text.substring(0, 4000)}`;
                 GemUI.status(`🛑 Lỗi ${m}. Đổi Key ${gemIdx+1}...`, "orange");
                 await GemCore.connect(gemKeys[gemIdx].key);
 
-                // Chờ thông báo lỗi biến mất
                 if (errEl) {
                     let c = 0;
                     while (document.body.contains(errEl) && c < 30) {
@@ -987,14 +643,12 @@ TEXT: ${text.substring(0, 4000)}`;
             }
         }
 
-        // --- INITIALIZATION ---
         rebuildMasterMenu();
         GemUI.init();
         GemAuto.init();
         loadGeminiData();
         startDynamicVisibilityLoop();
 
-        // Quan sát Chat để thêm nút
         const obs = new MutationObserver(() => {
             document.getElementById('chat')?.querySelectorAll('.mes').forEach(addButtons);
         });
@@ -1009,7 +663,6 @@ TEXT: ${text.substring(0, 4000)}`;
         });
         bodyObs.observe(document.body, { childList: true, subtree: true });
 
-        // Tự động ẩn Gemini Manager nếu chuyển API khác
         setInterval(() => {
             const el = document.getElementById('chat_completion_source');
             const p = document.getElementById('tm-manager');

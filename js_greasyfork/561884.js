@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Universal Image Downloader
 // @namespace    https://greasyfork.org/en/users/1553223-ozler365
-// @version      7.2
+// @version      7.7
 // @description  Professional UI, Smart Source Scan (No Scroll), and Strict Reader Isolation
 // @author       ozler365
 // @license      MIT
@@ -25,6 +25,9 @@
 
     // 1. Configuration & Localization
     const isZh = (navigator.language || 'en').toLowerCase().includes("zh");
+    // Detect Mobile Environment
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
     const i18n = {
         subFolder: isZh ? "文件夹名称" : "Folder Name",
         selectAll: isZh ? "全选" : "Select All",
@@ -33,7 +36,7 @@
         selected: isZh ? "已选择" : "Selected",
         source: isZh ? "来源" : "Source",
         menuOpen: isZh ? "启动下载器" : "Open Downloader",
-        sourceScan: isZh ? "⚡ 源码扫描" : "⚡ Source Scan",
+        sourceScan: isZh ? "⚡ 强制加载 (正则)" : "⚡ Force Load (Regex)",
         processing: isZh ? "分析中..." : "Analyzing...",
     };
 
@@ -41,6 +44,17 @@
     function getAbsUrl(url) {
         if (!url || typeof url !== 'string' || url.startsWith('blob:') || url.startsWith('data:')) return url;
         try { return new URL(url, document.baseURI).href; } catch(e) { return url; }
+    }
+
+    function getFilename(url) {
+        try {
+            const u = new URL(url, document.baseURI);
+            let name = u.pathname.split('/').pop();
+            if (!name || name.indexOf('.') === -1) return url;
+            return decodeURIComponent(name);
+        } catch(e) {
+            return url.split('/').pop().split('?')[0];
+        }
     }
 
     async function getImageBlob(url) {
@@ -88,10 +102,9 @@
     function openUI() {
         if (document.querySelector(".tyc-overlay")) return;
 
-        // --- UI STYLES ---
         const styles = `
             .tyc-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:2147483640; display:flex; justify-content:center; align-items:center; font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-            .tyc-modal { width:90vw; height:85vh; background:#fcfcfc; border-radius:12px; display:flex; flex-direction:column; overflow:hidden; resize:both; min-width:800px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid #444; }
+            .tyc-modal { width:90vw; height:85vh; background:#fcfcfc; border-radius:12px; display:flex; flex-direction:column; overflow:hidden; resize:both; min-width:600px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid #444; }
             .tyc-header { padding:15px 25px; background:#fff; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; gap:15px; flex-wrap:wrap; box-shadow: 0 2px 5px rgba(0,0,0,0.03); z-index: 10; }
             .tyc-input { padding:8px 12px; border:2px solid #ccc !important; border-radius:6px; font-weight:600; width:140px; background-color: #ffffff !important; color: #222 !important; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); font-size: 14px; }
             .tyc-input:focus { border-color: #007bff !important; outline: none; }
@@ -111,6 +124,23 @@
             .tyc-card.selected { border-color:#007bff; background:#edf5ff; }
             .tyc-card.selected::after { content:"✓"; position:absolute; top:5px; right:5px; background:#007bff; color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:14px; }
             .tyc-card img { max-width:95%; max-height:95%; object-fit:contain; pointer-events:none; }
+
+            /* --- MOBILE OPTIMIZATIONS --- */
+            @media screen and (max-width: 768px) {
+                .tyc-modal { 
+                    width: 95vw; 
+                    height: 80vh; 
+                    min-width: unset; 
+                    border-radius: 8px; 
+                    border: 1px solid #555; 
+                }
+                .tyc-header { padding: 8px; gap: 6px; justify-content: space-between; }
+                .tyc-input { width: 70px; font-size: 12px; padding: 4px; }
+                .tyc-btn { padding: 5px 8px; font-size: 11px; white-space: nowrap; }
+                .tyc-grid { padding: 8px; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-rows: 140px; gap: 6px; }
+                .tyc-badge { display: none; }
+                .tyc-label span { display: none; }
+            }
         `;
 
         const html = `
@@ -119,14 +149,14 @@
                 <div class="tyc-modal">
                     <div class="tyc-header">
                         <label class="tyc-label">
-                            <input type="checkbox" id="tyc-select-all" style="width:18px; height:18px;"> 
+                            <input type="checkbox" id="tyc-select-all" style="width:18px; height:18px;">
                             <span>${i18n.selectAll}</span>
                         </label>
                         <div style="height:25px; border-left:1px solid #ddd; margin:0 5px;"></div>
                         <input type="text" id="tyc-folder" class="tyc-input" placeholder="${i18n.subFolder}">
                         <span class="tyc-badge" id="tyc-count">0</span>
                         <div style="flex:1;"></div>
-                        
+
                         <button class="tyc-btn tyc-btn-orange" id="tyc-source-scan">${i18n.sourceScan}</button>
                         <button class="tyc-btn tyc-btn-blue" id="tyc-download">${i18n.download}</button>
                         <button class="tyc-btn tyc-btn-green" id="tyc-zip">${i18n.zip}</button>
@@ -138,22 +168,23 @@
         `;
 
         document.body.insertAdjacentHTML("beforeend", html);
-        
+
         // --- VARIABLES ---
         const grid = document.getElementById("tyc-grid");
         const countBadge = document.getElementById("tyc-count");
         let selectedIndices = new Set();
         let imgUrls = [];
+        let seenFilenames = new Set();
 
         // --- 1. DOM SCANNER ---
         const scanDOM = () => {
-            const urlSet = new Set();
+            const tempUrls = new Set();
             const imgRegex = /\.(jpg|jpeg|png|webp|avif|bmp|gif)($|\?)/i;
             const hostname = window.location.hostname;
 
             const mainSelectors = [
-                '#_imageList', '.viewer_lst', '#readerarea', '.reading-content', 
-                '.chapter-images', '.entry-content', '#chapter-container', 
+                '#_imageList', '.viewer_lst', '#readerarea', '.reading-content',
+                '.chapter-images', '.entry-content', '#chapter-container',
                 '#images-container', '.viewer-container', '.ts-main-image'
             ];
 
@@ -174,16 +205,16 @@
                 if (!el.tagName) return;
                 if (ignoredTags.includes(el.tagName.toUpperCase())) return;
                 if (el.closest(noiseClasses.join(','))) return;
-                
+
                 const attrs = [el.src, el.getAttribute('data-src'), el.getAttribute('data-url'), el.getAttribute('data-original')];
-                
+
                 attrs.forEach(val => {
                     if (val && typeof val === 'string') {
                         if (val.includes('previous') || val.includes('next') || val.includes('thumb')) {
                              if (!hostname.includes('webtoons.com') && (val.includes('150x150') || val.includes('300x300'))) return;
                         }
                         if (imgRegex.test(val) || val.startsWith('blob:') || val.startsWith('data:image/')) {
-                            urlSet.add(getAbsUrl(val));
+                            tempUrls.add(getAbsUrl(val));
                         }
                     }
                 });
@@ -191,11 +222,20 @@
                 const bg = window.getComputedStyle(el).backgroundImage;
                 if (bg && bg !== 'none') {
                     const match = bg.match(/url\("?(.+?)"?\)/);
-                    if (match) urlSet.add(getAbsUrl(match[1]));
+                    if (match) tempUrls.add(getAbsUrl(match[1]));
                 }
             });
 
-            return Array.from(urlSet).filter(u => u && !u.startsWith('data:image/svg'));
+            const result = [];
+            tempUrls.forEach(u => {
+                if (!u || u.startsWith('data:image/svg')) return;
+                const fname = getFilename(u);
+                if (!seenFilenames.has(fname)) {
+                    seenFilenames.add(fname);
+                    result.push(u);
+                }
+            });
+            return result;
         };
 
         // --- 2. SOURCE CODE SCANNER ---
@@ -204,7 +244,7 @@
             const regex = /(https?:\\?\/\\?\/[^"'\s<>]+\.(?:jpg|jpeg|png|webp|avif))/gi;
             const matches = html.match(regex) || [];
             const cleanUrls = new Set();
-            
+
             matches.forEach(match => {
                 let clean = match.replace(/\\/g, '');
                 if (clean.includes('avatar') || clean.includes('logo') || clean.includes('icon') || clean.includes('thumb')) return;
@@ -221,7 +261,7 @@
                 const card = document.createElement("div");
                 card.className = "tyc-card";
                 if (selectedIndices.has(index)) card.classList.add("selected");
-                card.innerHTML = `<img src="${url}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove()">`;
+                card.innerHTML = `<img src="${url}" loading="lazy" onerror="this.parentElement.remove()">`;
                 card.onclick = () => {
                     if (selectedIndices.has(index)) {
                         selectedIndices.delete(index);
@@ -254,25 +294,22 @@
         sourceScanBtn.onclick = () => {
             sourceScanBtn.innerText = i18n.processing;
             sourceScanBtn.disabled = true;
-            
+
             setTimeout(() => {
                 const sourceUrls = scanSourceCode();
-                const currentSet = new Set(imgUrls);
                 let addedCount = 0;
-                
                 sourceUrls.forEach(u => {
-                    if (!currentSet.has(u)) {
+                    const fname = getFilename(u);
+                    if (!seenFilenames.has(fname)) {
+                        seenFilenames.add(fname);
                         imgUrls.push(u);
-                        currentSet.add(u);
                         addedCount++;
                     }
                 });
-
                 render();
                 sourceScanBtn.innerText = `Found +${addedCount}`;
                 sourceScanBtn.classList.remove('tyc-btn-orange');
                 sourceScanBtn.classList.add('tyc-btn-green');
-                
                 setTimeout(() => {
                     sourceScanBtn.innerText = i18n.sourceScan;
                     sourceScanBtn.disabled = false;
@@ -280,28 +317,43 @@
             }, 500);
         };
 
+        // --- DOWNLOAD HANDLER ---
         document.getElementById("tyc-download").onclick = async function() {
             const selected = Array.from(selectedIndices).sort((a,b)=>a-b);
             const btn = this;
-            const folder = document.getElementById("tyc-folder").value || "Chapter";
+            const folderInput = document.getElementById("tyc-folder").value.trim();
+            const folderPrefix = folderInput ? folderInput + "/" : "";
+
             btn.disabled = true;
+
+            // --- SMART DELAY ---
+            // Mobile browsers drop downloads if they happen too fast (throttling).
+            // We set a 1500ms delay for Mobile, and keep it fast (250ms) for Desktop.
+            const downloadDelay = isMobile ? 1500 : 250; 
+
             for (let i = 0; i < selected.length; i++) {
                 btn.innerText = `${i+1}/${selected.length}`;
                 try {
                     const blob = await getImageBlob(imgUrls[selected[i]]);
                     const jpeg = await convertToJpeg(blob);
-                    if (typeof GM_download === 'function') {
+                    
+                    const imgIndex = selected[i] + 1;
+                    const fileName = `image${imgIndex}.jpg`;
+
+                    if (!isMobile && typeof GM_download === 'function') {
                         const bUrl = URL.createObjectURL(jpeg);
                         GM_download({
                             url: bUrl,
-                            name: `${folder}/image${i+1}.jpg`,
+                            name: folderPrefix + fileName,
                             onload: () => URL.revokeObjectURL(bUrl)
                         });
                     } else {
-                        saveAs(jpeg, `image${i+1}.jpg`);
+                        saveAs(jpeg, fileName);
                     }
                 } catch(e) { console.error(e); }
-                await new Promise(r => setTimeout(r, 400));
+                
+                // Wait before next download
+                await new Promise(r => setTimeout(r, downloadDelay));
             }
             btn.innerText = i18n.download;
             btn.disabled = false;
@@ -318,7 +370,9 @@
                 try {
                     const blob = await getImageBlob(imgUrls[selected[i]]);
                     const jpeg = await convertToJpeg(blob);
-                    zip.file(`image${i+1}.jpg`, jpeg);
+                    
+                    const imgIndex = selected[i] + 1;
+                    zip.file(`image${imgIndex}.jpg`, jpeg);
                 } catch(e) { console.error(e); }
             }
             zip.generateAsync({type:"blob"}).then(c => {

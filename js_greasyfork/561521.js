@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name            Abdullah Abbas WME Suite
 // @namespace       https://greasyfork.org/users/AbdullahAbbas
-// @version         2026.01.09.29
-// @description     مجموعة أدوات عبد الله عباس (أزرار الطرق + النسخ الذكي + أزرار القفل + تحديد متقدم).
+// @version         2026.01.10.01
+// @description     مجموعة أدوات عبد الله عباس (أزرار الطرق + النسخ الذكي + أزرار القفل).
 // @author          Abdullah Abbas
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @license         GNU GPLv3
@@ -51,18 +51,6 @@
             copyLock: 'القفل (Lock)',
             copyAltNames: 'الأسماء البديلة',
             copyOther: 'أخرى (المستوى، رسوم...)',
-            // Advanced Selection - Arabic Only
-            advSelectTitle: 'تحديد متقدم',
-            btnSelect: 'تحديد',
-            btnClear: 'إلغاء التحديد',
-            lblCriteria: 'معيار التحديد:',
-            optNoCity: 'بدون مدينة',
-            optNoSpeed: 'بدون سرعة',
-            optLock: 'مستوى القفل',
-            optType: 'نوع الطريق',
-            lblValue: 'القيمة:',
-            msgSelected: 'تم تحديد',
-            msgNoMatch: 'لم يتم العثور على عناصر مطابقة',
             roadTypes: {
                 Fw: 'طريق حرة', MH: 'سريع رئيسي', mH: 'سريع ثانوي', PS: 'شارع رئيسي', St: 'شارع',
                 Rmp: 'منحدر', PR: 'طريق خاص', Pw: 'شارع ضيق', PLR: 'موقف', OR: 'غير معبد',
@@ -87,18 +75,6 @@
             copyLock: 'قوفڵ (Lock)',
             copyAltNames: 'ناوی جێگرەوە',
             copyOther: 'زانیارییەکانی تر',
-            // Advanced Selection - Kurdish Only
-            advSelectTitle: 'دیاریکردنی پێشکەوتوو',
-            btnSelect: 'دیاریکردن',
-            btnClear: 'لادانی دیاریکردن',
-            lblCriteria: 'پێوەر:',
-            optNoCity: 'بێ شار',
-            optNoSpeed: 'بێ خێرایی',
-            optLock: 'ئاستی قوفڵ',
-            optType: 'جۆری ڕێگا',
-            lblValue: 'نرخ:',
-            msgSelected: 'دیاریکرا',
-            msgNoMatch: 'هیچ نەدۆزرایەوە',
             roadTypes: {
                 Fw: 'ڕێگای خێرا', MH: 'خێرای سەرەکی', mH: 'خێرای لاوەکی', PS: 'شەقامی سەرەکی', St: 'شەقام',
                 Rmp: 'رامپ', PR: 'تایبەت', Pw: 'کۆڵان', PLR: 'پارکینگ', OR: 'ڕێگای خۆڵ',
@@ -123,18 +99,6 @@
             copyLock: 'Lock Level',
             copyAltNames: 'Alternate Names',
             copyOther: 'Others (Level, Toll...)',
-            // Advanced Selection
-            advSelectTitle: 'Advanced Selection',
-            btnSelect: 'Select',
-            btnClear: 'Deselect',
-            lblCriteria: 'Criteria:',
-            optNoCity: 'No City (Ghost)',
-            optNoSpeed: 'No Speed Limit',
-            optLock: 'Lock Level',
-            optType: 'Road Type',
-            lblValue: 'Value:',
-            msgSelected: 'Selected',
-            msgNoMatch: 'No matches found',
             roadTypes: {
                 Fw: 'Fw', MH: 'MH', mH: 'mH', PS: 'PS', St: 'St',
                 Rmp: 'Rmp', PR: 'PR', Pw: 'Pw', PLR: 'PLR', OR: 'OR',
@@ -334,84 +298,6 @@
             });
         }
 
-        // --- Advanced Selection Logic (NATIVE WME IMPLEMENTATION) ---
-        function performAdvancedSelection() {
-            if (typeof W === 'undefined' || !W.map || !W.model) return;
-
-            const criteria = $('#aaAdvCriteria').val();
-            const lockValue = $('#aaAdvLockVal').val();
-            const typeValue = $('#aaAdvTypeVal').val();
-
-            // Native Extent
-            const extent = W.map.getExtent();
-            let objectsToSelect = [];
-
-            // Iterate using Native WME Model
-            const segments = W.model.segments.getObjectArray();
-
-            segments.forEach(seg => {
-                // Check if segment is fully loaded and has geometry
-                if (!seg.geometry) return;
-
-                // Visible in current map view?
-                if (!extent.intersectsBounds(seg.geometry.getBounds())) return;
-
-                const attr = seg.attributes;
-                let match = false;
-
-                if (criteria === 'no_city') {
-                    // Check primary street
-                    const streetId = attr.primaryStreetID;
-                    if (streetId) {
-                        const street = W.model.streets.objects[streetId];
-                        if (street) {
-                            if (!street.attributes.cityID) {
-                                match = true; // Street has no city ID
-                            } else {
-                                const city = W.model.cities.objects[street.attributes.cityID];
-                                if (!city || !city.attributes.name || city.attributes.name.trim() === '') {
-                                    match = true; // City object exists but name is empty
-                                }
-                            }
-                        }
-                    } else {
-                         match = true; // No street assigned
-                    }
-                }
-                else if (criteria === 'no_speed') {
-                    // Driveable roads only (exclude walking trails etc)
-                    const driveable = [1, 2, 3, 4, 6, 7, 8, 17, 20, 22];
-                    if (driveable.includes(attr.roadType)) {
-                        const fwd = attr.fwdMaxSpeed;
-                        const rev = attr.revMaxSpeed;
-                        // In WME, null or 0 means no speed verified
-                        if ((fwd === null || fwd === 0) && (rev === null || rev === 0)) {
-                            match = true;
-                        }
-                    }
-                }
-                else if (criteria === 'lock') {
-                    // lockRank is 0-based in Model, but 1-based in UI
-                    const reqRank = parseInt(lockValue) - 1;
-                    if ((attr.lockRank || 0) === reqRank) match = true;
-                }
-                else if (criteria === 'type') {
-                    if (attr.roadType === parseInt(typeValue)) match = true;
-                }
-
-                if (match) objectsToSelect.push(seg);
-            });
-
-            // Native Select
-            if (objectsToSelect.length > 0) {
-                W.selectionManager.setSelectedModels(objectsToSelect);
-                console.log(SCRIPT_NAME + ': ' + trans.msgSelected + ': ' + objectsToSelect.length);
-            } else {
-                alert(trans.msgNoMatch);
-            }
-        }
-
-
         // --- Buttons Logic ---
         function onRoadTypeButtonClick(roadType) {
             const selection = sdk.Editing.getSelection();
@@ -523,9 +409,7 @@
                 '#sidepanel-clicksaver .controls-container label {white-space: normal;}',
                 '#sidepanel-clicksaver {font-size:13px;}',
                 '.cs-group-label {font-size: 11px; width: 100%; font-family: Poppins, sans-serif; text-transform: uppercase; font-weight: 700; color: #354148; margin-bottom: 6px; margin-top: 15px;}',
-                '.scf-details {margin-left: 15px; margin-top: 5px;}',
-                // Added for Advanced Selection Inputs
-                '.aa-input { width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 12px; }'
+                '.scf-details {margin-left: 15px; margin-top: 5px;}'
             ];
 
             // Build RT Colors
@@ -600,64 +484,6 @@
             $scfDetails.append(createSettingsCheckbox('scfInheritOtherCheckBox', 'inheritOther', trans.copyOther));
             $smartCopyDiv.append($scfDetails);
             $panel.append($smartCopyDiv);
-
-            // === New: Advanced Selection Section ===
-            const $advSelDiv = $('<div>', { class: 'side-panel-section', style: 'border-top:1px solid #eee; margin-top:10px; padding-top:10px;' });
-            $advSelDiv.append($('<label>', { class: 'cs-group-label' }).text(trans.advSelectTitle));
-
-            // Criteria Dropdown
-            const $critSel = $('<select>', { id: 'aaAdvCriteria', class: 'aa-input', style: 'margin-bottom:5px;' });
-            $critSel.append(
-                $('<option>', { value: 'no_city', text: trans.optNoCity }),
-                $('<option>', { value: 'no_speed', text: trans.optNoSpeed }),
-                $('<option>', { value: 'lock', text: trans.optLock }),
-                $('<option>', { value: 'type', text: trans.optType })
-            );
-
-            // Value Inputs (Separate IDs to avoid confusion)
-            const $valInputDiv = $('<div>', { id: 'aaAdvValueDiv', style: 'display:none; margin-bottom:5px;' });
-            $valInputDiv.append($('<label>',{style:'font-size:10px; display:block;'}).text(trans.lblValue));
-
-            // Lock Select
-            const $lockSel = $('<select>', { id: 'aaAdvLockVal', class: 'aa-input' });
-            [1,2,3,4,5,6].forEach(l => $lockSel.append($('<option>', { value: l, text: `Level ${l}` })));
-
-            // Type Select
-            const $typeSel = $('<select>', { id: 'aaAdvTypeVal', class: 'aa-input', style: 'display:none;' });
-             RENDER_ORDER.forEach(rt => {
-               $typeSel.append($('<option>', { value: roadTypeSettings[rt].id, text: trans.roadTypes[rt] }));
-            });
-
-            $valInputDiv.append($lockSel).append($typeSel);
-
-            // Execute Buttons (2 Buttons Row) - Flex direction determined by current language dir
-            const $btnContainer = $('<div>', { style: `display:flex; gap:5px; margin-top:5px; direction: ${trans.dir};` });
-            const $btnScan = $('<button>', { class: 'btn btn-primary', style: 'flex:1;' }).text(trans.btnSelect).click(performAdvancedSelection);
-            const $btnClear = $('<button>', { class: 'btn btn-default', style: 'flex:1;' }).text(trans.btnClear).click(() => W.selectionManager.unselectAll());
-
-            // Appending in DOM order. Flexbox 'start' (Right in RTL, Left in LTR) handles visual position.
-            // If RTL: First Element (Select) goes to Right. Second (Deselect) goes to Left.
-            // If LTR: First Element (Select) goes to Left. Second (Deselect) goes to Right.
-            $btnContainer.append($btnScan).append($btnClear);
-
-            $advSelDiv.append($critSel).append($valInputDiv).append($btnContainer);
-            $panel.append($advSelDiv);
-
-            // Event Listener for Dropdown Change
-            $critSel.change(function() {
-                const val = $(this).val();
-                if (val === 'lock') {
-                    $valInputDiv.show();
-                    $lockSel.show();
-                    $typeSel.hide();
-                } else if (val === 'type') {
-                    $valInputDiv.show();
-                    $lockSel.hide();
-                    $typeSel.show();
-                } else {
-                    $valInputDiv.hide();
-                }
-            });
 
             $panel.append($('<div>', { style: 'margin-top:20px;font-size:10px;color:#999999;' }).append($('<div>').text(`v. ${argsObject.scriptVersion}`)));
             const { tabLabel, tabPane } = await sdk.Sidebar.registerScriptTab();

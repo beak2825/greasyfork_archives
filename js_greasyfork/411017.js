@@ -3,7 +3,7 @@
 // @name:de            TracklistToRYM
 // @name:en            TracklistToRYM
 // @namespace          sun/userscripts
-// @version            1.51.1
+// @version            1.52.0
 // @description        Imports an album's tracklist from various sources into Rate Your Music.
 // @description:de     Importiert die Tracklist eines Albums von verschiedenen Quellen in Rate Your Music.
 // @description:en     Imports an album's tracklist from various sources into Rate Your Music.
@@ -26,8 +26,10 @@
 // @connect            7digital.com
 // @connect            allmusic.com
 // @connect            amazon.com
+// @connect            ampwall.com
 // @connect            apple.com
 // @connect            archive.org
+// @connect            audiomack.com
 // @connect            awa.fm
 // @connect            azurewebsites.net
 // @connect            baer.works
@@ -42,6 +44,7 @@
 // @connect            deezer.com
 // @connect            discogs.com
 // @connect            e-onkyo.com
+// @connect            freegalmusic.com
 // @connect            freemusicarchive.org
 // @connect            genie.co.kr
 // @connect            genius.com
@@ -89,6 +92,7 @@
 // @connect            setlist.fm
 // @connect            sny.sh
 // @connect            sonemic.com
+// @connect            sonica.music
 // @connect            soundcloud.com
 // @connect            spirit-of-rock.com
 // @connect            spotify.com
@@ -198,6 +202,18 @@
       length: ".a-size-base-plus.a-color-secondary",
     },
     {
+      name: "Ampwall",
+      icon: "https://ampwall.com/favicon-black.ico",
+      extractor: "node",
+      placeholder: "https://ampwall.com/a/*/album/*",
+      artist: "h2 a",
+      album: "h1",
+      parent: ".ov_auto .bdr_md",
+      index: "[data-testid='play-state-button'] div",
+      title: "[data-testid='track-name']",
+      length: ".ai_top.fv-num_tabular-nums div",
+    },
+    {
       name: "Apple Music",
       extractor: "json",
       placeholder: "https://music.apple.com/album/*/*",
@@ -230,6 +246,17 @@
       index: ".track-num",
       title: ".track-name",
       length: ".duration",
+    },
+    {
+      name: "Audiomack",
+      extractor: "node",
+      placeholder: "https://audiomack.com/*/album/*",
+      artist: "h1 .SinglePageMusicCard-artist",
+      album: ".SinglePageMusicCard-title",
+      parent: "[class*='music-showcase-list_MusicShowcaseListWrapper']",
+      index: "[class*='music-showcase-list_PlayModule'] p",
+      title: "[class*='text_noOfLines-1']:not([style])",
+      length: false,
     },
     {
       name: "AWA",
@@ -469,6 +496,51 @@
       length: "playTime",
       transformer: async (link) => {
         return `https://www.music-flo.com/api/meta/v1/album/${new URL(link).pathname.split("/")[3]}/track`;
+      },
+    },
+    {
+      name: "Freegal Music",
+      extractor: "json",
+      placeholder: "https://www.freegalmusic.com/album/*/*",
+      artist: "data.album.items.0.artist.name",
+      album: "data.album.items.0.title",
+      parent: "data.album.items.0.songs",
+      index: "trackNumber",
+      title: "title",
+      length: "fullDurationSec",
+      modifier: async (data) => {
+        const x = new DOMParser().parseFromString(data, "text/html");
+        return await new Promise((resolve) => {
+          GM.xmlHttpRequest({
+            method: "GET",
+            url: `https://api.freegalmusic.com/v1/album/songs?${new URLSearchParams(
+              {
+                albumId: new URL(
+                  x
+                    .querySelector("meta[property='og:url']")
+                    .getAttribute("content"),
+                ).pathname.split("/")[2],
+                provider: new URL(
+                  x
+                    .querySelector("meta[property='og:url']")
+                    .getAttribute("content"),
+                ).pathname.split("/")[3],
+              },
+            ).toString()}`,
+            headers: {
+              Authorization: `Bearer ${JSON.parse(x.getElementById("authToken").value).accessToken}`,
+            },
+            onload: async (response) => {
+              let x = JSON.parse(response.responseText);
+              for (const y of x.data.album.items[0].songs)
+                y.fullDurationSec = new Date(y.fullDurationSec * 1000)
+                  .toISOString()
+                  .slice(11, 19);
+              x = JSON.stringify(x);
+              resolve(x);
+            },
+          });
+        });
       },
     },
     {
@@ -829,7 +901,7 @@
     },
     {
       name: "Musixmatch",
-      icon: "https://www.musixmatch.com/favicon.png",
+      icon: "https://s.mxmcdn.net/mxm-com/static/favicon.png",
       extractor: "node",
       placeholder: "https://www.musixmatch.com/album/*/*",
       artist: ".mxm-album-banner__artist a",
@@ -853,7 +925,6 @@
     },
     {
       name: "Napster",
-      icon: "https://www.napster.com/wp-content/themes/napsterpitch/assets/favicon/favicon.ico",
       extractor: "node",
       placeholder: "https://napster.com/artist/*/album/*",
       artist: ".show-for-medium .artist-link",
@@ -1006,6 +1077,7 @@
     },
     {
       name: "Rauversion",
+      icon: "https://rauversion.com/assets/logo-f3bed47f211ef593041500c0bfdd24d7c5f17ab588aaefabb75a28cb9935fdff.png",
       extractor: "node",
       placeholder: "https://rauversion.com/playlists/*",
       artist: "h5 a",
@@ -1073,6 +1145,7 @@
     },
     {
       name: "Sonemic",
+      icon: "https://sonemic.com/assets/sonemic.svg",
       extractor: "node",
       placeholder: "https://sonemic.com/release/album/*/*",
       artist: "#page_object_header .music_artist",
@@ -1081,6 +1154,37 @@
       index: ".page_fragment_track_num",
       title: ".page_fragment_track_title .song",
       length: ".page_fragment_track_duration",
+    },
+    {
+      name: "sonica",
+      icon: "https://sonica.music/favicon.svg",
+      extractor: "json",
+      placeholder: "https://sonica.music/*",
+      artist: "0.result.data.json.owner_name",
+      album: "0.result.data.json.title",
+      parent: "1.result.data.json.tracks",
+      index: "order_number",
+      title: "title",
+      length: "versions.0.duration",
+      transformer: async (link) => {
+        return `https://sonica.music/api/trpc/collection.get,collection.tracks?${new URLSearchParams(
+          {
+            batch: 1,
+            input: JSON.stringify({
+              0: {
+                json: {
+                  collectionUrlId: new URL(link).pathname.split("/")[1],
+                },
+              },
+              1: {
+                json: {
+                  collectionUrlId: new URL(link).pathname.split("/")[1],
+                },
+              },
+            }),
+          },
+        ).toString()}`;
+      },
     },
     {
       name: "SoundCloud",
@@ -1163,6 +1267,7 @@
     },
     {
       name: "StreetVoice",
+      icon: "https://akstatic.streetvoice.com/asset/images/ico/favicon.ico",
       extractor: "node",
       placeholder: "https://streetvoice.com/*/songs/album/*",
       artist: ".user-info a",
@@ -1270,7 +1375,7 @@
     },
     {
       name: "UtaiteDB",
-      icon: "https://static.utaitedb.net/img/favicon.ico",
+      icon: "https://utaitedb.t3.storage.dev/img/favicon.ico",
       extractor: "json",
       placeholder: "https://utaitedb.net/Al/*",
       artist: "artistLinks.0.name",
@@ -1368,6 +1473,7 @@
     },
     {
       name: "Yandex Music",
+      icon: "https://music.yandex.com/favicon.svg",
       extractor: "json",
       placeholder: "https://music.yandex.com/album/*",
       artist: "byArtist.name",
@@ -1666,13 +1772,20 @@
                 method: "GET",
                 url: `https://rateyourmusic.com/go/searchcredits?target=filedunderperformer&label=performer&searchterm=${encodeURIComponent(artist)}`,
                 onload: async (response) => {
-                  eval(
-                    `unsafeWindow.${new DOMParser()
-                      .parseFromString(response.responseText, "text/html")
-                      .getElementsByClassName("result")[0]
-                      .getAttribute("onClick")
-                      .replace("window.parent.", "")}`,
-                  );
+                  try {
+                    eval(
+                      `unsafeWindow.${new DOMParser()
+                        .parseFromString(response.responseText, "text/html")
+                        .getElementsByClassName("result")[0]
+                        .getAttribute("onClick")
+                        .replace("window.parent.", "")}`,
+                    );
+                  } catch {
+                    printMessage(
+                      "warning",
+                      "Failed to get artist ID. Artist name was not set.",
+                    );
+                  }
                 },
               });
             }
@@ -1840,6 +1953,10 @@
       <div id="ttrym-settings-wrapper">
         <div class="submit_step_box">
           <span class="submit_step_header">${GM.info.script.name}: <span class="submit_step_header_title">Settings</span></span>
+          <div id="ttrym-icons">
+            <button id="ttrym-close-save" title="Save"></button>
+            <button id="ttrym-close-discard" title="Discard"></button>
+          </div>
           <div class="submit_field_header_separator"></div>
           <p>
             <b class="submit_field_header"><i class="fas fa-info"></i>Supply additional data <code>(artist, release)</code></b><br />
@@ -1970,8 +2087,14 @@
             <b><a href="https://addons.mozilla.org/firefox/addon/userunified-script-injector/" target="_blank"><img src="https://addons.mozilla.org/user-media/addon_icons/597/597912-64.png"> USI</a>:</b> all Userscripts → ${GM.info.script.name} → ⋮ → GM Values show<br />
             <b><a href="https://violentmonkey.github.io/" target="_blank"><img src="https://violentmonkey.github.io/_astro/vm.C4h557K-.png"> Violentmonkey</a>:</b> Open Dashboard → Installed scripts → ${GM.info.script.name} → Edit → Values
           </p>
-          <p>Finally, you can view all values below. This does not include changes that haven't been saved yet.</p>
-          <textarea rows="5" readonly>${JSON.stringify(await GM.getValues(await GM.listValues()), null, "\t")}</textarea>
+          ${
+            GM.getValues
+              ? `
+            <p>Finally, you can view all values below. This does not include changes that haven't been saved yet.</p>
+            <textarea rows="5" readonly>${JSON.stringify(await GM.getValues(await GM.listValues()), null, "\t")}</textarea>
+          `
+              : ""
+          }
           <div>
             <button id="ttrym-save" class="btn blue_btn btn_small">Save and reload page</button>
             <button id="ttrym-discard" class="btn flat_btn btn_small">Close window without saving</button>
@@ -1988,6 +2111,18 @@
             background: var(--background);
             padding: 50px;
             z-index: 80;
+          }
+          #ttrym-settings-wrapper #ttrym-icons {
+            position: sticky;
+            top: 0;
+            float: right;
+            font-family: "Font Awesome 5 Free";
+          }
+          #ttrym-settings-wrapper #ttrym-icons button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
           }
           #ttrym-settings-wrapper .submit_step_box {
             padding: 25px;
@@ -2075,6 +2210,18 @@
     document.getElementById("ttrym-button").value = await GM.getValue("button");
     document.getElementById("ttrym-favicon").value =
       await GM.getValue("favicon");
+
+    document
+      .getElementById("ttrym-close-save")
+      .addEventListener("click", () => {
+        document.getElementById("ttrym-save").click();
+      });
+
+    document
+      .getElementById("ttrym-close-discard")
+      .addEventListener("click", () => {
+        document.getElementById("ttrym-discard").click();
+      });
 
     document.getElementById("ttrym-enable").addEventListener("click", () => {
       for (const element of Array.from(
@@ -2177,7 +2324,7 @@
     let output = input;
     if (!output) return "";
     if (typeof output !== "string") output = output.toString();
-    if (output === "?:??" || output === "-") return "";
+    if (output === "?:??" || output === "-" || output === "0:00") return "";
     if (output.match(/PT(\d+H)?\d+M\d+S/))
       output = output.replace(/[PTS]/g, "").replace(/[HM]/g, ":");
     if (Number(output))

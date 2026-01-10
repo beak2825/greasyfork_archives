@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Npm Userscript
-// @version      0.2.1
+// @version      0.2.2
 // @description  Various improvements and fixes for npmjs.com
 // @license      MIT
 // @author       Bjorn Lu
@@ -262,7 +262,7 @@ versions, and fix provenance icon alignment.
       const publishedTd = row.querySelector("td:nth-child(3)");
       if (!downloadsTd || !publishedTd) return;
       const downloadsText = downloadsTd.textContent || "0";
-      const downloads = parseInt(downloadsText.replace(/,|\./g, ""), 10) || 0;
+      const downloads = parseInt(downloadsText.replace(/,|\.|\s/g, ""), 10) || 0;
       const publishedText = publishedTd.textContent || "";
       if (!majorToInfo[major]) {
         majorToInfo[major] = {

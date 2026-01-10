@@ -9,7 +9,7 @@
 // @license AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt
 // @grant GM_addStyle
 // @run-at document-start
-// @match https://www.ign.com/wikis/*
+// @match https://www.ign.com/wikis*
 // @downloadURL https://update.greasyfork.org/scripts/496869/IGN%20Wikis%20responsive.user.js
 // @updateURL https://update.greasyfork.org/scripts/496869/IGN%20Wikis%20responsive.meta.js
 // ==/UserScript==

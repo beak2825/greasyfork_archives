@@ -2,7 +2,7 @@
 // @name        Cuberealm.io Accounts+ account switcher
 // @namespace   cooluser1481
 // @match       https://cuberealm.io/*
-// @version     1.1.3
+// @version     1.1.4
 // @author      cooluser1481
 // @description The only account switcher you ever need! Easy access for alts and other accounts!
 // @license     GPL3
@@ -10,36 +10,13 @@
 // @updateURL https://update.greasyfork.org/scripts/553907/Cuberealmio%20Accounts%2B%20account%20switcher.meta.js
 // ==/UserScript==
 
-/*
-  ____  _____    _    ____  
- |  _ \| ____|  / \  |  _ \ 
- | |_) |  _|   / _ \ | | | |
- |  _ <| |___ / ___ \| |_| |
- |_|_\_\_____/_/_ _\_\____/ 
- |_   _| | | |_ _/ ___|     
-   | | | |_| || |\___ \     
-   | | |  _  || | ___) |    
-   |_| |_| |_|___|____/     
-                            
-Hey there, just so you know, this work is licensed under GPL-3.0 license GNU GENERAL PUBLIC LICENSE. You prob. don't know what this means, but basicly read the following points:
-*use:
-    *You are free to use this however, but do not credit as your own work. Private modifications are OK
-
-*editing:
-    *make sure, that if you edit or modify this script, do not claim it as your own, I spent many hours of my nights not sleeping to make this.
-    *Do not profit off of edited scripts, such as selling it for money, or even in-game cuberealm curency.
-    *Make sure to credit me for altered scripts.
-    *All edits of this must also be put under the same license.
-
-please follow that above cuz this was too hard to make.
-*/
 if(!localStorage.USSRstorage){localStorage.USSRstorage='[]';}
 const USSRstyle = document.createElement('style');
 USSRstyle.type = 'text/css';
 
 /* this CSS was death :skull: */
 
-/*all var start with USSR to avoind naming issues with other scripts + my ign is coolussr1481. This is mostly for the bookmarklet form*/
+/*all var start with USSR to avoind naming issues with other scripts + my ign is coolussr1481 + so everyone knows I made it >:). This is mostly for the bookmarklet form*/
 let USSRcss = `
 #UUSRcustomMenuContainer {
   display: flex;

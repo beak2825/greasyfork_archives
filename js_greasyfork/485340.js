@@ -2,7 +2,7 @@
 // @name        Kleinanzeigen - Sponsored Products remover
 // @namespace   https://greasyfork.org/en/users/2755-robotoilinc
 // @author      RobotOilInc
-// @version     0.1.3
+// @version     0.1.4
 // @license     MIT
 // @description Removes all the sponsored products/banners/suggested searches/etc from Kleinanzeigen.de
 // @match       http*://www.kleinanzeigen.de/*
@@ -35,6 +35,9 @@ new MutationObserver((mutationList, observer) => {
 
     // Remove "Top" ads
     removeElements('.badge-topad.is-topad');
+
+    // Remove ads in search
+    removeElements('[id="brws_banner-supersize"]');
 
     // Remove "Unternehmensseiten"
     removeElements('[id="measure-emotions-survey"]');

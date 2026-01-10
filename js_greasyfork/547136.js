@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vault Sharing - Mobile and Desktop
 // @namespace    vault.sharing.mobile
-// @version      4.0
+// @version      4.1
 // @description  Automatically keeps track of your vault transactions when vault sharing
 // @author       ANITABURN
 // @match        https://www.torn.com/properties.php*
@@ -161,8 +161,37 @@
           skippedOld++;
           continue;
         }
+        
+        // Check for duplicates by ID first
         if (allTransactions[id]) {
           skippedDuplicate++;
+          continue;
+        }
+
+        // Additional duplicate check: look for transactions with same properties
+        let isDuplicate = false;
+        for (let existingId in allTransactions) {
+          let existing = allTransactions[existingId];
+          
+          // Ensure both datetimes are Date objects for comparison
+          let existingTime = existing.datetime instanceof Date ? 
+            existing.datetime.getTime() : 
+            new Date(existing.datetime).getTime();
+          let transactionTime = transaction.datetime instanceof Date ? 
+            transaction.datetime.getTime() : 
+            new Date(transaction.datetime).getTime();
+          
+          if (existing.name === transaction.name &&
+              existing.type === transaction.type &&
+              existing.amount === transaction.amount &&
+              Math.abs(existingTime - transactionTime) < 1000) {
+            isDuplicate = true;
+            skippedDuplicate++;
+            break;
+          }
+        }
+
+        if (isDuplicate) {
           continue;
         }
 
@@ -241,6 +270,21 @@
     function calculateAndShowBalances() {
       let result = calculateBalances();
       showBalances(result.ownBalance, result.spouseBalance);
+    }
+
+    function clearCache() {
+      if (confirm('Are you sure you want to clear the transaction cache? This will remove all cached transactions.')) {
+        GM_deleteValue('transactions');
+        console.log('Transaction cache cleared');
+        showStatus('Cache cleared successfully!', false);
+        calculateAndShowBalances();
+        
+        // Close popup if it's open
+        let popup = document.getElementById('vault-sharing-cache-popup');
+        let overlay = document.getElementById('vault-cache-overlay');
+        if (popup) popup.remove();
+        if (overlay) overlay.remove();
+      }
     }
 
     function saveSettings() {
@@ -338,7 +382,7 @@
         statusEl.textContent = message;
         statusEl.style.display = 'block';
         statusEl.style.color = isError ? '#68acff' : '#e168ff';
-        statusEl.style.background = isError ? 'rgba(255,155,200,0.1)' : 'rgba(155,183,255,0.1)';
+        statusEl.style.background = isError ? 'rgba(155,183,255,0.1)' : 'rgba(225,104,255,0.1)';
         statusEl.style.padding = '8px';
         statusEl.style.borderRadius = '4px';
         statusEl.style.marginTop = '10px';
@@ -364,10 +408,19 @@
 
         let transactionArray = Object.entries(allTransactions)
           .filter(([id, t]) => t && t.datetime)
-          .map(([id, t]) => ({ id, ...t }))
+          .map(([id, t]) => {
+            // Ensure datetime is a Date object
+            let datetime = t.datetime;
+            if (typeof datetime === 'string') {
+              datetime = new Date(datetime);
+            }
+            return { id, ...t, datetime };
+          })
           .sort((a, b) => {
             if (!a.datetime || !b.datetime) return 0;
-            return b.datetime - a.datetime;
+            let aTime = a.datetime instanceof Date ? a.datetime.getTime() : new Date(a.datetime).getTime();
+            let bTime = b.datetime instanceof Date ? b.datetime.getTime() : new Date(b.datetime).getTime();
+            return bTime - aTime;
           });
 
         console.log('Transaction array:', transactionArray);
@@ -393,7 +446,10 @@
         let header = `
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #555; padding-bottom: 10px;">
             <h3 style="margin: 0; color: #68ebff; font-size: ${isMobile ? '16px' : '14px'};">Transaction Cache (${transactionArray.length})</h3>
-            <button id="vault-cache-close" style="background: #e168ff; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: ${isMobile ? '12px' : '11px'};">Close</button>
+            <div style="display: flex; gap: 6px;">
+              <button id="vault-cache-clear" style="background: #e168ff; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: ${isMobile ? '12px' : '11px'};">Clear Cache</button>
+              <button id="vault-cache-close" style="background: #68acff; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: ${isMobile ? '12px' : '11px'};">Close</button>
+            </div>
           </div>
         `;
 
@@ -406,15 +462,17 @@
             try {
               let typeColor = t.type === 'Deposit' ? '#68ebff' : '#e168ff';
               let dateStr = 'Unknown Date';
-              if (t.datetime && t.datetime.toISOString) {
-                let d = new Date(t.datetime);
-                let day = String(d.getUTCDate()).padStart(2, '0');
-                let month = String(d.getUTCMonth() + 1).padStart(2, '0');
-                let year = String(d.getUTCFullYear()).slice(-2);
-                let hours = String(d.getUTCHours()).padStart(2, '0');
-                let minutes = String(d.getUTCMinutes()).padStart(2, '0');
-                let seconds = String(d.getUTCSeconds()).padStart(2, '0');
-                dateStr = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+              if (t.datetime) {
+                let d = t.datetime instanceof Date ? t.datetime : new Date(t.datetime);
+                if (!isNaN(d.getTime())) {
+                  let day = String(d.getUTCDate()).padStart(2, '0');
+                  let month = String(d.getUTCMonth() + 1).padStart(2, '0');
+                  let year = String(d.getUTCFullYear()).slice(-2);
+                  let hours = String(d.getUTCHours()).padStart(2, '0');
+                  let minutes = String(d.getUTCMinutes()).padStart(2, '0');
+                  let seconds = String(d.getUTCSeconds()).padStart(2, '0');
+                  dateStr = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+                }
               }
               let amountStr = '$' + (t.amount ? t.amount.toLocaleString() : '0');
 
@@ -453,6 +511,7 @@
         document.body.appendChild(overlay);
         document.body.appendChild(popup);
 
+        document.getElementById('vault-cache-clear').addEventListener('click', clearCache);
         document.getElementById('vault-cache-close').addEventListener('click', () => {
           popup.remove();
           overlay.remove();
@@ -652,7 +711,7 @@
     </label>
     </div>
 
-    <div style="display: ${isMobile ? 'block' : 'flex'}; gap: 6px;">
+    <div style="display: ${isMobile ? 'block' : 'flex'}; gap: 6px; margin-bottom: 6px;">
     <button id="vault-sharing-save" style="
     background: #e168ff;
     color: white;
@@ -676,8 +735,21 @@
     font-size: ${isMobile ? '12px' : '11px'};
     flex: 1;
     min-height: ${isMobile ? '36px' : '28px'};
+    margin-bottom: ${isMobile ? '6px' : '0'};
     ">Set to Current</button>
     </div>
+
+    <button id="vault-sharing-clear-cache" style="
+    background: #68ebff;
+    color: white;
+    border: none;
+    padding: ${isMobile ? '8px 12px' : '6px 10px'};
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: ${isMobile ? '12px' : '11px'};
+    width: 100%;
+    min-height: ${isMobile ? '36px' : '28px'};
+    ">Clear Cache</button>
 
     <div id="vault-sharing-status" style="display: none; margin-top: 8px; font-size: ${isMobile ? '12px' : '11px'};"></div>
     </div>
@@ -696,6 +768,7 @@
         document.getElementById("vault-sharing-update")?.addEventListener("click", handleSetCurrent);
         document.getElementById("vault-sharing-cache-btn")?.addEventListener("click", showCachePopup);
         document.getElementById("vault-sharing-edit-btn")?.addEventListener("click", () => toggleEditMode());
+        document.getElementById("vault-sharing-clear-cache")?.addEventListener("click", clearCache);
 
         ['vault-sharing-own-start-balance', 'vault-sharing-spouse-start-balance', 'vault-sharing-total-vault-balance'].forEach(id => {
           let input = document.getElementById(id);

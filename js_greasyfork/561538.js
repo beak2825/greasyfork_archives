@@ -14,7 +14,7 @@
 (function () {
     'use strict';
 
-    const REF_LINK = 'https://litebits.io/ref/WLX822BU';
+    const REF_LINK = 'https://litebits.io/ref/80XQJHP9';
     const REF_FLAG = 'litebits_referral_applied';
 
     function ensureReferral() {

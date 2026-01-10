@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Scroll Position Saver
 // @namespace    http://greasyfork.org/
-// @version      1.0
+// @version      1.1
 // @description  Save scroll position in session cookies (clears on browser exit)
 // @author       Bui Quoc Dung
 // @match        *://*/*
@@ -14,69 +14,47 @@
 (function() {
     'use strict';
 
-    function getStorageKey() {
-        return 'scrollPos_' + window.location.href;
-    }
+    const storageKey = 'scrollPosition_' + window.location.href;
 
-    function saveScrollPosition() {
-        const scrollData = {
-            x: window.scrollX || window.pageXOffset,
-            y: window.scrollY || window.pageYOffset,
-            timestamp: Date.now()
-        };
-
+    const savePosition = function() {
         try {
-            sessionStorage.setItem(getStorageKey(), JSON.stringify(scrollData));
-        } catch (e) {}
-    }
+            const scrollData = {
+                horizontalCoordinate: window.scrollX,
+                verticalCoordinate: window.scrollY
+            };
+            sessionStorage.setItem(storageKey, JSON.stringify(scrollData));
+        } catch (error) {}
+    };
 
-    function restoreScrollPosition() {
+    const restorePosition = function() {
         try {
-            const savedData = sessionStorage.getItem(getStorageKey());
+            const savedScrollPosition = sessionStorage.getItem(storageKey);
+            if (savedScrollPosition) {
+                const parsedPositionData = JSON.parse(savedScrollPosition);
+                const horizontalCoordinate = parsedPositionData.horizontalCoordinate;
+                const verticalCoordinate = parsedPositionData.verticalCoordinate;
 
-            if (savedData) {
-                const scrollData = JSON.parse(savedData);
-                window.scrollTo(scrollData.x, scrollData.y);
+                window.scrollTo(horizontalCoordinate, verticalCoordinate);
 
                 window.addEventListener('load', function() {
-                    window.scrollTo(scrollData.x, scrollData.y);
-                }, { once: true });
+                    window.scrollTo(horizontalCoordinate, verticalCoordinate);
+                }, {
+                    once: true
+                });
             }
-        } catch (e) {}
-    }
+        } catch (error) {}
+    };
 
-    function cleanOldEntries() {
-        const oneHour = 60 * 60 * 1000;
-        const now = Date.now();
+    restorePosition();
 
-        try {
-            for (let i = 0; i < sessionStorage.length; i++) {
-                const key = sessionStorage.key(i);
+    let scrollTimeoutTimer;
 
-                if (key && key.startsWith('scrollPos_')) {
-                    const data = JSON.parse(sessionStorage.getItem(key));
-
-                    if (data.timestamp && (now - data.timestamp) > oneHour) {
-                        sessionStorage.removeItem(key);
-                    }
-                }
-            }
-        } catch (e) {}
-    }
-
-    restoreScrollPosition();
-
-    let scrollTimeout;
     window.addEventListener('scroll', function() {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(saveScrollPosition, 150);
-    }, { passive: true });
-
-    window.addEventListener('beforeunload', function() {
-        saveScrollPosition();
+        clearTimeout(scrollTimeoutTimer);
+        scrollTimeoutTimer = setTimeout(savePosition, 3000);
+    }, {
+        passive: true
     });
 
-    window.addEventListener('load', function() {
-        cleanOldEntries();
-    }, { once: true });
+    window.addEventListener('beforeunload', savePosition);
 })();

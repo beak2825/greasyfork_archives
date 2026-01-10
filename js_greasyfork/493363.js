@@ -5,7 +5,7 @@
 // @license     CC0
 // @match       https://*.alienwarearena.com/control-center
 // @icon        https://media.alienwarearena.com/images/favicons/favicon.ico
-// @version     1.6
+// @version     1.7
 // @grant       GM_addStyle
 // @run-at      document-start
 // @namespace   https://greasyfork.org/users/703184
@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 (function() {
-const UPGRADED_USERNAMES = ['TrishaHershberger', 'Mactics', 'FooYa', 'REDinFamy', 'Yun0gaming', 'kesslive', 'Ohmwrecker', 'Lovinurstyle', 'Layria', 'brydraa', 'Squeex', 'DatModz', 'CaliforniaGurl', '3llebelle', 'Liz_XP', 'KateeBear', 'A1phaChino', 'hazeleyedchic', 'DJUnreal', 'Pobelter', 'Valkyrae', 'TheGeekEntry', 'BlaineThePainTV', 'NinjaPullsGaming', 'MoonlitCharlie', 'Wickerrman', 'AmethystLady', 'BLbeel', 'everlynix', 'DemShenaniganss', 'whateverbri', 'Pokey_Star', 'runJDrun', 'Takkundr', 'Ludwig', 'MaudeGarrett', 'GrazeStreams', 'MatthewSantoro', 'Symfuhny', 'No_Lollygaggin'];
+const UPGRADED_USERNAMES = ['TrishaHershberger', 'Mactics', 'FooYa', 'REDinFamy', 'Yun0gaming', 'kesslive', 'Ohmwrecker', 'Lovinurstyle', 'Layria', 'brydraa', 'Squeex', 'DatModz', 'CaliforniaGurl', '3llebelle', 'Liz_XP', 'KateeBear', 'A1phaChino', 'hazeleyedchic', 'DJUnreal', 'Pobelter', 'Valkyrae', 'TheGeekEntry', 'BlaineThePainTV', 'NinjaPullsGaming', 'MoonlitCharlie', 'Wickerrman', 'AmethystLady', 'BLbeel', 'everlynix', 'DemShenaniganss', 'whateverbri', 'Pokey_Star', 'runJDrun', 'Takkundr', 'Ludwig', 'MaudeGarrett', 'GrazeStreams', 'MatthewSantoro', 'Symfuhny', 'No_Lollygaggin', 'NothingButSkillz', 'Kelsi'];
 const css = `
 .user-profile__profile-card:has( > .user-profile__card-header #control-center__twitch-max-reached) .quest-list__play {
     display: none;

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name        Cuberealm.io COOL-RAY XRAY SCRIPT
+// @name        Cuberealm.io COOL-RAY XRAY SCRIPT 😎
 // @namespace   cooluser1481
 // @match       https://cuberealm.io/*
-// @version     1.0.1
+// @version     1.0.2
 // @author      cooluser1481
-// @description A super simple and safe xray script
+// @description A super simple, safe, and cool xray script 😎
 // @license     GPL3
-// @downloadURL https://update.greasyfork.org/scripts/561113/Cuberealmio%20COOL-RAY%20XRAY%20SCRIPT.user.js
-// @updateURL https://update.greasyfork.org/scripts/561113/Cuberealmio%20COOL-RAY%20XRAY%20SCRIPT.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561113/Cuberealmio%20COOL-RAY%20XRAY%20SCRIPT%20%F0%9F%98%8E.user.js
+// @updateURL https://update.greasyfork.org/scripts/561113/Cuberealmio%20COOL-RAY%20XRAY%20SCRIPT%20%F0%9F%98%8E.meta.js
 // ==/UserScript==
 
 (function() {

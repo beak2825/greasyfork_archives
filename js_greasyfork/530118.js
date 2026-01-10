@@ -3,7 +3,7 @@
 // @description  Set playback speed for Read Aloud on ChatGPT.com, navigate between messages, and open a settings menu by clicking the speed display to toggle additional UI tweaks. Features include color-coded icons under ChatGPT's responses, highlighted color for bold text, compact sidebar, square design, and more.
 // @author       Tim Macy
 // @license      AGPL-3.0-or-later
-// @version      5.15.1
+// @version      5.15.2
 // @namespace    TimMacy.ReadAloudSpeedster
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
 // @match        https://*.chatgpt.com/*
@@ -20,7 +20,7 @@
 *                                                                       *
 *                    Copyright © 2025 Tim Macy                          *
 *                    GNU Affero General Public License v3.0             *
-*                    Version: 5.15.1 - Read Aloud Speedster             *
+*                    Version: 5.15.2 - Read Aloud Speedster             *
 *                                                                       *
 *             Visit: https://github.com/TimMacy                         *
 *                                                                       *
@@ -309,6 +309,10 @@
             padding: 0;
         }
 
+        :root:has(main button[aria-label^="Edit the title of"]) div.mx-auto.flex-1:has(div.shadow-short):not(:is(#thread-bottom *)) {
+            margin: 0;
+        }
+
         #thread-bottom-container,
         #thread-bottom-container div.mb-4.flex-1 {
             margin-bottom: 0;
@@ -436,6 +440,12 @@
         .bg-token-bg-elevated-primary.w-full > div {
             padding: 0;
             margin: 0;
+        }
+
+        #thread-bottom-container div.text-base.mx-auto {
+            --thread-content-margin: 0;
+            max-width: unset;
+            padding: 0;
         }
 
         /* menu hover shadow fix */
@@ -2383,7 +2393,7 @@
             bar.appendChild(mkBtn("o4-mini", () => selectModel("gpt-o4-mini")));
         }
 
-        const targetContainer = document.querySelector("#thread-bottom-container div.flex.items-center.gap-2.\\[grid-area\\:trailing\\] > div");
+        const targetContainer = document.querySelector("main form div.cursor-text:not(#thread-bottom-container) div.flex.items-center.gap-2.\\[grid-area\\:trailing\\]");
         targetContainer?.insertBefore(bar, targetContainer.firstChild);
     };
 
@@ -2404,7 +2414,7 @@
 
     const addReadAloudBtn = () => {
         const oldspeakBtn = document.getElementById("CentAnni-speak-btn");
-        const speakBtnLoc = document.querySelector("#thread-bottom");
+        const speakBtnLoc = document.querySelector("#thread-bottom, #thread-bottom-container");
         const speakBtn = document.createElement('button');
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('width', '20');
@@ -2416,7 +2426,7 @@
         speakBtn.onclick = readAloud;
         speakBtn.id = 'CentAnni-speak-btn';
         speakBtn.title = 'Read Aloud Last Message';
-        oldspeakBtn ? oldspeakBtn.replaceWith(speakBtn) : speakBtnLoc.appendChild(speakBtn);
+        oldspeakBtn ? oldspeakBtn.replaceWith(speakBtn) : speakBtnLoc?.appendChild(speakBtn);
     };
 
     // initialization after DOM has loaded

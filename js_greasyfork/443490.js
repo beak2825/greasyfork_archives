@@ -26,7 +26,7 @@
   const DOWN_GIT = "https://minhaskamal.github.io/DownGit";
   const JSDELIVR = "https://cdn.jsdelivr.net";
   function downloader(localUrl) {
-    const meta = localUrl == null ? void 0 : localUrl.split("/").filter((str) => str);
+    const meta = localUrl?.split("/").filter((str) => str);
     const [_a, _b, user, repo, flag, branch, ...rest] = meta;
     if (flag === "tree") {
       return `${DOWN_GIT}/#/home?url=${localUrl}`;

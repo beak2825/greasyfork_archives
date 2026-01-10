@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani Reviews Plus
 // @namespace    http://tampermonkey.net/
-// @version      1.40
+// @version      1.42
 // @license      MIT
 // @description  try to take over the world!
 // @author       You
@@ -16381,7 +16381,7 @@ var ePosition = /* @__PURE__ */ ((ePosition2) => {
 const useChangelogStore = /* @__PURE__ */ defineStore(
   "changelog",
   () => {
-    const currentVersion = ref(1.4), lastLoadedVersion = ref(0), log2 = ref([
+    const currentVersion = ref(1.42), lastLoadedVersion = ref(0), log2 = ref([
       {
         changes: [
           "Breakdown only shows on meaning",
@@ -16434,6 +16434,10 @@ const useChangelogStore = /* @__PURE__ */ defineStore(
       {
         changes: ["Fix issue where classes weren't getting added to body"],
         version: 1.39
+      },
+      {
+        changes: ["Tally items now links to the WaniKani page for said item."],
+        version: 1.42
       }
     ]), showLog = ref(false), showSince = ref(0);
     function checkLog() {
@@ -19338,7 +19342,7 @@ const _hoisted_10$1 = { key: 1 };
 const _hoisted_11$1 = { class: "meaningMnemonic" };
 const _hoisted_12$1 = ["innerHTML"];
 const _hoisted_13$1 = { class: "meaningHint" };
-const _hoisted_14$1 = { class: "reading" };
+const _hoisted_14 = { class: "reading" };
 const _hoisted_15 = { class: "primary" };
 const _hoisted_16 = {
   key: 0,
@@ -19423,7 +19427,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
           ], 64)) : createCommentVNode("", true)
         ]),
         createVNode(unref(script$B)),
-        createBaseVNode("div", _hoisted_14$1, [
+        createBaseVNode("div", _hoisted_14, [
           itemType.value == "kanji" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
             _cache[5] || (_cache[5] = createBaseVNode("span", { class: "header" }, "Reading: ", -1)),
             createBaseVNode("span", _hoisted_15, toDisplayString(((_l = __props.item) == null ? void 0 : _l.data.readings.filter((r2) => r2.primary).map((o2) => o2.reading).join(", ")) ?? ""), 1),
@@ -33935,40 +33939,39 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   }
 });
 const _hoisted_1$2 = { key: 0 };
-const _hoisted_2$1 = { class: "characters" };
-const _hoisted_3$1 = { class: "meanings" };
-const _hoisted_4$1 = { class: "primary" };
-const _hoisted_5$1 = {
+const _hoisted_2$1 = { class: "meanings" };
+const _hoisted_3$1 = { class: "primary" };
+const _hoisted_4$1 = {
   key: 0,
   class: "alternative"
+};
+const _hoisted_5$1 = {
+  key: 1,
+  class: "allowed"
 };
 const _hoisted_6$1 = {
   key: 1,
-  class: "allowed"
-};
-const _hoisted_7$1 = {
-  key: 1,
   class: "readings"
 };
-const _hoisted_8$1 = { class: "primary" };
-const _hoisted_9$1 = {
+const _hoisted_7$1 = { class: "primary" };
+const _hoisted_8$1 = {
   key: 0,
   class: "alternative"
 };
-const _hoisted_10 = {
+const _hoisted_9$1 = {
   key: 1,
   class: "allowed"
 };
-const _hoisted_11 = {
+const _hoisted_10 = {
   key: 2,
   class: "readings"
 };
-const _hoisted_12 = { class: "primary" };
-const _hoisted_13 = {
+const _hoisted_11 = { class: "primary" };
+const _hoisted_12 = {
   key: 0,
   class: "alternative"
 };
-const _hoisted_14 = {
+const _hoisted_13 = {
   key: 1,
   class: "allowed"
 };
@@ -34004,29 +34007,39 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
           default: withCtx(() => [
             createBaseVNode("div", null, [
               unref(indexStore).debug ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-                createBaseVNode("div", null, toDisplayString(__props.item), 1),
+                createBaseVNode("div", null, [
+                  createBaseVNode("span", null, toDisplayString(__props.item), 1)
+                ]),
                 createVNode(unref(script$B))
               ], 64)) : createCommentVNode("", true),
               createBaseVNode("div", null, [
-                createBaseVNode("span", _hoisted_2$1, toDisplayString(__props.item.subject.characters), 1)
+                createVNode(unref(script$q), {
+                  as: "a",
+                  class: "characters",
+                  variant: "link",
+                  href: `https://www.wanikani.com/${__props.item.subject.type.toLowerCase()}/${__props.item.subject.characters}`,
+                  target: "_blank",
+                  rel: "noopener",
+                  label: __props.item.subject.characters
+                }, null, 8, ["href", "label"])
               ]),
               createVNode(unref(script$B)),
-              createBaseVNode("div", _hoisted_3$1, [
+              createBaseVNode("div", _hoisted_2$1, [
                 _cache[0] || (_cache[0] = createBaseVNode("span", null, "Meanings: ", -1)),
-                createBaseVNode("span", _hoisted_4$1, toDisplayString(__props.item.subject.meanings.filter((m) => m.kind == "primary").map((o2) => o2.text).join(", ")), 1),
-                __props.item.subject.meanings.alternative != void 0 ? (openBlock(), createElementBlock("span", _hoisted_5$1, ", " + toDisplayString(__props.item.subject.meanings.alternative.map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
-                __props.item.subject.meanings.allowed != void 0 ? (openBlock(), createElementBlock("span", _hoisted_6$1, ", " + toDisplayString(__props.item.subject.meanings.allowed.map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
+                createBaseVNode("span", _hoisted_3$1, toDisplayString(__props.item.subject.meanings.filter((m) => m.kind == "primary").map((o2) => o2.text).join(", ")), 1),
+                __props.item.subject.meanings.alternative != void 0 ? (openBlock(), createElementBlock("span", _hoisted_4$1, ", " + toDisplayString(__props.item.subject.meanings.alternative.map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
+                __props.item.subject.meanings.allowed != void 0 ? (openBlock(), createElementBlock("span", _hoisted_5$1, ", " + toDisplayString(__props.item.subject.meanings.allowed.map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
               ]),
-              __props.item.subject.type == "Kanji" ? (openBlock(), createElementBlock("div", _hoisted_7$1, [
+              __props.item.subject.type == "Kanji" ? (openBlock(), createElementBlock("div", _hoisted_6$1, [
                 _cache[1] || (_cache[1] = createBaseVNode("span", null, "Readings: ", -1)),
-                createBaseVNode("span", _hoisted_8$1, toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "primary").map((o2) => o2.text).join(", ")), 1),
-                __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_9$1, ",  " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "alternative").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
-                __props.item.subject.readings.filter((r2) => r2.kind == "allowed").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_10, ",  " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "allowed").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
-              ])) : (openBlock(), createElementBlock("div", _hoisted_11, [
+                createBaseVNode("span", _hoisted_7$1, toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "primary").map((o2) => o2.text).join(", ")), 1),
+                __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_8$1, ",  " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "alternative").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
+                __props.item.subject.readings.filter((r2) => r2.kind == "allowed").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_9$1, ",  " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "allowed").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
+              ])) : (openBlock(), createElementBlock("div", _hoisted_10, [
                 _cache[2] || (_cache[2] = createBaseVNode("span", null, "Readings: ", -1)),
-                createBaseVNode("span", _hoisted_12, toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "primary").map((o2) => o2.text).join(", ")), 1),
-                __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_13, " " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "alternative").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
-                __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_14, " " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "allowed").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
+                createBaseVNode("span", _hoisted_11, toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "primary").map((o2) => o2.text).join(", ")), 1),
+                __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_12, " " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "alternative").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
+                __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_13, " " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "allowed").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
               ])),
               __props.item.subject.type == "Kanji" || __props.item.subject.type == "Vocabulary" ? (openBlock(), createElementBlock(Fragment, { key: 3 }, [
                 createBaseVNode("div", null, [
@@ -34046,7 +34059,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TallyItem = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-d6b15d00"]]);
+const TallyItem = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-442a5c39"]]);
 const _hoisted_1$1 = { id: "divTally" };
 const _hoisted_2 = { id: "divTallyCorrect" };
 const _hoisted_3 = { class: "percent" };
@@ -36159,6 +36172,8 @@ function addTallyDiv() {
   app.mount("#ReviewsPlus");
 }
 
+
+
 // Create our shared stylesheet:
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(`
@@ -36459,13 +36474,19 @@ sheet.replaceSync(`
 [data-v-3d956e48] .p-progressbar-value .incorrect {
   width: var(--0b9bd822);
   text-align: center;
-}.characters[data-v-d6b15d00] {
+}.characters[data-v-442a5c39] {
   font-size: 4rem;
+  color: black;
+  text-decoration: none;
 }
-.primary .title[data-v-d6b15d00] {
+.characters[data-v-442a5c39]:hover .p-button-label {
+  text-decoration: none;
+  color: black;
+}
+.p-button-link:not(:disabled):hover .p-button-label .primary .title[data-v-442a5c39] {
   font-weight: bold;
 }
-.secondary[data-v-d6b15d00] {
+.secondary[data-v-442a5c39] {
   font-size: 0.8rem;
 }
 `);

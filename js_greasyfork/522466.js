@@ -6,10 +6,10 @@
 // @icon                https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @author              ElectroKnight22
 // @namespace           electroknight22_youtube_better_theater_mode_namespace
-// @version             3.0.2
+// @version             3.0.3
 // @match               *://www.youtube.com/*
 // @match               *://www.youtube-nocookie.com/*
-// @require             https://update.greasyfork.org/scripts/549881/1705404/YouTube%20Helper%20API.js
+// @require             https://update.greasyfork.org/scripts/549881/1731753/YouTube%20Helper%20API.js
 // @noframes
 // @grant               GM.getValue
 // @grant               GM.setValue
@@ -36,6 +36,8 @@
 
 /*jshint esversion: 11 */
 /* global youtubeHelperApi */
+
+console.log('Better YouTube Theater Mode script init', 'is body ready?', document.readyState, document.body);
 
 (function () {
     'use strict';
@@ -468,7 +470,6 @@
     };
     const App = {
         init() {
-            console.log('init');
             try {
                 if (!this.detectGreasemonkey()) throw new Error('Greasemonkey API not detected');
                 Promise.all([SettingsManager.cleanupStorage(), SettingsManager.load()]).then(() => {

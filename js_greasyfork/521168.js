@@ -4,7 +4,7 @@
 // @match       https://www.myedio.com/*
 // @license     CC BY-NC
 // @grant       none
-// @version     1.1
+// @version     1.2
 // @author      Unknown Hacker
 // @description Being Submitted...
 // @downloadURL https://update.greasyfork.org/scripts/521168/No%20Overdues%21.user.js
@@ -22,49 +22,55 @@
 (function() {
     'use strict';
 
-      // === User Configurable Settings ===
+    const CONFIG = {
+        enableLogging: true,
+        brandColor: '#0267f0',
+        targetSelectors: [
+            '.c-calendar-list-accordion',
+            '.-mediumsmall.-neutral-darkest',
+            '.-overdue',
+            '.c-tag.-warning.-status-warning'
+        ],
+        tagSelector: '.c-tag.-neutral-lightest',
+        newTagText: '0 OVERDUE'
+    };
 
-
-// Set this to true to enable console logging, or false to disable it.
-    const enableLogging = true;
-
-    // === End Of Configurable Settings ===
-
-    function logScriptEnabled() {
-        if (enableLogging) { // Only log if logging is enabled
-            const logStyle = [
-                'color: white',
-                'background: linear-gradient(90deg, #ff5722, #ff9800)',
-                'padding: 10px',
-                'border-radius: 5px',
-                'font-size: 16px',
-                'font-weight: bold'
-            ].join(';');
-
-            console.log('%cScript Enabled: There are no set keys to disable.', logStyle);
-        }
+    function printBrandHeader() {
+        if (!CONFIG.enableLogging) return;
+        const mainStyle = `background: #1a1a1a; color: ${CONFIG.brandColor}; padding: 4px 10px; border-radius: 4px 0 0 4px; font-weight: bold; border: 1px solid ${CONFIG.brandColor}; border-right: none;`;
+        const subStyle = `background: ${CONFIG.brandColor}; color: #fff; padding: 4px 10px; border-radius: 0 4px 4px 0; font-weight: bold; border: 1px solid ${CONFIG.brandColor};`;
+        console.log('%cEDIO%cCLEANER ACTIVE', mainStyle, subStyle);
     }
 
-    function removeElementsAndChangeText() {
-        const calendarElements = document.querySelectorAll('.c-calendar-list-accordion');
-        calendarElements.forEach(element => element.remove());
+    function cleanDashboardUI() {
+        const elementsToRemove = document.querySelectorAll(CONFIG.targetSelectors.join(','));
+        elementsToRemove.forEach(el => el.remove());
 
-        const mediumSmallElements = document.querySelectorAll('.-mediumsmall.-neutral-darkest');
-        mediumSmallElements.forEach(element => element.remove());
-
-        const overdueElements = document.querySelectorAll('.-overdue');
-        overdueElements.forEach(element => element.remove());
-
-        const warningOverduesElements = document.querySelectorAll('.c-tag.-warning.-status-warning');
-        warningOverduesElements.forEach(element => element.remove());
-
-        const tagElements = document.querySelectorAll('.c-tag.-neutral-lightest');
-        tagElements.forEach(tag => {
-            tag.textContent = '0 OVERDUE';
+        const tags = document.querySelectorAll(CONFIG.tagSelector);
+        tags.forEach(tag => {
+            if (tag.textContent !== CONFIG.newTagText) {
+                tag.textContent = CONFIG.newTagText;
+            }
         });
     }
 
-    logScriptEnabled();
-    setInterval(removeElementsAndChangeText, 10);
+    function startUIMonitor() {
+        let timeout;
+        const observer = new MutationObserver((mutations) => {
+            if (mutations.some(m => m.addedNodes.length > 0)) {
+                clearTimeout(timeout);
+                timeout = setTimeout(cleanDashboardUI, 20);
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    printBrandHeader();
+    cleanDashboardUI();
+    startUIMonitor();
 
 })();

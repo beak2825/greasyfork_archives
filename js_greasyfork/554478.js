@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Puzzle duel: Share message
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-08
+// @version      2026-01-10
 // @description  Add a share button in the pop-up modal after finishing a puzzle.
 // @author       WYXkk
 // @match        https://puzzleduel.club/
@@ -17,11 +17,13 @@
     'use strict';
 
     function addButton(puzzle){
+        if(document.querySelector(puzzle.controls.card+' [name=voteShare]')) return;
         let voteSave=document.querySelector(puzzle.controls.voteSave);
         const shareButton=document.createElement('button');
         shareButton.type='button';
         shareButton.className='btn btn-info';
         shareButton.textContent='Share';
+        shareButton.name='voteShare';
         voteSave.before(shareButton);
         let error=0;
         let originalError=puzzle.showError;

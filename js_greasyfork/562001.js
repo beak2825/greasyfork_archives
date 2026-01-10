@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         Bonk Jukebox
 // @namespace    https://greasyfork.org/
-// @version      1.0
-// @description  Adds /jukebox [link], /pausejukebox, /playjukebox, /volume [0-100] to share music with players on the room. Partially ripped off from bonk commands, but different and compatible with it.
+// @version      1.1.1
+// @license      MIT
+// @description  Adds /jukebox [link], /pausejukebox, /playjukebox, /volume [0-100] to share music with players on the room.
 // @author       Sires
 // @match        https://bonk.io/*
 // @match        https://bonkisback.io/*
@@ -10,7 +11,6 @@
 // @run-at       document-idle
 // @grant        none
 // @icon         https://static.wikia.nocookie.net/minecraft_gamepedia/images/e/ee/Jukebox_JE2_BE2.png/revision/latest?cb=20201202075007
-// @license      MIT
 // @unwrap
 // @downloadURL https://update.greasyfork.org/scripts/562001/Bonk%20Jukebox.user.js
 // @updateURL https://update.greasyfork.org/scripts/562001/Bonk%20Jukebox.meta.js
@@ -24,6 +24,12 @@ function BonkJukeboxInjector(f) {
 }
 
 BonkJukeboxInjector(function () {
+    if (window.bonkJukeboxRunning) {
+        console.warn("Bonk Jukebox: Already running. Aborting duplicate injection.");
+        return;
+    }
+    window.bonkJukeboxRunning = true;
+
     var scope = window;
     var Gwindow = document.getElementById("maingameframe").contentWindow;
     var Gdocument = document.getElementById("maingameframe").contentDocument;
@@ -69,7 +75,7 @@ BonkJukeboxInjector(function () {
                     chat_content.appendChild(div);
                     chat_content.scrollTop = chat_content.scrollHeight;
                 }
-            } catch(e) { }
+            } catch(e) { console.error("Bonk Jukebox Error (displayInChat):", e); }
         }
     }
 
@@ -110,7 +116,7 @@ BonkJukeboxInjector(function () {
                     chat_content.appendChild(div);
                     chat_content.scrollTop = chat_content.scrollHeight;
                 }
-            } catch(e) { }
+            } catch(e) { console.error("Bonk Jukebox Error (displaySuggestionInChat):", e); }
         }
     }
 
@@ -157,7 +163,7 @@ BonkJukeboxInjector(function () {
                             state.paused = (data.info.playerState !== 1 && data.info.playerState !== 3);
                         }
                     }
-                } catch (e) {}
+                } catch (e) { console.error("Bonk Jukebox Error (messageListener):", e); }
             }
         };
         window.addEventListener('message', scope.jukeboxMessageListener);
@@ -249,11 +255,26 @@ BonkJukeboxInjector(function () {
         originalOpen.apply(this, arguments);
     };
 
+
     Gwindow.WebSocket.prototype.send = function (data) {
-        if (!bonkwss) {
-            bonkwss = this;
-            hookOnMessage(this);
+        if (!bonkwss) { 
+            bonkwss = this; 
+            hookOnMessage(this); 
             hookOnClose(this);
+        }
+
+
+        if (typeof data === 'string' && data.startsWith('42[')) {
+            try {
+                var packet = JSON.parse(data.substring(2));
+                if (packet[0] == 12) {
+                    hostid = 0;
+                    myid = 0;
+                    console.log("Jukebox: Room creation detected (Packet 12). Initializing as Host (0).");
+                }
+            } catch(e) { 
+                console.error("Bonk Jukebox Error (Packet 12 detection):", e); 
+            }
         }
 
         originalSend.call(this, data);
@@ -284,26 +305,46 @@ BonkJukeboxInjector(function () {
                     var playerList = packet[3];
                     if (playerList && playerList.length) {
                         for (var i = 0; i < playerList.length; i++) {
-                            if (playerList[i] && i == myid) {
-                                username = playerList[i].userName;
-                                break;
+                            if (playerList[i]) {
+                                playerids[i] = playerList[i].userName;
+                                if (i == myid) {
+                                    username = playerList[i].userName;
+                                }
                             }
                         }
                     }
                 }
 
+
+
                 if (type == 41) {
                     var p41payload = packet[1];
                     if (p41payload && typeof p41payload.newHost !== 'undefined') {
                         hostid = p41payload.newHost;
+                        console.log("Jukebox: Packet 41 set Host ID to " + hostid);
                     }
                 }
+
+
 
                 if (type == 6) {
                     if (typeof packet[2] !== 'undefined') {
                         hostid = packet[2];
+                        console.log("Jukebox: Packet 6 set Host ID to " + hostid);
                     }
                 }
+
+
+
+                if (type == 5) {
+                    delete playerids[packet[1]];
+                    if (packet[1] == myid) {
+                        console.log("Jukebox: Detected self leave via Packet 5. Cleaning up.");
+                        cleanupJukebox();
+                    }
+                }
+
+
 
                 if (type == 29) {
                     if (typeof packet[2] !== 'undefined') {
@@ -330,11 +371,13 @@ BonkJukeboxInjector(function () {
                     }
                 }
 
-                if ((type == 4 || type == 5) && packet.length >= 8) {
 
+                if (type == 4 && packet.length >= 8) {
                     if (typeof packet[1] === 'number' && typeof packet[3] === 'string' && typeof packet[7] === 'object') {
                         var newPlayerId = packet[1];
                         var newPlayerName = packet[3];
+
+                        playerids[newPlayerId] = newPlayerName;
 
                         if (hostid == myid && jukeboxplayer && !jukeboxplayer.isPaused()) {
                             var ts = Date.now() - jukeboxplayer.getCurrentTime() * 1000;
@@ -376,6 +419,19 @@ BonkJukeboxInjector(function () {
                 e.preventDefault();
                 e.stopPropagation();
 
+                if (val.startsWith("/volume ")) {
+                    var vol = parseInt(val.substring(8));
+                    if (!isNaN(vol)) {
+                        jukeboxplayervolume = vol;
+                        if (jukeboxplayer) jukeboxplayer.setVolume(vol);
+                        displayInChat("Volume set to " + vol + "%");
+                    }
+                }
+                else if (val.startsWith("/jukeboxhost")) {
+                    var hostName = playerids[hostid] || "Unknown";
+                    displayInChat("Current Host: " + hostName + " (ID: " + hostid + ")");
+                }
+
                 if (bonkwss) {
                     if (val.startsWith("/jukebox ")) {
                         var url = val.substring(9).trim();
@@ -406,14 +462,6 @@ BonkJukeboxInjector(function () {
                             var ts = Date.now() - jukeboxplayer.getCurrentTime() * 1000;
                             changeJukeboxURL(jukeboxplayerURL, ts, true);
                             originalSend.call(bonkwss, '42' + JSON.stringify([4, { "type": "video player", "from": username, "url": jukeboxplayerURL, "timestamp": ts, "to": [-1] }]));
-                        }
-                    }
-                    else if (val.startsWith("/volume ")) {
-                        var vol = parseInt(val.substring(8));
-                        if (!isNaN(vol)) {
-                            jukeboxplayervolume = vol;
-                            if (jukeboxplayer) jukeboxplayer.setVolume(vol);
-                            displayInChat("Volume set to " + vol + "%");
                         }
                     }
                 }

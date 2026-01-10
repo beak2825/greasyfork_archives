@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🌓 Smart Dark Mode Tuner
 // @namespace    https://melashri.net
-// @version      1.0
+// @version      1.1
 // @description  Adjustable dark mode
 // @author       melashri
 // @match        *://*/*
@@ -96,46 +96,66 @@
     panel.innerHTML = `
       <div style="
         position: fixed; top: 12px; right: 12px; z-index: 2147483640;
-        background: #1e1e1e; color: #e0e0e0; padding: 12px; border-radius: 8px;
-        font: 13px system-ui; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08);
-        max-width: 280px;
+        background: #1e1e1e; color: #e0e0e0; padding: 16px; border-radius: 8px;
+        font: 14px system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.08);
+        max-width: 300px;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
       ">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <b>🌓 Dark Tuner</b>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;cursor:move;">
+          <b style="font-size:15px;">🌓 Dark Tuner</b>
           <span id="toggleBtn" style="
-            cursor:pointer; padding:2px 8px; border-radius:4px;
+            cursor:pointer; padding:4px 12px; border-radius:4px;
             background:${settings.enabled ? '#4caf50' : '#f44336'};
-            color:white; font:500 12px sans-serif;
+            color:white; font:600 13px sans-serif;
+            touch-action: manipulation;
           ">${settings.enabled ? 'ON' : 'OFF'}</span>
         </div>
 
         <div id="controls" style="${settings.enabled ? '' : 'display:none'}">
-          <label style="display:block;margin:6px 0;">
+          <label style="display:block;margin:8px 0;">
             Invert: <code id="invVal">${settings.invert.toFixed(2)}</code><br>
-            <input type="range" id="inv" min="0" max="1" step="0.01" value="${settings.invert}">
+            <input type="range" id="inv" min="0" max="1" step="0.01" value="${settings.invert}"
+              style="width:100%;margin-top:4px;">
           </label>
-          <label style="display:block;margin:6px 0;">
+          <label style="display:block;margin:8px 0;">
             Contrast: <code id="conVal">${settings.contrast.toFixed(2)}</code><br>
-            <input type="range" id="con" min="0.5" max="2" step="0.05" value="${settings.contrast}">
+            <input type="range" id="con" min="0.5" max="2" step="0.05" value="${settings.contrast}"
+              style="width:100%;margin-top:4px;">
           </label>
-          <label style="display:block;margin:6px 0;">
+          <label style="display:block;margin:8px 0;">
             Brightness: <code id="briVal">${settings.brightness.toFixed(2)}</code><br>
-            <input type="range" id="bri" min="0.3" max="1.5" step="0.05" value="${settings.brightness}">
+            <input type="range" id="bri" min="0.3" max="1.5" step="0.05" value="${settings.brightness}"
+              style="width:100%;margin-top:4px;">
           </label>
-          <label style="display:block;margin:6px 0;">
+          <label style="display:block;margin:8px 0;">
             Saturation: <code id="satVal">${settings.saturate.toFixed(2)}</code><br>
-            <input type="range" id="sat" min="0" max="2" step="0.05" value="${settings.saturate}">
+            <input type="range" id="sat" min="0" max="2" step="0.05" value="${settings.saturate}"
+              style="width:100%;margin-top:4px;">
           </label>
-          <label style="display:flex;align-items:center;gap:6px;margin:8px 0">
-            <input type="checkbox" id="textShadow" ${settings.textShadow ? 'checked' : ''}>
+          <label style="display:flex;align-items:center;gap:8px;margin:10px 0;cursor:pointer;">
+            <input type="checkbox" id="textShadow" ${settings.textShadow ? 'checked' : ''}
+              style="width:18px;height:18px;cursor:pointer;">
             <span>Text shadow</span>
           </label>
         </div>
 
-        <div style="display:flex;gap:6px;margin-top:8px;font-size:12px">
-          <button id="reset" style="flex:1;padding:4px;background:#333;border:1px solid #555;border-radius:4px">↺ Reset</button>
-          <button id="hide" style="flex:1;padding:4px;background:#555;border:1px solid #777;border-radius:4px">⨯ Hide UI</button>
+        <div style="display:flex;gap:8px;margin-top:10px;font-size:13px">
+          <button id="reset" style="
+            flex:1;padding:8px;background:#333;color:#fff;border:1px solid #555;
+            border-radius:4px;cursor:pointer;font-weight:500;
+            touch-action: manipulation;
+          ">↺ Reset</button>
+          <button id="hide" style="
+            flex:1;padding:8px;background:#555;color:#fff;border:1px solid #777;
+            border-radius:4px;cursor:pointer;font-weight:500;
+            touch-action: manipulation;
+          ">⨯ Hide UI</button>
         </div>
       </div>
     `;
@@ -143,6 +163,7 @@
     document.body.appendChild(panel);
 
     const $ = (sel) => panel.querySelector(sel);
+    const panelDiv = panel.firstChild;
 
     $('#toggleBtn').onclick = () => {
       settings.enabled = !settings.enabled;
@@ -172,7 +193,10 @@
 
     $('#reset').onclick = () => {
       Object.assign(settings, DEFAULT_SETTINGS);
-      ['#inv','#con','#bri','#sat'].forEach(id => $(id).value = settings[id.slice(1)]);
+      ['#inv','#con','#bri','#sat'].forEach(id => {
+        const key = id === '#inv' ? 'invert' : id === '#con' ? 'contrast' : id === '#bri' ? 'brightness' : 'saturate';
+        $(id).value = settings[key];
+      });
       $('#textShadow').checked = settings.textShadow;
       ['#invVal','#conVal','#briVal','#satVal'].forEach((id,i) =>
         $(id).textContent = [settings.invert,settings.contrast,settings.brightness,settings.saturate][i].toFixed(2)
@@ -185,22 +209,58 @@
 
     $('#hide').onclick = hideUIGlobally;
 
-    // Draggable
-    const header = panel.firstChild;
-    let drag = false, ox, oy;
-    header.onmousedown = (e) => {
-      if (e.target.closest('button,input,label')) return;
-      drag = true; ox = e.clientX - panel.offsetLeft; oy = e.clientY - panel.offsetTop;
-      e.preventDefault();
+    // Draggable (Mouse + Touch support for iOS)
+    const header = panelDiv;
+    let drag = false, ox = 0, oy = 0;
+
+    const startDrag = (clientX, clientY, target) => {
+      if (target.closest('button,input,label')) return false;
+      drag = true;
+      ox = clientX - panelDiv.offsetLeft;
+      oy = clientY - panelDiv.offsetTop;
+      return true;
     };
-    document.addEventListener('mousemove', e => {
+
+    const doDrag = (clientX, clientY) => {
       if (drag) {
-        panel.style.left = (e.clientX - ox) + 'px';
-        panel.style.top = (e.clientY - oy) + 'px';
-        panel.style.right = 'auto';
+        panelDiv.style.left = (clientX - ox) + 'px';
+        panelDiv.style.top = (clientY - oy) + 'px';
+        panelDiv.style.right = 'auto';
+      }
+    };
+
+    const endDrag = () => {
+      drag = false;
+    };
+
+    // Mouse events
+    header.addEventListener('mousedown', (e) => {
+      if (startDrag(e.clientX, e.clientY, e.target)) {
+        e.preventDefault();
       }
     });
-    document.addEventListener('mouseup', () => drag = false);
+    document.addEventListener('mousemove', (e) => doDrag(e.clientX, e.clientY));
+    document.addEventListener('mouseup', endDrag);
+
+    // Touch events for iOS
+    header.addEventListener('touchstart', (e) => {
+      if (e.target.closest('button,input,label')) return;
+      const touch = e.touches[0];
+      if (startDrag(touch.clientX, touch.clientY, e.target)) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchmove', (e) => {
+      if (drag && e.touches.length > 0) {
+        const touch = e.touches[0];
+        doDrag(touch.clientX, touch.clientY);
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchend', endDrag);
+    document.addEventListener('touchcancel', endDrag);
   }
 
   // ── Toggle Button ───────────────────────────────────────────────
@@ -214,8 +274,8 @@
       bottom: '12px',
       right: '12px',
       zIndex: '2147483640',
-      width: '36px',
-      height: '36px',
+      width: '44px',
+      height: '44px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -223,12 +283,19 @@
       color: '#ddd',
       borderRadius: '50%',
       cursor: 'pointer',
-      fontSize: '16px',
-      boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+      fontSize: '20px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
       userSelect: 'none',
+      WebkitUserSelect: 'none',
+      touchAction: 'manipulation',
+      WebkitTapHighlightColor: 'transparent',
     });
     btn.title = 'Open Dark Mode Tuner';
     btn.onclick = showUIGlobally;
+    btn.ontouchend = (e) => {
+      e.preventDefault();
+      showUIGlobally();
+    };
     document.body.appendChild(btn);
   }
 
@@ -243,12 +310,10 @@
   function hideUIGlobally() {
     hideUIElements();
     localStorage.setItem(UI_VISIBLE_KEY, 'false');
-    // Broadcast to other tabs
-    // (localStorage change triggers 'storage' event elsewhere)
   }
 
   function showUIGlobally() {
-    hideUIElements(); // remove toggle btn first
+    hideUIElements();
     localStorage.setItem(UI_VISIBLE_KEY, 'true');
     createPanel();
   }
@@ -264,15 +329,11 @@
   // ── Cross-Tab Sync via Storage Event ────────────────────────────
   window.addEventListener('storage', (e) => {
     if (e.key === UI_VISIBLE_KEY) {
-      // Another tab changed the UI visibility → sync immediately
-      const shouldBeVisible = e.newValue !== 'false';
+      const shouldBeVisible = e.newValue === 'true';
       if (shouldBeVisible) {
-        // Another tab requested UI → we open it *only if user interacts* (avoid intrusion)
-        // But we *do* clean up our own toggle button to stay consistent
         hideUIElements();
-        createToggleButton(); // let user choose to open
+        createToggleButton();
       } else {
-        // Another tab hid UI → we hide ours too
         hideUIElements();
       }
     }
@@ -282,11 +343,15 @@
   function exposeOpenUI() {
     const globalKey = '__openDarkTunerUI__';
     window[globalKey] = showUIGlobally;
-    window.addEventListener('beforeunload', () => { delete window[globalKey]; });
+    window.addEventListener('beforeunload', () => {
+      window[globalKey] = null;
+    });
   }
 
-  try {
-    exposeOpenUI();
+  // Register menu commands separately from exposeOpenUI
+  exposeOpenUI();
+
+  if (typeof GM_registerMenuCommand !== 'undefined') {
     GM_registerMenuCommand('🌓 Open Dark Tuner UI', showUIGlobally);
     GM_registerMenuCommand(
       `🌓 Dark Mode: ${settings.enabled ? 'Disable' : 'Enable'}`,
@@ -295,7 +360,7 @@
         saveSettings();
       }
     );
-  } catch (e) {
+  } else {
     console.warn('[Dark Tuner] GM_registerMenuCommand unavailable');
   }
 
@@ -305,8 +370,10 @@
 
     if (showUI) {
       createPanel();
+    } else {
+      // Show toggle button by default so users can access the UI
+      createToggleButton();
     }
-    // Don't create toggle button automatically
   });
 
 })();

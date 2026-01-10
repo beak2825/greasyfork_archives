@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn War Stuff Enhanced
 // @namespace    namespace
-// @version      1.7.3
+// @version      1.9
 // @description  Show travel status and hospital time and sort by hospital time on war page. Fork of https://greasyfork.org/en/scripts/448681-torn-war-stuff
 // @author       xentac
 // @license      MIT
@@ -115,14 +115,32 @@
 
   let running = true;
   let found_war = false;
+  let pageVisible = !document.hidden;
+
+  document.addEventListener("visibilitychange", () => {
+    pageVisible = !document.hidden;
+  });
+
+  let member_lists = document.querySelectorAll("ul.members-list");
+
+  const refresh_member_lists = () => {
+    member_lists = document.querySelectorAll("ul.members-list");
+  };
 
   function get_faction_ids() {
+    refresh_member_lists();
     const nodes = get_member_lists();
     const faction_ids = [];
     nodes.forEach((elem) => {
-      const id = elem
-        .querySelector(`A[href^='/factions.php']`)
-        .href.split("ID=")[1];
+      const q = elem.querySelector(`A[href^='/factions.php']`);
+      if (!q) {
+        return;
+      }
+      const s = q.href.split("ID=");
+      if (s.length <= 1) {
+        return;
+      }
+      const id = s[1];
       if (id) {
         faction_ids.push(id);
       }
@@ -131,7 +149,7 @@
   }
 
   function get_member_lists() {
-    return document.querySelectorAll("ul.members-list");
+    return member_lists;
   }
 
   function get_sorted_column(member_list) {
@@ -145,21 +163,21 @@
 
     let classname = "";
 
-    if (member_div.className.match(/activeIcon__/)) {
+    if (member_div && member_div.className.match(/activeIcon__/)) {
       column = "member";
       classname = member_div.className;
-    } else if (level_div.className.match(/activeIcon__/)) {
+    } else if (level_div && level_div.className.match(/activeIcon__/)) {
       column = "level";
       classname = level_div.className;
-    } else if (points_div.className.match(/activeIcon__/)) {
+    } else if (points_div && points_div.className.match(/activeIcon__/)) {
       column = "points";
       classname = points_div.className;
-    } else if (status_div.className.match(/activeIcon__/)) {
+    } else if (status_div && status_div.className.match(/activeIcon__/)) {
       column = "status";
       classname = status_div.className;
     }
 
-    if (classname.match(/asc__/)) {
+    if (classname && classname.match(/asc__/)) {
       order = "asc";
     } else {
       order = "desc";
@@ -171,27 +189,6 @@
 
     return { column: column, order: order };
   }
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node.classList && node.classList.contains("faction-war")) {
-          console.log(
-            "[TornWarStuffEnhanced] Observed mutation of .faction-war node",
-          );
-          found_war = true;
-          extract_all_member_lis();
-        }
-      }
-    }
-  });
-
-  setTimeout(() => {
-    if (document.querySelector(".faction-war")) {
-      console.log("[TornWarStuffEnhanced] Found .faction-war");
-      found_war = true;
-      extract_all_member_lis();
-    }
-  }, 500);
 
   function pad_with_zeros(n) {
     if (n < 10) {
@@ -200,28 +197,108 @@
     return n;
   }
 
-  const wrapper = document.body; //.querySelector('#mainContainer')
-  observer.observe(wrapper, { subtree: true, childList: true });
+  const document_observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (!node.querySelector) {
+          return;
+        }
+        const factwarlist = node.querySelector("#faction_war_list_id");
+        if (factwarlist) {
+          if (factwarlist.querySelector(".faction-war")) {
+            found_war = true;
+            extract_all_member_lis();
+            update_statuses();
+          }
+          console.log(
+            "[TornWarStuffEnhanced] Found #faction_war_list_id, adding descriptions observer",
+          );
+          descriptions_observer.observe(factwarlist, { childList: true });
+          document_observer.disconnect();
+          const descriptions = factwarlist.querySelector(".descriptions");
+          if (descriptions) {
+            console.log(
+              "[TornWarStuffEnhanced] .descriptions already exists, adding .faction-war observer",
+            );
+            faction_war_observer.observe(descriptions, {
+              childList: true,
+              subtree: true,
+            });
+          }
+          if (factwarlist.querySelector(".faction-war")) {
+            console.log("[TornWarStuffEnhanced] .faction-war already exists");
+            found_war = true;
+            extract_all_member_lis();
+            update_statuses();
+            faction_war_observer.disconnect();
+          }
+        }
+      }
+    }
+  });
+
+  document_observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+  });
+
+  const descriptions_observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.classList && node.classList.contains("descriptions")) {
+          console.log("[TornWarStuffEnhanced] .descriptions added to DOM");
+          faction_war_observer.observe(node, {
+            childList: true,
+            subtree: true,
+          });
+        }
+      }
+      for (const node of mutation.removedNodes) {
+        if (node.classList && node.classList.contains("descriptions")) {
+          console.log("[TornWarStuffEnhanced] .descriptions removed from DOM");
+          faction_war_observer.disconnect();
+        }
+      }
+    }
+  });
+
+  const faction_war_observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.classList && node.classList.contains("faction-war")) {
+          console.log(
+            "[TornWarStuffEnhanced] Observed mutation of .faction-war node",
+          );
+          found_war = true;
+          extract_all_member_lis();
+          update_statuses();
+          faction_war_observer.disconnect();
+        }
+      }
+    }
+  });
 
   const member_status = new Map();
   const member_lis = new Map();
 
   let last_request = null;
-  const MIN_TIME_SINCE_LAST_REQUEST = 9000;
+  const MIN_TIME_SINCE_LAST_REQUEST = 10000;
+
+  const description_cache = new Map();
 
   async function update_statuses() {
     if (!running) {
+      return;
+    }
+    const faction_ids = get_faction_ids();
+    // If the faction ids are not yet available, give up and let us request again next time
+    if (faction_ids.length == 0) {
       return;
     }
     if (
       last_request &&
       new Date() - last_request < MIN_TIME_SINCE_LAST_REQUEST
     ) {
-      return;
-    }
-    const faction_ids = get_faction_ids();
-    // If the faction ids are not yet available, give up and let us request again next time
-    if (faction_ids.length == 0) {
       return;
     }
     last_request = new Date();
@@ -273,18 +350,23 @@
       return false;
     }
     for (const [k, v] of Object.entries(status.members)) {
-      v.status.description = v.status.description
-        .replace("South Africa", "SA")
-        .replace("Cayman Islands", "CI")
-        .replace("United Kingdom", "UK")
-        .replace("Argentina", "Arg")
-        .replace("Switzerland", "Switz");
-      member_status.set(k, v);
+      let d_cache = description_cache.get(v.status.description);
+      if (!d_cache) {
+        d_cache = v.status.description
+          .replace("South Africa", "SA")
+          .replace("Cayman Islands", "CI")
+          .replace("United Kingdom", "UK")
+          .replace("Argentina", "Arg")
+          .replace("Switzerland", "Switz");
+      }
+      v.status.description = d_cache;
+      member_status.set(k, v.status);
     }
   }
 
   function extract_all_member_lis() {
     member_lis.clear();
+    refresh_member_lists();
     get_member_lists().forEach((ul) => {
       extract_member_lis(ul);
     });
@@ -298,39 +380,40 @@
         return;
       }
       const id = atag.href.split("ID=")[1];
-      member_lis.set(id, li);
+      member_lis.set(id, {
+        li: li,
+        div: li.querySelector("DIV.status"),
+      });
     });
   }
 
-  let last_frame = new Date();
   const TIME_BETWEEN_FRAMES = 500;
+  const deferredWrites = [];
 
   function watch() {
-    if (!found_war) {
-      requestAnimationFrame(watch);
-      return;
-    }
-    // Update no more frequently than every 500ms
-    if (new Date() - last_frame < TIME_BETWEEN_FRAMES) {
-      requestAnimationFrame(watch);
-      return;
-    }
-    last_frame = new Date();
-    member_lis.forEach((li, id) => {
-      const state = member_status.get(id);
-      const status_DIV = li.querySelector("DIV.status");
+    let dirtySort = false;
+    deferredWrites.length = 0;
+    member_lis.forEach((elem, id) => {
+      const li = elem.li;
+      if (!li) {
+        return;
+      }
+      const status = member_status.get(id);
+      const status_DIV = elem.div;
       if (!status_DIV) {
         return;
       }
-      if (!state || !running) {
+      if (!status || !running) {
         // Make sure the user sees something before we've downloaded state
-        status_DIV.setAttribute(CONTENT, status_DIV.innerText);
+        deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
         return;
       }
-      const status = state.status;
 
-      li.setAttribute("data-until", status.until);
-      li.setAttribute("data-location", "");
+      if (li.getAttribute("data-until") != status.until) {
+        deferredWrites.push([li, "data-until", status.until]);
+        dirtySort = true;
+      }
+      let data_location = "";
       switch (status.state) {
         case "Abroad":
         case "Traveling":
@@ -340,30 +423,42 @@
               status_DIV.classList.contains("abroad")
             )
           ) {
-            status_DIV.setAttribute(CONTENT, status_DIV.innerText);
+            deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
             break;
           }
           if (status.description.includes("Traveling to ")) {
-            li.setAttribute("data-sortA", "4");
+            if (li.getAttribute("data-sortA") != "4") {
+              deferredWrites.push([li, "data-sortA", "4"]);
+              dirtySort = true;
+            }
             const content = "► " + status.description.split("Traveling to ")[1];
-            li.setAttribute("data-location", content);
-            status_DIV.setAttribute(CONTENT, content);
+            data_location = content;
+            deferredWrites.push([status_DIV, CONTENT, content]);
           } else if (status.description.includes("In ")) {
-            li.setAttribute("data-sortA", "3");
+            if (li.getAttribute("data-sortA") != "3") {
+              deferredWrites.push([li, "data-sortA", "3"]);
+              dirtySort = true;
+            }
             const content = status.description.split("In ")[1];
-            li.setAttribute("data-location", content);
-            status_DIV.setAttribute(CONTENT, content);
+            data_location = content;
+            deferredWrites.push([status_DIV, CONTENT, content]);
           } else if (status.description.includes("Returning")) {
-            li.setAttribute("data-sortA", "2");
+            if (li.getAttribute("data-sortA") != "2") {
+              deferredWrites.push([li, "data-sortA", "2"]);
+              dirtySort = true;
+            }
             const content =
               "◄ " + status.description.split("Returning to Torn from ")[1];
-            li.setAttribute("data-location", content);
-            status_DIV.setAttribute(CONTENT, content);
+            data_location = content;
+            deferredWrites.push([status_DIV, CONTENT, content]);
           } else if (status.description.includes("Traveling")) {
-            li.setAttribute("data-sortA", "5");
+            if (li.getAttribute("data-sortA") != "5") {
+              deferredWrites.push([li, "data-sortA", "5"]);
+              dirtySort = true;
+            }
             const content = "Traveling";
-            li.setAttribute("data-location", content);
-            status_DIV.setAttribute(CONTENT, content);
+            data_location = content;
+            deferredWrites.push([status_DIV, CONTENT, content]);
           }
           break;
         case "Hospital":
@@ -374,16 +469,19 @@
               status_DIV.classList.contains("jail")
             )
           ) {
-            status_DIV.setAttribute(CONTENT, status_DIV.innerText);
-            status_DIV.setAttribute(TRAVELING, "false");
-            status_DIV.setAttribute(HIGHLIGHT, "false");
+            deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
+            deferredWrites.push([status_DIV, TRAVELING, "false"]);
+            deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
             break;
           }
-          li.setAttribute("data-sortA", "1");
+          if (li.getAttribute("data-sortA") != "1") {
+            deferredWrites.push([li, "data-sortA", "1"]);
+            dirtySort = true;
+          }
           if (status.description.includes("In a")) {
-            status_DIV.setAttribute(TRAVELING, "true");
+            deferredWrites.push([status_DIV, TRAVELING, "true"]);
           } else {
-            status_DIV.setAttribute(TRAVELING, "false");
+            deferredWrites.push([status_DIV, TRAVELING, "false"]);
           }
 
           let now = new Date().getTime() / 1000;
@@ -392,7 +490,7 @@
           }
           const hosp_time_remaining = Math.round(status.until - now);
           if (hosp_time_remaining <= 0) {
-            status_DIV.setAttribute(HIGHLIGHT, "false");
+            deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
             return;
           }
           const s = Math.floor(hosp_time_remaining % 60);
@@ -401,25 +499,36 @@
           const time_string = `${pad_with_zeros(h)}:${pad_with_zeros(m)}:${pad_with_zeros(s)}`;
 
           if (status_DIV.getAttribute(CONTENT) != time_string) {
-            status_DIV.setAttribute(CONTENT, time_string);
+            deferredWrites.push([status_DIV, CONTENT, time_string]);
           }
 
           if (hosp_time_remaining < 300) {
-            status_DIV.setAttribute(HIGHLIGHT, "true");
+            deferredWrites.push([status_DIV, HIGHLIGHT, "true"]);
           } else {
-            status_DIV.setAttribute(HIGHLIGHT, "false");
+            deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
           }
           break;
 
         default:
-          status_DIV.setAttribute(CONTENT, status_DIV.innerText);
-          li.setAttribute("data-sortA", "0");
-          status_DIV.setAttribute(TRAVELING, "false");
-          status_DIV.setAttribute(HIGHLIGHT, "false");
+          deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
+          if (li.getAttribute("data-sortA") != "0") {
+            deferredWrites.push([li, "data-sortA", "0"]);
+            dirtySort = true;
+          }
+          deferredWrites.push([status_DIV, TRAVELING, "false"]);
+          deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
           break;
       }
+      if (li.getAttribute("data-location") != data_location) {
+        deferredWrites.push([li, "data-location", data_location]);
+        dirtySort = true;
+      }
     });
-    if (sort_enemies) {
+    for (const [elem, attrib, value] of deferredWrites) {
+      elem.setAttribute(attrib, value);
+    }
+    deferredWrites.length = 0;
+    if (sort_enemies && dirtySort) {
       // Only sort if Status is the field to be sorted
       const nodes = get_member_lists();
       for (let i = 0; i < nodes.length; i++) {
@@ -430,7 +539,7 @@
         if (sorted_column["column"] != "status") {
           continue;
         }
-        let lis = nodes[i].querySelectorAll("LI.enemy, li.your");
+        let lis = nodes[i].childNodes;
         let sorted_lis = Array.from(lis).sort((a, b) => {
           let left = a;
           let right = b;
@@ -466,27 +575,33 @@
           }
         }
         if (!sorted) {
+          const fragment = document.createDocumentFragment();
           sorted_lis.forEach((li) => {
-            nodes[i].appendChild(li);
+            fragment.appendChild(li);
           });
+          nodes[i].appendChild(fragment);
         }
       }
     }
-    requestAnimationFrame(watch);
+    for (const [id, ref] of member_lis) {
+      if (!ref.li.isConnected) {
+        member_lis.delete(id);
+      }
+    }
   }
 
-  function settimeout_update_statuses() {
+  setInterval(() => {
+    if (!running || !found_war) return;
     update_statuses();
-    setTimeout(() => {
-      settimeout_update_statuses();
-    }, 1000);
-  }
-  settimeout_update_statuses();
+  }, MIN_TIME_SINCE_LAST_REQUEST);
 
-  // Start the dom watcher
-  setTimeout(() => {
-    requestAnimationFrame(watch);
-  }, 1000);
+  setInterval(() => {
+    if (!found_war || !running || !pageVisible) {
+      return;
+    }
+
+    watch();
+  }, TIME_BETWEEN_FRAMES);
 
   console.log("[TornWarStuffEnhanced] Initialized");
 

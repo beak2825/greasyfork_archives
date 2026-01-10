@@ -6,7 +6,7 @@
 // @name:it            Aggiornamento automatico della timeline di Twitter (X)
 // @name:zh-CN         自动刷新 Twitter (X) 时间轴
 // @namespace          https://gist.github.com/4lrick/bedb39b069be0e4c94dc20214137c9f5
-// @version            2.4
+// @version            2.5
 // @description        Automatically refreshes the Twitter (X) timeline every 5 seconds without refreshing the tab.
 // @description:fr     Actualise automatiquement la timeline Twitter (X) toutes les 5 secondes sans rafraîchir l'onglet.
 // @description:es     Refresca automáticamente el timeline de Twitter (X) cada 5 segundos sin refrescar la pestaña.
@@ -33,7 +33,7 @@
     let menuCommandId;
 
     function isAtTopOfPage() {
-        const tablist = document.querySelector('[role="tab"][href="/home"]');
+        const tablist = document.querySelector('[role="tablist"]');
         const timeline = document.querySelector('main [role="region"]');
 
         if (tablist && timeline) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RGT Repo Tweaks
 // @namespace    https://retrogametalk.com/
-// @version      0.2
+// @version      0.4
 // @description  Combina: menu By Genre (A–Z opcional) + filtro sempre visível com Genre, No Hacks e ajustes de header
 // @match        https://retrogametalk.com/*
 // @grant        none
@@ -25,45 +25,66 @@
         "action-rpg",
         "adventure",
         "arcade",
+        "baseball",
+        "basketball",
         "beat-em-up",
         "board-game",
         "bootleg",
+        "bowling",
         "boxing",
+        "card-battle",
         "card-game",
         "compilation",
+        "construction",
         "dating-sim",
+        "driving",
         "fighting",
         "first-person-shooter",
+        "flight-simulator",
+        "football",
+        "fmv",
+        "fishing",
+        "game-show",
         "golf",
         "hack",
         "hack-slash",
         "homebrew",
+        "indie",
         "interactive-movie",
         "light-gun",
+        "mini-games",
         "miscellaneous",
+        "music",
+        "otome",
         "party",
         "platformer-2d",
         "platformer-3d",
         "point-and-click",
         "puzzle",
         "racing",
+        "rail-shooter",
         "rhythm",
         "rpg",
         "run-and-gun",
         "shoot-em-up",
         "shooter",
         "simulation",
+        "skateboarding",
         "soccer",
         "sports",
         "stealth",
         "strategy",
+        "survival",
         "survival-horror",
         "tactical-rpg",
+        "tennis",
         "third-person-shooter",
         "vehicular-combat",
         "visual-novel",
-        "wrestling"
+        "wrestling",
+        "hockey"
     ];
+
 
     function prettify(slug) {
         return slug
@@ -101,14 +122,19 @@
         `;
 
         const rootSub = li.querySelector('.sub-menu');
+        const toggle = li.querySelector('.dropdown-toggle');
 
+        // Desktop: hover abre o submenu
         li.addEventListener('mouseenter', () => {
-    rootSub.scrollTop = 0;
-});
-
-        li.addEventListener('click', () => {
-    rootSub.scrollTop = 0;
-});
+            rootSub.scrollTop = 0;
+        });
+        // Desktop/Mobile: clique ou toque no botão toggle abre o submenu
+        toggle.addEventListener('click', (e) => {
+            // apenas quando abre o submenu, não ao clicar em item
+            setTimeout(() => {
+                rootSub.scrollTop = 0;
+            }, 10);
+        });
 
         if (GROUP_BY_LETTER) {
             // 🔠 AGRUPADO A–Z
@@ -128,7 +154,7 @@
                 const letterSub = letterLi.querySelector('.sub-menu');
 
                 letterSub.style.maxHeight = '60vh';
-letterSub.style.overflowY = 'auto';
+                letterSub.style.overflowY = 'auto';
 
                 grouped[letter].sort().forEach(genre => {
                     const gLi = document.createElement('li');
@@ -166,7 +192,7 @@ letterSub.style.overflowY = 'auto';
 
     document.readyState === 'loading'
         ? document.addEventListener('DOMContentLoaded', createMenu)
-        : createMenu();
+    : createMenu();
 })();
 
 
@@ -244,51 +270,73 @@ letterSub.style.overflowY = 'auto';
             </select>
 
             <!-- Genre Select -->
-            <select id="genre" name="genre" class="filter-dropdown">
-                <option value="">All Genres</option>
-                <option value="action">Action</option>
-                <option value="action-adventure">Action-Adventure</option>
-                <option value="action-rpg">Action-RPG</option>
-                <option value="adventure">Adventure</option>
-                <option value="arcade">Arcade</option>
-                <option value="beat-em-up">Beat-em-up</option>
-                <option value="board-game">Board Game</option>
-                <option value="bootleg">Bootleg</option>
-                <option value="boxing">Boxing</option>
-                <option value="card-game">Card Game</option>
-                <option value="compilation">Compilation</option>
-                <option value="dating-sim">Dating Sim</option>
-                <option value="fighting">Fighting</option>
-                <option value="first-person-shooter">First Person Shooter</option>
-                <option value="golf">Golf</option>
-                <option value="hack">Hack</option>
-                <option value="hack-slash">Hack & Slash</option>
-                <option value="homebrew">Homebrew</option>
-                <option value="interactive-movie">Interactive Movie</option>
-                <option value="light-gun">Light Gun</option>
-                <option value="miscellaneous">Miscellaneous</option>
-                <option value="platformer-2d">Platformer 2D</option>
-                <option value="platformer-3d">Platformer 3D</option>
-                <option value="point-and-click">Point & Click</option>
-                <option value="puzzle">Puzzle</option>
-                <option value="racing">Racing</option>
-                <option value="rhythm">Rhythm</option>
-                <option value="rpg">RPG</option>
-                <option value="run-and-gun">Run & Gun</option>
-                <option value="shoot-em-up">Shoot-em-up</option>
-                <option value="shooter">Shooter</option>
-                <option value="simulation">Simulation</option>
-                <option value="soccer">Soccer</option>
-                <option value="sports">Sports</option>
-                <option value="stealth">Stealth</option>
-                <option value="strategy">Strategy</option>
-                <option value="survival-horror">Survival Horror</option>
-                <option value="tactical-rpg">Tactical RPG</option>
-                <option value="third-person-shooter">Third Person Shooter</option>
-                <option value="vehicular-combat">Vehicular Combat</option>
-                <option value="visual-novel">Visual Novel</option>
-                <option value="wrestling">Wrestling</option>
-            </select>
+<select id="genre" name="genre" class="filter-dropdown">
+    <option value="">All Genres</option>
+    <option value="action">Action</option>
+    <option value="action-adventure">Action-Adventure</option>
+    <option value="action-rpg">Action-RPG</option>
+    <option value="adventure">Adventure</option>
+    <option value="arcade">Arcade</option>
+    <option value="baseball">Baseball</option>
+    <option value="basketball">Basketball</option>
+    <option value="beat-em-up">Beat 'Em Up</option>
+    <option value="board-game">Board Game</option>
+    <option value="bootleg">Bootleg</option>
+    <option value="bowling">Bowling</option>
+    <option value="boxing">Boxing</option>
+    <option value="card-battle">Card Battle</option>
+    <option value="card-game">Card Game</option>
+    <option value="compilation">Compilation</option>
+    <option value="construction">Construction</option>
+    <option value="dating-sim">Dating Sim</option>
+    <option value="driving">Driving</option>
+    <option value="fighting">Fighting</option>
+    <option value="first-person-shooter">First Person Shooter</option>
+    <option value="flight-simulator">Flight Simulator</option>
+    <option value="football">Football</option>
+    <option value="fmv">FMV</option>
+    <option value="fishing">Fishing</option>
+    <option value="gamblling">Gambling</option>
+    <option value="game-show">Game Show</option>
+    <option value="golf">Golf</option>
+    <option value="hack">Hack</option>
+    <option value="hack-slash">Hack & Slash</option>
+    <option value="homebrew">Homebrew</option>
+    <option value="indie">Indie</option>
+    <option value="interactive-movie">Interactive Movie</option>
+    <option value="light-gun">Light Gun</option>
+    <option value="mini-games">Mini Games</option>
+    <option value="miscellaneous">Miscellaneous</option>
+    <option value="music">Music</option>
+    <option value="otome">Otome</option>
+    <option value="party">Party</option>
+    <option value="platformer-2d">Platformer 2D</option>
+    <option value="platformer-3d">Platformer 3D</option>
+    <option value="point-and-click">Point & Click</option>
+    <option value="puzzle">Puzzle</option>
+    <option value="racing">Racing</option>
+    <option value="rail-shooter">Rail Shooter</option>
+    <option value="rhythm">Rhythm</option>
+    <option value="rpg">RPG</option>
+    <option value="run-and-gun">Run & Gun</option>
+    <option value="shoot-em-up">Shoot 'Em Up</option>
+    <option value="shooter">Shooter</option>
+    <option value="simulation">Simulation</option>
+    <option value="skateboarding">Skateboarding</option>
+    <option value="soccer">Soccer</option>
+    <option value="sports">Sports</option>
+    <option value="stealth">Stealth</option>
+    <option value="strategy">Strategy</option>
+    <option value="survival">Survival</option>
+    <option value="survival-horror">Survival Horror</option>
+    <option value="tactical-rpg">Tactical RPG</option>
+    <option value="tennis">Tennis</option>
+    <option value="third-person-shooter">Third Person Shooter</option>
+    <option value="vehicular-combat">Vehicular Combat</option>
+    <option value="visual-novel">Visual Novel</option>
+    <option value="wrestling">Wrestling</option>
+    <option value="hockey">Hockey</option>
+</select>
 
             <select id="language" name="language" class="filter-dropdown">
                 <option value="">All Languages</option>
@@ -328,7 +376,7 @@ letterSub.style.overflowY = 'auto';
         const searchbar = options?.querySelector('.searchbar');
         if (!options || !searchbar) return;
 
-                searchbar.style.width = '86%';
+        searchbar.style.width = '50%';
 
         options.style.textAlign = 'inherit';
 
@@ -342,17 +390,72 @@ letterSub.style.overflowY = 'auto';
             ensureGenreSelect(filterForm);
         }
 
+        // --- ADICIONAR O BOTÃO DE CLEAR FILTERS ---
+        if (!document.getElementById('clear-filters')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.id = 'clear-filters';
+            clearBtn.type = 'button';
+            clearBtn.className = 'button-icons';
+            clearBtn.textContent = '✖'; // você pode trocar por ícone se quiser
+            clearBtn.style.marginLeft = '0.5em'; // ajuste visual
+            clearBtn.style.fontSize = '1.3em';
+            clearBtn.style.height = '35px';
+            clearBtn.style.marginLeft = 7;
+            clearBtn.style.marginRight = 0;
+            clearBtn.title = 'Clear all filters';
+
+            // Seleciona o container que envolve searchbar e sort
+            const searchBarDiv = document.querySelector('.searchbar');
+            const sortDiv = document.querySelector('.sort');
+
+            if (searchBarDiv && sortDiv) {
+                // Insere o botão entre searchbar e sort
+                sortDiv.parentNode.insertBefore(clearBtn, sortDiv);
+
+                clearBtn.addEventListener('click', () => {
+                    filterForm.reset(); // reseta selects e checkbox
+                    const searchInput = document.querySelector('.searchbar input[name="s"]');
+                    if (searchInput) searchInput.value = '';
+                });
+            }
+        }
+
+        // --- BOTÃO RANDOM GAME ---
+if (!document.getElementById('random-game')) {
+    const randomBtn = document.createElement('button');
+    randomBtn.id = 'random-game';
+    randomBtn.type = 'button';
+    randomBtn.className = 'button-icons';
+    randomBtn.textContent = '🎲';
+    randomBtn.title = 'Random Game by filters';
+
+    randomBtn.style.fontSize = '1.3em';
+    randomBtn.style.height = '35px';
+    randomBtn.style.marginLeft = '0.4em';
+    randomBtn.style.marginRight = '0';
+
+    const sortDiv = document.querySelector('.sort');
+    const clearBtn = document.getElementById('clear-filters');
+
+    if (sortDiv && clearBtn) {
+        sortDiv.parentNode.insertBefore(randomBtn, sortDiv);
+    }
+
+    randomBtn.addEventListener('click', runRandomGame);
+}
+
+
         const desc = filterForm.querySelector('.home-loop-description');
         if (desc) desc.remove();
 
-        filterForm.style.width = '100%';
+        filterForm.style.width = '85%';
         filterForm.style.margin = '0';
 
         // Ajusta o padding do input search-field
-const searchInput = document.querySelector('.search-field');
-if (searchInput) {
-    searchInput.style.padding = '0.5em 0.4375em';
-}
+        const searchInput = document.querySelector('.search-field');
+        if (searchInput) {
+            searchInput.style.padding = '0.5em 0.4375em';
+        }
 
 
         ['platform', 'genre', 'language', 'region'].forEach(id => {
@@ -360,11 +463,11 @@ if (searchInput) {
             if (el) el.style.margin = '0';
         });
 
-            // **Aqui aplicamos a margem na label do checkbox de forma segura**
-    const noHacksLabel = filterForm.querySelector('input[name="nohacks"]')?.parentElement;
-    if (noHacksLabel) {
-        noHacksLabel.style.marginLeft = '0.15em';
-    }
+        // **Aqui aplicamos a margem na label do checkbox de forma segura**
+        const noHacksLabel = filterForm.querySelector('input[name="nohacks"]')?.parentElement;
+        if (noHacksLabel) {
+            noHacksLabel.style.marginLeft = '0.15em';
+        }
 
         disableNativeSubmit(filterForm);
 
@@ -373,8 +476,25 @@ if (searchInput) {
 
 
 
+    const sortForm = document.getElementById('sort-form');
+
+    if (sortForm) {
+        sortForm.addEventListener('change', function () {
+            const filterForm = document.querySelector('form#filter');
+            if (!filterForm) return;
+
+            // Recupera base e query (já inclui sorted)
+            const { base, query } = buildQuery(filterForm);
+
+            // Redireciona sem adicionar sorted de novo
+            const finalUrl = '/repo/' + base + (query ? '?' + query : '');
+            window.location.href = finalUrl;
+        });
+    }
+
+
     const style = document.createElement('style');
-style.textContent = `
+    style.textContent = `
 /* Botão X */
 .button-icons.x-follow-icon {
     margin: 0 !important;
@@ -434,7 +554,7 @@ padding: 0px 5px;
 }
 
 `;
-document.head.appendChild(style);
+    document.head.appendChild(style);
 
 
     function ensureGenreSelect(form) {
@@ -507,81 +627,331 @@ document.head.appendChild(style);
         form.addEventListener('submit', e => e.preventDefault());
     }
 
-     function removeExtraButtons() {
-         const buttons = document.querySelectorAll('.button-icons');
-         buttons.forEach(btn => btn.remove());
-     }
+    function removeExtraButtons() {
+        const buttons = document.querySelectorAll('.button-icons');
+        buttons.forEach(btn => btn.remove());
+    }
 
     // --- NOVO: Monta query e envia ao clicar no botão ---
-function buildQuery(form) {
-    const params = new URLSearchParams();
-    const selects = form.querySelectorAll('select');
-    selects.forEach(sel => {
-        if (sel.value) params.append(sel.name, sel.value);
-    });
-    const checkbox = form.querySelector('input[name="nohacks"]');
-    if (checkbox && checkbox.checked) params.append(checkbox.name, checkbox.value);
+    function buildQuery(form) {
+        const params = new URLSearchParams();
 
-    // ---- pega termo digitado na barra de busca ----
-const searchInput = document.querySelector('.searchbar input[name="s"]');
-const sValue = searchInput ? searchInput.value.trim() : '';
-params.append('s', sValue);
-    return params.toString();
-}
+        ['genre', 'language', 'region'].forEach(id => {
+            const el = form.querySelector(`#${id}`);
+            if (el && el.value) params.append(el.name, el.value);
+        });
+
+        const checkbox = form.querySelector('input[name="nohacks"]');
+        if (checkbox && checkbox.checked) params.append(checkbox.name, checkbox.value);
+
+        const searchInput = document.querySelector('.searchbar input[name="s"]');
+        const sValue = searchInput ? searchInput.value.trim() : '';
+        if (sValue) params.append('s', sValue);
+
+        // ⚡ Novo: adiciona sorted
+        const sortedInput = document.querySelector('input[name="sorted"]:checked') || document.querySelector('input[name="sorted"]');
+        if (sortedInput && sortedInput.value) params.append('sorted', sortedInput.value);
+
+        const platformSelect = form.querySelector('#platform');
+        const platformPath = platformSelect && platformSelect.value ? platformSelect.value + '/' : '';
+
+        return {
+            base: platformPath,
+            query: params.toString()
+        };
+    }
+
+
+
 
 
     function setupSearchButton() {
         const searchButton = document.querySelector('.searchbar button[type="submit"], .searchbar input[type="submit"]');
         const filterForm = document.querySelector('form#filter');
         if (!searchButton || !filterForm) return;
+
         searchButton.addEventListener('click', e => {
             e.preventDefault();
-            const query = buildQuery(filterForm);
-            const action = filterForm.action || '/repo/';
-            const url = action + (query ? '?' + query : '');
+            const { base, query } = buildQuery(filterForm);
+            const url = '/repo/' + base + (query ? '?' + query : '');
             window.location.href = url;
         });
     }
+
+
+
     // -------------------------------------------
 
-function moveHeaderButtons() {
-    const masthead = document.querySelector('#masthead.site-header');
-    if (!masthead) return;
+    function moveHeaderButtons() {
+        const masthead = document.querySelector('#masthead.site-header');
+        if (!masthead) return;
 
-    const headerMain = masthead.querySelector('.site-header-main');
-    if (!headerMain) return;
+        const headerMain = masthead.querySelector('.site-header-main');
+        if (!headerMain) return;
 
-    const buttons = document.querySelectorAll(
-        'button.button-icons[onclick="openKoFiLink()"], button.button-icons.x-follow-icon[onclick="openXFollow()"]'
-    );
+        const buttons = document.querySelectorAll(
+            'button.button-icons[onclick="openKoFiLink()"], button.button-icons.x-follow-icon[onclick="openXFollow()"]'
+        );
 
-    buttons.forEach(btn => {
-        if (btn.parentElement !== masthead) {
-            masthead.insertBefore(btn, headerMain.nextSibling);
+        buttons.forEach(btn => {
+            if (btn.parentElement !== masthead) {
+                masthead.insertBefore(btn, headerMain.nextSibling);
+            }
+        });
+    }
+
+    function moveDarkmode() {
+        const darkBtn = document.querySelector('#darkmode');
+        if (!darkBtn) return;
+
+        const menu = document.querySelector('#menu-main-menu.primary-menu');
+        if (!menu) return;
+
+        // evita duplicar / sumir
+        if (darkBtn.closest('#menu-main-menu')) return;
+
+        // cria <li> SEMÂNTICO igual ao WP
+        const li = document.createElement('li');
+        li.className = 'menu-item menu-item-type-custom darkmode-menu-item';
+
+        li.appendChild(darkBtn);
+        menu.appendChild(li);
+    }
+
+    function addPageInputWithButton() {
+        const nav = document.querySelector('nav.navigation.pagination .nav-links');
+        if (!nav || nav.querySelector('#page-input-go')) return; // evita duplicar
+
+        // Página atual
+        const match = window.location.pathname.match(/\/page\/(\d+)\//);
+        const currentPage = match ? parseInt(match[1]) : 1;
+
+        // Input
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'page-input-go';
+        input.value = currentPage;
+        input.placeholder = 'Page';
+        input.style.height = '1.8em'; // mesma altura do search
+        input.style.padding = '0.4em 0.6em';
+        input.style.marginLeft = '0.5em';
+        input.style.border = '1px solid #bd7435';
+        input.style.borderRadius = '3px';
+        input.style.fontSize = '1em';
+        input.style.verticalAlign = 'middle';
+        input.style.width = '60px';
+        input.style.textAlign = 'center';
+
+        // Botão Go
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'Go';
+        btn.style.height = '1.8em';
+        btn.style.padding = '0.4em 0.8em';
+        btn.style.marginLeft = '0.2em';
+        btn.style.border = '1px solid #bd7435';
+        btn.style.borderRadius = '3px';
+        btn.style.background = '#bd7435';
+        btn.style.cursor = 'pointer';
+        btn.style.fontSize = '1em';
+        btn.style.verticalAlign = 'middle';
+
+        function goToPage() {
+            let page = parseInt(input.value);
+            if (!page || page < 1) page = 1;
+
+            const platformSelect = document.querySelector('#platform');
+            const platformPath = platformSelect && platformSelect.value ? platformSelect.value + '/' : '';
+            const base = '/repo/' + platformPath;
+
+            const filterForm = document.querySelector('form#filter');
+            let url = base + 'page/' + page + '/';
+
+            if (filterForm) {
+                const { query } = buildQuery(filterForm);
+                if (query) url += '?' + query;
+            }
+
+            window.location.href = url;
+        }
+
+        btn.addEventListener('click', goToPage);
+        input.addEventListener('keypress', e => {
+            if (e.key === 'Enter') goToPage();
+        });
+
+        nav.appendChild(input);
+        nav.appendChild(btn);
+    }
+
+
+
+
+        /* =====================================================
+       1️⃣ MÉTODO PRINCIPAL (BOTÃO 🎲)
+       ===================================================== */
+    async function runRandomGame() {
+
+        /* ===============================
+           2️⃣ MÉTODOS AUXILIARES
+           =============================== */
+
+    function buildFetchUrl() {
+        const form = document.querySelector('form#filter');
+        if (!form) return null;
+
+        const params = new URLSearchParams();
+
+        ['genre', 'language', 'region'].forEach(id => {
+            const el = form.querySelector(`#${id}`);
+            if (el && el.value) params.append(el.name, el.value);
+        });
+
+        const nohacks = form.querySelector('input[name="nohacks"]');
+        if (nohacks && nohacks.checked) params.append('nohacks', 'true');
+
+        const searchInput = document.querySelector('.searchbar input[name="s"]');
+        if (searchInput && searchInput.value.trim()) {
+            params.append('s', searchInput.value.trim());
+        }
+
+        const sorted =
+            document.querySelector('input[name="sorted"]:checked') ||
+            document.querySelector('input[name="sorted"]');
+
+        if (sorted && sorted.value) params.append('sorted', sorted.value);
+
+        const platform = form.querySelector('#platform')?.value || '';
+
+        const basePath =
+            '/repo/' +
+            (platform ? platform + '/' : '');
+
+        return location.origin + basePath + (params.toString() ? '?' + params.toString() : '');
+    }
+
+    function parseHtml(html) {
+        return new DOMParser().parseFromString(html, 'text/html');
+    }
+
+    function extractGameUrls(doc) {
+        const urls = new Set();
+
+        doc.querySelectorAll('.game-container').forEach(container => {
+            const link =
+                container.querySelector('a.cover-link') ||
+                container.querySelector('.game-title')?.closest('a');
+
+            if (link?.href) urls.add(link.href);
+        });
+
+        return [...urls];
+    }
+
+function getTotalPages(doc) {
+    const nav = doc.querySelector('nav.navigation.pagination');
+    if (!nav) return 1;
+
+    let maxPage = 1;
+
+    nav.querySelectorAll('.page-numbers').forEach(el => {
+        const match = el.textContent.match(/\d+/);
+        if (match) {
+            const num = parseInt(match[0], 10);
+            if (num > maxPage) maxPage = num;
         }
     });
-}
 
-function moveDarkmode() {
-    const darkBtn = document.querySelector('#darkmode');
-    if (!darkBtn) return;
-
-    const menu = document.querySelector('#menu-main-menu.primary-menu');
-    if (!menu) return;
-
-    // evita duplicar / sumir
-    if (darkBtn.closest('#menu-main-menu')) return;
-
-    // cria <li> SEMÂNTICO igual ao WP
-    const li = document.createElement('li');
-    li.className = 'menu-item menu-item-type-custom darkmode-menu-item';
-
-    li.appendChild(darkBtn);
-    menu.appendChild(li);
+    return maxPage;
 }
 
 
+    function buildPageUrl(baseUrl, pageNumber) {
+        if (pageNumber === 1) return baseUrl;
 
+        const url = new URL(baseUrl);
+
+        // garante que o path termina com /
+        let path = url.pathname;
+        if (!path.endsWith('/')) path += '/';
+
+        path += `page/${pageNumber}/`;
+        url.pathname = path;
+
+        return url.toString();
+    }
+
+        /* ===============================
+           3️⃣ LÓGICA PRINCIPAL
+           =============================== */
+
+    const baseUrl = buildFetchUrl();
+    if (!baseUrl) return;
+
+    console.log('FIRST FETCH:', baseUrl);
+
+    const firstRes = await fetch(baseUrl, { credentials: 'same-origin' });
+    const firstHtml = await firstRes.text();
+    const firstDoc = parseHtml(firstHtml);
+
+    const totalPages = getTotalPages(firstDoc);
+    console.log('TOTAL PAGES:', totalPages);
+
+    let finalDoc = firstDoc;
+    let chosenPage = 1;
+
+    if (totalPages > 1) {
+        chosenPage = Math.floor(Math.random() * totalPages) + 1;
+
+        if (chosenPage !== 1) {
+            const pageUrl = buildPageUrl(baseUrl, chosenPage);
+            console.log('SECOND FETCH (RANDOM PAGE):', pageUrl);
+
+            const res = await fetch(pageUrl, { credentials: 'same-origin' });
+            const html = await res.text();
+            finalDoc = parseHtml(html);
+        }
+    }
+
+    const gameUrls = extractGameUrls(finalDoc);
+
+    console.log('CHOSEN PAGE:', chosenPage);
+    console.log('GAME URLS:', gameUrls);
+    console.log('TOTAL GAMES:', gameUrls.length);
+
+if (gameUrls.length > 0) {
+    const randomIndex = Math.floor(Math.random() * gameUrls.length);
+    let randomGame = gameUrls[randomIndex];
+
+    // 🔹 reaproveita os filtros usados no fetch
+    const baseQuery = new URL(baseUrl).search;
+
+    if (baseQuery) {
+        randomGame += (randomGame.includes('?') ? '&' : '?') + baseQuery.slice(1);
+    }
+
+    // 🔹 verifica se plataforma NÃO foi selecionada
+    const platformSelected =
+        document.querySelector('#platform')?.value || '';
+
+    if (!platformSelected) {
+        randomGame +=
+            (randomGame.includes('?') ? '&' : '?') +
+            'ignore_platform=true';
+    }
+
+    console.log('🎲 Random game WITH FILTERS:', randomGame);
+
+    window.location.href = randomGame;
+    return randomGame;
+}
+ else {
+    alert('No games found with the selected filters.');
+    console.warn('No games found with the selected filters.');
+    return null;
+}
+
+    }
     // Observa DOM
     const observer = new MutationObserver(() => {
         ensureFilter();
@@ -589,23 +959,75 @@ function moveDarkmode() {
         setupSearchButton();
         moveHeaderButtons();
         moveDarkmode();
+        addPageInputWithButton();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    function restoreGenreFromQuery() {
-    const params = new URLSearchParams(window.location.search);
-    const genre = params.get('genre');
-    if (genre) {
-        const genreSelect = document.querySelector('#genre');
-        if (genreSelect) genreSelect.value = genre;
+    function restoreFiltersFromQuery() {
+        const params = new URLSearchParams(window.location.search);
+        const ignorePlatform = params.get('ignore_platform') === 'true';
+
+    const platformSelect = document.querySelector('#platform');
+
+    if (platformSelect) {
+        if (ignorePlatform) {
+            platformSelect.value = '';
+        } else {
+            let platform = params.get('platform') || null;
+
+            if (!platform) {
+                const match = window.location.pathname.match(/^\/repo\/([^\/]+)(\/|$)/);
+                if (match && !match[1].startsWith('page')) {
+                    platform = match[1];
+                }
+            }
+
+            platformSelect.value = platform || '';
+        }
     }
-}
+
+        // Outros selects
+        ['genre', 'language', 'region'].forEach(id => {
+            const el = document.querySelector(`#${id}`);
+            if (el) el.value = params.get(id) || '';
+        });
+
+        // Checkbox No Hacks
+        const nohacks = document.querySelector('input[name="nohacks"]');
+        if (nohacks) nohacks.checked = params.get('nohacks') === 'true';
+
+        // Campo de busca
+        const searchInput = document.querySelector('.searchbar input[name="s"]');
+        if (searchInput) searchInput.value = params.get('s') || '';
+    }
+
+
+    function restoreSortFromQuery() {
+        const params = new URLSearchParams(window.location.search);
+        const sorted = params.get('sorted');
+        if (!sorted) return;
+
+        // Se for radio buttons
+        const radio = document.querySelector(`input[name="sorted"][value="${sorted}"]`);
+        if (radio) {
+            radio.checked = true;
+        }
+
+        // Se for um input hidden
+        const hidden = document.querySelector('input[name="sorted"]');
+        if (hidden) {
+            hidden.value = sorted;
+        }
+    }
+
+
 
     // Tentativa inicial
-ensureFilter();
-restoreGenreFromQuery();
-//removeExtraButtons();
-setupSearchButton();
+    ensureFilter();
+    restoreFiltersFromQuery();
+    //removeExtraButtons();
+    setupSearchButton();
     moveHeaderButtons();
     moveDarkmode();
+    //addPageInput();
 })();

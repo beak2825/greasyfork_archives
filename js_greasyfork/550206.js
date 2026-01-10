@@ -2,7 +2,7 @@
 // @name         Scroll to Anime Player
 // @name:en      Scroll to Anime Player
 // @namespace    animestars.org
-// @version      0.2
+// @version      0.3
 // @description  Быстрый переход к аниме-плееру с кнопкой 👁
 // @description:en  Quickly jump to the anime player with a 👁️ button️
 // @author       ThinkForge-core
@@ -14,6 +14,7 @@
 // @match        https://asstars.tv/*
 // @match        https://ass.astars.club/*
 // @match        https://as2.asstars.tv/*
+// @match        https://animesss.tv/*
 // @license      MIT
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/550206/Scroll%20to%20Anime%20Player.user.js

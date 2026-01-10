@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Harmony: Enhancements
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      1.20.1
+// @version      1.21.2
 // @tag          ai-created
 // @description  Adds some convenience features, various UI and behavior settings, as well as an improved language detection to Harmony.
 // @author       chaban
@@ -16,7 +16,7 @@
 // @updateURL https://update.greasyfork.org/scripts/544751/Harmony%3A%20Enhancements.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     const SCRIPT_NAME = GM_info.script.name;
@@ -113,7 +113,7 @@
             section: 'Convenience Features',
             type: 'checkbox',
             runAt: 'load',
-            paths: [/^\/$/,/^\/release(?!\/actions)/],
+            paths: [/^\/$/, /^\/release(?!\/actions)/],
         },
         addActionsRelookupLink: {
             key: 'enhancements.ui.actionsRelookup',
@@ -256,7 +256,7 @@
             key: 'enhancements.lang.techTerms',
             label: 'Technical Terms (one per line, regex supported)',
             description: 'Terms that are not specific to any language (like "remix" or "live") will be removed from titles before analysis.',
-            defaultValue: ['live', 'remix(es)?', 'edit(ion)?', 'medley', 'mix', 'version(s)?', 'instrumental', 'album', 'radio', 'single', 'vocal', 'dub', 'club', 'extended', 'original', 'acoustic', 'unplugged', 'mono', 'stereo', 'demo', 'remaster(ed)?', 'f(ea)?t\\.?', 'spee?d up', 'slowed', 'chopped', 'screwed', '8d'],
+            defaultValue: ['live', '(re)?mix(es)?', 'edit(ion)?', 'medley', 'version(s)?', 'instrumental', 'album', 'radio', 'single', 'vocal', 'dub', 'club', 'extended', 'original', 'acoustic', 'unplugged', 'mono', 'stereo', 'demo', '(re)?master(ed)?', 'f(ea)?t\\.?', 'spee?d up', 'slow(ed)?', 'chopped', 'screwed', '8d', 'fast'],
             section: 'Language Detection',
             type: 'textarea',
         },
@@ -419,7 +419,7 @@
         },
     };
 
-    const ISO_639_1_TO_3_MAP = {'aa':'aar','ab':'abk','ae':'ave','af':'afr','ak':'aka','am':'amh','an':'arg','ar':'ara','as':'asm','av':'ava','ay':'aym','az':'aze','ba':'bak','be':'bel','bg':'bul','bi':'bis','bm':'bam','bn':'ben','bo':'bod','br':'bre','bs':'bos','ca':'cat','ce':'che','ch':'cha','co':'cos','cr':'cre','cs':'ces','cu':'chu','cv':'chv','cy':'cym','da':'dan','de':'deu','dv':'div','dz':'dzo','ee':'ewe','el':'ell','en':'eng','eo':'epo','es':'spa','et':'est','eu':'eus','fa':'fas','ff':'ful','fi':'fin','fj':'fij','fo':'fao','fr':'fra','fy':'fry','ga':'gle','gd':'gla','gl':'glg','gn':'grn','gu':'guj','gv':'glv','ha':'hau','he':'heb','hi':'hin','ho':'hmo','hr':'hrv','ht':'hat','hu':'hun','hy':'hye','hz':'her','ia':'ina','id':'ind','ie':'ile','ig':'ibo','ii':'iii','ik':'ipk','io':'ido','is':'isl','it':'ita','iu':'iku','ja':'jpn','jv':'jav','ka':'kat','kg':'kon','ki':'kik','kj':'kua','kk':'kaz','kl':'kal','km':'khm','kn':'kan','ko':'kor','kr':'kau','ks':'kas','ku':'kur','kv':'kom','kw':'cor','ky':'kir','la':'lat','lb':'ltz','lg':'lug','li':'lim','ln':'lin','lo':'lao','lt':'lit','lu':'lub','lv':'lav','mg':'mlg','mh':'mah','mi':'mri','mk':'mkd','ml':'mal','mn':'mon','mr':'mar','ms':'msa','mt':'mlt','my':'mya','na':'nau','nb':'nob','nd':'nde','ne':'nep','ng':'ndo','nl':'nld','nn':'nno','no':'nor','nr':'nbl','nv':'nav','ny':'nya','oc':'oci','oj':'oji','om':'orm','or':'ori','os':'oss','pa':'pan','pi':'pli','pl':'pol','ps':'pus','pt':'por','qu':'que','rm':'roh','rn':'run','ro':'ron','ru':'rus','rw':'kin','sa':'san','sc':'srd','sd':'snd','se':'sme','sg':'sag','si':'sin','sk':'slv','sl':'slv','sm':'smo','sn':'sna','so':'som','sq':'sqi','sr':'srp','ss':'ssw','st':'sot','su':'sun','sv':'swe','sw':'swa','ta':'tam','te':'tel','tg':'tgk','th':'tha','ti':'tir','tk':'tuk','tl':'tgl','tn':'tsn','to':'ton','tr':'tur','ts':'tso','tt':'tat','tw':'twi','ty':'tah','ug':'uig','uk':'ukr','ur':'urd','uz':'uzb','ve':'ven','vi':'vie','vo':'vol','wa':'wln','wo':'wol','xh':'xho','yi':'yid','yo':'yor','za':'zha','zh':'zho','zu':'zul'};
+    const ISO_639_1_TO_3_MAP = { 'aa': 'aar', 'ab': 'abk', 'ae': 'ave', 'af': 'afr', 'ak': 'aka', 'am': 'amh', 'an': 'arg', 'ar': 'ara', 'as': 'asm', 'av': 'ava', 'ay': 'aym', 'az': 'aze', 'ba': 'bak', 'be': 'bel', 'bg': 'bul', 'bi': 'bis', 'bm': 'bam', 'bn': 'ben', 'bo': 'bod', 'br': 'bre', 'bs': 'bos', 'ca': 'cat', 'ce': 'che', 'ch': 'cha', 'co': 'cos', 'cr': 'cre', 'cs': 'ces', 'cu': 'chu', 'cv': 'chv', 'cy': 'cym', 'da': 'dan', 'de': 'deu', 'dv': 'div', 'dz': 'dzo', 'ee': 'ewe', 'el': 'ell', 'en': 'eng', 'eo': 'epo', 'es': 'spa', 'et': 'est', 'eu': 'eus', 'fa': 'fas', 'ff': 'ful', 'fi': 'fin', 'fj': 'fij', 'fo': 'fao', 'fr': 'fra', 'fy': 'fry', 'ga': 'gle', 'gd': 'gla', 'gl': 'glg', 'gn': 'grn', 'gu': 'guj', 'gv': 'glv', 'ha': 'hau', 'he': 'heb', 'hi': 'hin', 'ho': 'hmo', 'hr': 'hrv', 'ht': 'hat', 'hu': 'hun', 'hy': 'hye', 'hz': 'her', 'ia': 'ina', 'id': 'ind', 'ie': 'ile', 'ig': 'ibo', 'ii': 'iii', 'ik': 'ipk', 'io': 'ido', 'is': 'isl', 'it': 'ita', 'iu': 'iku', 'ja': 'jpn', 'jv': 'jav', 'ka': 'kat', 'kg': 'kon', 'ki': 'kik', 'kj': 'kua', 'kk': 'kaz', 'kl': 'kal', 'km': 'khm', 'kn': 'kan', 'ko': 'kor', 'kr': 'kau', 'ks': 'kas', 'ku': 'kur', 'kv': 'kom', 'kw': 'cor', 'ky': 'kir', 'la': 'lat', 'lb': 'ltz', 'lg': 'lug', 'li': 'lim', 'ln': 'lin', 'lo': 'lao', 'lt': 'lit', 'lu': 'lub', 'lv': 'lav', 'mg': 'mlg', 'mh': 'mah', 'mi': 'mri', 'mk': 'mkd', 'ml': 'mal', 'mn': 'mon', 'mr': 'mar', 'ms': 'msa', 'mt': 'mlt', 'my': 'mya', 'na': 'nau', 'nb': 'nob', 'nd': 'nde', 'ne': 'nep', 'ng': 'ndo', 'nl': 'nld', 'nn': 'nno', 'no': 'nor', 'nr': 'nbl', 'nv': 'nav', 'ny': 'nya', 'oc': 'oci', 'oj': 'oji', 'om': 'orm', 'or': 'ori', 'os': 'oss', 'pa': 'pan', 'pi': 'pli', 'pl': 'pol', 'ps': 'pus', 'pt': 'por', 'qu': 'que', 'rm': 'roh', 'rn': 'run', 'ro': 'ron', 'ru': 'rus', 'rw': 'kin', 'sa': 'san', 'sc': 'srd', 'sd': 'snd', 'se': 'sme', 'sg': 'sag', 'si': 'sin', 'sk': 'slv', 'sl': 'slv', 'sm': 'smo', 'sn': 'sna', 'so': 'som', 'sq': 'sqi', 'sr': 'srp', 'ss': 'ssw', 'st': 'sot', 'su': 'sun', 'sv': 'swe', 'sw': 'swa', 'ta': 'tam', 'te': 'tel', 'tg': 'tgk', 'th': 'tha', 'ti': 'tir', 'tk': 'tuk', 'tl': 'tgl', 'tn': 'tsn', 'to': 'ton', 'tr': 'tur', 'ts': 'tso', 'tt': 'tat', 'tw': 'twi', 'ty': 'tah', 'ug': 'uig', 'uk': 'ukr', 'ur': 'urd', 'uz': 'uzb', 've': 'ven', 'vi': 'vie', 'vo': 'vol', 'wa': 'wln', 'wo': 'wol', 'xh': 'xho', 'yi': 'yid', 'yo': 'yor', 'za': 'zha', 'zh': 'zho', 'zu': 'zul' };
     const getISO639_3_Code = (code) => ISO_639_1_TO_3_MAP[code] || null;
 
     const AppState = {
@@ -906,11 +906,11 @@
         if (!main || main.querySelector('.he-settings-container')) return;
 
         const sections = Object.values(SETTINGS_CONFIG)
-        .filter(config => config.section) // Filter out internal settings
-        .reduce((acc, config) => {
-            (acc[config.section] = acc[config.section] || []).push(config);
-            return acc;
-        }, {});
+            .filter(config => config.section) // Filter out internal settings
+            .reduce((acc, config) => {
+                (acc[config.section] = acc[config.section] || []).push(config);
+                return acc;
+            }, {});
 
         const container = document.createElement('div');
         container.className = 'he-settings-container';
@@ -972,83 +972,83 @@
 
                 switch (config.type) {
                     case 'radio':
-                    wrap.classList.add('he-setting-row-column');
-                    const fieldset = document.createElement('div');
-                    fieldset.className = 'he-radio-group';
-                    config.options.forEach(option => {
-                        const radioWrap = document.createElement('div');
-                        const radioInput = document.createElement('input');
-                        radioInput.type = 'radio';
-                        radioInput.name = config.key;
-                        radioInput.value = option.value;
-                        radioInput.id = `${config.key}-${option.value}`;
-                        radioInput.checked = AppState.settings[config.key] === option.value;
-                        const radioLabel = document.createElement('label');
-                        radioLabel.htmlFor = radioInput.id;
-                        radioLabel.textContent = option.label;
-                        const radioContentWrap = document.createElement('div');
-                        radioContentWrap.className = 'he-radio-content';
-                        radioContentWrap.append(radioLabel);
-                        if (option.description) {
-                            const desc = document.createElement('small');
-                            desc.className = 'he-setting-description';
-                            desc.innerHTML = option.description;
-                            radioContentWrap.append(desc);
-                        }
-                        radioWrap.append(radioInput, radioContentWrap);
-                        fieldset.append(radioWrap);
-                    });
-                    input = fieldset; // Use the fieldset for event handling
-                    wrap.append(textContainer, fieldset);
-                    break;
+                        wrap.classList.add('he-setting-row-column');
+                        const fieldset = document.createElement('div');
+                        fieldset.className = 'he-radio-group';
+                        config.options.forEach(option => {
+                            const radioWrap = document.createElement('div');
+                            const radioInput = document.createElement('input');
+                            radioInput.type = 'radio';
+                            radioInput.name = config.key;
+                            radioInput.value = option.value;
+                            radioInput.id = `${config.key}-${option.value}`;
+                            radioInput.checked = AppState.settings[config.key] === option.value;
+                            const radioLabel = document.createElement('label');
+                            radioLabel.htmlFor = radioInput.id;
+                            radioLabel.textContent = option.label;
+                            const radioContentWrap = document.createElement('div');
+                            radioContentWrap.className = 'he-radio-content';
+                            radioContentWrap.append(radioLabel);
+                            if (option.description) {
+                                const desc = document.createElement('small');
+                                desc.className = 'he-setting-description';
+                                desc.innerHTML = option.description;
+                                radioContentWrap.append(desc);
+                            }
+                            radioWrap.append(radioInput, radioContentWrap);
+                            fieldset.append(radioWrap);
+                        });
+                        input = fieldset; // Use the fieldset for event handling
+                        wrap.append(textContainer, fieldset);
+                        break;
                     case 'checkbox':
-                    input = document.createElement('input');
-                    input.type = 'checkbox';
-                    input.checked = AppState.settings[config.key];
-                    input.className = 'he-checkbox';
-                    wrap.append(input, textContainer);
-                    break;
+                        input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.checked = AppState.settings[config.key];
+                        input.className = 'he-checkbox';
+                        wrap.append(input, textContainer);
+                        break;
                     case 'range':
-                    wrap.classList.add('he-setting-row-column');
-                    input = document.createElement('input');
-                    input.type = 'range';
-                    input.min = 0;
-                    input.max = 100;
-                    input.value = AppState.settings[config.key];
-                    const val = document.createElement('span');
-                    val.textContent = ` ${AppState.settings[config.key]}%`;
-                    input.addEventListener('input', () => val.textContent = ` ${input.value}%`);
-                    const rangeWrap = document.createElement('div');
-                    rangeWrap.className = 'he-range-wrap';
-                    rangeWrap.append(input, val);
-                    wrap.append(textContainer, rangeWrap);
-                    break;
+                        wrap.classList.add('he-setting-row-column');
+                        input = document.createElement('input');
+                        input.type = 'range';
+                        input.min = 0;
+                        input.max = 100;
+                        input.value = AppState.settings[config.key];
+                        const val = document.createElement('span');
+                        val.textContent = ` ${AppState.settings[config.key]}%`;
+                        input.addEventListener('input', () => val.textContent = ` ${input.value}%`);
+                        const rangeWrap = document.createElement('div');
+                        rangeWrap.className = 'he-range-wrap';
+                        rangeWrap.append(input, val);
+                        wrap.append(textContainer, rangeWrap);
+                        break;
                     case 'textarea':
-                    wrap.classList.add('he-setting-row-column');
-                    const areaContainer = document.createElement('div');
-                    input = document.createElement('textarea');
-                    input.rows = 5;
-                    input.value = Array.isArray(AppState.settings[config.key]) ? AppState.settings[config.key].join('\n') : '';
-                    input.className = 'he-textarea';
-                    input.spellcheck = false;
-                    areaContainer.appendChild(input);
-                    if (config.tidy) {
-                        const tidyBtn = document.createElement('button');
-                        tidyBtn.textContent = 'Tidy & Sort';
-                        tidyBtn.className = 'he-tidy-button';
-                        tidyBtn.title = 'Sorts alphabetically and removes duplicates/invalid lines.';
-                        tidyBtn.onclick = (e) => {
-                            e.preventDefault();
-                            const currentVal = input.value;
-                            const cleanedVal = config.tidy(currentVal);
-                            input.value = cleanedVal;
-                            input.dispatchEvent(new Event('change'));
-                            showTooltip('List tidied and saved!', 'success', e);
-                        };
-                        lbl.after(tidyBtn);
-                    }
-                    wrap.append(textContainer, areaContainer);
-                    break;
+                        wrap.classList.add('he-setting-row-column');
+                        const areaContainer = document.createElement('div');
+                        input = document.createElement('textarea');
+                        input.rows = 5;
+                        input.value = Array.isArray(AppState.settings[config.key]) ? AppState.settings[config.key].join('\n') : '';
+                        input.className = 'he-textarea';
+                        input.spellcheck = false;
+                        areaContainer.appendChild(input);
+                        if (config.tidy) {
+                            const tidyBtn = document.createElement('button');
+                            tidyBtn.textContent = 'Tidy & Sort';
+                            tidyBtn.className = 'he-tidy-button';
+                            tidyBtn.title = 'Sorts alphabetically and removes duplicates/invalid lines.';
+                            tidyBtn.onclick = (e) => {
+                                e.preventDefault();
+                                const currentVal = input.value;
+                                const cleanedVal = config.tidy(currentVal);
+                                input.value = cleanedVal;
+                                input.dispatchEvent(new Event('change'));
+                                showTooltip('List tidied and saved!', 'success', e);
+                            };
+                            lbl.after(tidyBtn);
+                        }
+                        wrap.append(textContainer, areaContainer);
+                        break;
                 }
 
                 if (input) {
@@ -1084,7 +1084,7 @@
             if (name === 'Language Detection') {
                 const modeControl = sectionInputs[SETTINGS_CONFIG.languageDetectionMode.key];
                 const dependentInputs = Object.values(sectionInputs)
-                .filter(input => input !== modeControl);
+                    .filter(input => input !== modeControl);
                 const toggleDependentInputs = () => {
                     const modeConfig = SETTINGS_CONFIG.languageDetectionMode;
                     const checkedRadio = container.querySelector(`input[name="${modeConfig.key}"]:checked`);
@@ -1108,7 +1108,7 @@
     async function resetLanguageSettings() {
         const langConfigs = Object.values(SETTINGS_CONFIG).filter(c => c.section === 'Language Detection');
         for (const config of langConfigs) {
-            await GM_setValue(config.key, config.defaultValue);
+            await GM_deleteValue(config.key);
             const input = document.getElementById(config.key);
             if (!input) continue;
 
@@ -1122,15 +1122,15 @@
                     break;
                 }
                 case 'checkbox':
-                input.checked = config.defaultValue;
-                break;
+                    input.checked = config.defaultValue;
+                    break;
                 case 'range':
-                input.value = config.defaultValue;
-                input.nextElementSibling.textContent = ` ${config.defaultValue}%`;
-                break;
+                    input.value = config.defaultValue;
+                    input.nextElementSibling.textContent = ` ${config.defaultValue}%`;
+                    break;
                 case 'textarea':
-                input.value = config.defaultValue.join('\n');
-                break;
+                    input.value = config.defaultValue.join('\n');
+                    break;
             }
 
         }
@@ -1344,12 +1344,12 @@
             const currentRegion = regionInput ? regionInput.value.toLowerCase() : '';
             const defaultQbzRegion = 'us-en';
             const regionMap = new Map([
-                ['ar','ar-es'], ['au','au-en'], ['at','at-de'], ['be','be-nl'], ['br','br-pt'],
-                ['ca','ca-en'], ['cl','cl-es'], ['co','co-es'], ['dk','dk-en'], ['fi','fi-en'],
-                ['fr','fr-fr'], ['de','de-de'], ['ie','ie-en'], ['it','it-it'], ['jp','jp-ja'],
-                ['lu','lu-de'], ['mx','mx-es'], ['nl','nl-nl'], ['nz','nz-en'], ['no','no-en'],
-                ['pt','pt-pt'], ['es','es-es'], ['se','se-en'], ['ch','ch-de'], ['gb','gb-en'],
-                ['us','us-en'],
+                ['ar', 'ar-es'], ['au', 'au-en'], ['at', 'at-de'], ['be', 'be-nl'], ['br', 'br-pt'],
+                ['ca', 'ca-en'], ['cl', 'cl-es'], ['co', 'co-es'], ['dk', 'dk-en'], ['fi', 'fi-en'],
+                ['fr', 'fr-fr'], ['de', 'de-de'], ['ie', 'ie-en'], ['it', 'it-it'], ['jp', 'jp-ja'],
+                ['lu', 'lu-de'], ['mx', 'mx-es'], ['nl', 'nl-nl'], ['nz', 'nz-en'], ['no', 'no-en'],
+                ['pt', 'pt-pt'], ['es', 'es-es'], ['se', 'se-en'], ['ch', 'ch-de'], ['gb', 'gb-en'],
+                ['us', 'us-en'],
             ]);
 
             const regionKey = currentRegion.split(',').map(code => code.trim()).find(code => regionMap.has(code));
@@ -1673,7 +1673,7 @@
                     if (textNode) {
                         textNode.textContent = detectedType;
                         cell.insertBefore(document.createTextNode(' '), altValuesList);
-                        cell.insertBefore(UI_UTILS.createIndicatorSpan('overwritten', originalType, {tooltipPrefix: "Harmony's original guess:"}), altValuesList);
+                        cell.insertBefore(UI_UTILS.createIndicatorSpan('overwritten', originalType, { tooltipPrefix: "Harmony's original guess:" }), altValuesList);
                     }
                 }
 
@@ -1782,7 +1782,7 @@
                         modifications.push(`Track ${track.number}: "${trackTitleCorrection.original}" -> "${trackTitleCorrection.new}"`);
 
                         const trackCell = Array.from(tracklistTitleCells)
-                        .find(cell => cell.textContent.includes(trackTitleCorrection.original));
+                            .find(cell => cell.textContent.includes(trackTitleCorrection.original));
                         if (trackCell) {
                             const titleTextNode = findTextNode(trackCell, trackTitleCorrection.original);
                             if (titleTextNode) {
@@ -1807,18 +1807,45 @@
             }
 
             const originalLabel = { ...releaseData.labels[0] };
-            const labelName = originalLabel.name.trim().toLowerCase();
+            const labelName = originalLabel.name.trim();
 
-            // Condition 1: Check if the full artist string matches the label.
-            const fullArtistString = formatArtistString(releaseData.artists).trim().toLowerCase();
-            const isFullMatch = fullArtistString === labelName;
+            if (!labelName || originalLabel.mbid) return;
 
-            // Condition 2: Check if any individual artist name matches the label.
-            const individualArtistNames = new Set(releaseData.artists.map(artist => artist.name.trim().toLowerCase()));
-            const isPartialMatch = individualArtistNames.has(labelName);
+            // 1. Gather all artist names (Release Artists + Track Artists)
+            const allArtists = [
+                ...releaseData.artists,
+                ...(releaseData.media || []).flatMap(m =>
+                    (m.tracklist || []).flatMap(t => t.artists || [])
+                )
+            ];
 
-            // If either condition is true (and the label isn't already identified by an MBID), it's a self-release.
-            if ((isFullMatch || isPartialMatch) && !originalLabel.mbid) {
+            // 2. Extract unique names and sort by length (descending)
+            const uniqueArtistNames = new Set();
+            allArtists.forEach(artist => {
+                if (artist && artist.name) {
+                    uniqueArtistNames.add(artist.name.trim());
+                }
+            });
+
+            const sortedArtists = Array.from(uniqueArtistNames)
+                .sort((a, b) => b.length - a.length);
+
+            let remainingLabel = labelName;
+
+            // 3. Iteratively remove artist names
+            for (const artistName of sortedArtists) {
+                // Escape regex special characters in artist name
+                const escapedName = artistName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                // Case-insensitive replacement
+                const regex = new RegExp(escapedName, 'i');
+                remainingLabel = remainingLabel.replace(regex, '');
+            }
+
+            // 3. Check if what's left is only separators/whitespace
+            const SEPARATORS_REGEX = /^(?:x|&|,|\/|-|\+|feat\.|ft\.|pres\.|presents|vs\.|vs|\s)+$/i;
+            const isSelfRelease = remainingLabel.length === 0 || SEPARATORS_REGEX.test(remainingLabel);
+
+            if (isSelfRelease && !originalLabel.mbid) {
                 AppState.data.release.labels[0] = { ...originalLabel, ...NO_LABEL };
 
                 const { mainLabelList } = AppState.dom;
@@ -2297,8 +2324,10 @@
         GM_addStyle(css);
     }
 
-    async function migrateLanguageSettings() {
+    async function runSettingsCleanup() {
         const settings = AppState.settings;
+
+        // 1. Language Settings Migration (Legacy)
         const modeKey = SETTINGS_CONFIG.languageDetectionMode.key;
         const oldEnabledKey = 'enhancements.lang.enabled';
         const oldDisableKey = 'enhancements.lang.disableDetection';
@@ -2322,11 +2351,49 @@
             await GM_deleteValue(oldDisableKey);
             await GM_deleteValue(`${oldEnabledKey}.backup`);
         }
+
+        // 2. Cleanup List Defaults
+        const cleanupLists = [SETTINGS_CONFIG.techTerms, SETTINGS_CONFIG.stopWords];
+
+        const areSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
+
+        for (const config of cleanupLists) {
+            // Use a unique symbol to detect if the key is missing/unset
+            const UNSET = 'HE_UNSET_' + Math.random();
+            const storedValue = await GM_getValue(config.key, UNSET);
+
+            if (storedValue !== UNSET && Array.isArray(storedValue)) {
+                const storedSet = new Set(storedValue);
+                const defaultSet = new Set(config.defaultValue);
+
+                let shouldDelete = false;
+
+                // Check 1: Matches current default (e.g. fast/slow included)
+                // This covers cases where user saved "no effective change"
+                if (areSetsEqual(storedSet, defaultSet)) {
+                    shouldDelete = true;
+                }
+
+                // Check 2: Matches OLD default (for techTerms only)
+                // This covers users who have the old default "forked" in storage
+                if (!shouldDelete && config.key === SETTINGS_CONFIG.techTerms.key) {
+                    const oldDefaultSet = new Set(config.defaultValue.filter(x => !['fast', 'slow'].includes(x)));
+                    if (areSetsEqual(storedSet, oldDefaultSet)) {
+                        shouldDelete = true;
+                    }
+                }
+
+                if (shouldDelete) {
+                    await GM_deleteValue(config.key);
+                    log(`Cleanup: Reset ${config.key} to default (stored value matched default).`);
+                }
+            }
+        }
     }
 
     async function main() {
         AppState.settings = await getSettings();
-        await migrateLanguageSettings();
+        await runSettingsCleanup();
         await DebugModule.init();
 
         const { path } = AppState;

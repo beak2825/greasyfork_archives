@@ -2,7 +2,7 @@
 // @name           BasicLib
 // @description    This script contains some simple basic-functions.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.0.6
+// @version        1.0.7
 // @author         Cyrano68
 // @license        MIT
 // @grant          none
@@ -17,7 +17,7 @@
     let showLogToScreen = false;
     let maxNumScreenLogs = 200;
 
-    const myVersion = "1.0.6";  // It must be the same value indicated in @version.
+    const myVersion = "1.0.7";  // It must be the same value indicated in @version.
     consoleLog(`CY==> BasicLib: HELLO! Loading script (version: ${myVersion})...`);
 
     function getZeroFilledMillisecs(dateNow)
@@ -220,14 +220,10 @@
         return false;
     }
 
-    function setShowLogToScreen(showLogToScreenIn)
+    function setShowLogToScreen(showLogToScreenIn, maxNumScreenLogsIn)
     {
-        showLogToScreen = showLogToScreenIn;
-    }
-
-    function setMaxNumScreenLogs(maxNumScreenLogsIn)
-    {
-        maxNumScreenLogs = maxNumScreenLogsIn
+        showLogToScreen  = showLogToScreenIn;
+        maxNumScreenLogs = ((maxNumScreenLogsIn !== undefined) && (maxNumScreenLogsIn !== null)) ? maxNumScreenLogsIn : 200;
     }
 
     function getVersion()
@@ -244,7 +240,6 @@
         setInterval2:         setInterval2,
         textMatchesArray:     textMatchesArray,
         setShowLogToScreen:   setShowLogToScreen,
-        setMaxNumScreenLogs:  setMaxNumScreenLogs,
         getVersion:           getVersion
     };
 

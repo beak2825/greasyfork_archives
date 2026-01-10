@@ -1,334 +1,321 @@
 // ==UserScript==
-// @name         Torn Travel Shop Profit
+// @name         Travel Profit for TornPDA
 // @namespace    torn.abroad.profit
-// @version      2.1.0
-// @description  Shows profit (market value - abroad shop price) in travel shops on TornPDA mobile.
+// @version      2.6.5
+// @description  Shows profit next to abroad shop prices (PDA-friendly key handling).
 // @author       Grimsnecrosis
+// @match        https://www.torn.com/*
 // @match        https://www.torn.com/page.php?sid=travel*
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @grant        GM_registerMenuCommand
+// @run-at       document-end
+// @grant        GM_addStyle
+// @grant        GM_xmlhttpRequest
+// @connect      api.torn.com
 // @license      GPL-3.0
-// @downloadURL https://update.greasyfork.org/scripts/561937/Torn%20Travel%20Shop%20Profit.user.js
-// @updateURL https://update.greasyfork.org/scripts/561937/Torn%20Travel%20Shop%20Profit.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561937/Travel%20Profit%20for%20TornPDA.user.js
+// @updateURL https://update.greasyfork.org/scripts/561937/Travel%20Profit%20for%20TornPDA.meta.js
 // ==/UserScript==
 
 (() => {
   "use strict";
 
-  /********************
-   * PDA API KEY HOOK *
-   ********************/
-  // TornPDA replaces this with your key and shows a key icon in the script manager.
-  // If it stays as ###PDA-APIKEY###, we fall back to a one-time prompt + localStorage.
-  const PDA_KEY_PLACEHOLDER = "###PDA-APIKEY###";
+  /***********************
+   * TornPDA Key Hook
+   ***********************/
+  const PDA_API_KEY = "###PDA-APIKEY###";
+  const isPDA = () => !/^(###).+(###)$/.test(PDA_API_KEY);
+
+  // If you're NOT in PDA, you can optionally store a key in localStorage under this name.
+  const LS_KEY = "TPDA_TRAVEL_PROFIT_KEY";
 
   function getApiKey() {
-    let key = PDA_KEY_PLACEHOLDER;
-
-    // If TornPDA injected a real key, it won't start with "#"
-    if (key && key[0] !== "#") return key.trim();
-
-    // Fallback prompt (non-PDA or if injection not set)
-    const stored = localStorage.getItem("TPDA_TRAVEL_PROFIT_KEY");
-    if (stored) return stored;
-
-    const entered = prompt("Enter Torn API key (stored locally for travel profit):");
-    if (!entered) return null;
-    localStorage.setItem("TPDA_TRAVEL_PROFIT_KEY", entered.trim());
-    return entered.trim();
+    if (isPDA()) return PDA_API_KEY;
+    const k = localStorage.getItem(LS_KEY);
+    return (k && k.trim()) ? k.trim() : null;
   }
-
-  /****************
-   * HTTP WRAPPER *
-   ****************/
-  // Prefer TornPDA helpers if they exist; otherwise use fetch.
-  function httpGet(url) {
-    if (typeof PDA_httpGet === "function") {
-      return PDA_httpGet(url).then((res) => {
-        // TornPDA usually returns { responseText, status } shape to onload handlers,
-        // but PDA_httpGet often returns plain text. Handle both.
-        if (typeof res === "string") return res;
-        if (res && typeof res.responseText === "string") return res.responseText;
-        return JSON.stringify(res);
-      });
-    }
-    return fetch(url, { credentials: "omit" }).then((r) => r.text());
-  }
-
-  async function apiGetJson(url) {
-    const txt = await httpGet(url);
-    try {
-      return JSON.parse(txt);
-    } catch {
-      return null;
-    }
-  }
-
-  /*********
-   * CACHE *
-   *********/
-  const CACHE_TTL_MS = 20 * 60 * 1000; // 20 minutes
-  const cacheGet = (key) => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return null;
-      const obj = JSON.parse(raw);
-      if (!obj || typeof obj.t !== "number") return null;
-      if (Date.now() - obj.t > CACHE_TTL_MS) return null;
-      return obj.d;
-    } catch {
-      return null;
-    }
-  };
-  const cacheSet = (key, data) => {
-    try {
-      localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
-    } catch {}
-  };
-
-  /********************
-   * PRICE UTILITIES  *
-   ********************/
-  const moneyToInt = (s) => parseInt(String(s).replace(/[^0-9]/g, ""), 10) || 0;
-  const fmtProfit = (n) => `${n >= 0 ? "+$" : "-$"}${Math.abs(n).toLocaleString()}`;
 
   /***********************
-   * ITEM MAP + AVG PRICE *
+   * Styling
    ***********************/
-  async function getItemNameToIdMap(apiKey) {
-    const ck = "TPDA_TRAVEL_ITEMMAP_V1";
-    const cached = cacheGet(ck);
-    if (cached) return cached;
-
-    // Torn API v2 items list
-    const url = `https://api.torn.com/v2/torn/items?key=${encodeURIComponent(apiKey)}`;
-    const data = await apiGetJson(url);
-
-    const map = {};
-    const items = data?.items || [];
-    for (const it of items) {
-      if (it?.name && it?.id) map[it.name] = it.id;
+  GM_addStyle(`
+    .tpda-profit-pill {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.4;
+      opacity: 0.95;
+      white-space: nowrap;
     }
+    .tpda-profit-green { color: #0b7a2a; border: 1px solid rgba(11,122,42,0.35); }
+    .tpda-profit-red   { color: #b11f1f; border: 1px solid rgba(177,31,31,0.35); }
+    .tpda-profit-amber { color: #a05a00; border: 1px solid rgba(160,90,0,0.35); }
+  `);
 
-    cacheSet(ck, map);
-    return map;
+  /***********************
+   * Cache + throttling
+   ***********************/
+  const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+  const MAX_IN_FLIGHT = 2;
+
+  const memCache = new Map(); // itemId -> { t, avg }
+  let inFlight = 0;
+  const queue = [];
+
+  function cacheGet(itemId) {
+    const v = memCache.get(itemId);
+    if (!v) return null;
+    if (Date.now() - v.t > CACHE_TTL_MS) return null;
+    return v.avg;
+  }
+  function cacheSet(itemId, avg) {
+    memCache.set(itemId, { t: Date.now(), avg });
   }
 
-  async function getAveragePrice(apiKey, itemId) {
-    const ck = `TPDA_TRAVEL_AVG_${itemId}`;
-    const cached = cacheGet(ck);
+  function moneyToInt(s) {
+    return parseInt(String(s).replace(/[^0-9]/g, ""), 10) || 0;
+  }
+  function fmtProfit(n) {
+    const sign = n >= 0 ? "+$" : "-$";
+    return sign + Math.abs(n).toLocaleString();
+  }
+
+  /***********************
+   * HTTP helpers (PDA or browser)
+   ***********************/
+  async function httpGetJson(url) {
+    if (isPDA() && typeof window.PDA_httpGet === "function") {
+      const res = await window.PDA_httpGet(url, {});
+      if (!res || !res.responseText) throw new Error("No response from PDA_httpGet");
+      return JSON.parse(res.responseText);
+    }
+
+    // Browser fallback (Tampermonkey)
+    return await new Promise((resolve, reject) => {
+      if (typeof GM_xmlhttpRequest !== "function") {
+        reject(new Error("GM_xmlhttpRequest not available"));
+        return;
+      }
+      GM_xmlhttpRequest({
+        method: "GET",
+        url,
+        onload: (r) => {
+          try {
+            resolve(JSON.parse(r.responseText));
+          } catch (e) {
+            reject(e);
+          }
+        },
+        onerror: reject,
+      });
+    });
+  }
+
+  async function fetchAvgPrice(apiKey, itemId) {
+    const cached = cacheGet(itemId);
     if (typeof cached === "number") return cached;
 
-    const url = `https://api.torn.com/v2/market/${itemId}/itemmarket?key=${encodeURIComponent(apiKey)}`;
-    const data = await apiGetJson(url);
+    // Torn v2 itemmarket average price
+    const url = `https://api.torn.com/v2/market/${encodeURIComponent(itemId)}/itemmarket?key=${encodeURIComponent(apiKey)}`;
+    const data = await httpGetJson(url);
+    const avg = data?.itemmarket?.item?.average_price;
 
-    const avg = data?.itemmarket?.item?.average_price || 0;
-    cacheSet(ck, avg);
+    if (typeof avg !== "number") throw new Error("avg_price missing");
+    cacheSet(itemId, avg);
     return avg;
   }
 
-  /******************************
-   * DOM: FIND THE TRAVEL TABLE *
-   ******************************/
-  // Your screenshot is a classic table. We find tables that have headers including: Name / Stock / Cost / Buy
-  function findShopTables() {
-    const tables = Array.from(document.querySelectorAll("table"));
-    const matches = [];
-
-    for (const t of tables) {
-      const headerRow =
-        t.querySelector("thead tr") ||
-        t.querySelector("tr"); // fallback
-
-      if (!headerRow) continue;
-
-      const headers = Array.from(headerRow.querySelectorAll("th,td"))
-        .map((x) => (x.textContent || "").trim().toLowerCase());
-
-      const hasName = headers.includes("name");
-      const hasStock = headers.includes("stock");
-      const hasCost = headers.includes("cost");
-      const hasBuy = headers.includes("buy");
-
-      if (hasName && hasStock && hasCost && hasBuy) {
-        matches.push(t);
-      }
-    }
-    return matches;
+  function enqueue(task) {
+    return new Promise((resolve, reject) => {
+      queue.push({ task, resolve, reject });
+      pumpQueue();
+    });
   }
 
-  function getHeaderIndexes(table) {
-    const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
-    const cells = Array.from(headerRow.querySelectorAll("th,td"));
-    const headers = cells.map((x) => (x.textContent || "").trim().toLowerCase());
-    return {
-      nameIdx: headers.indexOf("name"),
-      costIdx: headers.indexOf("cost"),
-    };
-  }
+  async function pumpQueue() {
+    if (inFlight >= MAX_IN_FLIGHT) return;
+    const next = queue.shift();
+    if (!next) return;
 
-  function ensureProfitHeader(table, costIdx) {
-    const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
-    if (!headerRow) return;
-
-    // If already inserted, stop
-    if (headerRow.querySelector(".tpda-profit-th")) return;
-
-    const th = document.createElement("th");
-    th.className = "tpda-profit-th";
-    th.textContent = "Profit";
-
-    // Insert right after Cost column
-    const cells = Array.from(headerRow.querySelectorAll("th,td"));
-    const costCell = cells[costIdx];
-    if (costCell && costCell.parentNode) {
-      costCell.insertAdjacentElement("afterend", th);
-    } else {
-      headerRow.appendChild(th);
-    }
-  }
-
-  function ensureProfitCell(row, costIdx) {
-    // skip header rows
-    const tds = Array.from(row.querySelectorAll("td"));
-    if (!tds.length) return null;
-
-    // already inserted?
-    const existing = row.querySelector(".tpda-profit-td");
-    if (existing) return existing;
-
-    const td = document.createElement("td");
-    td.className = "tpda-profit-td";
-    td.style.fontWeight = "700";
-    td.style.whiteSpace = "nowrap";
-
-    const costCell = tds[costIdx];
-    if (costCell) {
-      costCell.insertAdjacentElement("afterend", td);
-    } else {
-      row.appendChild(td);
-    }
-    return td;
-  }
-
-  function getRowName(row, nameIdx) {
-    const tds = Array.from(row.querySelectorAll("td"));
-    const cell = tds[nameIdx];
-    if (!cell) return null;
-
-    // The “Name” cell usually includes just the item name text.
-    // If it contains extra whitespace/newlines, clean it.
-    const name = (cell.textContent || "").trim().split("\n")[0].trim();
-    return name || null;
-  }
-
-  function getRowCost(row, costIdx) {
-    const tds = Array.from(row.querySelectorAll("td"));
-    const cell = tds[costIdx];
-    if (!cell) return 0;
-    return moneyToInt(cell.textContent);
-  }
-
-  /*********************
-   * LIGHT REFRESH LOOP *
-   *********************/
-  let running = false;
-  let lastSignature = "";
-
-  function makeSignature(tables) {
-    // A cheap way to detect changes so we don’t reprocess constantly
-    let sig = "";
-    for (const t of tables) {
-      const rows = t.querySelectorAll("tbody tr").length || t.querySelectorAll("tr").length;
-      sig += `|${rows}`;
-    }
-    return sig;
-  }
-
-  async function refreshOnce() {
-    if (running) return;
-    running = true;
-
+    inFlight++;
     try {
-      const tables = findShopTables();
-      if (!tables.length) {
-        running = false;
-        return;
-      }
-
-      const sig = makeSignature(tables);
-      if (sig === lastSignature) {
-        running = false;
-        return;
-      }
-      lastSignature = sig;
-
-      const apiKey = getApiKey();
-      if (!apiKey) {
-        running = false;
-        return;
-      }
-
-      const nameToId = await getItemNameToIdMap(apiKey);
-
-      // Process each table
-      for (const table of tables) {
-        const { nameIdx, costIdx } = getHeaderIndexes(table);
-        if (nameIdx < 0 || costIdx < 0) continue;
-
-        ensureProfitHeader(table, costIdx);
-
-        // Prefer tbody rows, fallback to all rows excluding header
-        const bodyRows = Array.from(table.querySelectorAll("tbody tr"));
-        const rows = bodyRows.length ? bodyRows : Array.from(table.querySelectorAll("tr")).slice(1);
-
-        // VERY LOW CONCURRENCY: do them sequentially to keep PDA smooth
-        for (const row of rows) {
-          // Skip if row already has profit computed
-          if (row.dataset.tpdaProfitDone === "1") continue;
-
-          const name = getRowName(row, nameIdx);
-          const cost = getRowCost(row, costIdx);
-          if (!name) continue;
-
-          const profitTd = ensureProfitCell(row, costIdx);
-          if (!profitTd) continue;
-
-          // mark early so we don’t loop on errors
-          row.dataset.tpdaProfitDone = "1";
-          profitTd.textContent = "…";
-
-          const itemId = nameToId[name];
-          if (!itemId) {
-            profitTd.textContent = "N/A";
-            profitTd.style.opacity = "0.7";
-            continue;
-          }
-
-          try {
-            const avg = await getAveragePrice(apiKey, itemId);
-            const profit = avg - cost;
-
-            profitTd.textContent = fmtProfit(profit);
-            profitTd.style.color = profit >= 0 ? "#27ae60" : "#e74c3c";
-            profitTd.title = `Avg: $${avg.toLocaleString()} | Cost: $${cost.toLocaleString()}`;
-          } catch {
-            profitTd.textContent = "ERR";
-            profitTd.style.opacity = "0.7";
-          }
-        }
-      }
+      const out = await next.task();
+      next.resolve(out);
+    } catch (e) {
+      next.reject(e);
     } finally {
-      running = false;
+      inFlight--;
+      // keep going
+      setTimeout(pumpQueue, 0);
     }
   }
 
-  // Debounced polling (safe on PDA): checks for changes every 900ms
-  setInterval(() => {
-    refreshOnce();
-  }, 900);
+  /***********************
+   * DOM discovery (works on PDA mobile + normal web)
+   ***********************/
+  function isTravelPage() {
+    // Travel page is an SPA area; easiest check is URL contains sid=travel
+    return /page\.php\?sid=travel/i.test(location.href);
+  }
 
-  // Also do a quick run on load
-  refreshOnce();
+  function findRows() {
+    // PDA mobile layout often uses hashed classnames like stockTableWrapper___
+    const stockList = document.querySelectorAll("[class*='stockTableWrapper'] > li");
+    if (stockList && stockList.length) return Array.from(stockList);
+
+    // Fallback: older abroad shop list (.users-list > li)
+    const old = document.querySelectorAll(".users-list > li");
+    if (old && old.length) return Array.from(old);
+
+    return [];
+  }
+
+  function extractItemIdFromRow(row) {
+    // Look for an image and pull the first number from src/srcset
+    const img = row.querySelector("img");
+    const srcset = img?.getAttribute("srcset") || "";
+    const src = img?.getAttribute("src") || "";
+
+    const blob = (srcset.split(" ")[0] || src || "").trim();
+    if (!blob) return null;
+
+    // Common patterns: .../1234.png  or .../1234.webp
+    const m = blob.match(/\/(\d{2,6})\.(png|jpg|jpeg|gif|webp)/i) || blob.match(/(\d{2,6})/);
+    return m ? parseInt(m[1], 10) : null;
+  }
+
+  function extractCostFromRow(row) {
+    // PDA/TornTools style often includes neededSpace___ for the price column
+    const candidates = Array.from(row.querySelectorAll("[class*='neededSpace']"));
+    for (const el of candidates) {
+      const txt = el.textContent || "";
+      const n = moneyToInt(txt);
+      if (n > 0) return n;
+    }
+
+    // Fallback for older layout (.c-price)
+    const cprice = row.querySelector(".c-price");
+    if (cprice) {
+      const n = moneyToInt(cprice.textContent || "");
+      if (n > 0) return n;
+    }
+
+    // Last resort: find any "$" text inside row
+    const anyTextEls = Array.from(row.querySelectorAll("span,div"));
+    for (const el of anyTextEls) {
+      const t = (el.textContent || "").trim();
+      if (!t.includes("$")) continue;
+      const n = moneyToInt(t);
+      if (n > 0) return n;
+    }
+
+    return null;
+  }
+
+  function findNameAnchor(row) {
+    // Prefer something “name-like”
+    const preferred =
+      row.querySelector("[class*='name']") ||
+      row.querySelector(".details .name") ||
+      row.querySelector(".details") ||
+      row.querySelector("[class*='title']");
+
+    if (preferred && (preferred.textContent || "").trim().length) return preferred;
+
+    // fallback: first non-empty text element that isn't obviously numeric/currency
+    const els = Array.from(row.querySelectorAll("span,div")).filter(e => {
+      const t = (e.textContent || "").trim();
+      if (!t) return false;
+      if (t.includes("$")) return false;
+      if (/^\d+$/.test(t)) return false;
+      return t.length >= 3;
+    });
+
+    return els[0] || null;
+  }
+
+  function upsertProfitPill(nameEl, profit, tooltip) {
+    let pill = nameEl.querySelector(":scope > .tpda-profit-pill");
+    if (!pill) {
+      pill = document.createElement("span");
+      pill.className = "tpda-profit-pill tpda-profit-amber";
+      nameEl.appendChild(pill);
+    }
+
+    pill.classList.remove("tpda-profit-green", "tpda-profit-red", "tpda-profit-amber");
+    pill.classList.add(profit >= 0 ? "tpda-profit-green" : "tpda-profit-red");
+    pill.textContent = fmtProfit(profit);
+    pill.title = tooltip || "";
+  }
+
+  /***********************
+   * Main render (debounced)
+   ***********************/
+  let scheduled = false;
+  function scheduleRender() {
+    if (scheduled) return;
+    scheduled = true;
+    setTimeout(() => {
+      scheduled = false;
+      render().catch(() => {});
+    }, 350);
+  }
+
+  async function render() {
+    if (!isTravelPage()) return;
+
+    const rows = findRows();
+    if (!rows.length) return;
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      // In PDA you should ALWAYS have one; if not, do nothing (no popups)
+      console.log("[Travel Profit PDA] No API key available.");
+      return;
+    }
+
+    for (const row of rows) {
+      // avoid rework
+      if (row.dataset.tpdaProfitDone === "1") continue;
+
+      const itemId = extractItemIdFromRow(row);
+      const cost = extractCostFromRow(row);
+      const nameEl = findNameAnchor(row);
+
+      // If we can’t confidently place it, skip without marking done
+      if (!nameEl || !itemId || !cost) continue;
+
+      row.dataset.tpdaProfitDone = "1";
+      upsertProfitPill(nameEl, 0, "Loading…");
+
+      // queue API to avoid freezing
+      enqueue(async () => {
+        const avg = await fetchAvgPrice(apiKey, itemId);
+        const profit = avg - cost;
+        upsertProfitPill(nameEl, profit, `Avg: $${avg.toLocaleString()} | Cost: $${cost.toLocaleString()}`);
+      }).catch((e) => {
+        // show a subtle “?” instead of hard failing
+        upsertProfitPill(nameEl, 0, `Error: ${String(e)}`);
+        const pill = nameEl.querySelector(":scope > .tpda-profit-pill");
+        if (pill) {
+          pill.classList.remove("tpda-profit-green", "tpda-profit-red");
+          pill.classList.add("tpda-profit-amber");
+          pill.textContent = "?";
+        }
+      });
+    }
+  }
+
+  /***********************
+   * Boot
+   ***********************/
+  // Watch for SPA updates, but throttle heavily.
+  const mo = new MutationObserver(() => scheduleRender());
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+
+  // Initial pass + one delayed pass (SPA often renders after a beat)
+  scheduleRender();
+  setTimeout(scheduleRender, 1200);
 })();

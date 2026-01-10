@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani Links
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.01
 // @description  try to take over the world!
 // @author       You
 // @match        https://www.wanikani.com/*
@@ -10997,7 +10997,7 @@ var script$m = {
     Portal: script$o
   }
 };
-var _hoisted_1$7 = ["aria-modal"];
+var _hoisted_1$8 = ["aria-modal"];
 function render$j(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Portal = resolveComponent("Portal");
   var _directive_focustrap = resolveDirective("focustrap");
@@ -11039,7 +11039,7 @@ function render$j(_ctx, _cache, $props, $setup, $data, $options) {
             onKeydown: _cache[2] || (_cache[2] = function() {
               return $options.onContentKeydown && $options.onContentKeydown.apply($options, arguments);
             })
-          }, _ctx.ptm("content")), [renderSlot(_ctx.$slots, "default")], 16))], 16, _hoisted_1$7)), [[_directive_focustrap]]) : createCommentVNode("", true)];
+          }, _ctx.ptm("content")), [renderSlot(_ctx.$slots, "default")], 16))], 16, _hoisted_1$8)), [[_directive_focustrap]]) : createCommentVNode("", true)];
         }),
         _: 3
       }, 16, ["onEnter", "onLeave", "onAfterLeave"])];
@@ -12184,7 +12184,7 @@ var script$j = {
     Portal: script$o
   }
 };
-var _hoisted_1$6 = ["id"];
+var _hoisted_1$7 = ["id"];
 function render$h(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_TieredMenuSub = resolveComponent("TieredMenuSub");
   var _component_Portal = resolveComponent("Portal");
@@ -12241,7 +12241,7 @@ function render$h(_ctx, _cache, $props, $setup, $data, $options) {
           }, _ctx.ptm("rootList")), null, 16, ["id", "class", "tabindex", "aria-label", "aria-labelledby", "aria-disabled", "aria-activedescendant", "menuId", "focusedItemId", "items", "templates", "activeItemPath", "visible", "pt", "unstyled", "onFocus", "onBlur", "onKeydown", "onItemClick", "onItemMouseenter", "onItemMousemove"]), _ctx.$slots.end ? (openBlock(), createElementBlock("div", mergeProps({
             key: 1,
             "class": _ctx.cx("end")
-          }, _ctx.ptm("end")), [renderSlot(_ctx.$slots, "end")], 16)) : createCommentVNode("", true)], 16, _hoisted_1$6)) : createCommentVNode("", true)];
+          }, _ctx.ptm("end")), [renderSlot(_ctx.$slots, "end")], 16)) : createCommentVNode("", true)], 16, _hoisted_1$7)) : createCommentVNode("", true)];
         }),
         _: 3
       }, 16, ["onEnter", "onAfterEnter", "onLeave", "onAfterLeave"])];
@@ -16840,14 +16840,14 @@ var script$h = {
     }
   }
 };
-var _hoisted_1$5 = ["data-p"];
+var _hoisted_1$6 = ["data-p"];
 function render$e(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("span", mergeProps({
     "class": _ctx.cx("root"),
     "data-p": $options.dataP
   }, _ctx.ptmi("root")), [renderSlot(_ctx.$slots, "default", {}, function() {
     return [createTextVNode(toDisplayString(_ctx.value), 1)];
-  })], 16, _hoisted_1$5);
+  })], 16, _hoisted_1$6);
 }
 script$h.render = render$e;
 var style$3 = `
@@ -17737,7 +17737,7 @@ var script$g = {
     ripple: Ripple
   }
 };
-var _hoisted_1$4 = ["data-p"];
+var _hoisted_1$5 = ["data-p"];
 var _hoisted_2$4 = ["data-p"];
 function render$d(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_SpinnerIcon = resolveComponent("SpinnerIcon");
@@ -17770,7 +17770,7 @@ function render$d(_ctx, _cache, $props, $setup, $data, $options) {
             key: 0,
             "class": [_ctx.cx("icon"), _ctx.icon, _ctx.iconClass],
             "data-p": $options.dataIconP
-          }, _ctx.ptm("icon")), null, 16, _hoisted_1$4)) : createCommentVNode("", true)];
+          }, _ctx.ptm("icon")), null, 16, _hoisted_1$5)) : createCommentVNode("", true)];
         }), _ctx.label ? (openBlock(), createElementBlock("span", mergeProps({
           key: 2,
           "class": _ctx.cx("label")
@@ -18286,7 +18286,7 @@ var script$b = {
     MinusIcon: script$e
   }
 };
-var _hoisted_1$3 = ["data-p-checked", "data-p-indeterminate", "data-p-disabled", "data-p"];
+var _hoisted_1$4 = ["data-p-checked", "data-p-indeterminate", "data-p-disabled", "data-p"];
 var _hoisted_2$3 = ["id", "value", "name", "checked", "tabindex", "disabled", "readonly", "required", "aria-labelledby", "aria-label", "aria-invalid"];
 var _hoisted_3$2 = ["data-p"];
 function render$a(_ctx, _cache, $props, $setup, $data, $options) {
@@ -18345,7 +18345,7 @@ function render$a(_ctx, _cache, $props, $setup, $data, $options) {
     }, $options.getPTOptions("icon"), {
       "data-p": $options.dataP
     }), null, 16, ["class", "data-p"])) : createCommentVNode("", true)];
-  })], 16, _hoisted_3$2)], 16, _hoisted_1$3);
+  })], 16, _hoisted_3$2)], 16, _hoisted_1$4);
 }
 script$b.render = render$a;
 var script$a = {
@@ -19048,7 +19048,7 @@ function _toPrimitive$1(t2, r2) {
   }
   return ("string" === r2 ? String : Number)(t2);
 }
-var _hoisted_1$2 = ["data-p"];
+var _hoisted_1$3 = ["data-p"];
 var _hoisted_2$2 = ["aria-labelledby", "aria-modal", "data-p"];
 var _hoisted_3$1 = ["id"];
 var _hoisted_4$1 = ["data-p"];
@@ -19189,7 +19189,7 @@ function render$6(_ctx, _cache, $props, $setup, $data, $options) {
           }]]) : createCommentVNode("", true)];
         }),
         _: 3
-      }, 16, ["onEnter", "onAfterEnter", "onBeforeLeave", "onLeave", "onAfterLeave"])], 16, _hoisted_1$2)) : createCommentVNode("", true)];
+      }, 16, ["onEnter", "onAfterEnter", "onBeforeLeave", "onLeave", "onAfterLeave"])], 16, _hoisted_1$3)) : createCommentVNode("", true)];
     }),
     _: 3
   }, 8, ["appendTo"]);
@@ -19703,7 +19703,7 @@ function _toPrimitive(t2, r2) {
   }
   return ("string" === r2 ? String : Number)(t2);
 }
-var _hoisted_1$1 = ["aria-label"];
+var _hoisted_1$2 = ["aria-label"];
 var _hoisted_2$1 = ["aria-modal"];
 var _hoisted_3 = ["aria-label"];
 var _hoisted_4 = ["aria-label"];
@@ -19745,7 +19745,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return [(openBlock(), createBlock(resolveDynamicComponent(_ctx.previewIcon || _ctx.indicatorIcon ? "i" : "EyeIcon"), mergeProps({
       "class": [_ctx.cx("previewIcon"), _ctx.previewIcon]
     }, _ctx.ptm("previewIcon")), null, 16, ["class"]))];
-  })], 16, _hoisted_1$1)) : createCommentVNode("", true), createVNode(_component_Portal, null, {
+  })], 16, _hoisted_1$2)) : createCommentVNode("", true), createVNode(_component_Portal, null, {
     "default": withCtx(function() {
       return [$data.maskVisible ? withDirectives((openBlock(), createElementBlock("div", mergeProps({
         key: 0,
@@ -19864,7 +19864,7 @@ class cSettings {
     this.wanikani = data8 == null ? true : data8?.wanikani;
   }
 }
-const _hoisted_1 = { class: "choices" };
+const _hoisted_1$1 = { class: "choices" };
 const _hoisted_2 = { class: "buttons" };
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "Settings",
@@ -19908,7 +19908,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           id: "dlgSettings_" + unref(indexStore).scriptName
         }, {
           default: withCtx(() => [
-            createBaseVNode("div", _hoisted_1, [
+            createBaseVNode("div", _hoisted_1$1, [
               createBaseVNode("ul", null, [
                 createBaseVNode("li", null, [
                   createVNode(unref(script$b), {
@@ -20047,10 +20047,11 @@ const wkofCheck = () => {
     }
   }
 };
+const _hoisted_1 = { key: 0 };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "App",
   setup(__props) {
-    const indexStore = useIndexStore(), reviewsStore = useReviewsStore();
+    const debug = ref(false), indexStore = useIndexStore(), reviewsStore = useReviewsStore();
     function makeLinksDiv() {
       const spotBefore = document.querySelector("#user-response");
       if (spotBefore == null) return;
@@ -20065,6 +20066,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       indexStore.dashboardLoaded = false;
     }
     const handleWillShowNextQuestion = (event) => {
+      op.value.hide();
       nextTick(() => {
         reviewsStore.currentQuestion = event.detail;
       });
@@ -20098,7 +20100,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock(Fragment, null, [
         createBaseVNode("main", null, [
           unref(reviewsStore).reviewsLoaded ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-            createBaseVNode("div", null, "reviewsStore.currentQuestion: " + toDisplayString(unref(reviewsStore).currentQuestion), 1),
+            debug.value ? (openBlock(), createElementBlock("div", _hoisted_1, "reviewsStore.currentQuestion: " + toDisplayString(unref(reviewsStore).currentQuestion), 1)) : createCommentVNode("", true),
             createVNode(unref(script$m), {
               ref_key: "op",
               ref: op,

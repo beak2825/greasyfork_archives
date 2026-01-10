@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.8.4
+// @version         4.2.8.5
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1711,7 +1711,7 @@ else if (matchDomain('fnlondon.com')) {
         let article_id_dom = document.querySelector('head > meta[name="article.id"][content]');
         if (article_id_dom) {
           let article_id = article_id_dom.content;
-          let url_src = 'https://fn.djmedia.djservices.io/apps/finnews/theaters/top-stories?screen_ids=' + article_id;
+          let url_src = 'https://fn.djmedia.djservices.io/apps/finnews/theaters/default-article?screen_ids=' + article_id;
           let x_access_token = cs_param['x-access-token'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJBVVRIX1BIUkFTRV9QUk9EX0lPUyI6IlZlRXRaemRIaGF4bzhKRWpzaHlEIn0.bxWGVMaft1RN0_qWAnzoNBLx12sc0Jt4rLBaoG5n08AQTS9RibwlJlZrqUca_tm0lSCwl3Z1ehJcVepVH_YcNgRJsujt49JVFSGBO8B69zFDERS05x2RM_n0k8Jg9cyErhfsgWTsb8ObR6iRhHmw702_VcEzJrmdXwq44Bw3NgkBPOgIAZn37SA7hx__gvd8Hdxd5LLgZwxXTG1kWFW4S--vf4CxUt-uEY94m1VqaUyyMTEMvXTmktS2wReBH8mawDvBdyBDkQrPx7oaFP1zq4h-B1mQCj_wMRfR-QUls6BTpBPQUjO02FaTf-2RbHzAYn3xTpmxs0GE12iD4QBSbg";
           getExtFetch(url_src, '', {"app-identifier": "com.news.screens", "device-type": "phone", "x-access-token": x_access_token}, fix_dowjones_fetch, data_ext_fetch_id++, [article]);
         }
@@ -1720,7 +1720,7 @@ else if (matchDomain('fnlondon.com')) {
   }
   function fnlondon_main(node) {
     window.setTimeout(function () {
-      let signin_links = node.querySelectorAll('a[href^="https://www.fnlondon.com/client/login?target="]');
+      let signin_links = node.querySelectorAll('a[href^="https://www.fnlondon.com/client/login"][href*="target="]');
       for (let elem of signin_links) {
         elem.href = '#'; //decodeURIComponent(elem.href.split('target=')[1].split('&')[0]);
         elem.innerText = 'Open';
@@ -3623,7 +3623,12 @@ else if (matchDomain('investors.com')) {
       video.parentNode.replaceChild(video_new, video);
     }
   }
-  getJsonUrl('div.investors-paywall-overlay', '', 'div.investors-paywall-excerpt');
+  let paywall_sel = 'div.investors-paywall-overlay';
+  let paywall = document.querySelector(paywall_sel);
+  if (paywall)  {
+    setCookie('__tbc', '', 'investors.com', '/', 0);
+    getJsonUrl(paywall_sel, '', 'div.investors-paywall-excerpt');
+  }
   let ads = 'div.ads, div.headerAds';
   hideDOMStyle(ads);
 }
@@ -6008,6 +6013,37 @@ function fix_dowjones_fetch(url_src, data, article) {
         if (img_lead)
           img_lead_url = img_lead.src.split('?')[0];
         article.innerHTML = '';
+        function addBodyText(elem, par) {
+          if (par.body && par.body.text) {
+            if (par.body.additions) {
+              let items = par.body.additions.filter(x => x.type === 'link' && x.value && x.hasOwnProperty('rangeStart') && x.rangeLength);
+              if (items.length) {
+                function addLink(item, body_part, start_index) {
+                  item.rangeStart = item.rangeStart - start_index;
+                  let start = body_part.substring(0, item.rangeStart);
+                  let middle = body_part.substring(item.rangeStart, item.rangeStart + item.rangeLength);
+                  let end = body_part.substring(item.rangeStart + item.rangeLength);
+                  let sub_elem = document.createElement('a');
+                  sub_elem.href = item.value;
+                  sub_elem.innerText = middle;
+                  sub_elem.style = 'text-decoration: underline;';
+                  elem.append(document.createTextNode(start.replace(/\s_/g, '')), sub_elem, document.createTextNode(end.replace(/\s_/g, '')));
+                }
+                let start_index = end_index = 0;
+                for (let item of items) {
+                  end_index = start_index + item.rangeStart + item.rangeLength;
+                  let body_part = par.body.text.substring(start_index, end_index);
+                  addLink(item, body_part, start_index);
+                  start_index = end_index;
+                }
+                if (end_index)
+                  elem.appendChild(document.createTextNode(par.body.text.substring(end_index).replace(/\s_/g, '')));
+              } else
+                elem.innerText = par.body.text.replace(/\s_/g, '');
+            } else
+              elem.innerText = par.body.text.replace(/\s_/g, '');
+          }
+        }
         for (let par of pars) {
           let elem = document.createElement('p');
           if (par_class)
@@ -6017,40 +6053,14 @@ function fix_dowjones_fetch(url_src, data, article) {
               if (body_first && intro) {
                 elem = intro;
                 body_first = false;
-              } else if (par.body.text) {
-                if (par.body.additions) {
-                  let items = par.body.additions.filter(x => x.type === 'link' && x.value && x.hasOwnProperty('rangeStart') && x.rangeLength);
-                  if (items.length) {
-                    function addLink(item, body_part, start_index) {
-                      item.rangeStart = item.rangeStart - start_index;
-                      let start = body_part.substring(0, item.rangeStart);
-                      let middle = body_part.substring(item.rangeStart, item.rangeStart + item.rangeLength);
-                      let end = body_part.substring(item.rangeStart + item.rangeLength);
-                      let sub_elem = document.createElement('a');
-                      sub_elem.href = item.value;
-                      sub_elem.innerText = middle;
-                      sub_elem.style = 'text-decoration: underline;';
-                      elem.append(document.createTextNode(start.replace(/\s_/g, '')), sub_elem, document.createTextNode(end.replace(/\s_/g, '')));
-                    }
-                    let start_index = end_index = 0;
-                    for (let item of items) {
-                      end_index = start_index + item.rangeStart + item.rangeLength;
-                      let body_part = par.body.text.substring(start_index, end_index);
-                      addLink(item, body_part, start_index);
-                      start_index = end_index;
-                    }
-                    if (end_index) {
-                      elem.appendChild(document.createTextNode(par.body.text.substring(end_index).replace(/\s_/g, '')));
-                    }
-                  } else
-                    elem.innerText = par.body.text.replace(/\s_/g, '');
-                } else
-                  elem.innerText = par.body.text.replace(/\s_/g, '');
-              }
+              } else
+                addBodyText(elem, par);
             }
           } else if (par.type === 'listelement') {
-            if (par.body)
-              elem.innerText = ' • ' + par.body.text;
+            if (par.body) {
+              elem.appendChild(document.createTextNode(' • '));
+              addBodyText(elem, par);
+            }
           } else if (par.type === 'image') {
             if (par.image && par.image.url && !(img_lead_url && par.image.url.startsWith(img_lead_url))) {
               let caption = (par.caption ? par.caption.text + ' - ' : '') + (par.credit ? par.credit.text : '');
@@ -6096,13 +6106,20 @@ function fix_dowjones_fetch(url_src, data, article) {
             } else
               console.log(par);
           } else if (par.type === 'video') {
-            let video_thumbnail = makeFigure(par.thumbnail.url, par.description.text, {
-              style: 'width: 80%; margin: auto;'
-            });
-            let video_link = document.createElement('a');
-            video_link.href = par.url;
-            video_link.innerText = 'Video-link (open in media player): ' + par.url;
-            elem.append(video_thumbnail, video_link);
+            if (par.url) {
+              let video_thumbnail;
+              if (par.thumbnail && par.thumbnail.url) {
+                let caption;
+                if (par.description && par.description.text)
+                  caption = par.description.text;
+                video_thumbnail = makeFigure(par.thumbnail.url, caption, {style: 'width: 80%; margin: auto;'});
+                elem.appendChild(video_thumbnail);
+              }
+              let video_link = document.createElement('a');
+              video_link.href = par.url;
+              video_link.innerText = 'Video-link: ' + par.url;
+              elem.appendChild(video_link);
+            }
           } else if (par.type === 'youtube') {
              if (par.videoId) {
                elem = document.createElement('p');

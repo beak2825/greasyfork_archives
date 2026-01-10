@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EarnPepe Faucet Rotator PRO
 // @namespace    https://earnpepe.online/
-// @version      1.1
+// @version      1.3
 // @description  Fully automated faucet rotator for EarnPepe
 // @author       Rubystance
 // @license      MIT
@@ -188,15 +188,33 @@ if(location.href.includes('/app/faucet')){
 
   new MutationObserver(()=>{
     const s=$('#swal2-title');
-    if(s && s.textContent.trim()==='Great!' && !rotated){
-      rotated=true;
-      claims[currency]++;
-      save();
-      drawUI();
-      const next=nextFaucet();
-      if(next) setTimeout(()=>location.href=next.href,1200);
+    if(s && !rotated){
+      const txt = s.textContent.trim();
+
+      if(txt === 'Great!'){
+        rotated=true;
+        claims[currency]++;
+        save();
+        drawUI();
+        const next=nextFaucet();
+        if(next) setTimeout(()=>location.href=next.href,1200);
+      }
+
+      if(txt === 'Failed!'){
+        rotated=true;
+        const next=nextFaucet();
+        if(next) setTimeout(()=>location.href=next.href,1200);
+      }
     }
   }).observe(document.body,{childList:true,subtree:true});
 }
+
+new MutationObserver(() => {
+    const err = document.querySelector('.iconcaptcha-modal__body-title');
+    if (err && err.textContent.trim() === 'Captcha Error') {
+        console.warn('[EarnPepe] Captcha Error detected — reloading');
+        location.reload();
+    }
+}).observe(document.body, { childList: true, subtree: true });
 
 })();

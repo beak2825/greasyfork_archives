@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Declutter LinkedIn
 // @namespace    August4067
-// @version      0.2.0-alpha
+// @version      0.2.1-alpha
 // @description  Remove the feed, LinkedIn Premium upsells, news, and other clutter from LinkedIn
 // @license      MIT
 // @match        https://www.linkedin.com/*
@@ -176,8 +176,9 @@ function removeNotificationBadgeFromHomeIcon() {
   waitAndRemove(
     'li[class^="global-nav__primary-item"] span[class^="notification-badge"]',
   );
+  // New LinkedIn UI: badge span inside the home button
   waitAndRemove(
-    'a[data-view-name="navigation-homepage"] span[class$="_1ptbkx61f4"]',
+    'button[data-view-name="navigation-homepage"] span[data-color-scheme]',
   );
 }
 
@@ -208,15 +209,14 @@ function removeUpsellLinks() {
   );
 
   // Remove upsell section on mynetwork page
-  waitAndRemove(
-    'div[data-view-name="premium-upsell-card"]',
-    (node) => (node.closest("section").style.display = "none"),
-  );
+  waitAndRemove('div[data-view-name="premium-upsell-card"]', (node) => {
+    const section = node.closest("section");
+    if (section) section.style.display = "none";
+  });
 
   // Remove "try premium for $0" navbar menu item
-  waitAndRemove(
-    'a[data-view-name="premium-nav-upsell-text"]',
-    (node) => (node.closest("li").style.display = "none"),
+  waitAndRemove('[data-view-name="premium-nav-upsell-text"]', (node) =>
+    node.remove(),
   );
 
   // Remove "try 1 month of premium for $0" in profile dropdown
@@ -331,6 +331,9 @@ function removeUpsellLinksFromJobsSearch() {
 
   // Remove the upsell from the all filters sidebar on the right
   waitAndRemove('li[class="search-reusables__secondary-filters-upsell"]');
+
+  // Remove "Jobs where you're more likely to hear back" premium upsell module
+  waitAndRemove('[data-view-name="jobs-home-premium-top-applicant-jobs-jobs-feed-module"]');
 }
 
 (function () {

@@ -3,7 +3,7 @@
 // @name:zh-TW   Arca Live 圖片與影片下載器
 // @name:zh-CN   Arca Live 图片和视频下载器
 // @namespace    http://tampermonkey.net/
-// @version      3.4
+// @version      3.6
 // @description  Supports downloading images, GIFs, MP4s, and WEBMs from Arca Live posts (using GM_download to bypass CORS), with automatic filename formatting as "Board_PostID_0001~n". Offers both fast download and sequential download modes.And WebP to PNG conversion mode
 // @description:zh-TW 支援下載 Arca Live 貼文中的圖片、GIF、MP4、WEBM（使用 GM_download 繞過 CORS）並自動命名為「板塊_編號_0001~n」格式，快速下載、逐一下載兩種模式，以及Webp轉png模式。
 // @description:zh-CN 支援下载 Arca Live 贴文中的图片、GIF、MP4、WEBM（使用 GM_download 绕过 CORS）并自动命名为「板块_编号_0001~n」格式，快速下载、逐一下载两种模式，以及Webp转png模式。
@@ -187,10 +187,10 @@
       // 根據模式決定併行下載或逐一下載
       if (fastMode) {
         tasks.push(task());
-        await sleep(250); // 快速模式下的小間隔
+        await sleep(100); // 快速模式下的小間隔
       } else {
         await task();
-        await sleep(500); // 逐一下載模式下的較長間隔
+        await sleep(100); // 逐一下載模式下的較長間隔
       }
     }
 
