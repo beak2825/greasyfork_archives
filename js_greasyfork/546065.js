@@ -3,7 +3,9 @@
 // @namespace    http://tampermonkey.net/
 // @version      3.7
 // @description  在哔哩哔哩视频页面上，提供用户选项来自动进入网页全屏、自动开启关灯模式（调暗页面背景）、悬浮评论区选项，以及重构播放页面最大化播放器功能。
-// @author       twocold
+// @author       twocold0451
+// @homepage     https://github.com/twocold0451/bilibili-toolkit
+// @supportURL   https://github.com/twocold0451/bilibili-toolkit/issues
 // @match        https://www.bilibili.com/video/*
 // @grant        GM_getValue
 // @grant        GM_setValue

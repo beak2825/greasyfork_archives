@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         南大LMS智慧教育平台|MOOC增强
 // @namespace    http://tampermonkey.net/
-// @version      0.30
-// @description  南大LMS平台与MOOC平台加速进度/自动下一个/智能停止/无视频自动跳转/视频倍速控制/解除播放限制 + 验证码自动识别 + 自动下载课件
+// @version      0.40
+// @description  南大LMS平台与MOOC平台加速进度/自动下一个/智能停止/无视频自动跳转/视频倍速控制/解除播放限制 + 验证码自动识别 + 一键下载所有课件
 // @author       Hronrad
 // @license    GPL-3.0-only
 // @match        https://lms.nju.edu.cn/*
@@ -166,6 +166,8 @@
     }
 
     function removeVideoRestrictions() {
+        if (!GlobalSettings.config.autoJump) return;
+
         const videos = document.querySelectorAll('video:not([data-restrictions-removed])');
 
         videos.forEach(video => {
@@ -180,6 +182,8 @@
     }
 
     function removePageRestrictions() {
+        if (!GlobalSettings.config.autoJump) return;
+
         document.oncontextmenu = null;
         document.onselectstart = null;
         document.ondragstart = null;
@@ -187,6 +191,8 @@
     }
 
     function monitorRestrictions() {
+        if (!GlobalSettings.config.autoJump) return;
+
         const observer = new MutationObserver((mutations) => {
             let needsUpdate = false;
 
@@ -281,7 +287,6 @@
             speedMenu.appendChild(item);
         });
 
-        // 添加设置选项（分割线）
         const divider = document.createElement('div');
         divider.style.cssText = 'height: 1px; background: #ddd; margin: 5px 0;';
         speedMenu.appendChild(divider);
@@ -616,6 +621,7 @@
 
     function checkNoVideoAutoNext() {
         if (scriptPaused) return;
+        if (!GlobalSettings.config.autoJump) return;
 
         if (!contentReady) {
             return;
@@ -651,6 +657,7 @@
 
     function keepVideoPlaying() {
         if (scriptPaused) return;
+        if (!GlobalSettings.config.autoJump) return;
 
         document.querySelectorAll('video').forEach(video => {
             if (video.paused) {
@@ -675,6 +682,7 @@
 
     function performVirtualUserAction() {
         if (scriptPaused) return;
+
 
         const videos = document.querySelectorAll('video');
         const playButtons = document.querySelectorAll('.vjs-play-control');
@@ -711,6 +719,8 @@
     }
 
     function setupVideoCompletionHandler() {
+
+
         const videos = document.querySelectorAll('video:not([data-completion-handler])');
 
         videos.forEach(video => {
@@ -721,12 +731,12 @@
                 setTimeout(() => {
                     if (checkAllVideosCompleted()) {
                         if (hasNextButton()) {
-                            autoClickNext();
+                            if (GlobalSettings.config.autoJump) autoClickNext();
                         } else {
-                            pauseScript();
+                            if (GlobalSettings.config.autoJump) pauseScript();
                         }
                     } else {
-                        autoClickNext();
+                        if (GlobalSettings.config.autoJump) autoClickNext();
                     }
                 }, 2000);
             });
@@ -849,11 +859,11 @@
         setTimeout(init, 1000);
     }
 
-    // ======= 全局设置管理 =======
     const GlobalSettings = {
         config: {
             captchaAuto: true,
-            captchaApi: 'http://127.0.0.1:5000/ocr'
+            captchaApi: 'http://127.0.0.1:5000/ocr',
+            autoJump: false
         },
         load() {
             try {
@@ -915,6 +925,13 @@
                     <label style="display: block; margin-bottom: 4px; font-size: 13px; color: #666;">OCR API 地址:</label>
                     <input type="text" id="setting-captcha-api" value="${GlobalSettings.config.captchaApi}" style="width: 100%; padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
                 </div>
+                <label style="display: flex; align-items: center; margin-bottom: 12px; border-top: 1px solid #eee; padding-top: 12px;">
+                    <input type="checkbox" id="setting-auto-jump" ${GlobalSettings.config.autoJump ? 'checked' : ''} style="margin-right: 8px;">
+                    <div>
+                        <span style="font-weight: 500;">开启视频辅助功能</span>
+                        <div style="font-size: 12px; color: #666; margin-top: 2px;">包括自动下一个、解除限制、智能停止等(倍速除外)</div>
+                    </div>
+                </label>
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button id="cancel-settings" style="padding: 8px 16px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">取消</button>
@@ -925,20 +942,18 @@
         panel.appendChild(content);
         document.body.appendChild(panel);
 
-        // 关闭按钮
         document.getElementById('close-settings').onclick = () => panel.style.display = 'none';
         document.getElementById('cancel-settings').onclick = () => panel.style.display = 'none';
         panel.onclick = (e) => {
             if (e.target === panel) panel.style.display = 'none';
         };
 
-        // 保存按钮
         document.getElementById('save-settings').onclick = () => {
             GlobalSettings.config.captchaAuto = document.getElementById('setting-captcha-auto').checked;
             GlobalSettings.config.captchaApi = document.getElementById('setting-captcha-api').value.trim();
+            GlobalSettings.config.autoJump = document.getElementById('setting-auto-jump').checked;
             GlobalSettings.save();
             panel.style.display = 'none';
-            // 更新验证码助手配置
             if (typeof CaptchaHelper !== 'undefined') {
                 CaptchaHelper.config.auto = GlobalSettings.config.captchaAuto;
                 CaptchaHelper.config.api = GlobalSettings.config.captchaApi;
@@ -946,8 +961,6 @@
             }
         };
     }
-
-    // ======= 验证码自动识别与设置 =======
 const CaptchaHelper = {
     config: {
         auto: GlobalSettings.config.captchaAuto,
@@ -1017,7 +1030,6 @@ const CaptchaHelper = {
         }
     },
     init() {
-        // 页面验证码出现时自动识别和按钮
         const observer = new MutationObserver(() => {
             const img = this.getImg();
             if (img && img.src && !img.dataset.captchaProcessed) {
@@ -1039,18 +1051,15 @@ if (location.hostname.includes('authserver.nju.edu.cn')) {
     CaptchaHelper.init();
 }
 
-// ======= 课件批量下载(API获取)=======
 if (location.hostname === 'lms.nju.edu.cn' && location.pathname.includes('/course/')) {
     const btn = document.createElement('button');
-    btn.textContent = '📥 下载全部课件';
+    btn.textContent = '📥 选择下载课件';
     btn.style.cssText = 'position:fixed;bottom:80px;right:20px;z-index:9999;padding:12px 20px;background:#28BD6E;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,0.2)';
     btn.onclick = async () => {
-        // 从URL提取课程ID
         const courseIdMatch = location.pathname.match(/\/course\/(\d+)/);
         if (!courseIdMatch) return alert('无法识别课程ID');
         const courseId = courseIdMatch[1];
         
-        // 获取sub_course_id(从URL hash或默认为0)
         const hashMatch = location.hash.match(/sub_course_id=(\d+)/);
         const subCourseId = hashMatch ? hashMatch[1] : '0';
         
@@ -1058,7 +1067,6 @@ if (location.hostname === 'lms.nju.edu.cn' && location.pathname.includes('/cours
         btn.disabled = true;
         
         try {
-            // 调用API获取所有活动
             const response = await fetch(`/api/courses/${courseId}/activities?sub_course_id=${subCourseId}`, {
                 credentials: 'same-origin',
                 headers: {
@@ -1069,17 +1077,20 @@ if (location.hostname === 'lms.nju.edu.cn' && location.pathname.includes('/cours
             if (!response.ok) throw new Error('API请求失败');
             const data = await response.json();
             
-            // 提取所有课件(type=material)中的uploads
             const allFiles = [];
             if (data.activities) {
                 data.activities.forEach(activity => {
                     if (activity.type === 'material' && activity.uploads) {
                         activity.uploads.forEach(upload => {
-                            if (upload.reference_id && upload.name) {
+                            if ((upload.reference_id || upload.id) && upload.name) {
                                 allFiles.push({
                                     name: upload.name,
                                     reference_id: upload.reference_id,
-                                    url: `/api/uploads/reference/${upload.reference_id}/blob`,
+                                    file_id: upload.id,
+                                    activity_id: activity.id,
+                                    url: upload.reference_id ? 
+                                         `/api/uploads/reference/${upload.reference_id}/blob` : 
+                                         `/api/uploads/${upload.id}/blob`,
                                     activity_title: activity.title,
                                     type: upload.type,
                                     allow_download: upload.allow_download || false
@@ -1095,37 +1106,133 @@ if (location.hostname === 'lms.nju.edu.cn' && location.pathname.includes('/cours
             
             if (!allFiles.length) return alert('未找到课件');
             
-            // 筛选可下载文件
-            const downloadableFiles = allFiles.filter(f => f.allow_download);
+            if (!allFiles.length) return alert('没有可下载的文件');
+
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:20000;display:flex;justify-content:center;align-items:center;';
             
-            // 显示前10个文件名(标注是否可下载)
-            const preview = allFiles.slice(0, 10).map((f, i) => 
-                `${i + 1}. [${f.activity_title}] ${f.name}${f.allow_download ? ' (可下载)' : ''}`
-            ).join('\n');
-            const message = `找到 ${allFiles.length} 个文件，其中可下载 ${downloadableFiles.length} 个\n\n前10个文件:\n${preview}${allFiles.length > 10 ? '\n...' : ''}\n\n确认下载 ${downloadableFiles.length} 个可下载文件?`;
+            const content = document.createElement('div');
+            content.style.cssText = 'background:white;padding:20px;border-radius:8px;width:500px;max-width:90%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
             
-            if (!confirm(message)) return;
+            content.innerHTML = `<h3 style="margin:0 0 15px 0;font-size:18px;">选择要下载的课件 (共${allFiles.length}个)</h3>`;
             
-            if (!downloadableFiles.length) return alert('没有可下载的文件');
+            const list = document.createElement('div');
+            list.style.cssText = 'overflow-y:auto;flex:1;border:1px solid #eee;margin-bottom:15px;padding:5px;border-radius:4px;';
             
-            // 依次下载可下载文件
-            downloadableFiles.forEach((file, i) => {
-                setTimeout(() => {
+            const checkboxes = [];
+            allFiles.forEach((f, i) => {
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:6px;border-bottom:1px solid #f5f5f5;display:flex;align-items:center;';
+                
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.checked = true;
+                cb.id = `dl-file-${i}`;
+                cb.style.marginRight = '8px';
+                
+                const label = document.createElement('label');
+                label.htmlFor = `dl-file-${i}`;
+                label.textContent = `[${f.activity_title}] ${f.name}`;
+                label.style.cssText = 'font-size:13px;cursor:pointer;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+                label.title = label.textContent;
+                
+                item.appendChild(cb);
+                item.appendChild(label);
+                list.appendChild(item);
+                checkboxes.push({ cb, file: f });
+            });
+            
+            content.appendChild(list);
+            
+            const btns = document.createElement('div');
+            btns.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-top:10px;';
+            
+            const toggleBtn = document.createElement('button');
+            toggleBtn.textContent = '全选/清空';
+            toggleBtn.style.cssText = 'padding:6px 12px;border:1px solid #ddd;background:#f8f9fa;border-radius:4px;cursor:pointer;font-size:13px;color:#333;';
+            toggleBtn.onclick = () => {
+                const hasChecked = checkboxes.some(x => x.cb.checked);
+                checkboxes.forEach(x => x.cb.checked = !hasChecked);
+            };
+            btns.appendChild(toggleBtn);
+            
+            const rightBtns = document.createElement('div');
+            rightBtns.style.cssText = 'display:flex;gap:10px;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '取消';
+            closeBtn.style.cssText = 'padding:6px 16px;border:1px solid #ddd;background:white;border-radius:4px;cursor:pointer;';
+            closeBtn.onclick = () => document.body.removeChild(modal);
+            
+            const dlBtn = document.createElement('button');
+            dlBtn.textContent = '下载选中';
+            dlBtn.style.cssText = 'padding:6px 16px;border:none;background:#28BD6E;color:white;border-radius:4px;cursor:pointer;';
+            dlBtn.onclick = async () => {
+                const selected = checkboxes.filter(x => x.cb.checked).map(x => x.file);
+                if (!selected.length) return alert('请至少选择一个文件');
+                
+                document.body.removeChild(modal);
+                
+                for (let i = 0; i < selected.length; i++) {
+                    const file = selected[i];
+                    let downloadUrl = file.url;
+                    let isBlobUrl = false;
+                    
+                    try {
+                        const isImage = file.type === 'image' || /\.(png|jpg|jpeg|gif|bmp)$/i.test(file.name);
+
+                        if ((isImage || !file.reference_id) && file.file_id) {
+                            const directUrl = `/api/uploads/${file.file_id}/blob?preview=true`;
+                            const blobResp = await fetch(directUrl);
+                            if (blobResp.ok) {
+                                const blob = await blobResp.blob();
+                                downloadUrl = URL.createObjectURL(blob);
+                                isBlobUrl = true;
+                            }
+                        } 
+                        else if (file.activity_id && file.reference_id) {
+                            const typeStr = file.type || 'document';
+                            const apiUrl = `/api/uploads/reference/${typeStr}/${file.reference_id}/url?preview=true&refer_id=${file.activity_id}&refer_type=learning_activity`;
+                            const resp = await fetch(apiUrl);
+                            if (resp.ok) {
+                                const json = await resp.json();
+                                if (json.url) downloadUrl = json.url;
+                            }
+                        }
+                    } catch (e) {}
+
                     const a = document.createElement('a');
-                    a.href = file.url;
+                    a.href = downloadUrl;
                     a.download = file.name;
                     a.target = '_blank';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                }, i * 800);
-            });
+                    
+                    if (isBlobUrl) {
+                        setTimeout(() => URL.revokeObjectURL(downloadUrl), 10000);
+                    }
+                    
+                    if (i < selected.length - 1) {
+                        await new Promise(r => setTimeout(r, 800));
+                    }
+                }
+            };
+            
+            rightBtns.appendChild(closeBtn);
+            rightBtns.appendChild(dlBtn);
+            btns.appendChild(rightBtns);
+            
+            content.appendChild(btns);
+            
+            modal.onclick = (e) => { if (e.target === modal) document.body.removeChild(modal); };
+            modal.appendChild(content);
+            document.body.appendChild(modal);
             
         } catch (error) {
             btn.textContent = '📥 下载全部课件';
             btn.disabled = false;
             alert('获取课件列表失败: ' + error.message);
-            console.error('下载失败:', error);
         }
     };
     setTimeout(() => document.body.appendChild(btn), 2000);

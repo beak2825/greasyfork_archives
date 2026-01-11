@@ -5,12 +5,12 @@
 // @name:ja      X/Twitter クリーンアップ & ワイドレイアウト表示
 // @name:ko      X/Twitter 깔끔하게 & 레이아웃 너비 확장
 // @namespace    https://www.tampermonkey.net/
-// @version      5.9
-// @description  Hide unnecessary X menu items on the left (Bookmarks, Jobs, Communities, Business, Premium, Verified Organizations, Monetization, Ads) and right (Subscribe to Premium, Footer), Bottom right (floating message bar, Grok), Enlarge and customize the width of the tweet timeline, Custom Script Loading Speed. 
-// @description:zh-TW  隱藏 X 多餘選單項目，左側（書籤、工作機會、社群、商業、Premium、已認證組織、營利、廣告）、右側（訂閱 Premium、頁尾欄目）、右下（浮動訊息欄、Grok），加大、自定義推文時間軸的寬度，自定義腳本加載速度
-// @description:zh-CN  隐藏 X 多余选单项目，左侧（书签、工作机会、社群、商业、Premium、已认证组织、营利、广告）、右侧（订阅 Premium、页尾栏目）、右下（浮动讯息栏、Grok），加大、自定义推文时间轴的宽度，自定义脚本加载速度
-// @description:ja  Xの不要なメニュー項目を左側（ブックマーク、求人、コミュニティ、ビジネス、Premium、認証済み組織、収益化、広告）および右側（Premiumの購読、フッター） 右下（フローティングメッセージバー、Grok）で非表示にし、 ツイートのタイムラインの幅を拡大し、カスタマイズする、カスタムスクリプトの読み込み速度。
-// @description:ko  X(트위터)의 불필요한 메뉴 항목을 숨깁니다: 왼쪽(북마크, 채용 정보, 커뮤니티, 비즈니스, 프리미엄, 인증된 조직, 수익 창출, 광고), 오른쪽(프리미엄 구독, 푸터), 오른쪽 하단(메시지 창, Grok). 트윗 타임라인 너비 확장 및 스크립트 로딩 속도 사용자 설정 기능을 제공합니다. 
+// @version      6.0
+// @description  Hide unnecessary X menu items on the left (Bookmarks, Jobs, Creator Studio, Communities, Business, Premium, Verified Organizations, Monetization, Ads) and right (Subscribe to Premium, Footer), Bottom right (floating message bar, Grok), Enlarge and customize the width of the tweet timeline, Custom Script Loading Speed. 
+// @description:zh-TW  隱藏 X 多餘選單項目，左側（書籤、工作機會、創作者工作室、社群、商業、Premium、已認證組織、營利、廣告）、右側（訂閱 Premium、頁尾欄目）、右下（浮動訊息欄、Grok），加大、自定義推文時間軸的寬度，自定義腳本加載速度
+// @description:zh-CN  隐藏 X 多余选单项目，左侧（书签、工作机会、创作者工作室、社群、商业、Premium、已认证组织、营利、广告）、右侧（订阅 Premium、页尾栏目）、右下（浮动讯息栏、Grok），加大、自定义推文时间轴的宽度，自定义脚本加载速度
+// @description:ja  Xの不要なメニュー項目を左側（ブックマーク、求人、クリエイタースタジオ、コミュニティ、ビジネス、Premium、認証済み組織、収益化、広告）および右側（Premiumの購読、フッター） 右下（フローティングメッセージバー、Grok）で非表示にし、 ツイートのタイムラインの幅を拡大し、カスタマイズする、カスタムスクリプトの読み込み速度。
+// @description:ko  X(트위터)의 불필요한 메뉴 항목을 숨깁니다: 왼쪽(북마크, 채용 정보, 크리에이터 스튜디오, 커뮤니티, 비즈니스, 프리미엄, 인증된 조직, 수익 창출, 광고), 오른쪽(프리미엄 구독, 푸터), 오른쪽 하단(메시지 창, Grok). 트윗 타임라인 너비 확장 및 스크립트 로딩 속도 사용자 설정 기능을 제공합니다. 
 // @author       Hzbrrbmin + ChatGPT + Gemini
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -171,6 +171,7 @@
       const labels = [
         '書籤', 'Bookmarks', 'ブックマーク', '书签', '북마크',
         '工作機會', 'Careers', '求人', '工作机会', '채용 정보',
+        '創作者工作室', '创作者工作室', 'Creator Studio', 'クリエイタースタジオ', '크리에이터 스튜디오',
         '社群', 'Communities', 'コミュニティ', '社区', '커뮤니티',
         '商業', '商业', 'ビジネス', 'Business', '비즈니스',
         'Premium', 'プレミアム',

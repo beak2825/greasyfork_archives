@@ -2,7 +2,7 @@
 // @name         微博荐读屏蔽脚本
 // @namespace    https://github.com/catscarlet/weibo-selection-killer
 // @description  屏蔽最新微博分组页面的荐读推广
-// @version      0.0.2
+// @version      0.0.3
 // @author       catscarlet
 // @license      GNU Affero General Public License v3.0
 // @match        https://weibo.com/*
@@ -100,13 +100,13 @@
 
     // 处理元素变化的节流版本
     const handleElementChanges = throttle(function() {
-        const container = document.querySelector('.Scroll_wrap_ObsGW');
+        const container = document.querySelector('#scroller');
         if (!container) {
             return;
         }
 
         // 查找所有包含目标图标的元素
-        const targetIcons = container.querySelectorAll('.morepop_cross_1Q1PF');
+        const targetIcons = container.querySelectorAll('._cross_1v5ao_55');
 
         targetIcons.forEach(icon => {
             const article = icon.closest('article');
@@ -125,13 +125,13 @@
     // 启动DOM变化监控
     function startDomObserver() {
         if (domObserver) {
-            console.log('停止已有的 .Scroll_wrap_ObsGW 监视');
+            console.log('停止已有的 #scroller 监视');
             domObserver.disconnect();
         }
 
-        const container = document.querySelector('.Scroll_wrap_ObsGW');
+        const container = document.querySelector('#scroller');
         if (container) {
-            console.log('检测到 .Scroll_wrap_ObsGW，开始监视');
+            console.log('检测到 #scroller，开始监视');
             domObserver = new MutationObserver(handleElementChanges);
 
             const config = {
@@ -145,7 +145,7 @@
             handleElementChanges(); // 初始检查
         } else {
             // 容器不存在时重试
-            console.log('未检测到 .Scroll_wrap_ObsGW');
+            console.log('未检测到 #scroller');
             setTimeout(startDomObserver, 1000);
         }
     }

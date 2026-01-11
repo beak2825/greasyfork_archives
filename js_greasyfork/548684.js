@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         DBD-RawsBanHelper
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      3.1
 // @description  过滤动漫花园、末日动漫、Nyaa和蜜柑计划中的DBD-Raws与731学院内容，并修复行颜色问题
-// @description:zh-CN  3.0更新内容：1、重置了所有的过滤方法。2、过滤内容输出在F12控制台并调整了样式。3、新增了过滤词面板，鉴于有人不喜欢页面多东西，故放在了右下角不起眼的地方，并在油猴拓展管理处添加了开关。4、自定义过滤词本地存储化（妈妈再也不用担心更新前忘记存自己的过滤词了）。
+// @description:zh-CN  3.1更新内容：过滤关键词现在分为全局过滤和站点过滤，导入导出时也支持不同站点的区分，控制面板也进行相应的调整，修复了TOC对Nyaa中正常内容的错误过滤
+// @author       Fuck DBD-Raws
 // @license      MIT
 // @match        *://*.dmhy.org/*
 // @match        *://*.acgnx.se/*
@@ -12,6 +13,7 @@
 // @match        *://mikanani.me/*
 // @match        *://mikanani.kas.pub/*
 // @exclude      *://u2.dmhy.org/showup.php
+// @grant        GM_listValues
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
@@ -22,54 +24,55 @@
 (function () {
     'use strict';
 
-    // 配置对象：包含目标关键词和过滤类名
-    const config = {
-        targetKeywords: ['DBD-Raws', 'DBD制作组', 'DBD製作組', 'DBD转发', 'DBD轉發', 'DBD-SUB', 'DBD字幕组', 'DBD字幕組', 'DBD代发', 'DBD代發', 'DBD代传', 'DBD代傳', 'DBD转载', 'DBD轉載', 'DBD自购', 'DBD自購', 'DBD&', '&DBD', '[DBD]','[TOC]',
-            '我的英雄学院', '我的英雄學院', 'Boku no Hero Academia', 'Boku No Hero Academia', 'My Hero Academia', 'My.Hero.Academia', 'Boku.no.Hero.Academia', 'Boku.No.Hero.Academia', 'My_Hero_Academia', 'Boku_no_Hero_Academia', '僕のヒーローアカデミア',
-        ],
-    };
+    // 初始默认关键词（仅用于首次运行时的默认值）
+    const defaultKeywords = [
+        'DBD-Raws', 'DBD制作组', 'DBD製作組', 'DBD转发', 'DBD轉發', 'DBD-SUB', 'DBD字幕组', 'DBD字幕組',
+        'DBD代发', 'DBD代發', 'DBD代传', 'DBD代傳', 'DBD转载', 'DBD轉載', 'DBD自购', 'DBD自購',
+        'DBD&', '&DBD', '[DBD]', '[TOC]',
+        '我的英雄学院', '我的英雄學院', 'Boku no Hero Academia', 'Boku No Hero Academia',
+        'My Hero Academia', 'My.Hero.Academia', 'Boku.no.Hero.Academia', 'Boku.No.Hero.Academia',
+        'My_Hero_Academia', 'Boku_no_Hero_Academia', '僕のヒーローアカデミア',
+    ];
 
-    // 记录过滤结果的函数
+    // 全局关键词
+    function getGlobalKeywords() {
+        return GM_getValue('globalKeywords', []);
+    }
+    function saveGlobalKeywords(keywords) {
+        GM_setValue('globalKeywords', keywords);
+    }
+
+    // 站点关键词（按域名）
+    function getSiteKeywords(hostname = location.hostname) {
+        return GM_getValue('siteKeywords_' + hostname, []);
+    }
+    function saveSiteKeywords(keywords, hostname = location.hostname) {
+        GM_setValue('siteKeywords_' + hostname, keywords);
+    }
+
+    // 合并关键词（全局 + 站点）
+    function getAllKeywords() {
+        return [...getGlobalKeywords(), ...getSiteKeywords()];
+    }
+
+    // 记录过滤结果
     function logFilterResult(matchedKeywords, removedTexts, removedCount) {
         if (removedCount > 0) {
-            console.log(`🔍匹配关键词: 『${Array.from(matchedKeywords).join('、')}』，共过滤 ${removedCount} 条内容,过滤的内容如下:`);
-            removedTexts.forEach((text, index) => {
-                console.log(`✅${index + 1}. ${text}`);
-            });
+            // 拼接过滤内容，每行加上换行符
+            let logMessage = `🔍匹配关键词: 『${Array.from(matchedKeywords).join('、')}』\n`;
+            logMessage += `共过滤 ${removedCount} 条内容,过滤的内容如下:\n`;
+            logMessage += removedTexts.map((text, index) => `✅${index + 1}. ${text}`).join('\n');
+
+            console.log(logMessage); // ✅ 仅输出一条日志
         } else {
-            console.log('❌没啥可过滤的');
+            console.log('❌没啥要过滤的~');
         }
     }
 
-    // 监听点击事件，处理蜜柑计划展开的子组
-    document.addEventListener('click', function (e) {
-        // 定位到展开按钮
-        const span = e.target.closest('span.js-expand_bangumi');
-        if (!span) return;
-
-        // 找到父容器
-        const anBox = span.closest('div.an-box.animated.fadeIn');
-        if (!anBox) return;
-
-        // 找到展开的内容框架
-        const frame = anBox.nextElementSibling;
-        if (!frame || !frame.classList.contains('an-res-row-frame')) return;
-
-        console.log('🔍检测到展开的 frame，开始过滤');
-        filterMikanFrame(frame);
-
-        // 监听frame内容变化
-        const observer = new MutationObserver(() => {
-            filterMikanFrame(frame);
-        });
-        observer.observe(frame, { childList: true, subtree: true });
-    });
-
-    // 过滤特定内容（731学院）
+    // 过滤特定内容（我的英雄学院）
     function filter731() {
         const bullshits = document.querySelectorAll('[title~=我的英雄学院]');
         bullshits.forEach(bullshit => {
-            // 根据页面类型选择不同的父节点删除策略
             if (window.location.href.includes('/Home/Search')) {
                 bullshit.parentNode.parentNode.parentNode.parentNode.remove();
             } else {
@@ -78,37 +81,35 @@
         });
     }
 
-    // 过滤蜜柑计划展开的子组内容
+    // 过滤蜜柑计划展开的子组
     function filterMikanFrame(frame) {
+        const keywords = getAllKeywords();
         const matchedKeywords = new Set();
         const removedTexts = [];
         let removedCount = 0;
 
-        // 获取所有子组列表项
         const lis = frame.querySelectorAll('li.js-expand_bangumi-subgroup');
         lis.forEach(li => {
             const tag = li.querySelector('.sk-col.tag-res-name');
-            if (tag) {
-                const text = tag.textContent.trim();
-                const title = tag.getAttribute('title') || '';
-                // 检查是否匹配关键词
-                const hit = config.targetKeywords.find(keyword => text.includes(keyword) || title.includes(keyword));
-                if (hit) {
-                    matchedKeywords.add(hit);
-                    removedTexts.push(text);
-                    removedCount++;
-                    li.remove(); // 删除匹配的列表项
-                }
+            if (!tag) return;
+            const text = tag.textContent.trim();
+            const title = tag.getAttribute('title') || '';
+            const hit = keywords.find(keyword => text.includes(keyword) || title.includes(keyword));
+            if (hit) {
+                matchedKeywords.add(hit);
+                removedTexts.push(text);
+                removedCount++;
+                li.remove();
             }
         });
 
-        // 调用额外的过滤逻辑
         filter731();
         logFilterResult(matchedKeywords, removedTexts, removedCount);
     }
 
     // 过滤蜜柑计划列表模式
     function filterMikanList() {
+        const keywords = getAllKeywords();
         const rows = document.querySelectorAll('#sk-body table tbody tr');
         const removedTexts = [];
         const matchedKeywords = new Set();
@@ -117,18 +118,15 @@
         rows.forEach(row => {
             const td = row.querySelector('td:nth-child(3)');
             if (!td) return;
-
             const link = td.querySelector('a');
             if (!link) return;
-
             const text = link.textContent.trim();
-            // 检查是否匹配关键词
-            const hit = config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = keywords.find(keyword => text.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
                 removedTexts.push(text);
                 removedCount++;
-                row.remove(); // 删除整行
+                row.remove();
             }
         });
 
@@ -137,42 +135,37 @@
 
     // 过滤蜜柑计划搜索模式
     function filterMikanSearch() {
+        const keywords = getAllKeywords();
         filter731();
         const matchedKeywords = new Set();
         const removedTexts = [];
         let removedCount = 0;
 
-        // 过滤侧边栏
         const sidebarLis = document.querySelectorAll('#sk-container .leftbar-container ul li');
         sidebarLis.forEach(li => {
             const link = li.querySelector('span a');
             if (!link) return;
-
             const text = link.textContent.trim();
-            // 特殊处理TOC关键词
-            const hit = (text.includes("TOC") ? "TOC" : null) || config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = (text.includes('TOC') ? 'TOC' : null) || keywords.find(keyword => text.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
-                li.remove(); // 删除侧边栏项
+                li.remove();
             }
         });
 
-        // 过滤主表格
         const rows = document.querySelectorAll('#sk-container table tbody tr');
         rows.forEach(row => {
             const td = row.querySelector('td:nth-child(2)');
             if (!td) return;
-
             const link = td.querySelector('a');
             if (!link) return;
-
             const text = link.textContent.trim();
-            const hit = config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = keywords.find(keyword => text.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
                 removedTexts.push(text);
                 removedCount++;
-                row.remove(); // 删除整行
+                row.remove();
             }
         });
 
@@ -181,40 +174,34 @@
 
     // 过滤蜜柑计划番剧模式
     function filterMikanBangumi() {
+        const keywords = getAllKeywords();
         const matchedKeywords = new Set();
         const removedTexts = [];
         let removedCount = 0;
 
-        // 过滤侧边栏
         const sidebarLis = document.querySelectorAll('#sk-container .leftbar-container ul li');
         sidebarLis.forEach(li => {
             const link = li.querySelector('span a');
             if (!link) return;
-
             const text = link.textContent.trim();
-            // 特殊处理TOC关键词
-            const hit = (text.includes("TOC") ? "TOC" : null) || config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = (text.includes('TOC') ? 'TOC' : null) || keywords.find(keyword => text.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
                 li.remove();
             }
         });
 
-        // 过滤主内容区的字幕组
         const subgroupDivs = document.querySelectorAll('div.subgroup-text[id]');
         subgroupDivs.forEach(subgroupDiv => {
             const link = subgroupDiv.querySelector('a');
             if (!link) return;
-
             const text = link.textContent.trim();
-            // 特殊处理TOC关键词
-            const hit = (text.includes("TOC") ? "TOC" : null) || config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = (text.includes('TOC') ? 'TOC' : null) || keywords.find(keyword => text.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
                 removedTexts.push(text);
                 removedCount++;
 
-                // 删除字幕组及其相关元素（前后共5个元素）
                 const toRemove = [];
                 if (subgroupDiv.previousElementSibling) {
                     toRemove.push(subgroupDiv.previousElementSibling);
@@ -234,8 +221,9 @@
         logFilterResult(matchedKeywords, removedTexts, removedCount);
     }
 
-    // 过滤动漫花园内容
+    // 过滤动漫花园
     function filterDmhyContent() {
+        const keywords = getAllKeywords();
         const matchedKeywords = new Set();
         const removedTexts = [];
         let removedCount = 0;
@@ -245,22 +233,22 @@
 
         const rows = table.querySelectorAll('tbody tr');
         rows.forEach(row => {
-            // 定位到第三列（标题列）
             const td = row.querySelector('td:nth-child(3)');
             if (!td) return;
-
             const link = td.querySelector('a[target]');
-            const text = (link?.textContent || row.textContent).trim();
-            const hit = config.targetKeywords.find(keyword => text.includes(keyword));
+            // 改成兼容写法（ES5+）
+            const tdText = ((link && link.textContent) || td.textContent).trim();
+            const rowText = row.textContent.trim();// ✅ 用于匹配
+            const hit = keywords.find(keyword => rowText.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
-                removedTexts.push(text);
+                removedTexts.push(tdText);// ✅ 只保存第3列的内容
                 removedCount++;
-                row.remove(); // 删除整行
+                row.remove();
             }
         });
 
-        // 重新为剩余行添加交替背景色
+        // 重新设置剩余行的奇偶行样式
         const remainingRows = table.querySelectorAll('tbody tr');
         remainingRows.forEach((row, index) => {
             row.classList.remove('odd', 'even');
@@ -274,8 +262,9 @@
         logFilterResult(matchedKeywords, removedTexts, removedCount);
     }
 
-    // 过滤末日动漫内容
+    // 过滤末日动漫
     function filterAcgnxContent() {
+        const keywords = getAllKeywords();
         const matchedKeywords = new Set();
         const removedTexts = [];
         let removedCount = 0;
@@ -285,21 +274,21 @@
 
         const rows = table.querySelectorAll('tr');
         rows.forEach(row => {
-            // 定位到第三列（标题列）
             const td = row.querySelector('td:nth-child(3)');
             if (!td) return;
+            const tdText = td.textContent.trim(); // ✅ 用于保存
+            const rowText = row.textContent.trim();// ✅ 用于匹配
 
-            const text = td.textContent.trim();
-            const hit = config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = keywords.find(keyword => rowText.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
-                removedTexts.push(text);
+                removedTexts.push(tdText);// ✅ 只保存第3列的内容
                 removedCount++;
-                row.remove(); // 删除整行
+                row.remove();
             }
         });
 
-        // 重新为剩余行添加交替背景色
+        // 重新设置剩余行的奇偶行样式
         const remainingRows = table.querySelectorAll('tr');
         remainingRows.forEach((row, index) => {
             row.classList.remove('alt1', 'alt2');
@@ -313,39 +302,35 @@
         logFilterResult(matchedKeywords, removedTexts, removedCount);
     }
 
-    // 过滤Nyaa内容
+    // 过滤 Nyaa
     function filterNyaaContent() {
+        const keywords = getAllKeywords();
         const matchedKeywords = new Set();
         const removedTexts = [];
         let removedCount = 0;
 
         const rows = document.querySelectorAll('tr');
         rows.forEach(row => {
-            // 定位到第二列（标题列）
             const td = row.querySelector('td:nth-child(2)');
             if (!td) return;
-
             const text = td.textContent.trim();
-            const hit = config.targetKeywords.find(keyword => text.includes(keyword));
+            const hit = keywords.find(keyword => text.includes(keyword));
             if (hit) {
                 matchedKeywords.add(hit);
                 removedTexts.push(text);
                 removedCount++;
-                row.remove(); // 删除整行
+                row.remove();
             }
         });
 
         logFilterResult(matchedKeywords, removedTexts, removedCount);
     }
 
-    // 主过滤函数：根据当前页面调用对应的过滤方法
+    // 主过滤函数
     function filterContent() {
-        // 延迟执行以确保页面完全加载
         setTimeout(() => {
             console.clear();
             console.log('ℹ️DBD-RawsBanHelper初始化完成，开始执行！');
-
-            // 根据域名和路径决定使用哪种过滤方法
             if (location.hostname.includes('dmhy.org')) {
                 console.log('ℹ️正在执行『动漫花园』的过滤方法');
                 filterDmhyContent();
@@ -366,56 +351,105 @@
                 filterMikanBangumi();
             } else if (location.hostname.includes('mikanani.me') || location.hostname.includes('mikanani.kas.pub')) {
                 console.log('ℹ️蜜柑计划展开过滤逻辑已绑定点击事件');
-                // 蜜柑计划首页需要等待用户点击展开
             }
         }, 500);
     }
 
-    // 页面加载完成后执行主过滤函数
     window.addEventListener('load', filterContent);
 
-    // 监听DOM变化，持续过滤特定内容
+    // 监听 DOM 变化，持续过滤特定内容
     window.addEventListener('load', () => {
         const targetNode = document.querySelector('#sk-body');
         if (!targetNode) return;
-
-        // 使用MutationObserver监听DOM变化
         const observer = new MutationObserver(() => {
             filter731();
         });
         observer.observe(targetNode, { childList: true, subtree: true });
     });
 
-    // 保存关键词
-    function saveKeywords() {
-        localStorage.setItem('DBD_RawsBanHelper_keywords', JSON.stringify(config.targetKeywords));
-    }
-
-    // 初始化控制面板（抽屉式）
+    // 抽屉式控制面板
     function initControlPanel() {
         const showButton = GM_getValue('showButton', true);
 
-        // 创建面板
         const panel = document.createElement('div');
         panel.id = 'filter-config-panel';
         panel.style.cssText = `
         position: fixed;
-        top: 15%;               /* 距离顶部留白 */
+        top: 10%;
         right: 0;
-        width: 360px;              /* 面板宽度调大 */
-        height: 70%;            /* 不占满整个高度 */
+        width: 360px;   /* 缩窄 */
+        height: 85%;    /* 拉长 */
         background: #fff;
         border-left: 1px solid #ccc;
         box-shadow: -4px 0 12px rgba(0,0,0,0.2);
         z-index: 10000;
-        font-size: 14px;
         display: flex;
         flex-direction: column;
-        transform: translateX(100%); /* 默认隐藏在右侧 */
+        transform: translateX(100%);
         transition: transform 0.3s ease;
-        border-radius: 8px 0 0 8px;  /* 上下圆角 */
+        border-radius: 8px 0 0 8px;
     `;
+        panel.style.opacity = '0.95';
 
+        // 样式覆盖
+        const style = document.createElement('style');
+        style.textContent = `
+      #filter-config-panel, #filter-config-panel * {
+        font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+        box-sizing: border-box !important;
+      }
+      #filter-config-panel, #filter-config-panel ul {
+        overflow-y: scroll !important;
+      }
+        #filter-config-panel::-webkit-scrollbar
+     {
+        display: none !important;
+      }
+      #filter-config-panel li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 2px;
+      }
+      #filter-config-panel li span {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #filter-config-panel button {
+        padding: 4px 8px !important;
+        border: none !important;
+        border-radius: 4px !important;
+        cursor: pointer !important;
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+      }
+      .btn-add     { background: #4CAF50 !important; color: #fff !important; }
+      .btn-delete  { background: #f44336 !important; color: #fff !important; }
+      .btn-edit    { background: #FF9800 !important; color: #fff !important; }
+      .btn-export  { background: #795548 !important; color: #fff !important; }
+      .btn-import  { background: #2196F3 !important; color: #fff !important; }
+      #toggle-keyword-panel-btn {
+        font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", Arial, Helvetica, sans-serif !important;
+        font-size: 13px !important;
+      }
+      #filter-config-panel li {
+        border-bottom: 1px solid #eee;
+      }
+      .section-divider {
+        height: 5px;
+        background: #ccc;
+        margin: 8px 0;
+      }
+    `;
+        document.head.appendChild(style);
+
+        // 标题
         const title = document.createElement('div');
         title.textContent = '过滤关键词控制面板';
         title.style.fontWeight = 'bold';
@@ -424,152 +458,308 @@
         title.style.borderBottom = '1px solid #ddd';
         panel.appendChild(title);
 
-        // 列表容器
-        const list = document.createElement('ul');
-        list.style.listStyle = 'none';
-        list.style.padding = '10px';
-        list.style.margin = '0';
-        list.style.flex = '1';
-        list.style.overflowY = 'auto';
-        panel.appendChild(list);
+        // 全局关键词列表
+        const globalTitle = document.createElement('div');
+        globalTitle.textContent = '🌐 全局关键词(Global)';
+        globalTitle.style.fontWeight = 'bold';
+        globalTitle.style.padding = '5px 5px';
+        panel.appendChild(globalTitle);
 
-        // 底部容器
-        const bottomContainer = document.createElement('div');
-        bottomContainer.style.padding = '10px';
-        bottomContainer.style.borderTop = '1px solid #ddd';
+        const globalList = document.createElement('ul');
+        globalList.style.listStyle = 'none';
+        globalList.style.padding = '5px';
+        globalList.style.margin = '0';
+        globalList.style.flex = '1';
+        panel.appendChild(globalList);
 
-        const inputContainer = document.createElement('div');
-        inputContainer.style.display = 'flex';
-        inputContainer.style.marginBottom = '8px';
+        // 全局关键词输入区
+        const globalInputContainer = document.createElement('div');
+        globalInputContainer.style.display = 'flex';
+        globalInputContainer.style.gap = '5px';
+        globalInputContainer.style.padding = '5px 10px';
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = '请输入新的关键词，注意大小写敏感！';
-        input.style.flex = '1';
-        input.style.padding = '5px';
-        input.style.border = '1px solid #ccc';
-        input.style.borderRadius = '4px';
-        inputContainer.appendChild(input);
+        const globalInput = document.createElement('input');
+        globalInput.type = 'text';
+        globalInput.placeholder = ' 输入全局关键词，注意区分大小写！';
+        globalInput.style.flex = '1';
 
-        const addBtn = document.createElement('button');
-        addBtn.textContent = '添加';
-        addBtn.style.marginLeft = '8px';
-        addBtn.style.background = '#4CAF50';
-        addBtn.style.color = '#fff';
-        addBtn.style.border = 'none';
-        addBtn.style.borderRadius = '4px';
-        addBtn.style.cursor = 'pointer';
-        inputContainer.appendChild(addBtn);
+        const addGlobalBtn = document.createElement('button');
+        addGlobalBtn.textContent = '添加';
+        addGlobalBtn.className = 'btn-add';
 
-        bottomContainer.appendChild(inputContainer);
+        globalInputContainer.appendChild(globalInput);
+        globalInputContainer.appendChild(addGlobalBtn);
+        panel.appendChild(globalInputContainer);
 
-        // 导入导出按钮
+        // 在全局输入框之后插入分隔线
+        const sectionDivider = document.createElement('div');
+        sectionDivider.className = 'section-divider';
+        panel.appendChild(sectionDivider);
+
+        // 站点关键词列表
+        const siteTitle = document.createElement('div');
+        siteTitle.textContent = `📍 当前站点关键词 (${location.hostname})`;
+        siteTitle.style.fontWeight = 'bold';
+        siteTitle.style.padding = '5px 5px';
+        panel.appendChild(siteTitle);
+
+        const siteList = document.createElement('ul');
+        siteList.style.listStyle = 'none';
+        siteList.style.padding = '5px';
+        siteList.style.margin = '0';
+        siteList.style.flex = '1';
+        panel.appendChild(siteList);
+
+        // 站点关键词输入区
+        const siteInputContainer = document.createElement('div');
+        siteInputContainer.style.display = 'flex';
+        siteInputContainer.style.gap = '5px';
+        siteInputContainer.style.padding = '5px 10px';
+
+        const siteInput = document.createElement('input');
+        siteInput.type = 'text';
+        siteInput.placeholder = ' 输入站点关键词，注意区分大小写！';
+        siteInput.style.flex = '1';
+
+        const addSiteBtn = document.createElement('button');
+        addSiteBtn.textContent = '添加';
+        addSiteBtn.className = 'btn-add';
+
+        siteInputContainer.appendChild(siteInput);
+        siteInputContainer.appendChild(addSiteBtn);
+        panel.appendChild(siteInputContainer);
+
+        // 导入导出按钮区
         const ioContainer = document.createElement('div');
         ioContainer.style.display = 'flex';
-        ioContainer.style.justifyContent = 'space-between';
+        ioContainer.style.gap = '8px';
+        ioContainer.style.padding = '10px';
 
         const exportBtn = document.createElement('button');
-        exportBtn.textContent = '导出';
-        exportBtn.style.flex = '1';
-        exportBtn.style.marginRight = '5px';
-        exportBtn.style.background = '#2196F3';
-        exportBtn.style.color = '#fff';
-        exportBtn.style.border = 'none';
-        exportBtn.style.borderRadius = '4px';
-        exportBtn.style.cursor = 'pointer';
+        exportBtn.textContent = '导出配置文件';
+        exportBtn.className = 'btn-export';
+        exportBtn.style.flex = '1'; // 占满一半
 
         const importBtn = document.createElement('button');
-        importBtn.textContent = '导入';
-        importBtn.style.flex = '1';
-        importBtn.style.marginLeft = '5px';
-        importBtn.style.background = '#FF9800';
-        importBtn.style.color = '#fff';
-        importBtn.style.border = 'none';
-        importBtn.style.borderRadius = '4px';
-        importBtn.style.cursor = 'pointer';
+        importBtn.textContent = '导入配置文件';
+        importBtn.className = 'btn-import';
+        importBtn.style.flex = '1'; // 占满另一半
 
         ioContainer.appendChild(exportBtn);
         ioContainer.appendChild(importBtn);
-        bottomContainer.appendChild(ioContainer);
+        panel.appendChild(ioContainer);
 
-        panel.appendChild(bottomContainer);
         document.body.appendChild(panel);
 
-        // 渲染列表
-        function renderList() {
-            list.innerHTML = '';
-            const saved = JSON.parse(localStorage.getItem('DBD_RawsBanHelper_keywords')) || config.targetKeywords;
-            config.targetKeywords = saved;
+        // 渲染列表函数
+        function renderLists() {
+            globalList.innerHTML = '';
+            siteList.innerHTML = '';
 
-            config.targetKeywords.forEach((kw, index) => {
+            // 全局关键词列表
+            getGlobalKeywords().forEach((kw, index) => {
                 const li = document.createElement('li');
-                li.style.display = 'flex';
-                li.style.justifyContent = 'space-between';
-                li.style.alignItems = 'center';
-                li.style.padding = '4px 0';
-
-                // 序号 + 关键词
                 const textSpan = document.createElement('span');
+                textSpan.title = kw; // 鼠标悬停显示完整内容
                 textSpan.textContent = `${index + 1}. ${kw}`;
                 li.appendChild(textSpan);
 
                 const btnContainer = document.createElement('div');
+                btnContainer.style.display = 'flex';
+                btnContainer.style.gap = '8px';
 
-                // 修改按钮
-                const editBtn = document.createElement('button');
-                editBtn.textContent = '修改';
-                editBtn.style.background = '#FF9800';
-                editBtn.style.color = '#fff';
-                editBtn.style.border = 'none';
-                editBtn.style.borderRadius = '4px';
-                editBtn.style.cursor = 'pointer';
-                editBtn.style.marginRight = '5px';
-                editBtn.onclick = () => {
-                    const newKw = prompt('请输入新的关键词，注意大小写敏感！', kw);
-                    if (newKw && newKw.trim()) {
-                        config.targetKeywords[index] = newKw.trim();
-                        saveKeywords();
-                        renderList();
-                        location.reload();
+                // 移到站点
+                const globalMoveBtn = document.createElement('button');
+                globalMoveBtn.textContent = '移动';
+                globalMoveBtn.className = 'btn-import';
+                globalMoveBtn.onclick = (e) => {
+                    e.stopPropagation(); // ✅ 阻止冒泡，避免触发外部点击关闭
+                    const globalArr = getGlobalKeywords();
+                    globalArr.splice(index, 1);
+                    saveGlobalKeywords(globalArr);
+
+                    const siteArr = getSiteKeywords();
+                    if (!siteArr.includes(kw)) {
+                        siteArr.push(kw);
+                        saveSiteKeywords(siteArr);
                     }
+                    renderLists();
                 };
-                btnContainer.appendChild(editBtn);
+                btnContainer.appendChild(globalMoveBtn);
 
-                // 删除按钮
-                const delBtn = document.createElement('button');
-                delBtn.textContent = '删除';
-                delBtn.style.background = '#f44336';
-                delBtn.style.color = '#fff';
-                delBtn.style.border = 'none';
-                delBtn.style.borderRadius = '4px';
-                delBtn.style.cursor = 'pointer';
-                delBtn.onclick = () => {
-                    config.targetKeywords.splice(index, 1);
-                    saveKeywords();
-                    renderList();
+                // 修改
+                const globalEditBtn = document.createElement('button');
+                globalEditBtn.textContent = '修改';
+                globalEditBtn.className = 'btn-edit';
+                globalEditBtn.onclick = () => {
+                    const inputEdit = document.createElement('input');
+                    inputEdit.type = 'text';
+                    inputEdit.value = kw;
+                    li.replaceChild(inputEdit, textSpan);
+
+                    const globalSaveBtn = document.createElement('button');
+                    globalSaveBtn.textContent = '保存';
+                    globalSaveBtn.className = 'btn-add';
+                    globalSaveBtn.onclick = () => {
+                        const arr = getGlobalKeywords();
+                        arr[index] = inputEdit.value.trim();
+                        saveGlobalKeywords(arr);
+                        renderLists();
+                        location.reload();
+                    };
+
+                    const globalCancelBtn = document.createElement('button');
+                    globalCancelBtn.textContent = '取消';
+                    globalCancelBtn.className = 'btn-import';
+                    globalCancelBtn.onclick = () => renderLists();
+
+                    btnContainer.innerHTML = '';
+                    btnContainer.appendChild(globalSaveBtn);
+                    btnContainer.appendChild(globalCancelBtn);
+                };
+                btnContainer.appendChild(globalEditBtn);
+
+                // 删除
+                const globalDelBtn = document.createElement('button');
+                globalDelBtn.textContent = '删除';
+                globalDelBtn.className = 'btn-delete';
+                globalDelBtn.onclick = () => {
+                    const arr = getGlobalKeywords();
+                    arr.splice(index, 1);
+                    saveGlobalKeywords(arr);
+                    renderLists();
                     location.reload();
                 };
-                btnContainer.appendChild(delBtn);
+                btnContainer.appendChild(globalDelBtn);
 
                 li.appendChild(btnContainer);
-                list.appendChild(li);
+                globalList.appendChild(li);
+            });
+
+            // 站点关键词列表
+            getSiteKeywords().forEach((kw, index) => {
+                const li = document.createElement('li');
+                const textSpan = document.createElement('span');
+                textSpan.title = kw; // 鼠标悬停显示完整内容
+                textSpan.textContent = `${index + 1}. ${kw}`;
+                li.appendChild(textSpan);
+
+                const btnContainer = document.createElement('div');
+                btnContainer.style.display = 'flex';
+                btnContainer.style.gap = '8px';
+
+                // 移到全局
+                const siteMoveBtn = document.createElement('button');
+                siteMoveBtn.textContent = '移动';
+                siteMoveBtn.className = 'btn-import';
+                siteMoveBtn.onclick = (e) => {
+                    e.stopPropagation(); // ✅ 阻止冒泡
+                    const siteArr = getSiteKeywords();
+                    siteArr.splice(index, 1);
+                    saveSiteKeywords(siteArr);
+
+                    const globalArr = getGlobalKeywords();
+                    if (!globalArr.includes(kw)) {
+                        globalArr.push(kw);
+                        saveGlobalKeywords(globalArr);
+                    }
+                    renderLists();
+                };
+                btnContainer.appendChild(siteMoveBtn);
+
+                // 修改
+                const siteEditBtn = document.createElement('button');
+                siteEditBtn.textContent = '修改';
+                siteEditBtn.className = 'btn-edit';
+                siteEditBtn.onclick = () => {
+                    const inputEdit = document.createElement('input');
+                    inputEdit.type = 'text';
+                    inputEdit.value = kw;
+                    li.replaceChild(inputEdit, textSpan);
+
+                    const siteSaveBtn = document.createElement('button');
+                    siteSaveBtn.textContent = '保存';
+                    siteSaveBtn.className = 'btn-add';
+                    siteSaveBtn.onclick = () => {
+                        const arr = getSiteKeywords();
+                        arr[index] = inputEdit.value.trim();
+                        saveSiteKeywords(arr);
+                        renderLists();
+                        location.reload();
+                    };
+
+                    const siteCancelBtn = document.createElement('button');
+                    siteCancelBtn.textContent = '取消';
+                    siteCancelBtn.className = 'btn-import';
+                    siteCancelBtn.onclick = () => renderLists();
+
+                    btnContainer.innerHTML = '';
+                    btnContainer.appendChild(siteSaveBtn);
+                    btnContainer.appendChild(siteCancelBtn);
+                };
+                btnContainer.appendChild(siteEditBtn);
+
+                // 删除
+                const siteDelBtn = document.createElement('button');
+                siteDelBtn.textContent = '删除';
+                siteDelBtn.className = 'btn-delete';
+                siteDelBtn.onclick = () => {
+                    const arr = getSiteKeywords();
+                    arr.splice(index, 1);
+                    saveSiteKeywords(arr);
+                    renderLists();
+                    location.reload();
+                };
+                btnContainer.appendChild(siteDelBtn);
+
+                li.appendChild(btnContainer);
+                siteList.appendChild(li);
             });
         }
 
-        addBtn.onclick = () => {
-            const newKw = input.value.trim();
-            if (newKw && !config.targetKeywords.includes(newKw)) {
-                config.targetKeywords.push(newKw);
-                saveKeywords();
-                input.value = '';
-                renderList();
-                location.reload();
+        // 添加到全局/站点
+        addGlobalBtn.onclick = () => {
+            const newKw = globalInput.value.trim();
+            if (!newKw) return;
+            const arr = getGlobalKeywords();
+            if (!arr.includes(newKw)) {
+                arr.push(newKw);
+                saveGlobalKeywords(arr);
+                globalInput.value = '';
+                renderLists();
+                location.reload(); // ✅ 添加后刷新页面
+            }
+        };
+        addSiteBtn.onclick = () => {
+            const newKw = siteInput.value.trim();
+            if (!newKw) return;
+            const arr = getSiteKeywords();
+            if (!arr.includes(newKw)) {
+                arr.push(newKw);
+                saveSiteKeywords(arr);
+                siteInput.value = '';
+                renderLists();
+                location.reload(); // ✅ 添加后刷新页面
             }
         };
 
-        // 导出功能
+        // 导出：全局和所有站点分开存储
         exportBtn.onclick = () => {
-            const blob = new Blob([JSON.stringify(config.targetKeywords, null, 2)], { type: 'application/json' });
+            const data = {
+                global: getGlobalKeywords(),
+                sites: {}
+            };
+            const allKeys = GM_listValues();
+            allKeys.forEach(key => {
+                if (key.startsWith('siteKeywords_')) {
+                    const hostname = key.replace('siteKeywords_', '');
+                    const arr = GM_getValue(key, []);
+                    if (Array.isArray(arr)) {
+                        data.sites[hostname] = arr;
+                    }
+                }
+            });
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -578,7 +768,7 @@
             URL.revokeObjectURL(url);
         };
 
-        // 导入功能
+        // 导入：分别恢复全局和所有站点
         importBtn.onclick = () => {
             const inputFile = document.createElement('input');
             inputFile.type = 'file';
@@ -590,14 +780,17 @@
                 reader.onload = (event) => {
                     try {
                         const imported = JSON.parse(event.target.result);
-                        if (Array.isArray(imported)) {
-                            config.targetKeywords = imported;
-                            saveKeywords();
-                            renderList();
-                            location.reload();
-                        } else {
-                            alert('导入文件格式错误');
+                        if (imported.global && Array.isArray(imported.global)) {
+                            saveGlobalKeywords(imported.global);
                         }
+                        if (imported.sites) {
+                            Object.keys(imported.sites).forEach(hostname => {
+                                if (Array.isArray(imported.sites[hostname])) {
+                                    saveSiteKeywords(imported.sites[hostname], hostname);
+                                }
+                            });
+                        }
+                        renderLists();
                     } catch (err) {
                         alert('导入失败: ' + err.message);
                     }
@@ -607,27 +800,22 @@
             inputFile.click();
         };
 
-        renderList();
+        // 初始渲染
+        renderLists();
 
-        // 创建按钮
-        function createToggleBtn() {
-            if (document.getElementById('filter-toggle-btn')) return;
+        // 面板按钮（右下角）
+        if (showButton) {
             const toggleBtn = document.createElement('button');
-            toggleBtn.id = 'filter-toggle-btn';
-            toggleBtn.textContent = '过滤词面板';
-            toggleBtn.style.cssText = `
-            position: fixed;
-            bottom: 2.5px;
-            right: 20px;
-            background: rgba(33,150,243,0.8);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 5px 10px;
-            cursor: pointer;
-            z-index: 10001;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        `;
+            toggleBtn.id = 'toggle-keyword-panel-btn';// ✅ 添加 id
+            toggleBtn.textContent = '关键词面板';
+            toggleBtn.className = 'btn-import';
+            toggleBtn.style.position = 'fixed';
+            toggleBtn.style.bottom = '2px';
+            toggleBtn.style.right = '0';
+            toggleBtn.style.zIndex = '10001';
+            toggleBtn.style.borderRadius = '4px 0 0 4px';
+            toggleBtn.style.opacity = '0.7';// ✅ 半透明效果
+
             toggleBtn.onclick = () => {
                 if (panel.style.transform === 'translateX(0%)') {
                     panel.style.transform = 'translateX(100%)';
@@ -635,29 +823,33 @@
                     panel.style.transform = 'translateX(0%)';
                 }
             };
+
             document.body.appendChild(toggleBtn);
+            // 点击面板外部时自动关闭
+            document.addEventListener('click', (e) => {
+                const isClickInside = panel.contains(e.target) || toggleBtn.contains(e.target);
+                if (!isClickInside && panel.style.transform === 'translateX(0%)') {
+                    panel.style.transform = 'translateX(100%)'; // 收起面板
+                }
+            });
         }
-
-        function removeToggleBtn() {
-            const btn = document.getElementById('filter-toggle-btn');
-            if (btn) btn.remove();
-        }
-
-        if (showButton) createToggleBtn();
-
-        GM_registerMenuCommand(showButton ? '隐藏关键词按钮' : '显示关键词按钮', () => {
-            const current = GM_getValue('showButton', true);
-            const newState = !current;
-            GM_setValue('showButton', newState);
-            if (newState) {
-                createToggleBtn();
-            } else {
-                removeToggleBtn();
-                panel.style.transform = 'translateX(100%)';
-            }
-        });
     }
 
-    // 页面加载完成后初始化控制面板
     window.addEventListener('load', initControlPanel);
+
+    // 绑定蜜柑展开点击事件（保持原逻辑）
+    document.addEventListener('click', function (e) {
+        const span = e.target.closest('span.js-expand_bangumi');
+        if (!span) return;
+        const anBox = span.closest('div.an-box.animated.fadeIn');
+        if (!anBox) return;
+        const frame = anBox.nextElementSibling;
+        if (!frame || !frame.classList.contains('an-res-row-frame')) return;
+        console.log('🔍检测到展开的 frame，开始过滤');
+        filterMikanFrame(frame);
+        const observer = new MutationObserver(() => {
+            filterMikanFrame(frame);
+        });
+        observer.observe(frame, { childList: true, subtree: true });
+    });
 })();

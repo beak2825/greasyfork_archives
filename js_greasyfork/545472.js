@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RedGIFs Video Download Button
 // @namespace    https://github.com/p65536
-// @version      2.1.0
+// @version      2.2.1
 // @license      MIT
 // @description  Adds a download button (for one-click HD downloads) and an "Open in New Tab" button to each video on the RedGIFs site.
 // @icon         https://www.redgifs.com/favicon.ico
@@ -130,7 +130,7 @@
             height: 28px;
             padding: 4px;
             border-radius: 4px;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgb(0 0 0 / 0.6);
             border: none;
             cursor: pointer;
             display: flex;
@@ -141,7 +141,7 @@
             color: inherit; /* Prevent blue link color */
         }
         .${APPID}-open-in-new-tab-btn:hover {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgb(0 0 0 / 0.8);
         }
         /* Download Button on Thumbnails */
         .${APPID}-tile-download-btn {
@@ -176,7 +176,7 @@
             height: 32px;
             padding: 4px;
             border-radius: 4px;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgb(0 0 0 / 0.6);
             border: none;
             cursor: pointer;
             display: flex;
@@ -186,7 +186,7 @@
             color: inherit; /* Prevent blue link color */
         }
         .${APPID}-preview-open-btn:hover {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgb(0 0 0 / 0.8);
         }
         .${APPID}-preview-download-btn {
             position: absolute;
@@ -268,7 +268,7 @@
     const MODAL_STYLES = `
         .${APPID}-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgb(0 0 0 / 0.7);
             z-index: ${CONSTANTS.MODAL.Z_INDEX};
             display: flex; align-items: center; justify-content: center;
         }
@@ -278,7 +278,7 @@
             max-width: 90vw;
             border: 1px solid #444;
             border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 16px rgb(0 0 0 / 0.5);
             display: flex; flex-direction: column;
             font-family: sans-serif; font-size: 14px;
         }
@@ -418,15 +418,6 @@
     //              Handles log level control, message formatting, and console API wrapping.
     // =================================================================================
 
-    // Style definitions for styled Logger.badge()
-    const LOG_STYLES = {
-        BASE: 'color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;',
-        BLUE: 'background: #007bff;',
-        GREEN: 'background: #28a745;',
-        YELLOW: 'background: #ffc107; color: black;',
-        RED: 'background: #dc3545;',
-    };
-
     class Logger {
         /** @property {object} levels - Defines the numerical hierarchy of log levels. */
         static levels = {
@@ -440,55 +431,153 @@
         static level = 'log'; // Default level
 
         /**
+         * Defines the available badge styles.
+         * @property {object} styles
+         */
+        static styles = {
+            BASE: 'color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;',
+            RED: 'background: #dc3545;',
+            YELLOW: 'background: #ffc107; color: black;',
+            GREEN: 'background: #28a745;',
+            BLUE: 'background: #007bff;',
+            GRAY: 'background: #6c757d;',
+            ORANGE: 'background: #fd7e14;',
+            PINK: 'background: #e83e8c;',
+            PURPLE: 'background: #6f42c1;',
+            CYAN: 'background: #17a2b8; color: black;',
+            TEAL: 'background: #20c997; color: black;',
+        };
+
+        /**
+         * Maps log levels to default badge styles.
+         * @private
+         */
+        static _defaultStyles = {
+            error: this.styles.RED,
+            warn: this.styles.YELLOW,
+            info: this.styles.BLUE,
+            log: this.styles.GREEN,
+            debug: this.styles.GRAY,
+        };
+
+        /**
          * Sets the current log level.
          * @param {string} level The new log level. Must be one of 'error', 'warn', 'info', 'log', 'debug'.
          */
         static setLevel(level) {
             if (Object.prototype.hasOwnProperty.call(this.levels, level)) {
                 this.level = level;
-                Logger.badge('LOG LEVEL', LOG_STYLES.BLUE, 'log', `Logger level is set to '${this.level}'.`);
             } else {
-                Logger.badge('INVALID LEVEL', LOG_STYLES.YELLOW, 'warn', `Invalid log level "${level}". Valid levels are: ${Object.keys(this.levels).join(', ')}. Level not changed.`);
-            }
-        }
-
-        /** @param {...any} args The messages or objects to log. */
-        static error(...args) {
-            if (this.levels[this.level] >= this.levels.error) {
-                console.error(LOG_PREFIX, ...args);
-            }
-        }
-
-        /** @param {...any} args The messages or objects to log. */
-        static warn(...args) {
-            if (this.levels[this.level] >= this.levels.warn) {
-                console.warn(LOG_PREFIX, ...args);
-            }
-        }
-
-        /** @param {...any} args The messages or objects to log. */
-        static info(...args) {
-            if (this.levels[this.level] >= this.levels.info) {
-                console.info(LOG_PREFIX, ...args);
-            }
-        }
-
-        /** @param {...any} args The messages or objects to log. */
-        static log(...args) {
-            if (this.levels[this.level] >= this.levels.log) {
-                console.log(LOG_PREFIX, ...args);
+                // Use default style (empty string) for the badge
+                this._out('warn', 'INVALID LEVEL', '', `Invalid log level "${level}". Valid levels are: ${Object.keys(this.levels).join(', ')}. Level not changed.`);
             }
         }
 
         /**
-         * Logs messages for debugging. Only active in 'debug' level.
-         * @param {...any} args The messages or objects to log.
+         * Internal method to output logs if the level permits.
+         * @private
+         * @param {string} level - The log level ('error', 'warn', 'info', 'log', 'debug').
+         * @param {string} badgeText - The text inside the badge. If empty, no badge is shown.
+         * @param {string} badgeStyle - The background-color style (from Logger.styles). If empty, uses default.
+         * @param {...any} args - The messages to log.
          */
-        static debug(...args) {
-            if (this.levels[this.level] >= this.levels.debug) {
-                // Use console.debug for better filtering in browser dev tools.
-                console.debug(LOG_PREFIX, ...args);
+        static _out(level, badgeText, badgeStyle, ...args) {
+            if (this.levels[this.level] >= this.levels[level]) {
+                const consoleMethod = console[level] || console.log;
+
+                if (badgeText !== '') {
+                    // Badge mode: Use %c formatting
+                    let style = badgeStyle;
+                    if (style === '') {
+                        style = this._defaultStyles[level] || this.styles.GRAY;
+                    }
+                    const combinedStyle = `${this.styles.BASE} ${style}`;
+
+                    consoleMethod(
+                        `%c${LOG_PREFIX}%c %c${badgeText}%c`,
+                        'font-weight: bold;', // Style for the prefix
+                        'color: inherit;', // Reset for space
+                        combinedStyle, // Style for the badge
+                        'color: inherit;', // Reset for the rest of the message
+                        ...args
+                    );
+                } else {
+                    // No badge mode: Direct output for better object inspection
+                    consoleMethod(LOG_PREFIX, ...args);
+                }
             }
+        }
+
+        /**
+         * Internal method to start a log group if the level permits (debug or higher).
+         * @private
+         * @param {'group'|'groupCollapsed'} method - The console method to use.
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args
+         */
+        static _groupOut(method, badgeText, badgeStyle, ...args) {
+            if (this.levels[this.level] >= this.levels.debug) {
+                const consoleMethod = console[method];
+
+                if (badgeText !== '') {
+                    let style = badgeStyle;
+                    if (style === '') {
+                        style = this.styles.GRAY;
+                    }
+                    const combinedStyle = `${this.styles.BASE} ${style}`;
+
+                    consoleMethod(`%c${LOG_PREFIX}%c %c${badgeText}%c`, 'font-weight: bold;', 'color: inherit;', combinedStyle, 'color: inherit;', ...args);
+                } else {
+                    consoleMethod(LOG_PREFIX, ...args);
+                }
+            }
+        }
+
+        /**
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args
+         */
+        static error(badgeText, badgeStyle, ...args) {
+            this._out('error', badgeText, badgeStyle, ...args);
+        }
+
+        /**
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args
+         */
+        static warn(badgeText, badgeStyle, ...args) {
+            this._out('warn', badgeText, badgeStyle, ...args);
+        }
+
+        /**
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args
+         */
+        static info(badgeText, badgeStyle, ...args) {
+            this._out('info', badgeText, badgeStyle, ...args);
+        }
+
+        /**
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args
+         */
+        static log(badgeText, badgeStyle, ...args) {
+            this._out('log', badgeText, badgeStyle, ...args);
+        }
+
+        /**
+         * Logs messages for debugging. Only active in 'debug' level.
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args
+         */
+        static debug(badgeText, badgeStyle, ...args) {
+            this._out('debug', badgeText, badgeStyle, ...args);
         }
 
         /**
@@ -512,46 +601,38 @@
         }
 
         /**
+         * Starts a log group. Only active in 'debug' level.
+         * @param {string} badgeText
+         * @param {string} badgeStyle
          * @param {...any} args The title for the log group.
-         * @returns {void}
          */
-        static group = (...args) => console.group(LOG_PREFIX, ...args);
-        /**
-         * @param {...any} args The title for the collapsed log group.
-         * @returns {void}
-         */
-        static groupCollapsed = (...args) => console.groupCollapsed(LOG_PREFIX, ...args);
-        /**
-         * Closes the current log group.
-         * @returns {void}
-         */
-        static groupEnd = () => console.groupEnd();
+        static group(badgeText, badgeStyle, ...args) {
+            this._groupOut('group', badgeText, badgeStyle, ...args);
+        }
 
         /**
-         * Logs a message with a styled badge for better visibility.
-         * @param {string} badgeText - The text inside the badge.
-         * @param {string} badgeStyle - The background-color style (from LOG_STYLES).
-         * @param {'log'|'warn'|'error'|'info'|'debug'} level - The console log level.
-         * @param {...any} args - Additional messages to log after the badge.
+         * Starts a collapsed log group. Only active in 'debug' level.
+         * @param {string} badgeText
+         * @param {string} badgeStyle
+         * @param {...any} args The title for the log group.
          */
-        static badge(badgeText, badgeStyle, level, ...args) {
-            if (this.levels[this.level] < this.levels[level]) {
-                return; // Respect the current log level
+        static groupCollapsed(badgeText, badgeStyle, ...args) {
+            this._groupOut('groupCollapsed', badgeText, badgeStyle, ...args);
+        }
+
+        /**
+         * Closes the current log group. Only active in 'debug' level.
+         * @returns {void}
+         */
+        static groupEnd() {
+            if (this.levels[this.level] >= this.levels.debug) {
+                console.groupEnd();
             }
-
-            const style = `${LOG_STYLES.BASE} ${badgeStyle}`;
-            const consoleMethod = console[level] || console.log;
-
-            consoleMethod(
-                `%c${LOG_PREFIX}%c %c${badgeText}%c`,
-                'font-weight: bold;', // Style for the prefix
-                'color: inherit;', // Reset for space
-                style, // Style for the badge
-                'color: inherit;', // Reset for the rest of the message
-                ...args
-            );
         }
     }
+
+    // Alias for ease of use
+    const LOG_STYLES = Logger.styles;
 
     // =================================================================================
     // SECTION: Execution Guard
@@ -593,7 +674,7 @@
      * @param {string} tag - Tag name with optional ID/class (e.g., "div#app.container", "my-element").
      * @param {object | HChild | HChild[]} [propsOrChildren] - Attributes object or children.
      * @param {HChild | HChild[]} [children] - Children (if props are specified).
-     * @returns {HTMLElement|SVGElement} The created DOM element.
+     * @returns {HTMLElement | SVGElement} The created DOM element.
      */
     function h(tag, propsOrChildren, children) {
         const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -640,11 +721,11 @@
                         el.setAttribute(key, url);
                     } else {
                         el.setAttribute(key, '#');
-                        Logger.badge('UNSAFE URL', LOG_STYLES.YELLOW, 'warn', `Blocked potentially unsafe protocol "${parsedUrl.protocol}" in attribute "${key}":`, url);
+                        Logger.warn('UNSAFE URL', LOG_STYLES.YELLOW, `Blocked potentially unsafe protocol "${parsedUrl.protocol}" in attribute "${key}":`, url);
                     }
                 } catch {
                     el.setAttribute(key, '#');
-                    Logger.badge('INVALID URL', LOG_STYLES.YELLOW, 'warn', `Blocked invalid or relative URL in attribute "${key}":`, url);
+                    Logger.warn('INVALID URL', LOG_STYLES.YELLOW, `Blocked invalid or relative URL in attribute "${key}":`, url);
                 }
             }
             // 2. Direct property assignments.
@@ -671,7 +752,7 @@
                 el.setAttribute(key, String(value));
             }
             // 4. Default attribute handling.
-            else if (value !== false && value !== null) {
+            else if (value !== false && value !== null && typeof value !== 'undefined') {
                 el.setAttribute(key, value === true ? '' : String(value));
             }
         }
@@ -698,7 +779,10 @@
 
         el.appendChild(fragment);
 
-        return el;
+        if (el instanceof HTMLElement || el instanceof SVGElement) {
+            return el;
+        }
+        throw new Error('Created element is not a valid HTMLElement or SVGElement');
     }
 
     /**
@@ -722,8 +806,8 @@
 
     /**
      * Helper function to check if an item is a non-array object.
-     * @param {*} item The item to check.
-     * @returns {boolean}
+     * @param {unknown} item The item to check.
+     * @returns {item is Record<string, any>}
      */
     function isObject(item) {
         return !!(item && typeof item === 'object' && !Array.isArray(item));
@@ -736,7 +820,12 @@
      * @returns {T} The deep copy of the object.
      */
     function deepClone(obj) {
-        return structuredClone(obj);
+        try {
+            return structuredClone(obj);
+        } catch (e) {
+            Logger.error('CLONE FAILED', '', 'deepClone failed. Data contains non-clonable items.', e);
+            throw e;
+        }
     }
 
     /**
@@ -818,7 +907,7 @@
             // Return the substring from the last dot to the end.
             return pathname.substring(lastDotIndex); // e.g., ".mp4"
         } catch (e) {
-            Logger.warn('Could not parse URL to get extension:', url, e);
+            Logger.warn('URL ERROR', LOG_STYLES.YELLOW, 'Could not parse URL to get extension:', url, e);
             return ''; // Return empty on URL parsing failure
         }
     }
@@ -837,7 +926,7 @@
         let validTemplate = template;
         // Fallback to default if brackets are unbalanced
         if (openCount !== closeCount) {
-            Logger.warn('Filename template has unbalanced brackets. Falling back to default.');
+            Logger.warn('TEMPLATE', LOG_STYLES.YELLOW, 'Filename template has unbalanced brackets. Falling back to default.');
             validTemplate = '{user}_{date}_{id}';
         }
 
@@ -884,7 +973,6 @@
         _logAggregation: {},
         // prettier-ignore
         _aggregatedEvents: new Set([
-            EVENTS.UI_REPOSITION,
         ]),
         _aggregationDelay: 500, // ms
 
@@ -897,7 +985,7 @@
          */
         subscribe(event, listener, key) {
             if (!key) {
-                Logger.error('EventBus.subscribe requires a unique key.');
+                Logger.error('', '', 'EventBus.subscribe requires a unique key.');
                 return;
             }
             if (!this.events[event]) {
@@ -913,7 +1001,7 @@
          */
         once(event, listener, key) {
             if (!key) {
-                Logger.error('EventBus.once requires a unique key.');
+                Logger.error('', '', 'EventBus.once requires a unique key.');
                 return;
             }
             const onceListener = (...args) => {
@@ -959,7 +1047,7 @@
                     aggregation.timer = setTimeout(() => {
                         const finalCount = this._logAggregation[event]?.count || 0;
                         if (finalCount > 0) {
-                            console.log(LOG_PREFIX, `Event Published: ${event} (x${finalCount})`);
+                            Logger.debug('EventBus', LOG_STYLES.PURPLE, `Event Published: ${event} (x${finalCount})`);
                         }
                         delete this._logAggregation[event];
                     }, this._aggregationDelay);
@@ -969,7 +1057,7 @@
                         try {
                             listener(...args);
                         } catch (e) {
-                            Logger.error(`EventBus error in listener for event "${event}":`, e);
+                            Logger.error('', '', `EventBus error in listener for event "${event}":`, e);
                         }
                     });
                     return; // End execution here for aggregated events in debug mode.
@@ -979,8 +1067,7 @@
                 // In debug mode, provide detailed logging for NON-aggregated events.
                 const subscriberKeys = [...this.events[event].keys()];
 
-                // Use groupCollapsed for a cleaner default view
-                console.groupCollapsed(LOG_PREFIX, `Event Published: ${event}`);
+                Logger.groupCollapsed('EventBus', LOG_STYLES.PURPLE, `Event Published: ${event}`);
 
                 if (args.length > 0) {
                     console.log('  - Payload:', ...args);
@@ -999,22 +1086,22 @@
                 this.events[event].forEach((listener, key) => {
                     try {
                         // Log which specific subscriber is being executed
-                        Logger.debug(`-> Executing: ${key}`);
+                        Logger.debug('', '', `-> Executing: ${key}`);
                         listener(...args);
                     } catch (e) {
                         // Enhance error logging with the specific subscriber key
-                        Logger.badge('LISTENER ERROR', LOG_STYLES.RED, 'error', `Listener "${key}" failed for event "${event}":`, e);
+                        Logger.error('LISTENER ERROR', LOG_STYLES.RED, `Listener "${key}" failed for event "${event}":`, e);
                     }
                 });
 
-                console.groupEnd();
+                Logger.groupEnd();
             } else {
                 // Iterate over a copy of the values in case a listener unsubscribes itself.
                 [...this.events[event].values()].forEach((listener) => {
                     try {
                         listener(...args);
                     } catch (e) {
-                        Logger.badge('LISTENER ERROR', LOG_STYLES.RED, 'error', `Listener failed for event "${event}":`, e);
+                        Logger.error('LISTENER ERROR', LOG_STYLES.RED, `Listener failed for event "${event}":`, e);
                     }
                 });
             }
@@ -1046,7 +1133,7 @@
                 try {
                     work();
                 } catch (e) {
-                    Logger.badge('UI QUEUE ERROR', LOG_STYLES.RED, 'error', 'Error in queued UI work:', e);
+                    Logger.error('UI QUEUE ERROR', LOG_STYLES.RED, 'Error in queued UI work:', e);
                 }
             }
             this.isUiWorkScheduled = false;
@@ -1056,19 +1143,19 @@
     /**
      * Creates a unique, consistent event subscription key for EventBus.
      * @param {object} context The `this` context of the subscribing class instance.
-     * @param {string} eventName The full event name from the EVENTS constant (e.g., 'EVENTS.NAVIGATION').
+     * @param {string} eventName The full event name from the EVENTS constant.
      * @returns {string} A key in the format 'ClassName.purpose'.
      */
     function createEventKey(context, eventName) {
         // Extract a meaningful 'purpose' from the event name
         const parts = eventName.split(':');
-        const purpose = parts.length > 1 ? parts.slice(1).join('_') : parts[0]; // Use underscores if there are multiple parts after the first colon
+        const purpose = parts.length > 1 ? parts.slice(1).join('_') : parts[0];
 
-        if (!context || !context.constructor || !context.constructor.name) {
-            // Fallback for contexts where constructor name might not be available
-            return `UnknownContext.${purpose}`;
+        let contextName = 'UnknownContext';
+        if (context && context.constructor && context.constructor.name) {
+            contextName = context.constructor.name;
         }
-        return `${context.constructor.name}.${purpose}`;
+        return `${contextName}.${purpose}`;
     }
 
     // =================================================================================
@@ -1112,7 +1199,7 @@
                 try {
                     userConfig = JSON.parse(raw);
                 } catch (e) {
-                    Logger.error('Failed to parse configuration. Using default settings.', e);
+                    Logger.error('CONFIG LOAD', LOG_STYLES.RED, 'Failed to parse configuration. Using default settings.', e);
                 }
             }
             this.config = ConfigProcessor.process(userConfig);
@@ -1460,7 +1547,7 @@
                         }
                     }
                 } catch (error) {
-                    Logger.error('Error during JSON.parse interception:', error, result);
+                    Logger.error('JSON PARSE', LOG_STYLES.RED, 'Error during JSON.parse interception:', error, result);
                 }
 
                 // Always return the original result
@@ -1515,15 +1602,15 @@
                     const path = '[JSON_PARSE]';
 
                     if (count > 0) {
-                        Logger.badge('CACHE UPDATED', LOG_STYLES.BLUE, 'log', `${path} Added ${count} new items. Total: ${this.videoCache.size}`);
+                        Logger.log('CACHE UPDATED', LOG_STYLES.TEAL, `${path} Added ${count} new items. Total: ${this.videoCache.size}`);
                     } else {
                         // Log if the feed contained items, but all were already cached.
-                        Logger.badge('API HIT', LOG_STYLES.GREEN, 'log', `${path} (No new items added. Cache total: ${this.videoCache.size})`);
+                        Logger.log('API HIT', LOG_STYLES.TEAL, `${path} (No new items added. Cache total: ${this.videoCache.size})`);
                     }
                 }
                 // If no gifs found (e.g., an empty feed or non-media API response), silently do nothing.
             } catch (error) {
-                Logger.warn('Failed to process API data object:', error, data);
+                Logger.warn('API ERROR', LOG_STYLES.YELLOW, 'Failed to process API data object:', error, data);
             }
         }
     }
@@ -1666,7 +1753,7 @@
          */
         showToast(message, type) {
             if (!this.toastContainer) {
-                Logger.error('Toast container element not found. Cannot display toast.');
+                Logger.error('UI ERROR', LOG_STYLES.RED, 'Toast container element not found. Cannot display toast.');
                 return;
             }
 
@@ -1722,7 +1809,7 @@
         _setButtonIcon(button, iconName) {
             const cachedIcon = CACHED_ICONS[iconName];
             if (!cachedIcon) {
-                Logger.error(`Icon "${iconName}" not found.`);
+                Logger.error('ICON ERROR', LOG_STYLES.RED, `Icon "${iconName}" not found.`);
                 return;
             }
 
@@ -1830,16 +1917,17 @@
                 /* Feed Modules (Suggested/Trending Niches, Suggested/Trending Creators, Mobile OF Creators, Niche Explorer) */
                 /* Backward compatibility: Keep existing class-based selectors combined with new attribute-based selectors */
                 .FeedModule:has(.nicheListWidget.trendingNiches),
-                .FeedModule[data-feed-module-type="trending-niches"],
                 .FeedModule:has(.seeMoreBlock.suggestedCreators),
-                .FeedModule[data-feed-module-type="suggested-creators"],
                 .FeedModule:has(.seeMoreBlock.trendingCreators),
-                .FeedModule[data-feed-module-type="trending-creators"],
                 .FeedModule:has(.OnlyFansCreatorsModule),
-                .FeedModule[data-feed-module-type="only-fans"],
                 .FeedModule:has(.nicheExplorer),
+                .FeedModule[data-feed-module-type="trending-niches"],
                 .FeedModule[data-feed-module-type="suggested-niches"],
-                .FeedModule[data-feed-module-type="live-cam"] {
+                .FeedModule[data-feed-module-type="trending-creators"],
+                .FeedModule[data-feed-module-type="suggested-creators"],
+                .FeedModule[data-feed-module-type="only-fans"],
+                .FeedModule[data-feed-module-type="live-cam"],
+                .FeedModule[data-feed-module-type="boost"] {
                     display: none !important;
                 }
 
@@ -1877,6 +1965,14 @@
             // Handles Live Cam streams (Streamate) on both Desktop and Mobile.
             // Selectors are updated to match current site structure (.StreamateCameraDispatcher).
             sentinel.on('.StreamateCameraDispatcher', adHider);
+
+            // Handle Boosted Ad Posts
+            sentinel.on('.metaInfo_isBoosted', (infoElement) => {
+                const container = infoElement.closest('.GifPreview');
+                if (container) {
+                    container.style.setProperty('display', 'none', 'important');
+                }
+            });
         }
     }
 
@@ -1968,7 +2064,7 @@
                         const keyframes = `@keyframes ${this.animationName} { from { transform: none; } to { transform: none; } }`;
                         this.sheet.insertRule(keyframes, 0);
                     } catch (e) {
-                        Logger.badge('SENTINEL', LOG_STYLES.RED, 'error', 'Failed to insert keyframes rule:', e);
+                        Logger.error('SENTINEL', LOG_STYLES.RED, 'Failed to insert keyframes rule:', e);
                     }
                     this._flushPendingRules();
                 }
@@ -2018,7 +2114,7 @@
                     this.ruleSelectors.set(insertedRule, selector);
                 }
             } catch (e) {
-                Logger.badge('SENTINEL', LOG_STYLES.RED, 'error', `Failed to insert rule for selector "${selector}":`, e);
+                Logger.error('SENTINEL', LOG_STYLES.RED, `Failed to insert rule for selector "${selector}":`, e);
             }
         }
 
@@ -2106,14 +2202,14 @@
             if (this.styleElement instanceof HTMLStyleElement) {
                 this.styleElement.disabled = true;
             }
-            Logger.badge('SENTINEL', LOG_STYLES.GRAY, 'debug', 'Suspended.');
+            Logger.debug('SENTINEL', LOG_STYLES.CYAN, 'Suspended.');
         }
 
         resume() {
             if (this.styleElement instanceof HTMLStyleElement) {
                 this.styleElement.disabled = false;
             }
-            Logger.badge('SENTINEL', LOG_STYLES.GRAY, 'debug', 'Resumed.');
+            Logger.debug('SENTINEL', LOG_STYLES.CYAN, 'Resumed.');
         }
     }
 
@@ -2208,7 +2304,7 @@
                 this._onElementFound(element, getFeedId, CONSTANTS.CONTEXT_TYPE.PREVIEW);
             });
 
-            Logger.log('Initialized and observing DOM for new content.');
+            Logger.log('INIT', LOG_STYLES.GREEN, 'Initialized and observing DOM for new content.');
         }
 
         /**
@@ -2291,7 +2387,7 @@
                 if (button.disabled) return;
 
                 // Button is enabled (LOADING_CANCELLABLE), proceed with cancellation
-                Logger.log(`Cancelling download for ${videoId}...`);
+                Logger.log('DOWNLOAD', LOG_STYLES.YELLOW, `Cancelling download for ${videoId}...`);
                 const controller = this.activeDownloads.get(videoId);
                 controller.abort(); // Trigger the abort signal
 
@@ -2325,16 +2421,16 @@
 
                 if (videoInfo) {
                     // --- 2b. [Cache Hit] Execute Download ---
-                    Logger.badge('CACHE HIT', LOG_STYLES.LOG, 'log', `Starting download for ${videoId}`);
+                    Logger.log('CACHE HIT', LOG_STYLES.TEAL, `Starting download for ${videoId}`);
                     await this._executeDownload(videoInfo, videoId, controller.signal);
 
                     // --- 2c. Handle Success ---
                     this.ui.updateButtonState(button, 'SUCCESS');
                     this.ui.showToast('Download successful!', 'success');
-                    Logger.log(`Downloaded ${videoId} from:`, videoInfo.hdUrl);
+                    Logger.log('DOWNLOAD', LOG_STYLES.GREEN, `Downloaded ${videoId} from:`, videoInfo.hdUrl);
                 } else {
                     // --- 2d. [Cache Miss] Handle Failure ---
-                    Logger.warn(`Video info not found in cache for ${videoId}.`);
+                    Logger.warn('CACHE MISS', LOG_STYLES.YELLOW, `Video info not found in cache for ${videoId}.`);
                     this.ui.showToast('Video info not found in cache. (Try scrolling or refreshing)', 'error');
                     this.ui.updateButtonState(button, 'ERROR');
                 }
@@ -2342,7 +2438,7 @@
                 // --- 2e. Handle Errors (including AbortError) ---
                 if (error.name === 'AbortError') {
                     // Handle cancellation specifically (when the promise rejects)
-                    Logger.log(`Download process for ${videoId} was aborted.`);
+                    Logger.log('DOWNLOAD', LOG_STYLES.YELLOW, `Download process for ${videoId} was aborted.`);
                     this.ui.showToast('Download cancelled.', 'info');
                     // Button state should be reset by the click handler that initiated the abort
                     // If the abort happened for other reasons (e.g., page navigation), this ensures cleanup
@@ -2351,16 +2447,16 @@
                         this.ui.updateButtonState(button, 'IDLE');
                     }
                 } else if (error.status === 404) {
-                    Logger.warn(`Download failed: Not Found (404) for ${videoId}`, error);
+                    Logger.warn('DOWNLOAD', LOG_STYLES.YELLOW, `Download failed: Not Found (404) for ${videoId}`, error);
                     this.ui.showToast('Video not found (404).', 'error');
                     this.ui.updateButtonState(button, 'ERROR');
                 } else if (error.status === 403) {
-                    Logger.warn(`Download failed: Forbidden (403) for ${videoId}`, error);
+                    Logger.warn('DOWNLOAD', LOG_STYLES.YELLOW, `Download failed: Forbidden (403) for ${videoId}`, error);
                     this.ui.showToast('Access forbidden (403).', 'error');
                     this.ui.updateButtonState(button, 'ERROR');
                 } else {
                     // Handle all other errors (API, Download, Network, 5xx, etc.) uniformly
-                    Logger.error('Download failed:', error); // Keep existing detailed log for developer
+                    Logger.error('DOWNLOAD', LOG_STYLES.RED, 'Download failed:', error); // Keep existing detailed log for developer
 
                     const userErrorMessage = 'Download failed. (Network error or site update?)';
 
@@ -2403,7 +2499,7 @@
             let extension = getExtension(hdUrl);
 
             if (!extension) {
-                Logger.warn(`Could not determine extension from URL. Defaulting to '.mp4'. URL:`, hdUrl);
+                Logger.warn('DOWNLOAD', LOG_STYLES.YELLOW, `Could not determine extension from URL. Defaulting to '.mp4'. URL:`, hdUrl);
                 extension = '.mp4'; // Fallback to ".mp4" if extraction fails
             }
 
@@ -2469,13 +2565,13 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             app.init().catch((e) => {
-                Logger.error('Failed to initialize app:', e);
+                Logger.error('INIT', LOG_STYLES.RED, 'Failed to initialize app:', e);
             });
         });
     } else {
         // Already 'interactive' or 'complete'
         app.init().catch((e) => {
-            Logger.error('Failed to initialize app:', e);
+            Logger.error('INIT', LOG_STYLES.RED, 'Failed to initialize app:', e);
         });
     }
 })();

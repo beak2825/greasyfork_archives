@@ -12,9 +12,9 @@
 // @grant        GM_unregisterMenuCommand
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.2
+// @version      1.0.3
 // @license      MIT
-// @revision     1/11/2026, 6:46:27 AM
+// @revision     1/11/2026, 1:54:27 PM
 // @description  Switch to several provided colors & styles to customise the comment lines. Either reload the page or sort the comments to take effect.
 // @downloadURL https://update.greasyfork.org/scripts/546280/%5BLemmy%5D%20Comment%20Line%20Styles.user.js
 // @updateURL https://update.greasyfork.org/scripts/546280/%5BLemmy%5D%20Comment%20Line%20Styles.meta.js
@@ -25,7 +25,7 @@
 
   if (!document.head.querySelector(':scope > meta[name="Description"][content="Lemmy"]')) return;
 
-  const window = unsafeWindow;
+  //const window = unsafeWindow;
 
   const colors = [{
     name: 'Original',
@@ -266,7 +266,6 @@
         } else if (tagName === 'article') {
           element.classList.remove('border-top', 'mark', 'py-2');
           element.classList.add('custom-plr');
-          //element.style = styles[recurseCount % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) element.classList.add('custom-margin-left');
@@ -285,7 +284,6 @@
         } else if (tagName === 'div' && element.classList.contains('details')) { //N more replies.
           element.removeAttribute('style');
           element.classList.remove('ms-1');
-          //element.style = styles[(recurseCount + 1) % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + (((recurseCount + 1) % length) + 1));
           element.classList.add('custom-margin-left-double');
@@ -304,7 +302,6 @@
       const li = children[i];
       const liChildCount = li.childElementCount;
       li.classList.add('custom-mt');
-      //li.style = styles[recurseCount % styles.length];
       li.classList.add('custom-style');
       li.classList.add('custom-style-' + ((recurseCount % length) + 1));
       if (recurseCount !== 0) li.classList.add('custom-margin-left');
@@ -330,7 +327,6 @@
           element.removeAttribute('style');
           element.classList.remove('ms-1');
           element.classList.add('custom-mt');
-          //element.style = styles[(recurseCount + 1) % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + (((recurseCount + 1) % length) + 1));
           element.classList.add('custom-margin-left');
@@ -345,11 +341,9 @@
     node.classList.remove('border-top', 'ms-1'); // margin-left: 0.25rem
 
     for (const li of node.children) {
-      //const liChildCount = li.childElementCount;
       for (const element of li.children) {
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'ul') {
-          //element.style = styles[recurseCount % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) element.classList.add('custom-margin-left');
@@ -363,14 +357,12 @@
           const secChild = parent.querySelector(':scope > :nth-child(2)');
           if (!secChild) continue; // Comment is hidden/collapsed.
           secChild.classList.add('custom-p');
-          //secChild.style = styles[recurseCount % styles.length];
           secChild.classList.add('custom-style');
           secChild.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) secChild.classList.add('custom-margin-left');
           secChild.querySelector(':scope > :first-child > :last-child')?.classList.add('custom-mb0');
           const lastChild = parent.lastChild;
           lastChild.classList.remove('mt-1'); // margin-top: 0.25rem
-          //lastChild.style = styles[recurseCount % styles.length];
           lastChild.classList.add('custom-style');
           lastChild.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) lastChild.classList.add('custom-margin-left');
@@ -378,7 +370,6 @@
         } else if (tagName === 'div' && element.classList.contains('details')) { //N more replies.
           element.removeAttribute('style');
           element.classList.remove('ms-1');
-          //element.style = styles[recurseCount % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + (((recurseCount + 1) % length) + 1));
           element.classList.add('custom-margin-left-double');
@@ -395,7 +386,6 @@
       for (const element of li.children) {
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'ul') {
-          //element.style = styles[recurseCount % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) element.classList.add('custom-margin-left');
@@ -421,7 +411,6 @@
         } else if (tagName === 'div' && element.classList.contains('details')) { //N more replies.
           element.removeAttribute('style');
           element.classList.remove('ms-1');
-          //element.style = styles[recurseCount % styles.length];
           element.classList.add('custom-style');
           element.classList.add('custom-style-' + ((recurseCount % length) + 1));
           element.classList.add('custom-margin-left');
@@ -481,7 +470,7 @@
 
   const addColorsStyle = function() {
     const style = document.createElement('style');
-    style.id = (styleId = random(2));
+    style.id = (styleId || (styleId = random(2)));
     style.textContent = colors.find(({name}) => name === color).css;
     document.head.appendChild(style);
   };

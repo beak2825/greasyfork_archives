@@ -2,7 +2,7 @@
 // @name         LWM The One Script
 // @author       ImmortalRegis
 // @namespace    https://www.lordswm.com/pl_info.php?id=6736731
-// @version      v1.7
+// @version      v1.8
 // @description  Will keep track of all your needs. Timer or otherwise.
 // @match        https://www.lordswm.com/*
 // @license      GNU GPLv3
@@ -654,61 +654,50 @@ If you really like the script, gifts are welcome - https://www.lordswm.com/pl_in
 
     async function initThievesModule() {
         const mod = MODULES.thieves;
-        const enabled = await getValue(mod.enabledKey, mod.defaultEnabled);
+        const enabled = getFlag(mod.enabledKey, mod.defaultEnabled);
         if (!enabled) return;
-
-        const timer = await getValue(mod.timerKey, 0);
+        const timer = getFlag(mod.timerKey, 0);
         const now = Date.now();
-
+        const userId = getCookie("pl_id");
+        if (!userId) return console.warn("User ID not found.");
         if (location.pathname === '/war.php') {
             //   await checkThievesBattle(); // This will handle setting the timer if needed via battle
         }
-        if (location.pathname === '/pl_warlog.php') {
+        const playerId = new URL(location.href).searchParams.get("id");
+        if (location.pathname === '/pl_warlog.php' && playerId == userId) {
             parseThievesLogPage(document.documentElement.innerHTML); //document.documentElement.innerHTML  .textContent
         }
-
         if (timer > now) return;
 
-        const userId = getCookie("pl_id");
-        if (!userId) return console.warn("User ID not found.");
-
-        const lastChecked = await getValue(mod.lastCheckedKey, 0);
+        const lastChecked = getFlag(mod.lastCheckedKey, 0);
         if (now - lastChecked < recheckCooldownMedium) return;
-
-        setValue(mod.lastCheckedKey, now);
+        setFlag(mod.lastCheckedKey, now);
         fetchAndParse(`https://www.lordswm.com/pl_warlog.php?id=${userId}`, parseThievesLogPage);
-
     }
 
     function parseThievesLogPage(html) {
         const mod = MODULES.thieves;
-        const isPremium = getValue('mod_premium_status', false); // already saved in initThievesModule
-        const lines = html.split('<BR>').filter(Boolean);
+        const isPremium = getFlag('os_player_premium_status', false); // already saved in initThievesModule
+        //const lines = html.split(''<BR>').filter(Boolean');
+        const lines = html.split('&nbsp;&nbsp;');
         const now = Date.now();
-
         for (const line of lines) {
             if (!line.includes('Caravan')) continue;
             if (!/<b>Caravan/.test(line)) continue; // bold = you lost
-
             const timeMatch = line.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
             if (!timeMatch) continue;
-
             const [_, y, m, d, h, min] = timeMatch.map(Number);
             const utcPlus3 = new Date(Date.UTC(y, m - 1, d, h - 3, min)); // convert UTC+3 to UTC
             const timestamp = utcPlus3.getTime();
-
             if (now - timestamp > 60 * 60 * 1000) continue; // older than 1 hour
-
             const cooldown = (isPremium ? 42 : 60) * 60 * 1000;
             const readyAt = timestamp + cooldown;
-
-            getValue(mod.timerKey, 0).then(existingTime => {
+            getFlag(mod.timerKey, 0).then(existingTime => {
                 if (readyAt > existingTime) {
-                    setValue(mod.timerKey, readyAt);
-                    setValue(mod.notifiedKey, false);
+                    setFlag(mod.timerKey, readyAt);
+                    setFlag(mod.notifiedKey, false);
                 }
             });
-
             break; // only care about first match
         }
     }

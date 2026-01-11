@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ranged Way Idle
-// @version      6.20
+// @version      6.21
 // @author       AlphB
 // @description  一些超级有用的MWI的QoL功能
 // @match        https://*.milkywayidle.com/*
@@ -163,7 +163,7 @@
     };
 
     const globalVariables = {
-        scriptVersion: GM_info?.script?.version || "6.20",
+        scriptVersion: GM_info?.script?.version || "6.21",
         marketAPIUrl: "https://www.milkywayidle.com/game_data/marketplace.json",
         initCharacterData: null,
         documentObserver: null,
@@ -3881,7 +3881,10 @@
                             globalVariables.imListingsCreateTimeData = obj.result;
                         } else if (obj.type === "delete_listing_reply") {
                             if (obj.success) {
-                                obj.allListingId.forEach(listingId => globalVariables.imListingsToDeleteSet.delete(listingId.toString()));
+                                obj.allListingId.forEach(listingId => {
+                                    globalVariables.imListingsToDeleteSet.delete(listingId);
+                                    globalVariables.imListingsToDeleteSet.delete(listingId.toString());
+                                });
                                 setStorage("ranged_way_idle_deleted_listings", Array.from(new Set(getStorage("ranged_way_idle_deleted_listings") || []).union(new Set(obj.allListingId.map(id=>id.toString())))));
                                 document.querySelectorAll(".RangedWayIdleEstimateListingCreateTimeSet").forEach(node => node.classList.remove("RangedWayIdleEstimateListingCreateTimeSet"));
                             }

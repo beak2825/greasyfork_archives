@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CP统计
 // @namespace    http://tampermonkey.net/
-// @version      1.0.11
+// @version      1.0.12
 // @description  根据多重条件自动审核大额订单
 // @author       Cisco
 // @match        https://7777m.topcms.org/*
@@ -27,6 +27,7 @@
 // @match        https://8888t.topcms.org/*
 // @match        https://h5555.topcms.org/*
 // @match        https://q6q6.topcms.org/*
+// @match        https://555c.topcms.org/*
 // @icon         https://7777m.topcms.org/favicon.ico
 // @license      MIT
 // @grant        GM_setValue

@@ -21,18 +21,6 @@
 (function () {
     'use strict';
 
-    // Redirect feed pages to search
-    /*
-        */
-    const path = window.location.pathname;
-    if (path === '/feed/popular' || path === '/feed/trending') {
-        const base = window.location.origin;
-        window.location.replace(`${base}/search`);
-        return;
-    }
-    /*
-        */
-
     // Allowed words (whitelisted acronyms, companies, etc.) that cancels out blockedKeywords and all CAPS filter; emoji filtering still applies.
     const allowedAllCapsPatterns = [
         /^opening(s)?$/i,
@@ -46,8 +34,21 @@
 
     const whitelistedChannels = [
         'mariah carey',
+        'SleepTube - Hypnotic Relaxation',
         // add your trusted channels here
     ];
+
+    // Redirect feed pages to search
+    /*
+        */
+    const path = window.location.pathname;
+    if (path === '/feed/popular' || path === '/feed/trending') {
+        const base = window.location.origin;
+        window.location.replace(`${base}/search`);
+        return;
+    }
+    /*
+        */
 
     function isAllCapsWord(word) {
         const clean = word.replace(/[^\p{L}]/gu, ''); // keep letters only
@@ -299,7 +300,7 @@
         '*',
         '.',
         '..',
-        '1,000,000 women go',
+        '00',
         ':',
         '?',
         'a broke man',
@@ -351,13 +352,16 @@
         'before it’s too late',
         'behind',
         'belle delphine',
+        'ben esherick',
         'big announcement',
         'big ed',
         'biggest mistake',
         'bizarre',
         'blocked me',
         'blows my mind',
+        'blox',
         'brainrot',
+        'breakdown of',
         'breaks the internet',
         'bringing ideas',
         'bullied a',
@@ -413,6 +417,7 @@
         'dating horror stories',
         'defend',
         'degenerate',
+        'delete this',
         'deletes a random',
         'deserved end',
         'deserves',
@@ -469,6 +474,7 @@
         'everything that',
         'explained',
         'exploiting',
+        'explor',
         'expose',
         'exposed online',
         'exposed',
@@ -533,11 +539,13 @@
         'got the best of me',
         'got worse',
         'greatest trick',
+        'grox',
         'h3',
         'had to see this',
         'happy endings at',
         'has arrived',
         'has died',
+        'has gone',
         'has lost it',
         'hasan',
         'have to be ugly',
@@ -632,6 +640,7 @@
         'i convinced',
         'i copied',
         'i corrupted',
+        'i could',
         'i crashed',
         'i create',
         'i created',
@@ -834,6 +843,7 @@
         'i violated',
         'i visited',
         'i waited',
+        'i wanna',
         'i want to',
         'i warned',
         'i was a',
@@ -923,6 +933,7 @@
         'last chance',
         'laughs at',
         'leaked',
+        'learning',
         'left me',
         'legendary',
         'life changing',
@@ -1244,6 +1255,7 @@
         'watch me',
         'watch this before',
         'watch until the end',
+        'we all did',
         'we built',
         'we design',
         'we found',
@@ -1347,17 +1359,8 @@
 
 
     const blockedChannels = [
-        "it's blanko",
-        "it'sagundam",
-        "kat 'n chat",
-        "kent's tech world",
-        "sam o'nella academy",
-        "terror ted’s tales",
-        "we're in hell",
-        "zach's tech turf",
         '4o3o1',
         '5-minute crafts',
-        'a life after layoff',
         'aaronclarey',
         'according to nicole',
         'acheeto',
@@ -1369,10 +1372,13 @@
         'ahoy',
         'airrack',
         'alan becker',
+        'a life after layoff',
         'alinity',
+        'all things secured',
         'all time',
         'alphasniper97',
         'alphastein',
+        'ambient renders',
         'amd',
         'answer in progress',
         'apple',
@@ -1381,37 +1387,43 @@
         'augusttheduck',
         'austin evans',
         'barely sociable',
+        'be amazed',
         'beam in serie',
         'beast',
+        'beautiful relaxation',
         'belle delphine',
         'belyves',
         'ben azelart',
         'ben eater',
-        'ben shapiro',
         'benijugoso',
+        'ben shapiro',
         'berleezy',
         'best fails',
         'better bachelor',
         'big a',
-        'big data factor',
         'bigclivedotcom',
+        'big data factor',
         'blake the snake',
         'boffy',
+        'bonfire ambience',
         'boy boy',
-        'brent rivera',
         'brentech',
+        'brent rivera',
         'brick technology',
         'bright side',
         'britec09',
         'brodie robertson',
         'buzzfeedvideo',
         'camilla araujo',
+        'canceledmma',
         'captain disillusion',
         'carrerita',
         'caseoh',
         'casey neistat',
         'cashblox',
         'casually explained',
+        'catalyst',
+        'cat trumpet',
         'caylusblox',
         'celebrity drama',
         'cerostv',
@@ -1424,9 +1436,9 @@
         'christopher flannigan',
         'chubbyemu',
         'chud logic',
+        'ciência todo dia',
         'cinemassacre',
         'circletoonshd',
-        'ciência todo dia',
         'cleo abram',
         'clownfish tv',
         'clutch gaming highlights',
@@ -1443,13 +1455,16 @@
         'connor is lost',
         'corridor crew',
         'coryxkenshin',
+        'cozy screen',
+        '𝒞𝑜𝓏𝓎 𝒲𝒶𝓇𝓂 𝒜𝓂𝒷𝒾𝑒𝓃𝒸𝑒',
+        'cozy wood',
         'crashcourse',
         'crazy pranks 24/7',
         'critical role',
         'cybercpu tech',
         'dafuq!?boom!',
-        'daily dose of internet',
         'daily dose',
+        'daily dose of internet',
         'daily fails',
         'dakotatalks',
         'dani',
@@ -1462,7 +1477,9 @@
         'david dobrik',
         'dead air vhs',
         'deadwingdork',
+        'dear nature',
         'decoding the unknown',
+        'decoy',
         'deep dive with',
         'defunctland',
         'dhar mann',
@@ -1481,17 +1498,18 @@
         'doodle and arkey',
         'dougdoug',
         'dougdougdoug',
-        'dr sermed mezher',
         'drama alert',
         'drew gooden',
         'drossrotzank',
+        'dr sermed mezher',
         'drunken intelligence',
+        'druski',
         'dude perfect',
         'dumpy',
         'dw documentary',
         'eckhartsladder',
-        'el robot de platón',
         'electroboom',
+        'el robot de platón',
         'emergency awesome',
         'emiru',
         'emkay',
@@ -1501,6 +1519,8 @@
         'epic gamer moments',
         'eric murphy',
         'eroxblox',
+        'espn mma',
+        'esto es',
         'eta prime',
         'explainingcomputers',
         'extreme pranksters',
@@ -1509,19 +1529,22 @@
         'facebook',
         'failarmy',
         'faister gaming',
+        'faze',
         'faze clan',
         'faze rug',
-        'faze',
         'fern',
         'fgteev',
         'fifa',
         'fireship',
+        'firstpost',
         'folding ideas',
         'foltyn',
-        'fortnite battle clips',
         'fortnite',
+        'fortnite battle clips',
         'fredrik knudsen',
+        'froggydude',
         'gadget unboxings',
+        'gamegrumps',
         'gameranx',
         'gamers nexus',
         'gamestar',
@@ -1542,12 +1565,13 @@
         'hasan',
         'hay day',
         'hbomberguy',
+        'hodge twins',
         'holy baam',
         'hoopflix',
         'hoots hootman',
         'huebi',
-        'i did a thing',
         'ibaitv',
+        'i did a thing',
         'imallexx',
         'incognito mode',
         'infinite',
@@ -1558,9 +1582,10 @@
         'internet gossip',
         'internet historian',
         'is gogeth',
+        "it'sagundam",
+        "it's blanko",
         'itsfunneh',
         'itsjanke',
-        'j aubrey',
         'jack clips',
         'jack doherty',
         'jacksepticeye',
@@ -1569,6 +1594,7 @@
         'james julier art tutorials',
         'janky rondo',
         'jason mcbason',
+        'j aubrey',
         'jay foreman',
         'jaystation',
         'jayztwocents',
@@ -1594,11 +1620,15 @@
         'joxy',
         'jozhi7',
         'judelow',
+        'jynxzi',
         'kajudyt',
         'kamswy',
         'karl jobst',
         'katliente',
+        "kat 'n chat",
         'keepittechie',
+        "kent's tech world",
+        'khabir outdoors',
         'killianthecrafter',
         'kitboga',
         'ksi',
@@ -1608,6 +1638,7 @@
         'lankybox',
         'lastweektonight',
         'latte asmr',
+        'laura malvoyante',
         'lawful masses with leonard french',
         'lazarbeam',
         'leah ashe',
@@ -1627,8 +1658,8 @@
         'llm',
         'lmg clips',
         'logan paul',
-        'lol esports vods español casteos ibai',
         'lol esports',
+        'lol esports vods español casteos ibai',
         'louaista',
         'louis rossmann',
         'low level',
@@ -1639,14 +1670,16 @@
         'luka levi',
         'luke smith',
         'lyna',
+        'maamorae',
         'macrumors',
         'mandjtv extra',
         'mando',
+        'markiplier',
         'mark rober',
         'mark tilbury',
-        'markiplier',
         'marques brownlee',
         'max fosh',
+        'max the meat guy',
         'meatcanyon',
         'memes daily',
         'mental outlaw',
@@ -1655,6 +1688,7 @@
         'michael mjd',
         'michael reeves',
         'microsoft',
+        'mighty',
         'milliethepig',
         'millietwopig',
         'minecraft best moments',
@@ -1663,12 +1697,14 @@
         'modern vintage gamer',
         'moist69giraffe',
         'moon',
-        'more perfect union',
         'morecaseoh',
+        'more perfect union',
         'morgz',
+        'mouse games',
+        'mouse news',
         'mouzakrobat',
-        'mr. geil',
         'mrbeast',
+        'mr. geil',
         'mrmobile',
         'mrwhosetheboss',
         'mujin',
@@ -1677,6 +1713,7 @@
         'nakeyjakey',
         'naomi brockwell tv',
         'natmongkol thunlisa',
+        'ndl',
         'neko and tora',
         'nelonline',
         'netflix',
@@ -1684,22 +1721,29 @@
         'nexpo',
         'nick digiovanni',
         'nick jackson',
+        'niko omilana',
         'nilered',
         'nina lin',
-        'no text to speech',
+        'nintendo',
         'nocturn',
         'noel miller',
+        'no text to speech',
         'not just bikes',
         'noway4u',
         'numberphile',
         'nvidia',
+        'olav',
         'ompaville',
+        'once upon a pip',
         'onetake',
+        'only fire',
         'ontan',
+        'open thoughts',
         'optimum',
         'orangepeanut',
         'overeasy',
         'oversimplified',
+        'oxhorn',
         'paluten',
         'papaplatte gaming',
         'papaplatte uncut',
@@ -1722,20 +1766,25 @@
         'powerfuljre',
         'practical engineering',
         'prank wars',
+        'president chay',
         'preston',
         'project farm',
         'pubg highlights daily',
         'pursuit of wonder',
         'qtcinderella',
         'quick tech tips',
+        'rain melody',
         'rajo end',
         'rblx',
         'reaction memes',
         'reaction time',
+        'real ben esherick',
         'real engineering',
         'reallifelore',
         'reddit',
         'reggie',
+        'relax night and day - beautiful nature & sounds',
+        'relax with tv backgrounds',
         'ricegum',
         'rob braxman tech',
         'roblox',
@@ -1744,7 +1793,10 @@
         'ryan pictures',
         'ryan trahan',
         'sabine hossenfelder',
+        'safiya nygaard',
         'sagan hawkes',
+        'sam and colby',
+        "sam o'nella academy",
         'samtime',
         'savvynik',
         'scambaiters vs. scammers',
@@ -1774,8 +1826,11 @@
         'smii7yplus',
         'smosh pit',
         'sniperwolf',
+        'socialpark',
         'somber',
         'someordinarygamers',
+        'soreal',
+        'sound of winter',
         'spatnz',
         'spill',
         'spreen plus',
@@ -1806,8 +1861,8 @@
         'taylorswift',
         'tcnick',
         'team futurism',
-        'tech hacks daily',
         'techaltar',
+        'tech hacks daily',
         'techhut',
         'techlinked',
         'techlore',
@@ -1815,36 +1870,41 @@
         'technical sagar',
         'technology connections',
         'techquickie',
+        'tech with mobin',
         'ted-ed',
+        "terror ted’s tales",
         'tested',
+        'theautobharat',
         'the b1m',
         'the backlogs',
+        'thebackyardscientist',
+        'the b-team',
+        'theburntpeanut',
         'the critical drinker',
+        'theekwah',
         'the film theorists',
         'the hated one',
         'the infographics show',
         'the linux experiment',
         'the odd1sout',
-        'the sitdown',
-        'the slow mo guys',
-        'the thought emporium',
-        'the try guys',
-        'theautobharat',
-        'thebackyardscientist',
-        'theburntpeanut',
-        'theekwah',
         'theodd1sout',
         'theprimetime',
         'thequartering',
+        'therealjanelsmith',
+        'the sitdown',
+        'the slow mo guys',
+        'the take',
+        'the thought emporium',
+        'the try guys',
         'thiojoe',
         'tierzoo',
-        'tik tok compilation',
         'tiktok central',
-        'tim pool',
-        'timcast irl',
+        'tik tok compilation',
         'timcast',
-        'tom scott',
+        'timcast irl',
+        'tim pool',
         'tomdark',
+        'tom scott',
         'top 10 countdowns',
         'total os today',
         'trap lore ross',
@@ -1852,27 +1912,31 @@
         'trending gossip',
         'trending shorts',
         'trendy top 10s',
-        'tri-line',
         'triết tâm',
+        'trigrzolt',
+        'tri-line',
         'troom troom',
         'try',
         'trymacs',
         'tulas 47',
-        'turbo xtra',
         'turboblox',
+        'turbo xtra',
         'turkey tom',
         'tuv',
         'twitter',
         'two minute papers',
-        'tyler & snowi',
         'tyler oliveira',
+        'tyler & snowi',
+        'tyler vitelli',
         'ufd tech',
         'ukriblox',
+        'ultra Relax',
         'unspeakable',
         'upper echelon',
         'valkyrae',
         'valorant',
         'vanessa wingårdh',
+        'vanity fair',
         'vaush',
         'vegas matt',
         'veritas',
@@ -1889,12 +1953,15 @@
         'vox',
         'vsauce',
         'wavywebsurf',
+        'wdw pro',
         'wendover productions',
+        "we're in hell",
         'werlyb',
+        'wham baam dashcam',
         'whirow',
         'wifies',
-        'will tennyson',
         'william kitten',
+        'will tennyson',
         'windows',
         'wolfgang\'s channel',
         'woofer',
@@ -1902,6 +1969,7 @@
         'yeahmad',
         'yms highlights',
         'zach king',
+        "zach's tech turf",
         'zack telander',
         'zcrexpy',
         'zhc',
@@ -2026,18 +2094,22 @@
         'compilations',
         'courtroom',
         'daily',
+        'dashcam',
         'discover',
         'docu',
         'documentary',
+        'entertain',
         'explained',
         'explorer',
+        'export',
         'facts',
+        'fireplace',
         'footage',
-        'games',
         'gaming',
         'generated',
         'highlights',
         'hub',
+        'idiots',
         'insider',
         'media',
         'moments',
@@ -2047,9 +2119,7 @@
         'official',
         'plays',
         'playz',
-        'reaction',
-        'reactions',
-        'reacts',
+        'react',
         'recap',
         'reddit stories',
         'reddit',
@@ -2188,36 +2258,36 @@
         });
     }
 
-    function removeAntiFlickerOverlay() {
-        document.querySelectorAll('.antiFlickerOverlay').forEach(el => {
-            requestAnimationFrame(() => el.style.opacity = '0');
-            el.addEventListener('transitionend', () => el.remove());
-        });
+function removeAntiFlickerOverlay() {
+    document.querySelectorAll('.antiFlickerOverlay').forEach(el => {
+        requestAnimationFrame(() => el.style.opacity = '0');
+        el.addEventListener('transitionend', () => el.remove());
+    });
+}
+
+// Add overlays immediately
+const initOverlay = () => {
+    const cols = document.querySelectorAll('div.pure-u-md-1-4.pure-u-1');
+    if (!cols.length) {
+        requestAnimationFrame(initOverlay); // wait until columns exist
+        return;
     }
+    addAntiFlickerOverlay();
+};
+initOverlay();
 
-    // Add overlays immediately
-    const initOverlay = () => {
-        const cols = document.querySelectorAll('div.pure-u-md-1-4.pure-u-1');
-        if (!cols.length) {
-            requestAnimationFrame(initOverlay); // wait until columns exist
-            return;
-        }
-        addAntiFlickerOverlay();
-    };
-    initOverlay();
+// Run filtering
+let tries = 0;
+const maxTries = 20;
+const interval = setInterval(() => {
+    tries++;
+    const hasFiltered = filterResults();
 
-    // Run filtering
-    let tries = 0;
-    const maxTries = 20;
-    const interval = setInterval(() => {
-        tries++;
-        const hasFiltered = filterResults();
-
-        if (tries >= maxTries || !hasFiltered) {
-            clearInterval(interval);
-            removeAntiFlickerOverlay();
-            console.log('[Invidious Filter] Finished filtering.');
-        }
-    }, 250);
+    if (tries >= maxTries || !hasFiltered) {
+        clearInterval(interval);
+        removeAntiFlickerOverlay();
+        console.log('[Invidious Filter] Finished filtering.');
+    }
+}, 250);
 
 })();

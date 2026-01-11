@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小黑盒Pro
 // @namespace    You Boy
-// @version      1.3.3
+// @version      1.3.4
 // @description  为小黑盒PC网站提供可动态配置的增强功能，如夜间模式切换、Steam商店直达等。
 // @author       You Boy
 // @match        *://*.xiaoheihe.cn/*
@@ -6156,6 +6156,57 @@ class ThemeEnhancerModule extends Caliber.Module {
   }
 }
 
+/**
+ * 禁止视频自动播放模块
+ */
+class NoAutoplayModule extends Caliber.Module {
+  id = "noVideoAutoplay";
+  name = "禁止视频自动播放";
+  match = "/app/bbs/link";
+  description = "bbs帖子中视频默认暂停播放，需要手动点击播放按钮才能开始播放。";
+  defaultConfig = { enabled: false };
+  _taskId = null;
+  _payload = `
+    (() => {
+      const K = '__CALIBER_NAP__';
+      if(window[K]) { window[K].on = true; return; }
+      
+      const s = window[K] = { on: true, raw: HTMLMediaElement.prototype.play, t: 0 };
+      ['mousedown','keydown','touchstart','pointerdown','click'].forEach(e => 
+        window.addEventListener(e, () => s.on && (s.t = Date.now()), true)
+      );
+
+      HTMLMediaElement.prototype.play = function() {
+        if (!s.on || (Date.now() - s.t < 500) || this.dataset.ok) {
+          this.dataset.ok = '1';
+          return s.raw.apply(this, arguments);
+        }
+        this.pause();
+        return Promise.reject(new DOMException('Blocked', 'NotAllowedError'));
+      };
+    })();
+  `;
+
+  onEnable() {
+    this._sanitizer.injectScript(this._hostDocument, this._payload);
+    this._taskId = this._scheduler.register(
+      "video",
+      (v) => {
+        v.removeAttribute("autoplay");
+        v.pause();
+      },
+      { processExisting: true, root: this._hostDocument }
+    );
+  }
+
+  onDisable() {
+    this._executor.execute(
+      "if(window.__CALIBER_NAP__) window.__CALIBER_NAP__.on = false"
+    );
+
+    if (this._taskId) this._scheduler.unregister(this._taskId);
+  }
+}
 // #endregion
 
 // #region ================================ 应用启动区 (Application Bootstrap) ==========================
@@ -6221,6 +6272,7 @@ class ThemeEnhancerModule extends Caliber.Module {
       SteamDirectLinkModule,
       FeedsEnhancementModule,
       TopicEnhancementModule,
+      NoAutoplayModule,
       CustomMenuModule,
       ResponsiveBrowserModule,
       ZenModeModule,

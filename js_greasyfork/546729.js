@@ -1,13 +1,13 @@
 // ==UserScript==  
-// @name         나무위키 복사 도우미
+// @name         나무위키 도우미
 // @namespace    http://tampermonkey.net/  
-// @version      6.3
+// @version      6.4
 // @description  주석 번호와 설명을 복사할 수 있는 패널을 작고 세련된 UI로 제공하며, 페이지 내용과 URL 변경 시 자동 갱신. 복사 시 선택된 텍스트에 주석 내용 HTML을 보존한 형태로 자동 덧붙임, 이미지 링크 변환 기능.
 // @license      MIT
 // @match        https://namu.wiki/*  
 // @grant        GM_setClipboard  
-// @downloadURL https://update.greasyfork.org/scripts/546729/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4%20%EB%B3%B5%EC%82%AC%20%EB%8F%84%EC%9A%B0%EB%AF%B8.user.js
-// @updateURL https://update.greasyfork.org/scripts/546729/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4%20%EB%B3%B5%EC%82%AC%20%EB%8F%84%EC%9A%B0%EB%AF%B8.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/546729/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4%20%EB%8F%84%EC%9A%B0%EB%AF%B8.user.js
+// @updateURL https://update.greasyfork.org/scripts/546729/%EB%82%98%EB%AC%B4%EC%9C%84%ED%82%A4%20%EB%8F%84%EC%9A%B0%EB%AF%B8.meta.js
 // ==/UserScript==      
   
 (function () {  
@@ -19,7 +19,7 @@
     let collectedHtmlMap = new Map(); // Map(el → html)  
     let convertTimer = null;  
   
-    let panel, copyBtn, previewDiv, fixedContainer, smallButton, expandBtn;  
+    let panel, copyBtn, previewDiv, fixedContainer, expandBtn;  
     let isCopyButtonClick = false;  
   
     // ---------------- 수집 ----------------  
@@ -93,15 +93,6 @@
             display: flex; align-items: center; gap: 6px;  
         `;  
   
-        smallButton = document.createElement('button');  
-        smallButton.innerText = '주석 복사';  
-        smallButton.style = `  
-            background: ${green}; color: white; border: none;  
-            padding: 6px 10px; font-size: 13px; border-radius: 6px;  
-            cursor: pointer; height: 34px;  
-        `;  
-        smallButton.onclick = () => handleCopyClick(smallButton);  
-  
         expandBtn = document.createElement('button');  
         expandBtn.title = '펼치기';  
         expandBtn.style = `  
@@ -115,7 +106,6 @@
             fixedContainer.style.display = 'none';  
         };  
   
-        fixedContainer.appendChild(smallButton);  
         fixedContainer.appendChild(expandBtn);  
         document.body.appendChild(panel);  
         document.body.appendChild(fixedContainer);  

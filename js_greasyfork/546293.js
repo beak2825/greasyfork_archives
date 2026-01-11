@@ -5,6 +5,8 @@
 // @description  折叠面板、ShowID记忆、批量回调、VIP计算、删除订单/用户订单
 // @author       Steven
 // @match        https://mock.insicilis.com:18860/*
+// @match        https://mock.nuvankerder.com:18860/*
+// @match        https://mock-stg.nuvankerder.com:18860/*
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
 // @downloadURL https://update.greasyfork.org/scripts/546293/%E8%AE%A2%E5%8D%95%E6%89%B9%E9%87%8F%E5%9B%9E%E8%B0%83%20%2B%20VIP%E8%AE%A1%E7%AE%97%E5%B7%A5%E5%85%B7%20v32%EF%BC%88by%EF%BC%9A%E6%B5%8B%E8%AF%95%E7%BB%84%40Steven%EF%BC%89.user.js

@@ -2,7 +2,7 @@
 // @name        OC Success Scraper
 // @namespace   finally.torn.ocsuccess
 // @match       https://www.torn.com/factions.php*
-// @version     1.5
+// @version     1.7
 // @author      finally [2060206]
 // @description Saves & Fetches OC Success Chances for faction members
 // @grant       GM_addStyle
@@ -11,7 +11,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/546572/OC%20Success%20Scraper.user.js
 // @updateURL https://update.greasyfork.org/scripts/546572/OC%20Success%20Scraper.meta.js
 // ==/UserScript==
-
+ 
 let API_KEY = "INSERT_KEY_HERE";
 if (API_KEY.length == 16) {
   localStorage.setItem("finally.torn.ocsuccess.api", API_KEY);
@@ -91,9 +91,13 @@ function loadOCPositions() {
         const json = JSON.parse(response.responseText);
         Object.keys(json).forEach(title => {
           Object.keys(json[title]).forEach(position => {
-            json[title][position].forEach(([playerId, playerName, successChance]) => {
+            json[title][position].forEach(([playerId, playerName, success, ocId]) => {
               _playerNames[playerId] = playerName;
-              _knownPositions[`${title}_${position}_${playerId}`] = Math.max(successChance, _knownPositions[`${title}_${position}_${playerId}`] || 0);
+              if (_knownPositions[`${title}_${position}_${playerId}`]?.ocId > ocId) return;
+              _knownPositions[`${title}_${position}_${playerId}`] = {
+                ocId: ocId,
+                success: success,
+              };
             });
           });
         });
@@ -108,15 +112,17 @@ loadOCPositions();
 
 let _saveBuffer = {};
 let _saveTimeout = null;
-function saveOCPosition(title, position, playerId, playerName, successChance) {
-  const knownPosition = _knownPositions[`${title}_${position}_${playerId}`];
-  if (knownPosition && knownPosition >= successChance) {
+function saveOCPosition(ocId, title, position, playerId, playerName, success) {
+  if (_knownPositions[`${title}_${position}_${playerId}`]?.ocId >= ocId) {
     return;
   }
 
-  _knownPositions[`${title}_${position}_${playerId}`] = successChance;
+  _knownPositions[`${title}_${position}_${playerId}`] = {
+    ocId,
+    success,
+  };
   _playerNames[playerId] = playerName;
-  _saveBuffer[`${title}_${position}_${playerId}`] = [title, position, playerId, successChance];
+  _saveBuffer[`${title}_${position}_${playerId}`] = [ocId, title, position, playerId, success];
 
   if (API_KEY.length !== 16) return;
 
@@ -149,6 +155,9 @@ function saveOCPosition(title, position, playerId, playerName, successChance) {
 function handleOC(node) {
   if (!node) return;
 
+  const ocId = Number(node.dataset.ocId);
+  if (!ocId) return;
+
   const title = node.querySelector("p[class*='panelTitle']")?.innerHTML;
   if (!title) return;
 
@@ -162,7 +171,7 @@ function handleOC(node) {
     const playerId = Number(node.querySelector("a[href^='/profiles.php?XID=']")?.href.replace(/[^\d]/g, "")) || ownPlayerId();
     const playerName = node.querySelector(".honor-text:not(.honor-text-svg)")?.innerHTML || ownPlayerName();
 
-    saveOCPosition(title, position, playerId, playerName, successChance);
+    saveOCPosition(ocId, title, position, playerId, playerName, successChance);
   });
 }
 
@@ -180,7 +189,7 @@ function handleTooltip(node) {
   const allSuccessChances = Object.keys(_knownPositions)
     .filter(key => key.startsWith(`${title}_${position}_`))
     .map(key => {
-      return [key.split("_")[2], _knownPositions[key]];
+      return [key.split("_")[2], _knownPositions[key].success];
     });
 
   const successInfo = document.createElement("div");
