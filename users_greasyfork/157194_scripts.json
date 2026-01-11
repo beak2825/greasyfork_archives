@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557716,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T03:24:00.000Z",
+    "code_updated_at": "2025-12-03T03:23:59.000Z",
+    "namespace": "https://cemcoe.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 157194,
+        "name": "cemcoe",
+        "created_at": "2017-10-27T10:58:29.000Z",
+        "url": "https://greasyfork.org/users/157194-cemcoe"
+      }
+    ],
+    "name": "X/Twitter Scraper (3 Months Limit & High-Res Images)",
+    "description": "Scrape tweets from a specific user on X (Twitter) for the last 3 months into a CSV file with original image quality.",
+    "url": "https://greasyfork.org/scripts/557716-x-twitter-scraper-3-months-limit-high-res-images",
+    "code_url": "https://update.greasyfork.org/scripts/557716/XTwitter%20Scraper%20%283%20Months%20Limit%20%20High-Res%20Images%29.user.js",
+    "code_size": 10018,
+    "license": "MIT License",
+    "version": "2025.10.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

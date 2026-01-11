@@ -96,6 +96,39 @@
     "version": "2025-12-14",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558036,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T15:32:01.000Z",
+    "code_updated_at": "2025-12-05T15:43:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1005301,
+        "name": "xiaolongmr",
+        "created_at": "2023-01-01T05:26:58.000Z",
+        "url": "https://greasyfork.org/users/1005301-xiaolongmr"
+      }
+    ],
+    "name": "Apple USDZ Finder + Preview + Download（离线/在线 混合版）",
+    "description": "在 Apple 页面查找 USDZ 文件，支持下载、预览、Quick Look。**强制使用内联 Base64**，绕过 CSP 限制。",
+    "url": "https://greasyfork.org/scripts/558036-apple-usdz-finder-preview-download-%E7%A6%BB%E7%BA%BF-%E5%9C%A8%E7%BA%BF-%E6%B7%B7%E5%90%88%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/558036/Apple%20USDZ%20Finder%20%2B%20Preview%20%2B%20Download%EF%BC%88%E7%A6%BB%E7%BA%BF%E5%9C%A8%E7%BA%BF%20%E6%B7%B7%E5%90%88%E7%89%88%EF%BC%89.user.js",
+    "code_size": 1803767,
+    "license": null,
+    "version": "2.0.1 // 版本号已更新",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

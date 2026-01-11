@@ -1,0 +1,34 @@
+{
+  "id": 557708,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-03T01:24:50.000Z",
+  "code_updated_at": "2025-12-03T01:30:31.000Z",
+  "namespace": "chk.pop.locale.xp.unified",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530985,
+      "name": "Ke1",
+      "created_at": "2025-10-26T19:53:30.000Z",
+      "url": "https://greasyfork.org/users/1530985-ke1",
+      "scripts": []
+    }
+  ],
+  "name": "💧.𖥔 ݁ ˖ Health & Mood Watch (XP Only)",
+  "description": "Auto-heals Health (<75%) and Mood (<50%) using XP only. Works on Safari/iPad.",
+  "url": "https://greasyfork.org/scripts/557708-%F0%96%A5%94-health-mood-watch-xp-only",
+  "code_url": "https://update.greasyfork.org/scripts/557708/%F0%9F%92%A7%F0%96%A5%94%20%DD%81%20%CB%96%20Health%20%20Mood%20Watch%20%28XP%20Only%29.user.js",
+  "code_size": 8793,
+  "license": null,
+  "version": "4.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

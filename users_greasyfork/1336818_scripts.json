@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558163,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T00:29:49.000Z",
+    "code_updated_at": "2025-12-07T00:29:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1336818,
+        "name": "fusse",
+        "created_at": "2024-07-20T00:20:01.000Z",
+        "url": "https://greasyfork.org/users/1336818-fusse"
+      }
+    ],
+    "name": "Bonk win changer",
+    "description": "you can change the win system the text of win",
+    "url": "https://greasyfork.org/scripts/558163-bonk-win-changer",
+    "code_url": "https://update.greasyfork.org/scripts/558163/Bonk%20win%20changer.user.js",
+    "code_size": 1906,
+    "license": "MIT License",
+    "version": "01",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

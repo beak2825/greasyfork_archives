@@ -1,0 +1,33 @@
+{
+  "id": 558006,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-05T11:45:13.000Z",
+  "code_updated_at": "2025-12-05T11:45:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1544383,
+      "name": "setarcox",
+      "created_at": "2025-12-04T01:57:11.000Z",
+      "url": "https://greasyfork.org/users/1544383-setarcox"
+    }
+  ],
+  "name": "Gemini 灵枢导航 (Gemini Chat 目录) - V23.0 ClickOutside",
+  "description": "V23升级：新增点击目录外部区域自动收起功能；保留V20悬浮UI与V19滚动逻辑。",
+  "url": "https://greasyfork.org/scripts/558006-gemini-%E7%81%B5%E6%9E%A2%E5%AF%BC%E8%88%AA-gemini-chat-%E7%9B%AE%E5%BD%95-v23-0-clickoutside",
+  "code_url": "https://update.greasyfork.org/scripts/558006/Gemini%20%E7%81%B5%E6%9E%A2%E5%AF%BC%E8%88%AA%20%28Gemini%20Chat%20%E7%9B%AE%E5%BD%95%29%20-%20V230%20ClickOutside.user.js",
+  "code_size": 11015,
+  "license": null,
+  "version": "23.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

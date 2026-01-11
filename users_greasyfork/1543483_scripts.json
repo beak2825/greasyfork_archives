@@ -1,0 +1,68 @@
+[
+  {
+    "id": 557963,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T03:09:06.000Z",
+    "code_updated_at": "2025-12-05T03:12:02.000Z",
+    "namespace": "https://github.com/kelryry",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543483,
+        "name": "kelryry",
+        "created_at": "2025-12-01T11:21:46.000Z",
+        "url": "https://greasyfork.org/users/1543483-kelryry"
+      }
+    ],
+    "name": "多平台问卷AI自动填写，问卷星、腾讯问卷、飞书通用",
+    "description": "Extracts DOM structure, sends it to Gemini AI for semantic analysis, and simulates human input to fill forms. Supports custom user profiles and works on modern frameworks (React/Vue).",
+    "url": "https://greasyfork.org/scripts/557963-%E5%A4%9A%E5%B9%B3%E5%8F%B0%E9%97%AE%E5%8D%B7ai%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99-%E9%97%AE%E5%8D%B7%E6%98%9F-%E8%85%BE%E8%AE%AF%E9%97%AE%E5%8D%B7-%E9%A3%9E%E4%B9%A6%E9%80%9A%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/557963/%E5%A4%9A%E5%B9%B3%E5%8F%B0%E9%97%AE%E5%8D%B7AI%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%EF%BC%8C%E9%97%AE%E5%8D%B7%E6%98%9F%E3%80%81%E8%85%BE%E8%AE%AF%E9%97%AE%E5%8D%B7%E3%80%81%E9%A3%9E%E4%B9%A6%E9%80%9A%E7%94%A8.user.js",
+    "code_size": 15451,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557522,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T11:32:43.000Z",
+    "code_updated_at": "2025-12-01T11:33:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543483,
+        "name": "kelryry",
+        "created_at": "2025-12-01T11:21:46.000Z",
+        "url": "https://greasyfork.org/users/1543483-kelryry"
+      }
+    ],
+    "name": "问卷星AI自动填写",
+    "description": "利用 Google Gemini 模型自动回答问卷，支持新版VM页面、协议自动勾选、手机号强力填充、漏题自动定位高亮。",
+    "url": "https://greasyfork.org/scripts/557522-%E9%97%AE%E5%8D%B7%E6%98%9Fai%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+    "code_url": "https://update.greasyfork.org/scripts/557522/%E9%97%AE%E5%8D%B7%E6%98%9FAI%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+    "code_size": 18911,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

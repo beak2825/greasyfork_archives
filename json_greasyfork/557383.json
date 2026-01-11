@@ -1,0 +1,59 @@
+{
+  "id": 557383,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-30T06:08:05.000Z",
+  "code_updated_at": "2025-12-09T12:28:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543050,
+      "name": "Militina winter",
+      "created_at": "2025-11-30T05:16:48.000Z",
+      "url": "https://greasyfork.org/users/1543050-militina-winter",
+      "scripts": [
+        {
+          "id": 557383,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-30T06:08:05.000Z",
+          "code_updated_at": "2025-12-09T12:28:25.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NinjaIO Mod UI v0.015 (changed to  ninjabattle.io)",
+          "description": "Full Mod UI: FPS, Click Taps, Custom Cursor, Rainbow, UI Color, Fullscreen Panel",
+          "url": "https://greasyfork.org/scripts/557383-ninjaio-mod-ui-v0-015-changed-to-ninjabattle-io",
+          "code_url": "https://update.greasyfork.org/scripts/557383/NinjaIO%20Mod%20UI%20v0015%20%28changed%20to%20%20ninjabattleio%29.user.js",
+          "code_size": 13991,
+          "license": null,
+          "version": "0.015",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NinjaIO Mod UI v0.015 (changed to  ninjabattle.io)",
+  "description": "Full Mod UI: FPS, Click Taps, Custom Cursor, Rainbow, UI Color, Fullscreen Panel",
+  "url": "https://greasyfork.org/scripts/557383-ninjaio-mod-ui-v0-015-changed-to-ninjabattle-io",
+  "code_url": "https://update.greasyfork.org/scripts/557383/NinjaIO%20Mod%20UI%20v0015%20%28changed%20to%20%20ninjabattleio%29.user.js",
+  "code_size": 13991,
+  "license": null,
+  "version": "0.015",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

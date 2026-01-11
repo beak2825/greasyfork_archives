@@ -1,0 +1,34 @@
+{
+  "id": 558473,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-10T03:49:14.000Z",
+  "code_updated_at": "2025-12-10T03:49:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1129783,
+      "name": "Crazy uncle",
+      "created_at": "2023-07-18T09:29:14.000Z",
+      "url": "https://greasyfork.org/users/1129783-crazy-uncle",
+      "scripts": []
+    }
+  ],
+  "name": "Sync loginUser Token to Server & update localStorage",
+  "description": "上传 token，并把服务端返回的 token+timestamp 同步写回 localStorage.loginUser",
+  "url": "https://greasyfork.org/scripts/558473-sync-loginuser-token-to-server-update-localstorage",
+  "code_url": "https://update.greasyfork.org/scripts/558473/Sync%20loginUser%20Token%20to%20Server%20%20update%20localStorage.user.js",
+  "code_size": 1959,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

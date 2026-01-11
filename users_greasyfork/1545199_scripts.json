@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558300,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T08:57:35.000Z",
+    "code_updated_at": "2025-12-08T08:57:35.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/488053-tp-overhaul",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1545199,
+        "name": "Florian LF",
+        "created_at": "2025-12-06T10:09:12.000Z",
+        "url": "https://greasyfork.org/users/1545199-florian-lf"
+      }
+    ],
+    "name": "TP Overhaul",
+    "description": "Améliorations des TPs de DC",
+    "url": "https://greasyfork.org/scripts/558300-tp-overhaul",
+    "code_url": "https://update.greasyfork.org/scripts/558300/TP%20Overhaul.user.js",
+    "code_size": 50988,
+    "license": "MIT License",
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558105,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T10:12:35.000Z",
+    "code_updated_at": "2025-12-06T10:12:35.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/488053-tp-overhaul",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1545199,
+        "name": "Florian LF",
+        "created_at": "2025-12-06T10:09:12.000Z",
+        "url": "https://greasyfork.org/users/1545199-florian-lf"
+      }
+    ],
+    "name": "TP Overhaul",
+    "description": "Améliorations des TPs de DC",
+    "url": "https://greasyfork.org/scripts/558105-tp-overhaul",
+    "code_url": "https://update.greasyfork.org/scripts/558105/TP%20Overhaul.user.js",
+    "code_size": 48284,
+    "license": "MIT License",
+    "version": "1.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

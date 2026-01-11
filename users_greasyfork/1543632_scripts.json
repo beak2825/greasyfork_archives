@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557596,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T23:45:36.000Z",
+    "code_updated_at": "2025-12-01T23:45:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543632,
+        "name": "Аб Вг",
+        "created_at": "2025-12-01T23:37:47.000Z",
+        "url": "https://greasyfork.org/users/1543632-%D0%B0%D0%B1-%D0%B2%D0%B3"
+      }
+    ],
+    "name": "Pikabu Quick Ignore Button",
+    "description": "Быстрый пожизненный игнор через кнопку kill рядом с каждым постом",
+    "url": "https://greasyfork.org/scripts/557596-pikabu-quick-ignore-button",
+    "code_url": "https://update.greasyfork.org/scripts/557596/Pikabu%20Quick%20Ignore%20Button.user.js",
+    "code_size": 4169,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

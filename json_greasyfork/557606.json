@@ -1,0 +1,59 @@
+{
+  "id": 557606,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T03:05:14.000Z",
+  "code_updated_at": "2025-12-02T10:24:05.000Z",
+  "namespace": "https://github.com/zhaeong97/",
+  "support_url": "https://github.com/zhaeong97/tampermonkey/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1445719,
+      "name": "zhaeong",
+      "created_at": "2025-03-14T16:21:13.000Z",
+      "url": "https://greasyfork.org/users/1445719-zhaeong",
+      "scripts": [
+        {
+          "id": 557606,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-02T03:05:14.000Z",
+          "code_updated_at": "2025-12-02T10:24:05.000Z",
+          "namespace": "https://github.com/zhaeong97/",
+          "support_url": "https://github.com/zhaeong97/tampermonkey/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "虎扑增强",
+          "description": "虎扑帖子图片优化、视频悬浮、评论交互增强、工具栏优化等多项功能，提升虎扑浏览体验",
+          "url": "https://greasyfork.org/scripts/557606-%E8%99%8E%E6%89%91%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/557606/%E8%99%8E%E6%89%91%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 136596,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "1.4.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "虎扑增强",
+  "description": "虎扑帖子图片优化、视频悬浮、评论交互增强、工具栏优化等多项功能，提升虎扑浏览体验",
+  "url": "https://greasyfork.org/scripts/557606-%E8%99%8E%E6%89%91%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/557606/%E8%99%8E%E6%89%91%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 136596,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "1.4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -196,5 +196,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557954,
+    "daily_installs": 1,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T00:14:49.000Z",
+    "code_updated_at": "2025-12-05T00:14:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "Export Cookies",
+    "description": "Export cookies to various formats in one click!",
+    "url": "https://greasyfork.org/scripts/557954-export-cookies",
+    "code_url": "https://update.greasyfork.org/scripts/557954/Export%20Cookies.user.js",
+    "code_size": 11497,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557409,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T10:02:57.000Z",
+    "code_updated_at": "2025-12-03T03:00:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "Chrome Stats Redirector",
+    "description": "Adds a menu to jump to chrome-stats.com for the current extension",
+    "url": "https://greasyfork.org/scripts/557409-chrome-stats-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/557409/Chrome%20Stats%20Redirector.user.js",
+    "code_size": 7659,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -493,5 +493,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 558364,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T23:29:40.000Z",
+    "code_updated_at": "2025-12-09T00:19:50.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - Minesweeper Mini-game",
+    "description": "Play minesweeper with Piper!",
+    "url": "https://greasyfork.org/scripts/558364-fv-minesweeper-mini-game",
+    "code_url": "https://update.greasyfork.org/scripts/558364/FV%20-%20Minesweeper%20Mini-game.user.js",
+    "code_size": 14152,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558140,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T17:53:01.000Z",
+    "code_updated_at": "2025-12-07T11:50:19.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - Sudoku Flow Mini-game",
+    "description": "Play Sudoku with Flow!",
+    "url": "https://greasyfork.org/scripts/558140-fv-sudoku-flow-mini-game",
+    "code_url": "https://update.greasyfork.org/scripts/558140/FV%20-%20Sudoku%20Flow%20Mini-game.user.js",
+    "code_size": 15265,
+    "license": null,
+    "version": "5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558025,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T14:29:35.000Z",
+    "code_updated_at": "2025-12-05T15:05:25.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - Magic 8-Ball Mini-game",
+    "description": "Magic 8-Ball with predictions and a secret cat mode.",
+    "url": "https://greasyfork.org/scripts/558025-fv-magic-8-ball-mini-game",
+    "code_url": "https://update.greasyfork.org/scripts/558025/FV%20-%20Magic%208-Ball%20Mini-game.user.js",
+    "code_size": 16507,
+    "license": null,
+    "version": "8.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557659,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-02T14:47:03.000Z",
+    "code_updated_at": "2025-12-02T14:47:03.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - Quick Craft Dock",
+    "description": "Grid/list toggle recipes. Only click the recipe you want and watch it go. Auto starts and completes recipes. Works on the Alchemist, Blacksmith, Cook, and Crafter.",
+    "url": "https://greasyfork.org/scripts/557659-fv-quick-craft-dock",
+    "code_url": "https://update.greasyfork.org/scripts/557659/FV%20-%20Quick%20Craft%20Dock.user.js",
+    "code_size": 7744,
+    "license": null,
+    "version": "4.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

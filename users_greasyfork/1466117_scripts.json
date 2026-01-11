@@ -162,6 +162,39 @@
     "version": "1.1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557818,
+    "daily_installs": 1,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T19:21:35.000Z",
+    "code_updated_at": "2025-12-14T14:16:06.000Z",
+    "namespace": "https://greasyfork.org/en/users/1466117",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466117,
+        "name": "uwuMocha",
+        "created_at": "2025-05-05T18:23:31.000Z",
+        "url": "https://greasyfork.org/users/1466117-uwumocha"
+      }
+    ],
+    "name": "GGn Mining Stats",
+    "description": "Adds a button to the userlog page to calculate personal mining drops statistics.",
+    "url": "https://greasyfork.org/scripts/557818-ggn-mining-stats",
+    "code_url": "https://update.greasyfork.org/scripts/557818/GGn%20Mining%20Stats.user.js",
+    "code_size": 14704,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557525,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T11:54:38.000Z",
+    "code_updated_at": "2025-12-03T10:36:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441232,
+        "name": "cssdoa",
+        "created_at": "2025-03-01T09:53:35.000Z",
+        "url": "https://greasyfork.org/users/1441232-cssdoa"
+      }
+    ],
+    "name": "嗶哩輕小說直排閱讀器",
+    "description": "去除背景色 + 調整 P 標籤屬性 + 滾輪/上下鍵卷動(距離一致) + 邊界跳轉章節 + 線上字體 + 符號替換(括號/破折號等)",
+    "url": "https://greasyfork.org/scripts/557525-%E5%97%B6%E5%93%A9%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%9B%B4%E6%8E%92%E9%96%B1%E8%AE%80%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/557525/%E5%97%B6%E5%93%A9%E8%BC%95%E5%B0%8F%E8%AA%AA%E7%9B%B4%E6%8E%92%E9%96%B1%E8%AE%80%E5%99%A8.user.js",
+    "code_size": 11238,
+    "license": "MIT License",
+    "version": "7.11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558526,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T15:29:57.000Z",
+    "code_updated_at": "2025-12-10T16:02:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1367832,
+        "name": "Lemon Allen",
+        "created_at": "2024-09-15T06:48:27.000Z",
+        "url": "https://greasyfork.org/users/1367832-lemon-allen"
+      }
+    ],
+    "name": "TEMU打印商品打包标签",
+    "description": "从右侧抽屉提取 SKU货号、次销售属性、发货数，直接调用浏览器打印，不显示生成页面。",
+    "url": "https://greasyfork.org/scripts/558526-temu%E6%89%93%E5%8D%B0%E5%95%86%E5%93%81%E6%89%93%E5%8C%85%E6%A0%87%E7%AD%BE",
+    "code_url": "https://update.greasyfork.org/scripts/558526/TEMU%E6%89%93%E5%8D%B0%E5%95%86%E5%93%81%E6%89%93%E5%8C%85%E6%A0%87%E7%AD%BE.user.js",
+    "code_size": 6728,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

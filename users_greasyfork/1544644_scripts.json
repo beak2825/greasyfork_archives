@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557919,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T15:00:49.000Z",
+    "code_updated_at": "2025-12-04T15:00:49.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544644,
+        "name": "devpruthvi",
+        "created_at": "2025-12-04T14:47:36.000Z",
+        "url": "https://greasyfork.org/users/1544644-devpruthvi"
+      }
+    ],
+    "name": "Filter unnecessary visa types",
+    "description": "04/12/2025, 20:17:48",
+    "url": "https://greasyfork.org/scripts/557919-filter-unnecessary-visa-types",
+    "code_url": "https://update.greasyfork.org/scripts/557919/Filter%20unnecessary%20visa%20types.user.js",
+    "code_size": 2099,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

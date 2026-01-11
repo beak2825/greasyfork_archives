@@ -30,6 +30,39 @@
     "version": "9.9.10",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557412,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T10:50:05.000Z",
+    "code_updated_at": "2025-12-01T04:08:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218911,
+        "name": "Zero Array",
+        "created_at": "2023-11-17T03:50:59.000Z",
+        "url": "https://greasyfork.org/users/1218911-zero-array"
+      }
+    ],
+    "name": "AllwinCard 自动二次验证",
+    "description": "脚本会持续扫描直到找到验证框，执行一次单次赋值操作后  间隔5秒后重新循环扫描。",
+    "url": "https://greasyfork.org/scripts/557412-allwincard-%E8%87%AA%E5%8A%A8%E4%BA%8C%E6%AC%A1%E9%AA%8C%E8%AF%81",
+    "code_url": "https://update.greasyfork.org/scripts/557412/AllwinCard%20%E8%87%AA%E5%8A%A8%E4%BA%8C%E6%AC%A1%E9%AA%8C%E8%AF%81.user.js",
+    "code_size": 7367,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

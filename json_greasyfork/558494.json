@@ -1,0 +1,34 @@
+{
+  "id": 558494,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-10T08:13:42.000Z",
+  "code_updated_at": "2025-12-29T03:53:32.000Z",
+  "namespace": "https://greasyfork.org/users/1546436-zasternight",
+  "support_url": "https://github.com/lvzhenbo/115-plus/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1546436,
+      "name": "zasternight",
+      "created_at": "2025-12-10T01:46:45.000Z",
+      "url": "https://greasyfork.org/users/1546436-zasternight",
+      "scripts": []
+    }
+  ],
+  "name": "115+",
+  "description": "为115网盘添加一些功能，已美化下载按钮为红色",
+  "url": "https://greasyfork.org/scripts/558494-115",
+  "code_url": "https://update.greasyfork.org/scripts/558494/115%2B.user.js",
+  "code_size": 174180,
+  "license": "MIT License",
+  "version": "1.2.18",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

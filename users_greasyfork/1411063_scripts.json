@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557475,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T01:25:40.000Z",
+    "code_updated_at": "2025-12-01T01:25:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411063,
+        "name": "Juan Rigo",
+        "created_at": "2024-12-15T06:31:54.000Z",
+        "url": "https://greasyfork.org/users/1411063-juan-rigo"
+      }
+    ],
+    "name": "OpenGuessr Blink (with preview-time GUI)",
+    "description": "Show Street View briefly then hide it (Blink) on OpenGuessr. Small GUI to set preview time and enable/disable.",
+    "url": "https://greasyfork.org/scripts/557475-openguessr-blink-with-preview-time-gui",
+    "code_url": "https://update.greasyfork.org/scripts/557475/OpenGuessr%20Blink%20%28with%20preview-time%20GUI%29.user.js",
+    "code_size": 9939,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

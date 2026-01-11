@@ -1,0 +1,59 @@
+{
+  "id": 558222,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-07T12:18:28.000Z",
+  "code_updated_at": "2025-12-07T12:18:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1545564,
+      "name": "Abhay yadav",
+      "created_at": "2025-12-07T12:12:13.000Z",
+      "url": "https://greasyfork.org/users/1545564-abhay-yadav",
+      "scripts": [
+        {
+          "id": 558222,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-07T12:18:28.000Z",
+          "code_updated_at": "2025-12-07T12:18:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Photos Time editor SPA-Safe Auto Time Setter based on Name (S00E00)",
+          "description": "Auto-set time based on SxxEyy pattern for currently visible photo in Google Photos",
+          "url": "https://greasyfork.org/scripts/558222-google-photos-time-editor-spa-safe-auto-time-setter-based-on-name-s00e00",
+          "code_url": "https://update.greasyfork.org/scripts/558222/Google%20Photos%20Time%20editor%20SPA-Safe%20Auto%20Time%20Setter%20based%20on%20Name%20%28S00E00%29.user.js",
+          "code_size": 3907,
+          "license": null,
+          "version": "4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Photos Time editor SPA-Safe Auto Time Setter based on Name (S00E00)",
+  "description": "Auto-set time based on SxxEyy pattern for currently visible photo in Google Photos",
+  "url": "https://greasyfork.org/scripts/558222-google-photos-time-editor-spa-safe-auto-time-setter-based-on-name-s00e00",
+  "code_url": "https://update.greasyfork.org/scripts/558222/Google%20Photos%20Time%20editor%20SPA-Safe%20Auto%20Time%20Setter%20based%20on%20Name%20%28S00E00%29.user.js",
+  "code_size": 3907,
+  "license": null,
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

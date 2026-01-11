@@ -1,0 +1,59 @@
+{
+  "id": 557600,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T00:38:01.000Z",
+  "code_updated_at": "2025-12-22T18:20:35.000Z",
+  "namespace": "mailto:arabalika@noreplay.codeberg.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543640,
+      "name": "PhDoge",
+      "created_at": "2025-12-02T00:31:12.000Z",
+      "url": "https://greasyfork.org/users/1543640-phdoge",
+      "scripts": [
+        {
+          "id": 557600,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-02T00:38:01.000Z",
+          "code_updated_at": "2025-12-22T18:20:35.000Z",
+          "namespace": "mailto:arabalika@noreplay.codeberg.org",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Filter X.com Location",
+          "description": "Script to filter X content by user location.",
+          "url": "https://greasyfork.org/scripts/557600-filter-x-com-location",
+          "code_url": "https://update.greasyfork.org/scripts/557600/Filter%20Xcom%20Location.user.js",
+          "code_size": 28184,
+          "license": "AGPL3.0",
+          "version": "0.2.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Filter X.com Location",
+  "description": "Script to filter X content by user location.",
+  "url": "https://greasyfork.org/scripts/557600-filter-x-com-location",
+  "code_url": "https://update.greasyfork.org/scripts/557600/Filter%20Xcom%20Location.user.js",
+  "code_size": 28184,
+  "license": "AGPL3.0",
+  "version": "0.2.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

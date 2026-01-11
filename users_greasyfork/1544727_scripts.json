@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557951,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T23:06:12.000Z",
+    "code_updated_at": "2025-12-04T23:27:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544727,
+        "name": "It Cry about",
+        "created_at": "2025-12-04T22:55:57.000Z",
+        "url": "https://greasyfork.org/users/1544727-it-cry-about"
+      }
+    ],
+    "name": "Sillytavern character assist (db)",
+    "description": "Writing assist with Gemini API",
+    "url": "https://greasyfork.org/scripts/557951-sillytavern-character-assist-db",
+    "code_url": "https://update.greasyfork.org/scripts/557951/Sillytavern%20character%20assist%20%28db%29.user.js",
+    "code_size": 76974,
+    "license": null,
+    "version": "1.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

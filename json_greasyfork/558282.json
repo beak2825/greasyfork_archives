@@ -1,0 +1,59 @@
+{
+  "id": 558282,
+  "daily_installs": 7,
+  "total_installs": 248,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-08T03:42:01.000Z",
+  "code_updated_at": "2025-12-09T07:39:43.000Z",
+  "namespace": "OCDownloader",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1545746,
+      "name": "lavimEodãF",
+      "created_at": "2025-12-08T03:01:15.000Z",
+      "url": "https://greasyfork.org/users/1545746-lavimeod%C3%A3f",
+      "scripts": [
+        {
+          "id": 558282,
+          "daily_installs": 7,
+          "total_installs": 248,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-08T03:42:01.000Z",
+          "code_updated_at": "2025-12-09T07:39:43.000Z",
+          "namespace": "OCDownloader",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "One Click Downloader for OnlyFans – Images & Videos",
+          "description": "Adds one-click download buttons for images and videos...",
+          "url": "https://greasyfork.org/scripts/558282-one-click-downloader-for-onlyfans-images-videos",
+          "code_url": "https://update.greasyfork.org/scripts/558282/One%20Click%20Downloader%20for%20OnlyFans%20%E2%80%93%20Images%20%20Videos.user.js",
+          "code_size": 10199,
+          "license": "MIT License",
+          "version": "4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "One Click Downloader for OnlyFans – Images & Videos",
+  "description": "Adds one-click download buttons for images and videos...",
+  "url": "https://greasyfork.org/scripts/558282-one-click-downloader-for-onlyfans-images-videos",
+  "code_url": "https://update.greasyfork.org/scripts/558282/One%20Click%20Downloader%20for%20OnlyFans%20%E2%80%93%20Images%20%20Videos.user.js",
+  "code_size": 10199,
+  "license": "MIT License",
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

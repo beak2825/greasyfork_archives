@@ -1,0 +1,59 @@
+{
+  "id": 557458,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-30T20:25:25.000Z",
+  "code_updated_at": "2025-11-30T20:27:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 729510,
+      "name": "Christian Wilkie",
+      "created_at": "2021-01-20T18:18:44.000Z",
+      "url": "https://greasyfork.org/users/729510-christian-wilkie",
+      "scripts": [
+        {
+          "id": 557458,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-30T20:25:25.000Z",
+          "code_updated_at": "2025-11-30T20:27:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Stop and Shop & Giant Coupon Clip",
+          "description": "(Copied by Chris Wilkie from Chris Alves script for Giant) Easily clip all visible coupons on the Giant grocery store website. https://github.com/Chrisae9/monkeyscripts/blob/main/giant-coupon-clipper/giant-coupon-clipper.js",
+          "url": "https://greasyfork.org/scripts/557458-stop-and-shop-giant-coupon-clip",
+          "code_url": "https://update.greasyfork.org/scripts/557458/Stop%20and%20Shop%20%20Giant%20Coupon%20Clip.user.js",
+          "code_size": 2354,
+          "license": null,
+          "version": "1.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Stop and Shop & Giant Coupon Clip",
+  "description": "(Copied by Chris Wilkie from Chris Alves script for Giant) Easily clip all visible coupons on the Giant grocery store website. https://github.com/Chrisae9/monkeyscripts/blob/main/giant-coupon-clipper/giant-coupon-clipper.js",
+  "url": "https://greasyfork.org/scripts/557458-stop-and-shop-giant-coupon-clip",
+  "code_url": "https://update.greasyfork.org/scripts/557458/Stop%20and%20Shop%20%20Giant%20Coupon%20Clip.user.js",
+  "code_size": 2354,
+  "license": null,
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

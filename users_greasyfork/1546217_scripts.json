@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558495,
+    "daily_installs": 1,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T08:23:01.000Z",
+    "code_updated_at": "2025-12-10T08:29:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546217,
+        "name": "otis1995",
+        "created_at": "2025-12-09T09:02:26.000Z",
+        "url": "https://greasyfork.org/users/1546217-otis1995"
+      }
+    ],
+    "name": "华医网全自动",
+    "description": "仅用于华医网，自动播放、自动考试、无人巡航",
+    "url": "https://greasyfork.org/scripts/558495-%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%85%A8%E8%87%AA%E5%8A%A8",
+    "code_url": "https://update.greasyfork.org/scripts/558495/%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%85%A8%E8%87%AA%E5%8A%A8.user.js",
+    "code_size": 252953,
+    "license": "AGPL License",
+    "version": "1.2.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

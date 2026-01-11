@@ -30,6 +30,39 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558055,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T22:02:53.000Z",
+    "code_updated_at": "2025-12-05T22:30:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Extract Users From Team (Auto-Scroll)",
+    "description": "Scrapes virtualized lists by auto-scrolling (Window Support)",
+    "url": "https://greasyfork.org/scripts/558055-extract-users-from-team-auto-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/558055/Extract%20Users%20From%20Team%20%28Auto-Scroll%29.user.js",
+    "code_size": 7669,
+    "license": null,
+    "version": "0.0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

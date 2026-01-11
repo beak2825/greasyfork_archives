@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557608,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-02T03:52:57.000Z",
+    "code_updated_at": "2025-12-02T03:52:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451925,
+        "name": "喂你吃药",
+        "created_at": "2025-03-30T07:30:58.000Z",
+        "url": "https://greasyfork.org/users/1451925-%E5%96%82%E4%BD%A0%E5%90%83%E8%8D%AF"
+      }
+    ],
+    "name": "Readeasy (一键复制内容)",
+    "description": "一键复制。内置你自定义的 Markdown 转换逻辑(支持中文引号转引用)，使用 GM_addStyle 穿透 CSP。",
+    "url": "https://greasyfork.org/scripts/557608-readeasy-%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%E5%86%85%E5%AE%B9",
+    "code_url": "https://update.greasyfork.org/scripts/557608/Readeasy%20%28%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%E5%86%85%E5%AE%B9%29.user.js",
+    "code_size": 14860,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

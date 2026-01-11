@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558214,
+    "daily_installs": 4,
+    "total_installs": 175,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T10:52:11.000Z",
+    "code_updated_at": "2025-12-07T10:52:11.000Z",
+    "namespace": "https://greasyfork.org/users/919633",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1525365,
+        "name": "prince_finn",
+        "created_at": "2025-10-11T22:09:01.000Z",
+        "url": "https://greasyfork.org/users/1525365-prince-finn"
+      }
+    ],
+    "name": "! Glotus Client",
+    "description": "An excellent Moomoo.io hack for a comfortable gaming experience",
+    "url": "https://greasyfork.org/scripts/558214-glotus-client",
+    "code_url": "https://update.greasyfork.org/scripts/558214/%21%20Glotus%20Client.user.js",
+    "code_size": 368280,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557442,
+    "daily_installs": 6,
+    "total_installs": 133,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T17:09:07.000Z",
+    "code_updated_at": "2025-11-30T17:09:06.000Z",
+    "namespace": "https://dsc.gg/Aibm",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1525365,
+        "name": "prince_finn",
+        "created_at": "2025-10-11T22:09:01.000Z",
+        "url": "https://greasyfork.org/users/1525365-prince-finn"
+      }
+    ],
+    "name": "Aibm recode",
+    "description": "An excellent Moomoo.io hack for a comfortable gaming experience",
+    "url": "https://greasyfork.org/scripts/557442-aibm-recode",
+    "code_url": "https://update.greasyfork.org/scripts/557442/Aibm%20recode.user.js",
+    "code_size": 1505180,
+    "license": "MIT License",
+    "version": "2.3.9.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

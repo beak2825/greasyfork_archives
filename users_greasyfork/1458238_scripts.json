@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557419,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T13:01:55.000Z",
+    "code_updated_at": "2025-12-22T12:59:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1458238,
+        "name": "Myuui",
+        "created_at": "2025-04-15T14:38:53.000Z",
+        "url": "https://greasyfork.org/users/1458238-myuui"
+      }
+    ],
+    "name": "Myuui's Minestrator Theme",
+    "description": "Purple theme and cleaned UI for Minestrator",
+    "url": "https://greasyfork.org/scripts/557419-myuui-s-minestrator-theme",
+    "code_url": "https://update.greasyfork.org/scripts/557419/Myuui%27s%20Minestrator%20Theme.user.js",
+    "code_size": 8301,
+    "license": "MIT License",
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

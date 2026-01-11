@@ -1,0 +1,59 @@
+{
+  "id": 557411,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-30T10:19:26.000Z",
+  "code_updated_at": "2025-11-30T10:20:40.000Z",
+  "namespace": "hardcover-editions-native-v2.2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543115,
+      "name": "cozyrosy",
+      "created_at": "2025-11-30T09:26:04.000Z",
+      "url": "https://greasyfork.org/users/1543115-cozyrosy",
+      "scripts": [
+        {
+          "id": 557411,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-30T10:19:26.000Z",
+          "code_updated_at": "2025-11-30T10:20:40.000Z",
+          "namespace": "hardcover-editions-native-v2.2",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hardcover.app - Goodreads, Anna's Archive & LibGen buttons",
+          "description": "Adds Goodreads, Anna's & LibGen buttons using the exact CSS classes of Hardcover's 'Select Edition' button.",
+          "url": "https://greasyfork.org/scripts/557411-hardcover-app-goodreads-anna-s-archive-libgen-buttons",
+          "code_url": "https://update.greasyfork.org/scripts/557411/Hardcoverapp%20-%20Goodreads%2C%20Anna%27s%20Archive%20%20LibGen%20buttons.user.js",
+          "code_size": 3565,
+          "license": "MIT License",
+          "version": "2.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hardcover.app - Goodreads, Anna's Archive & LibGen buttons",
+  "description": "Adds Goodreads, Anna's & LibGen buttons using the exact CSS classes of Hardcover's 'Select Edition' button.",
+  "url": "https://greasyfork.org/scripts/557411-hardcover-app-goodreads-anna-s-archive-libgen-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/557411/Hardcoverapp%20-%20Goodreads%2C%20Anna%27s%20Archive%20%20LibGen%20buttons.user.js",
+  "code_size": 3565,
+  "license": "MIT License",
+  "version": "2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

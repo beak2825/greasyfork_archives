@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557495,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T06:44:57.000Z",
+    "code_updated_at": "2025-12-24T08:25:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543372,
+        "name": "SHANHH",
+        "created_at": "2025-12-01T05:47:38.000Z",
+        "url": "https://greasyfork.org/users/1543372-shanhh"
+      }
+    ],
+    "name": "句乐部 - 增强学习助手",
+    "description": "禁止下一题 + 禁止右方向键 + 输入时自动隐藏答案（带控制开关，Ctrl+Shift+U 显示/隐藏面板）",
+    "url": "https://greasyfork.org/scripts/557495-%E5%8F%A5%E4%B9%90%E9%83%A8-%E5%A2%9E%E5%BC%BA%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/557495/%E5%8F%A5%E4%B9%90%E9%83%A8%20-%20%E5%A2%9E%E5%BC%BA%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 7070,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

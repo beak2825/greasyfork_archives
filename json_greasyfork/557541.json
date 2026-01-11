@@ -1,0 +1,59 @@
+{
+  "id": 557541,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-01T14:42:48.000Z",
+  "code_updated_at": "2025-12-01T14:42:48.000Z",
+  "namespace": "https://github.com/coezbek/BoardGameArenaGeek",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543554,
+      "name": "ChristopherOezbek",
+      "created_at": "2025-12-01T14:39:30.000Z",
+      "url": "https://greasyfork.org/users/1543554-christopheroezbek",
+      "scripts": [
+        {
+          "id": 557541,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-01T14:42:48.000Z",
+          "code_updated_at": "2025-12-01T14:42:48.000Z",
+          "namespace": "https://github.com/coezbek/BoardGameArenaGeek",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BGA to BGG - BoardGameArenaGeek",
+          "description": "Fetches BoardGameGeek.com (BGG) stats for games on BoardGameArena.com (BGA).",
+          "url": "https://greasyfork.org/scripts/557541-bga-to-bgg-boardgamearenageek",
+          "code_url": "https://update.greasyfork.org/scripts/557541/BGA%20to%20BGG%20-%20BoardGameArenaGeek.user.js",
+          "code_size": 18597,
+          "license": null,
+          "version": "1.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BGA to BGG - BoardGameArenaGeek",
+  "description": "Fetches BoardGameGeek.com (BGG) stats for games on BoardGameArena.com (BGA).",
+  "url": "https://greasyfork.org/scripts/557541-bga-to-bgg-boardgamearenageek",
+  "code_url": "https://update.greasyfork.org/scripts/557541/BGA%20to%20BGG%20-%20BoardGameArenaGeek.user.js",
+  "code_size": 18597,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

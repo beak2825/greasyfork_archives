@@ -1,0 +1,34 @@
+{
+  "id": 558339,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-08T17:41:05.000Z",
+  "code_updated_at": "2025-12-08T17:41:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 844643,
+      "name": "Louis R.",
+      "created_at": "2021-11-26T09:36:49.000Z",
+      "url": "https://greasyfork.org/users/844643-louis-r",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Custom Race Filter (Docks 100 Any Car Free)",
+  "description": "Show only Docks 100-lap, Any car, 100-driver, $0 races on Torn custom races page",
+  "url": "https://greasyfork.org/scripts/558339-torn-custom-race-filter-docks-100-any-car-free",
+  "code_url": "https://update.greasyfork.org/scripts/558339/Torn%20Custom%20Race%20Filter%20%28Docks%20100%20Any%20Car%20Free%29.user.js",
+  "code_size": 4786,
+  "license": "GNU GPLv3",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

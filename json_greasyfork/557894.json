@@ -1,0 +1,33 @@
+{
+  "id": 557894,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-04T10:48:46.000Z",
+  "code_updated_at": "2025-12-06T12:53:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1544547,
+      "name": "hue98",
+      "created_at": "2025-12-04T10:40:33.000Z",
+      "url": "https://greasyfork.org/users/1544547-hue98"
+    }
+  ],
+  "name": "SOOP Chat Keyword Logger (별풍선)",
+  "description": "SOOP 채팅에서 '별풍선' 단어가 나오면 시간과 문장을 기록하고, L 키로 패널을 토글합니다. (성능 최적화 버전)",
+  "url": "https://greasyfork.org/scripts/557894-soop-chat-keyword-logger-%EB%B3%84%ED%92%8D%EC%84%A0",
+  "code_url": "https://update.greasyfork.org/scripts/557894/SOOP%20Chat%20Keyword%20Logger%20%28%EB%B3%84%ED%92%8D%EC%84%A0%29.user.js",
+  "code_size": 10578,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558394,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-09T06:31:47.000Z",
+    "code_updated_at": "2025-12-09T07:24:16.000Z",
+    "namespace": "https://yutura.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1002810,
+        "name": "neneneon",
+        "created_at": "2022-12-26T01:21:39.000Z",
+        "url": "https://greasyfork.org/users/1002810-neneneon"
+      }
+    ],
+    "name": "Yutura Ranking: 開設日 + YouTube直リンク",
+    "description": "ランキング一覧にチャンネル開設日を表示し、YouTubeへ直リンクを追加する",
+    "url": "https://greasyfork.org/scripts/558394-yutura-ranking-%E9%96%8B%E8%A8%AD%E6%97%A5-youtube%E7%9B%B4%E3%83%AA%E3%83%B3%E3%82%AF",
+    "code_url": "https://update.greasyfork.org/scripts/558394/Yutura%20Ranking%3A%20%E9%96%8B%E8%A8%AD%E6%97%A5%20%2B%20YouTube%E7%9B%B4%E3%83%AA%E3%83%B3%E3%82%AF.user.js",
+    "code_size": 8263,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

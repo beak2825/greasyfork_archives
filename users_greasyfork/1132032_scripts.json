@@ -1,0 +1,101 @@
+[
+  {
+    "id": 558463,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T02:00:35.000Z",
+    "code_updated_at": "2025-12-10T14:13:21.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132032,
+        "name": "Yoyo Yossarian",
+        "created_at": "2023-07-21T05:41:00.000Z",
+        "url": "https://greasyfork.org/users/1132032-yoyo-yossarian"
+      }
+    ],
+    "name": "Elimination Chat Buttons (Clipboard Stable Version)",
+    "description": "Adds Elimination war buttons with Primary/Secondary/Farm target links.",
+    "url": "https://greasyfork.org/scripts/558463-elimination-chat-buttons-clipboard-stable-version",
+    "code_url": "https://update.greasyfork.org/scripts/558463/Elimination%20Chat%20Buttons%20%28Clipboard%20Stable%20Version%29.user.js",
+    "code_size": 24682,
+    "license": "MIT License",
+    "version": "3.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558083,
+    "daily_installs": 0,
+    "total_installs": 118,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T07:16:20.000Z",
+    "code_updated_at": "2025-12-06T07:16:20.000Z",
+    "namespace": "yoyoyossarian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132032,
+        "name": "Yoyo Yossarian",
+        "created_at": "2023-07-21T05:41:00.000Z",
+        "url": "https://greasyfork.org/users/1132032-yoyo-yossarian"
+      }
+    ],
+    "name": "Torn ELIM Filter Panel",
+    "description": "Filtering (level, stats, attacks, FFScouter arrows) for ELIM team pages. Supports raw+percent stats. Auto-reapplies on infinite scroll.",
+    "url": "https://greasyfork.org/scripts/558083-torn-elim-filter-panel",
+    "code_url": "https://update.greasyfork.org/scripts/558083/Torn%20ELIM%20Filter%20Panel.user.js",
+    "code_size": 14998,
+    "license": "MIT License",
+    "version": "3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557405,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T09:33:58.000Z",
+    "code_updated_at": "2025-11-30T09:33:58.000Z",
+    "namespace": "yoyoyossarian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1132032,
+        "name": "Yoyo Yossarian",
+        "created_at": "2023-07-21T05:41:00.000Z",
+        "url": "https://greasyfork.org/users/1132032-yoyo-yossarian"
+      }
+    ],
+    "name": "Torn Forum TLDR (Groq Version) – Free Summaries",
+    "description": "TLDR button + free Groq API integration + summary box + custom API modal",
+    "url": "https://greasyfork.org/scripts/557405-torn-forum-tldr-groq-version-free-summaries",
+    "code_url": "https://update.greasyfork.org/scripts/557405/Torn%20Forum%20TLDR%20%28Groq%20Version%29%20%E2%80%93%20Free%20Summaries.user.js",
+    "code_size": 11561,
+    "license": "MIT License",
+    "version": "2.2-groq",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

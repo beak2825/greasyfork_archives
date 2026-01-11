@@ -30,6 +30,39 @@
     "version": "0.9.5",
     "locale": "ja",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557388,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T07:13:38.000Z",
+    "code_updated_at": "2025-12-08T19:59:38.000Z",
+    "namespace": "https://greasyfork.org/users/1433839",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433839,
+        "name": "kmikrt AI",
+        "created_at": "2025-02-11T05:59:39.000Z",
+        "url": "https://greasyfork.org/users/1433839-kmikrt-ai"
+      }
+    ],
+    "name": "YouTube 広告ブロック(old ipad/safari)",
+    "description": "ad guardが効かない端末でのyoutube広告ブロックを補助する",
+    "url": "https://greasyfork.org/scripts/557388-youtube-%E5%BA%83%E5%91%8A%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF-old-ipad-safari",
+    "code_url": "https://update.greasyfork.org/scripts/557388/YouTube%20%E5%BA%83%E5%91%8A%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF%28old%20ipadsafari%29.user.js",
+    "code_size": 7422,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

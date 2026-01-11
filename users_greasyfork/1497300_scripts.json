@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557672,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-02T17:49:02.000Z",
+    "code_updated_at": "2025-12-02T17:49:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497300,
+        "name": "kitaesq",
+        "created_at": "2025-07-22T12:12:39.000Z",
+        "url": "https://greasyfork.org/users/1497300-kitaesq"
+      }
+    ],
+    "name": "Data login",
+    "description": "This script lets you log in to a bonk.io account without using a password.",
+    "url": "https://greasyfork.org/scripts/557672-data-login",
+    "code_url": "https://update.greasyfork.org/scripts/557672/Data%20login.user.js",
+    "code_size": 4405,
+    "license": null,
+    "version": "2025-11-30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

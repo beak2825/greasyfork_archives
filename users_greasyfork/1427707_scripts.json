@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557584,
+    "daily_installs": 2,
+    "total_installs": 187,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T20:40:37.000Z",
+    "code_updated_at": "2025-12-01T20:41:36.000Z",
+    "namespace": "Eclipse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1427707,
+        "name": "Ultra Hack",
+        "created_at": "2025-01-26T19:33:12.000Z",
+        "url": "https://greasyfork.org/users/1427707-ultra-hack"
+      }
+    ],
+    "name": "Eclipse Client",
+    "description": "A powerfull script for some people that have it",
+    "url": "https://greasyfork.org/scripts/557584-eclipse-client",
+    "code_url": "https://update.greasyfork.org/scripts/557584/Eclipse%20Client.user.js",
+    "code_size": 486881,
+    "license": "GNU",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

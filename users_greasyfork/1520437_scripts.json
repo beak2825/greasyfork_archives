@@ -30,6 +30,72 @@
     "version": "1.2.4",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558433,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-09T18:02:10.000Z",
+    "code_updated_at": "2025-12-09T18:51:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520437,
+        "name": "WinterValor",
+        "created_at": "2025-09-28T16:58:33.000Z",
+        "url": "https://greasyfork.org/users/1520437-wintervalor"
+      }
+    ],
+    "name": "Elimination Team FF Filter + Quick Attack",
+    "description": "Adds FF Filters and quick attack button",
+    "url": "https://greasyfork.org/scripts/558433-elimination-team-ff-filter-quick-attack",
+    "code_url": "https://update.greasyfork.org/scripts/558433/Elimination%20Team%20FF%20Filter%20%2B%20Quick%20Attack.user.js",
+    "code_size": 11112,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558367,
+    "daily_installs": 0,
+    "total_installs": 99,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T23:50:36.000Z",
+    "code_updated_at": "2025-12-09T18:53:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520437,
+        "name": "WinterValor",
+        "created_at": "2025-09-28T16:58:33.000Z",
+        "url": "https://greasyfork.org/users/1520437-wintervalor"
+      }
+    ],
+    "name": "Elimination Team FF Filter + Quick Attack",
+    "description": "Adds FF Filters and quick attack button",
+    "url": "https://greasyfork.org/scripts/558367-elimination-team-ff-filter-quick-attack",
+    "code_url": "https://update.greasyfork.org/scripts/558367/Elimination%20Team%20FF%20Filter%20%2B%20Quick%20Attack.user.js",
+    "code_size": 11167,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

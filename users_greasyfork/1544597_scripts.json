@@ -1,0 +1,68 @@
+[
+  {
+    "id": 557910,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T12:54:12.000Z",
+    "code_updated_at": "2025-12-04T12:54:12.000Z",
+    "namespace": "custommod.bonk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544597,
+        "name": "khayrie",
+        "created_at": "2025-12-04T12:22:45.000Z",
+        "url": "https://greasyfork.org/users/1544597-khayrie"
+      }
+    ],
+    "name": "Bonk.io Music Player + Screen Filters",
+    "description": "Filters + draggable UI + YouTube music + rainbow user + compact menus",
+    "url": "https://greasyfork.org/scripts/557910-bonk-io-music-player-screen-filters",
+    "code_url": "https://update.greasyfork.org/scripts/557910/Bonkio%20Music%20Player%20%2B%20Screen%20Filters.user.js",
+    "code_size": 7675,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557907,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T12:29:21.000Z",
+    "code_updated_at": "2025-12-04T12:51:59.000Z",
+    "namespace": "custommod.hitbox",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544597,
+        "name": "khayrie",
+        "created_at": "2025-12-04T12:22:45.000Z",
+        "url": "https://greasyfork.org/users/1544597-khayrie"
+      }
+    ],
+    "name": "Hitbox.io Music Player + Screen Filters",
+    "description": "Filters + draggable UI + YouTube music + rainbow user + compact menus",
+    "url": "https://greasyfork.org/scripts/557907-hitbox-io-music-player-screen-filters",
+    "code_url": "https://update.greasyfork.org/scripts/557907/Hitboxio%20Music%20Player%20%2B%20Screen%20Filters.user.js",
+    "code_size": 7681,
+    "license": "MIT License",
+    "version": "4.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

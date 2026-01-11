@@ -1,0 +1,59 @@
+{
+  "id": 558433,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-09T18:02:10.000Z",
+  "code_updated_at": "2025-12-09T18:51:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1520437,
+      "name": "WinterValor",
+      "created_at": "2025-09-28T16:58:33.000Z",
+      "url": "https://greasyfork.org/users/1520437-wintervalor",
+      "scripts": [
+        {
+          "id": 550989,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-28T17:14:01.000Z",
+          "code_updated_at": "2025-09-28T17:14:01.000Z",
+          "namespace": "wintervalor.mexico_header_quick_buy",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn: Zip Tie Quick Buy",
+          "description": "Adds a Buy button next to the \"Mexico\" title. Amount is user-editable and saved for future uses.",
+          "url": "https://greasyfork.org/scripts/550989-torn-zip-tie-quick-buy",
+          "code_url": "https://update.greasyfork.org/scripts/550989/Torn%3A%20Zip%20Tie%20Quick%20Buy.user.js",
+          "code_size": 8118,
+          "license": null,
+          "version": "0.3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Elimination Team FF Filter + Quick Attack",
+  "description": "Adds FF Filters and quick attack button",
+  "url": "https://greasyfork.org/scripts/558433-elimination-team-ff-filter-quick-attack",
+  "code_url": "https://update.greasyfork.org/scripts/558433/Elimination%20Team%20FF%20Filter%20%2B%20Quick%20Attack.user.js",
+  "code_size": 11112,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

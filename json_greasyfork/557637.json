@@ -1,0 +1,59 @@
+{
+  "id": 557637,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T10:13:21.000Z",
+  "code_updated_at": "2025-12-02T10:13:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527351,
+      "name": "sadsa76",
+      "created_at": "2025-10-16T09:36:29.000Z",
+      "url": "https://greasyfork.org/users/1527351-sadsa76",
+      "scripts": [
+        {
+          "id": 557637,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-02T10:13:21.000Z",
+          "code_updated_at": "2025-12-02T10:13:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🌟 超星学习通AI刷课神器｜⚡ 全自动刷视频+章节测试｜🧠 AI智能答题｜🎮 一键挂机｜DeepSeek大模型强力驱动",
+          "description": "内置最新DeepSeek大模型，题目识别精准，答案准确率高。支持自动刷课、自动答题、自动完成章节测试，极简操作，解放双手，持续更新稳定可用。",
+          "url": "https://greasyfork.org/scripts/557637-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9Aai%E5%88%B7%E8%AF%BE%E7%A5%9E%E5%99%A8-%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-ai%E6%99%BA%E8%83%BD%E7%AD%94%E9%A2%98-%E4%B8%80%E9%94%AE%E6%8C%82%E6%9C%BA-deepseek%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BC%BA%E5%8A%9B%E9%A9%B1%E5%8A%A8",
+          "code_url": "https://update.greasyfork.org/scripts/557637/%F0%9F%8C%9F%20%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9AAI%E5%88%B7%E8%AF%BE%E7%A5%9E%E5%99%A8%EF%BD%9C%E2%9A%A1%20%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91%2B%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%EF%BD%9C%F0%9F%A7%A0%20AI%E6%99%BA%E8%83%BD%E7%AD%94%E9%A2%98%EF%BD%9C%F0%9F%8E%AE%20%E4%B8%80%E9%94%AE%E6%8C%82%E6%9C%BA%EF%BD%9CDeepSeek%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BC%BA%E5%8A%9B%E9%A9%B1%E5%8A%A8.user.js",
+          "code_size": 226672,
+          "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+          "version": "1.0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🌟 超星学习通AI刷课神器｜⚡ 全自动刷视频+章节测试｜🧠 AI智能答题｜🎮 一键挂机｜DeepSeek大模型强力驱动",
+  "description": "内置最新DeepSeek大模型，题目识别精准，答案准确率高。支持自动刷课、自动答题、自动完成章节测试，极简操作，解放双手，持续更新稳定可用。",
+  "url": "https://greasyfork.org/scripts/557637-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9Aai%E5%88%B7%E8%AF%BE%E7%A5%9E%E5%99%A8-%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-ai%E6%99%BA%E8%83%BD%E7%AD%94%E9%A2%98-%E4%B8%80%E9%94%AE%E6%8C%82%E6%9C%BA-deepseek%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BC%BA%E5%8A%9B%E9%A9%B1%E5%8A%A8",
+  "code_url": "https://update.greasyfork.org/scripts/557637/%F0%9F%8C%9F%20%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9AAI%E5%88%B7%E8%AF%BE%E7%A5%9E%E5%99%A8%EF%BD%9C%E2%9A%A1%20%E5%85%A8%E8%87%AA%E5%8A%A8%E5%88%B7%E8%A7%86%E9%A2%91%2B%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%EF%BD%9C%F0%9F%A7%A0%20AI%E6%99%BA%E8%83%BD%E7%AD%94%E9%A2%98%EF%BD%9C%F0%9F%8E%AE%20%E4%B8%80%E9%94%AE%E6%8C%82%E6%9C%BA%EF%BD%9CDeepSeek%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BC%BA%E5%8A%9B%E9%A9%B1%E5%8A%A8.user.js",
+  "code_size": 226672,
+  "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+  "version": "1.0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

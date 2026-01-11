@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558066,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T02:25:33.000Z",
+    "code_updated_at": "2025-12-06T02:25:33.000Z",
+    "namespace": "https://nerd.wwnorton.com/nerd/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193591,
+        "name": "Godlyredflame",
+        "created_at": "2023-10-11T14:12:55.000Z",
+        "url": "https://greasyfork.org/users/1193591-godlyredflame"
+      }
+    ],
+    "name": "NerdScript",
+    "description": "Add a button to open an iframe's source in a new tab on nerd.wwnorton.com/nerd/",
+    "url": "https://greasyfork.org/scripts/558066-nerdscript",
+    "code_url": "https://update.greasyfork.org/scripts/558066/NerdScript.user.js",
+    "code_size": 1038,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

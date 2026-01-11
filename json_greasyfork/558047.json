@@ -1,0 +1,34 @@
+{
+  "id": 558047,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-05T20:22:46.000Z",
+  "code_updated_at": "2025-12-05T20:22:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 866512,
+      "name": "ERROR ERROR",
+      "created_at": "2022-01-18T18:13:26.000Z",
+      "url": "https://greasyfork.org/users/866512-error-error",
+      "scripts": []
+    }
+  ],
+  "name": "Modify Layout Widths on t.bilibili.com",
+  "description": "Modify widths of main and aside elements on t.bilibili.com",
+  "url": "https://greasyfork.org/scripts/558047-modify-layout-widths-on-t-bilibili-com",
+  "code_url": "https://update.greasyfork.org/scripts/558047/Modify%20Layout%20Widths%20on%20tbilibilicom.user.js",
+  "code_size": 1498,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

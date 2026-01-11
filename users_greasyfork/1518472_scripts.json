@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557991,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T10:48:53.000Z",
+    "code_updated_at": "2025-12-05T11:25:04.000Z",
+    "namespace": "casper-smart-connect-fill/wme",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1518472,
+        "name": "Casper it",
+        "created_at": "2025-09-23T10:47:35.000Z",
+        "url": "https://greasyfork.org/users/1518472-casper-it"
+      }
+    ],
+    "name": "CASPER Smart Connect Fill",
+    "description": "Copy City and Country from connected segments in Waze Map Editor.",
+    "url": "https://greasyfork.org/scripts/557991-casper-smart-connect-fill",
+    "code_url": "https://update.greasyfork.org/scripts/557991/CASPER%20Smart%20Connect%20Fill.user.js",
+    "code_size": 31577,
+    "license": "GNU General Public License v2.0 only",
+    "version": "2025.11.22.014",
+    "locale": "ar",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

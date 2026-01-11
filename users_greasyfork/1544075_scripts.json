@@ -31,5 +31,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 558277,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T02:41:16.000Z",
+    "code_updated_at": "2025-12-08T02:41:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544075,
+        "name": "Logan Bell",
+        "created_at": "2025-12-03T05:20:52.000Z",
+        "url": "https://greasyfork.org/users/1544075-logan-bell"
+      }
+    ],
+    "name": "Neopets Ad Blocker",
+    "description": "Attempts to clear ads and empty space.",
+    "url": "https://greasyfork.org/scripts/558277-neopets-ad-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/558277/Neopets%20Ad%20Blocker.user.js",
+    "code_size": 4325,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558275,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T02:16:37.000Z",
+    "code_updated_at": "2025-12-08T02:16:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544075,
+        "name": "Logan Bell",
+        "created_at": "2025-12-03T05:20:52.000Z",
+        "url": "https://greasyfork.org/users/1544075-logan-bell"
+      }
+    ],
+    "name": "Neopets Event Icon Blocker",
+    "description": "Blocks specific event icon on the Neopets homepage. Intended fir Christmas 2025.",
+    "url": "https://greasyfork.org/scripts/558275-neopets-event-icon-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/558275/Neopets%20Event%20Icon%20Blocker.user.js",
+    "code_size": 1373,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558005,
+    "daily_installs": 1,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T11:42:28.000Z",
+    "code_updated_at": "2025-12-05T11:42:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544075,
+        "name": "Logan Bell",
+        "created_at": "2025-12-03T05:20:52.000Z",
+        "url": "https://greasyfork.org/users/1544075-logan-bell"
+      }
+    ],
+    "name": "Neopets NPC Shop Pricer",
+    "description": "Checks item prices in modern NPC shops against ItemDB market value, with compact styling and link to ItemDB.",
+    "url": "https://greasyfork.org/scripts/558005-neopets-npc-shop-pricer",
+    "code_url": "https://update.greasyfork.org/scripts/558005/Neopets%20NPC%20Shop%20Pricer.user.js",
+    "code_size": 6010,
+    "license": "     MIT",
+    "version": "1.0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558003,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T11:37:38.000Z",
+    "code_updated_at": "2025-12-08T05:06:11.000Z",
+    "namespace": "  http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544075,
+        "name": "Logan Bell",
+        "created_at": "2025-12-03T05:20:52.000Z",
+        "url": "https://greasyfork.org/users/1544075-logan-bell"
+      }
+    ],
+    "name": "Neopets Inventory Price Injector",
+    "description": "Injects ItemDB Market Price, Restock Range, and Item Effects into the item details pop-up on the Neopets Inventory page. Also attempts to help remove ads from inventory.",
+    "url": "https://greasyfork.org/scripts/558003-neopets-inventory-price-injector",
+    "code_url": "https://update.greasyfork.org/scripts/558003/Neopets%20Inventory%20Price%20Injector.user.js",
+    "code_size": 18697,
+    "license": "     MIT",
+    "version": "     1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557881,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T09:32:48.000Z",
+    "code_updated_at": "2025-12-08T02:19:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544075,
+        "name": "Logan Bell",
+        "created_at": "2025-12-03T05:20:52.000Z",
+        "url": "https://greasyfork.org/users/1544075-logan-bell"
+      }
+    ],
+    "name": "Neopets 'Auction' Pricer",
+    "description": "Checks item prices in the Auction House table against ItemDB market value, injecting a \"Market Price\" column next to Current Price. Highlights the market price in RED if the Current Price exceeds the market value (overpay), or GREEN otherwise.",
+    "url": "https://greasyfork.org/scripts/557881-neopets-auction-pricer",
+    "code_url": "https://update.greasyfork.org/scripts/557881/Neopets%20%27Auction%27%20Pricer.user.js",
+    "code_size": 10607,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

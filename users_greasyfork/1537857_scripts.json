@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558112,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T12:24:10.000Z",
+    "code_updated_at": "2025-12-06T12:24:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537857,
+        "name": "levinion",
+        "created_at": "2025-11-14T16:31:52.000Z",
+        "url": "https://greasyfork.org/users/1537857-levinion"
+      }
+    ],
+    "name": "duckduckgo-bang",
+    "description": "Add an additional G button to jump to google",
+    "url": "https://greasyfork.org/scripts/558112-duckduckgo-bang",
+    "code_url": "https://update.greasyfork.org/scripts/558112/duckduckgo-bang.user.js",
+    "code_size": 3734,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

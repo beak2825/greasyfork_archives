@@ -1,0 +1,59 @@
+{
+  "id": 558023,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-05T14:12:32.000Z",
+  "code_updated_at": "2025-12-05T14:12:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1544952,
+      "name": "S7upidity",
+      "created_at": "2025-12-05T14:11:20.000Z",
+      "url": "https://greasyfork.org/users/1544952-s7upidity",
+      "scripts": [
+        {
+          "id": 558052,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-05T20:59:24.000Z",
+          "code_updated_at": "2025-12-07T10:04:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FlightClub",
+          "description": "Flight Club helper script for Torn",
+          "url": "https://greasyfork.org/scripts/558052-flightclub",
+          "code_url": "https://update.greasyfork.org/scripts/558052/FlightClub.user.js",
+          "code_size": 9395,
+          "license": "GNU General Public License v3.0 or later",
+          "version": "2025-12-07.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "S7FlightClub",
+  "description": "Flight Club helper script for Torn",
+  "url": "https://greasyfork.org/scripts/558023-s7flightclub",
+  "code_url": "https://update.greasyfork.org/scripts/558023/S7FlightClub.user.js",
+  "code_size": 9884,
+  "license": null,
+  "version": "2025-12-05",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

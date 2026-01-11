@@ -1,0 +1,34 @@
+{
+  "id": 557671,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T17:11:29.000Z",
+  "code_updated_at": "2025-12-02T17:11:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530985,
+      "name": "Ke1",
+      "created_at": "2025-10-26T19:53:30.000Z",
+      "url": "https://greasyfork.org/users/1530985-ke1",
+      "scripts": []
+    }
+  ],
+  "name": "🎯 Dakkar's Pendulum (iOS Safari, delayed)",
+  "description": "iOS Safari compatible version. Adds dynamic cooldown timer. Waits for compass & diary elements before acting.",
+  "url": "https://greasyfork.org/scripts/557671-dakkar-s-pendulum-ios-safari-delayed",
+  "code_url": "https://update.greasyfork.org/scripts/557671/%F0%9F%8E%AF%20Dakkar%27s%20Pendulum%20%28iOS%20Safari%2C%20delayed%29.user.js",
+  "code_size": 13041,
+  "license": null,
+  "version": "5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

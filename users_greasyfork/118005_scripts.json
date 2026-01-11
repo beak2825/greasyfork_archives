@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558188,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T04:16:00.000Z",
+    "code_updated_at": "2025-12-07T04:16:00.000Z",
+    "namespace": "https://identi.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 118005,
+        "name": "Nana Lee",
+        "created_at": "2017-04-19T10:38:12.000Z",
+        "url": "https://greasyfork.org/users/118005-nana-lee"
+      }
+    ],
+    "name": "Identi Bypass JDownloader Click'n'Load 2",
+    "description": "Desencripta los enlaces Click'n'Load 2 directamente en el navegador sin tener JDownloader abierto.",
+    "url": "https://greasyfork.org/scripts/558188-identi-bypass-jdownloader-click-n-load-2",
+    "code_url": "https://update.greasyfork.org/scripts/558188/Identi%20Bypass%20JDownloader%20Click%27n%27Load%202.user.js",
+    "code_size": 6419,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

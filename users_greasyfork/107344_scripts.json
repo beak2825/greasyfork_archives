@@ -1,0 +1,68 @@
+[
+  {
+    "id": 557623,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-02T08:01:53.000Z",
+    "code_updated_at": "2025-12-02T08:01:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 107344,
+        "name": "船长zscc",
+        "created_at": "2017-03-05T09:19:40.000Z",
+        "url": "https://greasyfork.org/users/107344-%E8%88%B9%E9%95%BFzscc"
+      }
+    ],
+    "name": "Dub.co 汉化脚本(船仓完美版)",
+    "description": "汉化 Dub.co 界面",
+    "url": "https://greasyfork.org/scripts/557623-dub-co-%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC-%E8%88%B9%E4%BB%93%E5%AE%8C%E7%BE%8E%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/557623/Dubco%20%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC%28%E8%88%B9%E4%BB%93%E5%AE%8C%E7%BE%8E%E7%89%88%29.user.js",
+    "code_size": 22598,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557615,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-02T06:05:36.000Z",
+    "code_updated_at": "2025-12-13T17:13:22.000Z",
+    "namespace": "https://github.com/izscc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 107344,
+        "name": "船长zscc",
+        "created_at": "2017-03-05T09:19:40.000Z",
+        "url": "https://greasyfork.org/users/107344-%E8%88%B9%E9%95%BFzscc"
+      }
+    ],
+    "name": "You.com 汉化脚本(船仓完美版)",
+    "description": "对 You.com 网站界面进行完美汉化，融合全量字典与高性能遍历逻辑。",
+    "url": "https://greasyfork.org/scripts/557615-you-com-%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC-%E8%88%B9%E4%BB%93%E5%AE%8C%E7%BE%8E%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/557615/Youcom%20%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC%28%E8%88%B9%E4%BB%93%E5%AE%8C%E7%BE%8E%E7%89%88%29.user.js",
+    "code_size": 43755,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

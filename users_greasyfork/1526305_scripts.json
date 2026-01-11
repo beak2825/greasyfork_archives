@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557777,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T11:23:49.000Z",
+    "code_updated_at": "2025-12-03T11:23:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1526305,
+        "name": "sdsfdscxzea",
+        "created_at": "2025-10-14T01:51:09.000Z",
+        "url": "https://greasyfork.org/users/1526305-sdsfdscxzea"
+      }
+    ],
+    "name": "千川素材中心视频管理助手（自动勾选 + 批量添加标签 + 自动翻页）",
+    "description": "刷新→切到100条/页→只等分页后的video/list→等1秒→按material_id匹配行，source_type_words为空则勾选→有勾选则批量添加标签→等待下一页video/list→自动翻页并重复本页操作。",
+    "url": "https://greasyfork.org/scripts/557777-%E5%8D%83%E5%B7%9D%E7%B4%A0%E6%9D%90%E4%B8%AD%E5%BF%83%E8%A7%86%E9%A2%91%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B-%E8%87%AA%E5%8A%A8%E5%8B%BE%E9%80%89-%E6%89%B9%E9%87%8F%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE-%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/557777/%E5%8D%83%E5%B7%9D%E7%B4%A0%E6%9D%90%E4%B8%AD%E5%BF%83%E8%A7%86%E9%A2%91%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B%EF%BC%88%E8%87%AA%E5%8A%A8%E5%8B%BE%E9%80%89%20%2B%20%E6%89%B9%E9%87%8F%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%20%2B%20%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5%EF%BC%89.user.js",
+    "code_size": 25089,
+    "license": null,
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

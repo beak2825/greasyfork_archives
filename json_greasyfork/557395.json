@@ -1,0 +1,59 @@
+{
+  "id": 557395,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-30T08:08:23.000Z",
+  "code_updated_at": "2025-11-30T08:08:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543088,
+      "name": "子意",
+      "created_at": "2025-11-30T07:43:32.000Z",
+      "url": "https://greasyfork.org/users/1543088-%E5%AD%90%E6%84%8F",
+      "scripts": [
+        {
+          "id": 557395,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-30T08:08:23.000Z",
+          "code_updated_at": "2025-11-30T08:08:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Jellyfin 海报图添加分辨率标识（Jellyfin-Qualitytags）",
+          "description": "Jellyfin 给海报图添加分辨率标识，来源：https://github.com/BobHasNoSoul/Jellyfin-Qualitytags",
+          "url": "https://greasyfork.org/scripts/557395-jellyfin-%E6%B5%B7%E6%8A%A5%E5%9B%BE%E6%B7%BB%E5%8A%A0%E5%88%86%E8%BE%A8%E7%8E%87%E6%A0%87%E8%AF%86-jellyfin-qualitytags",
+          "code_url": "https://update.greasyfork.org/scripts/557395/Jellyfin%20%E6%B5%B7%E6%8A%A5%E5%9B%BE%E6%B7%BB%E5%8A%A0%E5%88%86%E8%BE%A8%E7%8E%87%E6%A0%87%E8%AF%86%EF%BC%88Jellyfin-Qualitytags%EF%BC%89.user.js",
+          "code_size": 13181,
+          "license": "MIT License",
+          "version": "2025-11-30",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Jellyfin 海报图添加分辨率标识（Jellyfin-Qualitytags）",
+  "description": "Jellyfin 给海报图添加分辨率标识，来源：https://github.com/BobHasNoSoul/Jellyfin-Qualitytags",
+  "url": "https://greasyfork.org/scripts/557395-jellyfin-%E6%B5%B7%E6%8A%A5%E5%9B%BE%E6%B7%BB%E5%8A%A0%E5%88%86%E8%BE%A8%E7%8E%87%E6%A0%87%E8%AF%86-jellyfin-qualitytags",
+  "code_url": "https://update.greasyfork.org/scripts/557395/Jellyfin%20%E6%B5%B7%E6%8A%A5%E5%9B%BE%E6%B7%BB%E5%8A%A0%E5%88%86%E8%BE%A8%E7%8E%87%E6%A0%87%E8%AF%86%EF%BC%88Jellyfin-Qualitytags%EF%BC%89.user.js",
+  "code_size": 13181,
+  "license": "MIT License",
+  "version": "2025-11-30",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

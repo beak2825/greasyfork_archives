@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557779,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T11:33:06.000Z",
+    "code_updated_at": "2025-12-03T11:33:06.000Z",
+    "namespace": "https://greasyfork.org/en/users/1244737",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244737,
+        "name": "robomoist",
+        "created_at": "2024-01-07T21:27:52.000Z",
+        "url": "https://greasyfork.org/users/1244737-robomoist"
+      }
+    ],
+    "name": "Stumblechat mobile bigger chat",
+    "description": "With 2 different sizes.",
+    "url": "https://greasyfork.org/scripts/557779-stumblechat-mobile-bigger-chat",
+    "code_url": "https://update.greasyfork.org/scripts/557779/Stumblechat%20mobile%20bigger%20chat.user.css",
+    "code_size": 3603,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

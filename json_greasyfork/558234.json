@@ -1,0 +1,59 @@
+{
+  "id": 558234,
+  "daily_installs": 1,
+  "total_installs": 143,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-07T14:43:26.000Z",
+  "code_updated_at": "2025-12-26T15:35:10.000Z",
+  "namespace": "https://greasyfork.org/users/598831",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 598831,
+      "name": "hhq",
+      "created_at": "2020-06-17T11:08:30.000Z",
+      "url": "https://greasyfork.org/users/598831-hhq",
+      "scripts": [
+        {
+          "id": 558234,
+          "daily_installs": 1,
+          "total_installs": 143,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-07T14:43:26.000Z",
+          "code_updated_at": "2025-12-26T15:35:10.000Z",
+          "namespace": "https://greasyfork.org/users/598831",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Warframe Market 物品名称中英对照显示 支持搜索",
+          "description": "Warframe Market 物品名称中英对照显示 老外发消息再也不用一个一个找了，直接搜索英文就出来",
+          "url": "https://greasyfork.org/scripts/558234-warframe-market-%E7%89%A9%E5%93%81%E5%90%8D%E7%A7%B0%E4%B8%AD%E8%8B%B1%E5%AF%B9%E7%85%A7%E6%98%BE%E7%A4%BA-%E6%94%AF%E6%8C%81%E6%90%9C%E7%B4%A2",
+          "code_url": "https://update.greasyfork.org/scripts/558234/Warframe%20Market%20%E7%89%A9%E5%93%81%E5%90%8D%E7%A7%B0%E4%B8%AD%E8%8B%B1%E5%AF%B9%E7%85%A7%E6%98%BE%E7%A4%BA%20%E6%94%AF%E6%8C%81%E6%90%9C%E7%B4%A2.user.js",
+          "code_size": 4213,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Warframe Market 物品名称中英对照显示 支持搜索",
+  "description": "Warframe Market 物品名称中英对照显示 老外发消息再也不用一个一个找了，直接搜索英文就出来",
+  "url": "https://greasyfork.org/scripts/558234-warframe-market-%E7%89%A9%E5%93%81%E5%90%8D%E7%A7%B0%E4%B8%AD%E8%8B%B1%E5%AF%B9%E7%85%A7%E6%98%BE%E7%A4%BA-%E6%94%AF%E6%8C%81%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/558234/Warframe%20Market%20%E7%89%A9%E5%93%81%E5%90%8D%E7%A7%B0%E4%B8%AD%E8%8B%B1%E5%AF%B9%E7%85%A7%E6%98%BE%E7%A4%BA%20%E6%94%AF%E6%8C%81%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 4213,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

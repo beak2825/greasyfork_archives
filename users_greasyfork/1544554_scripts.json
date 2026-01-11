@@ -96,7 +96,7 @@
     "version": "8.6",
     "locale": "vi",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 559426,
@@ -130,5 +130,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 558354,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T20:17:34.000Z",
+    "code_updated_at": "2025-12-08T21:12:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544554,
+        "name": "emeraldfriendly",
+        "created_at": "2025-12-04T10:54:20.000Z",
+        "url": "https://greasyfork.org/users/1544554-emeraldfriendly"
+      }
+    ],
+    "name": "Mobile Interface Optimizer (Touch Fix)",
+    "description": "Tối ưu hóa giao diện hiển thị và cải thiện độ nhạy thao tác chạm cho thiết bị di động.",
+    "url": "https://greasyfork.org/scripts/558354-mobile-interface-optimizer-touch-fix",
+    "code_url": "https://update.greasyfork.org/scripts/558354/Mobile%20Interface%20Optimizer%20%28Touch%20Fix%29.user.js",
+    "code_size": 7639,
+    "license": null,
+    "version": "8.3",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

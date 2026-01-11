@@ -1,0 +1,33 @@
+{
+  "id": 558491,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-10T07:50:28.000Z",
+  "code_updated_at": "2025-12-10T07:50:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 907858,
+      "name": "soladuor",
+      "created_at": "2022-04-28T00:56:08.000Z",
+      "url": "https://greasyfork.org/users/907858-soladuor"
+    }
+  ],
+  "name": "修改 KIMI 聊天区域最大宽度",
+  "description": "此脚本默认设为 75%，如果需要其他宽度可在代码里直接改",
+  "url": "https://greasyfork.org/scripts/558491-%E4%BF%AE%E6%94%B9-kimi-%E8%81%8A%E5%A4%A9%E5%8C%BA%E5%9F%9F%E6%9C%80%E5%A4%A7%E5%AE%BD%E5%BA%A6",
+  "code_url": "https://update.greasyfork.org/scripts/558491/%E4%BF%AE%E6%94%B9%20KIMI%20%E8%81%8A%E5%A4%A9%E5%8C%BA%E5%9F%9F%E6%9C%80%E5%A4%A7%E5%AE%BD%E5%BA%A6.user.js",
+  "code_size": 23816,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

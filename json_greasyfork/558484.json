@@ -1,0 +1,33 @@
+{
+  "id": 558484,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-10T06:51:00.000Z",
+  "code_updated_at": "2025-12-26T01:27:49.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1546436-zasternight",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1546436,
+      "name": "zasternight",
+      "created_at": "2025-12-10T01:46:45.000Z",
+      "url": "https://greasyfork.org/users/1546436-zasternight"
+    }
+  ],
+  "name": "115云盘链接助手",
+  "description": "自动捕捉页面磁力链接和Ed2k链接并一键保存至115云盘，支持可视化选择自定义保存文件夹，顶部面板一键复制链接，支持批量下载，性能优化版",
+  "url": "https://greasyfork.org/scripts/558484-115%E4%BA%91%E7%9B%98%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/558484/115%E4%BA%91%E7%9B%98%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 67937,
+  "license": "MIT License",
+  "version": "3.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

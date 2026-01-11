@@ -1,0 +1,34 @@
+{
+  "id": 557611,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T04:20:06.000Z",
+  "code_updated_at": "2025-12-02T04:20:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533849,
+      "name": "Jaehyong Kim",
+      "created_at": "2025-11-04T04:29:39.000Z",
+      "url": "https://greasyfork.org/users/1533849-jaehyong-kim",
+      "scripts": []
+    }
+  ],
+  "name": "LIMS 런 Work Target Size 자동 입력",
+  "description": "수주번호, LIB, INDEX, Target Size 입력을 기반으로 IBSheet 값 입력 및 체크 (고객명 컬럼 포함 지원)",
+  "url": "https://greasyfork.org/scripts/557611-lims-%EB%9F%B0-work-target-size-%EC%9E%90%EB%8F%99-%EC%9E%85%EB%A0%A5",
+  "code_url": "https://update.greasyfork.org/scripts/557611/LIMS%20%EB%9F%B0%20Work%20Target%20Size%20%EC%9E%90%EB%8F%99%20%EC%9E%85%EB%A0%A5.user.js",
+  "code_size": 16119,
+  "license": null,
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558260,
+    "daily_installs": 2,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T20:43:36.000Z",
+    "code_updated_at": "2025-12-07T20:43:36.000Z",
+    "namespace": "kalila.w2g",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 209123,
+        "name": "Kalila Violette",
+        "created_at": "2018-08-31T01:24:23.000Z",
+        "url": "https://greasyfork.org/users/209123-kalila-violette"
+      }
+    ],
+    "name": "W2G Full Theater + Panels + Helpers (v15)",
+    "description": "Full-theater player on w2g + edge hover panels + script settings (auto-join, auto-refresh, native controls, auto-unmute, auto-start, Twitch helpers)",
+    "url": "https://greasyfork.org/scripts/558260-w2g-full-theater-panels-helpers-v15",
+    "code_url": "https://update.greasyfork.org/scripts/558260/W2G%20Full%20Theater%20%2B%20Panels%20%2B%20Helpers%20%28v15%29.user.js",
+    "code_size": 42572,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

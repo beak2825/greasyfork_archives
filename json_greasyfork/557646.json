@@ -1,0 +1,34 @@
+{
+  "id": 557646,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T12:25:10.000Z",
+  "code_updated_at": "2025-12-02T12:25:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532241,
+      "name": "03ACKD",
+      "created_at": "2025-10-30T10:08:09.000Z",
+      "url": "https://greasyfork.org/users/1532241-03ackd",
+      "scripts": []
+    }
+  ],
+  "name": "카카오페이지 장르 필터(BL 차단)",
+  "description": "BL은 무조건 차단(카운트 제외)하며, 요청하신 순서(현판, 판타지, 무협, 로판, 로맨스)대로 필터를 제공합니다. (카운트 오류 수정)",
+  "url": "https://greasyfork.org/scripts/557646-%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%8E%98%EC%9D%B4%EC%A7%80-%EC%9E%A5%EB%A5%B4-%ED%95%84%ED%84%B0-bl-%EC%B0%A8%EB%8B%A8",
+  "code_url": "https://update.greasyfork.org/scripts/557646/%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%8E%98%EC%9D%B4%EC%A7%80%20%EC%9E%A5%EB%A5%B4%20%ED%95%84%ED%84%B0%28BL%20%EC%B0%A8%EB%8B%A8%29.user.js",
+  "code_size": 7898,
+  "license": null,
+  "version": "1.6",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558458,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T00:13:27.000Z",
+    "code_updated_at": "2025-12-10T00:13:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 11868,
+        "name": "coofly",
+        "created_at": "2015-05-30T18:50:22.000Z",
+        "url": "https://greasyfork.org/users/11868-coofly"
+      }
+    ],
+    "name": "比特球云盘 - 一键删除所有文件",
+    "description": "利用删除成功提示出现后极短延迟，实现最快循环删除。",
+    "url": "https://greasyfork.org/scripts/558458-%E6%AF%94%E7%89%B9%E7%90%83%E4%BA%91%E7%9B%98-%E4%B8%80%E9%94%AE%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/558458/%E6%AF%94%E7%89%B9%E7%90%83%E4%BA%91%E7%9B%98%20-%20%E4%B8%80%E9%94%AE%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6.user.js",
+    "code_size": 6731,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

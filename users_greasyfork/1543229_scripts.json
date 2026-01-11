@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557432,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T15:12:57.000Z",
+    "code_updated_at": "2025-11-30T15:12:57.000Z",
+    "namespace": "russbear",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543229,
+        "name": "collectanos",
+        "created_at": "2025-11-30T15:04:35.000Z",
+        "url": "https://greasyfork.org/users/1543229-collectanos"
+      }
+    ],
+    "name": "Moodle Preview Tasks",
+    "description": "Предпросмотр заданий",
+    "url": "https://greasyfork.org/scripts/557432-moodle-preview-tasks",
+    "code_url": "https://update.greasyfork.org/scripts/557432/Moodle%20Preview%20Tasks.user.js",
+    "code_size": 7482,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

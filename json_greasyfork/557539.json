@@ -1,0 +1,34 @@
+{
+  "id": 557539,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-01T14:18:15.000Z",
+  "code_updated_at": "2025-12-01T14:18:15.000Z",
+  "namespace": "https://premiumtechpanel.sellasist.pl/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1396754,
+      "name": "Dawid110d",
+      "created_at": "2024-11-15T09:13:21.000Z",
+      "url": "https://greasyfork.org/users/1396754-dawid110d",
+      "scripts": []
+    }
+  ],
+  "name": "SA - Menadżer pakowania - kolory ilości",
+  "description": "Koloruje kolumnę \"Zamówiona ilość\" wg przedziałów 1-5, 6-10, 11-15, 16-20 itd.",
+  "url": "https://greasyfork.org/scripts/557539-sa-menad%C5%BCer-pakowania-kolory-ilo%C5%9Bci",
+  "code_url": "https://update.greasyfork.org/scripts/557539/SA%20-%20Menad%C5%BCer%20pakowania%20-%20kolory%20ilo%C5%9Bci.user.js",
+  "code_size": 2988,
+  "license": "Proprietary",
+  "version": "1.0",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

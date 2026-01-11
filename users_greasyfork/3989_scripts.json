@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557355,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T22:03:54.000Z",
+    "code_updated_at": "2025-11-30T07:38:13.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3989,
+        "name": "TNB",
+        "created_at": "2014-07-28T19:39:14.000Z",
+        "url": "https://greasyfork.org/users/3989-tnb"
+      }
+    ],
+    "name": "Display YouTube controller below the video",
+    "description": "youtubeのコントローラーを動画下に表示する",
+    "url": "https://greasyfork.org/scripts/557355-display-youtube-controller-below-the-video",
+    "code_url": "https://update.greasyfork.org/scripts/557355/Display%20YouTube%20controller%20below%20the%20video.user.css",
+    "code_size": 2289,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

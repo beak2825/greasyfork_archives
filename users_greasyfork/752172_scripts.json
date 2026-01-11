@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558108,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T10:40:14.000Z",
+    "code_updated_at": "2025-12-06T10:40:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 752172,
+        "name": "春风满园关不住",
+        "created_at": "2021-03-28T03:47:44.000Z",
+        "url": "https://greasyfork.org/users/752172-%E6%98%A5%E9%A3%8E%E6%BB%A1%E5%9B%AD%E5%85%B3%E4%B8%8D%E4%BD%8F"
+      }
+    ],
+    "name": "B站音频在线随机播放器",
+    "description": "从B站收藏夹获取音频播放",
+    "url": "https://greasyfork.org/scripts/558108-b%E7%AB%99%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/558108/B%E7%AB%99%E9%9F%B3%E9%A2%91%E5%9C%A8%E7%BA%BF%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE%E5%99%A8.user.js",
+    "code_size": 59563,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

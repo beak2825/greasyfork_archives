@@ -30,6 +30,72 @@
     "version": "4.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558213,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T10:17:51.000Z",
+    "code_updated_at": "2025-12-12T17:58:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528309,
+        "name": "Zeus Lavandor",
+        "created_at": "2025-10-18T20:38:17.000Z",
+        "url": "https://greasyfork.org/users/1528309-zeus-lavandor"
+      }
+    ],
+    "name": "Binance Philippines Complete Suite (Новия преди 16 версия)",
+    "description": "Enhanced Binance script with modern UI, responsive design, and improved UX",
+    "url": "https://greasyfork.org/scripts/558213-binance-philippines-complete-suite-%D0%BD%D0%BE%D0%B2%D0%B8%D1%8F-%D0%BF%D1%80%D0%B5%D0%B4%D0%B8-16-%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/558213/Binance%20Philippines%20Complete%20Suite%20%28%D0%9D%D0%BE%D0%B2%D0%B8%D1%8F%20%D0%BF%D1%80%D0%B5%D0%B4%D0%B8%2016%20%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F%29.user.js",
+    "code_size": 44290,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558093,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T08:58:14.000Z",
+    "code_updated_at": "2025-12-06T08:58:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528309,
+        "name": "Zeus Lavandor",
+        "created_at": "2025-10-18T20:38:17.000Z",
+        "url": "https://greasyfork.org/users/1528309-zeus-lavandor"
+      }
+    ],
+    "name": "Binance Philippines Complete Suite (Enhanced)",
+    "description": "Enhanced Binance script with modern UI, responsive design, and improved UX",
+    "url": "https://greasyfork.org/scripts/558093-binance-philippines-complete-suite-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/558093/Binance%20Philippines%20Complete%20Suite%20%28Enhanced%29.user.js",
+    "code_size": 42741,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

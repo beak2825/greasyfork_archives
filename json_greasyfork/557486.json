@@ -1,0 +1,59 @@
+{
+  "id": 557486,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-01T05:06:50.000Z",
+  "code_updated_at": "2025-12-01T05:07:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543361,
+      "name": "Aa H",
+      "created_at": "2025-12-01T04:56:54.000Z",
+      "url": "https://greasyfork.org/users/1543361-aa-h",
+      "scripts": [
+        {
+          "id": 557486,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-01T05:06:50.000Z",
+          "code_updated_at": "2025-12-01T05:07:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "xt一站式自动填写联系人",
+          "description": "自动填写新增综合维修弹窗中的联系人信息",
+          "url": "https://greasyfork.org/scripts/557486-xt%E4%B8%80%E7%AB%99%E5%BC%8F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%81%94%E7%B3%BB%E4%BA%BA",
+          "code_url": "https://update.greasyfork.org/scripts/557486/xt%E4%B8%80%E7%AB%99%E5%BC%8F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%81%94%E7%B3%BB%E4%BA%BA.user.js",
+          "code_size": 6498,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "xt一站式自动填写联系人",
+  "description": "自动填写新增综合维修弹窗中的联系人信息",
+  "url": "https://greasyfork.org/scripts/557486-xt%E4%B8%80%E7%AB%99%E5%BC%8F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%81%94%E7%B3%BB%E4%BA%BA",
+  "code_url": "https://update.greasyfork.org/scripts/557486/xt%E4%B8%80%E7%AB%99%E5%BC%8F%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%81%94%E7%B3%BB%E4%BA%BA.user.js",
+  "code_size": 6498,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

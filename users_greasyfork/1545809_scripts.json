@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558325,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T14:15:10.000Z",
+    "code_updated_at": "2025-12-08T14:15:09.000Z",
+    "namespace": "https://github.com/Gentle-Lijie/SPDPO-CCC-Helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1545809,
+        "name": "Gentle-Lijie",
+        "created_at": "2025-12-08T07:06:24.000Z",
+        "url": "https://greasyfork.org/users/1545809-gentle-lijie"
+      }
+    ],
+    "name": "SPDPO-CCC-Helper (Tampermonkey)",
+    "description": "在 nottingham.edu.cn 捕获“查看详情/开始报名”ID，生成访问/二维码，并支持持久化定时提交。",
+    "url": "https://greasyfork.org/scripts/558325-spdpo-ccc-helper-tampermonkey",
+    "code_url": "https://update.greasyfork.org/scripts/558325/SPDPO-CCC-Helper%20%28Tampermonkey%29.user.js",
+    "code_size": 59947,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

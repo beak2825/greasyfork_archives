@@ -1,0 +1,34 @@
+{
+  "id": 558496,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-10T08:31:13.000Z",
+  "code_updated_at": "2025-12-10T08:31:12.000Z",
+  "namespace": "https://greasyfork.org/users/1546436-zasternight",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1546436,
+      "name": "zasternight",
+      "created_at": "2025-12-10T01:46:45.000Z",
+      "url": "https://greasyfork.org/users/1546436-zasternight",
+      "scripts": []
+    }
+  ],
+  "name": "网页链接助手",
+  "description": "支持全网主流网盘和小众网盘自动填写密码; 资源站点下载页网盘密码预处理; 文本转链接; 移除链接重定向; 重定向页面自动跳转; 维基百科及镜像、开发者文档、谷歌商店自动切换中文, 维基百科、谷歌开发者、谷歌商店、Github链接转为镜像链接; 新标签打开链接; (外部)链接净化直达",
+  "url": "https://greasyfork.org/scripts/558496-%E7%BD%91%E9%A1%B5%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/558496/%E7%BD%91%E9%A1%B5%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 26937,
+  "license": "GPL-3.0 License",
+  "version": "2.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

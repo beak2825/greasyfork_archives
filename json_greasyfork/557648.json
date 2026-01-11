@@ -1,0 +1,34 @@
+{
+  "id": 557648,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T12:26:48.000Z",
+  "code_updated_at": "2025-12-28T13:27:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532241,
+      "name": "03ACKD",
+      "created_at": "2025-10-30T10:08:09.000Z",
+      "url": "https://greasyfork.org/users/1532241-03ackd",
+      "scripts": []
+    }
+  ],
+  "name": "웹소설 URL 자동 최적화 (문피아 & 리디북스)",
+  "description": "문피아 모바일 링크를 PC 링크로 변환하고, 리디북스의 복잡한 URL을 깔끔한 목록 URL로 자동 변환합니다.",
+  "url": "https://greasyfork.org/scripts/557648-%EC%9B%B9%EC%86%8C%EC%84%A4-url-%EC%9E%90%EB%8F%99-%EC%B5%9C%EC%A0%81%ED%99%94-%EB%AC%B8%ED%94%BC%EC%95%84-%EB%A6%AC%EB%94%94%EB%B6%81%EC%8A%A4",
+  "code_url": "https://update.greasyfork.org/scripts/557648/%EC%9B%B9%EC%86%8C%EC%84%A4%20URL%20%EC%9E%90%EB%8F%99%20%EC%B5%9C%EC%A0%81%ED%99%94%20%28%EB%AC%B8%ED%94%BC%EC%95%84%20%20%EB%A6%AC%EB%94%94%EB%B6%81%EC%8A%A4%29.user.js",
+  "code_size": 2068,
+  "license": null,
+  "version": "1.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

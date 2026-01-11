@@ -1,0 +1,33 @@
+{
+  "id": 557330,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-29T15:09:43.000Z",
+  "code_updated_at": "2025-11-29T15:09:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 669868,
+      "name": "yanxi董",
+      "created_at": "2020-07-24T14:02:41.000Z",
+      "url": "https://greasyfork.org/users/669868-yanxi%E8%91%A3"
+    }
+  ],
+  "name": "Trie文本替换与高亮",
+  "description": "Aho-Corasick 高性能文本替换。纯离线 CSV 版。",
+  "url": "https://greasyfork.org/scripts/557330-trie%E6%96%87%E6%9C%AC%E6%9B%BF%E6%8D%A2%E4%B8%8E%E9%AB%98%E4%BA%AE",
+  "code_url": "https://update.greasyfork.org/scripts/557330/Trie%E6%96%87%E6%9C%AC%E6%9B%BF%E6%8D%A2%E4%B8%8E%E9%AB%98%E4%BA%AE.user.js",
+  "code_size": 24389,
+  "license": null,
+  "version": "25.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

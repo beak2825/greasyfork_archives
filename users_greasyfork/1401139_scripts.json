@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557734,
+    "daily_installs": 13,
+    "total_installs": 541,
+    "fan_score": "20.8",
+    "good_ratings": 1,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T05:32:50.000Z",
+    "code_updated_at": "2025-12-03T05:32:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401139,
+        "name": "rex editz",
+        "created_at": "2024-11-23T08:16:54.000Z",
+        "url": "https://greasyfork.org/users/1401139-rex-editz"
+      }
+    ],
+    "name": "Destiny V1",
+    "description": "The best cheat for Deadshot.io",
+    "url": "https://greasyfork.org/scripts/557734-destiny-v1",
+    "code_url": "https://update.greasyfork.org/scripts/557734/Destiny%20V1.user.js",
+    "code_size": 56478,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

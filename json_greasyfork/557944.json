@@ -1,0 +1,33 @@
+{
+  "id": 557944,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-04T19:59:09.000Z",
+  "code_updated_at": "2025-12-04T19:59:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 158923,
+      "name": "STELLAR STELS",
+      "created_at": "2017-11-12T09:07:32.000Z",
+      "url": "https://greasyfork.org/users/158923-stellar-stels"
+    }
+  ],
+  "name": "Universal Captcha Cleaner",
+  "description": "Automatically clears all site data after any captcha is solved on the page (reCAPTCHA v2/v3, hCaptcha, invisible) without breaking site load",
+  "url": "https://greasyfork.org/scripts/557944-universal-captcha-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/557944/Universal%20Captcha%20Cleaner.user.js",
+  "code_size": 2640,
+  "license": null,
+  "version": "2.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

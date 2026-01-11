@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557451,
+    "daily_installs": 1,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T18:57:02.000Z",
+    "code_updated_at": "2025-11-30T19:05:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 978152,
+        "name": "Silas Davis",
+        "created_at": "2022-11-01T18:28:28.000Z",
+        "url": "https://greasyfork.org/users/978152-silas-davis"
+      }
+    ],
+    "name": "NitroType Remote Control",
+    "description": "Remote control script for NitroType with 25+ pranks using Firebase",
+    "url": "https://greasyfork.org/scripts/557451-nitrotype-remote-control",
+    "code_url": "https://update.greasyfork.org/scripts/557451/NitroType%20Remote%20Control.user.js",
+    "code_size": 23491,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

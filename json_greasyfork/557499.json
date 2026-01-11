@@ -1,0 +1,59 @@
+{
+  "id": 557499,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-01T07:56:10.000Z",
+  "code_updated_at": "2025-12-01T07:56:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543408,
+      "name": "n0tbond-tpham27",
+      "created_at": "2025-12-01T07:54:13.000Z",
+      "url": "https://greasyfork.org/users/1543408-n0tbond-tpham27",
+      "scripts": [
+        {
+          "id": 557561,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-01T16:17:18.000Z",
+          "code_updated_at": "2025-12-01T16:17:18.000Z",
+          "namespace": "https://ps.ssis.edu.vn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bond's PS SSIS Inline GPA (4.3 scale + weighted)",
+          "description": "gpa calc thing, only usable for ssis's powerschool.",
+          "url": "https://greasyfork.org/scripts/557561-bond-s-ps-ssis-inline-gpa-4-3-scale-weighted",
+          "code_url": "https://update.greasyfork.org/scripts/557561/Bond%27s%20PS%20SSIS%20Inline%20GPA%20%2843%20scale%20%2B%20weighted%29.user.js",
+          "code_size": 10434,
+          "license": "MIT License",
+          "version": "2025.12.01-ssisedit",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PowerSchool GPA Calculator (4.3 Scale + Weighted)",
+  "description": "Calculates unweighted & weighted GPA on PowerSchool using 4.3 scale.",
+  "url": "https://greasyfork.org/scripts/557499-powerschool-gpa-calculator-4-3-scale-weighted",
+  "code_url": "https://update.greasyfork.org/scripts/557499/PowerSchool%20GPA%20Calculator%20%2843%20Scale%20%2B%20Weighted%29.user.js",
+  "code_size": 4792,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

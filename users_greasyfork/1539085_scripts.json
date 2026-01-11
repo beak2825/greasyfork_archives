@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557842,
+    "daily_installs": 13,
+    "total_installs": 353,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T01:56:24.000Z",
+    "code_updated_at": "2026-01-09T01:42:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539085,
+        "name": "Aggressive_Tip4777",
+        "created_at": "2025-11-18T09:50:04.000Z",
+        "url": "https://greasyfork.org/users/1539085-aggressive-tip4777"
+      }
+    ],
+    "name": "Grok Auto-Retry + Prompt Snippets + History + Favorites (v41 - Edited Image History )",
+    "description": "Navigation arrows cycle through permanent prompt history. Adds Edited Image history + favorites. Fixes wrong tiny up-arrow \"Make video\" button click in Image Extend/Edit mode.",
+    "url": "https://greasyfork.org/scripts/557842-grok-auto-retry-prompt-snippets-history-favorites-v41-edited-image-history",
+    "code_url": "https://update.greasyfork.org/scripts/557842/Grok%20Auto-Retry%20%2B%20Prompt%20Snippets%20%2B%20History%20%2B%20Favorites%20%28v41%20-%20Edited%20Image%20History%20%29.user.js",
+    "code_size": 68492,
+    "license": "MIT License",
+    "version": "41",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

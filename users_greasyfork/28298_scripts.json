@@ -96,6 +96,72 @@
     "version": "2026.01.03",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558389,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-09T05:38:28.000Z",
+    "code_updated_at": "2026-01-02T03:04:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "YouTube To Gemini 自动总结与字幕",
+    "description": "YouTube 首页/搜索分段缩略图网格100%修复，Gemini一键总结. Mobile & Desktop",
+    "url": "https://greasyfork.org/scripts/558389-youtube-to-gemini-%E8%87%AA%E5%8A%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%AD%97%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/558389/YouTube%20To%20Gemini%20%E8%87%AA%E5%8A%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%AD%97%E5%B9%95.user.js",
+    "code_size": 54773,
+    "license": "MIT License",
+    "version": "3.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558384,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-09T04:08:41.000Z",
+    "code_updated_at": "2025-12-21T02:11:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "AI Page Summarizer Pro (Obsolete)",
+    "description": "网页内容智能总结，支持自定义API和提示词",
+    "url": "https://greasyfork.org/scripts/558384-ai-page-summarizer-pro-obsolete",
+    "code_url": "https://update.greasyfork.org/scripts/558384/AI%20Page%20Summarizer%20Pro%20%28Obsolete%29.user.js",
+    "code_size": 89395,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

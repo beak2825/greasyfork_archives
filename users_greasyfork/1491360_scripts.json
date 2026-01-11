@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557423,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T13:20:14.000Z",
+    "code_updated_at": "2025-12-20T07:14:53.000Z",
+    "namespace": "https://pony.town/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491360,
+        "name": "Lonel",
+        "created_at": "2025-07-03T15:47:41.000Z",
+        "url": "https://greasyfork.org/users/1491360-lonel"
+      }
+    ],
+    "name": "PonyTownImportPony",
+    "description": "Use Edit character modal to import your character from the PTC file!!",
+    "url": "https://greasyfork.org/scripts/557423-ponytownimportpony",
+    "code_url": "https://update.greasyfork.org/scripts/557423/PonyTownImportPony.user.js",
+    "code_size": 118794,
+    "license": "MIT License",
+    "version": "0.124.0-alpha",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

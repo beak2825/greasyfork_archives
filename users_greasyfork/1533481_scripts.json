@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557856,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T04:25:11.000Z",
+    "code_updated_at": "2025-12-04T04:25:11.000Z",
+    "namespace": "https://xdaforums.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533481,
+        "name": "qcgzxw",
+        "created_at": "2025-11-03T03:52:34.000Z",
+        "url": "https://greasyfork.org/users/1533481-qcgzxw"
+      }
+    ],
+    "name": "XDA Ads Remover (AdsNinja Blocker)",
+    "description": "Remove AdsNinja and Google Ads on XDA Forums",
+    "url": "https://greasyfork.org/scripts/557856-xda-ads-remover-adsninja-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/557856/XDA%20Ads%20Remover%20%28AdsNinja%20Blocker%29.user.js",
+    "code_size": 1998,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

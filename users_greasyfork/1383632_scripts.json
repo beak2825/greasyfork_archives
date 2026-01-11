@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558319,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T12:44:17.000Z",
+    "code_updated_at": "2025-12-09T06:14:46.000Z",
+    "namespace": "https://greasyfork.org/users/1383632",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383632,
+        "name": "sedoruee",
+        "created_at": "2024-10-20T12:28:36.000Z",
+        "url": "https://greasyfork.org/users/1383632-sedoruee"
+      }
+    ],
+    "name": "Bangumi 私信优化",
+    "description": "null",
+    "url": "https://greasyfork.org/scripts/558319-bangumi-%E7%A7%81%E4%BF%A1%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/558319/Bangumi%20%E7%A7%81%E4%BF%A1%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 53164,
+    "license": "MIT License",
+    "version": "11.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558186,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T03:55:22.000Z",
+    "code_updated_at": "2025-12-07T03:55:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383632,
+        "name": "sedoruee",
+        "created_at": "2024-10-20T12:28:36.000Z",
+        "url": "https://greasyfork.org/users/1383632-sedoruee"
+      }
+    ],
+    "name": "Bangumi 终端",
+    "description": "在 bgm.tv 显示本地 AI 生成的用户画像和手动备注，支持复制 Markdown 和复杂链接格式",
+    "url": "https://greasyfork.org/scripts/558186-bangumi-%E7%BB%88%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/558186/Bangumi%20%E7%BB%88%E7%AB%AF.user.js",
+    "code_size": 13590,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

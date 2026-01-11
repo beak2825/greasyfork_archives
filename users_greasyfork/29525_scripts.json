@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558041,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T17:49:18.000Z",
+    "code_updated_at": "2025-12-05T17:49:18.000Z",
+    "namespace": "es.jessjon.kittycats.nameenter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29525,
+        "name": "J. Jones",
+        "created_at": "2016-02-06T07:06:18.000Z",
+        "url": "https://greasyfork.org/users/29525-j-jones"
+      }
+    ],
+    "name": "KittyCatS Enter Interceptor for Naming",
+    "description": "Intercepts [Enter] keypress on the KittyCatS name field to submit",
+    "url": "https://greasyfork.org/scripts/558041-kittycats-enter-interceptor-for-naming",
+    "code_url": "https://update.greasyfork.org/scripts/558041/KittyCatS%20Enter%20Interceptor%20for%20Naming.user.js",
+    "code_size": 925,
+    "license": "MIT License",
+    "version": "1.1.20251205",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

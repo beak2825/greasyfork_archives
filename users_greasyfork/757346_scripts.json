@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558483,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T06:47:39.000Z",
+    "code_updated_at": "2025-12-10T06:47:39.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/123456",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 757346,
+        "name": "ほし",
+        "created_at": "2021-04-11T04:32:39.000Z",
+        "url": "https://greasyfork.org/users/757346-%E3%81%BB%E3%81%97"
+      }
+    ],
+    "name": "桃寝-安全weiban 国安教育 课程学习部分自动化",
+    "description": "1. 第一次检测到第一门课立即点击；2. 之后每5s检测，课时未刷新则停手并立即弹出右下角彩蛋按钮；3. 连续8次找不到元素报警；4. 提供手动按钮；5. 适用 weiban.mycourse.cn 与 mcwk.mycourse.cn",
+    "url": "https://greasyfork.org/scripts/558483-%E6%A1%83%E5%AF%9D-%E5%AE%89%E5%85%A8weiban-%E5%9B%BD%E5%AE%89%E6%95%99%E8%82%B2-%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E9%83%A8%E5%88%86%E8%87%AA%E5%8A%A8%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/558483/%E6%A1%83%E5%AF%9D-%E5%AE%89%E5%85%A8weiban%20%E5%9B%BD%E5%AE%89%E6%95%99%E8%82%B2%20%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E9%83%A8%E5%88%86%E8%87%AA%E5%8A%A8%E5%8C%96.user.js",
+    "code_size": 8455,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

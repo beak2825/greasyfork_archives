@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558107,
+    "daily_installs": 1,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T10:32:18.000Z",
+    "code_updated_at": "2025-12-06T10:32:18.000Z",
+    "namespace": "https://github.com/yourname/youtube-hide-upcoming",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1410268,
+        "name": "Clifford Terry",
+        "created_at": "2024-12-13T08:25:06.000Z",
+        "url": "https://greasyfork.org/users/1410268-clifford-terry"
+      }
+    ],
+    "name": "YouTube - Hide Upcoming (Premiere) Videos in Subscriptions",
+    "description": "Hides upcoming/premiere videos on YouTube's subscription feed",
+    "url": "https://greasyfork.org/scripts/558107-youtube-hide-upcoming-premiere-videos-in-subscriptions",
+    "code_url": "https://update.greasyfork.org/scripts/558107/YouTube%20-%20Hide%20Upcoming%20%28Premiere%29%20Videos%20in%20Subscriptions.user.js",
+    "code_size": 3148,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558001,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T11:34:23.000Z",
+    "code_updated_at": "2025-12-05T11:34:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1410268,
+        "name": "Clifford Terry",
+        "created_at": "2024-12-13T08:25:06.000Z",
+        "url": "https://greasyfork.org/users/1410268-clifford-terry"
+      }
+    ],
+    "name": "hianime.to - Move Header to Bottom",
+    "description": "Moves the top header bar on hianime.to to the bottom of the page",
+    "url": "https://greasyfork.org/scripts/558001-hianime-to-move-header-to-bottom",
+    "code_url": "https://update.greasyfork.org/scripts/558001/hianimeto%20-%20Move%20Header%20to%20Bottom.user.js",
+    "code_size": 2248,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

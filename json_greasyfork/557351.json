@@ -1,0 +1,59 @@
+{
+  "id": 557351,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-29T20:59:52.000Z",
+  "code_updated_at": "2025-11-29T20:59:52.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542967,
+      "name": "Mortasen",
+      "created_at": "2025-11-29T20:57:39.000Z",
+      "url": "https://greasyfork.org/users/1542967-mortasen",
+      "scripts": [
+        {
+          "id": 557351,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-29T20:59:52.000Z",
+          "code_updated_at": "2025-11-29T20:59:52.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Photofeeler Average Score",
+          "description": "This script adds 4th bar on Photofeeler all results page - Average",
+          "url": "https://greasyfork.org/scripts/557351-photofeeler-average-score",
+          "code_url": "https://update.greasyfork.org/scripts/557351/Photofeeler%20Average%20Score.user.js",
+          "code_size": 3839,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Photofeeler Average Score",
+  "description": "This script adds 4th bar on Photofeeler all results page - Average",
+  "url": "https://greasyfork.org/scripts/557351-photofeeler-average-score",
+  "code_url": "https://update.greasyfork.org/scripts/557351/Photofeeler%20Average%20Score.user.js",
+  "code_size": 3839,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

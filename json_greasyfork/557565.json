@@ -1,0 +1,33 @@
+{
+  "id": 557565,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-01T17:04:58.000Z",
+  "code_updated_at": "2025-12-01T17:10:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543557,
+      "name": "oopsitsdeleted",
+      "created_at": "2025-12-01T14:44:05.000Z",
+      "url": "https://greasyfork.org/users/1543557-oopsitsdeleted"
+    }
+  ],
+  "name": "Carousell++",
+  "description": "Makes Carousell search less annoying and more useful",
+  "url": "https://greasyfork.org/scripts/557565-carousell",
+  "code_url": "https://update.greasyfork.org/scripts/557565/Carousell%2B%2B.user.js",
+  "code_size": 5509,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 557872,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T08:20:55.000Z",
+    "code_updated_at": "2025-12-04T08:20:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 945635,
+        "name": "viabv12ra",
+        "created_at": "2022-08-12T09:43:33.000Z",
+        "url": "https://greasyfork.org/users/945635-viabv12ra"
+      }
+    ],
+    "name": "1024magnet_highlight",
+    "description": "在当前页面自动高亮指定的关键字列表，纯原生JS实现",
+    "url": "https://greasyfork.org/scripts/557872-1024magnet-highlight",
+    "code_url": "https://update.greasyfork.org/scripts/557872/1024magnet_highlight.user.js",
+    "code_size": 3360,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557871,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T07:59:40.000Z",
+    "code_updated_at": "2025-12-04T07:59:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 945635,
+        "name": "viabv12ra",
+        "created_at": "2022-08-12T09:43:33.000Z",
+        "url": "https://greasyfork.org/users/945635-viabv12ra"
+      }
+    ],
+    "name": "1024magnet_add_href",
+    "description": "1024 mobile version add href link, remove onclick.",
+    "url": "https://greasyfork.org/scripts/557871-1024magnet-add-href",
+    "code_url": "https://update.greasyfork.org/scripts/557871/1024magnet_add_href.user.js",
+    "code_size": 1294,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557870,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T07:58:38.000Z",
+    "code_updated_at": "2025-12-04T08:00:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 945635,
+        "name": "viabv12ra",
+        "created_at": "2022-08-12T09:43:33.000Z",
+        "url": "https://greasyfork.org/users/945635-viabv12ra"
+      }
+    ],
+    "name": "1024magnet_magnet",
+    "description": "1024 mobile version copy magnet",
+    "url": "https://greasyfork.org/scripts/557870-1024magnet-magnet",
+    "code_url": "https://update.greasyfork.org/scripts/557870/1024magnet_magnet.user.js",
+    "code_size": 1659,
+    "license": "MI",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

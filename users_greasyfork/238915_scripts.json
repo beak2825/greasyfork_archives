@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557588,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T21:18:30.000Z",
+    "code_updated_at": "2025-12-01T21:18:30.000Z",
+    "namespace": "hide-google-drive-labels",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 238915,
+        "name": "Gene Wood",
+        "created_at": "2019-01-11T19:41:59.000Z",
+        "url": "https://greasyfork.org/users/238915-gene-wood"
+      }
+    ],
+    "name": "Hide Google Drive Labels",
+    "description": "Hide Google Drive labels",
+    "url": "https://greasyfork.org/scripts/557588-hide-google-drive-labels",
+    "code_url": "https://update.greasyfork.org/scripts/557588/Hide%20Google%20Drive%20Labels.user.js",
+    "code_size": 4473,
+    "license": "Mozilla Public License 2.0",
+    "version": "2025-12-01.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

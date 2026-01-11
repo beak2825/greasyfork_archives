@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558091,
+    "daily_installs": 1,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T08:53:47.000Z",
+    "code_updated_at": "2025-12-06T08:53:47.000Z",
+    "namespace": "any",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083784,
+        "name": "mrrobot",
+        "created_at": "2023-05-24T04:07:26.000Z",
+        "url": "https://greasyfork.org/users/1083784-mrrobot"
+      }
+    ],
+    "name": "Spotify Mobile + AdBlocker + Mute",
+    "description": "Mobile-style Spotify layout + blocks all ads + mutes Spotify ads automatically.",
+    "url": "https://greasyfork.org/scripts/558091-spotify-mobile-adblocker-mute",
+    "code_url": "https://update.greasyfork.org/scripts/558091/Spotify%20Mobile%20%2B%20AdBlocker%20%2B%20Mute.user.js",
+    "code_size": 6151,
+    "license": null,
+    "version": "2025-11-17.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557621,
+    "daily_installs": 1,
+    "total_installs": 81,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-02T07:03:48.000Z",
+    "code_updated_at": "2026-01-08T18:00:54.000Z",
+    "namespace": "https://github.com/insin/control-panel-for-twitter/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083784,
+        "name": "mrrobot",
+        "created_at": "2023-05-24T04:07:26.000Z",
+        "url": "https://greasyfork.org/users/1083784-mrrobot"
+      }
+    ],
+    "name": "Control Panel for Twitter",
+    "description": "Gives you more control over Twitter and adds missing features and UI improvements",
+    "url": "https://greasyfork.org/scripts/557621-control-panel-for-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/557621/Control%20Panel%20for%20Twitter.user.js",
+    "code_size": 288498,
+    "license": null,
+    "version": "209",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

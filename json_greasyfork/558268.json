@@ -1,0 +1,34 @@
+{
+  "id": 558268,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-07T23:39:24.000Z",
+  "code_updated_at": "2025-12-07T23:39:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1545707,
+      "name": "Wallrussian",
+      "created_at": "2025-12-07T23:36:38.000Z",
+      "url": "https://greasyfork.org/users/1545707-wallrussian",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Competition Team Target Helper",
+  "description": "Show 3 \"okay\" attack targets under a chosen level on competition team page.",
+  "url": "https://greasyfork.org/scripts/558268-torn-competition-team-target-helper",
+  "code_url": "https://update.greasyfork.org/scripts/558268/Torn%20Competition%20Team%20Target%20Helper.user.js",
+  "code_size": 6426,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

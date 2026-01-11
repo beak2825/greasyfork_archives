@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558368,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T23:52:49.000Z",
+    "code_updated_at": "2025-12-20T06:30:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870933,
+        "name": "Lintilla",
+        "created_at": "2022-01-30T02:24:28.000Z",
+        "url": "https://greasyfork.org/users/870933-lintilla"
+      }
+    ],
+    "name": "Prolific Sidebar Toggle",
+    "description": "Toggle the sidebar visibility",
+    "url": "https://greasyfork.org/scripts/558368-prolific-sidebar-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/558368/Prolific%20Sidebar%20Toggle.user.js",
+    "code_size": 2110,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

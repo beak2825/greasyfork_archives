@@ -1,0 +1,59 @@
+{
+  "id": 558329,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-08T15:28:44.000Z",
+  "code_updated_at": "2025-12-17T15:37:37.000Z",
+  "namespace": "https://github.com/ntgmc/Better-PRTS-Plus",
+  "support_url": "https://github.com/ntgmc/Better-PRTS-Plus/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542608,
+      "name": "一只摆烂的42",
+      "created_at": "2025-11-28T17:22:23.000Z",
+      "url": "https://greasyfork.org/users/1542608-%E4%B8%80%E5%8F%AA%E6%91%86%E7%83%82%E7%9A%8442",
+      "scripts": [
+        {
+          "id": 558329,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-08T15:28:44.000Z",
+          "code_updated_at": "2025-12-17T15:37:37.000Z",
+          "namespace": "https://github.com/ntgmc/Better-PRTS-Plus",
+          "support_url": "https://github.com/ntgmc/Better-PRTS-Plus/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better-PRTS-Plus",
+          "description": "[整合版] 集成完美作业筛选、深度暗黑模式及干员头像可视化等功能的 zoot.plus 全方位体验增强脚本。",
+          "url": "https://greasyfork.org/scripts/558329-better-prts-plus",
+          "code_url": "https://update.greasyfork.org/scripts/558329/Better-PRTS-Plus.user.js",
+          "code_size": 86576,
+          "license": "GPL-3.0 License",
+          "version": "2.7.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better-PRTS-Plus",
+  "description": "[整合版] 集成完美作业筛选、深度暗黑模式及干员头像可视化等功能的 zoot.plus 全方位体验增强脚本。",
+  "url": "https://greasyfork.org/scripts/558329-better-prts-plus",
+  "code_url": "https://update.greasyfork.org/scripts/558329/Better-PRTS-Plus.user.js",
+  "code_size": 86576,
+  "license": "GPL-3.0 License",
+  "version": "2.7.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

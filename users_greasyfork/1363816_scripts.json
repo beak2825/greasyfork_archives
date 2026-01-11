@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557509,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T10:00:53.000Z",
+    "code_updated_at": "2025-12-01T10:00:53.000Z",
+    "namespace": "http://jb.zhanyc.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363816,
+        "name": "Dagobert",
+        "created_at": "2024-09-06T06:57:25.000Z",
+        "url": "https://greasyfork.org/users/1363816-dagobert"
+      }
+    ],
+    "name": "🌱【付费使用】法宣在线考试脚本|贵州省智慧普法依法治理云平台|使用说明：http://doc.zhanyc.cn/pages/fxzx/",
+    "description": "当前脚本付费才可使用！请按照付费版，进入考试自动答题|接各类脚本开发、代挂工作，微信：zhanyc_cn 备用微信:zhanfengkuo 个人网站：http://doc.zhanyc.cn",
+    "url": "https://greasyfork.org/scripts/557509-%E4%BB%98%E8%B4%B9%E4%BD%BF%E7%94%A8-%E6%B3%95%E5%AE%A3%E5%9C%A8%E7%BA%BF%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC-%E8%B4%B5%E5%B7%9E%E7%9C%81%E6%99%BA%E6%85%A7%E6%99%AE%E6%B3%95%E4%BE%9D%E6%B3%95%E6%B2%BB%E7%90%86%E4%BA%91%E5%B9%B3%E5%8F%B0-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E-http-doc-zhanyc-cn-pages-fxzx",
+    "code_url": "https://update.greasyfork.org/scripts/557509/%F0%9F%8C%B1%E3%80%90%E4%BB%98%E8%B4%B9%E4%BD%BF%E7%94%A8%E3%80%91%E6%B3%95%E5%AE%A3%E5%9C%A8%E7%BA%BF%E8%80%83%E8%AF%95%E8%84%9A%E6%9C%AC%7C%E8%B4%B5%E5%B7%9E%E7%9C%81%E6%99%BA%E6%85%A7%E6%99%AE%E6%B3%95%E4%BE%9D%E6%B3%95%E6%B2%BB%E7%90%86%E4%BA%91%E5%B9%B3%E5%8F%B0%7C%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%EF%BC%9Ahttp%3Adoczhanyccnpagesfxzx.user.js",
+    "code_size": 38306,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]
