@@ -2,10 +2,10 @@
 // @name           HideAnnoyingPopupsLib
 // @description    This script hides the annoying popups that are shown in a web page.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.1.4
+// @version        1.1.5
 // @author         Cyrano68
 // @license        MIT
-// @require        https://update.greasyfork.org/scripts/547732/1725674/BasicLib.js
+// @require        https://update.greasyfork.org/scripts/547732/1728184/BasicLib.js
 // @grant          none
 // @run-at         document-start
 // ==/UserScript==
@@ -18,7 +18,7 @@
     const blib = window.BasicLib;
     blib.consoleLog(`CY==> HideAnnoyingPopupsLib: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
-    const myVersion = "1.1.4";  // It must be the same value indicated in @version.
+    const myVersion = "1.1.5";  // It must be the same value indicated in @version.
     blib.consoleLog(`CY==> HideAnnoyingPopupsLib: HELLO! Loading script (version: ${myVersion})...`);
 
     let showDebugLog = false;

@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         深圳大学体育场馆自动抢票
+// @name         深圳大学体育场馆自动预约
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
+// @version      1.2.4
 // @description  深圳大学体育场馆自动预约脚本 - iOS、安卓、移动端、桌面端完全兼容
 // @author       zskfree
 // @match        https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/*
@@ -13,8 +13,8 @@
 // @connect      qyapi.weixin.qq.com
 // @run-at       document-end
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/537386/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E4%BD%93%E8%82%B2%E5%9C%BA%E9%A6%86%E8%87%AA%E5%8A%A8%E6%8A%A2%E7%A5%A8.user.js
-// @updateURL https://update.greasyfork.org/scripts/537386/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E4%BD%93%E8%82%B2%E5%9C%BA%E9%A6%86%E8%87%AA%E5%8A%A8%E6%8A%A2%E7%A5%A8.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/537386/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E4%BD%93%E8%82%B2%E5%9C%BA%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6.user.js
+// @updateURL https://update.greasyfork.org/scripts/537386/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E4%BD%93%E8%82%B2%E5%9C%BA%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6.meta.js
 // ==/UserScript==
 
 (function () {
@@ -58,7 +58,7 @@
     const Storage = {
         prefix: 'szu_sports_',
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        version: '1.2.1',
+        version: '1.2.4',
 
         set(key, value) {
             const data = { value, timestamp: Date.now(), version: this.version };
@@ -540,7 +540,7 @@
             Storage.set('scheduledTime', targetTime);
 
             this.timerId = setTimeout(() => {
-                addLog(`⏰ 定时任务触发，开始抢票！`, 'success');
+                addLog(`⏰ 定时任务触发，开始预约！`, 'success');
                 if (!isRunning) {
                     updateConfigFromUI();
                     if (validateConfig()) startBooking();
@@ -677,7 +677,7 @@
         btn.style.cssText = `position:fixed;top:20px;right:20px;width:${size};height:${size};background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10001;box-shadow:0 4px 15px rgba(0,0,0,0.3);transition:all 0.3s;border:3px solid rgba(255,255,255,0.2);font-size:${fontSize};user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;`;
 
         btn.innerHTML = '🎾';
-        btn.title = '显示/隐藏抢票面板';
+        btn.title = '显示/隐藏预约面板';
 
         Interaction.bind(btn, togglePanel);
 
@@ -707,7 +707,7 @@
 
         panel.innerHTML = `
         <div style="margin-bottom:15px;text-align:center;position:relative;">
-            <h3 style="margin:0;font-size:${Device.isMobile ? '20px' : '18px'};text-shadow:2px 2px 4px rgba(0,0,0,0.5);">🎾 自动抢票助手 v1.2.1</h3>
+            <h3 style="margin:0;font-size:${Device.isMobile ? '20px' : '18px'};text-shadow:2px 2px 4px rgba(0,0,0,0.5);">🎾 自动预约助手 v1.2.4</h3>
             <button id="close-panel" style="position:absolute;top:-5px;right:-5px;background:rgba(255,255,255,0.2);border:none;color:white;width:${Device.isMobile ? '35px' : '30px'};height:${Device.isMobile ? '35px' : '30px'};border-radius:50%;cursor:pointer;font-size:${Device.isMobile ? '20px' : '16px'};display:flex;align-items:center;justify-content:center;touch-action:manipulation;" title="隐藏面板">×</button>
             <button id="toggle-config" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:${Device.isMobile ? '8px 12px' : '5px 10px'};border-radius:5px;cursor:pointer;margin-top:5px;font-size:${Device.isMobile ? '14px' : '12px'};touch-action:manipulation;">⚙️ 配置设置</button>
         </div>
@@ -778,7 +778,7 @@
         </div>
     
         <div style="background:rgba(255,255,255,0.15);padding:12px;border-radius:8px;margin-bottom:15px;">
-            <div style="font-size:${Device.isMobile ? '15px' : '13px'};margin-bottom:8px;font-weight:bold;">⏰ 定时抢票</div>
+            <div style="font-size:${Device.isMobile ? '15px' : '13px'};margin-bottom:8px;font-weight:bold;">⏰ 定时预约</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
                 <div>
                     <label style="font-size:${Device.isMobile ? '13px' : '11px'};display:block;margin-bottom:3px;">日期:</label>
@@ -797,7 +797,7 @@
         </div>
     
         <div style="margin-bottom:15px;">
-            <button id="start-btn" style="${Styles.button}background:linear-gradient(45deg,#ff6b6b,#ee5a52);color:white;">🚀 开始抢票</button>
+            <button id="start-btn" style="${Styles.button}background:linear-gradient(45deg,#ff6b6b,#ee5a52);color:white;">🚀 开始预约</button>
         </div>
     
         <div id="status-area" style="background:rgba(0,0,0,0.2);padding:10px;border-radius:8px;font-size:${Device.isMobile ? '14px' : '12px'};max-height:${Device.isMobile ? '250px' : '200px'};overflow-y:auto;border:1px solid rgba(255,255,255,0.1);">
@@ -914,11 +914,11 @@
 
         Interaction.bind(panel.querySelector('#start-btn'), () => {
             if (isRunning) {
-                // 停止抢票
-                addLog(`⏹️ 正在停止抢票...`, 'info');
+                // 停止预约
+                addLog(`⏹️ 正在停止预约...`, 'info');
                 stopBooking();
             } else {
-                // 开始抢票前先更新配置
+                // 开始预约前先更新配置
                 updateConfigFromUI();
 
                 // 验证配置
@@ -928,7 +928,7 @@
                 }
 
                 // 二次确认（可选）
-                const confirmMsg = `确认开始抢票？\n日期: ${formatDateDisplay(CONFIG.TARGET_DATE)}\n项目: ${CONFIG.SPORT}\n校区: ${CONFIG.CAMPUS}\n时段: ${CONFIG.PREFERRED_TIMES.join(', ')}`;
+                const confirmMsg = `确认开始预约？\n日期: ${formatDateDisplay(CONFIG.TARGET_DATE)}\n项目: ${CONFIG.SPORT}\n校区: ${CONFIG.CAMPUS}\n时段: ${CONFIG.PREFERRED_TIMES.join(', ')}`;
 
                 if (Device.isMobile || confirm(confirmMsg)) {
                     startBooking();
@@ -1017,7 +1017,7 @@
             if (remainingSeconds <= 60 && remainingSeconds > 30) {
                 updateCountdownDisplay(`⏰ 倒计时: ${formatted} (将在30秒时刷新页面)`);
             } else if (remainingSeconds <= 30) {
-                updateCountdownDisplay(`⏰ 倒计时: ${formatted} (即将开始抢票)`);
+                updateCountdownDisplay(`⏰ 倒计时: ${formatted} (即将开始预约)`);
             } else {
                 updateCountdownDisplay(`⏰ 倒计时: ${formatted}`);
             }
@@ -1404,7 +1404,7 @@
     // ==================== 主流程 ====================
     async function startBooking() {
         if (isRunning) {
-            addLog(`⚠️ 正在抢票中，请勿重复点击`, 'warning');
+            addLog(`⚠️ 正在预约中，请勿重复点击`, 'warning');
             return;
         }
 
@@ -1420,7 +1420,7 @@
 
         const btn = document.getElementById('start-btn');
         if (btn) {
-            btn.textContent = '⏹️ 停止抢票';
+            btn.textContent = '⏹️ 停止预约';
             btn.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
         }
 
@@ -1436,7 +1436,7 @@
             return `${year}/${month}/${day}`;
         };
 
-        addLog(`🚀 开始抢票！`, 'success');
+        addLog(`🚀 开始预约！`, 'success');
         addLog(`📊 ${CONFIG.SPORT} | ${CONFIG.CAMPUS} | ${formatDate(CONFIG.TARGET_DATE)}`, 'info');
         addLog(`⏰ 目标时段: ${CONFIG.PREFERRED_TIMES.join(', ')}`, 'info');
 
@@ -1478,7 +1478,7 @@
                                 const result = await bookSlot(groups[time][0]);
 
                                 if (result === 'limit_reached') {
-                                    addLog(`🏁 已达预约上限，停止抢票`, 'success');
+                                    addLog(`🏁 已达预约上限，停止预约`, 'success');
                                     break;
                                 }
                                 if (result === 'already_booked') {
@@ -1524,7 +1524,7 @@
 
         const btn = document.getElementById('start-btn');
         if (btn) {
-            btn.textContent = '🚀 开始抢票';
+            btn.textContent = '🚀 开始预约';
             btn.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a52)';
         }
 
@@ -1540,7 +1540,7 @@
 
         const elapsed = startTime ? Math.round((new Date() - startTime) / 1000) : 0;
         addLog(`📊 运行 ${elapsed} 秒，查询 ${retryCount} 次`, 'info');
-        addLog(`✅ 抢票已停止，可重新配置并开始`, 'info');
+        addLog(`✅ 预约已停止，可重新配置并开始`, 'info');
     }
 
     // ==================== 初始化 ====================
@@ -1582,12 +1582,24 @@
         const scheduledDateInput = document.getElementById('scheduled-date');
         const scheduledTimeInput = document.getElementById('scheduled-time');
 
+        const savedScheduledTime = Storage.get('scheduledTime', null);
+        const hasSavedSchedule = typeof savedScheduledTime === 'number' && savedScheduledTime > Date.now();
+
+        const pad2 = (n) => String(n).padStart(2, '0');
+        const formatLocalDateInput = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        const formatLocalTimeInput = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+
         if (scheduledDateInput && scheduledTimeInput) {
-            scheduledDateInput.value = defaultDateTime.date;
-            // 默认设置为下一个整点
-            const nextHour = new Date();
-            nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
-            scheduledTimeInput.value = `${String(nextHour.getHours()).padStart(2, '0')}:00`;
+            if (hasSavedSchedule) {
+                const d = new Date(savedScheduledTime);
+                scheduledDateInput.value = formatLocalDateInput(d);
+                scheduledTimeInput.value = formatLocalTimeInput(d);
+            } else {
+                scheduledDateInput.value = defaultDateTime.date;
+                const nextHour = new Date();
+                nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
+                scheduledTimeInput.value = `${pad2(nextHour.getHours())}:00`;
+            }
         }
 
         // 检查是否是预约前刷新恢复的状态
@@ -1617,7 +1629,7 @@
             }
         }
 
-        addLog(`🎮 抢票助手已就绪 (${Device.isIPad ? 'iPad' : (Device.isMobile ? '移动端' : '桌面端')})`, 'success');
+        addLog(`🎮 预约助手已就绪 (${Device.isIPad ? 'iPad' : (Device.isMobile ? '移动端' : '桌面端')})`, 'success');
     }
 
     // 添加一个格式化日期显示的辅助函数

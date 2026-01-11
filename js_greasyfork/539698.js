@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitLab Assistant
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.3
 // @description  GitLab Viewer Publish and Deploy Project!
 // @author       Sean
 // @match        http://192.168.0.200*
@@ -52,13 +52,13 @@
          taskUrl: 'https://k7n084n7rx.feishu.cn/base/BmGUb5Zp6a9WCasthF1cAWhTnSn?table=tblOmZNTbdrdLp5R&view=vewnWhBOwo'
         },
         {id: '1组', value: '赵阳,井宇轩,谢环志,范新悦,汤浩,汤浩(前端研发4部),汤浩(前端研究中心)', manager: '赵阳', dept: '前端研发4部',
-         taskUrl: 'https://d5t3la2r90.feishu.cn/base/As2abCpPZaItARsJYNpc5f2Fn8b?table=tbl1pX1qd7Qu7F5K&view=vewnWhBOwo'
+         taskUrl: 'https://ai.feishu.cn/base/DZ4pbG7XzaEsQpsCP1jcG4oQnsg?table=tbl0sEJBLvnezOvB&view=vewnWhBOwo'
         },
         {id: '2组', value: '武洲,黄鑫慧,沈小炜,钱雨婷,瞿超楠,钱雨婷(前端研发4部),钱雨婷(前端研究中心)', manager: '武洲', dept: '前端研发4部',
-         taskUrl: 'https://d5t3la2r90.feishu.cn/base/As2abCpPZaItARsJYNpc5f2Fn8b?table=tbl1pX1qd7Qu7F5K&view=vew7pdLXB1'
+         taskUrl: 'https://ai.feishu.cn/base/DZ4pbG7XzaEsQpsCP1jcG4oQnsg?table=tbl0sEJBLvnezOvB&view=vew7pdLXB1'
         },
         {id: '3组', value: '黄聪,胡家华,瞿国强,赵丁琪,徐海,许佳伟,高婧', manager: '黄聪', dept: '前端研发4部',
-         taskUrl: 'https://d5t3la2r90.feishu.cn/base/As2abCpPZaItARsJYNpc5f2Fn8b?table=tbl1pX1qd7Qu7F5K&view=vewwl6pYGU'
+         taskUrl: 'https://ai.feishu.cn/base/DZ4pbG7XzaEsQpsCP1jcG4oQnsg?table=tbl0sEJBLvnezOvB&view=vewwl6pYGU'
         }
     ];
     // git上项目的命名空间（groupID），用于新建项目的时候属于哪个群组

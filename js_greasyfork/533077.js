@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LynxChan Extended Minus Minus
 // @namespace    https://rentry.org/8chanMinusMinus
-// @version      2.4.13
+// @version      2.4.14
 // @description  LynxChan Extended with even more features
 // @author       SaddestPanda & Dandelion & /gfg/
 // @license      UNLICENSE
@@ -282,7 +282,7 @@
     //     }
     // }
     // const CustomFilters = new FilteringManager({
-    //     'ImageHash':settings.filterByImageHash, 
+    //     'ImageHash':settings.filterByImageHash,
     //     'ImageName':settings.filterByImageName
     // });
     function deserializeFilters() {
@@ -308,7 +308,7 @@
         let filters = {}
 
         Object.keys(keyValueObject).forEach(k => {
-            
+
             filters[k] = {}
 
             let regexLines = keyValueObject[k].split("\n");
@@ -771,7 +771,7 @@
 
         if (settings.showDeletionCheckbox === false) {
             addMyStyle("lynx-hide-post-checkbox",`
-            .deletionCheckBox {
+            input.deletionCheckBox {
                 display: none;
             }
             `)
@@ -1157,7 +1157,7 @@
                             }
 
                             btn.setAttribute("aria-selected", idx==j);
-                            
+
                         }
                     }
                 })(i);
@@ -1318,7 +1318,7 @@
             const fileNames = Array.from(post.querySelectorAll(".originalNameLink[href]"));
             if (fileNames.length == 0) //No attachments
                 return;
-            
+
             const positions = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th']
             //Part of the post but only on mobile
             const mobileSelect = post.querySelector(".mobileSelect")
@@ -1396,7 +1396,7 @@
                             //The menu is already deleted by this point, so this does nothing
                             //post.querySelector(".floatingList.extraMenu")?.remove()
                         })
-                        
+
                         if (imageUploadedFileName != imageFileName) { //If name == hash then this file has no filename
                             let menuOption = document.createElement("li");
                             menuOption.innerText = `Filter ${pos} Attachment Filename`
@@ -1452,7 +1452,7 @@
                             } else if (htmlElement.innerText=="Hide") {
                                 //console.log("Click hide button!!")
                                 setTimeout(() => htmlElement.click(), 1);
-                                
+
                                 return true;
                             } else {
                                 console.log(htmlElement.innerText)

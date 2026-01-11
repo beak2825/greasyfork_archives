@@ -5,7 +5,6 @@
 // @description  Tag suggestions and weight shortcuts for NovelAI prompts. 通过Ctrl+↑/↓快速调整输入光标所在的Tag权重，Ctrl+←/→移动Tag位置。自动格式化Prompt。
 // @author       Takoro
 // @match        https://novelai.net/image
-// @match        https://novelai.github.io/image
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=novelai.net
 // @license      MIT
 // @grant        GM_xmlhttpRequest

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Humpty-Dumpty's Property Manager
-// @version      2.0.1
+// @version      2.1.0
 // @author       Humpty-Dumpty[2527857]
 // @description  Property management tools for the Torn City game
 // @license      MIT
@@ -25,12 +25,17 @@
         INIT_OWNED_PROPERTIES_COMPLETE: 6,
         INIT_URL_WATCHERS_IN_PROGRESS: 7,
         WAITING_FOR_URL_MATCH: 8,
-        FOUND_URL_MATCH_TO_PROCESS: 9,
+        FOUND_URL_OFFER_EXTENTION_MATCH_TO_PROCESS: 9,
         PROCESSING_URL_MATCH: 10,
         HAS_PROCESSED_PROP_TITLE: 11,
         HAS_PROCESSED_PROP_COST: 12,
         HAS_PROCESSED_PROP_DAYS: 13,
         HAS_PROCESSED_PROP_COST_LABEL: 14,
+        FOUND_URL_LEASE_NEW_PROPERTY_MATCH_TO_PROCESS: 15,
+        PROCESSING_URL_LEASE_NEW_PROPERTY_MATCH: 16,
+        HAS_FOUND_ADD_PROP_MARKET_DIV: 17,
+        HAS_FETCHED_PROPERTY_INFO_ADD_MARKET: 18,
+        HAS_PROCESSED_ADD_PROP_MARKET_COST: 19,
     };
 
     let CurrentState = State.START_UP;
@@ -822,7 +827,7 @@
         CurrentState = State.INIT_OWNED_PROPERTIES_COMPLETE;
     }
 
-    async function fetchPropertyInformation(propertyId) {
+    async function fetchPropertyInformation(propertyId, expectCurrentlyHasTenant) {
         const api_key = GM_getValue('API_KEY', null);
         if (! api_key) {
             throw new Error(`No API_KEY`);
@@ -884,8 +889,8 @@
         //     }
         // }
 
-        if (!resBody?.property?.rented?.days_left ||
-            !resBody?.property?.rented?.total_cost ||
+        if ((expectCurrentlyHasTenant && !resBody?.property?.rented?.days_left) ||
+            (expectCurrentlyHasTenant && !resBody?.property?.rented?.total_cost) ||
             !resBody?.property?.happy ||
             !resBody?.property?.upgrades ||
             !resBody?.property?.property_type) {
@@ -893,6 +898,63 @@
         }
 
         return resBody;
+    }
+
+    async function setAddRentalMarketPropertyPrices() {
+        CurrentState = State.PROCESSING_URL_LEASE_NEW_PROPERTY_MATCH;
+        logInfo(`setAddRentalMarketPropertyPrices(): START`);
+
+        const regEx = /#\/p=options&ID=(.+)&tab=lease$/;
+        const matchArray = regEx.exec(location.hash);
+        if (matchArray.length < 2) {
+            logError(`could not find property Id in location hash (${location.hash})`);
+            return;
+        }
+
+        const propertyId = matchArray[1];
+        logInfo(`propertyId=${propertyId}`);
+
+        let daysToLease = 10;
+        let price = 999999999;
+
+        if (CurrentState === State.PROCESSING_URL_LEASE_NEW_PROPERTY_MATCH) {
+            const addToRentalMarketDiv = document.querySelector(`#market`);
+            if (addToRentalMarketDiv && addToRentalMarketDiv.style.display === 'block') {
+                CurrentState = State.HAS_FOUND_ADD_PROP_MARKET_DIV;
+            } else {
+                return; // early as have not navigated to 'add property to rental market' tab
+            }
+        }
+
+        if (CurrentState === State.HAS_FOUND_ADD_PROP_MARKET_DIV) {
+            const response = await fetchPropertyInformation(propertyId, false);
+            const propertyGuide = getPropertyGuide(response.property);
+            if (propertyGuide) {
+                price = propertyGuide.suggestedDailyRent * 10;
+            }
+
+            CurrentState = State.HAS_FETCHED_PROPERTY_INFO_ADD_MARKET;
+        }
+
+        if (CurrentState === State.HAS_FETCHED_PROPERTY_INFO_ADD_MARKET) {
+            const costInput = document.querySelector('#market .cost input[type="text"]:not([type=""]');
+            costInput.value = getFormattedMoneyString(price);
+            costInput.dispatchEvent(new Event('input', { bubbles: true }));
+            costInput.dispatchEvent(new Event('change', { bubbles: true }));
+            logInfo(`Set add property market lease cost to: ${getFormattedMoneyString(price)}`);
+
+            CurrentState = State.HAS_PROCESSED_ADD_PROP_MARKET_COST;
+        }
+
+        if (CurrentState === State.HAS_PROCESSED_ADD_PROP_MARKET_COST) {
+            const leaseDaysInput = document.querySelector(`#market .amount input[type="text"]:not([type=""]`);
+            leaseDaysInput.value = daysToLease;
+            leaseDaysInput.dispatchEvent(new Event('input', { bubbles: true }));
+            leaseDaysInput.dispatchEvent(new Event('change', { bubbles: true }));
+            logInfo(`Set lease days to: ${daysToLease}`);
+        }
+
+        CurrentState = State.WAITING_FOR_URL_MATCH;
     }
 
     function getPropertyGuide(property) {
@@ -941,7 +1003,7 @@
                     ]
                 },
                 {
-                    baseHappy: 3775,
+                    baseHappy: 3725,
                     suggestedDailyRent: 750000,
                     upgrades: [
                         "Superior interior",
@@ -1020,7 +1082,7 @@
         const propertyId = matchArray[1];
         logInfo(`propertyId=${propertyId}`);
 
-        const response = await fetchPropertyInformation(propertyId);
+        const response = await fetchPropertyInformation(propertyId, true);
 
         const propertyGuide = getPropertyGuide(response.property);
 
@@ -1107,19 +1169,34 @@
         return /#\/p=options&ID=.+&tab=offerExtension$/.test(location.hash);
     }
 
+    function isLocationUrlLeaseNewProperty() {
+        return /#\/p=options&ID=.+&tab=lease$/.test(location.hash);
+    }
+
     function initUrlWatchers() {
         CurrentState = State.INIT_URL_WATCHERS_IN_PROGRESS;
 
         window.addEventListener('hashchange', (info) => {
             if (isLocationUrlOfferExtension()) {
                 logInfo(`Page changed hash, new page url matches (${location.hash})`);
-                CurrentState = State.FOUND_URL_MATCH_TO_PROCESS;
+                CurrentState = State.FOUND_URL_OFFER_EXTENTION_MATCH_TO_PROCESS;
+            }
+
+            if (isLocationUrlLeaseNewProperty()) {
+                logInfo(`Page changed hash, new page url matches (${location.hash})`);
+                CurrentState = State.FOUND_URL_LEASE_NEW_PROPERTY_MATCH_TO_PROCESS;
             }
         });
 
         if (isLocationUrlOfferExtension()) {
             logInfo(`Initial page url matches (${location.hash})`);
-            CurrentState = State.FOUND_URL_MATCH_TO_PROCESS;
+            CurrentState = State.FOUND_URL_OFFER_EXTENTION_MATCH_TO_PROCESS;
+            return;
+        }
+
+        if (isLocationUrlLeaseNewProperty()) {
+            logInfo(`Initial page url matches (${location.hash})`);
+            CurrentState = State.FOUND_URL_LEASE_NEW_PROPERTY_MATCH_TO_PROCESS;
             return;
         }
 
@@ -1159,11 +1236,18 @@
                 case State.WAITING_FOR_URL_MATCH:
                     logInfo(`main(): nothing to do for state=WAITING_FOR_URL_MATCH`);
                     break;
-                case State.FOUND_URL_MATCH_TO_PROCESS:
+                case State.FOUND_URL_OFFER_EXTENTION_MATCH_TO_PROCESS:
                     setRentalExtensionPrices();
                     break;
                 case State.PROCESSING_URL_MATCH:
                     setRentalExtensionPrices();
+                    break;
+                case State.FOUND_URL_LEASE_NEW_PROPERTY_MATCH_TO_PROCESS:
+                case State.PROCESSING_URL_LEASE_NEW_PROPERTY_MATCH:
+                case State.HAS_FOUND_ADD_PROP_MARKET_DIV:
+                case State.HAS_FETCHED_PROPERTY_INFO_ADD_MARKET:
+                case State.HAS_PROCESSED_ADD_PROP_MARKET_COST:
+                    setAddRentalMarketPropertyPrices();
                     break;
                 default:
                     logInfo(`main(): nothing to do for state=${CurrentState}`);

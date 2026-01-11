@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         kuplafix
 // @namespace    kuplafix
-// @version      2.0.9
+// @version      2.1.1
 // @description  kuplahotelli UI fixes & enhancements (ScriptCat edition)
 // @author       res
 // @match        *://kuplahotelli.com/game/nitro*
@@ -59,7 +59,7 @@
 
   // Keep startup quiet; use `log` for controlled output.
   const SCRIPT_NAME = 'kuplafix';
-  const SCRIPT_VERSION = '2.0.9';
+  const SCRIPT_VERSION = '2.1.1';
   const CONFIG_KEY = 'kuplafix_config';
   const DEBUG_ENABLED = false;
 
@@ -145,6 +145,7 @@
   // Configuration Management
   // ─────────────────────────────────────────────────────────────────
   const defaultConfig = {
+    browserEnabled: false,
     onlineCountEnabled: true,
     onlineCountInterval: 60000,
     gifBlockerEnabled: false,
@@ -162,9 +163,9 @@
       currencies: true,
     },
     menuPosition: null,
-    livekitEnabled: true,
+    livekitEnabled: false,
     livekitTokenEndpoint: 'https://kuplafix-livekit-auth.kuplafix.workers.dev/', // URL to Cloudflare Worker
-    voiceMessagesEnabled: true,
+    voiceMessagesEnabled: false,
     voiceHideRecordButton: false,
     voiceMessageCharLimit: 100,
     voiceMessageMaxDurationMs: 4000,
@@ -173,10 +174,17 @@
     chatHistoryCacheEnabled: true,
     chatHistoryCacheSize: 1000,
     chatHistoryCacheExpiry: 7 * 24 * 60 * 60 * 1000, // 7 days
-    roomLightingEnabled: true,
+    roomLightingEnabled: false,
     roomBrightness: 1,
     roomTemperature: 0, // 0-100 yövalo (päivänvalo lämmin) aste
-    featureOrder: ['online-count', 'gif-blocker', 'bubble-alerts', 'room-lighting', 'livekit', 'chat-history', 'voice-messages'],
+    fastLoadEnabled: true, // Preconnect & preload hints for faster loading
+    rendererConfigHijackEnabled: false,
+    rendererConfigOverrides: {},
+    uiConfigOverrides: {},
+    packetMacros: '[]', // JSON string of macros
+    ignoredOutgoingHeaders: '[]', // JSON string of header IDs
+    ignoredIncomingHeaders: '[]', // JSON string of header IDs
+    featureOrder: ['online-count', 'gif-blocker', 'bubble-alerts', 'chat-history', 'room-lighting', 'livekit', 'browser', 'voice-messages', 'renderer-config', 'packet-tools'],
     collapsedFeatures: {},
   };
 
@@ -485,6 +493,41 @@
           --kuplafix-border: #364951;
         }
 
+        /* Custom Scrollbar */
+        .kuplafix-menu::-webkit-scrollbar,
+        .kuplafix-console-content::-webkit-scrollbar,
+        .pb-header-dropdown::-webkit-scrollbar,
+        .kuplafix-chat-history-content::-webkit-scrollbar,
+        #pb-content::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .kuplafix-menu::-webkit-scrollbar-track,
+        .kuplafix-console-content::-webkit-scrollbar-track,
+        .pb-header-dropdown::-webkit-scrollbar-track,
+        .kuplafix-chat-history-content::-webkit-scrollbar-track,
+        #pb-content::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.1);
+          border-radius: 10px;
+        }
+
+        .kuplafix-menu::-webkit-scrollbar-thumb,
+        .kuplafix-console-content::-webkit-scrollbar-thumb,
+        .pb-header-dropdown::-webkit-scrollbar-thumb,
+        .kuplafix-chat-history-content::-webkit-scrollbar-thumb,
+        #pb-content::-webkit-scrollbar-thumb {
+          background: var(--kuplafix-border);
+          border-radius: 10px;
+        }
+
+        .kuplafix-menu::-webkit-scrollbar-thumb:hover,
+        .kuplafix-console-content::-webkit-scrollbar-thumb:hover,
+        .pb-header-dropdown::-webkit-scrollbar-thumb:hover,
+        .kuplafix-chat-history-content::-webkit-scrollbar-thumb:hover,
+        #pb-content::-webkit-scrollbar-thumb:hover {
+          background: var(--kuplafix-accent);
+        }
+
         .kuplafix-menu {
           position: fixed;
           top: 50%;
@@ -494,14 +537,14 @@
           border: 1px solid var(--kuplafix-border);
           border-radius: 8px;
           color: white;
-          padding: 18px;
+          padding: 15px;
           width: 92%;
           max-width: 440px;
           z-index: 99999;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
           max-height: 80vh;
-          overflow-y: scroll;
+          overflow-y: auto;
         }
 
         .kuplafix-menu-header {
@@ -539,7 +582,6 @@
         /* Place the close button as a hoverable control in the top-right corner of the menu */
         .kuplafix-close-btn {
           position: absolute;
-          top: 8px;
           right: 8px;
           background: transparent;
           color: #ffffff;
@@ -775,6 +817,48 @@
           border-color: #c0392b !important;
         }
 
+        /* Custom checkbox styling for macros */
+        .kuplafix-macro-checkbox {
+          appearance: none;
+          -webkit-appearance: none;
+          width: 16px;
+          height: 16px;
+          border: 2px solid rgba(124, 177, 200, 0.4);
+          border-radius: 3px;
+          background: rgba(12, 18, 22, 0.8);
+          cursor: pointer;
+          position: relative;
+          flex-shrink: 0;
+          transition: all 0.2s ease;
+        }
+
+        .kuplafix-macro-checkbox:hover {
+          border-color: rgba(124, 177, 200, 0.7);
+          background: rgba(12, 18, 22, 0.95);
+        }
+
+        .kuplafix-macro-checkbox:checked {
+          background: var(--kuplafix-accent);
+          border-color: var(--kuplafix-accent);
+        }
+
+        .kuplafix-macro-checkbox:checked::after {
+          content: '✓';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: bold;
+          line-height: 1;
+        }
+
+        .kuplafix-macro-checkbox:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
         .kuplafix-options-buttons {
           display: flex;
           gap: 8px;
@@ -942,6 +1026,8 @@
           position: relative !important;
           z-index: auto !important;
           margin: 0 !important;
+          pointer-events: auto !important;
+          cursor: pointer !important;
         }
 
         /* Event Invite Notification Styling */
@@ -1008,6 +1094,178 @@
           background: var(--kuplafix-accent);
         }
 
+        /* Console Log Styles */
+        .kuplafix-console {
+          background: #0c1216;
+          border: 1px solid var(--kuplafix-border);
+          border-radius: 4px;
+          font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+          font-size: 11px;
+          color: #cbd6dc;
+          height: 400px;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        .kuplafix-console-header {
+          background: rgba(23, 111, 143, 0.15);
+          border-bottom: 1px solid var(--kuplafix-border);
+          padding: 4px 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .kuplafix-console-content {
+          flex: 1;
+          overflow-y: auto;
+          padding: 4px 0;
+          scroll-behavior: smooth;
+        }
+
+        .kuplafix-console-line {
+          padding: 2px 8px;
+          border-bottom: 1px solid rgba(54, 73, 81, 0.2);
+          display: flex;
+          gap: 8px;
+          cursor: pointer;
+          transition: background 0.1s;
+          white-space: nowrap;
+        }
+
+        .kuplafix-console-line:hover {
+          background: rgba(23, 111, 143, 0.1);
+        }
+
+        .kuplafix-console-time {
+          color: #5c707a;
+          flex-shrink: 0;
+          width: 55px;
+        }
+
+        .kuplafix-console-id {
+          color: #7cb1c8;
+          font-weight: bold;
+          flex-shrink: 0;
+          width: 40px;
+        }
+
+        .kuplafix-console-name {
+          color: #fff;
+          flex-shrink: 0;
+          width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .kuplafix-console-hex {
+          color: #888;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* Searchable Dropdown Styles */
+        .pb-header-search-container {
+          position: relative;
+          width: 100%;
+        }
+
+        .pb-header-dropdown {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: #1a2429;
+          border: 1px solid var(--kuplafix-border);
+          border-top: none;
+          max-height: 300px;
+          overflow-y: auto;
+          z-index: 1000;
+          display: none;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .pb-header-dropdown.open {
+          display: block;
+        }
+
+        .pb-header-item {
+          padding: 6px 10px;
+          cursor: pointer;
+          font-size: 12px;
+          color: #cbd6dc;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .pb-header-item:hover {
+          background: var(--kuplafix-primary);
+          color: #fff;
+        }
+
+        .pb-header-item-id {
+          color: #7cb1c8;
+          font-weight: bold;
+          font-family: monospace;
+        }
+
+        /* In-Game Browser Styles */
+        .kuplafix-browser {
+          position: fixed;
+          background: var(--kuplafix-bg);
+          border: 1px solid var(--kuplafix-border);
+          border-radius: 8px;
+          z-index: 100002;
+          display: flex;
+          flex-direction: column;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
+          width: 800px;
+          height: 600px;
+          resize: both;
+          min-width: 320px;
+          min-height: 240px;
+        }
+
+        /* Fix white corner on resize handle/scrollbars */
+        .kuplafix-browser::-webkit-scrollbar { width: 8px; height: 8px; }
+        .kuplafix-browser::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .kuplafix-browser::-webkit-scrollbar-thumb { background: var(--kuplafix-border); border-radius: 4px; }
+        .kuplafix-browser::-webkit-scrollbar-corner { background: transparent; }
+
+        .kuplafix-browser-header {
+          background: rgba(23, 111, 143, 0.15);
+          border-bottom: 1px solid var(--kuplafix-border);
+          padding: 8px 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: move;
+        }
+
+        .kuplafix-browser-title {
+            font-size: 13px;
+            color: #cbd6dc;
+            font-weight: 600;
+        }
+
+        .kuplafix-browser-content {
+            flex: 1;
+            background: #000;
+            position: relative;
+        }
+
+        .kuplafix-browser iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            color-scheme: dark;
+            background-color: #1a2429; /* Dark background to prevent white flash/corners */
+        }
+        
         #kuplafix-notification-clones .nitro-notification-bubble:hover {
           border-color: rgba(124, 177, 200, 0.6) !important;
           box-shadow: 0 4px 16px rgba(23, 111, 143, 0.3) !important;
@@ -1269,11 +1527,21 @@
           pointer-events: none;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
           animation: kuplafix-popup-appear 0.2s ease-out;
+          transition: opacity 0.3s;
         }
 
         @keyframes kuplafix-popup-appear {
           from { opacity: 0; transform: scale(0.9); }
           to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes kuplafix-toast-appear {
+          from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .kuplafix-toast {
+          animation: kuplafix-toast-appear 0.3s ease-out !important;
         }
 
         .kuplafix-chat-history-content .d-flex.p-1 {
@@ -1468,6 +1736,22 @@
           opacity: 0.9;
         }
 
+        .nitro-chat-input-container .nitro-chat-input-control {
+            font-size: 14px;
+            margin-left: 5px;
+            margin-top: 3px;
+            outline: none;
+            background: transparent;
+            border-color: transparent;
+            color: #fff;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+
+        .nitro-chat-input-container.has-voice-button .nitro-chat-input-control {
+            width: 50% !important;
+        }
+
         /* Voice button docked inside chat input next to emoji/gif selectors */
         .nitro-chat-input-container .kuplafix-voice-holder {
           position: absolute;
@@ -1548,6 +1832,7 @@
           align-items: center;
           gap: 10px;
           padding-bottom: 0;
+          min-height: 26px;
         }
 
         .kuplafix-drag-handle {
@@ -1838,7 +2123,7 @@
       // Check for pending update
       const pendingUpdate = GM_getValue('kuplafix_pending_update', null);
       let subtitleHtml = `kuplafix ${SCRIPT_VERSION} - uusin`;
-      if (pendingUpdate && SCRIPT_VERSION !== pendingUpdate) {
+      if (pendingUpdate && UpdateChecker.isNewerVersion(pendingUpdate, SCRIPT_VERSION)) {
         subtitleHtml = `
           <a href="${UpdateChecker.GREASYFORK_URL}" target="_blank" style="
             color: #7cb1c8;
@@ -2102,10 +2387,51 @@
             </div>
           `
         },
+        'renderer-config': {
+          title: 'client muokkaus',
+          description: 'muokkaa pelin renderer-config.json tiedostoa ennen latausta.',
+          toggleId: 'kf-renderer-config',
+          configKey: 'rendererConfigHijackEnabled',
+          settingsBtn: `<button class="kuplafix-btn-secondary" id="kuplafix-options-renderer-config" title="Muokkaa muuttujia">Asetukset</button>`,
+          content: `
+            <div class="kuplafix-feature-options-panel" id="kuplafix-panel-renderer-config">
+              <form class="kuplafix-options-form" id="kuplafix-form-renderer-config">
+                <div style="margin-bottom: 8px;">
+                  <label class="kuplafix-options-label" style="display: block; margin-bottom: 4px;">Renderer Config (JSON):</label>
+                  <textarea id="kuplafix-renderer-overrides" style="width: 100%; height: 60px; background: rgba(0,0,0,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-family: monospace; font-size: 11px; padding: 4px; resize: vertical;" placeholder='{"system.packet.log": true}'>${JSON.stringify(config.get('rendererConfigOverrides') || {}, null, 2)}</textarea>
+                </div>
+                <div style="margin-bottom: 8px;">
+                  <label class="kuplafix-options-label" style="display: block; margin-bottom: 4px;">UI Config (JSON):</label>
+                  <textarea id="kuplafix-ui-overrides" style="width: 100%; height: 60px; background: rgba(0,0,0,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-family: monospace; font-size: 11px; padding: 4px; resize: vertical;" placeholder='{"catalog.links.enabled": false}'>${JSON.stringify(config.get('uiConfigOverrides') || {}, null, 2)}</textarea>
+                </div>
+                <button type="submit" class="kuplafix-btn">Tallenna muuttujat</button>
+              </form>
+            </div>
+            <div class="kuplafix-feature-status-row">
+              <div class="kuplafix-feature-status">
+                Muuttujia: ${Object.keys(config.get('rendererConfigOverrides') || {}).length + Object.keys(config.get('uiConfigOverrides') || {}).length} kpl
+              </div>
+            </div>
+          `
+        },
+        'packet-tools': {
+          title: 'packet tools',
+          description: 'työkaluja pakettien lähettämiseen ja tutkimiseen.',
+          headerBtn: '<button id="kuplafix-open-builder-header" class="kuplafix-btn" style="padding: 2px 8px; font-size: 11px; height: auto;">Packet Builder</button>',
+          content: ''
+        },
+        'browser': {
+          title: 'kupla etusivu -nappi',
+          description: 'lisää painike vasempaan valikkoon, josta voit selata etusivua poistumatta pelistä.',
+          toggleId: 'kf-browser',
+          configKey: 'browserEnabled',
+          settingsBtn: `<button class="kuplafix-btn-secondary" id="kuplafix-open-browser-now">Avaa</button>`,
+          content: ``
+        }
       };
 
       // Generate HTML based on order
-      let featureOrder = config.get('featureOrder') || ['online-count', 'gif-blocker', 'bubble-alerts', 'room-lighting', 'livekit', 'chat-history'];
+      let featureOrder = config.get('featureOrder') || ['online-count', 'gif-blocker', 'browser', 'bubble-alerts', 'room-lighting', 'livekit', 'chat-history', 'voice-messages', 'renderer-config', 'packet-tools'];
       
       // Ensure all defined features are in the list (in case config is stale)
       const definedFeatures = Object.keys(features);
@@ -2130,11 +2456,14 @@
               <div class="kuplafix-feature-title">${f.title}</div>
             </div>
             <div class="kuplafix-header-controls">
+              ${f.headerBtn || ''}
+              ${f.toggleId ? `
               <label class="kuplafix-toggle" title="Ota ominaisuus käyttöön tai pois">
                 <input type="checkbox" id="${f.toggleId}" ${isEnabled ? 'checked' : ''}>
                 <span class="kuplafix-toggle-slider"></span>
               </label>
-              <button class="kuplafix-minimize-btn" title="${isCollapsed ? 'Laajenna' : 'Pienennä'}">▼</button>
+              ` : ''}
+              ${(f.content || f.settingsBtn) ? `<button class="kuplafix-minimize-btn" title="${isCollapsed ? 'Laajenna' : 'Pienennä'}">▼</button>` : ''}
             </div>
           </div>
           <div class="kuplafix-feature-content">
@@ -2159,7 +2488,7 @@
           ${featuresHtml}
         </div>
 
-        <div class="kuplafix-menu-footer">
+        <div class="kuplafix-menu-footer" style="padding-top:15px; margin-top:15px; border-top:1px solid var(--kuplafix-border);">
           <button class="kuplafix-btn" id="kuplafix-reset-btn" style="width: 100%; background: #7f8c8d; cursor: pointer;">Palauta oletukset</button>
         </div>
       `;
@@ -2167,6 +2496,12 @@
       (targetDoc.body || targetDoc.documentElement).appendChild(menu);
       this.configMenu = menu;
       log.info('✓ Config menu opened');
+
+      // Bind handlers
+      const browserBtn = targetDoc.getElementById('kuplafix-open-browser-now');
+      if (browserBtn) {
+          browserBtn.onclick = () => Browser.open();
+      }
 
       this.applyStoredPosition(menu, targetDoc);
       const viewForPosition = targetDoc.defaultView || window;
@@ -2290,14 +2625,34 @@
         });
       };
 
-      const onlineCount = menu.querySelector('#kf-online-count');
-      if (onlineCount) {
-        onlineCount.addEventListener('change', (e) => {
-          config.set('onlineCountEnabled', e.target.checked);
-          ChatEnhancements.refreshState(true);
-        });
-      }
+      // Helper for toggle binding
+      const bindFeatureToggle = (id, configKey, name, callback) => {
+        const toggle = menu.querySelector('#' + id);
+        if (toggle) {
+          toggle.addEventListener('change', (e) => {
+            const enabled = e.target.checked;
+            config.set(configKey, enabled);
+            UI.showToast(`${name} ${enabled ? 'käytössä' : 'pois käytöstä'}`);
+            if (callback) callback(enabled);
+          });
+        }
+      };
 
+      bindFeatureToggle('kf-online-count', 'onlineCountEnabled', 'Kävijämäärä', () => {
+        ChatEnhancements.refreshState(true);
+      });
+
+      bindFeatureToggle('kf-browser', 'browserEnabled', 'Kupla Etusivu', (enabled) => {
+        if (typeof Browser !== 'undefined') {
+          if (enabled) {
+            Browser.addButton();
+          } else {
+            Browser.removeButton();
+            Browser.closeWindow(); // Close window if disabling feature
+          }
+        }
+      });
+      
       const onlineOptionsBtn = menu.querySelector('#kuplafix-options-online-count');
       const onlineOptionsPanel = menu.querySelector('#kuplafix-panel-online-count');
       const onlineOptionsForm = menu.querySelector('#kuplafix-form-online-count');
@@ -2339,6 +2694,7 @@
           onlineOptionsPanel.classList.remove('kuplafix-open');
           onlineOptionsBtn.classList.remove('kuplafix-active');
           ChatEnhancements.refreshState(true);
+          UI.showToast('Päivitysväli tallennettu.');
         });
       }
 
@@ -2357,12 +2713,9 @@
         });
       }
 
-      const gifBlockerToggle = menu.querySelector('#kf-gif-blocker');
-      if (gifBlockerToggle) {
-        gifBlockerToggle.addEventListener('change', (e) => {
-          GifBlocker.toggleFeature(e.target.checked);
-        });
-      }
+      bindFeatureToggle('kf-gif-blocker', 'gifBlockerEnabled', 'GIF-esto', (enabled) => {
+          GifBlocker.toggleFeature(enabled);
+      });
 
       const gifBlockerOptionsBtn = menu.querySelector('#kuplafix-options-gif-blocker');
       const gifBlockerPanel = menu.querySelector('#kuplafix-panel-gif-blocker');
@@ -2417,6 +2770,7 @@
                 gifStatusLabel.textContent = `Sallitut: ${updated.length}`;
               });
             });
+            UI.showToast(`Käyttäjä ${username} lisätty sallittuihin.`);
           }
           
           gifUsernameInput.value = '';
@@ -2506,17 +2860,13 @@
         RoomLighting.refresh();
       };
 
-      if (roomLightingToggle) {
-        roomLightingToggle.addEventListener('change', (e) => {
-          const enabled = e.target.checked;
-          config.set('roomLightingEnabled', enabled);
-          if (enabled) {
-            RoomLighting.refresh();
-          } else {
-            RoomLighting.clear();
-          }
-        });
-      }
+      bindFeatureToggle('kf-room-lighting', 'roomLightingEnabled', 'Huonevalaistus', (enabled) => {
+        if (enabled) {
+          RoomLighting.refresh();
+        } else {
+          RoomLighting.clear();
+        }
+      });
 
       if (roomLightingOptionsBtn && roomLightingPanel) {
         roomLightingOptionsBtn.addEventListener('click', () => {
@@ -2553,6 +2903,7 @@
         roomLightingForm.addEventListener('submit', (e) => {
           e.preventDefault();
           applyRoomLighting();
+          UI.showToast('Huonevalaistuksen asetukset tallennettu.');
         });
       }
 
@@ -2600,31 +2951,22 @@
       updateRoomStatus();
 
       // Bubble Alerts handlers
-      const bubbleAlertsToggle = menu.querySelector('#kf-bubble-alerts');
-      if (bubbleAlertsToggle) {
-        bubbleAlertsToggle.addEventListener('change', (e) => {
-          config.set('bubbleAlertsEnabled', e.target.checked);
-          BubbleAlerts.init();
-        });
-      }
+      bindFeatureToggle('kf-bubble-alerts', 'bubbleAlertsEnabled', 'Kuplailmoitukset', () => {
+        BubbleAlerts.init();
+      });
 
       // LiveKit handler
-      const livekitToggle = menu.querySelector('#kf-livekit');
-      if (livekitToggle) {
-        livekitToggle.addEventListener('change', (e) => {
-          const enabled = e.target.checked;
-          config.set('livekitEnabled', enabled);
-          const statusLabel = menu.querySelector('[data-role="livekit-status"]');
-          if (statusLabel) {
-            statusLabel.textContent = enabled ? 'Käytössä' : 'Pois käytöstä';
-          }
-          if (enabled) {
-            LiveKit.addButton();
-          } else {
-            LiveKit.removeButton();
-          }
-        });
-      }
+      bindFeatureToggle('kf-livekit', 'livekitEnabled', 'LiveKit', (enabled) => {
+        const statusLabel = menu.querySelector('[data-role="livekit-status"]');
+        if (statusLabel) {
+          statusLabel.textContent = enabled ? 'Käytössä' : 'Pois käytöstä';
+        }
+        if (enabled) {
+          LiveKit.addButton();
+        } else {
+          LiveKit.removeButton();
+        }
+      });
 
       const livekitOptionsBtn = menu.querySelector('#kuplafix-options-livekit');
       const livekitPanel = menu.querySelector('#kuplafix-panel-livekit');
@@ -2651,7 +2993,7 @@
           config.set('livekitTokenEndpoint', url);
           livekitPanel.classList.remove('kuplafix-open');
           livekitOptionsBtn.classList.remove('kuplafix-active');
-          alert('LiveKit-tokenin päätepiste tallennettu.');
+          UI.showToast('LiveKit-tokenin päätepiste tallennettu.');
         });
       }
 
@@ -2724,16 +3066,12 @@
       });
 
       // Chat History handlers
-      const chatHistoryToggle = menu.querySelector('#kf-chat-history');
-      if (chatHistoryToggle) {
-        chatHistoryToggle.addEventListener('change', (e) => {
-          config.set('chatHistoryCacheEnabled', e.target.checked);
-          if (e.target.checked) {
-            ChatHistoryCache.init();
-            ChatHistoryUI.init();
-          }
-        });
-      }
+      bindFeatureToggle('kf-chat-history', 'chatHistoryCacheEnabled', 'Chat-historia', (enabled) => {
+        if (enabled) {
+          ChatHistoryCache.init();
+          ChatHistoryUI.init();
+        }
+      });
 
       const chatHistoryOptionsBtn = menu.querySelector('#kuplafix-options-chat-history');
       const chatHistoryPanel = menu.querySelector('#kuplafix-panel-chat-history');
@@ -2778,6 +3116,7 @@
           
           chatHistoryPanel.classList.remove('kuplafix-open');
           chatHistoryOptionsBtn.classList.remove('kuplafix-active');
+          UI.showToast('Välimuistin asetukset tallennettu.');
         });
       }
       
@@ -2785,24 +3124,19 @@
         chatClearBtn.addEventListener('click', () => {
           if (confirm('Haluatko varmasti tyhjentää viestihistorian välimuistin?')) {
             ChatHistoryCache.clearCache();
-            alert('Välimuisti tyhjennetty.');
+            UI.showToast('Välimuisti tyhjennetty.');
           }
         });
       }
 
       // Voice messages toggle
-      const voiceToggle = menu.querySelector('#kf-voice-messages');
-      if (voiceToggle) {
-        voiceToggle.addEventListener('change', (e) => {
-          const enabled = e.target.checked;
-          config.set('voiceMessagesEnabled', enabled);
-          if (enabled) {
-            VoiceMessages.init();
-          } else {
-            VoiceMessages.teardown?.();
-          }
-        });
-      }
+      bindFeatureToggle('kf-voice-messages', 'voiceMessagesEnabled', 'Ääniviestit', (enabled) => {
+        if (enabled) {
+          VoiceMessages.init();
+        } else {
+          VoiceMessages.teardown?.();
+        }
+      });
 
       // Voice messages options
       const voiceOptionsBtn = menu.querySelector('#kuplafix-options-voice-messages');
@@ -2842,10 +3176,113 @@
           } catch (_) {
             // ignore
           }
+          UI.showToast(`Tallennuspainike ${hide ? 'piilotettu' : 'näkyvissä'}.`);
         });
       }
+
+      // Renderer Config options
+      const rendererOptionsBtn = menu.querySelector('#kuplafix-options-renderer-config');
+      const rendererPanel = menu.querySelector('#kuplafix-panel-renderer-config');
+      const rendererForm = menu.querySelector('#kuplafix-form-renderer-config');
+      const rendererOverridesTextarea = menu.querySelector('#kuplafix-renderer-overrides');
+      const uiOverridesTextarea = menu.querySelector('#kuplafix-ui-overrides');
+
+      if (rendererOptionsBtn && rendererPanel) {
+        rendererOptionsBtn.addEventListener('click', () => {
+          closeOtherPanels(rendererPanel);
+          const opened = rendererPanel.classList.toggle('kuplafix-open');
+          if (opened) {
+            rendererOptionsBtn.classList.add('kuplafix-active');
+          } else {
+            rendererOptionsBtn.classList.remove('kuplafix-active');
+          }
+        });
+      }
+
+      if (rendererForm && rendererOverridesTextarea && uiOverridesTextarea) {
+        rendererForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          try {
+            const rVal = rendererOverridesTextarea.value.trim();
+            const uVal = uiOverridesTextarea.value.trim();
+            
+            const rParsed = JSON.parse(rVal);
+            const uParsed = JSON.parse(uVal);
+            
+            config.set('rendererConfigOverrides', rParsed);
+            config.set('uiConfigOverrides', uParsed);
+            
+            UI.showToast('Muuttujat tallennettu. Päivitä sivu (F5) jotta muutokset tulevat voimaan.');
+          } catch (err) {
+            UI.showToast('Virheellinen JSON-muoto: ' + err.message, 'error');
+          }
+        });
+      }
+
+      bindFeatureToggle('kf-renderer-config', 'rendererConfigHijackEnabled', 'Renderöijän konfiguraatio', (enabled) => {
+        if (enabled) {
+          ConfigHijacker.init();
+        }
+      });
+
+      // Packet Tools Listeners
+      const openBuilderBtn = menu.querySelector('#kuplafix-open-builder-header');
+      if (openBuilderBtn) {
+        log.debug('Packet Builder button found, attaching listener');
+        openBuilderBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          log.info('Packet Builder button clicked');
+          try {
+              if (typeof PacketBuilder !== 'undefined') {
+                  PacketBuilder.toggle();
+              } else {
+                  log.error('PacketBuilder not found');
+                  UI.showToast('Internal Error: PacketBuilder not found', 'error');
+              }
+          } catch (err) {
+              log.error('Error opening PacketBuilder:', err);
+          }
+        });
+      } else {
+          log.warn('Packet Builder button NOT found in menu');
+      }
+
+      bindFeatureToggle('kuplafix-packet-logging', 'packetLoggingEnabled', 'Pakettiloki', (enabled) => {
+          PacketManager.loggingEnabled = enabled;
+      });
       
       log.debug('Config menu event handlers attached');
+    },
+
+    showToast(message, type = 'info', docRef = document) {
+      const doc = docRef || document;
+      const existing = doc.querySelector('.kuplafix-toast');
+      if (existing) existing.remove();
+
+      const toast = doc.createElement('div');
+      toast.className = 'kuplafix-timestamp-popup kuplafix-toast';
+      if (type === 'error') toast.style.background = 'rgba(220, 53, 69, 0.95)';
+      toast.textContent = message;
+      
+      toast.style.position = 'fixed';
+      toast.style.bottom = '5%';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.zIndex = '100000000';
+      toast.style.pointerEvents = 'none';
+      toast.style.transition = 'opacity 0.3s, transform 0.3s';
+      
+      (doc.body || doc.documentElement).appendChild(toast);
+
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(-50%) translateY(10px) scale(0.9)';
+          setTimeout(() => {
+            if (toast.parentElement) toast.remove();
+          }, 300);
+        }
+      }, 3000);
     },
 
     makeDraggable(element, handle, docRef = document, onDragEnd) {
@@ -2861,6 +3298,11 @@
         e.preventDefault();
         pos3 = e.clientX;
         pos4 = e.clientY;
+        
+        // Prevent text selection while dragging
+        docRef.body.style.userSelect = 'none';
+        docRef.body.style.webkitUserSelect = 'none';
+
         const rect = element.getBoundingClientRect();
         element.style.transform = 'translate(0, 0)';
         element.style.left = `${rect.left}px`;
@@ -2893,6 +3335,11 @@
       function closeDragElement() {
         docRef.removeEventListener('mouseup', closeDragElement);
         docRef.removeEventListener('mousemove', elementDrag);
+        
+        // Restore text selection
+        docRef.body.style.userSelect = '';
+        docRef.body.style.webkitUserSelect = '';
+
         if (typeof onDragEnd === 'function') {
           onDragEnd(element, docRef);
         }
@@ -3280,6 +3727,7 @@
           // Don't show a separate notification - just show in menu
         } else {
           log.debug(`Already on latest version (${currentVersion})`);
+          GM_deleteValue('kuplafix_pending_update');
         }
       } catch (err) {
         log.warn('Error parsing update information:', err);
@@ -3682,13 +4130,13 @@
     async init() {
       log.debug('RoomLighting.init()');
       await DOM.ready;
-      this.refresh();
-      this.setupObservers();
+      this.setupObserversForDoc(document);
+      this.applyToDoc(document);
 
-      DOM.onNitroIframeDocReady(() => {
-        log.debug('RoomLighting: reapplying filters on iframe ready');
-        this.refresh();
-        this.setupObservers();
+      DOM.onNitroIframeDocReady((iframeDoc) => {
+        log.debug('RoomLighting: iframe doc ready');
+        this.setupObserversForDoc(iframeDoc);
+        this.applyToDoc(iframeDoc);
       });
     },
 
@@ -3700,26 +4148,26 @@
       return docs;
     },
 
-    setupObservers() {
-      this.teardown();
-      this.getDocs().forEach((docRef) => {
-        const target = docRef.body || docRef.documentElement;
-        if (!target) return;
+    setupObserversForDoc(docRef) {
+      if (this.observers.has(docRef)) return; // Already observing this doc
+      
+      const target = docRef.body || docRef.documentElement;
+      if (!target) return;
 
-        const observer = new MutationObserver(() => {
-          if (!this.isEnabled()) return;
-          const pending = this.pendingApply.get(docRef);
-          if (pending) clearTimeout(pending);
-          const handle = setTimeout(() => {
-            this.pendingApply.delete(docRef);
-            this.applyToDoc(docRef);
-          }, 120);
-          this.pendingApply.set(docRef, handle);
-        });
-
-        observer.observe(target, { childList: true, subtree: true });
-        this.observers.set(docRef, observer);
+      const observer = new MutationObserver(() => {
+        if (!this.isEnabled()) return;
+        const pending = this.pendingApply.get(docRef);
+        if (pending) clearTimeout(pending);
+        const handle = setTimeout(() => {
+          this.pendingApply.delete(docRef);
+          this.applyToDoc(docRef);
+        }, 120);
+        this.pendingApply.set(docRef, handle);
       });
+
+      observer.observe(target, { childList: true, subtree: true });
+      this.observers.set(docRef, observer);
+      log.debug('RoomLighting observer attached to document');
     },
 
     teardown() {
@@ -4351,10 +4799,14 @@
         removeAnimations(clonedBubble);
         
         // Add click-to-dismiss on the clone
-        const clickHandler = () => {
-          this.removeClone(cloneId);
+        const clickHandler = (e) => {
+          if (e.shiftKey) {
+            this.removeAllClones();
+          } else {
+            this.removeClone(cloneId);
+          }
         };
-        clonedBubble.addEventListener('click', clickHandler, { once: true });
+        clonedBubble.addEventListener('click', clickHandler);
         
         // Assemble structure: wrapper > animWrapper > bubble
         animWrapper.appendChild(clonedBubble);
@@ -4409,6 +4861,19 @@
           log.debug('Error removing clone:', e);
         }
       }, 260);
+    },
+
+    removeAllClones() {
+      // Get all clone IDs first to avoid modifying map during iteration
+      const cloneIds = Array.from(this.clonedNotifications.keys());
+      log.debug(`[CLONES] removeAllClones: removing ${cloneIds.length} clones`);
+      
+      // Remove each clone with a slight stagger for visual effect
+      cloneIds.forEach((cloneId, index) => {
+        setTimeout(() => {
+          this.removeClone(cloneId);
+        }, index * 30); // 30ms stagger between each
+      });
     },
 
     processAlert(alertElement) {
@@ -5141,13 +5606,11 @@
       await DOM.ready;
       
       this.loadCache();
-      this.startObserving();
+      this.setupWidgetWatcherForDoc(document);
 
-      // The chat widget is inside the Nitro iframe; re-check and ensure observers attach after iframe loads/reloads.
-      DOM.onNitroIframeDocReady(() => {
+      DOM.onNitroIframeDocReady((iframeDoc) => {
         try {
-          this.startObserving();
-          this.checkWidget();
+          this.setupWidgetWatcherForDoc(iframeDoc);
         } catch (_) {
           // ignore
         }
@@ -5191,38 +5654,37 @@
       this.saveTimeout = setTimeout(() => this.saveCache(), 2000);
     },
 
-    async startObserving() {
+    _widgetWatchers: new Map(),
+
+    setupWidgetWatcherForDoc(docRef) {
+      if (this._widgetWatchers.has(docRef)) return; // Already watching
+      
+      // Check immediately
       this.checkWidget();
 
-      const schedule = () => {
-        if (this._widgetDebounceHandle) return;
-        this._widgetDebounceHandle = setTimeout(() => {
-          this._widgetDebounceHandle = null;
-          this.checkWidget();
-        }, 250);
-      };
+      const target = docRef.body || docRef.documentElement;
+      if (!target) return;
 
-      if (!this._widgetObserver) {
-        this._widgetObserver = new MutationObserver(() => schedule());
-      }
-      try {
-        this._widgetObserver.observe(document.body || document.documentElement, {
-          childList: true,
-          subtree: true,
-          attributes: false,
-        });
-      } catch (_) {}
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === 1) {
+              if (node.classList?.contains('nitro-chat-widget')) {
+                this.checkWidget();
+                return;
+              }
+              if (node.querySelector?.('.nitro-chat-widget')) {
+                this.checkWidget();
+                return;
+              }
+            }
+          }
+        }
+      });
 
-      const iframeDoc = DOM.getIframeDoc();
-      if (iframeDoc?.body) {
-        try {
-          this._widgetObserver.observe(iframeDoc.body, {
-            childList: true,
-            subtree: true,
-            attributes: false,
-          });
-        } catch (_) {}
-      }
+      observer.observe(target, { childList: true, subtree: true });
+      this._widgetWatchers.set(docRef, observer);
+      log.debug('ChatHistoryCache widget watcher attached to document');
     },
 
     checkWidget() {
@@ -5274,11 +5736,61 @@
             
             // Update UI if open
             ChatHistoryUI.addMessage(msgData);
+            
+            // Check for shared macro in chat message
+            this.checkForSharedMacro(msgData);
           }
         } catch (e) {
           log.warn('Error processing bubble:', e);
         }
       }, 50);
+    },
+    
+    checkForSharedMacro(msgData) {
+        // Check if message contains KFM2: macro code
+        if (!msgData || !msgData.message) return;
+        
+        // Strip HTML tags to get plain text
+        const plainText = msgData.message.replace(/<[^>]*>/g, '');
+        
+        // Look for KFM2: marker
+        const kfmIndex = plainText.indexOf('KFM2:');
+        if (kfmIndex === -1) return;
+        
+        // Extract the base64 code after KFM2:
+        let code = '';
+        for (let i = kfmIndex + 5; i < plainText.length; i++) {
+            const c = plainText[i];
+            // Base64 chars + padding
+            if (/[A-Za-z0-9+/=]/.test(c)) {
+                code += c;
+            } else {
+                break;
+            }
+        }
+        
+        if (code.length < 10) return; // Too short to be valid
+        
+        const fullCode = 'KFM2:' + code;
+        
+        // Try to decode the macro
+        if (typeof PacketBuilder === 'undefined' || !PacketBuilder.decodeMacro) return;
+        
+        const macro = PacketBuilder.decodeMacro(fullCode);
+        if (!macro) {
+            log.debug('ChatCache: Found KFM2 code but failed to decode');
+            return;
+        }
+        
+        // Get sharer name from message data
+        const sharerName = msgData.username || 'Someone';
+        
+        log.info(`ChatCache: Detected shared macro "${macro.name}" from ${sharerName}`);
+        
+        // Show notification using PacketManager's function
+        if (typeof PacketManager !== 'undefined' && PacketManager.showMacroShareNotification) {
+            PacketManager.showMacroShareNotification(macro, fullCode, sharerName);
+        }
     },
 
     extractMessageData(container) {
@@ -5377,9 +5889,13 @@
     mediaRecorder: null,
     chunks: [],
     isRecording: false,
+    isSticky: false,
     wasCancelled: false,
     countdownHandle: null,
     recordingTimeout: null,
+    clickTimeout: null,
+    holdStarted: 0,
+    justStoppedSticky: false,
     countdownEndsAt: 0,
     observers: new Map(),
     monitoredDocs: new Set(),
@@ -5388,6 +5904,10 @@
       const doc = docRef || document;
       const selector = doc.getElementById('kuplafix-voice-selector');
       const holder = selector?.closest?.('.kuplafix-voice-holder');
+      
+      const container = doc.querySelector('.nitro-chat-input-container');
+      if (container) container.classList.remove('has-voice-button');
+
       if (holder?.isConnected) holder.remove();
       else if (selector?.isConnected) selector.remove();
 
@@ -5411,6 +5931,43 @@
       }
 
       this.attachFab(docRef);
+    },
+
+    showHelpPopup(event, docRef = document) {
+      const doc = docRef || document;
+      const existing = doc.querySelector('.kuplafix-voice-help-popup');
+      if (existing) existing.remove();
+
+      const popup = doc.createElement('div');
+      popup.className = 'kuplafix-timestamp-popup kuplafix-voice-help-popup';
+      popup.textContent = 'Pidä pohjassa nauhoittaaksesi tai tuplaklikkaa lukitaksesi nauhoituksen.';
+      
+      // Position it above the button
+      if (this.fab) {
+        const rect = this.fab.getBoundingClientRect();
+        const win = doc.defaultView || window;
+        popup.style.position = 'fixed';
+        popup.style.bottom = (win.innerHeight - rect.top + 10) + 'px';
+        popup.style.right = (win.innerWidth - rect.right) + 'px';
+        popup.style.left = 'auto';
+        popup.style.display = 'block';
+        popup.style.zIndex = '1000000';
+      } else {
+        const x = event.clientX || 0;
+        const y = event.clientY || 0;
+        popup.style.left = `${x - 180}px`;
+        popup.style.top = `${y - 45}px`;
+      }
+      
+      popup.style.pointerEvents = 'none';
+      (doc.body || doc.documentElement).appendChild(popup);
+      
+      setTimeout(() => {
+        popup.style.opacity = '0';
+        setTimeout(() => {
+          if (popup.parentElement) popup.remove();
+        }, 300);
+      }, 3000);
     },
 
     async init() {
@@ -5462,12 +6019,15 @@
         }
 
         if (container && (!this.fabWrapper || !container.contains(this.fabWrapper))) {
+          container.classList.add('has-voice-button');
           if (this.fabWrapper?.isConnected) this.fabWrapper.remove();
           const wrapper = doc.createElement('div');
           wrapper.className = 'cursor-pointer kuplafix-voice-holder';
           wrapper.appendChild(existing);
           this.insertWrapper(container, wrapper);
           this.fabWrapper = wrapper;
+        } else if (container) {
+          container.classList.add('has-voice-button');
         }
         return;
       }
@@ -5476,7 +6036,7 @@
       btn.id = 'kuplafix-voice-selector';
       btn.className = 'kuplafix-voice-selector';
       btn.type = 'button';
-      btn.title = 'Pidä pohjassa nauhoittaaksesi (max 4s / 100 merkkiä)';
+      btn.title = 'Klikkaa ohjeeseen, pidä pohjassa nauhoittaaksesi tai tuplaklikkaa lukitaksesi.';
 
       const progress = doc.createElement('div');
       progress.className = 'kuplafix-voice-progress';
@@ -5490,15 +6050,39 @@
       const start = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!this.isRecording) {
-          this.startRecording();
+        
+        if (this.isSticky) {
+          this.cancelRecording();
+          this.isSticky = false;
+          this.justStoppedSticky = true;
+          return;
         }
+
+        this.justStoppedSticky = false;
+        this.holdStarted = Date.now();
+        this.startRecording();
       };
 
       const stop = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (this.isRecording) {
+        
+        if (this.isSticky) return;
+        if (this.justStoppedSticky) {
+          this.justStoppedSticky = false;
+          return;
+        }
+
+        const duration = Date.now() - this.holdStarted;
+        if (duration < 300) {
+          this.cancelRecording();
+          if (this.clickTimeout) clearTimeout(this.clickTimeout);
+          this.clickTimeout = setTimeout(() => {
+            if (!this.isSticky && !this.justStoppedSticky) {
+              this.showHelpPopup(e, doc);
+            }
+          }, 300);
+        } else {
           this.stopRecording();
         }
       };
@@ -5506,12 +6090,24 @@
       btn.addEventListener('mousedown', start);
       btn.addEventListener('touchstart', start, { passive: false });
       btn.addEventListener('mouseup', stop);
-      btn.addEventListener('mouseleave', () => this.cancelRecording());
       btn.addEventListener('touchend', stop);
-      btn.addEventListener('touchcancel', () => this.cancelRecording());
+      btn.addEventListener('mouseleave', () => {
+        if (!this.isSticky) this.cancelRecording();
+      });
+      btn.addEventListener('touchcancel', () => {
+        if (!this.isSticky) this.cancelRecording();
+      });
+      btn.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.clickTimeout) clearTimeout(this.clickTimeout);
+        this.isSticky = true;
+        if (!this.isRecording) this.startRecording();
+      });
       btn.addEventListener('click', (e) => e.preventDefault());
 
       if (container) {
+        container.classList.add('has-voice-button');
         const wrapper = doc.createElement('div');
         wrapper.className = 'cursor-pointer kuplafix-voice-holder';
         wrapper.appendChild(btn);
@@ -5583,7 +6179,7 @@
     async startRecording() {
       if (this.isRecording) return;
       if (!navigator.mediaDevices?.getUserMedia) {
-        alert('Mikrofonia ei voitu käyttää (getUserMedia ei tuettu).');
+        UI.showToast('Mikrofonia ei voitu käyttää (getUserMedia ei tuettu).', 'error');
         return;
       }
 
@@ -5629,7 +6225,7 @@
         }, maxDuration + 50);
       } catch (err) {
         log.error('VoiceMessages: recording failed', err);
-        alert('Äänitys epäonnistui. Tarkista mikrofonin käyttöoikeudet.');
+        UI.showToast('Äänitys epäonnistui. Tarkista mikrofonin käyttöoikeudet.', 'error');
         this.isRecording = false;
         this.setFabState('idle');
         this.clearCountdown();
@@ -5639,6 +6235,7 @@
     stopRecording(force = false) {
       if (!this.mediaRecorder) return;
       this.isRecording = false;
+      this.isSticky = false;
       
       if (this.recordingTimeout) {
         clearTimeout(this.recordingTimeout);
@@ -5684,7 +6281,7 @@
           return;
         }
 
-        alert('Ääniviestiä ei voitu lähettää (upload epäonnistui).');
+        UI.showToast('Ääniviestiä ei voitu lähettää (upload epäonnistui).', 'error');
       } catch (err) {
         log.error('VoiceMessages: failed to process audio', err);
       }
@@ -6395,6 +6992,4021 @@
     },
   };
 
+  // ─────────────────────────────────────────────────────────────────
+  // Packet Manager (Interception & Injection)
+  // ─────────────────────────────────────────────────────────────────
+  const PacketManager = {
+    socket: null,
+    loggingEnabled: false,
+    outgoingHistory: [],
+    incomingHistory: [],
+    maxHistory: 50,
+    ignoredOutgoingHeaders: new Set(),
+    ignoredIncomingHeaders: new Set(),
+    macros: [],
+    macroExecuting: new Set(), // Prevent infinite loops
+    
+    // Known Header IDs (can be expanded)
+    HEADERS: {
+      OUTGOING: {
+        "ACHIEVEMENT_LIST": 219,
+        "AUTHENTICATION": -1,
+        "BOT_CONFIGURATION": 1986,
+        "BOT_PICKUP": 3323,
+        "BOT_PLACE": 1592,
+        "BOT_SKILL_SAVE": 2624,
+        "GET_CLUB_OFFERS": 3285,
+        "GET_CLUB_GIFT_INFO": 487,
+        "GET_CATALOG_INDEX": 1195,
+        "GET_CATALOG_PAGE": 412,
+        "CATALOG_PURCHASE": 3492,
+        "CATALOG_PURCHASE_GIFT": 1411,
+        "GET_PRODUCT_OFFER": 2594,
+        "CLIENT_LATENCY": 295,
+        "CLIENT_LATENCY_MEASURE": 96,
+        "CLIENT_POLICY": 26979,
+        "CLIENT_PONG": 2596,
+        "CLIENT_TOOLBAR_TOGGLE": 2313,
+        "CLIENT_VARIABLES": 1053,
+        "GET_CURRENT_TIMING_CODE": 2912,
+        "DESKTOP_NEWS": 1827,
+        "DESKTOP_VIEW": 105,
+        "GET_BUNDLE_DISCOUNT_RULESET": 223,
+        "EVENT_TRACKER": 3457,
+        "FIND_NEW_FRIENDS": 516,
+        "FURNITURE_ALIASES": 3898,
+        "FURNITURE_FLOOR_UPDATE": 248,
+        "FURNITURE_MULTISTATE": 99,
+        "FURNITURE_PICKUP": 3456,
+        "FURNITURE_PLACE": 1258,
+        "FURNITURE_POSTIT_PLACE": 2248,
+        "FURNITURE_POSTIT_SAVE_STICKY_POLE": 3283,
+        "FURNITURE_RANDOMSTATE": 3617,
+        "FURNITURE_WALL_MULTISTATE": 210,
+        "FURNITURE_WALL_UPDATE": 168,
+        "GAMES_INIT": 2914,
+        "GAMES_LIST": 741,
+        "ACCEPTGAMEINVITE": 3802,
+        "GAMEUNLOADEDMESSAGE": 3207,
+        "GETGAMEACHIEVEMENTSMESSAGE": 2399,
+        "GETGAMESTATUSMESSAGE": 3171,
+        "GETUSERGAMEACHIEVEMENTSMESSAGE": 389,
+        "JOINQUEUEMESSAGE": 1458,
+        "LEAVEQUEUEMESSAGE": 2384,
+        "RESETRESOLUTIONACHIEVEMENTMESSAGE": 3144,
+        "GETWEEKLYGAMEREWARDWINNERS": 1054,
+        "GAME2GETACCOUNTGAMESTATUSMESSAGE": 11,
+        "GAME2CHECKGAMEDIRECTORYSTATUSMESSAGE": 3259,
+        "GAME2EXITGAMEMESSAGE": 1445,
+        "GAME2GAMECHATMESSAGE": 2502,
+        "GAME2LOADSTAGEREADYMESSAGE": 2415,
+        "GAME2PLAYAGAINMESSAGE": 3196,
+        "GAME2REQUESTFULLSTATUSUPDATEMESSAGE": 1598,
+        "GAME2GETWEEKLYFRIENDSLEADERBOARD": 1232,
+        "GAME2GETWEEKLYLEADERBOARD": 2565,
+        "GET_GIFT_WRAPPING_CONFIG": 418,
+        "GROUP_ADMIN_ADD": 2894,
+        "GROUP_ADMIN_REMOVE": 722,
+        "GROUP_CREATE_OPTIONS": 798,
+        "GROUP_FAVORITE": 3549,
+        "GET_FORUM_STATS": 3149,
+        "GET_FORUM_THREADS": 873,
+        "GET_FORUMS_LIST": 436,
+        "GET_FORUM_MESSAGES": 232,
+        "GET_FORUM_THREAD": 3900,
+        "GET_UNREAD_FORUMS_COUNT": 2908,
+        "FORUM_MODERATE_MESSAGE": 286,
+        "FORUM_MODERATE_THREAD": 1397,
+        "FORUM_POST_MESSAGE": 3529,
+        "UPDATE_FORUM_READ_MARKER": 1855,
+        "UPDATE_FORUM_SETTINGS": 2214,
+        "FORUM_UPDATE_THREAD": 3045,
+        "GROUP_INFO": 2991,
+        "GROUP_DELETE": 1134,
+        "GROUP_MEMBER_REMOVE_CONFIRM": 3593,
+        "GROUP_MEMBER_REMOVE": 593,
+        "GROUP_MEMBERS": 312,
+        "GROUP_MEMBERSHIPS": 367,
+        "GROUP_REQUEST": 998,
+        "GROUP_REQUEST_ACCEPT": 3386,
+        "GROUP_REQUEST_DECLINE": 1894,
+        "GROUP_SETTINGS": 1004,
+        "GROUP_PARTS": 813,
+        "GROUP_BUY": 230,
+        "GROUP_SAVE_INFORMATION": 3137,
+        "GROUP_SAVE_BADGE": 1991,
+        "GROUP_SAVE_COLORS": 1764,
+        "GROUP_SAVE_PREFERENCES": 3435,
+        "GROUP_BADGES": 21,
+        "GROUP_UNBLOCK_MEMBER": 2864,
+        "GET_BADGE_POINTS_LIMITS": 1371,
+        "REQUESTABADGE": 3077,
+        "GETISBADGEREQUESTFULFILLED": 1364,
+        "ITEM_CLOTHING_REDEEM": 3374,
+        "ITEM_COLOR_WHEEL_CLICK": 2144,
+        "ITEM_DICE_CLICK": 1990,
+        "ITEM_DICE_CLOSE": 1533,
+        "ITEM_DIMMER_SAVE": 1648,
+        "ITEM_DIMMER_SETTINGS": 2813,
+        "ITEM_DIMMER_TOGGLE": 2296,
+        "ITEM_EXCHANGE_REDEEM": 3115,
+        "ITEM_PAINT": 711,
+        "SET_OBJECT_DATA": 3608,
+        "ITEM_STACK_HELPER": 3839,
+        "ITEM_WALL_CLICK": 210,
+        "ITEM_WALL_UPDATE": 168,
+        "MARKETPLACE_CONFIG": 2597,
+        "ACCEPT_FRIEND": 137,
+        "MESSENGER_CHAT": 3567,
+        "DECLINE_FRIEND": 2890,
+        "FOLLOW_FRIEND": 3997,
+        "MESSENGER_FRIENDS": 1523,
+        "MESSENGER_INIT": 2781,
+        "MESSENGER_RELATIONSHIPS": 2138,
+        "SET_RELATIONSHIP_STATUS": 3768,
+        "REMOVE_FRIEND": 1689,
+        "REQUEST_FRIEND": 3157,
+        "GET_FRIEND_REQUESTS": 2448,
+        "SEND_ROOM_INVITE": 1276,
+        "HABBO_SEARCH": 1210,
+        "FRIEND_LIST_UPDATE": 1419,
+        "MOD_TOOL_USER_INFO": 3295,
+        "GET_USER_FLAT_CATS": 3027,
+        "NAVIGATOR_INIT": 2110,
+        "NAVIGATOR_SEARCH": 249,
+        "NAVIGATOR_SEARCH_CLOSE": 1834,
+        "NAVIGATOR_SEARCH_OPEN": 637,
+        "NAVIGATOR_SEARCH_SAVE": 2226,
+        "GET_USER_EVENT_CATS": 1782,
+        "NAVIGATOR_SETTINGS_SAVE": 3159,
+        "NAVIGATOR_CATEGORY_LIST_MODE": 1202,
+        "NAVIGATOR_DELETE_SAVED_SEARCH": 1954,
+        "PET_INFO": 2934,
+        "PET_PICKUP": 1581,
+        "PET_PLACE": 2647,
+        "PET_RESPECT": 3202,
+        "PET_RIDE": 1036,
+        "PET_MOVE": 3449,
+        "PET_OPEN_PACKAGE": 3698,
+        "PET_SELECTED": 549,
+        "PETS_BREED": 1638,
+        "PET_CANCEL_BREEDING": 2713,
+        "PET_CONFIRM_BREEDING": 3382,
+        "GET_PET_TRAINING_PANEL": 2161,
+        "RECYCLER_PRIZES": 398,
+        "RECYCLER_STATUS": 1342,
+        "RECYCLER_ITEMS": 2771,
+        "RELEASE_VERSION": 4000,
+        "CALL_FOR_HELP": 1691,
+        "ROOM_AMBASSADOR_ALERT": 2996,
+        "ROOM_BAN_GIVE": 1477,
+        "ROOM_BAN_LIST": 2267,
+        "ROOM_BAN_REMOVE": 992,
+        "ROOM_CREATE": 2752,
+        "ROOM_DELETE": 532,
+        "ROOM_DOORBELL": 1644,
+        "ROOM_ENTER": 2312,
+        "ROOM_FAVORITE": 3817,
+        "ROOM_FAVORITE_REMOVE": 309,
+        "CAN_CREATE_ROOM": 2128,
+        "CANCEL_ROOM_EVENT": 2725,
+        "EDIT_ROOM_EVENT": 3991,
+        "COMPETITION_ROOM_SEARCH": 433,
+        "FORWARD_TO_RANDOM_PROMOTED_ROOM": 10,
+        "FORWARD_TO_SOME_ROOM": 1703,
+        "GET_CATEGORIES_WITH_USER_COUNT": 3782,
+        "GET_GUEST_ROOM": 2230,
+        "GET_OFFICIAL_ROOMS": 1229,
+        "GET_POPULAR_ROOM_TAGS": 826,
+        "GUILD_BASE_SEARCH": 2930,
+        "MY_FAVOURITE_ROOMS_SEARCH": 2578,
+        "MY_FREQUENT_ROOM_HISTORY_SEARCH": 1002,
+        "MY_FRIENDS_ROOM_SEARCH": 2266,
+        "MY_GUILD_BASES_SEARCH": 39,
+        "MY_RECOMMENDED_ROOMS": 2537,
+        "MY_ROOM_HISTORY_SEARCH": 2264,
+        "MY_ROOM_RIGHTS_SEARCH": 272,
+        "MY_ROOMS_SEARCH": 2277,
+        "POPULAR_ROOMS_SEARCH": 2758,
+        "ROOM_AD_EVENT_TAB_CLICKED": 2412,
+        "ROOM_AD_EVENT_TAB_VIEWED": 2668,
+        "ROOM_AD_SEARCH": 2809,
+        "ROOM_TEXT_SEARCH": 3943,
+        "ROOMS_WHERE_MY_FRIENDS_ARE": 1786,
+        "ROOMS_WITH_HIGHEST_SCORE_SEARCH": 2939,
+        "SET_ROOM_SESSION_TAGS": 3305,
+        "UPDATE_ROOM_THUMBNAIL": 2468,
+        "ROOM_KICK": 1320,
+        "ROOM_LIKE": 3582,
+        "ROOM_MODEL": 2300,
+        "GET_OCCUPIED_TILES": 1687,
+        "GET_ROOM_ENTRY_TILE": 3559,
+        "ROOM_MODEL_SAVE": 875,
+        "ROOM_MUTE": 3637,
+        "ROOM_MUTE_USER": 3485,
+        "ROOM_RIGHTS_GIVE": 808,
+        "ROOM_RIGHTS_LIST": 3385,
+        "ROOM_RIGHTS_REMOVE": 2064,
+        "ROOM_RIGHTS_REMOVE_ALL": 2683,
+        "ROOM_RIGHTS_REMOVE_OWN": 3182,
+        "ROOM_SETTINGS": 3129,
+        "ROOM_SETTINGS_SAVE": 1969,
+        "ROOM_SETTINGS_UPDATE_ROOM_CATEGORY_AND_TRADE": 1265,
+        "ROOM_STAFF_PICK": 1918,
+        "ROOM_FILTER_WORDS": 1911,
+        "ROOM_FILTER_WORDS_MODIFY": 3001,
+        "MYSTERYBOXWAITINGCANCELEDMESSAGE": 2012,
+        "MYSTERYBOX_OPEN_TROPHY": 3074,
+        "SECURITY_MACHINE": 2490,
+        "SECURITY_TICKET": 2419,
+        "TRADE": 1481,
+        "TRADE_ACCEPT": 3863,
+        "TRADE_CANCEL": 2341,
+        "TRADE_CLOSE": 2551,
+        "TRADE_CONFIRM": 2760,
+        "TRADE_ITEM": 3107,
+        "TRADE_ITEM_REMOVE": 3845,
+        "TRADE_ITEMS": 1263,
+        "TRADE_UNACCEPT": 1444,
+        "UNIT_ACTION": 2456,
+        "UNIT_CHAT": 1314,
+        "UNIT_CHAT_SHOUT": 2085,
+        "UNIT_CHAT_WHISPER": 1543,
+        "UNIT_DANCE": 2080,
+        "UNIT_DROP_HAND_ITEM": 2814,
+        "UNIT_GIVE_HANDITEM": 2941,
+        "UNIT_LOOK": 3301,
+        "UNIT_POSTURE": 2235,
+        "UNIT_SIGN": 1975,
+        "UNIT_TYPING": 1597,
+        "UNIT_TYPING_STOP": 1474,
+        "UNIT_WALK": 3320,
+        "USER_BADGES": 2769,
+        "USER_BADGES_CURRENT": 2091,
+        "USER_BADGES_CURRENT_UPDATE": 644,
+        "USER_BOTS": 3848,
+        "USER_CURRENCY": 273,
+        "USER_EFFECT_ACTIVATE": 2959,
+        "USER_EFFECT_ENABLE": 1752,
+        "USER_FIGURE": 2730,
+        "USER_FURNITURE": 3150,
+        "REQUESTFURNIINVENTORYWHENNOTINROOM": 3500,
+        "USER_HOME_ROOM": 1740,
+        "USER_INFO": 357,
+        "USER_MOTTO": 2228,
+        "USER_IGNORED": 3878,
+        "USER_PETS": 3095,
+        "USER_PROFILE": 3265,
+        "USER_PROFILE_BY_NAME": 2249,
+        "USER_RESPECT": 2694,
+        "GET_SOUND_SETTINGS": 2388,
+        "USER_SETTINGS_CAMERA": 1461,
+        "USER_SETTINGS_CHAT_STYLE": 1030,
+        "USER_SETTINGS_INVITES": 1086,
+        "USER_SETTINGS_OLD_CHAT": 1262,
+        "USER_SETTINGS_VOLUME": 1367,
+        "USER_SUBSCRIPTION": 3166,
+        "GET_WARDROBE": 2742,
+        "SAVE_WARDROBE_OUTFIT": 800,
+        "USER_TAGS": 17,
+        "PEER_USERS_CLASSIFICATION": 1160,
+        "USER_CLASSIFICATION": 2285,
+        "VISIT_USER": 2970,
+        "WIRED_ACTION_SAVE": 2281,
+        "WIRED_APPLY_SNAPSHOT": 3373,
+        "WIRED_CONDITION_SAVE": 3203,
+        "WIRED_OPEN": 768,
+        "WIRED_TRIGGER_SAVE": 1520,
+        "GET_ITEM_DATA": 3964,
+        "ONE_WAY_DOOR_CLICK": 2765,
+        "REMOVE_WALL_ITEM": 3336,
+        "SET_ITEM_DATA": 3666,
+        "CATALOG_REDEEM_VOUCHER": 339,
+        "ROOM_TONER_APPLY": 2880,
+        "FRIEND_FURNI_CONFIRM_LOCK": 3775,
+        "MANNEQUIN_SAVE_NAME": 2850,
+        "MANNEQUIN_SAVE_LOOK": 2209,
+        "PRESENT_OPEN_PRESENT": 3558,
+        "CATALOG_SELECT_VIP_GIFT": 2276,
+        "USER_IGNORE_ID": 3314,
+        "USER_IGNORE": 1117,
+        "USER_UNIGNORE": 2061,
+        "MODTOOL_REQUEST_ROOM_INFO": 707,
+        "MODTOOL_CHANGE_ROOM_SETTINGS": 3260,
+        "MODTOOL_REQUEST_USER_CHATLOG": 1391,
+        "MODTOOL_REQUEST_ROOM_CHATLOG": 2587,
+        "MODTOOL_SANCTION_ALERT": 229,
+        "MODTOOL_SANCTION_BAN": 2766,
+        "MODTOOL_SANCTION_KICK": 2582,
+        "MODTOOL_SANCTION_TRADELOCK": 3742,
+        "MODTOOL_ALERTEVENT": 1840,
+        "MODTOOL_SANCTION_MUTE": 1945,
+        "MODTOOL_REQUEST_USER_ROOMS": 3526,
+        "MODTOOL_ROOM_ALERT": 3842,
+        "MODTOOL_PREFERENCES": 31,
+        "CLOSE_ISSUE_DEFAULT_ACTION": 2717,
+        "CLOSE_ISSUES": 2067,
+        "DEFAULT_SANCTION": 1681,
+        "GET_CFH_CHATLOG": 211,
+        "MODTOOL_SANCTION": 1392,
+        "PICK_ISSUES": 15,
+        "RELEASE_ISSUES": 1572,
+        "CONVERT_GLOBAL_ROOM_ID": 314,
+        "REQUEST_SELL_ITEM": 848,
+        "REQUEST_MARKETPLACE_ITEM_STATS": 3288,
+        "MARKETPLACE_SELL_ITEM": 3447,
+        "MARKETPLACE_REQUEST_OWN_ITEMS": 2105,
+        "MARKETPLACE_TAKE_BACK_ITEM": 434,
+        "MARKETPLACE_REDEEM_CREDITS": 2650,
+        "MARKETPLACE_REQUEST_OFFERS": 2407,
+        "MARKETPLACE_BUY_OFFER": 1603,
+        "MARKETPLACE_BUY_TOKENS": 1866,
+        "CATALOG_REQUESET_PET_BREEDS": 1756,
+        "APPROVE_NAME": 2109,
+        "UNIT_GIVE_HANDITEM_PET": 2768,
+        "PET_MOUNT": 1036,
+        "PET_SUPPLEMENT": 749,
+        "FURNITURE_GROUP_INFO": 2651,
+        "ACHIEVEMENT_RESOLUTION_OPEN": 359,
+        "USE_PET_PRODUCT": 1328,
+        "REMOVE_PET_SADDLE": 186,
+        "TOGGLE_PET_RIDING": 1472,
+        "TOGGLE_PET_BREEDING": 3379,
+        "UNSEEN_RESET_CATEGORY": 3493,
+        "UNSEEN_RESET_ITEMS": 2343,
+        "COMMUNITY_GOAL_VOTE_COMPOSER": 3536,
+        "GET_PROMO_ARTICLES": 1827,
+        "ACCEPT_QUEST": 3604,
+        "ACTIVATE_QUEST": 793,
+        "CANCEL_QUEST": 3133,
+        "FRIEND_REQUEST_QUEST_COMPLETE": 1148,
+        "GET_COMMUNITY_GOAL_EARNED_PRIZES": 2688,
+        "GET_COMMUNITY_GOAL_HALL_OF_FAME": 2167,
+        "GET_COMMUNITY_GOAL_PROGRESS": 1145,
+        "GET_CONCURRENT_USERS_GOAL_PROGRESS": 1343,
+        "GET_CONCURRENT_USERS_REWARD": 3872,
+        "GET_DAILY_QUEST": 2486,
+        "GET_QUESTS": 3333,
+        "GET_SEASONAL_QUESTS_ONLY": 1190,
+        "OPEN_QUEST_TRACKER": 2750,
+        "REDEEM_COMMUNITY_GOAL_PRIZE": 90,
+        "REJECT_QUEST": 2397,
+        "START_CAMPAIGN": 1697,
+        "GET_BONUS_RARE_INFO": 957,
+        "CRAFT": 3591,
+        "CRAFT_SECRET": 1251,
+        "GET_CRAFTABLE_PRODUCTS": 633,
+        "GET_CRAFTING_RECIPE": 1173,
+        "GET_CRAFTING_RECIPES_AVAILABLE": 3086,
+        "PHOTO_COMPETITION": 3959,
+        "PUBLISH_PHOTO": 2068,
+        "PURCHASE_PHOTO": 2408,
+        "RENDER_ROOM": 3226,
+        "RENDER_ROOM_THUMBNAIL": 1982,
+        "REQUEST_CAMERA_CONFIGURATION": 796,
+        "ADD_JUKEBOX_DISK": 753,
+        "GET_JUKEBOX_PLAYLIST": 1435,
+        "GET_NOW_PLAYING": 1325,
+        "GET_OFFICIAL_SONG_ID": 3189,
+        "GET_SONG_INFO": 3082,
+        "GET_SOUND_MACHINE_PLAYLIST": 3498,
+        "GET_USER_SONG_DISKS": 2304,
+        "REMOVE_JUKEBOX_DISK": 3050,
+        "INTERSTITIAL_SHOWN": 1109,
+        "GET_INTERSTITIAL": 2519,
+        "CHANGE_USERNAME": 2977,
+        "CHECK_USERNAME": 3950,
+        "OPEN_CAMPAIGN_CALENDAR_DOOR_STAFF": 3889,
+        "OPEN_CAMPAIGN_CALENDAR_DOOR": 2257,
+        "BUILDERS_CLUB_PLACE_ROOM_ITEM": 1051,
+        "BUILDERS_CLUB_PLACE_WALL_ITEM": 462,
+        "BUILDERS_CLUB_QUERY_FURNI_COUNT": 2529,
+        "GET_CATALOG_PAGE_EXPIRATION": 742,
+        "GET_CATALOG_PAGE_WITH_EARLIEST_EXP": 3135,
+        "GET_DIRECT_CLUB_BUY_AVAILABLE": 801,
+        "GET_HABBO_BASIC_MEMBERSHIP_EXTEND_OFFER": 603,
+        "GET_HABBO_CLUB_EXTEND_OFFER": 2462,
+        "GET_IS_OFFER_GIFTABLE": 1347,
+        "GET_LIMITED_OFFER_APPEARING_NEXT": 410,
+        "GET_NEXT_TARGETED_OFFER": 596,
+        "GET_ROOM_AD_PURCHASE_INFO": 1075,
+        "GET_SEASONAL_CALENDAR_DAILY_OFFER": 3257,
+        "GET_TARGETED_OFFER": 2487,
+        "MARK_CATALOG_NEW_ADDITIONS_PAGE_OPENED": 2150,
+        "PURCHASE_BASIC_MEMBERSHIP_EXTENSION": 2735,
+        "PURCHASE_ROOM_AD": 777,
+        "PURCHASE_TARGETED_OFFER": 1826,
+        "PURCHASE_VIP_MEMBERSHIP_EXTENSION": 3407,
+        "ROOM_AD_PURCHASE_INITIATED": 2283,
+        "SET_TARGETTED_OFFER_STATE": 2041,
+        "SHOP_TARGETED_OFFER_VIEWED": 3483,
+        "HELPER_TALENT_TRACK": 196,
+        "TALENT_TRACK_GET_LEVEL": 2127,
+        "FORWARD_TO_A_COMPETITION_ROOM": 172,
+        "FORWARD_TO_A_SUBMITTABLE_ROOM": 1450,
+        "FORWARD_TO_RANDOM_COMPETITION_ROOM": 865,
+        "GET_IS_USER_PART_OF_COMPETITION": 2077,
+        "GET_SECONDS_UNTIL": 271,
+        "ROOM_COMPETITION_INIT": 1334,
+        "SUBMIT_ROOM_TO_COMPETITION": 2595,
+        "VOTE_FOR_ROOM": 143,
+        "GET_GIFT": 2436,
+        "RESET_PHONE_NUMBER_STATE": 2741,
+        "SET_PHONE_NUMBER_VERIFICATION_STATUS": 1379,
+        "TRY_PHONE_NUMBER": 790,
+        "VERIFY_CODE": 2721,
+        "CONTROL_YOUTUBE_DISPLAY_PLAYBACK": 3005,
+        "GET_YOUTUBE_DISPLAY_STATUS": 336,
+        "SET_YOUTUBE_DISPLAY_PLAYLIST": 2069,
+        "GO_TO_FLAT": 685,
+        "CHANGE_QUEUE": 3093,
+        "CALL_FOR_HELP_FROM_FORUM_MESSAGE": 1412,
+        "CALL_FOR_HELP_FROM_FORUM_THREAD": 534,
+        "CALL_FOR_HELP_FROM_IM": 2950,
+        "CALL_FOR_HELP_FROM_PHOTO": 2492,
+        "CALL_FOR_HELP_FROM_SELFIE": 2755,
+        "CHAT_REVIEW_GUIDE_DECIDES": 3365,
+        "CHAT_REVIEW_GUIDE_DETACHED": 2501,
+        "CHAT_REVIEW_GUIDE_VOTE": 3961,
+        "CHAT_REVIEW_SESSION_CREATE": 3060,
+        "DELETE_PENDING_CALLS_FOR_HELP": 3605,
+        "GET_CFH_STATUS": 2746,
+        "GET_FAQ_CATEGORY": 3445,
+        "GET_FAQ_TEXT": 1849,
+        "GET_GUIDE_REPORTING_STATUS": 3786,
+        "GET_PENDING_CALLS_FOR_HELP": 3267,
+        "GET_QUIZ_QUESTIONS": 1296,
+        "GUIDE_SESSION_CREATE": 3338,
+        "GUIDE_SESSION_FEEDBACK": 477,
+        "GUIDE_SESSION_GET_REQUESTER_ROOM": 1052,
+        "GUIDE_SESSION_GUIDE_DECIDES": 1424,
+        "GUIDE_SESSION_INVITE_REQUESTER": 234,
+        "GUIDE_SESSION_IS_TYPING": 519,
+        "GUIDE_SESSION_MESSAGE": 3899,
+        "GUIDE_SESSION_ON_DUTY_UPDATE": 1922,
+        "GUIDE_SESSION_REPORT": 3969,
+        "GUIDE_SESSION_REQUESTER_CANCELS": 291,
+        "GUIDE_SESSION_RESOLVED": 887,
+        "POST_QUIZ_ANSWERS": 3720,
+        "SEARCH_FAQS": 2031,
+        "POLL_ANSWER": 3505,
+        "POLL_REJECT": 1773,
+        "POLL_START": 109,
+        "DISCONNECT": 2445,
+        "SCR_GET_KICKBACK_INFO": 869,
+        "COMPOST_PLANT": 3835,
+        "HARVEST_PET": 1521,
+        "SET_CLOTHING_CHANGE_DATA": 924,
+        "GROUP_UNFAVORITE": 1820,
+        "NEW_USER_EXPERIENCE_GET_GIFTS": 1822,
+        "NEW_USER_EXPERIENCE_SCRIPT_PROCEED": 1299,
+        "HANDSHAKE_INIT_DIFFIE": 3110,
+        "HANDSHAKE_COMPLETE_DIFFIE": 773,
+        "WELCOME_OPEN_GIFT": 2638,
+        "WELCOME_GIFT_CHANGE_EMAIL": 66,
+        "EMAIL_GET_STATUS": 2557,
+        "EMAIL_CHANGE": 3965,
+        "APPROVE_ALL_MEMBERSHIP_REQUESTS": 882,
+        "RENTABLE_SPACE_CANCEL_RENT": 1667,
+        "RENTABLE_SPACE_RENT": 2946,
+        "RENTABLE_SPACE_STATUS": 872,
+        "TRACKING_PERFORMANCE_LOG": 3230,
+        "TRACKING_LAG_WARNING_REPORT": 3847,
+        "ROOM_DIRECTORY_ROOM_NETWORK_OPEN_CONNECTION": 3736,
+        "RENTABLE_EXTEND_RENT_OR_BUYOUT_STRIP_ITEM": 2115,
+        "RENTABLE_EXTEND_RENT_OR_BUYOUT_FURNI": 1071,
+        "RENTABLE_GET_RENT_OR_BUYOUT_OFFER": 2518,
+        "DELETE_ITEM": 10018
+      },
+      INCOMING: {
+        "ACHIEVEMENT_LIST": 305,
+        "AUTHENTICATED": 2491,
+        "AUTHENTICATION": -1,
+        "AVAILABILITY_STATUS": 2033,
+        "BUILDERS_CLUB_EXPIRED": 1452,
+        "CLUB_OFFERS": 2405,
+        "CATALOG_PAGE": 804,
+        "CATALOG_PAGE_LIST": 1032,
+        "CATALOG_PURCHASE_OK": 869,
+        "CATALOG_PURCHASE_ERROR": 1404,
+        "CATALOG_PURCHASE_NOT_ALLOWED": 3770,
+        "PRODUCT_OFFER": 3388,
+        "LIMITED_SOLD_OUT": 377,
+        "CATALOG_PUBLISHED": 1866,
+        "CFH_RESULT_MESSAGE": 3635,
+        "CLIENT_LATENCY": 10,
+        "CLIENT_PING": 3928,
+        "DESKTOP_CAMPAIGN": 1745,
+        "DESKTOP_NEWS": 286,
+        "DESKTOP_VIEW": 122,
+        "BUNDLE_DISCOUNT_RULESET": 2347,
+        "FIRST_LOGIN_OF_DAY": 793,
+        "FURNITURE_ALIASES": 1723,
+        "FURNITURE_DATA": 2547,
+        "FURNITURE_FLOOR": 1778,
+        "FURNITURE_FLOOR_ADD": 1534,
+        "FURNITURE_FLOOR_REMOVE": 2703,
+        "FURNITURE_FLOOR_UPDATE": 3776,
+        "FURNITURE_ITEMDATA": 2202,
+        "FURNITURE_STATE": 2376,
+        "FURNITURE_GROUP_CONTEXT_MENU_INFO": 3293,
+        "FURNITURE_POSTIT_STICKY_POLE_OPEN": 2366,
+        "GAME_CENTER_ACHIEVEMENTS": 2265,
+        "GAME_CENTER_GAME_LIST": 222,
+        "GAME_CENTER_STATUS": 2893,
+        "GAME_CENTER_IN_ARENA_QUEUE": 872,
+        "GAME_CENTER_STOP_COUNTER": 3191,
+        "GAME_CENTER_USER_LEFT_GAME": 3138,
+        "GAME_CENTER_DIRECTORY_STATUS": 2246,
+        "GAME_CENTER_STARTING_GAME_FAILED": 2142,
+        "GAME_CENTER_JOINING_FAILED": 1730,
+        "GAMESTATUSMESSAGE": 3805,
+        "GAMEACHIEVEMENTS": 1689,
+        "GAMEINVITE": 904,
+        "JOININGQUEUEFAILED": 3035,
+        "JOINEDQUEUEMESSAGE": 2260,
+        "LEFTQUEUE": 1477,
+        "LOAD_GAME_URL": 2624,
+        "LOADGAME": 3654,
+        "UNLOADGAME": 1715,
+        "ACHIEVEMENTRESOLUTIONCOMPLETED": 740,
+        "ACHIEVEMENTRESOLUTIONPROGRESS": 3370,
+        "ACHIEVEMENTRESOLUTIONS": 66,
+        "GENERIC_ALERT": 3801,
+        "MODERATOR_MESSAGE": 2030,
+        "GENERIC_ERROR": 1600,
+        "GIFT_WRAPPER_CONFIG": 2234,
+        "GROUP_BADGES": 2402,
+        "GROUP_CREATE_OPTIONS": 2159,
+        "GROUP_FORUM_DATA": 3011,
+        "GROUP_FORUM_LIST": 3001,
+        "GROUP_FORUM_THREADS": 1073,
+        "GROUP_FORUM_POST": 2049,
+        "GROUP_FORUM_POST_THREAD": 1862,
+        "GROUP_FORUM_THREAD_MESSAGES": 509,
+        "GROUP_FORUM_UNREAD_COUNT": 2379,
+        "GROUP_FORUM_UPDATE_MESSAGE": 324,
+        "GROUP_FORUM_UPDATE_THREAD": 2528,
+        "GROUP_INFO": 1702,
+        "GROUP_LIST": 420,
+        "GROUP_MEMBER": 265,
+        "GROUP_MEMBERS": 1200,
+        "GROUP_MEMBERS_REFRESH": 2445,
+        "GROUP_MEMBER_REMOVE_CONFIRM": 1876,
+        "GROUP_PURCHASED": 2808,
+        "GROUP_SETTINGS": 3965,
+        "GROUP_BADGE_PARTS": 2238,
+        "GROUP_MEMBERSHIP_REQUESTED": 1180,
+        "GROUP_DETAILS_CHANGED": 1459,
+        "GROUP_HABBO_JOIN_FAILED": 762,
+        "GUILD_EDIT_FAILED": 3988,
+        "GUILD_MEMBER_MGMT_FAILED": 818,
+        "ITEM_DIMMER_SETTINGS": 2710,
+        "ITEM_STACK_HELPER": 2816,
+        "ITEM_WALL": 1369,
+        "ITEM_WALL_ADD": 2187,
+        "ITEM_WALL_REMOVE": 3208,
+        "ITEM_WALL_UPDATE": 2009,
+        "MARKETPLACE_CONFIG": 1823,
+        "MESSENGER_ACCEPT_FRIENDS": 896,
+        "MESSENGER_CHAT": 1587,
+        "MESSENGER_FIND_FRIENDS": 1210,
+        "MESSENGER_FOLLOW_FAILED": 3048,
+        "MESSENGER_FRIEND_NOTIFICATION": 3082,
+        "MESSENGER_FRIENDS": 3130,
+        "MESSENGER_INIT": 1605,
+        "MESSENGER_INSTANCE_MESSAGE_ERROR": 3359,
+        "MESSENGER_INVITE": 3870,
+        "MESSENGER_INVITE_ERROR": 462,
+        "MESSENGER_MESSAGE_ERROR": 892,
+        "MESSENGER_MINIMAIL_COUNT": 2803,
+        "MESSENGER_MINIMAIL_NEW": 1911,
+        "MESSENGER_RELATIONSHIPS": 2016,
+        "MESSENGER_REQUEST": 2219,
+        "MESSENGER_REQUEST_ERROR": 892,
+        "MESSENGER_REQUESTS": 280,
+        "MESSENGER_SEARCH": 973,
+        "MESSENGER_UPDATE": 2800,
+        "MODERATION_REPORT_DISABLED": 1651,
+        "MODERATION_TOOL": 2696,
+        "MODERATION_USER_INFO": 2866,
+        "MOTD_MESSAGES": 2035,
+        "NAVIGATOR_CATEGORIES": 1562,
+        "NAVIGATOR_COLLAPSED": 1543,
+        "NAVIGATOR_EVENT_CATEGORIES": 3244,
+        "NAVIGATOR_LIFTED": 3104,
+        "NAVIGATOR_METADATA": 3052,
+        "NAVIGATOR_OPEN_ROOM_CREATOR": 2064,
+        "NAVIGATOR_SEARCH": 2690,
+        "NAVIGATOR_SEARCHES": 3984,
+        "NAVIGATOR_SETTINGS": 518,
+        "THUMBNAIL_UPDATE_RESULT": 1927,
+        "CAN_CREATE_ROOM": 378,
+        "CATEGORIES_WITH_VISITOR_COUNT": 1455,
+        "COMPETITION_ROOMS_DATA": 3954,
+        "CONVERTED_ROOM_ID": 1331,
+        "GUEST_ROOM_SEARCH_RESULT": 52,
+        "NOTIFICATION_LIST": 1992,
+        "NOTIFICATION_OFFER_REWARD_DELIVERED": 2125,
+        "NOTIFICATION_SIMPLE_ALERT": 5100,
+        "NOTIFICATION_ELEMENT_POINTER": 1787,
+        "PET_FIGURE_UPDATE": 1924,
+        "PET_INFO": 2901,
+        "PET_TRAINING_PANEL": 1164,
+        "PET_LEVEL_UPDATE": 2824,
+        "PET_SCRATCH_FAILED": 1130,
+        "PET_OPEN_PACKAGE_REQUESTED": 2380,
+        "PET_OPEN_PACKAGE_RESULT": 546,
+        "PET_BREEDING": 1746,
+        "PET_CONFIRM_BREEDING_RESULT": 1625,
+        "PET_GO_TO_BREEDING_NEST_FAILURE": 2621,
+        "PET_NEST_BREEDING_SUCCESS": 2527,
+        "PET_CONFIRM_BREEDING_REQUEST": 634,
+        "PET_BREEDING_RESULT": 1553,
+        "RECYCLER_PRIZES": 3164,
+        "RECYCLER_STATUS": 3433,
+        "RECYCLER_FINISHED": 468,
+        "ROOM_BAN_LIST": 1869,
+        "ROOM_BAN_REMOVE": 3429,
+        "ROOM_CREATED": 1304,
+        "ROOM_DOORBELL": 2309,
+        "ROOM_DOORBELL_ACCEPTED": 3783,
+        "ROOM_DOORBELL_REJECTED": 878,
+        "ROOM_ENTER": 758,
+        "ROOM_ENTER_ERROR": 899,
+        "ROOM_FORWARD": 160,
+        "ROOM_HEIGHT_MAP": 2753,
+        "ROOM_HEIGHT_MAP_UPDATE": 558,
+        "ROOM_INFO": 687,
+        "ROOM_INFO_OWNER": 749,
+        "ROOM_MODEL": 1301,
+        "ROOM_MODEL_BLOCKED_TILES": 3990,
+        "ROOM_MODEL_DOOR": 1664,
+        "ROOM_MODEL_NAME": 2031,
+        "ROOM_MUTED": 2533,
+        "ROOM_MUTE_USER": 826,
+        "ROOM_PAINT": 2454,
+        "ROOM_PROMOTION": 2274,
+        "ROOM_QUEUE_STATUS": 2208,
+        "ROOM_RIGHTS": 780,
+        "ROOM_RIGHTS_CLEAR": 2392,
+        "ROOM_RIGHTS_LIST": 1284,
+        "ROOM_RIGHTS_LIST_ADD": 2088,
+        "ROOM_RIGHTS_LIST_REMOVE": 1327,
+        "ROOM_RIGHTS_OWNER": 339,
+        "ROOM_ROLLING": 3207,
+        "ROOM_SCORE": 482,
+        "ROOM_SETTINGS": 1498,
+        "ROOM_SETTINGS_CHAT": 1191,
+        "ROOM_SETTINGS_SAVE": 948,
+        "ROOM_SETTINGS_SAVE_ERROR": 1555,
+        "ROOM_INFO_UPDATED": 3297,
+        "ROOM_SPECTATOR": 1033,
+        "ROOM_THICKNESS": 3547,
+        "ROOM_GET_FILTER_WORDS": 2937,
+        "ROOM_MESSAGE_NOTIFICATION": 1634,
+        "ROOM_POPULAR_TAGS_RESULT": 2012,
+        "INFO_FEED_ENABLE": 3284,
+        "SECURITY_MACHINE": 1488,
+        "MYSTERY_BOX_KEYS": 2833,
+        "GOTMYSTERYBOXPRIZEMESSAGE": 3712,
+        "CANCELMYSTERYBOXWAITMESSAGE": 596,
+        "SHOWMYSTERYBOXWAITMESSAGE": 3201,
+        "TRADE_ACCEPTED": 2568,
+        "TRADE_CLOSED": 1373,
+        "TRADE_COMPLETED": 1001,
+        "TRADE_CONFIRMATION": 2720,
+        "TRADE_LIST_ITEM": 2024,
+        "TRADE_NOT_OPEN": 3128,
+        "TRADE_OPEN": 2505,
+        "TRADE_OPEN_FAILED": 217,
+        "TRADE_OTHER_NOT_ALLOWED": 1254,
+        "TRADE_YOU_NOT_ALLOWED": 3058,
+        "TRADE_NO_SUCH_ITEM": 2873,
+        "UNIT": 374,
+        "UNIT_CHANGE_NAME": 2182,
+        "UNIT_CHAT": 1446,
+        "UNIT_CHAT_SHOUT": 1036,
+        "UNIT_CHAT_WHISPER": 2704,
+        "UNIT_DANCE": 2233,
+        "UNIT_EFFECT": 1167,
+        "UNIT_EXPRESSION": 1631,
+        "UNIT_HAND_ITEM": 1474,
+        "UNIT_IDLE": 1797,
+        "UNIT_INFO": 3920,
+        "UNIT_NUMBER": 2324,
+        "UNIT_REMOVE": 2661,
+        "UNIT_STATUS": 1640,
+        "UNIT_TYPING": 1717,
+        "UNSEEN_ITEMS": 2103,
+        "USER_ACHIEVEMENT_SCORE": 1968,
+        "USER_BADGES": 717,
+        "USER_BADGES_ADD": 2493,
+        "USER_BADGES_CURRENT": 1087,
+        "USER_BOT_REMOVE": 233,
+        "USER_BOTS": 3086,
+        "USER_CHANGE_NAME": 118,
+        "USER_CLOTHING": 1450,
+        "USER_CREDITS": 3475,
+        "USER_CURRENCY": 2018,
+        "ACTIVITY_POINT_NOTIFICATION": 2275,
+        "USER_EFFECTS": 340,
+        "USER_FAVORITE_ROOM": 2524,
+        "USER_FAVORITE_ROOM_COUNT": 151,
+        "USER_FIGURE": 2429,
+        "USER_FURNITURE": 994,
+        "USER_FURNITURE_ADD": 104,
+        "USER_FURNITURE_POSTIT_PLACED": 1501,
+        "USER_FURNITURE_REFRESH": 3151,
+        "USER_FURNITURE_REMOVE": 159,
+        "USER_HOME_ROOM": 2875,
+        "ROOM_EVENT_CANCEL": 3479,
+        "ROOM_EVENT": 1840,
+        "USER_IGNORED": 126,
+        "USER_IGNORED_RESULT": 207,
+        "USER_INFO": 2725,
+        "USER_OUTFITS": 3315,
+        "USER_PERKS": 2586,
+        "USER_PERMISSIONS": 411,
+        "USER_PET_ADD": 2101,
+        "USER_PET_REMOVE": 3253,
+        "USER_PETS": 3522,
+        "USER_PROFILE": 3898,
+        "USER_RESPECT": 2815,
+        "USER_SANCTION_STATUS": 3679,
+        "USER_SETTINGS": 513,
+        "USER_SUBSCRIPTION": 954,
+        "USER_WARDROBE_PAGE": 3315,
+        "USER_CLASSIFICATION": 966,
+        "GET_USER_TAGS": 1255,
+        "WIRED_ACTION": 1434,
+        "WIRED_CONDITION": 1108,
+        "WIRED_ERROR": 156,
+        "WIRED_OPEN": 1830,
+        "WIRED_REWARD": 178,
+        "WIRED_SAVE": 1155,
+        "WIRED_TRIGGER": 383,
+        "PLAYING_GAME": 448,
+        "FURNITURE_STATE_2": 3431,
+        "REMOVE_BOT_FROM_INVENTORY": 233,
+        "ADD_BOT_TO_INVENTORY": 1352,
+        "ACHIEVEMENT_PROGRESSED": 2107,
+        "MODTOOL_ROOM_INFO": 1333,
+        "MODTOOL_USER_CHATLOG": 3377,
+        "MODTOOL_ROOM_CHATLOG": 3434,
+        "MODTOOL_VISITED_ROOMS_USER": 1752,
+        "MODERATOR_ACTION_RESULT": 2335,
+        "ISSUE_DELETED": 3192,
+        "ISSUE_INFO": 3609,
+        "ISSUE_PICK_FAILED": 3150,
+        "CFH_CHATLOG": 607,
+        "MODERATOR_TOOL_PREFERENCES": 1576,
+        "LOVELOCK_FURNI_START": 3753,
+        "LOVELOCK_FURNI_FRIEND_COMFIRMED": 382,
+        "LOVELOCK_FURNI_FINISHED": 770,
+        "GIFT_RECEIVER_NOT_FOUND": 1517,
+        "GIFT_OPENED": 56,
+        "FLOOD_CONTROL": 566,
+        "REMAINING_MUTE": 826,
+        "USER_EFFECT_LIST": 340,
+        "USER_EFFECT_LIST_ADD": 2867,
+        "USER_EFFECT_LIST_REMOVE": 2228,
+        "USER_EFFECT_ACTIVATE": 1959,
+        "AVATAR_EFFECT_SELECTED": 3473,
+        "CLUB_GIFT_INFO": 619,
+        "REDEEM_VOUCHER_ERROR": 714,
+        "REDEEM_VOUCHER_OK": 3336,
+        "IN_CLIENT_LINK": 2023,
+        "BOT_COMMAND_CONFIGURATION": 1618,
+        "BOT_SKILL_LIST_UPDATE": 69,
+        "BOT_FORCE_OPEN_CONTEXT_MENU": 296,
+        "HAND_ITEM_RECEIVED": 354,
+        "PET_PLACING_ERROR": 2913,
+        "BOT_ERROR": 639,
+        "MARKETPLACE_SELL_ITEM": 54,
+        "MARKETPLACE_ITEM_STATS": 725,
+        "MARKETPLACE_OWN_ITEMS": 3884,
+        "MARKETPLACE_CANCEL_SALE": 3264,
+        "MARKETPLACE_ITEM_POSTED": 1359,
+        "MARKETPLACE_ITEMS_SEARCHED": 680,
+        "MARKETPLACE_AFTER_ORDER_STATUS": 2032,
+        "CATALOG_RECEIVE_PET_BREEDS": 3331,
+        "CATALOG_APPROVE_NAME_RESULT": 1503,
+        "OBJECTS_DATA_UPDATE": 1453,
+        "PET_EXPERIENCE": 2156,
+        "COMMUNITY_GOAL_VOTE_EVENT": 1435,
+        "PROMO_ARTICLES": 286,
+        "COMMUNITY_GOAL_EARNED_PRIZES": 3319,
+        "COMMUNITY_GOAL_PROGRESS": 2525,
+        "CONCURRENT_USERS_GOAL_PROGRESS": 2737,
+        "QUEST_DAILY": 1878,
+        "QUEST_CANCELLED": 3027,
+        "QUEST_COMPLETED": 949,
+        "COMMUNITY_GOAL_HALL_OF_FAME": 3005,
+        "EPIC_POPUP": 3945,
+        "SEASONAL_QUESTS": 1122,
+        "QUESTS": 3625,
+        "QUEST": 230,
+        "BONUS_RARE_INFO": 1533,
+        "CRAFTABLE_PRODUCTS": 1000,
+        "CRAFTING_RECIPE": 2774,
+        "CRAFTING_RECIPES_AVAILABLE": 2124,
+        "CRAFTING_RESULT": 618,
+        "CAMERA_PUBLISH_STATUS": 2057,
+        "CAMERA_PURCHASE_OK": 2783,
+        "CAMERA_STORAGE_URL": 3696,
+        "CAMERA_SNAPSHOT": 463,
+        "COMPETITION_STATUS": 133,
+        "INIT_CAMERA": 3878,
+        "THUMBNAIL_STATUS": 3595,
+        "ACHIEVEMENT_NOTIFICATION": 806,
+        "CLUB_GIFT_NOTIFICATION": 2188,
+        "INTERSTITIAL_MESSAGE": 1808,
+        "ROOM_AD_ERROR": 1759,
+        "AVAILABILITY_TIME": 600,
+        "HOTEL_CLOSED_AND_OPENS": 3728,
+        "HOTEL_CLOSES_AND_OPENS_AT": 2771,
+        "HOTEL_WILL_CLOSE_MINUTES": 1050,
+        "HOTEL_MAINTENANCE": 1350,
+        "JUKEBOX_PLAYLIST_FULL": 105,
+        "JUKEBOX_SONG_DISKS": 34,
+        "NOW_PLAYING": 469,
+        "OFFICIAL_SONG_ID": 1381,
+        "PLAYLIST": 1748,
+        "PLAYLIST_SONG_ADDED": 1140,
+        "TRAX_SONG_INFO": 3365,
+        "USER_SONG_DISKS_INVENTORY": 2602,
+        "CHECK_USER_NAME": 563,
+        "CFH_SANCTION": 2782,
+        "CFH_TOPICS": 325,
+        "CFH_SANCTION_STATUS": 2221,
+        "CAMPAIGN_CALENDAR_DATA": 2531,
+        "CAMPAIGN_CALENDAR_DOOR_OPENED": 2551,
+        "BUILDERS_CLUB_FURNI_COUNT": 3828,
+        "BUILDERS_CLUB_SUBSCRIPTION": 1452,
+        "CATALOG_PAGE_EXPIRATION": 2668,
+        "CATALOG_EARLIEST_EXPIRY": 2515,
+        "CLUB_GIFT_SELECTED": 659,
+        "TARGET_OFFER_NOT_FOUND": 1237,
+        "TARGET_OFFER": 119,
+        "DIRECT_SMS_CLUB_BUY": 195,
+        "ROOM_AD_PURCHASE": 2468,
+        "NOT_ENOUGH_BALANCE": 3914,
+        "LIMITED_OFFER_APPEARING_NEXT": 44,
+        "IS_OFFER_GIFTABLE": 761,
+        "CLUB_EXTENDED_OFFER": 3964,
+        "SEASONAL_CALENDAR_OFFER": 1889,
+        "COMPETITION_ENTRY_SUBMIT": 1177,
+        "COMPETITION_VOTING_INFO": 3506,
+        "COMPETITION_TIMING_CODE": 1745,
+        "COMPETITION_USER_PART_OF": 3841,
+        "COMPETITION_NO_OWNED_ROOMS": 2064,
+        "COMPETITION_SECONDS_UNTIL": 3926,
+        "BADGE_POINT_LIMITS": 2501,
+        "BADGE_REQUEST_FULFILLED": 2998,
+        "HELPER_TALENT_TRACK": 3406,
+        "TALENT_TRACK_LEVEL": 1203,
+        "TALENT_TRACK_LEVEL_UP": 638,
+        "USER_BANNED": 1683,
+        "BOT_RECEIVED": 3684,
+        "PET_LEVEL_NOTIFICATION": 859,
+        "PET_RECEIVED": 1111,
+        "MODERATION_CAUTION": 1890,
+        "YOUTUBE_CONTROL_VIDEO": 1554,
+        "YOUTUBE_DISPLAY_PLAYLISTS": 1112,
+        "YOUTUBE_DISPLAY_VIDEO": 1411,
+        "CFH_DISABLED_NOTIFY": 1651,
+        "QUESTION": 2665,
+        "POLL_CONTENTS": 2997,
+        "POLL_ERROR": 662,
+        "POLL_OFFER": 3785,
+        "POLL_START_ROOM": 5200,
+        "QUESTION_ANSWERED": 2589,
+        "QUESTION_FINISHED": 1066,
+        "CFH_PENDING_CALLS": 1121,
+        "GUIDE_ON_DUTY_STATUS": 1548,
+        "GUIDE_SESSION_ATTACHED": 1591,
+        "GUIDE_SESSION_DETACHED": 138,
+        "GUIDE_SESSION_ENDED": 1456,
+        "GUIDE_SESSION_ERROR": 673,
+        "GUIDE_SESSION_INVITED_TO_GUIDE_ROOM": 219,
+        "GUIDE_SESSION_MESSAGE": 841,
+        "GUIDE_SESSION_PARTNER_IS_TYPING": 1016,
+        "GUIDE_SESSION_REQUESTER_ROOM": 1847,
+        "GUIDE_SESSION_STARTED": 3209,
+        "GUIDE_TICKET_CREATION_RESULT": 3285,
+        "GUIDE_TICKET_RESOLUTION": 2674,
+        "GUIDE_REPORTING_STATUS": 3463,
+        "HOTEL_MERGE_NAME_CHANGE": 1663,
+        "ISSUE_CLOSE_NOTIFICATION": 934,
+        "QUIZ_DATA": 2927,
+        "QUIZ_RESULTS": 2772,
+        "CFH_PENDING_CALLS_DELETED": 77,
+        "CFH_REPLY": 3796,
+        "CHAT_REVIEW_SESSION_DETACHED": 30,
+        "CHAT_REVIEW_SESSION_OFFERED_TO_GUIDE": 735,
+        "CHAT_REVIEW_SESSION_RESULTS": 3276,
+        "CHAT_REVIEW_SESSION_STARTED": 143,
+        "CHAT_REVIEW_SESSION_VOTING_STATUS": 1829,
+        "SCR_SEND_KICKBACK_INFO": 3277,
+        "PET_STATUS": 1907,
+        "GROUP_DEACTIVATE": 3129,
+        "PET_RESPECTED": 2788,
+        "PET_SUPPLEMENT": 3441,
+        "NOOBNESS_LEVEL": 3738,
+        "DISCONNECT_REASON": 4000,
+        "CAN_CREATE_ROOM_EVENT": 2599,
+        "FAVORITE_GROUP_UDPATE": 3403,
+        "NO_SUCH_FLAT": 84,
+        "ROOM_SETTINGS_ERROR": 2897,
+        "SHOW_ENFORCE_ROOM_CATEGORY": 3896,
+        "CUSTOM_USER_NOTIFICATION": 909,
+        "NEW_USER_EXPERIENCE_GIFT_OFFER": 3575,
+        "RESTORE_CLIENT": 426,
+        "FIREWORK_CHARGE_DATA": 5210,
+        "NEW_USER_EXPERIENCE_NOT_COMPLETE": 3639,
+        "CONNECTION_ERROR": 1004,
+        "ACCOUNT_SAFETY_LOCK_STATUS_CHANGE": 1243,
+        "PHONE_COLLECTION_STATE": 2890,
+        "PHONE_TRY_NUMBER_RESULT": 800,
+        "PHONE_TRY_VERIFICATION_CODE_RESULT": 91,
+        "EXTENDED_PROFILE_CHANGED": 876,
+        "WELCOME_GIFT_CHANGE_EMAIL_RESULT": 2293,
+        "WELCOME_GIFT_STATUS": 2707,
+        "HANDSHAKE_INIT_DIFFIE": 1347,
+        "HANDSHAKE_COMPLETE_DIFFIE": 3885,
+        "RENTABLE_SPACE_RENT_OK": 2046,
+        "RENTABLE_SPACE_STATUS": 3559,
+        "RENTABLE_SPACE_RENT_FAILED": 1868,
+        "EMAIL_STATUS": 612,
+        "CHANGE_EMAIL_RESULT": 1815,
+        "WEEKLY_GAME_REWARD": 2641,
+        "WEEKLY_GAME_REWARD_WINNERS": 3097,
+        "WEEKLY_COMPETITIVE_LEADERBOARD": 3512,
+        "WEEKLY_COMPETITIVE_FRIENDS_LEADERBOARD": 3560,
+        "WEEKLY_GAME2_FRIENDS_LEADERBOARD": 2270,
+        "WEEKLY_GAME2_LEADERBOARD": 2196,
+        "RENTABLE_FURNI_RENT_OR_BUYOUT_OFFER": 35,
+        "HANDSHAKE_IDENTITY_ACCOUNT": 3523
+      }
+    },
+
+    types: {
+        String: (v) => ({ type: 'String', value: String(v) }),
+        Int: (v) => ({ type: 'Int', value: parseInt(v) || 0 }),
+        Short: (v) => ({ type: 'Short', value: parseInt(v) || 0 }),
+        Byte: (v) => ({ type: 'Byte', value: parseInt(v) || 0 }),
+        Boolean: (v) => ({ type: 'Byte', value: v ? 1 : 0 })
+    },
+
+    async init() {
+      log.debug('PacketManager.init()');
+      this.loggingEnabled = !!config.get('packetLoggingEnabled');
+      this.loadMacros();
+      this.loadIgnoredHeaders();
+      this.hijackWebSocket(window);
+      
+      // Also watch for iframes
+      DOM.onNitroIframeDocReady((iframeDoc) => {
+        const win = iframeDoc.defaultView;
+        if (win) this.hijackWebSocket(win);
+      });
+    },
+
+    loadMacros() {
+      try {
+        const saved = config.get('packetMacros');
+        this.macros = saved ? JSON.parse(saved) : [];
+        log.debug('PacketManager: Loaded', this.macros.length, 'macros');
+      } catch (e) {
+        log.error('PacketManager: Failed to load macros', e);
+        this.macros = [];
+      }
+    },
+
+    saveMacros() {
+      try {
+        config.set('packetMacros', JSON.stringify(this.macros));
+        log.debug('PacketManager: Saved', this.macros.length, 'macros');
+      } catch (e) {
+        log.error('PacketManager: Failed to save macros', e);
+      }
+    },
+
+    loadIgnoredHeaders() {
+      try {
+        const savedOut = config.get('ignoredOutgoingHeaders');
+        const savedIn = config.get('ignoredIncomingHeaders');
+        this.ignoredOutgoingHeaders = new Set(savedOut ? JSON.parse(savedOut) : []);
+        this.ignoredIncomingHeaders = new Set(savedIn ? JSON.parse(savedIn) : []);
+        log.debug('PacketManager: Loaded ignored headers - OUT:', this.ignoredOutgoingHeaders.size, 'IN:', this.ignoredIncomingHeaders.size);
+      } catch (e) {
+        log.error('PacketManager: Failed to load ignored headers', e);
+        this.ignoredOutgoingHeaders = new Set();
+        this.ignoredIncomingHeaders = new Set();
+      }
+    },
+
+    saveIgnoredHeaders() {
+      try {
+        config.set('ignoredOutgoingHeaders', JSON.stringify([...this.ignoredOutgoingHeaders]));
+        config.set('ignoredIncomingHeaders', JSON.stringify([...this.ignoredIncomingHeaders]));
+        log.debug('PacketManager: Saved ignored headers');
+      } catch (e) {
+        log.error('PacketManager: Failed to save ignored headers', e);
+      }
+    },
+
+    addIgnoredHeader(direction, headerId) {
+      const set = direction === 'OUT' ? this.ignoredOutgoingHeaders : this.ignoredIncomingHeaders;
+      set.add(headerId);
+      this.saveIgnoredHeaders();
+    },
+
+    removeIgnoredHeader(direction, headerId) {
+      const set = direction === 'OUT' ? this.ignoredOutgoingHeaders : this.ignoredIncomingHeaders;
+      set.delete(headerId);
+      this.saveIgnoredHeaders();
+    },
+
+    clearIgnoredHeaders(direction) {
+      if (direction === 'OUT') {
+        this.ignoredOutgoingHeaders.clear();
+      } else {
+        this.ignoredIncomingHeaders.clear();
+      }
+      this.saveIgnoredHeaders();
+    },
+
+    addMacro(macro) {
+      macro.id = Date.now() + Math.random();
+      macro.enabled = true;
+      this.macros.push(macro);
+      this.saveMacros();
+      return macro;
+    },
+
+    updateMacro(id, updates) {
+      const idx = this.macros.findIndex(m => m.id === id);
+      if (idx !== -1) {
+        this.macros[idx] = { ...this.macros[idx], ...updates };
+        this.saveMacros();
+      }
+    },
+
+    deleteMacro(id) {
+      this.macros = this.macros.filter(m => m.id !== id);
+      this.saveMacros();
+    },
+
+    toggleMacro(id) {
+      const macro = this.macros.find(m => m.id === id);
+      if (macro) {
+        macro.enabled = !macro.enabled;
+        this.saveMacros();
+      }
+    },
+
+    hijackWebSocket(win) {
+      if (!win || win.__kuplafix_ws_hijacked) return;
+      win.__kuplafix_ws_hijacked = true;
+      
+      log.info('PacketManager: Hijacking WebSocket on', win === window ? 'top window' : 'iframe');
+
+      const self = this;
+      const OriginalWebSocket = win.WebSocket;
+      
+      // Hook prototype send to catch all sends
+      const originalProtoSend = OriginalWebSocket.prototype.send;
+      OriginalWebSocket.prototype.send = function(data) {
+        if (this.url && this.url.includes('hanarchy.net')) {
+             self.logPacket('OUT', data);
+        }
+        return originalProtoSend.call(this, data);
+      };
+
+      // Define the proxy class
+      const WebSocketProxy = function(url, protocols) {
+        // Only log if it looks interesting to avoid spam
+        if (url.includes('hanarchy.net')) {
+            log.info('PacketManager: new WebSocket called with', url);
+        }
+        
+        const ws = new OriginalWebSocket(url, protocols);
+        
+        // Check if this is the game connection (Targeting hanarchy.net as requested)
+        // NOTE: We filter for hanarchy.net to avoid hijacking the secondary 'nitro.kuplahotelli.com' socket
+        // which is not the main game server.
+        if (url.includes('hanarchy.net')) {
+          log.info('PacketManager: Captured WebSocket connection to', url);
+          self.socket = ws;
+          window.kuplaSocket = ws;
+          
+          // Hook incoming
+          ws.addEventListener('message', (event) => {
+            self.logPacket('IN', event.data);
+          });
+        }
+        
+        return ws;
+      };
+
+      // Copy prototype and constants
+      WebSocketProxy.prototype = OriginalWebSocket.prototype;
+      WebSocketProxy.CONNECTING = OriginalWebSocket.CONNECTING;
+      WebSocketProxy.OPEN = OriginalWebSocket.OPEN;
+      WebSocketProxy.CLOSING = OriginalWebSocket.CLOSING;
+      WebSocketProxy.CLOSED = OriginalWebSocket.CLOSED;
+
+      // Apply the hijack
+      try {
+        win.WebSocket = WebSocketProxy;
+      } catch (e) {
+        log.error('PacketManager: Failed to assign WebSocket proxy', e);
+      }
+    },
+
+    hookSocket(ws) {
+       // Deprecated: We now hook prototype. 
+       // Kept for compatibility if needed, but empty now.
+    },
+
+    logPacket(direction, data) {
+      try {
+        let buffer;
+        const type = Object.prototype.toString.call(data);
+        
+        // Handle different data types
+        if (data instanceof ArrayBuffer || type === '[object ArrayBuffer]') {
+          buffer = data;
+        } else if (ArrayBuffer.isView(data) || (data && data.buffer && (data.buffer instanceof ArrayBuffer || Object.prototype.toString.call(data.buffer) === '[object ArrayBuffer]'))) {
+          // TypedArray (Uint8Array, etc.) - Handle views correctly
+          // If it has a buffer property that is an ArrayBuffer, treat it as a view
+          buffer = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+        } else if (data instanceof Blob || type === '[object Blob]') {
+          // Blob is async - handle cross-frame Blob detection too
+          const reader = new FileReader();
+          reader.onload = () => {
+              this.processBuffer(direction, reader.result);
+          };
+          reader.readAsArrayBuffer(data);
+          return;
+        } else {
+          // Unknown or string
+          // console.log('[PacketManager] Unknown data type:', type, data);
+          return;
+        }
+
+        if (buffer) {
+            this.processBuffer(direction, buffer);
+        }
+      } catch (e) {
+        console.error('Error logging packet', e);
+      }
+    },
+
+    processBuffer(direction, buffer) {
+        if (buffer.byteLength >= 6) {
+          const view = new DataView(buffer);
+          const length = view.getInt32(0); // Big Endian
+          const header = view.getInt16(4); // Big Endian
+          
+          // Check for shared macros in furniture packets (trophies)
+          if (direction === 'IN') {
+            this.checkForSharedMacro(header, buffer);
+          }
+          
+          // Check macros
+          this.checkMacros(direction, header, buffer);
+          
+          // Add to history
+          this.addToHistory(direction, header, length, buffer);
+
+          if (this.loggingEnabled) {
+            // Find header name
+            let headerName = 'Unknown';
+            const headerMap = direction === 'OUT' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+            for (const [name, id] of Object.entries(headerMap)) {
+                if (id === header) {
+                    headerName = name;
+                    break;
+                }
+            }
+
+            console.log(`%c[PacketManager] ${direction} [${header}] ${headerName} Len:${length}`, 
+              direction === 'OUT' ? 'color: #00aa00' : 'color: #00aaaa');
+              
+            // Hex dump for analysis
+            const hex = Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+            console.log(`%c[PacketManager] ${direction} HEX: ${hex}`, 'color: #888');
+          }
+        }
+    },
+
+    checkMacros(direction, header, buffer) {
+        const dir = direction === 'OUT' ? 'send' : 'receive';
+        
+        for (const macro of this.macros) {
+            if (!macro.enabled) continue;
+            if (macro.trigger.direction !== dir) continue;
+            if (macro.trigger.header !== header) continue;
+            
+            // Prevent infinite loops
+            const macroKey = `${macro.id}-${Date.now()}`;
+            if (this.macroExecuting.has(macro.id)) continue;
+            
+            // Parse packet arguments for condition checking and variable substitution
+            const parsedArgs = this.parsePacket(buffer);
+            
+            // Check conditions
+            let conditionsMet = true;
+            if (macro.trigger.conditions && macro.trigger.conditions.length > 0) {
+                for (const cond of macro.trigger.conditions) {
+                    const argIndex = parseInt(cond.argIndex);
+                    if (argIndex >= 0 && argIndex < parsedArgs.length) {
+                        const argValue = parsedArgs[argIndex].value;
+                        const condValue = cond.value;
+                        
+                        switch (cond.operator) {
+                            case 'eq':
+                                conditionsMet = conditionsMet && (String(argValue) === String(condValue));
+                                break;
+                            case 'neq':
+                                conditionsMet = conditionsMet && (String(argValue) !== String(condValue));
+                                break;
+                            case 'gt':
+                                conditionsMet = conditionsMet && (Number(argValue) > Number(condValue));
+                                break;
+                            case 'gte':
+                                conditionsMet = conditionsMet && (Number(argValue) >= Number(condValue));
+                                break;
+                            case 'lt':
+                                conditionsMet = conditionsMet && (Number(argValue) < Number(condValue));
+                                break;
+                            case 'lte':
+                                conditionsMet = conditionsMet && (Number(argValue) <= Number(condValue));
+                                break;
+                            case 'contains':
+                                conditionsMet = conditionsMet && String(argValue).includes(String(condValue));
+                                break;
+                        }
+                    } else {
+                        conditionsMet = false;
+                    }
+                    if (!conditionsMet) break;
+                }
+            }
+            
+            if (!conditionsMet) continue;
+            
+            // Execute macro actions
+            this.macroExecuting.add(macro.id);
+            this.executeMacro(macro, parsedArgs);
+            
+            // Remove from executing set after a delay
+            setTimeout(() => this.macroExecuting.delete(macro.id), 100);
+        }
+    },
+
+    executeMacro(macro, triggerArgs) {
+        log.debug('PacketManager: Executing macro', macro.name);
+        
+        // Execute each action in sequence
+        const executeActions = async (actionIndex = 0) => {
+            if (actionIndex >= macro.actions.length) return;
+            
+            const action = macro.actions[actionIndex];
+            
+            // Variable substitution: replace {{arg0}}, {{arg1}}, etc. with trigger packet args
+            const substituteVars = (value) => {
+                if (typeof value !== 'string') return value;
+                return value.replace(/\{\{arg(\d+)\}\}/g, (match, idx) => {
+                    const i = parseInt(idx);
+                    if (i >= 0 && i < triggerArgs.length) {
+                        return String(triggerArgs[i].value);
+                    }
+                    return match;
+                });
+            };
+            
+            if (action.type === 'send') {
+                // Send a packet
+                const args = action.args.map(arg => ({
+                    type: arg.type,
+                    value: substituteVars(arg.value)
+                }));
+                
+                this.send(action.header, ...args.map(a => this.types[a.type](a.value)));
+                
+                // Show toast if configured
+                if (action.showToast && action.toastMessage) {
+                    UI.showToast(substituteVars(action.toastMessage), 'info');
+                }
+                
+            } else if (action.type === 'inject') {
+                // Inject an incoming packet (simulate server message)
+                const args = action.args.map(arg => ({
+                    type: arg.type,
+                    value: substituteVars(arg.value)
+                }));
+                
+                this.inject(action.header, ...args.map(a => this.types[a.type](a.value)));
+                
+                if (action.showToast && action.toastMessage) {
+                    UI.showToast(substituteVars(action.toastMessage), 'info');
+                }
+                
+            } else if (action.type === 'toast') {
+                // Just show a toast
+                UI.showToast(substituteVars(action.toastMessage), action.toastType || 'info');
+                
+            } else if (action.type === 'delay') {
+                // Wait before next action
+                await new Promise(resolve => setTimeout(resolve, parseInt(action.delay) || 100));
+            }
+            
+            // Continue to next action
+            executeActions(actionIndex + 1);
+        };
+        
+        executeActions();
+    },
+    
+    checkForSharedMacro(header, buffer) {
+        // Check furniture update/add packets for shared macros (trophies)
+        // 3776 = FURNITURE_FLOOR_UPDATE, 1534 = FURNITURE_FLOOR_ADD
+        // Note: Chat messages are handled by ChatCache.checkForSharedMacro() via DOM observer
+        if (header !== 3776 && header !== 1534) return;
+        
+        try {
+            // Convert buffer to string and look for KFM2: marker
+            const bytes = new Uint8Array(buffer);
+            const text = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+            
+            // Find KFM2: marker
+            const kfmIndex = text.indexOf('KFM2:');
+            if (kfmIndex === -1) return;
+            
+            // Extract the base64 code after KFM2:
+            // It ends at next tab, newline, or non-base64 char
+            let code = '';
+            for (let i = kfmIndex + 5; i < text.length; i++) {
+                const c = text[i];
+                // Base64 chars + padding
+                if (/[A-Za-z0-9+/=]/.test(c)) {
+                    code += c;
+                } else {
+                    break;
+                }
+            }
+            
+            if (code.length < 10) return; // Too short to be valid
+            
+            const fullCode = 'KFM2:' + code;
+            
+            // Try to decode the macro
+            const macro = PacketBuilder.decodeMacro(fullCode);
+            if (!macro) {
+                log.debug('PacketManager: Found KFM2 code but failed to decode');
+                return;
+            }
+            
+            // Try to extract sharer name
+            let sharerName = 'Someone';
+            
+            // For chat messages (1446), we can't easily get the sender name from the packet
+            // For trophies, the format is: username\tdate\ttext (within a length-prefixed string)
+            if (header === 3776 || header === 1534) {
+                // Find KFM2: and work backwards to extract the username
+                // The trophy text format is: "username\tdate\tKFM2:..."
+                const kfmPos = text.indexOf('KFM2:');
+                if (kfmPos > 0) {
+                    // Find the two tabs before KFM2:
+                    let tab1 = -1, tab2 = -1;
+                    for (let i = kfmPos - 1; i >= 0; i--) {
+                        if (text.charCodeAt(i) === 9) { // tab
+                            if (tab2 === -1) tab2 = i;
+                            else { tab1 = i; break; }
+                        }
+                    }
+                    
+                    // Extract date between tabs to validate structure
+                    if (tab1 >= 0 && tab2 > tab1) {
+                        const datePart = text.substring(tab1 + 1, tab2);
+                        // Date should look like "8-1-2026" or similar
+                        if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(datePart)) {
+                            // Now find username - scan backwards from tab1
+                            // The tricky part: the trophy text is preceded by a 2-byte length prefix
+                            // which might include a byte that looks like a valid ASCII letter
+                            let nameEnd = tab1;
+                            let nameStart = tab1;
+                            for (let i = tab1 - 1; i >= Math.max(0, tab1 - 25); i--) {
+                                const c = text.charCodeAt(i);
+                                // Check if PREVIOUS char (i-1) is a null byte - if so, we've hit the length prefix
+                                if (i > 0 && text.charCodeAt(i - 1) === 0) {
+                                    // Don't include this char - it's part of the length prefix
+                                    break;
+                                }
+                                // Stop at null byte (0x00) directly
+                                if (c === 0) {
+                                    break;
+                                }
+                                // Valid username chars: alphanumeric, underscore, hyphen
+                                if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c === 95 || c === 45) {
+                                    nameStart = i;
+                                } else {
+                                    // Hit a non-username char, stop
+                                    break;
+                                }
+                            }
+                            
+                            if (nameStart < nameEnd) {
+                                const extractedName = text.substring(nameStart, nameEnd);
+                                if (extractedName.length >= 2 && extractedName.length <= 20) {
+                                    sharerName = extractedName;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            const source = 'trophy';
+            log.info(`PacketManager: Found shared macro "${macro.name}" from ${sharerName} via ${source}`);
+            
+            // Show persistent notification with import option
+            this.showMacroShareNotification(macro, fullCode, sharerName);
+            
+        } catch (e) {
+            log.warn('PacketManager: Error checking for shared macro:', e);
+        }
+    },
+    
+    // Track active macro notifications to prevent duplicates (Set of cloneIds)
+    activeMacroNotificationIds: new Set(),
+    
+    showMacroShareNotification(macro, code, sharerName) {
+        // Check if user has opted in to accept all macros
+        const acceptAll = config.get('acceptAllMacroNotifications') || false;
+        
+        // Check if this exact code is already being displayed
+        const alreadyVisible = window.kupla_pendingMacroImports?.some(p => 
+            p.code === code && this.activeMacroNotificationIds.has(p.cloneId)
+        );
+        if (alreadyVisible) {
+            log.debug('PacketManager: Macro notification for this code already visible');
+            return;
+        }
+        
+        // Safety filter: only show macros from "0es" by default
+        if (!acceptAll && sharerName !== '0es') {
+            log.debug('PacketManager: Ignoring macro from', sharerName, '(not from 0es and acceptAll is disabled)');
+            return;
+        }
+        
+        // If there's already an active macro notification and user hasn't opted in, skip
+        if (!acceptAll && this.activeMacroNotificationIds.size > 0) {
+            log.debug('PacketManager: Macro notification already visible, skipping');
+            return;
+        }
+        
+        // Ensure clone container is ready
+        if (typeof BubbleAlerts !== 'undefined' && BubbleAlerts.ensureCloneContainer) {
+            BubbleAlerts.ensureCloneContainer();
+        }
+        
+        // Use BubbleAlerts if available, otherwise create custom notification
+        if (typeof BubbleAlerts !== 'undefined' && BubbleAlerts.cloneContainer) {
+            // Get a clone ID from BubbleAlerts to properly integrate with the system
+            const cloneId = ++BubbleAlerts.cloneIdCounter;
+            const self = this;
+            
+            // Store the macro data for later import
+            if (!window.kupla_pendingMacroImports) window.kupla_pendingMacroImports = [];
+            const pendingImport = { macro, code, sharerName, timestamp: Date.now(), cloneId };
+            window.kupla_pendingMacroImports.push(pendingImport);
+            
+            // Track this as an active macro notification
+            this.activeMacroNotificationIds.add(cloneId);
+            
+            // Helper to remove the alert using BubbleAlerts system
+            const removeAlert = () => {
+                BubbleAlerts.removeClone(cloneId);
+                // Remove from active notification tracker
+                self.activeMacroNotificationIds.delete(cloneId);
+                // Remove from pending imports
+                const idx = window.kupla_pendingMacroImports?.findIndex(p => p.cloneId === cloneId);
+                if (idx >= 0) window.kupla_pendingMacroImports.splice(idx, 1);
+            };
+            
+            // Create wrapper matching native clone structure
+            const wrapper = document.createElement('div');
+            wrapper.className = 'animate__animated';
+            wrapper.style.cssText = 'display: block;';
+            
+            // Create alert matching native notification structure exactly
+            const alert = document.createElement('div');
+            alert.className = 'd-flex overflow-hidden gap-2 align-items-center nitro-notification-bubble rounded';
+            // Mark as a BubbleAlerts clone so it's properly tracked
+            alert.dataset.kuplafixClone = 'true';
+            alert.dataset.cloneId = cloneId;
+            alert.style.pointerEvents = 'auto';
+            alert.style.cursor = 'pointer';
+            alert.style.visibility = 'visible';
+            alert.style.display = 'flex';
+            
+            // Icon area - use gift.gif like native gift notifications
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'd-flex align-items-center justify-content-center bubble-image-container';
+            const iconImg = document.createElement('img');
+            iconImg.className = 'no-select';
+            iconImg.src = 'https://images.habbo.com/c_images/stickers/sticker_walkingMechaDog.gif';
+            iconImg.alt = '';
+            iconImg.onerror = () => { iconImg.style.display = 'none'; iconDiv.textContent = '🎁'; };
+            iconDiv.appendChild(iconImg);
+            alert.appendChild(iconDiv);
+            
+            // Content area - matching native structure
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'd-inline text-white nitro-small-size-text text-wrap';
+            
+            const textSpan = document.createElement('span');
+            textSpan.innerHTML = `<b>${sharerName}</b> jakoi makron:<br><b>${macro.name}</b>`;
+            contentDiv.appendChild(textSpan);
+            
+            alert.appendChild(contentDiv);
+            
+            // Import button - matching event notification style
+            const importBtn = document.createElement('button');
+            importBtn.className = 'kuplafix-event-notification-button';
+            importBtn.textContent = 'Lisää';
+            importBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Import the macro
+                self.importSharedMacro(macro, code);
+                // Open Packet Builder to Macros tab
+                if (typeof PacketBuilder !== 'undefined') {
+                    PacketBuilder.activeTab = 'macros';
+                    if (!PacketBuilder.isOpen) {
+                        PacketBuilder.toggle();
+                    } else {
+                        PacketBuilder.renderContent();
+                    }
+                }
+                removeAlert();
+            });
+            alert.appendChild(importBtn);
+            
+            wrapper.appendChild(alert);
+            
+            // Click handler - dismiss on click, but not when clicking button
+            const clickHandler = (e) => {
+                // Don't dismiss if clicking the import button
+                if (e.target.closest('.kuplafix-event-notification-button')) return;
+                
+                if (e.shiftKey) {
+                    BubbleAlerts.removeAllClones();
+                } else {
+                    removeAlert();
+                }
+            };
+            alert.addEventListener('click', clickHandler);
+            
+            // Register with BubbleAlerts clone system so removeAllClones works
+            BubbleAlerts.clonedNotifications.set(cloneId, {
+                clone: wrapper,
+                originalWrapper: null,
+                clickHandler: clickHandler,
+                contentHash: 'macro-share-' + Date.now()
+            });
+            
+            // Add to container
+            BubbleAlerts.cloneContainer.appendChild(wrapper);
+            
+            // No auto-dismiss - persist like other notifications until clicked
+        } else {
+            // Fallback: use toast with manual import
+            UI.showToast(`🎁 ${sharerName} shared macro "${macro.name}" - Open Packet Builder > Macros to import`, 'success');
+            
+            // Store pending import for manual access
+            if (!window.kupla_pendingMacroImports) window.kupla_pendingMacroImports = [];
+            window.kupla_pendingMacroImports.push({ macro, code, sharerName, timestamp: Date.now() });
+        }
+    },
+    
+    importSharedMacro(macro, code) {
+        // Check if macro with same name exists, add number suffix if needed
+        let baseName = macro.name;
+        let counter = 1;
+        while (this.macros.find(m => m.name === macro.name)) {
+            macro.name = `${baseName} ${counter}`;
+            counter++;
+        }
+        
+        // Add to macros
+        this.macros.push(macro);
+        this.saveMacros();
+        
+        UI.showToast(`✅ Imported macro "${macro.name}"`, 'success');
+        
+        // Refresh macros tab if open
+        if (PacketBuilder.isOpen && PacketBuilder.activeTab === 'macros') {
+            PacketBuilder.renderContent();
+        }
+    },
+    
+    addToHistory(direction, header, length, buffer) {
+        // Only log if builder is open and not on macros tab
+        if (!PacketBuilder.isOpen) return;
+        if (PacketBuilder.activeTab === 'macros') return;
+
+        // Check if header is ignored
+        const ignoredSet = direction === 'OUT' ? this.ignoredOutgoingHeaders : this.ignoredIncomingHeaders;
+        if (ignoredSet.has(header)) return;
+
+        const packet = {
+            id: Date.now() + Math.random(),
+            timestamp: new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            direction,
+            header,
+            length,
+            buffer: buffer, // Store buffer for parsing
+            hex: Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join(' ')
+        };
+        
+        const targetHistory = direction === 'OUT' ? this.outgoingHistory : this.incomingHistory;
+        targetHistory.push(packet);
+        if (targetHistory.length > this.maxHistory) {
+            targetHistory.shift();
+        }
+        
+        // Update UI if open and on the correct tab
+        if (PacketBuilder.isOpen) {
+            if (direction === 'OUT' && PacketBuilder.activeTab === 'history') {
+                PacketBuilder.appendLog(packet);
+            } else if (direction === 'IN' && PacketBuilder.activeTab === 'incoming') {
+                PacketBuilder.appendIncomingLog(packet);
+            }
+        }
+    },
+
+    clearHistory() {
+        this.outgoingHistory = [];
+        if (PacketBuilder.isOpen && PacketBuilder.activeTab === 'history') {
+            PacketBuilder.renderContent();
+        }
+    },
+
+    clearIncomingHistory() {
+        this.incomingHistory = [];
+        if (PacketBuilder.isOpen && PacketBuilder.activeTab === 'incoming') {
+            PacketBuilder.renderContent();
+        }
+    },
+
+    // Improved Parser for Import
+    parsePacket(buffer) {
+        const args = [];
+        if (buffer.byteLength < 6) return args;
+        
+        const view = new DataView(buffer);
+        const payloadLen = buffer.byteLength - 6;
+        let offset = 6;
+
+        const getHex = (start, len) => {
+            return Array.from(new Uint8Array(buffer, start, len))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join(' ');
+        };
+
+        // Heuristic 1: If payload is a multiple of 4 and small (like UNIT_LOOK), 
+        // it's almost certainly a sequence of Ints.
+        if (payloadLen > 0 && payloadLen % 4 === 0 && payloadLen <= 32) {
+            for (let i = 0; i < payloadLen; i += 4) {
+                args.push({ 
+                    type: 'Int', 
+                    value: view.getInt32(offset + i),
+                    hex: getHex(offset + i, 4)
+                });
+            }
+            return args;
+        }
+        
+        while (offset < buffer.byteLength) {
+            const remaining = buffer.byteLength - offset;
+            
+            // 1. Try String (Heuristic: length > 0 and printable)
+            if (remaining >= 2) {
+                const strLen = view.getInt16(offset);
+                if (strLen > 0 && strLen <= remaining - 2 && strLen < 2048) {
+                    const strBytes = new Uint8Array(buffer, offset + 2, strLen);
+                    let printable = true;
+                    for (let i = 0; i < strLen; i++) {
+                        const c = strBytes[i];
+                        if (c < 32 && ![9, 10, 13].includes(c)) {
+                            printable = false;
+                            break;
+                        }
+                    }
+                    if (printable) {
+                        try {
+                            const str = new TextDecoder().decode(strBytes);
+                            args.push({ 
+                                type: 'String', 
+                                value: str,
+                                hex: getHex(offset, 2 + strLen)
+                            });
+                            offset += 2 + strLen;
+                            continue;
+                        } catch (e) {}
+                    }
+                } else if (strLen === 0 && remaining === 2) {
+                    // Empty string at the very end
+                    args.push({ 
+                        type: 'String', 
+                        value: '',
+                        hex: getHex(offset, 2)
+                    });
+                    offset += 2;
+                    continue;
+                }
+            }
+            
+            // 2. Try Int (4 bytes)
+            if (remaining >= 4) {
+                args.push({ 
+                    type: 'Int', 
+                    value: view.getInt32(offset),
+                    hex: getHex(offset, 4)
+                });
+                offset += 4;
+                continue;
+            }
+            
+            // 3. Try Short (2 bytes)
+            if (remaining >= 2) {
+                args.push({ 
+                    type: 'Short', 
+                    value: view.getInt16(offset),
+                    hex: getHex(offset, 2)
+                });
+                offset += 2;
+                continue;
+            }
+            
+            // 4. Fallback to Byte
+            args.push({ 
+                type: 'Byte', 
+                value: new Uint8Array(buffer)[offset],
+                hex: getHex(offset, 1)
+            });
+            offset += 1;
+        }
+        return args;
+    },
+
+    // Binary Writer Helper
+    createPacket(header, args) {
+      const chunks = [];
+      let totalLength = 0;
+
+      const write = (buffer) => {
+        chunks.push(buffer);
+        totalLength += buffer.byteLength;
+      };
+
+      const writeByte = (val) => {
+        const buf = new Uint8Array(1);
+        buf[0] = val;
+        write(buf);
+      };
+
+      const writeShort = (val) => {
+        const buf = new Uint8Array(2);
+        const view = new DataView(buf.buffer);
+        view.setInt16(0, val); // Big Endian
+        write(buf);
+      };
+
+      const writeInt = (val) => {
+        const buf = new Uint8Array(4);
+        const view = new DataView(buf.buffer);
+        view.setInt32(0, val); // Big Endian
+        write(buf);
+      };
+
+      const writeString = (val) => {
+        const enc = new TextEncoder();
+        const bytes = enc.encode(val);
+        writeShort(bytes.length);
+        write(bytes);
+      };
+
+      // 1. Write Header
+      writeShort(header);
+
+      // 2. Write Args
+      for (const arg of args) {
+        if (arg === null || arg === undefined) {
+          // writeShort(0); // Should we write 0 for null? Or just skip? 
+          // Usually null strings are empty strings (len 0).
+          // Null numbers are 0.
+          // Let's assume 0 int for safety if unknown.
+          writeInt(0);
+          continue;
+        }
+
+        if (typeof arg === 'object' && arg.type) {
+          // Explicit Typed Argument
+          switch (arg.type) {
+            case 'Byte': writeByte(arg.value); break;
+            case 'Short': writeShort(arg.value); break;
+            case 'Int': writeInt(arg.value); break;
+            case 'String': writeString(arg.value); break;
+            default: console.warn('Unknown type', arg.type);
+          }
+        } else if (typeof arg === 'number') {
+          // Default to Int for numbers
+          writeInt(arg);
+        } else if (typeof arg === 'boolean') {
+          writeByte(arg ? 1 : 0);
+        } else if (typeof arg === 'string') {
+          writeString(arg);
+        }
+      }
+
+      // 3. Combine Payload
+      const payload = new Uint8Array(totalLength);
+      let offset = 0;
+      for (const chunk of chunks) {
+        payload.set(new Uint8Array(chunk.buffer || chunk), offset);
+        offset += chunk.byteLength;
+      }
+
+      // 4. Wrap with Length (Int)
+      const finalBuf = new Uint8Array(4 + payload.byteLength);
+      const finalView = new DataView(finalBuf.buffer);
+      finalView.setInt32(0, payload.byteLength);
+      finalBuf.set(payload, 4);
+
+      return finalBuf.buffer;
+    },
+
+    // Public API: Send to Server
+    send(header, ...values) {
+      if (!this.socket) {
+        const msg = 'PacketManager: Socket not captured yet.';
+        log.error(msg);
+        UI.showToast(msg, 'error');
+        return;
+      }
+      
+      if (this.socket.readyState !== WebSocket.OPEN) {
+        const msg = `PacketManager: Socket not open (State: ${this.socket.readyState})`;
+        log.error(msg);
+        UI.showToast(msg, 'error');
+        return;
+      }
+
+      try {
+        const buffer = this.createPacket(header, values);
+        this.socket.send(buffer);
+        
+        const msg = `Sent Packet [${header}]`;
+        log.info(msg, values);
+        
+        // Hex dump for debug
+        if (this.loggingEnabled) {
+            const hex = Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+            console.log(`%c[PacketManager] SENT HEX: ${hex}`, 'color: #00aa00; font-weight: bold');
+        }
+        
+        UI.showToast(msg, 'success');
+      } catch (e) {
+        log.error('PacketManager: Send error', e);
+        UI.showToast('Packet Send Error', 'error');
+      }
+    },
+
+    // Public API: Inject to Client (Simulate Incoming)
+    inject(header, ...values) {
+      if (!this.socket) {
+        UI.showToast('Socket not captured', 'error');
+        return;
+      }
+      try {
+        const buffer = this.createPacket(header, values);
+        
+        // Create a MessageEvent without source (WebSocket is not a valid source for MessageEvent)
+        const event = new MessageEvent('message', {
+          data: buffer,
+          origin: this.socket.url
+        });
+        
+        // Dispatch it on the socket
+        this.socket.dispatchEvent(event);
+        
+        // Fallback: Try calling onmessage directly if it exists
+        if (this.socket.onmessage) {
+          this.socket.onmessage(event);
+        }
+        
+        const msg = `Injected Packet [${header}]`;
+        log.info(msg, values);
+        
+        if (this.loggingEnabled) {
+            const hex = Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+            console.log(`%c[PacketManager] INJECT HEX: ${hex}`, 'color: #00aaaa; font-weight: bold');
+        }
+
+        UI.showToast(msg, 'info');
+      } catch (e) {
+        log.error('Packet Injection Error', e);
+        UI.showToast('Injection Error', 'error');
+      }
+    },
+    
+    // Alias for inject
+    receive(header, ...values) {
+      this.inject(header, ...values);
+    },
+    
+    // Type helpers for console use
+    types: {
+      Byte: (v) => ({ type: 'Byte', value: v }),
+      Short: (v) => ({ type: 'Short', value: v }),
+      Int: (v) => ({ type: 'Int', value: v }),
+      String: (v) => ({ type: 'String', value: v }),
+    },
+    
+    debug() {
+      console.log('PacketManager Debug:');
+      console.log('- Socket:', this.socket);
+      console.log('- ReadyState:', this.socket ? this.socket.readyState : 'N/A');
+      console.log('- Logging:', this.loggingEnabled);
+    },
+    
+    toggleLogging(state) {
+      this.loggingEnabled = state !== undefined ? state : !this.loggingEnabled;
+      config.set('packetLoggingEnabled', this.loggingEnabled);
+      log.info(`PacketManager: Logging ${this.loggingEnabled ? 'ENABLED' : 'DISABLED'}`);
+    }
+  };
+
+  // ─────────────────────────────────────────────────────────────────
+  // Packet Builder UI
+  // ─────────────────────────────────────────────────────────────────
+  const PacketBuilder = {
+    isOpen: false,
+    window: null,
+    activeTab: 'builder', // 'builder', 'history', 'incoming', or 'macros'
+    lastPosition: null,
+    editingMacro: null, // For macro editor
+    
+    toggle() {
+      if (this.isOpen) this.close();
+      else this.open();
+    },
+
+    open() {
+      if (this.isOpen) return;
+      this.isOpen = true;
+
+      const win = document.createElement('div');
+      win.className = 'kuplafix-menu'; // Reuse main menu class for styling
+      
+      const pos = this.lastPosition || { top: '100px', left: '100px' };
+      
+      Object.assign(win.style, {
+        position: 'fixed',
+        top: pos.top,
+        left: pos.left,
+        width: '450px',
+        height: 'auto',
+        maxHeight: '650px',
+        zIndex: '100001', // Higher than main menu (99999)
+        transform: 'none', // Override centering from class
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '15px', // Match main menu padding
+        overflow: 'hidden',
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      });
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'kuplafix-menu-header';
+      header.style.cursor = 'move';
+      header.style.marginBottom = '15px';
+      header.style.paddingRight = '40px'; // Space for close button
+      header.innerHTML = `
+        <div class="kuplafix-menu-subtitle" style="margin:0; font-weight:bold; color:#fff; text-transform:none; letter-spacing:normal; font-size:16px;">Packet Builder</div>
+        <button class="kuplafix-close-btn">✕</button>
+      `;
+      header.querySelector('button').onclick = () => this.close();
+      win.appendChild(header);
+
+      // Tabs
+      const tabs = document.createElement('div');
+      tabs.style.display = 'flex';
+      tabs.style.borderBottom = '1px solid var(--kuplafix-border)';
+      tabs.style.background = 'rgba(12, 18, 22, 0.7)';
+      tabs.style.margin = '0 -15px'; // Pull to edges
+      
+      const createTab = (id, label) => {
+          const tab = document.createElement('div');
+          tab.textContent = label;
+          tab.style.flex = '1';
+          tab.style.padding = '10px';
+          tab.style.textAlign = 'center';
+          tab.style.cursor = 'pointer';
+          tab.style.fontSize = '12px';
+          tab.style.fontWeight = '600';
+          tab.style.textTransform = 'uppercase';
+          tab.style.letterSpacing = '0.05em';
+          tab.style.color = this.activeTab === id ? '#fff' : '#aaa';
+          tab.style.background = this.activeTab === id ? 'rgba(23, 111, 143, 0.35)' : 'transparent';
+          tab.style.borderBottom = this.activeTab === id ? '2px solid var(--kuplafix-accent)' : '2px solid transparent';
+          tab.onclick = () => {
+              this.activeTab = id;
+              this.renderContent();
+          };
+          return tab;
+      };
+      
+      tabs.appendChild(createTab('builder', 'Builder'));
+      tabs.appendChild(createTab('history', 'Out Log'));
+      tabs.appendChild(createTab('incoming', 'In Log'));
+      tabs.appendChild(createTab('macros', 'Macros'));
+      win.appendChild(tabs);
+
+      // Content Area
+      const content = document.createElement('div');
+      content.id = 'pb-content';
+      content.style.flex = '1';
+      content.style.overflowY = 'auto';
+      content.style.padding = '15px 0 0 0'; // Only top padding for spacing from tabs
+      win.appendChild(content);
+
+      document.body.appendChild(win);
+      this.window = win;
+      this.contentArea = content;
+
+      // Make draggable
+      this.makeDraggable(win, header);
+      
+      this.renderContent();
+    },
+    
+    renderContent() {
+        if (!this.window) return;
+        
+        // Update tabs styling
+        const tabs = this.window.children[1].children;
+        const tabIds = ['builder', 'history', 'incoming', 'macros'];
+        for (let i = 0; i < tabs.length && i < tabIds.length; i++) {
+            const isActive = this.activeTab === tabIds[i];
+            tabs[i].style.color = isActive ? '#fff' : '#aaa';
+            tabs[i].style.background = isActive ? 'rgba(23, 111, 143, 0.35)' : 'transparent';
+            tabs[i].style.borderBottom = isActive ? '2px solid var(--kuplafix-accent)' : '2px solid transparent';
+        }
+        
+        this.contentArea.innerHTML = '';
+        this.contentArea.style.padding = '15px 15px 15px 0px';
+        
+        if (this.activeTab === 'builder') {
+            this.renderBuilder();
+        } else if (this.activeTab === 'history') {
+            this.renderHistory();
+        } else if (this.activeTab === 'incoming') {
+            this.renderIncomingLog();
+        } else if (this.activeTab === 'macros') {
+            this.renderMacros();
+        }
+    },
+    
+    renderBuilder() {
+      const content = this.contentArea;
+      content.style.padding = '15px 15px 15px 0px';
+      
+      // Header Selection Row
+      const headerRow = document.createElement('div');
+      headerRow.className = 'kuplafix-options-row';
+      headerRow.style.alignItems = 'flex-start';
+      headerRow.innerHTML = `
+        <div style="flex:2; position:relative;">
+          <label class="kuplafix-options-label">Header (ID or Name)</label>
+          <div class="pb-header-search-container">
+            <input type="text" id="pb-header-search" placeholder="Search headers..." class="kuplafix-options-input" style="width:100%; box-sizing:border-box;">
+            <div id="pb-header-dropdown" class="pb-header-dropdown"></div>
+          </div>
+          <input type="hidden" id="pb-header" value="1314">
+        </div>
+        <div style="flex:1">
+          <label class="kuplafix-options-label">Direction</label>
+          <select id="pb-direction" class="kuplafix-options-input">
+            <option value="send">Send (OUT)</option>
+            <option value="inject">Inject (IN)</option>
+          </select>
+        </div>
+      `;
+      content.appendChild(headerRow);
+
+      const searchInput = headerRow.querySelector('#pb-header-search');
+      const dropdown = headerRow.querySelector('#pb-header-dropdown');
+      const hiddenInput = headerRow.querySelector('#pb-header');
+      const dirSelect = headerRow.querySelector('#pb-direction');
+
+      // Initialize search input with default
+      const updateSearchFromId = (id, direction) => {
+          const map = direction === 'send' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+          let name = 'Unknown';
+          for (const [n, i] of Object.entries(map)) {
+              if (i === parseInt(id)) {
+                  name = n;
+                  break;
+              }
+          }
+          searchInput.value = name !== 'Unknown' ? `[${id}] ${name}` : id;
+          hiddenInput.value = id;
+          this.updatePayloadPreview();
+      };
+
+      updateSearchFromId(hiddenInput.value, dirSelect.value);
+
+      searchInput.onfocus = () => {
+          this.showDropdown(dropdown, searchInput.value, dirSelect.value);
+      };
+
+      searchInput.oninput = () => {
+          this.showDropdown(dropdown, searchInput.value, dirSelect.value);
+          // If user types a number directly, update hidden input
+          if (/^\d+$/.test(searchInput.value)) {
+              hiddenInput.value = searchInput.value;
+              this.updatePayloadPreview();
+          }
+      };
+
+      dirSelect.onchange = () => {
+          updateSearchFromId(hiddenInput.value, dirSelect.value);
+      };
+
+      // Close dropdown on click outside
+      const closeHandler = (e) => {
+          if (!headerRow.contains(e.target)) {
+              dropdown.classList.remove('open');
+          }
+      };
+      document.addEventListener('mousedown', closeHandler);
+      this.window._closeHandler = closeHandler; // Store for cleanup
+
+      // Arguments Container
+      const argsContainer = document.createElement('div');
+      argsContainer.id = 'pb-args';
+      argsContainer.style.display = 'flex';
+      argsContainer.style.flexDirection = 'column';
+      argsContainer.style.gap = '8px';
+      argsContainer.style.marginTop = '15px';
+      content.appendChild(argsContainer);
+
+      // Add Argument Button
+      const addBtn = document.createElement('button');
+      addBtn.textContent = '+ Add Argument';
+      addBtn.className = 'kuplafix-btn-secondary';
+      addBtn.style.width = '100%';
+      addBtn.style.marginTop = '10px';
+      addBtn.onclick = () => {
+          this.addArgumentRow(argsContainer);
+          this.updatePayloadPreview();
+      };
+      content.appendChild(addBtn);
+
+      // Payload Preview
+      const previewSection = document.createElement('div');
+      previewSection.style.marginTop = '15px';
+      previewSection.innerHTML = `
+          <div style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Payload Preview</div>
+          <div id="pb-payload-preview" class="kuplafix-console-content" style="min-height: 40px; max-height: 80px; padding: 8px; font-family: monospace; font-size: 11px; word-break: break-all;"></div>
+      `;
+      content.appendChild(previewSection);
+
+      // Actions
+      const actions = document.createElement('div');
+      actions.style.marginTop = '15px';
+      
+      const sendBtn = document.createElement('button');
+      sendBtn.textContent = 'Execute Packet';
+      sendBtn.className = 'kuplafix-btn';
+      sendBtn.style.width = '100%';
+      sendBtn.onclick = () => this.executePacket();
+      actions.appendChild(sendBtn);
+      
+      content.appendChild(actions);
+      
+      // Add initial argument (String)
+      this.addArgumentRow(argsContainer, 'String');
+      
+      // Initial preview update
+      this.updatePayloadPreview();
+    },
+
+    showDropdown(dropdown, query, direction) {
+        dropdown.innerHTML = '';
+        const map = direction === 'send' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+        
+        let showAll = !query;
+        let search = query;
+        const match = query.match(/^\[(\d+)\]\s*(.*)$/);
+        if (match) {
+            const selectedId = parseInt(match[1]);
+            const selectedName = match[2];
+            // If the name in the box matches the ID in the box, it's a "clean" selection
+            // We show all entries to allow browsing when the user clicks a filled field
+            if (map[selectedName] === selectedId) {
+                showAll = true;
+            }
+            search = selectedName;
+        }
+        
+        const items = Object.entries(map);
+        const filtered = items.filter(([name, id]) => {
+            if (showAll) return true;
+            const q = search.toLowerCase();
+            return name.toLowerCase().includes(q) || id.toString().includes(q);
+        }).slice(0, 200);
+
+        if (filtered.length === 0) {
+            dropdown.classList.remove('open');
+            return;
+        }
+
+        filtered.forEach(([name, id]) => {
+            const item = document.createElement('div');
+            item.className = 'pb-header-item';
+            item.innerHTML = `
+                <span>${name}</span>
+                <span class="pb-header-item-id">${id}</span>
+            `;
+            item.onclick = (e) => {
+                e.stopPropagation();
+                const searchInput = document.getElementById('pb-header-search');
+                const hiddenInput = document.getElementById('pb-header');
+                searchInput.value = `[${id}] ${name}`;
+                hiddenInput.value = id;
+                dropdown.classList.remove('open');
+                this.updatePayloadPreview();
+            };
+            dropdown.appendChild(item);
+        });
+
+        dropdown.classList.add('open');
+    },
+    
+    renderHistory() {
+        const content = this.contentArea;
+        content.style.padding = '15px 15px 15px 0px';
+        
+        const consoleWrapper = document.createElement('div');
+        consoleWrapper.className = 'kuplafix-console';
+        
+        const consoleHeader = document.createElement('div');
+        consoleHeader.className = 'kuplafix-console-header';
+        consoleHeader.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Outgoing Packets</span>
+                    <button class="kuplafix-btn-secondary" style="padding: 2px 8px; font-size: 9px;">Clear Log</button>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label style="font-size: 10px; color: #aaa; white-space: nowrap;">Ignore IDs:</label>
+                    <input type="text" id="pb-ignore-outgoing" class="kuplafix-options-input" placeholder="e.g. 374, 1640, 1717" style="flex: 1; font-size: 10px; padding: 4px 8px;" value="${Array.from(PacketManager.ignoredOutgoingHeaders).join(', ')}">
+                </div>
+            </div>
+        `;
+        consoleHeader.querySelector('button').onclick = () => PacketManager.clearHistory();
+        
+        const ignoreInput = consoleHeader.querySelector('#pb-ignore-outgoing');
+        ignoreInput.onchange = () => {
+            const ids = ignoreInput.value.split(',').map(s => s.trim()).filter(s => s && !isNaN(s)).map(s => parseInt(s));
+            PacketManager.ignoredOutgoingHeaders = new Set(ids);
+            PacketManager.saveIgnoredHeaders();
+            UI.showToast(`Ignoring ${ids.length} outgoing header(s)`, 'info');
+        };
+        
+        const consoleContent = document.createElement('div');
+        consoleContent.className = 'kuplafix-console-content';
+        consoleContent.id = 'pb-console-content';
+        
+        if (PacketManager.outgoingHistory.length === 0) {
+            consoleContent.innerHTML = '<div style="text-align:center; color:#5c707a; padding:20px; font-size: 10px;">Console ready. Waiting for packets...</div>';
+        } else {
+            PacketManager.outgoingHistory.forEach(p => {
+                consoleContent.appendChild(this.createLogLine(p));
+            });
+        }
+        
+        consoleWrapper.appendChild(consoleHeader);
+        consoleWrapper.appendChild(consoleContent);
+        content.appendChild(consoleWrapper);
+        
+        // Scroll to bottom
+        setTimeout(() => {
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }, 10);
+    },
+
+    createLogLine(p, direction = 'OUT') {
+        const line = document.createElement('div');
+        line.className = 'kuplafix-console-line';
+        
+        // Find header name
+        let headerName = 'Unknown';
+        const headerMap = direction === 'OUT' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+        for (const [name, id] of Object.entries(headerMap)) {
+            if (id === p.header) {
+                headerName = name;
+                break;
+            }
+        }
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'kuplafix-console-time';
+        timeSpan.textContent = p.timestamp;
+        
+        const idSpan = document.createElement('span');
+        idSpan.className = 'kuplafix-console-id';
+        idSpan.textContent = `[${p.header}]`;
+        idSpan.style.cursor = 'pointer';
+        idSpan.title = 'Click to ignore this header';
+        idSpan.onclick = (e) => {
+            e.stopPropagation();
+            PacketManager.addIgnoredHeader(direction, p.header);
+            
+            // Update input field
+            const inputId = direction === 'OUT' ? 'pb-ignore-outgoing' : 'pb-ignore-incoming';
+            const input = document.getElementById(inputId);
+            const ignoredSet = direction === 'OUT' ? PacketManager.ignoredOutgoingHeaders : PacketManager.ignoredIncomingHeaders;
+            if (input) {
+                input.value = Array.from(ignoredSet).join(', ');
+            }
+            
+            UI.showToast(`Ignoring header [${p.header}] ${headerName}`, 'info');
+        };
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'kuplafix-console-name';
+        nameSpan.textContent = headerName;
+        nameSpan.style.cursor = 'pointer';
+        nameSpan.title = 'Click to import to builder';
+        nameSpan.onclick = () => this.importPacket(p, direction);
+        
+        const hexSpan = document.createElement('span');
+        hexSpan.className = 'kuplafix-console-hex';
+        hexSpan.textContent = p.hex;
+        hexSpan.style.cursor = 'pointer';
+        hexSpan.title = 'Click to import to builder';
+        hexSpan.onclick = () => this.importPacket(p, direction);
+        
+        line.appendChild(timeSpan);
+        line.appendChild(idSpan);
+        line.appendChild(nameSpan);
+        line.appendChild(hexSpan);
+        
+        return line;
+    },
+
+    appendLog(packet) {
+        const consoleContent = document.getElementById('pb-console-content');
+        if (!consoleContent) return;
+        
+        // Remove placeholder if it exists
+        if (PacketManager.outgoingHistory.length === 1) {
+            consoleContent.innerHTML = '';
+        }
+        
+        const line = this.createLogLine(packet);
+        consoleContent.appendChild(line);
+        
+        // Auto-scroll if near bottom
+        const isNearBottom = consoleContent.scrollHeight - consoleContent.scrollTop - consoleContent.clientHeight < 50;
+        if (isNearBottom) {
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }
+        
+        // Keep max lines
+        if (consoleContent.children.length > PacketManager.maxHistory) {
+            consoleContent.removeChild(consoleContent.firstChild);
+        }
+    },
+
+    renderIncomingLog() {
+        const content = this.contentArea;
+        content.style.padding = '15px 15px 15px 0px';
+        
+        const consoleWrapper = document.createElement('div');
+        consoleWrapper.className = 'kuplafix-console';
+        
+        const consoleHeader = document.createElement('div');
+        consoleHeader.className = 'kuplafix-console-header';
+        consoleHeader.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.05em;">Incoming Packets</span>
+                    <button class="kuplafix-btn-secondary" style="padding: 2px 8px; font-size: 9px;">Clear Log</button>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <label style="font-size: 10px; color: #aaa; white-space: nowrap;">Ignore IDs:</label>
+                    <input type="text" id="pb-ignore-incoming" class="kuplafix-options-input" placeholder="e.g. 374, 1640, 1717" style="flex: 1; font-size: 10px; padding: 4px 8px;" value="${Array.from(PacketManager.ignoredIncomingHeaders).join(', ')}">
+                </div>
+            </div>
+        `;
+        consoleHeader.querySelector('button').onclick = () => PacketManager.clearIncomingHistory();
+        
+        const ignoreInput = consoleHeader.querySelector('#pb-ignore-incoming');
+        ignoreInput.onchange = () => {
+            const ids = ignoreInput.value.split(',').map(s => s.trim()).filter(s => s && !isNaN(s)).map(s => parseInt(s));
+            PacketManager.ignoredIncomingHeaders = new Set(ids);
+            PacketManager.saveIgnoredHeaders();
+            UI.showToast(`Ignoring ${ids.length} incoming header(s)`, 'info');
+        };
+        
+        const consoleContent = document.createElement('div');
+        consoleContent.className = 'kuplafix-console-content';
+        consoleContent.id = 'pb-incoming-content';
+        
+        if (PacketManager.incomingHistory.length === 0) {
+            consoleContent.innerHTML = '<div style="text-align:center; color:#5c707a; padding:20px; font-size: 10px;">Console ready. Waiting for packets...</div>';
+        } else {
+            PacketManager.incomingHistory.forEach(p => {
+                consoleContent.appendChild(this.createLogLine(p, 'IN'));
+            });
+        }
+        
+        consoleWrapper.appendChild(consoleHeader);
+        consoleWrapper.appendChild(consoleContent);
+        content.appendChild(consoleWrapper);
+        
+        // Scroll to bottom
+        setTimeout(() => {
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }, 10);
+    },
+
+    appendIncomingLog(packet) {
+        const consoleContent = document.getElementById('pb-incoming-content');
+        if (!consoleContent) return;
+        
+        // Remove placeholder if it exists
+        if (PacketManager.incomingHistory.length === 1) {
+            consoleContent.innerHTML = '';
+        }
+        
+        const line = this.createLogLine(packet, 'IN');
+        consoleContent.appendChild(line);
+        
+        // Auto-scroll if near bottom
+        const isNearBottom = consoleContent.scrollHeight - consoleContent.scrollTop - consoleContent.clientHeight < 50;
+        if (isNearBottom) {
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }
+        
+        // Keep max lines
+        if (consoleContent.children.length > PacketManager.maxHistory) {
+            consoleContent.removeChild(consoleContent.firstChild);
+        }
+    },
+    
+    importPacket(packet, direction = 'OUT') {
+        this.activeTab = 'builder';
+        this.renderContent();
+        
+        // Wait for render
+        setTimeout(() => {
+            const searchInput = document.getElementById('pb-header-search');
+            const hiddenInput = document.getElementById('pb-header');
+            const dirSelect = document.getElementById('pb-direction');
+            
+            // Set direction based on where packet came from
+            if (dirSelect) dirSelect.value = direction === 'OUT' ? 'send' : 'inject';
+            
+            // Find name
+            let name = 'Unknown';
+            const headerMap = direction === 'OUT' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+            for (const [n, i] of Object.entries(headerMap)) {
+                if (i === packet.header) {
+                    name = n;
+                    break;
+                }
+            }
+            
+            if (searchInput) searchInput.value = `[${packet.header}] ${name}`;
+            if (hiddenInput) hiddenInput.value = packet.header;
+            
+            // Clear args
+            const argsContainer = document.getElementById('pb-args');
+            if (argsContainer) {
+                argsContainer.innerHTML = '';
+                
+                // Try to parse arguments
+                const parsedArgs = PacketManager.parsePacket(packet.buffer);
+                
+                if (parsedArgs.length > 0) {
+                    parsedArgs.forEach(arg => {
+                        this.addArgumentRow(argsContainer, arg.type, arg.value);
+                    });
+                    UI.showToast(`Imported ${parsedArgs.length} arguments (Auto-detected)`, 'success');
+                } else {
+                    UI.showToast('Header imported. Could not auto-detect arguments.', 'info');
+                    this.addArgumentRow(argsContainer, 'String');
+                }
+            }
+            
+            // Update payload preview
+            this.updatePayloadPreview();
+        }, 50);
+    },
+
+    close() {
+      if (this.window) {
+        if (this.window._closeHandler) {
+            document.removeEventListener('mousedown', this.window._closeHandler);
+        }
+        this.window.remove();
+        this.window = null;
+      }
+      this.isOpen = false;
+    },
+
+    addArgumentRow(container, defaultType = 'String', defaultValue = '') {
+      const row = document.createElement('div');
+      row.className = 'pb-arg-row';
+      row.style.display = 'flex';
+      row.style.gap = '8px';
+      
+      const typeSelect = document.createElement('select');
+      typeSelect.className = 'pb-arg-type kuplafix-options-input';
+      typeSelect.style.width = '80px';
+      
+      ['String', 'Int', 'Short', 'Byte', 'Boolean'].forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        if (t === defaultType) opt.selected = true;
+        typeSelect.appendChild(opt);
+      });
+      typeSelect.onchange = () => this.updatePayloadPreview();
+
+      const valueInput = document.createElement('input');
+      valueInput.className = 'pb-arg-value kuplafix-options-input';
+      valueInput.placeholder = 'Value';
+      valueInput.value = defaultValue;
+      valueInput.style.flex = '1';
+      valueInput.oninput = () => this.updatePayloadPreview();
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '×';
+      removeBtn.className = 'kuplafix-btn';
+      removeBtn.style.background = '#c0392b';
+      removeBtn.style.width = '30px';
+      removeBtn.style.padding = '0';
+      removeBtn.onclick = () => {
+          row.remove();
+          this.updatePayloadPreview();
+      };
+
+      row.appendChild(typeSelect);
+      row.appendChild(valueInput);
+      row.appendChild(removeBtn);
+      container.appendChild(row);
+      
+      // Update preview after adding row
+      this.updatePayloadPreview();
+    },
+
+    updatePayloadPreview() {
+      const preview = document.getElementById('pb-payload-preview');
+      if (!preview) return;
+      
+      const headerEl = document.getElementById('pb-header');
+      const headerId = headerEl ? parseInt(headerEl.value) : 0;
+      const argRows = document.querySelectorAll('.pb-arg-row');
+      
+      if (isNaN(headerId) || headerId === 0) {
+          preview.innerHTML = '<span style="color:#5c707a;">Select a header...</span>';
+          return;
+      }
+      
+      const args = [];
+      argRows.forEach(row => {
+          const type = row.querySelector('.pb-arg-type').value;
+          const rawValue = row.querySelector('.pb-arg-value').value;
+          let value;
+          switch (type) {
+              case 'String': value = rawValue; break;
+              case 'Int': value = parseInt(rawValue) || 0; break;
+              case 'Short': value = parseInt(rawValue) || 0; break;
+              case 'Byte': value = parseInt(rawValue) || 0; break;
+              case 'Boolean': value = (rawValue === 'true' || rawValue === '1'); break;
+          }
+          args.push(PacketManager.types[type](value));
+      });
+      
+      try {
+          const buffer = PacketManager.createPacket(headerId, args);
+          const bytes = new Uint8Array(buffer);
+          const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+          
+          // Color-code: header (blue), payload (green)
+          const headerHex = Array.from(bytes.slice(0, 6)).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+          const payloadHex = bytes.length > 6 ? Array.from(bytes.slice(6)).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ') : '';
+          
+          preview.innerHTML = `
+              <span style="color:#3498db;" title="Length (4) + Header (2)">${headerHex}</span>${payloadHex ? ' ' : ''}
+              <span style="color:#2ecc71;" title="Payload">${payloadHex}</span>
+              <div style="margin-top:6px; font-size:10px; color:#888;">${bytes.length} bytes total</div>
+          `;
+      } catch (e) {
+          preview.innerHTML = `<span style="color:#e74c3c;">Error: ${e.message}</span>`;
+      }
+    },
+
+    executePacket() {
+      const headerId = parseInt(document.getElementById('pb-header').value);
+      const direction = document.getElementById('pb-direction').value;
+      const argRows = document.querySelectorAll('.pb-arg-row');
+      
+      if (isNaN(headerId)) {
+        UI.showToast('Invalid Header ID', 'error');
+        return;
+      }
+
+      const args = [];
+      
+      argRows.forEach(row => {
+        const type = row.querySelector('.pb-arg-type').value;
+        const rawValue = row.querySelector('.pb-arg-value').value;
+        let value;
+
+        switch (type) {
+          case 'String': value = rawValue; break;
+          case 'Int': value = parseInt(rawValue) || 0; break;
+          case 'Short': value = parseInt(rawValue) || 0; break;
+          case 'Byte': value = parseInt(rawValue) || 0; break;
+          case 'Boolean': value = (rawValue === 'true' || rawValue === '1'); break;
+        }
+
+        // Use explicit types helper
+        args.push(PacketManager.types[type](value));
+      });
+
+      if (direction === 'send') {
+        PacketManager.send(headerId, ...args);
+      } else {
+        PacketManager.inject(headerId, ...args);
+      }
+    },
+
+    makeDraggable(element, handle) {
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      handle.onmousedown = dragMouseDown;
+
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        
+        // Prevent text selection while dragging
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitUserSelect = 'none';
+        
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+      }
+
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        
+        // Restore text selection
+        document.body.style.userSelect = '';
+        document.body.style.webkitUserSelect = '';
+        
+        // Save position
+        PacketBuilder.lastPosition = {
+            top: element.style.top,
+            left: element.style.left
+        };
+      }
+    },
+
+    // ─────────────────────────────────────────────────────────────────
+    // Macros Tab
+    // ─────────────────────────────────────────────────────────────────
+    renderMacros() {
+        const content = this.contentArea;
+        
+        // If editing a macro, show editor
+        if (this.editingMacro !== null) {
+            this.renderMacroEditor();
+            return;
+        }
+        
+        // Safety setting for macro notifications
+        const settingsRow = document.createElement('div');
+        settingsRow.style.cssText = 'background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:8px 10px; margin-bottom:12px; display:flex; align-items:center;';
+        
+        const acceptAllEnabled = config.get('acceptAllMacroNotifications') || false;
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'accept-all-macros';
+        checkbox.checked = acceptAllEnabled;
+        checkbox.className = 'kuplafix-macro-checkbox';
+        checkbox.style.cssText = 'margin-right:8px;';
+        checkbox.onchange = () => {
+            config.set('acceptAllMacroNotifications', checkbox.checked);
+            log.info('Receive all macro notifications:', checkbox.checked);
+        };
+        
+        const label = document.createElement('label');
+        label.htmlFor = 'accept-all-macros';
+        label.style.cssText = 'color:rgba(255,255,255,0.8); font-size:11px; cursor:pointer; user-select:none;';
+        label.textContent = 'Receive macros from all users (default: only 0es)';
+        
+        settingsRow.appendChild(checkbox);
+        settingsRow.appendChild(label);
+        content.appendChild(settingsRow);
+        
+        // Header with Add button
+        const headerDiv = document.createElement('div');
+        headerDiv.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;';
+        headerDiv.innerHTML = `
+            <div style="color:#fff; font-weight:600;">Macros (${PacketManager.macros.length})</div>
+        `;
+        
+        const addBtn = document.createElement('button');
+        addBtn.className = 'kuplafix-btn';
+        addBtn.style.fontSize = '11px';
+        addBtn.style.padding = '4px 10px';
+        addBtn.textContent = '+ New Macro';
+        addBtn.onclick = () => {
+            this.editingMacro = {
+                name: 'New Macro',
+                enabled: true,
+                trigger: {
+                    direction: 'receive',
+                    header: 0,
+                    conditions: []
+                },
+                actions: []
+            };
+            this.renderContent();
+        };
+        headerDiv.appendChild(addBtn);
+        content.appendChild(headerDiv);
+        
+        // Macro List
+        if (PacketManager.macros.length === 0) {
+            const empty = document.createElement('div');
+            empty.style.cssText = 'text-align:center; color:#5c707a; padding:30px 0;';
+            empty.innerHTML = `
+                <div style="font-size:24px; margin-bottom:8px;">📦</div>
+                <div>No macros configured</div>
+                <div style="font-size:11px; margin-top:4px;">Click "+ New Macro" to create one</div>
+            `;
+            content.appendChild(empty);
+            return;
+        }
+        
+        const list = document.createElement('div');
+        list.style.cssText = 'display:flex; flex-direction:column; gap:8px;';
+        
+        for (const macro of PacketManager.macros) {
+            const item = document.createElement('div');
+            item.style.cssText = `
+                background: rgba(12, 18, 22, 0.6);
+                border: 1px solid var(--kuplafix-border);
+                border-radius: 6px;
+                padding: 10px 12px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            
+            // Enable toggle
+            const toggle = document.createElement('input');
+            toggle.type = 'checkbox';
+            toggle.checked = macro.enabled;
+            toggle.className = 'kuplafix-macro-checkbox';
+            toggle.onchange = () => {
+                PacketManager.toggleMacro(macro.id);
+                this.renderContent();
+            };
+            
+            // Info
+            const info = document.createElement('div');
+            info.style.cssText = 'flex:1; min-width:0;';
+            
+            const dirLabel = macro.trigger.direction === 'send' ? 'OUT' : 'IN';
+            const headerName = this.getHeaderName(macro.trigger.header, macro.trigger.direction);
+            
+            info.innerHTML = `
+                <div style="font-weight:600; color:${macro.enabled ? '#fff' : '#5c707a'}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${macro.name}</div>
+                <div style="font-size:11px; color:#5c707a;">
+                    <span style="color:${macro.trigger.direction === 'send' ? '#2ecc71' : '#3498db'};">${dirLabel}</span> 
+                    [${macro.trigger.header}] ${headerName}
+                    ${macro.trigger.conditions.length > 0 ? `• ${macro.trigger.conditions.length} condition(s)` : ''}
+                    • ${macro.actions.length} action(s)
+                </div>
+            `;
+            
+            // Buttons
+            const btnGroup = document.createElement('div');
+            btnGroup.style.cssText = 'display:flex; gap:4px;';
+            
+            const shareBtn = document.createElement('button');
+            shareBtn.className = 'kuplafix-btn';
+            shareBtn.style.cssText = 'padding:4px 8px; font-size:11px; background:#8e44ad;';
+            shareBtn.textContent = '📤';
+            shareBtn.title = 'Share macro';
+            shareBtn.onclick = () => {
+                const code = this.encodeMacro(macro);
+                if (code) {
+                    this.showShareDialog(code, macro.name);
+                }
+            };
+            
+            const editBtn = document.createElement('button');
+            editBtn.className = 'kuplafix-btn';
+            editBtn.style.cssText = 'padding:4px 8px; font-size:11px;';
+            editBtn.textContent = 'Edit';
+            editBtn.onclick = () => {
+                this.editingMacro = JSON.parse(JSON.stringify(macro)); // Deep copy
+                this.renderContent();
+            };
+            
+            const delBtn = document.createElement('button');
+            delBtn.className = 'kuplafix-btn';
+            delBtn.style.cssText = 'padding:4px 8px; font-size:11px; background:#c0392b;';
+            delBtn.textContent = '×';
+            delBtn.title = 'Delete macro';
+            delBtn.onclick = () => {
+                PacketManager.deleteMacro(macro.id);
+                UI.showToast(`Deleted macro "${macro.name}"`, 'info');
+                this.renderContent();
+            };
+            
+            btnGroup.appendChild(shareBtn);
+            btnGroup.appendChild(editBtn);
+            btnGroup.appendChild(delBtn);
+            
+            item.appendChild(toggle);
+            item.appendChild(info);
+            item.appendChild(btnGroup);
+            list.appendChild(item);
+        }
+        
+        content.appendChild(list);
+        
+        // Import section
+        const importSection = document.createElement('div');
+        importSection.style.cssText = 'margin-top:16px; padding-top:12px; border-top:1px solid var(--kuplafix-border);';
+        importSection.innerHTML = `
+            <div style="display:flex; gap:8px; align-items:center;">
+                <input type="text" id="macro-import-input" class="kuplafix-options-input" placeholder="Paste macro code (KFM2:...)..." style="flex:1; font-size:11px;">
+                <button id="macro-import-btn" class="kuplafix-btn" style="font-size:11px; padding:4px 10px;">Import</button>
+            </div>
+            <div style="font-size:10px; color:#5c707a; margin-top:6px;">📤 Share via trophy text (300 chars) or chat (100 chars). Most macros fit!</div>
+        `;
+        content.appendChild(importSection);
+        
+        importSection.querySelector('#macro-import-btn').onclick = () => {
+            const input = importSection.querySelector('#macro-import-input');
+            const code = input.value.trim();
+            if (!code) {
+                UI.showToast('Please paste a macro code', 'error');
+                return;
+            }
+            
+            const macro = this.decodeMacro(code);
+            if (macro) {
+                PacketManager.addMacro(macro);
+                UI.showToast(`Imported macro "${macro.name}"`, 'success');
+                input.value = '';
+                this.renderContent();
+            } else {
+                UI.showToast('Invalid macro code', 'error');
+            }
+        };
+    },
+
+    renderMacroEditor() {
+        const content = this.contentArea;
+        const macro = this.editingMacro;
+        const isNew = !macro.id;
+        
+        // Header
+        const headerDiv = document.createElement('div');
+        headerDiv.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;';
+        headerDiv.innerHTML = `<div style="color:#fff; font-weight:600;">${isNew ? 'New Macro' : 'Edit Macro'}</div>`;
+        
+        const backBtn = document.createElement('button');
+        backBtn.className = 'kuplafix-btn';
+        backBtn.style.cssText = 'font-size:11px; padding:4px 10px; background:#5c707a;';
+        backBtn.textContent = '← Back';
+        backBtn.onclick = () => {
+            this.editingMacro = null;
+            this.renderContent();
+        };
+        headerDiv.appendChild(backBtn);
+        content.appendChild(headerDiv);
+        
+        // Scrollable form
+        const form = document.createElement('div');
+        form.style.cssText = 'max-height:450px; overflow-y:auto; padding-right:5px;';
+        
+        // Name
+        form.innerHTML += `
+            <div class="kuplafix-options-row" style="margin-bottom:12px;">
+                <div style="flex:1;">
+                    <label class="kuplafix-options-label">Macro Name</label>
+                    <input type="text" id="macro-name" class="kuplafix-options-input" value="${macro.name}" style="width:100%; box-sizing:border-box;">
+                </div>
+            </div>
+        `;
+        
+        // Trigger Section
+        const triggerDiv = document.createElement('div');
+        triggerDiv.innerHTML = `
+            <div style="color:#3498db; font-size:11px; font-weight:600; text-transform:uppercase; margin-bottom:8px; margin-top:12px;">Trigger</div>
+            <div class="kuplafix-options-row" style="margin-bottom:8px;">
+                <div style="flex:1;">
+                    <label class="kuplafix-options-label">Direction</label>
+                    <select id="macro-trigger-dir" class="kuplafix-options-input">
+                        <option value="receive" ${macro.trigger.direction === 'receive' ? 'selected' : ''}>Receive (IN)</option>
+                        <option value="send" ${macro.trigger.direction === 'send' ? 'selected' : ''}>Send (OUT)</option>
+                    </select>
+                </div>
+                <div style="flex:2; position:relative;">
+                    <label class="kuplafix-options-label">Header (select from log or type)</label>
+                    <div id="macro-header-container" style="position:relative;"></div>
+                </div>
+            </div>
+        `;
+        form.appendChild(triggerDiv);
+        
+        // Build header dropdown from logged packets
+        this.buildTriggerHeaderDropdown(form.querySelector('#macro-header-container'), macro);
+        
+        // Conditions
+        form.innerHTML += `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin:12px 0 8px 0;">
+                <div style="color:#e67e22; font-size:11px; font-weight:600; text-transform:uppercase;">Conditions (optional)</div>
+                <button id="add-condition-btn" class="kuplafix-btn" style="font-size:10px; padding:2px 6px;">+ Add</button>
+            </div>
+            <div id="macro-conditions" style="display:flex; flex-direction:column; gap:6px;"></div>
+        `;
+        
+        // Actions
+        form.innerHTML += `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin:12px 0 8px 0;">
+                <div style="color:#2ecc71; font-size:11px; font-weight:600; text-transform:uppercase;">Actions</div>
+                <button id="add-action-btn" class="kuplafix-btn" style="font-size:10px; padding:2px 6px;">+ Add</button>
+            </div>
+            <div id="macro-actions" style="display:flex; flex-direction:column; gap:8px;"></div>
+        `;
+        
+        // Save/Cancel buttons
+        form.innerHTML += `
+            <div style="display:flex; gap:8px; margin-top:16px; padding-top:12px; border-top:1px solid var(--kuplafix-border);">
+                <button id="macro-save-btn" class="kuplafix-btn" style="flex:1;">Save Macro</button>
+                <button id="macro-cancel-btn" class="kuplafix-btn" style="flex:1; background:#5c707a;">Cancel</button>
+            </div>
+        `;
+        
+        content.appendChild(form);
+        
+        // Bind events
+        form.querySelector('#macro-name').oninput = (e) => macro.name = e.target.value;
+        form.querySelector('#macro-trigger-dir').onchange = (e) => {
+            macro.trigger.direction = e.target.value;
+            // Rebuild header dropdown for new direction
+            this.buildTriggerHeaderDropdown(form.querySelector('#macro-header-container'), macro);
+        };
+        
+        // Render conditions
+        const condContainer = form.querySelector('#macro-conditions');
+        this.renderMacroConditions(condContainer, macro);
+        
+        form.querySelector('#add-condition-btn').onclick = () => {
+            macro.trigger.conditions.push({ argIndex: '0', operator: 'eq', value: '' });
+            this.renderMacroConditions(condContainer, macro);
+        };
+        
+        // Render actions
+        const actContainer = form.querySelector('#macro-actions');
+        this.renderMacroActions(actContainer, macro);
+        
+        form.querySelector('#add-action-btn').onclick = () => {
+            macro.actions.push({ type: 'send', header: 0, args: [], showToast: false, toastMessage: '' });
+            this.renderMacroActions(actContainer, macro);
+        };
+        
+        // Save/Cancel
+        form.querySelector('#macro-save-btn').onclick = () => {
+            if (!macro.name.trim()) {
+                UI.showToast('Please enter a macro name', 'error');
+                return;
+            }
+            if (!macro.trigger.header) {
+                UI.showToast('Please select a trigger header', 'error');
+                return;
+            }
+            if (macro.actions.length === 0) {
+                UI.showToast('Please add at least one action', 'error');
+                return;
+            }
+            
+            if (isNew) {
+                PacketManager.addMacro(macro);
+                UI.showToast(`Macro "${macro.name}" created`, 'success');
+            } else {
+                PacketManager.updateMacro(macro.id, macro);
+                UI.showToast(`Macro "${macro.name}" updated`, 'success');
+            }
+            
+            this.editingMacro = null;
+            this.renderContent();
+        };
+        
+        form.querySelector('#macro-cancel-btn').onclick = () => {
+            this.editingMacro = null;
+            this.renderContent();
+        };
+    },
+
+    renderMacroConditions(container, macro) {
+        container.innerHTML = '';
+        
+        // Show sample args info if available
+        if (macro.trigger.sampleArgs && macro.trigger.sampleArgs.length > 0) {
+            const sampleDiv = document.createElement('div');
+            sampleDiv.style.cssText = 'background:rgba(52, 152, 219, 0.15); border:1px solid rgba(52, 152, 219, 0.3); border-radius:4px; padding:8px; margin-bottom:8px; font-size:10px;';
+            sampleDiv.innerHTML = `<div style="color:#3498db; font-weight:600; margin-bottom:4px;">Sample Args from Selected Packet:</div>`;
+            
+            macro.trigger.sampleArgs.forEach((arg, i) => {
+                const val = String(arg.value);
+                const preview = val.length > 30 ? val.substring(0, 30) + '...' : val;
+                sampleDiv.innerHTML += `<div style="color:#aaa;"><span style="color:#e67e22;">arg[${i}]</span> (${arg.type}): <span style="color:#fff;">${preview}</span></div>`;
+            });
+            container.appendChild(sampleDiv);
+        }
+        
+        if (macro.trigger.conditions.length === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.style.cssText = 'color:#5c707a; font-size:11px; padding:8px; text-align:center;';
+            emptyDiv.textContent = 'No conditions - triggers on any packet with matching header';
+            container.appendChild(emptyDiv);
+            return;
+        }
+        
+        macro.trigger.conditions.forEach((cond, idx) => {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex; gap:4px; align-items:center; background:rgba(12,18,22,0.5); padding:6px; border-radius:4px;';
+            
+            // Get sample value for placeholder if available
+            const sampleVal = macro.trigger.sampleArgs && macro.trigger.sampleArgs[parseInt(cond.argIndex)] 
+                ? String(macro.trigger.sampleArgs[parseInt(cond.argIndex)].value) 
+                : '';
+            const placeholder = sampleVal ? `e.g. ${sampleVal.substring(0, 15)}` : 'value';
+            
+            row.innerHTML = `
+                <span style="color:#888; font-size:10px;">arg[</span>
+                <input type="number" class="cond-arg kuplafix-options-input" value="${cond.argIndex}" style="width:45px; font-size:11px; text-align:center;" min="0" max="${macro.trigger.sampleArgs ? macro.trigger.sampleArgs.length - 1 : 99}">
+                <span style="color:#888; font-size:10px;">]</span>
+                <select class="cond-op kuplafix-options-input" style="width:70px; font-size:11px;">
+                    <option value="eq" ${cond.operator === 'eq' ? 'selected' : ''}>=</option>
+                    <option value="neq" ${cond.operator === 'neq' ? 'selected' : ''}>≠</option>
+                    <option value="gt" ${cond.operator === 'gt' ? 'selected' : ''}>&gt;</option>
+                    <option value="gte" ${cond.operator === 'gte' ? 'selected' : ''}>≥</option>
+                    <option value="lt" ${cond.operator === 'lt' ? 'selected' : ''}>&lt;</option>
+                    <option value="lte" ${cond.operator === 'lte' ? 'selected' : ''}>≤</option>
+                    <option value="contains" ${cond.operator === 'contains' ? 'selected' : ''}>contains</option>
+                </select>
+                <input type="text" class="cond-val kuplafix-options-input" value="${cond.value}" placeholder="${placeholder}" style="flex:1; font-size:11px;">
+                <button class="cond-del kuplafix-btn" style="background:#c0392b; padding:2px 6px;">×</button>
+            `;
+            
+            row.querySelector('.cond-arg').onchange = (e) => {
+                cond.argIndex = e.target.value;
+                this.renderMacroConditions(container, macro); // Re-render to update placeholder
+            };
+            row.querySelector('.cond-op').onchange = (e) => cond.operator = e.target.value;
+            row.querySelector('.cond-val').oninput = (e) => cond.value = e.target.value;
+            row.querySelector('.cond-del').onclick = () => {
+                macro.trigger.conditions.splice(idx, 1);
+                this.renderMacroConditions(container, macro);
+            };
+            
+            container.appendChild(row);
+        });
+    },
+
+    renderMacroActions(container, macro) {
+        container.innerHTML = '';
+        
+        if (macro.actions.length === 0) {
+            container.innerHTML = '<div style="color:#5c707a; font-size:11px; padding:8px; text-align:center;">No actions configured</div>';
+            return;
+        }
+        
+        macro.actions.forEach((action, idx) => {
+            const card = document.createElement('div');
+            card.style.cssText = 'background:rgba(12,18,22,0.5); padding:10px; border-radius:6px; border:1px solid var(--kuplafix-border);';
+            
+            // Action type selector, reorder buttons, and delete
+            const headerRow = document.createElement('div');
+            headerRow.style.cssText = 'display:flex; gap:8px; align-items:center; margin-bottom:8px;';
+            headerRow.innerHTML = `
+                <select class="act-type kuplafix-options-input" style="flex:1;">
+                    <option value="send" ${action.type === 'send' ? 'selected' : ''}>Send Packet (OUT)</option>
+                    <option value="inject" ${action.type === 'inject' ? 'selected' : ''}>Inject Packet (IN)</option>
+                    <option value="toast" ${action.type === 'toast' ? 'selected' : ''}>Show Toast</option>
+                    <option value="delay" ${action.type === 'delay' ? 'selected' : ''}>Delay (ms)</option>
+                </select>
+                <button class="act-up kuplafix-btn" style="background:#3498db; padding:4px 8px;" ${idx === 0 ? 'disabled' : ''} title="Move Up">↑</button>
+                <button class="act-down kuplafix-btn" style="background:#3498db; padding:4px 8px;" ${idx === macro.actions.length - 1 ? 'disabled' : ''} title="Move Down">↓</button>
+                <button class="act-del kuplafix-btn" style="background:#c0392b; padding:4px 8px;">×</button>
+            `;
+            card.appendChild(headerRow);
+            
+            // Action-specific content
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'act-content';
+            this.renderActionContent(contentDiv, action, idx, macro);
+            card.appendChild(contentDiv);
+            
+            // Events
+            headerRow.querySelector('.act-type').onchange = (e) => {
+                action.type = e.target.value;
+                // Reset action-specific props
+                if (action.type === 'send' || action.type === 'inject') {
+                    action.header = action.header || 0;
+                    action.args = action.args || [];
+                } else if (action.type === 'delay') {
+                    action.delay = action.delay || 100;
+                }
+                this.renderActionContent(contentDiv, action, idx, macro);
+            };
+            
+            headerRow.querySelector('.act-up').onclick = () => {
+                if (idx > 0) {
+                    [macro.actions[idx - 1], macro.actions[idx]] = [macro.actions[idx], macro.actions[idx - 1]];
+                    this.renderMacroActions(container, macro);
+                }
+            };
+            
+            headerRow.querySelector('.act-down').onclick = () => {
+                if (idx < macro.actions.length - 1) {
+                    [macro.actions[idx], macro.actions[idx + 1]] = [macro.actions[idx + 1], macro.actions[idx]];
+                    this.renderMacroActions(container, macro);
+                }
+            };
+            
+            headerRow.querySelector('.act-del').onclick = () => {
+                macro.actions.splice(idx, 1);
+                this.renderMacroActions(container, macro);
+            };
+            
+            container.appendChild(card);
+        });
+    },
+
+    renderActionContent(container, action, idx, macro) {
+        container.innerHTML = '';
+        
+        if (action.type === 'send' || action.type === 'inject') {
+            // Packet header input
+            container.innerHTML = `
+                <div style="margin-bottom:8px;">
+                    <label class="kuplafix-options-label" style="font-size:10px;">Header</label>
+                    <input type="text" class="act-header kuplafix-options-input" placeholder="Header ID or name" value="${action.header || ''}" style="width:100%; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <label class="kuplafix-options-label" style="font-size:10px; margin:0;">Arguments</label>
+                        <button class="add-arg-btn kuplafix-btn" style="font-size:9px; padding:1px 5px;">+ Arg</button>
+                    </div>
+                    <div class="act-args" style="display:flex; flex-direction:column; gap:4px;"></div>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="checkbox" class="act-toast-check" ${action.showToast ? 'checked' : ''} style="width:14px; height:14px;">
+                    <input type="text" class="act-toast-msg kuplafix-options-input" placeholder="Toast message (use {{arg0}} for vars)" value="${action.toastMessage || ''}" style="flex:1; font-size:11px;">
+                </div>
+            `;
+            
+            container.querySelector('.act-header').oninput = (e) => {
+                const val = e.target.value;
+                const num = parseInt(val);
+                if (!isNaN(num)) {
+                    action.header = num;
+                } else {
+                    const map = action.type === 'send' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+                    const found = Object.entries(map).find(([name]) => name.toLowerCase() === val.toLowerCase());
+                    if (found) action.header = found[1];
+                }
+            };
+            
+            // Render args
+            const argsContainer = container.querySelector('.act-args');
+            this.renderActionArgs(argsContainer, action);
+            
+            container.querySelector('.add-arg-btn').onclick = () => {
+                action.args.push({ type: 'Int', value: '' });
+                this.renderActionArgs(argsContainer, action);
+            };
+            
+            container.querySelector('.act-toast-check').onchange = (e) => action.showToast = e.target.checked;
+            container.querySelector('.act-toast-msg').oninput = (e) => action.toastMessage = e.target.value;
+            
+        } else if (action.type === 'toast') {
+            container.innerHTML = `
+                <div style="display:flex; gap:8px;">
+                    <input type="text" class="toast-msg kuplafix-options-input" placeholder="Toast message..." value="${action.toastMessage || ''}" style="flex:1;">
+                    <select class="toast-type kuplafix-options-input" style="width:80px;">
+                        <option value="info" ${action.toastType === 'info' ? 'selected' : ''}>Info</option>
+                        <option value="success" ${action.toastType === 'success' ? 'selected' : ''}>Success</option>
+                        <option value="error" ${action.toastType === 'error' ? 'selected' : ''}>Error</option>
+                    </select>
+                </div>
+            `;
+            container.querySelector('.toast-msg').oninput = (e) => action.toastMessage = e.target.value;
+            container.querySelector('.toast-type').onchange = (e) => action.toastType = e.target.value;
+            
+        } else if (action.type === 'delay') {
+            container.innerHTML = `
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <span style="color:#888; font-size:11px;">Wait</span>
+                    <input type="number" class="delay-val kuplafix-options-input" value="${action.delay || 100}" style="width:80px;" min="0">
+                    <span style="color:#888; font-size:11px;">ms before next action</span>
+                </div>
+            `;
+            container.querySelector('.delay-val').oninput = (e) => action.delay = parseInt(e.target.value) || 100;
+        }
+    },
+
+    renderActionArgs(container, action) {
+        container.innerHTML = '';
+        
+        if (!action.args || action.args.length === 0) {
+            container.innerHTML = '<div style="color:#5c707a; font-size:10px;">No arguments</div>';
+            return;
+        }
+        
+        action.args.forEach((arg, idx) => {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex; gap:4px; align-items:center;';
+            row.innerHTML = `
+                <select class="arg-type kuplafix-options-input" style="width:70px; font-size:10px;">
+                    <option value="String" ${arg.type === 'String' ? 'selected' : ''}>String</option>
+                    <option value="Int" ${arg.type === 'Int' ? 'selected' : ''}>Int</option>
+                    <option value="Short" ${arg.type === 'Short' ? 'selected' : ''}>Short</option>
+                    <option value="Byte" ${arg.type === 'Byte' ? 'selected' : ''}>Byte</option>
+                    <option value="Boolean" ${arg.type === 'Boolean' ? 'selected' : ''}>Bool</option>
+                </select>
+                <input type="text" class="arg-val kuplafix-options-input" value="${arg.value}" placeholder="Value or {{arg0}}" style="flex:1; font-size:10px;">
+                <button class="arg-del kuplafix-btn" style="background:#c0392b; padding:1px 5px; font-size:10px;">×</button>
+            `;
+            
+            row.querySelector('.arg-type').onchange = (e) => arg.type = e.target.value;
+            row.querySelector('.arg-val').oninput = (e) => arg.value = e.target.value;
+            row.querySelector('.arg-del').onclick = () => {
+                action.args.splice(idx, 1);
+                this.renderActionArgs(container, action);
+            };
+            
+            container.appendChild(row);
+        });
+    },
+
+    buildTriggerHeaderDropdown(container, macro) {
+        container.innerHTML = '';
+        
+        const direction = macro.trigger.direction;
+        const history = direction === 'send' ? PacketManager.outgoingHistory : PacketManager.incomingHistory;
+        
+        // Get unique packets from history with their parsed args for display
+        const uniquePackets = new Map();
+        for (const packet of history) {
+            if (!uniquePackets.has(packet.header)) {
+                const parsedArgs = PacketManager.parsePacket(packet.buffer);
+                uniquePackets.set(packet.header, {
+                    header: packet.header,
+                    name: this.getHeaderName(packet.header, direction),
+                    args: parsedArgs,
+                    timestamp: packet.timestamp
+                });
+            }
+        }
+        
+        // Create input with dropdown
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position:relative;';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'macro-trigger-header';
+        input.className = 'kuplafix-options-input';
+        input.style.cssText = 'width:100%; box-sizing:border-box;';
+        
+        // Set initial value or placeholder
+        if (macro.trigger.header) {
+            const name = this.getHeaderName(macro.trigger.header, direction);
+            input.value = `[${macro.trigger.header}] ${name}`;
+            input.placeholder = 'Click to select different packet or edit...';
+        } else {
+            input.placeholder = uniquePackets.size > 0 ? 'Select from log or type header ID...' : 'Type header ID (e.g. 4000)...';
+        }
+        
+        const dropdown = document.createElement('div');
+        dropdown.className = 'pb-header-dropdown';
+        dropdown.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(12, 18, 22, 0.98);
+            border: 1px solid var(--kuplafix-border);
+            border-radius: 0 0 6px 6px;
+            z-index: 1000;
+            display: none;
+        `;
+        
+        // Build dropdown items from logged packets
+        if (uniquePackets.size > 0) {
+            for (const [headerId, packet] of uniquePackets) {
+                const item = document.createElement('div');
+                item.style.cssText = `
+                    padding: 8px 10px;
+                    cursor: pointer;
+                    border-bottom: 1px solid rgba(255,255,255,0.05);
+                    font-size: 11px;
+                `;
+                
+                const argsPreview = packet.args.slice(0, 3).map(a => {
+                    const val = String(a.value);
+                    return val.length > 15 ? val.substring(0, 15) + '...' : val;
+                }).join(', ');
+                
+                item.innerHTML = `
+                    <div style="color:#fff; font-weight:500;">[${headerId}] ${packet.name}</div>
+                    <div style="color:#5c707a; font-size:10px; margin-top:2px;">
+                        ${packet.args.length} args: ${argsPreview || '(none)'}
+                    </div>
+                `;
+                
+                item.onmouseenter = () => item.style.background = 'rgba(23, 111, 143, 0.3)';
+                item.onmouseleave = () => item.style.background = 'transparent';
+                item.onclick = () => {
+                    macro.trigger.header = headerId;
+                    macro.trigger.sampleArgs = packet.args; // Store sample args for reference
+                    input.value = `[${headerId}] ${packet.name}`;
+                    dropdown.style.display = 'none';
+                    
+                    // Update conditions UI to show available args
+                    const condContainer = document.getElementById('macro-conditions');
+                    if (condContainer) {
+                        this.renderMacroConditions(condContainer, macro);
+                    }
+                };
+                
+                dropdown.appendChild(item);
+            }
+        } else {
+            const emptyItem = document.createElement('div');
+            emptyItem.style.cssText = 'padding:12px; color:#5c707a; text-align:center; font-size:11px;';
+            emptyItem.innerHTML = `
+                <div>No packets logged for ${direction === 'send' ? 'Outgoing' : 'Incoming'}</div>
+                <div style="margin-top:4px;">Switch to ${direction === 'send' ? 'Out Log' : 'In Log'} tab first to capture packets</div>
+            `;
+            dropdown.appendChild(emptyItem);
+        }
+        
+        // Events
+        input.onfocus = () => dropdown.style.display = 'block';
+        input.onblur = () => setTimeout(() => dropdown.style.display = 'none', 150);
+        input.oninput = (e) => {
+            const val = e.target.value;
+            const num = parseInt(val.replace(/\[(\d+)\].*/, '$1'));
+            if (!isNaN(num)) {
+                macro.trigger.header = num;
+            } else {
+                // Try to look up by name
+                const map = direction === 'send' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+                const found = Object.entries(map).find(([name]) => 
+                    name.toLowerCase().includes(val.toLowerCase())
+                );
+                if (found) macro.trigger.header = found[1];
+            }
+        };
+        
+        wrapper.appendChild(input);
+        wrapper.appendChild(dropdown);
+        container.appendChild(wrapper);
+    },
+
+    // ─────────────────────────────────────────────────────────────────
+    // Macro Share Dialog
+    // ─────────────────────────────────────────────────────────────────
+    
+    showShareDialog(code, macroName) {
+        // Remove existing dialog if any
+        const existing = document.getElementById('macro-share-dialog');
+        if (existing) existing.remove();
+        
+        const len = code.length;
+        const fitsChat = len <= 100;
+        const fitsTrophy = len <= 300;
+        
+        const dialog = document.createElement('div');
+        dialog.id = 'macro-share-dialog';
+        dialog.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(12, 18, 22, 0.98);
+            border: 1px solid var(--kuplafix-border);
+            border-radius: 8px;
+            padding: 16px;
+            z-index: 100002;
+            width: 380px;
+            max-width: 90vw;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        `;
+        
+        dialog.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <div style="color:#fff; font-weight:600;">Share: ${macroName}</div>
+                <button id="share-close-btn" style="background:none; border:none; color:#888; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <div style="margin-bottom:12px;">
+                <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:12px; color:#fff; font-weight:500;">${len} characters</span>
+                    <span style="font-size:10px; padding:2px 6px; border-radius:3px; background:${fitsChat ? '#27ae60' : (fitsTrophy ? '#f39c12' : '#c0392b')}; color:#fff;">
+                        ${fitsChat ? '✓ Fits chat' : (fitsTrophy ? '✓ Fits trophy' : '✗ Too long')}
+                    </span>
+                </div>
+                <textarea id="share-code-text" readonly style="
+                    width: 100%;
+                    height: 80px;
+                    background: rgba(0,0,0,0.3);
+                    border: 1px solid var(--kuplafix-border);
+                    border-radius: 4px;
+                    color: #fff;
+                    font-family: monospace;
+                    font-size: 11px;
+                    padding: 8px;
+                    resize: none;
+                    box-sizing: border-box;
+                ">${code}</textarea>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button id="share-copy-btn" class="kuplafix-btn" style="flex:1; min-width:120px;">📋 Copy to Clipboard</button>
+                ${fitsChat ? '<button id="share-send-chat-btn" class="kuplafix-btn" style="flex:1; min-width:100px; background:#27ae60;">💬 Send to Chat</button>' : ''}
+                ${fitsTrophy ? '<button id="share-buy-trophy-btn" class="kuplafix-btn" style="flex:1; min-width:100px; background:#8e44ad;">🏆 Buy Trophy</button>' : ''}
+            </div>
+            <div style="font-size:10px; color:#5c707a; margin-top:10px; line-height:1.4;">
+                <strong>How to share:</strong><br>
+                • <span style="color:${fitsChat ? '#27ae60' : '#888'};">Chat message</span> - paste in room chat (≤100 chars)<br>
+                • <span style="color:${fitsTrophy ? '#27ae60' : '#888'};">Trophy text</span> - paste in trophy description (≤300 chars)<br>
+                • Discord/external - any length works
+            </div>
+        `;
+        
+        document.body.appendChild(dialog);
+        
+        // Events
+        dialog.querySelector('#share-close-btn').onclick = () => dialog.remove();
+        dialog.querySelector('#share-copy-btn').onclick = () => {
+            navigator.clipboard.writeText(code).then(() => {
+                UI.showToast('Copied to clipboard!', 'success');
+            }).catch(() => {
+                // Fallback - select the text
+                const textarea = dialog.querySelector('#share-code-text');
+                textarea.select();
+                document.execCommand('copy');
+                UI.showToast('Copied!', 'success');
+            });
+        };
+        // Send to Chat button
+        const sendChatBtn = dialog.querySelector('#share-send-chat-btn');
+        if (sendChatBtn) {
+            sendChatBtn.onclick = () => {
+                // Send UNIT_CHAT packet (header 1314) with the macro code
+                // Format: String(message), Int(0) for trailing bytes
+                PacketManager.send(1314, 
+                    PacketManager.types.String(code),
+                    PacketManager.types.Int(0)
+                );
+                UI.showToast('💬 Macro code sent to chat!', 'success');
+                dialog.remove();
+            };
+        }
+        
+        // Buy Trophy button
+        const buyTrophyBtn = dialog.querySelector('#share-buy-trophy-btn');
+        if (buyTrophyBtn) {
+            buyTrophyBtn.onclick = () => {
+                // Send CATALOG_PURCHASE packet for a trophy with the macro code as text
+                // Header: 3492, args: Int(pageId), Int(itemId), String(text), Int(amount)
+                PacketManager.send(3492, 
+                    PacketManager.types.Int(1635463920), // pageId
+                    PacketManager.types.Int(283),        // itemId (bronze trophy)
+                    PacketManager.types.String(code),    // trophy text (the macro code)
+                    PacketManager.types.Int(1)           // amount
+                );
+                UI.showToast('🏆 Trophy purchase request sent! Check catalog if it fails.', 'info');
+                dialog.remove();
+            };
+        }
+        
+        // Close on outside click
+        const closeOnOutside = (e) => {
+            if (!dialog.contains(e.target)) {
+                dialog.remove();
+                document.removeEventListener('mousedown', closeOnOutside);
+            }
+        };
+        setTimeout(() => document.addEventListener('mousedown', closeOnOutside), 100);
+    },
+
+    // ─────────────────────────────────────────────────────────────────
+    // Macro Encoding/Decoding for Sharing
+    // Format v2: KFM2:<base64> - Ultra compact array-based format
+    // [name, triggerDir, triggerHeader, [[condIdx,condOp,condVal]...], [[actType,actData...]...]]
+    // ─────────────────────────────────────────────────────────────────
+    
+    encodeMacro(macro) {
+        try {
+            const typeMap = { 'String': 0, 'Int': 1, 'Short': 2, 'Byte': 3, 'Boolean': 4 };
+            const opMap = { 'eq': 0, 'neq': 1, 'gt': 2, 'gte': 3, 'lt': 4, 'lte': 5, 'contains': 6 };
+            
+            // Ultra compact array format
+            // [name, dir(0/1), header, conditions[], actions[]]
+            const conditions = (macro.trigger.conditions || []).map(c => 
+                [parseInt(c.argIndex), opMap[c.operator] || 0, c.value]
+            );
+            
+            const actions = (macro.actions || []).map(act => {
+                if (act.type === 'send' || act.type === 'inject') {
+                    // [type(0/1), header, [[argType, argVal]...], showToast?, toastMsg?]
+                    const args = (act.args || []).map(a => [typeMap[a.type] || 0, a.value]);
+                    const arr = [act.type === 'send' ? 0 : 1, act.header, args];
+                    if (act.showToast) arr.push(1, act.toastMessage || '');
+                    return arr;
+                } else if (act.type === 'toast') {
+                    // [2, message, type(0=info,1=success,2=error)]
+                    return [2, act.toastMessage || '', act.toastType === 'success' ? 1 : (act.toastType === 'error' ? 2 : 0)];
+                } else if (act.type === 'delay') {
+                    // [3, ms]
+                    return [3, act.delay || 100];
+                }
+                return [0, 0, []];
+            });
+            
+            const compact = [
+                macro.name.substring(0, 32), // Name limit for share code size
+                macro.trigger.direction === 'send' ? 1 : 0,
+                macro.trigger.header,
+                conditions,
+                actions
+            ];
+            
+            const json = JSON.stringify(compact);
+            const base64 = btoa(unescape(encodeURIComponent(json)));
+            return 'KFM2:' + base64;
+        } catch (e) {
+            log.error('Failed to encode macro', e);
+            return null;
+        }
+    },
+    
+    decodeMacro(code) {
+        try {
+            // Support both v1 (KFM1) and v2 (KFM2) formats
+            if (code.startsWith('KFM1:')) {
+                return this.decodeMacroV1(code);
+            }
+            
+            if (!code.startsWith('KFM2:')) {
+                return null;
+            }
+            
+            const base64 = code.substring(5);
+            const json = decodeURIComponent(escape(atob(base64)));
+            const [name, dir, header, conditions, actions] = JSON.parse(json);
+            
+            const typeMapRev = ['String', 'Int', 'Short', 'Byte', 'Boolean'];
+            const opMapRev = ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'contains'];
+            
+            const macro = {
+                name: name || 'Imported Macro',
+                enabled: true,
+                trigger: {
+                    direction: dir === 1 ? 'send' : 'receive',
+                    header: header || 0,
+                    conditions: (conditions || []).map(([i, o, v]) => ({
+                        argIndex: String(i),
+                        operator: opMapRev[o] || 'eq',
+                        value: v || ''
+                    }))
+                },
+                actions: (actions || []).map(arr => {
+                    const type = arr[0];
+                    if (type === 0 || type === 1) {
+                        // send/inject
+                        return {
+                            type: type === 0 ? 'send' : 'inject',
+                            header: arr[1] || 0,
+                            args: (arr[2] || []).map(([t, v]) => ({
+                                type: typeMapRev[t] || 'String',
+                                value: v || ''
+                            })),
+                            showToast: arr[3] === 1,
+                            toastMessage: arr[4] || ''
+                        };
+                    } else if (type === 2) {
+                        // toast
+                        return {
+                            type: 'toast',
+                            toastMessage: arr[1] || '',
+                            toastType: arr[2] === 1 ? 'success' : (arr[2] === 2 ? 'error' : 'info')
+                        };
+                    } else if (type === 3) {
+                        // delay
+                        return { type: 'delay', delay: arr[1] || 100 };
+                    }
+                    return { type: 'delay', delay: 100 };
+                })
+            };
+            
+            return macro;
+        } catch (e) {
+            log.error('Failed to decode macro', e);
+            return null;
+        }
+    },
+    
+    // Legacy v1 decoder for backward compatibility
+    decodeMacroV1(code) {
+        try {
+            const base64 = code.substring(5);
+            const json = decodeURIComponent(escape(atob(base64)));
+            const compact = JSON.parse(json);
+            
+            const typeMapRev = ['String', 'Int', 'Short', 'Byte', 'Boolean'];
+            const opMapRev = ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'contains'];
+            const actTypeMapRev = ['send', 'inject', 'toast', 'delay'];
+            
+            return {
+                name: compact.n || 'Imported Macro',
+                enabled: true,
+                trigger: {
+                    direction: compact.t.d === 1 ? 'send' : 'receive',
+                    header: compact.t.h || 0,
+                    conditions: (compact.t.c || []).map(c => ({
+                        argIndex: String(c.i),
+                        operator: opMapRev[c.o] || 'eq',
+                        value: c.v || ''
+                    }))
+                },
+                actions: (compact.a || []).map(a => {
+                    const act = { type: actTypeMapRev[a.t] || 'send' };
+                    if (act.type === 'send' || act.type === 'inject') {
+                        act.header = a.h || 0;
+                        act.args = (a.r || []).map(arg => ({
+                            type: typeMapRev[arg.t] || 'String',
+                            value: arg.v || ''
+                        }));
+                        act.showToast = !!a.s;
+                        act.toastMessage = a.m || '';
+                    } else if (act.type === 'toast') {
+                        act.toastMessage = a.m || '';
+                        act.toastType = a.y === 1 ? 'success' : (a.y === 2 ? 'error' : 'info');
+                    } else if (act.type === 'delay') {
+                        act.delay = a.l || 100;
+                    }
+                    return act;
+                })
+            };
+        } catch (e) {
+            log.error('Failed to decode v1 macro', e);
+            return null;
+        }
+    },
+
+    getHeaderName(headerId, direction) {
+        const map = direction === 'send' ? PacketManager.HEADERS.OUTGOING : PacketManager.HEADERS.INCOMING;
+        for (const [name, id] of Object.entries(map)) {
+            if (id === headerId) return name;
+        }
+        return 'Unknown';
+    }
+  };
+
+  // ─────────────────────────────────────────────────────────────────
+  // FastLoad - Preconnect & Preload for faster loading
+  // ─────────────────────────────────────────────────────────────────
+  // Based on HAR traffic analysis from kuplahotelli.com
+  // Key insight: Assets are served from https://kuplahotelli.com/nitro-assets/
+  const FastLoad = {
+    _initialized: false,
+    _cache: new Map(),
+    
+    // Asset base URL (from HAR: https://kuplahotelli.com/nitro-assets/)
+    // Note: The game uses a double slash in many places, e.g., /nitro-assets//gamedata/
+    ASSET_BASE: 'https://kuplahotelli.com/nitro-assets/',
+    
+    // Called IMMEDIATELY on script load (before config)
+    earlyInit() {
+      if (this._initialized) return;
+      this._initialized = true;
+      
+      this.injectHints();
+      this.preloadGamedata();
+    },
+
+    injectHints() {
+      const origins = [
+        'https://kuplahotelli.com',
+        'https://kupla.hanarchy.net' // Web Socket domain
+      ];
+      origins.forEach(origin => {
+        const preconnect = document.createElement('link');
+        preconnect.rel = 'preconnect';
+        preconnect.href = origin;
+        preconnect.crossOrigin = 'anonymous';
+        document.head.appendChild(preconnect);
+        
+        const dns = document.createElement('link');
+        dns.rel = 'dns-prefetch';
+        dns.href = origin;
+        document.head.appendChild(dns);
+      });
+    },
+
+    async preloadGamedata() {
+      // Critical JSON files
+      const jsonFiles = [
+        '/gamedata/FurnitureData.json',    // 26MB
+        '/gamedata/FigureDataISO.json',   // 16MB
+        '/gamedata/ProductData.json',      // 3.8MB
+        '/gamedata/ExternalTexts.json',
+        '/gamedata/UITexts.json',
+        '/gamedata/FigureMapISO.json',
+        '/gamedata/EffectMap.json',
+        '/gamedata/HabboAvatarActions.json'
+      ];
+      
+      const nitroAssets = [
+        '/bundled/generic/place_holder.nitro',
+        '/bundled/generic/room.nitro',
+        '/bundled/generic/tile_cursor.nitro',
+        '/bundled/generic/selection_arrow.nitro',
+        '/bundled/generic/place_holder_wall.nitro',
+        '/bundled/generic/place_holder_pet.nitro',
+        '/bundled/generic/avatar_additions.nitro',
+        '/bundled/generic/group_badge.nitro',
+        '/bundled/generic/floor_editor.nitro',
+        '/bundled/figure2/hh_human_body.nitro',
+        '/bundled/figure2/hh_human_50_body.nitro',
+        '/bundled/figure2/hh_human_item.nitro',
+        '/bundled/effect/Dance1.nitro',
+        '/bundled/effect/Dance2.nitro',
+        '/bundled/effect/Dance3.nitro',
+        '/bundled/effect/Dance4.nitro'
+      ];
+
+      const all = [...jsonFiles, ...nitroAssets];
+      log.info(`[kuplafix] FastLoad: Starting Cache-Forwarding for ${all.length} assets`);
+
+      all.forEach(file => {
+        const url = `${this.ASSET_BASE}${file}`;
+        const promise = fetch(url).then(async resp => {
+          if (!resp.ok) throw new Error(`Status ${resp.status}`);
+          const blob = await resp.blob();
+          return {
+            blob,
+            status: resp.status,
+            statusText: resp.statusText,
+            headers: resp.headers
+          };
+        }).catch(err => {
+          log.warn(`[kuplafix] FastLoad: Failed early fetch ${file}:`, err);
+          return null;
+        });
+        this._cache.set(url, promise);
+      });
+    },
+
+    // Try to get a response from our early cache
+    async getCachedResponse(url) {
+      const baseUrl = url.split('?')[0];
+      const cached = this._cache.get(baseUrl);
+      if (!cached) return null;
+
+      try {
+        const data = await cached;
+        if (!data) return null;
+        
+        log.info(`[kuplafix] FastLoad: HIT early cache for ${baseUrl}`);
+
+        // Strip encoding headers since the blob is already decompressed
+        const headers = new Headers(data.headers);
+        headers.delete('content-encoding');
+        headers.delete('content-length');
+
+        return new Response(data.blob, {
+          status: data.status,
+          statusText: data.statusText,
+          headers: headers
+        });
+      } catch (e) {
+        return null;
+      }
+    },
+    
+    // Returns config overrides
+    getConfigOverrides() {
+      return {};
+    }
+  };
+  
+  // Run FastLoad IMMEDIATELY (before everything else)
+  FastLoad.earlyInit();
+
+  // ─────────────────────────────────────────────────────────────────
+  // Renderer Config Hijacker
+  // ─────────────────────────────────────────────────────────────────
+  const ConfigHijacker = {
+    _initialized: false,
+    async init() {
+      if (this._initialized) return;
+      this._initialized = true;
+      
+      log.debug('ConfigHijacker.init()');
+      // Don't return early - we need to hijack for fastLoadEnabled OR rendererConfigHijackEnabled
+      if (!config.get('rendererConfigHijackEnabled') && !config.get('fastLoadEnabled')) return;
+
+      this.apply(window);
+      
+      // Also watch for iframes
+      DOM.onNitroIframeDocReady((iframeDoc) => {
+        const win = iframeDoc.defaultView;
+        if (win) this.apply(win);
+      });
+    },
+
+    apply(win) {
+      if (!win || win.__kuplafix_hijacked) return;
+      win.__kuplafix_hijacked = true;
+
+      log.info('Applying renderer-config hijacker to window');
+
+      const originalFetch = win.fetch;
+      win.fetch = async (...args) => {
+        let url = '';
+        if (typeof args[0] === 'string') url = args[0];
+        else if (args[0] instanceof URL) url = args[0].href;
+        else if (args[0] && args[0].url) url = args[0].url;
+        else if (args[0] && typeof args[0] === 'object' && args[0].toString().includes('Request')) url = args[0].url;
+        
+        const isRenderer = url && url.includes('renderer-config.json');
+        const isUI = url && url.includes('ui-config.json');
+
+        if (isRenderer || isUI) {
+          const type = isRenderer ? 'renderer-config.json' : 'ui-config.json';
+          const configKey = isRenderer ? 'rendererConfigOverrides' : 'uiConfigOverrides';
+          
+          log.info(`Hijacking ${type} fetch:`, url);
+          try {
+            const response = await originalFetch(...args);
+            const data = await response.json();
+            
+            // Apply FastLoad overrides first (if enabled and this is renderer-config)
+            if (isRenderer && config.get('fastLoadEnabled')) {
+              const fastLoadOverrides = FastLoad.getConfigOverrides();
+              for (const [key, value] of Object.entries(fastLoadOverrides)) {
+                data[key] = value;
+              }
+              log.info('Applied FastLoad config overrides');
+            }
+            
+            // Then apply user overrides (can override FastLoad settings)
+            const overrides = config.get(configKey) || {};
+            let changed = false;
+            for (const [key, value] of Object.entries(overrides)) {
+              data[key] = value;
+              changed = true;
+            }
+
+            if (changed) {
+              log.info(`Applied user overrides to ${type}`);
+            }
+
+            const modifiedResponse = new Response(JSON.stringify(data), {
+              status: response.status,
+              statusText: response.statusText,
+              headers: response.headers
+            });
+            
+            // Proxy the response to ensure .json() works if called again
+            return modifiedResponse;
+          } catch (err) {
+            log.error(`Failed to hijack ${type}:`, err);
+          }
+        }
+        return originalFetch(...args);
+      };
+
+      // Also handle XHR for older client versions
+      const originalOpen = win.XMLHttpRequest.prototype.open;
+      win.XMLHttpRequest.prototype.open = function(method, url) {
+        this._url = (url instanceof URL) ? url.href : url;
+        return originalOpen.apply(this, arguments);
+      };
+
+      const originalSend = win.XMLHttpRequest.prototype.send;
+      win.XMLHttpRequest.prototype.send = function() {
+        const url = this._url;
+        const isRenderer = url && typeof url === 'string' && url.includes('renderer-config.json');
+        const isUI = url && typeof url === 'string' && url.includes('ui-config.json');
+
+        if (isRenderer || isUI) {
+          const type = isRenderer ? 'renderer-config.json' : 'ui-config.json';
+          const configKey = isRenderer ? 'rendererConfigOverrides' : 'uiConfigOverrides';
+
+          log.info(`Hijacking ${type} XHR:`, url);
+          
+          const originalOnReadyStateChange = this.onreadystatechange;
+          this.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+              try {
+                const data = JSON.parse(this.responseText);
+                
+                // Apply FastLoad overrides first (if enabled and this is renderer-config)
+                if (isRenderer && config.get('fastLoadEnabled')) {
+                  const fastLoadOverrides = FastLoad.getConfigOverrides();
+                  for (const [key, value] of Object.entries(fastLoadOverrides)) {
+                    data[key] = value;
+                  }
+                  log.info('Applied FastLoad config overrides (XHR)');
+                }
+                
+                // Then apply user overrides
+                const overrides = config.get(configKey) || {};
+                let changed = false;
+                for (const [key, value] of Object.entries(overrides)) {
+                  data[key] = value;
+                  changed = true;
+                }
+                if (changed) {
+                  log.info(`Applied user overrides to ${type} (XHR)`);
+                }
+                
+                // Always update if FastLoad is enabled or user overrides exist
+                if ((isRenderer && config.get('fastLoadEnabled')) || changed) {
+                  // Use Object.defineProperty to override read-only properties
+                  Object.defineProperty(this, 'responseText', { value: JSON.stringify(data), configurable: true });
+                  Object.defineProperty(this, 'response', { value: JSON.stringify(data), configurable: true });
+                }
+              } catch (err) {
+                log.error(`Failed to hijack ${type} XHR response:`, err);
+              }
+            }
+            if (originalOnReadyStateChange) originalOnReadyStateChange.apply(this, arguments);
+          };
+        }
+        return originalSend.apply(this, arguments);
+      };
+    }
+  };
+
   // Module: Event Invite Blocker
   // Blocks the intrusive event invite popup and shows a compact notification instead
   const EventInviteBlocker = {
@@ -6577,6 +11189,256 @@
   };
 
   // ─────────────────────────────────────────────────────────────────
+  // In-Game Browser
+  // ─────────────────────────────────────────────────────────────────
+  const Browser = {
+    window: null,
+    iframe: null,
+    isOpen: false,
+    lastPosition: null,
+    button: null,
+
+    async init() {
+      log.debug('Browser.init()');
+      await DOM.ready;
+      
+      if (config.get('browserEnabled')) {
+        this.addButton();
+      }
+
+      // Re-add button if iframe reloads
+      DOM.onNitroIframeDocReady(() => {
+        if (config.get('browserEnabled')) {
+          this.addButton();
+        }
+      });
+    },
+
+    toggle() {
+      if (this.isOpen) {
+        this.close();
+      } else {
+        this.open();
+      }
+    },
+
+    addButton() {
+      // Use DOM helper to find existing config button container
+      const configContainer = DOM.querySelector('#kuplafix-config-btn-container');
+      if (!configContainer) {
+        log.debug('Browser: config container not found, retrying...');
+        setTimeout(() => this.addButton(), 500);
+        return;
+      }
+
+      if (this.button && this.button.isConnected) return;
+      
+      const doc = configContainer.ownerDocument;
+      if (doc.getElementById('kuplafix-browser-btn-container')) return;
+
+      const btn = doc.createElement('div');
+      btn.id = 'kuplafix-browser-btn';
+      btn.className = 'cursor-pointer navigation-item icon icon-house nitro-toolbar-icon nitro-space-right sidebar-navigation-icon';
+      
+      btn.style.width = '32px';
+      btn.style.height = '32px';
+      btn.style.margin = '0 auto';
+      btn.style.display = 'block';
+      btn.style.cursor = 'pointer';
+      btn.title = 'Kupla Etusivu';
+      
+      btn.addEventListener('mouseenter', () => (btn.style.opacity = '0.7'));
+      btn.addEventListener('mouseleave', () => (btn.style.opacity = '1'));
+      
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggle();
+      });
+
+      const labelRow = doc.createElement('div');
+      labelRow.className = 'w-100 text-center';
+      labelRow.style.marginTop = '5px';
+      
+      const label = doc.createElement('div');
+      label.className = 'd-inline text-white fw-bold text-center nitro-small-size-text';
+      label.textContent = 'Etusivu';
+      labelRow.appendChild(label);
+
+      const wrapper = doc.createElement('div');
+      wrapper.id = 'kuplafix-browser-btn-container';
+      wrapper.className = 'text-center mb-4';
+      wrapper.appendChild(btn);
+      wrapper.appendChild(labelRow);
+
+      // Try to insert after LiveKit button, otherwise after Config button
+      const livekitContainer = doc.getElementById('kuplafix-livekit-btn-container');
+      const target = livekitContainer || configContainer;
+      
+      if (target && target.parentNode) {
+        target.parentNode.insertBefore(wrapper, target.nextSibling);
+        log.info('✓ Browser button added to sidebar');
+      } else {
+        log.error('Browser: failed to find insertion point');
+      }
+      
+      this.button = btn;
+    },
+
+    removeButton() {
+      const wrapper = DOM.querySelector('#kuplafix-browser-btn-container');
+      if (wrapper) {
+        wrapper.remove();
+        this.button = null;
+      }
+    },
+
+    handleClick(e) {
+        // Disabled
+    },
+
+    open(url) {
+        if (!this.window) {
+            this.createWindow();
+        }
+        
+        // If url is provided, navigate
+        if (url) {
+            this.iframe.src = url;
+        } else if (!this.iframe.src || this.iframe.src === 'about:blank') {
+             this.iframe.src = 'https://kuplahotelli.com';
+        }
+
+        this.window.style.display = 'flex';
+        this.isOpen = true;
+    },
+
+    close() {
+        if (this.window) {
+            this.window.style.display = 'none';
+            this.isOpen = false;
+            this.iframe.src = 'about:blank';
+        }
+    },
+
+    closeWindow() {
+        this.close();
+    },
+
+    createWindow() {
+        const win = document.createElement('div');
+        win.className = 'kuplafix-browser';
+        
+        const pos = this.lastPosition || { top: '50px', left: '50px' };
+        win.style.top = pos.top;
+        win.style.left = pos.left;
+
+        win.innerHTML = `
+            <div class="kuplafix-browser-header">
+                <span class="kuplafix-browser-title">kuplahotelli.com</span>
+                <div style="display:flex; gap:8px;">
+                     <button class="kuplafix-btn-secondary" style="padding:2px 8px;" id="kb-popout" title="Avaa uudessa välilehdessä">↗</button>
+                    <button class="kuplafix-btn-secondary" style="padding:2px 8px;" id="kb-home">⌂</button>
+                    <button class="kuplafix-close-btn" style="position:static;" id="kb-close">✕</button>
+                </div>
+            </div>
+            <div class="kuplafix-browser-content">
+                <iframe src="about:blank" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
+            </div>
+        `;
+
+        // Append to main doc or where convenient. 
+        // If using iframe context, careful with context. 
+        // For simple overlay, document.body is fine.
+        document.body.appendChild(win);
+        this.window = win;
+        this.iframe = win.querySelector('iframe');
+
+        // Handle scrollbar injection for same-origin pages
+        this.iframe.onload = () => {
+            try {
+                const doc = this.iframe.contentDocument;
+                if (doc) {
+                    const style = doc.createElement('style');
+                    style.textContent = `
+                        ::-webkit-scrollbar { width: 8px; height: 8px; }
+                        ::-webkit-scrollbar-track { background: #0c1216; }
+                        ::-webkit-scrollbar-thumb { background: #364951; border-radius: 4px; }
+                        ::-webkit-scrollbar-thumb:hover { background: #7cb1c8; }
+                        body { background-color: #1a2429; color: #fff; } /* Dark default */
+                    `;
+                    doc.head.appendChild(style);
+                }
+            } catch (e) {
+                // Cross-origin, cannot access contentDocument
+            }
+        };
+
+        // Event listeners
+        win.querySelector('#kb-close').onclick = () => this.close();
+        win.querySelector('#kb-home').onclick = () => {
+            this.iframe.src = 'https://kuplahotelli.com';
+        };
+        win.querySelector('#kb-popout').onclick = () => {
+             if (this.iframe && this.iframe.src) {
+                 window.open(this.iframe.src, '_blank');
+             }
+        };
+
+        // Make draggable
+        const header = win.querySelector('.kuplafix-browser-header');
+        this.makeDraggable(win, header);
+    },
+
+    makeDraggable(element, handle) {
+        let isDragging = false;
+        let startX, startY;
+        let initialLeft, initialTop;
+
+        handle.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            const rect = element.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            // Remove transform if any to switch to top/left positioning
+            element.style.transform = 'none';
+            element.style.left = initialLeft + 'px';
+            element.style.top = initialTop + 'px';
+            
+            handle.style.cursor = 'grabbing';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            
+            element.style.left = `${initialLeft + dx}px`;
+            element.style.top = `${initialTop + dy}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                handle.style.cursor = 'move';
+                
+                // Save position
+                this.lastPosition = {
+                    top: element.style.top,
+                    left: element.style.left
+                };
+            }
+        });
+    }
+  };
+
+  // ─────────────────────────────────────────────────────────────────
   // Initialization sequence
   // ─────────────────────────────────────────────────────────────────
   const FEATURE_MODULES = [
@@ -6593,6 +11455,9 @@
     ChatHistoryCache,
     EventInviteBlocker,
     VoiceMessages,
+    ConfigHijacker,
+    PacketManager,
+    Browser
   ];
 
   async function startFeatureModules() {
@@ -6611,8 +11476,7 @@
     try {
       log.info(`Initializing v${SCRIPT_VERSION}...`);
 
-      config.load();
-
+      // config.load() is now called immediately at the bottom
       await startFeatureModules();
 
       log.info('✓ All modules initialized successfully');
@@ -6622,6 +11486,17 @@
   }
 
   // Start initialization
+  config.load();
+  
+  // Immediate hijacking for renderer-config (must be before client loads)
+  // Also init if fastLoadEnabled is true (for config overrides)
+  if (config.get('rendererConfigHijackEnabled') || config.get('fastLoadEnabled')) {
+    ConfigHijacker.init();
+  }
+
+  // Immediate hijacking for WebSocket (must be before client loads)
+  PacketManager.init();
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initialize);
   } else {
@@ -6632,7 +11507,8 @@
 
   // Export to window for debugging
   if (typeof window !== 'undefined') {
-    window.kuplafix = {
+    const targetWindow = (typeof unsafeWindow !== 'undefined') ? unsafeWindow : window;
+    targetWindow.kuplafix = {
       version: SCRIPT_VERSION,
       config,
       log,
@@ -6643,6 +11519,10 @@
       alerts: BubbleAlerts,
       chatCache: ChatHistoryCache,
       chatUI: ChatHistoryUI,
+      packets: PacketManager,
+      browser: Browser,
+      builder: PacketBuilder,
+      fastLoad: FastLoad,
       // Test helpers for update checker
       testUpdateNotification: (version) => {
         try {
@@ -6652,7 +11532,6 @@
             UpdateChecker.latestVersion = version;
             UpdateChecker.showBadge(version);
             UpdateChecker.updateMenuHeaderLink(version);
-            UpdateChecker.showNotification(version);
           }
           log.info(`Test: Update notification set for version ${version}`);
         } catch (e) {
@@ -6683,6 +11562,6 @@
         }
       },
     };
-    log.debug('✓ kuplafix window object exported');
+    log.debug('✓ kuplafix window object exported to unsafeWindow');
   }
 })();

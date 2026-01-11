@@ -11,7 +11,7 @@
 // @require         https://greasyfork.org/scripts/27254-clipboard-js/code/clipboardjs.js
 // @require         https://update.greasyfork.org/scripts/28502/187735/jQuery%20UI%20-%20v1114.js
 // @require         https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js
-// @version         2025.11.20.01
+// @version         2026.01.09.01
 // @grant           unsafeWindow
 // @downloadURL https://update.greasyfork.org/scripts/538122/WME%20BeenThere-dev.user.js
 // @updateURL https://update.greasyfork.org/scripts/538122/WME%20BeenThere-dev.meta.js
@@ -373,9 +373,9 @@
                 if ($('#btGroupName').val() !== ""){
                     let name = $('#btGroupName').val();
                     let exists = btSettings.Groups[name];
-                    if (exists === null) {
+                    if (!exists) {
                         btSettings.Groups[name] = [];
-                        $('#btGroupsName').val("");
+                        $('#btGroupName').val("");
                         LoadCustomGroups();
                         saveSettings();
                     }

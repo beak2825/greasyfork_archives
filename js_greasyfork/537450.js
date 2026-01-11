@@ -1,27 +1,25 @@
 // ==UserScript==
-// @name          Automator PopMundo
+// @name          Automator PopMundo V3.2 
 // @namespace     https://popmundo.com/
-// @version       2.1.0
-// @description   Automatiza interações no Popmundo.
+// @version       3.2.0
+// @description   Automatiza interações no Popmundo com UI Minimalista, perfis por personagem, correção de bugs e sistema de backup.
 // @author        Ninja
 // @match         https://*.popmundo.com/World/Popmundo.aspx/*
 // @grant         none
 // @require       https://cdn.jsdelivr.net/npm/js-cookie@3.0.0/dist/js.cookie.min.js
-// @downloadURL https://update.greasyfork.org/scripts/537450/Automator%20PopMundo.user.js
-// @updateURL https://update.greasyfork.org/scripts/537450/Automator%20PopMundo.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/537450/Automator%20PopMundo%20V32.user.js
+// @updateURL https://update.greasyfork.org/scripts/537450/Automator%20PopMundo%20V32.meta.js
 // ==/UserScript==
+
 (function() {
-    'use strict'
+    'use strict';
 
-    //Delay entre abertura de abas em milisegundos.
-    const DELAY = 500 //ms
-    //Domain
+    // --- CONFIGURAÇÕES ---
+    const DELAY = 500; // Tempo entre ações (ms)
     const DOMAIN = "popmundo.com";
+    const LOG_STORAGE_KEY = 'popmundo_automator_log';
 
-    // Seletor flexível para o dropdown de personagem. A CHAVE DA SOLUÇÃO.
-    const CHAR_DROPDOWN_SELECTOR = "select[id$='ucCharacterBar_ddlCurrentCharacter']";
-
-    // Lista Mestra de todas as interações conhecidas.
+    // --- LISTA DE INTERAÇÕES ---
     const allPossibleInteractions = {
         62: "Dizer o que pensa", 34: "Ter uma discussão profunda", 18: "Brincar com", 44: "Fazer massagem",
         60: "High Five", 67: "Queda de braço", 66: "Trançar o cabelo", 63: "Tapinha nas costas",
@@ -40,153 +38,127 @@
         11: "Fazer amor", 19: "Sexo tântrico", 164: "Desfrutar do Kobe Sutra", 171: "Ligar para agradecer",
     };
 
-    // --- GERENCIAMENTO DE ESTADO E DADOS ---
-    let loggedInCharId;
-    let loggedInCharName; // NOVO: Armazena o nome do personagem logado.
-    let CUSTOM_PROFILES_KEY;
+    // --- VARIÁVEIS GLOBAIS ---
+    let CURRENT_CHAR_ID = null;
+    let STORAGE_KEY_PROFILES = null;
 
-    const manageCharacterSession = () => {
-        const STORAGE_KEY = 'popmundo_char_session_info';
-        const dropdown = jQuery(CHAR_DROPDOWN_SELECTOR);
-
-        const currentGuid = dropdown.find('option:selected').val();
-        const currentName = dropdown.find('option:selected').text();
-        loggedInCharName = currentName; // NOVO: Captura o nome.
-
-        if (currentGuid === '0') {
-             sessionStorage.removeItem(STORAGE_KEY);
-             return null;
+    // --- ESTILOS CSS ---
+    const injectStyles = () => {
+        if (jQuery('link[href*="font-awesome"]').length === 0) {
+            jQuery('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
         }
 
-        let storedInfo;
-        try { storedInfo = JSON.parse(sessionStorage.getItem(STORAGE_KEY)); } catch (e) { storedInfo = null; }
-
-        if (storedInfo && storedInfo.guid === currentGuid && storedInfo.numericalId) {
-            loggedInCharName = storedInfo.name; // Garante que temos o nome mesmo com a sessão.
-            return storedInfo.numericalId;
-        }
-
-        console.log(`Automator Popmundo: Sessão nova ou troca de personagem detectada para "${currentName}". Re-identificando...`);
-
-        const detectNumericalId = () => {
-            const path = window.location.pathname;
-            const extractIdFromHref = (href) => {
-                if (!href || !href.includes('/Character/')) return null;
-                try {
-                    const potentialId = parseInt(href.split('/Character/')[1], 10);
-                    return isNaN(potentialId) ? null : potentialId;
-                } catch (e) { return null; }
-            };
-            if (path.includes('/Character/Relations/')) {
-                try {
-                    const id = parseInt(path.split('/Character/Relations/')[1], 10);
-                    if (!isNaN(id)) return id;
-                } catch (e) {}
+        const css = `
+            #automator-panel {
+                background: #fff; border-left: 4px solid #333; border-radius: 4px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;
+                font-family: 'Segoe UI', Tahoma, sans-serif; color: #333;
+                border: 1px solid #e0e0e0; border-left-width: 4px;
             }
-            let link = jQuery('#ctl00_cphLeftColumn_ctl00_divCharacterLinks a[href*="/Character/"]:first').attr('href');
-            if (link) return extractIdFromHref(link);
-            link = jQuery('a:has(img[alt="Meu Personagem"])').attr('href');
-            if (link) return extractIdFromHref(link);
-            link = jQuery('#column1 a[href*="/Character/"]:first').attr('href');
-            if (link) return extractIdFromHref(link);
-            return null;
-        };
+            .auto-header {
+                padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
+                background: #fcfcfc; border-bottom: 1px solid #eee;
+            }
+            .auto-header h3 { margin: 0; font-size: 14px; font-weight: 700; color: #444; }
+            .auto-status { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px; }
+            .status-off { background: #eee; color: #777; }
+            .status-on { background: #28a745; color: #fff; }
 
-        const numericalId = detectNumericalId();
+            .auto-body { padding: 15px; display: flex; gap: 20px; flex-wrap: wrap; }
+            .auto-column { flex: 1; min-width: 300px; }
+            .auto-actions { display: flex; gap: 8px; margin-bottom: 15px; }
 
-        if (numericalId) {
-            const newInfo = { guid: currentGuid, numericalId: numericalId, name: currentName };
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(newInfo));
-            console.log(`Automator Popmundo: Personagem "${currentName}" identificado com ID numérico ${numericalId}.`);
-            return numericalId;
-        }
+            .auto-btn {
+                border: 1px solid #ccc; background: #fff; padding: 6px 12px;
+                border-radius: 4px; cursor: pointer; font-size: 12px; color: #333;
+                transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+                font-weight: 500;
+            }
+            .auto-btn:hover { background: #f5f5f5; border-color: #bbb; }
+            .btn-primary { background: #333; color: #fff; border-color: #333; }
+            .btn-primary:hover { background: #000; border-color: #000; }
+            .btn-danger { color: #d9534f; border-color: #d9534f; }
+            .btn-danger:hover { background: #d9534f; color: #fff; }
+            .btn-success { color: #28a745; border-color: #28a745; }
+            .btn-success:hover { background: #28a745; color: #fff; }
 
-        console.warn(`Automator Popmundo: Falha ao detectar o ID numérico para "${currentName}".`);
-        return null;
+            .auto-log {
+                background: #222; color: #0f0; font-family: 'Consolas', monospace;
+                font-size: 11px; padding: 10px; height: 140px; overflow-y: auto;
+                border-radius: 4px; margin-top: 5px; line-height: 1.4;
+            }
+            .log-entry { border-bottom: 1px solid #333; padding: 1px 0; }
+            .log-time { color: #666; margin-right: 8px; }
+
+            /* Editor */
+            #profile-manager { border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
+            summary { cursor: pointer; outline: none; font-size: 13px; font-weight: 600; color: #555; }
+            .editor-box { margin-top: 10px; padding: 15px; background: #fafafa; border: 1px solid #eee; border-radius: 4px; }
+            .editor-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+            .editor-label { font-size: 11px; font-weight: bold; color: #777; width: 100%; margin-bottom: 3px; display:block;}
+
+            .editor-list {
+                height: 150px; overflow-y: auto; border: 1px solid #ddd;
+                background: #fff; list-style: none; padding: 0; margin: 0; border-radius: 3px;
+            }
+            .editor-list li {
+                padding: 6px 10px; border-bottom: 1px solid #f0f0f0; display: flex;
+                justify-content: space-between; align-items: center; font-size: 12px;
+            }
+            .editor-list li:nth-child(even) { background: #fbfbfb; }
+            .editor-list li:hover { background: #f0f8ff; }
+            .rm-int { border:none; background:none; color:#999; cursor:pointer; font-weight:bold; padding:0 5px; }
+            .rm-int:hover { color: red; }
+
+            select.auto-select, input.auto-input {
+                padding: 6px; border: 1px solid #ddd; border-radius: 4px; width: 100%; font-size: 12px; box-sizing: border-box;
+            }
+
+            /* Tabela Popmundo */
+            select.interaction-type { border: 1px solid #ccc; padding: 2px; border-radius: 3px; font-size: 10px; max-width: 120px; }
+        `;
+        jQuery('head').append(`<style>${css}</style>`);
     };
 
+    // --- LÓGICA DE DADOS ---
+    const getProfiles = () => {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY_PROFILES) || '{}'); }
+        catch (e) { return {}; }
+    };
 
-    const SCRIPT_STATE_KEY = 'interactScriptState';
-    const LOG_STORAGE_KEY = 'popmundo_script_log';
+    const saveProfiles = (profiles) => {
+        localStorage.setItem(STORAGE_KEY_PROFILES, JSON.stringify(profiles));
+    };
 
-    const getScriptState = () => localStorage.getItem(SCRIPT_STATE_KEY);
-    const setScriptState = (state) => localStorage.setItem(SCRIPT_STATE_KEY, state);
-    const stopScript = () => localStorage.removeItem(SCRIPT_STATE_KEY);
+    // --- LÓGICA DE LOG ---
+    const log = (msg) => {
+        const time = new Date().toLocaleTimeString();
+        if (window.parent === window) {
+            const logBox = jQuery('#auto-log-box');
+            if (logBox.length) {
+                logBox.prepend(`<div class="log-entry"><span class="log-time">[${time}]</span> ${msg}</div>`);
+            }
+            let history = JSON.parse(localStorage.getItem(LOG_STORAGE_KEY) || '[]');
+            history.unshift(`[${time}] ${msg}`);
+            if(history.length > 50) history = history.slice(0, 50);
+            localStorage.setItem(LOG_STORAGE_KEY, JSON.stringify(history));
+        } else {
+            window.parent.postMessage("automator-log#" + msg, "*");
+        }
+    };
+
+    // --- LÓGICA CORE (Navegação via Iframe) ---
+    let frameOpen = false;
+    const openUrl = (url) => { frameOpen = true; jQuery('#interaction-iframe').attr('src', url); };
+    const closeUrl = () => { frameOpen = false; jQuery('#interaction-iframe').attr('src', null); };
+    const sendClose = () => { window.parent.postMessage("interaction-frame-close", "*") };
+
+    const getScriptState = () => localStorage.getItem('interactScriptState');
+    const setScriptState = (state) => localStorage.setItem('interactScriptState', state);
+    const stopScript = () => localStorage.removeItem('interactScriptState');
     const isScriptRunning = () => getScriptState() === 'running';
-    const isScriptPaused = () => getScriptState() === 'paused';
 
-    // --- NOVAS FUNÇÕES DE GERENCIAMENTO DE PERFIS ---
-
-    /**
-     * NOVO: Procura no localStorage por todos os perfis salvos de todos os personagens.
-     * @returns {Array} Lista de objetos, cada um contendo id, nome e dados dos perfis de um personagem.
-     */
-    const findAllCharacterProfiles = () => {
-        const allProfilesData = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('popmundo_profiles_')) {
-                try {
-                    const charId = parseInt(key.replace('popmundo_profiles_', ''), 10);
-                    if (charId && charId !== loggedInCharId) { // Exclui o personagem atual
-                        const data = JSON.parse(localStorage.getItem(key));
-                        // Suporta a nova estrutura e a antiga
-                        const charName = data.characterName || `Personagem ID ${charId}`;
-                        const profiles = data.profiles || data;
-                        if (Object.keys(profiles).length > 0) {
-                           allProfilesData.push({ id: charId, name: charName, profiles: profiles });
-                        }
-                    }
-                } catch (e) {
-                    console.warn(`Automator Popmundo: Falha ao ler perfis da chave ${key}`, e);
-                }
-            }
-        }
-        return allProfilesData;
-    };
-
-
-    /**
-     * MODIFICADO: Lê os perfis do personagem atual.
-     * Agora extrai os perfis da nova estrutura de dados {characterName, profiles}.
-     */
-    const getCustomProfiles = () => {
-        try {
-            const rawData = localStorage.getItem(CUSTOM_PROFILES_KEY);
-            if (!rawData) return {};
-            const parsedData = JSON.parse(rawData);
-            // Se 'profiles' existir, retorna isso (nova estrutura), senão, assume que é a estrutura antiga.
-            return parsedData.profiles || parsedData;
-        } catch (e) {
-            return {};
-        }
-    };
-
-    /**
-     * MODIFICADO: Salva os perfis do personagem atual.
-     * Agora salva no novo formato {characterName, profiles}.
-     */
-    const saveCustomProfiles = (profiles) => {
-        const dataToStore = {
-            characterName: loggedInCharName || "Desconhecido",
-            profiles: profiles
-        };
-        localStorage.setItem(CUSTOM_PROFILES_KEY, JSON.stringify(dataToStore));
-    };
-
-    const getAllProfiles = () => getCustomProfiles();
-
-    // --- FUNÇÕES DE NAVEGAÇÃO E INTERAÇÃO (sem alteração) ---
-    jQuery.fn.center = function () { return this.css("left", jQuery("#ppm-main").position().left + "px") }
-    const getInteractionUserLinks = () => {
-        const l = [];
-        jQuery(".data").not("#autointeract-log-table").find("a[href*='/Interact/Details/']").each((i, a) => {
-            const url = a.href.replace("/Interact/Details/", "/Character/");
-            const name = jQuery(a).closest('tr').find("a[href*='/Character/']").text().trim();
-            l.push({ url: url, name: name });
-        });
-        return l;
-    };
+    // Helpers
     const getAvaiableInteractions = () => { const r = []; jQuery("#ctl00_cphTopColumn_ctl00_ddlInteractionTypes option").each((_, o) => { if (o.value != 0) { r.push(o.value) } }); return r; };
     const getLocationId = () => { let r = 0; jQuery(".characterPresentation a").each((i, a) => { if (a.href.includes("/World/Popmundo.aspx/Locale/")) { r = Number(a.href.split("/Locale/")[1]) } }); return r; };
     const getCityId = () => { let r = 0; jQuery(".characterPresentation a").each((_, a) => { if (a.href.includes("/World/Popmundo.aspx/City/")) { r = Number(a.href.split("/City/")[1]) } }); return r; };
@@ -200,57 +172,33 @@
     const interact = (id) => { jQuery.when(jQuery("#ctl00_cphTopColumn_ctl00_ddlInteractionTypes").val(id).change()).then(() => { let b = jQuery("#ctl00_cphTopColumn_ctl00_btnInteract"); if (b.length > 0) { b.click() } }) };
 
     const getNextInteraction = (userId) => {
-        const allProfiles = getAllProfiles();
-        const preference = Cookies.get("interact-" + userId, { domain: DOMAIN });
-        const avaiableIntr = getAvaiableInteractions();
+        const allProfiles = getProfiles();
+        const preference = Cookies.get(`interact-${CURRENT_CHAR_ID}-${userId}`, { domain: DOMAIN });
         if (preference && preference !== "skip" && allProfiles[preference]) {
+            const available = getAvaiableInteractions();
             for (let intr of allProfiles[preference]) {
-                if (avaiableIntr.includes(String(intr))) return intr;
+                if (available.includes(String(intr))) return intr;
             }
         }
         return -1;
     };
 
-    let frameOpen = false;
-    const openUrl = (url) => { frameOpen = true; jQuery('#interaction-iframe').attr('src', url); };
-    const closeUrl = () => { frameOpen = false; jQuery('#interaction-iframe').attr('src', null); };
-    const sendClose = () => { window.parent.postMessage("interaction-frame-close", "*") };
-
-    // --- LÓGICA DE LOG (sem alteração) ---
-    let LOG_INDEX = 0;
-    const log = (data) => {
-        if (window.parent === window) {
-            jQuery("#autointeract-log-table").find('tbody').append(`<tr class="${LOG_INDEX++ % 2 == 0 ? "odd": "even"}"><td>${data}</td></tr>`);
-            try {
-                const storedLog = JSON.parse(localStorage.getItem(LOG_STORAGE_KEY) || '[]');
-                storedLog.push(data);
-                localStorage.setItem(LOG_STORAGE_KEY, JSON.stringify(storedLog));
-            } catch (e) { console.error("Falha ao salvar log:", e); }
-        } else {
-            window.parent.postMessage("interaction-frame-log#"+data, "*");
-        }
-    };
-
-    const loadLogFromStorage = () => {
-        const logTableBody = jQuery("#autointeract-log-table").find('tbody');
-        logTableBody.empty();
-        try {
-            const storedLog = JSON.parse(localStorage.getItem(LOG_STORAGE_KEY) || '[]');
-            storedLog.forEach(logEntry => {
-                logTableBody.append(`<tr class="${LOG_INDEX++ % 2 == 0 ? "odd": "even"}"><td>${logEntry}</td></tr>`);
-            });
-        } catch(e) { localStorage.removeItem(LOG_STORAGE_KEY); }
+    const getInteractionUserLinks = () => {
+        const l = [];
+        jQuery(".data").not("#autointeract-log-table").find("a[href*='/Interact/Details/']").each((i, a) => {
+            const url = a.href.replace("/Interact/Details/", "/Character/");
+            const name = jQuery(a).closest('tr').find("a[href*='/Character/']").text().trim();
+            l.push({ url: url, name: name });
+        });
+        return l;
     };
 
     const open = (cityId, links, current, finished) => {
         if (links.length == current || !isScriptRunning()) {
-            if (!isScriptRunning()) log('Script pausado ou cancelado.');
-            finished();
-            return;
+            finished(); return;
         }
         const charName = encodeURIComponent(links[current].name);
         openUrl(`${links[current].url}#${cityId}|${charName}`);
-
         const interval = setInterval(() => {
             if (!frameOpen) {
                 clearInterval(interval);
@@ -264,272 +212,373 @@
         window.addEventListener('message', e => {
             const data = (e.message ? e.message : e.data) + "";
             if (data == "interaction-frame-close") closeUrl();
-            if (data.includes("interaction-frame-log#")) log(data.split("interaction-frame-log#")[1]);
+            if (data.includes("automator-log#")) log(data.split("automator-log#")[1]);
         }, false);
     };
 
-    // ##################################################################################
-    // #                     INTERFACE GRÁFICA (UI) v2.1.0                              #
-    // ##################################################################################
+    // --- GUI INJECTION ---
     const injectGUI = () => {
-        const allProfiles = getAllProfiles();
-        let interactionOptions = '', existingProfilesHtml = '', bulkAssignOptions = '<option value="">-- Selecione --</option>';
+        const isRunning = getScriptState() === 'running';
+        const profiles = getProfiles();
+        const storedLog = JSON.parse(localStorage.getItem(LOG_STORAGE_KEY) || '[]');
 
-        Object.entries(allPossibleInteractions).sort((a, b) => a[1].localeCompare(b[1])).forEach(([id, name]) => {
-            interactionOptions += `<option value="${id}">[${id}] ${name}</option>`;
+        // Opções de perfil
+        let profileOpts = '<option value="">-- Selecione um perfil --</option>';
+        for(let p in profiles) profileOpts += `<option value="${p}">${p}</option>`;
+
+        // Opções de interação (ordenadas alfabeticamente)
+        let allInteractionOpts = '';
+        Object.entries(allPossibleInteractions).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([id, name]) => {
+            allInteractionOpts += `<option value="${id}">[${id}] ${name}</option>`;
         });
 
-        if (!loggedInCharId) {
-            existingProfilesHtml = '<p style="color: #c00;">Não foi possível identificar o personagem. Os perfis não podem ser carregados ou criados.</p>';
-        } else {
-            for (const profileName in allProfiles) {
-                existingProfilesHtml += `<div class="profile-item" data-profile-name="${profileName}"><strong>${profileName}</strong><span class="profile-controls"><button type="button" class="edit-profile-btn round">Editar</button><button type="button" class="delete-profile-btn round">Excluir</button></span></div>`;
-                bulkAssignOptions += `<option value="${profileName}">${profileName}</option>`;
-            }
-            existingProfilesHtml = existingProfilesHtml || '<p>Nenhum perfil criado para este personagem.</p>';
-        }
+        const logHtml = storedLog.map(l => `<div class="log-entry">${l}</div>`).join('');
 
-        // --- NOVO: HTML para o importador de perfis ---
-        const otherCharactersWithProfiles = findAllCharacterProfiles();
-        let importPanelHtml = '';
-        if (otherCharactersWithProfiles.length > 0) {
-            let charOptions = '<option value="">-- Selecione Personagem --</option>';
-            otherCharactersWithProfiles.forEach(charData => {
-                charOptions += `<option value="${charData.id}">${charData.name}</option>`;
-            });
-            importPanelHtml = `
-                <div id="import-profiles-section">
-                    <h4>Importar Perfil de Outro Personagem</h4>
-                    <select id="import-char-select" class="round">${charOptions}</select>
-                    <select id="import-profile-select" class="round" disabled><option value="">-- Selecione Perfil --</option></select>
-                    <button type="button" id="import-profile-btn" class="round" disabled>Importar</button>
-                </div>`;
-        } else {
-             importPanelHtml = `<div id="import-profiles-section"><h4>Importar Perfil</h4><p>Nenhum perfil de outros personagens encontrado.</p></div>`;
-        }
+        const html = `
+        <div id="automator-panel">
+            <div class="auto-header">
+                <h3><i class="fa fa-robot"></i> Automator <span style="font-weight:400; font-size:12px; color:#777;">| ID: ${CURRENT_CHAR_ID}</span></h3>
+                <span class="auto-status ${isRunning ? 'status-on' : 'status-off'}">${isRunning ? 'EXECUTANDO' : 'PARADO'}</span>
+            </div>
+            <div class="auto-body">
+                <div class="auto-column">
+                    <div class="auto-actions">
+                        ${isRunning
+                            ? `<button id="btn-stop" class="auto-btn btn-danger" type="button"><i class="fa fa-stop"></i> Parar</button>`
+                            : `<button id="btn-start" class="auto-btn btn-primary" type="button"><i class="fa fa-play"></i> Iniciar</button>`
+                        }
+                        <button id="btn-clear-log" class="auto-btn" type="button"><i class="fa fa-trash"></i> Log</button>
+                    </div>
 
-        function getActionButtonsHtml() {
-            const state = getScriptState();
-            if (state === 'running') return `<button type="button" id="script-pause-btn" class="round">Pausar</button>`;
-            if (state === 'paused') return `<button type="button" id="script-resume-btn" class="round">Retomar</button><button type="button" id="script-cancel-btn" class="round">Cancelar</button>`;
-            return `<button type="button" id="script-start-btn" class="round">Iniciar</button>`;
-        }
+                    <div style="background:#f9f9f9; padding:8px; border:1px solid #eee; border-radius:4px; margin-bottom:10px;">
+                        <span class="editor-label">Aplicar Perfil em Massa:</span>
+                        <div style="display:flex; gap:5px; margin-bottom:5px;">
+                            <select id="bulk-profile" class="auto-select" style="flex:1">${profileOpts}</select>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button id="btn-bulk-city" class="auto-btn" type="button">Mesma Cidade</button>
+                            <button id="btn-bulk-others" class="auto-btn" type="button">Outras Cidades</button>
+                        </div>
+                    </div>
 
-        const profileManagerPanel = `<div class="box"><details><summary><h2>Gerenciar Perfis de Interação:</h2></summary><div class="box-content"><div id="existing-profiles-list"><h4>Seus Perfis</h4>${existingProfilesHtml}</div><hr>${importPanelHtml}<hr><div id="profile-editor"><h4 id="editor-title">Criar Novo Perfil</h4><p><label for="profile-name-input">Nome:</label><br><input type="text" id="profile-name-input" class="round"></p><div class="editor-columns"><div><label>Disponíveis:</label><select id="available-interactions-select" size="10" class="round">${interactionOptions}</select><button type="button" id="add-interaction-btn" class="round">Adicionar →</button></div><div><label>No Perfil (ordem):</label><ul id="profile-selected-list"></ul></div></div><p class="actionbuttons"><button type="button" id="save-profile-btn" class="round">Salvar</button><button type="button" id="cancel-edit-btn" class="round" style="display: none;">Cancelar</button></p></div></div></details></div>`;
-        const bulkAssignPanel = `<div class="box"><h2>Seleção Rápida:</h2><div class="box-content"><p>Aplicar perfil para personagens da <strong>mesma cidade</strong>:</p><select id="bulk-assign-same-city-profile-select" class="round">${bulkAssignOptions}</select><button id="bulk-assign-same-city-btn" class="round" type="button">Aplicar</button><p style="margin-top: 10px;">Aplicar perfil para personagens de <strong>outras cidades</strong>:</p><select id="bulk-assign-other-city-profile-select" class="round">${bulkAssignOptions}</select><button id="bulk-assign-other-city-btn" class="round" type="button">Aplicar</button></div></div>`;
-        const actionLogPanel = `<div class="box"><h2>Ações e Log</h2><div class="box-content"><p class="actionbuttons" id="action-buttons-container">${getActionButtonsHtml()}<button id="clear-log-btn" class="round" type="button" title="Limpar Log" style="margin-left: 15px;">Limpar Log</button></p><table class="data" id="autointeract-log-table"><tbody></tbody></table></div></div>`;
-        const uiStyles = `<style>#action-buttons-container button{margin-right:5px;}.box-content{padding:0 10px 10px 10px}summary{cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary h2{margin-bottom:0 !important}details[open] summary h2{margin-bottom:12px !important}#autointeract-container h4{margin-top:10px;border-bottom:1px solid #ccc;padding-bottom:5px}#existing-profiles-list .profile-item{display:flex;justify-content:space-between;align-items:center;padding:5px;border-bottom:1px solid #eee}#existing-profiles-list .profile-item:last-child{border:none}.profile-controls button{margin-left:5px}#profile-editor{padding:10px;border:1px dashed #ccc;margin-top:10px;border-radius:3px}#profile-editor .editor-columns{display:flex;gap:10px;align-items:flex-start}#profile-editor .editor-columns>div{flex:1}#profile-editor input,#profile-editor select{width:100%;box-sizing:border-box}#profile-editor #add-interaction-btn{margin-top:5px}#profile-selected-list{list-style:none;margin:0;padding:5px;border:1px solid #ccc;height:180px;overflow-y:auto;background:#fff;border-radius:3px}#profile-selected-list li{padding:4px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}#profile-selected-list li:hover{background:#f0f8ff}#profile-selected-list .controls button{font-size:12px;padding:1px 5px;margin-left:2px}#bulk-assign-same-city-profile-select, #bulk-assign-other-city-profile-select{margin-right:10px; width: auto;} #import-profiles-section select{margin-right: 5px;}</style>`;
+                    <div id="profile-manager">
+                        <details>
+                            <summary><i class="fa fa-edit"></i> Gerenciar Perfis</summary>
+                            <div class="editor-box">
+                                <span class="editor-label">Backup / Restauração:</span>
+                                <div class="editor-row" style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                                    <button id="btn-export-profiles" class="auto-btn" style="flex:1" type="button"><i class="fa fa-download"></i> Exportar</button>
+                                    <button id="btn-import-profiles" class="auto-btn" style="flex:1" type="button"><i class="fa fa-upload"></i> Importar</button>
+                                    <input type="file" id="import-file-input" style="display:none" accept=".json">
+                                </div>
 
-        jQuery('head').append(uiStyles);
-        jQuery("#ppm-content").prepend(`<div id="autointeract-container">${profileManagerPanel}${bulkAssignPanel}${actionLogPanel}</div>`);
+                                <span class="editor-label">Criar novo:</span>
+                                <div class="editor-row">
+                                    <input type="text" id="new-profile-name" class="auto-input" placeholder="Nome do perfil">
+                                    <button id="btn-create-profile" class="auto-btn" type="button"><i class="fa fa-plus"></i></button>
+                                </div>
+                                <hr style="border:0; border-top:1px solid #eee; margin:10px 0;">
+                                <span class="editor-label">Editar existente:</span>
+                                <div class="editor-row">
+                                    <select id="editor-profile-select" class="auto-select">${profileOpts}</select>
+                                    <button id="btn-delete-profile" class="auto-btn btn-danger" type="button"><i class="fa fa-trash"></i></button>
+                                </div>
+                                <div class="editor-row">
+                                    <select id="editor-interaction-select" class="auto-select">${allInteractionOpts}</select>
+                                    <button id="btn-add-interaction" class="auto-btn" type="button">Adicionar</button>
+                                </div>
+                                <span class="editor-label" style="margin-top:5px;">Lista de Ações:</span>
+                                <ul id="editor-list" class="editor-list"></ul>
+                                <button id="btn-save-profile" class="auto-btn btn-primary" type="button" style="width:100%; margin-top:10px;">Salvar & Atualizar</button>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+                <div class="auto-column">
+                    <span class="editor-label">Log de Atividades:</span>
+                    <div id="auto-log-box" class="auto-log">${logHtml}</div>
+                </div>
+            </div>
+        </div>
+        `;
 
-        if (!loggedInCharId) {
-            jQuery('#profile-editor input, #profile-editor select, #profile-editor button').prop('disabled', true);
-            jQuery('#bulk-assign-same-city-profile-select, #bulk-assign-other-city-profile-select, #bulk-assign-same-city-btn, #bulk-assign-other-city-btn').prop('disabled', true);
-            jQuery('#import-profiles-section select, #import-profiles-section button').prop('disabled', true);
-        }
+        jQuery("#ppm-content").prepend(html);
 
-        const relationsTable = jQuery(".data").not("#autointeract-log-table");
-        relationsTable.find("thead tr").append("<th>Prioridade</th>");
-        relationsTable.find("tbody tr").each((_, elem) => {
+        // Inject dropdowns into Popmundo table
+        jQuery(".data").not("#autointeract-log-table").find("thead tr").append("<th>Perfil</th>");
+        jQuery(".data").not("#autointeract-log-table").find("tbody tr").each((_, elem) => {
             const link = jQuery(elem).find("a[href*='/Character/']");
             if (link.length > 0) {
                 const id = Number(link.attr('href').split("/Character/")[1]);
-                const selected = Cookies.get("interact-" + id, { domain: DOMAIN });
-                let optionsHtml = '<option value="">-- Selecione --</option>';
-                for (const name in allProfiles) { optionsHtml += `<option value="${name}" ${selected == name ? "selected":""}>${name}</option>`; }
-                optionsHtml += `<option value="skip" ${selected == "skip" ? "selected":""}>Skip</option>`;
-                jQuery(elem).append(`<td><select data-id="${id}" class="interaction-type round">${optionsHtml}</select></td>`);
-            } else { relationsTable.find("thead tr th:last-child").remove(); }
+                const selected = Cookies.get(`interact-${CURRENT_CHAR_ID}-${id}`, { domain: DOMAIN });
+
+                let opts = '<option value="">--</option>';
+                for (let p in profiles) opts += `<option value="${p}" ${selected == p ? "selected":""}>${p}</option>`;
+                opts += `<option value="skip" ${selected == "skip" ? "selected":""}>Pular</option>`;
+
+                jQuery(elem).append(`<td><select data-id="${id}" class="interaction-type">${opts}</select></td>`);
+            } else { jQuery(elem).find("thead tr th:last-child").remove(); }
         });
+
+        setupEvents();
     };
 
-    // ##################################################################################
-    // #                     LÓGICA DE EVENTOS (HANDLERS)                               #
-    // ##################################################################################
-    function setupEventHandlers() {
-        function addInteractionToSelectedList(id, name) { if (jQuery('#profile-selected-list').find(`li[data-id="${id}"]`).length > 0) return; jQuery('#profile-selected-list').append(`<li data-id="${id}"><span>[${id}] ${name}</span><span class="controls"><button type="button" class="move-up-btn round" title="Subir">▲</button><button type="button" class="move-down-btn round" title="Descer">▼</button><button type="button" class="remove-interaction-btn round" title="Remover">X</button></span></li>`); }
-        jQuery(document).on('click', '#add-interaction-btn', () => { const opt = jQuery('#available-interactions-select option:selected'); if (opt.length) addInteractionToSelectedList(opt.val(), opt.text().split('] ')[1]); });
-        jQuery(document).on('click', '.remove-interaction-btn', function() { jQuery(this).closest('li').remove(); });
-        jQuery(document).on('click', '.move-up-btn', function() { const li = jQuery(this).closest('li'); li.prev().before(li); });
-        jQuery(document).on('click', '.move-down-btn', function() { const li = jQuery(this).closest('li'); li.next().after(li); });
-        function resetEditor() { jQuery('#editor-title').text('Criar Novo Perfil'); jQuery('#profile-name-input').val('').prop('readonly', false); jQuery('#profile-selected-list').empty(); jQuery('#cancel-edit-btn').hide(); }
-        jQuery(document).on('click', '#save-profile-btn', () => { const name = jQuery('#profile-name-input').val().trim(); const interactions = jQuery('#profile-selected-list li').map(function() { return jQuery(this).data('id'); }).get(); if (!name) { alert('Insira um nome para o perfil.'); return; } if (interactions.length === 0) { alert('Adicione pelo menos uma interação.'); return; } const profiles = getCustomProfiles(); profiles[name] = interactions; saveCustomProfiles(profiles); alert(`Perfil "${name}" salvo! A página será recarregada.`); window.location.reload(); });
-        jQuery(document).on('click', '.delete-profile-btn', function() { const name = jQuery(this).closest('.profile-item').data('profile-name'); if (confirm(`Excluir o perfil "${name}"?`)) { const profiles = getCustomProfiles(); delete profiles[name]; saveCustomProfiles(profiles); alert(`Perfil "${name}" excluído. A página será recarregada.`); window.location.reload(); } });
-        jQuery(document).on('click', '.edit-profile-btn', function() { const name = jQuery(this).closest('.profile-item').data('profile-name'); const data = getCustomProfiles()[name]; if (data) { resetEditor(); jQuery('#editor-title').text(`Editando: ${name}`); jQuery('#profile-name-input').val(name).prop('readonly', true); data.forEach(id => addInteractionToSelectedList(id, allPossibleInteractions[id] || 'Desconhecido')); jQuery('#cancel-edit-btn').show(); const details = jQuery('#profile-editor').closest('details'); if (!details.prop('open')) { details.prop('open', true); } jQuery('html, body').animate({ scrollTop: jQuery("#profile-editor").offset().top - 20 }, 500); } });
-        jQuery(document).on('click', '#cancel-edit-btn', resetEditor);
-        jQuery(document).on('click', '#bulk-assign-same-city-btn', () => { const profile = jQuery('#bulk-assign-same-city-profile-select').val(); if (!profile) return; let count = 0; jQuery(".data").not("#autointeract-log-table").find("tbody tr").each(function() { const isSameCity = jQuery(this).find('a strong').length > 0; if (isSameCity) { const select = jQuery(this).find('select.interaction-type'); if (select.length) { select.val(profile).trigger('change'); count++; } } }); alert(`${count} personagem(ns) da mesma cidade atualizado(s) para o perfil "${profile}".`); });
-        jQuery(document).on('click', '#bulk-assign-other-city-btn', () => { const profile = jQuery('#bulk-assign-other-city-profile-select').val(); if (!profile) return; let count = 0; jQuery(".data").not("#autointeract-log-table").find("tbody tr").each(function() { const isOtherCity = jQuery(this).find('a strong').length === 0 && jQuery(this).find('a[href*="/Character/"]').length > 0; if (isOtherCity) { const select = jQuery(this).find('select.interaction-type'); if (select.length) { select.val(profile).trigger('change'); count++; } } }); alert(`${count} personagem(ns) de outras cidades atualizado(s) para o perfil "${profile}".`); });
-        jQuery(document).on("change", ".interaction-type", (event) => { const elem = jQuery(event.target); Cookies.set("interact-" + elem.data("id"), elem.val(), { domain: DOMAIN }); });
+    const setupEvents = () => {
+        // --- FUNÇÕES DE RENDERIZAÇÃO ---
+        const renderEditorList = (profileName) => {
+            const list = jQuery('#editor-list');
+            list.empty();
+            const profiles = getProfiles();
 
-        // --- NOVOS EVENT HANDLERS PARA IMPORTAÇÃO ---
-        const otherCharactersProfiles = findAllCharacterProfiles();
-        jQuery(document).on('change', '#import-char-select', function() {
-            const selectedCharId = jQuery(this).val();
-            const profileSelect = jQuery('#import-profile-select');
-            const importBtn = jQuery('#import-profile-btn');
-            profileSelect.html('<option value="">-- Selecione Perfil --</option>').prop('disabled', true);
-            importBtn.prop('disabled', true);
-
-            if (selectedCharId) {
-                const charData = otherCharactersProfiles.find(c => c.id == selectedCharId);
-                if (charData && charData.profiles) {
-                    Object.keys(charData.profiles).forEach(profileName => {
-                        profileSelect.append(`<option value="${profileName}">${profileName}</option>`);
+            if (profileName && profiles[profileName]) {
+                if (profiles[profileName].length === 0) {
+                    list.append('<li style="color:#999; justify-content:center;">(Vazio)</li>');
+                } else {
+                    profiles[profileName].forEach((id, idx) => {
+                        const name = allPossibleInteractions[id] || "ID Desconhecido: " + id;
+                        list.append(`<li><span>${name}</span> <button type="button" class="rm-int" data-idx="${idx}" data-profile="${profileName}">x</button></li>`);
                     });
-                    profileSelect.prop('disabled', false);
                 }
+            } else {
+                list.append('<li style="color:#999; justify-content:center;">Selecione um perfil</li>');
             }
+        };
+
+        // --- HANDLERS (Todos usam e.preventDefault() para não recarregar) ---
+
+        // Start/Stop
+        jQuery('#btn-start').click((e) => { e.preventDefault(); setScriptState('running'); window.location.reload(); });
+        jQuery('#btn-stop').click((e) => { e.preventDefault(); stopScript(); window.location.reload(); });
+        jQuery('#btn-clear-log').click((e) => { e.preventDefault(); localStorage.removeItem(LOG_STORAGE_KEY); jQuery('#auto-log-box').empty(); });
+
+        // Save Cookie on Change
+        jQuery(document).on("change", ".interaction-type", (e) => {
+            const elem = jQuery(e.target);
+            Cookies.set(`interact-${CURRENT_CHAR_ID}-${elem.data("id")}`, elem.val(), { domain: DOMAIN });
         });
 
-        jQuery(document).on('change', '#import-profile-select', function() {
-            jQuery('#import-profile-btn').prop('disabled', !jQuery(this).val());
+        // Bulk Actions
+        jQuery('#btn-bulk-city, #btn-bulk-others').click(function(e) {
+            e.preventDefault();
+            const profile = jQuery('#bulk-profile').val();
+            if(!profile) return alert("Por favor, selecione um perfil para aplicar em massa.");
+
+            const isSameCityBtn = this.id === 'btn-bulk-city';
+            let count = 0;
+
+            jQuery(".data tbody tr").each(function() {
+                const isSameCity = jQuery(this).find('a strong').length > 0; // Popmundo bolds name if same city
+                const shouldApply = isSameCityBtn ? isSameCity : !isSameCity;
+
+                if (shouldApply) {
+                    const sel = jQuery(this).find('select.interaction-type');
+                    if(sel.length) { sel.val(profile).trigger('change'); count++; }
+                }
+            });
+            alert(`Aplicado perfil "${profile}" para ${count} personagens.`);
         });
 
-        jQuery(document).on('click', '#import-profile-btn', function() {
-            const charId = jQuery('#import-char-select').val();
-            const profileName = jQuery('#import-profile-select').val();
+        // --- EXPORT / IMPORT LOGIC ---
 
-            if (!charId || !profileName) return;
+        // Exportar
+        jQuery('#btn-export-profiles').click(e => {
+            e.preventDefault();
+            const profiles = getProfiles();
+            if(Object.keys(profiles).length === 0) return alert("Não há perfis para exportar.");
 
-            const charData = otherCharactersProfiles.find(c => c.id == charId);
-            const profileToImport = charData.profiles[profileName];
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(profiles));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", `popmundo_profiles_${CURRENT_CHAR_ID}.json`);
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
 
-            const currentProfiles = getCustomProfiles();
+        // Botão Importar (Dispara o input file)
+        jQuery('#btn-import-profiles').click(e => {
+            e.preventDefault();
+            jQuery('#import-file-input').click();
+        });
 
-            if (currentProfiles[profileName]) {
-                if (!confirm(`Um perfil com o nome "${profileName}" já existe. Deseja sobrescrevê-lo?`)) {
-                    return;
+        // Input File Change (Lê o arquivo)
+        jQuery('#import-file-input').change(function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (typeof imported !== 'object') throw new Error("Arquivo inválido ou corrompido.");
+
+                    const current = getProfiles();
+                    const merged = { ...current, ...imported }; // Merge: Importados sobrescrevem iguais
+
+                    if(confirm(`Encontrados ${Object.keys(imported).length} perfis. Deseja importar e mesclar com os atuais?`)) {
+                        saveProfiles(merged);
+                        alert("Perfis importados com sucesso!");
+                        window.location.reload();
+                    }
+                } catch(err) {
+                    alert("Erro ao importar: " + err.message);
                 }
-            }
+            };
+            reader.readAsText(file);
+        });
 
-            currentProfiles[profileName] = profileToImport;
-            saveCustomProfiles(currentProfiles);
-            alert(`Perfil "${profileName}" do personagem "${charData.name}" importado com sucesso! A página será recarregada.`);
+
+        // --- EDITOR LOGIC ---
+
+        // Criar Perfil
+        jQuery('#btn-create-profile').click((e) => {
+            e.preventDefault();
+            const name = jQuery('#new-profile-name').val().trim();
+            if(!name) return alert("Digite um nome para o perfil.");
+
+            const profiles = getProfiles();
+            if(profiles[name]) return alert("Perfil já existe!");
+
+            profiles[name] = [];
+            saveProfiles(profiles);
+            alert(`Perfil "${name}" criado! A página irá recarregar para atualizar os menus.`);
             window.location.reload();
         });
 
+        // Deletar Perfil
+        jQuery('#btn-delete-profile').click((e) => {
+            e.preventDefault();
+            const name = jQuery('#editor-profile-select').val();
+            if(!name) return alert("Selecione um perfil para excluir.");
+            if(!confirm(`Tem certeza que deseja apagar o perfil "${name}"?`)) return;
 
-        // Handlers de controle do script
-        jQuery(document).on('click', '#script-start-btn', () => {
-            if (!loggedInCharId) {
-                alert("ERRO: Não foi possível identificar o personagem logado. O script não pode iniciar. Tente navegar para a página do seu personagem ou para a página de Relações e recarregue.");
-                return;
-            }
-            localStorage.removeItem(LOG_STORAGE_KEY);
-            setScriptState('running');
+            const profiles = getProfiles();
+            delete profiles[name];
+            saveProfiles(profiles);
             window.location.reload();
         });
-        jQuery(document).on('click', '#script-pause-btn', () => { setScriptState('paused'); jQuery('#action-buttons-container').html(`<button type="button" id="script-resume-btn" class="round">Retomar</button><button type="button" id="script-cancel-btn" class="round">Cancelar</button><button id="clear-log-btn" class="round" type="button" title="Limpar Log" style="margin-left: 15px;">Limpar Log</button>`); });
-        jQuery(document).on('click', '#script-resume-btn', () => { setScriptState('running'); window.location.reload(); });
-        jQuery(document).on('click', '#script-cancel-btn', () => { stopScript(); window.location.reload(); });
 
-        jQuery(document).on('click', '#clear-log-btn', () => {
-            if (confirm('Tem certeza que deseja apagar todo o log? Esta ação não pode ser desfeita.')) {
-                localStorage.removeItem(LOG_STORAGE_KEY);
-                jQuery("#autointeract-log-table tbody").empty();
-                LOG_INDEX = 0;
+        // Mudar Dropdown de Perfil
+        jQuery('#editor-profile-select').change(function() {
+            renderEditorList(this.value);
+        });
+
+        // Adicionar Interação
+        jQuery('#btn-add-interaction').click((e) => {
+            e.preventDefault();
+            const profile = jQuery('#editor-profile-select').val();
+            const intId = jQuery('#editor-interaction-select').val();
+
+            if(!profile) return alert("Selecione um perfil na lista 'Editar existente' primeiro!");
+
+            const profiles = getProfiles();
+            if(!profiles[profile]) profiles[profile] = [];
+
+            profiles[profile].push(Number(intId));
+            saveProfiles(profiles);
+
+            renderEditorList(profile);
+        });
+
+        // Remover Interação (Dinâmico)
+        jQuery(document).on('click', '.rm-int', function(e) {
+            e.preventDefault();
+            const idx = jQuery(this).data('idx');
+            const profile = jQuery(this).data('profile');
+
+            const profiles = getProfiles();
+            if(profiles[profile]) {
+                profiles[profile].splice(idx, 1);
+                saveProfiles(profiles);
+                renderEditorList(profile);
             }
         });
-    }
 
-    const loadInteractionIds = () => { jQuery("#ctl00_cphTopColumn_ctl00_ddlInteractionTypes option").each((_, o)=>{ jQuery(o).html(`[${o.value}] ${jQuery(o).html()}`) }) };
+        // Salvar Geral
+        jQuery('#btn-save-profile').click((e) => { e.preventDefault(); window.location.reload(); });
+    };
 
-    function initializeScript() {
-        loggedInCharId = manageCharacterSession();
-        CUSTOM_PROFILES_KEY = loggedInCharId ? `popmundo_profiles_${loggedInCharId}` : 'popmundo_profiles_fallback';
+    // --- INICIALIZAÇÃO DO SCRIPT ---
+    const init = () => {
+        // 1. Detectar ID
+        const relationsMatch = window.location.pathname.match(/\/Character\/Relations\/(\d+)/);
+        if (relationsMatch) {
+            CURRENT_CHAR_ID = relationsMatch[1];
+        } else {
+            const dropdown = jQuery("select[id$='ucCharacterBar_ddlCurrentCharacter']");
+            const fromStorage = JSON.parse(sessionStorage.getItem('popmundo_char_session_info') || '{}');
+            if(fromStorage.numericalId) CURRENT_CHAR_ID = fromStorage.numericalId;
+        }
 
-        jQuery('a[href*="/Logout.aspx"]').on('click', function() {
-            sessionStorage.removeItem('popmundo_char_session_info');
-        });
+        if(!CURRENT_CHAR_ID) {
+             const link = jQuery('a:has(img[alt="Meu Personagem"])').attr('href');
+             if(link) CURRENT_CHAR_ID = link.split('/Character/')[1];
+        }
+
+        if (!CURRENT_CHAR_ID) {
+            console.log("Automator: Aguardando identificação do personagem...");
+            return;
+        }
+
+        // 2. Definir chave de storage única
+        STORAGE_KEY_PROFILES = `popmundo_profiles_${CURRENT_CHAR_ID}`;
+        injectStyles();
 
         const path = window.location.pathname;
         const extraData = decodeURIComponent(window.location.hash).replace("#", "");
 
+        // 3. Roteamento
         if (path.includes("/Character/Relations/")) {
-            if (!loggedInCharId) {
-                jQuery("#ppm-content").prepend('<div class="box" style="color: red; padding: 10px;"><b>Automator PopMundo:</b> Não foi possível identificar o personagem logado. O script não pode funcionar corretamente. Tente navegar para a página de Relações do seu personagem e recarregar.</div>');
-            }
-            injectIframe(); injectGUI(); loadLogFromStorage(); setupEventHandlers();
-            const currentPage = Number(getCurrentPage()); const cityId = getCityId();
-            if (localStorage.getItem("interactScriptPage") == currentPage) { stopScript(); localStorage.removeItem("interactScriptPage"); window.location.reload(); }
+            injectIframe();
+            injectGUI();
 
             if (isScriptRunning()) {
-                if (!loggedInCharId) {
-                    log("ERRO CRÍTICO: Personagem não identificado. Parando o script.");
-                    stopScript();
-                    alert("ERRO CRÍTICO: Não foi possível identificar o personagem logado. O script foi interrompido para evitar erros.");
-                    window.location.reload();
-                    return;
+                const currentPage = Number(getCurrentPage());
+                const cityId = getCityId();
+                if (localStorage.getItem("interactScriptPage") == currentPage) {
+                    stopScript(); localStorage.removeItem("interactScriptPage"); window.location.reload();
                 }
                 localStorage.setItem("interactScriptPage", currentPage);
+
                 open(cityId, getInteractionUserLinks(), 0, () => {
                     if (isScriptRunning()) {
-                        if (isLastPage()) { log("✨ Script finalizado com sucesso."); stopScript(); localStorage.removeItem("interactScriptPage"); alert("Script finalizado."); window.location.reload(); }
-                        else { goToPage(currentPage + 1); }
+                        if (isLastPage()) {
+                            log("Ciclo finalizado."); stopScript(); localStorage.removeItem("interactScriptPage"); alert("Automação concluída!"); window.location.reload();
+                        } else { goToPage(currentPage + 1); }
                     }
                 });
             }
-        } else if (path.includes("/Character/") && !path.includes("/Character/Relations/") && isScriptRunning()) {
+        }
+        else if (path.includes("/Character/") && isScriptRunning()) {
             const id = Number(path.split("/Character/")[1]);
             const [myCityId, charName] = extraData.split('|');
             const locId = getLocationId();
-            if (isNaN(locId) || isNaN(id) || locId == 0 || getCityId() == 0) { sendClose(); return; }
-            localStorage.setItem("interact-cid", id);
-            localStorage.setItem("interact-cname", charName || `ID ${id}`);
-            if (Number(myCityId) == getCityId()) { log(`📍 ${charName}: Na mesma cidade. Movendo para a localização...`); gotoLocation(locId, id); }
-            else { log(`✈️ ${charName}: Em outra cidade. Tentando interagir diretamente...`); gotoInteraction(id); }
-        } else if (path.includes("/Locale/") && isScriptRunning()) {
-            const id = localStorage.getItem("interact-cid");
-            const name = localStorage.getItem("interact-cname") || `ID ${id}`;
-            if (id) { log(`📞 ${name}: Não foi possível entrar no local, tentando ligar...`); gotoPhone(id); }
-        } else if (path.includes("/Interact/Details/")) {
-            loadInteractionIds();
-        } else if (path.includes("/Interact/")) {
-            if (isScriptRunning()) {
-                const isPhone = path.includes("/Interact/Phone/");
-                const id = Number(path.split(isPhone ? "/Interact/Phone/" : "/Interact/")[1]);
-                const name = localStorage.getItem("interact-cname") || `ID ${id}`;
-                const itr = getNextInteraction(id);
-                if (itr === -1) { log(`🤷 ${name}: Nenhuma interação válida ou foi pulado (skip).`); setTimeout(() => { sendClose() }, DELAY); return; }
-                log(`<b>${isPhone ? "📞 Ligando para" : "🧑‍🤝‍🧑 Interagindo com"} ${name}</b> (Ação: [${itr}] ${allPossibleInteractions[itr]})`);
-                interact(itr);
-            } else if (isScriptPaused()) {
-                const id = Number(path.split(path.includes("/Interact/Phone/") ? "/Interact/Phone/" : "/Interact/")[1]);
-                const name = localStorage.getItem("interact-cname") || `ID ${id}`;
-                log(`⏸️ Interação com ${name} ignorada, script pausado.`);
-                setTimeout(() => { sendClose() }, DELAY);
-            } else { loadInteractionIds(); }
-        } else if (getScriptState()) {
-            log(`❓ Caminho desconhecido: ${window.location.pathname}`);
-            if (window.parent !== window) { sendClose(); }
+            if (isNaN(locId) || isNaN(id)) { sendClose(); return; }
+
+            if (Number(myCityId) == getCityId()) {
+                log(`Movendo: ${charName}`); gotoLocation(locId, id);
+            } else {
+                log(`Tentando remoto: ${charName}`); gotoInteraction(id);
+            }
         }
-    }
+        else if (path.includes("/Interact/") && isScriptRunning()) {
+            const isPhone = path.includes("/Interact/Phone/");
+            const id = Number(path.split(isPhone ? "/Interact/Phone/" : "/Interact/")[1]);
+            const itr = getNextInteraction(id);
 
-    jQuery(document).ready(function() {
-        const timeout = 10000;
-        let intervalId;
-        let timeoutId;
-
-        intervalId = setInterval(function() {
-            const element = jQuery(CHAR_DROPDOWN_SELECTOR);
-            if (element.length > 0 && element.val() !== null) {
-                clearInterval(intervalId);
-                clearTimeout(timeoutId);
-                initializeScript();
+            if (itr === -1) {
+                log(`ID ${id}: Sem ação ou Pular.`);
+                setTimeout(sendClose, DELAY);
+            } else {
+                log(`Ação [${itr}]: ${allPossibleInteractions[itr]}`);
+                interact(itr);
             }
-        }, 100);
+        }
+        else if (isScriptRunning() && (path.includes("/Locale/") || path.includes("/City/"))) {
+             setTimeout(sendClose, DELAY);
+        }
+    };
 
-        timeoutId = setTimeout(function() {
-            clearInterval(intervalId);
-            // Só exibe o erro se o script não for executado em uma página onde deveria.
-            if (!loggedInCharId && (window.location.pathname.includes("/Character/") || window.location.pathname.includes("/World/Popmundo.aspx/News/"))) {
-                 console.error(`Automator Popmundo: O elemento '${CHAR_DROPDOWN_SELECTOR}' não foi encontrado após ${timeout/1000} segundos. O script não será executado nesta página.`);
-                 if (window.location.pathname.includes("/Character/Relations/")) {
-                     jQuery("#ppm-content").prepend('<div class="box" style="color: red; padding: 10px;"><b>Automator PopMundo:</b> ERRO DE TIMING. A página não carregou os elementos necessários a tempo. Por favor, recarregue.</div>');
-                 }
-            }
-        }, timeout);
-    });
+    jQuery(document).ready(init);
 
 })();

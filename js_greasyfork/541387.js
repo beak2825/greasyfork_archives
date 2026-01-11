@@ -1,25 +1,25 @@
 // ==UserScript==
-// @name         Holotower Custom Emotes Box
+// @name         Holotower Emote Menu
 // @namespace    http://holotower.org/
-// @version      1.25
+// @version      1.26
 // @author       anonymous
 // @license      CC0
-// @description  Adds a custom emote box to the quick reply form on Holotower
+// @description  Adds an emote menu to the Quick Reply on Holotower
 // @icon         https://boards.holotower.org/static/emotes/ina/_tehepero.png
 // @match        *://boards.holotower.org/*
 // @match        *://holotower.org/*
 // @grant        none
 // @run-at       document-body
-// @downloadURL https://update.greasyfork.org/scripts/541387/Holotower%20Custom%20Emotes%20Box.user.js
-// @updateURL https://update.greasyfork.org/scripts/541387/Holotower%20Custom%20Emotes%20Box.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/541387/Holotower%20Emote%20Menu.user.js
+// @updateURL https://update.greasyfork.org/scripts/541387/Holotower%20Emote%20Menu.meta.js
 // ==/UserScript==
 
 (function () {
     "use strict";
 
     // Prevent loading the script twice
-    if (document.documentElement.dataset.customEmotesBoxLoaded) return;
-    document.documentElement.dataset.customEmotesBoxLoaded = "true";
+    if (document.documentElement.dataset.customEmoteMenuLoaded) return;
+    document.documentElement.dataset.customEmoteMenuLoaded = "true";
 
     const emotes_db = {
         categories: [{
@@ -1088,7 +1088,8 @@
                         "bijouPebblebweh", "bijouThink", "bijouOobib", "bijouPebbleeyes", "bijouMILK",
                         "bijouSwirlyeyes", "bijouPebbleyay", "bijouPebbleAAA", "bijoucat",
                         "bijouPebblecena", "bijouFear", "bijouThatswild", "bijouPebbledumb",
-                        "bijouPebblegasp", "bijouSmart"
+                        "bijouPebblegasp", "bijouSmart", "bijouMask", "bijouCatface", "bijouComfy",
+                        "bijouRockin", "bijouSideye", "bijouVibe"
                     ]
                 }, {
                     name: "Nerissa Ravencroft", id: "nerissa", oshimark: "🎼", emotes: [
@@ -1502,6 +1503,14 @@
                         "vedalDespair", "vedalCelebrate", "vedalTwinPeek", "vedalStonks", "vedalSad"
                     ]
                 }, {
+                    name: "PillowDear", id: "pillowdear", oshimark: "💌 🏹", emotes: [
+                        "ChatLOVE", "ChatDIZZY", "PillSleep", "PillHeart", "PillAngry", "PillCry",
+                        "PillPat", "PillWave", "Laugh", "Scared", "Hug", "gun", "Nerd", "dumb",
+                        "annoyed", "WAA", "heart", "penlights", "birthday", "dread", "blush",
+                        "amazing", "ppp", "iii", "lll", "ooo", "www", "seaweed", "Olive", "ASMR",
+                        "yandere", "silly"
+                    ]
+                }, {
                     name: "Poko Rakun", id: "poko", oshimark: "🔑", emotes: [
                         "PokoYessir", "PokoHeart", "PokoChad", "PokoConfused", "PokoPanik", "PokoMouth",
                         "PokoPat", "PokoAngry", "PokoSmug", "PokoBlush", "PokoGlare", "PokoTired",
@@ -1594,10 +1603,10 @@
     let emoteSelectContainer;
 
     // Run immediately if QR is open on script load (can happen when reloading a page after clicking a post to reply to it). Small delay to allow themes to load first.
-    if ($('form#quick-reply').length > 0) setTimeout(injectEmoteBox(), 10);
+    if ($('form#quick-reply').length > 0) setTimeout(injectEmoteMenu(), 10);
 
     // Run the script whenever QR is opened
-    $(window).on('quick-reply', injectEmoteBox);
+    $(window).on('quick-reply', injectEmoteMenu);
 
     // Append CSS
     const style = document.createElement("style");
@@ -1643,7 +1652,7 @@
 `;
     document.head.appendChild(style);
 
-    function injectEmoteBox() {
+    function injectEmoteMenu() {
         $('form#quick-reply input[name="subject"]').after(
             $('<div id="emote-menu">')
                 .append(
@@ -1832,9 +1841,9 @@
 
         return {
             show: savedSettings.show ?? false,
+            emoteListHeight: parseInt(savedSettings.emoteListHeight) || 120,
             lastCategory: savedSettings.lastCategory ?? emotes_db.categories[0].name,
             lastMembers: savedSettings.lastMembers ?? { [emotes_db.categories[0].name]: emotes_db.categories[0].subcategories[0].members[0].id },
-            emoteListHeight: parseInt(savedSettings.emoteListHeight) || 120,
             cachedEmotes: {
                 lastModified: parseInt(savedSettings.cachedEmotes?.lastModified) || 0,
                 emptyMembers: savedSettings.cachedEmotes?.emptyMembers || [],

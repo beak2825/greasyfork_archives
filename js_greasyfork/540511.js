@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GGn Formatters
-// @version      44
+// @version      45
 // @description  Formatters
 // @author       ingts (some by ZeDoCaixao and letsclay)
 // @match        https://gazellegames.net/
@@ -521,8 +521,8 @@ function formatSysReqs(str) {
     function formatSectionLabel(partialPattern, replacement) {
         reqs = reqs.replace(
             // colon only, colon preceded/followed by [/b], colon with space before [/b]
-            new RegExp(`(\\n)?(?:\\[\\*]\\[b]|\\s*\\[\\*]|\\[b]|\\*)\\s*(?:${partialPattern})\\s*(?::\\s\\[\\/b]|:\\[\\/b]|\\[\\/b]:|:) *`, 'i'),
-            (_, newline) => newline ? replacement : replacement.replace('\n', ''))  // the check is to handle OS because there's no newline before it
+            new RegExp(`(\\n)?(?:\\[\\*]\\[b]|\\s*\\[\\*]|\\[b]|\\*)\\s*(?:${partialPattern})\\s*(?::\\s\\[\\/b]|:\\[\\/b]|\\[\\/b]:|:) *`, 'gi'),
+            (_, newline) => newline ? replacement : replacement.replace('\n', ''))  // the check is to handle OS because there's no newline before it if there's no min/rec
     }
 
     /**
@@ -530,7 +530,7 @@ function formatSysReqs(str) {
      * @param {(match: string) => string} func
      */
     function formatSection(sectionName, func) {
-        const regExp = new RegExp(`(^\\[\\*]\\[b]${sectionName}\\[\\/b]: )(.*)`, 'm')
+        const regExp = new RegExp(`(^\\[\\*]\\[b]${sectionName}\\[\\/b]: )(.*)`, 'gm')
         reqs = reqs.replace(regExp, (_, p1, p2) => `${p1}${func(p2)}`)
     }
 

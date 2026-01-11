@@ -1,14 +1,19 @@
 // ==UserScript==
 // @name         Alias Helper
 // @namespace    http://tampermonkey.net/
-// @version      1.4.3
+// @version      1.5.2
 // @description  Makes adding aliases easier.
 // @author       You
 // @match        https://gazellegames.net/torrents.php?action=editgroup&groupid=*
+// @match        https://steamdb.info/app/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gazellegames.net
 // @grant        GM_xmlhttpRequest
 // @grant        GM.getValue
 // @grant        GM.setValue
+// @grant        GM.deleteValue
+// @grant        GM_openInTab
+// @grant        GM.addValueChangeListener
+// @grant        GM.removeValueChangeListener
 // @connect      api.vndb.org
 // @connect      steamdb.info
 // @connect      mobygames.com
@@ -20,6 +25,22 @@
 
 (async () => {
     'use strict';
+
+    if (location.hostname === "steamdb.info") {
+        if (GM.getValue('checking_steamdb_aliases', 1)) {
+            if (document.getElementById('info')) {
+                const info = {};
+                const result = document.evaluate("//td[contains(text(),'name_localized')]/following-sibling::td[1]/table/tbody/tr/td[2]", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                const nodes = [];
+                for (let i = 0; i < result.snapshotLength; i++) {
+                    nodes.push(result.snapshotItem(i).textContent.trim());
+                }
+                info.name_localized = nodes;
+                GM.setValue('steamdb_alias_info', info);
+            }
+        }
+    }
+
     let IGDB_CLIENT = await GM.getValue("IGDB_CLIENT_ID", null);
     let IGDB_SECRET = await GM.getValue("IGDB_CLIENT_SECRET", null);
 
@@ -348,52 +369,33 @@
         async function fetchSuggestions(q, cb) {
             const collected = [];
             const IGDB_TOKEN = await fetchIGDBToken();
+            const steamInput = document.querySelector("#steamuri");
+            let steamAppId = null;
+            if (steamInput?.value) {
+                const match = steamInput.value.match(/\d+/);
+                if (match) {
+                    steamAppId = match[0];
+                }
+            }
+
+            const mobyInput = document.querySelector("#mobygamesuri");
 
             const tasks = [];
             if (sources.vndb) tasks.push(fetchVNDBAliases(q));
             if (sources.igdb) tasks.push(fetchIGDBAliases(q));
-            if (sources.mobygames) tasks.push(fetchMobyAliases(q));
-            // if (sources.steamdb) tasks.push(fetchSteamAliases(q));
+            if (sources.mobygames) tasks.push(fetchMobyAliases(mobyInput?.value));
+            if (sources.steamdb && steamAppId) {
+                tasks.push(fetchSteamAliases(steamAppId));
+            }
 
             await Promise.all(tasks);
             cb(collected);
 
-            // Steam
-            /*          const appId = document.querySelector('#steamuri').value.match(/\d+/);
-            if (appId) {
-                GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: `https://steamdb.info/app/${appId}/info/`,
-                    onload(res) {
-                        try {
-                            console.log(`https://steamdb.info/app/${appId}/info/`);
-                            console.log(res.status);
-                            const html2 = res.responseText;
-                            const regex = /<td>Name Localized<\/td>\s*<td>(.*?)<\/td>/gi;
-                            let match;
-                            const steamAliases = new Set();
-
-                            while ((match = regex.exec(html2)) !== null) {
-                                const alias = match[1].replace(/<[^>]+>/g, '').trim();
-                                if (alias && !tags.includes(alias)) {
-                                    steamAliases.add(alias);
-                                }
-                            }
-
-                            steamAliases.forEach(alias => {
-                                collected.push({name: alias, src: 'SteamDB' });
-                            });
-                        } catch(e){}
-                        if (--pending===0) cb(collected);
-                    },
-                    onerror(){ if (--pending===0) cb(collected); }
-                });
-            } else {
-                console.log("Steamdb skipped");
-            } */
-
             // VNDB
             function fetchVNDBAliases(q) {
+                if (!q) {
+                    return Promise.resolve();
+                }
                 return new Promise(resolve => {
                     let filter;
                     (VNDBID) ? filter = ['id', "=", VNDBID[0]] : filter = ['search', '=', q];
@@ -504,7 +506,6 @@
                         }
 
                         aliasMap.forEach((source, alias) => {
-                            console.log(`${source} ${alias}`);
                             collected.push({name: alias, src: source });
                         });
 
@@ -518,20 +519,65 @@
 
             // MobyGames
             function fetchMobyAliases(q) {
+                if (!q) {
+                    return Promise.resolve();
+                }
                 return new Promise(resolve => {
                     GM_xmlhttpRequest({
                         method: 'GET',
-                        url: `https://www.mobygames.com/search/quick?q=${encodeURIComponent(q)}`,
+                        url: q,
                         onload(res) {
                             try {
                                 const html = new DOMParser().parseFromString(res.responseText,'text/html');
-                                html.querySelectorAll('.searchTitle a').forEach((a,i) => {
-                                    if (i<5) collected.push({name: a.textContent.trim(), src:'MobyGames'});
+                                html.querySelectorAll('#main div.mb div span u').forEach((a,i) => {
+                                    collected.push({name: a.textContent.trim(), src:'MobyGames-aka'});
                                 });
-                            } catch(e){}
+
+                                html.querySelectorAll('section>ul.text-sm>li').forEach((a,i) => {
+                                    collected.push({name: a.textContent.split(' - ').slice(0,-1).join("").trim(), src:'MobyGames-alt'});
+                                });
+                                resolve();
+                            } catch(err){
+                                console.error("Error fetching Moby aliases:", err);
+                            }
                         },
                         onerror: resolve
                     });
+                });
+            }
+
+            // Steam
+            function fetchSteamAliases(q) {
+                return new Promise((resolve) => {
+                    GM.deleteValue('steamdb_alias_info');
+                    GM.setValue('checking_steamdb_aliases', 1);
+                    const tab = GM_openInTab(`https://steamdb.info/app/${q}/info`);
+
+                    const listener = GM.addValueChangeListener(
+                        "steamdb_alias_info", (key, oldValue, newValue) => {
+                            GM.removeValueChangeListener(listener);
+                            tab.close();
+                            const aliases = newValue?.name_localized ?? [];
+
+                            GM.deleteValue(key);
+                            GM.deleteValue("checking_steamdb_aliases");
+                            if (!newValue) {
+                                console.warn("SteamDB returned no alias data");
+                                clearTimeout(timeout);
+                                resolve;
+                            }
+                            aliases.forEach((a) => collected.push({ name: a, src: "SteamDB" }));
+                            clearTimeout(timeout);
+                            resolve(aliases);
+                        }
+                    );
+
+                    const timeout = setTimeout(() => {
+                        GM.removeValueChangeListener(listener);
+                        try { tab.close(); } catch {}
+                        console.warn("Time out waiting for steamdb_alias_info");
+                        resolve();
+                    }, 15000);
                 });
             }
         }

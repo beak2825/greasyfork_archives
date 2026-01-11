@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         X站-优化
-// @version      1.1.0
+// @version      1.1.1
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
-// @description  xvideos··xhamster··自动播放·宽屏·高画质·隐藏已观看·广告拦截·等增强功能
+// @description  xvideos··xhamster··(自动->播放·宽屏·高画质)·隐藏已观看·等增强功能
 // @match        *://*.xvideos.com/*
 // @match        https://*.xhamster.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=xvideos.com
@@ -65,7 +65,7 @@
     }
     static shouldApplyHideWatched() {
       const pageType = this.getCurrentPageType();
-      return [ "home", "search", "category", "tags", "profile" ].includes(pageType);
+      return [ "home", "search", "category", "tags", "profile", "video" ].includes(pageType);
     }
     static isVideoPage() {
       return "video" === this.getCurrentPageType();

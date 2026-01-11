@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         cela-自动学习脚本API版
 // @namespace    https://github.com/Moker32/
-// @version      3.40
-// @description  [API版] cela自动学习脚本，支持浦东分院课程列表页面，支持专栏详情页面课程获取
+// @version      3.50
+// @description  [API版] 中国干部网络学院自动学习脚本，支持主站及浦东分院，采用状态机驱动的极简高效架构。
 // @author       Moker32
 // @license      GPL-3.0-or-later
 // @grant        GM_getValue
@@ -11,11 +11,17 @@
 // @match        *://pudong.e-celap.cn/*
 // @match        *://pd.cela.cn/*
 // @match        *://*.e-celap.cn/*
+// @match        *://www.cela.gov.cn/*
+// @match        *://cela.gwypx.com.cn/*
+// @match        *://cela.cbead.cn/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @connect      cela.e-celap.cn
 // @connect      pudong.e-celap.cn
 // @connect      pd.cela.cn
+// @connect      cela.gwypx.com.cn
+// @connect      cela.cbead.cn
+// @connect      www.cela.gov.cn
 // @connect      zpyapi.shsets.com
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/542254/cela-%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%ACAPI%E7%89%88.user.js
@@ -23,27 +29,20 @@
 // ==/UserScript==
 
 /**
- * CELA自动学习脚本API版
+ * CELA 自动学习脚本 API 版
  *
- * 本脚本通过直接调用CELA网站的API端点来实现自动学习功能，
- * 支持主站和浦东分院环境，具有智能学习策略和多种容错机制。
+ * 本脚本通过直接调用 CELA 平台后端 API 实现自动化学习逻辑，
+ * 核心支持浦东分院环境，采用状态机驱动架构，具备极高的执行效率与稳定性。
  *
  * 主要特性：
- * - 基于真实API分析，直接调用后端接口
- * - 支持快速学习、超快速模式等多种策略
- * - 多数据源支持，API失败时自动降级
- * - 学习记录保存到服务器，后台可查询
- * - 现代化UI设计，支持拖拽和配置界面
- * - 7层弹窗拦截机制，确保学习不被中断
- *
- * 技术亮点：
- * - 双API架构: 主站API + 视频API双重保障
- * - 事件驱动模块化设计，EventBus解耦
- * - 根据课程进度自动选择学习策略
- * - 支持主站和各分院环境
+ * - 极简 API 驱动：基于真实接口分析，单端点同步进度，解决 20001 拦截异常。
+ * - 状态机架构：引入 LEARNER_STATES 显式管理异步流程，杜绝逻辑竞态。
+ * - 性能优化：实现已完成课程的“零秒切换”，无谓等待时间降至最低。
+ * - 环境识别：自动区分门户、浦东分院及暂不支持的其他分支。
+ * - 现代化 UI：常量驱动的 EventBus 设计，实时反馈任务进度与统计。
  *
  * @author Moker32
- * @version 3.40
+ * @version 3.50
  * @license GPL-3.0-or-later
  */
 
@@ -57,22 +56,25 @@
      */
     const CONSTANTS = {
         /**
+         * 事件名称定义
+         */
+        EVENTS: {
+            LOG: 'log',
+            STATUS_UPDATE: 'statusUpdate',
+            PROGRESS_UPDATE: 'progressUpdate',
+            STATISTICS_UPDATE: 'statisticsUpdate'
+        },
+        /**
          * API端点配置
          * 定义所有与学习相关的API端点
          */
         API_ENDPOINTS: {
             GET_PLAY_TREND: '/inc/nc/course/play/getPlayTrend',      // 获取播放趋势信息
-            PULSE_SAVE_RECORD: '/inc/nc/course/play/pulseSaveRecord', // 脉冲式保存学习记录
-            REPORT_PROGRESS: '/inc/nc/course/play/reportProgress',    // 报告学习进度
-            UPDATE_PROGRESS: '/inc/nc/course/play/updateProgress',    // 更新学习进度
+            PULSE_SAVE_RECORD: '/inc/nc/course/play/pulseSaveRecord', // 进度同步上报
             GET_STUDY_RECORD: '/inc/nc/course/getStudyRecord',
-            SAVE_STUDY_RECORD: '/inc/nc/course/saveStudyRecord',
             GET_COURSEWARE_DETAIL: '/inc/nc/course/play/getCoursewareDetail', // 获取课件详情
             GET_PACK_BY_ID: '/inc/nc/pack/getById',                   // 根据ID获取包信息
-            GET_COURSE_LIST: '/api/course/list',                      // 获取课程列表
-            PUSH_COURSE: '/dsfa/nc/cela/api/pushCourse',              // 推送课程
-            GET_COURSE_BY_USER: '/dsfa/nc/cela/api/getCourseByUserAndCourse', // 根据用户获取课程
-            VIDEO_PROGRESS: '/api/player/progress'                    // 视频进度
+            GET_COURSE_LIST: '/api/course/list'                      // 获取课程列表
         },
         /**
          * DOM选择器配置
@@ -107,22 +109,13 @@
          * 定义用于查找课程元素的CSS选择器列表
          */
         COURSE_SELECTORS: [
+            '.dsf-many-schedule-course-list-row', '.dsf_nc_pd_special_item',
             '[class*="course"]', '[data-course]', '.course-item', '.lesson-item',
             '.el-card', '.el-card__body', '.course-card', '.course-box',
             '.nc-course-item', '.study-item', '.learn-item',
             '[class*="item"]', '[class*="card"]', '[data-id]',
-            '.pudong-course', '.pd-course', '.dsf-course'
-        ],
-        /**
-         * 备用选择器配置
-         * 当主要选择器无效时使用的备用选择器
-         */
-        FALLBACK_SELECTORS: [
-            'div[class*="list"] > div',
-            'ul > li',
-            '.content div',
-            '#app div[class]',
-            '[class*="container"] > div'
+            '.pudong-course', '.pd-course', '.dsf-course',
+            '.dsjy_card', '.item_content', '.class-item-desc'
         ],
         /**
          * 视频选择器配置
@@ -154,6 +147,91 @@
         UI_LIMITS: {
             MAX_LOG_ENTRIES: 50,      // 最大日志条数
             LOG_FLUSH_DELAY: 100      // 日志刷新延迟（毫秒）
+        }
+    };
+
+    /**
+     * 浦东分院专用处理器
+     * 集中管理浦东分院的页面识别、选择器配置及特殊逻辑
+     */
+    const PudongHandler = {
+        /**
+         * 页面类型定义
+         */
+        PAGE_TYPES: {
+            INDEX: 'index',           // 首页/综合页
+            COLUMN: 'column',         // 专栏页 (zgpdyxkc 等)
+            PLAYER: 'player',         // 播放页
+            UNKNOWN: 'unknown'
+        },
+
+        /**
+         * 选择器配置
+         */
+        SELECTORS: {
+            // 课程列表项
+            COURSE_ITEMS: [
+                '.dsf_nc_zg_item',                // 职工培训专栏
+                '.dsf_nc_pd_course_express_item', // 首页课程速递
+                '.dsf-many-schedule-course-list-row', // 常见列表行
+                '.dsf_nc_pd_special_item',        // 浦东专题项
+                '.pd_course_item',                // 浦东课程项 (备用)
+                '.dsjy_card'                      // 党史教育卡片
+            ],
+            // 进入学习按钮
+            ENTER_BTN: '.course-enter-btn', // 需进一步确认
+            // 播放器容器
+            PLAYER_CONTAINER: '#coursePlayer'
+        },
+
+        /**
+         * 识别当前页面类型
+         * @returns {string} 页面类型
+         */
+        identifyPage: function() {
+            const url = window.location.href;
+            if (url.includes('coursePlayer')) return this.PAGE_TYPES.PLAYER;
+            if (url.includes('/pc/nc/page/pd/') || 
+                url.includes('zgpdyxkc') || 
+                url.includes('specialcolumn') || 
+                url.includes('channelDetail')) return this.PAGE_TYPES.COLUMN;
+            if (url.includes('/pc/nc/pagehome/index')) return this.PAGE_TYPES.INDEX;
+            return this.PAGE_TYPES.UNKNOWN;
+        },
+
+        /**
+         * 初始化处理器
+         */
+        init: function() {
+            if (!this.isPudongMode()) return;
+            console.log('🏗️ 浦东分院处理器已激活');
+            this.handle();
+        },
+
+        /**
+         * 主处理逻辑分发
+         */
+        handle: function() {
+            const pageType = this.identifyPage();
+            console.log(`🧭 识别为浦东页面类型: ${pageType}`);
+
+            // 核心逻辑分发
+            if (pageType === this.PAGE_TYPES.INDEX) {
+                console.log('🏠 执行浦东首页处理逻辑');
+            } else if (pageType === this.PAGE_TYPES.COLUMN) {
+                console.log('📑 执行浦东专栏页处理逻辑');
+            } else if (pageType === this.PAGE_TYPES.PLAYER) {
+                console.log('▶️ 执行浦东播放页处理逻辑');
+            } else {
+                console.log('⚠️ 未知页面类型，跳过处理');
+            }
+        },
+
+        /**
+         * 检测是否为浦东分院模式
+         */
+        isPudongMode: function() {
+            return CONFIG.PUDONG_MODE || false;
         }
     };
 
@@ -250,7 +328,7 @@
          * 定义所有可用的配置选项及其默认值
          *
          * @type {Object}
-         * @property {string} LEARNING_STRATEGY - 学习策略 ('smart': 智能学习模式)
+         * @property {string} LEARNING_STRATEGY - 学习策略 ('default': 默认学习模式)
          * @property {boolean} SKIP_COMPLETED_COURSES - 是否跳过已完成课程
          * @property {boolean} STUDY_RECORD_ENABLED - 是否启用学习记录
          * @property {boolean} FALLBACK_MODE - 是否启用兜底模式（已禁用）
@@ -266,7 +344,7 @@
          */
         defaultConfig: {
             // === 固定配置 (不可修改) ===
-            LEARNING_STRATEGY: 'smart',                    // 智能学习模式
+            LEARNING_STRATEGY: 'default',                    // 默认学习模式
             SKIP_COMPLETED_COURSES: true,                  // 跳过已完成课程
             STUDY_RECORD_ENABLED: true,                    // 启用学习记录
             FALLBACK_MODE: false,                          // 禁用兜底模式
@@ -282,13 +360,11 @@
             // === 自动配置 (系统检测) ===
             PUDONG_MODE: false,                           // 浦东分院模式(自动检测)
             PUDONG_API_BASE: '',                          // 浦东API基础URL(自动设置)
+            IS_PORTAL: false,                             // 是否为门户页面
+            SUPER_FAST_MODE: true,                        // 极速模式：单次上报直接完成
 
-            // === 安全配置 ===
-            STRICT_MODE: false,                           // 严格模式：禁止使用模拟ID上报
-            SAFE_MODE: false,                             // 安全模式：模拟更真实的人类学习行为(耗时更长)
-
-            // === 向后兼容配置 (将被迁移) ===
-            FAST_LEARNING_MODE: true,                     // 兼容旧版本
+            // === 内部状态 ===
+            FAST_LEARNING_MODE: true                      // 极速模式标志
         },
 
         /**
@@ -302,12 +378,11 @@
          *
          * 使用固定配置，不再从存储加载
          */
-        load() {
-            // 使用固定配置，不再从存储加载
-            this.config = { ...this.defaultConfig };
-            EventBus.publish('log', { message: '✅ 使用固定配置：智能学习模式', type: 'success' });
-        },
-
+                        load() {
+                            // 使用固定配置，不再从存储加载
+                            this.config = { ...this.defaultConfig };
+                            EventBus.publish(CONSTANTS.EVENTS.LOG, { message: '✅ 使用固定配置：默认学习模式', type: 'success' });
+                        },
         /**
          * 获取配置值
          *
@@ -350,85 +425,49 @@
         const hostname = window.location.hostname;
         const href = window.location.href;
 
-        // 检测是否为浦东分院
+        // 1. 检测是否为门户网站
+        if (hostname === 'www.cela.gov.cn' || href.includes('cela.gov.cn/home')) {
+            CONFIG.IS_PORTAL = true;
+            console.log('🏠 检测到中国干部网络学院门户页面');
+        }
+
+        // 2. 检测是否为浦东分院 (当前核心支持环境)
         if (hostname.includes('pudong') ||
             hostname.includes('pd.') ||
-            href.includes('浦东分院') ||
-            href.includes('pudong') ||
-            document.title.includes('浦东')) {
+            hostname === 'cela.e-celap.cn') {
             CONFIG.PUDONG_MODE = true;
             console.log('🏢 检测到浦东分院环境');
         }
 
+        // 3. 检测暂不支持的分院
+        if (hostname.includes('gwypx.com.cn')) {
+            CONFIG.UNSUPPORTED_BRANCH = '党校分院';
+        } else if (hostname.includes('cbead.cn')) {
+            CONFIG.UNSUPPORTED_BRANCH = '企业分院';
+        }
+
         // 设置API基础URL
         if (CONFIG.PUDONG_MODE) {
-            if (hostname.includes('pudong.e-celap.cn')) {
-                CONFIG.PUDONG_API_BASE = `https://${hostname}`;
-            } else if (hostname.includes('pd.cela.cn')) {
-                CONFIG.PUDONG_API_BASE = `https://${hostname}`;
-            } else {
-                // 默认使用主站API
-                CONFIG.PUDONG_API_BASE = 'https://cela.e-celap.cn';
-            }
+            // 如果已经在 cela.e-celap.cn，直接使用相对路径或当前域名
+            CONFIG.PUDONG_API_BASE = `https://${hostname}`;
         }
 
-        console.log(`🌐 当前环境: ${CONFIG.PUDONG_MODE ? '浦东分院' : '主站'} (${hostname})`);
-        console.log(`🔗 API基础URL: ${CONFIG.PUDONG_API_BASE || 'https://cela.e-celap.cn'}`);
-    };
+        console.log(`🌐 当前环境: ${CONFIG.PUDONG_MODE ? '浦东分院' : '未知或门户环境'} (${hostname})`);
+        
+        // 处理不兼容提示
+        setTimeout(() => {
+            if (typeof UI === 'undefined' || !UI.setIncompatible) return;
 
-    /**
-     * 检测浦东分院环境下的API端点可用性
-     *
-     * 检测浦东分院环境下的特殊API端点是否可用，用于优化API调用策略
-     *
-     * @async
-     * @function detectPudongApiEndpoints
-     */
-    const detectPudongApiEndpoints = async () => {
-        if (!CONFIG.PUDONG_MODE) return;
-
-        try {
-            // 尝试检测浦东分院的特殊API端点
-            const endpointsToTest = [
-                '/api/player/progress',
-                '/api/study/record',
-                '/api/video/info',
-                '/api/player/pulse',
-                '/inc/nc/course/play/getPlayTrend',
-                '/inc/nc/course/play/pulseSaveRecord',
-                '/inc/nc/course/play/reportProgress',
-                '/inc/nc/course/play/updateProgress',
-                '/inc/nc/course/play/getPlayInfo',
-                '/inc/nc/course/play/getPlayInfoById',
-                '/inc/nc/course/play/updatePlayProgress',
-                '/api/course/player/progress',
-                '/dsf/nc/cela/api/coursePlayerInfo',
-                '/api/course/detail',
-                '/inc/nc/course/detail',
-                '/api/course/progress',
-                '/inc/nc/course/progress',
-                '/api/learning/record',
-                '/inc/nc/learning/record'
-            ];
-
-            for (const endpoint of endpointsToTest) {
-                try {
-                    const response = await API._request({
-                        method: 'GET',
-                        url: `${API.getBaseUrl()}${endpoint}?_t=${Date.now()}`,
-                        timeout: 5000
-                    });
-
-                    // 记录可用的端点，即使返回错误码也可能表示端点存在
-                    console.log(`🔍 API端点检测: ${endpoint} - ${response?.code || response?.status || response?.message || 'no response'}`);
-                } catch (error) {
-                    // 端点不可用或需要POST请求
-                    console.log(`🔍 API端点检测: ${endpoint} - 不可用 (${error.message})`);
-                }
+            if (CONFIG.UNSUPPORTED_BRANCH) {
+                UI.setIncompatible(`当前检测到【${CONFIG.UNSUPPORTED_BRANCH}】，本脚本暂不支持该环境，请联系开发者适配。`);
+            } else if (CONFIG.IS_PORTAL) {
+                UI.setIncompatible('门户网站仅用于信息展示，不支持自动学习，请进入具体的学习平台。');
+            } else if (!CONFIG.PUDONG_MODE) {
+                UI.setIncompatible('当前域名未被识别为受支持的学习环境，脚本已停止加载。');
+            } else if (href.includes('pagehome/index')) {
+                UI.setIncompatible('首页不支持自动学习，请进入具体的课程列表或详情页。');
             }
-        } catch (error) {
-            console.log(`⚠️ API端点检测失败: ${error.message}`);
-        }
+        }, 1500);
     };
 
     // --- UI和日志（优化版） ---
@@ -494,7 +533,7 @@
             panel.id = 'api-learner-panel';
             panel.innerHTML = `
                 <div class="header">
-                    API学习助手 v3.40
+                    cela学习助手 v3.50
                 </div>
                 <div class="content">
                     <div class="status">状态: <span id="learner-status">待命</span></div>
@@ -511,7 +550,7 @@
                 </div>
                 <div class="footer">
                     <button id="toggle-learning-btn" data-state="stopped">开始学习</button>
-                    <div class="feature-note">✨ 智能学习模式 + 自动记录</div>
+                    <div class="feature-note">✨ 默认学习模式 + 自动记录</div>
                 </div>
             `;
             document.body.appendChild(panel);
@@ -553,10 +592,10 @@
         // 初始化事件监听器 (v2.0新增)
         initEventListeners: function() {
             // 订阅事件
-            EventBus.subscribe('log', ({ message, type }) => this.log(message, type));
-            EventBus.subscribe('statusUpdate', status => this.updateStatus(status));
-            EventBus.subscribe('progressUpdate', progress => this.updateProgress(progress));
-            EventBus.subscribe('statisticsUpdate', stats => this.updateStatistics(stats));
+            EventBus.subscribe(CONSTANTS.EVENTS.LOG, ({ message, type }) => this.log(message, type));
+            EventBus.subscribe(CONSTANTS.EVENTS.STATUS_UPDATE, status => this.updateStatus(status));
+            EventBus.subscribe(CONSTANTS.EVENTS.PROGRESS_UPDATE, progress => this.updateProgress(progress));
+            EventBus.subscribe(CONSTANTS.EVENTS.STATISTICS_UPDATE, stats => this.updateStatistics(stats));
         },
         /**
          * 批量刷新日志缓冲区
@@ -627,35 +666,171 @@
          */
         addStyles: () => {
             const styles = `
-                #api-learner-panel { position: fixed; bottom: 20px; right: 20px; width: 400px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 99999; font-family: sans-serif; font-size: 14px; color: #333; }
-                #api-learner-panel .header { background: #f7f7f7; padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #ddd; border-radius: 8px 8px 0 0; }
-                #api-learner-panel .content { padding: 15px; }
-                #api-learner-panel .status { margin-bottom: 10px; }
-                #api-learner-panel .statistics { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: #f9f9f9; border-radius: 4px; font-size: 12px; }
-                #api-learner-panel .stat-item { text-align: center; }
-                #api-learner-panel .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
-                #api-learner-panel #learner-progress-inner { height: 100%; width: 0%; background: #4caf50; transition: width 0.3s ease; }
-                #api-learner-panel .log-container { max-height: 120px; overflow-y: auto; background: #fafafa; padding: 8px; border: 1px solid #eee; border-radius: 4px; font-size: 11px; line-height: 1.4; }
-                #api-learner-panel .log-entry.error { color: #f44336; }
-                #api-learner-panel .log-entry.success { color: #4caf50; }
-                #api-learner-panel .log-entry.warn { color: #ff9800; }
-                #api-learner-panel .footer { padding: 10px 15px; border-top: 1px solid #ddd; text-align: right; }
-                #api-learner-panel button { padding: 6px 10px; border: none; border-radius: 4px; cursor: pointer; margin-left: 8px; font-size: 12px; }
-                #api-learner-panel button#toggle-learning-btn {
-                    background: #2196f3;
-                    color: white;
-                    transition: background-color 0.3s ease;
+                #api-learner-panel { 
+                    all: initial !important; 
+                    position: fixed !important; 
+                    bottom: 20px !important; 
+                    right: 20px !important; 
+                    left: auto !important;
+                    top: auto !important;
+                    width: 400px !important; 
+                    height: auto !important;
+                    min-height: 200px !important; /* 设定最小高度，保证初始感官一致 */
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    transform: none !important; /* 防止外部缩放或平移干扰 */
+                    zoom: 1 !important; /* 防止有些网站设置了全局缩放 */
+                    background: #ffffff !important; 
+                    border: 1px solid #dddddd !important; 
+                    border-radius: 8px !important; 
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; 
+                    z-index: 2147483647 !important; 
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; 
+                    font-size: 14px !important; 
+                    color: #333333 !important;
+                    line-height: 1.5 !important;
+                    text-align: left !important;
+                    box-sizing: border-box !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    overflow: hidden !important;
+                }
+                #api-learner-panel * { 
+                    all: unset !important; 
+                    box-sizing: border-box !important; 
+                    font-family: inherit !important;
+                    background: transparent !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    border: none !important;
+                }
+                #api-learner-panel *:before, #api-learner-panel *:after { 
+                    content: none !important; 
+                    display: none !important;
+                }
+                #api-learner-panel .header { 
+                    display: block !important;
+                    background: #f7f7f7 !important; 
+                    padding: 10px 15px !important; 
+                    font-weight: bold !important; 
+                    border-bottom: 1px solid #ddd !important; 
+                    width: 100% !important;
+                }
+                #api-learner-panel .content { 
+                    display: block !important;
+                    padding: 15px !important; 
+                    width: 100% !important;
+                    background: #ffffff !important;
+                    flex-grow: 1 !important;
+                }
+                #api-learner-panel .status { 
+                    display: block !important;
+                    margin-bottom: 10px !important; 
+                    font-weight: bold !important; 
+                }
+                #api-learner-panel .statistics { 
+                    display: flex !important; 
+                    justify-content: space-between !important; 
+                    margin-bottom: 10px !important; 
+                    padding: 8px !important; 
+                    background: #f9f9f9 !important; 
+                    border-radius: 4px !important; 
+                    font-size: 12px !important; 
+                    width: 100% !important;
+                }
+                #api-learner-panel .stat-item { 
+                    display: block !important;
+                    text-align: center !important; 
+                    flex: 1 !important; 
+                }
+                #api-learner-panel .progress-bar { 
+                    display: block !important;
+                    height: 8px !important; 
+                    background: #eeeeee !important; 
+                    border-radius: 4px !important; 
+                    overflow: hidden !important; 
+                    margin-bottom: 10px !important; 
+                    width: 100% !important;
+                }
+                #api-learner-panel #learner-progress-inner { 
+                    display: block !important;
+                    height: 100% !important; 
+                    width: 0% !important; 
+                    background: #4caf50 !important; 
+                    transition: width 0.3s ease !important; 
+                }
+                #api-learner-panel .log-container { 
+                    display: block !important;
+                    height: 150px !important; /* 固定高度，确保面板整体大小更一致 */
+                    overflow-y: auto !important; 
+                    background: #fafafa !important; 
+                    padding: 8px !important; 
+                    border: 1px solid #eeeeee !important; 
+                    border-radius: 4px !important; 
+                    font-size: 11px !important; 
+                    line-height: 1.4 !important; 
+                    font-family: monospace !important; 
+                    width: 100% !important;
+                }
+                #api-learner-panel .log-entry { 
+                    display: block !important;
+                    margin-bottom: 4px !important; 
+                    border-left: 2px solid #ccc !important; 
+                    padding-left: 6px !important; 
+                    word-break: break-all !important;
+                }
+                #api-learner-panel .log-entry.error { color: #f44336 !important; border-left-color: #f44336 !important; }
+                #api-learner-panel .log-entry.success { color: #4caf50 !important; border-left-color: #4caf50 !important; }
+                #api-learner-panel .log-entry.warn { color: #ff9800 !important; border-left-color: #ff9800 !important; }
+                #api-learner-panel .log-entry.info { color: #2196f3 !important; border-left-color: #2196f3 !important; }
+                #api-learner-panel .footer { 
+                    display: block !important;
+                    padding: 10px 15px !important; 
+                    border-top: 1px solid #dddddd !important; 
+                    text-align: right !important; 
+                    width: 100% !important;
+                    background: #ffffff !important;
+                }
+                #api-learner-panel button { 
+                    display: inline-block !important;
+                    padding: 8px 16px !important; 
+                    border-radius: 4px !important; 
+                    cursor: pointer !important; 
+                    font-size: 13px !important; 
+                    font-weight: bold !important;
+                    line-height: 1.2 !important;
+                    background-color: #2196f3 !important;
+                    color: #ffffff !important;
+                    margin-left: 8px !important;
+                    vertical-align: middle !important;
                 }
                 #api-learner-panel button#toggle-learning-btn[data-state="running"] {
-                    background: #f44336;
+                    background-color: #f44336 !important;
                 }
-                #api-learner-panel button:disabled { background: #ccc; }
-                #api-learner-panel .feature-note { font-size: 11px; color: #666; margin-top: 8px; text-align: center; }
+                #api-learner-panel .feature-note { 
+                    display: block !important;
+                    font-size: 11px !important; 
+                    color: #666666 !important; 
+                    margin-top: 8px !important; 
+                    text-align: center !important; 
+                    width: 100% !important;
+                }
             `;
-            const styleSheet = document.createElement("style");
-            styleSheet.type = "text/css";
+            const styleSheet = document.createElement('style');
+            styleSheet.type = 'text/css';
             styleSheet.innerText = styles;
             document.head.appendChild(styleSheet);
+        },
+        /**
+         * 设置页面为不兼容状态
+         *
+         * 在状态栏显示警告并记录原因
+         *
+         * @param {string} reason - 不兼容的具体原因
+         */
+        setIncompatible: (reason) => {
+            UI.updateStatus('⚠️ 当前页面暂不兼容');
+            UI.log(`[兼容性检查] ${reason}`, 'warn');
         },
         /**
          * 导出日志
@@ -683,163 +858,32 @@
     /**
      * 学习策略模块
      *
-     * 定义不同的学习策略，根据课程进度自动选择最适合的策略
+     * 仅保留极速完成模式
      *
      * @typedef {Object} LearningStrategies
-     * @property {Function} _executeSteps - 策略执行的辅助函数
-     * @property {Function} slow_start - 慢启动策略：分3步到50%，然后快速完成
-     * @property {Function} progressive - 渐进式策略：分5步完成
-     * @property {Function} fast_finish - 快速完成策略：直接跳到95%然后完成
-     * @property {Function} final_push - 最后冲刺策略：直接完成
+     * @property {Function} instant_finish - 即时完成策略：直接上报到99%
      */
     const LearningStrategies = {
         /**
-         * 策略执行的辅助函数，封装重复逻辑
+         * 即时完成策略：单次上报直接达到 99% 并完成
          *
          * @async
          * @param {Object} context - 学习上下文对象
-         * @param {Array<number>} steps - 要执行的步骤时间点数组
-         * @param {number} delay - 每个步骤之间的延迟（毫秒）
-         * @returns {boolean} 是否成功执行所有步骤
+         * @returns {boolean} 是否成功
          */
-        async _executeSteps(context, steps, delay) {
-            for (const targetTime of steps) {
-                if (Learner.stopRequested) {
-                    EventBus.publish('log', { message: '⏹️ 收到停止请求，中断策略执行', type: 'warn' });
-                    return false;
-                }
-
-                const randomDelay = Math.floor(delay * 0.6 + Math.random() * delay * 0.4); // 延迟的60%-100%
-                await new Promise(resolve => setTimeout(resolve, randomDelay));
-                const success = await API.smartReportProgress(context.playInfo, targetTime);
-                if (!success) return false;
-
-                context.currentTime = targetTime;
-                const progress = Math.floor((context.currentTime / context.duration) * 100);
-                EventBus.publish('log', { message: `[策略执行] 进度: ${progress}%`, type: 'info' });
-            }
-            return true;
-        },
-
-        /**
-         * 慢启动策略：分3步到50%，然后快速完成
-         *
-         * 适用于刚开始学习的课程，模拟真实学习行为
-         *
-         * @async
-         * @param {Object} context - 学习上下文对象
-         * @returns {boolean} 策略是否成功执行
-         */
-        async slow_start(context) {
+        async instant_finish(context) {
             const { duration } = context;
-            EventBus.publish('log', { message: '[慢启动策略] 开始执行', type: 'info' });
-
-            // 优化：更平滑的曲线，增加 65%, 80%, 90% 节点，防止从 50% 直接跳到 100%
-            const progressPoints = [0.2, 0.35, 0.5, 0.65, 0.8, 0.9];
-            const steps = progressPoints.map(p => Math.floor(duration * p));
-            
-            // 动态延迟计算：课程越长，延迟应该越长，以增加真实感
-            // 基础延迟 3秒，每分钟课程增加 0.1秒延迟
-            let baseDelay = 3000 + (duration / 60) * 100;
-            
-            if (CONFIG.SAFE_MODE) {
-                baseDelay = baseDelay * 2; // 安全模式下延迟翻倍
-                EventBus.publish('log', { message: '[安全模式] 启用更真实的延迟模拟', type: 'info' });
-            }
-
-            const success = await this._executeSteps(context, steps, baseDelay);
-
-            if (success && !Learner.stopRequested) {
-                const delay = Math.floor(Math.random() * 2000 + 1000); 
-                await new Promise(resolve => setTimeout(resolve, delay));
-                context.currentTime = duration - 5; // 稍微留一点余量
-                return await API.smartReportProgress(context.playInfo, context.currentTime);
-            }
-            return success;
-        },
-
-        /**
-         * 渐进式策略：分5步完成
-         *
-         * 适用于进度在10%-50%之间的课程，逐步推进学习进度
-         *
-         * @async
-         * @param {Object} context - 学习上下文对象
-         * @returns {boolean} 策略是否成功执行
-         */
-        async progressive(context) {
-            const { duration, currentTime } = context;
-            EventBus.publish('log', { message: '[渐进式策略] 开始执行', type: 'info' });
-
-            const remaining = duration - currentTime;
-            const stepSize = Math.floor(remaining / 6); // 分得更细一点
-            const steps = [];
-
-            for (let i = 1; i <= 5; i++) {
-                const nextTime = Math.min(currentTime + (stepSize * i), duration - 10);
-                steps.push(nextTime);
-            }
-
-            // 动态延迟
-            let baseDelay = 3000 + (duration / 60) * 100;
-            if (CONFIG.SAFE_MODE) baseDelay *= 1.5;
-
-            return await this._executeSteps(context, steps, baseDelay);
-        },
-
-        /**
-         * 快速完成策略：直接跳到95%然后完成
-         *
-         * 适用于进度在50%-80%之间的课程，快速完成剩余部分
-         *
-         * @async
-         * @param {Object} context - 学习上下文对象
-         * @returns {boolean} 策略是否成功执行
-         */
-        async fast_finish(context) {
-            const { duration } = context;
-            EventBus.publish('log', { message: '[快速完成策略] 开始执行', type: 'info' });
+            EventBus.publish(CONSTANTS.EVENTS.LOG, { message: '🚀 采用极速完成策略 - 直接冲刺', type: 'info' });
 
             if (Learner.stopRequested) return false;
 
-            const target95 = Math.floor(duration * 0.95);
-            const initialDelay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
-            await new Promise(resolve => setTimeout(resolve, initialDelay));
-            let success = await API.smartReportProgress(context.playInfo, target95);
-
-            if (success && !Learner.stopRequested) {
-                const finalDelay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
-                await new Promise(resolve => setTimeout(resolve, finalDelay));
-                context.currentTime = duration - 10;
-                success = await API.smartReportProgress(context.playInfo, context.currentTime);
-            }
-            return success;
-        },
-
-        /**
-         * 最后冲刺策略：直接完成
-         *
-         * 适用于进度在80%以上的课程，直接完成剩余部分
-         *
-         * @async
-         * @param {Object} context - 学习上下文对象
-         * @returns {boolean} 策略是否成功执行
-         */
-        async final_push(context) {
-            const { duration } = context;
-            EventBus.publish('log', { message: '[最后冲刺策略] 开始执行', type: 'info' });
-
-            if (Learner.stopRequested) return false;
-
-            const delay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
+            const delay = Math.floor(Math.random() * 500 + 500); // 0.5-1.0秒小延迟
             await new Promise(resolve => setTimeout(resolve, delay));
-            context.currentTime = duration - 10;
-            return await API.smartReportProgress(context.playInfo, context.currentTime);
-        },
-
+            const finalTime = Math.max(0, duration - 30);
+            return await API.reportProgressWithDelay(context.playInfo, finalTime);
+        }
     };
 
-    // --- 工具函数 ---
     /**
      * 工具函数模块
      *
@@ -847,22 +891,49 @@
      *
      * @typedef {Object} Utils
      * @property {Function} formatTime - 将秒数格式化为时:分:秒格式
+     * @property {Function} parseTimeToSeconds - 将时间字符串解析为秒数
+     * @property {Function} parseDuration - 解析持续时间
      */
     const Utils = {
         /**
          * 将秒数格式化为时:分:秒格式
-         *
          * @param {number} seconds - 秒数
          * @returns {string} 格式化后的时间字符串 (HH:MM:SS)
          */
         formatTime: function(seconds) {
             if (!seconds || seconds < 0) return '00:00:00';
-
             const hours = Math.floor(seconds / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-
+            const secs = seconds % 60;
             return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        },
+
+        /**
+         * 将时间字符串解析为秒数
+         * @param {string} timeStr - 时间字符串 (HH:MM:SS)
+         * @returns {number} 总秒数
+         */
+        parseTimeToSeconds: function(timeStr) {
+            try {
+                if (!timeStr) return 0;
+                const parts = timeStr.split(':').map(part => parseInt(part, 10));
+                if (parts.length === 3) {
+                    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+                }
+                return 0;
+            } catch {
+                return 0;
+            }
+        },
+
+        /**
+         * 解析持续时间字符串
+         * @param {string} durationStr - 持续时间字符串
+         * @returns {number} 秒数
+         */
+        parseDuration: function(durationStr) {
+            if (!durationStr || typeof durationStr !== 'string') return CONSTANTS.TIME_FORMATS.DEFAULT_DURATION;
+            return this.parseTimeToSeconds(durationStr) || CONSTANTS.TIME_FORMATS.DEFAULT_DURATION;
         }
     };
 
@@ -928,7 +999,7 @@
      * @returns {Promise<Element>}
      */
     const waitForElement = (selector, timeout = 30000) => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const element = document.querySelector(selector);
             if (element) return resolve(element);
 
@@ -967,16 +1038,14 @@
                 id: raw.id || raw.businessId || raw.courseId,
                 courseId: raw.courseId || raw.id || raw.businessId,
                 // 优先使用dsUnitId，其次尝试构建，最后兜底
-                dsUnitId: raw.dsUnitId || raw.unitId || (raw.unitOrder && raw.order ? `unit_${raw.unitOrder}_${raw.order}` : `unit_default`),
+                dsUnitId: raw.dsUnitId || raw.unitId || (raw.unitOrder && raw.order ? `unit_${raw.unitOrder}_${raw.order}` : 'unit_default'),
                 title: raw.name || raw.title || raw.courseName || '未命名课程',
                 courseName: raw.name || raw.title || raw.courseName || '未命名课程',
                 teacher: raw.teacher || '',
                 durationStr: raw.duration || raw.durationStr || raw.timeLength || '00:30:00',
                 period: raw.period || 0,
                 status: raw.status || 'not_started',
-                source: source,
-                // 保留原始数据以备不时之需
-                _raw: raw
+                source: source
             };
         }
     };
@@ -988,30 +1057,18 @@
      * 负责与CELA网站进行API通信，包括进度上报、课程信息获取等功能
      *
      * @typedef {Object} API
-     * @property {string} _baseUrl - 主站API基础URL
-     * @property {string} _videoApiBaseUrl - 视频API基础URL
      * @property {AbortController} abortController - 用于中止请求的控制器
      * @property {Function} getBaseUrl - 动态获取基础URL
-     * @property {Function} _tryApiEndpoints - 通用API端点尝试策略
      * @property {Function} _isSuccessResponse - 统一的成功响应判断逻辑
      * @property {Function} _request - 通用请求函数
      * @property {Function} _extractToken - 提取认证令牌
      * @property {Function} reportProgress - 进度上报
-     * @property {Function} _createStudyRecord - 创建学习记录
-     * @property {Function} finishStudyRecord - 完成学习记录
-     * @property {Function} completeCourse - 完成课程
-     * @property {Function} getCourseListFromSpecialDetail - 从专栏详情获取课程列表
      * @property {Function} getCourseListFromChannel - 从频道获取课程列表
      * @property {Function} getCourseList - 获取课程列表
      * @property {Function} getPlayInfo - 获取播放信息
-     * @property {Function} parseTimeToSeconds - 将时间字符串解析为秒数
-     * @property {Function} parseDuration - 解析持续时间
      * @property {Function} pulseSaveRecord - 脉冲式保存记录
-     * @property {Function} secondsToTimeString - 将秒数转换为时间字符串
-     * @property {Function} antiCheatCheck - 防刷课检查
-     * @property {Function} extractUserId - 提取用户ID
      * @property {Function} checkCourseCompletion - 检查课程完成状态
-     * @property {Function} smartLearnCourse - 智能学习课程
+     * @property {Function} executeLearnStrategy - 执行学习策略
      */
     const API = {
         /**
@@ -1021,80 +1078,54 @@
         _cachedToken: null,
 
         /**
-         * 主站API基础URL
-         * @type {string}
-         */
-        _baseUrl: 'https://cela.e-celap.cn',
-        /**
-         * 视频API基础URL
-         * @type {string}
-         */
-        _videoApiBaseUrl: 'https://zpyapi.shsets.com',
-        /**
-         * 用于中止请求的控制器
-         * @type {AbortController}
-         */
-        abortController: null, // AbortController 支持
-
-        /**
          * 动态获取基础URL
          *
-         * 根据当前环境（主站或浦东分院）返回相应的API基础URL
+         * 根据当前环境返回相应的API基础URL
          *
          * @returns {string} API基础URL
          */
         getBaseUrl: function() {
-            if (CONFIG.PUDONG_MODE && CONFIG.PUDONG_API_BASE) {
-                return CONFIG.PUDONG_API_BASE;
-            }
-            return this._baseUrl;
+            return CONFIG.PUDONG_API_BASE || `https://${window.location.hostname}`;
         },
 
         /**
-         * 通用API端点尝试策略 (根据审查报告建议优化)
-         *
-         * 尝试多个API端点，直到找到一个成功响应的端点
-         *
-         * @async
-         * @param {Array<Function>} apiCalls - API调用函数数组
-         * @param {string} successMessage - 成功时的消息
-         * @param {string} failureMessage - 所有端点都失败时的消息
-         * @returns {Object|null} 成功响应或null
+         * 解析课程列表数据 (重构整合版)
+         * 将 API 返回的多种课程列表结构标准化
+         * 
+         * @param {Object} data - API返回的数据
+         * @param {string} sourcePrefix - 来源标识前缀
+         * @returns {Array} 标准化后的课程列表
          */
-        async _tryApiEndpoints(apiCalls, successMessage, failureMessage) {
-            for (let i = 0; i < apiCalls.length; i++) {
-                // 检查是否被中止
-                if (this.abortController && this.abortController.signal.aborted) {
-                    throw new DOMException('Aborted', 'AbortError');
-                }
-
-                try {
-                    const result = await apiCalls[i]();
-
-                    // 检查是否有错误
-                    if (result?.error) {
-                        // 如果有错误信息，记录并继续尝试下一个
-                        const errorMessage = result?.error || result?.message || 'unknown error';
-                        EventBus.publish('log', { message: `[API Strategy] 方法${i+1}失败: ${errorMessage}`, type: 'debug' });
-                        continue; // 尝试下一个方法
-                    }
-
-                    if (this._isSuccessResponse(result)) {
-                        EventBus.publish('log', { message: `${successMessage} (方法${i+1})`, type: 'success' });
-                        return result;
-                    }
-                    // 改进错误信息，显示更详细的响应内容
-                    const errorMessage = result?.message || result?.msg || result?.error || 'unknown error';
-                    EventBus.publish('log', { message: `[API Strategy] 方法${i+1}失败: ${errorMessage}`, type: 'debug' });
-                } catch (error) {
-                    EventBus.publish('log', { message: `[API Strategy] 方法${i+1}异常: ${error.message}`, type: 'debug' });
-                    if (error.name === 'AbortError') {
-                        throw error; // 重新抛出中止错误
+        _parseCourseListData(data, sourcePrefix) {
+            const courseList = [];
+            if (data.pdChannelUnitList) {
+                for (const unit of data.pdChannelUnitList) {
+                    if (unit.subList) {
+                        for (const course of unit.subList) {
+                            if (course.typeValue === 'course') {
+                                course.unitOrder = unit.order;
+                                courseList.push(CourseAdapter.normalize(course, `${sourcePrefix}_unit`));
+                            }
+                        }
                     }
                 }
+            } else {
+                let courses = [];
+                if (data.courseList) {
+                    courses = data.courseList;
+                } else if (data.courses) {
+                    courses = data.courses;
+                } else if (data.list) {
+                    courses = data.list;
+                } else if (Array.isArray(data)) {
+                    courses = data;
+                }
+
+                courses.forEach(course => {
+                    courseList.push(CourseAdapter.normalize(course, `${sourcePrefix}_list`));
+                });
             }
-            EventBus.publish('log', { message: failureMessage, type: 'warn' });
-            return null;
+            return courseList;
         },
 
         /**
@@ -1121,6 +1152,82 @@
         },
 
         /**
+         * 准备请求头
+         * @private
+         */
+        _prepareHeaders(customHeaders = {}, data = null) {
+            const token = this._extractToken();
+            const headers = {
+                'Accept': 'application/json, text/plain, */*',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Referer': window.location.href,
+                'Origin': this.getBaseUrl(),
+                'Cookie': document.cookie,
+                ...customHeaders
+            };
+
+            // 自动设置 Content-Type
+            if (!(data instanceof FormData)) {
+                if (typeof data === 'string' && data.includes('=')) {
+                    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                } else if (data) {
+                    headers['Content-Type'] = 'application/json';
+                }
+            }
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+                headers['X-Auth-Token'] = token;
+            }
+
+            return headers;
+        },
+
+        /**
+         * 处理响应逻辑
+         * @private
+         */
+        _handleResponse(response, resolve) {
+            // 401 Token过期处理
+            if (response.status === 401) {
+                UI.log('⚠️ Token可能已过期 (401)，清除缓存', 'warn');
+                this._cachedToken = null;
+            }
+
+            if (CONFIG.DEBUG_MODE) {
+                UI.log(`[API] ${response.status} ${response.responseText?.substring(0, 100)}...`);
+            }
+
+            try {
+                if (response.responseText && response.responseText.trim()) {
+                    return resolve(JSON.parse(response.responseText));
+                }
+                
+                if (response.status >= 200 && response.status < 300) {
+                    return resolve({ code: response.status, success: true, message: 'Success' });
+                }
+                
+                resolve({ status: response.status, message: 'Empty response' });
+            } catch {
+                const html = response.responseText || '';
+                if (html.trim().startsWith('<')) {
+                    if (html.includes('login') || html.includes('登录')) {
+                        UI.log('❌ 登录已失效，请重新登录', 'error');
+                        alert('cela学习助手：登录已失效，请刷新页面重新登录！');
+                        Learner.stop();
+                    } else if (html.includes('verification') || html.includes('验证码') || html.includes('人机')) {
+                        UI.log('❌ 触发人机验证，请手动完成验证', 'error');
+                        alert('cela学习助手：触发人机验证！请在页面上完成验证后点击“开始学习”继续。');
+                        Learner.stop();
+                    }
+                    return resolve({ error: 'HTML response received', status: response.status, isHtml: true });
+                }
+                resolve({ status: response.status, message: html || 'Empty response', success: response.status >= 200 && response.status < 300 });
+            }
+        },
+
+        /**
          * 通用请求函数
          *
          * 使用GM_xmlhttpRequest发送HTTP请求，支持多种数据格式和错误处理
@@ -1135,47 +1242,13 @@
          * @returns {Promise<Object>} 响应数据
          */
         _request: async function(options) {
-            // 使用请求队列包裹实际请求逻辑
             return RequestQueue.add(() => new Promise((resolve, reject) => {
-                // 检查是否被中止
                 if (this.abortController && this.abortController.signal.aborted) {
                     return reject(new DOMException('Aborted', 'AbortError'));
                 }
 
-                // 提取Cookie和其他认证信息
-                const cookies = document.cookie;
-                const token = this._extractToken();
+                const headers = this._prepareHeaders(options.headers, options.data);
 
-                // 构建请求头 - 根据数据类型设置Content-Type
-                const headers = {
-                    'Accept': 'application/json, text/plain, */*',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Referer': window.location.href,
-                    'Origin': this.getBaseUrl(),
-                    'Cookie': cookies,
-                    ...options.headers
-                };
-
-                // 根据数据类型设置Content-Type
-                if (options.data instanceof FormData) {
-                    // FormData会自动设置Content-Type，包括boundary
-                    // 不要手动设置Content-Type
-                } else if (typeof options.data === 'string' && options.data.includes('=')) {
-                    // URL编码的表单数据
-                    headers['Content-Type'] = 'application/x-www-form-urlencoded';
-                } else {
-                    // JSON数据
-                    headers['Content-Type'] = 'application/json';
-                }
-
-                // 如果有token，添加到请求头
-                if (token) {
-                    headers['Authorization'] = `Bearer ${token}`;
-                    headers['X-Auth-Token'] = token;
-                }
-
-                // 精简日志输出
                 if (CONFIG.DEBUG_MODE) {
                     UI.log(`[API] ${options.method || 'GET'} ${options.url}`);
                 }
@@ -1185,71 +1258,21 @@
                     url: options.url,
                     headers: headers,
                     data: options.data,
-                    timeout: 30000,
-                    onload: (response) => {
-                        // 401 Token过期处理
-                        if (response.status === 401) {
-                            UI.log(`⚠️ Token可能已过期 (401)，清除缓存`, 'warn');
-                            this._cachedToken = null;
-                        }
-
-                        if (CONFIG.DEBUG_MODE) {
-                            UI.log(`[API] ${response.status} ${response.responseText?.substring(0, 100)}...`);
-                        }
-
-                        try {
-                            if (response.responseText && response.responseText.trim()) {
-                                const data = JSON.parse(response.responseText);
-                                resolve(data);
-                            } else {
-                                // 对于空响应，尝试从状态码判断
-                                if (response.status >= 200 && response.status < 300) {
-                                    // 成功状态码但无响应体
-                                    resolve({ code: response.status, success: true, message: 'Success' });
-                                } else {
-                                    resolve({ status: response.status, message: 'Empty response' });
-                                }
-                            }
-                        } catch (parseError) {
-                            // 尝试处理非JSON响应
-                            if (response.responseText && response.responseText.trim().startsWith('<')) {
-                                // HTML响应，可能是错误页面
-                                UI.log(`⚠️ 收到HTML响应，可能请求错误`, 'warn');
-                                resolve({ error: 'HTML response received', status: response.status, raw: response.responseText });
-                            } else {
-                                // 尝试解析为文本
-                                try {
-                                    const textData = response.responseText ? JSON.parse(response.responseText) : null;
-                                    if (textData) {
-                                        resolve(textData);
-                                    } else {
-                                        // 返回状态信息
-                                        resolve({ status: response.status, message: response.responseText || 'Empty response', success: response.status >= 200 && response.status < 300 });
-                                    }
-                                } catch {
-                                    UI.log(`❌ JSON解析失败: ${parseError.message}`, 'error');
-                                    resolve({ error: 'JSON解析失败', status: response.status, raw: response.responseText });
-                                }
-                            }
-                        }
+                    timeout: options.timeout || 30000,
+                    onload: (res) => this._handleResponse(res, resolve),
+                    onerror: (err) => {
+                        UI.log(`❌ 请求失败: ${err.message}`, 'error');
+                        resolve({ error: err.message, status: err.status || 0 });
                     },
-                    onerror: function(error) {
-                        UI.log(`❌ 请求失败: ${error.message}`, 'error');
-                        // 根据错误类型提供更多信息
-                        resolve({ error: error.message, type: error.type || 'unknown', status: error.status || 0 });
-                    },
-                    ontimeout: function() {
-                        UI.log(`❌ 请求超时`, 'error');
+                    ontimeout: () => {
+                        UI.log('❌ 请求超时', 'error');
                         resolve({ error: '请求超时', status: 0, type: 'timeout' });
                     }
                 });
 
-                // 支持AbortController
                 if (this.abortController) {
                     this.abortController.signal.addEventListener('abort', () => {
-                        if (req.abort) {
-                            req.abort();
-                        }
+                        if (req.abort) req.abort();
                         reject(new DOMException('Aborted', 'AbortError'));
                     });
                 }
@@ -1291,7 +1314,7 @@
                         this._cachedToken = token; // 更新缓存
                         return token;
                     }
-                } catch (e) {
+                } catch {
                     // 忽略提取错误
                 }
             }
@@ -1302,7 +1325,7 @@
 
         /**
          * 进度上报 - 增强版，根据深度分析报告优化
-         * 支持真实API优先，智能降级到模拟模式
+         * 支持真实API优先，智能降级到兜底模式
          */
         reportProgress: async function(playInfo, currentTime) {
             try {
@@ -1310,31 +1333,22 @@
                 const progressPercent = Math.round((currentTime / playInfo.duration) * 100);
                 
                 if (isMockData) {
-                    UI.log(`⚠️ [警告] 正在对模拟视频ID上报进度，这通常意味着课程识别失败，服务器可能不会记录进度！`, 'warn');
+                    UI.log('⚠️ [警告] 正在对模拟视频ID上报进度，可能不会被记录！', 'warn');
                 }
 
-                // 构建真实API调用方法
-                const reportMethods = [
-                    // 方法1: 脉冲式进度上报
-                    () => this.pulseSaveRecord(playInfo, currentTime),
-                    // 方法2: 备用上报
-                    async () => {
-                        const watchPoint = API.secondsToTimeString(currentTime);
-                        const url = `${this.getBaseUrl()}/api/player/progress?courseId=${playInfo.courseId}&watchPoint=${watchPoint}&_t=${Date.now()}`;
-                        return await this._request({ method: 'GET', url });
-                    }
-                ];
+                const result = await this.pulseSaveRecord(playInfo, currentTime);
 
-                const result = await this._tryApiEndpoints(
-                    reportMethods,
-                    `[进度上报] 成功 (${progressPercent}%)`,
-                    `[进度上报] ❌ 所有API同步方法均已失败！`
-                );
+                if (this._isSuccessResponse(result)) {
+                    const successMsg = isMockData 
+                        ? `[进度上报] ⚠️ 模拟数据提交成功 (${progressPercent}%)` 
+                        : `[进度上报] 成功 (${progressPercent}%)`;
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, { message: successMsg, type: 'success' });
+                    return result;
+                }
 
-                if (result) return result;
-
-                // 如果所有方法都失败了，且是模拟数据，我们如实报错
-                throw new Error('服务器拒绝接收学习进度，同步失败');
+                const errorMsg = result?.message || '服务器拒绝接收学习进度';
+                EventBus.publish(CONSTANTS.EVENTS.LOG, { message: `[进度上报] ❌ 失败: ${errorMsg}`, type: 'warn' });
+                throw new Error(errorMsg);
 
             } catch (error) {
                 if (error.name === 'AbortError') throw error;
@@ -1343,7 +1357,11 @@
             }
         },
 
-        smartReportProgress: async function(playInfo, currentTime) {
+        /**
+         * 带延迟的进度上报
+         * 在进度接近完成时增加随机延迟，避免瞬时上报过快
+         */
+        reportProgressWithDelay: async function(playInfo, currentTime) {
             const progressPercent = Math.round((currentTime / playInfo.duration) * 100);
 
             if (progressPercent > 90) {
@@ -1353,109 +1371,11 @@
             return await this.reportProgress(playInfo, currentTime);
         },
 
-        /**
-         * 创建学习记录
-         *
-         * 优化：移除不必要的学习记录创建，浦东分院环境不需要此步骤
-         *
-         * @async
-         * @param {string} courseId - 课程ID
-         * @returns {boolean} 操作是否成功
-         */
-        _createStudyRecord: async function(courseId) {
-            UI.log(`[学习记录] 浦东分院环境，跳过学习记录创建: ${courseId}`, 'debug');
-            return true; // 直接返回成功，避免404错误
-        },
-
-        /**
-         * 完成学习记录
-         *
-         * 优化：移除不必要的学习记录完成，浦东分院环境不需要此步骤
-         *
-         * @async
-         * @param {Object} playInfo - 播放信息对象
-         * @param {number} finalTime - 最终时间
-         * @returns {boolean} 操作是否成功
-         */
-        finishStudyRecord: async function(playInfo, finalTime) {
-            UI.log(`[学习记录] 浦东分院环境，跳过学习记录完成: ${playInfo.courseId}`, 'debug');
-            return true; // 直接返回成功，避免404错误
-        },
-
-        /**
-         * 完成课程
-         *
-         * 优化：浦东分院环境下课程完成API可能不存在，简化为日志记录
-         *
-         * @async
-         * @param {Object} courseInfo - 课程信息对象
-         * @returns {boolean} 操作是否成功
-         */
-        completeCourse: async function(courseInfo) {
-            const courseId = courseInfo.id || courseInfo.courseId;
-            UI.log(`[课程完成] 浦东分院环境，课程学习标记完成: ${courseInfo.title || courseId}`, 'success');
-            return true; // 直接返回成功，避免404错误
-        },
-
         // 剩余的API方法（使用常量优化）
-
-        getCourseListFromSpecialDetail: async () => {
-            try {
-                UI.log('检测到专栏详情页面，尝试获取课程列表...', 'info');
-
-                const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
-                const channelId = urlParams.get('id');
-
-                if (!channelId) {
-                    UI.log('未找到专栏ID', 'error');
-                    return [];
-                }
-
-                UI.log(`专栏ID: ${channelId}`, 'debug');
-
-                const url = `${CONSTANTS.API_ENDPOINTS.GET_PACK_BY_ID}?id=${channelId}&_t=${Date.now()}`;
-                const response = await API._request({
-                    method: 'GET',
-                    url: `${API.getBaseUrl()}${url}`
-                });
-
-                if (!response.success || !response.data) {
-                    UI.log('专栏API返回数据异常', 'error');
-                    return [];
-                }
-
-                const channelData = response.data;
-                UI.log(`专栏标题: ${channelData.title}`, 'info');
-
-                const courseList = [];
-                if (channelData.pdChannelUnitList) {
-                    for (const unit of channelData.pdChannelUnitList) {
-                        UI.log(`单元: ${unit.unitName} (${unit.totalPeriod}学时)`, 'debug');
-
-                        if (unit.subList) {
-                            for (const course of unit.subList) {
-                                if (course.typeValue === 'course') {
-                                    // 预处理数据以适配 CourseAdapter
-                                    course.unitOrder = unit.order;
-                                    courseList.push(CourseAdapter.normalize(course, 'special_detail'));
-                                }
-                            }
-                        }
-                    }
-                }
-
-                UI.log(`[专栏课程] 成功获取 ${courseList.length} 门课程`, 'info');
-                return courseList;
-
-            } catch (error) {
-                UI.log(`获取专栏课程列表失败: ${error.message}`, 'error');
-                return [];
-            }
-        },
 
         getCourseListFromChannel: async function(channelId) {
             try {
-                UI.log(`正在从频道API获取课程列表 (ID: ${channelId})...`, 'info');
+                UI.log(`正在从频道/专栏API获取课程列表 (ID: ${channelId})...`, 'info');
 
                 const apiEndpoints = [
                     `${CONSTANTS.API_ENDPOINTS.GET_PACK_BY_ID}?id=${channelId}&_t=${Date.now()}`,
@@ -1467,48 +1387,15 @@
                 for (const endpoint of apiEndpoints) {
                     try {
                         UI.log(`尝试API端点: ${endpoint}`, 'debug');
-                        const response = await API._request({
+                        const response = await this._request({
                             method: 'GET',
-                            url: `${API.getBaseUrl()}${endpoint}`
+                            url: `${this.getBaseUrl()}${endpoint}`
                         });
 
                         if (response && response.success && response.data) {
-                            const courseList = [];
-                            const data = response.data;
-
-                            if (data.pdChannelUnitList) {
-                                for (const unit of data.pdChannelUnitList) {
-                                    UI.log(`单元: ${unit.unitName} (${unit.totalPeriod}学时)`, 'debug');
-
-                                    if (unit.subList) {
-                                        for (const course of unit.subList) {
-                                            if (course.typeValue === 'course') {
-                                                // 预处理数据
-                                                course.unitOrder = unit.order;
-                                                courseList.push(CourseAdapter.normalize(course, 'channel_unit'));
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                let courses = [];
-                                if (data.courseList) {
-                                    courses = data.courseList;
-                                } else if (data.courses) {
-                                    courses = data.courses;
-                                } else if (data.list) {
-                                    courses = data.list;
-                                } else if (Array.isArray(data)) {
-                                    courses = data;
-                                }
-
-                                courses.forEach(course => {
-                                    courseList.push(CourseAdapter.normalize(course, 'channel_list'));
-                                });
-                            }
-
+                            const courseList = this._parseCourseListData(response.data, 'channel');
                             if (courseList.length > 0) {
-                                UI.log(`✅ 从频道API获取到 ${courseList.length} 门课程`, 'info');
+                                UI.log(`✅ 从API获取到 ${courseList.length} 门课程`, 'info');
                                 return courseList;
                             }
                         }
@@ -1531,7 +1418,6 @@
                 
                 const endpoints = [
                     `/inc/nc/course/play/getPlayTrend?courseId=${courseId}&_t=${Date.now()}`,
-                    `/dsf/nc/cela/api/coursePlayerInfo?id=${courseId}&_t=${Date.now()}`,
                     `/inc/nc/course/play/getPlayInfoById?id=${courseId}&_t=${Date.now()}`,
                     `/api/course/player/info?id=${courseId}&_t=${Date.now()}`
                 ];
@@ -1582,7 +1468,7 @@
                                 return list.map(item => CourseAdapter.normalize(item, 'player_api_sublist'));
                             }
                         }
-                    } catch (e) {
+                    } catch {
                         continue;
                     }
                 }
@@ -1624,13 +1510,9 @@
                 const currentUrl = window.location.href;
                 UI.log(`当前页面URL: ${currentUrl}`, 'debug');
 
-                if (currentUrl.includes('/specialdetail')) {
-                    UI.log('检测到专栏详情页面，尝试从API获取课程列表...', 'info');
-                    return await API.getCourseListFromSpecialDetail();
-                }
-
-                // 强化频道页面识别 (增加关键词兼容性)
-                if (currentUrl.toLowerCase().includes('channeldetail') || 
+                // 统一专栏和频道页面识别 (增加关键词兼容性)
+                if (currentUrl.toLowerCase().includes('specialdetail') ||
+                    currentUrl.toLowerCase().includes('channeldetail') || 
                     currentUrl.toLowerCase().includes('zgpdyxkczl') ||
                     currentUrl.toLowerCase().includes('pdchanel')) {
                     
@@ -1659,54 +1541,66 @@
                 let courseList = [];
                 let courseElements = [];
 
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                // [优化] 动态等待课程元素加载，最多等待5秒
+                UI.log('⏳ 正在扫描页面课程元素...', 'debug');
+                for (let i = 0; i < 10; i++) {
+                    const found = CONSTANTS.COURSE_SELECTORS.some(s => document.querySelector(s));
+                    if (found) break;
+                    await new Promise(r => setTimeout(r, 500));
+                }
 
-                UI.log(`🔍 页面内容分析:`, 'debug');
+                UI.log('🔍 页面内容分析:', 'debug');
                 
                 // 专门针对浦东分院频道页的列表项
-                const pudongItems = document.querySelectorAll('.dsf_nc_pd_special_item, .list_item, .pd_course_item');
+                const pudongItems = document.querySelectorAll('.dsf_nc_pd_special_item, .list_item, .pd_course_item, .dsjy_card');
                 if (pudongItems.length > 0) {
                     UI.log(`📋 找到浦东分院专用列表项: ${pudongItems.length}个`, 'info');
                     courseElements = Array.from(pudongItems);
                 } else {
                     for (const selector of CONSTANTS.COURSE_SELECTORS) {
                         const elements = document.querySelectorAll(selector);
-                        if (elements.length > 0) {
-                            courseElements = Array.from(elements);
-                            UI.log(`📋 使用选择器 "${selector}" 找到 ${elements.length} 个课程元素`, 'info');
-                            break;
-                        }
-                    }
-                }
-
-                if (courseElements.length === 0) {
-                    for (const selector of CONSTANTS.FALLBACK_SELECTORS) {
-                        const elements = document.querySelectorAll(selector);
-                        if (elements.length > 0) {
-                            courseElements = Array.from(elements);
-                            UI.log(`📋 使用备用选择器 "${selector}" 找到 ${elements.length} 个元素`, 'info');
+                        // 过滤掉 UI 面板内部的元素
+                        const validElements = Array.from(elements).filter(el => !el.closest('#api-learner-panel'));
+                        if (validElements.length > 0) {
+                            courseElements = validElements;
+                            UI.log(`📋 使用选择器 "${selector}" 找到 ${validElements.length} 个课程元素`, 'info');
                             break;
                         }
                     }
                 }
 
                 courseElements.forEach((el, index) => {
-                    // 深度提取ID逻辑
+                    // [优化] 深度提取ID逻辑：增加递归向上查找
                     const findId = (element) => {
-                        return element.getAttribute('data-course-id') ||
-                               element.getAttribute('data-id') ||
-                               element.getAttribute('id') ||
-                               element.querySelector('[data-id]')?.getAttribute('data-id') ||
-                               element.querySelector('[data-course-id]')?.getAttribute('data-course-id') ||
-                               element.innerHTML.match(/[a-f0-9]{32}/)?.[0];
+                        let current = element;
+                        let depth = 0;
+                        while (current && depth < 5) {
+                            const id = current.getAttribute('data-id') ||
+                                       current.getAttribute('data-course-id') ||
+                                       current.getAttribute('id') ||
+                                       current.getAttribute('data-courseid') ||
+                                       current.querySelector('[data-id]')?.getAttribute('data-id') ||
+                                       current.querySelector('[data-course-id]')?.getAttribute('data-course-id');
+                            
+                            // 排除 Kapture 注入的辅助 ID 和过短的 ID
+                            if (id && !id.includes('kapture') && !id.includes('course_') && id.length > 5) return id;
+                            current = current.parentElement;
+                            depth++;
+                        }
+                        // 尝试从 innerHTML 或父元素内容中通过正则匹配 UUID (32位十六进制)
+                        const uuidMatch = (element.getAttribute('onclick') || element.parentElement?.innerHTML || '').match(/[a-f0-9]{32}/);
+                        return uuidMatch ? uuidMatch[0] : null;
                     };
 
+                    const courseId = findId(el);
+                    if (!courseId) return; // [新增] 如果没找到有效 ID，跳过此元素
+
                     const rawData = {
-                        courseId: findId(el) || `course_${index}`,
+                        courseId: courseId,
                         dsUnitId: el.getAttribute('data-unit-id') || el.getAttribute('data-dsunit') || `unit_${index}`,
-                        courseName: el.querySelector('.title, .name, .course-title, h3, h4')?.textContent?.trim() || 
+                        courseName: el.querySelector('.title, .name, .course-title, .item_content, h3, h4')?.textContent?.trim() || 
                                    el.getAttribute('title') || 
-                                   el.textContent?.trim()?.split('\n')[0]?.substring(0, 50) ||
+                                   el.textContent?.trim()?.split('\n')[0]?.substring(0, 80) ||
                                    `课程${index + 1}`,
                         durationStr: el.querySelector('.duration, .time, .period')?.textContent?.trim() || '00:30:00',
                         status: el.getAttribute('data-status') || 'not_started'
@@ -1716,6 +1610,13 @@
                         courseList.push(CourseAdapter.normalize(rawData, 'dom_scrape'));
                     }
                 });
+
+                // [新增] 兼容性检查触发逻辑
+                if (courseList.length === 0 && courseElements.length > 0) {
+                    UI.setIncompatible('检测到课程列表元素，但无法解析有效的课程 ID 属性。这通常意味着该专栏采用了非标准的数据绑定方式。');
+                } else if (courseList.length === 0 && PudongHandler.identifyPage() === PudongHandler.PAGE_TYPES.COLUMN) {
+                    UI.setIncompatible('当前专栏页面的 DOM 结构未被识别，脚本无法自动扫描课程。');
+                }
 
                 if (courseList.length === 0) {
                     try {
@@ -1731,7 +1632,7 @@
 
                         if (apiResponse.success && apiResponse.data) {
                             const apiCourses = Array.isArray(apiResponse.data) ? apiResponse.data :
-                                              apiResponse.data.list || apiResponse.data.records || [];
+                                apiResponse.data.list || apiResponse.data.records || [];
                             
                             courseList = apiCourses.map((course, index) => {
                                 // 确保有必要的字段供适配器使用
@@ -1808,7 +1709,7 @@
                             videoId = target.id;
                             coursewareId = target.id;
                             duration = target.sumDurationLong || 0;
-                            lastLearnedTime = target.lastWatchPoint ? API.parseTimeToSeconds(target.lastWatchPoint) : 0;
+                            lastLearnedTime = target.lastWatchPoint ? Utils.parseTimeToSeconds(target.lastWatchPoint) : 0;
                             UI.log(`[getPlayInfo] 成功匹配到课件: ${target.title}`, 'success');
                         }
                     }
@@ -1818,13 +1719,13 @@
                         videoId = data.locationSite.id;
                         coursewareId = data.locationSite.id;
                         duration = data.locationSite.sumDurationLong || 0;
-                        lastLearnedTime = data.locationSite.lastWatchPoint ? API.parseTimeToSeconds(data.locationSite.lastWatchPoint) : 0;
+                        lastLearnedTime = data.locationSite.lastWatchPoint ? Utils.parseTimeToSeconds(data.locationSite.lastWatchPoint) : 0;
                     }
                 }
 
                 // 3. 兜底时长处理
                 if (duration === 0 && courseDuration) {
-                    duration = API.parseDuration(courseDuration);
+                    duration = Utils.parseDuration(courseDuration);
                 }
                 if (duration === 0) {
                     duration = CONSTANTS.TIME_FORMATS.DEFAULT_DURATION;
@@ -1857,49 +1758,9 @@
         },
 
         /**
-         * 将时间字符串解析为秒数
+         * 提交学习进度 (原脉冲上报)
          *
-         * 将HH:MM:SS格式的时间字符串解析为总秒数
-         *
-         * @param {string} timeStr - 时间字符串 (HH:MM:SS)
-         * @returns {number} 总秒数
-         */
-        parseTimeToSeconds: (timeStr) => {
-            try {
-                const parts = timeStr.split(':').map(part => parseInt(part, 10));
-                if (parts.length === 3) {
-                    return parts[0] * 3600 + parts[1] * 60 + parts[2];
-                }
-                return 0;
-            } catch (e) {
-                return 0;
-            }
-        },
-
-        /**
-         * 解析持续时间
-         *
-         * 将持续时间字符串解析为秒数
-         *
-         * @param {string} durationStr - 持续时间字符串 (HH:MM:SS)
-         * @returns {number} 总秒数
-         */
-        parseDuration: (durationStr) => {
-            if (!durationStr || typeof durationStr !== 'string') return CONSTANTS.TIME_FORMATS.DEFAULT_DURATION;
-            const timeParts = durationStr.split(':');
-            if (timeParts.length === 3) {
-                const hours = parseInt(timeParts[0]) || 0;
-                const minutes = parseInt(timeParts[1]) || 0;
-                const seconds = parseInt(timeParts[2]) || 0;
-                return hours * 3600 + minutes * 60 + seconds;
-            }
-            return CONSTANTS.TIME_FORMATS.DEFAULT_DURATION;
-        },
-
-        /**
-         * 脉冲式保存记录
-         *
-         * 发送脉冲式学习记录，模拟用户持续学习行为
+         * 将当前学习位置同步到服务器
          *
          * @async
          * @param {Object} playInfo - 播放信息对象
@@ -1907,143 +1768,47 @@
          * @returns {Object} API响应结果
          */
         pulseSaveRecord: async (playInfo, currentTime) => {
-            const watchPoint = API.secondsToTimeString(currentTime);
+            const watchPoint = Utils.formatTime(currentTime);
+            const progress = Math.round((currentTime / playInfo.duration) * 100);
 
-            // 针对浦东分院环境调整脉冲上报参数
-            let payload;
-            if (CONFIG.PUDONG_MODE) {
-                payload = new URLSearchParams({
-                    courseId: playInfo.courseId,
-                    videoId: playInfo.videoId,
-                    watchPoint: watchPoint,
-                    currentTime: currentTime,
-                    duration: playInfo.duration,
-                    progress: Math.round((currentTime / playInfo.duration) * 100),
-                    _t: Date.now()
-                }).toString();
-            } else {
-                payload = new URLSearchParams({
-                    courseId: playInfo.courseId,
-                    coursewareId: playInfo.coursewareId || playInfo.videoId,
-                    watchPoint: watchPoint,
-                    pulseTime: 10,
-                    pulseRate: 1
-                }).toString();
-            }
+            const payload = new URLSearchParams({
+                courseId: playInfo.courseId,
+                coursewareId: playInfo.coursewareId || playInfo.videoId,
+                videoId: playInfo.videoId || '',
+                watchPoint: watchPoint,
+                currentTime: currentTime,
+                duration: playInfo.duration,
+                progress: progress,
+                pulseTime: 10,
+                pulseRate: 1,
+                _t: Date.now()
+            }).toString();
 
-            UI.log(`[脉冲上报] ${watchPoint} (${Math.round((currentTime / playInfo.duration) * 100)}%)`, 'info');
+            UI.log(`[进度同步] ${watchPoint} (${progress}%)`, 'info');
 
-            return await API._request({
-                method: 'POST',
-                url: `${API.getBaseUrl()}${CONFIG.PUDONG_MODE ? '/api/player/pulse' : CONSTANTS.API_ENDPOINTS.PULSE_SAVE_RECORD}`,
-                data: payload,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
-        },
-
-        /**
-         * 将秒数转换为时间字符串
-         *
-         * 将秒数转换为HH:MM:SS格式的时间字符串
-         *
-         * @param {number} seconds - 秒数
-         * @returns {string} 时间字符串 (HH:MM:SS)
-         */
-        secondsToTimeString: (seconds) => {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        },
-
-        /**
-         * 防刷课检查
-         *
-         * 执行防刷课检查，验证课程学习的合法性
-         *
-         * @async
-         * @param {string} courseId - 课程ID
-         * @param {string} userId - 用户ID
-         * @returns {Object} 检查结果对象
-         * @property {boolean} pushOk - 推送检查是否通过
-         * @property {boolean} checkOk - 用户课程检查是否通过
-         */
-        antiCheatCheck: async (courseId, userId) => {
             try {
-                UI.log(`[防刷课检查] 课程ID: ${courseId}`, 'debug');
-
-                const pushUrl = `${CONSTANTS.API_ENDPOINTS.PUSH_COURSE}?user_id=${userId}&course_id=${courseId}&_t=${Date.now()}`;
-                const pushResponse = await API._request({
-                    method: 'GET',
-                    url: `${API.getBaseUrl()}${pushUrl}`
+                return await API._request({
+                    method: 'POST',
+                    url: `${API.getBaseUrl()}${CONSTANTS.API_ENDPOINTS.PULSE_SAVE_RECORD}`,
+                    data: payload,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
                 });
-
-                const checkUrl = `${CONSTANTS.API_ENDPOINTS.GET_COURSE_BY_USER}?user_id=${userId}&course_id=${courseId}&_t=${Date.now()}`;
-                const checkResponse = await API._request({
-                    method: 'GET',
-                    url: `${API.getBaseUrl()}${checkUrl}`
-                });
-
-                UI.log(`[防刷课检查结果] Push: ${pushResponse?.message || '未知'}, Check: ${checkResponse?.message || '未知'}`, 'debug');
-
-                return {
-                    pushOk: pushResponse?.success === true,
-                    checkOk: checkResponse?.success === true
-                };
             } catch (error) {
-                UI.log(`[防刷课检查失败] ${error.message}`, 'error');
-                return { pushOk: false, checkOk: false };
-            }
-        },
-
-        /**
-         * 提取用户ID
-         *
-         * 从多个可能的位置提取用户ID，包括Cookie、DOM元素、URL参数、localStorage等
-         *
-         * @returns {string|null} 用户ID或null
-         */
-        extractUserId: () => {
-            try {
-                const cookieMatch = document.cookie.match(CONSTANTS.COOKIE_PATTERNS.USER_ID);
-                if (cookieMatch) {
-                    UI.log(`[用户ID提取] 从Cookie获取: ${cookieMatch[1]}`, 'debug');
-                    return cookieMatch[1];
+                // 浦东模式下尝试专用端点作为降级
+                if (CONFIG.PUDONG_MODE) {
+                    UI.log('[进度同步] 切换至备用端点重试...', 'debug');
+                    return await API._request({
+                        method: 'POST',
+                        url: `${API.getBaseUrl()}/api/player/pulse`,
+                        data: payload,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    });
                 }
-
-                const userIdElement = document.querySelector('[data-user-id]');
-                if (userIdElement) {
-                    const userId = userIdElement.getAttribute('data-user-id');
-                    UI.log(`[用户ID提取] 从DOM获取: ${userId}`, 'debug');
-                    return userId;
-                }
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const userId = urlParams.get('user_id');
-                if (userId) {
-                    UI.log(`[用户ID提取] 从URL获取: ${userId}`, 'debug');
-                    return userId;
-                }
-
-                const storedUserId = localStorage.getItem(CONSTANTS.STORAGE_KEYS.USER_ID) || localStorage.getItem(CONSTANTS.STORAGE_KEYS.USER_ID_ALT);
-                if (storedUserId) {
-                    UI.log(`[用户ID提取] 从localStorage获取: ${storedUserId}`, 'debug');
-                    return storedUserId;
-                }
-
-                const pMatch = document.cookie.match(CONSTANTS.COOKIE_PATTERNS.P_PARAM);
-                if (pMatch) {
-                    UI.log(`[用户ID提取] 从_p参数获取: ${pMatch[1]}`, 'debug');
-                    return pMatch[1];
-                }
-
-                UI.log('[用户ID提取] 未找到用户ID', 'warn');
-                return null;
-            } catch (error) {
-                UI.log(`[用户ID提取失败] ${error.message}`, 'error');
-                return null;
+                throw error;
             }
         },
 
@@ -2110,11 +1875,13 @@
                         if (studyRecord && studyRecord.success && studyRecord.data) {
                             const isFinished = studyRecord.data.isFinished === true || studyRecord.data.status === 'completed';
                             if (isFinished) {
-                                UI.log(`[完成度检查] 学习记录显示主课程已完成`, 'success');
+                                UI.log('[完成度检查] 学习记录显示主课程已完成', 'success');
                                 return { isCompleted: true, finishedRate: 100, method: 'studyRecord' };
                             }
                         }
-                    } catch (e) {}
+                    } catch {
+                        // 忽略单个端点检查失败
+                    }
                 }
 
                 return { isCompleted: false, finishedRate: 0, method: 'default' };
@@ -2126,171 +1893,56 @@
         },
 
         /**
-         * 智能学习课程 - 根据当前进度自动选择最佳学习策略
+         * 执行课程学习策略
          *
          * @param {Object} courseInfo - 课程信息对象
-         * @param {string} courseInfo.courseId - 课程ID
-         * @param {string} courseInfo.coursewareId - 课件ID
-         * @param {string} courseInfo.videoId - 视频ID
-         * @param {number} courseInfo.duration - 课程总时长(秒)
-         * @param {number} courseInfo.lastLearnedTime - 上次学习时间点(秒)
-         * @param {string} courseInfo.title - 课程标题
          * @returns {Promise<boolean>} 学习是否成功
          */
-        async smartLearnCourse(courseInfo) {
-            const { courseId, coursewareId, videoId, duration, lastLearnedTime } = courseInfo;
+        async executeLearnStrategy(courseInfo) {
+            const { courseId, duration, lastLearnedTime } = courseInfo;
             const currentProgress = Math.floor((lastLearnedTime / duration) * 100);
 
-            EventBus.publish('log', { message: `[智能学习] 课程: ${courseInfo.title || courseId}`, type: 'info' });
-            EventBus.publish('log', { message: `[智能学习] 当前进度: ${currentProgress}% (${Utils.formatTime(lastLearnedTime)}/${Utils.formatTime(duration)})`, type: 'info' });
+            EventBus.publish(CONSTANTS.EVENTS.LOG, { message: `[学习启动] 课程: ${courseInfo.title || courseId}`, type: 'info' });
+            EventBus.publish(CONSTANTS.EVENTS.LOG, { message: `[当前进度] ${currentProgress}% (${Utils.formatTime(lastLearnedTime)}/${Utils.formatTime(duration)})`, type: 'info' });
 
-            let strategy = 'normal';
-
-            if (currentProgress < 5) {
-                strategy = 'slow_start';
-                UI.log(`[智能学习] 策略: 慢启动 - 从头开始学习`);
-            } else if (currentProgress < 30) {
-                strategy = 'progressive';
-                UI.log(`[智能学习] 策略: 渐进式 - 从${currentProgress}%继续`);
-            } else if (currentProgress < 70) {
-                strategy = 'fast_finish';
-                UI.log(`[智能学习] 策略: 快速完成 - 直接跳跃到结束`);
-            } else {
-                strategy = 'final_push';
-                UI.log(`[智能学习] 策略: 最后冲刺 - 完成剩余部分`);
-            }
-
-            if (duration < 300) { // 小于5分钟的课程
-                if (currentProgress < 50) {
-                    strategy = 'fast_finish';
-                    UI.log(`[智能学习] 短课程策略: 快速完成`);
-                } else {
-                    strategy = 'final_push';
-                    UI.log(`[智能学习] 短课程策略: 最后冲刺`);
-                }
-            }
-
-            await this._createStudyRecord(courseId);
-
-            let currentTime = lastLearnedTime;
-            let success = false;
-
-            switch (strategy) {
-                case 'slow_start':
-                    const step1 = Math.floor(duration * 0.2);
-                    const step2 = Math.floor(duration * 0.35);
-                    const step3 = Math.floor(duration * 0.5);
-
-                    for (const targetTime of [step1, step2, step3]) {
-                        if (Learner.stopRequested) {
-                            UI.log('⏹️ 收到停止请求，中断智能学习', 'warn');
-                            return false;
-                        }
-
-                        // 使用更短的随机延迟时间，但保持学习步骤不变
-                        const delay = Math.floor(Math.random() * 2000 + 1000); // 1-3秒随机延迟
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        success = await this.smartReportProgress({ courseId, coursewareId, videoId, duration }, targetTime);
-                        if (!success) break;
-                        currentTime = targetTime;
-                        UI.log(`[慢启动] 进度: ${Math.floor((currentTime/duration)*100)}%`);
-                    }
-
-                    if (success && !Learner.stopRequested) {
-                        const delay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        currentTime = duration - 10;
-                        success = await this.smartReportProgress({ courseId, coursewareId, videoId, duration }, currentTime);
-                    }
-                    break;
-
-                case 'progressive':
-                    const remaining = duration - currentTime;
-                    const stepSize = Math.floor(remaining / 5);
-
-                    for (let i = 1; i <= 5; i++) {
-                        if (Learner.stopRequested) {
-                            UI.log('⏹️ 收到停止请求，中断智能学习', 'warn');
-                            return false;
-                        }
-
-                        // 使用更短的随机延迟时间，但保持学习步骤不变
-                        const delay = Math.floor(Math.random() * 1500 + 1000); // 1-2.5秒随机延迟
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        const nextTime = Math.min(currentTime + (stepSize * i), duration - 10);
-                        success = await this.smartReportProgress({ courseId, coursewareId, videoId, duration }, nextTime);
-                        if (!success) break;
-                        currentTime = nextTime;
-                        UI.log(`[渐进式] 步骤 ${i}/5: ${Math.floor((currentTime/duration)*100)}%`);
-                    }
-                    break;
-
-                case 'fast_finish':
-                    if (Learner.stopRequested) {
-                        UI.log('⏹️ 收到停止请求，中断智能学习', 'warn');
-                        return false;
-                    }
-
-                    const target95 = Math.floor(duration * 0.95);
-                    const initialDelay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
-                    await new Promise(resolve => setTimeout(resolve, initialDelay));
-                    success = await this.smartReportProgress({ courseId, coursewareId, videoId, duration }, target95);
-
-                    if (success && !Learner.stopRequested) {
-                        const finalDelay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
-                        await new Promise(resolve => setTimeout(resolve, finalDelay));
-                        currentTime = duration - 10;
-                        success = await this.smartReportProgress({ courseId, coursewareId, videoId, duration }, currentTime);
-                    }
-                    break;
-
-                case 'final_push':
-                    if (Learner.stopRequested) {
-                        UI.log('⏹️ 收到停止请求，中断智能学习', 'warn');
-                        return false;
-                    }
-
-                    const delay = Math.floor(Math.random() * 1000 + 500); // 0.5-1.5秒随机延迟
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    currentTime = duration - 10;
-                    success = await this.reportProgress({ courseId, coursewareId, videoId, duration }, currentTime);
-                    break;
-            }
+            // 极速模式：单次上报直接完成
+            UI.log('🚀 执行极速完成策略 - 直接冲刺 99%');
+            
+            // 直接调用即时完成逻辑
+            const success = await LearningStrategies.instant_finish({ 
+                playInfo: courseInfo, 
+                duration, 
+                currentTime: lastLearnedTime 
+            });
 
             if (success) {
-                UI.log(`✅ 智能学习完成: ${courseInfo.title || courseId}`, 'success');
-
-                try {
-                    await this.finishStudyRecord(courseInfo, currentTime);
-                    await this.completeCourse(courseInfo);
-                    UI.log(`✅ 学习记录已保存`, 'success');
-                } catch (error) {
-                    UI.log(`⚠️ 学习记录保存失败: ${error.message}`, 'warn');
-                }
-
-                return true;
+                UI.log(`✅ 课程处理完成: ${courseInfo.title || courseId}`, 'success');
             } else {
-                UI.log(`❌ 智能学习失败`, 'error');
-                return false;
+                UI.log(`❌ 课程处理失败: ${courseInfo.title || courseId}`, 'error');
             }
+
+            return success;
         }
     };
 
-    // --- 主控制逻辑（增强版） ---
     /**
-     * 主控制模块
-     *
-     * 负责整体学习流程的控制，包括开始学习、停止学习、处理课程等功能
-     *
-     * @typedef {Object} Learner
-     * @property {boolean} isRunning - 学习是否正在运行
-     * @property {boolean} stopRequested - 是否收到停止请求
-     * @property {Function} stop - 停止学习流程
-     * @property {Function} skipCompletedCourses - 跳过已完成课程
-     * @property {Function} processCourses - 处理课程列表
-     * @property {Function} startLearning - 开始学习流程
+     * 学习器状态定义
      */
+    const LEARNER_STATES = {
+        IDLE: 'idle',           // 待命
+        PREPARING: 'preparing', // 准备中（获取信息、校验进度）
+        LEARNING: 'learning',   // 学习中（发送API请求）
+        COOLING: 'cooling',     // 冷却中（课间延迟）
+        STOPPED: 'stopped'      // 已停止
+    };
+
+    // --- 主控制逻辑（增强版） ---
     const Learner = {
+        /**
+         * 当前运行状态
+         * @type {string}
+         */
+        state: LEARNER_STATES.IDLE,
         /**
          * 学习是否正在运行
          * @type {boolean}
@@ -2302,219 +1954,171 @@
          */
         stopRequested: false,
 
-        /**
-         * 停止学习流程
-         *
-         * 中止所有正在进行的请求并更新UI状态
-         */
-        stop: function() {
-            this.isRunning = false;
-            this.stopRequested = true;
-
-            // 使用AbortController真正中止所有正在进行的请求
-            if (API.abortController) {
-                API.abortController.abort();
-                UI.log('🛑 正在中止所有网络请求...', 'info');
-            }
-
-            const toggleBtn = document.getElementById(CONSTANTS.SELECTORS.TOGGLE_BTN.replace('#', ''));
-            if (toggleBtn) {
-                toggleBtn.setAttribute('data-state', 'stopped');
-                toggleBtn.textContent = '开始学习';
-            }
-            UI.updateStatus('已停止');
-            UI.log('⏹️ 学习流程已停止', 'warn');
-        },
-
-        /**
-         * 跳过已完成课程
-         *
-         * 检查并跳过已完成的课程，更新统计信息
-         *
-         * @async
-         */
-        async skipCompletedCourses() {
-            try {
-                UI.log('🔍 开始检查并跳过已完成的课程...');
-                UI.updateStatus('检查已完成课程');
-
-                // 获取课程列表
-                const courses = await API.getCourseList();
-                if (!courses || courses.length === 0) {
-                    UI.log('❌ 未找到课程列表', 'error');
-                    return;
-                }
-
-                let completedCount = 0;
-
-                for (let i = 0; i < courses.length; i++) {
-                    const course = courses[i];
-                    const courseId = course.id || course.courseId;
-
-                    UI.log(`检查第 ${i + 1}/${courses.length} 门课程: ${course.title}`);
-
-                    try {
-                        const completionCheck = await API.checkCourseCompletion(courseId);
-                        if (completionCheck.isCompleted) {
-                            UI.log(`✅ 已完成: ${course.title} (${completionCheck.finishedRate}%)`, 'success');
-                            completedCount++;
-                        } else {
-                            UI.log(`📖 未完成: ${course.title} (${completionCheck.finishedRate}%)`);
-                        }
-                    } catch (error) {
-                        UI.log(`❌ 检查失败: ${course.title} - ${error.message}`, 'error');
+                /**
+                 * 停止学习流程
+                 *
+                 * 中止所有正在进行的请求并更新UI状态
+                 */
+                stop: function() {
+                    this.isRunning = false;
+                    this.stopRequested = true;
+                    this.state = LEARNER_STATES.STOPPED;
+        
+                    // 使用AbortController真正中止所有正在进行的请求
+                    if (API.abortController) {
+                        API.abortController.abort();
+                        UI.log('🛑 正在中止所有网络请求...', 'info');
                     }
-
-                    // 更新进度
-                    const progress = Math.floor(((i + 1) / courses.length) * 100);
-                    UI.updateProgress(progress);
-                }
-
-                UI.log(`\n📊 检查完成: ${completedCount}/${courses.length} 门课程已完成`, 'success');
-                UI.updateStatus(`检查完成 - ${completedCount}/${courses.length} 已完成`);
-
-            } catch (error) {
-                UI.log(`❌ 检查过程出错: ${error.message}`, 'error');
-                UI.updateStatus('检查失败');
-            }
-        },
-
-        /**
-         * 处理课程列表
-         *
-         * 依次处理课程列表中的每门课程，应用学习策略
-         *
-         * @async
-         * @param {Array} courses - 课程列表
-         */
-        async processCourses(courses) {
-            UI.log(`发现 ${courses.length} 门课程，开始处理...`);
-            UI.updateStatus('处理课程列表');
-
-            // 初始化统计信息
-            const stats = {
-                total: courses.length,
-                completed: 0,
-                learned: 0,
-                failed: 0,
-                skipped: 0
-            };
-
-            UI.updateStatistics(stats);
-
-            for (let i = 0; i < courses.length; i++) {
-                // 检查是否收到停止请求
-                if (this.stopRequested) {
-                    UI.log('⏹️ 收到停止请求，中断学习流程', 'warn');
-                    break;
-                }
-
-                const course = courses[i];
-                UI.log(`\n📚 处理第 ${i + 1}/${courses.length} 门课程: ${course.title}`);
-                UI.updateStatus(`学习课程 ${i + 1}/${courses.length}`);
-
-                try {
+        
+                    const toggleBtn = document.getElementById(CONSTANTS.SELECTORS.TOGGLE_BTN.replace('#', ''));
+                    if (toggleBtn) {
+                        toggleBtn.setAttribute('data-state', 'stopped');
+                        toggleBtn.textContent = '开始学习';
+                    }
+                    UI.updateStatus('已停止');
+                    UI.log('⏹️ 学习流程已停止', 'warn');
+                },
+        
+                /**
+                 * 准备课程学习环境
+                 * @private
+                 */
+                async _prepareCourse(course) {
+                    this.state = LEARNER_STATES.PREPARING;
                     const courseId = course.id || course.courseId;
                     const coursewareId = course.dsUnitId;
-
-                    // 首先检查课程是否已完成
+        
+                    // 1. 检查跳过逻辑
                     if (CONFIG.SKIP_COMPLETED_COURSES) {
                         const completionCheck = await API.checkCourseCompletion(courseId, coursewareId);
                         if (completionCheck.isCompleted) {
                             UI.log(`✅ 课程已完成，跳过: ${course.title} (${completionCheck.finishedRate}%)`, 'success');
-                            stats.completed++;
-                            UI.updateStatistics(stats);
-                            continue;
+                            return { action: 'skip' };
                         }
                     }
-
-                    // 获取课程播放信息
+        
+                    // 2. 获取播放信息
                     const playInfo = await API.getPlayInfo(courseId, course.dsUnitId, course.durationStr);
                     if (!playInfo) {
                         UI.log(`❌ 无法获取课程播放信息，跳过: ${course.title}`, 'error');
-                        stats.failed++;
-                        UI.updateStatistics(stats);
-                        continue;
+                        return { action: 'fail' };
                     }
-
-                    // 双重检查：通过播放信息再次确认完成状态
+        
+                    // 3. 双重检查
                     const progressPercent = Math.floor((playInfo.lastLearnedTime / playInfo.duration) * 100);
                     if (progressPercent >= CONFIG.COMPLETION_THRESHOLD) {
                         UI.log(`✅ 播放信息确认课程已完成，跳过: ${course.title} (${progressPercent}%)`, 'success');
-                        stats.completed++;
-                        UI.updateStatistics(stats);
-                        continue;
+                        return { action: 'skip' };
                     }
-
-                    // 开始学习课程
-                    const courseInfoWithPlayInfo = {
+        
+                    return { action: 'learn', playInfo };
+                },
+        
+                /**
+                 * 执行课程学习
+                 * @private
+                 */
+                async _learnCourse(course, playInfo) {
+                    this.state = LEARNER_STATES.LEARNING;
+                    const courseInfo = {
                         ...course,
                         ...playInfo,
                         title: course.title || course.courseName,
-                        courseId: courseId
+                        courseId: course.id || course.courseId
                     };
-
-                    // 使用智能学习策略
-                    const success = await API.smartLearnCourse(courseInfoWithPlayInfo);
-
-                    if (success) {
-                        UI.log(`✅ 课程学习完成: ${course.title}`, 'success');
-                        stats.learned++;
-                    } else {
-                        UI.log(`❌ 课程学习失败: ${course.title}`, 'error');
-                        stats.failed++;
+        
+                    return await API.executeLearnStrategy(courseInfo);
+                },
+        
+                /**
+                 * 处理学习后的冷却与收尾
+                 * @private
+                 */
+                async _afterCourse(isLast) {
+                    if (isLast || this.stopRequested) return;
+        
+                    this.state = LEARNER_STATES.COOLING;
+                    const delay = Math.random() * 5000 + 5000;
+                    const seconds = Math.round(delay / 1000);
+                    
+                    UI.log('⏳ 等待处理下一门课程...');
+                    for (let i = seconds; i > 0; i--) {
+                        if (this.stopRequested) break;
+                        UI.updateStatus(`等待中 (${i}s)`);
+                        await new Promise(r => setTimeout(r, 1000));
                     }
-
+                },
+        
+                /**
+                 * 处理课程列表
+                 *
+                 * 依次处理课程列表中的每门课程，应用学习策略
+                 *
+                 * @async
+                 * @param {Array} courses - 课程列表
+                 */
+                async processCourses(courses) {
+                    UI.log(`发现 ${courses.length} 门课程，开始处理...`);
+                    UI.updateStatus('处理课程列表');
+        
+                    const stats = { total: courses.length, completed: 0, learned: 0, failed: 0, skipped: 0 };
                     UI.updateStatistics(stats);
-
-                    // 更新总体进度
-                    const overallProgress = Math.floor(((i + 1) / courses.length) * 100);
-                    UI.updateProgress(overallProgress);
-
-                    if (i < courses.length - 1) {
-                        const delay = Math.random() * 5000 + 5000; // 5-10秒随机间隔
-                        UI.log(`⏳ 等待 ${Math.round(delay/1000)} 秒后处理下一门课程...`);
-
-                        const delaySeconds = Math.round(delay / 1000);
-                        for (let j = 0; j < delaySeconds; j++) {
-                            if (this.stopRequested) {
-                                UI.log('⏹️ 等待期间收到停止请求，中断学习流程', 'warn');
-                                return;
+        
+                    for (let i = 0; i < courses.length; i++) {
+                        if (this.stopRequested) break;
+        
+                        const course = courses[i];
+                        UI.log(`\n📚 处理第 ${i + 1}/${courses.length} 门课程: ${course.title}`);
+                        UI.updateStatus(`学习课程 ${i + 1}/${courses.length}`);
+        
+                        try {
+                            const prep = await this._prepareCourse(course);
+                            
+                            if (prep.action === 'skip') {
+                                stats.skipped++; // 原本已完成，跳过
+                            } else if (prep.action === 'fail') {
+                                stats.failed++;
+                            } else if (prep.action === 'learn') {
+                                const success = await this._learnCourse(course, prep.playInfo);
+                                if (success) {
+                                    UI.log(`✅ 课程学习完成: ${course.title}`, 'success');
+                                    stats.learned++;
+                                } else {
+                                    UI.log(`❌ 课程学习失败: ${course.title}`, 'error');
+                                    stats.failed++;
+                                }
                             }
-                            await new Promise(resolve => setTimeout(resolve, 1000));
+        
+                            // 更新总完成数：跳过数 + 本次学习数
+                            stats.completed = stats.skipped + stats.learned;
+        
+                            UI.updateStatistics(stats);
+                            UI.updateProgress(Math.floor(((i + 1) / courses.length) * 100));
+        
+                            // 仅在实际执行了学习操作且非最后一门时触发冷却延迟
+                            if (prep.action === 'learn') {
+                                await this._afterCourse(i === courses.length - 1);
+                            }
+        
+                        } catch (error) {
+                            if (error.name === 'AbortError' || this.stopRequested) {
+                                UI.log(`⏹️ 学习流程已中断: ${course.title}`, 'warn');
+                                break;
+                            }
+                            UI.log(`❌ 处理课程 ${course.title} 时出错: ${error.message}`, 'error');
+                            stats.failed++;
+                            UI.updateStatistics(stats);
                         }
                     }
-
-                } catch (error) {
-                    if (error.name === 'AbortError' || this.stopRequested) {
-                        UI.log(`⏹️ 学习流程已中断: ${course.title}`, 'warn');
-                        break; // 退出循环
+        
+                    this.state = LEARNER_STATES.IDLE;
+                    if (this.stopRequested) {
+                        UI.log('\n🛑 学习已手动停止', 'warn');
+                    } else {
+                        UI.log('\n🎉 所有课程处理完成！', 'success');
+                        UI.updateStatus(`完成 - ${stats.completed + stats.learned}/${stats.total} 门课程`);
                     }
-                    
-                    UI.log(`❌ 处理课程 ${course.title} 时出错: ${error.message}`, 'error');
-                    stats.failed++;
-                    UI.updateStatistics(stats);
-                    continue;
-                }
-            }
-
-            // 显示学习统计
-            if (this.stopRequested) {
-                 UI.log(`\n🛑 学习已手动停止`, 'warn');
-            } else {
-                 UI.log(`\n🎉 所有课程处理完成！`, 'success');
-            }
-            
-            UI.log(`📊 学习统计:`);
-            UI.log(`   ✅ 已完成课程: ${stats.completed} 门`);
-            UI.log(`   📚 新学完课程: ${stats.learned} 门`);
-            UI.log(`   ❌ 失败课程: ${stats.failed} 门`);
-            UI.log(`   📖 总课程数: ${stats.total} 门`);
-
-            UI.updateStatus(`完成 - ${stats.completed + stats.learned}/${stats.total} 门课程`);
-            UI.updateProgress(100);
-        },
-
+                },
         /**
          * 开始学习流程
          *
@@ -2528,6 +2132,15 @@
          * @returns {boolean} 是否包含有效ID
          */
         hasValidId: function() {
+            // 已在 detectEnvironment 中处理门户、首页及不支持分院的判定
+            if (CONFIG.IS_PORTAL || CONFIG.UNSUPPORTED_BRANCH) return false;
+            
+            const href = window.location.href;
+            if (href.includes('pagehome/index') || document.querySelector('[module-name="nc.pagehome.index"]')) {
+                return false;
+            }
+
+
             // 检查是否在课程播放页面
             const isCoursePlayerPage = window.location.href.includes('/coursePlayer');
 
@@ -2537,6 +2150,9 @@
             // 检查是否在频道详情页面
             const isChannelDetailPage = window.location.href.includes('channelDetail');
 
+            // [新增] 检查是否在浦东分院特殊专栏页面 (使用 PudongHandler)
+            const isPudongSpecialPage = PudongHandler.identifyPage() === PudongHandler.PAGE_TYPES.COLUMN;
+
             // 检查是否在课程列表页面（不包含ID参数）
             const isChannelListPage = window.location.href.includes('channelList');
 
@@ -2545,7 +2161,7 @@
                 return false;
             }
 
-            if (isCoursePlayerPage || isSpecialDetailPage || isChannelDetailPage) {
+            if (isCoursePlayerPage || isSpecialDetailPage || isChannelDetailPage || isPudongSpecialPage) {
                 // 从URL中提取ID
                 let id = null;
 
@@ -2586,6 +2202,15 @@
                     if (match) {
                         id = match[1];
                     }
+                }
+            }
+
+            // [优化] 如果没找到 ID，但页面上有课程元素，也允许启动
+            if (!id) {
+                const hasCourseElements = CONSTANTS.COURSE_SELECTORS.some(selector => document.querySelector(selector));
+                if (hasCourseElements) {
+                    UI.log('[校验] 虽然URL没发现ID，但页面检测到课程元素，允许启动', 'info');
+                    return true;
                 }
             }
 
@@ -2712,30 +2337,26 @@
                 toggleBtn.textContent = '停止学习';
 
                 // 使用事件驱动更新状态
-                EventBus.publish('statusUpdate', '学习中...');
+                EventBus.publish(CONSTANTS.EVENTS.STATUS_UPDATE, '学习中...');
 
                 // 启动学习流程
                 Learner.startLearning().catch(error => {
-                    EventBus.publish('log', { message: `❌ 启动学习流程失败: ${error.message}`, type: 'error' });
+                    EventBus.publish(CONSTANTS.EVENTS.LOG, { message: `❌ 启动学习流程失败: ${error.message}`, type: 'error' });
                     Learner.stop();
                 });
             }
         });
 
         // 5. 发布初始化完成事件
-        EventBus.publish('log', { message: '🚀 API学习助手 v3.40 初始化完成', type: 'success' });
+        EventBus.publish(CONSTANTS.EVENTS.LOG, { message: '🚀 cela学习助手 v3.50 初始化完成', type: 'success' });
     }
 
     // 初始化环境检测和脚本
     function initScript() {
         detectEnvironment();
-
-        // 如果是浦东分院环境，检测API端点
-        if (CONFIG.PUDONG_MODE) {
-            setTimeout(() => {
-                detectPudongApiEndpoints();
-            }, 3000); // 稍后执行，避免影响初始化
-        }
+        
+        // 初始化浦东分院处理器
+        PudongHandler.init();
 
         init();
     }

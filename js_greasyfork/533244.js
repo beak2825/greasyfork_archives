@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         快焊焊
 // @namespace    http://tampermonkey.net/
-// @version      3.3
+// @version      3.4
 // @description  检索焊接文件中的LCID元素，从PHP API获取对应的库号，并添加到对应位置，支持一键复制待取元件清单
 // @author       Xano
 // @match        file:///*/*.html
@@ -225,24 +225,124 @@
       return;
     }
 
-    // 创建新按钮
+    // 创建"待买元件"按钮
+    const buyButton = document.createElement("div");
+    buyButton.className = exportButton.className;
+    buyButton.title = "导出无库存元件为CSV";
+    buyButton.innerHTML = "<span>待买元件</span>";
+    buyButton.addEventListener("click", exportNoStockToCsv);
+
+    // 创建"待取元件"按钮
     const button = document.createElement("div");
-    // 尝试使用与导出按钮相同的class
     button.className = exportButton.className;
     button.title = "复制待取元件清单";
-    button.innerHTML = "<span>复制待取元件清单</span>";
-
-    // 添加点击事件
+    button.innerHTML = "<span>待取元件</span>";
     button.addEventListener("click", getUnsoldered);
 
-    // 在导出按钮后面插入新按钮
+    // 在导出按钮后面依次插入：待买元件、待取元件
     if (exportButton.nextSibling) {
       toolsDiv.insertBefore(button, exportButton.nextSibling);
+      toolsDiv.insertBefore(buyButton, exportButton.nextSibling);
     } else {
+      toolsDiv.appendChild(buyButton);
       toolsDiv.appendChild(button);
     }
 
-    console.log("成功添加复制待取元件清单按钮");
+    console.log("成功添加待买元件和待取元件按钮");
+  }
+
+  // 导出无库存元件为CSV
+  function exportNoStockToCsv() {
+    const noStockItems = [];
+
+    const cells = document.querySelectorAll(
+      'td[style="position: relative; min-width: 70px;"]'
+    );
+
+    cells.forEach((cell) => {
+      const checkbox = cell.querySelector('input[type="checkbox"]');
+      if (!checkbox || !checkbox.checked) {
+        const row = cell.closest("tr");
+        const tds = row.querySelectorAll("td");
+
+        const tiaoma = tds[0]?.querySelector("span")?.textContent.trim() || "";
+
+        // 只收集无库存的元件（库号为空或显示"(无库存)"）
+        if (!tiaoma || tiaoma === "(无库存)") {
+          const key =
+            tds[3]
+              ?.querySelector("p")
+              ?.textContent.replace("详情", "")
+              .trim() || "";
+          const model = tds[4]?.querySelector("p")?.textContent.trim() || "";
+          const packaging =
+            tds[5]?.querySelector("p")?.textContent.trim() || "";
+          const lcid = tds[6]?.querySelector("b")?.textContent.trim() || "";
+          const quantity =
+            tds[7]
+              ?.querySelector("p")
+              ?.textContent.replace("使用:", "")
+              .trim() || "";
+
+          noStockItems.push({
+            key,
+            model,
+            packaging,
+            lcid,
+            quantity,
+          });
+        }
+      }
+    });
+
+    if (noStockItems.length === 0) {
+      alert("没有找到无库存的元件");
+      return;
+    }
+
+    // 生成CSV内容
+    const headers = ["值", "型号", "封装", "立创编号", "使用数量"];
+    const csvContent = [
+      headers.join(","),
+      ...noStockItems.map((item) =>
+        [item.key, item.model, item.packaging, item.lcid, item.quantity]
+          .map((v) => `"${v.replace(/"/g, '""')}"`)
+          .join(",")
+      ),
+    ].join("\n");
+
+    // 添加BOM以支持中文
+    const bom = "\uFEFF";
+    const blob = new Blob([bom + csvContent], {
+      type: "text/csv;charset=utf-8",
+    });
+
+    // 下载文件
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `待买元件_${new Date()
+      .toLocaleDateString("zh-CN")
+      .replace(/\//g, "-")}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+
+    // 显示提示
+    const toast = document.createElement("div");
+    toast.textContent = `已导出 ${noStockItems.length} 个无库存元件到CSV`;
+    toast.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #333;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      z-index: 10001;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => document.body.removeChild(toast), 3000);
   }
 
   // 修改 getUnsoldered 函数

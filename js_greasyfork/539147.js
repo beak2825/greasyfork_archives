@@ -5,7 +5,7 @@
 // @supportURL   https://sleazyfork.org/zh-CN/scripts/25781/feedback
 // @source       https://github.com/hobbyfang/javOldDriver
 // @description  JAV老司机神器,支持各Jav老司机站点。拥有高效浏览Jav的页面排版，JAV高清预览大图，JAV列表无限滚动自动加载，合成“挊”的自动获取JAV磁链接，一键自动115离线下载。。。。没时间解释了，快上车！
-// @author       Hobby
+// @author       s_____________
 
 // @require      https://lib.baomitu.com/jquery/2.2.4/jquery.min.js
 // @require      https://lib.baomitu.com/lovefield/2.1.12/lovefield.min.js
@@ -15,36 +15,9 @@
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.all.min.js
 // @resource     icon https://cdn.jsdelivr.net/gh/hobbyfang/javOldDriver@master/115helper_icon_001.jpg
 
-// javlib主要有码jav资源、排行榜、点评，最新地址在github.com/javlibcom
-// @include      *://*javlibrary.com/*
-// @include      *://*javlib.com/*
-// @include      *://*r86m.com/*
-// @include      *://*s87n.com/*
+// @match        https://javdb.com/*
+// @match        https://www.javlibrary.com/*
 
-// javbus有无码jav资源、论坛
-// @include      *://*javbus.com/*
-// @include      *://www.*bus*/*
-// @include      *://www.*javsee*/*
-// @include      *://www.*seejav*/*
-
-// onejav有FC2资源、排行榜
-// @include      *://*onejav.com/*
-
-// avsox有无码jav资源，含FC2  tellme.pw/avsox
-// @include      *://*avsox.*/*
-
-// jav321有素人资源、排行榜
-// @include      *://*jav321.com/video/*
-
-// javdb有各资源排行榜，但部分需付费  javdb.com
-// @include      *://*javdb*.com/*
-
-// @include      *://*javstore.*/*
-// @include      *://*avmoo.*/*
-// @include      ://tellme.pw/avmoo
-// @include      *://115.com/*
-// @include      *://*.quark.cn/list*
-// @include      *://www.*dmm*/*
 
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
@@ -138,7 +111,7 @@
     'use strict';
     const EMPTY_IMAGE_DATA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAB4CAMAAABsOSjPAAAAn1BMVEUAAAD/lgD/x3f/zoj/nRH/3Kr/+e7/sD//68z/1Zj/qzP/skT/uVX/9eX/pCL/oh3/wGb/8d3/4LL/5Lv/2aL/tUv/kAD/0o//9uj/v2L/mQn//vv//Pf/rjf/+vL/1pn/2pT/mAX/kwD/+/X/9OH/4rb/qzD/qSX/mAH/6sn/6cL/26f/y4D/nxr/vV7/uU//wnH/7tb/1YX/wEL/nypWdfcGAAAAAXRSTlMAQObYZgAABOdJREFUeNrs2F1TgkAYhmGeRMRWLbDlS5BAUPysqf7/b6sYt600dQ8a3nW4T3Teo2uWHRYw2tquMOiU5mhDl64ADR36jdZhsVv0X7XoFn2iFt2iT9Si/wG93AxY73Q8fLAooW2GizI7MRm0j4tLCiJoBTPyN4sE2s6h0o4EmkMprySAXmaK6CcC6A0UG1nNowdQLFo2j2aQmTxMKpyrbB7dk5rd54VfLXAmlxI6NOqKrUZocygOG43QXEycSB90KCZTUx90Mvk6bvRBV+P95F6jPY1RUQ9SrW55uPOdqR3id3kUEUYDkZkdmu8da731KrLoI3mPxkfDV486Ovthrps800aPUrs7l2ZR6uV00XPrc2GZMMtWC7Lo26Aez7gwyyxGFJ0MxWHOhVlmlW7pugE1dL03hPpl/y/wA2KfxX6gk++62cSoixkShxba9fuywjgsfgKwHZNCHyuYfVtvjjqfOHqdSWHMsG8XU0Z3I6Av98ZXi5vOR5uNQxDtVoBQzzhk+f63Sw+9juQenjKiz9Pj/oNsnQ4qYeNpZ0H1JYBBsWzVPPoZim2L5tElFOsRuOXFc6iVEkAbXSiVTCigjRAKmTaNE/G9nfNtbRsGwnjudBKW5Gk2ZtCtsJcb7N2+/5ebHv1JXROEkkFxih6IkSr57ufrnaQ2Ia93UP/4c5pt3Ar16dvfE509XpT/Hb62FX593852YHp9+dLWz3MfTfc686cQbmpAD+iGBvSAbmhAD+iGBvSAbmhAD+iGBvSAbuhjoDdKErYPmDSBttISWRvzhJI899m1tDShFRW5B6AnomBqSzXn3fWWANPchDbMMxF74segq3khf/h3X3g3b+Ek02V3aUFX+2QuD2l9e6vFH35VimjaQaPTr7mVHtW+XB6TAXRO5uVgRP8fNPdCM81WyCsp0dOeiBaDGY4o28GgqB00C7l8s5RhHx8iUFK4BW0dkdMpoyY493E4TJ5ydFUgCoFUL/RMQkViriXKGKgIS26pN2ht4a1Az7WkpZg5FuIGs8XBlrocp2uC59LNsv3QlO/2uH9DgwEINws7kmSdWWqZAE7jQRSMlGGPJULzgnv0EVqn1W9B6WP2CqcuuaJkZioOSN8BHVZHHoZtZIELXEL8cQ7JQrIiVXgPfXGYBCOeJKWGOmYEoANHpUBbuPKANrUFCy6aVWkJNdIPzYBzIArx4hBPQJucDj72HYVdduThtMXQpsjF4SVX0RFaJ9LqJLl0FTqatQgDPNdlowNaXyPtk5EKyPl2kzyuggdBytj96pGjKiTLFdqRugFt3kFzju+a/Sm0MnTOvP5IAzVlAeotxF6YLlYigaDAHfh8gpw8rhU6Q0U5pIdGKekMvd2ABqCCWcYMC9S5ACAxVS38diEaR1kqBwoGcImvrAAbUC7J2ny/eVtAgw1yZUjfgjZCZXE3lOUL9BxdrVIdNKEnKuIYX1egLZy4sphMBq0ggAB13bprOCu1zwsWCqORHmiXM8hSn9HCZ/aspdC000Nx1npZGVXFKl0AwmwvVuU5a4lcXgOqlLqy8ARUZnUcgnjXMdcjiI4ty7q4W9kWHjXx2oDul+rdiU/yR4C28SV9B5SzQJtr0nfoLNDlIOFNz9zTQKfi031TzwN9hwb0gG5oQA/oDxR9iq80ehI9PfQT6amhh4Y+k/4BYXA+w/0JM4sAAAAASUVORK5CYII=';
     const JAVDB_ITEM_SELECTOR = '.movie-list.v.cols-4.vcols-8 .item, .movie-list.v.cols-4.vcols-5 .item, .movie-list.h.cols-4.vcols-8 .item, .movie-list.h.cols-4.vcols-5 .item';
-    const BTSOW_DOMAIN = 'btsow.motorcycles';
+    const BTSOW_DOMAIN = 'btsow.lol';
     const JAVDB_DOMAIN = 'javdb368.com';
     const TORRENTKITTY_DOMAIN = 'www.torrentkitty.one';
     const MMTV_DOMAIN = '7mmtv.sx';
@@ -263,7 +236,7 @@
                 GM_setValue('btsow_url', BTSOW_DOMAIN);
             }
             if (isNewVersion || GM_getValue('btdig_url', undefined) === undefined) {
-                GM_setValue('btdig_url', 'www.btdig.com');
+                GM_setValue('btdig_url', 'btdig.com');
             }
             if (isNewVersion || GM_getValue('nyaa_url', undefined) === undefined) {
                 GM_setValue('nyaa_url', 'sukebei.nyaa.si');

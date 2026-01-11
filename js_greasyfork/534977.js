@@ -3,10 +3,10 @@
 // @name:zh           AI搜索引擎增强😈
 // @name:zh-TW        AI搜索引擎增強😈
 // @namespace         ai_search_engine_enhancements
-// @version           20251124
-// @description       AI搜索引擎功能增强,元宝AI搜索全自动跳转，kimi搜索跳转，百度添加网址显示，google结果新标签页打开,导航可自定义网址【脚本长期维护更新，完全免费，无广告，仅限学习交流！！】
-// @description:zh    AI搜索引擎功能增强,元宝AI搜索全自动跳转，kimi搜索跳转，百度添加网址显示，google结果新标签页打开,导航可自定义网址【脚本长期维护更新，完全免费，无广告，仅限学习交流！！】
-// @description:zh-TW AI搜索引擎功能增強,元寶AI搜索全自動跳轉，kimi搜索跳轉，百度添加網址顯示，google結果新標籤頁打開,導航可自定義網址【腳本長期維護更新，完全免費，無廣告，僅限學習交流！！】
+// @version           20260106
+// @description       AI搜索引擎功能增强,豆包、千问、元宝AI搜索全自动跳转，kimi搜索跳转，百度添加网址显示，google结果新标签页打开,导航可自定义网址【脚本长期维护更新，完全免费，无广告，仅限学习交流！！】
+// @description:zh    AI搜索引擎功能增强,豆包、千问、元宝AI搜索全自动跳转，kimi搜索跳转，百度添加网址显示，google结果新标签页打开,导航可自定义网址【脚本长期维护更新，完全免费，无广告，仅限学习交流！！】
+// @description:zh-TW AI搜索引擎功能增強,豆包、千問、元寶AI搜索全自動跳轉，kimi搜索跳轉，百度添加網址顯示，google結果新標籤頁打開,導航可自定義網址【腳本長期維護更新，完全免費，無廣告，僅限學習交流！！】
 // @author            huahuacat,CathyElla
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAA5NJREFUWEfFl89vVFUUxz/nzpsyJe1MO6W1tFqkqUoCLdGyEIMYjMbE4MIVJiRd4gYT/StYagIu3KImEsOOhYkSIoIa0y76g4UKrRaLwHSG+VFgmM7cS+4M084rb957Vcjc1WTuOfd83rnnfO+9QsiRSpmBmOKw1hwUGEUYAroeuWcxLBqYVYqLRc253l65EWZpCTLKpc2raD4W4UiQbeO8MZxB8VmiR37182sKcOGCcfaN8qmB45sJvNFW4NTkLJ8cOiRlr3U8AVYyZkxXOI2w9/8EX/M1TKsIEx1JmfEAdP+Vv20OoDgHJJ5I8PVFcmgOx/vkUuO6rgxUv1xz8SkEr8fMKcXBxkysAdg9H9/D5BNLe7P0Gaan5thXr4k1gMKyORmm4HQFillNMQ/3M5r2pCIWh1iXQkXCbZotzM5t8pG1rgLYVhPDL0Hu/05rbs2VKd193LKtAwb2RujbHY7CCPtti9YAUuaboD6fO1vmXlq7Inf2C4WbxvVfclgx8pYT9C1YnUj0ygdiFW6LsOTn8cd3ZbKL7uDdQ4pXjtYCLf+pWfi5Qv5GDWb4DYdtL6lAiAeGQSmkzTFj+KKZdWZec/UHTw1h+PUI7d1C/+5asIVLFeZ/qlR/jx2JEkv4C60IH0ouZb4S4agXgC7D7LerPCi407zRtjEbk6dXyS0ZuncqXnjbfyuM4WvJp8w0wpgXwN204crZ1cBUWoOtPcL+Y1Gy/ximvlxFHBifaEP5MRhmJL9s7jScaq5g6Wuaa+e90+9FNfq+Q3xAuPx5DXrXuw7xZ31rIWsBmuZ3aarM0pS7+PzSYWti54EI50+UqmaD44rBcf9t8AXILGiufh8+A7YW7LjzqGN2vecQ3+7fDb5bYPve9v9/GSoqvDwRJeKvS1nfIrSyO3OmRGll8whdO4QX34n6O9oi9GtD6337SoW/Ltd6ezNj5M0oyRF/Hai2YZAQ2aBWiKwghR09zzt09Cq29kHnYHOvqhCFkWK7xPLvmvkfg+th+x6Htvb1woslIbHDG6IqxXYqzGFk7Yo5w/XfKmSva0wDixWd7ucUQ685KAW5RSjfWw8aH4L2HjfE2mFUBQh5HNeXsBK9clNTuKXpfEbR0a9cimfnc39DKV/z8ARoPI6tUdgLSdg6sPJWzICKwpa42+uxC4mdbvmVzEK09FJaT1JLr+V1iJY+TOoQLX2aNdZsyx6nG9vtaT3PHwJueJlAXsXHsQAAAABJRU5ErkJggg==
 
@@ -27,6 +27,7 @@
 // @include           *://chat.deepseek.com/*
 // @include           *://chat.qwen.ai/*
 // @include           *://www.doubao.com/*
+// @include           *://www.qianwen.com/*
 
 // @require           https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
 // @require           https://greasyfork.org/scripts/454236-findandreplacedomtext-huahuacat/code/findAndReplaceDOMText-huahuacat.js?version=1112990
@@ -709,6 +710,10 @@
                     {
                         "name": "纳米",
                         "url": "https://www.n.cn/?q=@@"
+                    },
+                    {
+                        "name": "千问",
+                        "url": "https://www.qianwen.com?q=@@"
                     }
                 ]
             }
@@ -1478,6 +1483,98 @@
     }
 
 
+    // 千问添加q参数
+    async function addQianwenQueryParam() {
+        const getQueryParam = () => {
+            return new URLSearchParams(window.location.search).get('q');
+        };
+
+        const waitForElement = async (selector, timeout = 15000) => {
+            const start = Date.now();
+            return new Promise((resolve) => {
+                const check = () => {
+                    const el = document.querySelector(selector);
+                    if (el) return resolve(el);
+                    if (Date.now() - start > timeout) return resolve(null);
+                    setTimeout(check, 100);
+                };
+                check();
+            });
+        };
+
+        const query = getQueryParam();
+        if (!query) return;
+
+        try {
+            // === Step 1: 语义化定位输入框（核心改进）===
+            // 优先：通过placeholder定位（最稳定）
+            let textarea = await waitForElement('textarea[placeholder*="向千问提问"]');
+            if (!textarea) {
+                // 备用：通过容器结构定位（不依赖类名）
+                textarea = await waitForElement('.chatInput-dXdYNh textarea');
+            }
+            if (!textarea) {
+                // 最终备用：查找所有textarea并匹配placeholder
+                const textareas = Array.from(document.querySelectorAll('textarea'))
+                .filter(ta => ta.placeholder?.includes('向千问提问') || ta.placeholder?.includes('提问'));
+                textarea = textareas[0];
+            }
+
+            if (!textarea) {
+                console.error('[QianwenAuto] 无法定位输入框（无语义化标识）');
+                return;
+            }
+
+            // === Step 2: 填入文本（兼容React）===
+            textarea.focus();
+
+            // 使用原生setter确保React感知变化
+            const nativeSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLTextAreaElement.prototype,
+                'value'
+            )?.set;
+
+            if (nativeSetter) {
+                nativeSetter.call(textarea, query);
+            } else {
+                textarea.value = query;
+            }
+
+            // 触发输入事件链
+            ['input', 'change', 'keydown', 'keyup'].forEach(eventType => {
+                textarea.dispatchEvent(new Event(eventType, { bubbles: true }));
+            });
+
+            // 等待UI更新
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // === Step 3: 模拟回车发送（核心逻辑）===
+            const enterEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+                bubbles: true,
+                cancelable: true
+            });
+
+            textarea.dispatchEvent(enterEvent);
+            console.log('[QianwenAuto] 已通过回车发送问题:', query);
+
+        } catch (error) {
+            console.error('[QianwenAuto] 执行失败:', error);
+        }
+    }
+
+
+
+    // 仅在千问下运行
+    if (window.location.host === 'www.qianwen.com') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', addQianwenQueryParam);
+        } else {
+            addQianwenQueryParam();
+        }
+    }
 
 
 
@@ -1542,32 +1639,12 @@
             valueSetter.call(element, value);
         };
 
-        /** 等待发送按钮启用（解决输入后按钮未及时激活的问题） */
-        const waitForSendButtonEnabled = async (button, timeout = 5000) => {
-            const startTime = Date.now();
-            while (Date.now() - startTime < timeout) {
-                if (!button.disabled && !button.classList.contains('semi-button-disabled')) {
-                    console.log('[豆包优化] 发送按钮已启用');
-                    return true;
-                }
-                await delay(100);
-            }
-            console.warn('[豆包优化] 发送按钮未启用，尝试强制发送');
-            return false;
-        };
-
         // ================= 核心逻辑 =================
         try {
-            // 1. 定位核心元素（基于最新页面结构）
-            const [textarea, sendButton] = await Promise.all([
-                waitForElement([
-                    '[data-testid="chat_input_input"]', // 优先使用data-testid（更稳定）
-                    '.semi-input-textarea.semi-input-textarea-autosize' // 备选选择器
-                ]),
-                waitForElement([
-                    '[data-testid="chat_input_send_button"]', // 发送按钮唯一标识
-                    '.send-btn-mNNnTf' // 备选样式类
-                ])
+            // 1. 仅定位输入框（完全移除发送按钮相关逻辑）
+            const textarea = await waitForElement([
+                '[data-testid="chat_input_input"]', // 新结构核心输入框标识（必选）
+                '.semi-input-textarea.semi-input-textarea-autosize' // 备选兼容选择器
             ]);
 
             // 2. 聚焦并清空输入框（避免残留内容）
@@ -1604,38 +1681,29 @@
                 console.log('[豆包优化] 内容填充成功');
             }
 
-            // 5. 发送消息（优先按钮点击，降级Enter键）
+            // 5. 强制使用Enter键发送（完全移除按钮相关逻辑）
             textarea.focus(); // 确保输入框仍聚焦
             await delay(200);
+            console.log('[豆包优化] 强制使用Enter键发送消息');
 
-            // 等待发送按钮启用
-            const isButtonEnabled = await waitForSendButtonEnabled(sendButton);
-            if (isButtonEnabled) {
-                // 模拟真实点击（包含鼠标事件序列）
-                sendButton.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, buttons: 1 }));
-                await delay(50);
-                sendButton.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, buttons: 0 }));
-                sendButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-                console.log('[豆包优化] 已触发发送按钮点击');
-            } else {
-                // 降级方案：模拟Enter键发送
-                console.log('[豆包优化] 发送按钮未启用，尝试Enter键发送');
-                textarea.dispatchEvent(new KeyboardEvent('keydown', {
-                    key: 'Enter',
-                    code: 'Enter',
-                    keyCode: 13,
-                    bubbles: true,
-                    composed: true
-                }));
-                await delay(100);
-                textarea.dispatchEvent(new KeyboardEvent('keyup', {
-                    key: 'Enter',
-                    code: 'Enter',
-                    keyCode: 13,
-                    bubbles: true,
-                    composed: true
-                }));
-            }
+            // 模拟完整的Enter键事件（keydown + keyup，确保框架识别）
+            textarea.dispatchEvent(new KeyboardEvent('keydown', {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+                bubbles: true,
+                composed: true,
+                shiftKey: false // 确保不是Shift+Enter（换行）
+            }));
+            await delay(100); // 模拟按键间隔
+            textarea.dispatchEvent(new KeyboardEvent('keyup', {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+                bubbles: true,
+                composed: true,
+                shiftKey: false
+            }));
 
             // 6. 最终验证
             await delay(1000);
@@ -1659,7 +1727,6 @@
             }
         }
     }
-
     // 仅在豆包聊天页面执行
     if (window.location.host === 'www.doubao.com' && window.location.pathname.startsWith('/chat')) {
         // 确保页面完全加载（等待React/Vue初始化完成）

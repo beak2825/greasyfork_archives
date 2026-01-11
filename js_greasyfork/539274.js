@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         98堂-预览
-// @version      1.10.10
+// @version      1.11.0
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
 // @description  98堂[原色花堂]增强：图片预览 · 无缝翻页
@@ -21,9 +21,9 @@
       cacheEnabled: !0,
       cacheSize: 500,
       cacheTTL: 36e5,
-      lazyLoadThreshold: 2,
       networkTimeout: 5e3,
-      maxRetries: 2
+      maxRetries: 2,
+      imageLoadTimeout: 200
     },
     get(key) {
       if ("maxPreviewImages" === key) return this.defaults[key];
@@ -146,39 +146,30 @@
   _Lightbox.nextBtn = null, _Lightbox.closeBtn = null, _Lightbox.images = [], _Lightbox.currentIndex = 0;
   let Lightbox = _Lightbox;
   const _ImageProxy = class {
-    static shouldProxy(url) {
+    static isTargetHost(url) {
       return !(url.includes("/static/") || url.includes("icon") || url.includes("avatar")) && ([ "ymawv.la", "wmaiv.la", "iili.io", "7pzzv.us" ].some(host => url.includes(host)) || url.toLowerCase().endsWith(".gif"));
     }
-    static getPreviewUrl(originalUrl) {
-      if (!this.shouldProxy(originalUrl)) return originalUrl;
+    static getCompressedUrl(originalUrl) {
       try {
-        const cleanUrl = originalUrl.replace(/^https?:\/\//, ""), isGif = originalUrl.toLowerCase().endsWith(".gif"), conf = isGif ? this.CONFIG.ANIMATED : this.CONFIG.STATIC;
+        const cleanUrl = originalUrl.replace(/^https?:\/\//, ""), conf = originalUrl.toLowerCase().endsWith(".gif") ? this.CONFIG.ANIMATED : this.CONFIG.STATIC;
         let params = `url=${encodeURIComponent(cleanUrl)}&w=${conf.w}&q=${conf.q}&output=${conf.fmt}`;
-        return isGif && -1 === conf.n && (params += "&n=-1"), `${this.PROXY_URL}?${params}`;
+        return void 0 !== conf.n && (params += `&n=${conf.n}`), `${this.PROXY_URL}?${params}`;
       } catch {
         return originalUrl;
       }
     }
-    static async load(img, originalUrl) {
-      const proxyUrl = this.getPreviewUrl(originalUrl), isProxied = proxyUrl !== originalUrl;
-      if (img.src !== proxyUrl) return new Promise((resolve, reject) => {
-        const onLoad = () => {
-          if (cleanup(), isProxied) try {
-            const entries = performance.getEntriesByName(proxyUrl);
-            if (entries.length > 0) {
-              const entry = entries[entries.length - 1], size = entry.encodedBodySize || entry.transferSize;
-              size > 0 && (size / 1024).toFixed(1);
-            }
-          } catch (e) {}
-          resolve();
-        }, onError = () => {
-          cleanup(), isProxied ? (img.src = originalUrl, img.onload = () => resolve(), img.onerror = () => reject(new Error("原图也加载失败"))) : reject(new Error("加载失败"));
-        }, cleanup = () => {
-          img.removeEventListener("load", onLoad), img.removeEventListener("error", onError), 
-          img.onload = null, img.onerror = null;
-        };
-        img.addEventListener("load", onLoad), img.addEventListener("error", onError), img.decoding = "async", 
-        img.src = proxyUrl;
+    static async load(img, originalUrl, isHighPriority = !1) {
+      if (isHighPriority && img.setAttribute("fetchpriority", "high"), !this.isTargetHost(originalUrl)) return this.directLoad(img, originalUrl);
+      const compressedUrl = this.getCompressedUrl(originalUrl);
+      return this.directLoad(img, compressedUrl);
+    }
+    static directLoad(img, url) {
+      return new Promise((resolve, reject) => {
+        img.decoding = "async", img.onload = () => {
+          img.onload = null, img.onerror = null, resolve();
+        }, img.onerror = () => {
+          img.onload = null, img.onerror = null, reject(new Error("加载失败"));
+        }, img.src = url;
       });
     }
   };
@@ -210,7 +201,7 @@
       } catch {}
     }
     static async loadImage(img, url, isHighPriority = !1) {
-      return isHighPriority && img.setAttribute("fetchpriority", "high"), ImageProxy.load(img, url);
+      return ImageProxy.load(img, url, isHighPriority);
     }
     static async queueLoad(img, url, priority = 0) {
       const loadTask = async () => {
@@ -393,8 +384,8 @@
             imgWrapper.classList.remove("sht-img-loading"), imgWrapper.classList.add("sht-img-error");
           }), imgWrapper.addEventListener("click", e => {
             e.preventDefault(), e.stopPropagation();
-            const allImgSrcs = limitedImages.map(img2 => img2.getAttribute("file")), currentIdx = allImgSrcs.indexOf(imgSrc);
-            Lightbox.show(allImgSrcs, currentIdx);
+            const allLoadedSrcs = Array.from(imgContainer.querySelectorAll("img.sht-img")).map(el => el.src).filter(src => src && !src.startsWith("data:")), currentIdx = allLoadedSrcs.indexOf(img.src);
+            Lightbox.show(allLoadedSrcs, currentIdx >= 0 ? currentIdx : 0);
           }), imgWrapper.appendChild(img), imgContainer.appendChild(imgWrapper);
         }), StyleManager.setImageGridWidth(imgContainer, limitedImages.length), container.appendChild(imgContainer), 
         this.observeImagesForLazyLoad(imgContainer);
@@ -411,32 +402,11 @@
       if (0 === images.length) return;
       const allUrls = Array.from(images).map(img => img.dataset.src).filter(Boolean);
       ImageLoader.preconnectBatch(allUrls), ImageLoader.preconnect("https://images.weserv.nl"), 
-      images.forEach((img, index) => {
-        if (index < 8) {
-          const imgElement = img, src = imgElement.dataset.src;
-          src && (imgElement.classList.add("sht-img-priority"), ImageLoader.queueLoad(imgElement, src, 100).catch(() => {
-            imgElement.closest(".sht-img-item, .sht-img-item-single")?.classList.add("sht-img-error");
-          }));
-        }
-      });
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target, src = img.dataset.src;
-            if (src && !img.src && !img.classList.contains("sht-img-priority")) {
-              const rect = img.getBoundingClientRect(), distance = Math.abs(rect.top), priority = Math.max(0, 50 - Math.floor(distance / 100));
-              ImageLoader.queueLoad(img, src, priority).catch(() => {
-                img.closest(".sht-img-item, .sht-img-item-single")?.classList.add("sht-img-error");
-              }), observer.unobserve(img);
-            }
-          }
+      images.forEach(img => {
+        const imgElement = img, src = imgElement.dataset.src;
+        src && ImageLoader.queueLoad(imgElement, src, 50).catch(() => {
+          imgElement.closest(".sht-img-item, .sht-img-item-single")?.classList.add("sht-img-error");
         });
-      }, {
-        rootMargin: "1500px",
-        threshold: .01
-      });
-      images.forEach((img, index) => {
-        index >= 8 && observer.observe(img);
       });
     }
   }

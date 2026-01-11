@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MZ - Federasyon Çatışması Puanlama
 // @namespace    Nicotin
-// @version      6.3
+// @version      6.4
 // @description  Fetches user data etc. with auto-sorting by FED PUANI, adds Fenerbahçe analysis tools, and includes a Top ranking analyzer.
 // @author       Tuncay
 // @match        https://www.managerzone.com/?p=federations&sub=league&tab=division
@@ -98,7 +98,8 @@
         { season: '95', subSeason: '1', level: 1, division: 1, leagueName: 'Elite Division' },
         { season: '95', subSeason: '2', level: 2, division: 2, leagueName: 'Division 1.2' },
         { season: '96', subSeason: '1', level: 1, division: 1, leagueName: 'Elite Division' },
-        { season: '96', subSeason: '2', level: 2, division: 2, leagueName: 'Division 1.2' }
+        { season: '96', subSeason: '2', level: 2, division: 2, leagueName: 'Division 1.2' },
+        { season: '97', subSeason: '1', level: 1, division: 1, leagueName: 'Elite Division' }
     ];
 
     let fenerbahceOverallStandings = {};

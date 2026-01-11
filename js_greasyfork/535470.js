@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BOSS海投助手
 // @namespace    https://github.com/yangshengzhou03
-// @version      1.2.4.0
+// @version      1.2.4.2
 // @description  求职工具！Yangshengzhou开发用于提高BOSS直聘投递效率，批量沟通，高效求职
 // @author       Yangshengzhou
 // @match        https://www.zhipin.com/web/*
@@ -13,6 +13,7 @@
 // @icon         https://www.zhipin.com/favicon.ico
 // @connect      zhipin.com
 // @connect      spark-api-open.xf-yun.com
+// @connect      112.124.60.16
 // @noframes
 // @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js
 // @downloadURL https://update.greasyfork.org/scripts/535470/BOSS%E6%B5%B7%E6%8A%95%E5%8A%A9%E6%89%8B.user.js
@@ -29,46 +30,8 @@
     DELAYS: {
       SHORT: 30,
       MEDIUM_SHORT: 200,
-      DICT_LIST_LOAD: 300,
-      RESUME_LIST_LOAD: 500,
-      POSITION_DETAIL_LOAD: 800,
-      LONG: 1000,
-    },
-    COLORS: {
-      PRIMARY: "#2196f3",
-      SECONDARY: "#ff5722",
     },
     MINI_ICON_SIZE: 40,
-    SELECTORS: {
-      JOB_LIST: {
-        JOB_CARD: "li.job-card-box",
-        CHAT_BTN: "a.op-btn-chat",
-      },
-      CHAT: {
-        CHAT_INPUT: "#chat-input",
-        SEND_BUTTON: ".btn-send",
-        FRIEND_MESSAGE: ".item-friend .text span",
-        COMMON_PHRASE_BTN: ".btn-dict",
-        RESUME_BTN: '.toolbar-btn:contains("发简历")',
-        CONFIRM_SEND: "span.btn-sure-v2",
-        IMAGE_SEND_BTN:
-          '.toolbar-btn-content.icon.btn-sendimg input[type="file"]',
-      },
-    },
-    AI: {
-      MAX_REPLIES: 30,
-      DEFAULT_ROLE:
-        "你是求职的应届生正在面对HR，回复需满足：20字内，编造专业对口/实习经验/证书任一岗位优势；被问个人信息或岗位条件，直接配合提供合理数据；全程积极真诚无拒绝言辞。",
-    },
-    MESSAGES: {
-      JOB_MATCHED: "找到匹配岗位: ",
-      JOB_NOT_FOUND: "没有找到符合条件的岗位",
-      START_PROCESSING: "开始自动处理...",
-      STOP_PROCESSING: "已停止自动处理",
-      RESUME_SENT: "简历已发送",
-      AI_REPLYING: "AI 正在回复...",
-      MAX_REPLIES_REACHED: "今日 AI 回复次数已达上限",
-    },
     STORAGE_KEYS: {
       PROCESSED_HRS: "processedHRs",
       SENT_GREETINGS_HRS: "sentGreetingsHRs",
@@ -76,8 +39,6 @@
       SENT_IMAGE_RESUME_HRS: "sentImageResumeHRs",
       AI_REPLY_COUNT: "aiReplyCount",
       LAST_AI_DATE: "lastAiDate",
-      AI_ROLE: "aiRole",
-      KEYWORD_REPLIES: "keywordReplies",
     },
     STORAGE_LIMITS: {
       PROCESSED_HRS: 500,
@@ -99,9 +60,6 @@
     ui: {
       isMinimized: false,
       theme: localStorage.getItem("theme") || "light",
-      showWelcomeMessage: JSON.parse(
-        localStorage.getItem("showWelcomeMessage") || "true"
-      ),
     },
 
     hrInteractions: {
@@ -125,30 +83,12 @@
       useAiReply: true,
     },
 
-    operation: {
-      lastMessageTime: 0,
-    },
-
-    user: {
-      isPremiumUser: localStorage.getItem("isPremiumUser") === "true",
-    },
-
     settings: {
       useAutoSendResume: JSON.parse(
         localStorage.getItem("useAutoSendResume") || "false"
       ),
-      autoScrollSpeed: parseInt(
-        localStorage.getItem("autoScrollSpeed") || "500"
-      ),
-      customPhrases: JSON.parse(localStorage.getItem("customPhrases") || "[]"),
       actionDelays: {
         click: parseInt(localStorage.getItem("clickDelay") || "130"),
-      },
-      notifications: {
-        enabled: JSON.parse(
-          localStorage.getItem("notificationsEnabled") || "true"
-        ),
-        sound: JSON.parse(localStorage.getItem("notificationSound") || "true"),
       },
       ai: {
         role:
@@ -172,16 +112,6 @@
       keywordReplies: JSON.parse(
         localStorage.getItem("keywordReplies") || "[]"
       ),
-      intervals: {
-        basic: parseInt(
-          localStorage.getItem("basicInterval") ||
-            CONFIG.BASIC_INTERVAL.toString()
-        ),
-        operation: parseInt(
-          localStorage.getItem("operationInterval") ||
-            CONFIG.OPERATION_INTERVAL.toString()
-        ),
-      },
     },
 
     activation: {
@@ -189,11 +119,13 @@
       activationCode: localStorage.getItem("activationCode") || "",
       cardKey: localStorage.getItem("cardKey") || "",
       activatedAt: localStorage.getItem("activationDate") || "",
-      dailyCommunicationCount: JSON.parse(
-        localStorage.getItem("dailyCommunicationCount") || "0"
-      ),
-      lastCommunicationDate:
-        localStorage.getItem("lastCommunicationDate") || "",
+    },
+
+    comments: {
+      currentCompanyName: "",
+      commentsList: [],
+      isLoading: false,
+      isCommentMode: false,
     },
   };
 
@@ -248,8 +180,7 @@
         this.setItem(storageKey, records);
 
         console.log(
-          `存储管理: 添加记录${
-            records.length >= limit ? "并删除最早记录" : ""
+          `存储管理: 添加记录${records.length >= limit ? "并删除最早记录" : ""
           }，当前${storageKey}数量: ${records.length}/${limit}`
         );
       } catch (error) {
@@ -315,20 +246,14 @@
           aiReplyCount: state.ai.replyCount,
           lastAiDate: state.ai.lastAiDate,
 
-          showWelcomeMessage: state.ui.showWelcomeMessage,
-          isPremiumUser: state.user.isPremiumUser,
           useAiReply: state.ai.useAiReply,
           useAutoSendResume: state.settings.useAutoSendResume,
           useAutoSendImageResume: state.settings.useAutoSendImageResume,
           imageResumeData: state.settings.imageResumeData,
           imageResumes: state.settings.imageResumes || [],
-          autoScrollSpeed: state.settings.autoScrollSpeed,
-          customPhrases: state.settings.customPhrases,
           keywordReplies: state.settings.keywordReplies || [],
           theme: state.ui.theme,
           clickDelay: state.settings.actionDelays.click,
-          notificationsEnabled: state.settings.notifications.enabled,
-          notificationSound: state.settings.notifications.sound,
           includeKeywords: state.includeKeywords,
           locationKeywords: state.locationKeywords,
         };
@@ -364,172 +289,58 @@
 
   class ActivationManager {
     static async activateWithCardKey(cardKey) {
-      try {
-        if (!this.validateCardKey(cardKey)) {
-          throw new Error("激活码格式不正确");
-        }
-
-        const apiUrl = `http://112.124.60.16/api/public/card-keys/verify/${cardKey}`;
-
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(
-          apiUrl
-        )}`;
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-        const response = await fetch(proxyUrl, {
-          method: "GET",
-          mode: "cors",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const responseText = await response.text();
-        let data;
+      return new Promise((resolve, reject) => {
         try {
-          const parsed = JSON.parse(responseText);
-          if (parsed.contents) {
-            data = JSON.parse(parsed.contents);
-          } else {
-            throw new Error("代理响应格式错误");
+          if (!this.validateCardKey(cardKey)) {
+            reject(new Error("激活码格式不正确"));
+            return;
           }
-        } catch (e) {
-          throw new Error("代理响应格式错误");
+
+          const apiUrl = `https://112.124.60.16/api/public/card-keys/verify/${cardKey}`;
+
+          GM_xmlhttpRequest({
+            method: "GET",
+            url: apiUrl,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            timeout: 10000,
+            onload: (response) => {
+              try {
+                const data = JSON.parse(response.responseText);
+
+                if (data.code === 200 && data.message === "success") {
+                  state.activation.isActivated = true;
+                  state.activation.activatedAt = new Date().toISOString();
+                  state.activation.cardKey = cardKey;
+
+                  localStorage.setItem("activationStatus", "true");
+                  localStorage.setItem("activationDate", state.activation.activatedAt);
+                  localStorage.setItem("cardKey", cardKey);
+                  resolve(true);
+                } else {
+                  reject(new Error(data.message || "激活码无效或已过期"));
+                }
+              } catch (error) {
+                reject(new Error("响应解析失败: " + error.message));
+              }
+            },
+            onerror: (error) => {
+              reject(new Error("网络请求失败: " + error.message));
+            },
+            ontimeout: () => {
+              reject(new Error("请求超时"));
+            },
+          });
+        } catch (error) {
+          reject(new Error(error.message));
         }
-
-        if (data.code === 200 && data.message === "success") {
-          state.activation.isActivated = true;
-          state.activation.activatedAt = new Date().toISOString();
-          state.activation.cardKey = cardKey;
-
-          localStorage.setItem("activationStatus", "true");
-          localStorage.setItem("activationDate", state.activation.activatedAt);
-          localStorage.setItem("cardKey", cardKey);
-
-          this.updateActivationUI();
-
-          return true;
-        } else {
-          throw new Error(data.message || "激活码无效或已过期");
-        }
-      } catch (error) {
-        throw new Error(error.message);
-      }
+      });
     }
 
     static validateCardKey(cardKey) {
       const keyPattern = /^[A-Za-z0-9]{32}$/;
       return keyPattern.test(cardKey);
-    }
-
-    static async verifyCardKey(cardKey) {
-      try {
-        if (!this.validateCardKey(cardKey)) {
-          throw new Error("激活码格式不正确");
-        }
-
-        const apiUrl = `http://112.124.60.16/api/public/card-keys/verify/${cardKey}`;
-
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(
-          apiUrl
-        )}`;
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-        const response = await fetch(proxyUrl, {
-          method: "GET",
-          mode: "cors",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const responseText = await response.text();
-        let data;
-        try {
-          const parsed = JSON.parse(responseText);
-          if (parsed.contents) {
-            data = JSON.parse(parsed.contents);
-          } else {
-            throw new Error("代理响应格式错误");
-          }
-        } catch (e) {
-          throw new Error("代理响应格式错误");
-        }
-
-        if (data.code === 200 && data.message === "success") {
-          return true;
-        } else {
-          throw new Error(data.message || "激活码无效或已过期");
-        }
-      } catch (error) {
-        throw new Error("验证失败：" + error.message);
-      }
-    }
-
-    static verifyCardKeyWithIframe(cardKey) {
-      return new Promise((resolve, reject) => {
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-
-        const timeoutId = setTimeout(() => {
-          if (iframe.parentNode) {
-            iframe.parentNode.removeChild(iframe);
-          }
-          reject(new Error("激活服务器响应超时"));
-        }, 15000);
-
-        const messageHandler = (event) => {
-          if (event.origin === "https://112.124.60.16") {
-            clearTimeout(timeoutId);
-            if (iframe.parentNode) {
-              iframe.parentNode.removeChild(iframe);
-            }
-            document.removeEventListener("message", messageHandler);
-
-            try {
-              let data;
-              if (typeof event.data === "string") {
-                data = JSON.parse(event.data);
-              } else {
-                data = event.data;
-              }
-
-              if (data.code === 200 && data.message === "success") {
-                resolve(true);
-              } else {
-                reject(new Error(data.message || "激活码无效或已过期"));
-              }
-            } catch (e) {
-              reject(new Error("服务器响应格式错误"));
-            }
-          }
-        };
-
-        document.addEventListener("message", messageHandler);
-
-        try {
-          iframe.src = `http://112.124.60.16/api/public/card-keys/verify/${cardKey}`;
-          document.body.appendChild(iframe);
-        } catch (e) {
-          clearTimeout(timeoutId);
-          document.removeEventListener("message", messageHandler);
-          reject(new Error("iframe创建失败"));
-        }
-      });
     }
 
     static checkActivationStatus() {
@@ -538,50 +349,13 @@
       const cardKey = localStorage.getItem("cardKey");
 
       if (activationStatus === "true" && activationDate && cardKey) {
-        // 启动时只检查本地存储，不进行网络验证
         state.activation.isActivated = true;
         state.activation.activatedAt = activationDate;
         state.activation.cardKey = cardKey;
-        this.updateActivationUI();
         return true;
       }
 
       return false;
-    }
-
-    static clearActivation() {
-      state.activation.isActivated = false;
-      state.activation.activatedAt = "";
-      state.activation.cardKey = "";
-
-      localStorage.removeItem("activationStatus");
-      localStorage.removeItem("activationDate");
-      localStorage.removeItem("cardKey");
-
-      this.updateActivationUI();
-    }
-
-    static updateActivationUI() {
-      const activationBtn = document.querySelector(
-        "#boss-activation-btn .boss-icon"
-      );
-      if (activationBtn) {
-        activationBtn.textContent = "💎";
-      }
-    }
-
-    static getUsageStats() {
-      return {
-        isActivated: state.activation.isActivated,
-        activatedAt: state.activation.activatedAt,
-        cardKey: state.activation.cardKey,
-        daysSinceActivation: state.activation.activatedAt
-          ? Math.floor(
-              (Date.now() - new Date(state.activation.activatedAt).getTime()) /
-                (1000 * 60 * 60 * 24)
-            )
-          : 0,
-      };
     }
   }
 
@@ -731,7 +505,7 @@
         inputBox.textContent = "";
         inputBox.focus();
         document.execCommand("insertText", false, replyText);
-        await Core.delay(Core.operationInterval / 10);
+        await Core.delay(CONFIG.OPERATION_INTERVAL / 10);
 
         const sendButton = document.querySelector(".btn-send");
         if (sendButton) {
@@ -1063,6 +837,27 @@
       this._applyTheme();
       this.createControlPanel();
       this.createMiniIcon();
+
+      if (this.currentPageType === this.PAGE_TYPES.JOB_LIST && !state.isRunning) {
+        setTimeout(() => {
+          Core.loadAndDisplayComments();
+        }, 500);
+      }
+
+      this.setupJobCardClickListener();
+    },
+
+    setupJobCardClickListener() {
+      if (this.currentPageType === this.PAGE_TYPES.JOB_LIST) {
+        document.addEventListener("click", (e) => {
+          const jobCard = e.target.closest("li.job-card-box");
+          if (jobCard && !state.isRunning) {
+            setTimeout(() => {
+              Core.loadAndDisplayComments();
+            }, 500);
+          }
+        });
+      }
     },
 
     createControlPanel() {
@@ -1135,7 +930,7 @@
             right: 24px;
             width: clamp(300px, 80vw, 400px);
             border-radius: 12px;
-            padding: 18px;
+            padding: 12px;
             font-family: 'Segoe UI', system-ui, sans-serif;
             z-index: 2147483647;
             display: flex;
@@ -1182,15 +977,15 @@
       const buttonTitles =
         this.currentPageType === this.PAGE_TYPES.JOB_LIST
           ? {
-              activate: "激活插件",
-              settings: "插件设置",
-              close: "最小化海投面板",
-            }
+            activate: "激活插件",
+            settings: "插件设置",
+            close: "最小化海投面板",
+          }
           : {
-              activate: "激活插件",
-              settings: "海投设置",
-              close: "最小化聊天面板",
-            };
+            activate: "激活插件",
+            settings: "海投设置",
+            close: "最小化聊天面板",
+          };
 
       const activationIcon = state.activation.isActivated
         ? `<svg t="1767250169245" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5617" width="200" height="200"><path d="M517.032183 19.734053a493.35132 493.35132 0 1 0 493.351321 493.35132 493.35132 493.35132 0 0 0-493.351321-493.35132z m0 927.500482a434.149162 434.149162 0 1 1 434.149162-434.149162 434.149162 434.149162 0 0 1-434.149162 434.149162z m-31.771825-320.086337h50.913857l28.417036-257.92407H513.085373z m-54.268645-257.92407l-92.750048 193.985739-48.940451-193.985739h-57.426094l72.423974 257.92407H355.21295l133.204857-257.92407z m347.714011 5.722875a148.597418 148.597418 0 0 0-46.177684-4.933513h-119.58836l-28.219695 257.134708h50.913856l9.867026-90.184621h81.896319a116.03623 116.03623 0 0 0 33.153209-4.144151 70.450569 70.450569 0 0 0 24.470226-14.011178 87.619194 87.619194 0 0 0 21.510117-28.811717 109.918674 109.918674 0 0 0 10.853729-36.113317 88.605897 88.605897 0 0 0-5.328194-43.612256A57.623434 57.623434 0 0 0 778.705724 374.947003z m-17.168626 76.962806a48.348429 48.348429 0 0 1-14.80054 33.745231 45.190981 45.190981 0 0 1-26.838312 6.117556H651.223743l7.69628-77.357487H730.159954a45.388321 45.388321 0 0 1 19.734053 2.762767c9.077664 5.525535 13.616496 16.971285 11.643091 33.942571z" p-id="5618" fill="#d81e06"></path></svg>`
@@ -1247,13 +1042,13 @@
       const titleConfig =
         this.currentPageType === this.PAGE_TYPES.JOB_LIST
           ? {
-              main: `<span style="color:var(--primary-color);">BOSS</span>海投助手`,
-              sub: "高效求职 · 智能匹配",
-            }
+            main: `<span style="color:var(--primary-color);">BOSS</span>海投助手`,
+            sub: "高效求职 · 智能匹配",
+          }
           : {
-              main: `<span style="color:var(--primary-color);">BOSS</span>智能聊天`,
-              sub: "智能对话 · 高效沟通",
-            };
+            main: `<span style="color:var(--primary-color);">BOSS</span>智能聊天`,
+            sub: "智能对话 · 高效沟通",
+          };
 
       title.innerHTML = `
         <div style="
@@ -1307,15 +1102,7 @@
 
       const filterContainer = this._createFilterContainer();
 
-      elements.controlBtn = this._createTextButton(
-        "启动海投",
-        "var(--primary-color)",
-        () => {
-          toggleProcess();
-        }
-      );
-
-      container.append(filterContainer, elements.controlBtn);
+      container.append(filterContainer);
       return container;
     },
 
@@ -1387,7 +1174,7 @@
             background: var(--secondary-color);
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 0px;
         `;
 
       const filterRow = document.createElement("div");
@@ -1413,41 +1200,15 @@
 
       filterRow.append(includeFilterCol, locationFilterCol);
 
-      const joinGroupBtn = document.createElement("button");
-      joinGroupBtn.className = "boss-advanced-filter-btn";
-      joinGroupBtn.innerHTML = '<i class="fa fa-sliders"></i> 海投服务群';
-      joinGroupBtn.style.cssText = `
-            width: 100%;
-            padding: 8px 10px;
-            background: white;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            text-align: center;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        `;
+      elements.controlBtn = this._createTextButton(
+        "启动海投",
+        "var(--primary-color)",
+        () => {
+          toggleProcess();
+        }
+      );
 
-      joinGroupBtn.addEventListener("click", () => {
-        window.open("https://qm.qq.com/q/ZNOz2ZZb6S", "_blank");
-      });
-
-      joinGroupBtn.addEventListener("mouseenter", () => {
-        joinGroupBtn.style.backgroundColor = "var(--primary-color)";
-        joinGroupBtn.style.color = "white";
-      });
-
-      joinGroupBtn.addEventListener("mouseleave", () => {
-        joinGroupBtn.style.backgroundColor = "white";
-        joinGroupBtn.style.color = "var(--primary-color)";
-      });
-
-      filterContainer.append(filterRow, joinGroupBtn);
+      filterContainer.append(filterRow, elements.controlBtn);
       return filterContainer;
     },
 
@@ -1463,7 +1224,6 @@
       const input = document.createElement("input");
       input.id = id;
       input.placeholder = placeholder;
-      input.className = "boss-filter-input";
       input.style.cssText = `
             width: 100%;
             padding: 8px 10px;
@@ -1521,7 +1281,7 @@
           : "boss-chat-log";
 
       const height =
-        this.currentPageType === this.PAGE_TYPES.JOB_LIST ? "180px" : "220px";
+        this.currentPageType === this.PAGE_TYPES.JOB_LIST ? "260px" : "260px";
 
       log.style.cssText = `
             height: ${height};
@@ -1573,7 +1333,7 @@
             padding-top: 15px;
             border-top: 1px solid var(--accent-color);
             margin-top: auto;
-            padding: 15px;
+            padding: 0px;
         `;
 
       const statsContainer = document.createElement("div");
@@ -1640,14 +1400,12 @@
             height: 32px;
             border-radius: 50%;
             border: none;
-            background: ${
-              this.currentPageType === this.PAGE_TYPES.JOB_LIST
-                ? "var(--accent-color)"
-                : "var(--accent-color)"
-            };
-            cursor: ${
-              isActivationBtn && isActivated ? "not-allowed" : "pointer"
-            };
+            background: ${this.currentPageType === this.PAGE_TYPES.JOB_LIST
+          ? "var(--accent-color)"
+          : "var(--accent-color)"
+        };
+            cursor: ${isActivationBtn && isActivated ? "not-allowed" : "pointer"
+        };
             font-size: 16px;
             transition: all 0.2s ease;
             display: flex;
@@ -1667,12 +1425,35 @@
         btn.addEventListener("click", onClick);
       }
 
+      // 保存 SVG 的原始 fill 颜色
+      let originalSvgFill = null;
+      if (icon.includes("<svg")) {
+        const svgElement = btn.querySelector("svg");
+        if (svgElement) {
+          const pathElement = svgElement.querySelector("path");
+          if (pathElement) {
+            originalSvgFill = pathElement.getAttribute("fill");
+          }
+        }
+      }
+
       btn.addEventListener("mouseenter", () => {
         // 如果是激活按钮且插件已激活，不应用悬停效果
         if (!(isActivationBtn && isActivated)) {
           btn.style.backgroundColor = "var(--primary-color)";
           btn.style.color = "#fff";
           btn.style.transform = "scale(1.1)";
+
+          // 如果按钮包含 SVG，将 SVG 的 fill 颜色改为白色
+          if (icon.includes("<svg")) {
+            const svgElement = btn.querySelector("svg");
+            if (svgElement) {
+              const pathElement = svgElement.querySelector("path");
+              if (pathElement) {
+                pathElement.setAttribute("fill", "#fff");
+              }
+            }
+          }
         }
       });
 
@@ -1685,6 +1466,17 @@
               : "var(--accent-color)";
           btn.style.color = "var(--primary-color)";
           btn.style.transform = "scale(1)";
+
+          // 如果按钮包含 SVG，恢复 SVG 的原始颜色
+          if (icon.includes("<svg") && originalSvgFill) {
+            const svgElement = btn.querySelector("svg");
+            if (svgElement) {
+              const pathElement = svgElement.querySelector("path");
+              if (pathElement) {
+                pathElement.setAttribute("fill", originalSvgFill);
+              }
+            }
+          }
         }
       });
 
@@ -1693,12 +1485,10 @@
 
     _addButtonHoverEffects(btn) {
       btn.addEventListener("mouseenter", () => {
-        btn.style.transform = "scale(1.05)";
         btn.style.boxShadow = `0 6px 15px rgba(var(--primary-rgb), 0.3)`;
       });
 
       btn.addEventListener("mouseleave", () => {
-        btn.style.transform = "scale(1)";
         btn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
       });
     },
@@ -1811,16 +1601,8 @@
     useAutoSendResume: JSON.parse(
       localStorage.getItem("useAutoSendResume") || "false"
     ),
-    autoScrollSpeed: parseInt(localStorage.getItem("autoScrollSpeed") || "500"),
-    customPhrases: JSON.parse(localStorage.getItem("customPhrases") || "[]"),
     actionDelays: {
       click: parseInt(localStorage.getItem("clickDelay") || "130"),
-    },
-    notifications: {
-      enabled: JSON.parse(
-        localStorage.getItem("notificationsEnabled") || "true"
-      ),
-      sound: JSON.parse(localStorage.getItem("notificationSound") || "true"),
     },
     ai: {
       role:
@@ -1844,15 +1626,6 @@
     excludeHeadhunters: JSON.parse(
       localStorage.getItem("excludeHeadhunters") || "false"
     ),
-
-    intervals: {
-      basic:
-        parseInt(localStorage.getItem("basicInterval")) ||
-        CONFIG.BASIC_INTERVAL,
-      operation:
-        parseInt(localStorage.getItem("operationInterval")) ||
-        CONFIG.OPERATION_INTERVAL,
-    },
   };
 
   function saveSettings() {
@@ -1860,23 +1633,7 @@
       "useAutoSendResume",
       settings.useAutoSendResume.toString()
     );
-    localStorage.setItem(
-      "autoScrollSpeed",
-      settings.autoScrollSpeed.toString()
-    );
-    localStorage.setItem(
-      "customPhrases",
-      JSON.stringify(settings.customPhrases)
-    );
     localStorage.setItem("clickDelay", settings.actionDelays.click.toString());
-    localStorage.setItem(
-      "notificationsEnabled",
-      settings.notifications.enabled.toString()
-    );
-    localStorage.setItem(
-      "notificationSound",
-      settings.notifications.sound.toString()
-    );
     localStorage.setItem("aiRole", settings.ai.role);
 
     localStorage.setItem("autoReply", settings.autoReply.toString());
@@ -1908,77 +1665,6 @@
       "excludeHeadhunters",
       settings.excludeHeadhunters.toString()
     );
-
-    localStorage.setItem("basicInterval", settings.intervals.basic.toString());
-    localStorage.setItem(
-      "operationInterval",
-      settings.intervals.operation.toString()
-    );
-
-    if (state.settings) {
-      Object.assign(state.settings, settings);
-    }
-  }
-
-  function loadSettings() {
-    settings.useAutoSendResume = JSON.parse(
-      localStorage.getItem("useAutoSendResume") || "false"
-    );
-    settings.autoScrollSpeed = parseInt(
-      localStorage.getItem("autoScrollSpeed") || "500"
-    );
-    settings.customPhrases = JSON.parse(
-      localStorage.getItem("customPhrases") || "[]"
-    );
-    settings.actionDelays.click = parseInt(
-      localStorage.getItem("clickDelay") || "130"
-    );
-    settings.notifications.enabled = JSON.parse(
-      localStorage.getItem("notificationsEnabled") || "true"
-    );
-    settings.notifications.sound = JSON.parse(
-      localStorage.getItem("notificationSound") || "true"
-    );
-    settings.ai.role =
-      localStorage.getItem("aiRole") ||
-      "你是求职的应届生正在面对HR，回复需满足：20字内，编造专业对口/实习经验/证书任一岗位优势；被问个人信息或岗位条件，直接配合提供合理数据；全程积极真诚无拒绝言辞。";
-
-    settings.useAutoSendImageResume = JSON.parse(
-      localStorage.getItem("useAutoSendImageResume") || "false"
-    );
-
-    try {
-      settings.imageResumes =
-        JSON.parse(localStorage.getItem("imageResumes")) || [];
-    } catch (e) {
-      settings.imageResumes = [];
-    }
-
-    try {
-      settings.recruiterActivityStatus = JSON.parse(
-        localStorage.getItem("recruiterActivityStatus")
-      ) || ["不限"];
-    } catch (e) {
-      settings.recruiterActivityStatus = ["不限"];
-    }
-
-    settings.imageResumeData = localStorage.getItem("imageResumeData") || null;
-
-    settings.communicationMode =
-      localStorage.getItem("communicationMode") || "new-only";
-
-    settings.excludeHeadhunters = JSON.parse(
-      localStorage.getItem("excludeHeadhunters") || "false"
-    );
-
-    settings.intervals = {
-      basic:
-        parseInt(localStorage.getItem("basicInterval")) ||
-        CONFIG.BASIC_INTERVAL,
-      operation:
-        parseInt(localStorage.getItem("operationInterval")) ||
-        CONFIG.OPERATION_INTERVAL,
-    };
 
     if (state.settings) {
       Object.assign(state.settings, settings);
@@ -2149,22 +1835,7 @@
         margin-right: 5px;
     `;
 
-    const intervalTab = document.createElement("button");
-    intervalTab.textContent = "间隔设置";
-    intervalTab.className = "settings-tab";
-    intervalTab.style.cssText = `
-        padding: 9px 15px;
-        background: rgba(0, 0, 0, 0.05);
-        color: #333;
-        border: none;
-        border-radius: 8px 8px 0 0;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        margin-right: 5px;
-    `;
-
-    tabsContainer.append(aiTab, advancedTab, intervalTab);
+    tabsContainer.append(aiTab, advancedTab);
 
     const aiSettingsPanel = document.createElement("div");
     aiSettingsPanel.id = "ai-settings-panel";
@@ -2250,7 +1921,7 @@
 
     addKeywordBtn.addEventListener("click", () => {
       if (!state.activation.isActivated) {
-        showNotification("请先激活会员以使用关键词自动回复功能", "error");
+        showNotification("请激活以使用关键词自动回复功能", "error");
         return;
       }
       addKeywordReplyRule();
@@ -2707,8 +2378,8 @@
       statusOption.className =
         "select-option" +
         (settings.recruiterActivityStatus &&
-        Array.isArray(settings.recruiterActivityStatus) &&
-        settings.recruiterActivityStatus.includes(option.value)
+          Array.isArray(settings.recruiterActivityStatus) &&
+          settings.recruiterActivityStatus.includes(option.value)
           ? " selected"
           : "");
       statusOption.dataset.value = option.value;
@@ -2729,13 +2400,12 @@
             margin-right: 8px;
             color: rgba(0, 123, 255, 0.9);
             font-weight: bold;
-            display: ${
-              settings.recruiterActivityStatus &&
-              Array.isArray(settings.recruiterActivityStatus) &&
-              settings.recruiterActivityStatus.includes(option.value)
-                ? "inline"
-                : "none"
-            };
+            display: ${settings.recruiterActivityStatus &&
+          Array.isArray(settings.recruiterActivityStatus) &&
+          settings.recruiterActivityStatus.includes(option.value)
+          ? "inline"
+          : "none"
+        };
         `;
 
       const textSpan = document.createElement("span");
@@ -2752,6 +2422,10 @@
     });
 
     statusHeader.addEventListener("click", () => {
+      if (!state.activation.isActivated) {
+        showNotification("请激活解锁投递筛选功能", "error");
+        return;
+      }
       statusOptions.style.display =
         statusOptions.style.display === "block" ? "none" : "block";
       statusIcon.style.transform =
@@ -2806,107 +2480,12 @@
       recruiterStatusSetting
     );
 
-    const intervalSettingsPanel = document.createElement("div");
-    intervalSettingsPanel.id = "interval-settings-panel";
-    intervalSettingsPanel.style.display = "none";
-
-    const basicIntervalSettingResult = createSettingItem(
-      "基本间隔",
-      "滚动、检查新聊天等间隔时间（毫秒）",
-      () => document.getElementById("basic-interval-input")
-    );
-
-    const basicIntervalSetting = basicIntervalSettingResult.settingItem;
-
-    const basicIntervalInput = document.createElement("input");
-    basicIntervalInput.id = "basic-interval-input";
-    basicIntervalInput.type = "number";
-    basicIntervalInput.min = 500;
-    basicIntervalInput.max = 10000;
-    basicIntervalInput.step = 100;
-    basicIntervalInput.style.cssText = `
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-        font-size: 14px;
-        margin-top: 10px;
-        transition: all 0.2s ease;
-    `;
-
-    addFocusBlurEffects(basicIntervalInput);
-    basicIntervalSetting.append(basicIntervalInput);
-
-    const operationIntervalSettingResult = createSettingItem(
-      "操作间隔",
-      "点击沟通按钮之间的间隔时间（毫秒）",
-      () => document.getElementById("operation-interval-input")
-    );
-
-    const operationIntervalSetting = operationIntervalSettingResult.settingItem;
-
-    const operationIntervalInput = document.createElement("input");
-    operationIntervalInput.id = "operation-interval-input";
-    operationIntervalInput.type = "number";
-    operationIntervalInput.min = 100;
-    operationIntervalInput.max = 2000;
-    operationIntervalInput.step = 50;
-    operationIntervalInput.style.cssText = `
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-        font-size: 14px;
-        margin-top: 10px;
-        transition: all 0.2s ease;
-    `;
-
-    addFocusBlurEffects(operationIntervalInput);
-    operationIntervalSetting.append(operationIntervalInput);
-
-    const scrollSpeedSettingResult = createSettingItem(
-      "自动滚动速度",
-      "页面自动滚动的速度 (毫秒/像素)",
-      () => document.getElementById("scroll-speed-input")
-    );
-
-    const scrollSpeedSetting = scrollSpeedSettingResult.settingItem;
-
-    const scrollSpeedInput = document.createElement("input");
-    scrollSpeedInput.id = "scroll-speed-input";
-    scrollSpeedInput.type = "number";
-    scrollSpeedInput.min = 100;
-    scrollSpeedInput.max = 2000;
-    scrollSpeedInput.step = 50;
-    scrollSpeedInput.style.cssText = `
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-        font-size: 14px;
-        margin-top: 10px;
-        transition: all 0.2s ease;
-    `;
-
-    addFocusBlurEffects(scrollSpeedInput);
-    scrollSpeedSetting.append(scrollSpeedInput);
-
-    intervalSettingsPanel.append(
-      basicIntervalSetting,
-      operationIntervalSetting,
-      scrollSpeedSetting
-    );
-
     aiTab.addEventListener("click", () => {
       setActiveTab(aiTab, aiSettingsPanel);
     });
 
     advancedTab.addEventListener("click", () => {
       setActiveTab(advancedTab, advancedSettingsPanel);
-    });
-
-    intervalTab.addEventListener("click", () => {
-      setActiveTab(intervalTab, intervalSettingsPanel);
     });
 
     const dialogFooter = document.createElement("div");
@@ -2931,35 +2510,6 @@
           const aiRoleInput = document.getElementById("ai-role-input");
           settings.ai.role = aiRoleInput ? aiRoleInput.value : "";
 
-          const basicIntervalInput = document.getElementById(
-            "basic-interval-input"
-          );
-          const basicIntervalValue = basicIntervalInput
-            ? parseInt(basicIntervalInput.value)
-            : settings.intervals.basic;
-          settings.intervals.basic = isNaN(basicIntervalValue)
-            ? settings.intervals.basic
-            : basicIntervalValue;
-
-          const operationIntervalInput = document.getElementById(
-            "operation-interval-input"
-          );
-          const operationIntervalValue = operationIntervalInput
-            ? parseInt(operationIntervalInput.value)
-            : settings.intervals.operation;
-          settings.intervals.operation = isNaN(operationIntervalValue)
-            ? settings.intervals.operation
-            : operationIntervalValue;
-
-          const scrollSpeedInput =
-            document.getElementById("scroll-speed-input");
-          const scrollSpeedValue = scrollSpeedInput
-            ? parseInt(scrollSpeedInput.value)
-            : settings.autoScrollSpeed;
-          settings.autoScrollSpeed = isNaN(scrollSpeedValue)
-            ? settings.autoScrollSpeed
-            : scrollSpeedValue;
-
           saveSettings();
 
           showNotification("设置已保存");
@@ -2976,8 +2526,7 @@
     dialogContent.append(
       tabsContainer,
       aiSettingsPanel,
-      advancedSettingsPanel,
-      intervalSettingsPanel
+      advancedSettingsPanel
     );
     dialog.append(dialogHeader, dialogContent, dialogFooter);
 
@@ -3069,7 +2618,7 @@
       "#recruiter-status-select .select-clear"
     ).style.display =
       settings.recruiterActivityStatus.length > 0 &&
-      !settings.recruiterActivityStatus.includes("不限")
+        !settings.recruiterActivityStatus.includes("不限")
         ? "inline"
         : "none";
 
@@ -3119,23 +2668,6 @@
     );
     if (excludeHeadhuntersInput) {
       excludeHeadhuntersInput.checked = settings.excludeHeadhunters;
-    }
-
-    const basicIntervalInput = document.getElementById("basic-interval-input");
-    if (basicIntervalInput) {
-      basicIntervalInput.value = settings.intervals.basic.toString();
-    }
-
-    const operationIntervalInput = document.getElementById(
-      "operation-interval-input"
-    );
-    if (operationIntervalInput) {
-      operationIntervalInput.value = settings.intervals.operation.toString();
-    }
-
-    const scrollSpeedInput = document.getElementById("scroll-speed-input");
-    if (scrollSpeedInput) {
-      scrollSpeedInput.value = settings.autoScrollSpeed.toString();
     }
 
     const autoSendImageResumeInput = document.querySelector(
@@ -3295,7 +2827,7 @@
       
       <!-- Content -->
       <div style="padding: 24px 20px; text-align: center;">
-        <h3 style="color: #333; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">￥1.99元 永久解锁功能</h3>
+        <h3 style="color: #333; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">￥4.9元 永久解锁功能</h3>
         <p style="color: #666; font-size: 13px; margin: 0 0 20px 0;">输入激活码，offer快人一步</p>
         
         <div style="margin-bottom: 20px; text-align: left;">
@@ -3336,7 +2868,7 @@
           }
 
           if (!ActivationManager.validateCardKey(code)) {
-            alert("激活码格式不正确，请输入32位激活码");
+            alert("激活码非法，请粘贴正确的激活码");
             return;
           }
 
@@ -3353,10 +2885,9 @@
               );
               if (activationBtn) {
                 activationBtn.innerHTML = "";
-                activationBtn.style.backgroundColor = "#ffd700";
-                activationBtn.style.color = "#fff";
                 activationBtn.style.padding = "0";
               }
+              location.reload();
             }
           } catch (error) {
             if (error.message.includes("The user aborted a request.")) {
@@ -3456,9 +2987,8 @@
         width: 50px;
         height: 26px;
         border-radius: 13px;
-        background-color: ${
-          isChecked && !isDisabled ? "rgba(0, 123, 255, 0.9)" : "#e5e7eb"
-        };
+        background-color: ${isChecked && !isDisabled ? "rgba(0, 123, 255, 0.9)" : "#e5e7eb"
+      };
         cursor: ${isDisabled ? "not-allowed" : "pointer"};
         opacity: ${isDisabled ? "0.5" : "1"};
     `;
@@ -3573,7 +3103,6 @@
     const panels = [
       document.getElementById("ai-settings-panel"),
       document.getElementById("advanced-settings-panel"),
-      document.getElementById("interval-settings-panel"),
     ];
 
     tabs.forEach((t) => {
@@ -3623,33 +3152,9 @@
     }, 2000);
   }
 
-  function filterJobsByKeywords(jobDescriptions) {
-    const excludeKeywords = [];
-    const includeKeywords = [];
-
-    return jobDescriptions.filter((description) => {
-      for (const keyword of excludeKeywords) {
-        if (description.includes(keyword)) {
-          return false;
-        }
-      }
-
-      if (includeKeywords.length > 0) {
-        return includeKeywords.some((keyword) => description.includes(keyword));
-      }
-
-      return true;
-    });
-  }
-
   const Core = {
     CONFIG,
 
-    basicInterval:
-      parseInt(localStorage.getItem("basicInterval")) || CONFIG.BASIC_INTERVAL,
-    operationInterval:
-      parseInt(localStorage.getItem("operationInterval")) ||
-      CONFIG.OPERATION_INTERVAL,
     messageObserver: null,
     lastProcessedMessage: null,
     processingMessage: false,
@@ -3681,7 +3186,7 @@
         if (location.pathname.includes("/jobs")) await this.processJobList();
         else if (location.pathname.includes("/chat"))
           await this.handleChatPage();
-        await this.delay(this.basicInterval);
+        await this.delay(CONFIG.BASIC_INTERVAL);
       }
     },
 
@@ -3689,7 +3194,7 @@
       return new Promise((resolve) => {
         const cardSelector = "li.job-card-box";
         const maxHistory = 3;
-        const waitTime = this.basicInterval;
+        const waitTime = CONFIG.BASIC_INTERVAL;
         let cardCountHistory = [];
         let isStopped = false;
 
@@ -3731,7 +3236,9 @@
 
     async processJobList() {
       const excludeHeadhunters = settings.excludeHeadhunters;
-      const activeStatusFilter = settings.recruiterActivityStatus;
+      const activeStatusFilter = state.activation.isActivated
+        ? settings.recruiterActivityStatus
+        : ["不限"];
 
       state.jobList = Array.from(
         document.querySelectorAll("li.job-card-box")
@@ -3781,7 +3288,7 @@
       currentCard.scrollIntoView({ behavior: "smooth", block: "center" });
       currentCard.click();
 
-      await this.delay(this.operationInterval * 2);
+      await this.delay(CONFIG.OPERATION_INTERVAL * 2);
 
       let activeTime = "未知";
       const onlineTag = document.querySelector(".boss-online-tag");
@@ -3809,8 +3316,7 @@
         ? `工作地包含[${state.locationKeywords.join("、")}]`
         : "工作地不限";
       this.log(
-        `正在沟通：${++state.currentIndex}/${
-          state.jobList.length
+        `正在沟通：${++state.currentIndex}/${state.jobList.length
         }，${includeLog}，${locationLog}，招聘者"${activeTime}"`
       );
 
@@ -3825,7 +3331,7 @@
     },
 
     async handleGreetingModal() {
-      await this.delay(this.operationInterval * 4);
+      await this.delay(CONFIG.OPERATION_INTERVAL * 4);
 
       const btn = [
         ...document.querySelectorAll(".default-btn.cancel-btn"),
@@ -3833,7 +3339,7 @@
 
       if (btn) {
         btn.click();
-        await this.delay(this.operationInterval * 2);
+        await this.delay(CONFIG.OPERATION_INTERVAL * 2);
       }
     },
 
@@ -3861,7 +3367,7 @@
         settings.communicationIncludeKeywords.trim()
       ) {
         await this.simulateClick(latestChatLi.querySelector(".figure"));
-        await this.delay(this.operationInterval * 2);
+        await this.delay(CONFIG.OPERATION_INTERVAL * 2);
 
         const positionName = this.getPositionNameFromChat();
         const includeKeywords = settings.communicationIncludeKeywords
@@ -3889,7 +3395,7 @@
         await this.simulateClick(latestChatLi.querySelector(".figure"));
         latestChatLi.classList.add("last-clicked");
 
-        await this.delay(this.operationInterval);
+        await this.delay(CONFIG.OPERATION_INTERVAL);
         await HRInteractionManager.handleHRInteraction(hrKey);
 
         if (settings.communicationMode === "auto") {
@@ -3971,7 +3477,7 @@
       this.processingMessage = true;
 
       try {
-        await this.delay(this.operationInterval);
+        await this.delay(CONFIG.OPERATION_INTERVAL);
 
         const lastMessage = await this.getLastFriendMessageText();
         if (!lastMessage) return;
@@ -4026,7 +3532,6 @@
         }
 
         await this.delay(CONFIG.DELAYS.MEDIUM_SHORT);
-        const postReplyMessage = await this.getLastFriendMessageText();
       } catch (error) {
         this.log(`处理消息出错: ${error.message}`);
       } finally {
@@ -4095,9 +3600,9 @@
           StatePersistence.saveState();
         }
 
-        const maxReplies = state.user.isPremiumUser ? 25 : 10;
+        const maxReplies = 10;
         if (state.ai.replyCount >= maxReplies) {
-          this.log(`免费版AI回复已达上限`);
+          this.log(`AI回复已达上限`);
           return false;
         }
 
@@ -4114,7 +3619,7 @@
         inputBox.textContent = "";
         inputBox.focus();
         document.execCommand("insertText", false, aiReplyText);
-        await this.delay(this.operationInterval / 10);
+        await this.delay(CONFIG.OPERATION_INTERVAL / 10);
 
         const sendButton = document.querySelector(".btn-send");
         if (sendButton) {
@@ -4191,9 +3696,9 @@
               reject(
                 new Error(
                   "响应解析失败: " +
-                    error.message +
-                    "\n原始响应: " +
-                    response.responseText
+                  error.message +
+                  "\n原始响应: " +
+                  response.responseText
                 )
               );
             }
@@ -4314,19 +3819,327 @@
       toggleProcess();
       this.log("所有岗位沟通完成，恭喜您即将找到理想工作！");
       state.currentIndex = 0;
-      state.operation.lastMessageTime = 0;
     },
 
     log(message) {
       const logEntry = `[${new Date().toLocaleTimeString()}] ${message}`;
       const logPanel = document.querySelector("#pro-log");
       if (logPanel) {
+        if (state.comments.isCommentMode) {
+          return;
+        }
+
         const logItem = document.createElement("div");
         logItem.className = "log-item";
+        logItem.style.padding = "0px 8px";
         logItem.textContent = logEntry;
         logPanel.appendChild(logItem);
         logPanel.scrollTop = logPanel.scrollHeight;
       }
+    },
+
+    async getCurrentCompanyName() {
+      try {
+        let companyName = "";
+        let retries = 0;
+        const maxRetries = 10;
+
+        while (retries < maxRetries && !companyName) {
+          const bossInfoAttr = document.querySelector(".boss-info-attr");
+          if (bossInfoAttr) {
+            const text = bossInfoAttr.textContent.trim();
+            if (text) {
+              const parts = text.split("·");
+              if (parts.length >= 1) {
+                companyName = parts[0].trim();
+                if (companyName) {
+                  return companyName;
+                }
+              }
+            }
+          }
+
+          retries++;
+          if (retries < maxRetries) {
+            await this.delay(200);
+          }
+        }
+
+        return companyName;
+      } catch (error) {
+        console.log(`获取公司名失败: ${error.message}`);
+        return "";
+      }
+    },
+
+    async fetchCompanyComments(companyName, page = 1, size = 10) {
+      return new Promise((resolve, reject) => {
+        if (!companyName) {
+          resolve({ success: false, data: null, message: "公司名不能为空" });
+          return;
+        }
+
+        const apiUrl = `https://112.124.60.16/api/public/boss-reviews?company_name=${encodeURIComponent(companyName)}&page=${page}&size=${size}`;
+
+        GM_xmlhttpRequest({
+          method: "GET",
+          url: apiUrl,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+          onload: (response) => {
+            try {
+              const data = JSON.parse(response.responseText);
+              if (data.code === 200) {
+                resolve({ success: true, data: data.data, message: data.message });
+              } else {
+                resolve({ success: false, data: null, message: data.message || "获取评论失败" });
+              }
+            } catch (error) {
+              console.log(`解析评论数据失败: ${error.message}`);
+              resolve({ success: false, data: null, message: "响应解析失败" });
+            }
+          },
+          onerror: (error) => {
+            console.log(`获取评论失败: ${error.message}`);
+            resolve({ success: false, data: null, message: "网络请求失败" });
+          },
+          ontimeout: () => {
+            console.log("获取评论超时");
+            resolve({ success: false, data: null, message: "请求超时" });
+          },
+        });
+      });
+    },
+
+    async submitCompanyComment(companyName, comment) {
+      return new Promise((resolve, reject) => {
+        if (!companyName || !comment) {
+          resolve({ success: false, message: "公司名和评论不能为空" });
+          return;
+        }
+
+        const cardKey = localStorage.getItem("cardKey");
+        if (!cardKey) {
+          resolve({ success: false, message: "激活异常，请先激活" });
+          return;
+        }
+
+        const apiUrl = `https://112.124.60.16/api/public/boss-reviews`;
+
+        GM_xmlhttpRequest({
+          method: "POST",
+          url: apiUrl,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: JSON.stringify({
+            card_key: cardKey,
+            company_name: companyName,
+            content: comment,
+          }),
+          timeout: 10000,
+          onload: (response) => {
+            try {
+              const data = JSON.parse(response.responseText);
+              if (data.code === 200) {
+                resolve({ success: true, message: data.message || "评论发布成功" });
+              } else {
+                resolve({ success: false, message: data.message || "评论提交失败" });
+              }
+            } catch (error) {
+              resolve({ success: false, message: "响应解析失败" });
+            }
+          },
+          onerror: (error) => {
+            resolve({ success: false, message: "网络请求失败" });
+          },
+          ontimeout: () => {
+            resolve({ success: false, message: "请求超时" });
+          },
+        });
+      });
+    },
+
+    displayActivationPrompt(companyName) {
+      const logPanel = document.querySelector("#pro-log");
+      if (!logPanel) return;
+
+      logPanel.innerHTML = "";
+      logPanel.style.position = "relative";
+      logPanel.style.padding = "0";
+      logPanel.style.height = "260px";
+      logPanel.style.display = "flex";
+      logPanel.style.flexDirection = "column";
+
+      const contentContainer = document.createElement("div");
+      contentContainer.className = "comment-content-container";
+      contentContainer.style.cssText = "flex: 1; overflow-y: auto; padding: 12px; scrollbar-width: thin; scrollbar-color: var(--primary-color) var(--secondary-color); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;";
+
+      const iconDiv = document.createElement("div");
+      iconDiv.innerHTML = "🔒";
+      iconDiv.style.cssText = "font-size: 48px; margin-bottom: 16px;";
+
+      const titleDiv = document.createElement("div");
+      titleDiv.textContent = "激活解锁评论功能";
+      titleDiv.style.cssText = "font-size: 16px; font-weight: bold; color: #1f2937; margin-bottom: 8px;";
+
+      const descDiv = document.createElement("div");
+      descDiv.textContent = "查看求职者们给公司的评论，避开求职陷阱";
+      descDiv.style.cssText = "font-size: 13px; color: #6b7280; margin-bottom: 16px;";
+
+      contentContainer.appendChild(iconDiv);
+      contentContainer.appendChild(titleDiv);
+      contentContainer.appendChild(descDiv);
+      logPanel.appendChild(contentContainer);
+    },
+
+    displayComments(comments, companyName) {
+      const logPanel = document.querySelector("#pro-log");
+      if (!logPanel) return;
+
+      logPanel.innerHTML = "";
+      logPanel.style.position = "relative";
+      logPanel.style.padding = "0";
+      logPanel.style.height = "260px";
+      logPanel.style.display = "flex";
+      logPanel.style.flexDirection = "column";
+
+      if (!companyName) {
+        const noCompanyItem = document.createElement("div");
+        noCompanyItem.className = "comment-item";
+        noCompanyItem.style.cssText = "padding: 0px; border-bottom: 1px solid #e5e7eb; color: #6b7280; text-align: center;";
+        noCompanyItem.textContent = "未找到公司信息";
+        logPanel.appendChild(noCompanyItem);
+        return;
+      }
+
+      const contentContainer = document.createElement("div");
+      contentContainer.className = "comment-content-container";
+      contentContainer.style.cssText = "flex: 1; overflow-y: auto; padding: 12px; scrollbar-width: thin; scrollbar-color: var(--primary-color) var(--secondary-color);";
+
+      const headerItem = document.createElement("div");
+      headerItem.className = "comment-header";
+      headerItem.style.cssText = "padding: 0px; border-radius: 0px; margin-bottom: 0px;";
+      headerItem.innerHTML = `
+        <div style="color: #1f2937; font-size: 12px; margin-bottom: 0px;">${companyName}</div>
+      `;
+      contentContainer.appendChild(headerItem);
+
+      if (!comments || comments.length === 0) {
+        const noCommentsItem = document.createElement("div");
+        noCommentsItem.className = "comment-item";
+        noCommentsItem.style.cssText = "padding: 12px; border-bottom: 1px solid #e5e7eb; color: #6b7280; text-align: center;";
+        noCommentsItem.textContent = "这家公司还没有评论哦，来评论一下吧！";
+        contentContainer.appendChild(noCommentsItem);
+      } else {
+        comments.forEach((comment, index) => {
+          const commentItem = document.createElement("div");
+          commentItem.className = "comment-item";
+          commentItem.style.cssText = "padding: 12px; border-bottom: 1px solid #e5e7eb; margin-bottom: 8px; background: #ffffff; border-radius: 8px;";
+
+          const contentDiv = document.createElement("div");
+          contentDiv.style.cssText = "color: #374151; font-size: 13px; line-height: 1.6; margin-bottom: 6px; word-break: break-word;";
+          contentDiv.textContent = comment.content || comment.comment || comment;
+
+          const metaDiv = document.createElement("div");
+          metaDiv.style.cssText = "font-size: 11px; color: #9ca3af; display: flex; justify-content: space-between;";
+
+          const timeText = comment.createdAt || comment.time || new Date().toLocaleString();
+          metaDiv.innerHTML = `<span>${timeText}</span>`;
+
+          commentItem.appendChild(contentDiv);
+          commentItem.appendChild(metaDiv);
+          contentContainer.appendChild(commentItem);
+        });
+      }
+
+      logPanel.appendChild(contentContainer);
+
+      const inputContainer = document.createElement("div");
+      inputContainer.className = "comment-input-container";
+      inputContainer.style.cssText = "flex-shrink: 0; padding: 12px; background: var(--secondary-color); border-top: 1px solid #e5e7eb; display: flex; gap: 8px; align-items: center;";
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = "comment-input";
+      input.placeholder = "说点什么呢...";
+      input.style.cssText = "flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; font-family: inherit; box-sizing: border-box; outline: none;";
+      input.onfocus = () => {
+        input.style.borderColor = "var(--primary-color)";
+      };
+      input.onblur = () => {
+        input.style.borderColor = "#d1d5db";
+      };
+
+      const submitBtn = document.createElement("button");
+      submitBtn.textContent = "发表";
+      submitBtn.style.cssText = "padding: 8px 16px; background: var(--primary-color); color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s ease;";
+      submitBtn.onmouseenter = () => {
+        submitBtn.style.opacity = "0.9";
+      };
+      submitBtn.onmouseleave = () => {
+        submitBtn.style.opacity = "1";
+      };
+
+      submitBtn.onclick = async () => {
+        const commentText = input.value.trim();
+        if (!commentText) {
+          alert("请输入评论内容");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "提交中...";
+
+        const result = await this.submitCompanyComment(companyName, commentText);
+
+        if (result.success) {
+          alert("评论提交成功！");
+          input.value = "";
+          await this.loadAndDisplayComments();
+        } else {
+          alert(result.message || "评论提交失败");
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "发表";
+      };
+
+      inputContainer.appendChild(input);
+      inputContainer.appendChild(submitBtn);
+      logPanel.appendChild(inputContainer);
+
+      contentContainer.scrollTop = contentContainer.scrollHeight;
+    },
+
+    async loadAndDisplayComments() {
+      const companyName = await this.getCurrentCompanyName();
+      state.comments.currentCompanyName = companyName;
+      state.comments.isCommentMode = true;
+
+      if (state.comments.isLoading) return;
+
+      state.comments.isLoading = true;
+      const logPanel = document.querySelector("#pro-log");
+      if (logPanel) {
+        logPanel.innerHTML = '<div style="padding: 12px; text-align: center; color: #6b7280;">加载评论中...</div>';
+      }
+
+      if (!state.activation.isActivated) {
+        state.comments.isLoading = false;
+        this.displayActivationPrompt(companyName);
+        return;
+      }
+
+      const result = await this.fetchCompanyComments(companyName);
+      state.comments.isLoading = false;
+
+      const comments = result.success && result.data ? result.data.records : [];
+      state.comments.commentsList = comments;
+
+      this.displayComments(comments, companyName);
     },
   };
 
@@ -4334,6 +4147,8 @@
     state.isRunning = !state.isRunning;
 
     if (state.isRunning) {
+      state.comments.isCommentMode = false;
+
       state.includeKeywords = elements.includeInput.value
         .trim()
         .toLowerCase()
@@ -4348,11 +4163,15 @@
       elements.controlBtn.textContent = "停止海投";
       elements.controlBtn.style.background = "#4285f4";
 
+      const logPanel = document.querySelector("#pro-log");
+      if (logPanel) {
+        logPanel.innerHTML = "";
+      }
+
       const startTime = new Date();
       Core.log(`开始自动海投，时间：${startTime.toLocaleTimeString()}`);
       Core.log(
-        `筛选条件：职位名包含【${
-          state.includeKeywords.join("、") || "无"
+        `筛选条件：职位名包含【${state.includeKeywords.join("、") || "无"
         }】，工作地包含【${state.locationKeywords.join("、") || "无"}】`
       );
 
@@ -4362,12 +4181,13 @@
       elements.controlBtn.style.background = "#4285f4";
 
       state.isRunning = false;
-
-      const stopTime = new Date();
-      Core.log(`停止自动海投，时间：${stopTime.toLocaleTimeString()}`);
-      Core.log(`本次共沟通 ${state.currentIndex} 个岗位`);
-
       state.currentIndex = 0;
+
+      if (location.pathname.includes("/jobs")) {
+        setTimeout(() => {
+          Core.loadAndDisplayComments();
+        }, 300);
+      }
     }
   }
 
@@ -4376,7 +4196,7 @@
 
     if (state.isRunning) {
       elements.controlBtn.textContent = "停止智能聊天";
-      elements.controlBtn.style.background = "#4285f4";
+      elements.controlBtn.style.background = "#34a853";
 
       const startTime = new Date();
       Core.log(`开始智能聊天，时间：${startTime.toLocaleTimeString()}`);
@@ -4384,7 +4204,7 @@
       Core.startProcessing();
     } else {
       elements.controlBtn.textContent = "开始智能聊天";
-      elements.controlBtn.style.background = "#4285f4";
+      elements.controlBtn.style.background = "#34a853";
 
       state.isRunning = false;
 
@@ -4763,9 +4583,8 @@
       if (stepIndex === this.steps.length - 1) {
         buttonsHtml = `
                 <div class="guide-buttons" style="display: flex; justify-content: center; padding: 16px; border-top: 1px solid #f0f0f0; background: #f9fafb;">
-                    <button id="guide-finish-btn" style="padding: 8px 32px; background: ${
-                      step.highlightColor || "#4285f4"
-                    }; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
+                    <button id="guide-finish-btn" style="padding: 8px 32px; background: ${step.highlightColor || "#4285f4"
+          }; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">
                         完成
                     </button>
                 </div>
@@ -4774,26 +4593,22 @@
         buttonsHtml = `
                 <div class="guide-buttons" style="display: flex; justify-content: flex-end; padding: 16px; border-top: 1px solid #f0f0f0; background: #f9fafb;">
                     <button id="guide-skip-btn" style="padding: 8px 16px; background: white; color: #4b5563; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease;">跳过</button>
-                    <button id="guide-next-btn" style="padding: 8px 16px; background: ${
-                      step.highlightColor || "#4285f4"
-                    }; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; margin-left: 8px; transition: all 0.2s ease; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">下一步</button>
+                    <button id="guide-next-btn" style="padding: 8px 16px; background: ${step.highlightColor || "#4285f4"
+          }; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; margin-left: 8px; transition: all 0.2s ease; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);">下一步</button>
                 </div>
             `;
       }
 
       this.guideElement.innerHTML = `
-            <div class="guide-header" style="padding: 16px; background: ${
-              step.highlightColor || "#4285f4"
-            }; color: white;">
+            <div class="guide-header" style="padding: 16px; background: ${step.highlightColor || "#4285f4"
+        }; color: white;">
                 <div class="guide-title" style="font-size: 16px; font-weight: 600;">海投助手引导</div>
-                <div class="guide-step" style="font-size: 12px; opacity: 0.8; margin-top: 2px;">步骤 ${
-                  stepIndex + 1
-                }/${this.steps.length}</div>
+                <div class="guide-step" style="font-size: 12px; opacity: 0.8; margin-top: 2px;">步骤 ${stepIndex + 1
+        }/${this.steps.length}</div>
             </div>
             <div class="guide-content" style="padding: 20px; font-size: 14px; line-height: 1.6;">
-                <div style="white-space: pre-wrap; font-family: inherit; margin: 0;">${
-                  step.content
-                }</div>
+                <div style="white-space: pre-wrap; font-family: inherit; margin: 0;">${step.content
+        }</div>
             </div>
             ${buttonsHtml}
         `;
@@ -4924,7 +4739,6 @@
         setTimeout(() => {
           this.showStep(this.currentStep);
         }, 300);
-      } else {
       }
     },
 
@@ -5055,7 +4869,8 @@
           const targetElement = document.querySelector(targetSelector);
           if (targetElement) {
             targetElement.textContent =
-              "把常用语换为自我介绍，并设图片简历; 招呼语功能必须启用。";
+              "把常用语换为自我介绍，并设图片简历; 招呼语功能必须启用！！！";
+            targetElement.style.color = "red";
             obs.disconnect();
           }
         });
@@ -5074,6 +4889,19 @@
   }
 
   window.addEventListener("load", init);
+
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+    const currentUrl = location.href;
+    if (currentUrl !== lastUrl) {
+      lastUrl = currentUrl;
+      if (UI.currentPageType === UI.PAGE_TYPES.JOB_LIST && !state.isRunning && location.pathname.includes("/jobs")) {
+        setTimeout(() => {
+          Core.loadAndDisplayComments();
+        }, 500);
+      }
+    }
+  }).observe(document, { subtree: true, childList: true });
 
   function addKeywordReplyRule() {
     if (!state.settings.keywordReplies) {
@@ -5114,7 +4942,7 @@
       return;
     }
 
-    state.settings.keywordReplies.forEach((rule, index) => {
+    state.settings.keywordReplies.forEach((rule, _index) => {
       const ruleElement = document.createElement("div");
       ruleElement.className = "keyword-rule-item";
       ruleElement.style.cssText = `
@@ -5238,23 +5066,6 @@
     );
     if (autoSendImageResumeInput) {
       autoSendImageResumeInput.checked = settings.useAutoSendImageResume;
-    }
-
-    const basicIntervalInput = document.getElementById("basic-interval-input");
-    if (basicIntervalInput) {
-      basicIntervalInput.value = settings.intervals.basic;
-    }
-
-    const operationIntervalInput = document.getElementById(
-      "operation-interval-input"
-    );
-    if (operationIntervalInput) {
-      operationIntervalInput.value = settings.intervals.operation;
-    }
-
-    const scrollSpeedInput = document.getElementById("scroll-speed-input");
-    if (scrollSpeedInput) {
-      scrollSpeedInput.value = settings.autoScrollSpeed;
     }
 
     loadKeywordReplies();

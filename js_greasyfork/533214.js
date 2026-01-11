@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         筛选ABDC
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-03-001
+// @version      2026-01-06-001
 // @description  小工具
 // @author       周利斌
 // @match        https://so1.imageoss.com/*
@@ -25,10 +25,10 @@
     "use strict";
     function getValue(key, value) { const gmGetValueExists = window.GM_getValue && typeof GM_getValue !== "undefined"; return gmGetValueExists ? GM_getValue(key, value) : (localStorage.getItem(key) === null ? value : JSON.parse(localStorage.getItem(key))); }
     function setValue(key, value) { const gmSetValueExists = window.GM_setValue && typeof GM_setValue !== "undefined"; return gmSetValueExists ? GM_setValue(key, value) : localStorage.setItem(key, JSON.stringify(value)); }
-    function delay(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
-    function throttle(func, interval, immediate) { if (immediate === undefined) immediate = true; let lastExecuteTime = 0, timer = null; return function (...args) { const context = this, currentTime = Date.now(); immediate ? (currentTime - lastExecuteTime >= interval && (func.apply(context, args), lastExecuteTime = currentTime)) : (timer && clearTimeout(timer), (!lastExecuteTime || currentTime - lastExecuteTime >= interval) && (timer = setTimeout(function () { func.apply(context, args); lastExecuteTime = Date.now(); timer = null; }, interval))); }; }
-    function debounce(func, wait, immediate) { if (immediate === undefined) immediate = false; let timer = null; return function (...args) { const context = this; if (timer) clearTimeout(timer); immediate ? (!timer && (timer = setTimeout(function () { timer = null; }, wait), func.apply(context, args))) : (timer = setTimeout(function () { func.apply(context, args); timer = null; }, wait)); }; }
-    function waitUtilAsync(fn, timeout, interval, ctrl) { if (timeout === undefined) timeout = 10000; if (interval === undefined) interval = 50; if (ctrl === undefined) ctrl = { cancelled: false }; return new Promise(function (resolve) { const start = performance.now(); (async function loop() { if (ctrl.cancelled) return resolve(false); const result = await fn(); if (result) return resolve(result); if (performance.now() - start > timeout) return resolve(false); setTimeout(loop, interval); })(); }); }
+    function delay(ms = 0) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
+    function throttle(func, interval = 1000, immediate = true) { if (immediate === undefined) immediate = true; let lastExecuteTime = 0, timer = null; return function (...args) { const context = this, currentTime = Date.now(); immediate ? (currentTime - lastExecuteTime >= interval && (func.apply(context, args), lastExecuteTime = currentTime)) : (timer && clearTimeout(timer), (!lastExecuteTime || currentTime - lastExecuteTime >= interval) && (timer = setTimeout(function () { func.apply(context, args); lastExecuteTime = Date.now(); timer = null; }, interval))); }; }
+    function debounce(func, wait = 1000, immediate = false) { if (immediate === undefined) immediate = false; let timer = null; return function (...args) { const context = this; if (timer) clearTimeout(timer); immediate ? (!timer && (timer = setTimeout(function () { timer = null; }, wait), func.apply(context, args))) : (timer = setTimeout(function () { func.apply(context, args); timer = null; }, wait)); }; }
+    function waitUtilAsync(fn, timeout = 100000, interval = 1000, ctrl = { cancelled: false }) { if (timeout === undefined) timeout = 10000; if (interval === undefined) interval = 50; if (ctrl === undefined) ctrl = { cancelled: false }; return new Promise(function (resolve) { const start = performance.now(); (async function loop() { if (ctrl.cancelled) return resolve(false); const result = await fn(); if (result) return resolve(result); if (performance.now() - start > timeout) return resolve(false); setTimeout(loop, interval); })(); }); }
     /**
     * Create (or return if exists) a floating control panel with optional font-size controls,
     * draggable handle, and a close button. Position and font-size are persisted by `id`. 
@@ -40,7 +40,17 @@
     * @param {keyof HTMLElementTagNameMap} [options.tagName='button'] - Tag name for interactive controls
     * @returns {HTMLDivElement} The panel DOM element
     */
-    function getPanel({ id = '_zlb_root_div_', fontsize = true, drag = true, close = true, tagName = 'button' } = {}) { const closeButtonId = id + '_close_'; let panelElement = document.getElementById(id); const createCloseButton = (host) => appendTo({ parent: host, id: closeButtonId }, tagName, 'X关闭X', () => { if (typeof close === 'function') close(); host.remove(); }); if (panelElement) { if (close) createCloseButton(panelElement); return/** @type {HTMLDivElement} */(panelElement); } panelElement = document.createElement('div'); panelElement.id = id; panelElement.classList.add('notranslate'); panelElement.setAttribute('translate', 'no'); panelElement.onmousedown = panelElement.oncontextmenu = (event) => event.stopPropagation(); document.body.appendChild(panelElement); let currentFontSize = Number(getValue(id + ':fs', 12)); let leftPercent = Math.min(Math.max(Number(getValue(id + ':L', 50)), 0), 95); let topPercent = Math.min(Math.max(Number(getValue(id + ':T', 50)), 0), 95); const styleElement = document.createElement('style'); panelElement.appendChild(styleElement); const updatePanelStyles = () => { styleElement.textContent = `#${id}{position:fixed;z-index:999999;background-color:rgba(187, 180, 180, 0.9);border:1px solid rgba(191, 70, 173, 0.9);max-width:50vw;left:${leftPercent}%;top:${topPercent}%;user-select:none;font-size:${currentFontSize}px;display:flex;flex-wrap:wrap;}#${id} button{border-radius:${currentFontSize}px;min-width:auto;display: inline-flex;padding:0 4px;font-size:${currentFontSize}px;}#${id} span{margin:0 2px}#${id} label{margin:0px 2px;display: inline-flex;border:1px solid rgba(117,70,227,.7);border-radius:${currentFontSize}px;}`; }; updatePanelStyles(); if (fontsize) { appendTo(panelElement, tagName, '-字号-', () => { currentFontSize = Math.max(6, currentFontSize * 0.9); setValue(id + ':fs', currentFontSize); updatePanelStyles(); }); appendTo(panelElement, tagName, '+字号+', () => { currentFontSize = currentFontSize * 1.1; setValue(id + ':fs', currentFontSize); updatePanelStyles(); }); } if (drag) { const dragHandleButton = appendTo(panelElement, tagName, '✥拖动✥'); dragHandleButton.addEventListener('mousedown', (event) => { const rect = panelElement.getBoundingClientRect(); const deltaX = event.clientX - rect.left; const deltaY = event.clientY - rect.top; const moveHandler = (moveEvent) => { panelElement.style.left = (moveEvent.clientX - deltaX) + 'px'; panelElement.style.top = (moveEvent.clientY - deltaY) + 'px'; }; const upHandler = () => { document.removeEventListener('mousemove', moveHandler); document.removeEventListener('mouseup', upHandler); const leftInPercent = (parseFloat(panelElement.style.left) / document.documentElement.clientWidth) * 100; const topInPercent = (parseFloat(panelElement.style.top) / document.documentElement.clientHeight) * 100; leftPercent = Math.min(Math.max(leftInPercent, 0), 95); topPercent = Math.min(Math.max(topInPercent, 0), 95); panelElement.style.left = leftPercent + '%'; panelElement.style.top = topPercent + '%'; setValue(id + ':L', leftPercent); setValue(id + ':T', topPercent); updatePanelStyles(); }; document.addEventListener('mousemove', moveHandler); document.addEventListener('mouseup', upHandler); }); } if (close) createCloseButton(panelElement); setTimeout(() => { if (panelElement.children.length <= 1 + !!fontsize * 2 + !!drag + !!close) panelElement.remove(); }, 100); return/** @type {HTMLDivElement} */(panelElement); }
+    function getPanel({ id = '_zlb_root_div_', fontsize = true, drag = true, close = true, tagName = 'button' } = {}) {
+        const closeButtonId = id + '_close_'; let panelElement = document.getElementById(id);
+        const createCloseButton = (host) => appendTo({ parent: host, id: closeButtonId }, tagName, 'X关闭X', () => { if (typeof close === 'function') close(); host.remove(); }); if (panelElement) { if (close) createCloseButton(panelElement); return/** @type {HTMLDivElement} */(panelElement); } panelElement = document.createElement('div'); panelElement.id = id; panelElement.classList.add('notranslate'); panelElement.setAttribute('translate', 'no'); panelElement.onmousedown = panelElement.oncontextmenu = (event) => event.stopPropagation(); document.body.appendChild(panelElement); let currentFontSize = Number(getValue(id + ':fs', 12)); let leftPercent = Math.min(Math.max(Number(getValue(id + ':L', 50)), 0), 95); let topPercent = Math.min(Math.max(Number(getValue(id + ':T', 50)), 0), 95); const styleElement = document.createElement('style'); panelElement.appendChild(styleElement); const updatePanelStyles = () => {
+            styleElement.textContent =
+                `
+    #${id}{position:fixed;z-index:999999;background-color:rgba(187, 180, 180, 0.9);border:1px solid rgba(191, 70, 173, 0.9);max-width:50vw;left:${leftPercent}%;top:${topPercent}%;user-select:none;font-size:${currentFontSize}px;display:flex;flex-wrap:wrap;transition: all .25s;}
+    #${id} button{border-radius:${currentFontSize}px;min-width:auto;display: inline-flex;padding:0 4px;font-size:${currentFontSize}px;transition: all .25s;}
+    #${id} span{margin:0 2px}
+    #${id} label{margin:0px 2px;display: inline-flex;border:1px solid rgba(117,70,227,.7);border-radius:${currentFontSize}px;transition: all .25s;}`;
+        }; updatePanelStyles(); if (fontsize) { appendTo(panelElement, tagName, '-字号-', () => { currentFontSize = Math.max(6, currentFontSize * 0.9); setValue(id + ':fs', currentFontSize); updatePanelStyles(); }); appendTo(panelElement, tagName, '+字号+', () => { currentFontSize = currentFontSize * 1.1; setValue(id + ':fs', currentFontSize); updatePanelStyles(); }); } if (drag) { const dragHandleButton = appendTo(panelElement, tagName, '✥拖动✥'); dragHandleButton.addEventListener('mousedown', (event) => { const rect = panelElement.getBoundingClientRect(); const deltaX = event.clientX - rect.left; const deltaY = event.clientY - rect.top; const moveHandler = (moveEvent) => { panelElement.style.left = (moveEvent.clientX - deltaX) + 'px'; panelElement.style.top = (moveEvent.clientY - deltaY) + 'px'; }; const upHandler = () => { document.removeEventListener('mousemove', moveHandler); document.removeEventListener('mouseup', upHandler); const leftInPercent = (parseFloat(panelElement.style.left) / document.documentElement.clientWidth) * 100; const topInPercent = (parseFloat(panelElement.style.top) / document.documentElement.clientHeight) * 100; leftPercent = Math.min(Math.max(leftInPercent, 0), 95); topPercent = Math.min(Math.max(topInPercent, 0), 95); panelElement.style.left = leftPercent + '%'; panelElement.style.top = topPercent + '%'; setValue(id + ':L', leftPercent); setValue(id + ':T', topPercent); updatePanelStyles(); }; document.addEventListener('mousemove', moveHandler); document.addEventListener('mouseup', upHandler); }); } if (close) createCloseButton(panelElement); setTimeout(() => { if (panelElement.children.length <= 1 + !!fontsize * 2 + !!drag + !!close) panelElement.remove(); }, 100); return/** @type {HTMLDivElement} */(panelElement);
+    }
     /**
     * 创建或复用一个 HTML 元素，并插入到指定位置。 可以在parentOrOption中写任意属性
     *
@@ -75,34 +85,42 @@
      * @param {string[]} status 
      * @param {((btn: HTMLElement) => void)[]} funcs - 单个函数或者 与状态列表一一对应的回调函数数组 
      */
-    function toggleButton(parent, key, status, funcs, bgColors = ["", "#ffb6c1", "#a8d08d", "#f0e68c", "#add8e6", "#ff6347", "#98fb98", "#7b7070", "#ffd700", "#ff1493", "#90ee90", "#ff4500", "#8a2be2", "#32cd32", "#ff8c00", "#d2691e", "#ff0000", "#b0e0e6", "#dcdcdc", "#c7c7c7"]) {
-        let state = getValue(key, status[0]);
-        let index = status.indexOf(state) || 0;
-        function updateBtn(index, state) {
-            btn.textContent = `${state}`;
-            if (bgColors && bgColors.length > 0)
+    function toggleButton(parent, key, statusList, funcs = [], bgColors = ["", "#ffb6c1", "#a8d08d", "#f0e68c", "#add8e6", "#ff6347", "#98fb98", "#7b7070", "#ffd700", "#ff1493", "#90ee90", "#ff4500", "#8a2be2", "#32cd32", "#ff8c00", "#d2691e", "#ff0000", "#b0e0e6", "#dcdcdc", "#c7c7c7"]) {
+        const initialState = getValue(key, statusList[0]);
+        let currentIndex = statusList.indexOf(initialState) === -1 ? 0 : statusList.indexOf(initialState);
+        let currentStatusList = [...statusList];
+        const updateButton = (index, state) => {
+            btn.textContent = String(state);
+            if (Array.isArray(bgColors) && bgColors.length) {
                 btn.style.backgroundColor = bgColors[index % bgColors.length] || "";
-            btn.dataset.index = index;
-            btn.dataset.state = state;
-            (Array.isArray(funcs) && funcs.length > 0 ? (funcs[index % funcs.length]) : funcs)?.(btn, state, index)
+            }
+            btn.dataset.index = String(index);
+            btn.dataset.state = String(state);
+            const targetFunc = Array.isArray(funcs) && funcs.length ? funcs[index % funcs.length] : funcs;
+            targetFunc?.call(btn, btn, state, index);
+        };
+        const btn = appendTo(parent, "button", initialState, () => {
+            currentIndex = (currentIndex + 1) % currentStatusList.length;
+            const newState = currentStatusList[currentIndex];
+            setValue(key, newState);
+            updateButton(currentIndex, newState);
         }
-        let btn = appendTo(parent, "button", state, () => {
-            index = (index + 1) % status.length;
-            state = status[index];
-            setValue(key, state);
-            updateBtn(index, state);
-        });
-        updateBtn(index, state);
+        );
+        updateButton(currentIndex, initialState);
+        btn.setStatus = (newStatusList) => {
+            currentStatusList = [...newStatusList];
+            const newIndex = currentStatusList.indexOf(btn.dataset.state) === -1 ? 0 : currentStatusList.indexOf(btn.dataset.state);
+            currentIndex = newIndex;
+            updateButton(currentIndex, currentStatusList[currentIndex]);
+        };
         return btn;
     }
 
     // Your code here...
 
-    if (document.querySelector("#gs_bdy")) {
-        //设置谷歌查询结果的最小高度，让滚动条一直存在
-        document.querySelector("#gs_bdy").style.minHeight = "600px";
-    }
-    waitUtilAsync(() => document.querySelectorAll(".gs_a").length > 0, 1e3).then(() => document.querySelectorAll(".gs_a").forEach(f => (f.classList.add("notranslate"), f.setAttribute("translate", 'no'))));
+    if (document.querySelector("#gs_bdy")) document.querySelector("#gs_bdy").style.minHeight = "600px";  //设置谷歌查询结果的最小高度，让滚动条一直存在
+
+    waitUtilAsync(() => document.querySelectorAll(".gs_a").length > 0, 1e4).then(() => document.querySelectorAll(".gs_a").forEach(f => (f.classList.add("notranslate"), f.setAttribute("translate", 'no'))));
     await waitUtilAsync(() => document.querySelectorAll(".srankInfo").length > 0, 1e8, 1000)
     await delay(1000);
     const selector = [
@@ -158,9 +176,7 @@
         if (window.filterRankRegisted) {
             return;
         }
-        const [ui] = get_ul_lis(selector)
-        // console.log(ui)
-        if (!ui) return setTimeout(() => filterRank(), 1000);
+        await waitUtilAsync(() => get_ul_lis(selector)[0], 1e9)
         const panel = getPanel()
         if (window.filterRankRegisted) {
             return;
@@ -174,7 +190,7 @@
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === 1 && (node.classList.contains('srankSpan') || node.classList.contains('srankDiv'))) {
                                 // console.log(`.srankdiv 的数量: ${document.querySelectorAll('.srankSpan,.srankDiv').length} 开启查询`);
-                                queryFilterThrottle()
+                                if (queryFilterThrottle) queryFilterThrottle()
                             }
                         });
                     });
@@ -190,6 +206,7 @@
             if (queryFilterThrottle) queryFilterThrottle()
         })
         // console.log("allow_check",allow_check)
+        appendTo(panel, "button", "筛选", () => queryFilterThrottle?.call())
         const RankFilter = {};
         [["ALL", () => true, ["", "++"]], ["空白", () => true, ["", "--"]],
         ["Top", ms => ms.some(m => m.textContent.includes("Top"))],
@@ -475,7 +492,8 @@
                         f.remove()
                     })
                 }
-                btn.textContent = state + `[${document.querySelectorAll("span.scolor-sos").length}]`
+                if (btn.textContent != state + `[${document.querySelectorAll("span.scolor-sos").length}]`)
+                    btn.textContent = state + `[${document.querySelectorAll("span.scolor-sos").length}]`
             }
             t = setInterval(setText, 1000)
         })
@@ -483,17 +501,14 @@
     setTimeout(initYujing, 1000)
     if (location.href.indexOf("scispace") > -1) {
         let t = undefined
-        toggleButton(getPanel(), "Scispace自动加载", ["Scispace手动加载", "Scispace自动加载"],
-            [
-                () => {
-                    if (t) clearInterval(t); t = undefined;
-                },
-                () => {
-                    if (t) clearInterval(t); t = undefined;
-                    t = setInterval(() => {
-                        document.querySelector(".border-primary [data-icon=files],.border-primary [data-icon=spinner-third]")?.parentElement.click()
-                    }, 2000)
-                }
-            ])
+        toggleButton(getPanel(), "Scispace自动加载", ["Scispace手动加载", "Scispace自动加载"], (btn, state, index) => {
+            if (t) clearInterval(t); t = undefined;
+            if (index == 1)
+                t = setInterval(() => {
+                    const d = document.querySelector(".border-primary [data-icon=files],.border-primary [data-icon=spinner-third]")
+                    // d?.scrollIntoView()
+                    d?.parentElement.click()
+                }, 800)
+        })
     }
 })();

@@ -1,62 +1,97 @@
 // ==UserScript==
-// @name          JustWatch - Search Improvements
-// @description   Improved search efficiency
+// @name          JustWatch - Search Improvements & Watchlist Hider
+// @description   Improved search efficiency and hides watchlist items
 // @author        TheRealHawk
 // @license       MIT
 // @namespace     https://greasyfork.org/en/users/18936-therealhawk
 // @match         https://www.justwatch.com/*
-// @version       1.2
-// @require       https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js
-// @require       https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js
-// @require       https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
-// @downloadURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20Improvements.user.js
-// @updateURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20Improvements.meta.js
+// @version       1.12
+// @require       https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js
+// @grant         GM_addStyle
+// @downloadURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20Improvements%20%20Watchlist%20Hider.user.js
+// @updateURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20Improvements%20%20Watchlist%20Hider.meta.js
 // ==/UserScript==
 
-// Workaround to get rid of "is not defined" warnings
-/* globals $, jQuery, moment */
+(function() {
+    'use strict';
 
-function waitForEl(selector, callback, maxtries = false, interval = 100) {
-    const poller = setInterval(() => {
-        const el = $(selector)
-        const retry = maxtries === false || maxtries-- > 0
-        if (retry && el.length < 1) return
-        clearInterval(poller)
-        callback(el || null)
-    }, interval)
-}
+    GM_addStyle(`
+        #searchbar-input {
+            color: black !important;
+            background: white !important;
+        }
+        #searchbar-input:focus {
+            color: black !important;
+        }
+    `);
 
-waitForEl('#searchbar-input', function() {
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
 
-    $('#searchbar-input').css( { color: 'black' } );
-    $('#searchbar-input:focus').css( { color: 'black' } );
-    $('#searchbar-input').css( { background: 'white' } );
-
-    $('#searchbar-input').click(function() {
-        $(this).focus();
-        $(this).select();
-    });
-
-}, 10, 500);
-
-var imdbRating = $('img.is-imdb').next('div').first().text();
-var titleText = $('.title-block > div > .text-muted').text();
-
-titleText = titleText.replace(/ $/, ' - IMDB: ' + imdbRating);
-
-$('.title-block > div > .text-muted').text(titleText);
-
-var observedNode = document.querySelector('.title-block > div > .text-muted');
-var observerConfig = { attributes: true, childList: true, subtree: true , characterData: true };
-
-var callback = (mutationList, observer) => {
-    for (const mutation of mutationList) {
-        if (mutation.type === 'characterData') {
-            console.log(mutation);
-            $('.title-block > div > .text-muted').text(titleText);
+    function enhanceSearchBar() {
+        const $searchBar = $('#searchbar-input');
+        if ($searchBar.length && !$searchBar.hasClass('jw-enhanced')) {
+            $searchBar.addClass('jw-enhanced');
+            $searchBar.on('click', function() {
+                $(this).select();
+            });
         }
     }
-};
 
-var observer = new MutationObserver(callback);
-observer.observe(observedNode, observerConfig);
+    // State tracking for the auto-scroll mechanic
+    let isAutoScrolling = false;
+    let savedScrollPos = 0;
+
+    function hideWatchlistItems() {
+        const $watchedItems = $('.title-poster-quick-actions-content__bubbles__item--selected svg[data-icon="bookmark"]');
+        $watchedItems.closest('[data-testid="titleItem"]').hide();
+        
+        // Check if we need to load more or if we can restore position
+        manageInfiniteScroll();
+    }
+
+    function manageInfiniteScroll() {
+        const scrollThreshold = window.innerHeight * 2;
+        const currentHeight = document.documentElement.scrollHeight;
+
+        // Condition 1: The page has enough content (more than 2 screens worth)
+        if (currentHeight > scrollThreshold) {
+            // If we were forcing a scroll, we can now safely go back to the user's position
+            if (isAutoScrolling) {
+                window.scrollTo(0, savedScrollPos);
+                isAutoScrolling = false;
+            }
+            return;
+        }
+
+        // Condition 2: The page is too short (we need more items)
+        // If we aren't already managing a scroll, save the user's spot
+        if (!isAutoScrolling) {
+            savedScrollPos = window.scrollY;
+            isAutoScrolling = true;
+        }
+
+        // Jump to bottom to trigger JustWatch's loader
+        window.scrollTo(0, document.body.scrollHeight);
+        window.dispatchEvent(new CustomEvent('scroll'));
+    }
+
+    // Run once on load
+    hideWatchlistItems();
+
+    const observer = new MutationObserver(debounce(() => {
+        enhanceSearchBar();
+        hideWatchlistItems(); 
+    }, 200));
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+})();

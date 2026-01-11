@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name          Scholar's Toolkit
 // @namespace     greasyfork.org
-// @version       4.6
+// @version       4.9
 // @description   Checks for free PDFs from Google Scholar, Sci-Hub, LibGen, Anna's Archive, Sci-net, Semantic Scholar, Unpaywall, OpenAlex, Openrxiv (medRxiv/bioRxiv), and ArXiv. When hovering a DOI, it also displays journal name, ISSN, publisher, metrics (SJR, H-Index, JIF, CiteScore), citation count, and integrity status (PubPeer, Retraction Database, Beall's Predatory List).
 // @author        Bui Quoc Dung
 // @match         *://*/*
 // @grant         GM_getResourceText
 // @grant         GM_xmlhttpRequest
+// @require       https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js
 // @connect       *
 // @license       AGPL-3.0-or-later
 // @downloadURL https://update.greasyfork.org/scripts/542954/Scholar%27s%20Toolkit.user.js
@@ -76,11 +77,19 @@ async function fetchCrossref(doi) {
     try {
         const r = await httpGet(`https://api.crossref.org/works/${doi}`);
         const js = JSON.parse(r.responseText).message;
+        const decodeAndStrip = (text) => {
+            if (!text) return "";
+            const decoded = he.decode(text);
+            const temp = document.createElement('div');
+            temp.innerHTML = decoded;
+            return temp.textContent || temp.innerText || '';
+        };
+
         return {
             success: true,
-            title: (js.title?.[0] || "").replace(/&amp;/g, '&'),
-            journal: (js["container-title"]?.[0] || "").replace(/&amp;/g, '&'),
-            publisher: (js.publisher || "").replace(/&amp;/g, '&'),
+            title: decodeAndStrip(js.title?.[0] || ""),
+            journal: decodeAndStrip(js["container-title"]?.[0] || ""),
+            publisher: decodeAndStrip(js.publisher || ""),
             issn: js.ISSN?.[0] || "",
             citationCount: js['is-referenced-by-count'],
             crossrefData: js,
@@ -438,7 +447,7 @@ async function checkSemanticScholar(doi, cell) {
             if (pdfLink) {
                 updateLink(cell, '[PDF] Semantic', pdfLink);
             } else {
-                updateLink(cell, '[PDF] Semantic', readerUrl, true);
+                updateLink(cell, '[PDF] Semantic', readerUrl);
             }
         } else {
             updateLink(cell, '[No] Semantic', `https://www.semanticscholar.org/search?q=${encodeURIComponent(doi)}`, true);

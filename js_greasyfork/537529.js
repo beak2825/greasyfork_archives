@@ -9,7 +9,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/537529/Funr3g.user.js
 // @updateURL https://update.greasyfork.org/scripts/537529/Funr3g.meta.js
 // ==/UserScript==
-
+ 
 (() => {
     "use strict";
     var __webpack_modules__ = {
@@ -57,7 +57,7 @@
             },
             72: e => {
                 var t = [];
-
+ 
                 function n(e) {
                     for (var n = -1, o = 0; o < t.length; o++)
                         if (t[o].identifier === e) {
@@ -65,7 +65,7 @@
                             break
                         } return n
                 }
-
+ 
                 function o(e, o) {
                     for (var i = {}, a = [], r = 0; r < e.length; r++) {
                         var l = e[r],
@@ -94,7 +94,7 @@
                     }
                     return a
                 }
-
+ 
                 function s(e, t) {
                     var n = t.domAPI(t);
                     return n.update(e),
@@ -208,7 +208,7 @@
             }
         },
         __webpack_module_cache__ = {};
-
+ 
     function __webpack_require__(e) {
         var t = __webpack_module_cache__[e];
         if (void 0 !== t) return t.exports;
@@ -563,9 +563,24 @@
             "Chunk Interval": 1000
         });
         this.lastExecutionTime = 0;
+        this.toggleKey = "KeyZ"; // Defina aqui a tecla (KeyZ, KeyF, etc)
+
+        // Escuta o teclado para ativar/desativar
+        document.addEventListener("keydown", this.handleKeyPress.bind(this));
+    }
+
+    handleKeyPress(e) {
+        // Verifica se a tecla foi pressionada e se não está apenas segurando
+        if (e.code === this.toggleKey && !e.repeat) {
+            this.toggle(); 
+            console.log(`${this.name} status: ${this.isEnabled}`);
+        }
     }
 
     onRender() {
+        // IMPORTANTE: Só executa se o módulo estiver ativado (isEnabled)
+        if (!this.isEnabled) return;
+
         const world = hooks.A?.gameWorld;
         if (!world?.player || !world?.chunkManager) return;
 
@@ -577,7 +592,7 @@
         if (now - this.lastExecutionTime < interval) return;
         this.lastExecutionTime = now;
 
-        // Extrai e floor das coordenadas do jogador corretamente
+        // Posição do jogador
         const playerPos = world.player.position;
         const playerX = Math.floor(playerPos.x);
         const playerY = Math.floor(playerPos.y);
@@ -586,30 +601,28 @@
         for (let dx = -radius; dx <= radius; dx++) {
             for (let dy = -radius; dy <= radius; dy++) {
                 for (let dz = -radius; dz <= radius; dz++) {
-
                     const x = playerX + dx;
                     const y = playerY + dy;
                     const z = playerZ + dz;
 
-                    // NÃO destruir **nenhum** bloco que esteja exatamente uma unidade abaixo dos pés do jogador
-                    if (y === playerY - 1) continue;
+                    // Proteção: NÃO destrói o bloco exatamente abaixo dos pés (evita cair no vazio)
+                    if (x === playerX && z === playerZ && y === playerY - 1) continue;
 
                     try {
                         const block = world.chunkManager.getBlock(x, y, z);
                         if (block !== 0) {
+                            // Quebra o bloco (setando para 0)
                             world.chunkManager.setBlock(x, y, z, 0, true, true);
                         }
                     } catch (err) {
-                        // falhas silenciosas para não quebrar o loop (p.ex. coordenadas fora do mapa)
-                        //console.warn("Nuker: erro ao acessar bloco", x,y,z, err);
+                        // Silencia erros de blocos fora do mapa carregado
                     }
                 }
             }
         }
     }
 }
-
-
+ 
     class AdBypass extends Module {
         constructor() {
             super("AdBypass", "Misc")
@@ -621,8 +634,8 @@
             hooks.A.stores.adsStore.rewardCommercialVideoWrapper = this._reward;
         }
     }
-
-
+ 
+ 
 class Nuker1 extends Module {
     constructor() {
         super("Nuker1", "Misc", {
@@ -630,14 +643,14 @@ class Nuker1 extends Module {
             Distance: 3,
             "Chunk Interval": 1000
         });
-
+ 
         // Adiciona a propriedade de atalho de tecla (KeyZ)
         // O nome da propriedade pode variar dependendo do seu framework,
         // mas vou usar 'toggleKey' conforme sua sintaxe de exemplo.
-        this.toggleKey = "KeyZ";
+        this.toggleKey = "";
         this.lastExecutionTime = 0;
     }
-
+ 
     // Função auxiliar para calcular o vetor de direção do olhar (look vector)
     getLookVector(playerRotation) {
         const yaw = playerRotation.y;
@@ -647,40 +660,40 @@ class Nuker1 extends Module {
         const z = Math.cos(yaw) * Math.cos(pitch);
         return { x, y, z };
     }
-
+ 
     onRender() {
         const world = hooks.A?.gameWorld;
         // O código de quebra só será executado se o módulo estiver ativo (this.enabled)
         if (!world?.player || !world?.chunkManager || !this.enabled) return;
-
+ 
         // Restante do código 3x3x1
         const distance = Math.max(1, parseInt(this.options.Distance) || 3);
         const interval = Math.max(0, parseInt(this.options["Chunk Interval"]) || 1000);
         const radius = 1;
-
+ 
         const now = Date.now();
         if (now - this.lastExecutionTime < interval) return;
         this.lastExecutionTime = now;
-
+ 
         const playerPos = world.player.position;
         const playerRot = world.player.rotation;
         const lookVector = this.getLookVector(playerRot);
-
+ 
         const center_X_float = playerPos.x + lookVector.x * distance;
         const center_Y_float = playerPos.y + world.player.height / 2 + lookVector.y * distance;
         const center_Z_float = playerPos.z + lookVector.z * distance;
-
+ 
         const centerX = Math.floor(center_X_float);
         const centerY = Math.floor(center_Y_float);
         const centerZ = Math.floor(center_Z_float);
-
+ 
         for (let dx = -radius; dx <= radius; dx++) {
             for (let dy = -radius; dy <= radius; dy++) {
-
+ 
                 const x = centerX + dx;
                 const y = centerY + dy;
                 const z = centerZ;
-
+ 
                 try {
                     const block = world.chunkManager.getBlock(x, y, z);
                     if (block !== 0) {
@@ -693,9 +706,9 @@ class Nuker1 extends Module {
         }
     }
 }
-
-
-
+ 
+ 
+ 
 class Fly extends Module {
     constructor() {
         super("Fly", "Movement", {
@@ -704,19 +717,19 @@ class Fly extends Module {
         this.toggleKey = "KeyF"; // Tecla para ativar/desativar (F)
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
     }
-
+ 
     handleKeyPress(e) {
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle(); // ativa ou desativa o módulo
         }
     }
-
+ 
     onRender() {
         const player = hooks.A?.gameWorld?.player;
         if (!player) return;
-
+ 
         player.velocity.gravity = 0;
-
+ 
         if (player.inputs.jump) {
             player.velocity.velVec3.y = this.options["Vertical Speed"];
         } else if (player.inputs.crouch) {
@@ -725,7 +738,7 @@ class Fly extends Module {
             player.velocity.velVec3.y = 0;
         }
     }
-
+ 
     onDisable() {
         const player = hooks.A?.gameWorld?.player;
         if (player) player.velocity.gravity = 23;
@@ -744,8 +757,8 @@ class Fly extends Module {
             hooks.A.gameWorld.player.velocity.moveSpeed = 4.5, hooks.A.gameWorld.player.velocity.fastMoveSpeed = 6.4
         }
     }
-
-
+ 
+ 
     class FreeMinebucks extends Module {
         constructor() {
             super("Minebucks", "Misc")
@@ -754,7 +767,7 @@ class Fly extends Module {
             hooks.A.network.get("/users/freeHeadcoins"), hooks.A.stores.userState.user.balance.minebucks += 10, module_moduleManager.modules.minebucks.disable()
         }
     }
-
+ 
     class FreeSpins extends Module {
         constructor() {
             super("freeSpins", "Misc")
@@ -763,54 +776,125 @@ class Fly extends Module {
             hooks.A.network.get("/users/freeSpinner"), hooks.A.stores.userState.user.balance.freeSpinner += 10, module_moduleManager.modules.freeSpinner.disable()
         }
     }
-
-  class NoFall extends Module {
+ 
+ class NoFall extends Module {
     constructor() {
+        // Mantido em Visual conforme solicitado
         super("NoFall", "Visual", null);
     }
-        onEnable() {
-            U.listeners.NoFall = function(e, t) {
-                if (e == U.toServer.TIME_STEP_INFO && t.lp) {
-                    let e = t.lp[3];
-                    e > 0 && (t.lp[3] *= .01), e < 0 && (t.lp[3] = -.01), 0 == e && (t.lp[3] = -.01)
-                }
+
+    onEnable() {
+        // Verifica se o objeto principal de rede existe
+        if (hooks.A && hooks.A.network) {
+            
+            // SOLUÇÃO PARA O ERRO: Cria o objeto listeners se ele não existir
+            if (!hooks.A.network.listeners) {
+                hooks.A.network.listeners = {};
             }
-        }
-        onDisable() {
-            delete U.listeners.NoFall
+
+            hooks.A.network.listeners.NoFall = function(packetType, packetData) {
+                // Intercepta o pacote de movimento (TIME_STEP_INFO)
+                if (packetType == hooks.A.network.toServer.TIME_STEP_INFO && packetData.lp) {
+                    let verticalSpeed = packetData.lp[3]; // lp[3] é a velocidade vertical (eixo Y)
+                    
+                    // Modifica a velocidade para valores mínimos para anular o dano de queda
+                    if (verticalSpeed > 0) {
+                        packetData.lp[3] *= 0.01;
+                    } else if (verticalSpeed < 0) {
+                        packetData.lp[3] = -0.01;
+                    } else if (verticalSpeed == 0) {
+                        packetData.lp[3] = -0.01;
+                    }
+                }
+            };
+        } else {
+            console.warn("NoFall: Rede não encontrada. Entre no jogo primeiro.");
+            this.disable();
         }
     }
 
+    onDisable() {
+        // Remove o listener com segurança para não dar erro ao desativar
+        if (hooks.A && hooks.A.network && hooks.A.network.listeners) {
+            delete hooks.A.network.listeners.NoFall;
+        }
+    }
+}
+ 
 class NoHunger extends Module {
     constructor() {
-        super("NoHunger", "Visual", null);
+        super("NoHunger", "Misc", null);
     }
-        onEnable() {
-            U.listeners.NoHunger = function(e, t) {
-                e == U.toServer.TIME_STEP_INFO && (t.m && delete t.m, t.s && delete t.s, t.j && delete t.j)
+
+    onEnable() {
+        // Verifica se o hooks e o network existem
+        if (hooks.A && hooks.A.network) {
+            
+            // ESSA LINHA É A SOLUÇÃO: se listeners não existir, nós criamos ele como um objeto vazio
+            if (!hooks.A.network.listeners) {
+                hooks.A.network.listeners = {};
             }
-        }
-        onDisable() {
-            delete U.listeners.NoHunger
-        }
-    }
-    class NoDrown extends Module {
-    constructor() {
-        super("NoDrown", "Visual", null);
-    }
-        get damageListener() {
-            return a.gameWorld.eventEmitter._events.get(48).values().next().value
-        }
-        onRender() {
-            a?.gameWorld?.eventEmitter?._events && this.damageListener.callback.toString().includes("damageToApply") && (this.damageListener.callback = () => {})
-        }
-        onDisable() {
-            a?.gameWorld?.eventEmitter?._events && (this.damageListener.callback = e => {
-                this.damageToApply += e
-            })
+
+            hooks.A.network.listeners.NoHunger = function(packetType, packetData) {
+                if (packetType == hooks.A.network.toServer.TIME_STEP_INFO) {
+                    if (packetData.m) delete packetData.m;
+                    if (packetData.s) delete packetData.s;
+                    if (packetData.j) delete packetData.j;
+                }
+            };
+        } else {
+            console.log("Erro: O jogo ainda não carregou a rede (network).");
+            this.disable(); // Desativa o módulo para não bugar
         }
     }
 
+    onDisable() {
+        if (hooks.A && hooks.A.network && hooks.A.network.listeners) {
+            delete hooks.A.network.listeners.NoHunger;
+        }
+    }
+}
+    class NoDrown extends Module {
+    constructor() {
+        // Mantido em 'Visual' conforme sua preferência
+        super("NoDrown", "Visual", null);
+    }
+
+    // O objeto 'a' do original vira 'hooks.A' para funcionar no seu china_fixed_menu
+    get damageListener() {
+        try {
+            // Tenta acessar o evento 48 (dano de afogamento/água)
+            return hooks.A.gameWorld.eventEmitter._events.get(48).values().next().value;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    onRender() {
+        // Verifica se o mundo do jogo e os eventos estão carregados
+        if (hooks.A?.gameWorld?.eventEmitter?._events) {
+            const listener = this.damageListener;
+            
+            // Se encontrar a função que aplica dano, ela é substituída por uma função vazia
+            if (listener && listener.callback.toString().includes("damageToApply")) {
+                listener.callback = () => {};
+            }
+        }
+    }
+
+    onDisable() {
+        // Ao desligar, restaura a função original para você voltar a levar dano
+        if (hooks.A?.gameWorld?.eventEmitter?._events) {
+            const listener = this.damageListener;
+            if (listener) {
+                listener.callback = function(e) {
+                    this.damageToApply += e;
+                };
+            }
+        }
+    }
+}
+ 
     class FreeHeadcoins extends Module {
         constructor() {
             super("FreeHeadcoins", "Misc")
@@ -844,11 +928,71 @@ class NoHunger extends Module {
             }
         }
     }
+ 
+   
+ 
+class DiamondXray extends Module {
+    constructor() {
+        // Nome: DiamondXray, Categoria: Visual, Configurações: Opacidade e Brilho
+        super("DiamondXray", "Visual", {
+            Opacity: 0.1,
+            Glow: true
+        });
+        this.keybind = "Z";
+    }
+ 
+    onRender() {
+        // T_ é o dicionário de blocos identificado no NINE.txt
+        // O ID 56 é o padrão para Diamond Ore, mas usamos a variável do motor se disponível
+        const DIAMOND_ID = (typeof T_ !== 'undefined' && T_.DIAMOND_ORE) ? T_.DIAMOND_ORE : 56;
+        
+        // Acessa a cena global do jogo (Three.js) comentada no NINE.txt
+        if (typeof window.scene !== 'undefined') {
+            window.scene.traverse((object) => {
+                // Verifica se o objeto é um mesh de bloco
+                if (object.isMesh && object.blockData) {
+                    if (object.blockData.id === DIAMOND_ID) {
+                        // Configuração para o Diamante: Visível através das paredes
+                        object.material.depthTest = false;
+                        object.material.transparent = true;
+                        object.material.opacity = 1.0;
+                        object.renderOrder = 1000;
+                        
+                        if (this.settings.Glow) {
+                            object.material.emissive = { r: 0, g: 0.6, b: 1 }; // Brilho azul
+                        }
+                    } else {
+                        // Configuração para os demais blocos: Ficam transparentes baseado no slider
+                        object.material.transparent = true;
+                        object.material.opacity = this.settings.Opacity;
+                    }
+                }
+            });
+        }
+    }
+ 
+    // Método chamado automaticamente pelo sistema quando o módulo é desativado
+    onDisable() {
+        if (typeof window.scene !== 'undefined') {
+            window.scene.traverse((object) => {
+                if (object.isMesh) {
+                    object.material.depthTest = true;
+                    object.material.transparent = false;
+                    object.material.opacity = 1.0;
+                    if (object.material.emissive) {
+                        object.material.emissive = { r: 0, g: 0, b: 0 };
+                    }
+                }
+            });
+        }
+    }
+}
+ 
     class Chams extends Module {
     constructor() {
         super("Chams", "Visual", null);
     }
-
+ 
     onRender() {
         try {
             hooks.A?.gameWorld?.server?.players.forEach((plr) => {
@@ -857,7 +1001,7 @@ class NoHunger extends Module {
             });
         } catch {}
     }
-
+ 
     onDisable() {
         try {
             hooks.A?.gameWorld?.server?.players.forEach((plr) => {
@@ -873,18 +1017,18 @@ class NoHunger extends Module {
         });
         this.originalFOV = null;
     }
-
+ 
     onEnable() {
         let cam = hooks.A?.gameWorld?.threeScene?.camera;
         if (cam) {
             this.originalFOV = cam.fov; // salva o FOV original
         }
     }
-
+ 
     onRender() {
         let cam = hooks.A?.gameWorld?.threeScene?.camera;
         if (!cam) return;
-
+ 
         const newFOV = parseFloat(this.options.FOV);
         if (cam.fov !== newFOV) {
             cam.fov = newFOV;
@@ -892,7 +1036,7 @@ class NoHunger extends Module {
             hooks.A.gameWorld.player.settings.fov = newFOV;
         }
     }
-
+ 
     onDisable() {
         let cam = hooks.A?.gameWorld?.threeScene?.camera;
         if (cam && this.originalFOV) {
@@ -971,15 +1115,15 @@ class NoHunger extends Module {
     });
     this.lastExecutionTime = 0; // more explicit
   }
-
+ 
   onRender() {
     const now = Date.now();
     // garante que jogador exista e que passou o delay
     if (!hooks?.A?.gameWorld?.player) return;
-
+ 
     const delay = Number(this.options?.Delay) || 100;
     if (now - this.lastExecutionTime < delay) return;
-
+ 
     this.lastExecutionTime = now;
     try {
       this.tryKill();
@@ -987,43 +1131,43 @@ class NoHunger extends Module {
       console.error("Killaura.tryKill erro:", err);
     }
   }
-
+ 
   tryKill() {
     // protege e converte opções
     const reach = Number(this.options?.Reach) || 5;
     const yOffset = Number(this.options?.["Y Offset"]) || 1.62;
-
+ 
     // pega o alvo mais próximo (pode retornar null)
     const target = (typeof gameUtils !== "undefined" && gameUtils.getClosestPlayer)
       ? gameUtils.getClosestPlayer()
       : null;
     if (!target) return;
-
+ 
     // aceita model ou _model (compatibilidade)
     const targetModel = target.model || target._model || null;
     const s = targetModel?.position;
     if (!s) return; // sem posição do alvo, sai
-
+ 
     const me = hooks?.A?.gameWorld?.player;
     if (!me?.position) return;
-
+ 
     const origin = {
       x: me.position.x,
       y: me.position.y + yOffset,
       z: me.position.z
     };
-
+ 
     const dx = origin.x - s.x;
     const dy = origin.y - s.y;
     const dz = origin.z - s.z;
     const dist = Math.hypot(dx, dy, dz);
     if (dist === 0) return;
-
+ 
     // normaliza e inverte (mantive sua inversão)
     const nx = -dx / dist;
     const ny = -dy / dist;
     const nz = -dz / dist;
-
+ 
     if (dist < reach) {
       // tenta pegar sessionId ou id (compatibilidade)
       const targetId = target.sessionId ?? target.id ?? target.sid ?? null;
@@ -1041,49 +1185,49 @@ class NoHunger extends Module {
     }
   }
 }
-
+ 
 class KnockbackDisabler extends Module {
     constructor() {
         super("KnockbackDisabler", "Misc");
-
+ 
         // Configurações internas
         this.blocks = 10;     // knockback
         this.damage = 2;      // dano
     }
-
+ 
     applyKnockbackAndDamage(target, attacker) {
         let dx = target.x - attacker.x;
         let dy = target.y - attacker.y;
         let length = Math.sqrt(dx * dx + dy * dy);
-
+ 
         if (!length) return;
-
+ 
         dx /= length;
         dy /= length;
-
+ 
         // Knockback
         target.x += dx * this.blocks;
         target.y += dy * this.blocks;
-
+ 
         // Dano
         if (typeof target.health === "number") {
             target.health -= this.damage;
             if (target.health < 0) target.health = 0;
         }
     }
-
+ 
     onRender() {
         // Simulação de evento "onHit"
         if (window.player && window.attacker && window.playerWasHit) {
             this.applyKnockbackAndDamage(window.player, window.attacker);
-
+ 
             // Reseta evento
             window.playerWasHit = false;
         }
     }
 }
-
-
+ 
+ 
   class GunModifier extends Module {
     constructor() {
         super("GunModifier", "Combat", {
@@ -1094,22 +1238,22 @@ class KnockbackDisabler extends Module {
             "Recoil": 0,
             "isAuto": true
         });
-
+ 
         this.originalValuesMap = new Map(); // Salva os valores por arma
         this.toggleKey = "KeyJ"; // Tecla para ativar/desativar
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
     }
-
+ 
     handleKeyPress(e) {
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle();
         }
     }
-
+ 
     get gunSystem() {
         return hooks.A.stores.gameState.gameWorld.systemsManager.activeSystems.find(e => e?.bulletsSystem);
     }
-
+ 
     backupGun(gun) {
         if (!this.originalValuesMap.has(gun)) {
             this.originalValuesMap.set(gun, {
@@ -1123,7 +1267,7 @@ class KnockbackDisabler extends Module {
             });
         }
     }
-
+ 
     applyMods(gun) {
         gun.bulletsPerShot = this.options["Bullets per shot"];
         gun.isAuto = this.options["isAuto"];
@@ -1135,22 +1279,22 @@ class KnockbackDisabler extends Module {
             gun.recoilAttackX = 0;
         }
     }
-
+ 
     onEnable() {
         const gun = this.gunSystem?.playerShooter?.currPlayerWeaponSpec;
         if (!gun) return;
-
+ 
         this.backupGun(gun);
         this.applyMods(gun);
     }
-
+ 
     onDisable() {
         const gun = this.gunSystem?.playerShooter?.currPlayerWeaponSpec;
         if (!gun) return;
-
+ 
         const original = this.originalValuesMap.get(gun);
         if (!original) return;
-
+ 
         // Restaura valores originais
         gun.bulletsPerShot = original.bulletsPerShot;
         gun.isAuto = original.isAuto;
@@ -1159,12 +1303,12 @@ class KnockbackDisabler extends Module {
         gun.reloadTimeMs = original.reloadTimeMs;
         gun.recoilAttackY = original.recoilAttackY;
         gun.recoilAttackX = original.recoilAttackX;
-
+ 
         // Remove backup (opcional)
         this.originalValuesMap.delete(gun);
     }
 }
-
+ 
     class Disabler extends Module {
         constructor() {
             super("Disabler", "Misc"), this.packetID = null
@@ -1221,37 +1365,37 @@ class KnockbackDisabler extends Module {
             hooks.A?.stores?.gameState?.gameWorld?.server && ("true" == this.options["On Aim"] && hooks.A.stores.gameState.gameWorld.player.inputs.rightMB || "true" == this.options["On Shoot"] && hooks.A.stores.gameState.gameWorld.player.inputs.leftMB || "true" !== this.options["On Shoot"] && "true" !== this.options["On Aim"]) && this.aimAtEnemy()
         }
     }
-
+ 
     class NoClip extends Module {
     constructor() {
         super("NoClip", "Movement");
         this.toggleKey = "KeyG"; // Tecla para ativar/desativar (letra N)
         this._og = null;
-
+ 
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
     }
-
+ 
     handleKeyPress(e) {
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle();
         }
     }
-
+ 
     get playerPhysicsSystem() {
         return hooks.A?.gameWorld?.systemsManager?.activeSystems?.find((e => e?.playerPhysicsSystem))?.playerPhysicsSystem;
     }
-
+ 
     onRender() {
         const system = this.playerPhysicsSystem;
         if (!system || !hooks.A?.gameWorld?.player) return;
-
+ 
         if (!this._og) this._og = system.resolveBlockCollision;
-
+ 
         if (system.resolveBlockCollision === this._og) {
             system.resolveBlockCollision = () => {};
         }
     }
-
+ 
     onDisable() {
         const system = this.playerPhysicsSystem;
         if (system && this._og) {
@@ -1259,14 +1403,14 @@ class KnockbackDisabler extends Module {
         }
     }
 }
-
-
-
+ 
+ 
+ 
     class HitAllModule extends Module {
     constructor() {
         super("1HitAll", "Combat", null, "KeyU"); // Atalho: tecla U
     }
-
+ 
     hitAll() {
         try {
         window.hooked.gameWorld.server.players.forEach(plr => {
@@ -1283,148 +1427,123 @@ class KnockbackDisabler extends Module {
         });
     } catch {}
     }
-
+ 
     onEnable() {
         this.hitAll();
     }
 }
-
+ 
 class TeleportModule extends Module {
     constructor() {
-        super("Teleport", "Misc", {
-            "Home": 1,
-
-            // Home 1
-            "X": 0, "Y": 80, "Z": 0,
-
-            // Home 2
-            "X2": 0, "Y2": 80, "Z2": 0,
-
-            // Home 3
-            "X3": 0, "Y3": 80, "Z3": 0,
-
-            // Botão
-            "Save current position": false
+        super("Teleport", "Misc");
+ 
+        // Atalho fixo: tecla T (não ativa/desativa o módulo)
+        this.key = "KeyT";
+ 
+        document.addEventListener("keydown", (e) => {
+            if (e.code === this.key && !e.repeat) {
+                this.tpToSelectedBlock();
+            }
         });
-
-        this.toggleKey = "KeyY";   // abre menu (ativa/desativa)
-        this.teleportKey = "KeyT"; // TELEPORTA SEMPRE
-
-        document.addEventListener("keydown", this.handleKeys.bind(this));
     }
-
-    handleKeys(e) {
-        // Abre / fecha menu
-        if (e.code === this.toggleKey && !e.repeat) {
-            this.toggle();
-        }
-
-        // Teleporta SEMPRE (independente de enabled)
-        if (e.code === this.teleportKey && !e.repeat) {
-            this.teleport();
-        }
-    }
-
-    get player() {
-        return hooks.A?.gameWorld?.player;
-    }
-
-    teleport() {
-        if (!this.player) return;
-
-        const h = this.options["Home"];
-        const map = {
-            1: ["X", "Y", "Z"],
-            2: ["X2", "Y2", "Z2"],
-            3: ["X3", "Y3", "Z3"]
-        };
-
-        const k = map[h];
-        if (!k) return;
-
-        Object.assign(this.player.position, {
-            x: this.options[k[0]],
-            y: this.options[k[1]],
-            z: this.options[k[2]]
-        });
-
-        this.player.physicsPosComp.copyPos(this.player.position);
-    }
-
-    // Botão: salvar posição atual
-    onRender() {
-        if (!this.enabled) return;
-
-        if (this.options["Save current position"]) {
-            this.saveCurrentPosition();
-            this.options["Save current position"] = false;
+ 
+    /** Função de teleporte */
+    tp(x = 0, y = 0, z = 0, relative = true) {
+        try {
+            const player = hooks.A?.gameWorld?.player;
+            if (!player) return;
+ 
+            const position = player.position;
+            if (relative) {
+                position.x += x;
+                position.y += y;
+                position.z += z;
+            } else {
+                Object.assign(position, { x, y, z });
+            }
+            player.physicsPosComp.copyPos(position);
+        } catch (err) {
+            console.warn("Teleport falhou:", err);
         }
     }
-
-    saveCurrentPosition() {
-        if (!this.player) return;
-
-        const p = this.player.position;
-        const h = this.options["Home"];
-
-        if (h === 1) {
-            this.options.X = p.x;
-            this.options.Y = p.y;
-            this.options.Z = p.z;
-        } else if (h === 2) {
-            this.options.X2 = p.x;
-            this.options.Y2 = p.y;
-            this.options.Z2 = p.z;
-        } else if (h === 3) {
-            this.options.X3 = p.x;
-            this.options.Y3 = p.y;
-            this.options.Z3 = p.z;
+ 
+    /** Teleporta até o bloco selecionado (crosshair) */
+    tpToSelectedBlock() {
+        try {
+            const gameWorld = hooks.A?.gameWorld;
+            if (!gameWorld) return;
+ 
+            const outlineSystem = gameWorld.systemsManager.activeSystems.find(s => s.currBlockPos);
+            if (!outlineSystem) return;
+ 
+            outlineSystem.intersectAndShow(true, 500);
+            if (!outlineSystem.currBlockPos) return;
+ 
+            const { x, y, z } = outlineSystem.currBlockPos;
+            this.tp(x, y + 1, z, false);
+        } catch (err) {
+            console.warn("Erro ao teleportar:", err);
         }
     }
 }
-
-
-     class HitModule extends Module {
+ 
+ 
+ 
+ 
+  class HitModule extends Module {
     constructor() {
-        super("2HitAll", "Combat", null, "KeyX"); // Atalho: tecla X
+        // Mantido em Combat com atalho na tecla X
+        super("2HitAll", "Combat", null, "KeyX");
     }
 
     hitAll() {
         try {
-            hooks.A?.gameWorld?.server?.players.forEach(plr => {
-                const { x, y, z } = plr.model.position;
+            const network = hooks.A?.network;
+            const server = hooks.A?.gameWorld?.server;
+            const players = hooks.A?.gameWorld?.server?.players;
 
-                if (plr.hasOwnProperty('isBlock')) { // HNS
+            // Verifica se as instâncias do jogo estão prontas
+            if (!network || !server || !players) return;
+
+            players.forEach(plr => {
+                // Não ataca a si mesmo
+                if (plr.sessionId === server.sessionId) return;
+
+                const { x, y, z } = plr.model.position;
+                const time = hooks.A.gameWorld.time.localServerTimeMs;
+
+                // Referência corrigida: packetsOut vira network.toServer
+                if (plr.hasOwnProperty('isBlock')) { // Modo HNS (Hide and Seek)
                     if (plr.isHunter) return;
-                    hooks.A.gameWorld.server.sendData(
-                        packetsOut.HNS_ATTACK_BLOCK,
-                        [x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001,
-                         hooks.A.gameWorld.time.localServerTimeMs, plr.sessionId]
+                    server.sendData(
+                        network.toServer.HNS_ATTACK_BLOCK,
+                        [x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, time, plr.sessionId]
                     );
-                } else if (plr.hasOwnProperty('isZombie')) { // Infection
+                } else if (plr.hasOwnProperty('isZombie')) { // Modo Infection
                     if (plr.isZombie) return;
-                    hooks.A.gameWorld.server.sendData(
-                        packetsOut.HIT,
-                        [hooks.A.gameWorld.time.localServerTimeMs, x, y + 0.1, z,
-                         0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]
+                    server.sendData(
+                        network.toServer.HIT,
+                        [time, x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]
                     );
-                } else { // Other
-                    hooks.A.gameWorld.server.sendData(
-                        packetsOut.HIT,
-                        [hooks.A.gameWorld.time.localServerTimeMs, x, y + 0.1, z,
-                         0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]
+                } else { // Modos Normais
+                    server.sendData(
+                        network.toServer.HIT,
+                        [time, x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]
                     );
                 }
             });
-        } catch {}
+        } catch (err) {
+            console.error("Erro no HitAll:", err);
+        }
     }
 
     onEnable() {
-        this.hitAll(); // executa quando ativado pelo menu ou tecla X
+        this.hitAll();
+        // Opcional: Desativa automaticamente após bater para você poder apertar de novo
+        this.disable(); 
     }
 }
-
-
+ 
 class CustomCrosshair extends Module {
     constructor() {
         super("CustomCrosshair", "Visual", {
@@ -1432,10 +1551,10 @@ class CustomCrosshair extends Module {
         });
         this.crosshair = null;
     }
-
+ 
     createCrosshair() {
         if (this.crosshair) return;
-
+ 
         const crosshair = document.createElement("div");
         crosshair.id = "custom-crosshair";
         crosshair.style.position = "fixed";
@@ -1445,10 +1564,10 @@ class CustomCrosshair extends Module {
         crosshair.style.zIndex = "9999";
         crosshair.style.pointerEvents = "none";
         document.body.appendChild(crosshair);
-
+ 
         this.crosshair = crosshair;
     }
-
+ 
     clearCrosshair() {
         if (!this.crosshair) return;
         this.crosshair.innerHTML = "";
@@ -1462,15 +1581,15 @@ class CustomCrosshair extends Module {
         this.crosshair.style.webkitMaskImage = "";
         this.crosshair.style.display = "none";
     }
-
+ 
     applyCrosshair(style) {
         if (!this.crosshair) this.createCrosshair();
         this.clearCrosshair();
-
+ 
         this.crosshair.style.display = "flex";
         this.crosshair.style.alignItems = "center";
         this.crosshair.style.justifyContent = "center";
-
+ 
         switch (style) {
             case "myrrr":
                 this.crosshair.style.width = "15px";
@@ -1495,7 +1614,7 @@ class CustomCrosshair extends Module {
                 this.crosshair.appendChild(horiz);
                 this.crosshair.appendChild(vert);
                 break;
-
+ 
             case "dot":
                 this.crosshair.style.width = "8px";
                 this.crosshair.style.height = "8px";
@@ -1503,7 +1622,7 @@ class CustomCrosshair extends Module {
                 this.crosshair.style.background = "#fff";
                 this.crosshair.style.filter = "drop-shadow(0 0 4px #66f)";
                 break;
-
+ 
             case "shotgun":
                 this.crosshair.style.width = "20px";
                 this.crosshair.style.height = "20px";
@@ -1513,7 +1632,7 @@ class CustomCrosshair extends Module {
                 this.crosshair.style.background = "rgba(255, 255, 255, 0.1)";
                 this.crosshair.style.filter = "drop-shadow(0 0 6px #0ff)";
                 break;
-
+ 
             case "ceborix":
             default:
                 this.crosshair.style.width = "12px";
@@ -1539,21 +1658,21 @@ class CustomCrosshair extends Module {
                 break;
         }
     }
-
+ 
     onEnable() {
         this.createCrosshair();
         this.applyCrosshair(this.options.Style);
     }
-
+ 
     onSettingUpdate() {
         this.applyCrosshair(this.options.Style);
     }
-
+ 
     onDisable() {
         if (this.crosshair) this.crosshair.style.display = "none";
     }
 }
-
+ 
  class GhostMode extends Module {
     constructor() {
         super("GhostMode", "Movement", {
@@ -1562,37 +1681,37 @@ class CustomCrosshair extends Module {
         });
         this.isGhost = false;
     }
-
+ 
     onEnable() {
         const player = hooks.A?.gameWorld?.player;
         if (!player || !player.model) return;
         const model = player.model;
-
+ 
         if (this.settings.Fade) {
             this.fadeModel(model, this.settings.Duration, false);
         } else {
             model.visible = false;
         }
-
+ 
         this.isGhost = true;
         console.log("[GhostMode] Modelo oculto localmente.");
     }
-
+ 
     onDisable() {
         const player = hooks.A?.gameWorld?.player;
         if (!player || !player.model) return;
         const model = player.model;
-
+ 
         if (this.settings.Fade) {
             this.fadeModel(model, this.settings.Duration, true);
         } else {
             model.visible = true;
         }
-
+ 
         this.isGhost = false;
         console.log("[GhostMode] Modelo visível novamente.");
     }
-
+ 
     // Função utilitária para fade in/out do modelo (educacional)
     fadeModel(model, duration = 600, visible = false) {
         if (!model) return;
@@ -1605,11 +1724,11 @@ class CustomCrosshair extends Module {
                 meshes.push(obj);
             }
         });
-
+ 
         const start = performance.now();
         const from = visible ? 0 : 1;
         const to = visible ? 1 : 0;
-
+ 
         function animate(now) {
             const t = Math.min(1, (now - start) / duration);
             const value = from + (to - from) * t;
@@ -1619,17 +1738,17 @@ class CustomCrosshair extends Module {
             });
             if (t < 1) requestAnimationFrame(animate);
         }
-
+ 
         requestAnimationFrame(animate);
     }
 }
-
-
+ 
+ 
 class NoFog extends Module {
     constructor() {
         super("NoFog", "Visual", null);
     }
-
+ 
     onRender() {
         try {
             if (hooks.A?.gameWorld?.threeScene?.scene?.fog) {
@@ -1644,7 +1763,7 @@ class NoFog extends Module {
         } catch {}
     }
 }
-
+ 
     const module_moduleManager = {
         modules: {},
         addModules: function(...e) {
@@ -1660,7 +1779,7 @@ class NoFog extends Module {
             }
         },
         init() {
-            this.addModules(new ArrayList, new Watermark, new ClickGUI, new Airjump, new Instabreak, new Nuker, new Nuker1, new AdBypass, new Fly, new Speed, new FreeHeadcoins, new FreeMinebucks, new FreeSpins, new Fill, new Chams, new FOVChanger, new NoFall, new NoDrown, new NoHunger, new Scaffold, new Killaura, new GunModifier, new Disabler, new GhostMode, new Aimbot, new NoClip, new HitAllModule, new TeleportModule, new NoFog, new CustomCrosshair, new HitModule, new KnockbackDisabler), events.on("render", (() => {
+            this.addModules(new ArrayList, new Watermark, new ClickGUI, new Airjump, new Instabreak, new Nuker, new Nuker1, new AdBypass, new Fly, new Speed, new FreeHeadcoins, new FreeMinebucks, new FreeSpins, new Fill, new Chams, new FOVChanger, new DiamondXray, new NoFall, new NoDrown, new NoHunger, new Scaffold, new Killaura, new GunModifier, new Disabler, new GhostMode, new Aimbot, new NoClip, new HitAllModule, new TeleportModule, new NoFog, new CustomCrosshair, new HitModule, new KnockbackDisabler), events.on("render", (() => {
                 for (let e in this.modules) this.modules[e].isEnabled && this.modules[e].onRender()
             })), events.on("keydown", this.handleKeyPress.bind(this)), events.on("setting.update", (() => {
                 for (let e in this.modules) this.modules[e].isEnabled && this.modules[e].onSettingUpdate()
@@ -1676,7 +1795,7 @@ class NoFog extends Module {
                 events.emit("render")
             }), 1e3 / 60), document.addEventListener("keydown", (e => {
                 events.emit("keydown", e.code)
-            })), hooks.A.init(), module_moduleManager.init(), window.hooks = hooks.A
+            })), hooks.A.init(), module_moduleManager.init(), U.init(), this.packets = U, window.hooks = hooks.A
         }
         disable() {}
     }

@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         vamvideo
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.3
 // @description  作者标记，作者列表折叠
 // @author       ssnangua
 // @match        https://www.vamvideo.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=vamvideo.com
 // @grant        GM_addStyle
+// @grant        unsafeWindow
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/544416/vamvideo.user.js
 // @updateURL https://update.greasyfork.org/scripts/544416/vamvideo.meta.js
@@ -33,7 +34,8 @@
           for (let name in value) el.style[name] = value[name];
         }
       } else if (key === "className") el.className = value;
-      else if (/^on[^a-z]/.test(key) && typeof value === "function") el.addEventListener(key.slice(2).toLowerCase(), value);
+      else if (/^on[^a-z]/.test(key) && typeof value === "function")
+        el.addEventListener(key.slice(2).toLowerCase(), value);
       else el.setAttribute(key, value);
     }
 
@@ -45,15 +47,17 @@
 
   // 作者标记
   const pinCache = {
-    data: localStorage.pin ? JSON.parse(localStorage.pin) : {},
-    get(author) {
+    data: JSON.parse(localStorage.pin || "{}"),
+    getItem(author) {
       return this.data[author];
     },
-    set(author, item) {
+    setItem(author, item) {
+      this.data = JSON.parse(localStorage.pin || "{}");
       this.data[author] = item;
       localStorage.pin = JSON.stringify(this.data);
     },
   };
+  unsafeWindow.pinCache = pinCache;
 
   const list = $$(".post").map(($post) => {
     const $img = $("img", $post);
@@ -73,7 +77,7 @@
       {
         className: "pin",
         onClick() {
-          pinCache.set(item.author, item);
+          pinCache.setItem(item.author, item);
           updatePinState();
         },
       },
@@ -86,7 +90,7 @@
 
   function updatePinState() {
     list.forEach((item) => {
-      const pin = pinCache.get(item.author);
+      const pin = pinCache.getItem(item.author);
       if (!pin) return;
       item.$post.classList.toggle("old", item.dateValue <= pin.dateValue);
       item.$pin.classList.toggle("cur", item.title === pin.title);
@@ -116,6 +120,10 @@
   }
 
   GM_addStyle(`
+    .banner-archive {
+      display: none;
+    }
+
     .header > .container {
       display: flex;
 

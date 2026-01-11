@@ -6,9 +6,9 @@
 // @match *://*.iesdouyin.com/*
 // @exclude *://lf-zt.douyin.com*
 // @grant none
-// @version 3.4
-// @changelog 优化文档描述，调整跨域配置指引
-// @description 自动跳过直播、智能屏蔽关键字（自动不感兴趣）、跳过广告、最高分辨率、分辨率筛选、AI智能筛选（自动点赞）、极速模式
+// @version 3.5
+// @changelog 新增智谱AI支持（免费在线视觉模型），无需本地部署，准确度相比Ollama开源模型有显著提升
+// @description 自动跳过直播、智能屏蔽关键字（自动不感兴趣）、跳过广告、最高分辨率、分辨率筛选、AI智能筛选（支持智谱/Ollama）、极速模式
 // @author Frequenk
 // @license GPL-3.0 License
 // @run-at document-start
@@ -151,7 +151,12 @@
                     enabled: false,
                     key: 'aiPreference',
                     content: this.loadAiContent(),
+                    provider: this.loadAiProvider(),
+                    // Ollama 配置
                     model: this.loadAiModel(),
+                    // 智谱配置
+                    zhipuApiKey: this.loadZhipuApiKey(),
+                    zhipuModel: this.loadZhipuModel(),
                     autoLike: this.loadAutoLikeSetting()
                 },
                 speedMode: {
@@ -193,8 +198,21 @@
             return localStorage.getItem('douyin_ai_content') || '露脸的美女';
         }
 
+        loadAiProvider() {
+            // 默认 ollama，保持向后兼容
+            return localStorage.getItem('douyin_ai_provider') || 'ollama';
+        }
+
         loadAiModel() {
             return localStorage.getItem('douyin_ai_model') || 'qwen3-vl:8b';
+        }
+
+        loadZhipuApiKey() {
+            return localStorage.getItem('douyin_zhipu_api_key') || '';
+        }
+
+        loadZhipuModel() {
+            return localStorage.getItem('douyin_zhipu_model') || 'glm-4.6v-flash';
         }
 
         loadTargetResolution() {
@@ -248,9 +266,24 @@
             localStorage.setItem('douyin_ai_content', content);
         }
 
+        saveAiProvider(provider) {
+            this.config.aiPreference.provider = provider;
+            localStorage.setItem('douyin_ai_provider', provider);
+        }
+
         saveAiModel(model) {
             this.config.aiPreference.model = model;
             localStorage.setItem('douyin_ai_model', model);
+        }
+
+        saveZhipuApiKey(apiKey) {
+            this.config.aiPreference.zhipuApiKey = apiKey;
+            localStorage.setItem('douyin_zhipu_api_key', apiKey);
+        }
+
+        saveZhipuModel(model) {
+            this.config.aiPreference.zhipuModel = model;
+            localStorage.setItem('douyin_zhipu_model', model);
         }
 
         saveTargetResolution(resolution) {
@@ -490,7 +523,97 @@
             return btnContainer;
         }
 
-        static showErrorDialog() {
+        // 智谱注册引导弹窗
+        static showZhipuGuideDialog() {
+            // 移除已存在的引导弹窗
+            const existingGuide = document.querySelector('.zhipu-guide-dialog');
+            if (existingGuide) {
+                existingGuide.remove();
+                return;
+            }
+
+            const dialog = document.createElement('div');
+            dialog.className = 'zhipu-guide-dialog';
+            dialog.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.95);
+                border: 2px solid rgba(254, 44, 85, 0.8);
+                color: white;
+                padding: 25px;
+                border-radius: 12px;
+                z-index: 10002;
+                max-width: 420px;
+                max-height: 85vh;
+                overflow-y: auto;
+                text-align: left;
+                font-size: 14px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            `;
+
+            const stepStyle = `background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid #fe2c55;`;
+            const stepTitleStyle = `color: #fe2c55; font-size: 15px; font-weight: bold; margin-bottom: 8px;`;
+
+            dialog.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 24px; margin-bottom: 8px;">🔑 如何获取智谱 API Key</div>
+                    <p style="color: #aaa; font-size: 12px; margin: 0;">免费注册，无需本地部署，即可使用 AI 视觉筛选</p>
+                </div>
+
+                <div style="${stepStyle}">
+                    <div style="${stepTitleStyle}">步骤一：注册账号</div>
+                    <div style="color: rgba(255,255,255,0.8); line-height: 1.6;">
+                        访问 <a href="https://www.bigmodel.cn/invite?icode=GrgfvImGKwdq1i6nWogBXQZ3c5owLmCCcMQXWcJRS8E%3D" target="_blank" style="color: #fe2c55; text-decoration: underline;">智谱开放平台</a>，点击右上角「注册/登录」<br>
+                        使用手机号或微信扫码完成注册
+                    </div>
+                </div>
+
+                <div style="${stepStyle}">
+                    <div style="${stepTitleStyle}">步骤二：获取 API Key</div>
+                    <div style="color: rgba(255,255,255,0.8); line-height: 1.6;">
+                        登录后进入「个人中心」→「API Keys」<br>
+                        点击「添加新的 API Key」按钮，复制生成的 Key
+                    </div>
+                </div>
+
+                <div style="background: rgba(254, 44, 85, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <div style="color: #fe2c55; font-size: 13px; margin-bottom: 5px;">💡 推荐使用免费模型</div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 12px; line-height: 1.5;">
+                        <strong>GLM-4.6V-Flash</strong> - 视觉推理能力强，速度快
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="zhipu-guide-close" style="
+                        background: #fe2c55;
+                        color: white;
+                        border: none;
+                        padding: 10px 30px;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 14px;
+                    ">我知道了</button>
+                </div>
+            `;
+
+            document.body.appendChild(dialog);
+
+            dialog.querySelector('.zhipu-guide-close').addEventListener('click', (e) => {
+                e.stopPropagation();
+                dialog.remove();
+            });
+
+            // 阻止弹窗内部点击事件冒泡，避免关闭设置弹窗
+            dialog.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+        // 错误提示弹窗，根据服务商显示不同内容
+        static showErrorDialog(provider = 'ollama') {
             const dialog = document.createElement('div');
             dialog.className = 'error-dialog-' + Date.now();
             dialog.style.cssText = `
@@ -513,59 +636,110 @@
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             `;
 
-            const commonStyle = `background: rgba(255, 255, 255, 0.1); padding: 8px; border-radius: 4px; font-family: monospace; margin: 5px 0; display: block; user-select: text;`;
-            const h3Style = `color: #fe2c55; margin: 15px 0 8px 0; font-size: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;`;
+            if (provider === 'zhipu') {
+                // 智谱错误提示
+                dialog.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">⚠️ 智谱 API 调用失败</div>
+                        <p style="color: #aaa; font-size: 13px;">请检查以下可能的原因</p>
+                    </div>
 
-            dialog.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 32px; margin-bottom: 10px;">⚠️ 连接失败</div>
-                    <p style="color: #aaa; font-size: 13px;">请确保 <a href="https://ollama.com/" target="_blank" style="color: #fe2c55;">Ollama</a> 已运行并配置跨域访问</p>
-                </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="color: #fe2c55; font-size: 15px; margin-bottom: 10px; font-weight: bold;">常见问题排查</div>
+                        <ul style="padding-left: 20px; margin: 0; line-height: 1.8; color: rgba(255,255,255,0.8);">
+                            <li>检查 API Key 是否正确复制（无多余空格）</li>
+                            <li>确认账户已完成实名认证</li>
+                            <li>检查是否触发速率限制（免费用户并发上限为3）</li>
+                        </ul>
+                    </div>
 
-                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h3 style="${h3Style}">🖥️ Windows 配置</h3>
-                    <ol style="padding-left: 20px; margin: 0; line-height: 1.6;">
-                        <li>打开 <strong>控制面板</strong> -> 系统 -> 高级系统设置 -> 环境变量</li>
-                        <li>在 <strong>用户变量</strong> 点击新建，添加两个变量：
-                            <div style="${commonStyle}">
-                                OLLAMA_HOST = 0.0.0.0<br>
-                                OLLAMA_ORIGINS = *
-                            </div>
-                        </li>
-                        <li>点击确定保存，重启 Ollama</li>
-                    </ol>
+                    <div style="text-align: center;">
+                        <button class="zhipu-guide-btn" style="
+                            background: transparent;
+                            color: #fe2c55;
+                            border: 1px solid #fe2c55;
+                            padding: 8px 20px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 13px;
+                            margin-right: 10px;
+                        ">查看注册教程</button>
+                        <button class="error-dialog-close" style="
+                            background: #fe2c55;
+                            color: white;
+                            border: none;
+                            padding: 8px 20px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 13px;
+                        ">关闭</button>
+                    </div>
+                `;
+            } else {
+                // Ollama 错误提示（原有逻辑）
+                const commonStyle = `background: rgba(255, 255, 255, 0.1); padding: 8px; border-radius: 4px; font-family: monospace; margin: 5px 0; display: block; user-select: text;`;
+                const h3Style = `color: #fe2c55; margin: 15px 0 8px 0; font-size: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;`;
 
-                    <h3 style="${h3Style}">🍎 macOS 配置</h3>
-                    <div style="margin-bottom: 5px;">打开终端运行以下命令，然后重启 Ollama：</div>
-                    <code style="${commonStyle}">
-                        launchctl setenv OLLAMA_HOST "0.0.0.0"<br>
-                        launchctl setenv OLLAMA_ORIGINS "*"
-                    </code>
+                dialog.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">⚠️ 连接失败</div>
+                        <p style="color: #aaa; font-size: 13px;">请确保 <a href="https://ollama.com/" target="_blank" style="color: #fe2c55;">Ollama</a> 已运行并配置跨域访问</p>
+                    </div>
 
-                    <h3 style="${h3Style}">🐧 Linux (systemd) 配置</h3>
-                    <div style="margin-bottom: 5px;">1. 编辑服务配置: <code style="background:rgba(255,255,255,0.1); px-1">sudo systemctl edit ollama.service</code></div>
-                    <div style="margin-bottom: 5px;">2. 在 <code style="color:#aaa">[Service]</code> 下方添加：</div>
-                    <code style="${commonStyle}">
-                        [Service]<br>
-                        Environment="OLLAMA_HOST=0.0.0.0"<br>
-                        Environment="OLLAMA_ORIGINS=*"
-                    </code>
-                    <div style="margin-top: 5px;">3. 重启服务: <code style="background:rgba(255,255,255,0.1); px-1">sudo systemctl daemon-reload && sudo systemctl restart ollama</code></div>
-                </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="${h3Style}">🖥️ Windows 配置</h3>
+                        <ol style="padding-left: 20px; margin: 0; line-height: 1.6;">
+                            <li>打开 <strong>控制面板</strong> -> 系统 -> 高级系统设置 -> 环境变量</li>
+                            <li>在 <strong>用户变量</strong> 点击新建，添加两个变量：
+                                <div style="${commonStyle}">
+                                    OLLAMA_HOST = 0.0.0.0<br>
+                                    OLLAMA_ORIGINS = *
+                                </div>
+                            </li>
+                            <li>点击确定保存，重启 Ollama</li>
+                        </ol>
 
-                <div style="text-align: center;">
-                    <div class="error-dialog-close" style="margin-top: 10px; font-size: 14px; color: #fe2c55; cursor: pointer; text-decoration: underline;">关闭</div>
-                </div>
-            `;
+                        <h3 style="${h3Style}">🍎 macOS 配置</h3>
+                        <div style="margin-bottom: 5px;">打开终端运行以下命令，然后重启 Ollama：</div>
+                        <code style="${commonStyle}">
+                            launchctl setenv OLLAMA_HOST "0.0.0.0"<br>
+                            launchctl setenv OLLAMA_ORIGINS "*"
+                        </code>
+
+                        <h3 style="${h3Style}">🐧 Linux (systemd) 配置</h3>
+                        <div style="margin-bottom: 5px;">1. 编辑服务配置: <code style="background:rgba(255,255,255,0.1); px-1">sudo systemctl edit ollama.service</code></div>
+                        <div style="margin-bottom: 5px;">2. 在 <code style="color:#aaa">[Service]</code> 下方添加：</div>
+                        <code style="${commonStyle}">
+                            [Service]<br>
+                            Environment="OLLAMA_HOST=0.0.0.0"<br>
+                            Environment="OLLAMA_ORIGINS=*"
+                        </code>
+                        <div style="margin-top: 5px;">3. 重启服务: <code style="background:rgba(255,255,255,0.1); px-1">sudo systemctl daemon-reload && sudo systemctl restart ollama</code></div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div class="error-dialog-close" style="margin-top: 10px; font-size: 14px; color: #fe2c55; cursor: pointer; text-decoration: underline;">关闭</div>
+                    </div>
+                `;
+            }
 
             document.body.appendChild(dialog);
 
-            // 点击关闭文字
+            // 点击关闭按钮
             dialog.querySelector('.error-dialog-close').addEventListener('click', () => {
                 dialog.remove();
             });
 
-            // 点击背景关闭
+            // 智谱错误弹窗中的"查看注册教程"按钮
+            const guideBtn = dialog.querySelector('.zhipu-guide-btn');
+            if (guideBtn) {
+                guideBtn.addEventListener('click', () => {
+                    dialog.remove();
+                    UIFactory.showZhipuGuideDialog();
+                });
+            }
+
+            // 点击弹窗外部关闭
             dialog.addEventListener('click', (e) => {
                 if (e.target === dialog) dialog.remove();
             });
@@ -791,100 +965,205 @@
         }
 
         showAiPreferenceDialog() {
-            const currentContent = this.config.get('aiPreference').content;
-            const currentModel = this.config.get('aiPreference').model;
-            const autoLikeEnabled = this.config.get('aiPreference').autoLike;
+            const aiConfig = this.config.get('aiPreference');
+            const currentContent = aiConfig.content;
+            const currentProvider = aiConfig.provider;
+            const currentOllamaModel = aiConfig.model;
+            const currentZhipuApiKey = aiConfig.zhipuApiKey;
+            const currentZhipuModel = aiConfig.zhipuModel;
+            const autoLikeEnabled = aiConfig.autoLike;
+
+            // 智谱免费模型列表
+            const zhipuModels = [
+                { value: 'glm-4.6v-flash', label: 'GLM-4.6V-Flash (免费)', desc: '视觉推理，速度快' }
+            ];
+            const isZhipuCustomModel = !zhipuModels.some(m => m.value === currentZhipuModel);
+
+            // Ollama 模型列表
+            const ollamaModels = ['qwen3-vl:8b', 'qwen2.5vl:7b'];
+            const isOllamaCustomModel = !ollamaModels.includes(currentOllamaModel);
+
+            const selectStyle = `width: 100%; padding: 8px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; appearance: none; cursor: pointer;`;
+            const inputStyle = `width: 100%; padding: 8px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px;`;
+            const labelStyle = `color: rgba(255, 255, 255, 0.7); font-size: 12px; display: block; margin-bottom: 5px;`;
 
             const content = `
+                <!-- 想看的内容 -->
                 <div style="margin-bottom: 15px;">
-                    <label style="color: rgba(255, 255, 255, 0.7); font-size: 12px; display: block; margin-bottom: 5px;">
-                        想看什么内容？（例如：露脸的美女、猫咪）
-                    </label>
-                    <input type="text" class="ai-content-input" value="${currentContent}" placeholder="输入你想看的内容"
-                        style="width: 100%; padding: 8px; background: rgba(255, 255, 255, 0.1);
-                               color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px;">
+                    <label style="${labelStyle}">想看什么内容？（例如：露脸的美女、猫咪）</label>
+                    <input type="text" class="ai-content-input" value="${currentContent}" placeholder="输入你想看的内容" style="${inputStyle}">
                 </div>
 
+                <!-- 服务商选择 -->
                 <div style="margin-bottom: 15px;">
-                    <label style="color: rgba(255, 255, 255, 0.7); font-size: 12px; display: block; margin-bottom: 5px;">
-                        AI模型选择
-                    </label>
+                    <label style="${labelStyle}">AI服务商 <span style="color: #fe2c55; font-weight: bold;">✨ 新增智谱AI</span></label>
                     <div style="position: relative;">
-                        <select class="ai-model-select"
-                            style="width: 100%; padding: 8px; background: rgba(255, 255, 255, 0.1);
-                                   color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px;
-                                   appearance: none; cursor: pointer;">
-                            <option value="qwen3-vl:8b" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentModel === 'qwen3-vl:8b' ? 'selected' : ''}>qwen3-vl:8b (推荐)</option>
-                            <option value="qwen2.5vl:7b" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentModel === 'qwen2.5vl:7b' ? 'selected' : ''}>qwen2.5vl:7b</option>
-                            <option value="custom" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentModel !== 'qwen3-vl:8b' && currentModel !== 'qwen2.5vl:7b' ? 'selected' : ''}>自定义模型</option>
+                        <select class="ai-provider-select" style="${selectStyle}">
+                            <option value="ollama" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentProvider === 'ollama' ? 'selected' : ''}>Ollama (本地部署)</option>
+                            <option value="zhipu" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentProvider === 'zhipu' ? 'selected' : ''}>智谱AI (免费在线) ⭐</option>
                         </select>
-                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-                                   pointer-events: none; color: rgba(255, 255, 255, 0.5);">▼</span>
+                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: rgba(255, 255, 255, 0.5);">▼</span>
                     </div>
-                    <input type="text" class="ai-model-input" value="${currentModel !== 'qwen3-vl:8b' && currentModel !== 'qwen2.5vl:7b' ? currentModel : ''}"
-                        placeholder="输入自定义模型名称"
-                        style="width: 100%; padding: 8px; margin-top: 10px; background: rgba(255, 255, 255, 0.1);
-                               color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px;
-                               display: ${currentModel !== 'qwen3-vl:8b' && currentModel !== 'qwen2.5vl:7b' ? 'block' : 'none'};">
                 </div>
 
+                <!-- Ollama 配置区域 -->
+                <div class="ollama-config-section" style="display: ${currentProvider === 'ollama' ? 'block' : 'none'}; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; margin-bottom: 15px;">
+                    <label style="${labelStyle}">Ollama 模型选择</label>
+                    <div style="position: relative;">
+                        <select class="ollama-model-select" style="${selectStyle}">
+                            <option value="qwen3-vl:8b" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentOllamaModel === 'qwen3-vl:8b' ? 'selected' : ''}>qwen3-vl:8b (推荐)</option>
+                            <option value="qwen2.5vl:7b" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentOllamaModel === 'qwen2.5vl:7b' ? 'selected' : ''}>qwen2.5vl:7b</option>
+                            <option value="custom" style="background: rgba(0, 0, 0, 0.9); color: white;" ${isOllamaCustomModel ? 'selected' : ''}>自定义模型</option>
+                        </select>
+                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: rgba(255, 255, 255, 0.5);">▼</span>
+                    </div>
+                    <input type="text" class="ollama-model-input" value="${isOllamaCustomModel ? currentOllamaModel : ''}" placeholder="输入自定义模型名称"
+                        style="${inputStyle} margin-top: 10px; display: ${isOllamaCustomModel ? 'block' : 'none'};">
+                    <div style="color: rgba(255, 255, 255, 0.5); font-size: 11px; margin-top: 10px;">
+                        提示：需要安装 <a href="https://ollama.com/" target="_blank" style="color: #fe2c55;">Ollama</a> 并下载视觉模型
+                    </div>
+                </div>
+
+                <!-- 智谱配置区域 -->
+                <div class="zhipu-config-section" style="display: ${currentProvider === 'zhipu' ? 'block' : 'none'}; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; margin-bottom: 15px;">
+                    <label style="${labelStyle}">API Key</label>
+                    <input type="password" class="zhipu-apikey-input" value="${currentZhipuApiKey}" placeholder="输入智谱 API Key" style="${inputStyle}">
+                    <div style="color: rgba(255, 255, 255, 0.5); font-size: 11px; margin-top: 8px;">
+                        前往 <a href="https://www.bigmodel.cn/invite?icode=GrgfvImGKwdq1i6nWogBXQZ3c5owLmCCcMQXWcJRS8E%3D" target="_blank" style="color: #fe2c55; text-decoration: underline;">智谱</a> 注册获取免费 API Key，
+                        <span class="zhipu-guide-trigger" style="color: #fe2c55; cursor: pointer; text-decoration: underline;">查看教程</span>
+                    </div>
+
+                    <label style="${labelStyle} margin-top: 15px;">模型选择</label>
+                    <div style="position: relative;">
+                        <select class="zhipu-model-select" style="${selectStyle}">
+                            ${zhipuModels.map(m => `<option value="${m.value}" style="background: rgba(0, 0, 0, 0.9); color: white;" ${currentZhipuModel === m.value ? 'selected' : ''}>${m.label}</option>`).join('')}
+                            <option value="custom" style="background: rgba(0, 0, 0, 0.9); color: white;" ${isZhipuCustomModel ? 'selected' : ''}>自定义模型</option>
+                        </select>
+                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: rgba(255, 255, 255, 0.5);">▼</span>
+                    </div>
+                    <input type="text" class="zhipu-model-input" value="${isZhipuCustomModel ? currentZhipuModel : ''}" placeholder="输入自定义模型名称"
+                        style="${inputStyle} margin-top: 10px; display: ${isZhipuCustomModel ? 'block' : 'none'};">
+                </div>
+
+                <!-- 自动点赞选项 -->
                 <div style="margin-bottom: 15px; padding: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
                     <label style="display: flex; align-items: center; cursor: pointer; color: white; font-size: 13px;">
-                        <input type="checkbox" class="auto-like-checkbox" ${autoLikeEnabled ? 'checked' : ''}
-                               style="margin-right: 8px; transform: scale(1.2);">
+                        <input type="checkbox" class="auto-like-checkbox" ${autoLikeEnabled ? 'checked' : ''} style="margin-right: 8px; transform: scale(1.2);">
                         AI判定为喜欢的内容将自动点赞（Z键）
                     </label>
                     <div style="color: rgba(255, 255, 255, 0.5); font-size: 11px; margin-top: 5px; margin-left: 24px;">
                         帮助抖音算法了解你喜欢此类内容
                     </div>
                 </div>
-
-                <div style="color: rgba(255, 255, 255, 0.5); font-size: 11px; margin-bottom: 10px;">
-                    提示：需要安装 <a href="https://ollama.com/" target="_blank" style="color: #fe2c55;">Ollama</a> 并下载视觉模型
-                </div>
             `;
 
             const dialog = UIFactory.createDialog('ai-preference-dialog', '设置AI喜好', content, () => {
                 const contentInput = dialog.querySelector('.ai-content-input');
-                const modelSelect = dialog.querySelector('.ai-model-select');
-                const modelInput = dialog.querySelector('.ai-model-input');
+                const providerSelect = dialog.querySelector('.ai-provider-select');
                 const autoLikeCheckbox = dialog.querySelector('.auto-like-checkbox');
 
-                const content = contentInput.value.trim();
-                let model = modelSelect.value === 'custom'
-                    ? modelInput.value.trim()
-                    : modelSelect.value;
+                const contentValue = contentInput.value.trim();
+                const providerValue = providerSelect.value;
 
-                if (!content) {
+                if (!contentValue) {
                     alert('请输入想看的内容');
                     return false;
                 }
 
-                if (!model) {
-                    alert('请选择或输入模型名称');
-                    return false;
+                // 根据服务商验证和保存配置
+                if (providerValue === 'zhipu') {
+                    const apiKeyInput = dialog.querySelector('.zhipu-apikey-input');
+                    const zhipuModelSelect = dialog.querySelector('.zhipu-model-select');
+                    const zhipuModelInput = dialog.querySelector('.zhipu-model-input');
+
+                    const apiKey = apiKeyInput.value.trim();
+                    if (!apiKey) {
+                        alert('请输入智谱 API Key\n\n👉 前往智谱开放平台免费注册获取');
+                        UIFactory.showZhipuGuideDialog();
+                        return false;
+                    }
+
+                    let zhipuModel = zhipuModelSelect.value === 'custom'
+                        ? zhipuModelInput.value.trim()
+                        : zhipuModelSelect.value;
+
+                    if (!zhipuModel) {
+                        alert('请选择或输入模型名称');
+                        return false;
+                    }
+
+                    this.config.saveZhipuApiKey(apiKey);
+                    this.config.saveZhipuModel(zhipuModel);
+                } else {
+                    const ollamaModelSelect = dialog.querySelector('.ollama-model-select');
+                    const ollamaModelInput = dialog.querySelector('.ollama-model-input');
+
+                    let ollamaModel = ollamaModelSelect.value === 'custom'
+                        ? ollamaModelInput.value.trim()
+                        : ollamaModelSelect.value;
+
+                    if (!ollamaModel) {
+                        alert('请选择或输入模型名称');
+                        return false;
+                    }
+
+                    this.config.saveAiModel(ollamaModel);
                 }
 
-                this.config.saveAiContent(content);
-                this.config.saveAiModel(model);
+                this.config.saveAiContent(contentValue);
+                this.config.saveAiProvider(providerValue);
                 this.config.saveAutoLikeSetting(autoLikeCheckbox.checked);
 
-                this.notificationManager.showMessage('🤖 AI喜好: 设置已保存');
+                const providerName = providerValue === 'zhipu' ? '智谱AI' : 'Ollama';
+                this.notificationManager.showMessage(`🤖 AI喜好: 已切换到 ${providerName}`);
                 return true;
             });
 
-            // 处理模型选择切换
-            const modelSelect = dialog.querySelector('.ai-model-select');
-            const modelInput = dialog.querySelector('.ai-model-input');
+            if (!dialog) return;
 
-            modelSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'custom') {
-                    modelInput.style.display = 'block';
-                } else {
-                    modelInput.style.display = 'none';
-                    modelInput.value = '';
+            // 服务商切换事件
+            const providerSelect = dialog.querySelector('.ai-provider-select');
+            const ollamaSection = dialog.querySelector('.ollama-config-section');
+            const zhipuSection = dialog.querySelector('.zhipu-config-section');
+
+            providerSelect.addEventListener('change', (e) => {
+                const isZhipu = e.target.value === 'zhipu';
+                ollamaSection.style.display = isZhipu ? 'none' : 'block';
+                zhipuSection.style.display = isZhipu ? 'block' : 'none';
+
+                // 切换到智谱且 API Key 为空时，弹出引导
+                if (isZhipu) {
+                    const apiKeyInput = dialog.querySelector('.zhipu-apikey-input');
+                    if (!apiKeyInput.value.trim()) {
+                        UIFactory.showZhipuGuideDialog();
+                    }
                 }
             });
+
+            // Ollama 模型选择切换
+            const ollamaModelSelect = dialog.querySelector('.ollama-model-select');
+            const ollamaModelInput = dialog.querySelector('.ollama-model-input');
+            ollamaModelSelect.addEventListener('change', (e) => {
+                ollamaModelInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+                if (e.target.value !== 'custom') ollamaModelInput.value = '';
+            });
+
+            // 智谱模型选择切换
+            const zhipuModelSelect = dialog.querySelector('.zhipu-model-select');
+            const zhipuModelInput = dialog.querySelector('.zhipu-model-input');
+            zhipuModelSelect.addEventListener('change', (e) => {
+                zhipuModelInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+                if (e.target.value !== 'custom') zhipuModelInput.value = '';
+            });
+
+            // 智谱引导教程触发
+            const guideTrigger = dialog.querySelector('.zhipu-guide-trigger');
+            if (guideTrigger) {
+                guideTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    UIFactory.showZhipuGuideDialog();
+                });
+            }
 
             // 防止复选框点击时关闭弹窗
             dialog.querySelector('.auto-like-checkbox').addEventListener('click', (e) => {
@@ -1182,8 +1461,9 @@
                 this.currentCheckIndex++;
             } catch (error) {
                 console.error('AI判断功能出错:', error);
-                // 显示错误提示
-                UIFactory.showErrorDialog();
+                // 显示错误提示，根据服务商类型显示不同内容
+                const provider = this.config.get('aiPreference').provider;
+                UIFactory.showErrorDialog(provider);
                 // 关闭AI喜好模式
                 this.config.setEnabled('aiPreference', false);
                 UIManager.updateToggleButtons('ai-preference-button', false);
@@ -1216,7 +1496,18 @@
             return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
         }
 
+        // 根据服务商选择调用方式
         async callAI(base64Image) {
+            const provider = this.config.get('aiPreference').provider;
+            if (provider === 'zhipu') {
+                return await this.callZhipuAI(base64Image);
+            } else {
+                return await this.callOllamaAI(base64Image);
+            }
+        }
+
+        // Ollama 本地 API 调用
+        async callOllamaAI(base64Image) {
             const content = this.config.get('aiPreference').content;
             const model = this.config.get('aiPreference').model;
 
@@ -1232,11 +1523,53 @@
             });
 
             if (!response.ok) {
-                throw new Error(`AI请求失败: ${response.status}`);
+                throw new Error(`Ollama请求失败: ${response.status}`);
             }
 
             const result = await response.json();
             return result.response?.trim();
+        }
+
+        // 智谱 API 调用
+        async callZhipuAI(base64Image) {
+            const content = this.config.get('aiPreference').content;
+            const zhipuModel = this.config.get('aiPreference').zhipuModel;
+            const apiKey = this.config.get('aiPreference').zhipuApiKey;
+
+            if (!apiKey) {
+                throw new Error('智谱 API Key 未配置');
+            }
+
+            const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: zhipuModel,
+                    messages: [{
+                        role: 'user',
+                        content: [
+                            { type: 'text', text: `这是${content}吗?回答『是』或者『不是』,不要说任何多余的字符` },
+                            { type: 'image_url', image_url: { url: base64Image } }
+                        ]
+                    }],
+                    stream: false
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`智谱请求失败: ${response.status} - ${errorText}`);
+            }
+
+            const result = await response.json();
+            // 智谱返回格式: { choices: [{ message: { content: '是' } }] }
+            let answer = result.choices?.[0]?.message?.content?.trim() || '';
+            // 清理可能存在的 <think> 标签
+            answer = answer.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+            return answer;
         }
 
         handleResponse(aiResponse) {

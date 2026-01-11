@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Auto Tags Filler for Iromirai & Chichi-pui
-// @name:ja      タグ入力補助 for イロミライ＆ちちぷい
-// @description    Auto-fills tags for Iromirai & Chichi-pui.
+// @name         Auto Tags Filler for chichi-pui & iromirai
+// @name:ja      タグ入力補助 for ちちぷい＆イロミライ
+// @description    Auto-fills tags for chichi-pui & iromirai.
 // @description:ja イロミライとちちぷいのタグ入力を補助します。
 // @namespace    https://bsky.app/profile/neon-ai.art
-// @homepage     https://bsky.app/profile/neon-ai.art
+// @homepage     https://neon-aiart.github.io/
 // @icon         data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛄️</text></svg>
 // @version     7.3
 // @author       ねおん
@@ -14,8 +14,8 @@
 // @grant        GM_setValue
 // @require      https://greasyfork.org/scripts/28536-gm-config/code/GM_config.js?version=184529
 // @license      CC BY-NC 4.0
-// @downloadURL https://update.greasyfork.org/scripts/542540/Auto%20Tags%20Filler%20for%20Iromirai%20%20Chichi-pui.user.js
-// @updateURL https://update.greasyfork.org/scripts/542540/Auto%20Tags%20Filler%20for%20Iromirai%20%20Chichi-pui.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/542540/Auto%20Tags%20Filler%20for%20chichi-pui%20%20iromirai.user.js
+// @updateURL https://update.greasyfork.org/scripts/542540/Auto%20Tags%20Filler%20for%20chichi-pui%20%20iromirai.meta.js
 // ==/UserScript==
 
 /**

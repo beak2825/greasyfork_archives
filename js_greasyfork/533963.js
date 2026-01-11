@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Grok Rate Limit Display
 // @namespace    http://tampermonkey.net/
-// @version      5.2
-// @description  Displays remaining queries on grok.com. Ported from the Chrome Extension.
-// @author       Blankspeaker
+// @version      5.2.27
+// @description  Displays remaining queries on grok.com
+// @author       Blankspeaker, Originally ported from CursedAtom's chrome extension
 // @match        https://grok.com/*
-// @grant        none
+// @icon         https://img.icons8.com/color/1200/grok--v2.jpg
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/533963/Grok%20Rate%20Limit%20Display.user.js
 // @updateURL https://update.greasyfork.org/scripts/533963/Grok%20Rate%20Limit%20Display.meta.js
@@ -34,7 +34,7 @@
         "Grok 4.1 Thinking": "grok-4-1-thinking-1129",
     };
 
-    const DEFAULT_MODEL = "grok-3";
+    const DEFAULT_MODEL = "grok-4";
     const DEFAULT_KIND = "DEFAULT";
     const POLL_INTERVAL_MS = 30000;
     const MODEL_SELECTOR = "button[aria-label='Model select']";
@@ -55,6 +55,8 @@
     let lastSubmitButton = null;
     let pollInterval = null;
     let lastModelName = null;
+
+    // State for overlap checking
     let overlapCheckInterval = null;
     let isHiddenDueToOverlap = false;
 
@@ -70,14 +72,11 @@
         },
         attachButton: {
             selector: "button",
-            ariaLabel: "Attach",
             classContains: ["group/attach-button"],
-            svgPartialD: "M10 9V15",
         },
         submitButton: {
             selector: "button",
-            ariaLabel: "Submit",
-            svgPartialD: "M5 11L12 4M12 4L19 11M12 4V21",
+            svgPartialD: "M6 11L12 5M12 5L18 11M12 5V19",
         }
     };
 
@@ -126,32 +125,6 @@
         return null;
     }
 
-    // Function to wait for element based on config
-    function waitForElementByConfig(config, timeout = ELEMENT_WAIT_TIMEOUT_MS, root = document) {
-        return new Promise((resolve) => {
-            let element = findElement(config, root);
-            if (element) {
-                resolve(element);
-                return;
-            }
-
-            const observer = new MutationObserver(() => {
-                element = findElement(config, root);
-                if (element) {
-                    observer.disconnect();
-                    resolve(element);
-                }
-            });
-
-            observer.observe(root, { childList: true, subtree: true, attributes: true });
-
-            setTimeout(() => {
-                observer.disconnect();
-                resolve(null);
-            }, timeout);
-        });
-    }
-
     // Function to format timer for display (H:MM:SS or MM:SS)
     function formatTimer(seconds) {
         const hours = Math.floor(seconds / 3600);
@@ -162,40 +135,6 @@
         } else {
             return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
-    }
-
-    // Function to wait for element appearance
-    function waitForElement(selector, timeout = ELEMENT_WAIT_TIMEOUT_MS, root = document) {
-      return new Promise((resolve) => {
-        let element = root.querySelector(selector);
-        if (element) {
-          resolve(element);
-          return;
-        }
-
-        const observer = new MutationObserver(() => {
-          element = root.querySelector(selector);
-          if (element) {
-            observer.disconnect();
-            resolve(element);
-          }
-        });
-
-        observer.observe(root, { childList: true, subtree: true });
-
-        setTimeout(() => {
-          observer.disconnect();
-          resolve(null);
-        }, timeout);
-      });
-    }
-
-    // Function to remove any existing rate limit display
-    function removeExistingRateLimit() {
-      const existing = document.getElementById(RATE_LIMIT_CONTAINER_ID);
-      if (existing) {
-        existing.remove();
-      }
     }
 
     // Function to check if text content overlaps with rate limit display
@@ -275,7 +214,7 @@
           clearInterval(overlapCheckInterval);
           overlapCheckInterval = null;
         }
-      }, 500); // Check every 500ms instead of 200ms
+      }, 500);
     }
 
     // Function to stop overlap checking
@@ -285,6 +224,14 @@
         overlapCheckInterval = null;
       }
       isHiddenDueToOverlap = false;
+    }
+
+    // Function to remove any existing rate limit display
+    function removeExistingRateLimit() {
+        const existing = document.getElementById(RATE_LIMIT_CONTAINER_ID);
+        if (existing) {
+            existing.remove();
+        }
     }
 
     // Function to determine model key from SVG or text
@@ -334,706 +281,599 @@
 
     // Function to determine effort level based on model
     function getEffortLevel(modelName) {
-      if (modelName === 'grok-4-auto') {
-        return 'both';
-      } else if (modelName === 'grok-3') {
-        return 'low';
-      } else if (modelName === 'grok-4-1-non-thinking-w-tool') {
-        return 'low';
-      } else if (modelName === 'grok-4-1-thinking-1129') {
-        return 'high';
-      } else {
-        return 'high';
-      }
+        if (modelName === 'grok-4-auto') {
+            return 'both';
+        } else if (modelName === 'grok-3') {
+            return 'low';
+        } else if (modelName === 'grok-4-1-non-thinking-w-tool') {
+            return 'low';
+        } else if (modelName === 'grok-4-1-thinking-1129') {
+            return 'high';
+        } else {
+            // Grok 4, Heavy, and Grok 4.1 Thinking fall here
+            return 'high';
+        }
     }
 
     // Function to update or inject the rate limit display
     function updateRateLimitDisplay(queryBar, response, effort) {
-      if (isImaginePage()) {
-        removeExistingRateLimit();
-        return;
-      }
-
-      let rateLimitContainer = document.getElementById(RATE_LIMIT_CONTAINER_ID);
-
-      if (!rateLimitContainer) {
-        const bottomBar = queryBar.querySelector('.flex.gap-1\\.5.absolute.inset-x-0.bottom-0');
-        if (!bottomBar) {
-          return;
+        if (isImaginePage()) {
+            removeExistingRateLimit();
+            return;
         }
 
-        const modelSelectDiv = bottomBar.querySelector('div.z-20');
-        const submitButton = findElement(commonFinderConfigs.submitButton, bottomBar);
-        const attachButton = findElement(commonFinderConfigs.attachButton, bottomBar);
+        let rateLimitContainer = document.getElementById(RATE_LIMIT_CONTAINER_ID);
 
-        let insertPoint;
-        if (modelSelectDiv) {
-          insertPoint = modelSelectDiv;
-        } else if (submitButton) {
-          insertPoint = submitButton;
-        } else if (attachButton) {
-          insertPoint = attachButton;
-        } else {
-          insertPoint = bottomBar;
-        }
+        if (!rateLimitContainer) {
+            rateLimitContainer = document.createElement('div');
+            rateLimitContainer.id = RATE_LIMIT_CONTAINER_ID;
+            rateLimitContainer.className = 'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-60 disabled:cursor-not-allowed [&_svg]:duration-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:-mx-0.5 select-none text-fg-primary hover:bg-button-ghost-hover hover:border-border-l2 disabled:hover:bg-transparent h-10 px-3.5 py-2 text-sm rounded-full group/rate-limit transition-colors duration-100 relative overflow-hidden border border-transparent cursor-pointer';
+            rateLimitContainer.style.opacity = '0.8';
+            rateLimitContainer.style.transition = 'opacity 0.1s ease-in-out';
+            rateLimitContainer.style.zIndex = '20';
 
-        rateLimitContainer = document.createElement('div');
-        rateLimitContainer.id = RATE_LIMIT_CONTAINER_ID;
-        rateLimitContainer.className = 'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-60 disabled:cursor-not-allowed [&_svg]:duration-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:-mx-0.5 select-none text-fg-primary hover:bg-button-ghost-hover hover:border-border-l2 disabled:hover:bg-transparent h-10 px-3.5 py-2 text-sm rounded-full group/rate-limit transition-colors duration-100 relative overflow-hidden border border-transparent cursor-pointer';
-        rateLimitContainer.style.opacity = '0.8';
-        rateLimitContainer.style.transition = 'opacity 0.1s ease-in-out';
-        rateLimitContainer.style.zIndex = '20'; // Ensure it's above other elements
+            rateLimitContainer.addEventListener('click', () => {
+                fetchAndUpdateRateLimit(queryBar, true);
+            });
 
-        rateLimitContainer.addEventListener('click', () => {
-          fetchAndUpdateRateLimit(queryBar, true);
-        });
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '18');
+            svg.setAttribute('height', '18');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '2');
+            svg.setAttribute('stroke-linecap', 'round');
+            svg.setAttribute('stroke-linejoin', 'round');
+            svg.setAttribute('class', 'lucide lucide-gauge stroke-[2] text-fg-secondary transition-colors duration-100');
+            svg.setAttribute('aria-hidden', 'true');
 
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '18');
-        svg.setAttribute('height', '18');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('stroke', 'currentColor');
-        svg.setAttribute('stroke-width', '2');
-        svg.setAttribute('stroke-linecap', 'round');
-        svg.setAttribute('stroke-linejoin', 'round');
-        svg.setAttribute('class', 'lucide lucide-gauge stroke-[2] text-fg-secondary transition-colors duration-100');
-        svg.setAttribute('aria-hidden', 'true');
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex items-center';
 
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'flex items-center';
+            rateLimitContainer.appendChild(svg);
+            rateLimitContainer.appendChild(contentDiv);
 
-        rateLimitContainer.appendChild(svg);
-        rateLimitContainer.appendChild(contentDiv);
+            // New Insertion Logic: Place it in the tools container (right side)
+            const toolsContainer = queryBar.querySelector('div.ms-auto.flex.flex-row.items-end.gap-1');
 
-        if (insertPoint === bottomBar) {
-          bottomBar.appendChild(rateLimitContainer);
-        } else {
-          insertPoint.insertAdjacentElement('beforebegin', rateLimitContainer);
-        }
-      }
-
-      const contentDiv = rateLimitContainer.lastChild;
-      const svg = rateLimitContainer.querySelector('svg');
-
-      contentDiv.innerHTML = '';
-
-      const isBoth = effort === 'both';
-
-      if (response.error) {
-        if (isBoth) {
-          if (lastBoth.high !== null && lastBoth.low !== null) {
-            appendNumberSpan(contentDiv, lastBoth.high, '');
-            appendDivider(contentDiv);
-            appendNumberSpan(contentDiv, lastBoth.low, '');
-            rateLimitContainer.title = `High: ${lastBoth.high} | Low: ${lastBoth.low} queries remaining`;
-            setGaugeSVG(svg);
-          } else {
-            appendNumberSpan(contentDiv, 'Unavailable', '');
-            rateLimitContainer.title = 'Unavailable';
-            setGaugeSVG(svg);
-          }
-        } else {
-          const lastForEffort = (effort === 'high') ? lastHigh : lastLow;
-          if (lastForEffort.remaining !== null) {
-            let displayRemaining = lastForEffort.remaining;
-            let tooltipText = `${lastForEffort.remaining} queries remaining`;
-
-            // If we have cost info, calculate effective remaining only for free accounts
-            if (lastForEffort.isFreeAccount && lastForEffort.cost && lastForEffort.cost > 1) {
-              displayRemaining = Math.floor(lastForEffort.originalRemaining / lastForEffort.cost);
-              tooltipText = `${displayRemaining} queries (${lastForEffort.originalRemaining} tokens ÷ ${lastForEffort.cost} cost)`;
-            }
-
-            appendNumberSpan(contentDiv, displayRemaining, '');
-            rateLimitContainer.title = tooltipText;
-            setGaugeSVG(svg);
-          } else {
-            appendNumberSpan(contentDiv, 'Unavailable', '');
-            rateLimitContainer.title = 'Unavailable';
-            setGaugeSVG(svg);
-          }
-        }
-      } else {
-        if (countdownTimer) {
-          clearInterval(countdownTimer);
-          countdownTimer = null;
-        }
-
-        if (isBoth) {
-          lastBoth.high = response.highRemaining;
-          lastBoth.low = response.lowRemaining;
-          lastBoth.wait = response.waitTimeSeconds;
-          lastBoth.originalHigh = response.originalHighRemaining;
-          lastBoth.highCost = response.highCost;
-          lastBoth.isFreeAccount = response.isFreeAccount;
-
-          const high = lastBoth.high;
-          const low = lastBoth.low;
-          const waitTimeSeconds = lastBoth.wait;
-
-          let currentCountdown = waitTimeSeconds;
-
-          if (high > 0) {
-            appendNumberSpan(contentDiv, high, '');
-            appendDivider(contentDiv);
-            appendNumberSpan(contentDiv, low, '');
-
-            // Show cost info in tooltip only for free accounts
-            if (response.isFreeAccount && response.highCost > 1) {
-              rateLimitContainer.title = `High: ${high} queries (${response.originalHighRemaining} tokens ÷ ${response.highCost} cost) | Low: ${low} queries remaining`;
+            if (toolsContainer) {
+                // Prepend to put it to the left of the model selector/other buttons
+                toolsContainer.prepend(rateLimitContainer);
             } else {
-              rateLimitContainer.title = `High: ${high} | Low: ${low} queries remaining`;
+                // Fallback: bottom bar
+                const bottomBar = queryBar.querySelector('div.absolute.inset-x-0.bottom-0');
+                if (bottomBar) {
+                    bottomBar.appendChild(rateLimitContainer);
+                } else {
+                    rateLimitContainer.remove();
+                    rateLimitContainer = null;
+                    return;
+                }
             }
-            setGaugeSVG(svg);
-          } else if (waitTimeSeconds > 0) {
-            const timerSpan = appendNumberSpan(contentDiv, formatTimer(currentCountdown), '#ff6347');
+        }
 
-            // Only show low effort if it has queries remaining
-            if (low > 0) {
-              appendDivider(contentDiv);
-              appendNumberSpan(contentDiv, low, '');
-              rateLimitContainer.title = `High: Time until reset | Low: ${low} queries remaining`;
+        const contentDiv = rateLimitContainer.lastChild;
+        const svg = rateLimitContainer.querySelector('svg');
+
+        contentDiv.innerHTML = '';
+
+        const isBoth = effort === 'both';
+
+        if (response.error) {
+            if (isBoth) {
+                if (lastBoth.high !== null && lastBoth.low !== null) {
+                    appendNumberSpan(contentDiv, lastBoth.high, '');
+                    appendDivider(contentDiv);
+                    appendNumberSpan(contentDiv, lastBoth.low, '');
+                    rateLimitContainer.title = `High: ${lastBoth.high} | Low: ${lastBoth.low} queries remaining`;
+                    setGaugeSVG(svg);
+                } else {
+                    appendNumberSpan(contentDiv, 'Unavailable', '');
+                    rateLimitContainer.title = 'Unavailable';
+                    setGaugeSVG(svg);
+                }
             } else {
-              rateLimitContainer.title = `Time until reset`;
+                const lastForEffort = (effort === 'high') ? lastHigh : lastLow;
+                if (lastForEffort.remaining !== null) {
+                    appendNumberSpan(contentDiv, lastForEffort.remaining, '');
+                    rateLimitContainer.title = `${lastForEffort.remaining} queries remaining`;
+                    setGaugeSVG(svg);
+                } else {
+                    appendNumberSpan(contentDiv, 'Unavailable', '');
+                    rateLimitContainer.title = 'Unavailable';
+                    setGaugeSVG(svg);
+                }
             }
-            setClockSVG(svg);
-
-            isCountingDown = true;
-            if (pollInterval) {
-              clearInterval(pollInterval);
-              pollInterval = null;
-            }
-
-            countdownTimer = setInterval(() => {
-              currentCountdown--;
-              if (currentCountdown <= 0) {
+        } else {
+            if (countdownTimer) {
                 clearInterval(countdownTimer);
                 countdownTimer = null;
-                fetchAndUpdateRateLimit(queryBar, true);
-                isCountingDown = false;
-                if (document.visibilityState === 'visible' && lastQueryBar) {
-                  pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+            }
+
+            if (isBoth) {
+                lastBoth.high = response.highRemaining;
+                lastBoth.low = response.lowRemaining;
+                lastBoth.wait = response.waitTimeSeconds;
+
+                const high = lastBoth.high;
+                const low = lastBoth.low;
+                const waitTimeSeconds = lastBoth.wait;
+
+                let currentCountdown = waitTimeSeconds;
+
+                if (high > 0) {
+                    appendNumberSpan(contentDiv, high, '');
+                    appendDivider(contentDiv);
+                    appendNumberSpan(contentDiv, low, '');
+                    rateLimitContainer.title = `High: ${high} | Low: ${low} queries remaining`;
+                    setGaugeSVG(svg);
+                } else if (waitTimeSeconds > 0) {
+                    const timerSpan = appendNumberSpan(contentDiv, formatTimer(currentCountdown), '#ff6347');
+                    appendDivider(contentDiv);
+                    appendNumberSpan(contentDiv, low, '');
+                    rateLimitContainer.title = `High: Time until reset | Low: ${low} queries remaining`;
+                    setClockSVG(svg);
+
+                    isCountingDown = true;
+                    if (pollInterval) {
+                        clearInterval(pollInterval);
+                        pollInterval = null;
+                    }
+
+                    countdownTimer = setInterval(() => {
+                        currentCountdown--;
+                        if (currentCountdown <= 0) {
+                            clearInterval(countdownTimer);
+                            countdownTimer = null;
+                            fetchAndUpdateRateLimit(queryBar, true);
+                            isCountingDown = false;
+                            if (document.visibilityState === 'visible' && lastQueryBar) {
+                                pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+                            }
+                        } else {
+                            timerSpan.textContent = formatTimer(currentCountdown);
+                        }
+                    }, 1000);
+                } else {
+                    appendNumberSpan(contentDiv, '0', '#ff6347');
+                    appendDivider(contentDiv);
+                    appendNumberSpan(contentDiv, low, '');
+                    rateLimitContainer.title = `High: Limit reached | Low: ${low} queries remaining`;
+                    setGaugeSVG(svg);
                 }
-              } else {
-                timerSpan.textContent = formatTimer(currentCountdown);
-              }
-            }, 1000);
-          } else {
-            appendNumberSpan(contentDiv, '0', '#ff6347');
-
-            // Only show low effort if it has queries remaining
-            if (low > 0) {
-              appendDivider(contentDiv);
-              appendNumberSpan(contentDiv, low, '');
-              rateLimitContainer.title = `High: Limit reached | Low: ${low} queries remaining`;
             } else {
-              rateLimitContainer.title = `Limit reached. Awaiting reset.`;
-            }
-            setGaugeSVG(svg);
-          }
-        } else {
-          const lastForEffort = (effort === 'high') ? lastHigh : lastLow;
-          lastForEffort.remaining = response.remainingQueries;
-          lastForEffort.wait = response.waitTimeSeconds;
-          lastForEffort.originalRemaining = response.originalRemaining;
-          lastForEffort.cost = response.cost;
-          lastForEffort.isFreeAccount = response.isFreeAccount;
+                const lastForEffort = (effort === 'high') ? lastHigh : lastLow;
+                lastForEffort.remaining = response.remainingQueries;
+                lastForEffort.wait = response.waitTimeSeconds;
 
-          const remaining = lastForEffort.remaining;
-          const waitTimeSeconds = lastForEffort.wait;
+                const remaining = lastForEffort.remaining;
+                const waitTimeSeconds = lastForEffort.wait;
 
-          let currentCountdown = waitTimeSeconds;
+                let currentCountdown = waitTimeSeconds;
 
-          if (remaining > 0) {
-            appendNumberSpan(contentDiv, remaining, '');
+                if (remaining > 0) {
+                    appendNumberSpan(contentDiv, remaining, '');
+                    rateLimitContainer.title = `${remaining} queries remaining`;
+                    setGaugeSVG(svg);
+                } else if (waitTimeSeconds > 0) {
+                    const timerSpan = appendNumberSpan(contentDiv, formatTimer(currentCountdown), '#ff6347');
+                    rateLimitContainer.title = `Time until reset`;
+                    setClockSVG(svg);
 
-            // Show cost info in tooltip only for free accounts
-            if (response.isFreeAccount && response.cost > 1) {
-              rateLimitContainer.title = `${remaining} queries (${response.originalRemaining} tokens ÷ ${response.cost} cost)`;
-            } else {
-              rateLimitContainer.title = `${remaining} queries remaining`;
-            }
-            setGaugeSVG(svg);
-          } else if (waitTimeSeconds > 0) {
-            const timerSpan = appendNumberSpan(contentDiv, formatTimer(currentCountdown), '#ff6347');
-            rateLimitContainer.title = `Time until reset`;
-            setClockSVG(svg);
+                    isCountingDown = true;
+                    if (pollInterval) {
+                        clearInterval(pollInterval);
+                        pollInterval = null;
+                    }
 
-            isCountingDown = true;
-            if (pollInterval) {
-              clearInterval(pollInterval);
-              pollInterval = null;
-            }
-
-            countdownTimer = setInterval(() => {
-              currentCountdown--;
-              if (currentCountdown <= 0) {
-                clearInterval(countdownTimer);
-                countdownTimer = null;
-                fetchAndUpdateRateLimit(queryBar, true);
-                isCountingDown = false;
-                if (document.visibilityState === 'visible' && lastQueryBar) {
-                  pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+                    countdownTimer = setInterval(() => {
+                        currentCountdown--;
+                        if (currentCountdown <= 0) {
+                            clearInterval(countdownTimer);
+                            countdownTimer = null;
+                            fetchAndUpdateRateLimit(queryBar, true);
+                            isCountingDown = false;
+                            if (document.visibilityState === 'visible' && lastQueryBar) {
+                                pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+                            }
+                        } else {
+                            timerSpan.textContent = formatTimer(currentCountdown);
+                        }
+                    }, 1000);
+                } else {
+                    appendNumberSpan(contentDiv, '0', ' #ff6347');
+                    rateLimitContainer.title = 'Limit reached. Awaiting reset.';
+                    setGaugeSVG(svg);
                 }
-              } else {
-                timerSpan.textContent = formatTimer(currentCountdown);
-              }
-            }, 1000);
-          } else {
-            appendNumberSpan(contentDiv, '0', '#ff6347');
-            rateLimitContainer.title = 'Limit reached. Awaiting reset.';
-            setGaugeSVG(svg);
-          }
+            }
         }
-      }
     }
 
     function appendNumberSpan(parent, text, color) {
-      const span = document.createElement('span');
-      span.textContent = text;
-      if (color) span.style.color = color;
-      parent.appendChild(span);
-      return span;
+        const span = document.createElement('span');
+        span.textContent = text;
+        if (color) span.style.color = color;
+        parent.appendChild(span);
+        return span;
     }
 
     function appendDivider(parent) {
-      const divider = document.createElement('div');
-      divider.className = 'h-6 w-[2px] bg-border-l2 mx-1';
-      parent.appendChild(divider);
+        const divider = document.createElement('div');
+        divider.className = 'h-6 w-[2px] bg-border-l2 mx-1';
+        parent.appendChild(divider);
     }
 
     function setGaugeSVG(svg) {
-      if (svg) {
-        while (svg.firstChild) {
-          svg.removeChild(svg.firstChild);
+        if (svg) {
+            while (svg.firstChild) {
+                svg.removeChild(svg.firstChild);
+            }
+            const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path1.setAttribute('d', 'm12 14 4-4');
+            const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path2.setAttribute('d', 'M3.34 19a10 10 0 1 1 17.32 0');
+            svg.appendChild(path1);
+            svg.appendChild(path2);
+            svg.setAttribute('class', 'lucide lucide-gauge stroke-[2] text-fg-secondary transition-colors duration-100');
         }
-        const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path1.setAttribute('d', 'm12 14 4-4');
-        const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path2.setAttribute('d', 'M3.34 19a10 10 0 1 1 17.32 0');
-        svg.appendChild(path1);
-        svg.appendChild(path2);
-        svg.setAttribute('class', 'lucide lucide-gauge stroke-[2] text-fg-secondary transition-colors duration-100');
-      }
     }
 
     function setClockSVG(svg) {
-      if (svg) {
-        while (svg.firstChild) {
-          svg.removeChild(svg.firstChild);
+        if (svg) {
+            while (svg.firstChild) {
+                svg.removeChild(svg.firstChild);
+            }
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', '12');
+            circle.setAttribute('cy', '12');
+            circle.setAttribute('r', '8');
+            circle.setAttribute('stroke', 'currentColor');
+            circle.setAttribute('stroke-width', '2');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M12 12L12 6');
+            path.setAttribute('stroke', 'currentColor');
+            path.setAttribute('stroke-width', '2');
+            path.setAttribute('stroke-linecap', 'round');
+            svg.appendChild(circle);
+            svg.appendChild(path);
+            svg.setAttribute('class', 'stroke-[2] text-fg-secondary group-hover/rate-limit:text-fg-primary transition-colors duration-100');
         }
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', '12');
-        circle.setAttribute('cy', '12');
-        circle.setAttribute('r', '8');
-        circle.setAttribute('stroke', 'currentColor');
-        circle.setAttribute('stroke-width', '2');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M12 12L12 6');
-        path.setAttribute('stroke', 'currentColor');
-        path.setAttribute('stroke-width', '2');
-        path.setAttribute('stroke-linecap', 'round');
-        svg.appendChild(circle);
-        svg.appendChild(path);
-        svg.setAttribute('class', 'stroke-[2] text-fg-secondary group-hover/rate-limit:text-fg-primary transition-colors duration-100');
-      }
     }
 
     // Function to fetch rate limit
     async function fetchRateLimit(modelName, requestKind, force = false) {
-      const cacheKey = `${modelName}-${requestKind}`;
-      const now = Date.now();
-
-      // Check cache first (unless forced)
-      if (!force) {
-        const cached = cachedRateLimits[modelName]?.[requestKind];
-        if (cached !== undefined) {
-          // Only use cache if it's less than 10 seconds old
-          if (cached.timestamp && (now - cached.timestamp) < 10000) {
-            return cached.data;
-          }
-        }
-      }
-
-      // Prevent too frequent requests to the same endpoint
-      if (cachedRateLimits._lastRequest && (now - cachedRateLimits._lastRequest) < 2000) {
-        const cached = cachedRateLimits[modelName]?.[requestKind];
-        if (cached && cached.data) {
-          return cached.data;
-        }
-        return { error: true, reason: 'Rate limited' };
-      }
-
-      cachedRateLimits._lastRequest = now;
-
-      try {
-        const response = await fetch(window.location.origin + '/rest/rate-limits', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            requestKind,
-            modelName,
-          }),
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: Status ${response.status}`);
+        if (!force) {
+            const cached = cachedRateLimits[modelName]?.[requestKind];
+            if (cached !== undefined) {
+                return cached;
+            }
         }
 
-        const data = await response.json();
+        try {
+            const response = await fetch(window.location.origin + '/rest/rate-limits', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    requestKind,
+                    modelName,
+                }),
+                credentials: 'include',
+            });
 
-        // Cache the response with timestamp
-        if (!cachedRateLimits[modelName]) {
-          cachedRateLimits[modelName] = {};
+            if (!response.ok) {
+                throw new Error(`HTTP error: Status ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (!cachedRateLimits[modelName]) {
+                cachedRateLimits[modelName] = {};
+            }
+            cachedRateLimits[modelName][requestKind] = data;
+            return data;
+        } catch (error) {
+            console.error(`Failed to fetch rate limit:`, error);
+            if (!cachedRateLimits[modelName]) {
+                cachedRateLimits[modelName] = {};
+            }
+            cachedRateLimits[modelName][requestKind] = undefined;
+            return { error: true };
         }
-        cachedRateLimits[modelName][requestKind] = {
-          data: data,
-          timestamp: now
-        };
-
-        return data;
-      } catch (error) {
-        // Cache the error to prevent repeated failures
-        if (!cachedRateLimits[modelName]) {
-          cachedRateLimits[modelName] = {};
-        }
-        cachedRateLimits[modelName][requestKind] = {
-          data: { error: true, reason: error.message },
-          timestamp: now
-        };
-
-        return { error: true, reason: error.message };
-      }
     }
 
     // Function to process the rate limit data based on effort level
     function processRateLimitData(data, effortLevel) {
-      if (data.error) {
-        return data;
-      }
+        if (data.error) {
+            return data;
+        }
 
-      // Check if this is a free account (totalTokens <= 80)
-      const isFreeAccount = data.totalTokens <= 80;
-
-      if (effortLevel === 'both') {
-        const high = data.highEffortRateLimits?.remainingQueries;
-        const low = data.lowEffortRateLimits?.remainingQueries;
-        const highCost = data.highEffortRateLimits?.cost || 1;
-        const lowCost = data.lowEffortRateLimits?.cost || 1;
-
-        const waitTimeSeconds = Math.max(
-          data.highEffortRateLimits?.waitTimeSeconds || 0,
-          data.lowEffortRateLimits?.waitTimeSeconds || 0,
-          data.waitTimeSeconds || 0
-        );
-
-        if (high !== undefined && low !== undefined) {
-          // Only apply cost calculation for free accounts
-          const effectiveHighRemaining = isFreeAccount ? Math.floor(high / highCost) : high;
-
-          return {
-            highRemaining: effectiveHighRemaining,
-            lowRemaining: low,
-            waitTimeSeconds: waitTimeSeconds,
-            originalHighRemaining: high,
-            highCost: highCost,
-            isFreeAccount: isFreeAccount
-          };
+        if (effortLevel === 'both') {
+            const high = data.highEffortRateLimits?.remainingQueries;
+            const low = data.lowEffortRateLimits?.remainingQueries;
+            const waitTimeSeconds = Math.max(
+                data.highEffortRateLimits?.waitTimeSeconds || 0,
+                data.lowEffortRateLimits?.waitTimeSeconds || 0,
+                data.waitTimeSeconds || 0
+            );
+            if (high !== undefined && low !== undefined) {
+                return {
+                    highRemaining: high,
+                    lowRemaining: low,
+                    waitTimeSeconds: waitTimeSeconds
+                };
+            } else {
+                return { error: true };
+            }
         } else {
-          return { error: true, reason: 'Missing effort data' };
+            let rateLimitsKey = effortLevel === 'high' ? 'highEffortRateLimits' : 'lowEffortRateLimits';
+            let remaining = data[rateLimitsKey]?.remainingQueries;
+            if (remaining === undefined) {
+                remaining = data.remainingQueries;
+            }
+            if (remaining !== undefined) {
+                return {
+                    remainingQueries: remaining,
+                    waitTimeSeconds: data[rateLimitsKey]?.waitTimeSeconds || data.waitTimeSeconds || 0
+                };
+            } else {
+                return { error: true };
+            }
         }
-      } else {
-        let rateLimitsKey = effortLevel === 'high' ? 'highEffortRateLimits' : 'lowEffortRateLimits';
-        let remaining = data[rateLimitsKey]?.remainingQueries;
-        let cost = data[rateLimitsKey]?.cost || 1;
-
-        // Fallback to main remainingQueries if effort-specific not available
-        if (remaining === undefined) {
-          remaining = data.remainingQueries;
-        }
-
-        if (remaining !== undefined) {
-          // Only apply cost calculation for free accounts
-          const effectiveRemaining = isFreeAccount ? Math.floor(remaining / cost) : remaining;
-
-          return {
-            remainingQueries: effectiveRemaining,
-            waitTimeSeconds: data[rateLimitsKey]?.waitTimeSeconds || data.waitTimeSeconds || 0,
-            originalRemaining: remaining,
-            cost: cost,
-            isFreeAccount: isFreeAccount
-          };
-        } else {
-          return { error: true, reason: `Missing ${effortLevel} effort data` };
-        }
-      }
     }
 
     // Function to fetch and update rate limit
     async function fetchAndUpdateRateLimit(queryBar, force = false) {
-      if (isImaginePage() || !queryBar || !document.body.contains(queryBar)) {
-        return;
-      }
-
-      const modelName = getCurrentModelKey(queryBar);
-
-      if (modelName !== lastModelName) {
-        force = true;
-      }
-
-      if (isCountingDown && !force) {
-        return;
-      }
-
-      const effortLevel = getEffortLevel(modelName);
-
-      let requestKind = DEFAULT_KIND;
-      if (modelName === 'grok-3') {
-        const thinkButton = findElement(commonFinderConfigs.thinkButton, queryBar);
-        const searchButton = findElement(commonFinderConfigs.deepSearchButton, queryBar);
-
-        if (thinkButton && thinkButton.getAttribute('aria-pressed') === 'true') {
-          requestKind = 'REASONING';
-        } else if (searchButton && searchButton.getAttribute('aria-pressed') === 'true') {
-          const searchAria = searchButton.getAttribute('aria-label') || '';
-          if (/deeper/i.test(searchAria)) {
-            requestKind = 'DEEPERSEARCH';
-          } else if (/deep/i.test(searchAria)) {
-            requestKind = 'DEEPSEARCH';
-          }
+        if (isImaginePage() || !queryBar || !document.body.contains(queryBar)) {
+            return;
         }
-      }
+        const modelName = getCurrentModelKey(queryBar);
 
-      let data = await fetchRateLimit(modelName, requestKind, force);
+        if (modelName !== lastModelName) {
+            force = true;
+        }
 
-      const processedData = processRateLimitData(data, effortLevel);
+        if (isCountingDown && !force) {
+            return;
+        }
 
-      updateRateLimitDisplay(queryBar, processedData, effortLevel);
+        const effortLevel = getEffortLevel(modelName);
 
-      lastModelName = modelName;
+        let requestKind = DEFAULT_KIND;
+        if (modelName === 'grok-3') {
+            const thinkButton = findElement(commonFinderConfigs.thinkButton, queryBar);
+            const searchButton = findElement(commonFinderConfigs.deepSearchButton, queryBar);
+
+            if (thinkButton && thinkButton.getAttribute('aria-pressed') === 'true') {
+                requestKind = 'REASONING';
+            } else if (searchButton && searchButton.getAttribute('aria-pressed') === 'true') {
+                const searchAria = searchButton.getAttribute('aria-label') || '';
+                if (/deeper/i.test(searchAria)) {
+                    requestKind = 'DEEPERSEARCH';
+                } else if (/deep/i.test(searchAria)) {
+                    requestKind = 'DEEPSEARCH';
+                }
+            }
+        }
+
+        let data = await fetchRateLimit(modelName, requestKind, force);
+
+        const processedData = processRateLimitData(data, effortLevel);
+        updateRateLimitDisplay(queryBar, processedData, effortLevel);
+
+        lastModelName = modelName;
     }
 
     // Function to observe the DOM for the query bar
     function observeDOM() {
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === 'visible' && lastQueryBar && !isImaginePage()) {
-          fetchAndUpdateRateLimit(lastQueryBar, true);
-          if (!isCountingDown) {
-            if (pollInterval) {
-              clearInterval(pollInterval);
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && lastQueryBar && !isImaginePage()) {
+                fetchAndUpdateRateLimit(lastQueryBar, true);
+                if (!isCountingDown) {
+                    if (pollInterval) {
+                        clearInterval(pollInterval);
+                    }
+                    pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+                }
+            } else {
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                }
             }
-            pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
-          }
-        } else {
-          if (pollInterval) {
-            clearInterval(pollInterval);
-            pollInterval = null;
-          }
-        }
-      };
+        };
 
-      // Add resize listener to handle mobile/desktop mode switches
-      const handleResize = debounce(() => {
-        if (lastQueryBar) {
-          checkTextOverlap(lastQueryBar);
-        }
-      }, 300);
-
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      window.addEventListener('resize', handleResize);
-
-      if (!isImaginePage()) {
-        const initialQueryBar = document.querySelector(QUERY_BAR_SELECTOR);
-        if (initialQueryBar) {
-          removeExistingRateLimit();
-          fetchAndUpdateRateLimit(initialQueryBar);
-          lastQueryBar = initialQueryBar;
-
-          setupQueryBarObserver(initialQueryBar);
-          setupGrok3Observers(initialQueryBar);
-          setupSubmissionListeners(initialQueryBar);
-          startOverlapChecking(initialQueryBar);
-
-          // Immediate check for mobile state
-          setTimeout(() => checkTextOverlap(initialQueryBar), 100);
-
-          if (document.visibilityState === 'visible' && !isCountingDown) {
-            pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+        // Add resize listener to handle mobile/desktop mode switches
+        const handleResize = debounce(() => {
+          if (lastQueryBar) {
+            checkTextOverlap(lastQueryBar);
           }
-        }
-      }
-
-      const observer = new MutationObserver(() => {
-        if (isImaginePage()) {
-          removeExistingRateLimit();
-          stopOverlapChecking();
-          if (lastModelObserver) {
-            lastModelObserver.disconnect();
-            lastModelObserver = null;
-          }
-          if (lastThinkObserver) {
-            lastThinkObserver.disconnect();
-            lastThinkObserver = null;
-          }
-          if (lastSearchObserver) {
-            lastSearchObserver.disconnect();
-            lastSearchObserver = null;
-          }
-          lastInputElement = null;
-          lastSubmitButton = null;
-          if (pollInterval) {
-            clearInterval(pollInterval);
-            pollInterval = null;
-          }
-          lastQueryBar = null;
-          return;
-        }
-
-        const queryBar = document.querySelector(QUERY_BAR_SELECTOR);
-        if (queryBar && queryBar !== lastQueryBar) {
-          removeExistingRateLimit();
-          fetchAndUpdateRateLimit(queryBar);
-          if (lastModelObserver) {
-            lastModelObserver.disconnect();
-          }
-          if (lastThinkObserver) {
-            lastThinkObserver.disconnect();
-          }
-          if (lastSearchObserver) {
-            lastSearchObserver.disconnect();
-          }
-
-          setupQueryBarObserver(queryBar);
-          setupGrok3Observers(queryBar);
-          setupSubmissionListeners(queryBar);
-          startOverlapChecking(queryBar);
-
-          // Immediate check for mobile state
-          setTimeout(() => checkTextOverlap(queryBar), 100);
-
-          if (document.visibilityState === 'visible' && !isCountingDown) {
-            if (pollInterval) clearInterval(pollInterval);
-            pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
-          }
-          lastQueryBar = queryBar;
-        } else if (!queryBar && lastQueryBar) {
-          removeExistingRateLimit();
-          stopOverlapChecking();
-          if (lastModelObserver) {
-            lastModelObserver.disconnect();
-          }
-          if (lastThinkObserver) {
-            lastThinkObserver.disconnect();
-          }
-          if (lastSearchObserver) {
-            lastSearchObserver.disconnect();
-          }
-          lastQueryBar = null;
-          lastModelObserver = null;
-          lastThinkObserver = null;
-          lastSearchObserver = null;
-          lastInputElement = null;
-          lastSubmitButton = null;
-          if (pollInterval) {
-            clearInterval(pollInterval);
-            pollInterval = null;
-          }
-        }
-      });
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-
-      function setupQueryBarObserver(queryBar) {
-        const debouncedUpdate = debounce(() => {
-          fetchAndUpdateRateLimit(queryBar);
-          setupGrok3Observers(queryBar);
         }, 300);
 
-        lastModelObserver = new MutationObserver(debouncedUpdate);
-        lastModelObserver.observe(queryBar, { childList: true, subtree: true, attributes: true, characterData: true });
-      }
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('resize', handleResize);
 
-      function setupGrok3Observers(queryBar) {
-        const currentModel = getCurrentModelKey(queryBar);
-        if (currentModel === 'grok-3') {
-          const thinkButton = findElement(commonFinderConfigs.thinkButton, queryBar);
-          if (thinkButton) {
-            if (lastThinkObserver) lastThinkObserver.disconnect();
-            lastThinkObserver = new MutationObserver(() => {
-              fetchAndUpdateRateLimit(queryBar);
-            });
-            lastThinkObserver.observe(thinkButton, { attributes: true, attributeFilter: ['aria-pressed', 'class'] });
-          }
-          const searchButton = findElement(commonFinderConfigs.deepSearchButton, queryBar);
-          if (searchButton) {
-            if (lastSearchObserver) lastSearchObserver.disconnect();
-            lastSearchObserver = new MutationObserver(() => {
-              fetchAndUpdateRateLimit(queryBar);
-            });
-            lastSearchObserver.observe(searchButton, { attributes: true, attributeFilter: ['aria-pressed', 'class'], childList: true, subtree: true, characterData: true });
-          }
-        } else {
-          if (lastThinkObserver) {
-            lastThinkObserver.disconnect();
-            lastThinkObserver = null;
-          }
-          if (lastSearchObserver) {
-            lastSearchObserver.disconnect();
-            lastSearchObserver = null;
-          }
-        }
-      }
+        if (!isImaginePage()) {
+            const initialQueryBar = document.querySelector(QUERY_BAR_SELECTOR);
+            if (initialQueryBar) {
+                removeExistingRateLimit();
+                fetchAndUpdateRateLimit(initialQueryBar);
+                lastQueryBar = initialQueryBar;
 
-      function setupSubmissionListeners(queryBar) {
-        // Look for both desktop and mobile input elements
-        const contentEditable = queryBar.querySelector('div[contenteditable="true"]');
-        const textArea = queryBar.querySelector('textarea[aria-label*="Ask Grok"]');
-        const inputElement = contentEditable || textArea;
+                setupQueryBarObserver(initialQueryBar);
+                setupGrok3Observers(initialQueryBar);
+                setupSubmissionListeners(initialQueryBar);
 
-        if (inputElement && inputElement !== lastInputElement) {
-          lastInputElement = inputElement;
+                // Start overlap checking
+                startOverlapChecking(initialQueryBar);
+                setTimeout(() => checkTextOverlap(initialQueryBar), 100);
 
-          // Create a debounced version of overlap checking
-          const debouncedOverlapCheck = debounce(() => {
-            checkTextOverlap(queryBar);
-          }, 300);
-
-          // Add keydown listener for Enter submission
-          inputElement.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              setTimeout(() => fetchAndUpdateRateLimit(queryBar, true), 3000);
+                if (document.visibilityState === 'visible' && !isCountingDown) {
+                    pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+                }
             }
-          });
-
-          // Add input listener for debounced overlap checking
-          inputElement.addEventListener('input', debouncedOverlapCheck);
-
-          // Add focus listener
-          inputElement.addEventListener('focus', debouncedOverlapCheck);
-
-          // Add blur listener with delay
-          inputElement.addEventListener('blur', () => {
-            setTimeout(() => {
-              checkTextOverlap(queryBar);
-            }, 200);
-          });
         }
 
-        const submitButton = findElement(commonFinderConfigs.submitButton, queryBar);
-        if (submitButton && submitButton !== lastSubmitButton) {
-          lastSubmitButton = submitButton;
-          submitButton.addEventListener('click', () => {
-            setTimeout(() => fetchAndUpdateRateLimit(queryBar, true), 3000);
-          });
+        const observer = new MutationObserver(() => {
+            if (isImaginePage()) {
+                removeExistingRateLimit();
+                stopOverlapChecking();
+                if (lastModelObserver) {
+                    lastModelObserver.disconnect();
+                    lastModelObserver = null;
+                }
+                if (lastThinkObserver) {
+                    lastThinkObserver.disconnect();
+                    lastThinkObserver = null;
+                }
+                if (lastSearchObserver) {
+                    lastSearchObserver.disconnect();
+                    lastSearchObserver = null;
+                }
+                lastInputElement = null;
+                lastSubmitButton = null;
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                }
+                lastQueryBar = null;
+                return;
+            }
+
+            const queryBar = document.querySelector(QUERY_BAR_SELECTOR);
+            if (queryBar && queryBar !== lastQueryBar) {
+                removeExistingRateLimit();
+                fetchAndUpdateRateLimit(queryBar);
+                if (lastModelObserver) {
+                    lastModelObserver.disconnect();
+                }
+                if (lastThinkObserver) {
+                    lastThinkObserver.disconnect();
+                }
+                if (lastSearchObserver) {
+                    lastSearchObserver.disconnect();
+                }
+
+                setupQueryBarObserver(queryBar);
+                setupGrok3Observers(queryBar);
+                setupSubmissionListeners(queryBar);
+
+                // Start overlap checking
+                startOverlapChecking(queryBar);
+                setTimeout(() => checkTextOverlap(queryBar), 100);
+
+                if (document.visibilityState === 'visible' && !isCountingDown) {
+                    if (pollInterval) clearInterval(pollInterval);
+                    pollInterval = setInterval(() => fetchAndUpdateRateLimit(lastQueryBar, true), POLL_INTERVAL_MS);
+                }
+                lastQueryBar = queryBar;
+            } else if (!queryBar && lastQueryBar) {
+                removeExistingRateLimit();
+                stopOverlapChecking();
+                if (lastModelObserver) {
+                    lastModelObserver.disconnect();
+                }
+                if (lastThinkObserver) {
+                    lastThinkObserver.disconnect();
+                }
+                if (lastSearchObserver) {
+                    lastSearchObserver.disconnect();
+                }
+                lastQueryBar = null;
+                lastModelObserver = null;
+                lastThinkObserver = null;
+                lastSearchObserver = null;
+                lastInputElement = null;
+                lastSubmitButton = null;
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                }
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
+
+        function setupQueryBarObserver(queryBar) {
+            const debouncedUpdate = debounce(() => {
+                fetchAndUpdateRateLimit(queryBar);
+                setupGrok3Observers(queryBar);
+            }, 300);
+
+            lastModelObserver = new MutationObserver(debouncedUpdate);
+            lastModelObserver.observe(queryBar, { childList: true, subtree: true, attributes: true, characterData: true });
         }
-      }
+
+        function setupGrok3Observers(queryBar) {
+            const currentModel = getCurrentModelKey(queryBar);
+            if (currentModel === 'grok-3') {
+                const thinkButton = findElement(commonFinderConfigs.thinkButton, queryBar);
+                if (thinkButton) {
+                    if (lastThinkObserver) lastThinkObserver.disconnect();
+                    lastThinkObserver = new MutationObserver(() => {
+                        fetchAndUpdateRateLimit(queryBar);
+                    });
+                    lastThinkObserver.observe(thinkButton, { attributes: true, attributeFilter: ['aria-pressed', 'class'] });
+                }
+                const searchButton = findElement(commonFinderConfigs.deepSearchButton, queryBar);
+                if (searchButton) {
+                    if (lastSearchObserver) lastSearchObserver.disconnect();
+                    lastSearchObserver = new MutationObserver(() => {
+                        fetchAndUpdateRateLimit(queryBar);
+                    });
+                    lastSearchObserver.observe(searchButton, { attributes: true, attributeFilter: ['aria-pressed', 'class'], childList: true, subtree: true, characterData: true });
+                }
+            } else {
+                if (lastThinkObserver) {
+                    lastThinkObserver.disconnect();
+                    lastThinkObserver = null;
+                }
+                if (lastSearchObserver) {
+                    lastSearchObserver.disconnect();
+                    lastSearchObserver = null;
+                }
+            }
+        }
+
+        function setupSubmissionListeners(queryBar) {
+            const inputElement = queryBar.querySelector('div[contenteditable="true"]');
+            if (inputElement && inputElement !== lastInputElement) {
+                lastInputElement = inputElement;
+
+                // Create a debounced version of overlap checking
+                const debouncedOverlapCheck = debounce(() => {
+                    checkTextOverlap(queryBar);
+                }, 300);
+
+                inputElement.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        setTimeout(() => fetchAndUpdateRateLimit(queryBar, true), 3000);
+                    }
+                });
+
+                // Add listeners for overlap checking
+                inputElement.addEventListener('input', debouncedOverlapCheck);
+                inputElement.addEventListener('focus', debouncedOverlapCheck);
+                inputElement.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        checkTextOverlap(queryBar);
+                    }, 200);
+                });
+            }
+
+            const bottomBar = queryBar.querySelector('div.absolute.inset-x-0.bottom-0');
+            const submitButton = bottomBar ? findElement(commonFinderConfigs.submitButton, bottomBar) : findElement(commonFinderConfigs.submitButton, queryBar);
+            if (submitButton && submitButton !== lastSubmitButton) {
+                lastSubmitButton = submitButton;
+                submitButton.addEventListener('click', () => {
+                    setTimeout(() => fetchAndUpdateRateLimit(queryBar, true), 3000);
+                });
+            }
+        }
     }
 
     // Start observing the DOM for changes

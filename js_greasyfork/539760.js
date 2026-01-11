@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         文字替换工具
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  文字替换工具，支持按网址分组管理替换规则及原网址映射，添加原链角标显示，修复动态内容替换问题
 // @author       Yesaye
 // @match        *://*/*
@@ -190,7 +190,7 @@
         toggleButton.textContent = '收起 ◀';
         toggleButton.style.cssText = `
             position: absolute;
-            right: -24px;
+            right: 0px;
             bottom: 10px;
             padding: 5px 8px;
             background-color: #555;
@@ -201,6 +201,7 @@
             font-size: 12px;
             writing-mode: vertical-rl;
             text-orientation: mixed;
+            transition: .3s all;
         `;
 
         toggleButton.addEventListener('click', () => {

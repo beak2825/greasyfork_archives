@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name        ManagerZone Otomatik Teklif Yükseltici (Dashboard & Multi-Player Tam Sürüm)
 // @namespace   http://tampermonkey.net/
-// @version     4.0
+// @version     6.0
 // @description Otomatik teklif, Akıllı Süre takibi, Sesli Bildirimler, Çoklu Oyuncu Desteği ve Gelişmiş Takip Paneli (Dashboard).
 // @author      AI Assistant
 // @match       https://www.managerzone.com/?p=transfer*
 // @grant       GM.xmlHttpRequest
 // @grant       GM_getResourceText
-// @require     https://code.jquery.com/jquery-3.6.0.min.js
 // @downloadURL https://update.greasyfork.org/scripts/538408/ManagerZone%20Otomatik%20Teklif%20Y%C3%BCkseltici%20%28Dashboard%20%20Multi-Player%20Tam%20S%C3%BCr%C3%BCm%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/538408/ManagerZone%20Otomatik%20Teklif%20Y%C3%BCkseltici%20%28Dashboard%20%20Multi-Player%20Tam%20S%C3%BCr%C3%BCm%29.meta.js
 // ==/UserScript==
@@ -355,7 +354,7 @@
             SETTINGS_MANUAL_FILL_PROMPT: '(Manuel giriniz!)',
             SETTINGS_EXAMPLE_MAX_BID: 'Örn: 500000',
             SETTINGS_QUICK_BID_ADD_CURRENT: 'Mevcut',
-            SETTINGS_SAVE_BUTTON: 'Bu Oyuncu İçin Kaydet',
+            SETTINGS_SAVE_BUTTON: 'Ayarları Kaydet',
             SETTINGS_CLOSE_BUTTON: 'Kapat',
             STATUS_SUCCESS: 'success',
             STATUS_ERROR: 'error',
@@ -391,6 +390,90 @@
     };
 
     let currentLanguage = 'tr';
+
+    const MZ_CSS = `
+        @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
+        :root {
+            --mzab-fbyellow: #FDB913; --mzab-fbnavy: #001C50; --mzab-trred: #D93636; --mzab-green-success: #4CAF50;
+            --mzab-white: #FFFFFF; --mzab-text-main: #ECEFF1; --mzab-text-dark: #00143B; --mzab-background-dark: #18202A;
+            --mzab-background-medium: #2B3648; --mzab-background-light: #4A5568;
+        }
+        #mzAutoBidOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(24, 32, 42, 0.9); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        #mzAutoBidModal { background: var(--mzab-background-dark); border: 1px solid var(--mzab-background-medium); border-radius: 12px; padding: 25px; width: 95%; max-width: 1000px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); color: var(--mzab-text-main); font-family: 'Urbanist', system-ui, sans-serif; box-sizing: border-box; }
+        .mz-modal-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--mzab-fbnavy); color: var(--mzab-fbyellow); padding: 12px 20px; margin: -25px -25px 25px -25px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom: 2px solid var(--mzab-fbyellow); }
+        #mzAutoBidModal h2 { margin: 0; font-weight: 600; font-size: 1.4em; }
+        .mz-modal-lang-controls { display: flex; align-items: center; }
+        .mz-lang-toggle { color: var(--mzab-fbyellow); opacity: 0.7; cursor: pointer; font-size: 0.9em; padding: 4px 8px; border-radius: 4px; font-weight: 500;}
+        .mz-lang-toggle:hover { opacity: 1; background-color: rgba(255,255,255,0.1); }
+        .mz-lang-toggle.active { opacity: 1; font-weight: 700; background-color: var(--mzab-fbyellow); color: var(--mzab-text-dark); }
+        #mzAutoBidModal label { display: block; margin-bottom: 8px; font-weight: 500; color: #B0BEC5; font-size: 0.95em; }
+        #mzAutoBidModal input[type="number"], #mzAutoBidModal input[type="text"] { width: 100%; padding: 10px; margin-bottom: 18px; border: 1px solid var(--mzab-background-light); border-radius: 6px; box-sizing: border-box; background-color: var(--mzab-background-medium); color: var(--mzab-text-main); font-size: 1em; }
+        #mzAutoBidModal input[type="checkbox"] { width: auto; margin-right: 10px; transform: scale(1.1); accent-color: var(--mzab-fbyellow); vertical-align: middle; }
+        #mzAutoBidModal .checkbox-container { display: flex; align-items: center; margin-bottom: 20px; }
+        #mzAutoBidModal .checkbox-container label { margin-bottom: 0; color: var(--mzab-text-main); }
+        #mzAutoBidModal .button-container { display: flex; margin-top: 25px; border-top: 1px solid var(--mzab-background-medium); padding-top: 20px; }
+        #mzAutoBidModal button { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; font-size: 0.95em; font-family: 'Urbanist', system-ui, sans-serif;}
+        #mzAutoBidModal button.save { background-color: var(--mzab-fbyellow); color: var(--mzab-text-dark); }
+        #mzAutoBidModal button.save:hover { background-color: #FFC720; }
+        #mzAutoBidModal button.close { background-color: var(--mzab-background-light); color: var(--mzab-text-main); }
+        #mzAutoBidModal button.dashboard-btn { background-color: var(--mzab-fbnavy); color: var(--mzab-fbyellow); border: 1px solid var(--mzab-fbyellow); }
+        #mzAutoBidModal button.dashboard-btn:hover { background-color: var(--mzab-fbyellow); color: var(--mzab-text-dark); }
+        .status-message-box { border: 1px solid var(--mzab-background-light); color: var(--mzab-text-main); padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.95em; background-color: var(--mzab-background-medium); }
+        .status-message-box.success { background-color: #1D4232; border-color: #2C594A; color: #A7F3D0; }
+        .status-message-box.error { background-color: #5B2020; border-color: #7F2A2A; color: #FED7D7; }
+        .status-message-box.warning { background-color: #522E13; border-color: #7A4A1D; color: #FEEBC8; }
+        .quick-bid-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; margin-bottom: 20px; }
+        .quick-bid-buttons button { padding: 7px 12px; font-size: 0.8em; background-color: var(--mzab-background-medium); color: var(--mzab-text-main); border: 1px solid var(--mzab-background-light); border-radius: 5px; }
+        #mzDashboardView { display: none; width: 100%; }
+        #mzDashboardTable { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 1.05em; }
+        #mzDashboardTable th, #mzDashboardTable td { text-align: left; padding: 14px 10px; border-bottom: 1px solid var(--mzab-background-light); color: var(--mzab-text-main); vertical-align: middle; white-space: nowrap; }
+        #mzDashboardTable th { color: #90A4AE; font-weight: 600; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; border-bottom: 2px solid var(--mzab-fbyellow); }
+        #mzDashboardTable td strong { font-size: 1.1em; }
+        .mz-status-active { color: var(--mzab-green-success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 4px 8px; border-radius: 4px; }
+        .mz-status-stopped { color: #B0BEC5; opacity: 0.8; background: rgba(176, 190, 197, 0.1); padding: 4px 8px; border-radius: 4px; }
+        .mz-action-cell { vertical-align: middle !important; }
+        .mz-btn-wrapper { display: flex; gap: 8px; align-items: center; }
+        .mz-action-btn { padding: 8px 16px; text-align: center; font-size: 0.9em; text-decoration: none; border-radius: 6px; border: none; cursor: pointer; color: white; font-weight: 600; min-width: 50px; transition: opacity 0.2s; }
+        .mz-action-btn:hover { opacity: 0.9; }
+        .mz-go-btn { background: #1976D2; }
+        .mz-del-btn { background: var(--mzab-trred); }
+        .mz-action-btn:hover { opacity: 0.9; }
+        .mz-go-btn { background: #1976D2; }
+        .mz-del-btn { background: var(--mzab-trred); }
+        @media only screen and (max-width: 600px) {
+            #mzAutoBidModal { width: 100%; height: 100%; border-radius: 0; padding: 15px; overflow-y: auto; }
+            .mz-modal-header { margin: -15px -15px 15px -15px; padding: 10px; }
+            .button-container { flex-direction: column; gap: 10px; }
+            #mzAutoBidModal button { width: 100%; margin-bottom: 5px; padding: 12px; font-size: 1em; }
+            .mz-modal-header h2 { font-size: 1.1em; }
+            #mzAutoBidModal input[type="text"], #mzAutoBidModal input[type="number"], #mzAutoBidModal select { font-size: 1em; padding: 8px; }
+        }
+    `;
+
+    // --- İNSAN SİMÜLASYONU YARDIMCI FONKSİYONLARI ---
+
+    // Belirlenen aralıkta rastgele bekleme (Thinking Time)
+    const sleepRandom = (min, max) => new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * (max - min + 1)) + min));
+
+    // Gerçekçi Tıklama Simülasyonu (Mouseover -> Mousedown -> Mouseup -> Click)
+    async function simulateHumanClick(element) {
+        if (!element) return;
+
+        const events = ['mouseover', 'mousedown', 'mouseup', 'click'];
+
+        for (const eventType of events) {
+            // DÜZELTME: 'view: window' satırı kaldırıldı.
+            // Tampermonkey window nesnesi ile çakışmayı önler.
+            const event = new MouseEvent(eventType, {
+                bubbles: true,
+                cancelable: true
+            });
+            element.dispatchEvent(event);
+            // Olaylar arası mikrosaniye cinsinden çok kısa beklemeler
+            await sleepRandom(30, 80);
+        }
+    }
+
     // --- VERİ YAPISI ---
     let currentSettings = {
         myTeamID: null,
@@ -677,8 +760,24 @@
 
     function toggleKeepAlive(enable) {
         if (enable) {
-            keepAliveAudio.play().catch(e => console.warn("Keep-Alive başlatılamadı:", e));
-            logSystem("Arka plan modu aktif: Tarayıcı uyutulmuyor.");
+            // Sesi çalmayı dene
+            keepAliveAudio.play().then(() => {
+                // Başarılı olursa sessizce devam et
+            }).catch(e => {
+                // Eğer tarayıcı engellerse (Autoplay Policy), konsola bilgi ver ve ilk tıklamayı bekle
+                console.warn("[MZ Audio] Otomatik oynatma engellendi. Kullanıcı etkileşimi bekleniyor.");
+
+                const unlockAudio = () => {
+                    keepAliveAudio.play().catch(e => console.error("Ses yine başlatılamadı:", e));
+                    document.removeEventListener('click', unlockAudio); // Dinleyiciyi kaldır
+                    document.removeEventListener('keydown', unlockAudio);
+                };
+
+                // Sayfaya herhangi bir tıklama veya tuş basımı yapıldığında sesi aç
+                document.addEventListener('click', unlockAudio);
+                document.addEventListener('keydown', unlockAudio);
+            });
+            logSystem("Arka plan modu aktif (Etkileşim bekleniyor olabilir).");
         } else {
             keepAliveAudio.pause();
             logSystem("Arka plan modu pasif.");
@@ -725,34 +824,39 @@
         scheduleNextAutoBidCheck();
     }
 
-    async function attemptDirectBid() {
+    async function attemptDirectBid() { // Başına 'async' eklendi
         if (!activePlayerSettings || !activePlayerSettings.maxBid) return scheduleNextAutoBidCheck();
 
-        let checks = 0;
+        // --- DEĞİŞİKLİK: MutationObserver Kullanımı ---
         const powerboxShell = await new Promise((resolve) => {
-            const interval = setInterval(() => {
-                checks++;
-                const pbShell = document.getElementById('lightbox_transfer_buy_form');
-                if (pbShell?.style.display !== 'none') {
-                    clearInterval(interval);
-                    resolve(pbShell);
+            const existingBox = document.getElementById('lightbox_transfer_buy_form');
+            if (existingBox && existingBox.style.display !== 'none') {
+                return resolve(existingBox);
+            }
+            const observer = new MutationObserver((mutations, obs) => {
+                const box = document.getElementById('lightbox_transfer_buy_form');
+                if (box && box.style.display !== 'none') {
+                    obs.disconnect();
+                    resolve(box);
                 }
-                if (checks >= MAX_MODAL_CHECKS) {
-                    clearInterval(interval);
-                    warnLog('LOG_MODAL_TIMEOUT');
-                    resolve(null);
-                }
-            }, MODAL_CHECK_INTERVAL_MS);
+            });
+            observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+            setTimeout(() => {
+                observer.disconnect();
+                resolve(null);
+            }, 3000);
         });
 
-        if (!powerboxShell) return scheduleNextAutoBidCheck();
+        if (!powerboxShell) {
+            return scheduleNextAutoBidCheck();
+        }
 
         let inputChecks = 0;
         let bidInputFieldInPowerbox = null;
-        while (inputChecks < 90) {
+        while (inputChecks < 50) {
             bidInputFieldInPowerbox = powerboxShell.querySelector('input[name="bid_player_currency"]');
             if (bidInputFieldInPowerbox && bidInputFieldInPowerbox.value.trim() !== "") break;
-            await new Promise((r) => setTimeout(r, 100));
+            await new Promise((r) => setTimeout(r, 50));
             inputChecks++;
         }
 
@@ -788,6 +892,12 @@
             return;
         }
 
+        // --- İNSAN SİMÜLASYONU: KARAR SÜRESİ ---
+        // Kullanıcı burada rakama bakar, limitini düşünür ve onay butonuna gider.
+        logSystem(`İnsan Simülasyonu: Karar veriliyor ve onaylanıyor...`);
+        await sleepRandom(800, 1600);
+        // ---------------------------------------
+
         logSystem(`SONUÇ: Limit yeterli. ${finalBidAmount.toLocaleString()} EUR teklif ediliyor...`);
         log('LOG_EXTRACTING_BID_DATA');
 
@@ -819,7 +929,7 @@
                         log('LOG_BID_CONFIRMED_IN_POWERBOX');
                         bidJustPlaced = true;
                         const newHighestBid = jsonResponse.bid_amount || finalBidAmount;
-                        const isMyNewBidHighest = true; // Başarılıysa bizizdir
+                        const isMyNewBidHighest = true;
                         logSystem(`BAŞARILI: Teklif verildi! Şu anki Fiyat: ${newHighestBid}`);
                         playSound('success');
                         updatePlayerInfoUI(newHighestBid, isMyNewBidHighest);
@@ -856,7 +966,7 @@
         autoBidIntervalId = setTimeout(autoBid, nextCheckDelay);
     }
 
-    function autoBid() {
+    async function autoBid() { // Başına 'async' eklendi
         if (!activePlayerSettings || !activePlayerSettings.enabled) {
             if (autoBidIntervalId) clearTimeout(autoBidIntervalId);
             autoBidIntervalId = null;
@@ -906,7 +1016,19 @@
         if (!checkTimeThreshold()) return scheduleNextAutoBidCheck();
 
         log('LOG_INITIATING_BID_PROCESS');
-        bidButton.click();
+
+        // --- İNSAN SİMÜLASYONU BAŞLANGICI ---
+        // 1. Reaksiyon süresi (Fırsatı gördü, mouse'a elini götürüyor)
+        logSystem("İnsan Simülasyonu: Reaksiyon gösteriliyor...");
+        await sleepRandom(400, 900);
+
+        // 2. Butona gerçekçi tıklama
+        await simulateHumanClick(bidButton);
+
+        // 3. Pencerenin açılmasını algılama süresi
+        await sleepRandom(500, 1200);
+        // --- İNSAN SİMÜLASYONU BİTİŞİ ---
+
         attemptDirectBid();
     }
 
@@ -958,10 +1080,11 @@
                         <label for="mzAutoBidEnabled" id="mzAutoBidEnableLabel" style="color: var(--mzab-green-success); font-weight: bold; font-size: 1.05em;">${getString('SETTINGS_ENABLE_AUTOBID')}</label>
                     </div>
 
-                    <!-- TAKIM ID ALANI -->
+                   <!-- TAKIM ID ALANI -->
                     <div style="margin-bottom: 15px;">
                         <label for="mzAutoBidMyTeamID" id="mzAutoBidMyTeamIDLabel" style="font-size: 0.95em; color: #CFD8DC;">${getString('SETTINGS_YOUR_TEAM_ID')}</label>
-                        <input type="number" id="mzAutoBidMyTeamID" placeholder="${getString('SETTINGS_AUTO_FETCHED')}" readonly style="padding: 12px; font-size: 1.2em; font-weight: 800; background-color: #10151C; color: #FFFFFF; border: 1px solid #546E7A; border-radius: 6px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); cursor: not-allowed;">
+                        <!-- DEĞİŞİKLİK BURADA: type="number" yerine type="text" yapıldı -->
+                        <input type="text" id="mzAutoBidMyTeamID" placeholder="${getString('SETTINGS_AUTO_FETCHED')}" readonly style="padding: 12px; font-size: 1.2em; font-weight: 800; background-color: #10151C; color: #FFFFFF; border: 1px solid #546E7A; border-radius: 6px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); cursor: not-allowed;">
                     </div>
 
                     <div class="checkbox-container" style="margin-top: 15px; margin-bottom: 5px;">
@@ -1028,77 +1151,17 @@
     }
 
     function injectSettingsModalAndButton() {
+        // CSS Ekleme
         const styleElement = document.createElement('style');
-        styleElement.textContent = `
-        @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
-        :root {
-            --mzab-fbyellow: #FDB913; --mzab-fbnavy: #001C50; --mzab-trred: #D93636; --mzab-green-success: #4CAF50;
-            --mzab-white: #FFFFFF; --mzab-text-main: #ECEFF1; --mzab-text-dark: #00143B; --mzab-background-dark: #18202A;
-            --mzab-background-medium: #2B3648; --mzab-background-light: #4A5568;
-        }
-        #mzAutoBidOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(24, 32, 42, 0.9); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-
-        /* GÜNCELLEME: Modal genişliği 1000px yapıldı, böylece tablo rahatça yayılabilir */
-        #mzAutoBidModal { background: var(--mzab-background-dark); border: 1px solid var(--mzab-background-medium); border-radius: 12px; padding: 25px; width: 95%; max-width: 1000px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); color: var(--mzab-text-main); font-family: 'Urbanist', system-ui, sans-serif; box-sizing: border-box; }
-
-        .mz-modal-header { display: flex; justify-content: space-between; align-items: center; background-color: var(--mzab-fbnavy); color: var(--mzab-fbyellow); padding: 12px 20px; margin: -25px -25px 25px -25px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom: 2px solid var(--mzab-fbyellow); }
-        #mzAutoBidModal h2 { margin: 0; font-weight: 600; font-size: 1.4em; }
-        .mz-modal-lang-controls { display: flex; align-items: center; }
-        .mz-lang-toggle { color: var(--mzab-fbyellow); opacity: 0.7; cursor: pointer; font-size: 0.9em; padding: 4px 8px; border-radius: 4px; font-weight: 500;}
-        .mz-lang-toggle:hover { opacity: 1; background-color: rgba(255,255,255,0.1); }
-        .mz-lang-toggle.active { opacity: 1; font-weight: 700; background-color: var(--mzab-fbyellow); color: var(--mzab-text-dark); }
-        #mzAutoBidModal label { display: block; margin-bottom: 8px; font-weight: 500; color: #B0BEC5; font-size: 0.95em; }
-        #mzAutoBidModal input[type="number"], #mzAutoBidModal input[type="text"] { width: 100%; padding: 10px; margin-bottom: 18px; border: 1px solid var(--mzab-background-light); border-radius: 6px; box-sizing: border-box; background-color: var(--mzab-background-medium); color: var(--mzab-text-main); font-size: 1em; }
-        #mzAutoBidModal input[type="checkbox"] { width: auto; margin-right: 10px; transform: scale(1.1); accent-color: var(--mzab-fbyellow); vertical-align: middle; }
-        #mzAutoBidModal .checkbox-container { display: flex; align-items: center; margin-bottom: 20px; }
-        #mzAutoBidModal .checkbox-container label { margin-bottom: 0; color: var(--mzab-text-main); }
-        #mzAutoBidModal .button-container { display: flex; margin-top: 25px; border-top: 1px solid var(--mzab-background-medium); padding-top: 20px; }
-        #mzAutoBidModal button { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; font-size: 0.95em; font-family: 'Urbanist', system-ui, sans-serif;}
-        #mzAutoBidModal button.save { background-color: var(--mzab-fbyellow); color: var(--mzab-text-dark); }
-        #mzAutoBidModal button.save:hover { background-color: #FFC720; }
-        #mzAutoBidModal button.close { background-color: var(--mzab-background-light); color: var(--mzab-text-main); }
-        #mzAutoBidModal button.dashboard-btn { background-color: var(--mzab-fbnavy); color: var(--mzab-fbyellow); border: 1px solid var(--mzab-fbyellow); }
-        #mzAutoBidModal button.dashboard-btn:hover { background-color: var(--mzab-fbyellow); color: var(--mzab-text-dark); }
-        .status-message-box { border: 1px solid var(--mzab-background-light); color: var(--mzab-text-main); padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.95em; background-color: var(--mzab-background-medium); }
-        .status-message-box.success { background-color: #1D4232; border-color: #2C594A; color: #A7F3D0; }
-        .status-message-box.error { background-color: #5B2020; border-color: #7F2A2A; color: #FED7D7; }
-        .status-message-box.warning { background-color: #522E13; border-color: #7A4A1D; color: #FEEBC8; }
-        .quick-bid-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; margin-bottom: 20px; }
-        .quick-bid-buttons button { padding: 7px 12px; font-size: 0.8em; background-color: var(--mzab-background-medium); color: var(--mzab-text-main); border: 1px solid var(--mzab-background-light); border-radius: 5px; }
-
-        /* Dashboard Styles */
-        #mzDashboardView { display: none; width: 100%; }
-        #mzDashboardTable { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 1.05em; }
-
-        /* GÜNCELLEME: white-space: nowrap eklendi. Hücreler asla alt satıra geçmez. */
-        #mzDashboardTable th, #mzDashboardTable td {
-            text-align: left;
-            padding: 14px 10px;
-            border-bottom: 1px solid var(--mzab-background-light);
-            color: var(--mzab-text-main);
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        #mzDashboardTable th { color: #90A4AE; font-weight: 600; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; border-bottom: 2px solid var(--mzab-fbyellow); }
-        #mzDashboardTable td strong { font-size: 1.1em; }
-
-        .mz-status-active { color: var(--mzab-green-success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 4px 8px; border-radius: 4px; }
-        .mz-status-stopped { color: #B0BEC5; opacity: 0.8; background: rgba(176, 190, 197, 0.1); padding: 4px 8px; border-radius: 4px; }
-
-        /* BUTON DÜZENİ */
-        .mz-action-cell { vertical-align: middle !important; }
-        .mz-btn-wrapper { display: flex; gap: 8px; align-items: center; }
-        .mz-action-btn { padding: 8px 16px; text-align: center; font-size: 0.9em; text-decoration: none; border-radius: 6px; border: none; cursor: pointer; color: white; font-weight: 600; min-width: 50px; transition: opacity 0.2s; }
-        .mz-action-btn:hover { opacity: 0.9; }
-        .mz-go-btn { background: #1976D2; }
-        .mz-del-btn { background: var(--mzab-trred); }
-        `;
+        styleElement.textContent = MZ_CSS;
         document.head.appendChild(styleElement);
+
+        // HTML Ekleme
         const modalContainer = document.createElement('div');
-        modalContainer.innerHTML = buildModalHTML();
+        modalContainer.innerHTML = buildModalHTML(); // HTML template fonksiyonu aşağıda kalabilir
         document.body.appendChild(modalContainer);
 
+        // Ayarlar Butonu Ekleme
         const settingsButtonContainer = document.createElement('div');
         settingsButtonContainer.id = 'mzAutoBidSettingsBtnContainer';
         const settingsButton = document.createElement('button');
@@ -1552,13 +1615,7 @@
         }
     }
 
-    if (window.jQuery) window.addEventListener('load', sinop);
-    else {
-        const jqScript = document.createElement('script');
-        jqScript.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
-        jqScript.onload = () => window.addEventListener('load', sinop);
-        document.head.appendChild(jqScript);
-    }
+    window.addEventListener('load', sinop);
     if (window.speechSynthesis) window.speechSynthesis.getVoices();
 
 })();

@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         YouTube Watch Tracker v2.0
+// @name         YouTube Watch Tracker v2.4
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  Track YouTube watch time, videos, sessions, productivity stats; enhanced themes & monthly summaries
+// @version      2.4
+// @description  Track YouTube watch time with buttons for Videos, Shorts, and Lives
 // @author       Void
 // @match        *://*.youtube.com/*
 // @grant        none
 // @license      CC-BY-ND-4.0
-// @downloadURL https://update.greasyfork.org/scripts/540914/YouTube%20Watch%20Tracker%20v20.user.js
-// @updateURL https://update.greasyfork.org/scripts/540914/YouTube%20Watch%20Tracker%20v20.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/540914/YouTube%20Watch%20Tracker%20v24.user.js
+// @updateURL https://update.greasyfork.org/scripts/540914/YouTube%20Watch%20Tracker%20v24.meta.js
 // ==/UserScript==
 
 (function() {
@@ -16,11 +16,10 @@
     if(window.__YTWT_ACTIVE__) return;
     window.__YTWT_ACTIVE__ = true;
 
-    const VERSION = '2.0';
+    const VERSION = '2.4';
     const STORAGE_KEY = 'yt_watch_tracker_data';
     const SETTINGS_KEY = 'yt_watch_tracker_settings_v2';
 
-    // ───────── Themes ─────────
     const THEMES = [
     { name:'Neo', overlayBg:'rgba(20,10,30,0.9)', overlayBorder:'rgba(200,100,255,0.2)', overlayShadow:'0 0 20px rgba(200,100,255,0.3)', textColor:'#ffeaff', headerColor:'#dca0ff', headerBorder:'1px solid rgba(200,100,255,0.3)', versionColor:'#d0b0ff', toggleBg:'rgba(35,15,50,0.95)', toggleBgHover:'rgba(55,25,70,0.95)', buttonBg:'rgba(200,100,255,0.15)', buttonBgHover:'rgba(200,100,255,0.3)', buttonBorder:'rgba(255,200,255,0.3)' },
     { name:'Forest', overlayBg:'rgba(10,30,15,0.95)', overlayBorder:'rgba(100,255,100,0.2)', overlayShadow:'0 0 20px rgba(100,255,100,0.3)', textColor:'#e0ffe0', headerColor:'#80ff80', headerBorder:'1px solid rgba(100,255,100,0.3)', versionColor:'#b0ffb0', toggleBg:'rgba(15,40,20,0.95)', toggleBgHover:'rgba(35,60,40,0.95)', buttonBg:'rgba(100,255,100,0.15)', buttonBgHover:'rgba(100,255,100,0.3)', buttonBorder:'rgba(200,255,200,0.3)' },
@@ -69,106 +68,926 @@
     {name:'Pine', overlayBg:'rgba(10,35,15,0.95)', overlayBorder:'rgba(0,180,80,0.25)', overlayShadow:'0 0 20px rgba(0,150,60,0.35)', textColor:'#d0ffd0', headerColor:'#40ff60', headerBorder:'1px solid rgba(0,180,80,0.35)', versionColor:'#80ff90', toggleBg:'rgba(15,50,20,0.95)', toggleBgHover:'rgba(35,70,40,0.95)', buttonBg:'rgba(0,180,80,0.2)', buttonBgHover:'rgba(0,180,80,0.35)', buttonBorder:'rgba(0,220,100,0.4)'},
     {name:'Brick', overlayBg:'rgba(100,30,20,0.95)', overlayBorder:'rgba(200,80,60,0.25)', overlayShadow:'0 0 18px rgba(180,60,40,0.35)', textColor:'#fff0e0', headerColor:'#c05040', headerBorder:'1px solid rgba(200,80,60,0.35)', versionColor:'#e08070', toggleBg:'rgba(120,40,25,0.95)', toggleBgHover:'rgba(150,60,35,0.95)', buttonBg:'rgba(200,80,60,0.2)', buttonBgHover:'rgba(200,80,60,0.35)', buttonBorder:'rgba(220,100,80,0.4)'}
 
-];
+   ];
 
-    let settings={theme:0}, currentThemeIndex=0;
-    const getTheme=()=>THEMES[currentThemeIndex]||THEMES[0];
-    const getDate=()=>new Date().toISOString().slice(0,10);
-    const getMonth=()=>new Date().toISOString().slice(0,7);
-    const fmt=t=>`${Math.floor(t/3600)}h ${String(Math.floor((t%3600)/60)).padStart(2,'0')}m ${String(Math.floor(t%60)).padStart(2,'0')}s`;
-    const loadSettings=()=>{try{const s=JSON.parse(localStorage.getItem(SETTINGS_KEY)); if(s) settings=Object.assign(settings,s);}catch{} currentThemeIndex=settings.theme>=0&&settings.theme<THEMES.length?settings.theme:0;};
-    const saveSettings=()=>{try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}catch{}};
+    let settings = { theme: 0 }, currentThemeIndex = 0;
+    let data = {}, sessionTime = 0, videoTime = 0, perVideoData = {}, hourBuckets = Array(24).fill(0);
 
-    let data={}, sessionTime=0, videoTime=0, perVideoData={}, hourBuckets=Array(24).fill(0);
-    const loadData=()=>{try{data=JSON.parse(localStorage.getItem(STORAGE_KEY))||{}}catch{data={}}};
-    const saveData=()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}catch{}};
+    const getTheme = () => THEMES[currentThemeIndex] || THEMES[0];
+    const getDate = () => new Date().toISOString().slice(0,10);
+    const getMonth = () => new Date().toISOString().slice(0,7);
 
-    function ensureStats(date=getDate()){if(!data[date]) data[date]={watched:0,wasted:0,session:0,shortsTime:0,longformTime:0,foregroundTime:0,backgroundTime:0};}
-    function ensureVideoEntry(id){if(!perVideoData[id]) perVideoData[id]={title:document.title.replace(' - YouTube',''),channel:document.querySelector('ytd-channel-name')?.innerText||'',time:0};}
-
-    // ───────── UI ─────────
-    let overlay, contentBox, toggleBtn, headerEl, headerVersionEl, themeIconEl, pauseBtn, copyBtn;
-    let themedButtons=[], hidden=false, lastUiUpdate=0, trackingPaused=false;
-    const mkBtn=(label,fn)=>{const b=document.createElement('button');b.textContent=label;b.style.cssText='flex:1;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;border-width:1px;border-style:solid;outline:none;';b.onmouseenter=()=>b.style.background=getTheme().buttonBgHover;b.onmouseleave=()=>b.style.background=getTheme().buttonBg;b.onclick=fn;themedButtons.push(b);return b;};
-
-    function applyTheme(index){
-        currentThemeIndex=index;
-        const t=getTheme();
-        if(overlay){overlay.style.background=t.overlayBg; overlay.style.border=`1px solid ${t.overlayBorder}`; overlay.style.boxShadow=t.overlayShadow; overlay.style.color=t.textColor;}
-        if(headerEl){headerEl.style.color=t.headerColor; headerEl.style.borderBottom=t.headerBorder;}
-        if(headerVersionEl) headerVersionEl.style.color=t.versionColor;
-        if(themeIconEl) themeIconEl.style.color=t.versionColor;
-        if(toggleBtn) toggleBtn.style.background=t.toggleBg;
-        themedButtons.forEach(b=>{b.style.background=t.buttonBg; b.style.border=`1px solid ${t.buttonBorder}`; b.style.color=t.textColor;});
-    }
-
-    function createOverlay(){
-        overlay=document.createElement('div');
-        overlay.style.cssText='position:fixed;top:100px;right:0;width:280px;background:rgba(15,15,25,0.9);backdrop-filter:blur(10px);color:#fff;border-radius:10px 0 0 10px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 15px rgba(0,0,0,0.6);font-family:Segoe UI,sans-serif;font-size:13px;z-index:999999999;padding:12px 14px;user-select:none;transition:right .35s ease;';
-        headerEl=document.createElement('div'); headerEl.style.cssText='display:flex;align-items:center;justify-content:space-between;text-align:center;font-weight:600;color:#9dc0ff;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:4px;margin-bottom:6px;font-size:14px;';
-        const hTitle=document.createElement('span'); hTitle.textContent='📊 YouTube Watch Tracker';
-        const hRight=document.createElement('span'); hRight.style.cssText='display:flex;align-items:center;gap:6px;font-size:13px;';
-        themeIconEl=document.createElement('span'); themeIconEl.textContent='🎨'; themeIconEl.title='Change theme'; themeIconEl.style.cssText='cursor:pointer;font-size:14px;user-select:none;'; themeIconEl.onclick=()=>{settings.theme=(settings.theme+1)%THEMES.length; applyTheme(settings.theme); saveSettings();};
-        headerVersionEl=document.createElement('span'); headerVersionEl.textContent=`v${VERSION}`; headerVersionEl.style.cssText='font-size:11px;color:#aabfff;opacity:0.9;';
-        hRight.append(themeIconEl, headerVersionEl); headerEl.append(hTitle,hRight); overlay.appendChild(headerEl);
-        contentBox=document.createElement('div'); contentBox.style.cssText='line-height:1.6;margin-bottom:10px;white-space:pre;'; overlay.appendChild(contentBox);
-
-        const row1=document.createElement('div'); row1.style.cssText='display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;';
-        row1.append(
-            mkBtn('Export',()=>{navigator.clipboard.writeText(JSON.stringify(data,null,2)); alert('Copied JSON.');}),
-            mkBtn('Import',()=>{const j=prompt('Paste JSON:'); if(!j) return; try{const p=JSON.parse(j); if(typeof p!=='object') throw 0; data=p; saveData(); updateOverlay(true);}catch{alert('Invalid JSON');}}),
-            mkBtn('Reset',()=>{if(confirm('Reset today only?')){data[getDate()]={watched:0,wasted:0,session:0,shortsTime:0,longformTime:0,foregroundTime:0,backgroundTime:0}; sessionTime=0; saveData(); updateOverlay(true);}})
-        ); overlay.appendChild(row1);
-
-        const row2=document.createElement('div'); row2.style.cssText='display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-top:6px;';
-        pauseBtn=mkBtn('Pause',()=>{trackingPaused=!trackingPaused; pauseBtn.textContent=trackingPaused?'Resume':'Pause';});
-        copyBtn=mkBtn('Copy',()=>{navigator.clipboard.writeText(buildSummary()); alert('Summary copied.');});
-        row2.append(pauseBtn,copyBtn); overlay.appendChild(row2);
-
-        toggleBtn=document.createElement('div'); toggleBtn.textContent='←'; toggleBtn.style.cssText='position:fixed;top:120px;right:280px;width:26px;height:46px;background:rgba(25,25,40,0.95);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;border-radius:6px 0 0 6px;cursor:pointer;box-shadow:0 0 10px rgba(0,0,0,0.5);z-index:999999999;transition:right .35s ease,background .2s ease,transform .2s ease;'; toggleBtn.onclick=()=>{hidden=!hidden; overlay.style.right=hidden?'-300px':'0'; toggleBtn.style.right=hidden?'0':'280px'; toggleBtn.textContent=hidden?'→':'←';};
-
-        document.body.append(overlay); document.body.append(toggleBtn);
-        applyTheme(currentThemeIndex);
-    }
-
-    // ───────── Video Tracking ─────────
-    let videoEl=null, lastVideoId=null, lastInteraction=Date.now(), idleThreshold=60000;
-    ['mousemove','mousedown','keydown','wheel'].forEach(e=>window.addEventListener(e,()=>lastInteraction=Date.now(),{passive:true}));
-    const isIdle=()=>Date.now()-lastInteraction>idleThreshold;
-
-    const getCurrentVideoId=()=>{
-        const url=new URL(location.href);
-        const v=url.searchParams.get('v'); if(v) return `watch:${v}`;
-        const sh=url.pathname.match(/^\/shorts\/([^/?#]+)/); if(sh) return `shorts:${sh[1]}`;
-        return `url:${url.pathname}${url.search}`;
+    const fmt = t => {
+        const hours = Math.floor(t / 3600);
+        const minutes = Math.floor((t % 3600) / 60);
+        const seconds = Math.floor(t % 60);
+        return `${hours}h ${String(minutes).padStart(2,'0')}m ${String(seconds).padStart(2,'0')}s`;
     };
 
-    function handleNewVideoId(){const id=getCurrentVideoId(); if(!id||id===lastVideoId)return; lastVideoId=id; ensureStats(); data[getDate()].watched++; ensureVideoEntry(id); saveData(); updateOverlay(true);}
-    function attachVideo(){const v=document.querySelector('video'); if(v&&v!==videoEl){videoEl=v; videoTime=0; handleNewVideoId();}}
+    const loadSettings = () => {
+        try {
+            const s = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+            if(s) settings = Object.assign(settings,s);
+            currentThemeIndex = settings.theme >= 0 && settings.theme < THEMES.length ? settings.theme : 0;
+        } catch(e) {}
+    };
 
-    function buildSummary(){
-        ensureStats(); const d=getDate(); const m={watched:0,wasted:0,session:0};
-        for(const [k,v] of Object.entries(data)) if(k.startsWith(getMonth())) { m.watched+=v.watched||0; m.wasted+=v.wasted||0; m.session+=v.session||0; }
-        const daily=data[d]; const shortsPct=daily.wasted>0?((daily.shortsTime/daily.wasted)*100).toFixed(1):'0.0'; const prodScore=Math.max(0,100-shortsPct-(daily.watched>20?10:0));
+    const saveSettings = () => {
+        try {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+        } catch(e) {}
+    };
+
+    const loadData = () => {
+        try {
+            data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        } catch(e) {
+            data = {};
+        }
+    };
+
+    const saveData = () => {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch(e) {}
+    };
+
+    function ensureStats(date = getDate()) {
+        if(!data[date]) {
+            data[date] = {
+                watched: 0,
+                wasted: 0,
+                session: 0,
+                shortsTime: 0,
+                longformTime: 0,
+                foregroundTime: 0,
+                backgroundTime: 0,
+                shortsCount: 0,
+                liveCount: 0,
+                videoCount: 0
+            };
+        }
+    }
+
+    function ensureVideoEntry(id) {
+        if(!perVideoData[id]) {
+            perVideoData[id] = {
+                title: document.title.replace(' - YouTube',''),
+                channel: document.querySelector('ytd-channel-name')?.innerText || '',
+                time: 0,
+                type: 'unknown'
+            };
+        }
+    }
+
+    let overlay, contentBox, toggleBtn, headerEl, headerVersionEl, themeIconEl, pauseBtn, copyBtn;
+    let themedButtons = [], hidden = false, lastUiUpdate = 0, trackingPaused = false;
+    let currentScreen = 'main';
+    const screens = {};
+
+    function safeSetText(element, text) {
+        if(element.textContent !== undefined) {
+            element.textContent = text;
+        } else if(element.innerText !== undefined) {
+            element.innerText = text;
+        }
+    }
+
+    function safeClearElement(element) {
+        while(element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+
+    function safeCreateElement(tag, text = '') {
+        const element = document.createElement(tag);
+        safeSetText(element, text);
+        return element;
+    }
+
+    function safeCreateDiv(text = '') {
+        return safeCreateElement('div', text);
+    }
+
+    function mkBtn(label, onClick, icon = '') {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+
+        if(icon) {
+            const iconSpan = document.createElement('span');
+            safeSetText(iconSpan, icon + ' ');
+            iconSpan.style.marginRight = '5px';
+            btn.appendChild(iconSpan);
+        }
+
+        const textNode = document.createTextNode(label);
+        btn.appendChild(textNode);
+
+        btn.style.cssText = 'flex:1;border-radius:6px;padding:8px 12px;font-size:13px;cursor:pointer;border-width:1px;border-style:solid;outline:none;margin:3px 0;';
+        btn.onmouseenter = () => btn.style.background = getTheme().buttonBgHover;
+        btn.onmouseleave = () => btn.style.background = getTheme().buttonBg;
+        btn.onclick = onClick;
+        themedButtons.push(btn);
+        return btn;
+    }
+
+    function applyTheme(index) {
+        currentThemeIndex = index;
+        const t = getTheme();
+
+        if(overlay) {
+            overlay.style.background = t.overlayBg;
+            overlay.style.border = `1px solid ${t.overlayBorder}`;
+            overlay.style.boxShadow = t.overlayShadow;
+            overlay.style.color = t.textColor;
+        }
+        if(headerEl) {
+            headerEl.style.color = t.headerColor;
+            headerEl.style.borderBottom = t.headerBorder;
+        }
+        if(headerVersionEl) headerVersionEl.style.color = t.versionColor;
+        if(themeIconEl) themeIconEl.style.color = t.versionColor;
+        if(toggleBtn) toggleBtn.style.background = t.toggleBg;
+
+        themedButtons.forEach(b => {
+            b.style.background = t.buttonBg;
+            b.style.border = `1px solid ${t.buttonBorder}`;
+            b.style.color = t.textColor;
+        });
+    }
+
+    function createScreen(name, contentFn) {
+        const screen = document.createElement('div');
+        screen.id = `ytwt-screen-${name}`;
+        screen.style.cssText = 'display: none;';
+        contentFn(screen);
+        screens[name] = screen;
+        return screen;
+    }
+
+    function showScreen(name) {
+        currentScreen = name;
+        Object.values(screens).forEach(screen => {
+            screen.style.display = 'none';
+        });
+
+        if(screens[name]) {
+            screens[name].style.display = 'block';
+            updateScreen(name);
+        }
+    }
+
+    function getMonthStats() {
+        const month = getMonth();
+        const stats = {
+            watched: 0,
+            wasted: 0,
+            session: 0,
+            shortsTime: 0,
+            longformTime: 0,
+            shortsCount: 0,
+            liveCount: 0,
+            videoCount: 0
+        };
+
+        Object.entries(data).forEach(([date, dayData]) => {
+            if(date.startsWith(month)) {
+                stats.watched += dayData.watched || 0;
+                stats.wasted += dayData.wasted || 0;
+                stats.session += dayData.session || 0;
+                stats.shortsTime += dayData.shortsTime || 0;
+                stats.longformTime += dayData.longformTime || 0;
+                stats.shortsCount += dayData.shortsCount || 0;
+                stats.liveCount += dayData.liveCount || 0;
+                stats.videoCount += dayData.videoCount || 0;
+            }
+        });
+        return stats;
+    }
+
+    function buildSummary() {
+        ensureStats();
+        const d = getDate();
+        const m = { watched: 0, wasted: 0, session: 0 };
+
+        Object.entries(data).forEach(([k, v]) => {
+            if(k.startsWith(getMonth())) {
+                m.watched += v.watched || 0;
+                m.wasted += v.wasted || 0;
+                m.session += v.session || 0;
+            }
+        });
+
+        const daily = data[d];
+        const shortsPct = daily.wasted > 0 ? ((daily.shortsTime / daily.wasted) * 100).toFixed(1) : '0.0';
+        const prodScore = Math.max(0, 100 - shortsPct - (daily.watched > 20 ? 10 : 0));
+
         return `📅 Today: ${daily.watched} videos\n🕒 Watched: ${fmt(daily.wasted)}\n⌛ Session: ${fmt(sessionTime)}\n🎯 Productivity: ${prodScore}\n📆 Month: ${m.watched} videos\n🕒 Watched: ${fmt(m.wasted)}\n📱 Shorts: ${shortsPct}%`;
     }
 
-    function updateOverlay(force=false){const now=Date.now(); if(!force && now-lastUiUpdate<2500) return; lastUiUpdate=now; if(contentBox) contentBox.innerText=buildSummary();}
+    function createMainScreen(container) {
+        container.style.cssText = 'padding: 10px 0;';
 
-    function startSessionLoop(){setInterval(()=>{if(trackingPaused||document.hidden) return; ensureStats(); sessionTime++; data[getDate()].session++; if(Date.now()%20000<1000) saveData(); updateOverlay();},1000);}
-    function startWatchLoop(){setInterval(()=>{if(trackingPaused||document.hidden||!videoEl||videoEl.paused||videoEl.ended||isIdle()) return; ensureStats(); const rate=videoEl.playbackRate||1; const d=data[getDate()]; d.wasted+=rate; videoTime+=rate; hourBuckets[new Date().getHours()]+=rate; if(location.pathname.startsWith('/shorts/')) d.shortsTime+=rate; else d.longformTime+=rate; if(document.visibilityState==='visible') d.foregroundTime+=rate; else d.backgroundTime+=rate; if(lastVideoId&&perVideoData[lastVideoId]) perVideoData[lastVideoId].time+=rate; if(videoTime%30<1) saveData(); updateOverlay();},1000);}
+        const title = safeCreateDiv('📊 YouTube Watch Tracker');
+        title.style.cssText = 'font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center;';
+        container.appendChild(title);
 
-    function setupObservers(){
-        const videoObs=new MutationObserver(attachVideo); videoObs.observe(document.body,{childList:true,subtree:true});
-        let lastHref=location.href;
-        const urlObs=new MutationObserver(()=>{if(location.href!==lastHref){lastHref=location.href; attachVideo(); handleNewVideoId();}}); urlObs.observe(document.documentElement||document,{childList:true,subtree:true});
-        window.addEventListener('yt-navigate-finish',()=>{attachVideo(); handleNewVideoId();});
-        window.addEventListener('popstate',()=>{attachVideo(); handleNewVideoId();});
+        const desc = safeCreateDiv();
+        desc.style.cssText = 'font-size: 12px; line-height: 1.4; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;';
+
+        const descTitle1 = safeCreateDiv('What this script does:');
+        descTitle1.style.cssText = 'font-weight: bold; margin-bottom: 5px;';
+        desc.appendChild(descTitle1);
+
+        const list1 = safeCreateDiv();
+        list1.style.cssText = 'margin-left: 10px;';
+        ['Tracks your YouTube watch time automatically', 'Shows separate stats for Videos, Shorts & Lives', 'Calculates productivity scores', 'Saves data locally in your browser'].forEach(item => {
+            const itemDiv = safeCreateDiv('• ' + item);
+            list1.appendChild(itemDiv);
+        });
+        desc.appendChild(list1);
+
+        const descTitle2 = safeCreateDiv('How to use:');
+        descTitle2.style.cssText = 'font-weight: bold; margin: 10px 0 5px 0;';
+        desc.appendChild(descTitle2);
+
+        const list2 = safeCreateDiv();
+        list2.style.cssText = 'margin-left: 10px;';
+        ['Click any button below to view detailed stats', 'The tracker runs automatically in background'].forEach(item => {
+            const itemDiv = safeCreateDiv('• ' + item);
+            list2.appendChild(itemDiv);
+        });
+        desc.appendChild(list2);
+
+        container.appendChild(desc);
+
+        const buttonContainer = safeCreateDiv();
+        buttonContainer.style.cssText = 'margin: 20px 0;';
+
+        buttonContainer.appendChild(mkBtn('Video Stats', () => showScreen('videos'), '🎬'));
+        buttonContainer.appendChild(mkBtn('Shorts Stats', () => showScreen('shorts'), '📱'));
+        buttonContainer.appendChild(mkBtn('Live Stats', () => showScreen('lives'), '🔴'));
+        buttonContainer.appendChild(mkBtn('Daily Summary', () => showScreen('summary'), '📈'));
+
+        container.appendChild(buttonContainer);
+
+        const quickStats = safeCreateDiv('Loading stats...');
+        quickStats.id = 'ytwt-quick-stats';
+        quickStats.style.cssText = 'font-size: 12px; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;';
+        container.appendChild(quickStats);
     }
 
-    // ───────── Safe Init ─────────
-    function waitForBody(fn){if(document.body) return fn(); const obs=new MutationObserver((m,o)=>{if(document.body){o.disconnect();fn();}}); obs.observe(document.documentElement,{childList:true,subtree:true});}
-    function initSafe(){waitForBody(()=>{loadSettings(); loadData(); ensureStats(); createOverlay(); attachVideo(); handleNewVideoId(); startSessionLoop(); startWatchLoop(); setupObservers(); window.addEventListener('beforeunload',saveData);})}
-    if(document.readyState==='complete') initSafe(); else window.addEventListener('load',initSafe);
+    function updateMainScreen() {
+        const quickStats = document.getElementById('ytwt-quick-stats');
+        if(!quickStats) return;
+
+        ensureStats();
+        const today = data[getDate()];
+        const monthData = getMonthStats();
+
+        const shortsPct = today.wasted > 0 ? ((today.shortsTime / today.wasted) * 100).toFixed(1) : '0.0';
+        const prodScore = Math.max(0, 100 - shortsPct - (today.watched > 20 ? 10 : 0));
+
+        safeClearElement(quickStats);
+
+        const title = safeCreateDiv('📊 Quick Stats:');
+        title.style.cssText = 'font-weight: bold; margin-bottom: 5px;';
+        quickStats.appendChild(title);
+
+        const stats = [
+            `Videos: ${today.watched}`,
+            `Watch Time: ${fmt(today.wasted)}`,
+            `Shorts: ${shortsPct}%`,
+            `Productivity: ${prodScore}`
+        ];
+
+        stats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            quickStats.appendChild(statDiv);
+        });
+    }
+
+    function createVideosScreen(container) {
+        const backBtn = mkBtn('Back to Main', () => showScreen('main'), '⬅');
+        backBtn.style.cssText = 'width: 100%; margin-bottom: 15px;';
+        container.appendChild(backBtn);
+
+        const title = safeCreateDiv('🎬 Video Statistics');
+        title.style.cssText = 'font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center;';
+        container.appendChild(title);
+
+        const statsDiv = safeCreateDiv('Loading video statistics...');
+        statsDiv.id = 'ytwt-videos-stats';
+        statsDiv.style.cssText = 'font-size: 12px; line-height: 1.5; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;';
+        container.appendChild(statsDiv);
+    }
+
+    function updateVideosScreen() {
+        const statsDiv = document.getElementById('ytwt-videos-stats');
+        if(!statsDiv) return;
+
+        ensureStats();
+        const today = data[getDate()];
+        const monthData = getMonthStats();
+
+        const videoTime = today.longformTime;
+        const videoPct = today.wasted > 0 ? ((videoTime / today.wasted) * 100).toFixed(1) : '0.0';
+
+        safeClearElement(statsDiv);
+
+        const todayTitle = safeCreateDiv('📅 Today:');
+        todayTitle.style.cssText = 'font-weight: bold; margin-bottom: 5px;';
+        statsDiv.appendChild(todayTitle);
+
+        const todayStats = [
+            `Total Videos: ${today.videoCount || today.watched}`,
+            `Watch Time: ${fmt(videoTime)}`,
+            `Percentage: ${videoPct}%`,
+            `Avg per Video: ${(today.videoCount || today.watched) > 0 ? fmt(videoTime / (today.videoCount || today.watched)) : '0s'}`
+        ];
+
+        todayStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+
+        statsDiv.appendChild(safeCreateDiv(''));
+
+        const monthTitle = safeCreateDiv('📆 This Month:');
+        monthTitle.style.cssText = 'font-weight: bold; margin: 10px 0 5px 0;';
+        statsDiv.appendChild(monthTitle);
+
+        const monthStats = [
+            `Total Videos: ${monthData.videoCount || monthData.watched}`,
+            `Total Time: ${fmt(monthData.wasted)}`,
+            `Daily Avg: ${fmt(monthData.wasted / 30)}`
+        ];
+
+        monthStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+    }
+
+    function createShortsScreen(container) {
+        const backBtn = mkBtn('Back to Main', () => showScreen('main'), '⬅');
+        backBtn.style.cssText = 'width: 100%; margin-bottom: 15px;';
+        container.appendChild(backBtn);
+
+        const title = safeCreateDiv('📱 Shorts Statistics');
+        title.style.cssText = 'font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center;';
+        container.appendChild(title);
+
+        const statsDiv = safeCreateDiv('Loading shorts statistics...');
+        statsDiv.id = 'ytwt-shorts-stats';
+        statsDiv.style.cssText = 'font-size: 12px; line-height: 1.5; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;';
+        container.appendChild(statsDiv);
+    }
+
+    function updateShortsScreen() {
+        const statsDiv = document.getElementById('ytwt-shorts-stats');
+        if(!statsDiv) return;
+
+        ensureStats();
+        const today = data[getDate()];
+        const monthData = getMonthStats();
+
+        const shortsPct = today.wasted > 0 ? ((today.shortsTime / today.wasted) * 100).toFixed(1) : '0.0';
+        const estimatedShorts = Math.round(today.shortsTime / 30);
+        const actualShorts = today.shortsCount || estimatedShorts;
+        const avgPerShort = actualShorts > 0 ? fmt(today.shortsTime / actualShorts) : '0s';
+
+        safeClearElement(statsDiv);
+
+        const todayTitle = safeCreateDiv('📅 Today:');
+        todayTitle.style.cssText = 'font-weight: bold; margin-bottom: 5px;';
+        statsDiv.appendChild(todayTitle);
+
+        const todayStats = [
+            `Watch Time: ${fmt(today.shortsTime)}`,
+            `Percentage: ${shortsPct}%`,
+            `Shorts Watched: ${actualShorts}`,
+            `Avg per Short: ${avgPerShort}`
+        ];
+
+        todayStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+
+        statsDiv.appendChild(safeCreateDiv(''));
+
+        const monthTitle = safeCreateDiv('📆 This Month:');
+        monthTitle.style.cssText = 'font-weight: bold; margin: 10px 0 5px 0;';
+        statsDiv.appendChild(monthTitle);
+
+        const monthShorts = monthData.shortsCount || Math.round(monthData.shortsTime / 30);
+        const monthAvg = monthShorts > 0 ? fmt(monthData.shortsTime / monthShorts) : '0s';
+
+        const monthStats = [
+            `Total Time: ${fmt(monthData.shortsTime)}`,
+            `Daily Avg: ${fmt(monthData.shortsTime / 30)}`,
+            `Total Shorts: ${monthShorts}`,
+            `Avg per Short: ${monthAvg}`
+        ];
+
+        monthStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+
+        statsDiv.appendChild(safeCreateDiv(''));
+
+        const adviceTitle = safeCreateDiv('💡 Advice:');
+        adviceTitle.style.cssText = 'font-weight: bold; margin: 10px 0 5px 0; color: #ff6b6b;';
+        statsDiv.appendChild(adviceTitle);
+
+        const adviceText = safeCreateDiv(getShortsAdvice(parseFloat(shortsPct)));
+        statsDiv.appendChild(adviceText);
+    }
+
+    function getShortsAdvice(pct) {
+        if(pct > 50) return '⚠️ High shorts consumption. Try switching to longer videos for better focus.';
+        if(pct > 30) return '⚠️ Moderate shorts usage. Be mindful of your time.';
+        if(pct > 10) return '✅ Good balance. Keep enjoying in moderation.';
+        return '✅ Excellent! You focus on quality content.';
+    }
+
+    function createLivesScreen(container) {
+        const backBtn = mkBtn('Back to Main', () => showScreen('main'), '⬅');
+        backBtn.style.cssText = 'width: 100%; margin-bottom: 15px;';
+        container.appendChild(backBtn);
+
+        const title = safeCreateDiv('🔴 Live Stream Statistics');
+        title.style.cssText = 'font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center;';
+        container.appendChild(title);
+
+        const statsDiv = safeCreateDiv('Loading live stream statistics...');
+        statsDiv.id = 'ytwt-lives-stats';
+        statsDiv.style.cssText = 'font-size: 12px; line-height: 1.5; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;';
+        container.appendChild(statsDiv);
+    }
+
+    function updateLivesScreen() {
+        const statsDiv = document.getElementById('ytwt-lives-stats');
+        if(!statsDiv) return;
+
+        ensureStats();
+        const today = data[getDate()];
+        const monthData = getMonthStats();
+
+        const liveTime = today.longformTime;
+        const livePct = today.wasted > 0 ? ((liveTime / today.wasted) * 100).toFixed(1) : '0.0';
+        const liveCount = today.liveCount || 0;
+
+        safeClearElement(statsDiv);
+
+        const todayTitle = safeCreateDiv('📅 Today:');
+        todayTitle.style.cssText = 'font-weight: bold; margin-bottom: 5px;';
+        statsDiv.appendChild(todayTitle);
+
+        const todayStats = [
+            `Live Streams: ${liveCount}`,
+            `Watch Time: ${fmt(liveTime)}`,
+            `Percentage: ${livePct}%`,
+            `Avg per Stream: ${liveCount > 0 ? fmt(liveTime / liveCount) : '0s'}`
+        ];
+
+        todayStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+
+        statsDiv.appendChild(safeCreateDiv(''));
+
+        const monthTitle = safeCreateDiv('📆 This Month:');
+        monthTitle.style.cssText = 'font-weight: bold; margin: 10px 0 5px 0;';
+        statsDiv.appendChild(monthTitle);
+
+        const monthLiveCount = monthData.liveCount || 0;
+        const monthLiveAvg = monthLiveCount > 0 ? fmt(monthData.longformTime / monthLiveCount) : '0s';
+
+        const monthStats = [
+            `Total Streams: ${monthLiveCount}`,
+            `Total Time: ${fmt(monthData.longformTime)}`,
+            `Daily Avg: ${fmt(monthData.longformTime / 30)}`,
+            `Avg per Stream: ${monthLiveAvg}`
+        ];
+
+        monthStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+    }
+
+    function createSummaryScreen(container) {
+        const backBtn = mkBtn('Back to Main', () => showScreen('main'), '⬅');
+        backBtn.style.cssText = 'width: 100%; margin-bottom: 15px;';
+        container.appendChild(backBtn);
+
+        const title = safeCreateDiv('📈 Daily Summary');
+        title.style.cssText = 'font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center;';
+        container.appendChild(title);
+
+        const statsDiv = safeCreateDiv('Loading daily summary...');
+        statsDiv.id = 'ytwt-summary-stats';
+        statsDiv.style.cssText = 'font-size: 12px; line-height: 1.5; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 6px;';
+        container.appendChild(statsDiv);
+
+        const controlsDiv = safeCreateDiv();
+        controlsDiv.style.cssText = 'display: flex; gap: 8px; margin: 15px 0;';
+
+        const exportBtn = mkBtn('Export Data', () => {
+            try {
+                navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+                alert('Data copied to clipboard!');
+            } catch(e) {
+                console.log('YTWT: Failed to copy data');
+            }
+        }, '📋');
+        exportBtn.style.cssText = 'flex: 1; padding: 8px;';
+
+        const resetBtn = mkBtn('Reset Today', () => {
+            if(confirm('Reset today\'s data?')) {
+                data[getDate()] = {
+                    watched: 0,
+                    wasted: 0,
+                    session: 0,
+                    shortsTime: 0,
+                    longformTime: 0,
+                    foregroundTime: 0,
+                    backgroundTime: 0,
+                    shortsCount: 0,
+                    liveCount: 0,
+                    videoCount: 0
+                };
+                sessionTime = 0;
+                saveData();
+                updateAllScreens();
+            }
+        }, '🔄');
+        resetBtn.style.cssText = 'flex: 1; padding: 8px;';
+
+        controlsDiv.appendChild(exportBtn);
+        controlsDiv.appendChild(resetBtn);
+        container.appendChild(controlsDiv);
+    }
+
+    function updateSummaryScreen() {
+        const statsDiv = document.getElementById('ytwt-summary-stats');
+        if(!statsDiv) return;
+
+        ensureStats();
+        const today = data[getDate()];
+        const monthData = getMonthStats();
+
+        const shortsPct = today.wasted > 0 ? ((today.shortsTime / today.wasted) * 100).toFixed(1) : '0.0';
+        const prodScore = Math.max(0, 100 - shortsPct - (today.watched > 20 ? 10 : 0));
+
+        safeClearElement(statsDiv);
+
+        const todayTitle = safeCreateDiv('📅 Today:');
+        todayTitle.style.cssText = 'font-weight: bold; margin-bottom: 5px;';
+        statsDiv.appendChild(todayTitle);
+
+        const todayStats = [
+            `Total Videos: ${today.watched}`,
+            `Watch Time: ${fmt(today.wasted)}`,
+            `Session Time: ${fmt(sessionTime)}`,
+            `Shorts: ${shortsPct}%`,
+            `Productivity: ${prodScore}`,
+            `Foreground: ${fmt(today.foregroundTime)}`,
+            `Background: ${fmt(today.backgroundTime)}`,
+            `Shorts Count: ${today.shortsCount || Math.round(today.shortsTime / 30)}`,
+            `Live Streams: ${today.liveCount || 0}`
+        ];
+
+        todayStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+
+        statsDiv.appendChild(safeCreateDiv(''));
+
+        const monthTitle = safeCreateDiv('📆 This Month:');
+        monthTitle.style.cssText = 'font-weight: bold; margin: 10px 0 5px 0;';
+        statsDiv.appendChild(monthTitle);
+
+        const monthStats = [
+            `Total Videos: ${monthData.watched}`,
+            `Total Time: ${fmt(monthData.wasted)}`,
+            `Total Session: ${fmt(monthData.session)}`,
+            `Daily Avg Time: ${fmt(monthData.wasted / 30)}`
+        ];
+
+        monthStats.forEach(stat => {
+            const statDiv = safeCreateDiv('• ' + stat);
+            statsDiv.appendChild(statDiv);
+        });
+    }
+
+    function updateScreen(name) {
+        if(name === 'main') updateMainScreen();
+        else if(name === 'videos') updateVideosScreen();
+        else if(name === 'shorts') updateShortsScreen();
+        else if(name === 'lives') updateLivesScreen();
+        else if(name === 'summary') updateSummaryScreen();
+    }
+
+    function updateAllScreens() {
+        updateScreen(currentScreen);
+    }
+
+    function createOverlay() {
+        overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;top:100px;right:0;width:300px;background:rgba(15,15,25,0.9);backdrop-filter:blur(10px);color:#fff;border-radius:10px 0 0 10px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 15px rgba(0,0,0,0.6);font-family:Segoe UI,sans-serif;font-size:13px;z-index:999999;padding:12px 14px;user-select:none;transition:right .35s ease;';
+
+        headerEl = document.createElement('div');
+        headerEl.style.cssText = 'display:flex;align-items:center;justify-content:space-between;font-weight:600;color:#9dc0ff;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:8px;margin-bottom:12px;font-size:14px;';
+
+        const hTitle = safeCreateDiv('📊 YouTube Tracker');
+
+        const hRight = safeCreateDiv();
+        hRight.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:13px;';
+
+        themeIconEl = safeCreateDiv('🎨');
+        themeIconEl.title = 'Change theme';
+        themeIconEl.style.cssText = 'cursor:pointer;font-size:14px;user-select:none;';
+        themeIconEl.onclick = () => {
+            settings.theme = (settings.theme + 1) % THEMES.length;
+            applyTheme(settings.theme);
+            saveSettings();
+        };
+
+        headerVersionEl = safeCreateDiv(`v${VERSION}`);
+        headerVersionEl.style.cssText = 'font-size:11px;color:#aabfff;opacity:0.9;';
+
+        hRight.appendChild(themeIconEl);
+        hRight.appendChild(headerVersionEl);
+        headerEl.appendChild(hTitle);
+        headerEl.appendChild(hRight);
+        overlay.appendChild(headerEl);
+
+        contentBox = document.createElement('div');
+        contentBox.style.cssText = 'min-height: 200px;';
+        overlay.appendChild(contentBox);
+
+        createScreen('main', createMainScreen);
+        createScreen('videos', createVideosScreen);
+        createScreen('shorts', createShortsScreen);
+        createScreen('lives', createLivesScreen);
+        createScreen('summary', createSummaryScreen);
+
+        Object.values(screens).forEach(screen => {
+            contentBox.appendChild(screen);
+        });
+
+        const controlRow = safeCreateDiv();
+        controlRow.style.cssText = 'display:flex;justify-content:space-between;gap:6px;margin-top:12px;';
+
+        pauseBtn = mkBtn('Pause', () => {
+            trackingPaused = !trackingPaused;
+            pauseBtn.firstChild.textContent = trackingPaused ? '▶ ' : '⏸ ';
+            pauseBtn.childNodes[1].textContent = trackingPaused ? ' Resume' : ' Pause';
+        }, '⏸');
+
+        copyBtn = mkBtn('Copy Summary', () => {
+            try {
+                navigator.clipboard.writeText(buildSummary());
+                alert('Summary copied!');
+            } catch(e) {
+                console.log('YTWT: Failed to copy summary');
+            }
+        }, '📋');
+
+        controlRow.appendChild(pauseBtn);
+        controlRow.appendChild(copyBtn);
+        overlay.appendChild(controlRow);
+
+        toggleBtn = safeCreateDiv('←');
+        toggleBtn.style.cssText = 'position:fixed;top:120px;right:300px;width:26px;height:46px;background:rgba(25,25,40,0.95);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;border-radius:6px 0 0 6px;cursor:pointer;box-shadow:0 0 10px rgba(0,0,0,0.5);z-index:999999;transition:right .35s ease,background .2s ease,transform .2s ease;';
+        toggleBtn.onmouseenter = () => toggleBtn.style.background = getTheme().toggleBgHover;
+        toggleBtn.onmouseleave = () => toggleBtn.style.background = getTheme().toggleBg;
+        toggleBtn.onclick = () => {
+            hidden = !hidden;
+            overlay.style.right = hidden ? '-310px' : '0';
+            toggleBtn.style.right = hidden ? '0' : '300px';
+            safeSetText(toggleBtn, hidden ? '→' : '←');
+        };
+
+        document.body.appendChild(overlay);
+        document.body.appendChild(toggleBtn);
+        applyTheme(currentThemeIndex);
+
+        showScreen('main');
+    }
+
+    let currentVideoId = null;
+    let lastShortId = null;
+    let lastVideoUpdate = 0;
+    let shortsSeenToday = new Set();
+    let liveDetected = false;
+
+    function getVideoId() {
+        const url = new URL(window.location.href);
+        if (url.pathname.startsWith('/shorts/')) {
+            const match = url.pathname.match(/\/shorts\/([^/?]+)/);
+            return match ? `shorts:${match[1]}` : null;
+        }
+        const v = url.searchParams.get('v');
+        return v ? `watch:${v}` : null;
+    }
+
+    function detectContentType() {
+        const url = window.location.href;
+
+        if (url.includes('/shorts/')) return 'short';
+
+        if (document.querySelector('ytd-watch-flexy') &&
+            (document.querySelector('ytd-badge-supported-renderer[badge-style="LIVE"]') ||
+             document.querySelector('.ytp-live-badge') ||
+             document.title.includes('LIVE') ||
+             document.querySelector('ytd-live-chat-frame'))) {
+            return 'live';
+        }
+
+        return 'video';
+    }
+
+    function countShortIfNew() {
+        const vid = getVideoId();
+        if (!vid || !vid.startsWith('shorts:')) return;
+
+        if (vid === lastShortId) return;
+
+        lastShortId = vid;
+        ensureStats();
+        const today = data[getDate()];
+
+        if (!shortsSeenToday.has(vid)) {
+            shortsSeenToday.add(vid);
+            today.shortsCount = (today.shortsCount || 0) + 1;
+            saveData();
+            updateAllScreens();
+        }
+    }
+
+    function handleVideoChange() {
+        const vid = getVideoId();
+        if (!vid || vid === currentVideoId) return;
+
+        currentVideoId = vid;
+        const contentType = detectContentType();
+
+        ensureStats();
+        ensureVideoEntry(vid);
+        const today = data[getDate()];
+
+        perVideoData[vid].type = contentType;
+
+        if (!perVideoData[vid].counted) {
+            perVideoData[vid].counted = true;
+            today.watched += 1;
+
+            if (contentType === 'short') {
+                today.shortsCount = (today.shortsCount || 0) + 1;
+                shortsSeenToday.add(vid);
+            } else if (contentType === 'live') {
+                today.liveCount = (today.liveCount || 0) + 1;
+                liveDetected = true;
+            } else if (contentType === 'video') {
+                today.videoCount = (today.videoCount || 0) + 1;
+            }
+
+            saveData();
+            updateAllScreens();
+        }
+    }
+
+    function startTracking() {
+        let lastTick = Date.now();
+        let lastSave = Date.now();
+
+        setInterval(() => {
+            const now = Date.now();
+            const delta = Math.floor((now - lastTick) / 1000);
+            lastTick = now;
+
+            if (trackingPaused || delta <= 0) return;
+
+            ensureStats();
+            const today = data[getDate()];
+            const vid = getVideoId();
+            const contentType = detectContentType();
+            const videoEl = document.querySelector('video');
+
+            if (document.hidden) {
+                today.backgroundTime += delta;
+            } else {
+                today.foregroundTime += delta;
+                sessionTime += delta;
+                today.session += delta;
+            }
+
+            if (videoEl && !videoEl.paused && !videoEl.ended) {
+                today.wasted += delta;
+
+                if (contentType === 'short') {
+                    today.shortsTime += delta;
+                } else {
+                    today.longformTime += delta;
+                }
+
+                if (vid) {
+                    ensureVideoEntry(vid);
+                    perVideoData[vid].time += delta;
+                }
+            }
+
+            if (now - lastSave >= 5000) {
+                lastSave = now;
+                saveData();
+                updateAllScreens();
+            }
+        }, 1000);
+    }
+
+    function setupEventListeners() {
+        window.addEventListener('wheel', (e) => {
+            if (Math.abs(e.deltaY) > 40 && window.location.href.includes('/shorts/')) {
+                setTimeout(countShortIfNew, 300);
+            }
+        }, { passive: true });
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && window.location.href.includes('/shorts/')) {
+                setTimeout(countShortIfNew, 300);
+            }
+        });
+
+        let touchStartY = 0;
+        window.addEventListener('touchstart', (e) => {
+            if (window.location.href.includes('/shorts/')) {
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (window.location.href.includes('/shorts/') && Math.abs(e.changedTouches[0].clientY - touchStartY) > 50) {
+                setTimeout(countShortIfNew, 300);
+            }
+        }, { passive: true });
+
+        let lastUrl = window.location.href;
+        const observer = new MutationObserver(() => {
+            if (window.location.href !== lastUrl) {
+                lastUrl = window.location.href;
+                setTimeout(() => {
+                    handleVideoChange();
+                }, 500);
+            }
+        });
+
+        observer.observe(document.documentElement || document, {
+            childList: true,
+            subtree: true
+        });
+
+        window.addEventListener('yt-navigate-finish', () => {
+            setTimeout(handleVideoChange, 500);
+        });
+
+        window.addEventListener('popstate', () => {
+            setTimeout(handleVideoChange, 500);
+        });
+    }
+
+    function init() {
+        loadSettings();
+        loadData();
+
+        ensureStats();
+
+        const today = data[getDate()];
+        const shortsKeys = Object.keys(perVideoData).filter(k => k.startsWith('shorts:'));
+        shortsSeenToday = new Set(shortsKeys);
+
+        createOverlay();
+        handleVideoChange();
+        startTracking();
+        setupEventListeners();
+
+        setInterval(() => {
+            updateAllScreens();
+        }, 5000);
+
+        window.addEventListener('beforeunload', saveData);
+    }
+
+    if (document.readyState === 'complete') {
+        init();
+    } else {
+        window.addEventListener('load', init);
+    }
 
 })();

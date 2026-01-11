@@ -3,13 +3,16 @@
 // @namespace    objection.lol
 // @description  Enhances Objection.lol Courtroom functionality
 // @icon         https://objection.lol/favicon.ico
-// @version      0.27
+// @version      0.38
 // @author       Anonymous
 // @license      CC0
+// @match        https://objection.lol/courtroom
 // @match        https://objection.lol/courtroom/*
 // @run-at       document-idle
 // @grant        GM_xmlhttpRequest
 // @connect      catbox.moe
+// @connect      api.fxtwitter.com
+// @connect      youtube.com
 // @downloadURL https://update.greasyfork.org/scripts/543814/Objectionlol%20New%20Courtroom%20Enhancer.user.js
 // @updateURL https://update.greasyfork.org/scripts/543814/Objectionlol%20New%20Courtroom%20Enhancer.meta.js
 // ==/UserScript==
@@ -21,18 +24,6 @@
     function addStyle() {
         const style = document.createElement("style");
         style.innerHTML = `
-            #root>.MuiContainer-root>.MuiGrid2-root.MuiGrid2-container>.MuiGrid2-root:nth-child(2)>div.MuiStack-root>div.MuiBox-root:nth-of-type(1)>div.MuiStack-root ul>li a {
-                color: #00aeff;
-            }
-
-            #root>.MuiContainer-root>.MuiGrid2-root.MuiGrid2-container>.MuiGrid2-root:nth-child(2)>div.MuiStack-root>div.MuiBox-root:nth-of-type(1)>div.MuiStack-root ul>li a:hover {
-                color: #4fc5fcff;
-            }
-
-            #root>.MuiContainer-root>.MuiGrid2-root.MuiGrid2-container>.MuiGrid2-root:nth-child(2)>div.MuiStack-root>div.MuiBox-root:nth-of-type(1)>div.MuiStack-root ul>li a:visited {
-                color: #910f9c;
-            }
-
             #enhancer-settings-popup {
                 position: fixed;
                 overflow: auto;
@@ -145,20 +136,107 @@
                 left: 50%;
                 transform: translate(-50%, -50%);
                 z-index: 999;
+                pointer-events: none;
+                max-width: 70vw;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            div#hoverContainer div#hoverPreviewHeader {
+                position: absolute;
+                right: 0;
+                top: -32px;
+            }
+
+            #hoverPreviewHeader button {
+                all: unset;
+                width: 32px;
+                height: 32px;
+                display: inline-grid;
+                place-items: center;
+                border-radius: 6px;
+                color: #fff;
+                background: #131313db;
+                transition: background 120ms ease, transform 80ms ease;
+            }
+
+            #hoverPreviewHeader button:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            #hoverPreviewHeader button:active {
+                transform: scale(0.95);
+            }
+
+            #hoverPreviewHeader button svg {
+                width: 24px;
+                height: 24px;
+                pointer-events: none;
             }
 
             div#hoverContainer>img,
             div#hoverContainer>video,
             div#hoverContainer>audio,
-            div#hoverContainer iframe {
-                max-width: 94vw;
-                max-height: 92vh;
+            div#hoverContainer iframe,
+            div#hoverContainer .embedMediaContainer {
+                max-width: 70vw;
+                max-height: 80vh;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-                display: block;
             }
 
-            .sticky-embed {
+            div#hoverContainer.stickyEmbed {
+                pointer-events: unset;
+            }
+
+            #hoverContainer .embedMediaContainer {
+                display: flex;
+                flex-direction: row;
+                gap: 4px;
+                max-height: 50vh;
+                width: 100%;
+                justify-content: center;
+                align-items: stretch;
+                overflow: hidden;
+            }
+
+            #hoverContainer .embedText {
+                background-color: rgb(29, 29, 29);
+                color: white;
+                padding: 4px;
+                text-align: center;
+                width: 100%;
+                word-break: break-word;
+            }
+
+            #hoverContainer .embedMediaContainer img,
+            #hoverContainer .embedMediaContainer video {
+                flex: 1 1 0;
+                max-height: 50vh;
+                object-fit: contain;
+                width: auto;
+            }
+
+            .previewLink,
+            .previewStickyAnchor {
                 text-decoration: none;
+                color: #00aeff;
+            }
+
+            .previewLink:hover {
+                text-decoration: underline;
+            }
+
+            .previewLink:hover,
+            .previewStickyAnchor:hover {
+                color: #4fc5fcff;
+            }
+
+            .previewLink:visited {
+                color: #e717f8;
+            }
+
+            .previewStickyAnchor {
                 margin-left: 4px;
             }
         `;
@@ -213,7 +291,17 @@
                 <input type="checkbox" name="youtubeHoverPopup" ${settings.youtubeHoverPopup ? "checked" : ""}>
                 </label>
 
-                <label title="Disable ADT Hotkeys. A / D: Change pose; T: Toggle Testimony" style="margin-top: 8px;">
+                <label title="Preview X (formerly Twitter) links on hover">
+                <span>Hover Twitter</span>
+                <input type="checkbox" name="twitterHoverPopup" ${settings.twitterHoverPopup ? "checked" : ""}>
+                </label>
+
+                <label title="Don't send out your own typing notifications" style="margin-top: 8px;">
+                <span>Suppress Own Typing</span>
+                <input type="checkbox" name="suppressOwnTyping" ${settings.suppressOwnTyping ? "checked" : ""}>
+                </label>
+
+                <label title="Disable ADT Hotkeys. A / D: Change pose; T: Toggle Testimony">
                 <span>Disable ADT Hotkeys</span>
                 <input type="checkbox" name="disableHotkeys" ${settings.disableHotkeys ? "checked" : ""}>
                 </label>
@@ -221,6 +309,11 @@
                 <label title="Enable Enhancer Hotkeys. N: Open Settings; M: Toggle TTS">
                 <span>Enhancer Hotkeys</span>
                 <input type="checkbox" name="enhancerHotkeys" ${settings.enhancerHotkeys ? "checked" : ""}>
+                </label>
+
+                <label title="Maintain aspect ratio for presented evidence">
+                <span>Fix Evidence Stretch</span>
+                <input type="checkbox" name="fixEvidenceStretch" ${settings.fixEvidenceStretch ? "checked" : ""}>
                 </label>
 
                 <label title="Text-to-Speech for chat" style="margin-top: 8px;">
@@ -248,7 +341,18 @@
             input.addEventListener("change", ev => {
                 switch (ev.target.name) {
                     case "ttsEnabled":
-                        speechSynthesis.speak(new SpeechSynthesisUtterance("TTS " + (ev.target.checked ? "on" : "off")));
+                        const utterance = new SpeechSynthesisUtterance("TTS " + (ev.target.checked ? "on" : "off"));
+                        utterance.volume = settings.ttsVolume;
+                        utterance.rate = 1.5;
+                        speechSynthesis.speak(utterance);
+                        break;
+                    case "fixEvidenceStretch":
+                        const evidenceFixStretchStyle = document.getElementById("evidence-fix-stretch");
+                        if (evidenceFixStretchStyle) {
+                            evidenceFixStretchStyle.textContent = ev.target.checked
+                                ? `img[alt="Evidence"] { object-fit: contain !important; }`
+                                : "";
+                        }
                         break;
                 }
 
@@ -294,37 +398,30 @@
                 } else if (ev.key === "m") {
                     ev.preventDefault();
                     ev.stopImmediatePropagation();
-                    var checkbox = document.querySelector("#enhancer-settings-popup input[name=ttsEnabled]");
+                    var checkbox = document.querySelector(`#enhancer-settings-popup input[name="ttsEnabled"]`);
                     checkbox.click();
                 }
             }
-
         });
 
         notificationSound.setAudio(settings.notificationSoundUrl, settings.soundVolume);
 
-        const observer = new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                if (mutation.removedNodes.length > 0) {
-                    for (const node of mutation.removedNodes) {
-                        if (node.classList.contains("MuiDialog-root")) {
-                            if (node.textContent.includes("Join Courtroom")) {
-                                onCourtroomJoined();
-                                observer.disconnect();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
+        document.head.appendChild(Object.assign(document.createElement("style"), {
+            id: "evidence-fix-stretch",
+            textContent: settings.fixEvidenceStretch ? `img[alt="Evidence"] { object-fit: contain !important; }` : ""
+        }));
+
+
+        interceptWebSocketMessages();
     }
 
     function onCourtroomJoined() {
         const pageContainer = document.querySelector("#root > .MuiContainer-root > .MuiGrid2-root.MuiGrid2-container");
         const leftFrame = pageContainer.querySelector(".MuiGrid2-root:nth-child(1)");
         const rightFrame = pageContainer.querySelector(".MuiGrid2-root:nth-child(2)");
+
+        if (pageContainer._courtroomEnhancerInitialized) return;
+        pageContainer._courtroomEnhancerInitialized = true;
 
         new MutationObserver(mutations => {
             for (const mutation of mutations) {
@@ -347,9 +444,12 @@
 
     function onRightFrameFound(rightFrame) {
         if (!rightFrame || rightFrame.childNodes.length === 0) return;
+        const tabMenu = rightFrame.querySelector("div[role=tablist]");
 
         chatObserve(rightFrame.querySelector(":scope > div.MuiStack-root > div.MuiBox-root:nth-of-type(1)"));
-        addSettingsButton(rightFrame.querySelector(":scope > div.MuiStack-root > div.MuiBox-root:nth-of-type(4)"));
+        const settingsTabIndex = [...tabMenu.children].indexOf([...tabMenu.querySelectorAll(":scope > button")].find(tab => tab.textContent.toLowerCase().trim() === "settings"));
+        const settingsTab = rightFrame.querySelector("div[role=tabpanel]:nth-of-type(" + (settingsTabIndex + 1) + ")");
+        addSettingsButton(settingsTab);
     }
 
     function chatObserve(frameContainer) {
@@ -360,7 +460,7 @@
         function linkify(text) {
             return text.replace(urlRegex, (url) => {
                 const href = url.startsWith('http') ? encodeURI(url) : 'https://' + encodeURIComponent(url);
-                return `<a href="${href}" target="_blank" style="text-decoration: none;" rel="noopener noreferrer">${url}</a>`;
+                return `<a href="${href}" target="_blank" class="previewLink" rel="noopener noreferrer">${url}</a>`;
             });
         }
 
@@ -378,15 +478,104 @@
             return chatMessage;
         }
 
+        function previewEmbedMoveStart(ev) {
+            const hoverContainer = document.getElementById("hoverContainer");
+            if (!hoverContainer) return;
+
+            ev.preventDefault();
+
+            const moveBtn = ev.currentTarget;
+            moveBtn.setPointerCapture(ev.pointerId);
+
+            const containerRect = hoverContainer.getBoundingClientRect();
+            const btnRect = moveBtn.getBoundingClientRect();
+
+            hoverContainer._isMoving = true;
+
+            hoverContainer._offsetX = ev.clientX - containerRect.left;
+            hoverContainer._offsetY = ev.clientY - containerRect.top;
+
+            hoverContainer._btnOffsetLeft = btnRect.left - containerRect.left;
+            hoverContainer._btnOffsetTop = btnRect.top - containerRect.top;
+            hoverContainer._btnWidth = btnRect.width;
+            hoverContainer._btnHeight = btnRect.height;
+
+            document.addEventListener("pointermove", previewEmbedMove);
+            document.addEventListener("pointerup", previewEmbedMoveEnd);
+        }
+
+        function previewEmbedMove(ev) {
+            const hoverContainer = document.getElementById("hoverContainer");
+            if (!hoverContainer || !hoverContainer._isMoving) return;
+
+            let left = ev.clientX - hoverContainer._offsetX;
+            let top = ev.clientY - hoverContainer._offsetY;
+            left = Math.max(-hoverContainer._btnOffsetLeft, Math.min(window.innerWidth - hoverContainer._btnOffsetLeft - hoverContainer._btnWidth, left));
+            top = Math.max(-hoverContainer._btnOffsetTop, Math.min(window.innerHeight - hoverContainer._btnOffsetTop - hoverContainer._btnHeight, top));
+
+            hoverContainer.style.left = left + "px";
+            hoverContainer.style.top = top + "px";
+            hoverContainer.style.transform = "none";
+        }
+
+        function previewEmbedMoveEnd(ev) {
+            const hoverContainer = document.getElementById("hoverContainer");
+            if (!hoverContainer) return;
+            hoverContainer._isMoving = false;
+
+            if (ev?.currentTarget?.hasPointerCapture?.(ev.pointerId)) {
+                ev.currentTarget.releasePointerCapture(ev.pointerId);
+            }
+
+            document.removeEventListener("pointermove", previewEmbedMove);
+            document.removeEventListener("pointerup", previewEmbedMoveEnd);
+        }
+
         function previewEmbedShow(params = {}) {
             if (document.getElementById("hoverContainer")) return;
 
-            const type = params.type || "image";
-            const url = params.url || this.href;
+            const type = params.type;
+            const url = params.url;
             const sticky = params.sticky || false;
+            if (!type || !url) return;
 
             const hoverContainer = document.createElement("div");
             hoverContainer.id = "hoverContainer";
+
+            var hoverPreviewHeader;
+            if (sticky) {
+                hoverPreviewHeader = document.createElement("div");
+                hoverPreviewHeader.id = "hoverPreviewHeader";
+
+                const moveBtn = document.createElement("button");
+                moveBtn.title = "Move";
+                moveBtn.style.cursor = "grab";
+                moveBtn.addEventListener("pointerdown", previewEmbedMoveStart);
+                moveBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                    <circle cx="9"  cy="7"  r="1.5"/>
+                    <circle cx="15" cy="7"  r="1.5"/>
+                    <circle cx="9"  cy="12" r="1.5"/>
+                    <circle cx="15" cy="12" r="1.5"/>
+                    <circle cx="9"  cy="17" r="1.5"/>
+                    <circle cx="15" cy="17" r="1.5"/>
+                    </svg>`;
+
+                const closeBtn = document.createElement("button");
+                closeBtn.title = "Close";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.addEventListener("click", previewEmbedHide);
+                closeBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    </svg>`;
+
+                hoverPreviewHeader.appendChild(moveBtn);
+                hoverPreviewHeader.appendChild(closeBtn);
+                hoverContainer.appendChild(hoverPreviewHeader);
+                hoverContainer.classList.add("stickyEmbed");
+            }
 
             switch (type) {
                 case "image":
@@ -445,15 +634,86 @@
                         startTime = 3600 * (startTime[1] || 0) + 60 * (startTime[2] || 0) + 1 * (startTime[3] || 0);
                     }
 
-                    hoverContainer.insertAdjacentHTML("beforeend", `<div><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&start=${startTime}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`);
-                    break;
-            }
+                    hoverContainer.insertAdjacentHTML("beforeend", `<div><iframe width="480" height="270" src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&start=${startTime}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`); break;
+                case "twitter":
+                    if (!settings.twitterHoverPopup && !sticky) return;
+                    const sourceUrl = new URL(url);
+                    const apiUrl = "https://api.fxtwitter.com" + sourceUrl.pathname;
 
-            if (sticky) {
-                hoverContainer.insertAdjacentHTML("afterbegin", `<button style="float:right;cursor:pointer" id="hoverPreviewCloseBtn" title="Close"><svg xmlns="http://www.w3.org/2000/svg" style="width:1em;height:1em" viewBox="0 0 384 512">
-                    <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" fill="currentColor"></path>
-                    </svg></button>`);
-                hoverContainer.querySelector("#hoverPreviewCloseBtn").addEventListener("click", previewEmbedHide);
+                    if (sticky && hoverPreviewHeader)
+                        hoverPreviewHeader.style.display = "none";
+
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url: apiUrl,
+                        onload: r => {
+                            // api responds a json
+                            if (!r.responseText) return;
+                            const res = JSON.parse(r.responseText);
+                            if (res.code !== 200) return;
+
+                            if (sticky && hoverPreviewHeader)
+                                hoverPreviewHeader.style.display = "inline";
+
+                            const embedWrapper = document.createElement("div");
+                            embedWrapper.className = "embedWrapper";
+
+                            embedWrapper.insertAdjacentHTML("beforeend", `<div class="embedText">${linkify(res.tweet.text)}</div>`);
+
+                            const media = res.tweet.media;
+                            if (!media) return;
+                            const mediaContainer = document.createElement("div");
+                            mediaContainer.className = "embedMediaContainer";
+
+                            // photos
+                            if (Array.isArray(media.photos)) {
+                                for (const photo of media.photos) {
+                                    const a = document.createElement("a");
+                                    a.href = photo.url;
+                                    a.target = "_blank";
+                                    a.referrerPolicy = "no-referrer";
+
+                                    const img = document.createElement("img");
+                                    img.src = photo.url;
+
+                                    img.addEventListener("error", () => {
+                                        a.style.display = "none";
+                                        embedWrapper.style.maxWidth = getComputedStyle(mediaContainer).width;
+                                    });
+                                    img.addEventListener("load", () => {
+                                        embedWrapper.style.maxWidth = getComputedStyle(mediaContainer).width;
+                                    })
+
+                                    a.appendChild(img);
+                                    mediaContainer.appendChild(a);
+                                }
+                            }
+
+                            // videos
+                            if (Array.isArray(media.videos)) {
+                                for (const video of media.videos) {
+                                    const v = document.createElement("video");
+                                    v.controls = true;
+                                    v.crossOrigin = "anonymous";
+                                    v.preload = "metadata";
+                                    v.poster = video.thumbnail_url;
+
+                                    const source = document.createElement("source");
+                                    source.src = video.url;
+                                    source.type = video.format;
+
+                                    v.appendChild(source);
+                                    mediaContainer.appendChild(v);
+                                }
+                            }
+
+                            embedWrapper.appendChild(mediaContainer);
+                            hoverContainer.appendChild(embedWrapper);
+                        },
+                        onerror: () => { previewEmbedHide(true); }
+                    });
+                    break;
+
             }
 
             const container = document.querySelector("#root > .MuiContainer-root > .MuiGrid2-root.MuiGrid2-container");
@@ -462,13 +722,16 @@
         }
 
         function previewEmbedToggle(params = {}) {
-            if (document.getElementById("hoverContainer")) return previewEmbedHide();
+            const sticky = params.sticky || false;
+            if (document.getElementById("hoverContainer")) return previewEmbedHide(sticky);
             previewEmbedShow(params);
         }
 
-        function previewEmbedHide() {
+        function previewEmbedHide(forceHide = false) {
             const hoverContainer = document.getElementById("hoverContainer");
             if (!hoverContainer) return;
+            if (hoverContainer.classList.contains("stickyEmbed") && !forceHide) return;
+
             hoverContainer.style.display = "none";
             const iframe = document.querySelector("#hoverContainer iframe");
             if (iframe) {
@@ -488,9 +751,9 @@
 
         // Process all messages (useful when reloading the frame)
         for (const message of chatList.querySelectorAll("li")) {
-            const content = message.querySelector('div:nth-child(2) > p:nth-child(2)');
+            const content = message.querySelector(':scope > div.MuiListItemText-root > p.MuiTypography-root');
             if (!content) continue;
-            processMessageContent(message.querySelector('div:nth-child(2) > p:nth-child(2)'));
+            processMessageContent(content);
         }
 
         function processMessageContent(contentElement) {
@@ -502,27 +765,55 @@
                     try {
                         if (anchor.dataset.hoverpreview == "true") return;
                         const url = new URL(anchor.href);
-                        if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].some(ext => url.pathname.endsWith(ext))) {
-                            anchor.addEventListener("mouseover", previewEmbedShow.bind(anchor, { type: "image" }));
-                            anchor.addEventListener("mouseout", previewEmbedHide);
+                        if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].some(ext => url.pathname.endsWith(ext)) || url.host == "pbs.twimg.com") {
+                            anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "image", url: anchor.href }));
+                            anchor.addEventListener("mouseout", () => previewEmbedHide());
                         } else if ([".webm", ".mp4"].some(ext => url.pathname.endsWith(ext))) {
-                            anchor.addEventListener("mouseover", previewEmbedShow.bind(anchor, { type: "video" }));
-                            anchor.addEventListener("mouseout", previewEmbedHide);
+                            anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "video", url: anchor.href }));
+                            anchor.addEventListener("mouseout", () => previewEmbedHide());
                         } else if ([".mp3", ".ogg", ".m4a", ".wav", ".flac"].some(ext => url.pathname.endsWith(ext))) {
-                            anchor.addEventListener("mouseover", previewEmbedShow.bind(anchor, { type: "audio" }));
-                            anchor.addEventListener("mouseout", previewEmbedHide);
+                            anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "audio", url: anchor.href }));
+                            anchor.addEventListener("mouseout", () => previewEmbedHide());
                         } else if (["youtu.be", "www.youtube.com", "youtube.com"].includes(url.hostname)) {
-                            anchor.addEventListener("mouseover", previewEmbedShow.bind(anchor, { type: "youtube" }));
-                            anchor.addEventListener("mouseout", previewEmbedHide);
+                            anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "youtube", url: anchor.href }));
+                            anchor.addEventListener("mouseout", () => previewEmbedHide());
+
+                            GM_xmlhttpRequest({
+                                url: `https://www.youtube.com/oembed?url=${anchor.href}&format=json`,
+                                method: "GET",
+                                onload: r => {
+                                    if (r.status != 200) return;
+                                    const anchorContainer = anchor.closest("ul.MuiList-root");
+                                    const isAtBottom = anchorContainer.scrollTop + anchorContainer.clientHeight >= anchorContainer.scrollHeight - 1;
+
+                                    try {
+                                        const data = JSON.parse(r.responseText);
+                                        if (data.title) anchor.textContent = `[YouTube] ${data.title.trim()}`;
+                                    } catch (e) { anchor.textContent = `[YouTube] ${r.status} ${r.responseText}`; }
+
+                                    if (isAtBottom) anchorContainer.scrollTop = anchorContainer.scrollHeight;
+                                }
+                            });
 
                             const stickyEmbedBtn = document.createElement("a");
                             stickyEmbedBtn.href = `javascript:;`;
                             stickyEmbedBtn.title = "Sticky embed"
-                            stickyEmbedBtn.className = "sticky-embed";
+                            stickyEmbedBtn.className = "previewStickyAnchor";
                             stickyEmbedBtn.innerText = "[#]";
-                            stickyEmbedBtn.addEventListener("click", previewEmbedToggle.bind(stickyEmbedBtn, { type: "youtube", url: anchor.href, sticky: true }));
+                            stickyEmbedBtn.addEventListener("click", () => previewEmbedToggle({ type: "youtube", url: anchor.href, sticky: true }));
                             anchor.after(stickyEmbedBtn);
 
+                        } else if (["x.com", "twitter.com", "xcancel.com", "fxtwitter.com", "fixupx.com", "nitter.net"].includes(url.hostname)) {
+                            anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "twitter", url: anchor.href }));
+                            anchor.addEventListener("mouseout", () => previewEmbedHide());
+
+                            const stickyEmbedBtn = document.createElement("a");
+                            stickyEmbedBtn.href = `javascript:;`;
+                            stickyEmbedBtn.title = "Sticky embed"
+                            stickyEmbedBtn.className = "previewStickyAnchor";
+                            stickyEmbedBtn.innerText = "[#]";
+                            stickyEmbedBtn.addEventListener("click", () => previewEmbedToggle({ type: "twitter", url: anchor.href, sticky: true }));
+                            anchor.after(stickyEmbedBtn);
                         }
                         anchor.dataset.hoverpreview = "true";
                     } catch (e) { }
@@ -539,11 +830,11 @@
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
                     if (node.nodeName === 'LI') {
-                        const content = node.querySelector('div:nth-child(2) > p:nth-child(2)');
+                        const content = node.querySelector(':scope > div.MuiListItemText-root > p.MuiTypography-root');
                         if (!content) continue;
                         processMessageContent(content);
                         if (settings.ttsEnabled) {
-                            const username = node.querySelector('div:nth-child(2) > span > div > p:nth-child(1)') ?? node.querySelector('div:nth-child(2) p');
+                            const username = node.querySelector(':scope > div.MuiListItemText-root > span p.MuiTypography-root');
                             if (!username) continue;
                             if (settings.ttsExcludedUsernames && settings.ttsExcludedUsernames.split(",").map(name => name.trim()).some(name => new RegExp(`\\b${name.toLowerCase()}\\b`).test(username.textContent.toLowerCase()))) continue;
                             speechSynthesis.cancel();
@@ -602,11 +893,14 @@
         if (settings.videoHoverPopup === undefined) settings.videoHoverPopup = true;
         if (settings.audioHoverPopup === undefined) settings.audioHoverPopup = true;
         if (settings.youtubeHoverPopup === undefined) settings.youtubeHoverPopup = true;
+        if (settings.twitterHoverPopup === undefined) settings.twitterHoverPopup = true;
         if (settings.ttsEnabled === undefined) settings.ttsEnabled = false;
         if (settings.ttsExcludedUsernames === undefined) settings.ttsExcludedUsernames = "";
         if (settings.ttsVolume === undefined) settings.ttsVolume = 0.5;
+        if (settings.suppressOwnTyping === undefined) settings.suppressOwnTyping = false;
         if (settings.disableHotkeys === undefined) settings.disableHotkeys = true;
         if (settings.enhancerHotkeys === undefined) settings.enhancerHotkeys = true;
+        if (settings.fixEvidenceStretch === undefined) settings.fixEvidenceStretch = true;
         return settings;
     }
 
@@ -708,6 +1002,9 @@
 
     function initUploadDropModule(root) {
         const UPLOAD_API = "https://catbox.moe/user/api.php";
+        const inputSelector = `input.MuiInput-input[type="text"], input.MuiFilledInput-input[type="text"], input.MuiInputBase-input[type="text"], textarea.MuiInputBase-inputMultiline`;
+        let inputPrevContent;
+        let inputPrevSelectionStart;
 
         function isValidUrl(str) {
             try { new URL(str); return true; }
@@ -723,79 +1020,123 @@
             el.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
-        function uploadFileData(file) {
+        function uploadFile(uploadData) {
+            let reqType;
+            let dataType;
+
+            if (typeof uploadData === "object" && uploadData instanceof File) {
+                reqType = "fileupload";
+                dataType = "fileToUpload";
+            } else if (typeof uploadData === "string") {
+                reqType = "urlupload";
+                dataType = "url";
+            } else {
+                return Promise.reject(new Error("Invalid upload data"));
+            }
+
             return new Promise((resolve, reject) => {
                 const fd = new FormData();
-                fd.append("reqtype", "fileupload");
-                fd.append("fileToUpload", file);
+                fd.append("reqtype", reqType);
+                fd.append(dataType, uploadData);
 
                 GM_xmlhttpRequest({
                     method: "POST",
                     url: UPLOAD_API,
                     data: fd,
-                    onload: r => resolve(r.responseText.trim()),
+                    onload: r => {
+                        const response = r.responseText.trim();
+                        if (!response || !isValidUrl(response)) return reject(new Error(response || "Invalid response"));
+                        resolve(response);
+                    },
                     onerror: reject
                 });
             });
         }
 
-        function uploadRemoteUrl(url) {
-            return new Promise((resolve, reject) => {
-                const fd = new FormData();
-                fd.append("reqtype", "urlupload");
-                fd.append("url", url);
+        function onDragOver(e) {
+            const input = e.currentTarget;
 
-                GM_xmlhttpRequest({
-                    method: "POST",
-                    url: UPLOAD_API,
-                    data: fd,
-                    onload: r => resolve(r.responseText.trim()),
-                    onerror: reject
-                });
-            });
+            if (e.shiftKey) {
+                cancelDrag(input);
+                return;
+            }
+
+            if (input.readOnly) return;
+
+            const types = Array.from(e.dataTransfer.types);
+            if (!types.includes("Files") && !types.includes("text/plain")) return;
+
+            e.preventDefault();
+
+            if (input.classList.contains("dragover")) return;
+
+            inputPrevContent = input.value;
+            inputPrevSelectionStart = input.selectionStart;
+
+            setInputValue(input, `Drop to upload ${(types.includes("Files") ? "file" : "link")} to ${new URL(UPLOAD_API).hostname} - hold Shift to cancel`);
+
+            input.classList.add("dragover");
+            input.style.outline = "2px dashed #4caf50";
+        }
+
+        function onDragLeave(e) {
+            if (e.currentTarget.contains(e.relatedTarget)) return;
+            const input = e.currentTarget;
+            if (!input.classList.contains("dragover")) return;
+            cancelDrag(input);
+        }
+
+        async function onDrop(e) {
+            const input = e.currentTarget;
+
+            if (e.shiftKey) {
+                cancelDrag(input);
+                return;
+            }
+            if (!input.classList.contains("dragover")) return;
+
+            e.preventDefault();
+            cancelDrag(input);
+
+            const uploadData = e.dataTransfer.getData("text/plain") || e.dataTransfer.files[0];
+            if (!uploadData) return;
+
+            setInputValue(input, "Uploading...");
+            try {
+                const response = await uploadFile(uploadData);
+                setInputValue(
+                    input,
+                    inputPrevContent.slice(0, inputPrevSelectionStart) +
+                    (inputPrevContent[inputPrevSelectionStart - 1]?.match(/\S/) ? " " : "") +
+                    response +
+                    (inputPrevContent[inputPrevSelectionStart]?.match(/\S/) ? " " : "") +
+                    inputPrevContent.slice(inputPrevSelectionStart)
+                );
+            } catch (e) {
+                console.error("Error uploading file:", e);
+                setInputValue(input, inputPrevContent);
+            }
+        }
+
+        function cancelDrag(input) {
+            if (!input.classList.contains("dragover")) return;
+            setInputValue(input, inputPrevContent);
+            input.classList.remove("dragover");
+            input.style.outline = "";
         }
 
         function attachUploadDrop(input) {
-            if (!(input instanceof HTMLInputElement)) return;
+            if (!(input instanceof HTMLInputElement) && !(input instanceof HTMLTextAreaElement)) return;
             if (input.dataset.uploadDropAttached) return;
             input.dataset.uploadDropAttached = "true";
 
-            input.addEventListener("dragover", e => {
-                e.preventDefault();
-                input.style.outline = "2px dashed #4caf50";
-            });
-
-            input.addEventListener("dragleave", () => {
-                input.style.outline = "";
-            });
-
-            input.addEventListener("drop", async e => {
-                e.preventDefault();
-                input.style.outline = "";
-
-                try {
-                    const dt = e.dataTransfer;
-                    const text = dt.getData("text/plain");
-
-                    if (text && isValidUrl(text)) {
-                        setInputValue(input, "Uploading...");
-                        setInputValue(input, await uploadRemoteUrl(text));
-                        return;
-                    }
-
-                    if (dt.files?.length) {
-                        setInputValue(input, "Uploading...");
-                        setInputValue(input, await uploadFileData(dt.files[0]));
-                    }
-                } catch (err) {
-                    console.error("Upload failed:", err);
-                    setInputValue(input, "");
-                }
-            });
+            input.addEventListener("dragover", onDragOver);
+            input.addEventListener("dragleave", onDragLeave);
+            input.addEventListener("drop", onDrop);
         }
 
         function attachAllInputs(rootNode) {
-            rootNode.querySelectorAll("input").forEach(attachUploadDrop);
+            rootNode.querySelectorAll(inputSelector).forEach(attachUploadDrop);
         }
 
         attachAllInputs(root);
@@ -803,8 +1144,7 @@
             for (const m of mutations) {
                 for (const node of m.addedNodes) {
                     if (node.nodeType !== 1) continue;
-                    if (node.tagName === "INPUT") attachUploadDrop(node);
-                    else attachAllInputs(node);
+                    attachAllInputs(node);
                 }
             }
         });
@@ -815,6 +1155,37 @@
         });
     }
 
+    function interceptWebSocketMessages() {
+        const originalSend = WebSocket.prototype.send;
+        WebSocket.prototype.send = function (data) {
+            if (typeof data === "string" && data.startsWith("42[")) {
+                try {
+                    const payload = JSON.parse(data.slice(2));
+                    switch (payload[0]) {
+                        case "me": {
+                            onCourtroomJoined();
+                            break;
+                        }
+                        case "typing": {
+                            if (settings.suppressOwnTyping) return;
+                        }
+                    }
+                } catch { console.warn("Failed to parse:", data); }
+            }
+            return originalSend.call(this, data);
+        };
+    }
+
+    function interceptClickHandler(e) {
+        const deleteEvidenceButton = e.target.closest("button[title='Delete Evidence']");
+        if (deleteEvidenceButton) {
+            const yesButton = [...deleteEvidenceButton.closest(".MuiPaper-root").querySelectorAll("button")].find(btn => btn.textContent.trim() === "Yes");
+            if (yesButton) yesButton.click();
+            return;
+        }
+    }
+
+    document.documentElement.addEventListener("click", interceptClickHandler);
 
     init();
 })();
