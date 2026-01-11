@@ -1,8 +1,8 @@
 [
   {
     "id": 562135,
-    "daily_installs": 2,
-    "total_installs": 2,
+    "daily_installs": 8,
+    "total_installs": 8,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -30,7 +30,7 @@
     "version": "1.1.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unknown"
   },
   {
     "id": 562088,

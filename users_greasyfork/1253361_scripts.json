@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562186,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T05:34:35.000Z",
+    "code_updated_at": "2026-01-11T05:34:35.000Z",
+    "namespace": "clandestine",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1253361,
+        "name": "Cat-Ling",
+        "created_at": "2024-01-26T05:43:25.000Z",
+        "url": "https://greasyfork.org/users/1253361-cat-ling"
+      }
+    ],
+    "name": "F95Zone - Buzzheavier Direct Download",
+    "description": "Directly downloads Buzzheavier links from F95 threads.",
+    "url": "https://greasyfork.org/scripts/562186-f95zone-buzzheavier-direct-download",
+    "code_url": "https://update.greasyfork.org/scripts/562186/F95Zone%20-%20Buzzheavier%20Direct%20Download.user.js",
+    "code_size": 5166,
+    "license": "GNU General Public License v2.0 only",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
