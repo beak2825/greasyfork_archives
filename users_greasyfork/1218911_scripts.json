@@ -63,6 +63,72 @@
     "version": "2.1.1",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557193,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T07:48:39.000Z",
+    "code_updated_at": "2025-12-10T15:21:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218911,
+        "name": "Zero Array",
+        "created_at": "2023-11-17T03:50:59.000Z",
+        "url": "https://greasyfork.org/users/1218911-zero-array"
+      }
+    ],
+    "name": "ChatGPT 对话导出 & ChatGPT/Gemini 宽屏显示",
+    "description": "智能识别ChatGPT与Gemini页面特征，提供ChatGPT对话导出和ChatGPT/Gemini宽屏显示(油猴扩展菜单列表开启关闭)",
+    "url": "https://greasyfork.org/scripts/557193-chatgpt-%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA-chatgpt-gemini-%E5%AE%BD%E5%B1%8F%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/557193/ChatGPT%20%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA%20%20ChatGPTGemini%20%E5%AE%BD%E5%B1%8F%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 23820,
+    "license": "V：ChatGPT4V",
+    "version": "6.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557176,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T03:27:41.000Z",
+    "code_updated_at": "2025-12-02T12:12:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218911,
+        "name": "Zero Array",
+        "created_at": "2023-11-17T03:50:59.000Z",
+        "url": "https://greasyfork.org/users/1218911-zero-array"
+      }
+    ],
+    "name": "海外支付类页面丨账单地址自动填写/解锁",
+    "description": "自动检测全网所有 Stripe 支付页面自动填充免税区地址。",
+    "url": "https://greasyfork.org/scripts/557176-%E6%B5%B7%E5%A4%96%E6%94%AF%E4%BB%98%E7%B1%BB%E9%A1%B5%E9%9D%A2%E4%B8%A8%E8%B4%A6%E5%8D%95%E5%9C%B0%E5%9D%80%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99-%E8%A7%A3%E9%94%81",
+    "code_url": "https://update.greasyfork.org/scripts/557176/%E6%B5%B7%E5%A4%96%E6%94%AF%E4%BB%98%E7%B1%BB%E9%A1%B5%E9%9D%A2%E4%B8%A8%E8%B4%A6%E5%8D%95%E5%9C%B0%E5%9D%80%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E8%A7%A3%E9%94%81.user.js",
+    "code_size": 13402,
+    "license": "V:chatgpt4v",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

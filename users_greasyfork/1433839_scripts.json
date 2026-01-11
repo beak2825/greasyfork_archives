@@ -63,6 +63,39 @@
     "version": "0.1",
     "locale": "ja",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556570,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T12:13:18.000Z",
+    "code_updated_at": "2025-12-18T08:18:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433839,
+        "name": "kmikrt AI",
+        "created_at": "2025-02-11T05:59:39.000Z",
+        "url": "https://greasyfork.org/users/1433839-kmikrt-ai"
+      }
+    ],
+    "name": "Delete YouTube spam comments",
+    "description": "Delete comments containing spam keywords or user IDs. Easily customizable.",
+    "url": "https://greasyfork.org/scripts/556570-delete-youtube-spam-comments",
+    "code_url": "https://update.greasyfork.org/scripts/556570/Delete%20YouTube%20spam%20comments.user.js",
+    "code_size": 5786,
+    "license": "MIT License",
+    "version": "0.40(test)",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

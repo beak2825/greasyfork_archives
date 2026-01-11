@@ -31,5 +31,137 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557253,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T18:03:44.000Z",
+    "code_updated_at": "2025-11-30T11:40:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542261,
+        "name": "nrrr",
+        "created_at": "2025-11-27T16:18:54.000Z",
+        "url": "https://greasyfork.org/users/1542261-nrrr"
+      }
+    ],
+    "name": "あいもげ高速スクロール(仮)",
+    "description": "あいもげで既読位置までスクロールする機能を高速化します",
+    "url": "https://greasyfork.org/scripts/557253-%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E9%AB%98%E9%80%9F%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB-%E4%BB%AE",
+    "code_url": "https://update.greasyfork.org/scripts/557253/%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E9%AB%98%E9%80%9F%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%28%E4%BB%AE%29.user.js",
+    "code_size": 5860,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557192,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T07:42:50.000Z",
+    "code_updated_at": "2025-12-11T01:32:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542261,
+        "name": "nrrr",
+        "created_at": "2025-11-27T16:18:54.000Z",
+        "url": "https://greasyfork.org/users/1542261-nrrr"
+      }
+    ],
+    "name": "あいもげサイドバー 機能拡張版",
+    "description": "公式サイドバーを機能拡張",
+    "url": "https://greasyfork.org/scripts/557192-%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%82%B5%E3%82%A4%E3%83%89%E3%83%90%E3%83%BC-%E6%A9%9F%E8%83%BD%E6%8B%A1%E5%BC%B5%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/557192/%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%82%B5%E3%82%A4%E3%83%89%E3%83%90%E3%83%BC%20%E6%A9%9F%E8%83%BD%E6%8B%A1%E5%BC%B5%E7%89%88.user.js",
+    "code_size": 53170,
+    "license": "MIT License",
+    "version": "1.9.9",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557138,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T19:36:37.000Z",
+    "code_updated_at": "2025-11-27T19:36:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542261,
+        "name": "nrrr",
+        "created_at": "2025-11-27T16:18:54.000Z",
+        "url": "https://greasyfork.org/users/1542261-nrrr"
+      }
+    ],
+    "name": "あいもげスクロール位置記憶ちゃん",
+    "description": "スレッドを閉じた時の位置を記憶して、再度開いた時に同じ位置から表示",
+    "url": "https://greasyfork.org/scripts/557138-%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%E4%BD%8D%E7%BD%AE%E8%A8%98%E6%86%B6%E3%81%A1%E3%82%83%E3%82%93",
+    "code_url": "https://update.greasyfork.org/scripts/557138/%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%E4%BD%8D%E7%BD%AE%E8%A8%98%E6%86%B6%E3%81%A1%E3%82%83%E3%82%93.user.js",
+    "code_size": 7559,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557113,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T16:26:50.000Z",
+    "code_updated_at": "2025-11-27T19:47:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542261,
+        "name": "nrrr",
+        "created_at": "2025-11-27T16:18:54.000Z",
+        "url": "https://greasyfork.org/users/1542261-nrrr"
+      }
+    ],
+    "name": "あいもげYoutubeポップアップ表示",
+    "description": "YouTubeリンククリックでポップアップ",
+    "url": "https://greasyfork.org/scripts/557113-%E3%81%82%E3%81%84%E3%82%82%E3%81%92youtube%E3%83%9D%E3%83%83%E3%83%97%E3%82%A2%E3%83%83%E3%83%97%E8%A1%A8%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/557113/%E3%81%82%E3%81%84%E3%82%82%E3%81%92Youtube%E3%83%9D%E3%83%83%E3%83%97%E3%82%A2%E3%83%83%E3%83%97%E8%A1%A8%E7%A4%BA.user.js",
+    "code_size": 14428,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

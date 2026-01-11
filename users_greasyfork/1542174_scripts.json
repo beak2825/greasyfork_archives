@@ -129,6 +129,105 @@
     "version": "0.3",
     "locale": "ja",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557299,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T07:24:19.000Z",
+    "code_updated_at": "2025-12-02T15:13:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542174,
+        "name": "ebine",
+        "created_at": "2025-11-27T11:48:08.000Z",
+        "url": "https://greasyfork.org/users/1542174-ebine"
+      }
+    ],
+    "name": "あいもげYouTube連続再生ちゃん",
+    "description": "スレ内の☑付きYouTubeリンクを連続再生するポップアッププレイヤー（ライブ除外・ドラッグ移動＆3カ所リサイズ・動的プレイリスト・前へ＆ループ＆長さ上限・重複埋め込み除去・引用行除外・YouTube一時プレイリスト・シャッフル／固定モード）",
+    "url": "https://greasyfork.org/scripts/557299-%E3%81%82%E3%81%84%E3%82%82%E3%81%92youtube%E9%80%A3%E7%B6%9A%E5%86%8D%E7%94%9F%E3%81%A1%E3%82%83%E3%82%93",
+    "code_url": "https://update.greasyfork.org/scripts/557299/%E3%81%82%E3%81%84%E3%82%82%E3%81%92YouTube%E9%80%A3%E7%B6%9A%E5%86%8D%E7%94%9F%E3%81%A1%E3%82%83%E3%82%93.user.js",
+    "code_size": 28394,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557278,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T01:05:28.000Z",
+    "code_updated_at": "2025-11-29T01:05:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542174,
+        "name": "ebine",
+        "created_at": "2025-11-27T11:48:08.000Z",
+        "url": "https://greasyfork.org/users/1542174-ebine"
+      }
+    ],
+    "name": "あいもげあぷリンクちゃん",
+    "description": "fu[数字].[拡張子]やf[数字].[拡張子]をURL化します",
+    "url": "https://greasyfork.org/scripts/557278-%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%81%82%E3%81%B7%E3%83%AA%E3%83%B3%E3%82%AF%E3%81%A1%E3%82%83%E3%82%93",
+    "code_url": "https://update.greasyfork.org/scripts/557278/%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%81%82%E3%81%B7%E3%83%AA%E3%83%B3%E3%82%AF%E3%81%A1%E3%82%83%E3%82%93.user.js",
+    "code_size": 4057,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557277,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T00:59:09.000Z",
+    "code_updated_at": "2025-12-27T10:38:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542174,
+        "name": "ebine",
+        "created_at": "2025-11-27T11:48:08.000Z",
+        "url": "https://greasyfork.org/users/1542174-ebine"
+      }
+    ],
+    "name": "あいもげカタログ連結ちゃん",
+    "description": "aimgimgカタログを左右に連結 + お気に入りワード(全スレ検索・OR検索)",
+    "url": "https://greasyfork.org/scripts/557277-%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%82%AB%E3%82%BF%E3%83%AD%E3%82%B0%E9%80%A3%E7%B5%90%E3%81%A1%E3%82%83%E3%82%93",
+    "code_url": "https://update.greasyfork.org/scripts/557277/%E3%81%82%E3%81%84%E3%82%82%E3%81%92%E3%82%AB%E3%82%BF%E3%83%AD%E3%82%B0%E9%80%A3%E7%B5%90%E3%81%A1%E3%82%83%E3%82%93.user.js",
+    "code_size": 21214,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ja",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

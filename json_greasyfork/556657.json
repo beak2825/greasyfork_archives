@@ -1,0 +1,34 @@
+{
+  "id": 556657,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-23T10:44:01.000Z",
+  "code_updated_at": "2025-11-23T10:44:01.000Z",
+  "namespace": "https://forum.blessrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1540723,
+      "name": "orccc",
+      "created_at": "2025-11-23T10:23:40.000Z",
+      "url": "https://greasyfork.org/users/1540723-orccc",
+      "scripts": []
+    }
+  ],
+  "name": "KF_script",
+  "description": "Suggestions for improving the script write here",
+  "url": "https://greasyfork.org/scripts/556657-kf-script",
+  "code_url": "https://update.greasyfork.org/scripts/556657/KF_script.user.js",
+  "code_size": 93898,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

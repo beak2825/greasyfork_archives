@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556664,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T11:58:05.000Z",
+    "code_updated_at": "2025-11-23T12:03:26.000Z",
+    "namespace": "https://github.com/tiansh",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 427204,
+        "name": "吟语",
+        "created_at": "2019-12-22T08:28:06.000Z",
+        "url": "https://greasyfork.org/users/427204-%E5%90%9F%E8%AF%AD"
+      }
+    ],
+    "name": "巴哈姆特动画疯 XML格式弹幕下载器",
+    "description": "以XML字幕格式保存巴哈姆特动画疯的弹幕",
+    "url": "https://greasyfork.org/scripts/556664-%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E5%8A%A8%E7%94%BB%E7%96%AF-xml%E6%A0%BC%E5%BC%8F%E5%BC%B9%E5%B9%95%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/556664/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E5%8A%A8%E7%94%BB%E7%96%AF%20XML%E6%A0%BC%E5%BC%8F%E5%BC%B9%E5%B9%95%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 24389,
+    "license": "Mozilla Public License 2.0; http://www.mozilla.org/MPL/2.0/",
+    "version": "2.1-xml-吟语版",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

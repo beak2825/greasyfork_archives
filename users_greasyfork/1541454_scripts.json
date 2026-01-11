@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556880,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T10:58:13.000Z",
+    "code_updated_at": "2025-11-25T11:03:51.000Z",
+    "namespace": "https://greasyfork.org/users/1541454",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541454,
+        "name": "KingSum Chou (XXX)",
+        "created_at": "2025-11-25T10:55:46.000Z",
+        "url": "https://greasyfork.org/users/1541454-kingsum-chou-xxx"
+      }
+    ],
+    "name": "ChatGPT  Exporter （支持Teams）",
+    "description": "轻松导出 ChatGPT 聊天记录，以便进一步分析或分享。支持Teams对话导出！！！",
+    "url": "https://greasyfork.org/scripts/556880-chatgpt-exporter-%E6%94%AF%E6%8C%81teams",
+    "code_url": "https://update.greasyfork.org/scripts/556880/ChatGPT%20%20Exporter%20%EF%BC%88%E6%94%AF%E6%8C%81Teams%EF%BC%89.user.js",
+    "code_size": 44247,
+    "license": "MIT License",
+    "version": "0.0.1.20251125110351",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

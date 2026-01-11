@@ -1,0 +1,34 @@
+{
+  "id": 556656,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-23T10:35:41.000Z",
+  "code_updated_at": "2025-11-23T10:35:41.000Z",
+  "namespace": "https://6njm.dev/torn/ghosttrade",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1540728,
+      "name": "6NJM",
+      "created_at": "2025-11-23T10:32:47.000Z",
+      "url": "https://greasyfork.org/users/1540728-6njm",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Ghost Trade Money Helper - Torn Control Center - 6NJM",
+  "description": "QoL helper for Torn ghost trades: auto-max deposit, add & subtract rows, compact mode, reinjection, color-coded UI, live wallet sync, hotkeys. Stays on Add Money page, EXCEPT when you click \"Back to Trade\" (one-time bypass).",
+  "url": "https://greasyfork.org/scripts/556656-torn-ghost-trade-money-helper-torn-control-center-6njm",
+  "code_url": "https://update.greasyfork.org/scripts/556656/Torn%20Ghost%20Trade%20Money%20Helper%20-%20Torn%20Control%20Center%20-%206NJM.user.js",
+  "code_size": 9214,
+  "license": "MIT License",
+  "version": "1.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

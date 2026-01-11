@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556862,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T09:12:58.000Z",
+    "code_updated_at": "2025-11-26T12:42:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541407,
+        "name": "Vincent Skerved",
+        "created_at": "2025-11-25T08:38:41.000Z",
+        "url": "https://greasyfork.org/users/1541407-vincent-skerved"
+      }
+    ],
+    "name": "GeoGuessr Indonesia Kabupaten Map Overlay (Google Maps 2025+)",
+    "description": "Press B to toggle Indonesian kabupaten borders on the GeoGuessr guess map (hover names, click-through, settings UI)",
+    "url": "https://greasyfork.org/scripts/556862-geoguessr-indonesia-kabupaten-map-overlay-google-maps-2025",
+    "code_url": "https://update.greasyfork.org/scripts/556862/GeoGuessr%20Indonesia%20Kabupaten%20Map%20Overlay%20%28Google%20Maps%202025%2B%29.user.js",
+    "code_size": 28973,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 556969,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-26T10:07:04.000Z",
+  "code_updated_at": "2025-12-04T15:02:11.000Z",
+  "namespace": "https://tcrf.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1541782,
+      "name": "Scary Jewery",
+      "created_at": "2025-11-26T09:51:06.000Z",
+      "url": "https://greasyfork.org/users/1541782-scary-jewery",
+      "scripts": [
+        {
+          "id": 556969,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-26T10:07:04.000Z",
+          "code_updated_at": "2025-12-04T15:02:11.000Z",
+          "namespace": "https://tcrf.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove TCRF pride",
+          "description": "Replaces the pride crud from the logo of The Cutting Room Floor",
+          "url": "https://greasyfork.org/scripts/556969-remove-tcrf-pride",
+          "code_url": "https://update.greasyfork.org/scripts/556969/Remove%20TCRF%20pride.user.js",
+          "code_size": 5275,
+          "license": "GNU GPLv3",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove TCRF pride",
+  "description": "Replaces the pride crud from the logo of The Cutting Room Floor",
+  "url": "https://greasyfork.org/scripts/556969-remove-tcrf-pride",
+  "code_url": "https://update.greasyfork.org/scripts/556969/Remove%20TCRF%20pride.user.js",
+  "code_size": 5275,
+  "license": "GNU GPLv3",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

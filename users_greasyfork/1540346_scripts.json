@@ -1,0 +1,68 @@
+[
+  {
+    "id": 556548,
+    "daily_installs": 5,
+    "total_installs": 275,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T08:11:33.000Z",
+    "code_updated_at": "2025-11-22T08:24:26.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540346,
+        "name": "VoidMuser",
+        "created_at": "2025-11-22T06:47:27.000Z",
+        "url": "https://greasyfork.org/users/1540346-voidmuser"
+      }
+    ],
+    "name": "X 媒体下载器 (X Media Downloader)",
+    "description": "在 X (Twitter) 帖子底部添加下载按钮，一键下载所有图片（原图）和视频（最高画质）。",
+    "url": "https://greasyfork.org/scripts/556548-x-%E5%AA%92%E4%BD%93%E4%B8%8B%E8%BD%BD%E5%99%A8-x-media-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/556548/X%20%E5%AA%92%E4%BD%93%E4%B8%8B%E8%BD%BD%E5%99%A8%20%28X%20Media%20Downloader%29.user.js",
+    "code_size": 14895,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556543,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T06:55:33.000Z",
+    "code_updated_at": "2025-11-23T08:14:57.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540346,
+        "name": "VoidMuser",
+        "created_at": "2025-11-22T06:47:27.000Z",
+        "url": "https://greasyfork.org/users/1540346-voidmuser"
+      }
+    ],
+    "name": "YouTube Ad Muter + Auto Skip Button (VoidMuser Mod)",
+    "description": "不隐藏广告：播放广告时自动静音；出现“跳过广告”按钮时自动点击；广告结束自动恢复静音状态。",
+    "url": "https://greasyfork.org/scripts/556543-youtube-ad-muter-auto-skip-button-voidmuser-mod",
+    "code_url": "https://update.greasyfork.org/scripts/556543/YouTube%20Ad%20Muter%20%2B%20Auto%20Skip%20Button%20%28VoidMuser%20Mod%29.user.js",
+    "code_size": 9270,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

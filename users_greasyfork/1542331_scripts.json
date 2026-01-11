@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557157,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T00:14:44.000Z",
+    "code_updated_at": "2025-11-28T00:19:50.000Z",
+    "namespace": "yan.chessbot.ui",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542331,
+        "name": "Kzyyhost",
+        "created_at": "2025-11-28T00:07:09.000Z",
+        "url": "https://greasyfork.org/users/1542331-kzyyhost"
+      }
+    ],
+    "name": "Aggressive Chess Bot — UI Reformulado",
+    "description": "UI do bot agressivo + integração confiável com Chess.com",
+    "url": "https://greasyfork.org/scripts/557157-aggressive-chess-bot-ui-reformulado",
+    "code_url": "https://update.greasyfork.org/scripts/557157/Aggressive%20Chess%20Bot%20%E2%80%94%20UI%20Reformulado.user.js",
+    "code_size": 5559,
+    "license": null,
+    "version": "1.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

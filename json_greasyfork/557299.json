@@ -1,0 +1,59 @@
+{
+  "id": 557299,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-29T07:24:19.000Z",
+  "code_updated_at": "2025-12-02T15:13:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542174,
+      "name": "ebine",
+      "created_at": "2025-11-27T11:48:08.000Z",
+      "url": "https://greasyfork.org/users/1542174-ebine",
+      "scripts": [
+        {
+          "id": 559098,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-16T11:40:15.000Z",
+          "code_updated_at": "2025-12-16T11:40:15.000Z",
+          "namespace": "https://example.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "X Home: Force Following tab",
+          "description": "Always switch Home timeline to \"Following\" (フォロー中)",
+          "url": "https://greasyfork.org/scripts/559098-x-home-force-following-tab",
+          "code_url": "https://update.greasyfork.org/scripts/559098/X%20Home%3A%20Force%20Following%20tab.user.js",
+          "code_size": 3001,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "あいもげYouTube連続再生ちゃん",
+  "description": "スレ内の☑付きYouTubeリンクを連続再生するポップアッププレイヤー（ライブ除外・ドラッグ移動＆3カ所リサイズ・動的プレイリスト・前へ＆ループ＆長さ上限・重複埋め込み除去・引用行除外・YouTube一時プレイリスト・シャッフル／固定モード）",
+  "url": "https://greasyfork.org/scripts/557299-%E3%81%82%E3%81%84%E3%82%82%E3%81%92youtube%E9%80%A3%E7%B6%9A%E5%86%8D%E7%94%9F%E3%81%A1%E3%82%83%E3%82%93",
+  "code_url": "https://update.greasyfork.org/scripts/557299/%E3%81%82%E3%81%84%E3%82%82%E3%81%92YouTube%E9%80%A3%E7%B6%9A%E5%86%8D%E7%94%9F%E3%81%A1%E3%82%83%E3%82%93.user.js",
+  "code_size": 28394,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

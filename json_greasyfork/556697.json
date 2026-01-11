@@ -1,0 +1,59 @@
+{
+  "id": 556697,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-23T17:11:06.000Z",
+  "code_updated_at": "2025-11-23T17:11:06.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1540829,
+      "name": "relty",
+      "created_at": "2025-11-23T16:12:05.000Z",
+      "url": "https://greasyfork.org/users/1540829-relty",
+      "scripts": [
+        {
+          "id": 556697,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-23T17:11:06.000Z",
+          "code_updated_at": "2025-11-23T17:11:06.000Z",
+          "namespace": "https://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "I'm Not A Robot - DDR AutoTap",
+          "description": "Automatically plays the DDR minigame at level 47 for you.",
+          "url": "https://greasyfork.org/scripts/556697-i-m-not-a-robot-ddr-autotap",
+          "code_url": "https://update.greasyfork.org/scripts/556697/I%27m%20Not%20A%20Robot%20-%20DDR%20AutoTap.user.js",
+          "code_size": 2494,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "I'm Not A Robot - DDR AutoTap",
+  "description": "Automatically plays the DDR minigame at level 47 for you.",
+  "url": "https://greasyfork.org/scripts/556697-i-m-not-a-robot-ddr-autotap",
+  "code_url": "https://update.greasyfork.org/scripts/556697/I%27m%20Not%20A%20Robot%20-%20DDR%20AutoTap.user.js",
+  "code_size": 2494,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

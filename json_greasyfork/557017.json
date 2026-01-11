@@ -1,0 +1,34 @@
+{
+  "id": 557017,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-26T18:38:27.000Z",
+  "code_updated_at": "2025-12-15T18:08:01.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1512630,
+      "name": "AngelK",
+      "created_at": "2025-09-07T08:04:39.000Z",
+      "url": "https://greasyfork.org/users/1512630-angelk",
+      "scripts": []
+    }
+  ],
+  "name": "Скрипт для модерирования форума BlackRussia для Ivan_Dapev by A.Kobzev",
+  "description": "Скрипт модерирования форума",
+  "url": "https://greasyfork.org/scripts/557017-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-blackrussia-%D0%B4%D0%BB%D1%8F-ivan-dapev-by-a-kobzev",
+  "code_url": "https://update.greasyfork.org/scripts/557017/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20BlackRussia%20%D0%B4%D0%BB%D1%8F%20Ivan_Dapev%20by%20AKobzev.user.js",
+  "code_size": 156526,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

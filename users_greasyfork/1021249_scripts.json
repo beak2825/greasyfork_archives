@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556681,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T14:51:04.000Z",
+    "code_updated_at": "2025-12-17T17:58:17.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1021249,
+        "name": "6uRaF",
+        "created_at": "2023-02-03T17:21:41.000Z",
+        "url": "https://greasyfork.org/users/1021249-6uraf"
+      }
+    ],
+    "name": "KF FROG",
+    "description": "Скрипт с новогодним стилем, подходящий для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах.",
+    "url": "https://greasyfork.org/scripts/556681-kf-frog",
+    "code_url": "https://update.greasyfork.org/scripts/556681/KF%20FROG.user.js",
+    "code_size": 17050,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

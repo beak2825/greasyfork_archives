@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557196,
+    "daily_installs": 1,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T08:14:58.000Z",
+    "code_updated_at": "2025-11-28T16:06:28.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542445,
+        "name": "Yenzelle Otoel",
+        "created_at": "2025-11-28T08:10:21.000Z",
+        "url": "https://greasyfork.org/users/1542445-yenzelle-otoel"
+      }
+    ],
+    "name": "DC - Fouille Tracker (Bleu)",
+    "description": "Minuteur fouille draggable, lock/unlock, historique déroulant, vide de l'historique, copier de l'historique (thème bleu)",
+    "url": "https://greasyfork.org/scripts/557196-dc-fouille-tracker-bleu",
+    "code_url": "https://update.greasyfork.org/scripts/557196/DC%20-%20Fouille%20Tracker%20%28Bleu%29.user.js",
+    "code_size": 30050,
+    "license": "@author",
+    "version": "1.2",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

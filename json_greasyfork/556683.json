@@ -1,0 +1,34 @@
+{
+  "id": 556683,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-23T15:30:24.000Z",
+  "code_updated_at": "2025-11-23T15:42:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1540806,
+      "name": "sh Pf",
+      "created_at": "2025-11-23T15:22:54.000Z",
+      "url": "https://greasyfork.org/users/1540806-sh-pf",
+      "scripts": []
+    }
+  ],
+  "name": "유튜브뮤직 볼륨 지속 + 조절",
+  "description": "재생 중 항상 볼륨 낮게 유지 + 모바일에서 배율 조절 가능",
+  "url": "https://greasyfork.org/scripts/556683-%EC%9C%A0%ED%8A%9C%EB%B8%8C%EB%AE%A4%EC%A7%81-%EB%B3%BC%EB%A5%A8-%EC%A7%80%EC%86%8D-%EC%A1%B0%EC%A0%88",
+  "code_url": "https://update.greasyfork.org/scripts/556683/%EC%9C%A0%ED%8A%9C%EB%B8%8C%EB%AE%A4%EC%A7%81%20%EB%B3%BC%EB%A5%A8%20%EC%A7%80%EC%86%8D%20%2B%20%EC%A1%B0%EC%A0%88.user.js",
+  "code_size": 1851,
+  "license": null,
+  "version": "1.8",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 556814,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-24T20:25:08.000Z",
+    "code_updated_at": "2025-12-16T05:26:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 29660,
+        "name": "BMN",
+        "created_at": "2016-02-07T22:59:07.000Z",
+        "url": "https://greasyfork.org/users/29660-bmn"
+      }
+    ],
+    "name": "二维码自动解析",
+    "description": "鼠标悬停时自动在本地解析二维码",
+    "url": "https://greasyfork.org/scripts/556814-%E4%BA%8C%E7%BB%B4%E7%A0%81%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/556814/%E4%BA%8C%E7%BB%B4%E7%A0%81%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 47930,
+    "license": "GPLv3",
+    "version": "2.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

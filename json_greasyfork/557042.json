@@ -1,0 +1,59 @@
+{
+  "id": 557042,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-27T02:18:27.000Z",
+  "code_updated_at": "2025-11-27T07:31:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 285861,
+      "name": "PAY YOUR BILL",
+      "created_at": "2019-03-24T03:21:52.000Z",
+      "url": "https://greasyfork.org/users/285861-pay-your-bill",
+      "scripts": [
+        {
+          "id": 557042,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-27T02:18:27.000Z",
+          "code_updated_at": "2025-11-27T07:31:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "S1摸鱼助手(excel)",
+          "description": "把 S1 论坛伪装成 Excel 表格。公式栏变成可点击的层级目录，底部 Sheet 实现翻页。",
+          "url": "https://greasyfork.org/scripts/557042-s1%E6%91%B8%E9%B1%BC%E5%8A%A9%E6%89%8B-excel",
+          "code_url": "https://update.greasyfork.org/scripts/557042/S1%E6%91%B8%E9%B1%BC%E5%8A%A9%E6%89%8B%28excel%29.user.js",
+          "code_size": 19903,
+          "license": "MIT License",
+          "version": "3.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "S1摸鱼助手(excel)",
+  "description": "把 S1 论坛伪装成 Excel 表格。公式栏变成可点击的层级目录，底部 Sheet 实现翻页。",
+  "url": "https://greasyfork.org/scripts/557042-s1%E6%91%B8%E9%B1%BC%E5%8A%A9%E6%89%8B-excel",
+  "code_url": "https://update.greasyfork.org/scripts/557042/S1%E6%91%B8%E9%B1%BC%E5%8A%A9%E6%89%8B%28excel%29.user.js",
+  "code_size": 19903,
+  "license": "MIT License",
+  "version": "3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

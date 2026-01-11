@@ -1,0 +1,34 @@
+{
+  "id": 557244,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-28T16:44:59.000Z",
+  "code_updated_at": "2025-11-28T16:44:59.000Z",
+  "namespace": "https://your-local-scripts.example",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542595,
+      "name": "deen hack",
+      "created_at": "2025-11-28T16:43:29.000Z",
+      "url": "https://greasyfork.org/users/1542595-deen-hack",
+      "scripts": []
+    }
+  ],
+  "name": "Gemini Movie/TV/Actor/Episode Recs on IMDb – Plot+Genres Strip + Smart Search Strip + Model Picker",
+  "description": "Top strip: Prompt 100 using IMDb plot+genres, now medium-aware (Movie vs TV Show). Bottom strip: smart search bar that can return movies, TV shows, TV episodes, and actors, respecting query wording. Uses TMDB movie/tv/person/episode APIs. Model picker for Gemini 2.5 Flash / Flash-Lite / 2.0 Flash. Both strips stay visible. Click posters to adjust TMDB match and see type.",
+  "url": "https://greasyfork.org/scripts/557244-gemini-movie-tv-actor-episode-recs-on-imdb-plot-genres-strip-smart-search-strip-model-picker",
+  "code_url": "https://update.greasyfork.org/scripts/557244/Gemini%20MovieTVActorEpisode%20Recs%20on%20IMDb%20%E2%80%93%20Plot%2BGenres%20Strip%20%2B%20Smart%20Search%20Strip%20%2B%20Model%20Picker.user.js",
+  "code_size": 89069,
+  "license": null,
+  "version": "2.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

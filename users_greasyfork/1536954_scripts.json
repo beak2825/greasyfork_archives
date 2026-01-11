@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556655,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T10:20:39.000Z",
+    "code_updated_at": "2025-11-23T10:20:39.000Z",
+    "namespace": "https://greasyfork.org/users/1536954",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536954,
+        "name": "ISHFAQ AHMAD MIR",
+        "created_at": "2025-11-12T07:36:02.000Z",
+        "url": "https://greasyfork.org/users/1536954-ishfaq-ahmad-mir"
+      }
+    ],
+    "name": "YouTube Shorts & Feed Filter for Subscriptions",
+    "description": "Blocks YouTube Shorts except from subscribed channels and filters feed to show only subscribed content",
+    "url": "https://greasyfork.org/scripts/556655-youtube-shorts-feed-filter-for-subscriptions",
+    "code_url": "https://update.greasyfork.org/scripts/556655/YouTube%20Shorts%20%20Feed%20Filter%20for%20Subscriptions.user.js",
+    "code_size": 10818,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

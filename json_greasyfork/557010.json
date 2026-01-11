@@ -1,0 +1,59 @@
+{
+  "id": 557010,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-26T16:23:18.000Z",
+  "code_updated_at": "2025-12-05T06:26:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1541926,
+      "name": "ssalihsrz",
+      "created_at": "2025-11-26T16:20:27.000Z",
+      "url": "https://greasyfork.org/users/1541926-ssalihsrz",
+      "scripts": [
+        {
+          "id": 557010,
+          "daily_installs": 0,
+          "total_installs": 22,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-26T16:23:18.000Z",
+          "code_updated_at": "2025-12-05T06:26:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MangaPark s0x Load Balancer & Fixer",
+          "description": "Proactively replaces broken s0x servers with s00/s01/s03/s04 (load balanced) and fixes failures.",
+          "url": "https://greasyfork.org/scripts/557010-mangapark-s0x-load-balancer-fixer",
+          "code_url": "https://update.greasyfork.org/scripts/557010/MangaPark%20s0x%20Load%20Balancer%20%20Fixer.user.js",
+          "code_size": 3074,
+          "license": "MIT License",
+          "version": "3.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MangaPark s0x Load Balancer & Fixer",
+  "description": "Proactively replaces broken s0x servers with s00/s01/s03/s04 (load balanced) and fixes failures.",
+  "url": "https://greasyfork.org/scripts/557010-mangapark-s0x-load-balancer-fixer",
+  "code_url": "https://update.greasyfork.org/scripts/557010/MangaPark%20s0x%20Load%20Balancer%20%20Fixer.user.js",
+  "code_size": 3074,
+  "license": "MIT License",
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 557034,
+  "daily_installs": 1,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-27T00:15:00.000Z",
+  "code_updated_at": "2025-11-27T00:56:24.000Z",
+  "namespace": "tm.skill.color.circles.tactics",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1541982,
+      "name": "Fairkater",
+      "created_at": "2025-11-26T23:48:42.000Z",
+      "url": "https://greasyfork.org/users/1541982-fairkater",
+      "scripts": [
+        {
+          "id": 557034,
+          "daily_installs": 1,
+          "total_installs": 22,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-27T00:15:00.000Z",
+          "code_updated_at": "2025-11-27T00:56:24.000Z",
+          "namespace": "tm.skill.color.circles.tactics",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Trophymanager Skill Color Circles for Tactics",
+          "description": "Adds green or red circles next to skill values in the tactics screen, indicating skills that have changed after the last training session. Data is loaded once when hovering over a player and cached until the page is refreshed. Compatible with both English and Russian languages.",
+          "url": "https://greasyfork.org/scripts/557034-trophymanager-skill-color-circles-for-tactics",
+          "code_url": "https://update.greasyfork.org/scripts/557034/Trophymanager%20Skill%20Color%20Circles%20for%20Tactics.user.js",
+          "code_size": 8609,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Trophymanager Skill Color Circles for Tactics",
+  "description": "Adds green or red circles next to skill values in the tactics screen, indicating skills that have changed after the last training session. Data is loaded once when hovering over a player and cached until the page is refreshed. Compatible with both English and Russian languages.",
+  "url": "https://greasyfork.org/scripts/557034-trophymanager-skill-color-circles-for-tactics",
+  "code_url": "https://update.greasyfork.org/scripts/557034/Trophymanager%20Skill%20Color%20Circles%20for%20Tactics.user.js",
+  "code_size": 8609,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

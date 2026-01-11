@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557043,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T02:19:25.000Z",
+    "code_updated_at": "2025-11-27T02:19:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542002,
+        "name": "石敢当",
+        "created_at": "2025-11-27T02:17:34.000Z",
+        "url": "https://greasyfork.org/users/1542002-%E7%9F%B3%E6%95%A2%E5%BD%93"
+      }
+    ],
+    "name": "Fishing 一键赠送（每种自定义保留）",
+    "description": "遍历已发现鱼卡，填写 UID=11233，数量=拥有数量-保留数量（不足则跳过），依次点击“赠送”；自动拦截 alert。",
+    "url": "https://greasyfork.org/scripts/557043-fishing-%E4%B8%80%E9%94%AE%E8%B5%A0%E9%80%81-%E6%AF%8F%E7%A7%8D%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%9D%E7%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/557043/Fishing%20%E4%B8%80%E9%94%AE%E8%B5%A0%E9%80%81%EF%BC%88%E6%AF%8F%E7%A7%8D%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%9D%E7%95%99%EF%BC%89.user.js",
+    "code_size": 6962,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

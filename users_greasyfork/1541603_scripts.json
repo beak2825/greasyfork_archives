@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556919,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2025-11-25T19:48:11.000Z",
+    "code_updated_at": "2025-11-25T19:48:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541603,
+        "name": "Danny Swe",
+        "created_at": "2025-11-25T19:43:10.000Z",
+        "url": "https://greasyfork.org/users/1541603-danny-swe"
+      }
+    ],
+    "name": "Arras.io Alt Movement Mimic (Autodetect)",
+    "description": "Right-click on an alt to copy its movement, aiming, and shooting, with automatic variable detection.",
+    "url": "https://greasyfork.org/scripts/556919-arras-io-alt-movement-mimic-autodetect",
+    "code_url": "https://update.greasyfork.org/scripts/556919/Arrasio%20Alt%20Movement%20Mimic%20%28Autodetect%29.user.js",
+    "code_size": 13923,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

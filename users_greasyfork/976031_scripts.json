@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556698,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T17:13:20.000Z",
+    "code_updated_at": "2025-11-23T17:13:20.000Z",
+    "namespace": "pm-region-export",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 976031,
+        "name": "_derreck_",
+        "created_at": "2022-10-27T19:34:06.000Z",
+        "url": "https://greasyfork.org/users/976031-derreck"
+      }
+    ],
+    "name": "PM2KS Scraper",
+    "description": "Fetch region codes + counts for all galleries and download as CSV",
+    "url": "https://greasyfork.org/scripts/556698-pm2ks-scraper",
+    "code_url": "https://update.greasyfork.org/scripts/556698/PM2KS%20Scraper.user.js",
+    "code_size": 7687,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

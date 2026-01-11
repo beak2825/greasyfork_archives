@@ -1,0 +1,34 @@
+{
+  "id": 556903,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-25T15:29:46.000Z",
+  "code_updated_at": "2025-12-09T05:15:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1126327,
+      "name": "KLElisa",
+      "created_at": "2023-07-14T05:27:39.000Z",
+      "url": "https://greasyfork.org/users/1126327-klelisa",
+      "scripts": []
+    }
+  ],
+  "name": "FIS Button + Popup AutoClick",
+  "description": "Adds Button to configure ticket information and auto-clicks popup button if detected",
+  "url": "https://greasyfork.org/scripts/556903-fis-button-popup-autoclick",
+  "code_url": "https://update.greasyfork.org/scripts/556903/FIS%20Button%20%2B%20Popup%20AutoClick.user.js",
+  "code_size": 31355,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

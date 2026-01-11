@@ -1,0 +1,59 @@
+{
+  "id": 556961,
+  "daily_installs": 1,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-26T09:01:02.000Z",
+  "code_updated_at": "2025-12-30T02:41:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1526352,
+      "name": "blimjoe",
+      "created_at": "2025-10-14T04:50:04.000Z",
+      "url": "https://greasyfork.org/users/1526352-blimjoe",
+      "scripts": [
+        {
+          "id": 556961,
+          "daily_installs": 1,
+          "total_installs": 45,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-26T09:01:02.000Z",
+          "code_updated_at": "2025-12-30T02:41:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Rapidgator Auto Converter",
+          "description": "在 Rapidgator 页面自动显示链接转换工具",
+          "url": "https://greasyfork.org/scripts/556961-rapidgator-auto-converter",
+          "code_url": "https://update.greasyfork.org/scripts/556961/Rapidgator%20Auto%20Converter.user.js",
+          "code_size": 55917,
+          "license": null,
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Rapidgator Auto Converter",
+  "description": "在 Rapidgator 页面自动显示链接转换工具",
+  "url": "https://greasyfork.org/scripts/556961-rapidgator-auto-converter",
+  "code_url": "https://update.greasyfork.org/scripts/556961/Rapidgator%20Auto%20Converter.user.js",
+  "code_size": 55917,
+  "license": null,
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

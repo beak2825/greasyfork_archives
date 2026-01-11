@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556534,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T03:19:34.000Z",
+    "code_updated_at": "2025-11-22T03:19:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1116543,
+        "name": "名化",
+        "created_at": "2023-07-01T12:17:18.000Z",
+        "url": "https://greasyfork.org/users/1116543-%E5%90%8D%E5%8C%96"
+      }
+    ],
+    "name": "顺德区教师在线研修（满时长后随机1-3分钟跳下一节）",
+    "description": "自动播放 + 满时长后随机60-180秒再跳下一节 + 随机答题（极致防检测）",
+    "url": "https://greasyfork.org/scripts/556534-%E9%A1%BA%E5%BE%B7%E5%8C%BA%E6%95%99%E5%B8%88%E5%9C%A8%E7%BA%BF%E7%A0%94%E4%BF%AE-%E6%BB%A1%E6%97%B6%E9%95%BF%E5%90%8E%E9%9A%8F%E6%9C%BA1-3%E5%88%86%E9%92%9F%E8%B7%B3%E4%B8%8B%E4%B8%80%E8%8A%82",
+    "code_url": "https://update.greasyfork.org/scripts/556534/%E9%A1%BA%E5%BE%B7%E5%8C%BA%E6%95%99%E5%B8%88%E5%9C%A8%E7%BA%BF%E7%A0%94%E4%BF%AE%EF%BC%88%E6%BB%A1%E6%97%B6%E9%95%BF%E5%90%8E%E9%9A%8F%E6%9C%BA1-3%E5%88%86%E9%92%9F%E8%B7%B3%E4%B8%8B%E4%B8%80%E8%8A%82%EF%BC%89.user.js",
+    "code_size": 4092,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

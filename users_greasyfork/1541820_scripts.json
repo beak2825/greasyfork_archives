@@ -1,0 +1,68 @@
+[
+  {
+    "id": 556981,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-26T12:12:55.000Z",
+    "code_updated_at": "2025-11-26T13:09:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541820,
+        "name": "moreadderallplz",
+        "created_at": "2025-11-26T11:50:14.000Z",
+        "url": "https://greasyfork.org/users/1541820-moreadderallplz"
+      }
+    ],
+    "name": "Auto Scroll with Adjustable Speed (c/v)",
+    "description": "Auto scroll webpage with adjustable speed via 'c' and 'v' keys (0.1ms to 1000ms)",
+    "url": "https://greasyfork.org/scripts/556981-auto-scroll-with-adjustable-speed-c-v",
+    "code_url": "https://update.greasyfork.org/scripts/556981/Auto%20Scroll%20with%20Adjustable%20Speed%20%28cv%29.user.js",
+    "code_size": 2770,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556979,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-26T11:52:52.000Z",
+    "code_updated_at": "2025-11-26T12:01:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541820,
+        "name": "moreadderallplz",
+        "created_at": "2025-11-26T11:50:14.000Z",
+        "url": "https://greasyfork.org/users/1541820-moreadderallplz"
+      }
+    ],
+    "name": "Auto Scroll with Start/Stop Hotkey and Speed Adjustment (c/v)",
+    "description": "Auto scroll webpage with start/stop hotkey and adjustable speed via 'c' and 'v'.",
+    "url": "https://greasyfork.org/scripts/556979-auto-scroll-with-start-stop-hotkey-and-speed-adjustment-c-v",
+    "code_url": "https://update.greasyfork.org/scripts/556979/Auto%20Scroll%20with%20StartStop%20Hotkey%20and%20Speed%20Adjustment%20%28cv%29.user.js",
+    "code_size": 2683,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

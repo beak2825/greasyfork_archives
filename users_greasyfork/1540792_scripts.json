@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 556680,
+    "daily_installs": 1,
+    "total_installs": 70,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T14:50:30.000Z",
+    "code_updated_at": "2025-11-24T13:59:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540792,
+        "name": "Thiện Bảo Lê Văn",
+        "created_at": "2025-11-23T14:45:42.000Z",
+        "url": "https://greasyfork.org/users/1540792-thi%E1%BB%87n-b%E1%BA%A3o-l%C3%AA-v%C4%83n"
+      }
+    ],
+    "name": "MineFun Chat Translator (Vietnamese)",
+    "description": "Script tự động dịch tất cả tin nhắn chat trong MineFun sang tiếng Việt",
+    "url": "https://greasyfork.org/scripts/556680-minefun-chat-translator-vietnamese",
+    "code_url": "https://update.greasyfork.org/scripts/556680/MineFun%20Chat%20Translator%20%28Vietnamese%29.user.js",
+    "code_size": 2657,
+    "license": "ISC License",
+    "version": "1.2",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

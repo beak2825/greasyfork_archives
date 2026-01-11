@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556849,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T07:01:49.000Z",
+    "code_updated_at": "2025-11-25T07:01:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541370,
+        "name": "doylecnn",
+        "created_at": "2025-11-25T06:56:21.000Z",
+        "url": "https://greasyfork.org/users/1541370-doylecnn"
+      }
+    ],
+    "name": "逮捕中国五毛自干五大外宣（Tampermonkey 版）",
+    "description": "识别并标记 X（Twitter）上的中国五毛、自干五和大外宣账号，显示用户真实位置",
+    "url": "https://greasyfork.org/scripts/556849-%E9%80%AE%E6%8D%95%E4%B8%AD%E5%9B%BD%E4%BA%94%E6%AF%9B%E8%87%AA%E5%B9%B2%E4%BA%94%E5%A4%A7%E5%A4%96%E5%AE%A3-tampermonkey-%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/556849/%E9%80%AE%E6%8D%95%E4%B8%AD%E5%9B%BD%E4%BA%94%E6%AF%9B%E8%87%AA%E5%B9%B2%E4%BA%94%E5%A4%A7%E5%A4%96%E5%AE%A3%EF%BC%88Tampermonkey%20%E7%89%88%EF%BC%89.user.js",
+    "code_size": 37542,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

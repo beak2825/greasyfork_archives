@@ -1,0 +1,59 @@
+{
+  "id": 557151,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-27T20:50:07.000Z",
+  "code_updated_at": "2025-11-27T20:50:07.000Z",
+  "namespace": "https://github.com/torus711",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542312,
+      "name": "torus711",
+      "created_at": "2025-11-27T20:40:52.000Z",
+      "url": "https://greasyfork.org/users/1542312-torus711",
+      "scripts": [
+        {
+          "id": 557151,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-27T20:50:07.000Z",
+          "code_updated_at": "2025-11-27T20:50:07.000Z",
+          "namespace": "https://github.com/torus711",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ACAC Counter",
+          "description": "Add column which displays # of ACs while the contest on tasks page of AtCoder.",
+          "url": "https://greasyfork.org/scripts/557151-acac-counter",
+          "code_url": "https://update.greasyfork.org/scripts/557151/ACAC%20Counter.user.js",
+          "code_size": 1828,
+          "license": "MIT License",
+          "version": "0.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ACAC Counter",
+  "description": "Add column which displays # of ACs while the contest on tasks page of AtCoder.",
+  "url": "https://greasyfork.org/scripts/557151-acac-counter",
+  "code_url": "https://update.greasyfork.org/scripts/557151/ACAC%20Counter.user.js",
+  "code_size": 1828,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

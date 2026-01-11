@@ -1,0 +1,59 @@
+{
+  "id": 556795,
+  "daily_installs": 1,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-24T17:34:28.000Z",
+  "code_updated_at": "2025-11-26T01:30:23.000Z",
+  "namespace": "https://greasyfork.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1541196,
+      "name": "anon2026",
+      "created_at": "2025-11-24T16:46:11.000Z",
+      "url": "https://greasyfork.org/users/1541196-anon2026",
+      "scripts": [
+        {
+          "id": 556795,
+          "daily_installs": 1,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-24T17:34:28.000Z",
+          "code_updated_at": "2025-11-26T01:30:23.000Z",
+          "namespace": "https://greasyfork.org",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[2026] Freebitco.in Humanized Autoroller",
+          "description": "Humanized autoroller using system clock only (65–80 min base), organic sleep window, loading bars, pending action display, and BTC balance awareness.",
+          "url": "https://greasyfork.org/scripts/556795-2026-freebitco-in-humanized-autoroller",
+          "code_url": "https://update.greasyfork.org/scripts/556795/%5B2026%5D%20Freebitcoin%20Humanized%20Autoroller.user.js",
+          "code_size": 38035,
+          "license": "MIT License",
+          "version": "4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[2026] Freebitco.in Humanized Autoroller",
+  "description": "Humanized autoroller using system clock only (65–80 min base), organic sleep window, loading bars, pending action display, and BTC balance awareness.",
+  "url": "https://greasyfork.org/scripts/556795-2026-freebitco-in-humanized-autoroller",
+  "code_url": "https://update.greasyfork.org/scripts/556795/%5B2026%5D%20Freebitcoin%20Humanized%20Autoroller.user.js",
+  "code_size": 38035,
+  "license": "MIT License",
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

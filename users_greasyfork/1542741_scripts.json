@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557297,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T07:06:23.000Z",
+    "code_updated_at": "2025-12-28T15:49:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542741,
+        "name": "めらのあ",
+        "created_at": "2025-11-29T06:10:19.000Z",
+        "url": "https://greasyfork.org/users/1542741-%E3%82%81%E3%82%89%E3%81%AE%E3%81%82"
+      }
+    ],
+    "name": "YouTube Live Chat Channel Name Restorer",
+    "description": "YouTubeのライブチャットでチャンネル名を表示します。メンバーは元の色（緑など）、一般は明るいグレー、チャンネル主は黄色で表示されます。固定コメント非表示ボタン付き。",
+    "url": "https://greasyfork.org/scripts/557297-youtube-live-chat-channel-name-restorer",
+    "code_url": "https://update.greasyfork.org/scripts/557297/YouTube%20Live%20Chat%20Channel%20Name%20Restorer.user.js",
+    "code_size": 12276,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

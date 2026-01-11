@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556735,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-24T03:08:30.000Z",
+    "code_updated_at": "2025-11-24T03:12:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504416,
+        "name": "Dax Fox",
+        "created_at": "2025-08-13T02:58:34.000Z",
+        "url": "https://greasyfork.org/users/1504416-dax-fox"
+      }
+    ],
+    "name": "Catbox Anime Girl Database",
+    "description": "view catbox  (",
+    "url": "https://greasyfork.org/scripts/556735-catbox-anime-girl-database",
+    "code_url": "https://update.greasyfork.org/scripts/556735/Catbox%20Anime%20Girl%20Database.user.js",
+    "code_size": 9374,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

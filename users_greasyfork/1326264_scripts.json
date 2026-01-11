@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557221,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T12:07:16.000Z",
+    "code_updated_at": "2025-11-28T12:07:16.000Z",
+    "namespace": "Huawei HG6145D2 WKE2.094.443A01",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1326264,
+        "name": "Mochamad Adi",
+        "created_at": "2024-06-30T14:55:41.000Z",
+        "url": "https://greasyfork.org/users/1326264-mochamad-adi"
+      }
+    ],
+    "name": "Huawei Router Anti-Logout",
+    "description": "Prevents automatic logout on the Huawei router interface and allows custom or unlimited session duration settings.",
+    "url": "https://greasyfork.org/scripts/557221-huawei-router-anti-logout",
+    "code_url": "https://update.greasyfork.org/scripts/557221/Huawei%20Router%20Anti-Logout.user.js",
+    "code_size": 6373,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557149,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T20:36:43.000Z",
+    "code_updated_at": "2025-11-27T20:36:42.000Z",
+    "namespace": "Huawei HG6145D2 WKE2.094.443A01",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1326264,
+        "name": "Mochamad Adi",
+        "created_at": "2024-06-30T14:55:41.000Z",
+        "url": "https://greasyfork.org/users/1326264-mochamad-adi"
+      }
+    ],
+    "name": "Huawei Router Readable Status",
+    "description": "Formatting traffic numbers into measurable units, adding thousands separators to packets, and click-to-copy IP/MAC features on the Huawei router interface.",
+    "url": "https://greasyfork.org/scripts/557149-huawei-router-readable-status",
+    "code_url": "https://update.greasyfork.org/scripts/557149/Huawei%20Router%20Readable%20Status.user.js",
+    "code_size": 12997,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557141,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T19:43:31.000Z",
+    "code_updated_at": "2025-12-31T00:53:44.000Z",
+    "namespace": "ZTE F672Y V9.1.10P4N3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1326264,
+        "name": "Mochamad Adi",
+        "created_at": "2024-06-30T14:55:41.000Z",
+        "url": "https://greasyfork.org/users/1326264-mochamad-adi"
+      }
+    ],
+    "name": "ZTE Router Readable Status",
+    "description": "The complete dashboard makeover: WAN/LAN Stats, Speedometer, Colors, Formatting, & Copy-Paste.",
+    "url": "https://greasyfork.org/scripts/557141-zte-router-readable-status",
+    "code_url": "https://update.greasyfork.org/scripts/557141/ZTE%20Router%20Readable%20Status.user.js",
+    "code_size": 13081,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

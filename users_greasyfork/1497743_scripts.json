@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556529,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T01:35:52.000Z",
+    "code_updated_at": "2025-11-22T01:35:52.000Z",
+    "namespace": "plum.husky",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497743,
+        "name": "Sawyer Miller",
+        "created_at": "2025-07-23T20:32:14.000Z",
+        "url": "https://greasyfork.org/users/1497743-sawyer-miller"
+      }
+    ],
+    "name": "Pants",
+    "description": "Deletes Shorts from YouTube *search* results only",
+    "url": "https://greasyfork.org/scripts/556529-pants",
+    "code_url": "https://update.greasyfork.org/scripts/556529/Pants.user.js",
+    "code_size": 1000,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

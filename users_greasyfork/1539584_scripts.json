@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557152,
+    "daily_installs": 1,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T21:41:13.000Z",
+    "code_updated_at": "2025-11-27T21:41:12.000Z",
+    "namespace": "butter.lot",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539584,
+        "name": "MrButtersLot",
+        "created_at": "2025-11-20T02:17:53.000Z",
+        "url": "https://greasyfork.org/users/1539584-mrbutterslot"
+      }
+    ],
+    "name": "JMIDIPlayer with speed control and transpose",
+    "description": "High performance MIDI Player for Multiplayer Piano with transpose",
+    "url": "https://greasyfork.org/scripts/557152-jmidiplayer-with-speed-control-and-transpose",
+    "code_url": "https://update.greasyfork.org/scripts/557152/JMIDIPlayer%20with%20speed%20control%20and%20transpose.user.js",
+    "code_size": 44440,
+    "license": "Beerware License",
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

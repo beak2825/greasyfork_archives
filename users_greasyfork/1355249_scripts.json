@@ -1,0 +1,134 @@
+[
+  {
+    "id": 556847,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T06:19:42.000Z",
+    "code_updated_at": "2025-11-25T06:19:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1355249,
+        "name": "apersongithub",
+        "created_at": "2024-08-21T00:10:16.000Z",
+        "url": "https://greasyfork.org/users/1355249-apersongithub"
+      }
+    ],
+    "name": "Duolingo Streak Extender",
+    "description": "GUI to extend streaks",
+    "url": "https://greasyfork.org/scripts/556847-duolingo-streak-extender",
+    "code_url": "https://update.greasyfork.org/scripts/556847/Duolingo%20Streak%20Extender.user.js",
+    "code_size": 20565,
+    "license": "Mozilla Public License 2.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556844,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T05:56:03.000Z",
+    "code_updated_at": "2025-11-26T21:33:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1355249,
+        "name": "apersongithub",
+        "created_at": "2024-08-21T00:10:16.000Z",
+        "url": "https://greasyfork.org/users/1355249-apersongithub"
+      }
+    ],
+    "name": "Get Any Duolingo Monthly Badge/Daily Quests",
+    "description": "GUI to complete any duolingo monthly badges and quests in seconds!",
+    "url": "https://greasyfork.org/scripts/556844-get-any-duolingo-monthly-badge-daily-quests",
+    "code_url": "https://update.greasyfork.org/scripts/556844/Get%20Any%20Duolingo%20Monthly%20BadgeDaily%20Quests.user.js",
+    "code_size": 34074,
+    "license": "Mozilla Public License 2.0",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556719,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T22:19:25.000Z",
+    "code_updated_at": "2025-11-23T22:19:25.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1355249,
+        "name": "apersongithub",
+        "created_at": "2024-08-21T00:10:16.000Z",
+        "url": "https://greasyfork.org/users/1355249-apersongithub"
+      }
+    ],
+    "name": "Duolingo Debug Menu",
+    "description": "Enable Duolingo Debug Menu and get Ambassador Preview Features",
+    "url": "https://greasyfork.org/scripts/556719-duolingo-debug-menu",
+    "code_url": "https://update.greasyfork.org/scripts/556719/Duolingo%20Debug%20Menu.user.js",
+    "code_size": 3764,
+    "license": "Mozilla Public License 2.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556601,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T19:34:45.000Z",
+    "code_updated_at": "2025-11-26T18:08:57.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1355249,
+        "name": "apersongithub",
+        "created_at": "2024-08-21T00:10:16.000Z",
+        "url": "https://greasyfork.org/users/1355249-apersongithub"
+      }
+    ],
+    "name": "Duolingo Shop",
+    "description": "Gets shop items",
+    "url": "https://greasyfork.org/scripts/556601-duolingo-shop",
+    "code_url": "https://update.greasyfork.org/scripts/556601/Duolingo%20Shop.user.js",
+    "code_size": 25319,
+    "license": "Mozilla Public License 2.0",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

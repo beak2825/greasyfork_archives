@@ -1,0 +1,59 @@
+{
+  "id": 556637,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-23T07:13:38.000Z",
+  "code_updated_at": "2025-12-12T18:55:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 68487,
+      "name": "Sakurai Omoi",
+      "created_at": "2016-09-25T08:44:22.000Z",
+      "url": "https://greasyfork.org/users/68487-sakurai-omoi",
+      "scripts": [
+        {
+          "id": 556637,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-23T07:13:38.000Z",
+          "code_updated_at": "2025-12-12T18:55:01.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "dlsite购物车增强",
+          "description": "为 DLsite 购物车添加评分、销量、发售日、标签等信息",
+          "url": "https://greasyfork.org/scripts/556637-dlsite%E8%B4%AD%E7%89%A9%E8%BD%A6%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/556637/dlsite%E8%B4%AD%E7%89%A9%E8%BD%A6%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 20136,
+          "license": null,
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "dlsite购物车增强",
+  "description": "为 DLsite 购物车添加评分、销量、发售日、标签等信息",
+  "url": "https://greasyfork.org/scripts/556637-dlsite%E8%B4%AD%E7%89%A9%E8%BD%A6%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/556637/dlsite%E8%B4%AD%E7%89%A9%E8%BD%A6%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 20136,
+  "license": null,
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

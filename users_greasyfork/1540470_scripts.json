@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556576,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T13:34:59.000Z",
+    "code_updated_at": "2025-11-22T13:34:59.000Z",
+    "namespace": "https://blog.maple3142.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540470,
+        "name": "hthienloc",
+        "created_at": "2025-11-22T13:23:39.000Z",
+        "url": "https://greasyfork.org/users/1540470-hthienloc"
+      }
+    ],
+    "name": "Local SoundCloud Downloader (with cover->ID3)",
+    "description": "Download SoundCloud without external service + embed cover art into MP3 ID3 metadata.",
+    "url": "https://greasyfork.org/scripts/556576-local-soundcloud-downloader-with-cover-id3",
+    "code_url": "https://update.greasyfork.org/scripts/556576/1699828/Local%20SoundCloud%20Downloader%20%28with%20cover-%3EID3%29.js",
+    "code_size": 9869,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

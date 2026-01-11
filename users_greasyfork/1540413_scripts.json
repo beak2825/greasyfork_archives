@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556560,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-22T10:57:29.000Z",
+    "code_updated_at": "2025-11-28T12:54:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540413,
+        "name": "qinjian1981",
+        "created_at": "2025-11-22T10:52:33.000Z",
+        "url": "https://greasyfork.org/users/1540413-qinjian1981"
+      }
+    ],
+    "name": "Garmin Connect 训练计划批量清理 & 导出 - 增强版 V2.3",
+    "description": "批量识别和删除 Garmin Connect 日历中指定月份的训练计划，新增：在日历页面批量导出运动记录(GPX)；支持在“我的训练”页面批量删除训练。",
+    "url": "https://greasyfork.org/scripts/556560-garmin-connect-%E8%AE%AD%E7%BB%83%E8%AE%A1%E5%88%92%E6%89%B9%E9%87%8F%E6%B8%85%E7%90%86-%E5%AF%BC%E5%87%BA-%E5%A2%9E%E5%BC%BA%E7%89%88-v2-3",
+    "code_url": "https://update.greasyfork.org/scripts/556560/Garmin%20Connect%20%E8%AE%AD%E7%BB%83%E8%AE%A1%E5%88%92%E6%89%B9%E9%87%8F%E6%B8%85%E7%90%86%20%20%E5%AF%BC%E5%87%BA%20-%20%E5%A2%9E%E5%BC%BA%E7%89%88%20V23.user.js",
+    "code_size": 32852,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -96,6 +96,39 @@
     "version": "1.5",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557045,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T03:02:44.000Z",
+    "code_updated_at": "2025-11-27T03:02:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1129783,
+        "name": "Crazy uncle",
+        "created_at": "2023-07-18T09:29:14.000Z",
+        "url": "https://greasyfork.org/users/1129783-crazy-uncle"
+      }
+    ],
+    "name": "Toomics 漫画批量下载 (智能长图修复版)",
+    "description": "Toomics下载：5米长页自动分段，修复图片截断/丢失问题",
+    "url": "https://greasyfork.org/scripts/557045-toomics-%E6%BC%AB%E7%94%BB%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD-%E6%99%BA%E8%83%BD%E9%95%BF%E5%9B%BE%E4%BF%AE%E5%A4%8D%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/557045/Toomics%20%E6%BC%AB%E7%94%BB%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%20%28%E6%99%BA%E8%83%BD%E9%95%BF%E5%9B%BE%E4%BF%AE%E5%A4%8D%E7%89%88%29.user.js",
+    "code_size": 13048,
+    "license": null,
+    "version": "3.4",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

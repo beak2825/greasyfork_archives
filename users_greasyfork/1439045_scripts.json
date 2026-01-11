@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556723,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T22:57:53.000Z",
+    "code_updated_at": "2025-11-23T22:57:53.000Z",
+    "namespace": "https://juan-copilot.example",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439045,
+        "name": "Juan Fernando4",
+        "created_at": "2025-02-23T22:10:21.000Z",
+        "url": "https://greasyfork.org/users/1439045-juan-fernando4"
+      }
+    ],
+    "name": "YouTube Music Volume Booster (Gain x3)",
+    "description": "Aumenta el volumen de YouTube Music usando WebAudio con control de ganancia hasta 3x.",
+    "url": "https://greasyfork.org/scripts/556723-youtube-music-volume-booster-gain-x3",
+    "code_url": "https://update.greasyfork.org/scripts/556723/YouTube%20Music%20Volume%20Booster%20%28Gain%20x3%29.user.js",
+    "code_size": 6476,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

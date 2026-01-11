@@ -261,6 +261,171 @@
     "version": "0.6.7",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557269,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T21:52:29.000Z",
+    "code_updated_at": "2025-11-28T21:53:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn — Export inventory",
+    "description": "Export Torn inventory (Primary, Secondary, Melee, Defensive) with colored quality & bonuses, ignoring equipped items, into a Google Sheet snapshot (bonus name + %)",
+    "url": "https://greasyfork.org/scripts/557269-torn-export-inventory",
+    "code_url": "https://update.greasyfork.org/scripts/557269/Torn%20%E2%80%94%20Export%20inventory.user.js",
+    "code_size": 14067,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557226,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T12:34:33.000Z",
+    "code_updated_at": "2026-01-09T12:56:30.000Z",
+    "namespace": "Torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn Profile Link Formatter 2.0",
+    "description": "Adds a copy button next to user names on profile, faction, and ranked war pages for easy sharing.",
+    "url": "https://greasyfork.org/scripts/557226-torn-profile-link-formatter-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/557226/Torn%20Profile%20Link%20Formatter%2020.user.js",
+    "code_size": 22446,
+    "license": "MIT License",
+    "version": "1.6.30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557088,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T12:43:54.000Z",
+    "code_updated_at": "2025-11-27T14:55:05.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Chain watcher",
+    "description": "Floating panel for faction chain with global 15s polling, cooldown display, and sound alert",
+    "url": "https://greasyfork.org/scripts/557088-chain-watcher",
+    "code_url": "https://update.greasyfork.org/scripts/557088/Chain%20watcher.user.js",
+    "code_size": 20280,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556894,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T14:13:12.000Z",
+    "code_updated_at": "2025-12-16T21:15:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn - Ranked Wars Leaders + Faction Leader",
+    "description": "Pending ranked wars and faction leaders in Torn, with resize and visited factions tracking",
+    "url": "https://greasyfork.org/scripts/556894-torn-ranked-wars-leaders-faction-leader",
+    "code_url": "https://update.greasyfork.org/scripts/556894/Torn%20-%20Ranked%20Wars%20Leaders%20%2B%20Faction%20Leader.user.js",
+    "code_size": 21613,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556613,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T00:00:22.000Z",
+    "code_updated_at": "2025-11-23T00:03:27.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "TORN Shoplifting Jewelry Panel (single API caller)",
+    "description": "Floating panel showing jewelry store cameras/guard status from Torn API (only one tab calls API)",
+    "url": "https://greasyfork.org/scripts/556613-torn-shoplifting-jewelry-panel-single-api-caller",
+    "code_url": "https://update.greasyfork.org/scripts/556613/TORN%20Shoplifting%20Jewelry%20Panel%20%28single%20API%20caller%29.user.js",
+    "code_size": 12149,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557320,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T13:37:22.000Z",
+    "code_updated_at": "2025-11-29T13:37:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 927526,
+        "name": "ygxiuming",
+        "created_at": "2022-06-20T08:55:39.000Z",
+        "url": "https://greasyfork.org/users/927526-ygxiuming"
+      }
+    ],
+    "name": "考研倒计时增强版",
+    "description": "功能丰富的考研倒计时，支持天气显示、拖拽定位、样式自定义",
+    "url": "https://greasyfork.org/scripts/557320-%E8%80%83%E7%A0%94%E5%80%92%E8%AE%A1%E6%97%B6%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/557320/%E8%80%83%E7%A0%94%E5%80%92%E8%AE%A1%E6%97%B6%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 37142,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

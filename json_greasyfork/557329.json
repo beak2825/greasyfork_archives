@@ -1,0 +1,34 @@
+{
+  "id": 557329,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-29T14:33:21.000Z",
+  "code_updated_at": "2025-12-29T09:08:13.000Z",
+  "namespace": "demscans-reactbot",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542873,
+      "name": "JainT",
+      "created_at": "2025-11-29T13:59:51.000Z",
+      "url": "https://greasyfork.org/users/1542873-jaint",
+      "scripts": []
+    }
+  ],
+  "name": "Wave Enhanced Controls - Filter, Sort, Keyboard, Auto Loot",
+  "description": "Adds filtering, sorting, RPG-like keyboard controls (1-5 keys), and claim buttons to wave pages. Filter mobs by type, sort by HP, and use keyboard shortcuts for quick actions.",
+  "url": "https://greasyfork.org/scripts/557329-wave-enhanced-controls-filter-sort-keyboard-auto-loot",
+  "code_url": "https://update.greasyfork.org/scripts/557329/Wave%20Enhanced%20Controls%20-%20Filter%2C%20Sort%2C%20Keyboard%2C%20Auto%20Loot.user.js",
+  "code_size": 73687,
+  "license": null,
+  "version": "1.1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

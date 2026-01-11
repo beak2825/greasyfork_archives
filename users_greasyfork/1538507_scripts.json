@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 557182,
+    "daily_installs": 1,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T05:27:09.000Z",
+    "code_updated_at": "2025-12-30T17:24:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538507,
+        "name": "Silverfox0338",
+        "created_at": "2025-11-16T17:59:51.000Z",
+        "url": "https://greasyfork.org/users/1538507-silverfox0338"
+      }
+    ],
+    "name": "Lemonade Prompt Builder",
+    "description": "Complete prompt builder for Lemonade AI with advanced features",
+    "url": "https://greasyfork.org/scripts/557182-lemonade-prompt-builder",
+    "code_url": "https://update.greasyfork.org/scripts/557182/Lemonade%20Prompt%20Builder.user.js",
+    "code_size": 297467,
+    "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+    "version": "9.0.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556706,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T19:11:49.000Z",
+    "code_updated_at": "2025-11-23T19:12:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538507,
+        "name": "Silverfox0338",
+        "created_at": "2025-11-16T17:59:51.000Z",
+        "url": "https://greasyfork.org/users/1538507-silverfox0338"
+      }
+    ],
+    "name": "Infinite Craft - Auto Dragger PRO - Admin Plugin",
+    "description": "Enhanced Queue UI + Real-time Path Display + Progress Tracking",
+    "url": "https://greasyfork.org/scripts/556706-infinite-craft-auto-dragger-pro-admin-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/556706/Infinite%20Craft%20-%20Auto%20Dragger%20PRO%20-%20Admin%20Plugin.user.js",
+    "code_size": 123646,
+    "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+    "version": "5.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556705,
+    "daily_installs": 1,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T19:09:43.000Z",
+    "code_updated_at": "2025-11-29T05:03:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538507,
+        "name": "Silverfox0338",
+        "created_at": "2025-11-16T17:59:51.000Z",
+        "url": "https://greasyfork.org/users/1538507-silverfox0338"
+      }
+    ],
+    "name": "Infinite Craft - Auto Dragger Pro - Element Sync Plugin",
+    "description": "Sync ALL elements - MAXIMUM SPEED",
+    "url": "https://greasyfork.org/scripts/556705-infinite-craft-auto-dragger-pro-element-sync-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/556705/Infinite%20Craft%20-%20Auto%20Dragger%20Pro%20-%20Element%20Sync%20Plugin.user.js",
+    "code_size": 46967,
+    "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

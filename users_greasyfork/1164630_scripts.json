@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557062,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T07:47:00.000Z",
+    "code_updated_at": "2025-11-27T07:47:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1164630,
+        "name": "NoushadBug",
+        "created_at": "2023-09-02T06:47:35.000Z",
+        "url": "https://greasyfork.org/users/1164630-noushadbug"
+      }
+    ],
+    "name": "Claude.ai Mermaid Chart Renderer",
+    "description": "Auto-render Mermaid charts on Claude.ai with zoom and pan options",
+    "url": "https://greasyfork.org/scripts/557062-claude-ai-mermaid-chart-renderer",
+    "code_url": "https://update.greasyfork.org/scripts/557062/Claudeai%20Mermaid%20Chart%20Renderer.user.js",
+    "code_size": 14597,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
