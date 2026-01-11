@@ -1,0 +1,59 @@
+{
+  "id": 556452,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-21T04:08:57.000Z",
+  "code_updated_at": "2025-12-10T19:33:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1539971,
+      "name": "Robert Wilkins",
+      "created_at": "2025-11-21T04:04:54.000Z",
+      "url": "https://greasyfork.org/users/1539971-robert-wilkins",
+      "scripts": [
+        {
+          "id": 556452,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-21T04:08:57.000Z",
+          "code_updated_at": "2025-12-10T19:33:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Submission Grinder Simple Dark Mode",
+          "description": "Really quick dark-mode for The Submission Grinder",
+          "url": "https://greasyfork.org/scripts/556452-submission-grinder-simple-dark-mode",
+          "code_url": "https://update.greasyfork.org/scripts/556452/Submission%20Grinder%20Simple%20Dark%20Mode.user.js",
+          "code_size": 1809,
+          "license": "MIT License",
+          "version": "2025-11-04",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Submission Grinder Simple Dark Mode",
+  "description": "Really quick dark-mode for The Submission Grinder",
+  "url": "https://greasyfork.org/scripts/556452-submission-grinder-simple-dark-mode",
+  "code_url": "https://update.greasyfork.org/scripts/556452/Submission%20Grinder%20Simple%20Dark%20Mode.user.js",
+  "code_size": 1809,
+  "license": "MIT License",
+  "version": "2025-11-04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

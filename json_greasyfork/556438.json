@@ -1,0 +1,33 @@
+{
+  "id": 556438,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T22:48:28.000Z",
+  "code_updated_at": "2025-11-20T23:01:54.000Z",
+  "namespace": "https://furvilla.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535374,
+      "name": "necroam",
+      "created_at": "2025-11-07T17:36:31.000Z",
+      "url": "https://greasyfork.org/users/1535374-necroam"
+    }
+  ],
+  "name": "FV - Sand Dollar Connect 4 Mini-Game",
+  "description": "Play Connect 4 against a few Oceadome villagers! Who would've known they be so competitive.",
+  "url": "https://greasyfork.org/scripts/556438-fv-sand-dollar-connect-4-mini-game",
+  "code_url": "https://update.greasyfork.org/scripts/556438/FV%20-%20Sand%20Dollar%20Connect%204%20Mini-Game.user.js",
+  "code_size": 20013,
+  "license": null,
+  "version": "23.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

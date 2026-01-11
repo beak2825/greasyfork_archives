@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556427,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T19:43:52.000Z",
+    "code_updated_at": "2025-11-20T19:43:52.000Z",
+    "namespace": "https://greasyfork.org/users/1357667",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357667,
+        "name": "mydeso",
+        "created_at": "2024-08-25T16:19:07.000Z",
+        "url": "https://greasyfork.org/users/1357667-mydeso"
+      }
+    ],
+    "name": "Thin Moving Crosshair",
+    "description": "moving cross hair",
+    "url": "https://greasyfork.org/scripts/556427-thin-moving-crosshair",
+    "code_url": "https://update.greasyfork.org/scripts/556427/Thin%20Moving%20Crosshair.user.js",
+    "code_size": 2408,
+    "license": null,
+    "version": "0.0.1.20251120194352",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

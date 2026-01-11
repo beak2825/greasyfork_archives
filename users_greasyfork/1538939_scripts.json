@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556147,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-18T01:22:23.000Z",
+    "code_updated_at": "2025-11-18T01:22:23.000Z",
+    "namespace": "Pokeidle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538939,
+        "name": "Fleck2025",
+        "created_at": "2025-11-18T01:18:33.000Z",
+        "url": "https://greasyfork.org/users/1538939-fleck2025"
+      }
+    ],
+    "name": "PokeIdle Hunting Helper (Beta)",
+    "description": "Highlights routes blue if all Pokemon there have been caught and adds a checkmark if enough for all evolutions have been caught there. Highlight gets golden when all Pokemon there have been caught as shiny and checkmark gets yellow if enough shinies for all evolutions have been caught.",
+    "url": "https://greasyfork.org/scripts/556147-pokeidle-hunting-helper-beta",
+    "code_url": "https://update.greasyfork.org/scripts/556147/PokeIdle%20Hunting%20Helper%20%28Beta%29.user.js",
+    "code_size": 11871,
+    "license": null,
+    "version": "5.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

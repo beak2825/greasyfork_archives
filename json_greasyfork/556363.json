@@ -1,0 +1,59 @@
+{
+  "id": 556363,
+  "daily_installs": 3,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T07:55:21.000Z",
+  "code_updated_at": "2025-11-20T07:55:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 792935,
+      "name": "Twist Mark",
+      "created_at": "2021-07-13T01:09:42.000Z",
+      "url": "https://greasyfork.org/users/792935-twist-mark",
+      "scripts": [
+        {
+          "id": 556363,
+          "daily_installs": 3,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T07:55:21.000Z",
+          "code_updated_at": "2025-11-20T07:55:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chaoxing Downloader",
+          "description": "用于下载超星学习通课件",
+          "url": "https://greasyfork.org/scripts/556363-chaoxing-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/556363/Chaoxing%20Downloader.user.js",
+          "code_size": 7746,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chaoxing Downloader",
+  "description": "用于下载超星学习通课件",
+  "url": "https://greasyfork.org/scripts/556363-chaoxing-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/556363/Chaoxing%20Downloader.user.js",
+  "code_size": 7746,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

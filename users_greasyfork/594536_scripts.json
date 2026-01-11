@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 556508,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-21T17:18:37.000Z",
+    "code_updated_at": "2025-11-21T17:19:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "Google Custom css  Gemeni AI     1.22.11.25",
+    "description": "Custom css for Google GemeniChat",
+    "url": "https://greasyfork.org/scripts/556508-google-custom-css-gemeni-ai-1-22-11-25",
+    "code_url": "https://update.greasyfork.org/scripts/556508/Google%20Custom%20css%20%20Gemeni%20AI%20%20%20%20%201221125.user.js",
+    "code_size": 19042,
+    "license": "LLC",
+    "version": "1.22.11.25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

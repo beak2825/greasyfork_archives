@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 556447,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-21T02:13:48.000Z",
+    "code_updated_at": "2025-11-21T03:01:53.000Z",
+    "namespace": "https://github.com/MWTBDLTR/torn-scripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1463000,
+        "name": "MWTBDLTR",
+        "created_at": "2025-04-28T02:53:50.000Z",
+        "url": "https://greasyfork.org/users/1463000-mwtbdltr"
+      }
+    ],
+    "name": "Torn Attack Page Helper",
+    "description": "Customizable numpad shortcuts for attacks to enhance accessibility",
+    "url": "https://greasyfork.org/scripts/556447-torn-attack-page-helper",
+    "code_url": "https://update.greasyfork.org/scripts/556447/Torn%20Attack%20Page%20Helper.user.js",
+    "code_size": 21216,
+    "license": "MIT License",
+    "version": "1.1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

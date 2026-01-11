@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556300,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T15:54:09.000Z",
+    "code_updated_at": "2025-11-20T11:35:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513779,
+        "name": "hu sheire",
+        "created_at": "2025-09-11T02:29:47.000Z",
+        "url": "https://greasyfork.org/users/1513779-hu-sheire"
+      }
+    ],
+    "name": "AI 解析增强版",
+    "description": "提取app.goodsfox.com网站中/material路径下页面的素材图片链接，支持调用通义千问VL-plus模型进行分析，并可将结果同步到Notion",
+    "url": "https://greasyfork.org/scripts/556300-ai-%E8%A7%A3%E6%9E%90%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/556300/AI%20%E8%A7%A3%E6%9E%90%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 67499,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

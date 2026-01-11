@@ -1,0 +1,34 @@
+{
+  "id": 556388,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T12:51:37.000Z",
+  "code_updated_at": "2025-11-20T12:51:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Req Start Binance 4Rec sp.eike@naturmed-doc.de",
+  "description": "Insert",
+  "url": "https://greasyfork.org/scripts/556388-req-start-binance-4rec-sp-eike-naturmed-doc-de",
+  "code_url": "https://update.greasyfork.org/scripts/556388/Req%20Start%20Binance%204Rec%20speike%40naturmed-docde.user.js",
+  "code_size": 13224,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

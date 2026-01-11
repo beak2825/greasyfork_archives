@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 556289,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T14:06:13.000Z",
+    "code_updated_at": "2025-11-19T14:06:13.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441997,
+        "name": "春儿",
+        "created_at": "2025-03-03T19:55:51.000Z",
+        "url": "https://greasyfork.org/users/1441997-%E6%98%A5%E5%84%BF"
+      }
+    ],
+    "name": "网站信息助手",
+    "description": "显示网站标题、完整网址、主域名、安全协议和用户代理信息",
+    "url": "https://greasyfork.org/scripts/556289-%E7%BD%91%E7%AB%99%E4%BF%A1%E6%81%AF%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/556289/%E7%BD%91%E7%AB%99%E4%BF%A1%E6%81%AF%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 8185,
+    "license": "MIT License",
+    "version": "1.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556288,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T13:50:24.000Z",
+    "code_updated_at": "2025-11-19T13:50:24.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441997,
+        "name": "春儿",
+        "created_at": "2025-03-03T19:55:51.000Z",
+        "url": "https://greasyfork.org/users/1441997-%E6%98%A5%E5%84%BF"
+      }
+    ],
+    "name": "禁止网页双击缩放",
+    "description": "禁用网页双击缩放功能",
+    "url": "https://greasyfork.org/scripts/556288-%E7%A6%81%E6%AD%A2%E7%BD%91%E9%A1%B5%E5%8F%8C%E5%87%BB%E7%BC%A9%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/556288/%E7%A6%81%E6%AD%A2%E7%BD%91%E9%A1%B5%E5%8F%8C%E5%87%BB%E7%BC%A9%E6%94%BE.user.js",
+    "code_size": 3256,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556286,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T13:41:54.000Z",
+    "code_updated_at": "2025-11-19T13:41:54.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441997,
+        "name": "春儿",
+        "created_at": "2025-03-03T19:55:51.000Z",
+        "url": "https://greasyfork.org/users/1441997-%E6%98%A5%E5%84%BF"
+      }
+    ],
+    "name": "视图转换",
+    "description": "电脑端和手机端视图切换工具",
+    "url": "https://greasyfork.org/scripts/556286-%E8%A7%86%E5%9B%BE%E8%BD%AC%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/556286/%E8%A7%86%E5%9B%BE%E8%BD%AC%E6%8D%A2.user.js",
+    "code_size": 12807,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

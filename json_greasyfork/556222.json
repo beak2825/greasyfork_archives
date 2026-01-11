@@ -1,0 +1,59 @@
+{
+  "id": 556222,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-19T00:59:11.000Z",
+  "code_updated_at": "2025-11-19T00:59:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1405439,
+      "name": "Minghan Zhang",
+      "created_at": "2024-12-02T13:28:04.000Z",
+      "url": "https://greasyfork.org/users/1405439-minghan-zhang",
+      "scripts": [
+        {
+          "id": 556222,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-19T00:59:11.000Z",
+          "code_updated_at": "2025-11-19T00:59:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Crowdin CSRF Interceptor",
+          "description": "Intercept Crowdin backend requests and display cookie and CSRF token",
+          "url": "https://greasyfork.org/scripts/556222-crowdin-csrf-interceptor",
+          "code_url": "https://update.greasyfork.org/scripts/556222/Crowdin%20CSRF%20Interceptor.user.js",
+          "code_size": 6614,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Crowdin CSRF Interceptor",
+  "description": "Intercept Crowdin backend requests and display cookie and CSRF token",
+  "url": "https://greasyfork.org/scripts/556222-crowdin-csrf-interceptor",
+  "code_url": "https://update.greasyfork.org/scripts/556222/Crowdin%20CSRF%20Interceptor.user.js",
+  "code_size": 6614,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

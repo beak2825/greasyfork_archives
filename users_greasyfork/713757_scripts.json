@@ -30,6 +30,39 @@
     "version": "1.0",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556245,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T06:43:31.000Z",
+    "code_updated_at": "2025-11-19T06:43:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713757,
+        "name": "shanlanwork",
+        "created_at": "2020-12-06T12:21:45.000Z",
+        "url": "https://greasyfork.org/users/713757-shanlanwork"
+      }
+    ],
+    "name": "Outlook 附件圖片懸浮預覽",
+    "description": "Outlook 網頁版附件圖片點擊後懸浮原圖，可拖曳與滾輪縮放",
+    "url": "https://greasyfork.org/scripts/556245-outlook-%E9%99%84%E4%BB%B6%E5%9C%96%E7%89%87%E6%87%B8%E6%B5%AE%E9%A0%90%E8%A6%BD",
+    "code_url": "https://update.greasyfork.org/scripts/556245/Outlook%20%E9%99%84%E4%BB%B6%E5%9C%96%E7%89%87%E6%87%B8%E6%B5%AE%E9%A0%90%E8%A6%BD.user.js",
+    "code_size": 10575,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

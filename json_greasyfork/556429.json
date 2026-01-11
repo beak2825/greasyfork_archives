@@ -1,0 +1,59 @@
+{
+  "id": 556429,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T19:55:57.000Z",
+  "code_updated_at": "2025-11-20T20:00:39.000Z",
+  "namespace": "https://github.com/vs4vijay/ado-extension-dev-magic",
+  "support_url": "https://github.com/vs4vijay/ado-extension-dev-magic/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1539883,
+      "name": "vs4vijay",
+      "created_at": "2025-11-20T19:54:00.000Z",
+      "url": "https://greasyfork.org/users/1539883-vs4vijay",
+      "scripts": [
+        {
+          "id": 556429,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T19:55:57.000Z",
+          "code_updated_at": "2025-11-20T20:00:39.000Z",
+          "namespace": "https://github.com/vs4vijay/ado-extension-dev-magic",
+          "support_url": "https://github.com/vs4vijay/ado-extension-dev-magic/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Azure DevOps Extension Dev Magic : ADO Extension Local Development Helper",
+          "description": "Replace production Azure DevOps extension iframe URLs with local development URLs for testing",
+          "url": "https://greasyfork.org/scripts/556429-azure-devops-extension-dev-magic-ado-extension-local-development-helper",
+          "code_url": "https://update.greasyfork.org/scripts/556429/Azure%20DevOps%20Extension%20Dev%20Magic%20%3A%20ADO%20Extension%20Local%20Development%20Helper.user.js",
+          "code_size": 8690,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Azure DevOps Extension Dev Magic : ADO Extension Local Development Helper",
+  "description": "Replace production Azure DevOps extension iframe URLs with local development URLs for testing",
+  "url": "https://greasyfork.org/scripts/556429-azure-devops-extension-dev-magic-ado-extension-local-development-helper",
+  "code_url": "https://update.greasyfork.org/scripts/556429/Azure%20DevOps%20Extension%20Dev%20Magic%20%3A%20ADO%20Extension%20Local%20Development%20Helper.user.js",
+  "code_size": 8690,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

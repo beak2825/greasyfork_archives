@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556428,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T19:53:52.000Z",
+    "code_updated_at": "2025-11-21T19:47:26.000Z",
+    "namespace": "https://github.com/DmitrMarch/return-old-youtube-video-sidelist",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539882,
+        "name": "DmitrMarch",
+        "created_at": "2025-11-20T19:51:55.000Z",
+        "url": "https://greasyfork.org/users/1539882-dmitrmarch"
+      }
+    ],
+    "name": "(ROYTVS) Return old YouTube video sidelist",
+    "description": "Простой userscript для возвращения старого дизайна бокового списка с видео на YouTube",
+    "url": "https://greasyfork.org/scripts/556428-roytvs-return-old-youtube-video-sidelist",
+    "code_url": "https://update.greasyfork.org/scripts/556428/%28ROYTVS%29%20Return%20old%20YouTube%20video%20sidelist.user.js",
+    "code_size": 5911,
+    "license": "https://github.com/DmitrMarch/return-old-youtube-video-sidelist/blob/main/LICENSE",
+    "version": "0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

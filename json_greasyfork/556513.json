@@ -17,7 +17,33 @@
       "id": 1540218,
       "name": "5MGroup",
       "created_at": "2025-11-21T18:19:37.000Z",
-      "url": "https://greasyfork.org/users/1540218-5mgroup"
+      "url": "https://greasyfork.org/users/1540218-5mgroup",
+      "scripts": [
+        {
+          "id": 556513,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-21T18:23:01.000Z",
+          "code_updated_at": "2025-11-21T18:23:01.000Z",
+          "namespace": "https://thehorizon.pro/js/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Flow Veo - Mostrar só Veo 3.1 Fast (v2.2 - Com Seleção Automática e Mais Tags)",
+          "description": "Esconde Veo 3.1 - Quality, Veo 2 - Fast e Veo 2 - Quality no seletor de modelo E seleciona Veo 3.1 - Fast",
+          "url": "https://greasyfork.org/scripts/556513-flow-veo-mostrar-s%C3%B3-veo-3-1-fast-v2-2-com-sele%C3%A7%C3%A3o-autom%C3%A1tica-e-mais-tags",
+          "code_url": "https://update.greasyfork.org/scripts/556513/Flow%20Veo%20-%20Mostrar%20s%C3%B3%20Veo%2031%20Fast%20%28v22%20-%20Com%20Sele%C3%A7%C3%A3o%20Autom%C3%A1tica%20e%20Mais%20Tags%29.user.js",
+          "code_size": 3085,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "Flow Veo - Mostrar só Veo 3.1 Fast (v2.2 - Com Seleção Automática e Mais Tags)",

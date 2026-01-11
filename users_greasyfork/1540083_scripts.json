@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556484,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-21T12:30:25.000Z",
+    "code_updated_at": "2025-11-24T03:41:05.000Z",
+    "namespace": "https://github.com/springsea72/minimalist-baidu-search-box.git",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540083,
+        "name": "springsea72",
+        "created_at": "2025-11-21T10:34:41.000Z",
+        "url": "https://greasyfork.org/users/1540083-springsea72"
+      }
+    ],
+    "name": "极简百度搜索框",
+    "description": "简化了百度搜索框，去除所有其他东西，只剩下单行搜索框",
+    "url": "https://greasyfork.org/scripts/556484-%E6%9E%81%E7%AE%80%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E6%A1%86",
+    "code_url": "https://update.greasyfork.org/scripts/556484/%E6%9E%81%E7%AE%80%E7%99%BE%E5%BA%A6%E6%90%9C%E7%B4%A2%E6%A1%86.user.js",
+    "code_size": 6243,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

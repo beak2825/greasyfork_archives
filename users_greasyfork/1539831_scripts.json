@@ -1,0 +1,68 @@
+[
+  {
+    "id": 556409,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T16:14:22.000Z",
+    "code_updated_at": "2025-11-20T16:20:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539831,
+        "name": "Chiam Zhang",
+        "created_at": "2025-11-20T15:43:32.000Z",
+        "url": "https://greasyfork.org/users/1539831-chiam-zhang"
+      }
+    ],
+    "name": "Website Data Cleaner",
+    "description": "One-click clear current website data（localStorage/Cookie/Database etc.）",
+    "url": "https://greasyfork.org/scripts/556409-website-data-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/556409/Website%20Data%20Cleaner.user.js",
+    "code_size": 18158,
+    "license": "MIT License",
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556408,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T15:56:38.000Z",
+    "code_updated_at": "2025-11-20T16:08:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539831,
+        "name": "Chiam Zhang",
+        "created_at": "2025-11-20T15:43:32.000Z",
+        "url": "https://greasyfork.org/users/1539831-chiam-zhang"
+      }
+    ],
+    "name": "网站数据清除工具 Website Data Cleaner",
+    "description": "自动识别系统语言，一键清除当前网站各类数据（支持中英文界面）",
+    "url": "https://greasyfork.org/scripts/556408-%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%B8%85%E9%99%A4%E5%B7%A5%E5%85%B7-website-data-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/556408/%E7%BD%91%E7%AB%99%E6%95%B0%E6%8D%AE%E6%B8%85%E9%99%A4%E5%B7%A5%E5%85%B7%20Website%20Data%20Cleaner.user.js",
+    "code_size": 18198,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556298,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T15:37:00.000Z",
+    "code_updated_at": "2025-11-19T15:55:32.000Z",
+    "namespace": "owenvoke",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 6932,
+        "name": "owenvoke",
+        "created_at": "2014-11-17T20:26:25.000Z",
+        "url": "https://greasyfork.org/users/6932-owenvoke"
+      }
+    ],
+    "name": "SpoolanDB: Filament Unger",
+    "description": "Generate a SpoolmanDB filaments entry for Filament Unger.",
+    "url": "https://greasyfork.org/scripts/556298-spoolandb-filament-unger",
+    "code_url": "https://update.greasyfork.org/scripts/556298/SpoolanDB%3A%20Filament%20Unger.user.js",
+    "code_size": 2330,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

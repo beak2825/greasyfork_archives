@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556152,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-18T02:53:03.000Z",
+    "code_updated_at": "2025-11-18T02:53:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1526786,
+        "name": "LangYa466",
+        "created_at": "2025-10-15T02:55:21.000Z",
+        "url": "https://greasyfork.org/users/1526786-langya466"
+      }
+    ],
+    "name": "NodeSeek 高级搜索 (自动主题)",
+    "description": "为 NodeSeek 搜索结果页面添加高级功能，自动适配网站的亮色和暗色主题。",
+    "url": "https://greasyfork.org/scripts/556152-nodeseek-%E9%AB%98%E7%BA%A7%E6%90%9C%E7%B4%A2-%E8%87%AA%E5%8A%A8%E4%B8%BB%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/556152/NodeSeek%20%E9%AB%98%E7%BA%A7%E6%90%9C%E7%B4%A2%20%28%E8%87%AA%E5%8A%A8%E4%B8%BB%E9%A2%98%29.user.js",
+    "code_size": 8505,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

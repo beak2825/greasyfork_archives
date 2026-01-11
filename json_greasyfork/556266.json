@@ -1,0 +1,34 @@
+{
+  "id": 556266,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-19T11:09:16.000Z",
+  "code_updated_at": "2025-12-01T01:04:11.000Z",
+  "namespace": "https://greasyfork.org/de/users/1516523-martink",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516523,
+      "name": "martink",
+      "created_at": "2025-09-18T09:31:20.000Z",
+      "url": "https://greasyfork.org/users/1516523-martink",
+      "scripts": []
+    }
+  ],
+  "name": "enhanced template editor",
+  "description": "Gruppen-Spalten",
+  "url": "https://greasyfork.org/scripts/556266-enhanced-template-editor",
+  "code_url": "https://update.greasyfork.org/scripts/556266/enhanced%20template%20editor.user.js",
+  "code_size": 9127,
+  "license": "MIT License",
+  "version": "0.3.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

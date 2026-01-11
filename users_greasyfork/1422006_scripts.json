@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556380,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T11:02:39.000Z",
+    "code_updated_at": "2025-11-20T11:02:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1422006,
+        "name": "An0nX",
+        "created_at": "2025-01-11T11:33:12.000Z",
+        "url": "https://greasyfork.org/users/1422006-an0nx"
+      }
+    ],
+    "name": "Steam Showcase Perfect Sync",
+    "description": "Invisible sync: hides showcases until fully loaded, then fades them in perfectly synced. No buttons.",
+    "url": "https://greasyfork.org/scripts/556380-steam-showcase-perfect-sync",
+    "code_url": "https://update.greasyfork.org/scripts/556380/Steam%20Showcase%20Perfect%20Sync.user.js",
+    "code_size": 5177,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

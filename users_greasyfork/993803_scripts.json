@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556374,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T10:11:24.000Z",
+    "code_updated_at": "2026-01-06T02:09:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 993803,
+        "name": "Gentle Zhou",
+        "created_at": "2022-12-07T04:51:39.000Z",
+        "url": "https://greasyfork.org/users/993803-gentle-zhou"
+      }
+    ],
+    "name": "TikTok Market Scope Data Extractor",
+    "description": "抓取 TikTok Market Scope 的商品品类洞察和商品洞察数据",
+    "url": "https://greasyfork.org/scripts/556374-tiktok-market-scope-data-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/556374/TikTok%20Market%20Scope%20Data%20Extractor.user.js",
+    "code_size": 30136,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

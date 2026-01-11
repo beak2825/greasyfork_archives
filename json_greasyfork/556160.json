@@ -1,0 +1,59 @@
+{
+  "id": 556160,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-18T04:42:19.000Z",
+  "code_updated_at": "2025-11-18T04:42:19.000Z",
+  "namespace": "https://greasyfork.org/users/1532336",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532336,
+      "name": "angel12538",
+      "created_at": "2025-10-30T15:37:21.000Z",
+      "url": "https://greasyfork.org/users/1532336-angel12538",
+      "scripts": [
+        {
+          "id": 556160,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-18T04:42:19.000Z",
+          "code_updated_at": "2025-11-18T04:42:19.000Z",
+          "namespace": "https://greasyfork.org/users/1532336",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站批量取关未更新UP",
+          "description": "并发扫描关注列表；若连续10个UP无动态/被反爬则暂停，手动过图后可继续；扫描结束后自动复核无动态名单；最后慢速取关",
+          "url": "https://greasyfork.org/scripts/556160-b%E7%AB%99%E6%89%B9%E9%87%8F%E5%8F%96%E5%85%B3%E6%9C%AA%E6%9B%B4%E6%96%B0up",
+          "code_url": "https://update.greasyfork.org/scripts/556160/B%E7%AB%99%E6%89%B9%E9%87%8F%E5%8F%96%E5%85%B3%E6%9C%AA%E6%9B%B4%E6%96%B0UP.user.js",
+          "code_size": 18046,
+          "license": null,
+          "version": "1.3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站批量取关未更新UP",
+  "description": "并发扫描关注列表；若连续10个UP无动态/被反爬则暂停，手动过图后可继续；扫描结束后自动复核无动态名单；最后慢速取关",
+  "url": "https://greasyfork.org/scripts/556160-b%E7%AB%99%E6%89%B9%E9%87%8F%E5%8F%96%E5%85%B3%E6%9C%AA%E6%9B%B4%E6%96%B0up",
+  "code_url": "https://update.greasyfork.org/scripts/556160/B%E7%AB%99%E6%89%B9%E9%87%8F%E5%8F%96%E5%85%B3%E6%9C%AA%E6%9B%B4%E6%96%B0UP.user.js",
+  "code_size": 18046,
+  "license": null,
+  "version": "1.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

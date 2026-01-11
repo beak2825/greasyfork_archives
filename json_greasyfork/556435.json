@@ -1,0 +1,33 @@
+{
+  "id": 556435,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T21:38:54.000Z",
+  "code_updated_at": "2025-11-20T21:38:54.000Z",
+  "namespace": "https://dr.hawkward.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 10021,
+      "name": "Karuga",
+      "created_at": "2015-03-28T16:46:37.000Z",
+      "url": "https://greasyfork.org/users/10021-karuga"
+    }
+  ],
+  "name": "DR Sale Rate and Oz Overlay (Auto-buy, Always-on Overlay)",
+  "description": "Overlay with persistent stats and auto-buy logic for QuickBuySummary page",
+  "url": "https://greasyfork.org/scripts/556435-dr-sale-rate-and-oz-overlay-auto-buy-always-on-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/556435/DR%20Sale%20Rate%20and%20Oz%20Overlay%20%28Auto-buy%2C%20Always-on%20Overlay%29.user.js",
+  "code_size": 15771,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

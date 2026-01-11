@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556216,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-18T22:08:47.000Z",
+    "code_updated_at": "2025-12-15T20:10:23.000Z",
+    "namespace": "https://precilens.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539211,
+        "name": "Precilens",
+        "created_at": "2025-11-18T22:04:57.000Z",
+        "url": "https://greasyfork.org/users/1539211-precilens"
+      }
+    ],
+    "name": "Click&Fit",
+    "description": "Module Click&Fit avec upload topographies et autres fonctionnalités",
+    "url": "https://greasyfork.org/scripts/556216-click-fit",
+    "code_url": "https://update.greasyfork.org/scripts/556216/ClickFit.user.js",
+    "code_size": 232642,
+    "license": "MIT License",
+    "version": "5.1.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 556345,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T04:16:52.000Z",
+  "code_updated_at": "2025-11-21T03:00:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1539613,
+      "name": "nkucc",
+      "created_at": "2025-11-20T04:12:53.000Z",
+      "url": "https://greasyfork.org/users/1539613-nkucc",
+      "scripts": [
+        {
+          "id": 556345,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T04:16:52.000Z",
+          "code_updated_at": "2025-11-21T03:00:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "湖南干部教育-自动刷文本(文案优化版)",
+          "description": "自动刷文本课。",
+          "url": "https://greasyfork.org/scripts/556345-%E6%B9%96%E5%8D%97%E5%B9%B2%E9%83%A8%E6%95%99%E8%82%B2-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%87%E6%9C%AC-%E6%96%87%E6%A1%88%E4%BC%98%E5%8C%96%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/556345/%E6%B9%96%E5%8D%97%E5%B9%B2%E9%83%A8%E6%95%99%E8%82%B2-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%87%E6%9C%AC%28%E6%96%87%E6%A1%88%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+          "code_size": 26695,
+          "license": "MIT License",
+          "version": "0.0.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "湖南干部教育-自动刷文本(文案优化版)",
+  "description": "自动刷文本课。",
+  "url": "https://greasyfork.org/scripts/556345-%E6%B9%96%E5%8D%97%E5%B9%B2%E9%83%A8%E6%95%99%E8%82%B2-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%87%E6%9C%AC-%E6%96%87%E6%A1%88%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/556345/%E6%B9%96%E5%8D%97%E5%B9%B2%E9%83%A8%E6%95%99%E8%82%B2-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%87%E6%9C%AC%28%E6%96%87%E6%A1%88%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+  "code_size": 26695,
+  "license": "MIT License",
+  "version": "0.0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

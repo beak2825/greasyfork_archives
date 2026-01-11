@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556395,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-20T14:10:22.000Z",
+    "code_updated_at": "2025-11-20T14:10:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://www.youtube.com/channel/UC4jY6sazFWsQaqLPIZXXSbA",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 104641,
+        "name": "KANALIN KRALI",
+        "created_at": "2017-02-21T18:16:43.000Z",
+        "url": "https://greasyfork.org/users/104641-kanalin-krali"
+      }
+    ],
+    "name": "İŞKUR Anti-Zaman Aşımı ve Bana Uygun İşler",
+    "description": "İŞKUR oturum süresi aşımını engeller ve otomatik olarak iş arama ekranına yönlendirir.",
+    "url": "https://greasyfork.org/scripts/556395-i-%C5%9Fkur-anti-zaman-a%C5%9F%C4%B1m%C4%B1-ve-bana-uygun-i-%C5%9Fler",
+    "code_url": "https://update.greasyfork.org/scripts/556395/%C4%B0%C5%9EKUR%20Anti-Zaman%20A%C5%9F%C4%B1m%C4%B1%20ve%20Bana%20Uygun%20%C4%B0%C5%9Fler.user.js",
+    "code_size": 2261,
+    "license": null,
+    "version": "1.1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

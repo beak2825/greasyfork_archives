@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556155,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-18T03:54:08.000Z",
+    "code_updated_at": "2025-11-18T08:26:27.000Z",
+    "namespace": "https://github.com/HardBrick21",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538969,
+        "name": "lx h",
+        "created_at": "2025-11-18T03:49:58.000Z",
+        "url": "https://greasyfork.org/users/1538969-lx-h"
+      }
+    ],
+    "name": "XXL-Job_Select_Search",
+    "description": "为XXL-Job的原生Select下拉框添加搜索功能（基于Choices.js）",
+    "url": "https://greasyfork.org/scripts/556155-xxl-job-select-search",
+    "code_url": "https://update.greasyfork.org/scripts/556155/XXL-Job_Select_Search.user.js",
+    "code_size": 1928,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

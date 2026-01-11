@@ -1,0 +1,59 @@
+{
+  "id": 556384,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T12:42:47.000Z",
+  "code_updated_at": "2025-11-21T07:14:33.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1493642-gggggzhu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1493642,
+      "name": "gggggzhu",
+      "created_at": "2025-07-11T03:39:59.000Z",
+      "url": "https://greasyfork.org/users/1493642-gggggzhu",
+      "scripts": [
+        {
+          "id": 556384,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T12:42:47.000Z",
+          "code_updated_at": "2025-11-21T07:14:33.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1493642-gggggzhu",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Factorio Mod Batch Downloader",
+          "description": "Batch manage and download Factorio mods without logging in.",
+          "url": "https://greasyfork.org/scripts/556384-factorio-mod-batch-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/556384/Factorio%20Mod%20Batch%20Downloader.user.js",
+          "code_size": 10018,
+          "license": "MIT Copyright ggggz",
+          "version": "1.32",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Factorio Mod Batch Downloader",
+  "description": "Batch manage and download Factorio mods without logging in.",
+  "url": "https://greasyfork.org/scripts/556384-factorio-mod-batch-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/556384/Factorio%20Mod%20Batch%20Downloader.user.js",
+  "code_size": 10018,
+  "license": "MIT Copyright ggggz",
+  "version": "1.32",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

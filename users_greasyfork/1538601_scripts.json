@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556164,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-18T05:52:40.000Z",
+    "code_updated_at": "2025-11-18T17:56:24.000Z",
+    "namespace": "393033152@qq.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538601,
+        "name": "Gavrain",
+        "created_at": "2025-11-17T04:27:42.000Z",
+        "url": "https://greasyfork.org/users/1538601-gavrain"
+      }
+    ],
+    "name": "ff14超域传送助手",
+    "description": "JavaScript",
+    "url": "https://greasyfork.org/scripts/556164-ff14%E8%B6%85%E5%9F%9F%E4%BC%A0%E9%80%81%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/556164/ff14%E8%B6%85%E5%9F%9F%E4%BC%A0%E9%80%81%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 15640,
+    "license": "Apache License 2.0",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

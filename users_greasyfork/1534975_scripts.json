@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556227,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T02:21:57.000Z",
+    "code_updated_at": "2025-11-21T06:41:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/kanzakichiya/Twitter-Long-Image-Generator/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1534975,
+        "name": "kanzakichiya",
+        "created_at": "2025-11-07T05:08:31.000Z",
+        "url": "https://greasyfork.org/users/1534975-kanzakichiya"
+      }
+    ],
+    "name": "推特长图生成",
+    "description": "将推文转换为高清长图片。修复了日期换行和截断的问题。",
+    "url": "https://greasyfork.org/scripts/556227-%E6%8E%A8%E7%89%B9%E9%95%BF%E5%9B%BE%E7%94%9F%E6%88%90",
+    "code_url": "https://update.greasyfork.org/scripts/556227/%E6%8E%A8%E7%89%B9%E9%95%BF%E5%9B%BE%E7%94%9F%E6%88%90.user.js",
+    "code_size": 172898,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
