@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559915,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T08:42:14.000Z",
+    "code_updated_at": "2025-12-23T08:42:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430831,
+        "name": "jimchen2",
+        "created_at": "2025-02-03T11:43:16.000Z",
+        "url": "https://greasyfork.org/users/1430831-jimchen2"
+      }
+    ],
+    "name": "AI Chat - Auto Russian Prompt (Google AI & LMSYS)",
+    "description": "Automatically types \"всегда отвечайте на русском языке\" into the prompt box on page load for Google AI Studio and LMSYS.",
+    "url": "https://greasyfork.org/scripts/559915-ai-chat-auto-russian-prompt-google-ai-lmsys",
+    "code_url": "https://update.greasyfork.org/scripts/559915/AI%20Chat%20-%20Auto%20Russian%20Prompt%20%28Google%20AI%20%20LMSYS%29.user.js",
+    "code_size": 2930,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559672,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T04:23:06.000Z",
+    "code_updated_at": "2025-12-21T04:23:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430831,
+        "name": "jimchen2",
+        "created_at": "2025-02-03T11:43:16.000Z",
+        "url": "https://greasyfork.org/users/1430831-jimchen2"
+      }
+    ],
+    "name": "Smart Cyrillic Address Bar to Yandex",
+    "description": "Redirect Cyrillic searches to Yandex if initiated from the Address Bar",
+    "url": "https://greasyfork.org/scripts/559672-smart-cyrillic-address-bar-to-yandex",
+    "code_url": "https://update.greasyfork.org/scripts/559672/Smart%20Cyrillic%20Address%20Bar%20to%20Yandex.user.js",
+    "code_size": 828,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

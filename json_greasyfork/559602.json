@@ -1,0 +1,59 @@
+{
+  "id": 559602,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-20T12:55:21.000Z",
+  "code_updated_at": "2025-12-20T12:55:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550363,
+      "name": "Ahnaf Tahmid",
+      "created_at": "2025-12-20T12:49:22.000Z",
+      "url": "https://greasyfork.org/users/1550363-ahnaf-tahmid",
+      "scripts": [
+        {
+          "id": 559602,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-20T12:55:21.000Z",
+          "code_updated_at": "2025-12-20T12:55:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TC PC Universal Randomizer Tester - Protected UI",
+          "description": "Protected UI with total freedom for Min/Max numbers",
+          "url": "https://greasyfork.org/scripts/559602-tc-pc-universal-randomizer-tester-protected-ui",
+          "code_url": "https://update.greasyfork.org/scripts/559602/TC%20PC%20Universal%20Randomizer%20Tester%20-%20Protected%20UI.user.js",
+          "code_size": 4451,
+          "license": "GNU GPLv3",
+          "version": "3.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TC PC Universal Randomizer Tester - Protected UI",
+  "description": "Protected UI with total freedom for Min/Max numbers",
+  "url": "https://greasyfork.org/scripts/559602-tc-pc-universal-randomizer-tester-protected-ui",
+  "code_url": "https://update.greasyfork.org/scripts/559602/TC%20PC%20Universal%20Randomizer%20Tester%20-%20Protected%20UI.user.js",
+  "code_size": 4451,
+  "license": "GNU GPLv3",
+  "version": "3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

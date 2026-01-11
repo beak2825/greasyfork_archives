@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560386,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T07:21:11.000Z",
+    "code_updated_at": "2025-12-27T07:21:11.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490325,
+        "name": "Edward7x",
+        "created_at": "2025-06-30T13:37:30.000Z",
+        "url": "https://greasyfork.org/users/1490325-edward7x"
+      }
+    ],
+    "name": "XET H5 PC 样式优化",
+    "description": "为 *.h5.xet.citv.cn 页面提供电脑端样式优化",
+    "url": "https://greasyfork.org/scripts/560386-xet-h5-pc-%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/560386/XET%20H5%20PC%20%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 2251,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560384,
+    "daily_installs": 2,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T07:13:44.000Z",
+    "code_updated_at": "2025-12-27T07:13:44.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490325,
+        "name": "Edward7x",
+        "created_at": "2025-06-30T13:37:30.000Z",
+        "url": "https://greasyfork.org/users/1490325-edward7x"
+      }
+    ],
+    "name": "小鹅通 m3u8 导出 / 一键复制工具",
+    "description": "自动监听页面请求，识别并评分课程播放过程中出现的 m3u8 地址，智能筛选主播放列表（master m3u8），并支持一键导出 JSON 或复制到剪贴板，适用于小鹅通网页端课程视频分析与下载辅助",
+    "url": "https://greasyfork.org/scripts/560384-%E5%B0%8F%E9%B9%85%E9%80%9A-m3u8-%E5%AF%BC%E5%87%BA-%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/560384/%E5%B0%8F%E9%B9%85%E9%80%9A%20m3u8%20%E5%AF%BC%E5%87%BA%20%20%E4%B8%80%E9%94%AE%E5%A4%8D%E5%88%B6%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 3771,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

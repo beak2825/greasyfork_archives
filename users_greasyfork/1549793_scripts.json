@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559434,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T00:23:01.000Z",
+    "code_updated_at": "2025-12-19T00:26:03.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1549793-swzift",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549793,
+        "name": "swzift",
+        "created_at": "2025-12-19T00:17:50.000Z",
+        "url": "https://greasyfork.org/users/1549793-swzift"
+      }
+    ],
+    "name": "Crowd ID Extractor (人群ID获取插件)",
+    "description": "批量 / 单行获取数据引擎、达摩盘、策略平台、京东人群 ID",
+    "url": "https://greasyfork.org/scripts/559434-crowd-id-extractor-%E4%BA%BA%E7%BE%A4id%E8%8E%B7%E5%8F%96%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/559434/Crowd%20ID%20Extractor%20%28%E4%BA%BA%E7%BE%A4ID%E8%8E%B7%E5%8F%96%E6%8F%92%E4%BB%B6%29.user.js",
+    "code_size": 14813,
+    "license": "MIT License",
+    "version": "2025-12-18.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

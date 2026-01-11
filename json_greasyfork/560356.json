@@ -1,0 +1,33 @@
+{
+  "id": 560356,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-26T23:39:49.000Z",
+  "code_updated_at": "2025-12-26T23:39:49.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1552905,
+      "name": "даниил Грахничев",
+      "created_at": "2025-12-26T23:21:32.000Z",
+      "url": "https://greasyfork.org/users/1552905-%D0%B4%D0%B0%D0%BD%D0%B8%D0%B8%D0%BB-%D0%B3%D1%80%D0%B0%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D0%B2"
+    }
+  ],
+  "name": "Государственные организации | by Danya Chips",
+  "description": "Скрипт для руководства государственных организаций сервера CHERRY.",
+  "url": "https://greasyfork.org/scripts/560356-%D0%B3%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5-%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8-by-danya-chips",
+  "code_url": "https://update.greasyfork.org/scripts/560356/%D0%93%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BE%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D0%B8%20%7C%20by%20Danya%20Chips.user.js",
+  "code_size": 37788,
+  "license": "MIT License",
+  "version": "2.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

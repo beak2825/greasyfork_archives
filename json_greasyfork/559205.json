@@ -1,0 +1,59 @@
+{
+  "id": 559205,
+  "daily_installs": 1,
+  "total_installs": 126,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-17T07:36:15.000Z",
+  "code_updated_at": "2025-12-22T09:05:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549092,
+      "name": "苏行",
+      "created_at": "2025-12-17T07:07:13.000Z",
+      "url": "https://greasyfork.org/users/1549092-%E8%8B%8F%E8%A1%8C",
+      "scripts": [
+        {
+          "id": 559205,
+          "daily_installs": 1,
+          "total_installs": 126,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-17T07:36:15.000Z",
+          "code_updated_at": "2025-12-22T09:05:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Everyday Profit Plus",
+          "description": "在原 Everyday Profit 基础上增强：保留原“总净资产”历史与标签；新增每日盈亏柱状图+均线、导出/导入备份、数据管理（编辑/删除/异常清理）、以及 MWITools 资产分项（装备/库存/订单/房子/技能）变化图（单按钮切换）",
+          "url": "https://greasyfork.org/scripts/559205-everyday-profit-plus",
+          "code_url": "https://update.greasyfork.org/scripts/559205/Everyday%20Profit%20Plus.user.js",
+          "code_size": 99834,
+          "license": "MIT License",
+          "version": "2025.12.22.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Everyday Profit Plus",
+  "description": "在原 Everyday Profit 基础上增强：保留原“总净资产”历史与标签；新增每日盈亏柱状图+均线、导出/导入备份、数据管理（编辑/删除/异常清理）、以及 MWITools 资产分项（装备/库存/订单/房子/技能）变化图（单按钮切换）",
+  "url": "https://greasyfork.org/scripts/559205-everyday-profit-plus",
+  "code_url": "https://update.greasyfork.org/scripts/559205/Everyday%20Profit%20Plus.user.js",
+  "code_size": 99834,
+  "license": "MIT License",
+  "version": "2025.12.22.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

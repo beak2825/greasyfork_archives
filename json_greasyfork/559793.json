@@ -1,0 +1,59 @@
+{
+  "id": 559793,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-22T09:16:45.000Z",
+  "code_updated_at": "2025-12-25T21:55:58.000Z",
+  "namespace": "https://torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550983,
+      "name": "Dozzi87",
+      "created_at": "2025-12-22T08:33:22.000Z",
+      "url": "https://greasyfork.org/users/1550983-dozzi87",
+      "scripts": [
+        {
+          "id": 559793,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-22T09:16:45.000Z",
+          "code_updated_at": "2025-12-25T21:55:58.000Z",
+          "namespace": "https://torn.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Live RW Hits And Xanax Used",
+          "description": "Floating live panel: Ranked War hits vs armory Xanax withdrawals, with API key input stored locally.",
+          "url": "https://greasyfork.org/scripts/559793-live-rw-hits-and-xanax-used",
+          "code_url": "https://update.greasyfork.org/scripts/559793/Live%20RW%20Hits%20And%20Xanax%20Used.user.js",
+          "code_size": 16417,
+          "license": null,
+          "version": "2.3.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Live RW Hits And Xanax Used",
+  "description": "Floating live panel: Ranked War hits vs armory Xanax withdrawals, with API key input stored locally.",
+  "url": "https://greasyfork.org/scripts/559793-live-rw-hits-and-xanax-used",
+  "code_url": "https://update.greasyfork.org/scripts/559793/Live%20RW%20Hits%20And%20Xanax%20Used.user.js",
+  "code_size": 16417,
+  "license": null,
+  "version": "2.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

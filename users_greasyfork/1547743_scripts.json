@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558971,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T04:15:13.000Z",
+    "code_updated_at": "2025-12-15T04:15:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547743,
+        "name": "章坷沥",
+        "created_at": "2025-12-13T17:24:19.000Z",
+        "url": "https://greasyfork.org/users/1547743-%E7%AB%A0%E5%9D%B7%E6%B2%A5"
+      }
+    ],
+    "name": "为了川香酱",
+    "description": "思想政治不及格",
+    "url": "https://greasyfork.org/scripts/558971-%E4%B8%BA%E4%BA%86%E5%B7%9D%E9%A6%99%E9%85%B1",
+    "code_url": "https://update.greasyfork.org/scripts/558971/%E4%B8%BA%E4%BA%86%E5%B7%9D%E9%A6%99%E9%85%B1.user.js",
+    "code_size": 3884,
+    "license": "MIT License",
+    "version": "2025-12-13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558830,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-13T17:26:34.000Z",
+    "code_updated_at": "2025-12-13T17:26:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547743,
+        "name": "章坷沥",
+        "created_at": "2025-12-13T17:24:19.000Z",
+        "url": "https://greasyfork.org/users/1547743-%E7%AB%A0%E5%9D%B7%E6%B2%A5"
+      }
+    ],
+    "name": "为了川香酱",
+    "description": "思想政治不及格",
+    "url": "https://greasyfork.org/scripts/558830-%E4%B8%BA%E4%BA%86%E5%B7%9D%E9%A6%99%E9%85%B1",
+    "code_url": "https://update.greasyfork.org/scripts/558830/%E4%B8%BA%E4%BA%86%E5%B7%9D%E9%A6%99%E9%85%B1.user.js",
+    "code_size": 3656,
+    "license": "MIT License",
+    "version": "2025-12-13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

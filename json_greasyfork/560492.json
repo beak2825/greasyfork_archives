@@ -1,0 +1,34 @@
+{
+  "id": 560492,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-28T05:01:58.000Z",
+  "code_updated_at": "2025-12-28T05:01:58.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1546436-zasternight",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1546436,
+      "name": "zasternight",
+      "created_at": "2025-12-10T01:46:45.000Z",
+      "url": "https://greasyfork.org/users/1546436-zasternight",
+      "scripts": []
+    }
+  ],
+  "name": "Jellyfin 真实视频下载",
+  "description": "在Jellyfin详情页和更多菜单添加下载按钮。智能适配IDM，强制转换Strm为视频格式下载。",
+  "url": "https://greasyfork.org/scripts/560492-jellyfin-%E7%9C%9F%E5%AE%9E%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/560492/Jellyfin%20%E7%9C%9F%E5%AE%9E%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 9549,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559845,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T17:43:09.000Z",
+    "code_updated_at": "2025-12-22T17:43:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257939,
+        "name": "Accus1958",
+        "created_at": "2024-02-05T19:34:30.000Z",
+        "url": "https://greasyfork.org/users/1257939-accus1958"
+      }
+    ],
+    "name": "Apotal/Medikamente-per-Klick Price Comparison",
+    "description": "Compare prices with Medikamente-per-Klick",
+    "url": "https://greasyfork.org/scripts/559845-apotal-medikamente-per-klick-price-comparison",
+    "code_url": "https://update.greasyfork.org/scripts/559845/ApotalMedikamente-per-Klick%20Price%20Comparison.user.js",
+    "code_size": 4658,
+    "license": "GPLv3",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

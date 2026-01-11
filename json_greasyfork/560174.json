@@ -1,0 +1,34 @@
+{
+  "id": 560174,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-25T10:02:24.000Z",
+  "code_updated_at": "2025-12-25T10:02:23.000Z",
+  "namespace": "https://123456321.xyz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1552345,
+      "name": "Abacki Babacki",
+      "created_at": "2025-12-25T09:55:24.000Z",
+      "url": "https://greasyfork.org/users/1552345-abacki-babacki",
+      "scripts": []
+    }
+  ],
+  "name": "24Coordination",
+  "description": "24coordination,on 24scope, click C to open",
+  "url": "https://greasyfork.org/scripts/560174-24coordination",
+  "code_url": "https://update.greasyfork.org/scripts/560174/24Coordination.user.js",
+  "code_size": 2665,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

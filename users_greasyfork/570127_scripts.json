@@ -1,0 +1,233 @@
+[
+  {
+    "id": 560507,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T09:32:39.000Z",
+    "code_updated_at": "2025-12-30T14:29:53.000Z",
+    "namespace": "https://greasyfork.org/users/570127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "ちんすこう大喜利",
+    "description": "【非公式】ちんすこう大喜利の投稿欄を非ログイン時にグレーアウトさせます",
+    "url": "https://greasyfork.org/scripts/560507-%E3%81%A1%E3%82%93%E3%81%99%E3%81%93%E3%81%86%E5%A4%A7%E5%96%9C%E5%88%A9",
+    "code_url": "https://update.greasyfork.org/scripts/560507/%E3%81%A1%E3%82%93%E3%81%99%E3%81%93%E3%81%86%E5%A4%A7%E5%96%9C%E5%88%A9.user.js",
+    "code_size": 2134,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560214,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-25T15:27:01.000Z",
+    "code_updated_at": "2025-12-26T00:27:47.000Z",
+    "namespace": "https://greasyfork.org/users/570127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "ABEMA Playback Rate Shortcut (d/s/g/r)",
+    "description": "ABEMA VODの再生速度を d/s で段階変更、g/r で 1.7x に設定",
+    "url": "https://greasyfork.org/scripts/560214-abema-playback-rate-shortcut-d-s-g-r",
+    "code_url": "https://update.greasyfork.org/scripts/560214/ABEMA%20Playback%20Rate%20Shortcut%20%28dsgr%29.user.js",
+    "code_size": 1971,
+    "license": "MIT License",
+    "version": "2025.12.26.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560206,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-25T14:23:45.000Z",
+    "code_updated_at": "2025-12-26T20:45:20.000Z",
+    "namespace": "https://greasyfork.org/ja/users/570127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "X Sidebar Shortcut Hints",
+    "description": "X: Sidebar Shortcut Hints",
+    "url": "https://greasyfork.org/scripts/560206-x-sidebar-shortcut-hints",
+    "code_url": "https://update.greasyfork.org/scripts/560206/X%20Sidebar%20Shortcut%20Hints.user.js",
+    "code_size": 1721,
+    "license": "MIT License",
+    "version": "0.2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560191,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-25T12:15:59.000Z",
+    "code_updated_at": "2025-12-25T12:15:59.000Z",
+    "namespace": "https://greasyfork.org/ja/users/570127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "Twitter → Wikipedia Cite tweet Copier (TL + 検索結果対応)",
+    "description": "タイムライン・検索結果の各ツイートにも📋Citeボタンを追加（Wikipedia用）",
+    "url": "https://greasyfork.org/scripts/560191-twitter-wikipedia-cite-tweet-copier-tl-%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E5%AF%BE%E5%BF%9C",
+    "code_url": "https://update.greasyfork.org/scripts/560191/Twitter%20%E2%86%92%20Wikipedia%20Cite%20tweet%20Copier%20%28TL%20%2B%20%E6%A4%9C%E7%B4%A2%E7%B5%90%E6%9E%9C%E5%AF%BE%E5%BF%9C%29.user.js",
+    "code_size": 3293,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559712,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T13:18:51.000Z",
+    "code_updated_at": "2026-01-03T02:07:14.000Z",
+    "namespace": "https://greasyfork.org/ja/users/570127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "X:Following Timeline",
+    "description": "Switch to \"Following\" once, and cycle Home tabs with ← →",
+    "url": "https://greasyfork.org/scripts/559712-x-following-timeline",
+    "code_url": "https://update.greasyfork.org/scripts/559712/X%3AFollowing%20Timeline.user.js",
+    "code_size": 2178,
+    "license": "MIT License",
+    "version": "1.7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558889,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T09:37:27.000Z",
+    "code_updated_at": "2025-12-25T12:06:32.000Z",
+    "namespace": "https://greasyfork.org/ja/users/570127",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "Disable speed change of Video Speed Controller",
+    "description": "ABEMAで d などの単キーショートカットを無効化する",
+    "url": "https://greasyfork.org/scripts/558889-disable-speed-change-of-video-speed-controller",
+    "code_url": "https://update.greasyfork.org/scripts/558889/Disable%20speed%20change%20of%20Video%20Speed%20Controller.user.js",
+    "code_size": 1231,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558840,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-13T20:24:03.000Z",
+    "code_updated_at": "2025-12-24T22:00:39.000Z",
+    "namespace": "https://greasyfork.org/ja/users/570127",
+    "support_url": "https://twitter.com/universato",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 570127,
+        "name": "universato",
+        "created_at": "2020-05-21T17:08:10.000Z",
+        "url": "https://greasyfork.org/users/570127-universato"
+      }
+    ],
+    "name": "Gmail pagination Key Shortcut",
+    "description": "paginate Gmail by arrow keys",
+    "url": "https://greasyfork.org/scripts/558840-gmail-pagination-key-shortcut",
+    "code_url": "https://update.greasyfork.org/scripts/558840/Gmail%20pagination%20Key%20Shortcut.user.js",
+    "code_size": 2223,
+    "license": "MIT License",
+    "version": "2025.12.25.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -129,6 +129,138 @@
     "version": "2.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560528,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T13:04:29.000Z",
+    "code_updated_at": "2025-12-28T13:04:29.000Z",
+    "namespace": "torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn F1x Users Fetch",
+    "description": "UserList → export users.txt (collect userIDs from the current UserList pages you browse)",
+    "url": "https://greasyfork.org/scripts/560528-torn-f1x-users-fetch",
+    "code_url": "https://update.greasyfork.org/scripts/560528/Torn%20F1x%20Users%20Fetch.user.js",
+    "code_size": 10711,
+    "license": null,
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560253,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T00:28:35.000Z",
+    "code_updated_at": "2025-12-26T08:37:57.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn — OC Helper Panel",
+    "description": "Floating OC panel: save API key, sync faction members, update available crimes, show who is in OC (and item status) + who is not registered.",
+    "url": "https://greasyfork.org/scripts/560253-torn-oc-helper-panel",
+    "code_url": "https://update.greasyfork.org/scripts/560253/Torn%20%E2%80%94%20OC%20Helper%20Panel.user.js",
+    "code_size": 16520,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559599,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T12:26:44.000Z",
+    "code_updated_at": "2025-12-20T12:26:44.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn — Chest Helper",
+    "description": "Christmas combination chest helper",
+    "url": "https://greasyfork.org/scripts/559599-torn-chest-helper",
+    "code_url": "https://update.greasyfork.org/scripts/559599/Torn%20%E2%80%94%20Chest%20Helper.user.js",
+    "code_size": 20052,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558512,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T12:52:55.000Z",
+    "code_updated_at": "2025-12-15T22:58:47.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn Elimination Team Panel",
+    "description": "Floating movable Elimination Team panel with filters",
+    "url": "https://greasyfork.org/scripts/558512-torn-elimination-team-panel",
+    "code_url": "https://update.greasyfork.org/scripts/558512/Torn%20Elimination%20Team%20Panel.user.js",
+    "code_size": 53761,
+    "license": null,
+    "version": "0.6.7",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

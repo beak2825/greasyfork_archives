@@ -1,0 +1,34 @@
+{
+  "id": 559720,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-21T15:05:00.000Z",
+  "code_updated_at": "2025-12-21T15:04:59.000Z",
+  "namespace": "https://greasyfork.org/users/1550737",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550737,
+      "name": "BestiKun",
+      "created_at": "2025-12-21T15:04:08.000Z",
+      "url": "https://greasyfork.org/users/1550737-bestikun",
+      "scripts": []
+    }
+  ],
+  "name": "TradingView Tradovate 订单标签盈亏显示",
+  "description": "将 TradingView Tradovate 止盈/止损挂单标签改为预计盈亏金额，并在拖动标签时实时刷新（Hook 原生渲染）。",
+  "url": "https://greasyfork.org/scripts/559720-tradingview-tradovate-%E8%AE%A2%E5%8D%95%E6%A0%87%E7%AD%BE%E7%9B%88%E4%BA%8F%E6%98%BE%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/559720/TradingView%20Tradovate%20%E8%AE%A2%E5%8D%95%E6%A0%87%E7%AD%BE%E7%9B%88%E4%BA%8F%E6%98%BE%E7%A4%BA.user.js",
+  "code_size": 12003,
+  "license": null,
+  "version": "1.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

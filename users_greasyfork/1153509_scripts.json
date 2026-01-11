@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560091,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T13:48:21.000Z",
+    "code_updated_at": "2025-12-24T13:49:27.000Z",
+    "namespace": "蒋晓楠",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1153509,
+        "name": "蒋晓楠",
+        "created_at": "2023-08-17T13:01:45.000Z",
+        "url": "https://greasyfork.org/users/1153509-%E8%92%8B%E6%99%93%E6%A5%A0"
+      }
+    ],
+    "name": "金投网专注看数据",
+    "description": "就看黄金和白银走势",
+    "url": "https://greasyfork.org/scripts/560091-%E9%87%91%E6%8A%95%E7%BD%91%E4%B8%93%E6%B3%A8%E7%9C%8B%E6%95%B0%E6%8D%AE",
+    "code_url": "https://update.greasyfork.org/scripts/560091/%E9%87%91%E6%8A%95%E7%BD%91%E4%B8%93%E6%B3%A8%E7%9C%8B%E6%95%B0%E6%8D%AE.user.js",
+    "code_size": 805,
+    "license": "MIT License",
+    "version": "20251224",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560089,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T13:47:05.000Z",
+    "code_updated_at": "2025-12-24T13:47:05.000Z",
+    "namespace": "蒋晓楠",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1153509,
+        "name": "蒋晓楠",
+        "created_at": "2023-08-17T13:01:45.000Z",
+        "url": "https://greasyfork.org/users/1153509-%E8%92%8B%E6%99%93%E6%A5%A0"
+      }
+    ],
+    "name": "YouTube作品列表查找",
+    "description": "到指定作品位置",
+    "url": "https://greasyfork.org/scripts/560089-youtube%E4%BD%9C%E5%93%81%E5%88%97%E8%A1%A8%E6%9F%A5%E6%89%BE",
+    "code_url": "https://update.greasyfork.org/scripts/560089/YouTube%E4%BD%9C%E5%93%81%E5%88%97%E8%A1%A8%E6%9F%A5%E6%89%BE.user.js",
+    "code_size": 1886,
+    "license": "MIT License",
+    "version": "20251222",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

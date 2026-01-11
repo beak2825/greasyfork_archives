@@ -1,0 +1,59 @@
+{
+  "id": 559366,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-18T14:44:05.000Z",
+  "code_updated_at": "2025-12-20T08:34:33.000Z",
+  "namespace": "https://e-qe.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549669,
+      "name": "achma",
+      "created_at": "2025-12-18T14:39:17.000Z",
+      "url": "https://greasyfork.org/users/1549669-achma",
+      "scripts": [
+        {
+          "id": 559366,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-18T14:44:05.000Z",
+          "code_updated_at": "2025-12-20T08:34:33.000Z",
+          "namespace": "https://e-qe.online/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "eqe fmpm - e-qe.online Shortcuts",
+          "description": "←→↑↓ → instant navigation • Space/`/Enter → check/submit",
+          "url": "https://greasyfork.org/scripts/559366-eqe-fmpm-e-qe-online-shortcuts",
+          "code_url": "https://update.greasyfork.org/scripts/559366/eqe%20fmpm%20-%20e-qeonline%20Shortcuts.user.js",
+          "code_size": 2222,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "eqe fmpm - e-qe.online Shortcuts",
+  "description": "←→↑↓ → instant navigation • Space/`/Enter → check/submit",
+  "url": "https://greasyfork.org/scripts/559366-eqe-fmpm-e-qe-online-shortcuts",
+  "code_url": "https://update.greasyfork.org/scripts/559366/eqe%20fmpm%20-%20e-qeonline%20Shortcuts.user.js",
+  "code_size": 2222,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

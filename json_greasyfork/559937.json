@@ -1,0 +1,33 @@
+{
+  "id": 559937,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T12:04:13.000Z",
+  "code_updated_at": "2025-12-23T12:04:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1519574,
+      "name": "LoneSpectator",
+      "created_at": "2025-09-26T10:02:04.000Z",
+      "url": "https://greasyfork.org/users/1519574-lonespectator"
+    }
+  ],
+  "name": "财务系统金额粘贴去空格",
+  "description": "在 cai.bistu.edu.cn 财务系统中，所有金额输入框（含新增行）粘贴时自动删除空格",
+  "url": "https://greasyfork.org/scripts/559937-%E8%B4%A2%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%87%91%E9%A2%9D%E7%B2%98%E8%B4%B4%E5%8E%BB%E7%A9%BA%E6%A0%BC",
+  "code_url": "https://update.greasyfork.org/scripts/559937/%E8%B4%A2%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%87%91%E9%A2%9D%E7%B2%98%E8%B4%B4%E5%8E%BB%E7%A9%BA%E6%A0%BC.user.js",
+  "code_size": 1869,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

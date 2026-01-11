@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560305,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T11:17:15.000Z",
+    "code_updated_at": "2025-12-26T11:58:12.000Z",
+    "namespace": "http://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552736,
+        "name": "larley",
+        "created_at": "2025-12-26T11:08:32.000Z",
+        "url": "https://greasyfork.org/users/1552736-larley"
+      }
+    ],
+    "name": "MSL Logger",
+    "description": "Decrypts Netflix MSL messages and logs them",
+    "url": "https://greasyfork.org/scripts/560305-msl-logger",
+    "code_url": "https://update.greasyfork.org/scripts/560305/MSL%20Logger.user.js",
+    "code_size": 7826,
+    "license": "CC BY-NC-ND 4.0",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

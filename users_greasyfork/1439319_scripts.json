@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559362,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T14:07:27.000Z",
+    "code_updated_at": "2025-12-18T14:07:26.000Z",
+    "namespace": "https://greasyfork.org/users/1439319",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439319,
+        "name": "Zcc09",
+        "created_at": "2025-02-24T09:57:42.000Z",
+        "url": "https://greasyfork.org/users/1439319-zcc09"
+      }
+    ],
+    "name": "Stremio Addon Manager",
+    "description": "Reorganize, rename, and manage Stremio addons directly from the web client.",
+    "url": "https://greasyfork.org/scripts/559362-stremio-addon-manager",
+    "code_url": "https://update.greasyfork.org/scripts/559362/Stremio%20Addon%20Manager.user.js",
+    "code_size": 25508,
+    "license": "MIT License",
+    "version": "1.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559355,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T13:11:29.000Z",
+    "code_updated_at": "2025-12-18T13:11:29.000Z",
+    "namespace": "https://greasyfork.org/users/1439319",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439319,
+        "name": "Zcc09",
+        "created_at": "2025-02-24T09:57:42.000Z",
+        "url": "https://greasyfork.org/users/1439319-zcc09"
+      }
+    ],
+    "name": "TikTok Sidebar Toggle",
+    "description": "One-click toggle for TikTok sidebar.",
+    "url": "https://greasyfork.org/scripts/559355-tiktok-sidebar-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/559355/TikTok%20Sidebar%20Toggle.user.js",
+    "code_size": 2694,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

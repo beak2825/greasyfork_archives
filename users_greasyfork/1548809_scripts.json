@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559103,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T12:34:11.000Z",
+    "code_updated_at": "2025-12-16T12:35:53.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/559103-%E4%B8%8A%E7%A7%91%E5%A4%A7%E5%9B%9E%E6%94%BE%E8%A7%86%E9%A2%91%E5%8E%BB%E6%B0%B4%E5%8D%B0-elrc-watermark-remover",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548809,
+        "name": "FrozenYears",
+        "created_at": "2025-12-16T12:26:41.000Z",
+        "url": "https://greasyfork.org/users/1548809-frozenyears"
+      }
+    ],
+    "name": "上科大回放视频去水印 (ELRC Watermark Remover)",
+    "description": "移除 elrc.shanghaitech.edu.cn 视频播放页面的 id=\"wm_div_id\" 水印",
+    "url": "https://greasyfork.org/scripts/559103-%E4%B8%8A%E7%A7%91%E5%A4%A7%E5%9B%9E%E6%94%BE%E8%A7%86%E9%A2%91%E5%8E%BB%E6%B0%B4%E5%8D%B0-elrc-watermark-remover",
+    "code_url": "https://update.greasyfork.org/scripts/559103/%E4%B8%8A%E7%A7%91%E5%A4%A7%E5%9B%9E%E6%94%BE%E8%A7%86%E9%A2%91%E5%8E%BB%E6%B0%B4%E5%8D%B0%20%28ELRC%20Watermark%20Remover%29.user.js",
+    "code_size": 1454,
+    "license": "GPL License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

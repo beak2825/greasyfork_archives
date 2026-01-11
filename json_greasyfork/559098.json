@@ -1,0 +1,59 @@
+{
+  "id": 559098,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-16T11:40:15.000Z",
+  "code_updated_at": "2025-12-16T11:40:15.000Z",
+  "namespace": "https://example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542174,
+      "name": "ebine",
+      "created_at": "2025-11-27T11:48:08.000Z",
+      "url": "https://greasyfork.org/users/1542174-ebine",
+      "scripts": [
+        {
+          "id": 559098,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-16T11:40:15.000Z",
+          "code_updated_at": "2025-12-16T11:40:15.000Z",
+          "namespace": "https://example.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "X Home: Force Following tab",
+          "description": "Always switch Home timeline to \"Following\" (フォロー中)",
+          "url": "https://greasyfork.org/scripts/559098-x-home-force-following-tab",
+          "code_url": "https://update.greasyfork.org/scripts/559098/X%20Home%3A%20Force%20Following%20tab.user.js",
+          "code_size": 3001,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "X Home: Force Following tab",
+  "description": "Always switch Home timeline to \"Following\" (フォロー中)",
+  "url": "https://greasyfork.org/scripts/559098-x-home-force-following-tab",
+  "code_url": "https://update.greasyfork.org/scripts/559098/X%20Home%3A%20Force%20Following%20tab.user.js",
+  "code_size": 3001,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

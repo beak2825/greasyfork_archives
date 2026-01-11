@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558726,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T12:16:46.000Z",
+    "code_updated_at": "2025-12-12T12:16:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547262,
+        "name": "mystify-321",
+        "created_at": "2025-12-12T12:10:24.000Z",
+        "url": "https://greasyfork.org/users/1547262-mystify-321"
+      }
+    ],
+    "name": "Torn Elimination team attack links from Hospital",
+    "description": "When you are hospitalized, the attack links are not clickable, this fixes that problem 😈",
+    "url": "https://greasyfork.org/scripts/558726-torn-elimination-team-attack-links-from-hospital",
+    "code_url": "https://update.greasyfork.org/scripts/558726/Torn%20Elimination%20team%20attack%20links%20from%20Hospital.user.js",
+    "code_size": 1856,
+    "license": "GPL-3.0 https://github.com/all-licenses/GNU-General-Public-License-v3.0/blob/main/LICENSE",
+    "version": "2025-12-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

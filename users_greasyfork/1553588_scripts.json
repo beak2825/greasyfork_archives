@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560560,
+    "daily_installs": 1,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T18:40:53.000Z",
+    "code_updated_at": "2026-01-01T20:43:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1553588,
+        "name": "MohammedXIslam573",
+        "created_at": "2025-12-28T18:34:52.000Z",
+        "url": "https://greasyfork.org/users/1553588-mohammedxislam573"
+      }
+    ],
+    "name": "CubeRealm.io Xray",
+    "description": "CubeRealm.io Xray - Made By MohammedXIslam :D",
+    "url": "https://greasyfork.org/scripts/560560-cuberealm-io-xray",
+    "code_url": "https://update.greasyfork.org/scripts/560560/CubeRealmio%20Xray.user.js",
+    "code_size": 8512,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

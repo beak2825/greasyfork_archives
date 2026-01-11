@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559877,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T01:14:25.000Z",
+    "code_updated_at": "2025-12-23T02:13:46.000Z",
+    "namespace": "https://greasyfork.org/users/doom",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 305931,
+        "name": "Emerson bardusco",
+        "created_at": "2019-05-30T18:53:18.000Z",
+        "url": "https://greasyfork.org/users/305931-emerson-bardusco"
+      }
+    ],
+    "name": "Clean Search Results VIP (Mobile Optimized)",
+    "description": "Painel VIP com tradutor e gamificação, otimizado para celular (toque longo).",
+    "url": "https://greasyfork.org/scripts/559877-clean-search-results-vip-mobile-optimized",
+    "code_url": "https://update.greasyfork.org/scripts/559877/Clean%20Search%20Results%20VIP%20%28Mobile%20Optimized%29.user.js",
+    "code_size": 9857,
+    "license": null,
+    "version": "15.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559771,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T03:26:13.000Z",
+    "code_updated_at": "2025-12-22T03:26:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 305931,
+        "name": "Emerson bardusco",
+        "created_at": "2019-05-30T18:53:18.000Z",
+        "url": "https://greasyfork.org/users/305931-emerson-bardusco"
+      }
+    ],
+    "name": "Tab Layout Organizer",
+    "description": "Organize suas abas em layouts dentro de um painel lateral",
+    "url": "https://greasyfork.org/scripts/559771-tab-layout-organizer",
+    "code_url": "https://update.greasyfork.org/scripts/559771/Tab%20Layout%20Organizer.user.js",
+    "code_size": 2879,
+    "license": null,
+    "version": "1.2",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 558812,
+  "daily_installs": 1,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-13T12:26:55.000Z",
+  "code_updated_at": "2025-12-13T12:26:55.000Z",
+  "namespace": "https://github.com/yourname",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1745,
+      "name": "muhuabin",
+      "created_at": "2014-05-20T16:57:42.000Z",
+      "url": "https://greasyfork.org/users/1745-muhuabin",
+      "scripts": [
+        {
+          "id": 558812,
+          "daily_installs": 1,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-13T12:26:55.000Z",
+          "code_updated_at": "2025-12-13T12:26:55.000Z",
+          "namespace": "https://github.com/yourname",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "dmhy动漫花园批量复制助手",
+          "description": "动漫花园：在日期前插入复选框，全选/反选/批量复制（已美化）",
+          "url": "https://greasyfork.org/scripts/558812-dmhy%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/558812/dmhy%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 3786,
+          "license": null,
+          "version": "5.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "dmhy动漫花园批量复制助手",
+  "description": "动漫花园：在日期前插入复选框，全选/反选/批量复制（已美化）",
+  "url": "https://greasyfork.org/scripts/558812-dmhy%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/558812/dmhy%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 3786,
+  "license": null,
+  "version": "5.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

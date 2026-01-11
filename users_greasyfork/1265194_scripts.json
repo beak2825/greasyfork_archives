@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558611,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T10:28:57.000Z",
+    "code_updated_at": "2025-12-12T07:12:17.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265194,
+        "name": "루시퍼홍",
+        "created_at": "2024-02-22T04:51:34.000Z",
+        "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D"
+      }
+    ],
+    "name": "[루시퍼홍] 네부 ios",
+    "description": "2024. 5. 27. 오후 16:43:18",
+    "url": "https://greasyfork.org/scripts/558611-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EB%84%A4%EB%B6%80-ios",
+    "code_url": "https://update.greasyfork.org/scripts/558611/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EB%84%A4%EB%B6%80%20ios.user.js",
+    "code_size": 104525,
+    "license": null,
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

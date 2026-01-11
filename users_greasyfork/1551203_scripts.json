@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559851,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T18:44:44.000Z",
+    "code_updated_at": "2025-12-22T18:44:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1551203,
+        "name": "youknowwhy",
+        "created_at": "2025-12-22T18:32:02.000Z",
+        "url": "https://greasyfork.org/users/1551203-youknowwhy"
+      }
+    ],
+    "name": "Nitro Type Racer Stats Sidebar (Draggable)",
+    "description": "Shows racer stats in a draggable sidebar on NitroType",
+    "url": "https://greasyfork.org/scripts/559851-nitro-type-racer-stats-sidebar-draggable",
+    "code_url": "https://update.greasyfork.org/scripts/559851/Nitro%20Type%20Racer%20Stats%20Sidebar%20%28Draggable%29.user.js",
+    "code_size": 4743,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

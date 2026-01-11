@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560310,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T12:27:58.000Z",
+    "code_updated_at": "2025-12-27T01:19:12.000Z",
+    "namespace": "https://github.com/Ryson-32/NodeGuaBot",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552685,
+        "name": "Райан Ryan Сонунуулу",
+        "created_at": "2025-12-26T08:43:04.000Z",
+        "url": "https://greasyfork.org/users/1552685-%D1%80%D0%B0%D0%B9%D0%B0%D0%BD-ryan-%D1%81%D0%BE%D0%BD%D1%83%D0%BD%D1%83%D1%83%D0%BB%D1%83"
+      }
+    ],
+    "name": "NodeGuaBot（NodeSeek AI吃瓜助手）",
+    "description": "NodeSeek论坛一键吃瓜：自动抓取楼层并生成时间线/争议点/立场对照，总结后可继续追问对话",
+    "url": "https://greasyfork.org/scripts/560310-nodeguabot-nodeseek-ai%E5%90%83%E7%93%9C%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/560310/NodeGuaBot%EF%BC%88NodeSeek%20AI%E5%90%83%E7%93%9C%E5%8A%A9%E6%89%8B%EF%BC%89.user.js",
+    "code_size": 76618,
+    "license": "MIT License",
+    "version": "0.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

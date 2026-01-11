@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558725,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T12:13:35.000Z",
+    "code_updated_at": "2025-12-12T12:14:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547226,
+        "name": "1837634311",
+        "created_at": "2025-12-12T10:38:19.000Z",
+        "url": "https://greasyfork.org/users/1547226-1837634311"
+      }
+    ],
+    "name": "西南交大教务系统一键评价助手",
+    "description": "极速完成所有课程评价。",
+    "url": "https://greasyfork.org/scripts/558725-%E8%A5%BF%E5%8D%97%E4%BA%A4%E5%A4%A7%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E4%B8%80%E9%94%AE%E8%AF%84%E4%BB%B7%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/558725/%E8%A5%BF%E5%8D%97%E4%BA%A4%E5%A4%A7%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E4%B8%80%E9%94%AE%E8%AF%84%E4%BB%B7%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 14758,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

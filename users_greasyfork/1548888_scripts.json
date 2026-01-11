@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559132,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T15:58:03.000Z",
+    "code_updated_at": "2025-12-20T10:29:42.000Z",
+    "namespace": "darkestage-exp-tracker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548888,
+        "name": "LosPolos Cco",
+        "created_at": "2025-12-16T15:54:38.000Z",
+        "url": "https://greasyfork.org/users/1548888-lospolos-cco"
+      }
+    ],
+    "name": "Darkest Age EXP Tracker",
+    "description": "EXP Tracker",
+    "url": "https://greasyfork.org/scripts/559132-darkest-age-exp-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/559132/Darkest%20Age%20EXP%20Tracker.user.js",
+    "code_size": 10571,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

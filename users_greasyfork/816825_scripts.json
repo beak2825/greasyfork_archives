@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559887,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T02:51:25.000Z",
+    "code_updated_at": "2025-12-23T02:51:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 816825,
+        "name": "Mighty boy",
+        "created_at": "2021-09-19T02:04:07.000Z",
+        "url": "https://greasyfork.org/users/816825-mighty-boy"
+      }
+    ],
+    "name": "智慧建业去水印+解除公文禁止复制功能20251223",
+    "description": "移除水印并解除禁止复制限制",
+    "url": "https://greasyfork.org/scripts/559887-%E6%99%BA%E6%85%A7%E5%BB%BA%E4%B8%9A%E5%8E%BB%E6%B0%B4%E5%8D%B0-%E8%A7%A3%E9%99%A4%E5%85%AC%E6%96%87%E7%A6%81%E6%AD%A2%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD20251223",
+    "code_url": "https://update.greasyfork.org/scripts/559887/%E6%99%BA%E6%85%A7%E5%BB%BA%E4%B8%9A%E5%8E%BB%E6%B0%B4%E5%8D%B0%2B%E8%A7%A3%E9%99%A4%E5%85%AC%E6%96%87%E7%A6%81%E6%AD%A2%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD20251223.user.js",
+    "code_size": 5319,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

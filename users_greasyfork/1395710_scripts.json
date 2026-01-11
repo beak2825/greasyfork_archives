@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559866,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T21:18:09.000Z",
+    "code_updated_at": "2025-12-23T08:05:59.000Z",
+    "namespace": "https://torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Torn Christmas Pot helper",
+    "description": "Pot helper with spam clicking, item triggers, and win tracking",
+    "url": "https://greasyfork.org/scripts/559866-torn-christmas-pot-helper",
+    "code_url": "https://update.greasyfork.org/scripts/559866/Torn%20Christmas%20Pot%20helper.user.js",
+    "code_size": 43226,
+    "license": null,
+    "version": "6.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559758,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T01:23:02.000Z",
+    "code_updated_at": "2025-12-22T01:23:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Torn City Bigger Christmas Event Window",
+    "description": "Makes the Christmas Town map bigger and moves it above the status images and your inventory. You can adjust size in tampermonkey menu",
+    "url": "https://greasyfork.org/scripts/559758-torn-city-bigger-christmas-event-window",
+    "code_url": "https://update.greasyfork.org/scripts/559758/Torn%20City%20Bigger%20Christmas%20Event%20Window.user.js",
+    "code_size": 7740,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

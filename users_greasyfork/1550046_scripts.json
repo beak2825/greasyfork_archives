@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559531,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T18:54:11.000Z",
+    "code_updated_at": "2025-12-19T18:54:11.000Z",
+    "namespace": "AutoBypass",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1550046,
+        "name": "Huuyui",
+        "created_at": "2025-12-19T17:18:41.000Z",
+        "url": "https://greasyfork.org/users/1550046-huuyui"
+      }
+    ],
+    "name": "Xtglinks Redirect Helper (Final)",
+    "description": "Skips intermediate shortener pages and lands on xtglinks final page",
+    "url": "https://greasyfork.org/scripts/559531-xtglinks-redirect-helper-final",
+    "code_url": "https://update.greasyfork.org/scripts/559531/Xtglinks%20Redirect%20Helper%20%28Final%29.user.js",
+    "code_size": 1247,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

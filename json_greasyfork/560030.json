@@ -1,0 +1,59 @@
+{
+  "id": 560030,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-24T03:02:37.000Z",
+  "code_updated_at": "2025-12-24T03:02:37.000Z",
+  "namespace": "mandreko_cardconjurer_bulkdownload",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551699,
+      "name": "mandreko",
+      "created_at": "2025-12-24T02:57:35.000Z",
+      "url": "https://greasyfork.org/users/1551699-mandreko",
+      "scripts": [
+        {
+          "id": 560030,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-24T03:02:37.000Z",
+          "code_updated_at": "2025-12-24T03:02:37.000Z",
+          "namespace": "mandreko_cardconjurer_bulkdownload",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Download all cards on CardConjurer",
+          "description": "Downloads all cards from a saved list as a single ZIP file instead of individual downloads.",
+          "url": "https://greasyfork.org/scripts/560030-download-all-cards-on-cardconjurer",
+          "code_url": "https://update.greasyfork.org/scripts/560030/Download%20all%20cards%20on%20CardConjurer.user.js",
+          "code_size": 6231,
+          "license": "MIT License",
+          "version": "2025-12-23",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Download all cards on CardConjurer",
+  "description": "Downloads all cards from a saved list as a single ZIP file instead of individual downloads.",
+  "url": "https://greasyfork.org/scripts/560030-download-all-cards-on-cardconjurer",
+  "code_url": "https://update.greasyfork.org/scripts/560030/Download%20all%20cards%20on%20CardConjurer.user.js",
+  "code_size": 6231,
+  "license": "MIT License",
+  "version": "2025-12-23",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

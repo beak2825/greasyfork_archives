@@ -1,0 +1,33 @@
+{
+  "id": 559947,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T13:29:55.000Z",
+  "code_updated_at": "2025-12-23T13:29:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551510,
+      "name": "KamilGadawski",
+      "created_at": "2025-12-23T13:23:20.000Z",
+      "url": "https://greasyfork.org/users/1551510-kamilgadawski"
+    }
+  ],
+  "name": "Strava - Toggle Virtual Ride",
+  "description": "Hides Virtual Ride with the option to switch in the menu",
+  "url": "https://greasyfork.org/scripts/559947-strava-toggle-virtual-ride",
+  "code_url": "https://update.greasyfork.org/scripts/559947/Strava%20-%20Toggle%20Virtual%20Ride.user.js",
+  "code_size": 2677,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

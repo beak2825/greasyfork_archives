@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559116,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T13:59:22.000Z",
+    "code_updated_at": "2025-12-16T13:59:22.000Z",
+    "namespace": "https://greasyfork.org/users/1548623",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548623,
+        "name": "NoMoreH1ding",
+        "created_at": "2025-12-16T03:03:46.000Z",
+        "url": "https://greasyfork.org/users/1548623-nomoreh1ding"
+      }
+    ],
+    "name": "fuckRegionTelepo",
+    "description": "No More 陆行鸟 火爆",
+    "url": "https://greasyfork.org/scripts/559116-regiontelepo",
+    "code_url": "https://update.greasyfork.org/scripts/559116/fuckRegionTelepo.user.js",
+    "code_size": 1995,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

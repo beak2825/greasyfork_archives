@@ -1,0 +1,33 @@
+{
+  "id": 558601,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-11T08:46:39.000Z",
+  "code_updated_at": "2025-12-16T07:38:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076338,
+      "name": "李楠兮",
+      "created_at": "2023-05-10T01:56:42.000Z",
+      "url": "https://greasyfork.org/users/1076338-%E6%9D%8E%E6%A5%A0%E5%85%AE"
+    }
+  ],
+  "name": "Dewu Fun110 Hook (Simple & Clean)",
+  "description": "Simple hook to print args index and result c/d",
+  "url": "https://greasyfork.org/scripts/558601-dewu-fun110-hook-simple-clean",
+  "code_url": "https://update.greasyfork.org/scripts/558601/Dewu%20Fun110%20Hook%20%28Simple%20%20Clean%29.user.js",
+  "code_size": 17551,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

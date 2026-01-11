@@ -1,0 +1,59 @@
+{
+  "id": 559912,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T08:09:50.000Z",
+  "code_updated_at": "2025-12-23T08:12:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 899835,
+      "name": "月神",
+      "created_at": "2022-04-09T10:24:49.000Z",
+      "url": "https://greasyfork.org/users/899835-%E6%9C%88%E7%A5%9E",
+      "scripts": [
+        {
+          "id": 443051,
+          "daily_installs": 0,
+          "total_installs": 67,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-04-09T10:37:36.000Z",
+          "code_updated_at": "2022-04-09T10:37:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "屏蔽一些不想看的广告",
+          "description": "屏蔽GM部落、藏宝湾、趣游的广告",
+          "url": "https://greasyfork.org/scripts/443051-%E5%B1%8F%E8%94%BD%E4%B8%80%E4%BA%9B%E4%B8%8D%E6%83%B3%E7%9C%8B%E7%9A%84%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/443051/%E5%B1%8F%E8%94%BD%E4%B8%80%E4%BA%9B%E4%B8%8D%E6%83%B3%E7%9C%8B%E7%9A%84%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 703,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CSQAQ网站自动点击关闭广告按钮（全站版）",
+  "description": "自动定位并点击csqaq.com所有页面的关闭广告按钮（class前缀transparentButton___）",
+  "url": "https://greasyfork.org/scripts/559912-csqaq%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%85%B3%E9%97%AD%E5%B9%BF%E5%91%8A%E6%8C%89%E9%92%AE-%E5%85%A8%E7%AB%99%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/559912/CSQAQ%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%85%B3%E9%97%AD%E5%B9%BF%E5%91%8A%E6%8C%89%E9%92%AE%EF%BC%88%E5%85%A8%E7%AB%99%E7%89%88%EF%BC%89.user.js",
+  "code_size": 2701,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

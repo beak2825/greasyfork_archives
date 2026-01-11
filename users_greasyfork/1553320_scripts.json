@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560481,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T03:54:13.000Z",
+    "code_updated_at": "2025-12-28T03:54:13.000Z",
+    "namespace": "https://greasyfork.org/users/1553320",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1553320,
+        "name": "ameng000",
+        "created_at": "2025-12-28T03:51:38.000Z",
+        "url": "https://greasyfork.org/users/1553320-ameng000"
+      }
+    ],
+    "name": "正保会计网校练习中心自动答题（完美版）for 猪猪",
+    "description": "完整的自动答题解决方案",
+    "url": "https://greasyfork.org/scripts/560481-%E6%AD%A3%E4%BF%9D%E4%BC%9A%E8%AE%A1%E7%BD%91%E6%A0%A1%E7%BB%83%E4%B9%A0%E4%B8%AD%E5%BF%83%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E5%AE%8C%E7%BE%8E%E7%89%88-for-%E7%8C%AA%E7%8C%AA",
+    "code_url": "https://update.greasyfork.org/scripts/560481/%E6%AD%A3%E4%BF%9D%E4%BC%9A%E8%AE%A1%E7%BD%91%E6%A0%A1%E7%BB%83%E4%B9%A0%E4%B8%AD%E5%BF%83%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%EF%BC%88%E5%AE%8C%E7%BE%8E%E7%89%88%EF%BC%89for%20%E7%8C%AA%E7%8C%AA.user.js",
+    "code_size": 20373,
+    "license": "MIT License",
+    "version": "2025.12.06",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

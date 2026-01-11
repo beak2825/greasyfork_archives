@@ -1,0 +1,59 @@
+{
+  "id": 560278,
+  "daily_installs": 1,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-26T05:37:50.000Z",
+  "code_updated_at": "2025-12-26T05:37:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1552605,
+      "name": "竹竹蜻蜓",
+      "created_at": "2025-12-26T03:53:54.000Z",
+      "url": "https://greasyfork.org/users/1552605-%E7%AB%B9%E7%AB%B9%E8%9C%BB%E8%9C%93",
+      "scripts": [
+        {
+          "id": 560278,
+          "daily_installs": 1,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-26T05:37:50.000Z",
+          "code_updated_at": "2025-12-26T05:37:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "云展网/yunzhan365 一键下载器 (v3.0 通用版)",
+          "description": "修复 book.yunzhan365.com 无法下载的问题。支持所有云展网子域名，自动探测 files/large, files/mobile 等多种路径，自动去参，支持 PDF/ZIP 双模式。",
+          "url": "https://greasyfork.org/scripts/560278-%E4%BA%91%E5%B1%95%E7%BD%91-yunzhan365-%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E5%99%A8-v3-0-%E9%80%9A%E7%94%A8%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/560278/%E4%BA%91%E5%B1%95%E7%BD%91yunzhan365%20%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E5%99%A8%20%28v30%20%E9%80%9A%E7%94%A8%E7%89%88%29.user.js",
+          "code_size": 9930,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "云展网/yunzhan365 一键下载器 (v3.0 通用版)",
+  "description": "修复 book.yunzhan365.com 无法下载的问题。支持所有云展网子域名，自动探测 files/large, files/mobile 等多种路径，自动去参，支持 PDF/ZIP 双模式。",
+  "url": "https://greasyfork.org/scripts/560278-%E4%BA%91%E5%B1%95%E7%BD%91-yunzhan365-%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E5%99%A8-v3-0-%E9%80%9A%E7%94%A8%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/560278/%E4%BA%91%E5%B1%95%E7%BD%91yunzhan365%20%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E5%99%A8%20%28v30%20%E9%80%9A%E7%94%A8%E7%89%88%29.user.js",
+  "code_size": 9930,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

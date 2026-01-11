@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560254,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T00:49:50.000Z",
+    "code_updated_at": "2025-12-26T00:49:50.000Z",
+    "namespace": "https://bsky.app/profile/neon-ai.art",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1494762,
+        "name": "ねおん",
+        "created_at": "2025-07-14T09:29:11.000Z",
+        "url": "https://greasyfork.org/users/1494762-%E3%81%AD%E3%81%8A%E3%82%93"
+      }
+    ],
+    "name": "TVer Click to Play",
+    "description": "Stop auto-play on TVer episode pages.",
+    "url": "https://greasyfork.org/scripts/560254-tver-click-to-play",
+    "code_url": "https://update.greasyfork.org/scripts/560254/TVer%20Click%20to%20Play.user.js",
+    "code_size": 1811,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559742,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T20:16:27.000Z",
+    "code_updated_at": "2025-12-23T06:28:59.000Z",
+    "namespace": "https://bsky.app/profile/neon-ai.art",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1494762,
+        "name": "ねおん",
+        "created_at": "2025-07-14T09:29:11.000Z",
+        "url": "https://greasyfork.org/users/1494762-%E3%81%AD%E3%81%8A%E3%82%93"
+      }
+    ],
+    "name": "Bluesky Follower Multi-Comparer",
+    "description": "Compare followers using a public API that requires no authentication.",
+    "url": "https://greasyfork.org/scripts/559742-bluesky-follower-multi-comparer",
+    "code_url": "https://update.greasyfork.org/scripts/559742/Bluesky%20Follower%20Multi-Comparer.user.js",
+    "code_size": 26422,
+    "license": "CC BY-NC 4.0",
+    "version": "1.7",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

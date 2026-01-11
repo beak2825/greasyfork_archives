@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559163,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T01:23:52.000Z",
+    "code_updated_at": "2025-12-17T17:03:30.000Z",
+    "namespace": "https://greasyfork.org/users/1548986",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548986,
+        "name": "longmanmaxtor",
+        "created_at": "2025-12-17T01:18:21.000Z",
+        "url": "https://greasyfork.org/users/1548986-longmanmaxtor"
+      }
+    ],
+    "name": "SetXHomeIsFollowing",
+    "description": "强制 X.com 默认显示 Following 标签页",
+    "url": "https://greasyfork.org/scripts/559163-setxhomeisfollowing",
+    "code_url": "https://update.greasyfork.org/scripts/559163/SetXHomeIsFollowing.user.js",
+    "code_size": 2220,
+    "license": null,
+    "version": "0.0.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

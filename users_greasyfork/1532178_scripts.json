@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558908,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T13:19:29.000Z",
+    "code_updated_at": "2025-12-14T14:56:37.000Z",
+    "namespace": "https://greasyfork.org/en/users/1532178-qop-z",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1532178,
+        "name": "qop_z",
+        "created_at": "2025-10-30T06:14:23.000Z",
+        "url": "https://greasyfork.org/users/1532178-qop-z"
+      }
+    ],
+    "name": "YouTube Copy Clean Link",
+    "description": "clicking yt share button > copies a short clean link to clipboard, without triggering share popup! *Right clicking it adds current time *Also works for yt short videos",
+    "url": "https://greasyfork.org/scripts/558908-youtube-copy-clean-link",
+    "code_url": "https://update.greasyfork.org/scripts/558908/YouTube%20Copy%20Clean%20Link.user.js",
+    "code_size": 3845,
+    "license": "GPLv3",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 559187,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-17T06:29:08.000Z",
+  "code_updated_at": "2025-12-17T06:29:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549075,
+      "name": "Jeff Woo (愚千一)",
+      "created_at": "2025-12-17T06:22:46.000Z",
+      "url": "https://greasyfork.org/users/1549075-jeff-woo-%E6%84%9A%E5%8D%83%E4%B8%80",
+      "scripts": [
+        {
+          "id": 559187,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-17T06:29:08.000Z",
+          "code_updated_at": "2025-12-17T06:29:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BuddhaSpace Super Tools (搜繁体 + 读简体)",
+          "description": "1.输入简体自动转繁体搜索 2.一键切换整个网页的简繁体",
+          "url": "https://greasyfork.org/scripts/559187-buddhaspace-super-tools-%E6%90%9C%E7%B9%81%E4%BD%93-%E8%AF%BB%E7%AE%80%E4%BD%93",
+          "code_url": "https://update.greasyfork.org/scripts/559187/BuddhaSpace%20Super%20Tools%20%28%E6%90%9C%E7%B9%81%E4%BD%93%20%2B%20%E8%AF%BB%E7%AE%80%E4%BD%93%29.user.js",
+          "code_size": 5731,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BuddhaSpace Super Tools (搜繁体 + 读简体)",
+  "description": "1.输入简体自动转繁体搜索 2.一键切换整个网页的简繁体",
+  "url": "https://greasyfork.org/scripts/559187-buddhaspace-super-tools-%E6%90%9C%E7%B9%81%E4%BD%93-%E8%AF%BB%E7%AE%80%E4%BD%93",
+  "code_url": "https://update.greasyfork.org/scripts/559187/BuddhaSpace%20Super%20Tools%20%28%E6%90%9C%E7%B9%81%E4%BD%93%20%2B%20%E8%AF%BB%E7%AE%80%E4%BD%93%29.user.js",
+  "code_size": 5731,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

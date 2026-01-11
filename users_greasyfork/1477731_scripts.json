@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559659,
+    "daily_installs": 3,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T02:12:55.000Z",
+    "code_updated_at": "2025-12-21T02:12:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477731,
+        "name": "IMMORTAL_DEMON_999",
+        "created_at": "2025-06-02T02:55:26.000Z",
+        "url": "https://greasyfork.org/users/1477731-immortal-demon-999"
+      }
+    ],
+    "name": "IMMORTAL DEMON v14.5 – THE OVERLORD ASCENDS",
+    "description": "Pro PvP Crosshair Size, Visual Fixes, and Demon Arrival Message.",
+    "url": "https://greasyfork.org/scripts/559659-immortal-demon-v14-5-the-overlord-ascends",
+    "code_url": "https://update.greasyfork.org/scripts/559659/IMMORTAL%20DEMON%20v145%20%E2%80%93%20THE%20OVERLORD%20ASCENDS.user.js",
+    "code_size": 6408,
+    "license": null,
+    "version": "14.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559225,
+    "daily_installs": 1,
+    "total_installs": 89,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T11:37:45.000Z",
+    "code_updated_at": "2025-12-18T04:11:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477731,
+        "name": "IMMORTAL_DEMON_999",
+        "created_at": "2025-06-02T02:55:26.000Z",
+        "url": "https://greasyfork.org/users/1477731-immortal-demon-999"
+      }
+    ],
+    "name": "HYDROFLOW v4.3 – Stealth Abyssal PVP CLIENT(ZERO LAG FIX) FOR BLOXD.IO",
+    "description": "Lag-free PvP HUD & Death-safe Hotbar.",
+    "url": "https://greasyfork.org/scripts/559225-hydroflow-v4-3-stealth-abyssal-pvp-client-zero-lag-fix-for-bloxd-io",
+    "code_url": "https://update.greasyfork.org/scripts/559225/HYDROFLOW%20v43%20%E2%80%93%20Stealth%20Abyssal%20PVP%20CLIENT%28ZERO%20LAG%20FIX%29%20FOR%20BLOXDIO.user.js",
+    "code_size": 5884,
+    "license": null,
+    "version": "4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 559976,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T17:39:35.000Z",
+  "code_updated_at": "2025-12-23T17:39:35.000Z",
+  "namespace": "https://github.com/liyuan4LY",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551596,
+      "name": "liyuan4LY",
+      "created_at": "2025-12-23T17:09:18.000Z",
+      "url": "https://greasyfork.org/users/1551596-liyuan4ly",
+      "scripts": [
+        {
+          "id": 559976,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-23T17:39:35.000Z",
+          "code_updated_at": "2025-12-23T17:39:35.000Z",
+          "namespace": "https://github.com/liyuan4LY",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小站托福(top.zhan.com) 新老TPO全解锁和去广告",
+          "description": "解锁老托福TPO 71-75和新托福全部试题，屏蔽所有弹窗广告。",
+          "url": "https://greasyfork.org/scripts/559976-%E5%B0%8F%E7%AB%99%E6%89%98%E7%A6%8F-top-zhan-com-%E6%96%B0%E8%80%81tpo%E5%85%A8%E8%A7%A3%E9%94%81%E5%92%8C%E5%8E%BB%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/559976/%E5%B0%8F%E7%AB%99%E6%89%98%E7%A6%8F%28topzhancom%29%20%E6%96%B0%E8%80%81TPO%E5%85%A8%E8%A7%A3%E9%94%81%E5%92%8C%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 2902,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小站托福(top.zhan.com) 新老TPO全解锁和去广告",
+  "description": "解锁老托福TPO 71-75和新托福全部试题，屏蔽所有弹窗广告。",
+  "url": "https://greasyfork.org/scripts/559976-%E5%B0%8F%E7%AB%99%E6%89%98%E7%A6%8F-top-zhan-com-%E6%96%B0%E8%80%81tpo%E5%85%A8%E8%A7%A3%E9%94%81%E5%92%8C%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/559976/%E5%B0%8F%E7%AB%99%E6%89%98%E7%A6%8F%28topzhancom%29%20%E6%96%B0%E8%80%81TPO%E5%85%A8%E8%A7%A3%E9%94%81%E5%92%8C%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 2902,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559600,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T12:34:30.000Z",
+    "code_updated_at": "2025-12-20T14:08:33.000Z",
+    "namespace": "https://github.com/TWGR-BelleBernice/TW-UserScripts",
+    "support_url": "https://github.com/TWGR-BelleBernice/TW-UserScripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 754649,
+        "name": "Belle Bernice",
+        "created_at": "2021-04-04T02:01:55.000Z",
+        "url": "https://greasyfork.org/users/754649-belle-bernice"
+      }
+    ],
+    "name": "The West - TW-DB.info Cloth Calc [Multi-Lang] - BB",
+    "description": "The West Script: Cloth Calculation for game version 1.34 or higher",
+    "url": "https://greasyfork.org/scripts/559600-the-west-tw-db-info-cloth-calc-multi-lang-bb",
+    "code_url": "https://update.greasyfork.org/scripts/559600/The%20West%20-%20TW-DBinfo%20Cloth%20Calc%20%5BMulti-Lang%5D%20-%20BB.user.js",
+    "code_size": 196588,
+    "license": null,
+    "version": "0.27.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

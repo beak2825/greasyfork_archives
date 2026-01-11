@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560197,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-25T13:43:51.000Z",
+    "code_updated_at": "2025-12-25T13:43:51.000Z",
+    "namespace": "VmlkZW8gQXV0b3BsYXkgQmxvY2tlcg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7027,
+        "name": "smed79",
+        "created_at": "2014-11-21T01:59:54.000Z",
+        "url": "https://greasyfork.org/users/7027-smed79"
+      }
+    ],
+    "name": "Video Autoplay Blocker",
+    "description": "Blocks all video autoplay and allowed playback only after user interaction.",
+    "url": "https://greasyfork.org/scripts/560197-video-autoplay-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/560197/Video%20Autoplay%20Blocker.user.js",
+    "code_size": 3752,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558977,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T06:07:09.000Z",
+    "code_updated_at": "2025-12-23T09:33:07.000Z",
+    "namespace": "https://github.com/smed79/search-engine-result-filter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7027,
+        "name": "smed79",
+        "created_at": "2014-11-21T01:59:54.000Z",
+        "url": "https://greasyfork.org/users/7027-smed79"
+      }
+    ],
+    "name": "Search Engine Result Filter",
+    "description": "Filters out specified domains from multiple search engines",
+    "url": "https://greasyfork.org/scripts/558977-search-engine-result-filter",
+    "code_url": "https://update.greasyfork.org/scripts/558977/Search%20Engine%20Result%20Filter.user.js",
+    "code_size": 4082,
+    "license": "GPLv3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

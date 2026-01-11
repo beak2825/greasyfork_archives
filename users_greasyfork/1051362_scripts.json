@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559987,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T19:05:21.000Z",
+    "code_updated_at": "2025-12-23T19:05:20.000Z",
+    "namespace": "B1773rm4n",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051362,
+        "name": "B1773rm4n",
+        "created_at": "2023-04-01T08:54:37.000Z",
+        "url": "https://greasyfork.org/users/1051362-b1773rm4n"
+      }
+    ],
+    "name": "Open first steam search results",
+    "description": "When the steam search page is opened, automatically open the first result.",
+    "url": "https://greasyfork.org/scripts/559987-open-first-steam-search-results",
+    "code_url": "https://update.greasyfork.org/scripts/559987/Open%20first%20steam%20search%20results.user.js",
+    "code_size": 758,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "2025-12-24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559983,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T19:00:31.000Z",
+    "code_updated_at": "2025-12-23T19:00:31.000Z",
+    "namespace": "B1773rm4n",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051362,
+        "name": "B1773rm4n",
+        "created_at": "2023-04-01T08:54:37.000Z",
+        "url": "https://greasyfork.org/users/1051362-b1773rm4n"
+      }
+    ],
+    "name": "1337x open in Steam",
+    "description": "Opens the game page in Steam based on the torrent title",
+    "url": "https://greasyfork.org/scripts/559983-1337x-open-in-steam",
+    "code_url": "https://update.greasyfork.org/scripts/559983/1337x%20open%20in%20Steam.user.js",
+    "code_size": 1928,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "2025-12-24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558721,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T11:15:32.000Z",
+    "code_updated_at": "2025-12-12T11:16:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443950,
+        "name": "wyih",
+        "created_at": "2025-03-09T12:29:08.000Z",
+        "url": "https://greasyfork.org/users/1443950-wyih"
+      }
+    ],
+    "name": "Perplexity to Notion Exporter",
+    "description": "Perplexity 导出至 Notion：智能图片归位 (支持 PicList/PicGo)+隐私开关+单个对话导出+多代码块列表修复",
+    "url": "https://greasyfork.org/scripts/558721-perplexity-to-notion-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/558721/Perplexity%20to%20Notion%20Exporter.user.js",
+    "code_size": 37623,
+    "license": "MIT License",
+    "version": "2.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558619,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T11:57:45.000Z",
+    "code_updated_at": "2025-12-11T11:57:44.000Z",
+    "namespace": "https://github.com/wyih/poe-to-notion",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443950,
+        "name": "wyih",
+        "created_at": "2025-03-09T12:29:08.000Z",
+        "url": "https://greasyfork.org/users/1443950-wyih"
+      }
+    ],
+    "name": "Poe to Notion Exporter (with PicList)",
+    "description": "导出 poe.com 聊天到 Notion，支持图片上传(PicList)+隐私开关+单条导出",
+    "url": "https://greasyfork.org/scripts/558619-poe-to-notion-exporter-with-piclist",
+    "code_url": "https://update.greasyfork.org/scripts/558619/Poe%20to%20Notion%20Exporter%20%28with%20PicList%29.user.js",
+    "code_size": 39979,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

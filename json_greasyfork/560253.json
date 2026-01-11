@@ -1,0 +1,59 @@
+{
+  "id": 560253,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-26T00:28:35.000Z",
+  "code_updated_at": "2025-12-26T08:37:57.000Z",
+  "namespace": "https://torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453712,
+      "name": "Ovidiu Vaduva",
+      "created_at": "2025-04-03T19:11:23.000Z",
+      "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva",
+      "scripts": [
+        {
+          "id": 536979,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-23T13:03:04.000Z",
+          "code_updated_at": "2025-05-23T13:03:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Overseas Bounty Highlighter",
+          "description": "Color RED bounty players",
+          "url": "https://greasyfork.org/scripts/536979-torn-overseas-bounty-highlighter",
+          "code_url": "https://update.greasyfork.org/scripts/536979/Torn%20Overseas%20Bounty%20Highlighter.user.js",
+          "code_size": 1067,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn — OC Helper Panel",
+  "description": "Floating OC panel: save API key, sync faction members, update available crimes, show who is in OC (and item status) + who is not registered.",
+  "url": "https://greasyfork.org/scripts/560253-torn-oc-helper-panel",
+  "code_url": "https://update.greasyfork.org/scripts/560253/Torn%20%E2%80%94%20OC%20Helper%20Panel.user.js",
+  "code_size": 16520,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

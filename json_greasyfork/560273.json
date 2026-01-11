@@ -1,0 +1,33 @@
+{
+  "id": 560273,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-26T03:56:36.000Z",
+  "code_updated_at": "2025-12-27T04:10:11.000Z",
+  "namespace": "https://greasyfork.org/es/users/1354104-eterve-nallo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354104,
+      "name": "Eterve Nallo",
+      "created_at": "2024-08-18T16:56:44.000Z",
+      "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+    }
+  ],
+  "name": "Oculta el botón 'Preguntar' de youtube.",
+  "description": "Oculta el botón de \"Preguntame\" de la interfaz de youtube.",
+  "url": "https://greasyfork.org/scripts/560273-oculta-el-bot%C3%B3n-preguntar-de-youtube",
+  "code_url": "https://update.greasyfork.org/scripts/560273/Oculta%20el%20bot%C3%B3n%20%27Preguntar%27%20de%20youtube.user.js",
+  "code_size": 2332,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

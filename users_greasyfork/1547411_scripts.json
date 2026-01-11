@@ -1,0 +1,101 @@
+[
+  {
+    "id": 559911,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T07:33:55.000Z",
+    "code_updated_at": "2025-12-23T07:33:55.000Z",
+    "namespace": "MoonLord",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547411,
+        "name": "MoonLord42",
+        "created_at": "2025-12-12T20:43:37.000Z",
+        "url": "https://greasyfork.org/users/1547411-moonlord42"
+      }
+    ],
+    "name": "Auctions Definitive Tool",
+    "description": "Compare prices with ItemDB, generate countdowns on each item, and automatically open a tab when there are 2:00 minutes left to use Auto-Bidder.",
+    "url": "https://greasyfork.org/scripts/559911-auctions-definitive-tool",
+    "code_url": "https://update.greasyfork.org/scripts/559911/Auctions%20Definitive%20Tool.user.js",
+    "code_size": 21350,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559031,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T17:38:52.000Z",
+    "code_updated_at": "2025-12-15T18:00:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547411,
+        "name": "MoonLord42",
+        "created_at": "2025-12-12T20:43:37.000Z",
+        "url": "https://greasyfork.org/users/1547411-moonlord42"
+      }
+    ],
+    "name": "Auto Tyranu Evavu",
+    "description": "Auto-plays Tyranu Evavu with persistent Start/Stop UI.",
+    "url": "https://greasyfork.org/scripts/559031-auto-tyranu-evavu",
+    "code_url": "https://update.greasyfork.org/scripts/559031/Auto%20Tyranu%20Evavu.user.js",
+    "code_size": 4574,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558794,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-13T03:39:43.000Z",
+    "code_updated_at": "2025-12-13T03:39:43.000Z",
+    "namespace": "MoonLord",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547411,
+        "name": "MoonLord42",
+        "created_at": "2025-12-12T20:43:37.000Z",
+        "url": "https://greasyfork.org/users/1547411-moonlord42"
+      }
+    ],
+    "name": "NeoDeck Auto-Add",
+    "description": "Automatically adds cards from the inventory to the NeoDeck.",
+    "url": "https://greasyfork.org/scripts/558794-neodeck-auto-add",
+    "code_url": "https://update.greasyfork.org/scripts/558794/NeoDeck%20Auto-Add.user.js",
+    "code_size": 10530,
+    "license": null,
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

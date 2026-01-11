@@ -1,0 +1,34 @@
+{
+  "id": 560553,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-28T17:43:41.000Z",
+  "code_updated_at": "2025-12-28T17:43:41.000Z",
+  "namespace": "https://api.mayhemhub.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1353220,
+      "name": "DEAD EDITZZ (D3AD3DiTZz)",
+      "created_at": "2024-08-17T07:44:53.000Z",
+      "url": "https://greasyfork.org/users/1353220-dead-editzz-d3ad3ditzz",
+      "scripts": []
+    }
+  ],
+  "name": "MayhemHub Support Bridge",
+  "description": "Request support/attacks in Torn via Discord.",
+  "url": "https://greasyfork.org/scripts/560553-mayhemhub-support-bridge",
+  "code_url": "https://update.greasyfork.org/scripts/560553/MayhemHub%20Support%20Bridge.user.js",
+  "code_size": 12429,
+  "license": null,
+  "version": "1.2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

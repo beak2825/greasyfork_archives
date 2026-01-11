@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560353,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T22:11:23.000Z",
+    "code_updated_at": "2026-01-08T12:17:33.000Z",
+    "namespace": "lunzhiPenxil",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552527,
+        "name": "Penxil仑质",
+        "created_at": "2025-12-25T21:02:54.000Z",
+        "url": "https://greasyfork.org/users/1552527-penxil%E4%BB%91%E8%B4%A8"
+      }
+    ],
+    "name": "WoD 美化",
+    "description": "美化一下老旧的WoD网站页面",
+    "url": "https://greasyfork.org/scripts/560353-wod-%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/560353/WoD%20%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 22855,
+    "license": "AGPL3",
+    "version": "2026.1.8.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

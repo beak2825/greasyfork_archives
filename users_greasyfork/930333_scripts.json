@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559969,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T17:06:28.000Z",
+    "code_updated_at": "2026-01-10T15:51:08.000Z",
+    "namespace": "https://greasyfork.org/users/930333",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 930333,
+        "name": "ardenwick",
+        "created_at": "2022-06-29T09:06:46.000Z",
+        "url": "https://greasyfork.org/users/930333-ardenwick"
+      }
+    ],
+    "name": "元元大王直播间弹幕布局",
+    "description": "1、自适应弹幕布局；2、弹幕画板可拖移；3、PK视图变化时刷新画面",
+    "url": "https://greasyfork.org/scripts/559969-%E5%85%83%E5%85%83%E5%A4%A7%E7%8E%8B%E7%9B%B4%E6%92%AD%E9%97%B4%E5%BC%B9%E5%B9%95%E5%B8%83%E5%B1%80",
+    "code_url": "https://update.greasyfork.org/scripts/559969/%E5%85%83%E5%85%83%E5%A4%A7%E7%8E%8B%E7%9B%B4%E6%92%AD%E9%97%B4%E5%BC%B9%E5%B9%95%E5%B8%83%E5%B1%80.user.js",
+    "code_size": 10850,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

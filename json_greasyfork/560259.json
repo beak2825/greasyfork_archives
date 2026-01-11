@@ -1,0 +1,33 @@
+{
+  "id": 560259,
+  "daily_installs": 1,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-26T02:11:37.000Z",
+  "code_updated_at": "2025-12-26T02:11:37.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1552560,
+      "name": "一点典芝士",
+      "created_at": "2025-12-26T01:24:25.000Z",
+      "url": "https://greasyfork.org/users/1552560-%E4%B8%80%E7%82%B9%E5%85%B8%E8%8A%9D%E5%A3%AB"
+    }
+  ],
+  "name": "Flash游戏自定义按键(移动端)",
+  "description": "一款由AI生成的用于在手机上在线玩flash或者部分h5游戏的按键，其主要内容包括，自定义按键，自定义按键布局，导入导出按键配置，长按菜单按钮隐藏按键，沉浸式体验等。",
+  "url": "https://greasyfork.org/scripts/560259-flash%E6%B8%B8%E6%88%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%89%E9%94%AE-%E7%A7%BB%E5%8A%A8%E7%AB%AF",
+  "code_url": "https://update.greasyfork.org/scripts/560259/Flash%E6%B8%B8%E6%88%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%89%E9%94%AE%28%E7%A7%BB%E5%8A%A8%E7%AB%AF%29.user.js",
+  "code_size": 36000,
+  "license": "MIT License",
+  "version": "V1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

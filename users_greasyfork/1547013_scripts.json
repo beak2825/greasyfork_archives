@@ -1,0 +1,134 @@
+[
+  {
+    "id": 559041,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T20:54:43.000Z",
+    "code_updated_at": "2025-12-15T20:58:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547013,
+        "name": "Wolfylein",
+        "created_at": "2025-12-11T18:31:45.000Z",
+        "url": "https://greasyfork.org/users/1547013-wolfylein"
+      }
+    ],
+    "name": "Its Raining Ducks!",
+    "description": "Makes Ducks appear on your Screen",
+    "url": "https://greasyfork.org/scripts/559041-its-raining-ducks",
+    "code_url": "https://update.greasyfork.org/scripts/559041/Its%20Raining%20Ducks%21.user.js",
+    "code_size": 2201,
+    "license": "Wolfylein",
+    "version": "2025-12-16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558677,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T22:27:07.000Z",
+    "code_updated_at": "2025-12-11T22:27:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547013,
+        "name": "Wolfylein",
+        "created_at": "2025-12-11T18:31:45.000Z",
+        "url": "https://greasyfork.org/users/1547013-wolfylein"
+      }
+    ],
+    "name": "Call the Boys for Doom's Guest",
+    "description": "Call the Boys Script for Doom",
+    "url": "https://greasyfork.org/scripts/558677-call-the-boys-for-doom-s-guest",
+    "code_url": "https://update.greasyfork.org/scripts/558677/Call%20the%20Boys%20for%20Doom%27s%20Guest.user.js",
+    "code_size": 1864,
+    "license": "GPL3",
+    "version": "2025-12-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558675,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T22:14:40.000Z",
+    "code_updated_at": "2025-12-11T22:18:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547013,
+        "name": "Wolfylein",
+        "created_at": "2025-12-11T18:31:45.000Z",
+        "url": "https://greasyfork.org/users/1547013-wolfylein"
+      }
+    ],
+    "name": "Call the Boys for Nog",
+    "description": "Nogs Call the Boys Script",
+    "url": "https://greasyfork.org/scripts/558675-call-the-boys-for-nog",
+    "code_url": "https://update.greasyfork.org/scripts/558675/Call%20the%20Boys%20for%20Nog.user.js",
+    "code_size": 1989,
+    "license": "GPL3",
+    "version": "2025-12-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558658,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T18:34:29.000Z",
+    "code_updated_at": "2025-12-15T21:23:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547013,
+        "name": "Wolfylein",
+        "created_at": "2025-12-11T18:31:45.000Z",
+        "url": "https://greasyfork.org/users/1547013-wolfylein"
+      }
+    ],
+    "name": "Call the Boys!",
+    "description": "Call the Boys to help with the Fight!",
+    "url": "https://greasyfork.org/scripts/558658-call-the-boys",
+    "code_url": "https://update.greasyfork.org/scripts/558658/Call%20the%20Boys%21.user.js",
+    "code_size": 3492,
+    "license": "GPL3",
+    "version": "10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

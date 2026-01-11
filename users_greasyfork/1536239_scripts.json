@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559457,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T05:40:59.000Z",
+    "code_updated_at": "2025-12-19T05:40:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536239,
+        "name": "Jim-0621",
+        "created_at": "2025-11-10T08:41:08.000Z",
+        "url": "https://greasyfork.org/users/1536239-jim-0621"
+      }
+    ],
+    "name": "浙江研究生课程联盟（自动播放）",
+    "description": "模拟真实点击播放，自动2倍速播放，非视频自动跳过，确保进度有效上报",
+    "url": "https://greasyfork.org/scripts/559457-%E6%B5%99%E6%B1%9F%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B%E8%81%94%E7%9B%9F-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/559457/%E6%B5%99%E6%B1%9F%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B%E8%81%94%E7%9B%9F%EF%BC%88%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%EF%BC%89.user.js",
+    "code_size": 2673,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

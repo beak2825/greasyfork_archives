@@ -1,0 +1,34 @@
+{
+  "id": 558836,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-13T19:21:38.000Z",
+  "code_updated_at": "2025-12-13T19:53:47.000Z",
+  "namespace": "https://linux.do/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1547767,
+      "name": "chigamma",
+      "created_at": "2025-12-13T19:06:04.000Z",
+      "url": "https://greasyfork.org/users/1547767-chigamma",
+      "scripts": []
+    }
+  ],
+  "name": "LinuxDo 用户关注标签",
+  "description": "在帖子中显示用户关注标签（互关/关注/粉丝），支持实时更新",
+  "url": "https://greasyfork.org/scripts/558836-linuxdo-%E7%94%A8%E6%88%B7%E5%85%B3%E6%B3%A8%E6%A0%87%E7%AD%BE",
+  "code_url": "https://update.greasyfork.org/scripts/558836/LinuxDo%20%E7%94%A8%E6%88%B7%E5%85%B3%E6%B3%A8%E6%A0%87%E7%AD%BE.user.js",
+  "code_size": 16497,
+  "license": "Fair License",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

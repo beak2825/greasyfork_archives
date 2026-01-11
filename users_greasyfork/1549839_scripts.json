@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559449,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T04:03:39.000Z",
+    "code_updated_at": "2025-12-19T04:48:53.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549839,
+        "name": "vacnex",
+        "created_at": "2025-12-19T03:56:56.000Z",
+        "url": "https://greasyfork.org/users/1549839-vacnex"
+      }
+    ],
+    "name": "Gemini Enhancement",
+    "description": "Add splitter in canvas mode, Full width layout, always visible scrollbar, and Middle-click New Chat & History",
+    "url": "https://greasyfork.org/scripts/559449-gemini-enhancement",
+    "code_url": "https://update.greasyfork.org/scripts/559449/Gemini%20Enhancement.user.js",
+    "code_size": 6312,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

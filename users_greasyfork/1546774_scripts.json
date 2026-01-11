@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 558575,
+    "daily_installs": 7,
+    "total_installs": 116,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T03:24:06.000Z",
+    "code_updated_at": "2026-01-06T16:30:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546774,
+        "name": "JackyLiii",
+        "created_at": "2025-12-11T03:22:47.000Z",
+        "url": "https://greasyfork.org/users/1546774-jackyliii"
+      }
+    ],
+    "name": "LDStatus Pro",
+    "description": "在 Linux.do 和 IDCFlare 页面显示信任级别进度，支持历史趋势、里程碑通知、阅读时间统计、排行榜系统、我的活动查看。两站点均支持排行榜和云同步功能",
+    "url": "https://greasyfork.org/scripts/558575-ldstatus-pro",
+    "code_url": "https://update.greasyfork.org/scripts/558575/LDStatus%20Pro.user.js",
+    "code_size": 1021185,
+    "license": "MIT License",
+    "version": "3.5.4.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

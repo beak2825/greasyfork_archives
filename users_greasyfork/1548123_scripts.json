@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559445,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T03:31:20.000Z",
+    "code_updated_at": "2025-12-19T03:31:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548123,
+        "name": "Tune",
+        "created_at": "2025-12-14T19:15:05.000Z",
+        "url": "https://greasyfork.org/users/1548123-tune"
+      }
+    ],
+    "name": "NodeSeek 搜索栏点击即显",
+    "description": "点击输入框显示搜索选项 + 强制排序(搜帖-谷歌-搜人)",
+    "url": "https://greasyfork.org/scripts/559445-nodeseek-%E6%90%9C%E7%B4%A2%E6%A0%8F%E7%82%B9%E5%87%BB%E5%8D%B3%E6%98%BE",
+    "code_url": "https://update.greasyfork.org/scripts/559445/NodeSeek%20%E6%90%9C%E7%B4%A2%E6%A0%8F%E7%82%B9%E5%87%BB%E5%8D%B3%E6%98%BE.user.js",
+    "code_size": 4452,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

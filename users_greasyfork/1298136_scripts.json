@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558652,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T17:34:50.000Z",
+    "code_updated_at": "2025-12-11T17:34:50.000Z",
+    "namespace": "https://github.com/shangxueink",
+    "support_url": "https://github.com/koakuuma/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1298136,
+        "name": "shangxueink",
+        "created_at": "2024-05-07T15:06:25.000Z",
+        "url": "https://greasyfork.org/users/1298136-shangxueink"
+      }
+    ],
+    "name": "ASMR音频声道反转",
+    "description": "在ASMR网站上添加音频声道反转功能，支持一键切换左右声道",
+    "url": "https://greasyfork.org/scripts/558652-asmr%E9%9F%B3%E9%A2%91%E5%A3%B0%E9%81%93%E5%8F%8D%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/558652/ASMR%E9%9F%B3%E9%A2%91%E5%A3%B0%E9%81%93%E5%8F%8D%E8%BD%AC.user.js",
+    "code_size": 64266,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

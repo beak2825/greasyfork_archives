@@ -1,0 +1,59 @@
+{
+  "id": 560398,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-27T10:16:41.000Z",
+  "code_updated_at": "2025-12-27T10:16:41.000Z",
+  "namespace": "https://s.sbs93310.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1553097,
+      "name": "sbkm9999",
+      "created_at": "2025-12-27T10:13:03.000Z",
+      "url": "https://greasyfork.org/users/1553097-sbkm9999",
+      "scripts": [
+        {
+          "id": 560398,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-27T10:16:41.000Z",
+          "code_updated_at": "2025-12-27T10:16:41.000Z",
+          "namespace": "https://s.sbs93310.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "osu! gender tags",
+          "description": "Tampermonkey version of osu! gender tags",
+          "url": "https://greasyfork.org/scripts/560398-osu-gender-tags",
+          "code_url": "https://update.greasyfork.org/scripts/560398/osu%21%20gender%20tags.user.js",
+          "code_size": 25394,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "osu! gender tags",
+  "description": "Tampermonkey version of osu! gender tags",
+  "url": "https://greasyfork.org/scripts/560398-osu-gender-tags",
+  "code_url": "https://update.greasyfork.org/scripts/560398/osu%21%20gender%20tags.user.js",
+  "code_size": 25394,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

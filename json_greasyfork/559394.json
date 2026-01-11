@@ -1,0 +1,59 @@
+{
+  "id": 559394,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-18T19:29:40.000Z",
+  "code_updated_at": "2025-12-18T19:29:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549745,
+      "name": "000rosiu",
+      "created_at": "2025-12-18T18:12:06.000Z",
+      "url": "https://greasyfork.org/users/1549745-000rosiu",
+      "scripts": [
+        {
+          "id": 559394,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-18T19:29:40.000Z",
+          "code_updated_at": "2025-12-18T19:29:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Filman.cc popup banner remover",
+          "description": "Removes popup banner on filman.cc",
+          "url": "https://greasyfork.org/scripts/559394-filman-cc-popup-banner-remover",
+          "code_url": "https://update.greasyfork.org/scripts/559394/Filmancc%20popup%20banner%20remover.user.js",
+          "code_size": 608,
+          "license": "GNU GPL v3.0",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Filman.cc popup banner remover",
+  "description": "Removes popup banner on filman.cc",
+  "url": "https://greasyfork.org/scripts/559394-filman-cc-popup-banner-remover",
+  "code_url": "https://update.greasyfork.org/scripts/559394/Filmancc%20popup%20banner%20remover.user.js",
+  "code_size": 608,
+  "license": "GNU GPL v3.0",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

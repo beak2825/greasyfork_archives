@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559730,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T17:04:15.000Z",
+    "code_updated_at": "2025-12-21T17:04:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538141,
+        "name": "Atilla TR",
+        "created_at": "2025-11-15T14:05:46.000Z",
+        "url": "https://greasyfork.org/users/1538141-atilla-tr"
+      }
+    ],
+    "name": "VS Code Full IDE - Monaco Edition (CSS)",
+    "description": "Tarayıcıyı tam donanımlı bir VS Code IDE'sine dönüştürür.",
+    "url": "https://greasyfork.org/scripts/559730-vs-code-full-ide-monaco-edition-css",
+    "code_url": "https://update.greasyfork.org/scripts/559730/VS%20Code%20Full%20IDE%20-%20Monaco%20Edition%20%28CSS%29.user.js",
+    "code_size": 5196,
+    "license": "none",
+    "version": "6.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

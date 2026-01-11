@@ -1,0 +1,59 @@
+{
+  "id": 560448,
+  "daily_installs": 1,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-27T19:23:56.000Z",
+  "code_updated_at": "2025-12-27T19:27:43.000Z",
+  "namespace": "https://github.com/VeltrixJS/azar-ip-sniffer",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1553247,
+      "name": "VeltrixJS",
+      "created_at": "2025-12-27T19:07:58.000Z",
+      "url": "https://greasyfork.org/users/1553247-veltrixjs",
+      "scripts": [
+        {
+          "id": 560448,
+          "daily_installs": 1,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-27T19:23:56.000Z",
+          "code_updated_at": "2025-12-27T19:27:43.000Z",
+          "namespace": "https://github.com/VeltrixJS/azar-ip-sniffer",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Azar IP Scanner",
+          "description": "IP Tracker for Azar with geolocation (Unlimited API)",
+          "url": "https://greasyfork.org/scripts/560448-azar-ip-scanner",
+          "code_url": "https://update.greasyfork.org/scripts/560448/Azar%20IP%20Scanner.user.js",
+          "code_size": 21343,
+          "license": null,
+          "version": "2.8",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Azar IP Scanner",
+  "description": "IP Tracker for Azar with geolocation (Unlimited API)",
+  "url": "https://greasyfork.org/scripts/560448-azar-ip-scanner",
+  "code_url": "https://update.greasyfork.org/scripts/560448/Azar%20IP%20Scanner.user.js",
+  "code_size": 21343,
+  "license": null,
+  "version": "2.8",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

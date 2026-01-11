@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559036,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T18:52:29.000Z",
+    "code_updated_at": "2025-12-20T22:16:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548540,
+        "name": "dapakyuu",
+        "created_at": "2025-12-15T18:45:56.000Z",
+        "url": "https://greasyfork.org/users/1548540-dapakyuu"
+      }
+    ],
+    "name": "MangaDex Read Status Filter for Advanced Search",
+    "description": "Mangadex Filter Based on User Read Status Works for Advanced Search",
+    "url": "https://greasyfork.org/scripts/559036-mangadex-read-status-filter-for-advanced-search",
+    "code_url": "https://update.greasyfork.org/scripts/559036/MangaDex%20Read%20Status%20Filter%20for%20Advanced%20Search.user.js",
+    "code_size": 29720,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

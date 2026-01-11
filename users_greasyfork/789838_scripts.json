@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558928,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T16:55:55.000Z",
+    "code_updated_at": "2025-12-17T14:08:44.000Z",
+    "namespace": "steam_lib_manager_unified",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 789838,
+        "name": "Идзуми Сэна",
+        "created_at": "2021-07-03T06:19:05.000Z",
+        "url": "https://greasyfork.org/users/789838-%D0%B8%D0%B4%D0%B7%D1%83%D0%BC%D0%B8-%D1%81%D1%8D%D0%BD%D0%B0"
+      }
+    ],
+    "name": "Steam: Автоматическое скрытие игр (Единая База)",
+    "description": "Скрипт для скрытия игр в магазине Steam, которые уже есть на ваших других аккаунтах. Использует единую локальную базу данных, работает между доменами (Community <-> Store).",
+    "url": "https://greasyfork.org/scripts/558928-steam-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5-%D1%81%D0%BA%D1%80%D1%8B%D1%82%D0%B8%D0%B5-%D0%B8%D0%B3%D1%80-%D0%B5%D0%B4%D0%B8%D0%BD%D0%B0%D1%8F-%D0%B1%D0%B0%D0%B7%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/558928/Steam%3A%20%D0%90%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5%20%D1%81%D0%BA%D1%80%D1%8B%D1%82%D0%B8%D0%B5%20%D0%B8%D0%B3%D1%80%20%28%D0%95%D0%B4%D0%B8%D0%BD%D0%B0%D1%8F%20%D0%91%D0%B0%D0%B7%D0%B0%29.user.js",
+    "code_size": 167768,
+    "license": null,
+    "version": "0.35",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558745,
+    "daily_installs": 1,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T16:40:40.000Z",
+    "code_updated_at": "2025-12-12T17:35:19.000Z",
+    "namespace": "https://greasyfork.org/users/789838",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 789838,
+        "name": "Идзуми Сэна",
+        "created_at": "2021-07-03T06:19:05.000Z",
+        "url": "https://greasyfork.org/users/789838-%D0%B8%D0%B4%D0%B7%D1%83%D0%BC%D0%B8-%D1%81%D1%8D%D0%BD%D0%B0"
+      }
+    ],
+    "name": "Yandex Music Downloader",
+    "description": "Добавляет кнопку для скачивания треков на Яндекс.Музыке. Использует гибридный метод (API или скрытый iframe) для получения аудиопотока и сохраняет файлы с корректным названием (Исполнитель - Трек). Работает в SPA-режиме.",
+    "url": "https://greasyfork.org/scripts/558745-yandex-music-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/558745/Yandex%20Music%20Downloader.user.js",
+    "code_size": 64959,
+    "license": null,
+    "version": "0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

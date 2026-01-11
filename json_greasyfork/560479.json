@@ -1,0 +1,59 @@
+{
+  "id": 560479,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-28T03:45:49.000Z",
+  "code_updated_at": "2025-12-28T03:45:48.000Z",
+  "namespace": "popclip.jike.compose",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1553318,
+      "name": "wangyr45",
+      "created_at": "2025-12-28T03:42:45.000Z",
+      "url": "https://greasyfork.org/users/1553318-wangyr45",
+      "scripts": [
+        {
+          "id": 560479,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-28T03:45:49.000Z",
+          "code_updated_at": "2025-12-28T03:45:48.000Z",
+          "namespace": "popclip.jike.compose",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Jike Compose Autofill",
+          "description": "将 URL 中的 ?text= 参数自动写入即刻网页的“分享你的想法...”编辑框，并触发输入事件",
+          "url": "https://greasyfork.org/scripts/560479-jike-compose-autofill",
+          "code_url": "https://update.greasyfork.org/scripts/560479/Jike%20Compose%20Autofill.user.js",
+          "code_size": 3911,
+          "license": null,
+          "version": "1.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Jike Compose Autofill",
+  "description": "将 URL 中的 ?text= 参数自动写入即刻网页的“分享你的想法...”编辑框，并触发输入事件",
+  "url": "https://greasyfork.org/scripts/560479-jike-compose-autofill",
+  "code_url": "https://update.greasyfork.org/scripts/560479/Jike%20Compose%20Autofill.user.js",
+  "code_size": 3911,
+  "license": null,
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

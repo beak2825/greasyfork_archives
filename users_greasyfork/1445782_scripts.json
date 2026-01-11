@@ -63,6 +63,39 @@
     "version": "1.2",
     "locale": "da",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558545,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T19:48:27.000Z",
+    "code_updated_at": "2025-12-11T13:49:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445782,
+        "name": "pipiorange030",
+        "created_at": "2025-03-14T20:37:14.000Z",
+        "url": "https://greasyfork.org/users/1445782-pipiorange030"
+      }
+    ],
+    "name": "GitHub Image Uploader Pro",
+    "description": "图片上传 - 🖼️图片预览 + 📱移动端长按 + 💻PC端右键 + 🎨11款皮肤",
+    "url": "https://greasyfork.org/scripts/558545-github-image-uploader-pro",
+    "code_url": "https://update.greasyfork.org/scripts/558545/GitHub%20Image%20Uploader%20Pro.user.js",
+    "code_size": 32054,
+    "license": null,
+    "version": "3.0.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 558994,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-15T09:11:14.000Z",
+  "code_updated_at": "2025-12-15T09:11:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1548085,
+      "name": "sswagz",
+      "created_at": "2025-12-14T16:28:43.000Z",
+      "url": "https://greasyfork.org/users/1548085-sswagz",
+      "scripts": [
+        {
+          "id": 558926,
+          "daily_installs": 1,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-14T16:30:28.000Z",
+          "code_updated_at": "2025-12-14T16:35:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mobile ChatGPT Overlay",
+          "description": "Mobile-friendly ChatGPT overlay with swipe gestures",
+          "url": "https://greasyfork.org/scripts/558926-mobile-chatgpt-overlay",
+          "code_url": "https://update.greasyfork.org/scripts/558926/Mobile%20ChatGPT%20Overlay.user.js",
+          "code_size": 25630,
+          "license": null,
+          "version": "3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mobile ChatGPT Overlay",
+  "description": "Mobile-friendly ChatGPT overlay with swipe gestures",
+  "url": "https://greasyfork.org/scripts/558994-mobile-chatgpt-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/558994/Mobile%20ChatGPT%20Overlay.user.js",
+  "code_size": 22871,
+  "license": null,
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

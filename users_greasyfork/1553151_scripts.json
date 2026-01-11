@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560586,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T01:22:25.000Z",
+    "code_updated_at": "2025-12-29T01:59:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1553151,
+        "name": "melville0333",
+        "created_at": "2025-12-27T13:16:19.000Z",
+        "url": "https://greasyfork.org/users/1553151-melville0333"
+      }
+    ],
+    "name": "集思录 可转债 三低",
+    "description": "可转债三低策略：选取价格<150（价格可调），溢价率<60%，剩余规模<5亿，按价格+溢价率*100+剩余规模*10 排序。已排除公告强赎、强赎满足天数小于8天、信用等级低、正股ST、正股股价低于2元、净资产为负，剩余年限小于1年，可转债概念为空。",
+    "url": "https://greasyfork.org/scripts/560586-%E9%9B%86%E6%80%9D%E5%BD%95-%E5%8F%AF%E8%BD%AC%E5%80%BA-%E4%B8%89%E4%BD%8E",
+    "code_url": "https://update.greasyfork.org/scripts/560586/%E9%9B%86%E6%80%9D%E5%BD%95%20%E5%8F%AF%E8%BD%AC%E5%80%BA%20%E4%B8%89%E4%BD%8E.user.js",
+    "code_size": 11308,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

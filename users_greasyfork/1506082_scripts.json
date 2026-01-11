@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559411,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T21:00:14.000Z",
+    "code_updated_at": "2025-12-18T22:02:41.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1506082,
+        "name": "AnotherBubblebath",
+        "created_at": "2025-08-18T00:27:34.000Z",
+        "url": "https://greasyfork.org/users/1506082-anotherbubblebath"
+      }
+    ],
+    "name": "Remove BetterRYM's Media Links",
+    "description": "Remove the current implementation of BetterRYM's media links since they're broken.",
+    "url": "https://greasyfork.org/scripts/559411-remove-betterrym-s-media-links",
+    "code_url": "https://update.greasyfork.org/scripts/559411/Remove%20BetterRYM%27s%20Media%20Links.user.js",
+    "code_size": 2256,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559309,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T06:41:10.000Z",
+    "code_updated_at": "2025-12-18T06:42:06.000Z",
+    "namespace": "RateYourMusic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1506082,
+        "name": "AnotherBubblebath",
+        "created_at": "2025-08-18T00:27:34.000Z",
+        "url": "https://greasyfork.org/users/1506082-anotherbubblebath"
+      }
+    ],
+    "name": "Arrow key release navigation",
+    "description": "Arrow key navigation on RateYourMusic",
+    "url": "https://greasyfork.org/scripts/559309-arrow-key-release-navigation",
+    "code_url": "https://update.greasyfork.org/scripts/559309/Arrow%20key%20release%20navigation.user.js",
+    "code_size": 851,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

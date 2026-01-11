@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559513,
+    "daily_installs": 3,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T13:55:33.000Z",
+    "code_updated_at": "2025-12-20T10:04:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549968,
+        "name": "Rash Vison",
+        "created_at": "2025-12-19T13:12:04.000Z",
+        "url": "https://greasyfork.org/users/1549968-rash-vison"
+      }
+    ],
+    "name": "CubeRealm.io X-R-A-Y",
+    "description": "Xray + GUI + Delayed save optimization + Select all / Deselect all + Hide / Show GUI + Safely hide ads",
+    "url": "https://greasyfork.org/scripts/559513-cuberealm-io-x-r-a-y",
+    "code_url": "https://update.greasyfork.org/scripts/559513/CubeRealmio%20X-R-A-Y.user.js",
+    "code_size": 9410,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

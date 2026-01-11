@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560129,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T21:14:20.000Z",
+    "code_updated_at": "2025-12-24T21:14:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512374,
+        "name": "mighty red",
+        "created_at": "2025-09-06T09:31:10.000Z",
+        "url": "https://greasyfork.org/users/1512374-mighty-red"
+      }
+    ],
+    "name": "ShippingManager - Full Ship Detail Scraper (Name Fix Final)",
+    "description": "Extract ship details, and snapshot key metrics for spreadsheet use",
+    "url": "https://greasyfork.org/scripts/560129-shippingmanager-full-ship-detail-scraper-name-fix-final",
+    "code_url": "https://update.greasyfork.org/scripts/560129/ShippingManager%20-%20Full%20Ship%20Detail%20Scraper%20%28Name%20Fix%20Final%29.user.js",
+    "code_size": 5905,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560128,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T20:53:03.000Z",
+    "code_updated_at": "2025-12-24T20:53:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512374,
+        "name": "mighty red",
+        "created_at": "2025-09-06T09:31:10.000Z",
+        "url": "https://greasyfork.org/users/1512374-mighty-red"
+      }
+    ],
+    "name": "Voyage History Extractor + Profit Snapshot",
+    "description": "Extract voyage history, calculate profit/NM, and snapshot key metrics for spreadsheet use",
+    "url": "https://greasyfork.org/scripts/560128-voyage-history-extractor-profit-snapshot",
+    "code_url": "https://update.greasyfork.org/scripts/560128/Voyage%20History%20Extractor%20%2B%20Profit%20Snapshot.user.js",
+    "code_size": 5041,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

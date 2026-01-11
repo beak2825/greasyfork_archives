@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559253,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T16:34:08.000Z",
+    "code_updated_at": "2025-12-19T02:14:57.000Z",
+    "namespace": "fb-reel-auto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "FB Reel Auto View + Like (Auto Start)",
+    "description": "Auto view FB Reel dengan delay random + like random (auto start)",
+    "url": "https://greasyfork.org/scripts/559253-fb-reel-auto-view-like-auto-start",
+    "code_url": "https://update.greasyfork.org/scripts/559253/FB%20Reel%20Auto%20View%20%2B%20Like%20%28Auto%20Start%29.user.js",
+    "code_size": 4713,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

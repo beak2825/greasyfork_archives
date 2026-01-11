@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559526,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T16:35:01.000Z",
+    "code_updated_at": "2025-12-19T17:29:53.000Z",
+    "namespace": "https://bilibili.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546586,
+        "name": "独孤求败0",
+        "created_at": "2025-12-10T11:52:48.000Z",
+        "url": "https://greasyfork.org/users/1546586-%E7%8B%AC%E5%AD%A4%E6%B1%82%E8%B4%A50"
+      }
+    ],
+    "name": "B站搜索增强（首页直接输入 / 视频页仅 /）",
+    "description": "首页直接输入进入搜索，视频页仅 / 进入搜索，不破坏快捷键",
+    "url": "https://greasyfork.org/scripts/559526-b%E7%AB%99%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA-%E9%A6%96%E9%A1%B5%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5-%E8%A7%86%E9%A2%91%E9%A1%B5%E4%BB%85",
+    "code_url": "https://update.greasyfork.org/scripts/559526/B%E7%AB%99%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA%EF%BC%88%E9%A6%96%E9%A1%B5%E7%9B%B4%E6%8E%A5%E8%BE%93%E5%85%A5%20%20%E8%A7%86%E9%A2%91%E9%A1%B5%E4%BB%85%20%EF%BC%89.user.js",
+    "code_size": 2733,
+    "license": null,
+    "version": "4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

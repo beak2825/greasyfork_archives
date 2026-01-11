@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558805,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-13T09:27:55.000Z",
+    "code_updated_at": "2025-12-13T13:56:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547573,
+        "name": "Elbowlian",
+        "created_at": "2025-12-13T09:08:50.000Z",
+        "url": "https://greasyfork.org/users/1547573-elbowlian"
+      }
+    ],
+    "name": "Torn Elimination filter players",
+    "description": "Filter players marked with high FF score, or being offline, and enable the attack button",
+    "url": "https://greasyfork.org/scripts/558805-torn-elimination-filter-players",
+    "code_url": "https://update.greasyfork.org/scripts/558805/Torn%20Elimination%20filter%20players.user.js",
+    "code_size": 4512,
+    "license": "GPLv3",
+    "version": "2025-12-13_03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

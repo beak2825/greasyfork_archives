@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559921,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T09:28:33.000Z",
+    "code_updated_at": "2025-12-23T09:28:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 899835,
+        "name": "月神",
+        "created_at": "2022-04-09T10:24:49.000Z",
+        "url": "https://greasyfork.org/users/899835-%E6%9C%88%E7%A5%9E"
+      }
+    ],
+    "name": "91cg全局屏蔽adspop广告div",
+    "description": "匹配所有网站，自动删除class为adspop的div广告元素",
+    "url": "https://greasyfork.org/scripts/559921-91cg%E5%85%A8%E5%B1%80%E5%B1%8F%E8%94%BDadspop%E5%B9%BF%E5%91%8Adiv",
+    "code_url": "https://update.greasyfork.org/scripts/559921/91cg%E5%85%A8%E5%B1%80%E5%B1%8F%E8%94%BDadspop%E5%B9%BF%E5%91%8Adiv.user.js",
+    "code_size": 3203,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559912,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T08:09:50.000Z",
+    "code_updated_at": "2025-12-23T08:12:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 899835,
+        "name": "月神",
+        "created_at": "2022-04-09T10:24:49.000Z",
+        "url": "https://greasyfork.org/users/899835-%E6%9C%88%E7%A5%9E"
+      }
+    ],
+    "name": "CSQAQ网站自动点击关闭广告按钮（全站版）",
+    "description": "自动定位并点击csqaq.com所有页面的关闭广告按钮（class前缀transparentButton___）",
+    "url": "https://greasyfork.org/scripts/559912-csqaq%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%85%B3%E9%97%AD%E5%B9%BF%E5%91%8A%E6%8C%89%E9%92%AE-%E5%85%A8%E7%AB%99%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559912/CSQAQ%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%85%B3%E9%97%AD%E5%B9%BF%E5%91%8A%E6%8C%89%E9%92%AE%EF%BC%88%E5%85%A8%E7%AB%99%E7%89%88%EF%BC%89.user.js",
+    "code_size": 2701,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

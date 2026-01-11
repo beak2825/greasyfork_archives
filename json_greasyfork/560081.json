@@ -1,0 +1,59 @@
+{
+  "id": 560081,
+  "daily_installs": 1,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-24T12:12:51.000Z",
+  "code_updated_at": "2025-12-24T13:38:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551947,
+      "name": "통나무대리요족",
+      "created_at": "2025-12-24T12:08:16.000Z",
+      "url": "https://greasyfork.org/users/1551947-%ED%86%B5%EB%82%98%EB%AC%B4%EB%8C%80%EB%A6%AC%EC%9A%94%EC%A1%B1",
+      "scripts": [
+        {
+          "id": 560081,
+          "daily_installs": 1,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-24T12:12:51.000Z",
+          "code_updated_at": "2025-12-24T13:38:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Templerun Auto-Complete+",
+          "description": "치지직, 숲, 유튜브 라이브에서 가사를 자동완성 해줍니다.  일치하는 부분이 있는 가사 찾기(초성도 가능), 입력이 빈 칸일 때 다음 가사 미리 띄우기 등의 기능이 있습니다.",
+          "url": "https://greasyfork.org/scripts/560081-templerun-auto-complete",
+          "code_url": "https://update.greasyfork.org/scripts/560081/Templerun%20Auto-Complete%2B.user.js",
+          "code_size": 61403,
+          "license": "MIT License",
+          "version": "2025.12.02",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Templerun Auto-Complete+",
+  "description": "치지직, 숲, 유튜브 라이브에서 가사를 자동완성 해줍니다.  일치하는 부분이 있는 가사 찾기(초성도 가능), 입력이 빈 칸일 때 다음 가사 미리 띄우기 등의 기능이 있습니다.",
+  "url": "https://greasyfork.org/scripts/560081-templerun-auto-complete",
+  "code_url": "https://update.greasyfork.org/scripts/560081/Templerun%20Auto-Complete%2B.user.js",
+  "code_size": 61403,
+  "license": "MIT License",
+  "version": "2025.12.02",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

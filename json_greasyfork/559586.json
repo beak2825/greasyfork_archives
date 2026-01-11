@@ -1,0 +1,59 @@
+{
+  "id": 559586,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-20T09:34:12.000Z",
+  "code_updated_at": "2025-12-20T09:34:12.000Z",
+  "namespace": "https://github.com/rezocrypt/aua-utils/",
+  "support_url": "https://t.me/rezocrypt",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549527,
+      "name": "Davit Harutyunyan",
+      "created_at": "2025-12-18T08:26:49.000Z",
+      "url": "https://greasyfork.org/users/1549527-davit-harutyunyan",
+      "scripts": [
+        {
+          "id": 559586,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-20T09:34:12.000Z",
+          "code_updated_at": "2025-12-20T09:34:12.000Z",
+          "namespace": "https://github.com/rezocrypt/aua-utils/",
+          "support_url": "https://t.me/rezocrypt",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AUA Courses Plugin",
+          "description": "AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility.",
+          "url": "https://greasyfork.org/scripts/559586-aua-courses-plugin",
+          "code_url": "https://update.greasyfork.org/scripts/559586/AUA%20Courses%20Plugin.user.js",
+          "code_size": 53728,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AUA Courses Plugin",
+  "description": "AUA Courses Plugin helps you find and filter courses more quickly and with greater flexibility.",
+  "url": "https://greasyfork.org/scripts/559586-aua-courses-plugin",
+  "code_url": "https://update.greasyfork.org/scripts/559586/AUA%20Courses%20Plugin.user.js",
+  "code_size": 53728,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

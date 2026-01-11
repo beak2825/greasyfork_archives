@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558876,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T06:01:13.000Z",
+    "code_updated_at": "2025-12-14T06:01:13.000Z",
+    "namespace": "https://greasyfork.org/users/1489016",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489016,
+        "name": "yinbao77",
+        "created_at": "2025-06-27T00:35:04.000Z",
+        "url": "https://greasyfork.org/users/1489016-yinbao77"
+      }
+    ],
+    "name": "聚合搜索 Pro",
+    "description": "整合百度、Google、必应搜索引擎，支持快捷键切换、自动翻页、关键词高亮、暗色模式。AI辅助生成。",
+    "url": "https://greasyfork.org/scripts/558876-%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2-pro",
+    "code_url": "https://update.greasyfork.org/scripts/558876/%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2%20Pro.user.js",
+    "code_size": 26217,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559788,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T08:10:53.000Z",
+    "code_updated_at": "2025-12-23T10:26:50.000Z",
+    "namespace": "SMTH-CONCORD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1550969,
+        "name": "brbbswd",
+        "created_at": "2025-12-22T08:01:10.000Z",
+        "url": "https://greasyfork.org/users/1550969-brbbswd"
+      }
+    ],
+    "name": "daguofan - Torn OC Work Score Display",
+    "description": "In Torn Faction -> Organized Crimes page, display \"work score\" on vacant slots of 7/8 level OCs in Recruiting tab, and support \"total score/daily score\" two modes.",
+    "url": "https://greasyfork.org/scripts/559788-daguofan-torn-oc-work-score-display",
+    "code_url": "https://update.greasyfork.org/scripts/559788/daguofan%20-%20Torn%20OC%20Work%20Score%20Display.user.js",
+    "code_size": 34448,
+    "license": "MIT License",
+    "version": "0.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

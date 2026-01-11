@@ -1,0 +1,34 @@
+{
+  "id": 560526,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-28T12:28:47.000Z",
+  "code_updated_at": "2025-12-28T12:29:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 701970,
+      "name": "DarkH15",
+      "created_at": "2020-11-05T14:17:06.000Z",
+      "url": "https://greasyfork.org/users/701970-darkh15",
+      "scripts": []
+    }
+  ],
+  "name": "Tokopedia Full Product Title Display or Tooltip",
+  "description": "Toggle between showing full product titles inline or tooltips on hover (including on images) for truncated items on Tokopedia search, product, and wishlist pages. Auto-expands main title on product detail pages.",
+  "url": "https://greasyfork.org/scripts/560526-tokopedia-full-product-title-display-or-tooltip",
+  "code_url": "https://update.greasyfork.org/scripts/560526/Tokopedia%20Full%20Product%20Title%20Display%20or%20Tooltip.user.js",
+  "code_size": 5646,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

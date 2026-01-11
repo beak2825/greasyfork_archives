@@ -1,0 +1,59 @@
+{
+  "id": 558798,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-13T03:57:15.000Z",
+  "code_updated_at": "2026-01-11T10:39:44.000Z",
+  "namespace": "Tampermonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434968,
+      "name": "LQ He",
+      "created_at": "2025-02-14T10:11:02.000Z",
+      "url": "https://greasyfork.org/users/1434968-lq-he",
+      "scripts": [
+        {
+          "id": 558798,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-13T03:57:15.000Z",
+          "code_updated_at": "2026-01-11T10:39:44.000Z",
+          "namespace": "Tampermonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube 倍速增强 + 新标签页打开",
+          "description": "长按快捷键快速倍速播放（Z/Ctrl 2倍速，右方向键 3倍速）。视频控制栏添加倍速切换按钮，支持自定义倍速设置。YouTube 链接强制新标签页打开。",
+          "url": "https://greasyfork.org/scripts/558798-youtube-%E5%80%8D%E9%80%9F%E5%A2%9E%E5%BC%BA-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80",
+          "code_url": "https://update.greasyfork.org/scripts/558798/YouTube%20%E5%80%8D%E9%80%9F%E5%A2%9E%E5%BC%BA%20%2B%20%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80.user.js",
+          "code_size": 55521,
+          "license": "MIT License",
+          "version": "1.6.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube 倍速增强 + 新标签页打开",
+  "description": "长按快捷键快速倍速播放（Z/Ctrl 2倍速，右方向键 3倍速）。视频控制栏添加倍速切换按钮，支持自定义倍速设置。YouTube 链接强制新标签页打开。",
+  "url": "https://greasyfork.org/scripts/558798-youtube-%E5%80%8D%E9%80%9F%E5%A2%9E%E5%BC%BA-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/558798/YouTube%20%E5%80%8D%E9%80%9F%E5%A2%9E%E5%BC%BA%20%2B%20%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80.user.js",
+  "code_size": 55521,
+  "license": "MIT License",
+  "version": "1.6.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

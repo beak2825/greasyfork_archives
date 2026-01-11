@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560097,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T15:00:16.000Z",
+    "code_updated_at": "2025-12-25T14:23:49.000Z",
+    "namespace": "Holotower-TS",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543454,
+        "name": "towanon",
+        "created_at": "2025-12-01T10:11:22.000Z",
+        "url": "https://greasyfork.org/users/1543454-towanon"
+      }
+    ],
+    "name": "Holotower TS",
+    "description": "Adds various features to Holotower",
+    "url": "https://greasyfork.org/scripts/560097-holotower-ts",
+    "code_url": "https://update.greasyfork.org/scripts/560097/Holotower%20TS.user.js",
+    "code_size": 184038,
+    "license": "MIT License",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

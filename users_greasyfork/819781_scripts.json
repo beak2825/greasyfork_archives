@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559567,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T04:43:36.000Z",
+    "code_updated_at": "2025-12-20T05:51:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819781,
+        "name": "zhengsk",
+        "created_at": "2021-09-28T07:22:04.000Z",
+        "url": "https://greasyfork.org/users/819781-zhengsk"
+      }
+    ],
+    "name": "WowPic 图片选择器",
+    "description": "WowPic网站 快速选择素材ID - 支持分组和持久化存储",
+    "url": "https://greasyfork.org/scripts/559567-wowpic-%E5%9B%BE%E7%89%87%E9%80%89%E6%8B%A9%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/559567/WowPic%20%E5%9B%BE%E7%89%87%E9%80%89%E6%8B%A9%E5%99%A8.user.js",
+    "code_size": 30506,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

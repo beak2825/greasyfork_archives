@@ -1,0 +1,233 @@
+[
+  {
+    "id": 560012,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:29.000Z",
+    "code_updated_at": "2025-12-23T23:17:28.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Threads to Markdown",
+    "description": "Downloads a Threads profile's posts as a Markdown file.",
+    "url": "https://greasyfork.org/scripts/560012-threads-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560012/Threads%20to%20Markdown.user.js",
+    "code_size": 10333,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560011,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:28.000Z",
+    "code_updated_at": "2025-12-23T23:17:28.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "PTT to Markdown",
+    "description": "Downloads a PTT article and comments as a Markdown file.",
+    "url": "https://greasyfork.org/scripts/560011-ptt-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560011/PTT%20to%20Markdown.user.js",
+    "code_size": 8499,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560010,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:28.000Z",
+    "code_updated_at": "2025-12-23T23:17:27.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Jules to Markdown",
+    "description": "Downloads a Jules chat log as a Markdown file.",
+    "url": "https://greasyfork.org/scripts/560010-jules-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560010/Jules%20to%20Markdown.user.js",
+    "code_size": 13705,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560008,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:27.000Z",
+    "code_updated_at": "2025-12-23T23:17:26.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "GitHub Comment ID",
+    "description": "Displays and allows copying of the comment ID on GitHub issue and pull request pages.",
+    "url": "https://greasyfork.org/scripts/560008-github-comment-id",
+    "code_url": "https://update.greasyfork.org/scripts/560008/GitHub%20Comment%20ID.user.js",
+    "code_size": 5934,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560006,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:26.000Z",
+    "code_updated_at": "2025-12-23T23:17:25.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Claude to Markdown",
+    "description": "Converts a Claude chat conversation into a Markdown file.",
+    "url": "https://greasyfork.org/scripts/560006-claude-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560006/Claude%20to%20Markdown.user.js",
+    "code_size": 8587,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560007,
+    "daily_installs": 1,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:26.000Z",
+    "code_updated_at": "2026-01-02T03:32:03.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Gemini to Markdown",
+    "description": "Converts a Gemini chat conversation into a Markdown file, including support for shared chats and canvas content.",
+    "url": "https://greasyfork.org/scripts/560007-gemini-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560007/Gemini%20to%20Markdown.user.js",
+    "code_size": 11052,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560005,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:25.000Z",
+    "code_updated_at": "2025-12-23T23:17:25.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Claude Code Web to Markdown",
+    "description": "Converts a Claude Code Web chat conversation into a Markdown file.",
+    "url": "https://greasyfork.org/scripts/560005-claude-code-web-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560005/Claude%20Code%20Web%20to%20Markdown.user.js",
+    "code_size": 15215,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

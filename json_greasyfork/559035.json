@@ -1,0 +1,34 @@
+{
+  "id": 559035,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-15T18:02:45.000Z",
+  "code_updated_at": "2026-01-02T11:41:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1548524,
+      "name": "鄭宇傑",
+      "created_at": "2025-12-15T17:42:49.000Z",
+      "url": "https://greasyfork.org/users/1548524-%E9%84%AD%E5%AE%87%E5%82%91",
+      "scripts": []
+    }
+  ],
+  "name": "ibon BOTTT (V1.2 Bark版)",
+  "description": "修復 + Bark通知 (冬冬勞工/Calypso)",
+  "url": "https://greasyfork.org/scripts/559035-ibon-bottt-v1-2-bark%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/559035/ibon%20BOTTT%20%28V12%20Bark%E7%89%88%29.user.js",
+  "code_size": 18205,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

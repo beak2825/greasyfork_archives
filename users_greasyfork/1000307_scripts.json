@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559462,
+    "daily_installs": 14,
+    "total_installs": 860,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T06:34:17.000Z",
+    "code_updated_at": "2025-12-21T08:21:17.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1000307,
+        "name": "chenxin hu",
+        "created_at": "2022-12-20T08:31:25.000Z",
+        "url": "https://greasyfork.org/users/1000307-chenxin-hu"
+      }
+    ],
+    "name": "2026最新可用-百度网盘SVIP高速解析直链的不限速下载助手 | HcxBaiduDownload",
+    "description": "百度网盘文件高速下载工具，自动处理文件重命名，支持小于150M文件快速下载",
+    "url": "https://greasyfork.org/scripts/559462-2026%E6%9C%80%E6%96%B0%E5%8F%AF%E7%94%A8-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98svip%E9%AB%98%E9%80%9F%E8%A7%A3%E6%9E%90%E7%9B%B4%E9%93%BE%E7%9A%84%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-hcxbaidudownload",
+    "code_url": "https://update.greasyfork.org/scripts/559462/2026%E6%9C%80%E6%96%B0%E5%8F%AF%E7%94%A8-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98SVIP%E9%AB%98%E9%80%9F%E8%A7%A3%E6%9E%90%E7%9B%B4%E9%93%BE%E7%9A%84%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%20%7C%20HcxBaiduDownload.user.js",
+    "code_size": 38070,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

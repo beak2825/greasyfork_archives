@@ -1,0 +1,59 @@
+{
+  "id": 559551,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-20T02:08:44.000Z",
+  "code_updated_at": "2026-01-01T16:48:15.000Z",
+  "namespace": "https://greasyfork.org/users/1550136",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550136,
+      "name": "JonClaw",
+      "created_at": "2025-12-20T01:38:20.000Z",
+      "url": "https://greasyfork.org/users/1550136-jonclaw",
+      "scripts": [
+        {
+          "id": 559551,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-20T02:08:44.000Z",
+          "code_updated_at": "2026-01-01T16:48:15.000Z",
+          "namespace": "https://greasyfork.org/users/1550136",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Dreaming Languages - Outside Time Enhancement Suite",
+          "description": "Adds quality-of-life features to the outside time modal of Dreaming Spanish/French",
+          "url": "https://greasyfork.org/scripts/559551-dreaming-languages-outside-time-enhancement-suite",
+          "code_url": "https://update.greasyfork.org/scripts/559551/Dreaming%20Languages%20-%20Outside%20Time%20Enhancement%20Suite.user.js",
+          "code_size": 8002,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Dreaming Languages - Outside Time Enhancement Suite",
+  "description": "Adds quality-of-life features to the outside time modal of Dreaming Spanish/French",
+  "url": "https://greasyfork.org/scripts/559551-dreaming-languages-outside-time-enhancement-suite",
+  "code_url": "https://update.greasyfork.org/scripts/559551/Dreaming%20Languages%20-%20Outside%20Time%20Enhancement%20Suite.user.js",
+  "code_size": 8002,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

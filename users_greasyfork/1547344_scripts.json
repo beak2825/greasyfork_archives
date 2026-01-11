@@ -163,5 +163,38 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 558750,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T16:58:01.000Z",
+    "code_updated_at": "2025-12-12T17:10:33.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547344,
+        "name": "Teyzun",
+        "created_at": "2025-12-12T16:46:54.000Z",
+        "url": "https://greasyfork.org/users/1547344-teyzun"
+      }
+    ],
+    "name": "Скрипт для ГС/ЗГС ГОСС-ГС/ЗГС ОПГ KOSTROMA",
+    "description": "Версия для сервера KOSTROMA",
+    "url": "https://greasyfork.org/scripts/558750-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D1%81-%D0%B7%D0%B3%D1%81-%D0%B3%D0%BE%D1%81%D1%81-%D0%B3%D1%81-%D0%B7%D0%B3%D1%81-%D0%BE%D0%BF%D0%B3-kostroma",
+    "code_url": "https://update.greasyfork.org/scripts/558750/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%A1%D0%97%D0%93%D0%A1%20%D0%93%D0%9E%D0%A1%D0%A1-%D0%93%D0%A1%D0%97%D0%93%D0%A1%20%D0%9E%D0%9F%D0%93%20KOSTROMA.user.js",
+    "code_size": 52857,
+    "license": "MIT License",
+    "version": "3.49",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

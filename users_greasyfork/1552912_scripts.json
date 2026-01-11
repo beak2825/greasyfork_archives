@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560359,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T00:29:04.000Z",
+    "code_updated_at": "2025-12-27T00:51:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552912,
+        "name": "Shadman",
+        "created_at": "2025-12-27T00:25:13.000Z",
+        "url": "https://greasyfork.org/users/1552912-shadman"
+      }
+    ],
+    "name": "replace furry",
+    "description": "Уточка в диалогах и на странице 404.",
+    "url": "https://greasyfork.org/scripts/560359-replace-furry",
+    "code_url": "https://update.greasyfork.org/scripts/560359/replace%20furry.user.js",
+    "code_size": 2083,
+    "license": null,
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

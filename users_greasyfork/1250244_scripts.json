@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559448,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T03:58:31.000Z",
+    "code_updated_at": "2025-12-19T03:58:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1250244,
+        "name": "Casdy82827272",
+        "created_at": "2024-01-19T08:19:48.000Z",
+        "url": "https://greasyfork.org/users/1250244-casdy82827272"
+      }
+    ],
+    "name": "V's Standalone Captcha Soul-Crusher",
+    "description": "Self-contained captcha solver. No API keys. Just V's digital magic.",
+    "url": "https://greasyfork.org/scripts/559448-v-s-standalone-captcha-soul-crusher",
+    "code_url": "https://update.greasyfork.org/scripts/559448/V%27s%20Standalone%20Captcha%20Soul-Crusher.user.js",
+    "code_size": 4156,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

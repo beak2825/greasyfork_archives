@@ -1,0 +1,59 @@
+{
+  "id": 559091,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-16T09:29:27.000Z",
+  "code_updated_at": "2025-12-22T02:31:44.000Z",
+  "namespace": "https://github.com/Huangmp1996",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 980030,
+      "name": "Huangmp1996",
+      "created_at": "2022-11-06T13:40:08.000Z",
+      "url": "https://greasyfork.org/users/980030-huangmp1996",
+      "scripts": [
+        {
+          "id": 559091,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-16T09:29:27.000Z",
+          "code_updated_at": "2025-12-22T02:31:44.000Z",
+          "namespace": "https://github.com/Huangmp1996",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Scholar Author Highlighter & Metrics",
+          "description": "Highlight papers where you are the first or last author on Google Scholar, and display a metrics panel (Papers, Citations, h-index) at the top of the article list.",
+          "url": "https://greasyfork.org/scripts/559091-google-scholar-author-highlighter-metrics",
+          "code_url": "https://update.greasyfork.org/scripts/559091/Google%20Scholar%20Author%20Highlighter%20%20Metrics.user.js",
+          "code_size": 9631,
+          "license": "MIT License",
+          "version": "3.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Scholar Author Highlighter & Metrics",
+  "description": "Highlight papers where you are the first or last author on Google Scholar, and display a metrics panel (Papers, Citations, h-index) at the top of the article list.",
+  "url": "https://greasyfork.org/scripts/559091-google-scholar-author-highlighter-metrics",
+  "code_url": "https://update.greasyfork.org/scripts/559091/Google%20Scholar%20Author%20Highlighter%20%20Metrics.user.js",
+  "code_size": 9631,
+  "license": "MIT License",
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559826,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T14:57:57.000Z",
+    "code_updated_at": "2025-12-23T01:17:55.000Z",
+    "namespace": "https://github.com/linyaocrush/My-Tampermonkey-script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435368,
+        "name": "linyaocrush",
+        "created_at": "2025-02-15T12:41:13.000Z",
+        "url": "https://greasyfork.org/users/1435368-linyaocrush"
+      }
+    ],
+    "name": "Steam 额外地区价格显示",
+    "description": "商店与购物车价格追加；购物车页显示“目标地区预计付款”，统计并剔除区域不可购买项",
+    "url": "https://greasyfork.org/scripts/559826-steam-%E9%A2%9D%E5%A4%96%E5%9C%B0%E5%8C%BA%E4%BB%B7%E6%A0%BC%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/559826/Steam%20%E9%A2%9D%E5%A4%96%E5%9C%B0%E5%8C%BA%E4%BB%B7%E6%A0%BC%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 25419,
+    "license": "MIT License",
+    "version": "0.3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559619,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T16:51:37.000Z",
+    "code_updated_at": "2025-12-22T14:27:34.000Z",
+    "namespace": "https://github.com/linyaocrush/My-Tampermonkey-script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435368,
+        "name": "linyaocrush",
+        "created_at": "2025-02-15T12:41:13.000Z",
+        "url": "https://greasyfork.org/users/1435368-linyaocrush"
+      }
+    ],
+    "name": "Steam 智能口味分析",
+    "description": "全本地逻辑，支持平权关键词、避雷屏蔽、全库画像自动同步、数据彻底重置。",
+    "url": "https://greasyfork.org/scripts/559619-steam-%E6%99%BA%E8%83%BD%E5%8F%A3%E5%91%B3%E5%88%86%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/559619/Steam%20%E6%99%BA%E8%83%BD%E5%8F%A3%E5%91%B3%E5%88%86%E6%9E%90.user.js",
+    "code_size": 13851,
+    "license": null,
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

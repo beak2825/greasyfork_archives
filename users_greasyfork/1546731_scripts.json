@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558548,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T21:07:13.000Z",
+    "code_updated_at": "2025-12-12T18:57:55.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546731,
+        "name": "Londonne",
+        "created_at": "2025-12-10T20:57:52.000Z",
+        "url": "https://greasyfork.org/users/1546731-londonne"
+      }
+    ],
+    "name": "Advent Incremental tooltips",
+    "description": "simple tooltips to display resources",
+    "url": "https://greasyfork.org/scripts/558548-advent-incremental-tooltips",
+    "code_url": "https://update.greasyfork.org/scripts/558548/Advent%20Incremental%20tooltips.user.js",
+    "code_size": 8609,
+    "license": "MIT License",
+    "version": "1.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

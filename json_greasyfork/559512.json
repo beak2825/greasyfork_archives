@@ -1,0 +1,59 @@
+{
+  "id": 559512,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-19T13:52:29.000Z",
+  "code_updated_at": "2025-12-19T14:00:12.000Z",
+  "namespace": "https://greasyfork.org/users/1549977",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549977,
+      "name": "spacegravy",
+      "created_at": "2025-12-19T13:40:47.000Z",
+      "url": "https://greasyfork.org/users/1549977-spacegravy",
+      "scripts": [
+        {
+          "id": 559512,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-19T13:52:29.000Z",
+          "code_updated_at": "2025-12-19T14:00:12.000Z",
+          "namespace": "https://greasyfork.org/users/1549977",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Avoid eBay Tracking",
+          "description": "Remove common eBay tracking ids/params and strip trackable keys",
+          "url": "https://greasyfork.org/scripts/559512-avoid-ebay-tracking",
+          "code_url": "https://update.greasyfork.org/scripts/559512/Avoid%20eBay%20Tracking.user.js",
+          "code_size": 15394,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Avoid eBay Tracking",
+  "description": "Remove common eBay tracking ids/params and strip trackable keys",
+  "url": "https://greasyfork.org/scripts/559512-avoid-ebay-tracking",
+  "code_url": "https://update.greasyfork.org/scripts/559512/Avoid%20eBay%20Tracking.user.js",
+  "code_size": 15394,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

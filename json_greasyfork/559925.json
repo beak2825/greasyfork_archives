@@ -1,0 +1,33 @@
+{
+  "id": 559925,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T10:19:37.000Z",
+  "code_updated_at": "2025-12-23T10:19:37.000Z",
+  "namespace": "https://sites.google.com/view/vizblox/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551449,
+      "name": "Pixelpaw Paramounth",
+      "created_at": "2025-12-23T10:13:39.000Z",
+      "url": "https://greasyfork.org/users/1551449-pixelpaw-paramounth"
+    }
+  ],
+  "name": "Golden Age Roblox Website Theme",
+  "description": "Dark mode + blocky gold UI + 2006–2013 nostalgia + Comic Sans",
+  "url": "https://greasyfork.org/scripts/559925-golden-age-roblox-website-theme",
+  "code_url": "https://update.greasyfork.org/scripts/559925/Golden%20Age%20Roblox%20Website%20Theme.user.js",
+  "code_size": 2101,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

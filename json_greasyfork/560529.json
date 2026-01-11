@@ -1,0 +1,59 @@
+{
+  "id": 560529,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-28T13:16:37.000Z",
+  "code_updated_at": "2025-12-28T13:16:37.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1553499,
+      "name": "Skeleton8595",
+      "created_at": "2025-12-28T12:54:58.000Z",
+      "url": "https://greasyfork.org/users/1553499-skeleton8595",
+      "scripts": [
+        {
+          "id": 560529,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-28T13:16:37.000Z",
+          "code_updated_at": "2025-12-28T13:16:37.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FictionLab Enhanced",
+          "description": "Add new features to FictionLab.ai and hide UI elements",
+          "url": "https://greasyfork.org/scripts/560529-fictionlab-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/560529/FictionLab%20Enhanced.user.js",
+          "code_size": 28410,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FictionLab Enhanced",
+  "description": "Add new features to FictionLab.ai and hide UI elements",
+  "url": "https://greasyfork.org/scripts/560529-fictionlab-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/560529/FictionLab%20Enhanced.user.js",
+  "code_size": 28410,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

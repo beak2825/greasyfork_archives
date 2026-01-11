@@ -163,5 +163,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 559303,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T03:49:34.000Z",
+    "code_updated_at": "2025-12-31T17:13:17.000Z",
+    "namespace": "http://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1427520,
+        "name": "BuiQuocDung1991",
+        "created_at": "2025-01-26T09:05:22.000Z",
+        "url": "https://greasyfork.org/users/1427520-buiquocdung1991"
+      }
+    ],
+    "name": "Google Scholar - PDF Auto-Rename & Download All",
+    "description": "Adds a \"Download All\" button to Scholar Labs, renames PDFs based on titles when you click to download URLs",
+    "url": "https://greasyfork.org/scripts/559303-google-scholar-pdf-auto-rename-download-all",
+    "code_url": "https://update.greasyfork.org/scripts/559303/Google%20Scholar%20-%20PDF%20Auto-Rename%20%20Download%20All.user.js",
+    "code_size": 11433,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559014,
+    "daily_installs": 2,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T13:44:48.000Z",
+    "code_updated_at": "2026-01-08T15:00:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1427520,
+        "name": "BuiQuocDung1991",
+        "created_at": "2025-01-26T09:05:22.000Z",
+        "url": "https://greasyfork.org/users/1427520-buiquocdung1991"
+      }
+    ],
+    "name": "YouTube toolkit",
+    "description": "Adds download and transcript buttons below video info on YouTube",
+    "url": "https://greasyfork.org/scripts/559014-youtube-toolkit",
+    "code_url": "https://update.greasyfork.org/scripts/559014/YouTube%20toolkit.user.js",
+    "code_size": 5654,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -31,5 +31,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 560472,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T01:48:50.000Z",
+    "code_updated_at": "2025-12-28T01:54:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "Favicon Fetcher & Base64 Encoder",
+    "description": "Fetch site favicon, show it in new tab, and copy base64 to clipboard",
+    "url": "https://greasyfork.org/scripts/560472-favicon-fetcher-base64-encoder",
+    "code_url": "https://update.greasyfork.org/scripts/560472/Favicon%20Fetcher%20%20Base64%20Encoder.user.js",
+    "code_size": 14785,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560471,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T01:33:06.000Z",
+    "code_updated_at": "2025-12-29T03:36:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "古诗文网增强 + 古文岛重定向",
+    "description": "增强古诗文网功能：去除广告、移除登录弹窗、自动展开内容、自动点击展开阅读全文等，并自动从古文岛重定向到古诗文网",
+    "url": "https://greasyfork.org/scripts/560471-%E5%8F%A4%E8%AF%97%E6%96%87%E7%BD%91%E5%A2%9E%E5%BC%BA-%E5%8F%A4%E6%96%87%E5%B2%9B%E9%87%8D%E5%AE%9A%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/560471/%E5%8F%A4%E8%AF%97%E6%96%87%E7%BD%91%E5%A2%9E%E5%BC%BA%20%2B%20%E5%8F%A4%E6%96%87%E5%B2%9B%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+    "code_size": 24013,
+    "license": "GPL v3.0",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560409,
+    "daily_installs": 4,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T12:29:49.000Z",
+    "code_updated_at": "2026-01-04T04:10:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "Amazon Enhancement",
+    "description": "Comprehensive Amazon improvements: filter sponsored content, remove Rufus AI, reduce CPU usage",
+    "url": "https://greasyfork.org/scripts/560409-amazon-enhancement",
+    "code_url": "https://update.greasyfork.org/scripts/560409/Amazon%20Enhancement.user.js",
+    "code_size": 43989,
+    "license": "MIT License",
+    "version": "2.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560366,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T02:13:41.000Z",
+    "code_updated_at": "2025-12-29T00:52:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "Google Contacts - Adjustable Column Width with Tooltips",
+    "description": "Make Google Contacts table columns resizable by dragging and show full content on hover",
+    "url": "https://greasyfork.org/scripts/560366-google-contacts-adjustable-column-width-with-tooltips",
+    "code_url": "https://update.greasyfork.org/scripts/560366/Google%20Contacts%20-%20Adjustable%20Column%20Width%20with%20Tooltips.user.js",
+    "code_size": 21712,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558967,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T03:47:11.000Z",
+    "code_updated_at": "2025-12-15T06:46:20.000Z",
+    "namespace": "tampermonkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1177387,
+        "name": "138 Aspen",
+        "created_at": "2023-09-21T02:50:05.000Z",
+        "url": "https://greasyfork.org/users/1177387-138-aspen"
+      }
+    ],
+    "name": "Codeberg README TOC",
+    "description": "Add table of contents(TOC) for README in Codeberg.",
+    "url": "https://greasyfork.org/scripts/558967-codeberg-readme-toc",
+    "code_url": "https://update.greasyfork.org/scripts/558967/Codeberg%20README%20TOC.user.js",
+    "code_size": 17379,
+    "license": "MIT License",
+    "version": "0.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

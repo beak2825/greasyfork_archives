@@ -1,0 +1,59 @@
+{
+  "id": 559647,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-12-20T22:30:20.000Z",
+  "code_updated_at": "2025-12-28T08:49:07.000Z",
+  "namespace": "https://www.deepco.app/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550484,
+      "name": "Cosmin Deme",
+      "created_at": "2025-12-20T21:19:40.000Z",
+      "url": "https://greasyfork.org/users/1550484-cosmin-deme",
+      "scripts": [
+        {
+          "id": 559647,
+          "daily_installs": 0,
+          "total_installs": 23,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-12-20T22:30:20.000Z",
+          "code_updated_at": "2025-12-28T08:49:07.000Z",
+          "namespace": "https://www.deepco.app/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DeepCo Statistics (Original Layout) + DC/hr Toast + Range Buttons (Stable)",
+          "description": "Full stable: original layout + legend toggles + range buttons + AUTO + SPA-safe. DC/hr from toast with robust dedupe + instant updates. DC/hr warmup (10s). Live values HUD top-center (only visible series). Title/subtitle aligned left.",
+          "url": "https://greasyfork.org/scripts/559647-deepco-statistics-original-layout-dc-hr-toast-range-buttons-stable",
+          "code_url": "https://update.greasyfork.org/scripts/559647/DeepCo%20Statistics%20%28Original%20Layout%29%20%2B%20DChr%20Toast%20%2B%20Range%20Buttons%20%28Stable%29.user.js",
+          "code_size": 56513,
+          "license": "AME",
+          "version": "2025-12-21r7q",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DeepCo Statistics (Original Layout) + DC/hr Toast + Range Buttons (Stable)",
+  "description": "Full stable: original layout + legend toggles + range buttons + AUTO + SPA-safe. DC/hr from toast with robust dedupe + instant updates. DC/hr warmup (10s). Live values HUD top-center (only visible series). Title/subtitle aligned left.",
+  "url": "https://greasyfork.org/scripts/559647-deepco-statistics-original-layout-dc-hr-toast-range-buttons-stable",
+  "code_url": "https://update.greasyfork.org/scripts/559647/DeepCo%20Statistics%20%28Original%20Layout%29%20%2B%20DChr%20Toast%20%2B%20Range%20Buttons%20%28Stable%29.user.js",
+  "code_size": 56513,
+  "license": "AME",
+  "version": "2025-12-21r7q",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

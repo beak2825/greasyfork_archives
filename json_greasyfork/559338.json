@@ -1,0 +1,33 @@
+{
+  "id": 559338,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-18T11:14:02.000Z",
+  "code_updated_at": "2025-12-18T11:14:01.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440408,
+      "name": "minhtanz1",
+      "created_at": "2025-02-27T01:09:42.000Z",
+      "url": "https://greasyfork.org/users/1440408-minhtanz1"
+    }
+  ],
+  "name": "WME Closest Segments",
+  "description": "Tìm tên đường gần nhất của venue (Place) đang được chọn",
+  "url": "https://greasyfork.org/scripts/559338-wme-closest-segments",
+  "code_url": "https://update.greasyfork.org/scripts/559338/WME%20Closest%20Segments.user.js",
+  "code_size": 46092,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

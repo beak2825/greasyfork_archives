@@ -1,0 +1,33 @@
+{
+  "id": 559879,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T01:43:54.000Z",
+  "code_updated_at": "2025-12-23T01:43:54.000Z",
+  "namespace": "https://github.com/lang-workspace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 947361,
+      "name": "田琅",
+      "created_at": "2022-08-17T07:59:30.000Z",
+      "url": "https://greasyfork.org/users/947361-%E7%94%B0%E7%90%85"
+    }
+  ],
+  "name": "自动翻页刷课助手",
+  "description": "自动模拟鼠标点击下一页，用于在线课程学习。开启后会在30秒到1分钟内随机点击下一页进行翻页。",
+  "url": "https://greasyfork.org/scripts/559879-%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5%E5%88%B7%E8%AF%BE%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/559879/%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5%E5%88%B7%E8%AF%BE%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 29489,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

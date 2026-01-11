@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559560,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T03:33:38.000Z",
+    "code_updated_at": "2025-12-20T03:33:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206502,
+        "name": "TomaszFromasz",
+        "created_at": "2018-08-21T06:06:43.000Z",
+        "url": "https://greasyfork.org/users/206502-tomaszfromasz"
+      }
+    ],
+    "name": "Cedric Revive",
+    "description": "Cedric is not dead... Yet.",
+    "url": "https://greasyfork.org/scripts/559560-cedric-revive",
+    "code_url": "https://update.greasyfork.org/scripts/559560/Cedric%20Revive.user.js",
+    "code_size": 2740,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558502,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T11:05:52.000Z",
+    "code_updated_at": "2025-12-10T12:27:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 206502,
+        "name": "TomaszFromasz",
+        "created_at": "2018-08-21T06:06:43.000Z",
+        "url": "https://greasyfork.org/users/206502-tomaszfromasz"
+      }
+    ],
+    "name": "Batch Management Script - MultiPP",
+    "description": "Manage batch limits with UI and Slack notifications",
+    "url": "https://greasyfork.org/scripts/558502-batch-management-script-multipp",
+    "code_url": "https://update.greasyfork.org/scripts/558502/Batch%20Management%20Script%20-%20MultiPP.user.js",
+    "code_size": 20994,
+    "license": null,
+    "version": "1.41",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

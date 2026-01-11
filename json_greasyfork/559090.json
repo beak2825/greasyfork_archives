@@ -1,0 +1,59 @@
+{
+  "id": 559090,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-16T09:23:32.000Z",
+  "code_updated_at": "2025-12-16T09:23:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1548752,
+      "name": "鸿运张",
+      "created_at": "2025-12-16T09:19:41.000Z",
+      "url": "https://greasyfork.org/users/1548752-%E9%B8%BF%E8%BF%90%E5%BC%A0",
+      "scripts": [
+        {
+          "id": 559090,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-16T09:23:32.000Z",
+          "code_updated_at": "2025-12-16T09:23:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "rust练习实践中文代码样式bug修复",
+          "description": "// @license MIT",
+          "url": "https://greasyfork.org/scripts/559090-rust%E7%BB%83%E4%B9%A0%E5%AE%9E%E8%B7%B5%E4%B8%AD%E6%96%87%E4%BB%A3%E7%A0%81%E6%A0%B7%E5%BC%8Fbug%E4%BF%AE%E5%A4%8D",
+          "code_url": "https://update.greasyfork.org/scripts/559090/rust%E7%BB%83%E4%B9%A0%E5%AE%9E%E8%B7%B5%E4%B8%AD%E6%96%87%E4%BB%A3%E7%A0%81%E6%A0%B7%E5%BC%8Fbug%E4%BF%AE%E5%A4%8D.user.js",
+          "code_size": 625,
+          "license": "MIT License",
+          "version": "2025-12-16",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "rust练习实践中文代码样式bug修复",
+  "description": "// @license MIT",
+  "url": "https://greasyfork.org/scripts/559090-rust%E7%BB%83%E4%B9%A0%E5%AE%9E%E8%B7%B5%E4%B8%AD%E6%96%87%E4%BB%A3%E7%A0%81%E6%A0%B7%E5%BC%8Fbug%E4%BF%AE%E5%A4%8D",
+  "code_url": "https://update.greasyfork.org/scripts/559090/rust%E7%BB%83%E4%B9%A0%E5%AE%9E%E8%B7%B5%E4%B8%AD%E6%96%87%E4%BB%A3%E7%A0%81%E6%A0%B7%E5%BC%8Fbug%E4%BF%AE%E5%A4%8D.user.js",
+  "code_size": 625,
+  "license": "MIT License",
+  "version": "2025-12-16",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

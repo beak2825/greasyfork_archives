@@ -1,0 +1,59 @@
+{
+  "id": 559386,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-18T18:25:36.000Z",
+  "code_updated_at": "2025-12-21T00:33:47.000Z",
+  "namespace": "social-block-kit",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1543953,
+      "name": "Steven-Qiang",
+      "created_at": "2025-12-02T18:21:17.000Z",
+      "url": "https://greasyfork.org/users/1543953-steven-qiang",
+      "scripts": [
+        {
+          "id": 559386,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-18T18:25:36.000Z",
+          "code_updated_at": "2025-12-21T00:33:47.000Z",
+          "namespace": "social-block-kit",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "社交平台自动拉黑工具",
+          "description": "基于关键词搜索用户并批量拉黑的多平台油猴脚本，支持抖音、哔哩哔哩等",
+          "url": "https://greasyfork.org/scripts/559386-%E7%A4%BE%E4%BA%A4%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E6%8B%89%E9%BB%91%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/559386/%E7%A4%BE%E4%BA%A4%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E6%8B%89%E9%BB%91%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 74754,
+          "license": "MIT License",
+          "version": "1.3.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "社交平台自动拉黑工具",
+  "description": "基于关键词搜索用户并批量拉黑的多平台油猴脚本，支持抖音、哔哩哔哩等",
+  "url": "https://greasyfork.org/scripts/559386-%E7%A4%BE%E4%BA%A4%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E6%8B%89%E9%BB%91%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/559386/%E7%A4%BE%E4%BA%A4%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E6%8B%89%E9%BB%91%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 74754,
+  "license": "MIT License",
+  "version": "1.3.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

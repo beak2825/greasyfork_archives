@@ -1,0 +1,101 @@
+[
+  {
+    "id": 560325,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T14:44:19.000Z",
+    "code_updated_at": "2025-12-26T14:44:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 741525,
+        "name": "cheng jack os",
+        "created_at": "2021-02-26T16:33:59.000Z",
+        "url": "https://greasyfork.org/users/741525-cheng-jack-os"
+      }
+    ],
+    "name": "X/Twitter 3-Way Hook (UI & Config Edition)",
+    "description": "Hook User, Home, Latest with UI Toast and Configurable Server URL",
+    "url": "https://greasyfork.org/scripts/560325-x-twitter-3-way-hook-ui-config-edition",
+    "code_url": "https://update.greasyfork.org/scripts/560325/XTwitter%203-Way%20Hook%20%28UI%20%20Config%20Edition%29.user.js",
+    "code_size": 10451,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559126,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T15:47:22.000Z",
+    "code_updated_at": "2025-12-26T14:53:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 741525,
+        "name": "cheng jack os",
+        "created_at": "2021-02-26T16:33:59.000Z",
+        "url": "https://greasyfork.org/users/741525-cheng-jack-os"
+      }
+    ],
+    "name": "小红书全量数据采集 (可视化配置版)",
+    "description": "采集 InitialState 和 Feed 流，支持可视化配置服务器地址及开关控制。",
+    "url": "https://greasyfork.org/scripts/559126-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%85%A8%E9%87%8F%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86-%E5%8F%AF%E8%A7%86%E5%8C%96%E9%85%8D%E7%BD%AE%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559126/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%85%A8%E9%87%8F%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%20%28%E5%8F%AF%E8%A7%86%E5%8C%96%E9%85%8D%E7%BD%AE%E7%89%88%29.user.js",
+    "code_size": 13069,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559107,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T12:40:58.000Z",
+    "code_updated_at": "2025-12-27T10:56:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 741525,
+        "name": "cheng jack os",
+        "created_at": "2021-02-26T16:33:59.000Z",
+        "url": "https://greasyfork.org/users/741525-cheng-jack-os"
+      }
+    ],
+    "name": "CSDN 自动AI神评助手 (全配置版)",
+    "description": "增加前端配置能力 -> 支持自定义系统提示词(Prompt) -> 自定义接口和模型 -> 气泡提示 -> 深度清洗 DeepSeek 思考标签",
+    "url": "https://greasyfork.org/scripts/559107-csdn-%E8%87%AA%E5%8A%A8ai%E7%A5%9E%E8%AF%84%E5%8A%A9%E6%89%8B-%E5%85%A8%E9%85%8D%E7%BD%AE%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559107/CSDN%20%E8%87%AA%E5%8A%A8AI%E7%A5%9E%E8%AF%84%E5%8A%A9%E6%89%8B%20%28%E5%85%A8%E9%85%8D%E7%BD%AE%E7%89%88%29.user.js",
+    "code_size": 11334,
+    "license": "MIT License",
+    "version": "9.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

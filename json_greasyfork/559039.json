@@ -1,0 +1,59 @@
+{
+  "id": 559039,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-15T20:13:17.000Z",
+  "code_updated_at": "2025-12-20T00:23:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1548552,
+      "name": "JohnK",
+      "created_at": "2025-12-15T19:59:27.000Z",
+      "url": "https://greasyfork.org/users/1548552-johnk",
+      "scripts": [
+        {
+          "id": 559039,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-15T20:13:17.000Z",
+          "code_updated_at": "2025-12-20T00:23:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT fix for missing caret",
+          "description": "Fixes ChatGPT bug where caret disappears after pasting CRLF-based newlines (Windows standard); converts CRLF to LF and pastes properly in ChatGPT ProseMirror editor",
+          "url": "https://greasyfork.org/scripts/559039-chatgpt-fix-for-missing-caret",
+          "code_url": "https://update.greasyfork.org/scripts/559039/ChatGPT%20fix%20for%20missing%20caret.user.js",
+          "code_size": 1422,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT fix for missing caret",
+  "description": "Fixes ChatGPT bug where caret disappears after pasting CRLF-based newlines (Windows standard); converts CRLF to LF and pastes properly in ChatGPT ProseMirror editor",
+  "url": "https://greasyfork.org/scripts/559039-chatgpt-fix-for-missing-caret",
+  "code_url": "https://update.greasyfork.org/scripts/559039/ChatGPT%20fix%20for%20missing%20caret.user.js",
+  "code_size": 1422,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

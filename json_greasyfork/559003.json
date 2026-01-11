@@ -1,0 +1,34 @@
+{
+  "id": 559003,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-15T12:12:17.000Z",
+  "code_updated_at": "2025-12-15T12:12:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1545884,
+      "name": "Omar Aliev",
+      "created_at": "2025-12-08T10:32:56.000Z",
+      "url": "https://greasyfork.org/users/1545884-omar-aliev",
+      "scripts": []
+    }
+  ],
+  "name": "Zorrov",
+  "description": "none",
+  "url": "https://greasyfork.org/scripts/559003-zorrov",
+  "code_url": "https://update.greasyfork.org/scripts/559003/Zorrov.user.js",
+  "code_size": 2920,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558599,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T08:37:29.000Z",
+    "code_updated_at": "2025-12-11T08:37:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546853,
+        "name": "talyor43",
+        "created_at": "2025-12-11T08:27:11.000Z",
+        "url": "https://greasyfork.org/users/1546853-talyor43"
+      }
+    ],
+    "name": "🎯 学习通全自动AI刷课工具｜⚡ 一键启动挂机模式｜🧠 智能AI题目作答｜📀 自动刷章节视频+测试｜💎 持续维护更新",
+    "description": "采用DeepSeek大模型，全面支持各类题型。自动完成视频进度、章节测试与作业，稳定可靠，长期可用。",
+    "url": "https://greasyfork.org/scripts/558599-%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%87%AA%E5%8A%A8ai%E5%88%B7%E8%AF%BE%E5%B7%A5%E5%85%B7-%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%E6%8C%82%E6%9C%BA%E6%A8%A1%E5%BC%8F-%E6%99%BA%E8%83%BDai%E9%A2%98%E7%9B%AE%E4%BD%9C%E7%AD%94-%E8%87%AA%E5%8A%A8%E5%88%B7%E7%AB%A0%E8%8A%82%E8%A7%86%E9%A2%91-%E6%B5%8B%E8%AF%95-%E6%8C%81%E7%BB%AD%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/558599/%F0%9F%8E%AF%20%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%87%AA%E5%8A%A8AI%E5%88%B7%E8%AF%BE%E5%B7%A5%E5%85%B7%EF%BD%9C%E2%9A%A1%20%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%E6%8C%82%E6%9C%BA%E6%A8%A1%E5%BC%8F%EF%BD%9C%F0%9F%A7%A0%20%E6%99%BA%E8%83%BDAI%E9%A2%98%E7%9B%AE%E4%BD%9C%E7%AD%94%EF%BD%9C%F0%9F%93%80%20%E8%87%AA%E5%8A%A8%E5%88%B7%E7%AB%A0%E8%8A%82%E8%A7%86%E9%A2%91%2B%E6%B5%8B%E8%AF%95%EF%BD%9C%F0%9F%92%8E%20%E6%8C%81%E7%BB%AD%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 226622,
+    "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+    "version": "1.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

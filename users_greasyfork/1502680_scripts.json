@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560462,
+    "daily_installs": 1,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T22:09:11.000Z",
+    "code_updated_at": "2026-01-03T20:08:08.000Z",
+    "namespace": "https://github.com/asmodeo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502680,
+        "name": "Parma",
+        "created_at": "2025-08-08T02:37:55.000Z",
+        "url": "https://greasyfork.org/users/1502680-parma"
+      }
+    ],
+    "name": "GeoGuessr Export Toolkit (GET)",
+    "description": "Export GeoGuessr rounds to JSON or Map-Making.App with tags, auto-send to MMA, and Google Maps short URL generation.",
+    "url": "https://greasyfork.org/scripts/560462-geoguessr-export-toolkit-get",
+    "code_url": "https://update.greasyfork.org/scripts/560462/GeoGuessr%20Export%20Toolkit%20%28GET%29.user.js",
+    "code_size": 80195,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

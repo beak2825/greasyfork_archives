@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 559153,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T21:50:05.000Z",
+    "code_updated_at": "2025-12-16T21:50:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "FFZ/Twitch Emote Picker - emote picker restyle Toggle",
+    "description": "Adds a button to switch custom styles in the Twitch emoticons panel (FFZ)",
+    "url": "https://greasyfork.org/scripts/559153-ffz-twitch-emote-picker-emote-picker-restyle-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/559153/FFZTwitch%20Emote%20Picker%20-%20emote%20picker%20restyle%20Toggle.user.js",
+    "code_size": 5990,
+    "license": "MIT License",
+    "version": "17122025",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

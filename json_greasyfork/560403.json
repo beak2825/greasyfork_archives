@@ -1,0 +1,59 @@
+{
+  "id": 560403,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-27T11:22:03.000Z",
+  "code_updated_at": "2025-12-27T11:22:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1553115,
+      "name": "ZhFuwe",
+      "created_at": "2025-12-27T11:07:42.000Z",
+      "url": "https://greasyfork.org/users/1553115-zhfuwe",
+      "scripts": [
+        {
+          "id": 560403,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-27T11:22:03.000Z",
+          "code_updated_at": "2025-12-27T11:22:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mercari RMB 价格显示",
+          "description": "适配 Mercari 主站、Shops 页、搜索页、详情页，显示换算的 RMB 价格，可修改汇率。",
+          "url": "https://greasyfork.org/scripts/560403-mercari-rmb-%E4%BB%B7%E6%A0%BC%E6%98%BE%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/560403/Mercari%20RMB%20%E4%BB%B7%E6%A0%BC%E6%98%BE%E7%A4%BA.user.js",
+          "code_size": 10722,
+          "license": "Apache License 2.0",
+          "version": "1.3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mercari RMB 价格显示",
+  "description": "适配 Mercari 主站、Shops 页、搜索页、详情页，显示换算的 RMB 价格，可修改汇率。",
+  "url": "https://greasyfork.org/scripts/560403-mercari-rmb-%E4%BB%B7%E6%A0%BC%E6%98%BE%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/560403/Mercari%20RMB%20%E4%BB%B7%E6%A0%BC%E6%98%BE%E7%A4%BA.user.js",
+  "code_size": 10722,
+  "license": "Apache License 2.0",
+  "version": "1.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

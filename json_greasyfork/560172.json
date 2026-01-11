@@ -1,0 +1,59 @@
+{
+  "id": 560172,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-25T09:46:49.000Z",
+  "code_updated_at": "2025-12-29T11:31:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 150520,
+      "name": "fes dwa",
+      "created_at": "2017-08-26T15:51:31.000Z",
+      "url": "https://greasyfork.org/users/150520-fes-dwa",
+      "scripts": [
+        {
+          "id": 560172,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-25T09:46:49.000Z",
+          "code_updated_at": "2025-12-29T11:31:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kakuyomu 縦書きリーダー (V2.1)",
+          "description": "カクヨムの縦書き化 F9で設定",
+          "url": "https://greasyfork.org/scripts/560172-kakuyomu-%E7%B8%A6%E6%9B%B8%E3%81%8D%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-v2-1",
+          "code_url": "https://update.greasyfork.org/scripts/560172/Kakuyomu%20%E7%B8%A6%E6%9B%B8%E3%81%8D%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC%20%28V21%29.user.js",
+          "code_size": 15592,
+          "license": "CC0",
+          "version": "2.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kakuyomu 縦書きリーダー (V2.1)",
+  "description": "カクヨムの縦書き化 F9で設定",
+  "url": "https://greasyfork.org/scripts/560172-kakuyomu-%E7%B8%A6%E6%9B%B8%E3%81%8D%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-v2-1",
+  "code_url": "https://update.greasyfork.org/scripts/560172/Kakuyomu%20%E7%B8%A6%E6%9B%B8%E3%81%8D%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC%20%28V21%29.user.js",
+  "code_size": 15592,
+  "license": "CC0",
+  "version": "2.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

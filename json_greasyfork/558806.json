@@ -1,0 +1,33 @@
+{
+  "id": 558806,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-13T09:28:21.000Z",
+  "code_updated_at": "2025-12-13T09:28:21.000Z",
+  "namespace": "https://moyu-idle.com/notepad",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 173945,
+      "name": "yika kia",
+      "created_at": "2018-03-08T14:09:07.000Z",
+      "url": "https://greasyfork.org/users/173945-yika-kia"
+    }
+  ],
+  "name": "猫猫放置-备忘录",
+  "description": "好记性不如烂笔头，记一下发展目标和TODO",
+  "url": "https://greasyfork.org/scripts/558806-%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE-%E5%A4%87%E5%BF%98%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/558806/%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE-%E5%A4%87%E5%BF%98%E5%BD%95.user.js",
+  "code_size": 7221,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

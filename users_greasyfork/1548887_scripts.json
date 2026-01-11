@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559127,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T15:48:04.000Z",
+    "code_updated_at": "2025-12-16T15:48:04.000Z",
+    "namespace": "E4gle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548887,
+        "name": "C. H.",
+        "created_at": "2025-12-16T15:46:36.000Z",
+        "url": "https://greasyfork.org/users/1548887-c-h"
+      }
+    ],
+    "name": "Kittens Game AutoPlay Loader",
+    "description": "Add-on for the wonderful incremental browser game: https://kittensgame.com/web/",
+    "url": "https://greasyfork.org/scripts/559127-kittens-game-autoplay-loader",
+    "code_url": "https://update.greasyfork.org/scripts/559127/Kittens%20Game%20AutoPlay%20Loader.user.js",
+    "code_size": 1331,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

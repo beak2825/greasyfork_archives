@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559677,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T05:30:11.000Z",
+    "code_updated_at": "2025-12-21T05:30:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547029,
+        "name": "kawau-tui",
+        "created_at": "2025-12-11T20:45:18.000Z",
+        "url": "https://greasyfork.org/users/1547029-kawau-tui"
+      }
+    ],
+    "name": "JanitorAI Character Page Avatar Extractor",
+    "description": "Adds a source link ONLY on character profile pages. Handles SPA navigation.",
+    "url": "https://greasyfork.org/scripts/559677-janitorai-character-page-avatar-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/559677/JanitorAI%20Character%20Page%20Avatar%20Extractor.user.js",
+    "code_size": 4632,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558668,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T21:04:06.000Z",
+    "code_updated_at": "2025-12-20T04:51:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547029,
+        "name": "kawau-tui",
+        "created_at": "2025-12-11T20:45:18.000Z",
+        "url": "https://greasyfork.org/users/1547029-kawau-tui"
+      }
+    ],
+    "name": "Disable JanitorAI Snowfall",
+    "description": "Disables the SnowfallCanvas to prevent nausea.",
+    "url": "https://greasyfork.org/scripts/558668-disable-janitorai-snowfall",
+    "code_url": "https://update.greasyfork.org/scripts/558668/Disable%20JanitorAI%20Snowfall.user.js",
+    "code_size": 1608,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

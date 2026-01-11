@@ -1,0 +1,34 @@
+{
+  "id": 559373,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-18T15:51:40.000Z",
+  "code_updated_at": "2025-12-18T15:51:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 204955,
+      "name": "GFgatus",
+      "created_at": "2018-08-14T18:23:50.000Z",
+      "url": "https://greasyfork.org/users/204955-gfgatus",
+      "scripts": []
+    }
+  ],
+  "name": "X (Twitter) Grok Commander V20.1 (Multilingual)",
+  "description": "X Post AI Commander [Multi-language precision strike version]. Added \"Automatically close the drawing window\", \"Force clear the input box after sending\" and \"Traditional Chinese button fingerprint lock\". Supports Traditional Chinese, Simplified Chinese, English, Japanese, and Korean.",
+  "url": "https://greasyfork.org/scripts/559373-x-twitter-grok-commander-v20-1-multilingual",
+  "code_url": "https://update.greasyfork.org/scripts/559373/X%20%28Twitter%29%20Grok%20Commander%20V201%20%28Multilingual%29.user.js",
+  "code_size": 33150,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

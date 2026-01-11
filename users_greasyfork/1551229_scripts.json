@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559870,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T22:28:34.000Z",
+    "code_updated_at": "2025-12-23T01:36:27.000Z",
+    "namespace": "https://openuserjs.org/users/torn/pokerodds_mc_v5_dark_series",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1551229,
+        "name": "Pineglo",
+        "created_at": "2025-12-22T22:21:25.000Z",
+        "url": "https://greasyfork.org/users/1551229-pineglo"
+      }
+    ],
+    "name": "Torn Poker Odds (Monte Carlo) - V5.1 Mobile Fixed + Pointer Drag + Layout Toggle",
+    "description": "Descriptive-only Monte Carlo estimates for Torn Hold'em with dark blue UI. Fixes hand-ranking score (no more high-card beating pairs), cancels stale sims when state changes, improves card parsing robustness across UI variants, and shows exact opponent count used. No advice.",
+    "url": "https://greasyfork.org/scripts/559870-torn-poker-odds-monte-carlo-v5-1-mobile-fixed-pointer-drag-layout-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/559870/Torn%20Poker%20Odds%20%28Monte%20Carlo%29%20-%20V51%20Mobile%20Fixed%20%2B%20Pointer%20Drag%20%2B%20Layout%20Toggle.user.js",
+    "code_size": 54980,
+    "license": "MIT License",
+    "version": "0.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

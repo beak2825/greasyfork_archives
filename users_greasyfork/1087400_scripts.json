@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 560385,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T07:13:59.000Z",
+    "code_updated_at": "2025-12-27T07:13:59.000Z",
+    "namespace": "https://greasyfork.org/users/30701-justins83-waze",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1087400,
+        "name": "kid4rm90s",
+        "created_at": "2023-05-30T15:55:13.000Z",
+        "url": "https://greasyfork.org/users/1087400-kid4rm90s"
+      }
+    ],
+    "name": "WazeToastr",
+    "description": "A toastr notification library for WME scripts",
+    "url": "https://greasyfork.org/scripts/560385-wazetoastr",
+    "code_url": "https://update.greasyfork.org/scripts/560385/1721917/WazeToastr.js",
+    "code_size": 1669,
+    "license": null,
+    "version": "2025.12.27.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559241,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T13:23:59.000Z",
+    "code_updated_at": "2026-01-07T12:41:59.000Z",
+    "namespace": "https://github.com/kid4rm90s/WME-Redirect-to-Beta-Links",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1087400,
+        "name": "kid4rm90s",
+        "created_at": "2023-05-30T15:55:13.000Z",
+        "url": "https://greasyfork.org/users/1087400-kid4rm90s"
+      }
+    ],
+    "name": "WME Redirect to Beta Links",
+    "description": "Open all WME links in Beta WME",
+    "url": "https://greasyfork.org/scripts/559241-wme-redirect-to-beta-links",
+    "code_url": "https://update.greasyfork.org/scripts/559241/WME%20Redirect%20to%20Beta%20Links.user.js",
+    "code_size": 4330,
+    "license": "MIT License",
+    "version": "2026.01.07.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

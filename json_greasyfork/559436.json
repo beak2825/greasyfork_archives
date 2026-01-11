@@ -1,0 +1,34 @@
+{
+  "id": 559436,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-19T00:55:11.000Z",
+  "code_updated_at": "2025-12-19T00:55:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533849,
+      "name": "Jaehyong Kim",
+      "created_at": "2025-11-04T04:29:39.000Z",
+      "url": "https://greasyfork.org/users/1533849-jaehyong-kim",
+      "scripts": []
+    }
+  ],
+  "name": "LIMS 작업선택 팝업 필터",
+  "description": "작업선택 팝업 전용 숨김 및 필터링 (다크 모드, 취소선 지원)",
+  "url": "https://greasyfork.org/scripts/559436-lims-%EC%9E%91%EC%97%85%EC%84%A0%ED%83%9D-%ED%8C%9D%EC%97%85-%ED%95%84%ED%84%B0",
+  "code_url": "https://update.greasyfork.org/scripts/559436/LIMS%20%EC%9E%91%EC%97%85%EC%84%A0%ED%83%9D%20%ED%8C%9D%EC%97%85%20%ED%95%84%ED%84%B0.user.js",
+  "code_size": 12070,
+  "license": null,
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

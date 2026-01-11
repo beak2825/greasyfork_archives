@@ -1,0 +1,34 @@
+{
+  "id": 559916,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-23T08:45:44.000Z",
+  "code_updated_at": "2025-12-23T08:45:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1538429,
+      "name": "Daturax [2627396]",
+      "created_at": "2025-11-16T12:59:57.000Z",
+      "url": "https://greasyfork.org/users/1538429-daturax-2627396",
+      "scripts": []
+    }
+  ],
+  "name": "Phantom Core v1.3.1 Beta",
+  "description": "Universal nano plugin host: Loads Phantom Plugins for TornPDA on Torn.com",
+  "url": "https://greasyfork.org/scripts/559916-phantom-core-v1-3-1-beta",
+  "code_url": "https://update.greasyfork.org/scripts/559916/Phantom%20Core%20v131%20Beta.user.js",
+  "code_size": 142410,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.3.1 Beta",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

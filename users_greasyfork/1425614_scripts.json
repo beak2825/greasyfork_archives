@@ -1,0 +1,233 @@
+[
+  {
+    "id": 559956,
+    "daily_installs": 1,
+    "total_installs": 112,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:11:22.000Z",
+    "code_updated_at": "2025-12-23T14:14:20.000Z",
+    "namespace": "https://github.com/ikaikail",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "网课全能助手｜超星学习通｜智慧树｜智慧职教｜中国大学mooc｜自动答题｜自动刷课｜一键操作｜超全题库｜可视化配置",
+    "description": "支持超星学习通、智慧树、智慧职教、中国大学mooc等平台，包含自动答题、自动刷课、任务点自动跳转、全网检索答案、chatgpt对接、音频视频自动静音播放、可视化参数配置等功能。",
+    "url": "https://greasyfork.org/scripts/559956-%E7%BD%91%E8%AF%BE%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E6%99%BA%E6%85%A7%E6%A0%91-%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6mooc-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE-%E4%B8%80%E9%94%AE%E6%93%8D%E4%BD%9C-%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93-%E5%8F%AF%E8%A7%86%E5%8C%96%E9%85%8D%E7%BD%AE",
+    "code_url": "https://update.greasyfork.org/scripts/559956/%E7%BD%91%E8%AF%BE%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B%EF%BD%9C%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%EF%BD%9C%E6%99%BA%E6%85%A7%E6%A0%91%EF%BD%9C%E6%99%BA%E6%85%A7%E8%81%8C%E6%95%99%EF%BD%9C%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6mooc%EF%BD%9C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%EF%BD%9C%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%EF%BD%9C%E4%B8%80%E9%94%AE%E6%93%8D%E4%BD%9C%EF%BD%9C%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93%EF%BD%9C%E5%8F%AF%E8%A7%86%E5%8C%96%E9%85%8D%E7%BD%AE.user.js",
+    "code_size": 30531,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559955,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:10:13.000Z",
+    "code_updated_at": "2025-12-23T14:10:13.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "vue.global.prod.js",
+    "description": "vue.global.prod",
+    "url": "https://greasyfork.org/scripts/559955-vue-global-prod-js",
+    "code_url": "https://update.greasyfork.org/scripts/559955/1719602/vueglobalprodjs.js",
+    "code_size": 131294,
+    "license": null,
+    "version": "0.0.1.20251223141013",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559954,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:09:32.000Z",
+    "code_updated_at": "2025-12-23T14:09:32.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "index.iife.min.js",
+    "description": "index.iife",
+    "url": "https://greasyfork.org/scripts/559954-index-iife-min-js",
+    "code_url": "https://update.greasyfork.org/scripts/559954/1719600/indexiifeminjs.js",
+    "code_size": 1636,
+    "license": null,
+    "version": "0.0.1.20251223140932",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 559953,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:08:56.000Z",
+    "code_updated_at": "2025-12-23T14:08:56.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "global.iife.min.js",
+    "description": "global.iife",
+    "url": "https://greasyfork.org/scripts/559953-global-iife-min-js",
+    "code_url": "https://update.greasyfork.org/scripts/559953/1719599/globaliifeminjs.js",
+    "code_size": 228811,
+    "license": null,
+    "version": "0.0.1.20251223140856",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559952,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:08:18.000Z",
+    "code_updated_at": "2025-12-23T14:08:18.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "pinia.iife.prod.js",
+    "description": "pinia.iife.prod",
+    "url": "https://greasyfork.org/scripts/559952-pinia-iife-prod-js",
+    "code_url": "https://update.greasyfork.org/scripts/559952/1719598/piniaiifeprodjs.js",
+    "code_size": 5823,
+    "license": null,
+    "version": "0.0.1.20251223140818",
+    "locale": "uz",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559951,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:07:25.000Z",
+    "code_updated_at": "2025-12-23T14:07:24.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "index.full.min.js",
+    "description": "index.full",
+    "url": "https://greasyfork.org/scripts/559951-index-full-min-js",
+    "code_url": "https://update.greasyfork.org/scripts/559951/1719596/indexfullminjs.js",
+    "code_size": 926427,
+    "license": null,
+    "version": "0.0.1.20251223140724",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559950,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T14:06:23.000Z",
+    "code_updated_at": "2025-12-23T14:06:23.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "md5.min.js",
+    "description": "md5",
+    "url": "https://greasyfork.org/scripts/559950-md5-min-js",
+    "code_url": "https://update.greasyfork.org/scripts/559950/1719593/md5minjs.js",
+    "code_size": 3750,
+    "license": null,
+    "version": "0.0.1.20251223140623",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

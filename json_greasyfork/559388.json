@@ -1,0 +1,34 @@
+{
+  "id": 559388,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-18T18:45:39.000Z",
+  "code_updated_at": "2025-12-18T18:45:39.000Z",
+  "namespace": "freebuyall",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549750,
+      "name": "木土土",
+      "created_at": "2025-12-18T18:39:44.000Z",
+      "url": "https://greasyfork.org/users/1549750-%E6%9C%A8%E5%9C%9F%E5%9C%9F",
+      "scripts": []
+    }
+  ],
+  "name": "查询排程自动填写影城名字",
+  "description": "适配多域名，支持用户自定义影城名称，支持脚本后续更新不丢失配置",
+  "url": "https://greasyfork.org/scripts/559388-%E6%9F%A5%E8%AF%A2%E6%8E%92%E7%A8%8B%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%BD%B1%E5%9F%8E%E5%90%8D%E5%AD%97",
+  "code_url": "https://update.greasyfork.org/scripts/559388/%E6%9F%A5%E8%AF%A2%E6%8E%92%E7%A8%8B%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E5%BD%B1%E5%9F%8E%E5%90%8D%E5%AD%97.user.js",
+  "code_size": 3417,
+  "license": null,
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

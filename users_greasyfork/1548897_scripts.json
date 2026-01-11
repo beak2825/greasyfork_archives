@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559134,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T16:25:23.000Z",
+    "code_updated_at": "2025-12-16T16:25:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548897,
+        "name": "Deonator",
+        "created_at": "2025-12-16T16:19:00.000Z",
+        "url": "https://greasyfork.org/users/1548897-deonator"
+      }
+    ],
+    "name": "AUTOsda4a (smart safe + pleasant sound + random time v0.8)",
+    "description": "Автосдача таска с рандомным временем (15–50 сек), если есть прогресс (не 0/x). Приятный звук 🔔",
+    "url": "https://greasyfork.org/scripts/559134-autosda4a-smart-safe-pleasant-sound-random-time-v0-8",
+    "code_url": "https://update.greasyfork.org/scripts/559134/AUTOsda4a%20%28smart%20safe%20%2B%20pleasant%20sound%20%2B%20random%20time%20v08%29.user.js",
+    "code_size": 3131,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

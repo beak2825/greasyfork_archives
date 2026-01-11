@@ -96,6 +96,105 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559577,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T07:33:00.000Z",
+    "code_updated_at": "2025-12-20T08:11:10.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512840,
+        "name": "lissa jo",
+        "created_at": "2025-09-08T01:11:42.000Z",
+        "url": "https://greasyfork.org/users/1512840-lissa-jo"
+      }
+    ],
+    "name": "CS – Duplicate Pet Remover In Trades",
+    "description": "Instantly removes visually identical pets on CS trade pages with 1 click",
+    "url": "https://greasyfork.org/scripts/559577-cs-duplicate-pet-remover-in-trades",
+    "code_url": "https://update.greasyfork.org/scripts/559577/CS%20%E2%80%93%20Duplicate%20Pet%20Remover%20In%20Trades.user.js",
+    "code_size": 1951,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559157,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T23:44:39.000Z",
+    "code_updated_at": "2025-12-16T23:44:39.000Z",
+    "namespace": "https://www.chickensmoothie.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512840,
+        "name": "lissa jo",
+        "created_at": "2025-09-08T01:11:42.000Z",
+        "url": "https://greasyfork.org/users/1512840-lissa-jo"
+      }
+    ],
+    "name": "CS Wishlist Pets & Items Open As Defaults on Trades",
+    "description": "Automatically opens wishlist pets/items by default on trade pages.",
+    "url": "https://greasyfork.org/scripts/559157-cs-wishlist-pets-items-open-as-defaults-on-trades",
+    "code_url": "https://update.greasyfork.org/scripts/559157/CS%20Wishlist%20Pets%20%20Items%20Open%20As%20Defaults%20on%20Trades.user.js",
+    "code_size": 2262,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558674,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T22:10:39.000Z",
+    "code_updated_at": "2025-12-11T22:10:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512840,
+        "name": "lissa jo",
+        "created_at": "2025-09-08T01:11:42.000Z",
+        "url": "https://greasyfork.org/users/1512840-lissa-jo"
+      }
+    ],
+    "name": "P3 Excavation Bot",
+    "description": "Continuous Excavation Bot: clicks Start Excavating!, 10 squares, logs items, stops at daily limit",
+    "url": "https://greasyfork.org/scripts/558674-p3-excavation-bot",
+    "code_url": "https://update.greasyfork.org/scripts/558674/P3%20Excavation%20Bot.user.js",
+    "code_size": 7375,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

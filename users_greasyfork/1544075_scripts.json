@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560127,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T20:51:03.000Z",
+    "code_updated_at": "2025-12-24T20:51:03.000Z",
+    "namespace": "https://greasyfork.org/users/1544075",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1544075,
+        "name": "Logan Bell",
+        "created_at": "2025-12-03T05:20:52.000Z",
+        "url": "https://greasyfork.org/users/1544075-logan-bell"
+      }
+    ],
+    "name": "Neopets Trading Post Price Checker",
+    "description": "Fetches itemdb prices for TP lots and displays a total lot value.",
+    "url": "https://greasyfork.org/scripts/560127-neopets-trading-post-price-checker",
+    "code_url": "https://update.greasyfork.org/scripts/560127/Neopets%20Trading%20Post%20Price%20Checker.user.js",
+    "code_size": 5374,
+    "license": "@MIT",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

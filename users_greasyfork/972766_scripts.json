@@ -1,0 +1,233 @@
+[
+  {
+    "id": 559251,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T15:59:56.000Z",
+    "code_updated_at": "2025-12-17T15:59:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Req Start Binance 4Rec vb.sven_bossmann@hotmail.com",
+    "description": "Insert",
+    "url": "https://greasyfork.org/scripts/559251-req-start-binance-4rec-vb-sven-bossmann-hotmail-com",
+    "code_url": "https://update.greasyfork.org/scripts/559251/Req%20Start%20Binance%204Rec%20vbsven_bossmann%40hotmailcom.user.js",
+    "code_size": 13234,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559250,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T15:58:59.000Z",
+    "code_updated_at": "2025-12-19T10:05:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Ed Start 4Rec vb.sven_bossmann@hotmail.com",
+    "description": "with minus bal handling",
+    "url": "https://greasyfork.org/scripts/559250-ed-start-4rec-vb-sven-bossmann-hotmail-com",
+    "code_url": "https://update.greasyfork.org/scripts/559250/Ed%20Start%204Rec%20vbsven_bossmann%40hotmailcom.user.js",
+    "code_size": 132155,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559233,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T12:40:20.000Z",
+    "code_updated_at": "2025-12-17T12:40:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Req Start Binance 4Rec hyp.m5rly108@gmail.com",
+    "description": "Insert",
+    "url": "https://greasyfork.org/scripts/559233-req-start-binance-4rec-hyp-m5rly108-gmail-com",
+    "code_url": "https://update.greasyfork.org/scripts/559233/Req%20Start%20Binance%204Rec%20hypm5rly108%40gmailcom.user.js",
+    "code_size": 13222,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559113,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T13:50:37.000Z",
+    "code_updated_at": "2025-12-16T13:50:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Req Binance 4Rec tar.maren.79@web.de",
+    "description": "Insert",
+    "url": "https://greasyfork.org/scripts/559113-req-binance-4rec-tar-maren-79-web-de",
+    "code_url": "https://update.greasyfork.org/scripts/559113/Req%20Binance%204Rec%20tarmaren79%40webde.user.js",
+    "code_size": 13172,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559112,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T13:49:47.000Z",
+    "code_updated_at": "2025-12-16T13:49:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Ed 4Rec  tar.maren.79@web.de",
+    "description": "with minus bal handling",
+    "url": "https://greasyfork.org/scripts/559112-ed-4rec-tar-maren-79-web-de",
+    "code_url": "https://update.greasyfork.org/scripts/559112/Ed%204Rec%20%20tarmaren79%40webde.user.js",
+    "code_size": 3886,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559100,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T12:13:46.000Z",
+    "code_updated_at": "2025-12-16T12:13:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Req Start Binance 4Rec vb.angelika.ludwig.beck@vodafone.de",
+    "description": "Insert",
+    "url": "https://greasyfork.org/scripts/559100-req-start-binance-4rec-vb-angelika-ludwig-beck-vodafone-de",
+    "code_url": "https://update.greasyfork.org/scripts/559100/Req%20Start%20Binance%204Rec%20vbangelikaludwigbeck%40vodafonede.user.js",
+    "code_size": 13246,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 559099,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T12:13:04.000Z",
+    "code_updated_at": "2025-12-16T12:13:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972766,
+        "name": "Alexander Faber",
+        "created_at": "2022-10-19T14:39:53.000Z",
+        "url": "https://greasyfork.org/users/972766-alexander-faber"
+      }
+    ],
+    "name": "Ed Start 4Rec vb.angelika.ludwig.beck@vodafone.de",
+    "description": "with minus bal handling",
+    "url": "https://greasyfork.org/scripts/559099-ed-start-4rec-vb-angelika-ludwig-beck-vodafone-de",
+    "code_url": "https://update.greasyfork.org/scripts/559099/Ed%20Start%204Rec%20vbangelikaludwigbeck%40vodafonede.user.js",
+    "code_size": 3909,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

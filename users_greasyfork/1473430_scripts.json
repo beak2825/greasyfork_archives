@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560350,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T21:44:32.000Z",
+    "code_updated_at": "2025-12-26T21:44:32.000Z",
+    "namespace": "https://musicbrainz.org/user/chaban",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473430,
+        "name": "chaban",
+        "created_at": "2025-05-22T13:32:49.000Z",
+        "url": "https://greasyfork.org/users/1473430-chaban"
+      }
+    ],
+    "name": "ListenBrainz: Center lengths and clip titles",
+    "description": "Moves track lengths to the center of the cards and clips titles instead of wrapping",
+    "url": "https://greasyfork.org/scripts/560350-listenbrainz-center-lengths-and-clip-titles",
+    "code_url": "https://update.greasyfork.org/scripts/560350/ListenBrainz%3A%20Center%20lengths%20and%20clip%20titles.user.css",
+    "code_size": 734,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559406,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T20:22:25.000Z",
+    "code_updated_at": "2026-01-10T14:18:49.000Z",
+    "namespace": "https://musicbrainz.org/user/chaban",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473430,
+        "name": "chaban",
+        "created_at": "2025-05-22T13:32:49.000Z",
+        "url": "https://greasyfork.org/users/1473430-chaban"
+      }
+    ],
+    "name": "ListenBrainz: Extended Controls",
+    "description": "Allows customizing which actions are shown in listen controls cards, moving \"Open in Music Service\" links to the main controls area, displaying source info, and auto-copying text in the \"Link Listen\" modal.",
+    "url": "https://greasyfork.org/scripts/559406-listenbrainz-extended-controls",
+    "code_url": "https://update.greasyfork.org/scripts/559406/ListenBrainz%3A%20Extended%20Controls.user.js",
+    "code_size": 18628,
+    "license": null,
+    "version": "1.1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

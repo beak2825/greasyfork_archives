@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560317,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T13:44:25.000Z",
+    "code_updated_at": "2025-12-26T13:45:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502964,
+        "name": "James Summers",
+        "created_at": "2025-08-08T21:02:10.000Z",
+        "url": "https://greasyfork.org/users/1502964-james-summers"
+      }
+    ],
+    "name": "Universal URL Logger (To Localhost)",
+    "description": "Sends visited URLs to a local Node.js server",
+    "url": "https://greasyfork.org/scripts/560317-universal-url-logger-to-localhost",
+    "code_url": "https://update.greasyfork.org/scripts/560317/Universal%20URL%20Logger%20%28To%20Localhost%29.user.js",
+    "code_size": 1502,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

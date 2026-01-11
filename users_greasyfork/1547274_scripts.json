@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558733,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T13:24:21.000Z",
+    "code_updated_at": "2025-12-12T20:36:08.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547274,
+        "name": "ksksk ksks",
+        "created_at": "2025-12-12T12:51:46.000Z",
+        "url": "https://greasyfork.org/users/1547274-ksksk-ksks"
+      }
+    ],
+    "name": "Sсript for Chief Administration",
+    "description": "Скрипт для Руководителей серверов!",
+    "url": "https://greasyfork.org/scripts/558733-s%D1%81ript-for-chief-administration",
+    "code_url": "https://update.greasyfork.org/scripts/558733/S%D1%81ript%20for%20Chief%20Administration.user.js",
+    "code_size": 22022,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

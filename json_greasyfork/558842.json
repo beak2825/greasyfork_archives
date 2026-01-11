@@ -1,0 +1,59 @@
+{
+  "id": 558842,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-13T21:36:40.000Z",
+  "code_updated_at": "2025-12-13T22:16:18.000Z",
+  "namespace": "https://greasyfork.org/users/1547294",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1547294,
+      "name": "tisomeke",
+      "created_at": "2025-12-12T14:37:10.000Z",
+      "url": "https://greasyfork.org/users/1547294-tisomeke",
+      "scripts": [
+        {
+          "id": 558842,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-13T21:36:40.000Z",
+          "code_updated_at": "2025-12-13T22:16:18.000Z",
+          "namespace": "https://greasyfork.org/users/1547294",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MTS-Link автоматическая отметка присутствия (все поддомены)",
+          "description": "Этот скрипт позволяет присутствовать на собраниях в МТС линк без необходимости постоянно контролировать появление \"проверки присутствия\". Скрипт автоматически обнаруживает такое окно и сам нажимает на кнопку. Работает на всех доменах \" *.mts-link.ru/* \". Скрипт является модификацией скрипта \"MTS-Link Auto Confirm & Close (Контроль присутствия для mts-link.ru)\" от Илья Горбунов (ilia.dront)",
+          "url": "https://greasyfork.org/scripts/558842-mts-link-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F-%D0%BE%D1%82%D0%BC%D0%B5%D1%82%D0%BA%D0%B0-%D0%BF%D1%80%D0%B8%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D0%B8%D1%8F-%D0%B2%D1%81%D0%B5-%D0%BF%D0%BE%D0%B4%D0%B4%D0%BE%D0%BC%D0%B5%D0%BD%D1%8B",
+          "code_url": "https://update.greasyfork.org/scripts/558842/MTS-Link%20%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D1%82%D0%BC%D0%B5%D1%82%D0%BA%D0%B0%20%D0%BF%D1%80%D0%B8%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D0%B8%D1%8F%20%28%D0%B2%D1%81%D0%B5%20%D0%BF%D0%BE%D0%B4%D0%B4%D0%BE%D0%BC%D0%B5%D0%BD%D1%8B%29.user.js",
+          "code_size": 2172,
+          "license": "GNU GPLv3",
+          "version": "1.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MTS-Link автоматическая отметка присутствия (все поддомены)",
+  "description": "Этот скрипт позволяет присутствовать на собраниях в МТС линк без необходимости постоянно контролировать появление \"проверки присутствия\". Скрипт автоматически обнаруживает такое окно и сам нажимает на кнопку. Работает на всех доменах \" *.mts-link.ru/* \". Скрипт является модификацией скрипта \"MTS-Link Auto Confirm & Close (Контроль присутствия для mts-link.ru)\" от Илья Горбунов (ilia.dront)",
+  "url": "https://greasyfork.org/scripts/558842-mts-link-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F-%D0%BE%D1%82%D0%BC%D0%B5%D1%82%D0%BA%D0%B0-%D0%BF%D1%80%D0%B8%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D0%B8%D1%8F-%D0%B2%D1%81%D0%B5-%D0%BF%D0%BE%D0%B4%D0%B4%D0%BE%D0%BC%D0%B5%D0%BD%D1%8B",
+  "code_url": "https://update.greasyfork.org/scripts/558842/MTS-Link%20%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BE%D1%82%D0%BC%D0%B5%D1%82%D0%BA%D0%B0%20%D0%BF%D1%80%D0%B8%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D0%B8%D1%8F%20%28%D0%B2%D1%81%D0%B5%20%D0%BF%D0%BE%D0%B4%D0%B4%D0%BE%D0%BC%D0%B5%D0%BD%D1%8B%29.user.js",
+  "code_size": 2172,
+  "license": "GNU GPLv3",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

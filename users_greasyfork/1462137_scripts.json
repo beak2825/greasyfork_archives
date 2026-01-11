@@ -130,5 +130,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 560288,
+    "daily_installs": 3,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T07:52:54.000Z",
+    "code_updated_at": "2026-01-03T10:47:46.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Instagram | Auto-Close/Block \"Sign up\" / \"Log in\" Overlay Popup",
+    "description": "Automatically blocks/closes Instagram login/signup overlays — includes mobile-friendly Reels fixes (end-of-video wall, poster/cover overlay, tap behavior, auto-redirect past \"Continue on web\").",
+    "url": "https://greasyfork.org/scripts/560288-instagram-auto-close-block-sign-up-log-in-overlay-popup",
+    "code_url": "https://update.greasyfork.org/scripts/560288/Instagram%20%7C%20Auto-CloseBlock%20%22Sign%20up%22%20%20%22Log%20in%22%20Overlay%20Popup.user.js",
+    "code_size": 40710,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "4.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559802,
+    "daily_installs": 1,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T09:57:13.000Z",
+    "code_updated_at": "2025-12-28T18:06:28.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Google AI Studio | Quick Actions Toolbar (Delete + Copy Markdown)",
+    "description": "Adds Delete and Copy as Markdown buttons directly to the message hover toolbar",
+    "url": "https://greasyfork.org/scripts/559802-google-ai-studio-quick-actions-toolbar-delete-copy-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/559802/Google%20AI%20Studio%20%7C%20Quick%20Actions%20Toolbar%20%28Delete%20%2B%20Copy%20Markdown%29.user.js",
+    "code_size": 9347,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559706,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T12:41:07.000Z",
+    "code_updated_at": "2026-01-01T13:47:49.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Google AI Studio | Collapse/Expand All Code Blocks (Manual/Automatic)",
+    "description": "Collapse/expand all code blocks with dual toolbar buttons, auto-collapse mode, and lazy loading support.",
+    "url": "https://greasyfork.org/scripts/559706-google-ai-studio-collapse-expand-all-code-blocks-manual-automatic",
+    "code_url": "https://update.greasyfork.org/scripts/559706/Google%20AI%20Studio%20%7C%20CollapseExpand%20All%20Code%20Blocks%20%28ManualAutomatic%29.user.js",
+    "code_size": 27154,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559376,
+    "daily_installs": 1,
+    "total_installs": 45,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T16:48:54.000Z",
+    "code_updated_at": "2025-12-31T19:42:19.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Claude/Grok/LMArena | Conversation/Chat Markdown Export/Download",
+    "description": "Export AI chat conversations to Markdown. Supports Claude.ai, Grok.com, and LMArena.ai",
+    "url": "https://greasyfork.org/scripts/559376-claude-grok-lmarena-conversation-chat-markdown-export-download",
+    "code_url": "https://update.greasyfork.org/scripts/559376/ClaudeGrokLMArena%20%7C%20ConversationChat%20Markdown%20ExportDownload.user.js",
+    "code_size": 153489,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "9.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559194,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T06:45:19.000Z",
+    "code_updated_at": "2025-12-31T20:09:41.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "LMArena | Floating Copy Buttons",
+    "description": "Adds floating copy buttons for code blocks and chat messages",
+    "url": "https://greasyfork.org/scripts/559194-lmarena-floating-copy-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/559194/LMArena%20%7C%20Floating%20Copy%20Buttons.user.js",
+    "code_size": 59487,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

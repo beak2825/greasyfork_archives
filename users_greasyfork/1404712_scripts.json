@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560340,
+    "daily_installs": 1,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T18:12:53.000Z",
+    "code_updated_at": "2025-12-27T22:38:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404712,
+        "name": "Ech0",
+        "created_at": "2024-11-30T18:49:35.000Z",
+        "url": "https://greasyfork.org/users/1404712-ech0"
+      }
+    ],
+    "name": "Zlap.io Bot Hack v1.2",
+    "description": "Up to 4 bots with WASD + Space mirroring, automated funneling with directions, and custom names. Saves settings. Includes Player Mode and custom delays.",
+    "url": "https://greasyfork.org/scripts/560340-zlap-io-bot-hack-v1-2",
+    "code_url": "https://update.greasyfork.org/scripts/560340/Zlapio%20Bot%20Hack%20v12.user.js",
+    "code_size": 21796,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559351,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T12:35:24.000Z",
+    "code_updated_at": "2025-12-18T13:25:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549611,
+        "name": "sdsobo.com",
+        "created_at": "2025-12-18T12:33:36.000Z",
+        "url": "https://greasyfork.org/users/1549611-sdsobo-com"
+      }
+    ],
+    "name": "长春工业大学做题系统-物理仿真版",
+    "description": "解决变色但不勾选的问题，采用物理仿真点击事件。",
+    "url": "https://greasyfork.org/scripts/559351-%E9%95%BF%E6%98%A5%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%E5%81%9A%E9%A2%98%E7%B3%BB%E7%BB%9F-%E7%89%A9%E7%90%86%E4%BB%BF%E7%9C%9F%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559351/%E9%95%BF%E6%98%A5%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%E5%81%9A%E9%A2%98%E7%B3%BB%E7%BB%9F-%E7%89%A9%E7%90%86%E4%BB%BF%E7%9C%9F%E7%89%88.user.js",
+    "code_size": 6455,
+    "license": "MIT License",
+    "version": "21.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

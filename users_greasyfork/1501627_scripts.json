@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559865,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T21:01:44.000Z",
+    "code_updated_at": "2025-12-22T21:35:59.000Z",
+    "namespace": "https://axley.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501627,
+        "name": "Jason Axley",
+        "created_at": "2025-08-04T19:02:04.000Z",
+        "url": "https://greasyfork.org/users/1501627-jason-axley"
+      }
+    ],
+    "name": "Readwise Reader Bulk Tagger",
+    "description": "This script will apply tags to items in bulk (e.g. from a search result)",
+    "url": "https://greasyfork.org/scripts/559865-readwise-reader-bulk-tagger",
+    "code_url": "https://update.greasyfork.org/scripts/559865/Readwise%20Reader%20Bulk%20Tagger.user.js",
+    "code_size": 6511,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559864,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T20:48:09.000Z",
+    "code_updated_at": "2025-12-22T20:48:09.000Z",
+    "namespace": "https://axley.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501627,
+        "name": "Jason Axley",
+        "created_at": "2025-08-04T19:02:04.000Z",
+        "url": "https://greasyfork.org/users/1501627-jason-axley"
+      }
+    ],
+    "name": "GenAI descriptions replacer for DDG",
+    "description": "Generative AI (GenAI) has no concept of \"truth\". Sadly, the GenAI hype machine is also truth-challenged. This script is a snarky attempt to ridicule GenAI hype by replacing them with translations.",
+    "url": "https://greasyfork.org/scripts/559864-genai-descriptions-replacer-for-ddg",
+    "code_url": "https://update.greasyfork.org/scripts/559864/GenAI%20descriptions%20replacer%20for%20DDG.user.js",
+    "code_size": 1183,
+    "license": "MIT License",
+    "version": "2025-08-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

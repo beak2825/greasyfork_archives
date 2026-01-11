@@ -1,0 +1,101 @@
+[
+  {
+    "id": 559375,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T16:28:40.000Z",
+    "code_updated_at": "2025-12-18T16:28:39.000Z",
+    "namespace": "yt-preview-links-comments-general",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 204955,
+        "name": "GFgatus",
+        "created_at": "2018-08-14T18:23:50.000Z",
+        "url": "https://greasyfork.org/users/204955-gfgatus"
+      }
+    ],
+    "name": "youtube.com (一般網頁）🔗連結🎞️預覽播放+留言查看",
+    "description": "在一般網頁的 YouTube 連結旁加入 ▶️ 預覽播放與 💬 留言查看",
+    "url": "https://greasyfork.org/scripts/559375-youtube-com-%E4%B8%80%E8%88%AC%E7%B6%B2%E9%A0%81-%E9%80%A3%E7%B5%90-%E9%A0%90%E8%A6%BD%E6%92%AD%E6%94%BE-%E7%95%99%E8%A8%80%E6%9F%A5%E7%9C%8B",
+    "code_url": "https://update.greasyfork.org/scripts/559375/youtubecom%20%28%E4%B8%80%E8%88%AC%E7%B6%B2%E9%A0%81%EF%BC%89%F0%9F%94%97%E9%80%A3%E7%B5%90%F0%9F%8E%9E%EF%B8%8F%E9%A0%90%E8%A6%BD%E6%92%AD%E6%94%BE%2B%E7%95%99%E8%A8%80%E6%9F%A5%E7%9C%8B.user.js",
+    "code_size": 52273,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559373,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T15:51:40.000Z",
+    "code_updated_at": "2025-12-18T15:51:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 204955,
+        "name": "GFgatus",
+        "created_at": "2018-08-14T18:23:50.000Z",
+        "url": "https://greasyfork.org/users/204955-gfgatus"
+      }
+    ],
+    "name": "X (Twitter) Grok Commander V20.1 (Multilingual)",
+    "description": "X Post AI Commander [Multi-language precision strike version]. Added \"Automatically close the drawing window\", \"Force clear the input box after sending\" and \"Traditional Chinese button fingerprint lock\". Supports Traditional Chinese, Simplified Chinese, English, Japanese, and Korean.",
+    "url": "https://greasyfork.org/scripts/559373-x-twitter-grok-commander-v20-1-multilingual",
+    "code_url": "https://update.greasyfork.org/scripts/559373/X%20%28Twitter%29%20Grok%20Commander%20V201%20%28Multilingual%29.user.js",
+    "code_size": 33150,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 559370,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T15:41:22.000Z",
+    "code_updated_at": "2025-12-18T17:23:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 204955,
+        "name": "GFgatus",
+        "created_at": "2018-08-14T18:23:50.000Z",
+        "url": "https://greasyfork.org/users/204955-gfgatus"
+      }
+    ],
+    "name": "X & Threads Grok Fact Checker",
+    "description": "X and Threads。Fact checking, long press to exit function.",
+    "url": "https://greasyfork.org/scripts/559370-x-threads-grok-fact-checker",
+    "code_url": "https://update.greasyfork.org/scripts/559370/X%20%20Threads%20Grok%20Fact%20Checker.user.js",
+    "code_size": 36414,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

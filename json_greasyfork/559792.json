@@ -1,0 +1,34 @@
+{
+  "id": 559792,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-22T09:00:51.000Z",
+  "code_updated_at": "2026-01-06T03:16:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 881035,
+      "name": "tafe",
+      "created_at": "2022-02-27T07:01:36.000Z",
+      "url": "https://greasyfork.org/users/881035-tafe",
+      "scripts": []
+    }
+  ],
+  "name": "集采助手",
+  "description": "物料录入、提交、类别选择、投标日期限制解除、验证码自动识别及比价表生成功能",
+  "url": "https://greasyfork.org/scripts/559792-%E9%9B%86%E9%87%87%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/559792/%E9%9B%86%E9%87%87%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 125401,
+  "license": null,
+  "version": "1.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 560035,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-24T04:09:23.000Z",
+  "code_updated_at": "2025-12-24T04:09:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551712,
+      "name": "Ferklen GD",
+      "created_at": "2025-12-24T04:02:54.000Z",
+      "url": "https://greasyfork.org/users/1551712-ferklen-gd",
+      "scripts": [
+        {
+          "id": 560035,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-24T04:09:23.000Z",
+          "code_updated_at": "2025-12-24T04:09:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Best countries in duels",
+          "description": "Scan played competitive duels and export almost accurate stats for every country.",
+          "url": "https://greasyfork.org/scripts/560035-best-countries-in-duels",
+          "code_url": "https://update.greasyfork.org/scripts/560035/Best%20countries%20in%20duels.user.js",
+          "code_size": 9942,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Best countries in duels",
+  "description": "Scan played competitive duels and export almost accurate stats for every country.",
+  "url": "https://greasyfork.org/scripts/560035-best-countries-in-duels",
+  "code_url": "https://update.greasyfork.org/scripts/560035/Best%20countries%20in%20duels.user.js",
+  "code_size": 9942,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

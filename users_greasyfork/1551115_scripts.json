@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559822,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-22T14:11:46.000Z",
+    "code_updated_at": "2025-12-22T14:28:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1551115,
+        "name": "Oxygen酱",
+        "created_at": "2025-12-22T14:04:25.000Z",
+        "url": "https://greasyfork.org/users/1551115-oxygen%E9%85%B1"
+      }
+    ],
+    "name": "JLU自动评教",
+    "description": "自动填写教学评价：滑块打分、标签选择、文字评价、提交、下一位教师",
+    "url": "https://greasyfork.org/scripts/559822-jlu%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/559822/JLU%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+    "code_size": 5252,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

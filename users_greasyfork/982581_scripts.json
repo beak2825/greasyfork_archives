@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558719,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T11:05:39.000Z",
+    "code_updated_at": "2025-12-12T11:05:39.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982581,
+        "name": "The Myth",
+        "created_at": "2022-11-13T01:24:49.000Z",
+        "url": "https://greasyfork.org/users/982581-the-myth"
+      }
+    ],
+    "name": "TorrentBD Scrap forum",
+    "description": "7/30/2024, 3:06:29 AM",
+    "url": "https://greasyfork.org/scripts/558719-torrentbd-scrap-forum",
+    "code_url": "https://update.greasyfork.org/scripts/558719/TorrentBD%20Scrap%20forum.user.js",
+    "code_size": 36589,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

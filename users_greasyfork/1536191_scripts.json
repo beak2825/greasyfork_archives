@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559669,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T03:42:43.000Z",
+    "code_updated_at": "2025-12-21T03:42:43.000Z",
+    "namespace": "https://www.grundos.cafe/userlookup/?user=hazr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536191,
+        "name": "h zr",
+        "created_at": "2025-11-10T05:37:04.000Z",
+        "url": "https://greasyfork.org/users/1536191-h-zr"
+      }
+    ],
+    "name": "GC Keyboard Shop Browser",
+    "description": "Allows ArrowKey, WASD, and NumPad shop browsing. The first shop item will automatically be focused, then the arrow keys, WASD, or 8426 (for NumPads) will navigate between items.",
+    "url": "https://greasyfork.org/scripts/559669-gc-keyboard-shop-browser",
+    "code_url": "https://update.greasyfork.org/scripts/559669/GC%20Keyboard%20Shop%20Browser.user.js",
+    "code_size": 2285,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559667,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T03:27:42.000Z",
+    "code_updated_at": "2025-12-21T03:27:42.000Z",
+    "namespace": "https://www.grundos.cafe/userlookup/?user=hazr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536191,
+        "name": "h zr",
+        "created_at": "2025-11-10T05:37:04.000Z",
+        "url": "https://greasyfork.org/users/1536191-h-zr"
+      }
+    ],
+    "name": "GC Stock Price Reminder",
+    "description": "Displays the first 3 shop results in the Description field when the user looks up an item in their Shop Stock using the Shop Wizard.",
+    "url": "https://greasyfork.org/scripts/559667-gc-stock-price-reminder",
+    "code_url": "https://update.greasyfork.org/scripts/559667/GC%20Stock%20Price%20Reminder.user.js",
+    "code_size": 2373,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

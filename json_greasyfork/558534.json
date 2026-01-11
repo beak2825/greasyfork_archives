@@ -1,0 +1,33 @@
+{
+  "id": 558534,
+  "daily_installs": 1,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-10T17:03:49.000Z",
+  "code_updated_at": "2025-12-10T17:03:49.000Z",
+  "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535374,
+      "name": "necroam",
+      "created_at": "2025-11-07T17:36:31.000Z",
+      "url": "https://greasyfork.org/users/1535374-necroam"
+    }
+  ],
+  "name": "FV - Onyx 8-Ball Mini-game",
+  "description": "Ask yes or no questions and let the magic 8-ball answer! Game works on /villager/455907",
+  "url": "https://greasyfork.org/scripts/558534-fv-onyx-8-ball-mini-game",
+  "code_url": "https://update.greasyfork.org/scripts/558534/FV%20-%20Onyx%208-Ball%20Mini-game.user.js",
+  "code_size": 16533,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

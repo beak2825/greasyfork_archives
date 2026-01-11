@@ -97,5 +97,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 560193,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-25T13:13:14.000Z",
+    "code_updated_at": "2025-12-25T13:39:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529082,
+        "name": "MINJAE KIM",
+        "created_at": "2025-10-21T03:34:21.000Z",
+        "url": "https://greasyfork.org/users/1529082-minjae-kim"
+      }
+    ],
+    "name": "Naver Webtoon + Kakao Page",
+    "description": "add KakaoPage to naver webtoon",
+    "url": "https://greasyfork.org/scripts/560193-naver-webtoon-kakao-page",
+    "code_url": "https://update.greasyfork.org/scripts/560193/Naver%20Webtoon%20%2B%20Kakao%20Page.user.js",
+    "code_size": 2797,
+    "license": "MIT License",
+    "version": "1.05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559711,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T13:13:31.000Z",
+    "code_updated_at": "2025-12-21T13:39:48.000Z",
+    "namespace": "tkor save scroll position",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529082,
+        "name": "MINJAE KIM",
+        "created_at": "2025-10-21T03:34:21.000Z",
+        "url": "https://greasyfork.org/users/1529082-minjae-kim"
+      }
+    ],
+    "name": "TKOR Scroll Saver",
+    "description": "Per-series panel-based resume with scroll fallback (fast, no jank)",
+    "url": "https://greasyfork.org/scripts/559711-tkor-scroll-saver",
+    "code_url": "https://update.greasyfork.org/scripts/559711/TKOR%20Scroll%20Saver.user.js",
+    "code_size": 3952,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558506,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T12:06:59.000Z",
+    "code_updated_at": "2026-01-05T06:09:33.000Z",
+    "namespace": "https://greasyfork.org/en/users/1529082-minjae-kim",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529082,
+        "name": "MINJAE KIM",
+        "created_at": "2025-10-21T03:34:21.000Z",
+        "url": "https://greasyfork.org/users/1529082-minjae-kim"
+      }
+    ],
+    "name": "Reddit Anti Translate",
+    "description": "Redirects Reddit pages auto translated by removing the tl=\"selected language\" parameter from Reddit URLs",
+    "url": "https://greasyfork.org/scripts/558506-reddit-anti-translate",
+    "code_url": "https://update.greasyfork.org/scripts/558506/Reddit%20Anti%20Translate.user.js",
+    "code_size": 943,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

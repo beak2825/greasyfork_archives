@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558760,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T18:50:40.000Z",
+    "code_updated_at": "2025-12-20T11:36:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496345,
+        "name": "José de los Ríos",
+        "created_at": "2025-07-19T12:21:39.000Z",
+        "url": "https://greasyfork.org/users/1496345-jos%C3%A9-de-los-r%C3%ADos"
+      }
+    ],
+    "name": "Transfer History",
+    "description": "Script to be able to view a transfer history summary on the team page",
+    "url": "https://greasyfork.org/scripts/558760-transfer-history",
+    "code_url": "https://update.greasyfork.org/scripts/558760/Transfer%20History.user.js",
+    "code_size": 11936,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559346,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T11:43:27.000Z",
+    "code_updated_at": "2025-12-18T11:43:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549595,
+        "name": "Skyisland2007",
+        "created_at": "2025-12-18T11:38:49.000Z",
+        "url": "https://greasyfork.org/users/1549595-skyisland2007"
+      }
+    ],
+    "name": "抖音自动重定向+解除静音",
+    "description": "自动跳转推荐页并尝试将音量设为最大",
+    "url": "https://greasyfork.org/scripts/559346-%E6%8A%96%E9%9F%B3%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91-%E8%A7%A3%E9%99%A4%E9%9D%99%E9%9F%B3",
+    "code_url": "https://update.greasyfork.org/scripts/559346/%E6%8A%96%E9%9F%B3%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91%2B%E8%A7%A3%E9%99%A4%E9%9D%99%E9%9F%B3.user.js",
+    "code_size": 1429,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559345,
+    "daily_installs": 1,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T11:41:55.000Z",
+    "code_updated_at": "2025-12-22T16:07:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549595,
+        "name": "Skyisland2007",
+        "created_at": "2025-12-18T11:38:49.000Z",
+        "url": "https://greasyfork.org/users/1549595-skyisland2007"
+      }
+    ],
+    "name": "Bing 极致净化：重定向全球版 + 背景替换 + 屏蔽资讯",
+    "description": "自动跳转全球版，替换背景为随机二次元图，屏蔽首页干扰元素",
+    "url": "https://greasyfork.org/scripts/559345-bing-%E6%9E%81%E8%87%B4%E5%87%80%E5%8C%96-%E9%87%8D%E5%AE%9A%E5%90%91%E5%85%A8%E7%90%83%E7%89%88-%E8%83%8C%E6%99%AF%E6%9B%BF%E6%8D%A2-%E5%B1%8F%E8%94%BD%E8%B5%84%E8%AE%AF",
+    "code_url": "https://update.greasyfork.org/scripts/559345/Bing%20%E6%9E%81%E8%87%B4%E5%87%80%E5%8C%96%EF%BC%9A%E9%87%8D%E5%AE%9A%E5%90%91%E5%85%A8%E7%90%83%E7%89%88%20%2B%20%E8%83%8C%E6%99%AF%E6%9B%BF%E6%8D%A2%20%2B%20%E5%B1%8F%E8%94%BD%E8%B5%84%E8%AE%AF.user.js",
+    "code_size": 3317,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

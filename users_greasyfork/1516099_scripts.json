@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559656,
+    "daily_installs": 2,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T01:41:54.000Z",
+    "code_updated_at": "2025-12-21T01:41:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516099,
+        "name": "senquan ding",
+        "created_at": "2025-09-17T06:29:04.000Z",
+        "url": "https://greasyfork.org/users/1516099-senquan-ding"
+      }
+    ],
+    "name": "学习通作业导出助手",
+    "description": "本脚本专为超星学习通（chaoxing.com）作业/考试查看页面设计，旨在将网页上的题目高保真地转化为可编辑的文档",
+    "url": "https://greasyfork.org/scripts/559656-%E5%AD%A6%E4%B9%A0%E9%80%9A%E4%BD%9C%E4%B8%9A%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/559656/%E5%AD%A6%E4%B9%A0%E9%80%9A%E4%BD%9C%E4%B8%9A%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 14174,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

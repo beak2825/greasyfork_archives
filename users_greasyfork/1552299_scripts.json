@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560162,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-25T07:55:50.000Z",
+    "code_updated_at": "2025-12-25T07:55:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552299,
+        "name": "陌上尘如雪",
+        "created_at": "2025-12-25T07:52:05.000Z",
+        "url": "https://greasyfork.org/users/1552299-%E9%99%8C%E4%B8%8A%E5%B0%98%E5%A6%82%E9%9B%AA"
+      }
+    ],
+    "name": "四川智慧教育全自动学习（纯净稳定版 + 2x）",
+    "description": "自动播放 / 自动下一节 / 后台不暂停 / 2倍速 / 异常自动恢复",
+    "url": "https://greasyfork.org/scripts/560162-%E5%9B%9B%E5%B7%9D%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%A8%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0-%E7%BA%AF%E5%87%80%E7%A8%B3%E5%AE%9A%E7%89%88-2x",
+    "code_url": "https://update.greasyfork.org/scripts/560162/%E5%9B%9B%E5%B7%9D%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%A8%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%EF%BC%88%E7%BA%AF%E5%87%80%E7%A8%B3%E5%AE%9A%E7%89%88%20%2B%202x%EF%BC%89.user.js",
+    "code_size": 3605,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

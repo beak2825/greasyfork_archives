@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559179,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T04:33:47.000Z",
+    "code_updated_at": "2025-12-17T05:02:46.000Z",
+    "namespace": "https://github.com/Ohdmire",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 337149,
+        "name": "Ohdmire",
+        "created_at": "2019-08-24T09:03:40.000Z",
+        "url": "https://greasyfork.org/users/337149-ohdmire"
+      }
+    ],
+    "name": "osu! Medal Show Solution",
+    "description": "show medal solution panel using Osekai",
+    "url": "https://greasyfork.org/scripts/559179-osu-medal-show-solution",
+    "code_url": "https://update.greasyfork.org/scripts/559179/osu%21%20Medal%20Show%20Solution.user.js",
+    "code_size": 9035,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

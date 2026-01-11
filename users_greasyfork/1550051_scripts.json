@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559527,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T17:29:38.000Z",
+    "code_updated_at": "2025-12-19T18:32:22.000Z",
+    "namespace": "torn.ct.pda.fulljoystick",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1550051,
+        "name": "FLTRSHY",
+        "created_at": "2025-12-19T17:27:02.000Z",
+        "url": "https://greasyfork.org/users/1550051-fltrshy"
+      }
+    ],
+    "name": "Christmas Town Mobile Joystick",
+    "description": "SPA-safe Christmas Town joystick with movable and toggleable joystick",
+    "url": "https://greasyfork.org/scripts/559527-christmas-town-mobile-joystick",
+    "code_url": "https://update.greasyfork.org/scripts/559527/Christmas%20Town%20Mobile%20Joystick.user.js",
+    "code_size": 6635,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

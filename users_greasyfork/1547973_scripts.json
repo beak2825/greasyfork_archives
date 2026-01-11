@@ -1,0 +1,68 @@
+[
+  {
+    "id": 558899,
+    "daily_installs": 1,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T11:30:09.000Z",
+    "code_updated_at": "2025-12-14T11:31:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547973,
+        "name": "IAmBoredAF",
+        "created_at": "2025-12-14T10:56:42.000Z",
+        "url": "https://greasyfork.org/users/1547973-iamboredaf"
+      }
+    ],
+    "name": "Basic chat filter bypass",
+    "description": "Useless script to bypass some chat filters.",
+    "url": "https://greasyfork.org/scripts/558899-basic-chat-filter-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/558899/Basic%20chat%20filter%20bypass.user.js",
+    "code_size": 2066,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558898,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T11:16:44.000Z",
+    "code_updated_at": "2025-12-14T11:16:44.000Z",
+    "namespace": "https://greasyfork.org/users/1547973-iamboredaf",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547973,
+        "name": "IAmBoredAF",
+        "created_at": "2025-12-14T10:56:42.000Z",
+        "url": "https://greasyfork.org/users/1547973-iamboredaf"
+      }
+    ],
+    "name": "No text to emoji conversions",
+    "description": "Simple script to stop insta from converting emoticons to emojis.",
+    "url": "https://greasyfork.org/scripts/558898-no-text-to-emoji-conversions",
+    "code_url": "https://update.greasyfork.org/scripts/558898/No%20text%20to%20emoji%20conversions.user.js",
+    "code_size": 1466,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
