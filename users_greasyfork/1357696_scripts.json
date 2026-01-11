@@ -1,0 +1,68 @@
+[
+  {
+    "id": 561522,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T15:51:58.000Z",
+    "code_updated_at": "2026-01-05T15:51:58.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357696,
+        "name": "Baccyy",
+        "created_at": "2024-08-25T17:44:55.000Z",
+        "url": "https://greasyfork.org/users/1357696-baccyy"
+      }
+    ],
+    "name": "Bazaar Scroll Remover",
+    "description": "Overrides overflow-x:hidden for .list__lkOUv.opened__gmF7S",
+    "url": "https://greasyfork.org/scripts/561522-bazaar-scroll-remover",
+    "code_url": "https://update.greasyfork.org/scripts/561522/Bazaar%20Scroll%20Remover.user.js",
+    "code_size": 680,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560640,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T14:16:16.000Z",
+    "code_updated_at": "2025-12-29T14:16:16.000Z",
+    "namespace": "blackjack",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357696,
+        "name": "Baccyy",
+        "created_at": "2024-08-25T17:44:55.000Z",
+        "url": "https://greasyfork.org/users/1357696-baccyy"
+      }
+    ],
+    "name": "Cartel Empire - Blackjack Easy Stand",
+    "description": "Enlarges Deal and Stand, hides the other buttons, removes the Continue step from Blackjack in Cartel Empire",
+    "url": "https://greasyfork.org/scripts/560640-cartel-empire-blackjack-easy-stand",
+    "code_url": "https://update.greasyfork.org/scripts/560640/Cartel%20Empire%20-%20Blackjack%20Easy%20Stand.user.js",
+    "code_size": 2967,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

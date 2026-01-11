@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560926,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T09:16:52.000Z",
+    "code_updated_at": "2025-12-31T09:16:52.000Z",
+    "namespace": "https://www.youtube.com/@Neo_PosterBoy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1277376,
+        "name": "UnoriginalName",
+        "created_at": "2024-03-21T09:03:16.000Z",
+        "url": "https://greasyfork.org/users/1277376-unoriginalname"
+      }
+    ],
+    "name": "Better Stamp Album",
+    "description": "Replaces Stamp album links with Form",
+    "url": "https://greasyfork.org/scripts/560926-better-stamp-album",
+    "code_url": "https://update.greasyfork.org/scripts/560926/Better%20Stamp%20Album.user.js",
+    "code_size": 2365,
+    "license": "GNU GPLv3",
+    "version": "2025.12.31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

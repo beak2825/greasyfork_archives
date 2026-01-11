@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560698,
+    "daily_installs": 1,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T03:33:20.000Z",
+    "code_updated_at": "2026-01-06T14:25:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528948,
+        "name": "Nice CN",
+        "created_at": "2025-10-20T16:19:30.000Z",
+        "url": "https://greasyfork.org/users/1528948-nice-cn"
+      }
+    ],
+    "name": "Bilibili 字幕下载器",
+    "description": "一键下载B站视频字幕，支持多种格式 (TXT/SRT/ASS/VTT/LRC/BCC)，支持番剧/课程/稍后再看。参考@indefined佬的脚本实现。",
+    "url": "https://greasyfork.org/scripts/560698-bilibili-%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/560698/Bilibili%20%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 85745,
+    "license": "MIT License",
+    "version": "2.5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

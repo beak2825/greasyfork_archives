@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561318,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T03:26:11.000Z",
+    "code_updated_at": "2026-01-04T06:15:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1402217,
+        "name": "chxcodepro",
+        "created_at": "2024-11-25T11:25:51.000Z",
+        "url": "https://greasyfork.org/users/1402217-chxcodepro"
+      }
+    ],
+    "name": "Linux.do 美化脚本",
+    "description": "Linux.do 界面美化：深色玻璃拟态、圆角卡片、宽屏布局、自动背景适配、去杂线、详情页美化",
+    "url": "https://greasyfork.org/scripts/561318-linux-do-%E7%BE%8E%E5%8C%96%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/561318/Linuxdo%20%E7%BE%8E%E5%8C%96%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 15539,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

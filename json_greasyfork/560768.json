@@ -1,0 +1,59 @@
+{
+  "id": 560768,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-30T12:48:53.000Z",
+  "code_updated_at": "2025-12-30T12:48:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 190945,
+      "name": "Alger Wu",
+      "created_at": "2018-06-13T16:14:12.000Z",
+      "url": "https://greasyfork.org/users/190945-alger-wu",
+      "scripts": [
+        {
+          "id": 560768,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-30T12:48:53.000Z",
+          "code_updated_at": "2025-12-30T12:48:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chiphell Dark Mode (CSS Variables Edition)",
+          "description": "Deep dark mode using CSS variables",
+          "url": "https://greasyfork.org/scripts/560768-chiphell-dark-mode-css-variables-edition",
+          "code_url": "https://update.greasyfork.org/scripts/560768/Chiphell%20Dark%20Mode%20%28CSS%20Variables%20Edition%29.user.js",
+          "code_size": 25307,
+          "license": null,
+          "version": "3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chiphell Dark Mode (CSS Variables Edition)",
+  "description": "Deep dark mode using CSS variables",
+  "url": "https://greasyfork.org/scripts/560768-chiphell-dark-mode-css-variables-edition",
+  "code_url": "https://update.greasyfork.org/scripts/560768/Chiphell%20Dark%20Mode%20%28CSS%20Variables%20Edition%29.user.js",
+  "code_size": 25307,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

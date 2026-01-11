@@ -1,0 +1,34 @@
+{
+  "id": 560668,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-29T20:08:16.000Z",
+  "code_updated_at": "2026-01-04T16:45:44.000Z",
+  "namespace": "https://gazellegames.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465663,
+      "name": "kdln",
+      "created_at": "2025-05-04T16:55:14.000Z",
+      "url": "https://greasyfork.org/users/1465663-kdln",
+      "scripts": []
+    }
+  ],
+  "name": "GGn Crafter",
+  "description": "Shows what items you can craft based on your current inventory",
+  "url": "https://greasyfork.org/scripts/560668-ggn-crafter",
+  "code_url": "https://update.greasyfork.org/scripts/560668/GGn%20Crafter.user.js",
+  "code_size": 715615,
+  "license": "ISC License",
+  "version": "1.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560637,
+    "daily_installs": 1,
+    "total_installs": 28,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T14:07:45.000Z",
+    "code_updated_at": "2025-12-29T14:07:44.000Z",
+    "namespace": "https://example.com/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1553859,
+        "name": "shuiguohaotian",
+        "created_at": "2025-12-29T14:00:49.000Z",
+        "url": "https://greasyfork.org/users/1553859-shuiguohaotian"
+      }
+    ],
+    "name": "linux.do 小助手（水果二创版）",
+    "description": "自动浏览、点赞、只看楼主、楼层号、保存帖子到本地、清爽模式、黑白灰模式、用户信息展示（批量展示）、查看用户话题。支持拖动和最小化控制面板（50×50圆形图标，统一边距，左右展开方向优化）。支持 linux.do 和 idcflare.com",
+    "url": "https://greasyfork.org/scripts/560637-linux-do-%E5%B0%8F%E5%8A%A9%E6%89%8B-%E6%B0%B4%E6%9E%9C%E4%BA%8C%E5%88%9B%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/560637/linuxdo%20%E5%B0%8F%E5%8A%A9%E6%89%8B%EF%BC%88%E6%B0%B4%E6%9E%9C%E4%BA%8C%E5%88%9B%E7%89%88%EF%BC%89.user.js",
+    "code_size": 163212,
+    "license": "MIT License",
+    "version": "1.6.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

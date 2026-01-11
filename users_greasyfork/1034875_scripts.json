@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561214,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T07:43:13.000Z",
+    "code_updated_at": "2026-01-03T07:47:33.000Z",
+    "namespace": "SinirsizABBSeyret",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034875,
+        "name": "Runterya",
+        "created_at": "2023-03-01T15:35:21.000Z",
+        "url": "https://greasyfork.org/users/1034875-runterya"
+      }
+    ],
+    "name": "Süre Limitsiz ABB Seyret",
+    "description": "Ağ trafiğinden yayın linkini yakalar. Her yeni araca tıklandığında linki günceller.",
+    "url": "https://greasyfork.org/scripts/561214-s%C3%BCre-limitsiz-abb-seyret",
+    "code_url": "https://update.greasyfork.org/scripts/561214/S%C3%BCre%20Limitsiz%20ABB%20Seyret.user.js",
+    "code_size": 6911,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

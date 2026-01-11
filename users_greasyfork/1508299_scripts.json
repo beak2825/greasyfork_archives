@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 560935,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T11:03:45.000Z",
+    "code_updated_at": "2026-01-08T13:40:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1508299,
+        "name": "Victor the great",
+        "created_at": "2025-08-24T08:21:07.000Z",
+        "url": "https://greasyfork.org/users/1508299-victor-the-great"
+      }
+    ],
+    "name": "HALO Armory Tracker Pro (Alien UI) - Torn Log ID Fix",
+    "description": "Faction armory tracker with Torn log ID deduplication",
+    "url": "https://greasyfork.org/scripts/560935-halo-armory-tracker-pro-alien-ui-torn-log-id-fix",
+    "code_url": "https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.user.js",
+    "code_size": 58291,
+    "license": null,
+    "version": "HALO.6.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

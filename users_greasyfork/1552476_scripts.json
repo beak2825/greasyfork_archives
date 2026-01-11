@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560789,
+    "daily_installs": 1,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T14:12:58.000Z",
+    "code_updated_at": "2026-01-01T11:03:17.000Z",
+    "namespace": "https://greasyfork.org/users/1552476",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552476,
+        "name": "dokuro",
+        "created_at": "2025-12-25T15:59:58.000Z",
+        "url": "https://greasyfork.org/users/1552476-dokuro"
+      }
+    ],
+    "name": "Bandit.RIP Community Costumes",
+    "description": "Adds new costumes to the game",
+    "url": "https://greasyfork.org/scripts/560789-bandit-rip-community-costumes",
+    "code_url": "https://update.greasyfork.org/scripts/560789/BanditRIP%20Community%20Costumes.user.js",
+    "code_size": 22418,
+    "license": "The Unlicense",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

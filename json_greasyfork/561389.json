@@ -1,0 +1,34 @@
+{
+  "id": 561389,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T14:05:26.000Z",
+  "code_updated_at": "2026-01-04T17:05:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556024,
+      "name": "Headhog94",
+      "created_at": "2026-01-04T14:02:40.000Z",
+      "url": "https://greasyfork.org/users/1556024-headhog94",
+      "scripts": []
+    }
+  ],
+  "name": "Asylum Script",
+  "description": "Helper script for Asylum members",
+  "url": "https://greasyfork.org/scripts/561389-asylum-script",
+  "code_url": "https://update.greasyfork.org/scripts/561389/Asylum%20Script.user.js",
+  "code_size": 18043,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

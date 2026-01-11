@@ -1,0 +1,134 @@
+[
+  {
+    "id": 561245,
+    "daily_installs": 1,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T13:53:09.000Z",
+    "code_updated_at": "2026-01-03T13:53:08.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Google AI Studio | Direct Link Opener",
+    "description": "Bypasses Google/Vertex redirect URLs - clicks open the actual destination directly",
+    "url": "https://greasyfork.org/scripts/561245-google-ai-studio-direct-link-opener",
+    "code_url": "https://update.greasyfork.org/scripts/561245/Google%20AI%20Studio%20%7C%20Direct%20Link%20Opener.user.js",
+    "code_size": 13551,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561175,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T19:48:01.000Z",
+    "code_updated_at": "2026-01-02T19:49:29.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Facebook | Auto-Close/Block \"Log in\" / \"Sign up\" Overlay Popup",
+    "description": "Auto-closes/blocks Facebook “Log in” / “Sign up” overlays and sticky footer bars (desktop + m.facebook.com), escapes forced /login/ redirects, and auto-reloads common error pages. Includes pause/resume button.interruptions.",
+    "url": "https://greasyfork.org/scripts/561175-facebook-auto-close-block-log-in-sign-up-overlay-popup",
+    "code_url": "https://update.greasyfork.org/scripts/561175/Facebook%20%7C%20Auto-CloseBlock%20%22Log%20in%22%20%20%22Sign%20up%22%20Overlay%20Popup.user.js",
+    "code_size": 38701,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.6.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561144,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T12:19:08.000Z",
+    "code_updated_at": "2026-01-03T07:10:19.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "Background Video Playback Fix (Instagram, Facebook, Reddit, TikTok)",
+    "description": "Prevents videos from pausing when the tab/window loses visibility or focus. Spoofs Page Visibility API, blocks lifecycle events, and auto-resumes videos paused by the site.",
+    "url": "https://greasyfork.org/scripts/561144-background-video-playback-fix-instagram-facebook-reddit-tiktok",
+    "code_url": "https://update.greasyfork.org/scripts/561144/Background%20Video%20Playback%20Fix%20%28Instagram%2C%20Facebook%2C%20Reddit%2C%20TikTok%29.user.js",
+    "code_size": 14877,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560626,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T10:59:16.000Z",
+    "code_updated_at": "2025-12-31T07:02:27.000Z",
+    "namespace": "https://greasyfork.org/en/users/1462137-piknockyou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462137,
+        "name": "piknockyou",
+        "created_at": "2025-04-25T18:34:19.000Z",
+        "url": "https://greasyfork.org/users/1462137-piknockyou"
+      }
+    ],
+    "name": "LMArena | Collapsible Code Blocks",
+    "description": "Adds collapsible code blocks with clickable headers, footer controls, and a global toolbar toggle",
+    "url": "https://greasyfork.org/scripts/560626-lmarena-collapsible-code-blocks",
+    "code_url": "https://update.greasyfork.org/scripts/560626/LMArena%20%7C%20Collapsible%20Code%20Blocks.user.js",
+    "code_size": 69065,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

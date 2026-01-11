@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560914,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T08:06:22.000Z",
+    "code_updated_at": "2025-12-31T08:06:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052387,
+        "name": "修越",
+        "created_at": "2023-04-03T09:54:34.000Z",
+        "url": "https://greasyfork.org/users/1052387-%E4%BF%AE%E8%B6%8A"
+      }
+    ],
+    "name": "可拖拽调整视频大小 + iframe 字体缩小 - xgplayer (稳定版2)",
+    "description": "拖动调整视频大小并保存，下次自动恢复；iframe 内 header-bar 字体和高度变小；视频严格填充容器；拖拽方块稳定显示；iframe 文字缩小稳定",
+    "url": "https://greasyfork.org/scripts/560914-%E5%8F%AF%E6%8B%96%E6%8B%BD%E8%B0%83%E6%95%B4%E8%A7%86%E9%A2%91%E5%A4%A7%E5%B0%8F-iframe-%E5%AD%97%E4%BD%93%E7%BC%A9%E5%B0%8F-xgplayer-%E7%A8%B3%E5%AE%9A%E7%89%882",
+    "code_url": "https://update.greasyfork.org/scripts/560914/%E5%8F%AF%E6%8B%96%E6%8B%BD%E8%B0%83%E6%95%B4%E8%A7%86%E9%A2%91%E5%A4%A7%E5%B0%8F%20%2B%20iframe%20%E5%AD%97%E4%BD%93%E7%BC%A9%E5%B0%8F%20-%20xgplayer%20%28%E7%A8%B3%E5%AE%9A%E7%89%882%29.user.js",
+    "code_size": 6256,
+    "license": "修越",
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

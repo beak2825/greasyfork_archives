@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561227,
+    "daily_installs": 3,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T09:22:38.000Z",
+    "code_updated_at": "2026-01-03T09:22:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1555500,
+        "name": "徐鹏飞",
+        "created_at": "2026-01-03T09:16:24.000Z",
+        "url": "https://greasyfork.org/users/1555500-%E5%BE%90%E9%B9%8F%E9%A3%9E"
+      }
+    ],
+    "name": "小红书视频下载助手 v3.1 (纯原生+Blob破解版)",
+    "description": "解决 blob 链接无法下载问题。无外部依赖，纯原生 JS 写法。暴力从网页源码和 Meta 信息中提取无水印原画地址。",
+    "url": "https://greasyfork.org/scripts/561227-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-v3-1-%E7%BA%AF%E5%8E%9F%E7%94%9F-blob%E7%A0%B4%E8%A7%A3%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/561227/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%20v31%20%28%E7%BA%AF%E5%8E%9F%E7%94%9F%2BBlob%E7%A0%B4%E8%A7%A3%E7%89%88%29.user.js",
+    "code_size": 8193,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

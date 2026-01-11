@@ -1,0 +1,68 @@
+[
+  {
+    "id": 561145,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T12:28:25.000Z",
+    "code_updated_at": "2026-01-02T12:28:25.000Z",
+    "namespace": "https://zyco.uk/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393983,
+        "name": "zyco Dolores",
+        "created_at": "2024-11-10T15:23:49.000Z",
+        "url": "https://greasyfork.org/users/1393983-zyco-dolores"
+      }
+    ],
+    "name": "哔哩哔哩优化",
+    "description": "消除视频暂停时右下角的小电视图标",
+    "url": "https://greasyfork.org/scripts/561145-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/561145/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 504,
+    "license": "GPL-3.0 License",
+    "version": "2025-10-16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561125,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T09:03:20.000Z",
+    "code_updated_at": "2026-01-02T12:20:13.000Z",
+    "namespace": "https://zyco.uk/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393983,
+        "name": "zyco Dolores",
+        "created_at": "2024-11-10T15:23:49.000Z",
+        "url": "https://greasyfork.org/users/1393983-zyco-dolores"
+      }
+    ],
+    "name": "少数派优化",
+    "description": "优化少数派首页文章跳转方式，由原本点击链接新开标签页，修改为在屏幕右侧新开窗口，且所有链接跳转都复用同一窗口。",
+    "url": "https://greasyfork.org/scripts/561125-%E5%B0%91%E6%95%B0%E6%B4%BE%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/561125/%E5%B0%91%E6%95%B0%E6%B4%BE%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 2660,
+    "license": "GPL-3.0 License",
+    "version": "2026-01-02-v2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

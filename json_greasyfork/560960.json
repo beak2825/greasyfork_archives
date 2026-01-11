@@ -1,0 +1,59 @@
+{
+  "id": 560960,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-31T16:36:11.000Z",
+  "code_updated_at": "2025-12-31T16:36:11.000Z",
+  "namespace": "https://github.com/szhu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1554607,
+      "name": "szhu",
+      "created_at": "2025-12-31T16:21:02.000Z",
+      "url": "https://greasyfork.org/users/1554607-szhu",
+      "scripts": [
+        {
+          "id": 560960,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-31T16:36:11.000Z",
+          "code_updated_at": "2025-12-31T16:36:11.000Z",
+          "namespace": "https://github.com/szhu",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gmail Sender Utils",
+          "description": "Quickly drill down by sender or label in Gmail.",
+          "url": "https://greasyfork.org/scripts/560960-gmail-sender-utils",
+          "code_url": "https://update.greasyfork.org/scripts/560960/Gmail%20Sender%20Utils.user.js",
+          "code_size": 10095,
+          "license": null,
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gmail Sender Utils",
+  "description": "Quickly drill down by sender or label in Gmail.",
+  "url": "https://greasyfork.org/scripts/560960-gmail-sender-utils",
+  "code_url": "https://update.greasyfork.org/scripts/560960/Gmail%20Sender%20Utils.user.js",
+  "code_size": 10095,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

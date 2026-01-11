@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561427,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T21:04:25.000Z",
+    "code_updated_at": "2026-01-05T09:19:28.000Z",
+    "namespace": "urn://https://www.georgegillams.co.uk/api/greasemonkey/sainsburys-delivery-slot-banner",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 180365,
+        "name": "George Gillams",
+        "created_at": "2018-04-16T12:07:21.000Z",
+        "url": "https://greasyfork.org/users/180365-george-gillams"
+      }
+    ],
+    "name": "Sainsbury's delivery slot banner",
+    "description": "Shows a banner when not editing a delivery slot",
+    "url": "https://greasyfork.org/scripts/561427-sainsbury-s-delivery-slot-banner",
+    "code_url": "https://update.greasyfork.org/scripts/561427/Sainsbury%27s%20delivery%20slot%20banner.user.js",
+    "code_size": 2877,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

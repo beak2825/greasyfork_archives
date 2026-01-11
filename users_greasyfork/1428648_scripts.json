@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561019,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T06:16:15.000Z",
+    "code_updated_at": "2026-01-01T06:16:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1428648,
+        "name": "Cornhub",
+        "created_at": "2025-01-29T15:16:27.000Z",
+        "url": "https://greasyfork.org/users/1428648-cornhub"
+      }
+    ],
+    "name": "TorrentBD Seedbonus Gift",
+    "description": "Gift seedbonus to user torrents",
+    "url": "https://greasyfork.org/scripts/561019-torrentbd-seedbonus-gift",
+    "code_url": "https://update.greasyfork.org/scripts/561019/TorrentBD%20Seedbonus%20Gift.user.js",
+    "code_size": 37874,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

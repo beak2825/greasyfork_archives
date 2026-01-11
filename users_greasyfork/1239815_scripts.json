@@ -1,14 +1,14 @@
 [
   {
     "id": 561853,
-    "daily_installs": 0,
-    "total_installs": 5,
+    "daily_installs": 2,
+    "total_installs": 7,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2026-01-08T13:42:18.000Z",
-    "code_updated_at": "2026-01-10T03:56:51.000Z",
+    "code_updated_at": "2026-01-11T08:51:43.000Z",
     "namespace": "https://torn.com/",
     "support_url": null,
     "contribution_url": null,
@@ -21,13 +21,13 @@
         "url": "https://greasyfork.org/users/1239815-zach-wozniak"
       }
     ],
-    "name": "Torn Quick Items + Armoury Quick Items (Standalone)",
-    "description": "Combines Inventory & Armoury Quick Items. Glassmorphism design. Fixes JSON, timers, and Close buttons.",
-    "url": "https://greasyfork.org/scripts/561853-torn-quick-items-armoury-quick-items-standalone",
-    "code_url": "https://update.greasyfork.org/scripts/561853/Torn%20Quick%20Items%20%2B%20Armoury%20Quick%20Items%20%28Standalone%29.user.js",
-    "code_size": 11176,
+    "name": "Torn Quick Items + Armoury (Glass UI + Fac Use)",
+    "description": "Torns Quick Items Script",
+    "url": "https://greasyfork.org/scripts/561853-torn-quick-items-armoury-glass-ui-fac-use",
+    "code_url": "https://update.greasyfork.org/scripts/561853/Torn%20Quick%20Items%20%2B%20Armoury%20%28Glass%20UI%20%2B%20Fac%20Use%29.user.js",
+    "code_size": 26454,
     "license": null,
-    "version": "1.2.0",
+    "version": "1.3.8",
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
@@ -63,6 +63,6 @@
     "version": "1.0.3",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
   }
 ]

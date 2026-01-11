@@ -1,0 +1,33 @@
+{
+  "id": 561517,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-05T15:37:24.000Z",
+  "code_updated_at": "2026-01-05T15:37:24.000Z",
+  "namespace": "https://github.com/maribox/my_userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556487,
+      "name": "maribox",
+      "created_at": "2026-01-05T15:29:57.000Z",
+      "url": "https://greasyfork.org/users/1556487-maribox"
+    }
+  ],
+  "name": "ChatGPT Message Queue",
+  "description": "Send message while ChatGPT is still thinking and automatically send when ChatGPT is ready. Inline queue UI with drag-to-reorder, edit/delete, merge queue items option and persistence. (the code is not great, but it works ig...). Also images don't work since that's a whole 'nother beast.",
+  "url": "https://greasyfork.org/scripts/561517-chatgpt-message-queue",
+  "code_url": "https://update.greasyfork.org/scripts/561517/ChatGPT%20Message%20Queue.user.js",
+  "code_size": 43624,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

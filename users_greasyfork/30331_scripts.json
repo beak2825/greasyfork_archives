@@ -1,0 +1,101 @@
+[
+  {
+    "id": 561088,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T23:05:05.000Z",
+    "code_updated_at": "2026-01-01T23:08:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30331,
+        "name": "Setcher",
+        "created_at": "2016-02-14T16:19:35.000Z",
+        "url": "https://greasyfork.org/users/30331-setcher"
+      }
+    ],
+    "name": "[TMS] Three Peaks Trading - Universal Lesson Scraper",
+    "description": "⛏️ Universal scraper with ✂️ copy buttons (filename-safe titles) for all lesson layouts",
+    "url": "https://greasyfork.org/scripts/561088-tms-three-peaks-trading-universal-lesson-scraper",
+    "code_url": "https://update.greasyfork.org/scripts/561088/%5BTMS%5D%20Three%20Peaks%20Trading%20-%20Universal%20Lesson%20Scraper.user.js",
+    "code_size": 13351,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560806,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T16:50:07.000Z",
+    "code_updated_at": "2025-12-30T16:53:35.000Z",
+    "namespace": "https://greasyfork.org/en/users/30331-setcher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30331,
+        "name": "Setcher",
+        "created_at": "2016-02-14T16:19:35.000Z",
+        "url": "https://greasyfork.org/users/30331-setcher"
+      }
+    ],
+    "name": "[TMS] RoboForex Accounts Enhancer",
+    "description": "4-tab modal, fixed saving, dark mode toggle works, fixed height, no auto-open",
+    "url": "https://greasyfork.org/scripts/560806-tms-roboforex-accounts-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/560806/%5BTMS%5D%20RoboForex%20Accounts%20Enhancer.user.js",
+    "code_size": 34790,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560801,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T15:53:37.000Z",
+    "code_updated_at": "2025-12-30T15:56:55.000Z",
+    "namespace": "https://greasyfork.org/en/users/30331-setcher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30331,
+        "name": "Setcher",
+        "created_at": "2016-02-14T16:19:35.000Z",
+        "url": "https://greasyfork.org/users/30331-setcher"
+      }
+    ],
+    "name": "[TMS] ShibariStudy - Category Scraper",
+    "description": "Enhanced scraper for ShibariStudy.com with comparison of what you have and what is missing.",
+    "url": "https://greasyfork.org/scripts/560801-tms-shibaristudy-category-scraper",
+    "code_url": "https://update.greasyfork.org/scripts/560801/%5BTMS%5D%20ShibariStudy%20-%20Category%20Scraper.user.js",
+    "code_size": 31771,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

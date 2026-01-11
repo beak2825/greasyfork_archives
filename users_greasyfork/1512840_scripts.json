@@ -30,6 +30,72 @@
     "version": "1.3",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561200,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T03:15:41.000Z",
+    "code_updated_at": "2026-01-03T03:31:34.000Z",
+    "namespace": "p3_eyrie_auto_feeder_html_v3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512840,
+        "name": "lissa jo",
+        "created_at": "2025-09-08T01:11:42.000Z",
+        "url": "https://greasyfork.org/users/1512840-lissa-jo"
+      }
+    ],
+    "name": "P3 – Eyrie Auto Egg Feeder",
+    "description": "Auto-feeds Eyrie eggs with Start/Stop, selectable priority modes, per-item toggles, and stationary bar",
+    "url": "https://greasyfork.org/scripts/561200-p3-eyrie-auto-egg-feeder",
+    "code_url": "https://update.greasyfork.org/scripts/561200/P3%20%E2%80%93%20Eyrie%20Auto%20Egg%20Feeder.user.js",
+    "code_size": 6924,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561199,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T03:15:26.000Z",
+    "code_updated_at": "2026-01-03T03:15:26.000Z",
+    "namespace": "p3_random_eyrie_auto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512840,
+        "name": "lissa jo",
+        "created_at": "2025-09-08T01:11:42.000Z",
+        "url": "https://greasyfork.org/users/1512840-lissa-jo"
+      }
+    ],
+    "name": "P3 – Random Eyrie Auto Interaction",
+    "description": "Automatically interacts with Random Eyrie actions on page load and refreshes randomly",
+    "url": "https://greasyfork.org/scripts/561199-p3-random-eyrie-auto-interaction",
+    "code_url": "https://update.greasyfork.org/scripts/561199/P3%20%E2%80%93%20Random%20Eyrie%20Auto%20Interaction.user.js",
+    "code_size": 1906,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

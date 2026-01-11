@@ -64,5 +64,104 @@
     "locale": "ko",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 561442,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T00:18:04.000Z",
+    "code_updated_at": "2026-01-05T23:15:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533849,
+        "name": "Jaehyong Kim",
+        "created_at": "2025-11-04T04:29:39.000Z",
+        "url": "https://greasyfork.org/users/1533849-jaehyong-kim"
+      }
+    ],
+    "name": "LIMS Save Index 중복 확인",
+    "description": "수주별 통합 실시간 중복 체크 ( v1.1.2: 내부/외부 중복 오보 수정 및 최적화 완료 )",
+    "url": "https://greasyfork.org/scripts/561442-lims-save-index-%EC%A4%91%EB%B3%B5-%ED%99%95%EC%9D%B8",
+    "code_url": "https://update.greasyfork.org/scripts/561442/LIMS%20Save%20Index%20%EC%A4%91%EB%B3%B5%20%ED%99%95%EC%9D%B8.user.js",
+    "code_size": 17788,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560850,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T02:17:34.000Z",
+    "code_updated_at": "2025-12-31T07:52:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533849,
+        "name": "Jaehyong Kim",
+        "created_at": "2025-11-04T04:29:39.000Z",
+        "url": "https://greasyfork.org/users/1533849-jaehyong-kim"
+      }
+    ],
+    "name": "LIMS 메인 대시보드 - META 수행팀",
+    "description": "META 수행팀 전용 (Metagenome Amplicon / MiSeq) 실시간 작업 현황",
+    "url": "https://greasyfork.org/scripts/560850-lims-%EB%A9%94%EC%9D%B8-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-meta-%EC%88%98%ED%96%89%ED%8C%80",
+    "code_url": "https://update.greasyfork.org/scripts/560850/LIMS%20%EB%A9%94%EC%9D%B8%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C%20-%20META%20%EC%88%98%ED%96%89%ED%8C%80.user.js",
+    "code_size": 28402,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560849,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T02:17:09.000Z",
+    "code_updated_at": "2026-01-09T07:41:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533849,
+        "name": "Jaehyong Kim",
+        "created_at": "2025-11-04T04:29:39.000Z",
+        "url": "https://greasyfork.org/users/1533849-jaehyong-kim"
+      }
+    ],
+    "name": "LIMS 메인 대시보드 - LRS 수행팀",
+    "description": "LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + Demulti 실시간 알림",
+    "url": "https://greasyfork.org/scripts/560849-lims-%EB%A9%94%EC%9D%B8-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C-lrs-%EC%88%98%ED%96%89%ED%8C%80",
+    "code_url": "https://update.greasyfork.org/scripts/560849/LIMS%20%EB%A9%94%EC%9D%B8%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C%20-%20LRS%20%EC%88%98%ED%96%89%ED%8C%80.user.js",
+    "code_size": 36035,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

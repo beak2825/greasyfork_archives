@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561150,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T13:23:07.000Z",
+    "code_updated_at": "2026-01-02T13:23:07.000Z",
+    "namespace": "https://greasyfork.org/users/1440408",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "Geo Importer & Directions",
+    "description": "Import segments (GPX, GeoJSON, KML) into Waze Map Editor, copy cursor coordinates, and open Google Maps directions. Also fetch GPX from Google Maps links via mapstogpx.com.",
+    "url": "https://greasyfork.org/scripts/561150-geo-importer-directions",
+    "code_url": "https://update.greasyfork.org/scripts/561150/Geo%20Importer%20%20Directions.user.js",
+    "code_size": 29050,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

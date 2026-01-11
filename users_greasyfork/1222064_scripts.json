@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 561215,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T07:54:47.000Z",
+    "code_updated_at": "2026-01-03T08:01:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1222064,
+        "name": "jsbay",
+        "created_at": "2023-11-23T03:47:41.000Z",
+        "url": "https://greasyfork.org/users/1222064-jsbay"
+      }
+    ],
+    "name": "黑与白自动抽卡助手",
+    "description": "自动进行十连抽卡操作",
+    "url": "https://greasyfork.org/scripts/561215-%E9%BB%91%E4%B8%8E%E7%99%BD%E8%87%AA%E5%8A%A8%E6%8A%BD%E5%8D%A1%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/561215/%E9%BB%91%E4%B8%8E%E7%99%BD%E8%87%AA%E5%8A%A8%E6%8A%BD%E5%8D%A1%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 16302,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560725,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T08:28:24.000Z",
+    "code_updated_at": "2025-12-30T08:28:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1222064,
+        "name": "jsbay",
+        "created_at": "2023-11-23T03:47:41.000Z",
+        "url": "https://greasyfork.org/users/1222064-jsbay"
+      }
+    ],
+    "name": "Linux.do GIFT 抢码助手 (老板尊享版 v7.0)",
+    "description": "完美适配SPA跳转、自动扫描、可视化日志、自动刷新、防重复提交、状态记忆、可拖拽、可最小化。",
+    "url": "https://greasyfork.org/scripts/560725-linux-do-gift-%E6%8A%A2%E7%A0%81%E5%8A%A9%E6%89%8B-%E8%80%81%E6%9D%BF%E5%B0%8A%E4%BA%AB%E7%89%88-v7-0",
+    "code_url": "https://update.greasyfork.org/scripts/560725/Linuxdo%20GIFT%20%E6%8A%A2%E7%A0%81%E5%8A%A9%E6%89%8B%20%28%E8%80%81%E6%9D%BF%E5%B0%8A%E4%BA%AB%E7%89%88%20v70%29.user.js",
+    "code_size": 15975,
+    "license": "MIT License",
+    "version": "7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 560634,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-29T13:07:36.000Z",
+  "code_updated_at": "2025-12-29T13:07:36.000Z",
+  "namespace": "https://premiershiprugby.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "Premiership Rugby redirect",
+  "description": "Redirects any match-centre page to the corresponding InCrowd JSON feed",
+  "url": "https://greasyfork.org/scripts/560634-premiership-rugby-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/560634/Premiership%20Rugby%20redirect.user.js",
+  "code_size": 792,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

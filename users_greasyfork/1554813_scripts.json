@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561033,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T09:13:24.000Z",
+    "code_updated_at": "2026-01-01T09:13:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1554813,
+        "name": "M-K-Al",
+        "created_at": "2026-01-01T09:07:02.000Z",
+        "url": "https://greasyfork.org/users/1554813-m-k-al"
+      }
+    ],
+    "name": "Alpertron ECM - Disable Auto-Scroll to Results",
+    "description": "Prevents automatic scrolling to the results area on Alpertron's ECM factorization page.",
+    "url": "https://greasyfork.org/scripts/561033-alpertron-ecm-disable-auto-scroll-to-results",
+    "code_url": "https://update.greasyfork.org/scripts/561033/Alpertron%20ECM%20-%20Disable%20Auto-Scroll%20to%20Results.user.js",
+    "code_size": 687,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

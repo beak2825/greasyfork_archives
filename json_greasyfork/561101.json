@@ -1,0 +1,59 @@
+{
+  "id": 561101,
+  "daily_installs": 1,
+  "total_installs": 3,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-02T02:38:41.000Z",
+  "code_updated_at": "2026-01-02T02:49:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555021,
+      "name": "MRFLAGA",
+      "created_at": "2026-01-02T02:28:31.000Z",
+      "url": "https://greasyfork.org/users/1555021-mrflaga",
+      "scripts": [
+        {
+          "id": 561101,
+          "daily_installs": 1,
+          "total_installs": 3,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-02T02:38:41.000Z",
+          "code_updated_at": "2026-01-02T02:49:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Lemonade Information Panel",
+          "description": "Add information panel button to Lemonade interface",
+          "url": "https://greasyfork.org/scripts/561101-lemonade-information-panel",
+          "code_url": "https://update.greasyfork.org/scripts/561101/Lemonade%20Information%20Panel.user.js",
+          "code_size": 20504,
+          "license": null,
+          "version": "2.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Lemonade Information Panel",
+  "description": "Add information panel button to Lemonade interface",
+  "url": "https://greasyfork.org/scripts/561101-lemonade-information-panel",
+  "code_url": "https://update.greasyfork.org/scripts/561101/Lemonade%20Information%20Panel.user.js",
+  "code_size": 20504,
+  "license": null,
+  "version": "2.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

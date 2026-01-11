@@ -1,0 +1,68 @@
+[
+  {
+    "id": 561087,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T22:57:57.000Z",
+    "code_updated_at": "2026-01-05T19:03:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439049,
+        "name": "augman",
+        "created_at": "2025-02-23T23:29:15.000Z",
+        "url": "https://greasyfork.org/users/1439049-augman"
+      }
+    ],
+    "name": "Klavia Frenzy Clicker 0.1.5.2 fix",
+    "description": "made by guappanese",
+    "url": "https://greasyfork.org/scripts/561087-klavia-frenzy-clicker-0-1-5-2-fix",
+    "code_url": "https://update.greasyfork.org/scripts/561087/Klavia%20Frenzy%20Clicker%200152%20fix.user.js",
+    "code_size": 182677,
+    "license": null,
+    "version": "0.1.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560814,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T17:58:37.000Z",
+    "code_updated_at": "2025-12-30T17:58:37.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439049,
+        "name": "augman",
+        "created_at": "2025-02-23T23:29:15.000Z",
+        "url": "https://greasyfork.org/users/1439049-augman"
+      }
+    ],
+    "name": "Klavia Rewards Detector",
+    "description": "Detect rewards even when auto-reloader skips UI",
+    "url": "https://greasyfork.org/scripts/560814-klavia-rewards-detector",
+    "code_url": "https://update.greasyfork.org/scripts/560814/Klavia%20Rewards%20Detector.user.js",
+    "code_size": 3726,
+    "license": null,
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

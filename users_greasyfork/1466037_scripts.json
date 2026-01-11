@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560729,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T09:08:10.000Z",
+    "code_updated_at": "2025-12-30T09:08:10.000Z",
+    "namespace": "local.autofill.darkpicker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466037,
+        "name": "Ayden Serna",
+        "created_at": "2025-05-05T14:32:48.000Z",
+        "url": "https://greasyfork.org/users/1466037-ayden-serna"
+      }
+    ],
+    "name": "Auto-fill Manager",
+    "description": "gurt",
+    "url": "https://greasyfork.org/scripts/560729-auto-fill-manager",
+    "code_url": "https://update.greasyfork.org/scripts/560729/Auto-fill%20Manager.user.js",
+    "code_size": 15823,
+    "license": "MIT License",
+    "version": "6.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

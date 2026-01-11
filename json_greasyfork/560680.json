@@ -1,0 +1,34 @@
+{
+  "id": 560680,
+  "daily_installs": 1,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-30T00:02:44.000Z",
+  "code_updated_at": "2026-01-11T04:15:15.000Z",
+  "namespace": "http://torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1553986,
+      "name": "srsbsns",
+      "created_at": "2025-12-29T20:44:22.000Z",
+      "url": "https://greasyfork.org/users/1553986-srsbsns",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Item Market & Bazaar Stock Labels by srsbsns",
+  "description": "Manual Scrape: Bazaar (Own Stock: x#) | Market (Stock x#). Excludes Market AddListing.",
+  "url": "https://greasyfork.org/scripts/560680-torn-item-market-bazaar-stock-labels-by-srsbsns",
+  "code_url": "https://update.greasyfork.org/scripts/560680/Torn%20Item%20Market%20%20Bazaar%20Stock%20Labels%20by%20srsbsns.user.js",
+  "code_size": 4471,
+  "license": "MIT License",
+  "version": "10.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 561179,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-02T22:14:10.000Z",
+  "code_updated_at": "2026-01-04T20:00:25.000Z",
+  "namespace": "https://github.com/welshwandering/detcord",
+  "support_url": "https://github.com/welshwandering/detcord/discussions",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555343,
+      "name": "welshwandering",
+      "created_at": "2026-01-02T22:11:02.000Z",
+      "url": "https://greasyfork.org/users/1555343-welshwandering",
+      "scripts": [
+        {
+          "id": 561179,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-02T22:14:10.000Z",
+          "code_updated_at": "2026-01-04T20:00:25.000Z",
+          "namespace": "https://github.com/welshwandering/detcord",
+          "support_url": "https://github.com/welshwandering/detcord/discussions",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Detcord",
+          "description": "Bulk delete your own Discord messages - Fast, secure, privacy-focused",
+          "url": "https://greasyfork.org/scripts/561179-detcord",
+          "code_url": "https://update.greasyfork.org/scripts/561179/Detcord.user.js",
+          "code_size": 160358,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Detcord",
+  "description": "Bulk delete your own Discord messages - Fast, secure, privacy-focused",
+  "url": "https://greasyfork.org/scripts/561179-detcord",
+  "code_url": "https://update.greasyfork.org/scripts/561179/Detcord.user.js",
+  "code_size": 160358,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

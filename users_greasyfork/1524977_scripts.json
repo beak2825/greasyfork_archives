@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561005,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T04:07:08.000Z",
+    "code_updated_at": "2026-01-02T03:30:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1524977,
+        "name": "9Rebels",
+        "created_at": "2025-10-11T00:57:34.000Z",
+        "url": "https://greasyfork.org/users/1524977-9rebels"
+      }
+    ],
+    "name": "大桔农场自动种植收获",
+    "description": "自动检测空地种植、检测成熟收获、自动出售",
+    "url": "https://greasyfork.org/scripts/561005-%E5%A4%A7%E6%A1%94%E5%86%9C%E5%9C%BA%E8%87%AA%E5%8A%A8%E7%A7%8D%E6%A4%8D%E6%94%B6%E8%8E%B7",
+    "code_url": "https://update.greasyfork.org/scripts/561005/%E5%A4%A7%E6%A1%94%E5%86%9C%E5%9C%BA%E8%87%AA%E5%8A%A8%E7%A7%8D%E6%A4%8D%E6%94%B6%E8%8E%B7.user.js",
+    "code_size": 69298,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

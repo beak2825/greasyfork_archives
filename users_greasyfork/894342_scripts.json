@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560711,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T05:13:37.000Z",
+    "code_updated_at": "2025-12-30T21:15:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 894342,
+        "name": "KloudKat42",
+        "created_at": "2022-03-27T21:47:15.000Z",
+        "url": "https://greasyfork.org/users/894342-kloudkat42"
+      }
+    ],
+    "name": "Magma Partner Panel Be Gone",
+    "description": "Remove the partner/ad panel on the magma canvas, resize the UI accordingly.",
+    "url": "https://greasyfork.org/scripts/560711-magma-partner-panel-be-gone",
+    "code_url": "https://update.greasyfork.org/scripts/560711/Magma%20Partner%20Panel%20Be%20Gone.user.js",
+    "code_size": 23545,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

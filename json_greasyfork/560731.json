@@ -1,0 +1,59 @@
+{
+  "id": 560731,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-30T09:21:49.000Z",
+  "code_updated_at": "2025-12-30T09:21:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1554129,
+      "name": "loveyou3000bout-ctrl",
+      "created_at": "2025-12-30T09:01:26.000Z",
+      "url": "https://greasyfork.org/users/1554129-loveyou3000bout-ctrl",
+      "scripts": [
+        {
+          "id": 560730,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-30T09:08:41.000Z",
+          "code_updated_at": "2025-12-30T09:08:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ERP图片放大显示",
+          "description": "监控ERP系统中特定POST请求并显示图片",
+          "url": "https://greasyfork.org/scripts/560730-erp%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E6%98%BE%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/560730/ERP%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E6%98%BE%E7%A4%BA.user.js",
+          "code_size": 16963,
+          "license": null,
+          "version": "2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "批量操作记录导出",
+  "description": "自动获取剪切板信息并解析K开头的编码",
+  "url": "https://greasyfork.org/scripts/560731-%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/560731/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 83711,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

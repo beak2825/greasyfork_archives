@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560702,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T04:35:26.000Z",
+    "code_updated_at": "2026-01-03T03:08:45.000Z",
+    "namespace": "http://tmn2010.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 139930,
+        "name": "Brent Papuni",
+        "created_at": "2017-07-11T08:10:23.000Z",
+        "url": "https://greasyfork.org/users/139930-brent-papuni"
+      }
+    ],
+    "name": "TMN Rankbar",
+    "description": "Save yourself 10 credits.",
+    "url": "https://greasyfork.org/scripts/560702-tmn-rankbar",
+    "code_url": "https://update.greasyfork.org/scripts/560702/TMN%20Rankbar.user.js",
+    "code_size": 4882,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

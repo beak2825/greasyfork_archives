@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561197,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T03:06:45.000Z",
+    "code_updated_at": "2026-01-03T03:06:44.000Z",
+    "namespace": "https://ielts.neea.cn/",
+    "support_url": "https://github.com/SkyBlue997/ielts-auto-booking/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541362,
+        "name": "SkyBlue997",
+        "created_at": "2025-11-25T06:22:28.000Z",
+        "url": "https://greasyfork.org/users/1541362-skyblue997"
+      }
+    ],
+    "name": "IELTS 雅思考位监控助手",
+    "description": "雅思考位监控与自动报名 - 支持登录、考位监控",
+    "url": "https://greasyfork.org/scripts/561197-ielts-%E9%9B%85%E6%80%9D%E8%80%83%E4%BD%8D%E7%9B%91%E6%8E%A7%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/561197/IELTS%20%E9%9B%85%E6%80%9D%E8%80%83%E4%BD%8D%E7%9B%91%E6%8E%A7%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 109098,
+    "license": "MIT License",
+    "version": "2.2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

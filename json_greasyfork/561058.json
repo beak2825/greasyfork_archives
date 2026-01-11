@@ -1,0 +1,33 @@
+{
+  "id": 561058,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-01T15:23:57.000Z",
+  "code_updated_at": "2026-01-05T09:53:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 567951,
+      "name": "Stuart Saddler",
+      "created_at": "2020-05-20T07:04:23.000Z",
+      "url": "https://greasyfork.org/users/567951-stuart-saddler"
+    }
+  ],
+  "name": "Upcoming UFC Fight Stats Scraper (with Fighter IDs + Fuzzy Odds)",
+  "description": "Scrapes UFC Stats event pages, calculates days since last fight, merges with live odds using fuzzy name matching, and includes Fighter IDs.",
+  "url": "https://greasyfork.org/scripts/561058-upcoming-ufc-fight-stats-scraper-with-fighter-ids-fuzzy-odds",
+  "code_url": "https://update.greasyfork.org/scripts/561058/Upcoming%20UFC%20Fight%20Stats%20Scraper%20%28with%20Fighter%20IDs%20%2B%20Fuzzy%20Odds%29.user.js",
+  "code_size": 30833,
+  "license": null,
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

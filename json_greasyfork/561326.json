@@ -1,0 +1,33 @@
+{
+  "id": 561326,
+  "daily_installs": 1,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T04:41:59.000Z",
+  "code_updated_at": "2026-01-04T07:49:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555798,
+      "name": "Double-Mountain",
+      "created_at": "2026-01-04T04:17:57.000Z",
+      "url": "https://greasyfork.org/users/1555798-double-mountain"
+    }
+  ],
+  "name": "SJTU显示隐藏的选课人数 - 自动监控",
+  "description": "显示已满课程的隐藏选课人数，支持动态加载",
+  "url": "https://greasyfork.org/scripts/561326-sjtu%E6%98%BE%E7%A4%BA%E9%9A%90%E8%97%8F%E7%9A%84%E9%80%89%E8%AF%BE%E4%BA%BA%E6%95%B0-%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7",
+  "code_url": "https://update.greasyfork.org/scripts/561326/SJTU%E6%98%BE%E7%A4%BA%E9%9A%90%E8%97%8F%E7%9A%84%E9%80%89%E8%AF%BE%E4%BA%BA%E6%95%B0%20-%20%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7.user.js",
+  "code_size": 3352,
+  "license": "MIT License",
+  "version": "1.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

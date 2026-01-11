@@ -1,0 +1,34 @@
+{
+  "id": 560664,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-29T18:58:20.000Z",
+  "code_updated_at": "2026-01-06T16:54:35.000Z",
+  "namespace": "http://tampermundo.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530985,
+      "name": "Ke1",
+      "created_at": "2025-10-26T19:53:30.000Z",
+      "url": "https://greasyfork.org/users/1530985-ke1",
+      "scripts": []
+    }
+  ],
+  "name": "🔥 Compass Pathfinder",
+  "description": "Auto-detects floors, waits for Normal state, runs routes. Mandatory Oxygen before Roof.",
+  "url": "https://greasyfork.org/scripts/560664-compass-pathfinder",
+  "code_url": "https://update.greasyfork.org/scripts/560664/%F0%9F%94%A5%20Compass%20Pathfinder.user.js",
+  "code_size": 66701,
+  "license": null,
+  "version": "5.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

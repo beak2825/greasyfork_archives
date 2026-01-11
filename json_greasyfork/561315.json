@@ -1,0 +1,59 @@
+{
+  "id": 561315,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T03:06:55.000Z",
+  "code_updated_at": "2026-01-05T12:10:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1554125,
+      "name": "Lovecrafx",
+      "created_at": "2025-12-30T08:49:17.000Z",
+      "url": "https://greasyfork.org/users/1554125-lovecrafx",
+      "scripts": [
+        {
+          "id": 561315,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-04T03:06:55.000Z",
+          "code_updated_at": "2026-01-05T12:10:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT Quick Search",
+          "description": "通过快捷键快速激活/退出 ChatGPT 搜索模式。使用 Cmd/Ctrl+Shift+K 切换搜索模式。",
+          "url": "https://greasyfork.org/scripts/561315-chatgpt-quick-search",
+          "code_url": "https://update.greasyfork.org/scripts/561315/ChatGPT%20Quick%20Search.user.js",
+          "code_size": 3784,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT Quick Search",
+  "description": "通过快捷键快速激活/退出 ChatGPT 搜索模式。使用 Cmd/Ctrl+Shift+K 切换搜索模式。",
+  "url": "https://greasyfork.org/scripts/561315-chatgpt-quick-search",
+  "code_url": "https://update.greasyfork.org/scripts/561315/ChatGPT%20Quick%20Search.user.js",
+  "code_size": 3784,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

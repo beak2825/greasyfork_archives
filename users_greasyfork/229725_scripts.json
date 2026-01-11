@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561388,
+    "daily_installs": 1,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T14:02:56.000Z",
+    "code_updated_at": "2026-01-04T14:02:56.000Z",
+    "namespace": "weibo-font-final",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 229725,
+        "name": "Loyle",
+        "created_at": "2018-12-01T11:26:08.000Z",
+        "url": "https://greasyfork.org/users/229725-loyle"
+      }
+    ],
+    "name": "放大微博字体",
+    "description": "放大微博正文、转发及评论中的字体大小",
+    "url": "https://greasyfork.org/scripts/561388-%E6%94%BE%E5%A4%A7%E5%BE%AE%E5%8D%9A%E5%AD%97%E4%BD%93",
+    "code_url": "https://update.greasyfork.org/scripts/561388/%E6%94%BE%E5%A4%A7%E5%BE%AE%E5%8D%9A%E5%AD%97%E4%BD%93.user.js",
+    "code_size": 4773,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

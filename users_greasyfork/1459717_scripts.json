@@ -1,0 +1,101 @@
+[
+  {
+    "id": 560699,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T04:09:43.000Z",
+    "code_updated_at": "2026-01-10T02:38:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Torn Trade Helper (Tracker Import)",
+    "description": "Scrape Torn trade page, aggregate added items, show panel and POST to Tracker backend to import trades",
+    "url": "https://greasyfork.org/scripts/560699-torn-trade-helper-tracker-import",
+    "code_url": "https://update.greasyfork.org/scripts/560699/Torn%20Trade%20Helper%20%28Tracker%20Import%29.user.js",
+    "code_size": 32976,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560650,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T15:37:36.000Z",
+    "code_updated_at": "2025-12-29T15:37:36.000Z",
+    "namespace": "torn.ct.smartlock.fixed",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Torn CT - Smart Lock (Fixed Direction)",
+    "description": "Ensures old directions are fully cleared before new ones start.",
+    "url": "https://greasyfork.org/scripts/560650-torn-ct-smart-lock-fixed-direction",
+    "code_url": "https://update.greasyfork.org/scripts/560650/Torn%20CT%20-%20Smart%20Lock%20%28Fixed%20Direction%29.user.js",
+    "code_size": 3349,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560636,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T14:07:35.000Z",
+    "code_updated_at": "2025-12-29T14:07:35.000Z",
+    "namespace": "awaken.ct.hybrid",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Torn Christmas Town Helper (merger)",
+    "description": "CT Helper - Merger of Hardy's and Getty111's versions. In test mode but safe to use. Modified by Mr_Awaken (3255504). Highlights Items, Chests, NPCs. Arrow pointing to items with item names, Auto-walk, and Games Cheat.",
+    "url": "https://greasyfork.org/scripts/560636-torn-christmas-town-helper-merger",
+    "code_url": "https://update.greasyfork.org/scripts/560636/Torn%20Christmas%20Town%20Helper%20%28merger%29.user.js",
+    "code_size": 96085,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

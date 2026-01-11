@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561216,
+    "daily_installs": 1,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T07:57:49.000Z",
+    "code_updated_at": "2026-01-03T07:57:49.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 371179,
+        "name": "𝖢𝖸 𝖥𝗎𝗇𝗀",
+        "created_at": "2019-09-15T05:02:34.000Z",
+        "url": "https://greasyfork.org/users/371179-%F0%9D%96%A2%F0%9D%96%B8-%F0%9D%96%A5%F0%9D%97%8E%F0%9D%97%87%F0%9D%97%80"
+      }
+    ],
+    "name": "YouTube Comment Thread CSS",
+    "description": "A new userstyle",
+    "url": "https://greasyfork.org/scripts/561216-youtube-comment-thread-css",
+    "code_url": "https://update.greasyfork.org/scripts/561216/YouTube%20Comment%20Thread%20CSS.user.css",
+    "code_size": 1574,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

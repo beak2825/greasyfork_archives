@@ -1,0 +1,59 @@
+{
+  "id": 560747,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-30T10:24:44.000Z",
+  "code_updated_at": "2025-12-30T10:24:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875221,
+      "name": "liaanj",
+      "created_at": "2022-02-11T03:35:21.000Z",
+      "url": "https://greasyfork.org/users/875221-liaanj",
+      "scripts": [
+        {
+          "id": 560747,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-30T10:24:44.000Z",
+          "code_updated_at": "2025-12-30T10:24:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Linux DO 帖子过滤器",
+          "description": "仅在 Linux DO 主列表页过滤包含特定关键词的帖子；进入帖子详情页自动停用并卸载 UI。",
+          "url": "https://greasyfork.org/scripts/560747-linux-do-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/560747/Linux%20DO%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+          "code_size": 20884,
+          "license": "MIT License",
+          "version": "4.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Linux DO 帖子过滤器",
+  "description": "仅在 Linux DO 主列表页过滤包含特定关键词的帖子；进入帖子详情页自动停用并卸载 UI。",
+  "url": "https://greasyfork.org/scripts/560747-linux-do-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/560747/Linux%20DO%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+  "code_size": 20884,
+  "license": "MIT License",
+  "version": "4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

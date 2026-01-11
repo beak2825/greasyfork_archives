@@ -1,0 +1,59 @@
+{
+  "id": 561412,
+  "daily_installs": 1,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T16:10:53.000Z",
+  "code_updated_at": "2026-01-05T19:40:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1517815,
+      "name": "mothman",
+      "created_at": "2025-09-21T16:06:25.000Z",
+      "url": "https://greasyfork.org/users/1517815-mothman",
+      "scripts": [
+        {
+          "id": 561412,
+          "daily_installs": 1,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-04T16:10:53.000Z",
+          "code_updated_at": "2026-01-05T19:40:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AO3: mothman's Mark for Later Button",
+          "description": "Adds a native AO3 button that perfectly matches any site skin's colors and shapes.",
+          "url": "https://greasyfork.org/scripts/561412-ao3-mothman-s-mark-for-later-button",
+          "code_url": "https://update.greasyfork.org/scripts/561412/AO3%3A%20mothman%27s%20Mark%20for%20Later%20Button.user.js",
+          "code_size": 3276,
+          "license": "MIT License",
+          "version": "1.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AO3: mothman's Mark for Later Button",
+  "description": "Adds a native AO3 button that perfectly matches any site skin's colors and shapes.",
+  "url": "https://greasyfork.org/scripts/561412-ao3-mothman-s-mark-for-later-button",
+  "code_url": "https://update.greasyfork.org/scripts/561412/AO3%3A%20mothman%27s%20Mark%20for%20Later%20Button.user.js",
+  "code_size": 3276,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

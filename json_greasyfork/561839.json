@@ -17,33 +17,7 @@
       "id": 1557832,
       "name": "jotsaru0",
       "created_at": "2026-01-08T11:22:51.000Z",
-      "url": "https://greasyfork.org/users/1557832-jotsaru0",
-      "scripts": [
-        {
-          "id": 561839,
-          "daily_installs": 0,
-          "total_installs": 2,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2026-01-08T11:29:12.000Z",
-          "code_updated_at": "2026-01-08T11:51:36.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "SEO Analyser Pro - 1.5",
-          "description": "Comprehensive SEO analysis tool with floating window",
-          "url": "https://greasyfork.org/scripts/561839-seo-analyser-pro-1-5",
-          "code_url": "https://update.greasyfork.org/scripts/561839/SEO%20Analyser%20Pro%20-%2015.user.js",
-          "code_size": 41984,
-          "license": null,
-          "version": "1.5",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1557832-jotsaru0"
     }
   ],
   "name": "SEO Analyser Pro - 1.5",

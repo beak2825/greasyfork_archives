@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561233,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T10:35:52.000Z",
+    "code_updated_at": "2026-01-03T10:50:41.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1360623,
+        "name": "qqqueen",
+        "created_at": "2024-08-30T23:29:10.000Z",
+        "url": "https://greasyfork.org/users/1360623-qqqueen"
+      }
+    ],
+    "name": "左右鍵翻頁",
+    "description": "2026/1/3 下午6:50:05",
+    "url": "https://greasyfork.org/scripts/561233-%E5%B7%A6%E5%8F%B3%E9%8D%B5%E7%BF%BB%E9%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/561233/%E5%B7%A6%E5%8F%B3%E9%8D%B5%E7%BF%BB%E9%A0%81.user.js",
+    "code_size": 1469,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

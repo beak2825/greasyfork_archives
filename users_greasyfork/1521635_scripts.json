@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 560835,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T23:00:15.000Z",
+    "code_updated_at": "2025-12-30T23:00:15.000Z",
+    "namespace": "https://github.com/nate-kean/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521635,
+        "name": "James River Data Team",
+        "created_at": "2025-10-02T14:59:09.000Z",
+        "url": "https://greasyfork.org/users/1521635-james-river-data-team"
+      }
+    ],
+    "name": "Family: auto-focus search box when clicking Add to Family button",
+    "description": "Typing into the search box is what you usually do after clicking the Add Individuals to Family button, so this focuses it for you so you can start typing immediately.",
+    "url": "https://greasyfork.org/scripts/560835-family-auto-focus-search-box-when-clicking-add-to-family-button",
+    "code_url": "https://update.greasyfork.org/scripts/560835/Family%3A%20auto-focus%20search%20box%20when%20clicking%20Add%20to%20Family%20button.user.js",
+    "code_size": 1106,
+    "license": "MIT License",
+    "version": "2025.12.30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560828,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T21:02:28.000Z",
+    "code_updated_at": "2025-12-30T21:02:27.000Z",
+    "namespace": "https://github.com/nate-kean/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521635,
+        "name": "James River Data Team",
+        "created_at": "2025-10-02T14:59:09.000Z",
+        "url": "https://greasyfork.org/users/1521635-james-river-data-team"
+      }
+    ],
+    "name": "View: add check for missing family",
+    "description": "If a profile is not associated with a family, add a suggestion to go to the Family tab and fix it.",
+    "url": "https://greasyfork.org/scripts/560828-view-add-check-for-missing-family",
+    "code_url": "https://update.greasyfork.org/scripts/560828/View%3A%20add%20check%20for%20missing%20family.user.js",
+    "code_size": 1621,
+    "license": "MIT License",
+    "version": "2025.12.30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

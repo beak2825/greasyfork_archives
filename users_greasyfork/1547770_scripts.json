@@ -361,5 +361,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 561082,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T21:21:00.000Z",
+    "code_updated_at": "2026-01-01T21:21:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547770,
+        "name": "NotNightmare",
+        "created_at": "2025-12-13T19:08:01.000Z",
+        "url": "https://greasyfork.org/users/1547770-notnightmare"
+      }
+    ],
+    "name": "Bloxd.io Crosshair Menu (Upload + Enable/Disable)",
+    "description": "Press ` to open crosshair menu. Upload custom crosshair or disable it.",
+    "url": "https://greasyfork.org/scripts/561082-bloxd-io-crosshair-menu-upload-enable-disable",
+    "code_url": "https://update.greasyfork.org/scripts/561082/Bloxdio%20Crosshair%20Menu%20%28Upload%20%2B%20EnableDisable%29.user.js",
+    "code_size": 3110,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561034,
+    "daily_installs": 1,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T09:19:41.000Z",
+    "code_updated_at": "2026-01-01T09:19:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547770,
+        "name": "NotNightmare",
+        "created_at": "2025-12-13T19:08:01.000Z",
+        "url": "https://greasyfork.org/users/1547770-notnightmare"
+      }
+    ],
+    "name": "Swift Client Style Menu (iPad Safari)",
+    "description": "Swift-style heavy-blur centered menu for bloxd.io (Backquote ` to toggle, Shadow DOM, main menu + in-game)",
+    "url": "https://greasyfork.org/scripts/561034-swift-client-style-menu-ipad-safari",
+    "code_url": "https://update.greasyfork.org/scripts/561034/Swift%20Client%20Style%20Menu%20%28iPad%20Safari%29.user.js",
+    "code_size": 18719,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560674,
+    "daily_installs": 2,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T21:56:08.000Z",
+    "code_updated_at": "2025-12-30T00:06:13.000Z",
+    "namespace": "https://greasyfork.org/users/1547770",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547770,
+        "name": "NotNightmare",
+        "created_at": "2025-12-13T19:08:01.000Z",
+        "url": "https://greasyfork.org/users/1547770-notnightmare"
+      }
+    ],
+    "name": "Bloxd.io Custom Cursor!!",
+    "description": "yay it works",
+    "url": "https://greasyfork.org/scripts/560674-bloxd-io-custom-cursor",
+    "code_url": "https://update.greasyfork.org/scripts/560674/Bloxdio%20Custom%20Cursor%21%21.user.js",
+    "code_size": 2799,
+    "license": null,
+    "version": "3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560669,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T20:38:46.000Z",
+    "code_updated_at": "2025-12-29T20:38:46.000Z",
+    "namespace": "https://greasyfork.org/users/1547770",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547770,
+        "name": "NotNightmare",
+        "created_at": "2025-12-13T19:08:01.000Z",
+        "url": "https://greasyfork.org/users/1547770-notnightmare"
+      }
+    ],
+    "name": "Bloxd.io White Crosshair Pulse Toggle",
+    "description": "White outlined glowing crosshair, slower pulse, bigger size, R/F toggle, mouse hold override",
+    "url": "https://greasyfork.org/scripts/560669-bloxd-io-white-crosshair-pulse-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/560669/Bloxdio%20White%20Crosshair%20Pulse%20Toggle.user.js",
+    "code_size": 2886,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

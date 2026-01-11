@@ -1,0 +1,59 @@
+{
+  "id": 561360,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T09:36:25.000Z",
+  "code_updated_at": "2026-01-04T09:40:35.000Z",
+  "namespace": "http://www.erevollution.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 874283,
+      "name": "SkyIsTheLimit",
+      "created_at": "2022-02-08T18:40:36.000Z",
+      "url": "https://greasyfork.org/users/874283-skyisthelimit",
+      "scripts": [
+        {
+          "id": 439727,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-02-08T18:46:16.000Z",
+          "code_updated_at": "2022-02-09T07:37:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Erev - Anti Cupidon",
+          "description": "Get rid of the Valentines theme (and maybe other themes as well) on Erevollution.",
+          "url": "https://greasyfork.org/scripts/439727-erev-anti-cupidon",
+          "code_url": "https://update.greasyfork.org/scripts/439727/Erev%20-%20Anti%20Cupidon.user.js",
+          "code_size": 522,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "eRevollution - Partial Train Button",
+  "description": "Unchecks all but the last training ground and clicks Train",
+  "url": "https://greasyfork.org/scripts/561360-erevollution-partial-train-button",
+  "code_url": "https://update.greasyfork.org/scripts/561360/eRevollution%20-%20Partial%20Train%20Button.user.js",
+  "code_size": 2337,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

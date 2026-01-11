@@ -1,0 +1,59 @@
+{
+  "id": 561121,
+  "daily_installs": 1,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-02T07:42:24.000Z",
+  "code_updated_at": "2026-01-05T05:25:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555100,
+      "name": "corde",
+      "created_at": "2026-01-02T07:36:33.000Z",
+      "url": "https://greasyfork.org/users/1555100-corde",
+      "scripts": [
+        {
+          "id": 561121,
+          "daily_installs": 1,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-02T07:42:24.000Z",
+          "code_updated_at": "2026-01-05T05:25:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili CC字幕实时显示插件（含AI翻译）- 修复版",
+          "description": "在B站播放器中集成CC字幕列表，支持DeepSeek AI实时翻译，提供\"双语双行\"字幕渲染。已修复AI字幕URL不包含CID导致的识别失败问题。",
+          "url": "https://greasyfork.org/scripts/561121-bilibili-cc%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6-%E5%90%ABai%E7%BF%BB%E8%AF%91-%E4%BF%AE%E5%A4%8D%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/561121/Bilibili%20CC%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6%EF%BC%88%E5%90%ABAI%E7%BF%BB%E8%AF%91%EF%BC%89-%20%E4%BF%AE%E5%A4%8D%E7%89%88.user.js",
+          "code_size": 50973,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili CC字幕实时显示插件（含AI翻译）- 修复版",
+  "description": "在B站播放器中集成CC字幕列表，支持DeepSeek AI实时翻译，提供\"双语双行\"字幕渲染。已修复AI字幕URL不包含CID导致的识别失败问题。",
+  "url": "https://greasyfork.org/scripts/561121-bilibili-cc%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6-%E5%90%ABai%E7%BF%BB%E8%AF%91-%E4%BF%AE%E5%A4%8D%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/561121/Bilibili%20CC%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6%EF%BC%88%E5%90%ABAI%E7%BF%BB%E8%AF%91%EF%BC%89-%20%E4%BF%AE%E5%A4%8D%E7%89%88.user.js",
+  "code_size": 50973,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

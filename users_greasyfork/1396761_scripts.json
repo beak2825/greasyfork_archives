@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560853,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T02:22:54.000Z",
+    "code_updated_at": "2025-12-31T02:22:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1396761,
+        "name": "Laity.",
+        "created_at": "2024-11-15T09:24:37.000Z",
+        "url": "https://greasyfork.org/users/1396761-laity"
+      }
+    ],
+    "name": "必应增强",
+    "description": "屏蔽主流广告，搜索结果按最新排序，优化浏览流畅度",
+    "url": "https://greasyfork.org/scripts/560853-%E5%BF%85%E5%BA%94%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/560853/%E5%BF%85%E5%BA%94%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 7275,
+    "license": null,
+    "version": "5.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561335,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T06:06:53.000Z",
+    "code_updated_at": "2026-01-04T14:00:10.000Z",
+    "namespace": "https://blog.chrxw.com",
+    "support_url": "https://blog.chrxw.com/scripts.html",
+    "contribution_url": "https://afdian.com/@chr233",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 719636,
+        "name": "chr233",
+        "created_at": "2020-12-22T05:17:18.000Z",
+        "url": "https://greasyfork.org/users/719636-chr233"
+      }
+    ],
+    "name": "SteamDB_RU",
+    "description": "SteamDB Russian Translation Plugin",
+    "url": "https://greasyfork.org/scripts/561335-steamdb-ru",
+    "code_url": "https://update.greasyfork.org/scripts/561335/SteamDB_RU.user.js",
+    "code_size": 7844,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.38",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

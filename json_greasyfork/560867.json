@@ -1,0 +1,34 @@
+{
+  "id": 560867,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-31T03:48:12.000Z",
+  "code_updated_at": "2025-12-31T03:48:12.000Z",
+  "namespace": "Popmundo.GigBooker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1549399,
+      "name": "loudmur",
+      "created_at": "2025-12-18T01:40:39.000Z",
+      "url": "https://greasyfork.org/users/1549399-loudmur",
+      "scripts": []
+    }
+  ],
+  "name": "🎸 Gig Booker",
+  "description": "Automatically books gigs for your band with city, date, time, genre, and venue selection",
+  "url": "https://greasyfork.org/scripts/560867-gig-booker",
+  "code_url": "https://update.greasyfork.org/scripts/560867/%F0%9F%8E%B8%20Gig%20Booker.user.js",
+  "code_size": 27371,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

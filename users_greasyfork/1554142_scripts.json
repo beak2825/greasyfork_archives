@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560736,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T09:33:05.000Z",
+    "code_updated_at": "2025-12-30T09:33:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1554142,
+        "name": "Leezus",
+        "created_at": "2025-12-30T09:29:15.000Z",
+        "url": "https://greasyfork.org/users/1554142-leezus"
+      }
+    ],
+    "name": "RR Mugbot v31 - WebSocket",
+    "description": "Real-time Russian Roulette Mugbot • WebSocket-driven • HTML status detection • draggable • mute/filter/pause/minimise",
+    "url": "https://greasyfork.org/scripts/560736-rr-mugbot-v31-websocket",
+    "code_url": "https://update.greasyfork.org/scripts/560736/RR%20Mugbot%20v31%20-%20WebSocket.user.js",
+    "code_size": 17308,
+    "license": "MIT License",
+    "version": "31.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

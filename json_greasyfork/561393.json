@@ -1,0 +1,59 @@
+{
+  "id": 561393,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T14:30:18.000Z",
+  "code_updated_at": "2026-01-04T14:30:18.000Z",
+  "namespace": "https://github.com/luanyufei/HBU-Evaluation-helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556003,
+      "name": "luanyufei",
+      "created_at": "2026-01-04T13:20:35.000Z",
+      "url": "https://greasyfork.org/users/1556003-luanyufei",
+      "scripts": [
+        {
+          "id": 561393,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-04T14:30:18.000Z",
+          "code_updated_at": "2026-01-04T14:30:18.000Z",
+          "namespace": "https://github.com/luanyufei/HBU-Evaluation-helper",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "河大教务自动化评教",
+          "description": "适配河北大学WebVPN，拟人化填分，智能重试机制解决倒计时不同步问题，自动循环。",
+          "url": "https://greasyfork.org/scripts/561393-%E6%B2%B3%E5%A4%A7%E6%95%99%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%84%E6%95%99",
+          "code_url": "https://update.greasyfork.org/scripts/561393/%E6%B2%B3%E5%A4%A7%E6%95%99%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%84%E6%95%99.user.js",
+          "code_size": 9883,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "河大教务自动化评教",
+  "description": "适配河北大学WebVPN，拟人化填分，智能重试机制解决倒计时不同步问题，自动循环。",
+  "url": "https://greasyfork.org/scripts/561393-%E6%B2%B3%E5%A4%A7%E6%95%99%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/561393/%E6%B2%B3%E5%A4%A7%E6%95%99%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%84%E6%95%99.user.js",
+  "code_size": 9883,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

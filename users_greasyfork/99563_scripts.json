@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560774,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T13:12:12.000Z",
+    "code_updated_at": "2026-01-04T09:38:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 99563,
+        "name": "caoyufei",
+        "created_at": "2017-02-03T07:33:39.000Z",
+        "url": "https://greasyfork.org/users/99563-caoyufei"
+      }
+    ],
+    "name": "linuxdo保活",
+    "description": "linuxdo自动浏览帖子，自动点赞",
+    "url": "https://greasyfork.org/scripts/560774-linuxdo%E4%BF%9D%E6%B4%BB",
+    "code_url": "https://update.greasyfork.org/scripts/560774/linuxdo%E4%BF%9D%E6%B4%BB.user.js",
+    "code_size": 21947,
+    "license": "MIT License",
+    "version": "0.2.5.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561420,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T18:29:03.000Z",
+    "code_updated_at": "2026-01-10T08:43:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 228292,
+        "name": "清风醉梦",
+        "created_at": "2018-11-25T12:51:05.000Z",
+        "url": "https://greasyfork.org/users/228292-%E6%B8%85%E9%A3%8E%E9%86%89%E6%A2%A6"
+      }
+    ],
+    "name": "ESJZone 阅读页面优化",
+    "description": "将小说阅读页面的样式应用到阅读页面，添加翻页功能（适配手机页面）",
+    "url": "https://greasyfork.org/scripts/561420-esjzone-%E9%98%85%E8%AF%BB%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/561420/ESJZone%20%E9%98%85%E8%AF%BB%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 10855,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

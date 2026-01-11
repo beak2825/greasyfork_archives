@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560966,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T17:12:01.000Z",
+    "code_updated_at": "2025-12-31T17:26:24.000Z",
+    "namespace": "https://jasonhk.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 48470,
+        "name": "Jason Kwok",
+        "created_at": "2016-06-11T09:26:37.000Z",
+        "url": "https://greasyfork.org/users/48470-jason-kwok"
+      }
+    ],
+    "name": "Bahamut AniMad Shows Extractor",
+    "description": "Extract and generate FFmpeg command to download shows from Bahamut AniMad.",
+    "url": "https://greasyfork.org/scripts/560966-bahamut-animad-shows-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/560966/Bahamut%20AniMad%20Shows%20Extractor.user.js",
+    "code_size": 5621,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

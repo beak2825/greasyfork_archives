@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560997,
+    "daily_installs": 2,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-01T02:09:30.000Z",
+    "code_updated_at": "2026-01-01T02:09:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1554685,
+        "name": "mtfxyn",
+        "created_at": "2026-01-01T02:06:46.000Z",
+        "url": "https://greasyfork.org/users/1554685-mtfxyn"
+      }
+    ],
+    "name": "B站深色模式自动切换",
+    "description": "根据系统主题自动修改 Bilibili 的 theme_style Cookie",
+    "url": "https://greasyfork.org/scripts/560997-b%E7%AB%99%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/560997/B%E7%AB%99%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2.user.js",
+    "code_size": 1845,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

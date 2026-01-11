@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560795,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T14:47:59.000Z",
+    "code_updated_at": "2025-12-31T00:03:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "FFZ popup emote select",
+    "description": "shows emotes in popup modal!",
+    "url": "https://greasyfork.org/scripts/560795-ffz-popup-emote-select",
+    "code_url": "https://update.greasyfork.org/scripts/560795/FFZ%20popup%20emote%20select.user.js",
+    "code_size": 76174,
+    "license": "MIT License",
+    "version": "1.3.28.26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

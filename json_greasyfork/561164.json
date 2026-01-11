@@ -1,0 +1,59 @@
+{
+  "id": 561164,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-02T17:11:38.000Z",
+  "code_updated_at": "2026-01-05T12:40:18.000Z",
+  "namespace": "http://bbs.91wc.net/aggregate-search.htm",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555274,
+      "name": "z1024",
+      "created_at": "2026-01-02T16:45:40.000Z",
+      "url": "https://greasyfork.org/users/1555274-z1024",
+      "scripts": [
+        {
+          "id": 561164,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-02T17:11:38.000Z",
+          "code_updated_at": "2026-01-05T12:40:18.000Z",
+          "namespace": "http://bbs.91wc.net/aggregate-search.htm",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "轻量级聚合搜索-精美侧边栏版 (Gemini修改版)",
+          "description": "搜索引擎切换，增加临时关闭、域名黑白名单、一键添加域名功能。修复布局问题，增加文字头像兜底。",
+          "url": "https://greasyfork.org/scripts/561164-%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2-%E7%B2%BE%E7%BE%8E%E4%BE%A7%E8%BE%B9%E6%A0%8F%E7%89%88-gemini%E4%BF%AE%E6%94%B9%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/561164/%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2-%E7%B2%BE%E7%BE%8E%E4%BE%A7%E8%BE%B9%E6%A0%8F%E7%89%88%20%28Gemini%E4%BF%AE%E6%94%B9%E7%89%88%29.user.js",
+          "code_size": 86455,
+          "license": "GPL License",
+          "version": "12.4.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "轻量级聚合搜索-精美侧边栏版 (Gemini修改版)",
+  "description": "搜索引擎切换，增加临时关闭、域名黑白名单、一键添加域名功能。修复布局问题，增加文字头像兜底。",
+  "url": "https://greasyfork.org/scripts/561164-%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2-%E7%B2%BE%E7%BE%8E%E4%BE%A7%E8%BE%B9%E6%A0%8F%E7%89%88-gemini%E4%BF%AE%E6%94%B9%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/561164/%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2-%E7%B2%BE%E7%BE%8E%E4%BE%A7%E8%BE%B9%E6%A0%8F%E7%89%88%20%28Gemini%E4%BF%AE%E6%94%B9%E7%89%88%29.user.js",
+  "code_size": 86455,
+  "license": "GPL License",
+  "version": "12.4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}
