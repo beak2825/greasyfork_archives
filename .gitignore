@@ -7,3 +7,4 @@ last_id.txt
 /errors
 *.etag
 /webhooks
+/webhooks_post
