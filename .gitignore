@@ -6,3 +6,4 @@ last_id.txt
 *.zip
 /errors
 *.etag
+/webhooks
