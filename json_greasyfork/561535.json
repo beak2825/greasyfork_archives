@@ -1,0 +1,59 @@
+{
+  "id": 561535,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-05T18:09:33.000Z",
+  "code_updated_at": "2026-01-06T17:37:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556533,
+      "name": "Roberto Mendoza",
+      "created_at": "2026-01-05T18:00:20.000Z",
+      "url": "https://greasyfork.org/users/1556533-roberto-mendoza",
+      "scripts": [
+        {
+          "id": 561535,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-05T18:09:33.000Z",
+          "code_updated_at": "2026-01-06T17:37:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MercadoLibre - Filtro Regional de Envíos Internacionales",
+          "description": "Oculta resultados internacionales en la búsqueda y muestra contador de publicaciones ocultas.",
+          "url": "https://greasyfork.org/scripts/561535-mercadolibre-filtro-regional-de-env%C3%ADos-internacionales",
+          "code_url": "https://update.greasyfork.org/scripts/561535/MercadoLibre%20-%20Filtro%20Regional%20de%20Env%C3%ADos%20Internacionales.user.js",
+          "code_size": 13061,
+          "license": "MIT License",
+          "version": "2.4.1",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MercadoLibre - Filtro Regional de Envíos Internacionales",
+  "description": "Oculta resultados internacionales en la búsqueda y muestra contador de publicaciones ocultas.",
+  "url": "https://greasyfork.org/scripts/561535-mercadolibre-filtro-regional-de-env%C3%ADos-internacionales",
+  "code_url": "https://update.greasyfork.org/scripts/561535/MercadoLibre%20-%20Filtro%20Regional%20de%20Env%C3%ADos%20Internacionales.user.js",
+  "code_size": 13061,
+  "license": "MIT License",
+  "version": "2.4.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561557,
+    "daily_installs": 1,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T20:50:21.000Z",
+    "code_updated_at": "2026-01-06T09:14:06.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1206713,
+        "name": "空梦",
+        "created_at": "2023-10-29T12:27:25.000Z",
+        "url": "https://greasyfork.org/users/1206713-%E7%A9%BA%E6%A2%A6"
+      }
+    ],
+    "name": "Yandex自动翻译",
+    "description": "Yandex自动翻译小部件 | 自动翻译所有网站 | 简化界面 | 使用Ctrl+Shift+Y切换 | 增强俄语支持",
+    "url": "https://greasyfork.org/scripts/561557-yandex%E8%87%AA%E5%8A%A8%E7%BF%BB%E8%AF%91",
+    "code_url": "https://update.greasyfork.org/scripts/561557/Yandex%E8%87%AA%E5%8A%A8%E7%BF%BB%E8%AF%91.user.js",
+    "code_size": 24617,
+    "license": null,
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

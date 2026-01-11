@@ -1,0 +1,34 @@
+{
+  "id": 561560,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-05T21:02:04.000Z",
+  "code_updated_at": "2026-01-05T21:02:04.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 875675,
+      "name": "Shakhnazar Almanov",
+      "created_at": "2022-02-12T06:26:47.000Z",
+      "url": "https://greasyfork.org/users/875675-shakhnazar-almanov",
+      "scripts": []
+    }
+  ],
+  "name": "HDrezka Improvement (R4 Onest)",
+  "description": "Аддон для смена шрифта на Onest",
+  "url": "https://greasyfork.org/scripts/561560-hdrezka-improvement-r4-onest",
+  "code_url": "https://update.greasyfork.org/scripts/561560/1728284/HDrezka%20Improvement%20%28R4%20Onest%29.js",
+  "code_size": 171878,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

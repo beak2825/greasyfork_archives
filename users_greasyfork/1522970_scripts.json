@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561565,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T22:37:21.000Z",
+    "code_updated_at": "2026-01-05T22:37:21.000Z",
+    "namespace": "nitrotype-hide-speed",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1522970,
+        "name": "Robotdelectura",
+        "created_at": "2025-10-06T19:52:00.000Z",
+        "url": "https://greasyfork.org/users/1522970-robotdelectura"
+      }
+    ],
+    "name": "Nitro Type - Hide Speed During Race",
+    "description": "Hides WPM/speed during races to reduce anxiety, shows it again after race ends",
+    "url": "https://greasyfork.org/scripts/561565-nitro-type-hide-speed-during-race",
+    "code_url": "https://update.greasyfork.org/scripts/561565/Nitro%20Type%20-%20Hide%20Speed%20During%20Race.user.js",
+    "code_size": 1421,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
