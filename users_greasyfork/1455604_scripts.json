@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561745,
+    "daily_installs": 1,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T15:41:22.000Z",
+    "code_updated_at": "2026-01-07T15:41:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1455604,
+        "name": "dinnercooker",
+        "created_at": "2025-04-09T02:04:50.000Z",
+        "url": "https://greasyfork.org/users/1455604-dinnercooker"
+      }
+    ],
+    "name": "虎牙自动最高画质 (高效版)",
+    "description": "利用 MutationObserver 技术，高效、低资源地自动切换虎牙直播最高画质（蓝光/20M/10M）",
+    "url": "https://greasyfork.org/scripts/561745-%E8%99%8E%E7%89%99%E8%87%AA%E5%8A%A8%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8-%E9%AB%98%E6%95%88%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/561745/%E8%99%8E%E7%89%99%E8%87%AA%E5%8A%A8%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8%20%28%E9%AB%98%E6%95%88%E7%89%88%29.user.js",
+    "code_size": 4226,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 561926,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-09T04:14:01.000Z",
+  "code_updated_at": "2026-01-09T04:14:01.000Z",
+  "namespace": "https://flatline.local",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1493614,
+      "name": "Mugiwara113",
+      "created_at": "2025-07-11T01:46:48.000Z",
+      "url": "https://greasyfork.org/users/1493614-mugiwara113",
+      "scripts": [
+        {
+          "id": 542242,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-07-11T01:51:04.000Z",
+          "code_updated_at": "2025-07-11T02:17:14.000Z",
+          "namespace": "https://yourdomain.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Project Bunnycloak",
+          "description": "Removes location data from websites to help protect VTubers and streamers from doxxing, now with toggleable stealth UI and live redaction log.",
+          "url": "https://greasyfork.org/scripts/542242-project-bunnycloak",
+          "code_url": "https://update.greasyfork.org/scripts/542242/Project%20Bunnycloak.user.js",
+          "code_size": 7266,
+          "license": null,
+          "version": "1.3 - Jet Black Stealth Mode",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Flatline Core (Strict + Submit Guard)",
+  "description": "Strict on-page redaction + leak-surface scrubbing + form submit guard (console-only).",
+  "url": "https://greasyfork.org/scripts/561926-flatline-core-strict-submit-guard",
+  "code_url": "https://update.greasyfork.org/scripts/561926/Flatline%20Core%20%28Strict%20%2B%20Submit%20Guard%29.user.js",
+  "code_size": 11782,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

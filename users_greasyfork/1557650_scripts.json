@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561776,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T00:06:39.000Z",
+    "code_updated_at": "2026-01-08T12:06:50.000Z",
+    "namespace": "https://github.com/Yipyipyip/swagger-json-extractor",
+    "support_url": "https://github.com/Yipyipyip/swagger-json-extractor/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1557650,
+        "name": "Yipyipyip",
+        "created_at": "2026-01-08T00:00:06.000Z",
+        "url": "https://greasyfork.org/users/1557650-yipyipyip"
+      }
+    ],
+    "name": "Swagger UI: Extract Endpoint JSON",
+    "description": "Adds a button to Swagger UI to copy endpoint JSON. Ideal for LLMs: extracts only the needed context (schemas, refs) for a specific endpoint, saving tokens and reducing noise compared to the full spec.",
+    "url": "https://greasyfork.org/scripts/561776-swagger-ui-extract-endpoint-json",
+    "code_url": "https://update.greasyfork.org/scripts/561776/Swagger%20UI%3A%20Extract%20Endpoint%20JSON.user.js",
+    "code_size": 9649,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

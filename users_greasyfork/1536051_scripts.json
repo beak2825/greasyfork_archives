@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562022,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T18:06:32.000Z",
+    "code_updated_at": "2026-01-09T18:06:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536051,
+        "name": "r0ss",
+        "created_at": "2025-11-09T16:52:25.000Z",
+        "url": "https://greasyfork.org/users/1536051-r0ss"
+      }
+    ],
+    "name": "Linux.do Content Archiver & WordPress Poster",
+    "description": "Embeds a toolbar at the top of linux.do posts to save content locally or publish to WordPress directly. Supports image uploading, category auto-creation, and status selection.",
+    "url": "https://greasyfork.org/scripts/562022-linux-do-content-archiver-wordpress-poster",
+    "code_url": "https://update.greasyfork.org/scripts/562022/Linuxdo%20Content%20Archiver%20%20WordPress%20Poster.user.js",
+    "code_size": 15570,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

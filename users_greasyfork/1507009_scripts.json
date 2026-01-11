@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561698,
+    "daily_installs": 1,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T08:08:27.000Z",
+    "code_updated_at": "2026-01-07T08:08:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1507009,
+        "name": "배수진",
+        "created_at": "2025-08-20T12:47:25.000Z",
+        "url": "https://greasyfork.org/users/1507009-%EB%B0%B0%EC%88%98%EC%A7%84"
+      }
+    ],
+    "name": "VFORKOREA(Button)",
+    "description": "Adds a bottom button. On click, waits table to be stable, then for each visible a.link3: if row checkbox unchecked click label, then open in new tab.",
+    "url": "https://greasyfork.org/scripts/561698-vforkorea-button",
+    "code_url": "https://update.greasyfork.org/scripts/561698/VFORKOREA%28Button%29.user.js",
+    "code_size": 7222,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

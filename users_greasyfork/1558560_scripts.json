@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562072,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T07:49:30.000Z",
+    "code_updated_at": "2026-01-10T07:49:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558560,
+        "name": "黄黄96",
+        "created_at": "2026-01-10T07:46:50.000Z",
+        "url": "https://greasyfork.org/users/1558560-%E9%BB%84%E9%BB%8496"
+      }
+    ],
+    "name": "Pokechill宝可梦战斗日志 (黄黄修改版)",
+    "description": "兼容汉化脚本",
+    "url": "https://greasyfork.org/scripts/562072-pokechill%E5%AE%9D%E5%8F%AF%E6%A2%A6%E6%88%98%E6%96%97%E6%97%A5%E5%BF%97-%E9%BB%84%E9%BB%84%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/562072/Pokechill%E5%AE%9D%E5%8F%AF%E6%A2%A6%E6%88%98%E6%96%97%E6%97%A5%E5%BF%97%20%28%E9%BB%84%E9%BB%84%E4%BF%AE%E6%94%B9%E7%89%88%29.user.js",
+    "code_size": 48159,
+    "license": null,
+    "version": "7.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

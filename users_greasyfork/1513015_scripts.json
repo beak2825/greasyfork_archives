@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561600,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T07:59:22.000Z",
+    "code_updated_at": "2026-01-06T10:30:08.000Z",
+    "namespace": "https://greasyfork.org/ja/users/1513015-81f32c5c",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513015,
+        "name": "81f32c5c",
+        "created_at": "2025-09-08T13:43:39.000Z",
+        "url": "https://greasyfork.org/users/1513015-81f32c5c"
+      }
+    ],
+    "name": "arenalogs add filter and graph",
+    "description": "アリーナログにフィルタとグラフを追加",
+    "url": "https://greasyfork.org/scripts/561600-arenalogs-add-filter-and-graph",
+    "code_url": "https://update.greasyfork.org/scripts/561600/arenalogs%20add%20filter%20and%20graph.user.js",
+    "code_size": 5597,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

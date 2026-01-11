@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562134,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T18:03:04.000Z",
+    "code_updated_at": "2026-01-10T18:03:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795702,
+        "name": "Christopher Fritz",
+        "created_at": "2021-07-21T02:53:38.000Z",
+        "url": "https://greasyfork.org/users/795702-christopher-fritz"
+      }
+    ],
+    "name": "Mokuro Reader Manga Kotoba Integration",
+    "description": "Integrates matching Manga Kotoba reading statuses with Mokuro Reader.",
+    "url": "https://greasyfork.org/scripts/562134-mokuro-reader-manga-kotoba-integration",
+    "code_url": "https://update.greasyfork.org/scripts/562134/Mokuro%20Reader%20Manga%20Kotoba%20Integration.user.js",
+    "code_size": 21551,
+    "license": "MIT License",
+    "version": "2026-01-10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 561743,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-07T15:23:06.000Z",
+  "code_updated_at": "2026-01-07T15:23:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557504,
+      "name": "soenestor",
+      "created_at": "2026-01-07T15:18:00.000Z",
+      "url": "https://greasyfork.org/users/1557504-soenestor",
+      "scripts": [
+        {
+          "id": 561743,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-07T15:23:06.000Z",
+          "code_updated_at": "2026-01-07T15:23:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "2game.info Day0コメント非表示",
+          "description": "rimworld.2game.infoでDay0ユーザーのコメントを非表示にする",
+          "url": "https://greasyfork.org/scripts/561743-2game-info-day0%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E9%9D%9E%E8%A1%A8%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/561743/2gameinfo%20Day0%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E9%9D%9E%E8%A1%A8%E7%A4%BA.user.js",
+          "code_size": 2191,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "2game.info Day0コメント非表示",
+  "description": "rimworld.2game.infoでDay0ユーザーのコメントを非表示にする",
+  "url": "https://greasyfork.org/scripts/561743-2game-info-day0%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E9%9D%9E%E8%A1%A8%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/561743/2gameinfo%20Day0%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E9%9D%9E%E8%A1%A8%E7%A4%BA.user.js",
+  "code_size": 2191,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

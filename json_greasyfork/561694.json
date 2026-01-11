@@ -1,0 +1,59 @@
+{
+  "id": 561694,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-07T07:36:13.000Z",
+  "code_updated_at": "2026-01-07T07:49:09.000Z",
+  "namespace": "https://redacted.sh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557178,
+      "name": "kitschmensch",
+      "created_at": "2026-01-07T07:31:35.000Z",
+      "url": "https://greasyfork.org/users/1557178-kitschmensch",
+      "scripts": [
+        {
+          "id": 561694,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-07T07:36:13.000Z",
+          "code_updated_at": "2026-01-07T07:49:09.000Z",
+          "namespace": "https://redacted.sh",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[RED] Search Collector",
+          "description": "Download multiple torrents by criteria from search results on Redacted.sh",
+          "url": "https://greasyfork.org/scripts/561694-red-search-collector",
+          "code_url": "https://update.greasyfork.org/scripts/561694/%5BRED%5D%20Search%20Collector.user.js",
+          "code_size": 29764,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[RED] Search Collector",
+  "description": "Download multiple torrents by criteria from search results on Redacted.sh",
+  "url": "https://greasyfork.org/scripts/561694-red-search-collector",
+  "code_url": "https://update.greasyfork.org/scripts/561694/%5BRED%5D%20Search%20Collector.user.js",
+  "code_size": 29764,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 561781,
+    "daily_installs": 2,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T01:16:34.000Z",
+    "code_updated_at": "2026-01-08T01:16:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1557659,
+        "name": "przherts",
+        "created_at": "2026-01-08T01:04:45.000Z",
+        "url": "https://greasyfork.org/users/1557659-przherts"
+      }
+    ],
+    "name": "X.com Default to Following Tab",
+    "description": "Force X.com home to open on Following tab instead of For You",
+    "url": "https://greasyfork.org/scripts/561781-x-com-default-to-following-tab",
+    "code_url": "https://update.greasyfork.org/scripts/561781/Xcom%20Default%20to%20Following%20Tab.user.js",
+    "code_size": 1184,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561780,
+    "daily_installs": 1,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T01:13:32.000Z",
+    "code_updated_at": "2026-01-08T01:13:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1557659,
+        "name": "przherts",
+        "created_at": "2026-01-08T01:04:45.000Z",
+        "url": "https://greasyfork.org/users/1557659-przherts"
+      }
+    ],
+    "name": "X Media Downloader",
+    "description": "Download GIFs, images, and videos from X (Twitter)",
+    "url": "https://greasyfork.org/scripts/561780-x-media-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/561780/X%20Media%20Downloader.user.js",
+    "code_size": 4250,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

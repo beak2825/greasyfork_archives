@@ -1,0 +1,134 @@
+[
+  {
+    "id": 562118,
+    "daily_installs": 4,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T15:26:44.000Z",
+    "code_updated_at": "2026-01-10T17:29:38.000Z",
+    "namespace": "https://marumori.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375759,
+        "name": "matskye",
+        "created_at": "2024-10-02T10:30:31.000Z",
+        "url": "https://greasyfork.org/users/1375759-matskye"
+      }
+    ],
+    "name": "MaruMori Scaled Bars",
+    "description": "Globally scaled bar segments with dominant-based slots and strict max-width cap using water-fill algorithm",
+    "url": "https://greasyfork.org/scripts/562118-marumori-scaled-bars",
+    "code_url": "https://update.greasyfork.org/scripts/562118/MaruMori%20Scaled%20Bars.user.js",
+    "code_size": 7669,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562102,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T12:18:32.000Z",
+    "code_updated_at": "2026-01-10T14:28:33.000Z",
+    "namespace": "https://marumori.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375759,
+        "name": "matskye",
+        "created_at": "2024-10-02T10:30:31.000Z",
+        "url": "https://greasyfork.org/users/1375759-matskye"
+      }
+    ],
+    "name": "MaruMori Justified scaled bar segments",
+    "description": "Justified bar segments with values displayed",
+    "url": "https://greasyfork.org/scripts/562102-marumori-justified-scaled-bar-segments",
+    "code_url": "https://update.greasyfork.org/scripts/562102/MaruMori%20Justified%20scaled%20bar%20segments.user.js",
+    "code_size": 5273,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562021,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T18:05:38.000Z",
+    "code_updated_at": "2026-01-09T18:05:37.000Z",
+    "namespace": "https://marumori.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375759,
+        "name": "matskye",
+        "created_at": "2024-10-02T10:30:31.000Z",
+        "url": "https://greasyfork.org/users/1375759-matskye"
+      }
+    ],
+    "name": "Marumori – Blur Reading Story During Reviews",
+    "description": "Blur reading stories during reviews; click to unblur",
+    "url": "https://greasyfork.org/scripts/562021-marumori-blur-reading-story-during-reviews",
+    "code_url": "https://update.greasyfork.org/scripts/562021/Marumori%20%E2%80%93%20Blur%20Reading%20Story%20During%20Reviews.user.js",
+    "code_size": 3569,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561566,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T23:05:45.000Z",
+    "code_updated_at": "2026-01-05T23:05:45.000Z",
+    "namespace": "https://marumori.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375759,
+        "name": "matskye",
+        "created_at": "2024-10-02T10:30:31.000Z",
+        "url": "https://greasyfork.org/users/1375759-matskye"
+      }
+    ],
+    "name": "Marumori Drake Meme Replacer",
+    "description": "Replace ❌ and ⭕ with maru YES and NO on /adventure/ pages",
+    "url": "https://greasyfork.org/scripts/561566-marumori-drake-meme-replacer",
+    "code_url": "https://update.greasyfork.org/scripts/561566/Marumori%20Drake%20Meme%20Replacer.user.js",
+    "code_size": 4351,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

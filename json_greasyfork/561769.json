@@ -1,0 +1,59 @@
+{
+  "id": 561769,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-07T21:36:15.000Z",
+  "code_updated_at": "2026-01-07T23:29:17.000Z",
+  "namespace": "cloge0.rid.avito",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557624,
+      "name": "Григорий Камышев",
+      "created_at": "2026-01-07T21:27:05.000Z",
+      "url": "https://greasyfork.org/users/1557624-%D0%B3%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%B8%D0%B9-%D0%BA%D0%B0%D0%BC%D1%8B%D1%88%D0%B5%D0%B2",
+      "scripts": [
+        {
+          "id": 561769,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-07T21:36:15.000Z",
+          "code_updated_at": "2026-01-07T23:29:17.000Z",
+          "namespace": "cloge0.rid.avito",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RID Avito",
+          "description": "Automated Reserve Filter by @cloge0. Protected.",
+          "url": "https://greasyfork.org/scripts/561769-rid-avito",
+          "code_url": "https://update.greasyfork.org/scripts/561769/RID%20Avito.user.js",
+          "code_size": 9420,
+          "license": null,
+          "version": "1.6 Smart Zones",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RID Avito",
+  "description": "Automated Reserve Filter by @cloge0. Protected.",
+  "url": "https://greasyfork.org/scripts/561769-rid-avito",
+  "code_url": "https://update.greasyfork.org/scripts/561769/RID%20Avito.user.js",
+  "code_size": 9420,
+  "license": null,
+  "version": "1.6 Smart Zones",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

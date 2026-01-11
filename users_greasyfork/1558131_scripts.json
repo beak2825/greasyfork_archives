@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561963,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T09:45:24.000Z",
+    "code_updated_at": "2026-01-09T09:45:24.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1558131-shinku714",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558131,
+        "name": "Shinku714",
+        "created_at": "2026-01-09T07:14:39.000Z",
+        "url": "https://greasyfork.org/users/1558131-shinku714"
+      }
+    ],
+    "name": "猫站自动认领",
+    "description": "猫站用户页自动认领所有可认领种子，提供悬浮UI、自动翻页、进度显示、成功/失败结果列表、查看全部弹窗、暂停/继续、清空记录与本地状态保存。",
+    "url": "https://greasyfork.org/scripts/561963-%E7%8C%AB%E7%AB%99%E8%87%AA%E5%8A%A8%E8%AE%A4%E9%A2%86",
+    "code_url": "https://update.greasyfork.org/scripts/561963/%E7%8C%AB%E7%AB%99%E8%87%AA%E5%8A%A8%E8%AE%A4%E9%A2%86.user.js",
+    "code_size": 23465,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

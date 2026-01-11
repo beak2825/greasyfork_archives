@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561584,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T04:22:19.000Z",
+    "code_updated_at": "2026-01-07T00:28:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556648,
+        "name": "im_a_lemon",
+        "created_at": "2026-01-06T03:40:29.000Z",
+        "url": "https://greasyfork.org/users/1556648-im-a-lemon"
+      }
+    ],
+    "name": "Desmos Keybind Assist",
+    "description": "Enables you to bind keyboard keys to action expressions in Desmos. Add \"@action_bind_key <list of keys>\" in a text box before an action to add a key binding.",
+    "url": "https://greasyfork.org/scripts/561584-desmos-keybind-assist",
+    "code_url": "https://update.greasyfork.org/scripts/561584/Desmos%20Keybind%20Assist.user.js",
+    "code_size": 2217,
+    "license": "MIT License",
+    "version": "2026-01-06",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 561735,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-07T13:51:45.000Z",
+  "code_updated_at": "2026-01-07T13:51:45.000Z",
+  "namespace": "https://linux.do/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557425,
+      "name": "AkiX",
+      "created_at": "2026-01-07T13:41:36.000Z",
+      "url": "https://greasyfork.org/users/1557425-akix",
+      "scripts": [
+        {
+          "id": 561735,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-07T13:51:45.000Z",
+          "code_updated_at": "2026-01-07T13:51:45.000Z",
+          "namespace": "https://linux.do/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Linux.do 帖子导出 Pro（超级版：范围/主题/离线/AI/搜索/目录/暂停/兜底下载）",
+          "description": "导出 Linux.do 帖子为离线 HTML（离线图片/头像、目录、搜索、过滤、主题切换、快捷键、暂停/继续）与发给 AI 的高质量纯文本，并带 GM_download + 兜底下载按钮",
+          "url": "https://greasyfork.org/scripts/561735-linux-do-%E5%B8%96%E5%AD%90%E5%AF%BC%E5%87%BA-pro-%E8%B6%85%E7%BA%A7%E7%89%88-%E8%8C%83%E5%9B%B4-%E4%B8%BB%E9%A2%98-%E7%A6%BB%E7%BA%BF-ai-%E6%90%9C%E7%B4%A2-%E7%9B%AE%E5%BD%95-%E6%9A%82%E5%81%9C-%E5%85%9C%E5%BA%95%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/561735/Linuxdo%20%E5%B8%96%E5%AD%90%E5%AF%BC%E5%87%BA%20Pro%EF%BC%88%E8%B6%85%E7%BA%A7%E7%89%88%EF%BC%9A%E8%8C%83%E5%9B%B4%E4%B8%BB%E9%A2%98%E7%A6%BB%E7%BA%BFAI%E6%90%9C%E7%B4%A2%E7%9B%AE%E5%BD%95%E6%9A%82%E5%81%9C%E5%85%9C%E5%BA%95%E4%B8%8B%E8%BD%BD%EF%BC%89.user.js",
+          "code_size": 79833,
+          "license": "MIT License",
+          "version": "2.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Linux.do 帖子导出 Pro（超级版：范围/主题/离线/AI/搜索/目录/暂停/兜底下载）",
+  "description": "导出 Linux.do 帖子为离线 HTML（离线图片/头像、目录、搜索、过滤、主题切换、快捷键、暂停/继续）与发给 AI 的高质量纯文本，并带 GM_download + 兜底下载按钮",
+  "url": "https://greasyfork.org/scripts/561735-linux-do-%E5%B8%96%E5%AD%90%E5%AF%BC%E5%87%BA-pro-%E8%B6%85%E7%BA%A7%E7%89%88-%E8%8C%83%E5%9B%B4-%E4%B8%BB%E9%A2%98-%E7%A6%BB%E7%BA%BF-ai-%E6%90%9C%E7%B4%A2-%E7%9B%AE%E5%BD%95-%E6%9A%82%E5%81%9C-%E5%85%9C%E5%BA%95%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/561735/Linuxdo%20%E5%B8%96%E5%AD%90%E5%AF%BC%E5%87%BA%20Pro%EF%BC%88%E8%B6%85%E7%BA%A7%E7%89%88%EF%BC%9A%E8%8C%83%E5%9B%B4%E4%B8%BB%E9%A2%98%E7%A6%BB%E7%BA%BFAI%E6%90%9C%E7%B4%A2%E7%9B%AE%E5%BD%95%E6%9A%82%E5%81%9C%E5%85%9C%E5%BA%95%E4%B8%8B%E8%BD%BD%EF%BC%89.user.js",
+  "code_size": 79833,
+  "license": "MIT License",
+  "version": "2.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

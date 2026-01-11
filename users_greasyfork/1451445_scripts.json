@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562055,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T04:16:44.000Z",
+    "code_updated_at": "2026-01-10T04:16:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451445,
+        "name": "蓮ノ空好き好きクラブ",
+        "created_at": "2025-03-29T00:49:11.000Z",
+        "url": "https://greasyfork.org/users/1451445-%E8%93%AE%E3%83%8E%E7%A9%BA%E5%A5%BD%E3%81%8D%E5%A5%BD%E3%81%8D%E3%82%AF%E3%83%A9%E3%83%96"
+      }
+    ],
+    "name": "UUTIX Helper (v13)",
+    "description": "分步复查：入口按钮监听“已订阅→购买”后点击；场次/票价/数量每步必须确认完成才进入下一步；场次=1跳过切换与loading；最后狂点購買，但点到后不立刻停——严格等待跳转到購物車页再停止。",
+    "url": "https://greasyfork.org/scripts/562055-uutix-helper-v13",
+    "code_url": "https://update.greasyfork.org/scripts/562055/UUTIX%20Helper%20%28v13%29.user.js",
+    "code_size": 26692,
+    "license": null,
+    "version": "2026-01-10.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

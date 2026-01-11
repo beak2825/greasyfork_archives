@@ -1,0 +1,101 @@
+[
+  {
+    "id": 562158,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T23:09:22.000Z",
+    "code_updated_at": "2026-01-10T23:09:47.000Z",
+    "namespace": "toby.torn.attackhelper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353455,
+        "name": "Jammyclam",
+        "created_at": "2024-08-17T14:28:39.000Z",
+        "url": "https://greasyfork.org/users/1353455-jammyclam"
+      }
+    ],
+    "name": "Torn Attack Helper - Full Screen Button (Log-Driven)",
+    "description": "Fullscreen attack button. Progresses ONLY when log updates. Supports spam-clicking during lag.",
+    "url": "https://greasyfork.org/scripts/562158-torn-attack-helper-full-screen-button-log-driven",
+    "code_url": "https://update.greasyfork.org/scripts/562158/Torn%20Attack%20Helper%20-%20Full%20Screen%20Button%20%28Log-Driven%29.user.js",
+    "code_size": 14275,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561977,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T12:28:49.000Z",
+    "code_updated_at": "2026-01-09T17:54:39.000Z",
+    "namespace": "toby.torn.pda.ocpayout",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353455,
+        "name": "Jammyclam",
+        "created_at": "2024-08-17T14:28:39.000Z",
+        "url": "https://greasyfork.org/users/1353455-jammyclam"
+      }
+    ],
+    "name": "Torn PDA OC Auto-Payout",
+    "description": "Calculates payouts. Fixes 85% bug via active item validation and cache self-repair.",
+    "url": "https://greasyfork.org/scripts/561977-torn-pda-oc-auto-payout",
+    "code_url": "https://update.greasyfork.org/scripts/561977/Torn%20PDA%20OC%20Auto-Payout.user.js",
+    "code_size": 10339,
+    "license": null,
+    "version": "1.8.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561761,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T20:05:50.000Z",
+    "code_updated_at": "2026-01-09T14:18:24.000Z",
+    "namespace": "toby.torn.occompanion",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353455,
+        "name": "Jammyclam",
+        "created_at": "2024-08-17T14:28:39.000Z",
+        "url": "https://greasyfork.org/users/1353455-jammyclam"
+      }
+    ],
+    "name": "OC Payout Companion",
+    "description": "Syncs splits from Revenant, fallback to local math if missing. Always Injects OC IDs. Fixed for SPA navigation.",
+    "url": "https://greasyfork.org/scripts/561761-oc-payout-companion",
+    "code_url": "https://update.greasyfork.org/scripts/561761/OC%20Payout%20Companion.user.js",
+    "code_size": 8850,
+    "license": null,
+    "version": "1.6.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

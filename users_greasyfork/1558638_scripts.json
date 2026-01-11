@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562097,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T11:39:21.000Z",
+    "code_updated_at": "2026-01-10T11:39:20.000Z",
+    "namespace": "https://github.com/hza2002/deepseek-collapse-think",
+    "support_url": "https://github.com/hza2002/deepseek-collapse-think/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558638,
+        "name": "hza2002",
+        "created_at": "2026-01-10T10:39:49.000Z",
+        "url": "https://greasyfork.org/users/1558638-hza2002"
+      }
+    ],
+    "name": "DeepSeek Think 自动收起",
+    "description": "自动收起 DeepSeek 对话中的 Think 思考过程部分，支持切换对话自动收起，节省屏幕空间。⚠️ 注意：本脚本依赖 DeepSeek 网站的 CSS 类名，官网更新后可能失效，届时请更新脚本或手动修改选择器。",
+    "url": "https://greasyfork.org/scripts/562097-deepseek-think-%E8%87%AA%E5%8A%A8%E6%94%B6%E8%B5%B7",
+    "code_url": "https://update.greasyfork.org/scripts/562097/DeepSeek%20Think%20%E8%87%AA%E5%8A%A8%E6%94%B6%E8%B5%B7.user.js",
+    "code_size": 11039,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 561896,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-08T23:27:35.000Z",
+  "code_updated_at": "2026-01-08T23:27:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533849,
+      "name": "Jaehyong Kim",
+      "created_at": "2025-11-04T04:29:39.000Z",
+      "url": "https://greasyfork.org/users/1533849-jaehyong-kim",
+      "scripts": []
+    }
+  ],
+  "name": "LIMS SQC대기 컬럼 너비 조절",
+  "description": "탭 전환 및 조회 시에도 LIB KIT 컬럼 너비 상시 유지",
+  "url": "https://greasyfork.org/scripts/561896-lims-sqc%EB%8C%80%EA%B8%B0-%EC%BB%AC%EB%9F%BC-%EB%84%88%EB%B9%84-%EC%A1%B0%EC%A0%88",
+  "code_url": "https://update.greasyfork.org/scripts/561896/LIMS%20SQC%EB%8C%80%EA%B8%B0%20%EC%BB%AC%EB%9F%BC%20%EB%84%88%EB%B9%84%20%EC%A1%B0%EC%A0%88.user.js",
+  "code_size": 2256,
+  "license": null,
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

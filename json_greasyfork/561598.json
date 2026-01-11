@@ -1,0 +1,34 @@
+{
+  "id": 561598,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-06T07:47:05.000Z",
+  "code_updated_at": "2026-01-06T07:47:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556721,
+      "name": "kauakakaka",
+      "created_at": "2026-01-06T07:44:48.000Z",
+      "url": "https://greasyfork.org/users/1556721-kauakakaka",
+      "scripts": []
+    }
+  ],
+  "name": "Mostrar GM no Chess.com",
+  "description": "Adiciona símbolo de GM no seu perfil e lista de online no Chess.com (visível apenas pra você)",
+  "url": "https://greasyfork.org/scripts/561598-mostrar-gm-no-chess-com",
+  "code_url": "https://update.greasyfork.org/scripts/561598/Mostrar%20GM%20no%20Chesscom.user.js",
+  "code_size": 1663,
+  "license": null,
+  "version": "1.0",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561888,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T22:06:09.000Z",
+    "code_updated_at": "2026-01-09T01:32:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457628,
+        "name": "kzehaya",
+        "created_at": "2025-04-14T05:19:18.000Z",
+        "url": "https://greasyfork.org/users/1457628-kzehaya"
+      }
+    ],
+    "name": "E-SAKIP Kaltim - Panel Editor",
+    "description": "Logo Pemprov, Strict Empty Table Check, Fixed Animation, Modern UI",
+    "url": "https://greasyfork.org/scripts/561888-e-sakip-kaltim-panel-editor",
+    "code_url": "https://update.greasyfork.org/scripts/561888/E-SAKIP%20Kaltim%20-%20Panel%20Editor.user.js",
+    "code_size": 31660,
+    "license": "MIT License",
+    "version": "28.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

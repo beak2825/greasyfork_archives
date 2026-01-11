@@ -1,0 +1,59 @@
+{
+  "id": 562002,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-09T15:48:11.000Z",
+  "code_updated_at": "2026-01-09T15:48:11.000Z",
+  "namespace": "https://lolz.live/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1558332,
+      "name": "SteamFix",
+      "created_at": "2026-01-09T15:46:36.000Z",
+      "url": "https://greasyfork.org/users/1558332-steamfix",
+      "scripts": [
+        {
+          "id": 562002,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-09T15:48:11.000Z",
+          "code_updated_at": "2026-01-09T15:48:11.000Z",
+          "namespace": "https://lolz.live/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LZTGIF",
+          "description": "Панель с избранными GIF слева от чата",
+          "url": "https://greasyfork.org/scripts/562002-lztgif",
+          "code_url": "https://update.greasyfork.org/scripts/562002/LZTGIF.user.js",
+          "code_size": 37615,
+          "license": "MIT License",
+          "version": "6.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LZTGIF",
+  "description": "Панель с избранными GIF слева от чата",
+  "url": "https://greasyfork.org/scripts/562002-lztgif",
+  "code_url": "https://update.greasyfork.org/scripts/562002/LZTGIF.user.js",
+  "code_size": 37615,
+  "license": "MIT License",
+  "version": "6.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

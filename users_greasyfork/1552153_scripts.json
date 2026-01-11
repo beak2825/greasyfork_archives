@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561887,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T21:54:46.000Z",
+    "code_updated_at": "2026-01-09T14:15:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1552153,
+        "name": "bj00rn",
+        "created_at": "2025-12-24T23:40:06.000Z",
+        "url": "https://greasyfork.org/users/1552153-bj00rn"
+      }
+    ],
+    "name": "NeoGAF Project Zero",
+    "description": "NeoGAF EQ",
+    "url": "https://greasyfork.org/scripts/561887-neogaf-project-zero",
+    "code_url": "https://update.greasyfork.org/scripts/561887/NeoGAF%20Project%20Zero.user.js",
+    "code_size": 16260,
+    "license": "MIT License",
+    "version": "0.9.23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 561685,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-07T05:20:43.000Z",
+  "code_updated_at": "2026-01-07T05:20:42.000Z",
+  "namespace": "https://fillr.app",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557129,
+      "name": "sanjana kansal",
+      "created_at": "2026-01-07T05:19:18.000Z",
+      "url": "https://greasyfork.org/users/1557129-sanjana-kansal",
+      "scripts": [
+        {
+          "id": 561685,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-07T05:20:43.000Z",
+          "code_updated_at": "2026-01-07T05:20:42.000Z",
+          "namespace": "https://fillr.app",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fillr - Auto-fill Forms",
+          "description": "Auto-fill job application forms instantly. Learns from your inputs, fills forms everywhere. Works on Google Forms, Greenhouse, Lever, Workday, and more.",
+          "url": "https://greasyfork.org/scripts/561685-fillr-auto-fill-forms",
+          "code_url": "https://update.greasyfork.org/scripts/561685/Fillr%20-%20Auto-fill%20Forms.user.js",
+          "code_size": 32070,
+          "license": "MIT License",
+          "version": "4.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fillr - Auto-fill Forms",
+  "description": "Auto-fill job application forms instantly. Learns from your inputs, fills forms everywhere. Works on Google Forms, Greenhouse, Lever, Workday, and more.",
+  "url": "https://greasyfork.org/scripts/561685-fillr-auto-fill-forms",
+  "code_url": "https://update.greasyfork.org/scripts/561685/Fillr%20-%20Auto-fill%20Forms.user.js",
+  "code_size": 32070,
+  "license": "MIT License",
+  "version": "4.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

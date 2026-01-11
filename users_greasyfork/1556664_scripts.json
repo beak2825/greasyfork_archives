@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561604,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T09:35:06.000Z",
+    "code_updated_at": "2026-01-08T09:42:13.000Z",
+    "namespace": "https://mirror.chromaso.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556664,
+        "name": "kisara_art",
+        "created_at": "2026-01-06T04:48:20.000Z",
+        "url": "https://greasyfork.org/users/1556664-kisara-art"
+      }
+    ],
+    "name": "M系镜像站扩展-屏蔽功能 更新支持扫描标签屏蔽文章",
+    "description": "1.支持深度引用屏蔽；2.支持关键词对标题及标签(Tag)的同步屏蔽；3.新增屏蔽模式切换；4.引入倒计时冷静期及温馨提示，支持一键反悔。",
+    "url": "https://greasyfork.org/scripts/561604-m%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD-%E6%9B%B4%E6%96%B0%E6%94%AF%E6%8C%81%E6%89%AB%E6%8F%8F%E6%A0%87%E7%AD%BE%E5%B1%8F%E8%94%BD%E6%96%87%E7%AB%A0",
+    "code_url": "https://update.greasyfork.org/scripts/561604/M%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD%20%E6%9B%B4%E6%96%B0%E6%94%AF%E6%8C%81%E6%89%AB%E6%8F%8F%E6%A0%87%E7%AD%BE%E5%B1%8F%E8%94%BD%E6%96%87%E7%AB%A0.user.js",
+    "code_size": 16331,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

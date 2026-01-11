@@ -1,0 +1,59 @@
+{
+  "id": 561908,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-09T02:19:06.000Z",
+  "code_updated_at": "2026-01-09T02:19:05.000Z",
+  "namespace": "https://mikanani.me/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1539229,
+      "name": "jldxnb",
+      "created_at": "2025-11-19T02:00:23.000Z",
+      "url": "https://greasyfork.org/users/1539229-jldxnb",
+      "scripts": [
+        {
+          "id": 561908,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-09T02:19:06.000Z",
+          "code_updated_at": "2026-01-09T02:19:05.000Z",
+          "namespace": "https://mikanani.me/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mikan Project 复制磁链（修复版：稳定挂载 + OR/多组 + UI 美化）",
+          "description": "兼容不同 DOM 布局的稳定版：OR 多组 AND、勾选优先、橙色 UI、MutationObserver 动态挂载",
+          "url": "https://greasyfork.org/scripts/561908-mikan-project-%E5%A4%8D%E5%88%B6%E7%A3%81%E9%93%BE-%E4%BF%AE%E5%A4%8D%E7%89%88-%E7%A8%B3%E5%AE%9A%E6%8C%82%E8%BD%BD-or-%E5%A4%9A%E7%BB%84-ui-%E7%BE%8E%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/561908/Mikan%20Project%20%E5%A4%8D%E5%88%B6%E7%A3%81%E9%93%BE%EF%BC%88%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%9A%E7%A8%B3%E5%AE%9A%E6%8C%82%E8%BD%BD%20%2B%20OR%E5%A4%9A%E7%BB%84%20%2B%20UI%20%E7%BE%8E%E5%8C%96%EF%BC%89.user.js",
+          "code_size": 10444,
+          "license": "MIT License",
+          "version": "1.21",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mikan Project 复制磁链（修复版：稳定挂载 + OR/多组 + UI 美化）",
+  "description": "兼容不同 DOM 布局的稳定版：OR 多组 AND、勾选优先、橙色 UI、MutationObserver 动态挂载",
+  "url": "https://greasyfork.org/scripts/561908-mikan-project-%E5%A4%8D%E5%88%B6%E7%A3%81%E9%93%BE-%E4%BF%AE%E5%A4%8D%E7%89%88-%E7%A8%B3%E5%AE%9A%E6%8C%82%E8%BD%BD-or-%E5%A4%9A%E7%BB%84-ui-%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/561908/Mikan%20Project%20%E5%A4%8D%E5%88%B6%E7%A3%81%E9%93%BE%EF%BC%88%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%9A%E7%A8%B3%E5%AE%9A%E6%8C%82%E8%BD%BD%20%2B%20OR%E5%A4%9A%E7%BB%84%20%2B%20UI%20%E7%BE%8E%E5%8C%96%EF%BC%89.user.js",
+  "code_size": 10444,
+  "license": "MIT License",
+  "version": "1.21",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

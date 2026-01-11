@@ -1,0 +1,101 @@
+[
+  {
+    "id": 561814,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T07:39:44.000Z",
+    "code_updated_at": "2026-01-08T07:39:44.000Z",
+    "namespace": "ogoo.shopee.order.spec-highlighter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515828,
+        "name": "ogoo _",
+        "created_at": "2025-09-16T12:01:36.000Z",
+        "url": "https://greasyfork.org/users/1515828-ogoo"
+      }
+    ],
+    "name": "規格放大鏡 1.9.1",
+    "description": "高亮「規格 / 數量」（數量≠1更強調），同時支援一般單品與組合購，並統一斑馬色索引；商品圖片點擊可顯示/關閉放大預覽（支援 background-image 與 <img>）；相容 SPA 動態渲染。修正：促銷組合「小計」欄位不再被放大。",
+    "url": "https://greasyfork.org/scripts/561814-%E8%A6%8F%E6%A0%BC%E6%94%BE%E5%A4%A7%E9%8F%A1-1-9-1",
+    "code_url": "https://update.greasyfork.org/scripts/561814/%E8%A6%8F%E6%A0%BC%E6%94%BE%E5%A4%A7%E9%8F%A1%20191.user.js",
+    "code_size": 10268,
+    "license": "MIT License",
+    "version": "1.9.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561813,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T07:36:02.000Z",
+    "code_updated_at": "2026-01-08T07:36:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515828,
+        "name": "ogoo _",
+        "created_at": "2025-09-16T12:01:36.000Z",
+        "url": "https://greasyfork.org/users/1515828-ogoo"
+      }
+    ],
+    "name": "備註放大鏡",
+    "description": "高亮顯示 \"買家備註\"",
+    "url": "https://greasyfork.org/scripts/561813-%E5%82%99%E8%A8%BB%E6%94%BE%E5%A4%A7%E9%8F%A1",
+    "code_url": "https://update.greasyfork.org/scripts/561813/%E5%82%99%E8%A8%BB%E6%94%BE%E5%A4%A7%E9%8F%A1.user.js",
+    "code_size": 4634,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561811,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T07:34:07.000Z",
+    "code_updated_at": "2026-01-08T07:34:07.000Z",
+    "namespace": "ogoo.shopee.hider",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515828,
+        "name": "ogoo _",
+        "created_at": "2025-09-16T12:01:36.000Z",
+        "url": "https://greasyfork.org/users/1515828-ogoo"
+      }
+    ],
+    "name": "訂單頁面簡化器",
+    "description": "在賣家中心訂單頁自動隱藏「累計帳款調整」「調整後訂單進帳」「買家訂單完成率」與「入帳明細」",
+    "url": "https://greasyfork.org/scripts/561811-%E8%A8%82%E5%96%AE%E9%A0%81%E9%9D%A2%E7%B0%A1%E5%8C%96%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/561811/%E8%A8%82%E5%96%AE%E9%A0%81%E9%9D%A2%E7%B0%A1%E5%8C%96%E5%99%A8.user.js",
+    "code_size": 3053,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

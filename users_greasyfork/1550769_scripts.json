@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561570,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T01:49:16.000Z",
+    "code_updated_at": "2026-01-06T02:01:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1550769,
+        "name": "Pedro Alexandre",
+        "created_at": "2025-12-21T16:16:02.000Z",
+        "url": "https://greasyfork.org/users/1550769-pedro-alexandre"
+      }
+    ],
+    "name": "Bonk.io - removedor do limite de fps + extra fps",
+    "description": "Remove limite de FPS e melhora o fps, melhora o fps removendo anuncios e o replay no lobby",
+    "url": "https://greasyfork.org/scripts/561570-bonk-io-removedor-do-limite-de-fps-extra-fps",
+    "code_url": "https://update.greasyfork.org/scripts/561570/Bonkio%20-%20removedor%20do%20limite%20de%20fps%20%2B%20extra%20fps.user.js",
+    "code_size": 2168,
+    "license": null,
+    "version": "5.1",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

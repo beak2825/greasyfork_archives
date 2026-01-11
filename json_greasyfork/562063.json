@@ -1,0 +1,59 @@
+{
+  "id": 562063,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-10T05:13:32.000Z",
+  "code_updated_at": "2026-01-10T05:17:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1558501,
+      "name": "UptoPol",
+      "created_at": "2026-01-10T04:54:51.000Z",
+      "url": "https://greasyfork.org/users/1558501-uptopol",
+      "scripts": [
+        {
+          "id": 562063,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-10T05:13:32.000Z",
+          "code_updated_at": "2026-01-10T05:17:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sharewood Torrent Download Buttons in List",
+          "description": "Ajoute un bouton \"télécharger\" directement sur la page de recherche sur sharewood.tv",
+          "url": "https://greasyfork.org/scripts/562063-sharewood-torrent-download-buttons-in-list",
+          "code_url": "https://update.greasyfork.org/scripts/562063/Sharewood%20Torrent%20Download%20Buttons%20in%20List.user.js",
+          "code_size": 6049,
+          "license": null,
+          "version": "2.1",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Sharewood Torrent Download Buttons in List",
+  "description": "Ajoute un bouton \"télécharger\" directement sur la page de recherche sur sharewood.tv",
+  "url": "https://greasyfork.org/scripts/562063-sharewood-torrent-download-buttons-in-list",
+  "code_url": "https://update.greasyfork.org/scripts/562063/Sharewood%20Torrent%20Download%20Buttons%20in%20List.user.js",
+  "code_size": 6049,
+  "license": null,
+  "version": "2.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

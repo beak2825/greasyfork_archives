@@ -1,0 +1,167 @@
+[
+  {
+    "id": 561727,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T13:18:10.000Z",
+    "code_updated_at": "2026-01-07T13:18:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "网页画笔工具",
+    "description": "在任意网页上绘画，支持画笔大小调节、颜色选择、撤回和清除",
+    "url": "https://greasyfork.org/scripts/561727-%E7%BD%91%E9%A1%B5%E7%94%BB%E7%AC%94%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/561727/%E7%BD%91%E9%A1%B5%E7%94%BB%E7%AC%94%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 17120,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561726,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T13:14:36.000Z",
+    "code_updated_at": "2026-01-07T13:14:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "Wikipedia Windows 8.1 Metro (Vertical Tategaki Fix)",
+    "description": "Win8 维基百科 V7：修复纵书模式失效问题 + 按钮替换 + 极速加载",
+    "url": "https://greasyfork.org/scripts/561726-wikipedia-windows-8-1-metro-vertical-tategaki-fix",
+    "code_url": "https://update.greasyfork.org/scripts/561726/Wikipedia%20Windows%2081%20Metro%20%28Vertical%20Tategaki%20Fix%29.user.js",
+    "code_size": 11660,
+    "license": null,
+    "version": "7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561719,
+    "daily_installs": 2,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T11:52:17.000Z",
+    "code_updated_at": "2026-01-07T11:52:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "YouTube Speed Control (Persistent + Slider + Wheel)",
+    "description": "Single-button menu with persistent speed memory, slider (0-10x), wheel adjust, and SPA-safe rebinding",
+    "url": "https://greasyfork.org/scripts/561719-youtube-speed-control-persistent-slider-wheel",
+    "code_url": "https://update.greasyfork.org/scripts/561719/YouTube%20Speed%20Control%20%28Persistent%20%2B%20Slider%20%2B%20Wheel%29.user.js",
+    "code_size": 8130,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561718,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T11:51:52.000Z",
+    "code_updated_at": "2026-01-07T11:51:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "Archive.org 滚轮翻页",
+    "description": "在 archive.org 使用鼠标滚轮实现 Page Up/Down 翻页效果",
+    "url": "https://greasyfork.org/scripts/561718-archive-org-%E6%BB%9A%E8%BD%AE%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/561718/Archiveorg%20%E6%BB%9A%E8%BD%AE%E7%BF%BB%E9%A1%B5.user.js",
+    "code_size": 5016,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561717,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T11:50:43.000Z",
+    "code_updated_at": "2026-01-07T11:50:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "極致流暢右鍵拖曳 + 手勢導航",
+    "description": "右鍵拖曳滾動 + 左右滑動返回/前進，類似Chrome觸控手勢",
+    "url": "https://greasyfork.org/scripts/561717-%E6%A5%B5%E8%87%B4%E6%B5%81%E6%9A%A2%E5%8F%B3%E9%8D%B5%E6%8B%96%E6%9B%B3-%E6%89%8B%E5%8B%A2%E5%B0%8E%E8%88%AA",
+    "code_url": "https://update.greasyfork.org/scripts/561717/%E6%A5%B5%E8%87%B4%E6%B5%81%E6%9A%A2%E5%8F%B3%E9%8D%B5%E6%8B%96%E6%9B%B3%20%2B%20%E6%89%8B%E5%8B%A2%E5%B0%8E%E8%88%AA.user.js",
+    "code_size": 6073,
+    "license": null,
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561767,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T21:09:10.000Z",
+    "code_updated_at": "2026-01-07T21:09:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1557617,
+        "name": "ThisIsRocketMan",
+        "created_at": "2026-01-07T20:55:09.000Z",
+        "url": "https://greasyfork.org/users/1557617-thisisrocketman"
+      }
+    ],
+    "name": "New Userscript",
+    "description": "Manga Blacklist",
+    "url": "https://greasyfork.org/scripts/561767-new-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/561767/New%20Userscript.user.js",
+    "code_size": 1921,
+    "license": "MIT License",
+    "version": "2025-12-23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

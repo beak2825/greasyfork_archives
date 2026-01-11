@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561636,
+    "daily_installs": 28,
+    "total_installs": 855,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T16:43:55.000Z",
+    "code_updated_at": "2026-01-07T01:52:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556728,
+        "name": "VitoHowe",
+        "created_at": "2026-01-06T08:09:12.000Z",
+        "url": "https://greasyfork.org/users/1556728-vitohowe"
+      }
+    ],
+    "name": "美国大兵 GPT 认证",
+    "description": "感谢作者FunkJ， 全流程全自动军人身份验证助手：**白嫖一年 GPT Plus，修复VLM自动翻页 + 动态加载检测 + 数据去重/预览/导出（优化提取）",
+    "url": "https://greasyfork.org/scripts/561636-%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%85%B5-gpt-%E8%AE%A4%E8%AF%81",
+    "code_url": "https://update.greasyfork.org/scripts/561636/%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%85%B5%20GPT%20%E8%AE%A4%E8%AF%81.user.js",
+    "code_size": 77910,
+    "license": "MIT License",
+    "version": "16.8.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

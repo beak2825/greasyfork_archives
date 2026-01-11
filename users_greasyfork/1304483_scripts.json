@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561725,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T12:54:00.000Z",
+    "code_updated_at": "2026-01-07T12:54:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304483,
+        "name": "yymydyy",
+        "created_at": "2024-05-20T08:26:21.000Z",
+        "url": "https://greasyfork.org/users/1304483-yymydyy"
+      }
+    ],
+    "name": "FMP Training History",
+    "description": "look players training history",
+    "url": "https://greasyfork.org/scripts/561725-fmp-training-history",
+    "code_url": "https://update.greasyfork.org/scripts/561725/FMP%20Training%20History.user.js",
+    "code_size": 14846,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

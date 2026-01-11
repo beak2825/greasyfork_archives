@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561722,
+    "daily_installs": 4,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T12:33:36.000Z",
+    "code_updated_at": "2026-01-07T16:12:51.000Z",
+    "namespace": "dd-captcha-solver",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1557355,
+        "name": "Mathew Murdock",
+        "created_at": "2026-01-07T12:25:31.000Z",
+        "url": "https://greasyfork.org/users/1557355-mathew-murdock"
+      }
+    ],
+    "name": "DD Captcha Solver",
+    "description": "Minimal captcha solver UI with token submission or view-only mode",
+    "url": "https://greasyfork.org/scripts/561722-dd-captcha-solver",
+    "code_url": "https://update.greasyfork.org/scripts/561722/DD%20Captcha%20Solver.user.js",
+    "code_size": 4820,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

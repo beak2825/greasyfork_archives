@@ -1,0 +1,59 @@
+{
+  "id": 562018,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-09T17:27:00.000Z",
+  "code_updated_at": "2026-01-09T17:30:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1558311,
+      "name": "XaixonT",
+      "created_at": "2026-01-09T14:52:44.000Z",
+      "url": "https://greasyfork.org/users/1558311-xaixont",
+      "scripts": [
+        {
+          "id": 561998,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-09T15:17:02.000Z",
+          "code_updated_at": "2026-01-09T15:17:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chess Cinematic Captures - Xaixon",
+          "description": "Movimiento fluido, inclinación 3D y muerte estilo Minecraft (rojo + caída lateral).",
+          "url": "https://greasyfork.org/scripts/561998-chess-cinematic-captures-xaixon",
+          "code_url": "https://update.greasyfork.org/scripts/561998/Chess%20Cinematic%20Captures%20-%20Xaixon.user.js",
+          "code_size": 3776,
+          "license": "MIT License",
+          "version": "8.0",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BloxDrop Omni-Solver V7",
+  "description": "Detección por contenido de texto y envío forzado. Versión día 57.",
+  "url": "https://greasyfork.org/scripts/562018-bloxdrop-omni-solver-v7",
+  "code_url": "https://update.greasyfork.org/scripts/562018/BloxDrop%20Omni-Solver%20V7.user.js",
+  "code_size": 3261,
+  "license": "MIT License",
+  "version": "7.0",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561670,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T02:56:49.000Z",
+    "code_updated_at": "2026-01-07T02:56:49.000Z",
+    "namespace": "https://blog.wizos.me",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 219386,
+        "name": "wizos",
+        "created_at": "2018-10-14T15:18:08.000Z",
+        "url": "https://greasyfork.org/users/219386-wizos"
+      }
+    ],
+    "name": "Video Side Controller",
+    "description": "A controller displayed on the side of the video",
+    "url": "https://greasyfork.org/scripts/561670-video-side-controller",
+    "code_url": "https://update.greasyfork.org/scripts/561670/Video%20Side%20Controller.user.js",
+    "code_size": 28997,
+    "license": "GPL3.0",
+    "version": "1.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

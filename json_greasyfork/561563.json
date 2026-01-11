@@ -1,0 +1,59 @@
+{
+  "id": 561563,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-05T22:23:16.000Z",
+  "code_updated_at": "2026-01-08T17:58:29.000Z",
+  "namespace": "https://greasyfork.org/users/684752",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 684752,
+      "name": "Luke Hankins",
+      "created_at": "2020-09-03T00:20:57.000Z",
+      "url": "https://greasyfork.org/users/684752-luke-hankins",
+      "scripts": [
+        {
+          "id": 415080,
+          "daily_installs": 1,
+          "total_installs": 540,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2020-10-30T13:25:37.000Z",
+          "code_updated_at": "2020-10-30T13:28:09.000Z",
+          "namespace": "https://greasyfork.org/users/684752",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "A Dark Room [Speed Cheat]",
+          "description": "Minor, non game-breaking speed cheat for A Dark Room.",
+          "url": "https://greasyfork.org/scripts/415080-a-dark-room-speed-cheat",
+          "code_url": "https://update.greasyfork.org/scripts/415080/A%20Dark%20Room%20%5BSpeed%20Cheat%5D.user.js",
+          "code_size": 2076,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pink Blue Map",
+  "description": "Toggle OBN / Nameless TT in torn map",
+  "url": "https://greasyfork.org/scripts/561563-pink-blue-map",
+  "code_url": "https://update.greasyfork.org/scripts/561563/Pink%20Blue%20Map.user.js",
+  "code_size": 3856,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

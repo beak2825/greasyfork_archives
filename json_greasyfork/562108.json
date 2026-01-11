@@ -1,0 +1,59 @@
+{
+  "id": 562108,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-10T13:56:02.000Z",
+  "code_updated_at": "2026-01-10T14:37:18.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453712,
+      "name": "Ovidiu Vaduva",
+      "created_at": "2025-04-03T19:11:23.000Z",
+      "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva",
+      "scripts": [
+        {
+          "id": 536979,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-23T13:03:04.000Z",
+          "code_updated_at": "2025-05-23T13:03:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Overseas Bounty Highlighter",
+          "description": "Color RED bounty players",
+          "url": "https://greasyfork.org/scripts/536979-torn-overseas-bounty-highlighter",
+          "code_url": "https://update.greasyfork.org/scripts/536979/Torn%20Overseas%20Bounty%20Highlighter.user.js",
+          "code_size": 1067,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FF Scouter V2 SG",
+  "description": "Shows the expected Fair Fight score against targets and faction war status",
+  "url": "https://greasyfork.org/scripts/562108-ff-scouter-v2-sg",
+  "code_url": "https://update.greasyfork.org/scripts/562108/FF%20Scouter%20V2%20SG.user.js",
+  "code_size": 100694,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.71.4-BS-safe",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

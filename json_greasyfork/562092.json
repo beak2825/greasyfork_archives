@@ -1,0 +1,59 @@
+{
+  "id": 562092,
+  "daily_installs": 7,
+  "total_installs": 7,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-10T10:43:38.000Z",
+  "code_updated_at": "2026-01-10T10:45:26.000Z",
+  "namespace": "evoezsquad",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556700,
+      "name": "fasf fasfg",
+      "created_at": "2026-01-06T06:39:18.000Z",
+      "url": "https://greasyfork.org/users/1556700-fasf-fasfg",
+      "scripts": [
+        {
+          "id": 562092,
+          "daily_installs": 7,
+          "total_installs": 7,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-10T10:43:38.000Z",
+          "code_updated_at": "2026-01-10T10:45:26.000Z",
+          "namespace": "evoezsquad",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "EvoWorld.io Zoom Hack",
+          "description": "Zoom hack for evoworld.io (flyordie.io)",
+          "url": "https://greasyfork.org/scripts/562092-evoworld-io-zoom-hack",
+          "code_url": "https://update.greasyfork.org/scripts/562092/EvoWorldio%20Zoom%20Hack.user.js",
+          "code_size": 3500,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "EvoWorld.io Zoom Hack",
+  "description": "Zoom hack for evoworld.io (flyordie.io)",
+  "url": "https://greasyfork.org/scripts/562092-evoworld-io-zoom-hack",
+  "code_url": "https://update.greasyfork.org/scripts/562092/EvoWorldio%20Zoom%20Hack.user.js",
+  "code_size": 3500,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562008,
+    "daily_installs": 1,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T16:18:52.000Z",
+    "code_updated_at": "2026-01-09T16:20:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457614,
+        "name": "Cerpow",
+        "created_at": "2025-04-14T04:46:34.000Z",
+        "url": "https://greasyfork.org/users/1457614-cerpow"
+      }
+    ],
+    "name": "Mobbin.com | Un-blur images mod",
+    "description": "Un-blur images for mobbin.com",
+    "url": "https://greasyfork.org/scripts/562008-mobbin-com-un-blur-images-mod",
+    "code_url": "https://update.greasyfork.org/scripts/562008/Mobbincom%20%7C%20Un-blur%20images%20mod.user.js",
+    "code_size": 3217,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

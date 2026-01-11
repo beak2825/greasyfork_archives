@@ -1,0 +1,134 @@
+[
+  {
+    "id": 562125,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T16:38:17.000Z",
+    "code_updated_at": "2026-01-10T16:38:17.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - test Claw Machine",
+    "description": "Play the claw machine and win rewards! (yes really)",
+    "url": "https://greasyfork.org/scripts/562125-fv-test-claw-machine",
+    "code_url": "https://update.greasyfork.org/scripts/562125/FV%20-%20test%20Claw%20Machine.user.js",
+    "code_size": 43495,
+    "license": null,
+    "version": "6.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561653,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T20:14:05.000Z",
+    "code_updated_at": "2026-01-06T20:14:05.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - Explorer Finds Item Museum",
+    "description": "Click on explore items to go to their corresponding item museum page.",
+    "url": "https://greasyfork.org/scripts/561653-fv-explorer-finds-item-museum",
+    "code_url": "https://update.greasyfork.org/scripts/561653/FV%20-%20Explorer%20Finds%20Item%20Museum.user.js",
+    "code_size": 4258,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561567,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T23:20:31.000Z",
+    "code_updated_at": "2026-01-05T23:34:54.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - BBCode Editor",
+    "description": "Adds a BBCode formatting toolbar to Furvilla text editors.",
+    "url": "https://greasyfork.org/scripts/561567-fv-bbcode-editor",
+    "code_url": "https://update.greasyfork.org/scripts/561567/FV%20-%20BBCode%20Editor.user.js",
+    "code_size": 22404,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561551,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-05T19:54:38.000Z",
+    "code_updated_at": "2026-01-05T19:54:37.000Z",
+    "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535374,
+        "name": "necroam",
+        "created_at": "2025-11-07T17:36:31.000Z",
+        "url": "https://greasyfork.org/users/1535374-necroam"
+      }
+    ],
+    "name": "FV - Search Item Button in Inventory",
+    "description": "Adds a Search button inside the item inventory that takes you to the item museum.",
+    "url": "https://greasyfork.org/scripts/561551-fv-search-item-button-in-inventory",
+    "code_url": "https://update.greasyfork.org/scripts/561551/FV%20-%20Search%20Item%20Button%20in%20Inventory.user.js",
+    "code_size": 2336,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

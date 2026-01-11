@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561688,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T06:57:49.000Z",
+    "code_updated_at": "2026-01-07T06:57:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1187834,
+        "name": "梧桐城花开",
+        "created_at": "2023-10-04T10:47:58.000Z",
+        "url": "https://greasyfork.org/users/1187834-%E6%A2%A7%E6%A1%90%E5%9F%8E%E8%8A%B1%E5%BC%80"
+      }
+    ],
+    "name": "抖音防闪烁 & 视频音量适配",
+    "description": "去除抖音网页版点击/长按时的蓝色高亮闪烁；抖音/TikTok视频自动取消静音并最大音量",
+    "url": "https://greasyfork.org/scripts/561688-%E6%8A%96%E9%9F%B3%E9%98%B2%E9%97%AA%E7%83%81-%E8%A7%86%E9%A2%91%E9%9F%B3%E9%87%8F%E9%80%82%E9%85%8D",
+    "code_url": "https://update.greasyfork.org/scripts/561688/%E6%8A%96%E9%9F%B3%E9%98%B2%E9%97%AA%E7%83%81%20%20%E8%A7%86%E9%A2%91%E9%9F%B3%E9%87%8F%E9%80%82%E9%85%8D.user.js",
+    "code_size": 4889,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

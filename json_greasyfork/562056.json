@@ -1,0 +1,34 @@
+{
+  "id": 562056,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-10T04:25:53.000Z",
+  "code_updated_at": "2026-01-10T04:25:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1558495,
+      "name": "Winds Mellow",
+      "created_at": "2026-01-10T04:18:54.000Z",
+      "url": "https://greasyfork.org/users/1558495-winds-mellow",
+      "scripts": []
+    }
+  ],
+  "name": "NJU南大教务自动评教",
+  "description": "锁定“很好”，随机评语，可自行修改",
+  "url": "https://greasyfork.org/scripts/562056-nju%E5%8D%97%E5%A4%A7%E6%95%99%E5%8A%A1%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/562056/NJU%E5%8D%97%E5%A4%A7%E6%95%99%E5%8A%A1%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js",
+  "code_size": 3027,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

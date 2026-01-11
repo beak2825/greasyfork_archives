@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561766,
+    "daily_installs": 2,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T21:08:56.000Z",
+    "code_updated_at": "2026-01-07T21:08:55.000Z",
+    "namespace": "skylimits.chatgpt.trimmer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1306281,
+        "name": "Chris Mcclelland",
+        "created_at": "2024-05-24T08:36:05.000Z",
+        "url": "https://greasyfork.org/users/1306281-chris-mcclelland"
+      }
+    ],
+    "name": "ChatGPT Optimizer, Remove lag by trimming In-Memory Conversation History.",
+    "description": "Trims huge conversation payloads for performance. Adds a bottom-right collapsible vertical menu to load older messages in safe increments.",
+    "url": "https://greasyfork.org/scripts/561766-chatgpt-optimizer-remove-lag-by-trimming-in-memory-conversation-history",
+    "code_url": "https://update.greasyfork.org/scripts/561766/ChatGPT%20Optimizer%2C%20Remove%20lag%20by%20trimming%20In-Memory%20Conversation%20History.user.js",
+    "code_size": 8990,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

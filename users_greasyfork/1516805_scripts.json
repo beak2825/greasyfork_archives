@@ -1,0 +1,68 @@
+[
+  {
+    "id": 562041,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T00:28:40.000Z",
+    "code_updated_at": "2026-01-10T00:28:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516805,
+        "name": "carrot4522",
+        "created_at": "2025-09-19T05:11:56.000Z",
+        "url": "https://greasyfork.org/users/1516805-carrot4522"
+      }
+    ],
+    "name": "YouTube Speed Control (v13)",
+    "description": "Modern speed button with readable colors. Located between channel and like buttons.",
+    "url": "https://greasyfork.org/scripts/562041-youtube-speed-control-v13",
+    "code_url": "https://update.greasyfork.org/scripts/562041/YouTube%20Speed%20Control%20%28v13%29.user.js",
+    "code_size": 12844,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561871,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T17:47:18.000Z",
+    "code_updated_at": "2026-01-08T17:47:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516805,
+        "name": "carrot4522",
+        "created_at": "2025-09-19T05:11:56.000Z",
+        "url": "https://greasyfork.org/users/1516805-carrot4522"
+      }
+    ],
+    "name": "Claude Project Bulk Delete (v4)",
+    "description": "Add checkboxes to select multiple conversations in Claude Projects for bulk deletion",
+    "url": "https://greasyfork.org/scripts/561871-claude-project-bulk-delete-v4",
+    "code_url": "https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v4%29.user.js",
+    "code_size": 22566,
+    "license": null,
+    "version": "4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

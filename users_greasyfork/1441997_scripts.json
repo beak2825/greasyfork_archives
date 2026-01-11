@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561700,
+    "daily_installs": 3,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T08:35:31.000Z",
+    "code_updated_at": "2026-01-07T08:35:31.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441997,
+        "name": "春儿",
+        "created_at": "2025-03-03T19:55:51.000Z",
+        "url": "https://greasyfork.org/users/1441997-%E6%98%A5%E5%84%BF"
+      }
+    ],
+    "name": "强制启用文字复制",
+    "description": "在网页中强制允许选中和复制文字，适用于禁用复制的站点",
+    "url": "https://greasyfork.org/scripts/561700-%E5%BC%BA%E5%88%B6%E5%90%AF%E7%94%A8%E6%96%87%E5%AD%97%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/561700/%E5%BC%BA%E5%88%B6%E5%90%AF%E7%94%A8%E6%96%87%E5%AD%97%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 1777,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

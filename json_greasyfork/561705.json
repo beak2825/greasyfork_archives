@@ -1,0 +1,59 @@
+{
+  "id": 561705,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-07T09:46:02.000Z",
+  "code_updated_at": "2026-01-07T09:49:43.000Z",
+  "namespace": "No Space",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557212,
+      "name": "CyberLazyBoy",
+      "created_at": "2026-01-07T09:25:34.000Z",
+      "url": "https://greasyfork.org/users/1557212-cyberlazyboy",
+      "scripts": [
+        {
+          "id": 561705,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-07T09:46:02.000Z",
+          "code_updated_at": "2026-01-07T09:49:43.000Z",
+          "namespace": "No Space",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "摸鱼神器网页版(Thief-Book in Browser)增加隐蔽选项",
+          "description": "浏览器隐蔽阅读神器，仅支持TXT。F4唤醒/隐藏，具备自动滚屏、书签、隐形模式等功能。",
+          "url": "https://greasyfork.org/scripts/561705-%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%99%A8%E7%BD%91%E9%A1%B5%E7%89%88-thief-book-in-browser-%E5%A2%9E%E5%8A%A0%E9%9A%90%E8%94%BD%E9%80%89%E9%A1%B9",
+          "code_url": "https://update.greasyfork.org/scripts/561705/%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%99%A8%E7%BD%91%E9%A1%B5%E7%89%88%28Thief-Book%20in%20Browser%29%E5%A2%9E%E5%8A%A0%E9%9A%90%E8%94%BD%E9%80%89%E9%A1%B9.user.js",
+          "code_size": 28932,
+          "license": "MIT License",
+          "version": "1.4.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "摸鱼神器网页版(Thief-Book in Browser)增加隐蔽选项",
+  "description": "浏览器隐蔽阅读神器，仅支持TXT。F4唤醒/隐藏，具备自动滚屏、书签、隐形模式等功能。",
+  "url": "https://greasyfork.org/scripts/561705-%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%99%A8%E7%BD%91%E9%A1%B5%E7%89%88-thief-book-in-browser-%E5%A2%9E%E5%8A%A0%E9%9A%90%E8%94%BD%E9%80%89%E9%A1%B9",
+  "code_url": "https://update.greasyfork.org/scripts/561705/%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%99%A8%E7%BD%91%E9%A1%B5%E7%89%88%28Thief-Book%20in%20Browser%29%E5%A2%9E%E5%8A%A0%E9%9A%90%E8%94%BD%E9%80%89%E9%A1%B9.user.js",
+  "code_size": 28932,
+  "license": "MIT License",
+  "version": "1.4.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

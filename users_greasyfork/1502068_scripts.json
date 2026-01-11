@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561724,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-07T12:45:30.000Z",
+    "code_updated_at": "2026-01-07T12:45:30.000Z",
+    "namespace": "local.maxxie.social.pomodoro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502068,
+        "name": "wei maxxie",
+        "created_at": "2025-08-06T06:25:21.000Z",
+        "url": "https://greasyfork.org/users/1502068-wei-maxxie"
+      }
+    ],
+    "name": "Social Pomodoro Reminder (15min, gentle) + Segment Timer (Cookie)",
+    "description": "Gentle pomodoro reminder every 15 min of active browsing time + visible segment timer; state stored in cookies",
+    "url": "https://greasyfork.org/scripts/561724-social-pomodoro-reminder-15min-gentle-segment-timer-cookie",
+    "code_url": "https://update.greasyfork.org/scripts/561724/Social%20Pomodoro%20Reminder%20%2815min%2C%20gentle%29%20%2B%20Segment%20Timer%20%28Cookie%29.user.js",
+    "code_size": 9861,
+    "license": null,
+    "version": "1.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

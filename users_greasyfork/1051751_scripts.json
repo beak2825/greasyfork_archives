@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561833,
+    "daily_installs": 1,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T10:21:51.000Z",
+    "code_updated_at": "2026-01-08T16:03:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051751,
+        "name": "Mark Levi",
+        "created_at": "2023-04-02T04:51:50.000Z",
+        "url": "https://greasyfork.org/users/1051751-mark-levi"
+      }
+    ],
+    "name": "Anime1 現代化改造 (V2.3 大圖滿版最終型)",
+    "description": "Grid 佈局 + Yahoo 高清圖 + 極速換頁 + 搜尋框 + 新分頁 + 滿版顯示 + 卡片放大",
+    "url": "https://greasyfork.org/scripts/561833-anime1-%E7%8F%BE%E4%BB%A3%E5%8C%96%E6%94%B9%E9%80%A0-v2-3-%E5%A4%A7%E5%9C%96%E6%BB%BF%E7%89%88%E6%9C%80%E7%B5%82%E5%9E%8B",
+    "code_url": "https://update.greasyfork.org/scripts/561833/Anime1%20%E7%8F%BE%E4%BB%A3%E5%8C%96%E6%94%B9%E9%80%A0%20%28V23%20%E5%A4%A7%E5%9C%96%E6%BB%BF%E7%89%88%E6%9C%80%E7%B5%82%E5%9E%8B%29.user.js",
+    "code_size": 15227,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

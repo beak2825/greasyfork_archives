@@ -1,0 +1,59 @@
+{
+  "id": 561797,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-08T04:48:26.000Z",
+  "code_updated_at": "2026-01-08T04:48:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557708,
+      "name": "coffeecanner",
+      "created_at": "2026-01-08T04:46:14.000Z",
+      "url": "https://greasyfork.org/users/1557708-coffeecanner",
+      "scripts": [
+        {
+          "id": 561797,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-08T04:48:26.000Z",
+          "code_updated_at": "2026-01-08T04:48:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "UNPAM Auto Isi Kuesioner (Smart Random)",
+          "description": "Auto isi kuesioner UNPAM (Quasar q-radio, auto-detect skala, random variatif)",
+          "url": "https://greasyfork.org/scripts/561797-unpam-auto-isi-kuesioner-smart-random",
+          "code_url": "https://update.greasyfork.org/scripts/561797/UNPAM%20Auto%20Isi%20Kuesioner%20%28Smart%20Random%29.user.js",
+          "code_size": 3006,
+          "license": "MIT License",
+          "version": "4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "UNPAM Auto Isi Kuesioner (Smart Random)",
+  "description": "Auto isi kuesioner UNPAM (Quasar q-radio, auto-detect skala, random variatif)",
+  "url": "https://greasyfork.org/scripts/561797-unpam-auto-isi-kuesioner-smart-random",
+  "code_url": "https://update.greasyfork.org/scripts/561797/UNPAM%20Auto%20Isi%20Kuesioner%20%28Smart%20Random%29.user.js",
+  "code_size": 3006,
+  "license": "MIT License",
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

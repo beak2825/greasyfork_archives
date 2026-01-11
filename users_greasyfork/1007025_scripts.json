@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561878,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-08T19:26:58.000Z",
+    "code_updated_at": "2026-01-08T19:26:58.000Z",
+    "namespace": "https://scripts.ashish.top",
+    "support_url": "https://ashish.top",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1007025,
+        "name": "e-coders",
+        "created_at": "2023-01-04T19:06:04.000Z",
+        "url": "https://greasyfork.org/users/1007025-e-coders"
+      }
+    ],
+    "name": "Chess.com Square Labels",
+    "description": "Displays algebraic square labels (a1–h8) directly on the chessboard, with adjustable opacity and a draggable control panel.",
+    "url": "https://greasyfork.org/scripts/561878-chess-com-square-labels",
+    "code_url": "https://update.greasyfork.org/scripts/561878/Chesscom%20Square%20Labels.user.js",
+    "code_size": 9193,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

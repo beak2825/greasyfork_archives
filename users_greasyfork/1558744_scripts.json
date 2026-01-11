@@ -1,0 +1,68 @@
+[
+  {
+    "id": 562148,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T20:51:37.000Z",
+    "code_updated_at": "2026-01-10T21:12:55.000Z",
+    "namespace": "http://userscripts.org/users/luckyluciano",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558744,
+        "name": "oban",
+        "created_at": "2026-01-10T15:21:48.000Z",
+        "url": "https://greasyfork.org/users/1558744-oban"
+      }
+    ],
+    "name": "KG - Letterboxd links (details + browse/search)",
+    "description": "Adds Letterboxd links using IMDb IDs on KG details.php and browse.php (keeps different icon sizes).",
+    "url": "https://greasyfork.org/scripts/562148-kg-letterboxd-links-details-browse-search",
+    "code_url": "https://update.greasyfork.org/scripts/562148/KG%20-%20Letterboxd%20links%20%28details%20%2B%20browsesearch%29.user.js",
+    "code_size": 4501,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 562119,
+    "daily_installs": 2,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-10T15:29:54.000Z",
+    "code_updated_at": "2026-01-10T15:33:04.000Z",
+    "namespace": "https://example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558744,
+        "name": "oban",
+        "created_at": "2026-01-10T15:21:48.000Z",
+        "url": "https://greasyfork.org/users/1558744-oban"
+      }
+    ],
+    "name": "KG - Add Letterboxd links (browse page only)",
+    "description": "Adds a small Letterboxd icon next to IMDb links on KG browse/search pages.",
+    "url": "https://greasyfork.org/scripts/562119-kg-add-letterboxd-links-browse-page-only",
+    "code_url": "https://update.greasyfork.org/scripts/562119/KG%20-%20Add%20Letterboxd%20links%20%28browse%20page%20only%29.user.js",
+    "code_size": 2205,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

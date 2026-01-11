@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561922,
+    "daily_installs": 2,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T03:48:53.000Z",
+    "code_updated_at": "2026-01-09T03:48:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495462,
+        "name": "ZephyrThePink",
+        "created_at": "2025-07-16T13:25:30.000Z",
+        "url": "https://greasyfork.org/users/1495462-zephyrthepink"
+      }
+    ],
+    "name": "JanitorAI: Send Images + Image Generation + Screenshare",
+    "description": "Send images to JanitorAI bots and generate images!. Includes Screenshare support.",
+    "url": "https://greasyfork.org/scripts/561922-janitorai-send-images-image-generation-screenshare",
+    "code_url": "https://update.greasyfork.org/scripts/561922/JanitorAI%3A%20Send%20Images%20%2B%20Image%20Generation%20%2B%20Screenshare.user.js",
+    "code_size": 183638,
+    "license": "MIT License",
+    "version": "2.5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

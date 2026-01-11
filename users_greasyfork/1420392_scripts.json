@@ -1,0 +1,68 @@
+[
+  {
+    "id": 561996,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-09T15:08:48.000Z",
+    "code_updated_at": "2026-01-09T23:58:11.000Z",
+    "namespace": "https://torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1420392,
+        "name": "Cleat (KillerCleat)",
+        "created_at": "2025-01-06T23:42:57.000Z",
+        "url": "https://greasyfork.org/users/1420392-cleat-killercleat"
+      }
+    ],
+    "name": "Torn Territory Wall Helper",
+    "description": "Territory wall helper",
+    "url": "https://greasyfork.org/scripts/561996-torn-territory-wall-helper",
+    "code_url": "https://update.greasyfork.org/scripts/561996/Torn%20Territory%20Wall%20Helper.user.js",
+    "code_size": 12091,
+    "license": null,
+    "version": "01.09.2026.12.25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 561582,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-06T04:01:44.000Z",
+    "code_updated_at": "2026-01-06T04:01:44.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1420392,
+        "name": "Cleat (KillerCleat)",
+        "created_at": "2025-01-06T23:42:57.000Z",
+        "url": "https://greasyfork.org/users/1420392-cleat-killercleat"
+      }
+    ],
+    "name": "Torn - IM Popup + Repeating Sound (Settings Panel Options)",
+    "description": "Full-screen popup when Torn IM unread count increases. Optional repeating sound every 30 seconds until popup is closed. Settings live in Torn Chat Settings panel.",
+    "url": "https://greasyfork.org/scripts/561582-torn-im-popup-repeating-sound-settings-panel-options",
+    "code_url": "https://update.greasyfork.org/scripts/561582/Torn%20-%20IM%20Popup%20%2B%20Repeating%20Sound%20%28Settings%20Panel%20Options%29.user.js",
+    "code_size": 17937,
+    "license": null,
+    "version": "01.05.2026.20.35",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

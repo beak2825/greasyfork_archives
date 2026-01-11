@@ -1,0 +1,59 @@
+{
+  "id": 561795,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-08T04:14:29.000Z",
+  "code_updated_at": "2026-01-08T04:14:29.000Z",
+  "namespace": "https://greasyfork.org/users/1275465",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1275465,
+      "name": "jack_the_dripper",
+      "created_at": "2024-03-16T19:25:47.000Z",
+      "url": "https://greasyfork.org/users/1275465-jack-the-dripper",
+      "scripts": [
+        {
+          "id": 525044,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-27T10:33:28.000Z",
+          "code_updated_at": "2025-01-27T10:42:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Add Unddit, Reveddit & Wayback Machine Links to Reddit",
+          "description": "Adds links to unddit, reveddit, wayback machine at the bottom of reddit post to quickly view deleted comments (old.reddit only)",
+          "url": "https://greasyfork.org/scripts/525044-add-unddit-reveddit-wayback-machine-links-to-reddit",
+          "code_url": "https://update.greasyfork.org/scripts/525044/Add%20Unddit%2C%20Reveddit%20%20Wayback%20Machine%20Links%20to%20Reddit.user.js",
+          "code_size": 3003,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "X/Twitter Timeline Master",
+  "description": "Easily fish yourself out of a doomscroll and reload your timeline without refreshing the page. Also includes an auto-refresh countdown timer, draggable UI, and hotkey functionality.",
+  "url": "https://greasyfork.org/scripts/561795-x-twitter-timeline-master",
+  "code_url": "https://update.greasyfork.org/scripts/561795/XTwitter%20Timeline%20Master.user.js",
+  "code_size": 15462,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 561885,
+  "daily_installs": 3,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-08T20:57:57.000Z",
+  "code_updated_at": "2026-01-10T18:48:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1557969,
+      "name": "Plain Sill",
+      "created_at": "2026-01-08T19:13:56.000Z",
+      "url": "https://greasyfork.org/users/1557969-plain-sill",
+      "scripts": [
+        {
+          "id": 561885,
+          "daily_installs": 3,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-08T20:57:57.000Z",
+          "code_updated_at": "2026-01-10T18:48:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili 专栏文章侧栏美化",
+          "description": "Bilibili 专栏文章侧栏美化，完美适配新旧版页面。新版侧栏位置微调；旧版侧栏增强目录点击交互体验。",
+          "url": "https://greasyfork.org/scripts/561885-bilibili-%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/561885/Bilibili%20%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96.user.js",
+          "code_size": 36327,
+          "license": "MIT License",
+          "version": "1.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili 专栏文章侧栏美化",
+  "description": "Bilibili 专栏文章侧栏美化，完美适配新旧版页面。新版侧栏位置微调；旧版侧栏增强目录点击交互体验。",
+  "url": "https://greasyfork.org/scripts/561885-bilibili-%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/561885/Bilibili%20%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96.user.js",
+  "code_size": 36327,
+  "license": "MIT License",
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}
