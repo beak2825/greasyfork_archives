@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Amtliche Hausnummern Import
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      4.5.0
+// @version      5.1.0
 // @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) - ALLE 16 Bundesländer + AT + CH + Speicher-Fehler Analyse + Geschwindigkeits-Einstellungen
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
@@ -244,8 +244,24 @@ const CONFIG = {
         duplicateCheck: true,
         maxSegmentDistance: 50,
         duplicateRadius: 20,  // Meter - HN mit gleicher Nummer innerhalb dieses Radius = Duplikat
-        autoPauseAfter: 50,   // Auto-Pause nach X importierten HN (0 = deaktiviert)
-        autoPauseEnabled: true // Auto-Pause aktiviert
+        segmentAwareRadius: 50, // Meter - Erweiterte Prüfung für verschiedene Segmente
+        autoPauseAfter: 25,   // Auto-Pause nach X importierten HN (0 = deaktiviert) - reduziert für bessere Duplikaterkennung
+        autoPauseEnabled: true, // Auto-Pause aktiviert
+        // Intelligente Duplikatserkennung
+        smartDuplicateDetection: true, // Segment-aware Duplikatserkennung
+        allowSameNumberDifferentSegments: true, // Erlaube gleiche HN auf verschiedenen Segmenten
+        allowSameNumberSameSegment: true, // Erlaube gleiche HN auf gleichem Segment (Bauernhöfe)
+        sameSegmentMinDistance: 10, // Mindestabstand für gleiche HN auf gleichem Segment (Meter)
+        preferRealCoordinates: true, // Bevorzuge echte Koordinaten gegenüber Dummy-Positionen
+        // Erweiterte Suche für große Gebäude
+        largeBuildingSearchRadius: 5000, // Meter - Suchradius für große Gebäude (Einkaufszentren, Bauernhöfe)
+        enableLargeBuildingSearch: true, // Aktiviere erweiterte Suche für große Gebäude
+        // UI-Funktionen
+        manualPauseEnabled: true, // Aktiviere manuelle Pause-Funktion während Import
+        // Visuelle Duplikatserkennung
+        visualDuplicateRadius: 200, // Pixel-Radius für räumliche Duplikatserkennung
+        visualDuplicateColor: 'rgba(255, 0, 0, 0.4)', // Rot - klassische Fehlerfarbe
+        layerOverlapThreshold: 10 // Pixel - Layer-Duplikate sind meist < 10px entfernt
     },
     search: {
         defaultRadius: 500,
@@ -259,6 +275,720 @@ const CONFIG = {
         batchDelay: 150,           // Pause nach jedem Batch
         parallelBatchSize: 10,     // Max HN pro parallelem Batch
         useParallelImport: true    // Parallele Verarbeitung aktiviert
+    }
+};
+
+// ============================================================================
+// GESCHWINDIGKEITSPROFIL - LocalStorage Persistenz
+// ============================================================================
+const SpeedProfile = {
+    storageKey: 'wme-hn-import-speed-profile',
+
+    // Lade Geschwindigkeitsprofil aus LocalStorage
+    load() {
+        try {
+            const stored = localStorage.getItem(this.storageKey);
+            if (stored) {
+                const profile = JSON.parse(stored);
+                // Überschreibe CONFIG.speed mit gespeicherten Werten
+                Object.assign(CONFIG.speed, profile);
+                console.log(`${SCRIPT_NAME}: Geschwindigkeitsprofil geladen:`, CONFIG.speed);
+                return true;
+            }
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Laden des Geschwindigkeitsprofils:`, e);
+        }
+        return false;
+    },
+
+    // Speichere aktuelles Geschwindigkeitsprofil in LocalStorage
+    save() {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(CONFIG.speed));
+            console.log(`${SCRIPT_NAME}: Geschwindigkeitsprofil gespeichert:`, CONFIG.speed);
+            return true;
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Speichern des Geschwindigkeitsprofils:`, e);
+        }
+        return false;
+    },
+
+    // Setze einen einzelnen Wert
+    set(key, value) {
+        if (CONFIG.speed.hasOwnProperty(key)) {
+            CONFIG.speed[key] = value;
+            this.save();
+            return true;
+        }
+        return false;
+    },
+
+    // Hole einen einzelnen Wert
+    get(key) {
+        return CONFIG.speed[key];
+    },
+
+    // Setze auf Standardwerte zurück
+    reset() {
+        CONFIG.speed = {
+            initialLoadDelay: 1200,
+            centeringDelay: 1200,
+            reloadDelay: 300,
+            batchDelay: 150,
+            parallelBatchSize: 10,
+            useParallelImport: true
+        };
+        this.save();
+        console.log(`${SCRIPT_NAME}: Geschwindigkeitsprofil zurückgesetzt`);
+    },
+
+    // Vordefinierte Profile
+    profiles: {
+        fast: {
+            name: 'Schnell',
+            initialLoadDelay: 800,
+            centeringDelay: 800,
+            reloadDelay: 200,
+            batchDelay: 100,
+            parallelBatchSize: 15,
+            useParallelImport: true
+        },
+        normal: {
+            name: 'Normal',
+            initialLoadDelay: 1200,
+            centeringDelay: 1200,
+            reloadDelay: 300,
+            batchDelay: 150,
+            parallelBatchSize: 10,
+            useParallelImport: true
+        },
+        safe: {
+            name: 'Sicher',
+            initialLoadDelay: 2000,
+            centeringDelay: 2000,
+            reloadDelay: 500,
+            batchDelay: 300,
+            parallelBatchSize: 5,
+            useParallelImport: false
+        }
+    },
+
+    // Wende ein vordefiniertes Profil an
+    applyProfile(profileName) {
+        const profile = this.profiles[profileName];
+        if (profile) {
+            Object.assign(CONFIG.speed, profile);
+            delete CONFIG.speed.name; // Name nicht in CONFIG speichern
+            this.save();
+            console.log(`${SCRIPT_NAME}: Profil "${profile.name}" angewendet`);
+            return true;
+        }
+        return false;
+    }
+};
+
+// Lade Geschwindigkeitsprofil beim Start
+SpeedProfile.load();
+
+// ============================================================================
+// VISUAL DUPLICATE DETECTION - Transparenz für bessere Erkennung
+// ============================================================================
+const VisualDuplicateDetector = {
+    isActive: false,
+    originalStyles: new Map(),
+    duplicateOverlay: null,
+
+    // Aktiviere visuelle Duplikatserkennung
+    activate() {
+        if (this.isActive) return;
+
+        console.log(`${SCRIPT_NAME}: Aktiviere visuelle Duplikatserkennung...`);
+        this.isActive = true;
+
+        // Finde alle HN-Elemente im DOM
+        this.applyTransparencyToHouseNumbers();
+
+        // Observer für neue HN-Elemente
+        this.startDOMObserver();
+
+        log('Visuelle Duplikatserkennung aktiviert - Doppelte HN werden hervorgehoben', 'success');
+    },
+
+    // Deaktiviere visuelle Duplikatserkennung
+    deactivate() {
+        if (!this.isActive) return;
+
+        console.log(`${SCRIPT_NAME}: Deaktiviere visuelle Duplikatserkennung...`);
+        this.isActive = false;
+
+        // Stelle ursprüngliche Styles wieder her
+        this.restoreOriginalStyles();
+
+        // Stoppe Observer
+        if (this.domObserver) {
+            this.domObserver.disconnect();
+            this.domObserver = null;
+        }
+
+        log('Visuelle Duplikatserkennung deaktiviert', 'info');
+    },
+
+    // Wende Transparenz auf alle HN an
+    applyTransparencyToHouseNumbers() {
+        try {
+            // Verschiedene Selektoren für HN-Elemente in WME
+            const selectors = [
+                '.house-number',
+                '.house-number-label',
+                '[class*="house"]',
+                '[class*="number"]',
+                '.olControlHouseNumber',
+                '.waze-house-number',
+                // SVG Text-Elemente (häufig für HN verwendet)
+                'text[class*="house"]',
+                'text[class*="number"]',
+                // Generische Text-Elemente die wie HN aussehen
+                'text[font-size]'
+            ];
+
+            const hnElements = new Set();
+
+            // Sammle alle potentiellen HN-Elemente
+            for (const selector of selectors) {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => hnElements.add(el));
+            }
+
+            // Zusätzlich: Suche nach Text-Elementen mit Zahlen
+            const allTextElements = document.querySelectorAll('text, span, div');
+            allTextElements.forEach(el => {
+                const text = el.textContent?.trim();
+                if (text && /^\d+[a-zA-Z]?$/.test(text) && text.length <= 4) {
+                    // Sieht aus wie eine Hausnummer
+                    hnElements.add(el);
+                }
+            });
+
+            console.log(`${SCRIPT_NAME}: Gefunden ${hnElements.size} potentielle HN-Elemente`);
+
+            // Sammle HN mit Positionen für Transparenz-Anwendung
+            const hnWithPositions = [];
+
+            hnElements.forEach(el => {
+                const text = el.textContent?.trim();
+                if (!text || !/^\d+[a-zA-Z]?$/.test(text)) return;
+
+                // Versuche Position des Elements zu ermitteln
+                let x = 0, y = 0;
+                try {
+                    const rect = el.getBoundingClientRect();
+                    x = rect.left + rect.width / 2;
+                    y = rect.top + rect.height / 2;
+
+                    // Für SVG-Elemente: Versuche transform oder direkte Koordinaten
+                    if (el.tagName === 'text' || el.tagName === 'tspan') {
+                        const transform = el.getAttribute('transform');
+                        if (transform) {
+                            const match = transform.match(/translate\(([^,]+),([^)]+)\)/);
+                            if (match) {
+                                x = parseFloat(match[1]) || x;
+                                y = parseFloat(match[2]) || y;
+                            }
+                        }
+
+                        // Direkte x/y Attribute
+                        const svgX = el.getAttribute('x');
+                        const svgY = el.getAttribute('y');
+                        if (svgX && svgY) {
+                            x = parseFloat(svgX) || x;
+                            y = parseFloat(svgY) || y;
+                        }
+                    }
+                } catch (e) {
+                    // Fallback: Verwende Element-Position
+                    try {
+                        const rect = el.getBoundingClientRect();
+                        x = rect.left;
+                        y = rect.top;
+                    } catch (e2) {
+                        x = Math.random() * 1000; // Zufällige Position als letzter Ausweg
+                        y = Math.random() * 1000;
+                    }
+                }
+
+                hnWithPositions.push({
+                    element: el,
+                    number: text.toLowerCase(),
+                    x: x,
+                    y: y
+                });
+            });
+
+            // Wende einheitliche Transparenz auf alle HN an (kein rotes Highlighting)
+            let processedCount = 0;
+
+            hnWithPositions.forEach((hn, index) => {
+                const el = hn.element;
+
+                // Speichere ursprünglichen Style
+                if (!this.originalStyles.has(el)) {
+                    this.originalStyles.set(el, {
+                        opacity: el.style.opacity || '',
+                        backgroundColor: el.style.backgroundColor || '',
+                        zIndex: el.style.zIndex || ''
+                    });
+                }
+
+                // Alle HN bekommen 80% Deckkraft + roten Hintergrund für beste Erkennung
+                el.style.opacity = '0.8';
+                el.style.backgroundColor = CONFIG.import.visualDuplicateColor || 'rgba(255, 0, 0, 0.4)';
+                el.style.zIndex = '9999';
+                el.title = `Hausnummer ${hn.number} (transparent für bessere Sicht)`;
+                processedCount++;
+            });
+
+            console.log(`${SCRIPT_NAME}: ${processedCount} Hausnummern transparent gemacht (50% Deckkraft)`);
+            console.log(`${SCRIPT_NAME}: Kein rotes Highlighting - nur weiße Transparenz für bessere Sicht`);
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler bei visueller Duplikatserkennung:`, e);
+        }
+    },
+
+    // Stelle ursprüngliche Styles wieder her
+    restoreOriginalStyles() {
+        this.originalStyles.forEach((originalStyle, element) => {
+            try {
+                element.style.opacity = originalStyle.opacity;
+                element.style.backgroundColor = originalStyle.backgroundColor;
+                element.style.zIndex = originalStyle.zIndex;
+                element.removeAttribute('title');
+            } catch (e) {
+                // Element möglicherweise nicht mehr im DOM
+            }
+        });
+        this.originalStyles.clear();
+    },
+
+    // DOM Observer für neue HN-Elemente
+    startDOMObserver() {
+        if (this.domObserver) return;
+
+        this.domObserver = new MutationObserver((mutations) => {
+            let hasNewHN = false;
+
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // Prüfe ob neue HN-Elemente hinzugefügt wurden
+                        const text = node.textContent?.trim();
+                        if (text && /^\d+[a-zA-Z]?$/.test(text) && text.length <= 4) {
+                            hasNewHN = true;
+                        }
+
+                        // Prüfe auch Kinder-Elemente
+                        const hnChildren = node.querySelectorAll?.('text, span, div');
+                        if (hnChildren) {
+                            hnChildren.forEach(child => {
+                                const childText = child.textContent?.trim();
+                                if (childText && /^\d+[a-zA-Z]?$/.test(childText) && childText.length <= 4) {
+                                    hasNewHN = true;
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            if (hasNewHN) {
+                // Verzögerte Aktualisierung um DOM-Updates abzuwarten
+                setTimeout(() => {
+                    if (this.isActive) {
+                        this.applyTransparencyToHouseNumbers();
+                    }
+                }, 500);
+            }
+        });
+
+        this.domObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+};
+
+// ============================================================================
+// MANUAL PAUSE SYSTEM - Pausieren während Import für Korrekturen
+// ============================================================================
+const ManualPauseSystem = {
+    isPaused: false,
+    pauseResolve: null,
+    pauseButton: null,
+    continueButton: null,
+    pauseOverlay: null,
+
+    // Erstelle Pause-UI
+    createPauseUI() {
+        if (this.pauseButton) return; // Bereits erstellt
+
+        // Pause Button (immer sichtbar während Import)
+        this.pauseButton = document.createElement('button');
+        this.pauseButton.id = 'manual-pause-btn';
+        this.pauseButton.innerHTML = '⏸️ Import Pausieren';
+        this.pauseButton.style.cssText = `
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            z-index: 10000;
+            padding: 10px 15px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: none;
+        `;
+
+        this.pauseButton.onclick = () => this.requestPause();
+        document.body.appendChild(this.pauseButton);
+
+        // Continue Button (nur sichtbar wenn pausiert)
+        this.continueButton = document.createElement('button');
+        this.continueButton.id = 'manual-continue-btn';
+        this.continueButton.innerHTML = '▶️ Import Fortsetzen';
+        this.continueButton.style.cssText = `
+            position: fixed;
+            top: 180px;
+            right: 20px;
+            z-index: 10000;
+            padding: 10px 15px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: none;
+        `;
+
+        this.continueButton.onclick = () => this.resumeImport();
+        document.body.appendChild(this.continueButton);
+    },
+
+    // Zeige Pause-Button während Import
+    showPauseButton() {
+        this.createPauseUI();
+        if (this.pauseButton) {
+            this.pauseButton.style.display = 'block';
+        }
+    },
+
+    // Verstecke Pause-Button nach Import
+    hidePauseButton() {
+        if (this.pauseButton) {
+            this.pauseButton.style.display = 'none';
+        }
+        if (this.continueButton) {
+            this.continueButton.style.display = 'none';
+        }
+        this.removePauseOverlay();
+    },
+
+    // Benutzer möchte pausieren
+    requestPause() {
+        if (this.isPaused) return;
+
+        this.isPaused = true;
+        log('Import manuell pausiert - Korrekturen können vorgenommen werden', 'warning');
+
+        // Zeige Continue-Button
+        if (this.continueButton) {
+            this.continueButton.style.display = 'block';
+        }
+
+        // Verstecke Pause-Button
+        if (this.pauseButton) {
+            this.pauseButton.style.display = 'none';
+        }
+
+        // Zeige Pause-Overlay
+        this.showPauseOverlay();
+
+        // Aktiviere visuelle Duplikatserkennung während Pause
+        VisualDuplicateDetector.activate();
+    },
+
+    // Import fortsetzen
+    resumeImport() {
+        if (!this.isPaused) return;
+
+        this.isPaused = false;
+        log('Import wird fortgesetzt...', 'success');
+
+        // Zeige Pause-Button wieder
+        if (this.pauseButton) {
+            this.pauseButton.style.display = 'block';
+        }
+
+        // Verstecke Continue-Button
+        if (this.continueButton) {
+            this.continueButton.style.display = 'none';
+        }
+
+        // Entferne Pause-Overlay
+        this.removePauseOverlay();
+
+        // Deaktiviere visuelle Duplikatserkennung
+        VisualDuplicateDetector.deactivate();
+
+        // Löse Promise auf wenn vorhanden
+        if (this.pauseResolve) {
+            this.pauseResolve();
+            this.pauseResolve = null;
+        }
+    },
+
+    // Warte auf Resume (für async/await)
+    async waitForResume() {
+        if (!this.isPaused) return;
+
+        return new Promise(resolve => {
+            this.pauseResolve = resolve;
+        });
+    },
+
+    // Zeige Pause-Overlay
+    showPauseOverlay() {
+        this.removePauseOverlay(); // Entferne altes Overlay
+
+        this.pauseOverlay = document.createElement('div');
+        this.pauseOverlay.id = 'manual-pause-overlay';
+        this.pauseOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 9998;
+            pointer-events: auto;
+        `;
+
+        // Klick auf Overlay schließt es
+        this.pauseOverlay.onclick = (e) => {
+            if (e.target === this.pauseOverlay) {
+                this.removePauseOverlay();
+            }
+        };
+
+        const pauseInfo = document.createElement('div');
+        pauseInfo.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-align: center;
+            pointer-events: auto;
+            max-width: 400px;
+            position: relative;
+        `;
+
+        // Verhindere dass Klicks auf das Info-Panel das Overlay schließen
+        pauseInfo.onclick = (e) => {
+            e.stopPropagation();
+        };
+
+        pauseInfo.innerHTML = `
+            <button onclick="ManualPauseSystem.removePauseOverlay()" style="
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+                color: #999;
+                padding: 0;
+                width: 25px;
+                height: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            " title="Schließen">&times;</button>
+            <h3 style="margin: 0 0 15px 0; color: #ff9800;">⏸️ Import Pausiert</h3>
+            <p style="margin: 0 0 15px 0;">
+                Der Import wurde pausiert. Sie können jetzt:<br>
+                • Fehler im aktuellen Bildschirmausschnitt korrigieren<br>
+                • Doppelte Hausnummern (rot hervorgehoben) löschen<br>
+                • Segmente bearbeiten<br>
+                • Straßennamen korrigieren
+            </p>
+            <p style="margin: 0 0 15px 0; font-size: 12px; color: #666;">
+                Klicken Sie "Import Fortsetzen" wenn Sie fertig sind.<br>
+                Am Ende kehrt der Import zum ursprünglichen Bildschirmausschnitt zurück.
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="ManualPauseSystem.resumeImport()" style="
+                    background: #4caf50;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">▶️ Import Fortsetzen</button>
+                <button onclick="ManualPauseSystem.removePauseOverlay()" style="
+                    background: #757575;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                ">Overlay schließen</button>
+            </div>
+        `;
+
+        this.pauseOverlay.appendChild(pauseInfo);
+        document.body.appendChild(this.pauseOverlay);
+    },
+
+    // Entferne Pause-Overlay
+    removePauseOverlay() {
+        if (this.pauseOverlay) {
+            this.pauseOverlay.remove();
+            this.pauseOverlay = null;
+        }
+    },
+
+    // Cleanup
+    cleanup() {
+        this.hidePauseButton();
+        if (this.pauseButton) {
+            this.pauseButton.remove();
+            this.pauseButton = null;
+        }
+        if (this.continueButton) {
+            this.continueButton.remove();
+            this.continueButton = null;
+        }
+        this.isPaused = false;
+        this.pauseResolve = null;
+    }
+};
+
+// Mache ManualPauseSystem global verfügbar für onclick-Handler
+unsafeWindow.ManualPauseSystem = ManualPauseSystem;
+const BlockedHouseNumbers = {
+    storageKey: 'wme-hn-import-blocked',
+
+    // Lade blockierte HN aus LocalStorage
+    load() {
+        try {
+            const stored = localStorage.getItem(this.storageKey);
+            return stored ? JSON.parse(stored) : {};
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Laden blockierter HN:`, e);
+            return {};
+        }
+    },
+
+    // Speichere blockierte HN in LocalStorage
+    save(blockedMap) {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(blockedMap));
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Speichern blockierter HN:`, e);
+        }
+    },
+
+    // Füge HN zur Blocklist hinzu
+    add(number, segmentId, reason = 'Manuell blockiert') {
+        const blocked = this.load();
+        const key = `${number}_${segmentId}`;
+        blocked[key] = {
+            number: number,
+            segmentId: segmentId,
+            reason: reason,
+            timestamp: Date.now()
+        };
+        this.save(blocked);
+        this.updateUI();
+        return key;
+    },
+
+    // Entferne HN aus Blocklist
+    remove(key) {
+        const blocked = this.load();
+        delete blocked[key];
+        this.save(blocked);
+        this.updateUI();
+    },
+
+    // Prüfe ob HN blockiert ist
+    isBlocked(number, segmentId) {
+        const blocked = this.load();
+        const key = `${number}_${segmentId}`;
+        return blocked.hasOwnProperty(key);
+    },
+
+    // Alle blockierten HN abrufen
+    getAll() {
+        return this.load();
+    },
+
+    // Alle blockierten HN löschen
+    clear() {
+        localStorage.removeItem(this.storageKey);
+        this.updateUI();
+    },
+
+    // UI aktualisieren
+    updateUI() {
+        const container = document.getElementById('blocked-hn-list');
+        if (!container) return;
+
+        const blocked = this.load();
+        const keys = Object.keys(blocked);
+
+        if (keys.length === 0) {
+            container.innerHTML = '<div style="color:#666;font-style:italic;padding:10px;">Keine blockierten Hausnummern</div>';
+            return;
+        }
+
+        let html = '<div style="max-height:150px;overflow-y:auto;">';
+        for (const key of keys) {
+            const hn = blocked[key];
+            const date = new Date(hn.timestamp).toLocaleString();
+            html += `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:5px;border-bottom:1px solid #eee;">
+                    <div>
+                        <strong>HN ${hn.number}</strong>
+                        <small style="color:#666;">(Segment: ${hn.segmentId})</small><br>
+                        <small style="color:#999;">${hn.reason} - ${date}</small>
+                    </div>
+                    <button onclick="BlockedHouseNumbers.remove('${key}')" class="btn btn-danger" style="padding:2px 6px;font-size:10px;">🗑️</button>
+                </div>
+            `;
+        }
+        html += '</div>';
+
+        container.innerHTML = html;
+
+        // Counter aktualisieren
+        const counter = document.getElementById('blocked-hn-count');
+        if (counter) {
+            counter.textContent = keys.length;
+        }
     }
 };
 
@@ -415,7 +1145,7 @@ const SaveErrorHandler = {
 
     // Fallback: Überwache DOM für Fehlermeldungen
     initFallback() {
-        // MutationObserver für WME Fehlermeldungen
+        // MutationObserver für WME Fehlermeldungen - VERBESSERT
         const observer = new MutationObserver((mutations) => {
             // Cooldown prüfen um Loops zu verhindern
             const now = Date.now();
@@ -426,12 +1156,35 @@ const SaveErrorHandler = {
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
                     if (node.nodeType === Node.ELEMENT_NODE) {
-                        // Nur scannen wenn es wie ein Dialog/Modal aussieht
-                        const isDialog = node.matches?.('[role="dialog"], [role="alertdialog"], [class*="modal"], [class*="dialog"], .wz-dialog, .wz-modal');
-                        const hasDialogChild = node.querySelector?.('[role="dialog"], [role="alertdialog"], [class*="modal"], [class*="dialog"]');
+                        // Ignoriere HTML, BODY, SCRIPT, STYLE Elemente
+                        if (['HTML', 'BODY', 'SCRIPT', 'STYLE', 'LINK', 'META'].includes(node.tagName)) {
+                            continue;
+                        }
 
-                        if (isDialog || hasDialogChild) {
+                        // Ignoriere sehr große Elemente (wahrscheinlich Container)
+                        const nodeText = node.textContent || '';
+                        if (nodeText.length > 5000) {
+                            continue;
+                        }
+
+                        // Ignoriere Script-Inhalte
+                        if (nodeText.includes('dataLayer') || nodeText.includes('gtm.js')) {
+                            continue;
+                        }
+
+                        // Erweiterte Dialog-Erkennung - NUR echte Dialoge
+                        const isDialog = node.matches?.('[role="dialog"], [role="alertdialog"], .wz-dialog, .wz-modal, .wz-toast, .wz-snackbar');
+                        const hasDialogChild = node.querySelector?.('[role="dialog"], [role="alertdialog"], .wz-dialog, .wz-modal');
+
+                        // Auch Text-basierte Erkennung - aber nur für kleine Elemente
+                        const hasErrorText = nodeText.length < 2000 && (
+                            nodeText.includes('Hausnummer existiert bereits') ||
+                            /\d{1,3}\s*Fehler/i.test(nodeText)
+                        );
+
+                        if (isDialog || hasDialogChild || hasErrorText) {
                             this.lastErrorScan = now;
+                            console.log(`${SCRIPT_NAME}: Potentieller Fehler-Dialog erkannt:`, node.tagName, node.className);
                             this.scanElementForErrors(node);
                         }
                     }
@@ -461,6 +1214,11 @@ const SaveErrorHandler = {
     // Prüft ob ein Text wie eine Fehlermeldung aussieht
     looksLikeError(text) {
         if (!text || text.length < 5) return false;
+        // Ignoriere sehr lange Texte (wahrscheinlich ganze Seite)
+        if (text.length > 5000) return false;
+        // Ignoriere Texte mit Script-Tags oder dataLayer (Google Tag Manager)
+        if (text.includes('dataLayer') || text.includes('gtm.js') || text.includes('googletagmanager')) return false;
+
         const lowerText = text.toLowerCase();
         return lowerText.includes('fehler') ||
                lowerText.includes('error') ||
@@ -473,64 +1231,130 @@ const SaveErrorHandler = {
                lowerText.includes('speichern');
     },
 
-    // Extrahiert Fehlerdetails aus WME-Dialog
+    // Extrahiert Fehlerdetails aus WME-Dialog - ROBUSTE VERSION
     extractAndParseWMEError(element) {
-        const fullText = element.textContent || element.innerText || '';
-
-        // Parse WME-spezifisches Format: "Hausnummer existiert bereits 2 Fehler"
-        const countMatch = fullText.match(/(\d+)\s*Fehler/i) || fullText.match(/(\d+)\s*error/i);
-        const errorCount = countMatch ? parseInt(countMatch[1]) : 1;
-
-        // Erkenne den Fehlertyp aus dem Text
-        let errorType = 'UNKNOWN';
-        let errorMessage = fullText.substring(0, 100); // Kürzen
-
-        if (/existiert\s*bereits|already\s*exists|duplicate/i.test(fullText)) {
-            errorType = 'DUPLICATE_HN';
-            errorMessage = `Hausnummer existiert bereits (${errorCount}x)`;
-        } else if (/zu\s*weit|too\s*far|distance/i.test(fullText)) {
-            errorType = 'HN_TOO_FAR';
-            errorMessage = `Hausnummer zu weit entfernt (${errorCount}x)`;
-        } else if (/gesperrt|locked|permission|rank/i.test(fullText)) {
-            errorType = 'SEGMENT_LOCKED';
-            errorMessage = `Segment gesperrt (${errorCount}x)`;
-        } else if (/ungültig|invalid|format/i.test(fullText)) {
-            errorType = 'INVALID_NUMBER';
-            errorMessage = `Ungültiges Format (${errorCount}x)`;
-        }
-
-        // Prüfe ob wir diesen Fehler schon haben (verhindert Duplikate)
-        const existingError = this.lastSaveErrors.find(e =>
-            e.type === errorType && e.source === 'WME-Dialog'
-        );
-
-        if (existingError) {
-            // Bereits erfasst, nicht nochmal hinzufügen
+        // Ignoriere das gesamte HTML-Dokument
+        if (element.tagName === 'HTML' || element.tagName === 'BODY') {
+            console.log(`${SCRIPT_NAME}: Ignoriere HTML/BODY Element`);
             return;
         }
 
-        // Einen Fehler-Eintrag für diesen Typ erstellen (nicht für jeden einzelnen)
-        const errorObj = {
-            type: errorType,
-            config: this.ERROR_TYPES[errorType],
-            originalMessage: errorMessage,
-            details: { count: errorCount },
-            timestamp: new Date(),
-            source: 'WME-Dialog'
-        };
+        const fullText = element.textContent || element.innerText || '';
 
-        this.lastSaveErrors.push(errorObj);
-        this.errorStats.errorsByType[errorType] = (this.errorStats.errorsByType[errorType] || 0) + errorCount;
+        // Ignoriere sehr lange Texte (wahrscheinlich ganze Seite)
+        if (fullText.length > 5000) {
+            console.log(`${SCRIPT_NAME}: Ignoriere zu langen Text (${fullText.length} Zeichen)`);
+            return;
+        }
 
-        console.log(`${SCRIPT_NAME}: WME-Dialog Fehler erkannt:`, errorType, errorCount);
+        // Ignoriere Texte mit Script-Inhalten
+        if (fullText.includes('dataLayer') || fullText.includes('gtm.js') || fullText.includes('googletagmanager')) {
+            console.log(`${SCRIPT_NAME}: Ignoriere Script-Inhalt`);
+            return;
+        }
 
-        // Fehler-Button aktualisieren (ohne Modal zu öffnen)
+        console.log(`${SCRIPT_NAME}: === WME DIALOG ANALYSE ===`);
+        console.log(`${SCRIPT_NAME}: Element:`, element.className, element.tagName);
+        console.log(`${SCRIPT_NAME}: Textlänge:`, fullText.length);
+        console.log(`${SCRIPT_NAME}: Volltext (erste 500 Zeichen):`, fullText.substring(0, 500));
+
+        // SPEZIELLE ERKENNUNG für WME-Fehler-Dialog wie im Screenshot
+        let totalErrors = 0;
+        let errorMessage = 'Unbekannter Fehler';
+        let errorType = 'DUPLICATE_HN';
+
+        // Suche nach "Hausnummer existiert bereits" (wie im Screenshot)
+        if (fullText.includes('Hausnummer existiert bereits') ||
+            fullText.includes('house number already exists')) {
+
+            errorType = 'DUPLICATE_HN';
+            errorMessage = 'Hausnummer existiert bereits';
+
+            // Versuche Anzahl zu extrahieren - NUR kleine Zahlen (1-999)
+            const numberMatches = fullText.match(/\b(\d{1,3})\b/g);
+            if (numberMatches && numberMatches.length > 0) {
+                // Filtere nur sinnvolle Zahlen (1-999)
+                const validNumbers = numberMatches
+                    .map(n => parseInt(n))
+                    .filter(n => n >= 1 && n <= 999);
+
+                if (validNumbers.length > 0) {
+                    // Nimm die größte sinnvolle Zahl als Fehleranzahl
+                    totalErrors = Math.max(...validNumbers);
+                }
+            }
+        }
+
+        // Fallback: Suche nach anderen Fehler-Indikatoren
+        if (totalErrors === 0) {
+            const errorPatterns = [
+                /(\d{1,3})\s*Fehler/i,
+                /(\d{1,3})\s*error/i,
+                /(\d{1,3})\s*duplicate/i,
+                /Fehler\s*(\d{1,3})/i,
+                /Error\s*(\d{1,3})/i
+            ];
+
+            for (const pattern of errorPatterns) {
+                const match = fullText.match(pattern);
+                if (match) {
+                    const num = parseInt(match[1]);
+                    if (num >= 1 && num <= 999) {
+                        totalErrors = Math.max(totalErrors, num);
+                    }
+                }
+            }
+        }
+
+        // Mindestens 1 Fehler wenn Dialog vorhanden und Fehlertext erkannt
+        if (totalErrors === 0 && (fullText.includes('existiert bereits') || fullText.includes('already exists'))) {
+            totalErrors = 1;
+        }
+
+        // Wenn keine Fehler erkannt, abbrechen
+        if (totalErrors === 0) {
+            console.log(`${SCRIPT_NAME}: Keine Fehler im Dialog erkannt`);
+            return;
+        }
+
+        console.log(`${SCRIPT_NAME}: Erkannte Fehleranzahl: ${totalErrors}`);
+        console.log(`${SCRIPT_NAME}: Fehlertyp: ${errorType}`);
+        console.log(`${SCRIPT_NAME}: Nachricht: ${errorMessage}`);
+
+        // Lösche alte Fehler und erstelle neue
+        this.lastSaveErrors = [];
+
+        // Erstelle die korrekte Anzahl von Fehlern
+        for (let i = 0; i < totalErrors; i++) {
+            const errorObj = {
+                type: errorType,
+                config: this.ERROR_TYPES[errorType],
+                originalMessage: `${errorMessage} (${i + 1}/${totalErrors})`,
+                details: {
+                    count: 1,
+                    index: i + 1,
+                    total: totalErrors
+                },
+                timestamp: new Date(),
+                source: 'WME-Dialog'
+            };
+
+            this.lastSaveErrors.push(errorObj);
+        }
+
+        this.errorStats.errorsByType[errorType] = totalErrors;
+
+        console.log(`${SCRIPT_NAME}: ${totalErrors} Fehler vom Typ ${errorType} erfasst`);
+
+        // Fehler-Button aktualisieren
         const errorBtn = document.getElementById('btn-show-save-errors');
         if (errorBtn) {
-            const totalErrors = this.lastSaveErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
             errorBtn.style.display = 'inline-block';
             errorBtn.textContent = `❌ ${totalErrors} Fehler`;
         }
+
+        // Log-Ausgabe für Benutzer
+        log(`❌ ${totalErrors} Fehler erkannt: ${errorMessage}`, 'error');
     },
 
     // Save-Finished Event Handler
@@ -621,18 +1445,46 @@ const SaveErrorHandler = {
             console.log(`${SCRIPT_NAME}: Fehler beim DOM-Scan:`, e);
         }
 
-        // 4. Suche nach dem spezifischen WME Fehler-Dialog (Screenshot-basiert)
+        // 4. Suche nach dem spezifischen WME Fehler-Dialog (erweiterte Suche)
         try {
-            // Der Dialog hat "Fehler beim Speichern" als Titel
-            const allElements = document.querySelectorAll('*');
-            for (const el of allElements) {
-                const text = el.textContent || '';
-                if (text.includes('Fehler beim Speichern') || text.includes('Hausnummer existiert bereits')) {
-                    this.extractAndParseWMEError(el);
-                    break;
+            // Erweiterte Selektoren für WME-Dialoge
+            const dialogSelectors = [
+                // Standard WME Dialoge
+                '.wz-dialog',
+                '.wz-modal',
+                '[class*="modal"]',
+                '[class*="dialog"]',
+                '[role="dialog"]',
+                '[role="alertdialog"]',
+                // Spezifische WME Fehler-Container
+                '[class*="save"][class*="error"]',
+                '[class*="error"][class*="message"]',
+                // Text-basierte Suche
+                '*'
+            ];
+
+            for (const selector of dialogSelectors) {
+                const elements = document.querySelectorAll(selector);
+                for (const el of elements) {
+                    const text = el.textContent || '';
+
+                    // Erweiterte Fehler-Erkennung
+                    if (text.includes('Fehler beim Speichern') ||
+                        text.includes('Hausnummer existiert bereits') ||
+                        text.includes('house number already exists') ||
+                        text.includes('duplicate house number') ||
+                        /\d+\s*Fehler/i.test(text) ||
+                        /\d+\s*error/i.test(text)) {
+
+                        console.log(`${SCRIPT_NAME}: Gefundener Fehler-Dialog:`, selector, text.substring(0, 200));
+                        this.extractAndParseWMEError(el);
+                        break;
+                    }
                 }
             }
-        } catch (e) {}
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Erweiterte Dialog-Suche Fehler:`, e);
+        }
     },
 
     // Fehler parsen und kategorisieren
@@ -1007,7 +1859,7 @@ const SaveErrorHandler = {
         return result;
     },
 
-    // Auto-Fix: Entferne alle Duplikat-HN
+    // Auto-Fix: Entferne nur die Duplikat-HN - SICHERE METHODE mit LocalStorage
     async autoFixDuplicates() {
         const pendingList = Array.from(pendingHouseNumbers.values());
         const grouped = {};
@@ -1024,45 +1876,23 @@ const SaveErrorHandler = {
             return;
         }
 
-        log(`🔧 Entferne ${duplicates.length} Duplikate...`, 'info');
+        log(`🔧 Entferne ${duplicates.length} Duplikate aus Import-Liste...`, 'info');
 
-        // Einfachste Methode: Alle Actions rückgängig machen
-        // Das ist zuverlässiger als einzelne zu suchen
-        if (W?.model?.actionManager) {
-            const actionCount = W.model.actionManager.getActions().length;
+        let removed = 0;
+        for (const dup of duplicates) {
+            const key = `${dup.number}_${dup.segmentId}`;
 
-            if (actionCount > 0) {
-                // Bestätigungsdialog
-                const confirmed = confirm(
-                    `${duplicates.length} Duplikate gefunden.\n\n` +
-                    `Um diese zu entfernen, werden ALLE ${actionCount} ausstehenden Änderungen rückgängig gemacht.\n\n` +
-                    `Fortfahren?`
-                );
-
-                if (!confirmed) {
-                    log('Auto-Fix abgebrochen', 'info');
-                    return;
-                }
-
-                // Alle Undo
-                let undone = 0;
-                for (let i = 0; i < actionCount; i++) {
-                    try {
-                        W.model.actionManager.undo();
-                        undone++;
-                    } catch (e) {
-                        break;
-                    }
-                }
-
-                // Pending Map leeren
-                pendingHouseNumbers.clear();
-                this.lastSaveErrors = [];
-
-                log(`✓ ${undone} Änderungen rückgängig gemacht`, 'success');
-                log(`💡 Tipp: Import erneut starten - Duplikate werden jetzt übersprungen`, 'info');
+            // Aus pending Map entfernen
+            if (pendingHouseNumbers.has(key)) {
+                pendingHouseNumbers.delete(key);
+                BlockedHouseNumbers.add(dup.number, dup.segmentId, 'Duplikat (Auto-Fix)');
+                removed++;
             }
         }
+
+        log(`✓ ${removed} Duplikate aus Import-Liste entfernt und blockiert`, 'success');
+        log(`💡 Die HN bleiben in WME sichtbar bis zum nächsten Speichern`, 'info');
+        log(`💡 Beim Speichern werden nur die Duplikate übersprungen`, 'info');
 
         // Modal schließen
         const modal = document.getElementById('hn-save-error-modal');
@@ -1071,6 +1901,9 @@ const SaveErrorHandler = {
         // Fehler-Button verstecken
         const errorBtn = document.getElementById('btn-show-save-errors');
         if (errorBtn) errorBtn.style.display = 'none';
+
+        // Fehler zurücksetzen
+        this.lastSaveErrors = [];
     },
 
     // Zur Position springen
@@ -1102,117 +1935,28 @@ const SaveErrorHandler = {
         }
     },
 
-    // Einzelne pending HN entfernen
+    // Einzelne pending HN entfernen - SICHERE METHODE mit LocalStorage
     removePendingHN(number, segmentId) {
         try {
             // Aus pending Map entfernen
             const key = `${number}_${segmentId}`;
             const hnData = pendingHouseNumbers.get(key);
-            pendingHouseNumbers.delete(key);
 
-            // Versuche die Action aus dem ActionManager zu entfernen
-            if (W?.model?.actionManager) {
-                const actions = W.model.actionManager.getActions();
-                console.log(`${SCRIPT_NAME}: Suche HN ${number} in ${actions.length} Actions...`);
-
-                // Durchsuche alle Actions von hinten nach vorne
-                for (let i = actions.length - 1; i >= 0; i--) {
-                    const action = actions[i];
-                    let actionNumber = null;
-                    let actionSegmentId = null;
-
-                    // Verschiedene Wege um die HN-Nummer aus der Action zu extrahieren
-                    // WME speichert Actions unterschiedlich je nach Version
-
-                    // Methode 1: Direkt auf action
-                    if (action?.number) actionNumber = action.number;
-                    if (action?.segmentId) actionSegmentId = action.segmentId;
-
-                    // Methode 2: In houseNumber Objekt
-                    if (action?.houseNumber?.number) actionNumber = action.houseNumber.number;
-                    if (action?.houseNumber?.segmentId) actionSegmentId = action.houseNumber.segmentId;
-
-                    // Methode 3: In attributes
-                    if (action?.attributes?.number) actionNumber = action.attributes.number;
-                    if (action?.attributes?.segID) actionSegmentId = action.attributes.segID;
-
-                    // Methode 4: In object.attributes
-                    if (action?.object?.attributes?.number) actionNumber = action.object.attributes.number;
-                    if (action?.object?.attributes?.segID) actionSegmentId = action.object.attributes.segID;
-
-                    // Methode 5: In newAttributes
-                    if (action?.newAttributes?.number) actionNumber = action.newAttributes.number;
-
-                    // Methode 6: Action-Name prüfen
-                    const actionName = action?.constructor?.name || action?.type || action?.actionName || '';
-                    const isHNAction = actionName.toLowerCase().includes('housenumber') ||
-                                       actionName.toLowerCase().includes('hn') ||
-                                       actionName.includes('AddHouseNumber');
-
-                    // Debug: Erste paar Actions loggen
-                    if (i >= actions.length - 3) {
-                        console.log(`${SCRIPT_NAME}: Action[${i}]: type=${actionName}, number=${actionNumber}, segId=${actionSegmentId}`);
-                    }
-
-                    // Prüfe ob diese Action zu unserer HN gehört
-                    const numberMatch = String(actionNumber) === String(number);
-                    const segmentMatch = !segmentId || String(actionSegmentId) === String(segmentId);
-
-                    if (numberMatch && (segmentMatch || isHNAction)) {
-                        console.log(`${SCRIPT_NAME}: Gefunden! Entferne Action[${i}] für HN ${number}`);
-
-                        // Undo bis zu dieser Action
-                        const undoCount = actions.length - i;
-                        for (let j = 0; j < undoCount; j++) {
-                            try {
-                                W.model.actionManager.undo();
-                            } catch (e) {
-                                console.log(`${SCRIPT_NAME}: Undo fehlgeschlagen:`, e);
-                                break;
-                            }
-                        }
-
-                        log(`🗑️ HN ${number} entfernt (${undoCount} Undo)`, 'success');
-                        return true;
-                    }
-                }
-
-                // Alternative: Wenn wir die Action nicht finden, versuche über das Model
-                console.log(`${SCRIPT_NAME}: Action nicht gefunden, versuche Model-Methode...`);
-
-                // Versuche HN direkt aus dem Model zu löschen
-                if (W?.model?.segmentHouseNumbers && hnData) {
-                    try {
-                        const existingHN = W.model.segmentHouseNumbers.getByAttributes({
-                            segID: parseInt(segmentId),
-                            number: String(number)
-                        });
-
-                        if (existingHN && existingHN.length > 0) {
-                            // Versuche DeleteHouseNumber Action
-                            const pageRequire = unsafeWindow?.require || W?.require;
-                            if (pageRequire) {
-                                try {
-                                    const DeleteHouseNumber = pageRequire('Waze/Action/DeleteHouseNumber');
-                                    if (DeleteHouseNumber) {
-                                        const deleteAction = new DeleteHouseNumber(existingHN[0]);
-                                        W.model.actionManager.add(deleteAction);
-                                        log(`🗑️ HN ${number} gelöscht (Delete Action)`, 'success');
-                                        return true;
-                                    }
-                                } catch (e) {
-                                    console.log(`${SCRIPT_NAME}: DeleteHouseNumber nicht verfügbar:`, e);
-                                }
-                            }
-                        }
-                    } catch (e) {
-                        console.log(`${SCRIPT_NAME}: Model-Methode fehlgeschlagen:`, e);
-                    }
-                }
+            if (!hnData) {
+                log(`⚠️ HN ${number} nicht im Tracking gefunden`, 'warning');
+                return false;
             }
 
-            log(`⚠️ HN ${number} aus Tracking entfernt (Action nicht gefunden)`, 'warning');
-            return false;
+            pendingHouseNumbers.delete(key);
+
+            // Zur Blocklist hinzufügen (persistent)
+            BlockedHouseNumbers.add(number, segmentId, 'Manuell entfernt');
+
+            log(`🗑️ HN ${number} aus Import-Liste entfernt und blockiert`, 'success');
+            log(`💡 Die HN bleibt in WME sichtbar bis zum Speichern`, 'info');
+            log(`💡 Beim Speichern wird diese HN übersprungen`, 'info');
+
+            return true;
         } catch (e) {
             log(`Fehler beim Entfernen: ${e.message}`, 'error');
             console.error(`${SCRIPT_NAME}: removePendingHN Fehler:`, e);
@@ -2425,135 +3169,38 @@ class WMEHouseNumberManager {
         this.existingHouseNumbers.clear();
         this.existingByCoords.clear();
 
+        console.log(`${SCRIPT_NAME}: === LADE EXISTIERENDE HN ===`);
+
+        // Verwende die gleiche Logik wie scanVisibleHouseNumbers
+        const scannedHN = importController.scanVisibleHouseNumbers();
+
         let loadedCount = 0;
         let coordsCount = 0;
 
-        // Helper zum Hinzufügen MIT Koordinaten
-        const addHN = (number, segId, lon = null, lat = null) => {
-            if (!number || segId === null || segId === undefined) return;
-            const numStr = String(number).trim().toLowerCase();
-            const segIdStr = String(segId);
-            const key = `${numStr}_${segIdStr}`;
-            if (!this.existingHouseNumbers.has(key)) {
-                this.existingHouseNumbers.set(key, true);
-                loadedCount++;
+        // Konvertiere gescannte HN zu existingHouseNumbers Format
+        for (const [number, positions] of scannedHN.entries()) {
+            for (const pos of positions) {
+                // Verwende eine generische Segment-ID da wir sie nicht haben
+                const segId = pos.isDummy ? 'unknown' : 'scanned';
+                const key = `${number}_${segId}`;
 
-                // Koordinaten speichern für Distanz-Prüfung
-                if (lon !== null && lat !== null && !isNaN(lon) && !isNaN(lat)) {
-                    const coordKey = `${numStr}_${lat.toFixed(4)}_${lon.toFixed(4)}`;
-                    this.existingByCoords.set(coordKey, { number: numStr, lon, lat, segmentId: segIdStr });
-                    coordsCount++;
-                }
-            }
-        };
+                if (!this.existingHouseNumbers.has(key)) {
+                    this.existingHouseNumbers.set(key, true);
+                    loadedCount++;
 
-        // Helper: Koordinaten aus HN-Objekt extrahieren (VERBESSERT)
-        const getHNCoords = (hn, segment = null) => {
-            if (!hn) return { lon: null, lat: null };
-
-            let lon = null, lat = null;
-            const attrs = hn.attributes || hn;
-
-            // METHODE A: geometry.coordinates (GeoJSON) - SDK Format
-            if (hn.geometry?.coordinates?.length >= 2) {
-                lon = hn.geometry.coordinates[0];
-                lat = hn.geometry.coordinates[1];
-            }
-            // METHODE B: point.coordinates
-            else if (hn.point?.coordinates?.length >= 2) {
-                lon = hn.point.coordinates[0];
-                lat = hn.point.coordinates[1];
-            }
-            // METHODE C: Direkte Koordinaten
-            else if (typeof hn.lon === 'number' && typeof hn.lat === 'number') {
-                lon = hn.lon;
-                lat = hn.lat;
-            }
-            // METHODE D: attributes.geometry
-            else if (attrs?.geometry?.coordinates?.length >= 2) {
-                lon = attrs.geometry.coordinates[0];
-                lat = attrs.geometry.coordinates[1];
-            }
-            // METHODE E: fractionPoint (Web Mercator) - WME internes Format
-            else if (attrs?.fractionPoint) {
-                const fp = attrs.fractionPoint;
-                if (typeof fp.x === 'number' && typeof fp.y === 'number') {
-                    // Web Mercator zu WGS84 konvertieren
-                    lon = fp.x * 180 / 20037508.34;
-                    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(fp.y * Math.PI / 20037508.34)) - Math.PI / 2);
-                }
-            }
-            // METHODE F: Berechne Position aus Segment + fraction
-            else if (segment && attrs?.fraction !== undefined) {
-                const coords = this.getPointOnSegment(segment, attrs.fraction);
-                if (coords) {
-                    lon = coords.lon;
-                    lat = coords.lat;
-                }
-            }
-
-            return { lon, lat };
-        };
-
-        try {
-            // METHODE 1: W.model.houseNumbers - Hauptquelle
-            if (W?.model?.houseNumbers) {
-                const hnObjects = W.model.houseNumbers.objects || {};
-                const segments = W.model.segments?.objects || {};
-
-                for (const id in hnObjects) {
-                    const hn = hnObjects[id];
-                    const attrs = hn?.attributes || hn;
-                    const number = attrs?.number || attrs?.houseNumber;
-                    const segId = attrs?.segID || attrs?.segmentId;
-
-                    // Segment für Koordinaten-Berechnung holen
-                    const segment = segId ? segments[segId] : null;
-                    const coords = getHNCoords(hn, segment);
-
-                    addHN(number, segId, coords.lon, coords.lat);
-                }
-                console.log(`${SCRIPT_NAME}: W.model.houseNumbers: ${Object.keys(hnObjects).length} HN`);
-            }
-
-            // METHODE 2: SDK getAll
-            if (wmeSDK?.DataModel?.HouseNumbers?.getAll) {
-                try {
-                    const allHN = wmeSDK.DataModel.HouseNumbers.getAll();
-                    if (allHN && Array.isArray(allHN)) {
-                        for (const hn of allHN) {
-                            const coords = getHNCoords(hn);
-                            addHN(hn?.number, hn?.segmentId, coords.lon, coords.lat);
-                        }
-                        console.log(`${SCRIPT_NAME}: SDK getAll: ${allHN.length} HN`);
-                    }
-                } catch (e) {
-                    // Ignorieren
-                }
-            }
-
-            // METHODE 3: Segment.attributes.houseNumbers mit Koordinaten-Berechnung
-            if (W?.model?.segments) {
-                const segments = W.model.segments.getObjectArray();
-                let segHNCount = 0;
-
-                for (const seg of segments) {
-                    if (!seg?.attributes) continue;
-                    const segId = seg.attributes.id;
-                    const houseNumbers = seg.attributes.houseNumbers || [];
-
-                    for (const hn of houseNumbers) {
-                        const number = hn?.number || hn?.houseNumber;
-                        const coords = getHNCoords(hn, seg);
-                        addHN(number, segId, coords.lon, coords.lat);
-                        segHNCount++;
+                    // Koordinaten speichern für Distanz-Prüfung (nur echte Koordinaten)
+                    if (!pos.isDummy && pos.lon !== null && pos.lat !== null) {
+                        const coordKey = `${number}_${pos.lat.toFixed(4)}_${pos.lon.toFixed(4)}`;
+                        this.existingByCoords.set(coordKey, {
+                            number: number,
+                            lon: pos.lon,
+                            lat: pos.lat,
+                            segmentId: segId
+                        });
+                        coordsCount++;
                     }
                 }
-                console.log(`${SCRIPT_NAME}: Segment.houseNumbers: ${segHNCount} HN`);
             }
-
-        } catch (e) {
-            console.error(`${SCRIPT_NAME}: Fehler beim Laden existierender HN:`, e);
         }
 
         log(`${this.existingHouseNumbers.size} existierende HN geladen (${this.existingByCoords.size} mit Koordinaten)`, 'info');
@@ -2567,83 +3214,6 @@ class WMEHouseNumberManager {
         }
 
         return this.existingHouseNumbers.size;
-    }
-
-    // Punkt auf Segment bei gegebener Fraktion berechnen
-    getPointOnSegment(segment, fraction) {
-        if (!segment || fraction === undefined) return null;
-
-        try {
-            let geom = null;
-            if (typeof segment.getGeometry === 'function') {
-                geom = segment.getGeometry();
-            } else if (segment.geometry) {
-                geom = segment.geometry;
-            } else if (segment.attributes?.geometry) {
-                geom = segment.attributes.geometry;
-            }
-
-            if (!geom) return null;
-
-            // Koordinaten extrahieren
-            let coords = [];
-            if (geom.coordinates) {
-                coords = geom.coordinates;
-            } else if (geom.getVertices) {
-                coords = geom.getVertices().map(v => [v.x, v.y]);
-            } else if (geom.components) {
-                coords = geom.components.map(c => [c.x, c.y]);
-            }
-
-            if (coords.length < 2) return null;
-
-            // Gesamtlänge berechnen
-            let totalLength = 0;
-            const segLengths = [];
-            for (let i = 0; i < coords.length - 1; i++) {
-                const len = Math.sqrt(
-                    Math.pow(coords[i+1][0] - coords[i][0], 2) +
-                    Math.pow(coords[i+1][1] - coords[i][1], 2)
-                );
-                segLengths.push(len);
-                totalLength += len;
-            }
-
-            // Position bei Fraktion finden
-            const targetDist = fraction * totalLength;
-            let accDist = 0;
-
-            for (let i = 0; i < segLengths.length; i++) {
-                if (accDist + segLengths[i] >= targetDist) {
-                    const t = (targetDist - accDist) / segLengths[i];
-                    let x = coords[i][0] + t * (coords[i+1][0] - coords[i][0]);
-                    let y = coords[i][1] + t * (coords[i+1][1] - coords[i][1]);
-
-                    // Prüfe ob Web Mercator (große Zahlen) -> konvertieren
-                    if (Math.abs(x) > 180 || Math.abs(y) > 90) {
-                        const lon = x * 180 / 20037508.34;
-                        const lat = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 20037508.34)) - Math.PI / 2);
-                        return { lon, lat };
-                    }
-
-                    return { lon: x, lat: y };
-                }
-                accDist += segLengths[i];
-            }
-
-            // Fallback: Letzter Punkt
-            const last = coords[coords.length - 1];
-            if (Math.abs(last[0]) > 180) {
-                return {
-                    lon: last[0] * 180 / 20037508.34,
-                    lat: 180 / Math.PI * (2 * Math.atan(Math.exp(last[1] * Math.PI / 20037508.34)) - Math.PI / 2)
-                };
-            }
-            return { lon: last[0], lat: last[1] };
-
-        } catch (e) {
-            return null;
-        }
     }
 
     // Straßennamen normalisieren für Vergleich
@@ -3070,169 +3640,6 @@ class WMEHouseNumberManager {
         };
     }
 
-    // Prüfen ob Hausnummer bereits existiert (VEREINFACHT UND ROBUSTER)
-    isDuplicate(number, segmentId, lon = null, lat = null) {
-        if (!CONFIG.import.duplicateCheck) return false;
-
-        const numberStr = String(number).trim().toLowerCase();
-        const segIdStr = String(segmentId);
-        const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20; // Meter
-
-        // ===== METHODE 0: GLOBALE SESSION-MAP (WICHTIGSTE!) =====
-        // Prüft gegen ALLE in dieser Browser-Session importierten HN
-        if (lon !== null && lat !== null) {
-            for (const [key, data] of globalImportedHN.entries()) {
-                if (!data || data.lon === undefined || data.lat === undefined) continue;
-
-                const existingNumber = String(data.number || '').toLowerCase();
-                if (existingNumber !== numberStr) continue;
-
-                const dist = CoordUtils.distance(lat, lon, data.lat, data.lon);
-                if (dist < DUPLICATE_DISTANCE) {
-                    console.log(`${SCRIPT_NAME}: Duplikat via globalImportedHN: ${numberStr} (${dist.toFixed(1)}m)`);
-                    return true;
-                }
-            }
-        }
-
-        // ===== METHODE 1: Session-Tracking (Manager-Level) =====
-        if (lon !== null && lat !== null) {
-            for (const [existingKey, coords] of this.importedThisSession.entries()) {
-                if (!coords || coords.lon === undefined || coords.lat === undefined) continue;
-
-                const existingNumber = coords.number || existingKey.split('_')[0];
-                if (existingNumber !== numberStr) continue;
-
-                const dist = CoordUtils.distance(lat, lon, coords.lat, coords.lon);
-                if (dist < DUPLICATE_DISTANCE) {
-                    return true;
-                }
-            }
-        }
-
-        // ===== METHODE 2: Key-basierte Prüfung (Nummer + Segment) =====
-        const key = `${numberStr}_${segIdStr}`;
-        if (this.existingHouseNumbers.has(key)) {
-            return true;
-        }
-
-        // ===== METHODE 2.5: W.model.segmentHouseNumbers.getByAttributes (WICHTIG!) =====
-        // Dies ist die Hauptmethode, die WME selbst verwendet
-        try {
-            if (W?.model?.segmentHouseNumbers?.getByAttributes) {
-                const existingHN = W.model.segmentHouseNumbers.getByAttributes({
-                    segID: parseInt(segIdStr),
-                    number: number  // Original-Nummer (nicht lowercase)
-                });
-                if (existingHN && existingHN.length > 0) {
-                    console.log(`${SCRIPT_NAME}: Duplikat via segmentHouseNumbers.getByAttributes: ${number} auf Segment ${segIdStr}`);
-                    return true;
-                }
-            }
-        } catch (e) {
-            // Ignorieren
-        }
-
-        // ===== METHODE 3: Prüfe gegen existierende HN mit Koordinaten =====
-        if (lon !== null && lat !== null && this.existingByCoords.size > 0) {
-            for (const [existingKey, coords] of this.existingByCoords.entries()) {
-                if (!coords || coords.lon === undefined || coords.lat === undefined) continue;
-
-                const existingNumber = coords.number || existingKey.split('_')[0];
-                if (existingNumber !== numberStr) continue;
-
-                const dist = CoordUtils.distance(lat, lon, coords.lat, coords.lon);
-                if (dist < DUPLICATE_DISTANCE) {
-                    return true;
-                }
-            }
-        }
-
-        // ===== METHODE 4: Live-Prüfung ALLER HN im Model =====
-        if (lon !== null && lat !== null) {
-            try {
-                const hnObjects = W?.model?.houseNumbers?.objects || {};
-                const segments = W?.model?.segments?.objects || {};
-
-                for (const id in hnObjects) {
-                    const hn = hnObjects[id];
-                    const attrs = hn?.attributes || hn;
-                    const existingNum = String(attrs?.number || attrs?.houseNumber || '').trim().toLowerCase();
-
-                    if (existingNum !== numberStr) continue;
-
-                    let existingLon = null, existingLat = null;
-
-                    if (attrs?.fractionPoint?.x !== undefined) {
-                        existingLon = attrs.fractionPoint.x * 180 / 20037508.34;
-                        existingLat = 180 / Math.PI * (2 * Math.atan(Math.exp(attrs.fractionPoint.y * Math.PI / 20037508.34)) - Math.PI / 2);
-                    } else if (attrs?.fraction !== undefined && attrs?.segID && segments[attrs.segID]) {
-                        const coords = this.getPointOnSegment(segments[attrs.segID], attrs.fraction);
-                        if (coords) {
-                            existingLon = coords.lon;
-                            existingLat = coords.lat;
-                        }
-                    }
-
-                    if (existingLon !== null && existingLat !== null) {
-                        const dist = CoordUtils.distance(lat, lon, existingLat, existingLon);
-                        if (dist < DUPLICATE_DISTANCE) {
-                            return true;
-                        }
-                    }
-                }
-            } catch (e) {
-                // Ignorieren
-            }
-        }
-
-        // ===== METHODE 5: Live-Prüfung über SDK =====
-        try {
-            if (wmeSDK?.DataModel?.HouseNumbers?.getBySegmentId) {
-                const segmentHN = wmeSDK.DataModel.HouseNumbers.getBySegmentId(segmentId);
-                if (segmentHN && Array.isArray(segmentHN)) {
-                    for (const hn of segmentHN) {
-                        if (String(hn?.number || '').trim().toLowerCase() === numberStr) {
-                            this.existingHouseNumbers.set(key, true);
-                            return true;
-                        }
-                    }
-                }
-            }
-        } catch (e) {
-            // Ignorieren
-        }
-
-        // ===== METHODE 6: Prüfe pending Actions =====
-        try {
-            if (W?.model?.actionManager) {
-                const actions = W.model.actionManager.getActions();
-                for (const action of actions) {
-                    if (action?.houseNumber || action?.object?.type === 'houseNumber') {
-                        const actionHN = action.houseNumber || action.object;
-                        const actionNum = String(actionHN?.number || actionHN?.attributes?.number || '').trim().toLowerCase();
-
-                        // Prüfe nach Nummer (nicht nur Segment, da HN auf verschiedenen Segmenten sein können)
-                        if (actionNum === numberStr) {
-                            // Prüfe Koordinaten wenn verfügbar
-                            const actionCoords = actionHN?.geometry?.coordinates || actionHN?.point?.coordinates;
-                            if (actionCoords && lon !== null && lat !== null) {
-                                const dist = CoordUtils.distance(lat, lon, actionCoords[1], actionCoords[0]);
-                                if (dist < DUPLICATE_DISTANCE) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (e) {
-            // Ignorieren
-        }
-
-        return false;
-    }
-
     // Hausnummer zur Duplikat-Liste hinzufügen (nach erfolgreichem Import)
     markAsImported(number, segmentId, lon = null, lat = null) {
         const numberStr = String(number).trim().toLowerCase();
@@ -3289,10 +3696,216 @@ class WMEHouseNumberManager {
             return { success: false, reason: `too_far_from_segment (${segmentDistance.toFixed(0)}m > ${MAX_SEGMENT_DISTANCE}m)` };
         }
 
-        // Duplikat-Check (mit Koordinaten für bessere Erkennung)
-        if (this.isDuplicate(numberStr, segmentId, houseNumber.lon, houseNumber.lat)) {
-            return { success: false, reason: 'duplicate' };
+        // ===== KRITISCHE SEGMENT-PRÜFUNG: Prüfe segment.attributes.houseNumbers =====
+        // Dies ist die ZUVERLÄSSIGSTE Methode um zu prüfen ob eine HN auf dem Segment existiert!
+        try {
+            const segmentHNArray = segment?.attributes?.houseNumbers || [];
+            console.log(`${SCRIPT_NAME}: [DEBUG] Segment ${segmentId} hat ${segmentHNArray.length} HN in attributes.houseNumbers`);
+
+            for (const hn of segmentHNArray) {
+                const existingNum = String(hn?.number || hn?.houseNumber || '').trim().toLowerCase();
+                console.log(`${SCRIPT_NAME}: [DEBUG] Vergleiche: "${existingNum}" mit "${numberLower}"`);
+                if (existingNum === numberLower) {
+                    console.log(`${SCRIPT_NAME}: SEGMENT-ARRAY DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId} (segment.attributes.houseNumbers)`);
+                    this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                    return { success: false, reason: 'duplicate_segment_array' };
+                }
+            }
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler bei segment.attributes.houseNumbers Prüfung:`, e);
         }
+
+        // ===== ALTERNATIVE SEGMENT-PRÜFUNG: Direkt über W.model.segmentHouseNumbers =====
+        try {
+            if (W?.model?.segmentHouseNumbers?.objects) {
+                let foundOnSegment = 0;
+                for (const hnId in W.model.segmentHouseNumbers.objects) {
+                    const hn = W.model.segmentHouseNumbers.objects[hnId];
+                    const hnSegId = hn?.attributes?.segID || hn?.segID;
+
+                    if (String(hnSegId) === String(segmentId)) {
+                        foundOnSegment++;
+                        const existingNum = String(hn?.attributes?.number || hn?.number || '').trim().toLowerCase();
+                        console.log(`${SCRIPT_NAME}: [DEBUG] segmentHouseNumbers: HN "${existingNum}" auf Segment ${segmentId}`);
+
+                        if (existingNum === numberLower) {
+                            console.log(`${SCRIPT_NAME}: SEGMENT-HN DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId} (W.model.segmentHouseNumbers)`);
+                            this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                            return { success: false, reason: 'duplicate_segment_hn_model' };
+                        }
+                    }
+                }
+                console.log(`${SCRIPT_NAME}: [DEBUG] ${foundOnSegment} HN auf Segment ${segmentId} in segmentHouseNumbers gefunden`);
+            }
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler bei W.model.segmentHouseNumbers Prüfung:`, e);
+        }
+
+        // ===== ACTION-MANAGER PRÜFUNG: Prüfe pending Actions auf Duplikate =====
+        // Neue HN sind noch nicht in segment.attributes.houseNumbers, aber im ActionManager!
+        try {
+            if (W?.model?.actionManager) {
+                const actions = W.model.actionManager.getActions?.() ||
+                               W.model.actionManager._actions ||
+                               W.model.actionManager.actions || [];
+
+                for (const action of actions) {
+                    // Prüfe verschiedene Action-Strukturen
+                    const actionSegId = action?.segmentId || action?.segment?.attributes?.id ||
+                                       action?._segmentId || action?.attributes?.segmentId ||
+                                       action?.houseNumber?.segmentId;
+                    const actionNumber = action?.number || action?.houseNumber?.number ||
+                                        action?._number || action?.attributes?.number;
+
+                    if (actionSegId && actionNumber) {
+                        const actionNumLower = String(actionNumber).trim().toLowerCase();
+                        const actionSegIdStr = String(actionSegId);
+
+                        // Prüfe ob gleiche HN auf gleichem Segment
+                        if (actionSegIdStr === String(segmentId) && actionNumLower === numberLower) {
+                            console.log(`${SCRIPT_NAME}: ACTION-MANAGER DUPLIKAT: HN ${numberStr} bereits als Action auf Segment ${segmentId}`);
+                            this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                            return { success: false, reason: 'duplicate_action_manager' };
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler bei ActionManager-Prüfung:`, e);
+        }
+
+        // ===== STRASSEN-PRÜFUNG: Prüfe ALLE Segmente mit gleichem Straßennamen =====
+        // Segmente mit gleichem Namen werden als EINE Straße behandelt!
+        try {
+            // Hole den Straßennamen des Ziel-Segments
+            let targetStreetName = null;
+            const primaryStreetID = segment.attributes?.primaryStreetID;
+            if (primaryStreetID && W?.model?.streets) {
+                const street = W.model.streets.getObjectById(primaryStreetID);
+                targetStreetName = street?.attributes?.name;
+            }
+            if (!targetStreetName) {
+                targetStreetName = segment.attributes?.primaryStreetName || segment.attributes?.name;
+            }
+
+            if (targetStreetName) {
+                console.log(`${SCRIPT_NAME}: Prüfe HN ${numberStr} gegen alle Segmente der Straße "${targetStreetName}"...`);
+
+                // Durchsuche ALLE Segmente nach gleichem Straßennamen
+                const allSegments = W?.model?.segments?.objects || {};
+                let segmentsWithSameName = 0;
+                const segmentIdsOnSameStreet = new Set(); // Sammle alle Segment-IDs dieser Straße
+
+                for (const otherSegId in allSegments) {
+                    const otherSeg = allSegments[otherSegId];
+                    if (!otherSeg?.attributes) continue;
+
+                    // Hole Straßennamen des anderen Segments
+                    let otherStreetName = null;
+                    const otherStreetID = otherSeg.attributes?.primaryStreetID;
+                    if (otherStreetID && W?.model?.streets) {
+                        const otherStreet = W.model.streets.getObjectById(otherStreetID);
+                        otherStreetName = otherStreet?.attributes?.name;
+                    }
+                    if (!otherStreetName) {
+                        otherStreetName = otherSeg.attributes?.primaryStreetName || otherSeg.attributes?.name;
+                    }
+
+                    // Prüfe ob gleicher Straßenname
+                    if (otherStreetName && otherStreetName.toLowerCase() === targetStreetName.toLowerCase()) {
+                        segmentsWithSameName++;
+                        segmentIdsOnSameStreet.add(String(otherSegId));
+
+                        // Prüfe HN auf diesem Segment (aus attributes.houseNumbers)
+                        const otherHNArray = otherSeg.attributes?.houseNumbers || [];
+                        for (const hn of otherHNArray) {
+                            const existingNum = String(hn?.number || hn?.houseNumber || '').trim().toLowerCase();
+                            if (existingNum === numberLower) {
+                                console.log(`${SCRIPT_NAME}: STRASSEN-DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${otherSegId} (gleiche Straße "${targetStreetName}")`);
+                                this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                                return { success: false, reason: 'duplicate_same_street' };
+                            }
+                        }
+                    }
+                }
+
+                // ===== ZUSÄTZLICHE PRÜFUNG: W.model.segmentHouseNumbers für alle Segmente der Straße =====
+                if (W?.model?.segmentHouseNumbers?.objects) {
+                    for (const hnId in W.model.segmentHouseNumbers.objects) {
+                        const hn = W.model.segmentHouseNumbers.objects[hnId];
+                        const hnSegId = String(hn?.attributes?.segID || hn?.segID || '');
+
+                        // Prüfe ob dieses Segment zur gleichen Straße gehört
+                        if (segmentIdsOnSameStreet.has(hnSegId)) {
+                            const existingNum = String(hn?.attributes?.number || hn?.number || '').trim().toLowerCase();
+                            if (existingNum === numberLower) {
+                                console.log(`${SCRIPT_NAME}: STRASSEN-DUPLIKAT (segmentHouseNumbers): HN ${numberStr} existiert bereits auf Segment ${hnSegId} (gleiche Straße "${targetStreetName}")`);
+                                this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                                return { success: false, reason: 'duplicate_same_street_model' };
+                            }
+                        }
+                    }
+                }
+
+                // ===== ZUSÄTZLICHE PRÜFUNG: W.model.houseNumbers für alle Segmente der Straße =====
+                if (W?.model?.houseNumbers?.objects) {
+                    for (const hnId in W.model.houseNumbers.objects) {
+                        const hn = W.model.houseNumbers.objects[hnId];
+                        const hnSegId = String(hn?.attributes?.segID || hn?.segID || '');
+
+                        // Prüfe ob dieses Segment zur gleichen Straße gehört
+                        if (segmentIdsOnSameStreet.has(hnSegId)) {
+                            const existingNum = String(hn?.attributes?.number || hn?.number || '').trim().toLowerCase();
+                            if (existingNum === numberLower) {
+                                console.log(`${SCRIPT_NAME}: STRASSEN-DUPLIKAT (houseNumbers): HN ${numberStr} existiert bereits auf Segment ${hnSegId} (gleiche Straße "${targetStreetName}")`);
+                                this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                                return { success: false, reason: 'duplicate_same_street_hn_model' };
+                            }
+                        }
+                    }
+                }
+
+                // Prüfe auch pendingHouseNumbers auf Segmenten der gleichen Straße
+                for (const [key, data] of pendingHouseNumbers.entries()) {
+                    if (String(data.number).trim().toLowerCase() !== numberLower) continue;
+                    if (segmentIdsOnSameStreet.has(String(data.segmentId))) {
+                        console.log(`${SCRIPT_NAME}: PENDING STRASSEN-DUPLIKAT: HN ${numberStr} bereits pending auf Segment ${data.segmentId} (gleiche Straße "${targetStreetName}")`);
+                        return { success: false, reason: 'duplicate_pending_same_street' };
+                    }
+                }
+
+                // Prüfe auch ActionManager auf Segmenten der gleichen Straße
+                try {
+                    if (W?.model?.actionManager) {
+                        const actions = W.model.actionManager.getActions?.() ||
+                                       W.model.actionManager._actions ||
+                                       W.model.actionManager.actions || [];
+
+                        for (const action of actions) {
+                            const actionSegId = action?.segmentId || action?.segment?.attributes?.id ||
+                                               action?._segmentId || action?.attributes?.segmentId;
+                            const actionNumber = action?.number || action?.houseNumber?.number ||
+                                                action?._number || action?.attributes?.number;
+
+                            if (actionSegId && actionNumber) {
+                                const actionNumLower = String(actionNumber).trim().toLowerCase();
+                                if (actionNumLower === numberLower && segmentIdsOnSameStreet.has(String(actionSegId))) {
+                                    console.log(`${SCRIPT_NAME}: ACTION STRASSEN-DUPLIKAT: HN ${numberStr} bereits als Action auf Segment ${actionSegId} (gleiche Straße "${targetStreetName}")`);
+                                    return { success: false, reason: 'duplicate_action_same_street' };
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {}
+
+                console.log(`${SCRIPT_NAME}: ${segmentsWithSameName} Segmente mit Straße "${targetStreetName}" geprüft, HN ${numberStr} nicht gefunden`);
+            }
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler bei Straßen-Prüfung:`, e);
+        }
+
+        // Duplikat-Check wurde bereits in filterAgainstExisting durchgeführt
+        // Hier nur noch finale Prüfung gegen aktuelle Actions
 
         // FINALE PRÜFUNG: Direkt über SDK prüfen ob HN auf Segment existiert
         try {
@@ -3327,16 +3940,19 @@ class WMEHouseNumberManager {
             }
         } catch (e) {}
 
-        // FINALE PRÜFUNG 3: W.model.segmentHouseNumbers.getByAttributes
+        // FINALE PRÜFUNG 3: W.model.segmentHouseNumbers - moderne Methode
         try {
-            if (W?.model?.segmentHouseNumbers?.getByAttributes) {
-                const existingHN = W.model.segmentHouseNumbers.getByAttributes({
-                    segID: segmentId,
-                    number: numberStr
-                });
-                if (existingHN && existingHN.length > 0) {
-                    this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
-                    return { success: false, reason: 'duplicate' };
+            if (W?.model?.segmentHouseNumbers?.objects) {
+                // Durchsuche alle segmentHouseNumbers nach passenden Einträgen
+                for (const hn of Object.values(W.model.segmentHouseNumbers.objects)) {
+                    const attrs = hn?.attributes || hn;
+                    const hnSegId = attrs?.segID || attrs?.segmentId;
+                    const hnNumber = String(attrs?.number || '').trim();
+
+                    if (String(hnSegId) === String(segmentId) && hnNumber === numberStr) {
+                        this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                        return { success: false, reason: 'duplicate' };
+                    }
                 }
             }
         } catch (e) {}
@@ -3351,6 +3967,157 @@ class WMEHouseNumberManager {
             const dist = CoordUtils.distance(houseNumber.lat, houseNumber.lon, data.lat, data.lon);
             if (dist < FINAL_CHECK_DISTANCE) {
                 return { success: false, reason: 'duplicate' };
+            }
+        }
+
+        // ===== ULTRA-FINALE PRÜFUNG: Direkte WME-Validierung =====
+        // Diese Prüfung simuliert WMEs interne Duplikatserkennung
+        try {
+            // Sammle ALLE HN mit dieser Nummer im aktuellen Bereich
+            const allHNWithNumber = [];
+
+            // Aus W.model.houseNumbers
+            if (W?.model?.houseNumbers?.objects) {
+                for (const hn of Object.values(W.model.houseNumbers.objects)) {
+                    const attrs = hn?.attributes || hn;
+                    const existingNum = String(attrs?.number || '').trim().toLowerCase();
+                    if (existingNum === numberLower) {
+                        const geometry = hn?.geometry || attrs?.geometry;
+                        if (geometry && geometry.coordinates) {
+                            const coords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                            if (coords) {
+                                allHNWithNumber.push({
+                                    lat: coords.lat,
+                                    lon: coords.lon,
+                                    segmentId: attrs?.segID || attrs?.segmentId,
+                                    source: 'houseNumbers'
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Aus W.model.segmentHouseNumbers
+            if (W?.model?.segmentHouseNumbers?.objects) {
+                for (const hn of Object.values(W.model.segmentHouseNumbers.objects)) {
+                    const attrs = hn?.attributes || hn;
+                    const existingNum = String(attrs?.number || '').trim().toLowerCase();
+                    if (existingNum === numberLower) {
+                        const geometry = hn?.geometry || attrs?.geometry;
+                        if (geometry && geometry.coordinates) {
+                            const coords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                            if (coords) {
+                                allHNWithNumber.push({
+                                    lat: coords.lat,
+                                    lon: coords.lon,
+                                    segmentId: attrs?.segID || attrs?.segmentId,
+                                    source: 'segmentHouseNumbers'
+                                });
+                            }
+                        } else {
+                            // Auch HN ohne Koordinaten berücksichtigen
+                            allHNWithNumber.push({
+                                lat: null,
+                                lon: null,
+                                segmentId: attrs?.segID || attrs?.segmentId,
+                                source: 'segmentHouseNumbers_noCoords'
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Prüfe gegen alle gefundenen HN
+            for (const existingHN of allHNWithNumber) {
+                // KRITISCH: Gleiche HN-Nummer auf gleichem Segment = IMMER DUPLIKAT!
+                // WME erlaubt KEINE doppelte HN auf dem gleichen Segment, egal wie weit sie auseinander sind!
+                if (String(existingHN.segmentId) === String(segmentId)) {
+                    console.log(`${SCRIPT_NAME}: SEGMENT-DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId} (${existingHN.source})`);
+                    this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                    return { success: false, reason: 'duplicate_same_segment' };
+                }
+
+                // Koordinaten-basierte Prüfung für verschiedene Segmente
+                if (existingHN.lat !== null && existingHN.lon !== null && String(existingHN.segmentId) !== String(segmentId)) {
+                    const dist = this.calculateDistance(houseNumber.lat, houseNumber.lon, existingHN.lat, existingHN.lon);
+                    if (dist < FINAL_CHECK_DISTANCE) {
+                        console.log(`${SCRIPT_NAME}: ULTRA-FINALE PRÜFUNG: HN ${numberStr} zu nah zu existierender HN auf anderem Segment (${dist.toFixed(1)}m, ${existingHN.source})`);
+                        this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                        return { success: false, reason: 'duplicate_different_segment_close' };
+                    }
+                }
+            }
+
+            console.log(`${SCRIPT_NAME}: ULTRA-FINALE PRÜFUNG: HN ${numberStr} OK (${allHNWithNumber.length} existierende HN geprüft)`);
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler bei ultra-finaler Prüfung:`, e);
+        }
+
+        // ===== PENDING DUPLIKAT-PRÜFUNG: Prüfe gegen bereits importierte HN in dieser Session =====
+        // Diese Prüfung verhindert, dass die gleiche HN mehrmals auf dem gleichen Segment importiert wird
+        const pendingKey = `${numberStr}_${segmentId}`;
+        if (pendingHouseNumbers.has(pendingKey)) {
+            console.log(`${SCRIPT_NAME}: PENDING DUPLIKAT: HN ${numberStr} wurde bereits auf Segment ${segmentId} importiert!`);
+            return { success: false, reason: 'duplicate_pending_same_segment' };
+        }
+
+        // Prüfe auch ob gleiche HN-Nummer auf gleichem Segment in pending existiert (mit anderem Key-Format)
+        for (const [key, data] of pendingHouseNumbers.entries()) {
+            if (String(data.segmentId) === String(segmentId) &&
+                String(data.number).trim().toLowerCase() === numberLower) {
+                console.log(`${SCRIPT_NAME}: PENDING DUPLIKAT (erweitert): HN ${numberStr} existiert bereits auf Segment ${segmentId} (Key: ${key})`);
+                return { success: false, reason: 'duplicate_pending_same_segment_extended' };
+            }
+        }
+
+        // ===== PENDING STRASSEN-PRÜFUNG: Prüfe gegen pending HN auf gleicher Straße =====
+        // Hole den Straßennamen des Ziel-Segments
+        let targetStreetName = null;
+        try {
+            const primaryStreetID = segment.attributes?.primaryStreetID;
+            if (primaryStreetID && W?.model?.streets) {
+                const street = W.model.streets.getObjectById(primaryStreetID);
+                targetStreetName = street?.attributes?.name;
+            }
+            if (!targetStreetName) {
+                targetStreetName = segment.attributes?.primaryStreetName || segment.attributes?.name;
+            }
+        } catch (e) {}
+
+        if (targetStreetName) {
+            for (const [key, data] of pendingHouseNumbers.entries()) {
+                if (String(data.number).trim().toLowerCase() !== numberLower) continue;
+
+                // Schnelle Prüfung: Nutze gespeicherten Straßennamen wenn vorhanden
+                if (data.streetName && data.streetName.toLowerCase() === targetStreetName.toLowerCase()) {
+                    console.log(`${SCRIPT_NAME}: PENDING STRASSEN-DUPLIKAT: HN ${numberStr} wurde bereits auf Straße "${targetStreetName}" importiert (Segment ${data.segmentId})`);
+                    return { success: false, reason: 'duplicate_pending_same_street' };
+                }
+
+                // Fallback: Prüfe ob pending HN auf Segment mit gleichem Straßennamen liegt
+                if (!data.streetName) {
+                    try {
+                        const pendingSegment = W?.model?.segments?.getObjectById?.(data.segmentId) ||
+                                              W?.model?.segments?.objects?.[data.segmentId];
+                        if (!pendingSegment) continue;
+
+                        let pendingStreetName = null;
+                        const pendingStreetID = pendingSegment.attributes?.primaryStreetID;
+                        if (pendingStreetID && W?.model?.streets) {
+                            const pendingStreet = W.model.streets.getObjectById(pendingStreetID);
+                            pendingStreetName = pendingStreet?.attributes?.name;
+                        }
+                        if (!pendingStreetName) {
+                            pendingStreetName = pendingSegment.attributes?.primaryStreetName || pendingSegment.attributes?.name;
+                        }
+
+                        if (pendingStreetName && pendingStreetName.toLowerCase() === targetStreetName.toLowerCase()) {
+                            console.log(`${SCRIPT_NAME}: PENDING STRASSEN-DUPLIKAT: HN ${numberStr} wurde bereits auf Straße "${targetStreetName}" importiert (Segment ${data.segmentId})`);
+                            return { success: false, reason: 'duplicate_pending_same_street' };
+                        }
+                    } catch (e) {}
+                }
             }
         }
 
@@ -3374,10 +4141,11 @@ class WMEHouseNumberManager {
                 this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
 
                 // Als PENDING markieren für Fehler-Tracking (wird bei erfolgreichem Save gelöscht)
-                const pendingKey = `${numberStr}_${segmentId}`;
+                // Speichere auch den Straßennamen für Straßen-Duplikat-Prüfung
                 pendingHouseNumbers.set(pendingKey, {
                     number: numberStr,
                     street: houseNumber.street || 'Unbekannt',
+                    streetName: targetStreetName || houseNumber.street || 'Unbekannt',
                     lat: houseNumber.lat,
                     lon: houseNumber.lon,
                     segmentId: segmentId,
@@ -3388,19 +4156,31 @@ class WMEHouseNumberManager {
                     await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
                         segmentId: segmentId,
                         number: numberStr,
-                        geometry: geometry
+                        point: geometry
                     });
                     return { success: true, segmentId: segmentId, distance: segmentDistance };
                 } catch (e1) {
+                    // Fallback: Try with different parameter names
                     try {
                         await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
                             segmentId: segmentId,
                             number: numberStr,
-                            point: geometry
+                            geometry: geometry
                         });
                         return { success: true, segmentId: segmentId, distance: segmentDistance };
                     } catch (e2) {
-                        throw e1;
+                        // Try with coordinates array directly
+                        try {
+                            await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
+                                segmentId: segmentId,
+                                number: numberStr,
+                                point: [houseNumber.lon, houseNumber.lat]
+                            });
+                            return { success: true, segmentId: segmentId, distance: segmentDistance };
+                        } catch (e3) {
+                            console.log(`${SCRIPT_NAME}: SDK Fehler - alle Varianten fehlgeschlagen:`, e1.message, e2.message, e3.message);
+                            throw e1; // Throw original error
+                        }
                     }
                 }
             }
@@ -3425,6 +4205,17 @@ class WMEHouseNumberManager {
                             W.model.actionManager.add(action);
 
                             this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+
+                            // Auch bei native Action zur pendingHouseNumbers hinzufügen!
+                            pendingHouseNumbers.set(pendingKey, {
+                                number: numberStr,
+                                street: houseNumber.street || 'Unbekannt',
+                                lat: houseNumber.lat,
+                                lon: houseNumber.lon,
+                                segmentId: segmentId,
+                                timestamp: Date.now()
+                            });
+
                             return { success: true, segmentId: segmentId, method: 'native_action' };
                         }
                     }
@@ -3502,17 +4293,36 @@ class ImportController {
         this.isRunning = true;
         this.shouldStop = false;
 
+        // Initialisiere Manual Pause System (nur wenn aktiviert)
+        if (CONFIG.import.manualPauseEnabled) {
+            ManualPauseSystem.showPauseButton();
+        }
+
         // ===== SCHRITT 1: Scanne ALLE sichtbaren Hausnummern =====
         log('Scanne existierende Hausnummern...', 'info');
         updateProgress('Scanne HN...');
-        const scannedHN = this.scanVisibleHouseNumbers();
+        const initialScannedHN = this.scanVisibleHouseNumbers();
 
         // Zähle Positionen
         let totalPositions = 0;
-        for (const positions of scannedHN.values()) {
+        for (const positions of initialScannedHN.values()) {
             totalPositions += positions.length;
         }
-        log(`${scannedHN.size} HN-Nummern gefunden (${totalPositions} Positionen)`, 'info');
+        log(`${initialScannedHN.size} HN-Nummern gefunden (${totalPositions} Positionen)`, 'info');
+
+        // DEBUG: Zeige erste paar gescannte HN
+        if (totalPositions > 0) {
+            let debugCount = 0;
+            for (const [number, positions] of initialScannedHN.entries()) {
+                if (debugCount < 3) {
+                    console.log(`${SCRIPT_NAME}: Gescannte HN "${number}": ${positions.length} Positionen`, positions);
+                    debugCount++;
+                }
+            }
+        } else {
+            console.log(`${SCRIPT_NAME}: WARNUNG: Keine existierenden HN gefunden! Duplikatserkennung funktioniert nicht.`);
+            console.log(`${SCRIPT_NAME}: Mögliche Ursachen: Zoom zu niedrig, HN nicht geladen, oder keine HN im Bereich`);
+        }
 
         // Warnung wenn keine HN gefunden wurden aber Segmente mit hasHNs existieren
         if (totalPositions === 0) {
@@ -3525,6 +4335,35 @@ class ImportController {
         }
 
         // ===== SCHRITT 2: Quelldaten gegen gescannte HN filtern =====
+        // Verwende die bereits gescannten HN vom ersten Schritt
+        let scannedHN = initialScannedHN;
+
+        // Wenn keine HN gefunden wurden, erweiterte Suche durchführen
+        if (scannedHN.size === 0 && houseNumbers.length > 0 && CONFIG.import.enableLargeBuildingSearch) {
+            log('Keine HN im sichtbaren Bereich - starte erweiterte Suche für große Gebäude...', 'warning');
+
+            // Berechne Zentrum der zu importierenden HN
+            let centerLat = 0, centerLon = 0;
+            for (const hn of houseNumbers) {
+                centerLat += hn.lat;
+                centerLon += hn.lon;
+            }
+            centerLat /= houseNumbers.length;
+            centerLon /= houseNumbers.length;
+
+            const searchRadius = CONFIG.import.largeBuildingSearchRadius || 5000;
+            console.log(`${SCRIPT_NAME}: Erweiterte Suche um Zentrum: ${centerLat.toFixed(6)}, ${centerLon.toFixed(6)}, Radius: ${searchRadius}m`);
+            scannedHN = await this.scanAllHouseNumbersInArea(centerLat, centerLon, searchRadius);
+
+            if (scannedHN.size > 0) {
+                log(`Erweiterte Suche: ${scannedHN.size} HN-Nummern gefunden (Radius: ${searchRadius}m)`, 'success');
+            } else {
+                log('Auch erweiterte Suche fand keine HN - Import ohne Duplikatsprüfung', 'warning');
+            }
+        } else if (scannedHN.size === 0 && !CONFIG.import.enableLargeBuildingSearch) {
+            log('Erweiterte Suche für große Gebäude ist deaktiviert', 'info');
+        }
+
         const deduplicatedHN = this.filterAgainstExisting(houseNumbers, scannedHN);
         const removedDuplicates = houseNumbers.length - deduplicatedHN.length;
 
@@ -3570,12 +4409,14 @@ class ImportController {
         // Gescannte HN zum Session-Tracking hinzufügen
         for (const [key, positions] of scannedHN.entries()) {
             for (const pos of positions) {
-                const coordKey = `${key}_${pos.lat.toFixed(4)}_${pos.lon.toFixed(4)}`;
-                wmeManager.importedThisSession.set(coordKey, {
-                    number: key,
-                    lat: pos.lat,
-                    lon: pos.lon
-                });
+                if (!pos.isDummy && pos.lat && pos.lon) {
+                    const coordKey = `${key}_${pos.lat.toFixed(4)}_${pos.lon.toFixed(4)}`;
+                    wmeManager.importedThisSession.set(coordKey, {
+                        number: key,
+                        lat: pos.lat,
+                        lon: pos.lon
+                    });
+                }
             }
         }
 
@@ -3636,6 +4477,19 @@ class ImportController {
             while (i < sortedHN.length && safeBatch.length < maxBatchSize && !this.shouldStop) {
                 const currentHN = sortedHN[i];
 
+                // MANUAL PAUSE CHECK: Prüfe ob Benutzer pausiert hat (nur wenn aktiviert)
+                if (CONFIG.import.manualPauseEnabled && ManualPauseSystem.isPaused) {
+                    log('Import pausiert - warte auf Fortsetzung...', 'warning');
+                    await ManualPauseSystem.waitForResume();
+
+                    if (this.shouldStop) {
+                        log('Import während Pause abgebrochen', 'warning');
+                        break;
+                    }
+
+                    log('Import nach Pause fortgesetzt', 'success');
+                }
+
                 // Prüfe ob diese HN noch im sicheren Bereich liegt
                 if (safeBatch.length > 0 && this.needsCenteringForHN(currentHN, lastCenterLat, lastCenterLon)) {
                     break; // Nächste HN braucht neue Zentrierung
@@ -3663,6 +4517,64 @@ class ImportController {
                 i++;
             }
 
+            // ================================================================
+            // BATCH-INTERNE DUPLIKAT-PRÜFUNG: Entferne Duplikate aus dem Batch
+            // ================================================================
+            if (safeBatch.length > 1) {
+                const uniqueBatch = [];
+                const seenInBatch = new Map(); // "number_segmentId" -> true
+
+                for (const hn of safeBatch) {
+                    const numLower = String(hn.number).trim().toLowerCase();
+                    // Finde das Segment für diese HN
+                    const findResult = wmeManager.findNearestSegment(hn.lon, hn.lat, hn.street, true);
+                    const segId = findResult?.segment?.attributes?.id || 'unknown';
+                    const batchKey = `${numLower}_${segId}`;
+
+                    if (seenInBatch.has(batchKey)) {
+                        // Duplikat im Batch gefunden!
+                        console.log(`${SCRIPT_NAME}: BATCH-DUPLIKAT: HN ${hn.number} auf Segment ${segId} übersprungen`);
+                        importStats.skipped++;
+                        importReport.duplicates.push({
+                            number: hn.number,
+                            street: hn.street,
+                            lat: hn.lat,
+                            lon: hn.lon,
+                            reason: 'batch_duplicate'
+                        });
+                    } else {
+                        // Prüfe auch gegen pendingHouseNumbers
+                        let isPending = false;
+                        for (const [key, data] of pendingHouseNumbers.entries()) {
+                            if (String(data.segmentId) === String(segId) &&
+                                String(data.number).trim().toLowerCase() === numLower) {
+                                isPending = true;
+                                break;
+                            }
+                        }
+
+                        if (isPending) {
+                            console.log(`${SCRIPT_NAME}: PENDING-DUPLIKAT: HN ${hn.number} auf Segment ${segId} übersprungen`);
+                            importStats.skipped++;
+                            importReport.duplicates.push({
+                                number: hn.number,
+                                street: hn.street,
+                                lat: hn.lat,
+                                lon: hn.lon,
+                                reason: 'pending_duplicate'
+                            });
+                        } else {
+                            seenInBatch.set(batchKey, true);
+                            uniqueBatch.push(hn);
+                        }
+                    }
+                }
+
+                // Ersetze safeBatch mit uniqueBatch
+                safeBatch.length = 0;
+                safeBatch.push(...uniqueBatch);
+            }
+
             // Parallele Verarbeitung des Safe-Batches
             if (safeBatch.length > 0) {
                 if (CONFIG.speed.useParallelImport) {
@@ -3687,7 +4599,19 @@ class ImportController {
                 if (importStats.successful >= nextPauseAt) {
                     lastPauseAt = Math.floor(importStats.successful / pauseInterval) * pauseInterval;
 
-                    log(`⏸️ Auto-Pause nach ${importStats.successful} Imports - Bitte jetzt SPEICHERN!`, 'warning');
+                    log(`⏸️ Auto-Pause nach ${importStats.successful} Imports - Starte Verifizierung...`, 'warning');
+                    updateProgress(`⏸️ PAUSE - Verifiziere Duplikate...`);
+
+                    // VERIFIZIERUNG während Auto-Pause mit sichtbarem Status
+                    performAutoPauseDuplicateCheck().then(() => {
+                        log(`✅ Verifizierung abgeschlossen`, 'success');
+                        updateProgress(`⏸️ PAUSE - Verifizierung fertig! Jetzt SPEICHERN!`);
+                    }).catch((e) => {
+                        log(`❌ Verifizierung fehlgeschlagen: ${e.message}`, 'error');
+                        updateProgress(`⏸️ PAUSE - Bitte SPEICHERN!`);
+                    });
+
+                    log(`⏸️ Bitte jetzt SPEICHERN! Dann "Fortfahren" klicken`, 'warning');
                     updateProgress(`⏸️ PAUSE - Speichern! Dann "Fortfahren" klicken`);
 
                     // Nicht-blockierende Pause - warte auf Button-Klick
@@ -3705,6 +4629,16 @@ class ImportController {
 
         this.isRunning = false;
         importReport.endTime = new Date();
+
+        // Cleanup Manual Pause System
+        ManualPauseSystem.hidePauseButton();
+        VisualDuplicateDetector.deactivate();
+
+        // Cleanup bei Abbruch
+        if (this.shouldStop) {
+            ManualPauseSystem.cleanup();
+        }
+
         onImportComplete();
 
         return importStats;
@@ -3794,440 +4728,1455 @@ class ImportController {
         return false;
     }
 
-    // Scanne ALLE sichtbaren Hausnummern und sammle ihre Koordinaten
+    // Scanne ALLE sichtbaren Hausnummern und sammle ihre Koordinaten - KORRIGIERTE VERSION
     scanVisibleHouseNumbers() {
-        const result = new Map(); // number (lowercase) -> Array von {lat, lon}
+        const result = new Map(); // number (lowercase) -> Array von {lat, lon, isDummy}
 
-        const addPosition = (number, lat, lon) => {
-            if (!number || lat === null || lon === null || isNaN(lat) || isNaN(lon)) return;
+        const addPosition = (number, lat, lon, isDummy = false) => {
+            if (!number) return;
+
+            // Dummy-Position hinzufügen (ohne Koordinaten-Validierung)
+            if (isDummy) {
+                const numStr = String(number).trim().toLowerCase();
+                if (!result.has(numStr)) {
+                    result.set(numStr, []);
+                }
+                result.get(numStr).push({ lat: null, lon: null, isDummy: true });
+                console.log(`${SCRIPT_NAME}: HN ${number} hinzugefügt (Dummy-Position)`);
+                return;
+            }
+
+            // Validiere echte Koordinaten
+            if (lat === null || lon === null || isNaN(lat) || isNaN(lon)) return;
+            if (lat < 45 || lat > 55 || lon < 5 || lon > 17) {
+                console.log(`${SCRIPT_NAME}: Ungültige Koordinaten für HN ${number}: ${lat}, ${lon}`);
+                return;
+            }
+
             const numStr = String(number).trim().toLowerCase();
             if (!result.has(numStr)) {
                 result.set(numStr, []);
             }
-            result.get(numStr).push({ lat, lon });
+            result.get(numStr).push({ lat, lon, isDummy: false });
+            console.log(`${SCRIPT_NAME}: HN ${number} hinzugefügt: ${lat.toFixed(6)}, ${lon.toFixed(6)}`);
         };
 
         try {
-            // ===== QUELLE 0: DOM-BASIERTE ERKENNUNG (WICHTIGSTE!) =====
-            // WME rendert HN als SVG-Text oder HTML-Elemente auf der Karte
-            let count0 = 0;
+            console.log(`${SCRIPT_NAME}: === SCAN STARTEN ===`);
 
-            // Methode A: SVG Text-Elemente im Map-Container
-            const mapContainer = document.getElementById('map') || document.querySelector('.olMap') || document.querySelector('[class*="map"]');
-            if (mapContainer) {
-                // Suche nach SVG Text-Elementen (HN werden oft als SVG gerendert)
-                const svgTexts = mapContainer.querySelectorAll('svg text, svg tspan');
-                for (const textEl of svgTexts) {
-                    const text = textEl.textContent?.trim();
-                    // Prüfe ob es eine Hausnummer ist (beginnt mit Ziffer)
-                    if (text && /^\d+[a-zA-Z]?$/.test(text)) {
-                        // Versuche Position aus transform oder parent zu bekommen
-                        const coords = this.getElementMapCoordinates(textEl);
-                        if (coords) {
-                            addPosition(text, coords.lat, coords.lon);
-                            count0++;
-                        }
-                    }
-                }
+            // DEBUG: Prüfe WME-Objekte
+            console.log(`${SCRIPT_NAME}: W verfügbar:`, !!W);
+            console.log(`${SCRIPT_NAME}: W.model verfügbar:`, !!W?.model);
+            console.log(`${SCRIPT_NAME}: W.model.segmentHouseNumbers verfügbar:`, !!W?.model?.segmentHouseNumbers);
+            console.log(`${SCRIPT_NAME}: W.model.segmentHouseNumbers.objects verfügbar:`, !!W?.model?.segmentHouseNumbers?.objects);
 
-                // Methode B: Suche nach HN-spezifischen Elementen
-                const hnElements = mapContainer.querySelectorAll(
-                    '[class*="house-number"], [class*="houseNumber"], [class*="hn-"], ' +
-                    '[data-house-number], [data-hn], .house-number-marker, .hn-marker'
-                );
-                for (const el of hnElements) {
-                    const text = el.textContent?.trim() || el.getAttribute('data-house-number') || el.getAttribute('data-hn');
-                    if (text && /^\d+[a-zA-Z]?$/.test(text)) {
-                        const coords = this.getElementMapCoordinates(el);
-                        if (coords) {
-                            addPosition(text, coords.lat, coords.lon);
-                            count0++;
-                        }
-                    }
-                }
+            if (W?.model?.segmentHouseNumbers?.objects) {
+                const objCount = Object.keys(W.model.segmentHouseNumbers.objects).length;
+                console.log(`${SCRIPT_NAME}: W.model.segmentHouseNumbers.objects hat ${objCount} Einträge`);
             }
 
-            // Methode C: OpenLayers Vector Layer Features
-            if (W?.map?.olMap?.layers) {
-                for (const layer of W.map.olMap.layers) {
-                    // Suche nach HouseNumbers Layer oder anderen relevanten Layern
-                    const layerName = layer?.name || layer?.CLASS_NAME || '';
-                    const layerId = layer?.id || '';
-
-                    // Erweiterte Layer-Suche
-                    const isHNLayer = layerName.toLowerCase().includes('house') ||
-                        layerName.toLowerCase().includes('hn') ||
-                        layerId.toLowerCase().includes('house') ||
-                        layerName.toLowerCase().includes('address') ||
-                        layerName.toLowerCase().includes('label');
-
-                    if (layer?.features && layer.features.length > 0) {
-                        for (const feature of layer.features) {
-                            const attrs = feature?.attributes || feature?.data || {};
-                            const number = attrs.number || attrs.houseNumber || attrs.hn ||
-                                          attrs.label || attrs.text || attrs.name;
-
-                            // Prüfe ob es eine gültige Hausnummer ist
-                            if (!number || !/^\d+[a-zA-Z]?$/.test(String(number).trim())) continue;
-
-                            let lat = null, lon = null;
-
-                            // Geometrie aus Feature
-                            if (feature.geometry) {
-                                if (feature.geometry.x !== undefined && feature.geometry.y !== undefined) {
-                                    // Web Mercator zu WGS84
-                                    lon = feature.geometry.x * 180 / 20037508.34;
-                                    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(feature.geometry.y * Math.PI / 20037508.34)) - Math.PI / 2);
-                                } else if (feature.geometry.coordinates) {
-                                    lon = feature.geometry.coordinates[0];
-                                    lat = feature.geometry.coordinates[1];
-                                }
-                            }
-
-                            if (lat !== null && lon !== null) {
-                                addPosition(number, lat, lon);
-                                count0++;
-                            }
-                        }
-                    }
-                }
-            }
-            console.log(`${SCRIPT_NAME}: Scan DOM/OpenLayers: ${count0} HN`);
-
-            // ===== QUELLE 0.5: W.model.segmentHouseNumbers (WICHTIG!) =====
-            // Dies ist die Hauptquelle für geladene HN in WME
-            let count05 = 0;
-            if (W?.model?.segmentHouseNumbers) {
-                try {
-                    const segHNObjects = W.model.segmentHouseNumbers.objects || {};
-                    const segments = W?.model?.segments?.objects || {};
-
-                    for (const id in segHNObjects) {
-                        const hn = segHNObjects[id];
-                        const attrs = hn?.attributes || hn;
-                        const number = attrs?.number;
-                        const segId = attrs?.segID;
-
-                        if (!number) continue;
-
-                        let lat = null, lon = null;
-
-                        // Methode A: fractionPoint (Web Mercator)
-                        if (attrs?.fractionPoint?.x !== undefined) {
-                            lon = attrs.fractionPoint.x * 180 / 20037508.34;
-                            lat = 180 / Math.PI * (2 * Math.atan(Math.exp(attrs.fractionPoint.y * Math.PI / 20037508.34)) - Math.PI / 2);
-                        }
-                        // Methode B: Berechne aus Segment + fraction
-                        else if (attrs?.fraction !== undefined && segId && segments[segId]) {
-                            const coords = wmeManager.getPointOnSegment(segments[segId], attrs.fraction);
-                            if (coords) {
-                                lat = coords.lat;
-                                lon = coords.lon;
-                            }
-                        }
-
-                        if (lat !== null && lon !== null) {
-                            addPosition(number, lat, lon);
-                            count05++;
-                        }
-                    }
-                } catch (e) {
-                    console.log(`${SCRIPT_NAME}: segmentHouseNumbers Fehler:`, e);
-                }
-            }
-            console.log(`${SCRIPT_NAME}: Scan W.model.segmentHouseNumbers: ${count05} HN`);
-
-            // ===== QUELLE 1: W.model.houseNumbers.objects =====
-            const hnObjects = W?.model?.houseNumbers?.objects || {};
-            const segments = W?.model?.segments?.objects || {};
-            let count1 = 0;
-
-            for (const id in hnObjects) {
-                const hn = hnObjects[id];
-                const attrs = hn?.attributes || hn;
-                const number = attrs?.number || attrs?.houseNumber;
-                const segId = attrs?.segID || attrs?.segmentId;
-
-                let lat = null, lon = null;
-
-                // Methode A: fractionPoint (Web Mercator -> WGS84)
-                if (attrs?.fractionPoint?.x !== undefined && attrs?.fractionPoint?.y !== undefined) {
-                    lon = attrs.fractionPoint.x * 180 / 20037508.34;
-                    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(attrs.fractionPoint.y * Math.PI / 20037508.34)) - Math.PI / 2);
-                }
-                // Methode B: Berechne aus Segment + fraction
-                else if (attrs?.fraction !== undefined && segId && segments[segId]) {
-                    const coords = wmeManager.getPointOnSegment(segments[segId], attrs.fraction);
-                    if (coords) {
-                        lat = coords.lat;
-                        lon = coords.lon;
-                    }
-                }
-
-                if (lat !== null && lon !== null) {
-                    addPosition(number, lat, lon);
-                    count1++;
-                }
-            }
-            console.log(`${SCRIPT_NAME}: Scan W.model.houseNumbers: ${count1} HN mit Koordinaten`);
-
-            // ===== QUELLE 2: SDK getAll =====
-            if (wmeSDK?.DataModel?.HouseNumbers?.getAll) {
-                try {
-                    const allHN = wmeSDK.DataModel.HouseNumbers.getAll();
-                    let count2 = 0;
-                    if (allHN && Array.isArray(allHN)) {
-                        for (const hn of allHN) {
-                            let lat = null, lon = null;
-                            if (hn?.geometry?.coordinates?.length >= 2) {
-                                lon = hn.geometry.coordinates[0];
-                                lat = hn.geometry.coordinates[1];
-                            } else if (hn?.point?.coordinates?.length >= 2) {
-                                lon = hn.point.coordinates[0];
-                                lat = hn.point.coordinates[1];
-                            }
-                            if (lat !== null && lon !== null) {
-                                addPosition(hn?.number, lat, lon);
-                                count2++;
-                            }
-                        }
-                    }
-                    console.log(`${SCRIPT_NAME}: Scan SDK getAll: ${count2} HN mit Koordinaten`);
-                } catch (e) {}
+            if (W?.model?.houseNumbers?.objects) {
+                const objCount = Object.keys(W.model.houseNumbers.objects).length;
+                console.log(`${SCRIPT_NAME}: W.model.houseNumbers.objects hat ${objCount} Einträge`);
             }
 
-            // ===== QUELLE 3: Segment.attributes.houseNumbers =====
-            let count3 = 0;
-            const allSegments = W?.model?.segments?.getObjectArray?.() || Object.values(W?.model?.segments?.objects || {});
-            for (const seg of allSegments) {
-                if (!seg?.attributes) continue;
-                const segHN = seg.attributes.houseNumbers || [];
-                const segId = seg.attributes.id;
+            // ===== METHODE 1: W.model.segmentHouseNumbers (HAUPTQUELLE) =====
+            let count_segHN = 0;
+            if (W?.model?.segmentHouseNumbers?.objects) {
+                console.log(`${SCRIPT_NAME}: Scanne W.model.segmentHouseNumbers...`);
+                const segHNObjects = W.model.segmentHouseNumbers.objects;
 
-                // Segment-Geometrie für Koordinaten-Berechnung
-                let geom = null;
-                try {
-                    if (typeof seg.getGeometry === 'function') geom = seg.getGeometry();
-                    else if (seg.geometry) geom = seg.geometry;
-                    else if (seg.attributes.geometry) geom = seg.attributes.geometry;
-                } catch (e) {}
+                for (const id in segHNObjects) {
+                    const hn = segHNObjects[id];
+                    const attrs = hn?.attributes || hn;
+                    const number = attrs?.number;
 
-                for (const hn of segHN) {
-                    const number = hn?.number || hn?.houseNumber;
                     if (!number) continue;
 
                     let lat = null, lon = null;
+                    let hasCoords = false;
 
-                    // Berechne Position aus fraction
-                    if (geom && hn.fraction !== undefined) {
-                        const coords = wmeManager.getPointOnSegment(seg, hn.fraction);
-                        if (coords) {
-                            lat = coords.lat;
-                            lon = coords.lon;
+                    // Koordinaten extrahieren - MODERNISIERT für neue WME API
+                    try {
+                        if (hn?.getOLGeometry && typeof hn.getOLGeometry === 'function') {
+                            const geom = hn.getOLGeometry();
+                            if (geom && geom.getCoordinates) {
+                                const coords = geom.getCoordinates();
+                                if (coords && coords.length >= 2) {
+                                    const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                    if (convertedCoords) {
+                                        lat = convertedCoords.lat;
+                                        lon = convertedCoords.lon;
+                                        hasCoords = true;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log(`${SCRIPT_NAME}: getOLGeometry Fehler für HN ${number}:`, e);
+                    }
+
+                    // Fallback: Versuche über attributes.geometry (ohne direkte geometry-Property)
+                    if (!hasCoords && attrs?.geometry?.coordinates) {
+                        const coords = attrs.geometry.coordinates;
+                        if (coords && coords.length >= 2) {
+                            const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                            if (convertedCoords) {
+                                lat = convertedCoords.lat;
+                                lon = convertedCoords.lon;
+                                hasCoords = true;
+                            }
                         }
                     }
 
-                    if (lat !== null && lon !== null) {
-                        addPosition(number, lat, lon);
-                        count3++;
+                    if (hasCoords) {
+                        addPosition(number, lat, lon, false);
+                        count_segHN++;
+                    } else {
+                        // Dummy-Position hinzufügen
+                        addPosition(number, null, null, true);
+                        count_segHN++;
                     }
                 }
             }
-            console.log(`${SCRIPT_NAME}: Scan Segment.houseNumbers: ${count3} HN`);
+            console.log(`${SCRIPT_NAME}: W.model.segmentHouseNumbers: ${count_segHN} HN gefunden`);
 
-            // ===== QUELLE 4: Globale Import-Map =====
-            let count4 = 0;
-            for (const [key, data] of globalImportedHN.entries()) {
-                if (data?.lat && data?.lon && data?.number) {
-                    addPosition(data.number, data.lat, data.lon);
-                    count4++;
+            // ===== METHODE 2: W.model.houseNumbers (BACKUP) =====
+            let count_hn = 0;
+            if (W?.model?.houseNumbers?.objects) {
+                console.log(`${SCRIPT_NAME}: Scanne W.model.houseNumbers...`);
+                const hnObjects = W.model.houseNumbers.objects;
+
+                for (const id in hnObjects) {
+                    const hn = hnObjects[id];
+                    const attrs = hn?.attributes || hn;
+                    const number = attrs?.number || attrs?.houseNumber;
+
+                    if (!number) continue;
+
+                    // Prüfe ob wir diese HN schon haben
+                    const numStr = String(number).trim().toLowerCase();
+                    if (result.has(numStr)) {
+                        // Bereits vorhanden, überspringe
+                        continue;
+                    }
+
+                    let lat = null, lon = null;
+                    let hasCoords = false;
+
+                    // Koordinaten extrahieren - MODERNISIERT
+                    try {
+                        if (hn?.getOLGeometry && typeof hn.getOLGeometry === 'function') {
+                            const geom = hn.getOLGeometry();
+                            if (geom && geom.getCoordinates) {
+                                const coords = geom.getCoordinates();
+                                if (coords && coords.length >= 2) {
+                                    const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                    if (convertedCoords) {
+                                        lat = convertedCoords.lat;
+                                        lon = convertedCoords.lon;
+                                        hasCoords = true;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log(`${SCRIPT_NAME}: getOLGeometry Fehler für HN ${number}:`, e);
+                    }
+
+                    // Fallback: attributes.geometry (ohne deprecated geometry property)
+                    if (!hasCoords && attrs?.geometry?.coordinates) {
+                        const coords = attrs.geometry.coordinates;
+                        if (coords && coords.length >= 2) {
+                            const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                            if (convertedCoords) {
+                                lat = convertedCoords.lat;
+                                lon = convertedCoords.lon;
+                                hasCoords = true;
+                            }
+                        }
+                    }
+
+                    if (hasCoords) {
+                        addPosition(number, lat, lon, false);
+                        count_hn++;
+                    } else {
+                        addPosition(number, null, null, true);
+                        count_hn++;
+                    }
                 }
             }
-            console.log(`${SCRIPT_NAME}: Scan globalImportedHN: ${count4} HN`);
+            console.log(`${SCRIPT_NAME}: W.model.houseNumbers: ${count_hn} zusätzliche HN gefunden`);
 
-            // ===== QUELLE 5: Pending Actions (noch nicht gespeicherte HN) =====
-            let count5 = 0;
+            // ===== METHODE 3: Direkte WME API Abfrage =====
+            let count_api = 0;
             try {
-                if (W?.model?.actionManager) {
-                    const actions = W.model.actionManager.getActions?.() || [];
-                    for (const action of actions) {
-                        // Suche nach AddHouseNumber Actions
-                        const actionType = action?.type || action?.actionType || action?.constructor?.name || '';
-                        if (actionType.toLowerCase().includes('housenumber') ||
-                            actionType.toLowerCase().includes('hn')) {
-
-                            const hn = action?.houseNumber || action?.object || action?.attributes;
-                            if (!hn) continue;
-
+                if (wmeSDK?.DataModel?.HouseNumbers?.getAll) {
+                    console.log(`${SCRIPT_NAME}: Scanne über WME SDK...`);
+                    const allHN = wmeSDK.DataModel.HouseNumbers.getAll();
+                    if (allHN && Array.isArray(allHN)) {
+                        for (const hn of allHN) {
                             const number = hn?.number || hn?.attributes?.number;
                             if (!number) continue;
 
-                            let lat = null, lon = null;
+                            const numStr = String(number).trim().toLowerCase();
+                            if (result.has(numStr)) continue; // Bereits vorhanden
 
-                            // Koordinaten aus verschiedenen Quellen
-                            if (hn?.point?.coordinates) {
-                                lon = hn.point.coordinates[0];
-                                lat = hn.point.coordinates[1];
-                            } else if (hn?.geometry?.coordinates) {
-                                lon = hn.geometry.coordinates[0];
-                                lat = hn.geometry.coordinates[1];
-                            }
-
-                            if (lat !== null && lon !== null) {
-                                addPosition(number, lat, lon);
-                                count5++;
+                            const geometry = hn?.geometry || hn?.point;
+                            if (geometry && geometry.coordinates) {
+                                const convertedCoords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                                if (convertedCoords) {
+                                    addPosition(number, convertedCoords.lat, convertedCoords.lon, false);
+                                    count_api++;
+                                }
+                            } else {
+                                addPosition(number, null, null, true);
+                                count_api++;
                             }
                         }
-                    }
-                }
-            } catch (e) {}
-            console.log(`${SCRIPT_NAME}: Scan Pending Actions: ${count5} HN`);
-
-            // ===== QUELLE 6: Venues/Places mit Hausnummern =====
-            let count6 = 0;
-            try {
-                const venues = W?.model?.venues?.getObjectArray?.() || Object.values(W?.model?.venues?.objects || {});
-                for (const venue of venues) {
-                    const attrs = venue?.attributes || venue;
-
-                    // Hausnummer aus Adresse
-                    const houseNumber = attrs?.houseNumber || attrs?.streetNumber ||
-                                       attrs?.address?.houseNumber || attrs?.address?.streetNumber;
-
-                    if (!houseNumber) continue;
-
-                    // Nur gültige Hausnummern (beginnt mit Ziffer)
-                    const numStr = String(houseNumber).trim();
-                    if (!/^\d/.test(numStr)) continue;
-
-                    let lat = null, lon = null;
-
-                    // Koordinaten aus Venue-Geometrie
-                    if (attrs?.geometry?.coordinates) {
-                        // Point oder Polygon Centroid
-                        const coords = attrs.geometry.coordinates;
-                        if (attrs.geometry.type === 'Point') {
-                            lon = coords[0];
-                            lat = coords[1];
-                        } else if (coords[0] && Array.isArray(coords[0])) {
-                            // Polygon - berechne Centroid
-                            const ring = coords[0];
-                            let sumLon = 0, sumLat = 0;
-                            for (const pt of ring) {
-                                sumLon += pt[0];
-                                sumLat += pt[1];
-                            }
-                            lon = sumLon / ring.length;
-                            lat = sumLat / ring.length;
-                        }
-                    } else if (typeof venue.getGeometry === 'function') {
-                        try {
-                            const geom = venue.getGeometry();
-                            if (geom?.getCentroid) {
-                                const centroid = geom.getCentroid();
-                                // Web Mercator zu WGS84
-                                lon = centroid.x * 180 / 20037508.34;
-                                lat = 180 / Math.PI * (2 * Math.atan(Math.exp(centroid.y * Math.PI / 20037508.34)) - Math.PI / 2);
-                            }
-                        } catch (e) {}
-                    }
-
-                    if (lat !== null && lon !== null) {
-                        addPosition(numStr, lat, lon);
-                        count6++;
                     }
                 }
             } catch (e) {
-                console.log(`${SCRIPT_NAME}: Venue-Scan Fehler:`, e);
+                console.log(`${SCRIPT_NAME}: WME SDK Scan Fehler:`, e);
             }
-            console.log(`${SCRIPT_NAME}: Scan Venues mit HN: ${count6}`);
+            console.log(`${SCRIPT_NAME}: WME SDK: ${count_api} zusätzliche HN gefunden`);
+
+            // ===== METHODE 4: Direkte Segment-Suche (FALLBACK) =====
+            let count_segments = 0;
+            try {
+                if (W?.model?.segments?.objects && (count_segHN + count_hn + count_api) === 0) {
+                    console.log(`${SCRIPT_NAME}: Fallback: Scanne Segmente nach HN...`);
+                    const segments = W.model.segments.objects;
+
+                    for (const segId in segments) {
+                        const segment = segments[segId];
+                        const houseNumbers = segment?.attributes?.houseNumbers || segment?.houseNumbers;
+
+                        if (houseNumbers && Array.isArray(houseNumbers)) {
+                            for (const hn of houseNumbers) {
+                                const number = hn?.number || hn?.attributes?.number;
+                                if (!number) continue;
+
+                                const numStr = String(number).trim().toLowerCase();
+                                if (result.has(numStr)) continue; // Bereits vorhanden
+
+                                // Versuche Koordinaten zu extrahieren
+                                let lat = null, lon = null;
+                                let hasCoords = false;
+
+                                try {
+                                    if (hn?.getOLGeometry && typeof hn.getOLGeometry === 'function') {
+                                        const geom = hn.getOLGeometry();
+                                        if (geom && geom.getCoordinates) {
+                                            const coords = geom.getCoordinates();
+                                            if (coords && coords.length >= 2) {
+                                                const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                                if (convertedCoords) {
+                                                    lat = convertedCoords.lat;
+                                                    lon = convertedCoords.lon;
+                                                    hasCoords = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (e) {
+                                    // Ignoriere Fehler
+                                }
+
+                                if (hasCoords) {
+                                    addPosition(number, lat, lon, false);
+                                    count_segments++;
+                                } else {
+                                    addPosition(number, null, null, true);
+                                    count_segments++;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log(`${SCRIPT_NAME}: Segment-Scan Fehler:`, e);
+            }
+            console.log(`${SCRIPT_NAME}: Segment-Scan: ${count_segments} zusätzliche HN gefunden`);
+
+            // ===== METHODE 5: Sichtbare Features auf der Karte (LETZTER FALLBACK) =====
+            let count_visible = 0;
+            try {
+                if ((count_segHN + count_hn + count_api + count_segments) === 0 && W?.map?.getOLMap) {
+                    console.log(`${SCRIPT_NAME}: Letzter Fallback: Scanne sichtbare Features...`);
+                    const olMap = W.map.getOLMap();
+
+                    if (olMap && olMap.getLayers) {
+                        const layers = olMap.getLayers().getArray();
+
+                        for (const layer of layers) {
+                            if (layer.getSource && typeof layer.getSource === 'function') {
+                                const source = layer.getSource();
+
+                                if (source && source.getFeatures && typeof source.getFeatures === 'function') {
+                                    const features = source.getFeatures();
+
+                                    for (const feature of features) {
+                                        const props = feature.getProperties ? feature.getProperties() : {};
+                                        const number = props.number || props.houseNumber || props.house_number;
+
+                                        if (number) {
+                                            const numStr = String(number).trim().toLowerCase();
+                                            if (result.has(numStr)) continue;
+
+                                            const geom = feature.getGeometry ? feature.getGeometry() : null;
+                                            if (geom && geom.getCoordinates) {
+                                                const coords = geom.getCoordinates();
+                                                if (coords && coords.length >= 2) {
+                                                    const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                                    if (convertedCoords) {
+                                                        addPosition(number, convertedCoords.lat, convertedCoords.lon, false);
+                                                        count_visible++;
+                                                    }
+                                                }
+                                            } else {
+                                                addPosition(number, null, null, true);
+                                                count_visible++;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log(`${SCRIPT_NAME}: Visible Features Scan Fehler:`, e);
+            }
+            console.log(`${SCRIPT_NAME}: Visible Features: ${count_visible} zusätzliche HN gefunden`);
+
+            const totalHN = count_segHN + count_hn + count_api + count_segments + count_visible;
+            console.log(`${SCRIPT_NAME}: === SCAN ABGESCHLOSSEN ===`);
+            console.log(`${SCRIPT_NAME}: Gesamt: ${totalHN} HN gefunden, ${result.size} verschiedene Nummern`);
+
+            // Debug: Zeige erste paar erkannte HN
+            if (result.size > 0) {
+                let debugCount = 0;
+                for (const [number, positions] of result.entries()) {
+                    if (debugCount < 5) {
+                        const realPos = positions.filter(p => !p.isDummy).length;
+                        const dummyPos = positions.filter(p => p.isDummy).length;
+                        console.log(`${SCRIPT_NAME}: HN "${number}": ${realPos} echte + ${dummyPos} Dummy Positionen`);
+                        debugCount++;
+                    }
+                }
+            } else {
+                console.log(`${SCRIPT_NAME}: ⚠️ KEINE HAUSNUMMERN GEFUNDEN`);
+                console.log(`${SCRIPT_NAME}: Mögliche Ursachen:`);
+                console.log(`${SCRIPT_NAME}: - Zoom-Level zu niedrig (empfohlen: 19+)`);
+                console.log(`${SCRIPT_NAME}: - Keine HN im sichtbaren Bereich`);
+                console.log(`${SCRIPT_NAME}: - WME-Daten noch nicht geladen`);
+                console.log(`${SCRIPT_NAME}: - Script zu früh ausgeführt`);
+                console.log(`${SCRIPT_NAME}: Versuche:`);
+                console.log(`${SCRIPT_NAME}: 1. Zoom auf Level 19+ setzen`);
+                console.log(`${SCRIPT_NAME}: 2. In einen Bereich mit bekannten HN navigieren`);
+                console.log(`${SCRIPT_NAME}: 3. Kurz warten und erneut versuchen`);
+            }
 
         } catch (e) {
-            console.error(`${SCRIPT_NAME}: Fehler beim Scannen:`, e);
+            console.error(`${SCRIPT_NAME}: scanVisibleHouseNumbers Fehler:`, e);
         }
-
-        // Statistik ausgeben
-        let totalPositions = 0;
-        for (const positions of result.values()) {
-            totalPositions += positions.length;
-        }
-        console.log(`${SCRIPT_NAME}: Gesamt: ${result.size} verschiedene HN-Nummern, ${totalPositions} Positionen`);
 
         return result;
     }
 
-    // Quelldaten gegen existierende HN filtern
+    // Erweiterte HN-Suche auch außerhalb des sichtbaren Bereichs - VERBESSERT für große Gebäude
+    async scanAllHouseNumbersInArea(centerLat, centerLon, radiusMeters = 1000) {
+        console.log(`${SCRIPT_NAME}: === ERWEITERTE HN-SUCHE FÜR GROSSE GEBÄUDE ===`);
+        console.log(`${SCRIPT_NAME}: Zentrum: ${centerLat.toFixed(6)}, ${centerLon.toFixed(6)}, Radius: ${radiusMeters}m`);
+
+        const result = new Map(); // number (lowercase) -> Array von {lat, lon, isDummy, source}
+
+        // Erweiterte addPosition Funktion mit Quellen-Tracking
+        const addPosition = (number, lat, lon, isDummy = false, source = 'unknown') => {
+            if (!number) return;
+
+            const numStr = String(number).trim().toLowerCase();
+            if (!result.has(numStr)) {
+                result.set(numStr, []);
+            }
+
+            if (isDummy) {
+                result.get(numStr).push({ lat: null, lon: null, isDummy: true, source });
+                console.log(`${SCRIPT_NAME}: [${source}] HN ${number} hinzugefügt (Dummy-Position)`);
+                return;
+            }
+
+            if (lat === null || lon === null || isNaN(lat) || isNaN(lon)) return;
+            if (lat < 45 || lat > 55 || lon < 5 || lon > 17) {
+                console.log(`${SCRIPT_NAME}: [${source}] Ungültige Koordinaten für HN ${number}: ${lat}, ${lon}`);
+                return;
+            }
+
+            result.get(numStr).push({ lat, lon, isDummy: false, source });
+            console.log(`${SCRIPT_NAME}: [${source}] HN ${number} hinzugefügt: ${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+        };
+
+        try {
+            // METHODE 1: Alle WME Model-Objekte durchsuchen (auch außerhalb Viewport)
+            const sources = [
+                { name: 'segmentHouseNumbers', objects: W?.model?.segmentHouseNumbers?.objects },
+                { name: 'houseNumbers', objects: W?.model?.houseNumbers?.objects }
+            ];
+
+            for (const source of sources) {
+                if (!source.objects) continue;
+
+                console.log(`${SCRIPT_NAME}: Durchsuche ALLE ${source.name} (auch außerhalb Viewport)...`);
+                let totalCount = 0;
+                let inRadiusCount = 0;
+
+                for (const id in source.objects) {
+                    const hn = source.objects[id];
+                    const attrs = hn?.attributes || hn;
+                    const number = attrs?.number;
+
+                    if (!number) continue;
+                    totalCount++;
+
+                    let lat = null, lon = null;
+                    let hasCoords = false;
+
+                    // Koordinaten extrahieren (alle Methoden versuchen) - MODERNISIERT
+                    try {
+                        if (hn?.getOLGeometry && typeof hn.getOLGeometry === 'function') {
+                            const geom = hn.getOLGeometry();
+                            if (geom && geom.getCoordinates) {
+                                const coords = geom.getCoordinates();
+                                if (coords && coords.length >= 2) {
+                                    const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                    if (convertedCoords) {
+                                        lat = convertedCoords.lat;
+                                        lon = convertedCoords.lon;
+                                        hasCoords = true;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {}
+
+                    // Fallback: attributes.geometry (ohne deprecated geometry property)
+                    if (!hasCoords && attrs?.geometry?.coordinates) {
+                        const coords = attrs.geometry.coordinates;
+                        if (coords && coords.length >= 2) {
+                            const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                            if (convertedCoords) {
+                                lat = convertedCoords.lat;
+                                lon = convertedCoords.lon;
+                                hasCoords = true;
+                            }
+                        }
+                    }
+
+                    if (hasCoords) {
+                        // Prüfe ob HN im erweiterten Suchradius liegt (für große Gebäude)
+                        const distance = this.calculateDistance(centerLat, centerLon, lat, lon);
+                        if (distance <= radiusMeters) {
+                            addPosition(number, lat, lon, false, source.name);
+                            inRadiusCount++;
+                        } else if (distance <= radiusMeters * 2) {
+                            // Auch HN in doppeltem Radius erfassen (für sehr große Gebäude)
+                            addPosition(number, lat, lon, false, `${source.name}_extended`);
+                            console.log(`${SCRIPT_NAME}: [${source.name}_extended] HN ${number} in erweitertem Radius: ${distance.toFixed(0)}m`);
+                            inRadiusCount++;
+                        }
+                    } else {
+                        // Dummy-Position hinzufügen (könnte trotzdem relevant sein)
+                        addPosition(number, null, null, true, source.name);
+                        inRadiusCount++;
+                    }
+                }
+
+                console.log(`${SCRIPT_NAME}: ${source.name}: ${inRadiusCount}/${totalCount} HN im Suchbereich gefunden`);
+            }
+
+            // METHODE 2: Direkte Segment-basierte Suche für große Gebäude
+            console.log(`${SCRIPT_NAME}: === SEGMENT-BASIERTE SUCHE FÜR GROSSE GEBÄUDE ===`);
+            try {
+                if (W?.model?.segments?.objects) {
+                    let segmentCount = 0;
+                    let hnFromSegments = 0;
+
+                    // Durchsuche alle Segmente im erweiterten Bereich
+                    for (const segId in W.model.segments.objects) {
+                        const segment = W.model.segments.objects[segId];
+                        const attrs = segment?.attributes || segment;
+
+                        // Prüfe ob Segment HN hat
+                        if (!attrs?.hasHNs) continue;
+
+                        // Prüfe ob Segment im Suchbereich liegt
+                        let segmentInRange = false;
+                        try {
+                            const geom = segment?.getGeometry?.() || attrs?.geometry;
+                            if (geom && geom.coordinates) {
+                                // Prüfe ersten und letzten Punkt des Segments
+                                const coords = geom.coordinates;
+                                for (let i = 0; i < coords.length; i += Math.max(1, Math.floor(coords.length / 3))) {
+                                    const convertedCoords = this.convertWebMercatorToWGS84(coords[i][0], coords[i][1]);
+                                    if (convertedCoords) {
+                                        const distance = this.calculateDistance(centerLat, centerLon, convertedCoords.lat, convertedCoords.lon);
+                                        if (distance <= radiusMeters * 1.5) { // Erweiterte Suche für Segmente
+                                            segmentInRange = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e) {}
+
+                        if (!segmentInRange) continue;
+                        segmentCount++;
+
+                        // Suche HN auf diesem Segment
+                        if (W?.model?.segmentHouseNumbers?.objects) {
+                            for (const hnId in W.model.segmentHouseNumbers.objects) {
+                                const hn = W.model.segmentHouseNumbers.objects[hnId];
+                                const hnAttrs = hn?.attributes || hn;
+                                const hnSegId = hnAttrs?.segID || hnAttrs?.segmentId;
+
+                                if (String(hnSegId) !== String(segId)) continue;
+
+                                const number = hnAttrs?.number;
+                                if (!number) continue;
+
+                                // Koordinaten extrahieren - MODERNISIERT
+                                try {
+                                    if (hn?.getOLGeometry && typeof hn.getOLGeometry === 'function') {
+                                        const geom = hn.getOLGeometry();
+                                        if (geom && geom.getCoordinates) {
+                                            const coords = geom.getCoordinates();
+                                            if (coords && coords.length >= 2) {
+                                                const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                                if (convertedCoords) {
+                                                    lat = convertedCoords.lat;
+                                                    lon = convertedCoords.lon;
+                                                    hasCoords = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (e) {}
+
+                                // Fallback: attributes.geometry
+                                if (!hasCoords && hnAttrs?.geometry?.coordinates) {
+                                    const coords = hnAttrs.geometry.coordinates;
+                                    if (coords && coords.length >= 2) {
+                                        const convertedCoords = this.convertWebMercatorToWGS84(coords[0], coords[1]);
+                                        if (convertedCoords) {
+                                            lat = convertedCoords.lat;
+                                            lon = convertedCoords.lon;
+                                            hasCoords = true;
+                                        }
+                                    }
+                                }
+
+                                // HN hinzufügen (auch wenn schon vorhanden - für Vollständigkeit)
+                                const numStr = String(number).trim().toLowerCase();
+                                if (!result.has(numStr)) {
+                                    if (hasCoords) {
+                                        addPosition(number, lat, lon, false, 'segment_search');
+                                        hnFromSegments++;
+                                    } else {
+                                        addPosition(number, null, null, true, 'segment_search');
+                                        hnFromSegments++;
+                                    }
+                                } else {
+                                    // Bereits vorhanden, aber logge es trotzdem
+                                    console.log(`${SCRIPT_NAME}: [segment_search] HN ${number} bereits erfasst (Segment ${segId})`);
+                                }
+                            }
+                        }
+                    }
+
+                    console.log(`${SCRIPT_NAME}: Segment-Suche: ${hnFromSegments} HN auf ${segmentCount} Segmenten mit hasHNs=true gefunden`);
+                }
+            } catch (e) {
+                console.log(`${SCRIPT_NAME}: Fehler bei Segment-basierter Suche:`, e);
+            }
+
+            // METHODE 3: WME SDK Fallback für sehr große Gebäude
+            console.log(`${SCRIPT_NAME}: === WME SDK FALLBACK FÜR GROSSE GEBÄUDE ===`);
+            try {
+                if (wmeSDK?.DataModel?.HouseNumbers?.getAll) {
+                    const allSDKHN = wmeSDK.DataModel.HouseNumbers.getAll();
+                    if (allSDKHN && Array.isArray(allSDKHN)) {
+                        let sdkCount = 0;
+                        for (const hn of allSDKHN) {
+                            const number = hn?.number || hn?.attributes?.number;
+                            if (!number) continue;
+
+                            const geometry = hn?.geometry || hn?.point;
+                            if (geometry && geometry.coordinates) {
+                                const convertedCoords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                                if (convertedCoords) {
+                                    const distance = this.calculateDistance(centerLat, centerLon, convertedCoords.lat, convertedCoords.lon);
+                                    if (distance <= radiusMeters * 2) { // Sehr erweiterte Suche
+                                        const numStr = String(number).trim().toLowerCase();
+                                        if (!result.has(numStr)) {
+                                            addPosition(number, convertedCoords.lat, convertedCoords.lon, false, 'sdk_fallback');
+                                            sdkCount++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        console.log(`${SCRIPT_NAME}: SDK Fallback: ${sdkCount} zusätzliche HN gefunden`);
+                    }
+                }
+            } catch (e) {
+                console.log(`${SCRIPT_NAME}: SDK Fallback Fehler:`, e);
+            }
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Erweiterte HN-Suche Fehler:`, e);
+        }
+
+        // Zusammenfassung
+        let totalPositions = 0;
+        let realPositions = 0;
+        let dummyPositions = 0;
+
+        for (const positions of result.values()) {
+            totalPositions += positions.length;
+            realPositions += positions.filter(p => !p.isDummy).length;
+            dummyPositions += positions.filter(p => p.isDummy).length;
+        }
+
+        console.log(`${SCRIPT_NAME}: === ERWEITERTE SUCHE ABGESCHLOSSEN ===`);
+        console.log(`${SCRIPT_NAME}: ${result.size} verschiedene HN-Nummern gefunden`);
+        console.log(`${SCRIPT_NAME}: ${realPositions} echte Positionen, ${dummyPositions} Dummy-Positionen`);
+        console.log(`${SCRIPT_NAME}: Suchradius: ${radiusMeters}m (erweitert auf ${radiusMeters * 2}m für große Gebäude)`);
+
+        return result;
+    }
+
+    // Quelldaten gegen existierende HN filtern - VERBESSERTE VERSION mit intelligenter Segment-Prüfung
     filterAgainstExisting(houseNumbers, existingHN) {
         const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20; // Meter
+        const SEGMENT_AWARE_DISTANCE = CONFIG.import.segmentAwareRadius || 50; // Erweiterte Prüfung für verschiedene Segmente
+        const SMART_DETECTION = CONFIG.import.smartDuplicateDetection !== false;
+        const ALLOW_DIFFERENT_SEGMENTS = CONFIG.import.allowSameNumberDifferentSegments !== false;
+        const ALLOW_SAME_SEGMENT = CONFIG.import.allowSameNumberSameSegment !== false;
+        const SAME_SEGMENT_MIN_DISTANCE = CONFIG.import.sameSegmentMinDistance || 10;
+        const PREFER_REAL_COORDS = CONFIG.import.preferRealCoordinates !== false;
+
         const result = [];
         const seen = new Map(); // Für Quelldaten-Deduplizierung
         let removedByWME = 0;
         let removedBySource = 0;
         let removedByGlobal = 0;
+        let removedByFallback = 0;
+
+        console.log(`${SCRIPT_NAME}: Filtere ${houseNumbers.length} HN gegen ${existingHN.size} existierende Nummern`);
+        console.log(`${SCRIPT_NAME}: Duplikat-Radius: ${DUPLICATE_DISTANCE}m, Segment-Aware: ${SEGMENT_AWARE_DISTANCE}m`);
+        console.log(`${SCRIPT_NAME}: Smart Detection: ${SMART_DETECTION}, Verschiedene Segmente: ${ALLOW_DIFFERENT_SEGMENTS}, Gleiche Segmente: ${ALLOW_SAME_SEGMENT} (min ${SAME_SEGMENT_MIN_DISTANCE}m), Echte Koordinaten bevorzugen: ${PREFER_REAL_COORDS}`);
+
+        // Debug: Zeige erste paar existierende HN
+        let debugCount = 0;
+        for (const [number, positions] of existingHN.entries()) {
+            if (debugCount < 5) {
+                console.log(`${SCRIPT_NAME}: Existierende HN "${number}": ${positions.length} Positionen`, positions);
+                debugCount++;
+            }
+        }
+
+        // FALLBACK: Wenn keine existierenden HN gefunden wurden, direkte WME-Prüfung
+        let fallbackHN = new Map(); // number -> Set von segmentIds mit Koordinaten
+        if (existingHN.size === 0) {
+            console.log(`${SCRIPT_NAME}: FALLBACK: Keine existierenden HN gefunden, verwende direkte WME-Prüfung`);
+
+            // Sammle alle HN-Nummern mit Segment-Info und Koordinaten direkt aus WME
+            try {
+                const segHNObjects = W?.model?.segmentHouseNumbers?.objects || {};
+                for (const id in segHNObjects) {
+                    const hn = segHNObjects[id];
+                    const number = hn?.attributes?.number || hn?.number;
+                    const segmentId = hn?.attributes?.segID || hn?.segID;
+                    const geometry = hn?.geometry || hn?.attributes?.geometry;
+
+                    if (number && segmentId) {
+                        const numStr = String(number).trim().toLowerCase();
+                        if (!fallbackHN.has(numStr)) {
+                            fallbackHN.set(numStr, new Set());
+                        }
+
+                        // Speichere Segment-ID mit Koordinaten-Info
+                        let coordInfo = { segmentId: String(segmentId), hasCoords: false };
+                        if (geometry && geometry.coordinates) {
+                            const coords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                            if (coords && coords.lat && coords.lon) {
+                                coordInfo.hasCoords = true;
+                                coordInfo.lat = coords.lat;
+                                coordInfo.lon = coords.lon;
+                            }
+                        }
+
+                        fallbackHN.get(numStr).add(JSON.stringify(coordInfo));
+                        console.log(`${SCRIPT_NAME}: Fallback HN gefunden: ${number} auf Segment ${segmentId} ${coordInfo.hasCoords ? `(${coordInfo.lat.toFixed(6)}, ${coordInfo.lon.toFixed(6)})` : '(ohne Koordinaten)'}`);
+                    }
+                }
+
+                const hnObjects = W?.model?.houseNumbers?.objects || {};
+                for (const id in hnObjects) {
+                    const hn = hnObjects[id];
+                    const number = hn?.attributes?.number || hn?.number;
+                    const segmentId = hn?.attributes?.segID || hn?.segID;
+                    const geometry = hn?.geometry || hn?.attributes?.geometry;
+
+                    if (number && segmentId) {
+                        const numStr = String(number).trim().toLowerCase();
+                        if (!fallbackHN.has(numStr)) {
+                            fallbackHN.set(numStr, new Set());
+                        }
+
+                        // Speichere Segment-ID mit Koordinaten-Info
+                        let coordInfo = { segmentId: String(segmentId), hasCoords: false };
+                        if (geometry && geometry.coordinates) {
+                            const coords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                            if (coords && coords.lat && coords.lon) {
+                                coordInfo.hasCoords = true;
+                                coordInfo.lat = coords.lat;
+                                coordInfo.lon = coords.lon;
+                            }
+                        }
+
+                        fallbackHN.get(numStr).add(JSON.stringify(coordInfo));
+                    }
+                }
+
+                console.log(`${SCRIPT_NAME}: Fallback: ${fallbackHN.size} HN-Nummern gefunden`);
+            } catch (e) {
+                console.log(`${SCRIPT_NAME}: Fallback-Fehler:`, e);
+            }
+        }
+
+        // Debug: Zeige erste paar zu importierende HN
+        console.log(`${SCRIPT_NAME}: Zu importierende HN (erste 5):`);
+        for (let i = 0; i < Math.min(5, houseNumbers.length); i++) {
+            const hn = houseNumbers[i];
+            console.log(`${SCRIPT_NAME}: Import HN ${hn.number} bei ${hn.lat.toFixed(6)}, ${hn.lon.toFixed(6)}`);
+        }
 
         for (const hn of houseNumbers) {
             const numberStr = String(hn.number).trim().toLowerCase();
             let isDuplicate = false;
+            let duplicateReason = '';
+            let duplicateDistance = 0;
 
-            // PRÜFUNG 0: Gegen GLOBALE Import-Map (alle bisherigen Imports)
+            console.log(`${SCRIPT_NAME}: === PRÜFE HN ${hn.number} bei ${hn.lat.toFixed(6)}, ${hn.lon.toFixed(6)} ===`);
+
+            // PRÜFUNG 1: Gegen existierende HN in WME (HAUPTPRÜFUNG)
+            if (!isDuplicate && existingHN.has(numberStr)) {
+                const existingPositions = existingHN.get(numberStr);
+                console.log(`${SCRIPT_NAME}: Prüfe HN ${hn.number} gegen ${existingPositions.length} existierende Positionen`);
+
+                // Intelligente Behandlung von Dummy-Positionen
+                const realPositions = existingPositions.filter(p => !p.isDummy && p.lat && p.lon);
+                const dummyPositions = existingPositions.filter(p => p.isDummy);
+
+                console.log(`${SCRIPT_NAME}: ${realPositions.length} echte Positionen, ${dummyPositions.length} Dummy-Positionen`);
+
+                // Prüfe zuerst echte Positionen - NUR DIESE SIND ZUVERLÄSSIG
+                for (let i = 0; i < realPositions.length; i++) {
+                    const pos = realPositions[i];
+                    const dist = this.calculateDistance(hn.lat, hn.lon, pos.lat, pos.lon);
+                    console.log(`${SCRIPT_NAME}: Position ${i+1}: Import(${hn.lat.toFixed(6)}, ${hn.lon.toFixed(6)}) vs Existing(${pos.lat.toFixed(6)}, ${pos.lon.toFixed(6)}) = ${dist.toFixed(1)}m`);
+
+                    if (dist < DUPLICATE_DISTANCE) {
+                        isDuplicate = true;
+                        duplicateReason = `WME (${dist.toFixed(1)}m zu Position ${i+1})`;
+                        duplicateDistance = dist;
+                        removedByWME++;
+                        console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                        break;
+                    } else {
+                        console.log(`${SCRIPT_NAME}: Position ${i+1} OK: ${dist.toFixed(1)}m > ${DUPLICATE_DISTANCE}m`);
+                    }
+                }
+
+                // WICHTIG: Dummy-Positionen NICHT als Duplikate behandeln wenn echte Koordinaten vorhanden sind
+                if (!isDuplicate && dummyPositions.length > 0 && realPositions.length === 0) {
+                    console.log(`${SCRIPT_NAME}: Nur Dummy-Positionen vorhanden - führe Segment-Prüfung durch`);
+
+                    // Nur bei Dummy-Positionen: Prüfe ob auf gleichem Segment
+                    try {
+                        const findResult = wmeManager.findNearestSegment(hn.lon, hn.lat, hn.street, true);
+                        const targetSegmentId = findResult?.segment?.attributes?.id;
+
+                        if (targetSegmentId) {
+                            console.log(`${SCRIPT_NAME}: Ziel-Segment für HN ${hn.number}: ${targetSegmentId}`);
+
+                            // Prüfe direkt in WME ob HN auf diesem Segment existiert
+                            const segHNObjects = W?.model?.segmentHouseNumbers?.objects || {};
+                            let foundOnSameSegment = false;
+
+                            for (const id in segHNObjects) {
+                                const existingHN = segHNObjects[id];
+                                const existingNumber = existingHN?.attributes?.number || existingHN?.number;
+                                const existingSegmentId = existingHN?.attributes?.segID || existingHN?.segID;
+
+                                if (String(existingNumber).trim().toLowerCase() === numberStr &&
+                                    String(existingSegmentId) === String(targetSegmentId)) {
+                                    foundOnSameSegment = true;
+                                    console.log(`${SCRIPT_NAME}: HN ${hn.number} existiert bereits auf Segment ${targetSegmentId}`);
+                                    break;
+                                }
+                            }
+
+                            if (foundOnSameSegment) {
+                                isDuplicate = true;
+                                duplicateReason = `WME (auf gleichem Segment ${targetSegmentId})`;
+                                removedByWME++;
+                                console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                            } else {
+                                console.log(`${SCRIPT_NAME}: HN ${hn.number} nicht auf Ziel-Segment ${targetSegmentId} gefunden - ERLAUBT`);
+                            }
+                        } else {
+                            console.log(`${SCRIPT_NAME}: Kein Ziel-Segment gefunden - Dummy-Position ignoriert`);
+                        }
+                    } catch (e) {
+                        console.log(`${SCRIPT_NAME}: Fehler bei Segment-Prüfung:`, e);
+                        // Bei Fehlern: NICHT als Duplikat behandeln
+                    }
+                } else if (!isDuplicate && dummyPositions.length > 0 && realPositions.length > 0) {
+                    console.log(`${SCRIPT_NAME}: Dummy-Positionen ignoriert - echte Koordinaten haben Vorrang`);
+                }
+
+                if (!isDuplicate) {
+                    console.log(`${SCRIPT_NAME}: ✓ PRÜFUNG 1 BESTANDEN: HN ${hn.number} - alle Distanzen > ${DUPLICATE_DISTANCE}m`);
+                }
+            } else {
+                console.log(`${SCRIPT_NAME}: HN ${hn.number} nicht in existierenden HN gefunden - PRÜFUNG 1 ÜBERSPRUNGEN`);
+            }
+
+            // PRÜFUNG 1.5: FALLBACK - Intelligente Segment-Aware Prüfung (NUR wenn Hauptprüfung keine Ergebnisse hatte)
+            if (!isDuplicate && fallbackHN.has(numberStr) && SMART_DETECTION && existingHN.size === 0) {
+                console.log(`${SCRIPT_NAME}: === PRÜFUNG 1.5: FALLBACK für HN ${hn.number} (nur weil Hauptprüfung leer war) ===`);
+                const existingSegmentInfos = Array.from(fallbackHN.get(numberStr)).map(s => JSON.parse(s));
+
+                // Versuche das Ziel-Segment für diese HN zu finden
+                let targetSegmentId = null;
+                let targetSegmentDistance = null;
+                try {
+                    const findResult = wmeManager.findNearestSegment(hn.lon, hn.lat, hn.street, true);
+                    targetSegmentId = findResult?.segment?.attributes?.id;
+                    targetSegmentDistance = findResult?.distance;
+                } catch (e) {
+                    console.log(`${SCRIPT_NAME}: Fehler beim Finden des Ziel-Segments für HN ${hn.number}:`, e);
+                }
+
+                console.log(`${SCRIPT_NAME}: HN ${hn.number} - Ziel-Segment: ${targetSegmentId}, existierende Segmente: ${existingSegmentInfos.length}`);
+
+                // Prüfe jedes existierende Segment - NUR echte Koordinaten berücksichtigen
+                let foundOnSameSegment = false;
+                let foundNearby = false;
+                let nearestDistance = Infinity;
+
+                for (let i = 0; i < existingSegmentInfos.length; i++) {
+                    const segInfo = existingSegmentInfos[i];
+                    console.log(`${SCRIPT_NAME}: Existierendes Segment ${i+1}: ${segInfo.segmentId}, hasCoords: ${segInfo.hasCoords}`);
+
+                    // NUR Segmente mit echten Koordinaten berücksichtigen
+                    if (!segInfo.hasCoords) {
+                        console.log(`${SCRIPT_NAME}: Segment ${segInfo.segmentId} hat keine Koordinaten - IGNORIERT`);
+                        continue;
+                    }
+
+                    if (targetSegmentId && segInfo.segmentId === String(targetSegmentId)) {
+                        // HN existiert bereits auf dem GLEICHEN Segment mit echten Koordinaten
+                        foundOnSameSegment = true;
+                        const dist = this.calculateDistance(hn.lat, hn.lon, segInfo.lat, segInfo.lon);
+                        console.log(`${SCRIPT_NAME}: HN ${hn.number} existiert bereits auf Ziel-Segment ${targetSegmentId}, Distanz: ${dist.toFixed(1)}m`);
+
+                        if (dist < SAME_SEGMENT_MIN_DISTANCE) {
+                            isDuplicate = true;
+                            duplicateReason = `Fallback (gleicher Segment ${targetSegmentId}, ${dist.toFixed(1)}m)`;
+                            removedByFallback++;
+                            console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                        } else if (ALLOW_SAME_SEGMENT) {
+                            console.log(`${SCRIPT_NAME}: HN ${hn.number} auf gleichem Segment, aber ausreichend entfernt (${dist.toFixed(1)}m) - ERLAUBT`);
+                        } else {
+                            isDuplicate = true;
+                            duplicateReason = `Fallback (gleicher Segment ${targetSegmentId}, nicht erlaubt)`;
+                            removedByFallback++;
+                            console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                        }
+                        break;
+                    }
+
+                    // Wenn wir Koordinaten haben, prüfe Distanz auch bei verschiedenen Segmenten
+                    const dist = this.calculateDistance(hn.lat, hn.lon, segInfo.lat, segInfo.lon);
+                    nearestDistance = Math.min(nearestDistance, dist);
+                    console.log(`${SCRIPT_NAME}: Distanz zu Segment ${segInfo.segmentId}: ${dist.toFixed(1)}m`);
+
+                    if (dist < DUPLICATE_DISTANCE) {
+                        foundNearby = true;
+                        console.log(`${SCRIPT_NAME}: HN ${hn.number} sehr nah (${dist.toFixed(1)}m) zu existierender HN auf Segment ${segInfo.segmentId}`);
+
+                        if (!ALLOW_DIFFERENT_SEGMENTS) {
+                            isDuplicate = true;
+                            duplicateReason = `Fallback (zu nah: ${dist.toFixed(1)}m, Segment ${segInfo.segmentId})`;
+                            removedByFallback++;
+                            console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                            break;
+                        } else {
+                            console.log(`${SCRIPT_NAME}: HN ${hn.number} nah zu existierender HN (${dist.toFixed(1)}m), aber verschiedene Segmente erlaubt - ERLAUBT`);
+                        }
+                    }
+                }
+
+                if (!isDuplicate && !foundOnSameSegment && !foundNearby) {
+                    console.log(`${SCRIPT_NAME}: HN ${hn.number} - keine problematischen Überschneidungen gefunden - ERLAUBT`);
+                }
+
+                if (!isDuplicate) {
+                    console.log(`${SCRIPT_NAME}: ✓ PRÜFUNG 1.5 BESTANDEN: HN ${hn.number}`);
+                }
+            } else if (fallbackHN.has(numberStr) && existingHN.size > 0) {
+                console.log(`${SCRIPT_NAME}: Fallback-Prüfung übersprungen - Hauptprüfung war bereits erfolgreich`);
+            }
+
+            // PRÜFUNG 2: Gegen GLOBALE Import-Map (bereits importierte HN)
             if (!isDuplicate) {
+                console.log(`${SCRIPT_NAME}: === PRÜFUNG 2: GLOBAL für HN ${hn.number} ===`);
+                let globalChecked = 0;
                 for (const [key, data] of globalImportedHN.entries()) {
                     if (!data || data.lon === undefined || data.lat === undefined) continue;
                     const existingNumber = String(data.number || '').toLowerCase();
                     if (existingNumber !== numberStr) continue;
 
-                    const dist = CoordUtils.distance(hn.lat, hn.lon, data.lat, data.lon);
+                    globalChecked++;
+                    const dist = this.calculateDistance(hn.lat, hn.lon, data.lat, data.lon);
+                    console.log(`${SCRIPT_NAME}: Global HN ${globalChecked}: ${dist.toFixed(1)}m`);
+
                     if (dist < DUPLICATE_DISTANCE) {
                         isDuplicate = true;
+                        duplicateReason = `Global (${dist.toFixed(1)}m zu Global-HN ${globalChecked})`;
+                        duplicateDistance = dist;
                         removedByGlobal++;
+                        console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
                         break;
                     }
                 }
+
+                if (!isDuplicate) {
+                    console.log(`${SCRIPT_NAME}: ✓ PRÜFUNG 2 BESTANDEN: HN ${hn.number} (${globalChecked} Global-HN geprüft)`);
+                }
             }
 
-            // PRÜFUNG 1: Gegen existierende HN in WME
+            // PRÜFUNG 3: Gegen bereits verarbeitete Quelldaten (innerhalb dieses Imports)
+            // WICHTIG: Prüfe auch auf gleiches Ziel-Segment!
             if (!isDuplicate) {
-                const existingPositions = existingHN.get(numberStr) || [];
-                for (const pos of existingPositions) {
-                    const dist = CoordUtils.distance(hn.lat, hn.lon, pos.lat, pos.lon);
-                    if (dist < DUPLICATE_DISTANCE) {
-                        isDuplicate = true;
-                        removedByWME++;
-                        break;
+                console.log(`${SCRIPT_NAME}: === PRÜFUNG 3: QUELLDATEN für HN ${hn.number} ===`);
+
+                // Finde das Ziel-Segment für diese HN
+                let targetSegmentId = null;
+                try {
+                    const findResult = wmeManager.findNearestSegment(hn.lon, hn.lat, hn.street, true);
+                    targetSegmentId = findResult?.segment?.attributes?.id;
+                } catch (e) {
+                    console.log(`${SCRIPT_NAME}: Fehler beim Finden des Ziel-Segments:`, e);
+                }
+
+                if (seen.has(numberStr)) {
+                    const seenPositions = seen.get(numberStr);
+                    console.log(`${SCRIPT_NAME}: Prüfe gegen ${seenPositions.length} bereits verarbeitete HN ${hn.number}`);
+
+                    for (let i = 0; i < seenPositions.length; i++) {
+                        const pos = seenPositions[i];
+                        const dist = this.calculateDistance(hn.lat, hn.lon, pos.lat, pos.lon);
+                        console.log(`${SCRIPT_NAME}: Quelldaten ${i+1}: ${dist.toFixed(1)}m, Segment: ${pos.segmentId}`);
+
+                        // KRITISCH: Prüfe ob gleiche HN auf gleichem Segment!
+                        if (targetSegmentId && pos.segmentId && String(targetSegmentId) === String(pos.segmentId)) {
+                            isDuplicate = true;
+                            duplicateReason = `Quelldaten GLEICHES SEGMENT (${dist.toFixed(1)}m, Segment ${targetSegmentId})`;
+                            duplicateDistance = dist;
+                            removedBySource++;
+                            console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                            break;
+                        }
+
+                        // Auch Distanz-basierte Prüfung
+                        if (dist < DUPLICATE_DISTANCE) {
+                            isDuplicate = true;
+                            duplicateReason = `Quelldaten (${dist.toFixed(1)}m zu Quelldaten-HN ${i+1})`;
+                            duplicateDistance = dist;
+                            removedBySource++;
+                            console.log(`${SCRIPT_NAME}: ✗ DUPLIKAT GEFUNDEN: HN ${hn.number} - ${duplicateReason}`);
+                            break;
+                        }
+                    }
+
+                    if (!isDuplicate) {
+                        console.log(`${SCRIPT_NAME}: ✓ PRÜFUNG 3 BESTANDEN: HN ${hn.number}`);
                     }
                 }
-            }
 
-            // PRÜFUNG 2: Gegen bereits verarbeitete Quelldaten (innerhalb dieses Imports)
-            if (!isDuplicate) {
-                const seenPositions = seen.get(numberStr) || [];
-                for (const pos of seenPositions) {
-                    const dist = CoordUtils.distance(hn.lat, hn.lon, pos.lat, pos.lon);
-                    if (dist < DUPLICATE_DISTANCE) {
-                        isDuplicate = true;
-                        removedBySource++;
-                        break;
+                // Speichere diese HN mit Segment-Info für zukünftige Prüfungen
+                if (!isDuplicate) {
+                    if (!seen.has(numberStr)) {
+                        seen.set(numberStr, []);
                     }
+                    seen.get(numberStr).push({
+                        lat: hn.lat,
+                        lon: hn.lon,
+                        segmentId: targetSegmentId
+                    });
                 }
             }
 
             if (!isDuplicate) {
-                // Zur seen-Liste hinzufügen
-                if (!seen.has(numberStr)) {
-                    seen.set(numberStr, []);
-                }
-                seen.get(numberStr).push({ lat: hn.lat, lon: hn.lon });
                 result.push(hn);
+                console.log(`${SCRIPT_NAME}: ✅ AKZEPTIERT: HN ${hn.number} bei ${hn.lat.toFixed(6)}, ${hn.lon.toFixed(6)} - ALLE PRÜFUNGEN BESTANDEN`);
+            } else {
+                // Debug-Info für alle Duplikate
+                console.log(`${SCRIPT_NAME}: ❌ ABGELEHNT: HN ${hn.number} bei ${hn.lat.toFixed(6)}, ${hn.lon.toFixed(6)} - ${duplicateReason}`);
             }
+
+            console.log(`${SCRIPT_NAME}: === ENDE PRÜFUNG HN ${hn.number} ===\n`);
         }
 
-        console.log(`${SCRIPT_NAME}: Deduplizierung: ${removedByGlobal} via Global, ${removedByWME} via WME, ${removedBySource} via Quelldaten`);
+        console.log(`${SCRIPT_NAME}: Deduplizierung: ${removedByWME} via WME, ${removedByGlobal} via Global, ${removedBySource} via Quelldaten, ${removedByFallback} via Fallback`);
+        console.log(`${SCRIPT_NAME}: ${result.length}/${houseNumbers.length} HN verbleiben nach Filterung`);
 
         return result;
     }
 
+    // Robuste Distanzberechnung zwischen zwei Koordinaten
+    calculateDistance(lat1, lon1, lat2, lon2) {
+        // Haversine-Formel für präzise Distanzberechnung
+        const R = 6371000; // Erdradius in Metern
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c; // Distanz in Metern
+    }
+
+    // Konvertiert Web Mercator (EPSG:3857) zu WGS84 (EPSG:4326)
+    convertWebMercatorToWGS84(x, y) {
+        try {
+            if (typeof x !== 'number' || typeof y !== 'number') {
+                return null;
+            }
+
+            // Web Mercator zu WGS84 Konvertierung
+            const lon = (x / 20037508.34) * 180;
+            let lat = (y / 20037508.34) * 180;
+            lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+
+            // Validierung der Koordinaten
+            if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+                console.log(`${SCRIPT_NAME}: Ungültige Koordinaten nach Konvertierung: ${lat}, ${lon}`);
+                return null;
+            }
+
+            return { lat: lat, lon: lon };
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler bei Koordinaten-Konvertierung:`, e);
+            return null;
+        }
+    }
+
+    // DEBUG: Manuelle Duplikatsprüfung für spezifische HN - VERBESSERTE VERSION
+    debugCheckDuplicate(number, lat, lon) {
+        console.log(`${SCRIPT_NAME}: === DEBUG DUPLIKAT-PRÜFUNG ===`);
+        console.log(`${SCRIPT_NAME}: Prüfe HN ${number} bei ${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+
+        const numberStr = String(number).trim().toLowerCase();
+        const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20;
+        const SEGMENT_AWARE_DISTANCE = 50;
+
+        console.log(`${SCRIPT_NAME}: Duplikat-Radius: ${DUPLICATE_DISTANCE}m, Segment-Aware: ${SEGMENT_AWARE_DISTANCE}m`);
+
+        // SCHRITT 1: Scanne existierende HN
+        console.log(`${SCRIPT_NAME}: === SCHRITT 1: EXISTIERENDE HN SCANNEN ===`);
+        const existingHN = this.scanVisibleHouseNumbers();
+
+        if (existingHN.has(numberStr)) {
+            const positions = existingHN.get(numberStr);
+            console.log(`${SCRIPT_NAME}: Gefunden ${positions.length} existierende HN ${number}:`);
+
+            for (let i = 0; i < positions.length; i++) {
+                const pos = positions[i];
+                if (pos.isDummy) {
+                    console.log(`${SCRIPT_NAME}: Position ${i+1}: Dummy-Position (ohne Koordinaten)`);
+                } else {
+                    const dist = this.calculateDistance(lat, lon, pos.lat, pos.lon);
+                    const isDuplicate = dist < DUPLICATE_DISTANCE;
+                    console.log(`${SCRIPT_NAME}: Position ${i+1}: ${pos.lat.toFixed(6)}, ${pos.lon.toFixed(6)} - Distanz: ${dist.toFixed(1)}m ${isDuplicate ? '(DUPLIKAT!)' : '(OK)'}`);
+                }
+            }
+        } else {
+            console.log(`${SCRIPT_NAME}: Keine existierende HN ${number} in scanVisibleHouseNumbers gefunden`);
+        }
+
+        // SCHRITT 2: Fallback-Prüfung mit Segment-Awareness
+        console.log(`${SCRIPT_NAME}: === SCHRITT 2: FALLBACK-PRÜFUNG ===`);
+        const segHNObjects = W?.model?.segmentHouseNumbers?.objects || {};
+        const hnObjects = W?.model?.houseNumbers?.objects || {};
+        const foundSegments = [];
+
+        // Sammle alle Segmente mit dieser HN
+        for (const id in segHNObjects) {
+            const hn = segHNObjects[id];
+            const hnNumber = hn?.attributes?.number || hn?.number;
+            const segmentId = hn?.attributes?.segID || hn?.segID;
+            const geometry = hn?.geometry || hn?.attributes?.geometry;
+
+            if (String(hnNumber).trim().toLowerCase() === numberStr) {
+                let coordInfo = { segmentId: segmentId, hasCoords: false, source: 'segmentHouseNumbers' };
+
+                if (geometry && geometry.coordinates) {
+                    const coords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                    if (coords && coords.lat && coords.lon) {
+                        coordInfo.hasCoords = true;
+                        coordInfo.lat = coords.lat;
+                        coordInfo.lon = coords.lon;
+
+                        const dist = this.calculateDistance(lat, lon, coords.lat, coords.lon);
+                        coordInfo.distance = dist;
+                        coordInfo.isDuplicate = dist < DUPLICATE_DISTANCE;
+                        coordInfo.isNearby = dist < SEGMENT_AWARE_DISTANCE;
+                    }
+                }
+
+                foundSegments.push(coordInfo);
+                console.log(`${SCRIPT_NAME}: Fallback: HN ${number} auf Segment ${segmentId} ${coordInfo.hasCoords ? `(${coordInfo.lat.toFixed(6)}, ${coordInfo.lon.toFixed(6)}, ${coordInfo.distance.toFixed(1)}m) ${coordInfo.isDuplicate ? 'DUPLIKAT!' : coordInfo.isNearby ? 'NAH' : 'OK'}` : '(ohne Koordinaten)'}`);
+            }
+        }
+
+        for (const id in hnObjects) {
+            const hn = hnObjects[id];
+            const hnNumber = hn?.attributes?.number || hn?.number;
+            const segmentId = hn?.attributes?.segID || hn?.segID;
+            const geometry = hn?.geometry || hn?.attributes?.geometry;
+
+            if (String(hnNumber).trim().toLowerCase() === numberStr) {
+                // Prüfe ob wir diese schon haben
+                const existing = foundSegments.find(s => s.segmentId === segmentId);
+                if (existing) continue;
+
+                let coordInfo = { segmentId: segmentId, hasCoords: false, source: 'houseNumbers' };
+
+                if (geometry && geometry.coordinates) {
+                    const coords = this.convertWebMercatorToWGS84(geometry.coordinates[0], geometry.coordinates[1]);
+                    if (coords && coords.lat && coords.lon) {
+                        coordInfo.hasCoords = true;
+                        coordInfo.lat = coords.lat;
+                        coordInfo.lon = coords.lon;
+
+                        const dist = this.calculateDistance(lat, lon, coords.lat, coords.lon);
+                        coordInfo.distance = dist;
+                        coordInfo.isDuplicate = dist < DUPLICATE_DISTANCE;
+                        coordInfo.isNearby = dist < SEGMENT_AWARE_DISTANCE;
+                    }
+                }
+
+                foundSegments.push(coordInfo);
+                console.log(`${SCRIPT_NAME}: Fallback: HN ${number} auf Segment ${segmentId} ${coordInfo.hasCoords ? `(${coordInfo.lat.toFixed(6)}, ${coordInfo.lon.toFixed(6)}, ${coordInfo.distance.toFixed(1)}m) ${coordInfo.isDuplicate ? 'DUPLIKAT!' : coordInfo.isNearby ? 'NAH' : 'OK'}` : '(ohne Koordinaten)'}`);
+            }
+        }
+
+        if (foundSegments.length === 0) {
+            console.log(`${SCRIPT_NAME}: Fallback: Keine HN ${number} gefunden - KEIN DUPLIKAT`);
+        } else {
+            console.log(`${SCRIPT_NAME}: Fallback: HN ${number} existiert auf ${foundSegments.length} Segmenten`);
+
+            // Analysiere Ziel-Segment
+            console.log(`${SCRIPT_NAME}: === ZIEL-SEGMENT ANALYSE ===`);
+            try {
+                const findResult = wmeManager.findNearestSegment(lon, lat, null, true);
+                const targetSegmentId = findResult?.segment?.attributes?.id;
+                const targetDistance = findResult?.distance;
+
+                if (targetSegmentId) {
+                    console.log(`${SCRIPT_NAME}: Ziel-Segment: ${targetSegmentId} (${targetDistance?.toFixed(1)}m entfernt)`);
+
+                    const onSameSegment = foundSegments.filter(s => s.segmentId === targetSegmentId);
+                    if (onSameSegment.length > 0) {
+                        console.log(`${SCRIPT_NAME}: ⚠️ HN ${number} existiert bereits auf Ziel-Segment ${targetSegmentId}!`);
+                        for (const seg of onSameSegment) {
+                            console.log(`${SCRIPT_NAME}: - ${seg.source}: ${seg.hasCoords ? `${seg.distance.toFixed(1)}m entfernt` : 'ohne Koordinaten'}`);
+                        }
+                    } else {
+                        console.log(`${SCRIPT_NAME}: ✓ HN ${number} existiert NICHT auf Ziel-Segment ${targetSegmentId}`);
+
+                        // Prüfe nahegelegene HN auf anderen Segmenten
+                        const nearby = foundSegments.filter(s => s.hasCoords && s.isNearby);
+                        if (nearby.length > 0) {
+                            console.log(`${SCRIPT_NAME}: ⚠️ Aber ${nearby.length} nahegelegene HN auf anderen Segmenten:`);
+                            for (const seg of nearby) {
+                                console.log(`${SCRIPT_NAME}: - Segment ${seg.segmentId}: ${seg.distance.toFixed(1)}m ${seg.isDuplicate ? '(ZU NAH!)' : '(OK)'}`);
+                            }
+                        }
+                    }
+                } else {
+                    console.log(`${SCRIPT_NAME}: ⚠️ Kein Ziel-Segment gefunden`);
+                }
+            } catch (e) {
+                console.log(`${SCRIPT_NAME}: Fehler bei Ziel-Segment Analyse:`, e);
+            }
+        }
+
+        // SCHRITT 3: Global Import Map prüfen
+        console.log(`${SCRIPT_NAME}: === SCHRITT 3: GLOBAL IMPORT MAP ===`);
+        let globalCount = 0;
+        for (const [key, data] of globalImportedHN.entries()) {
+            if (!data || data.lon === undefined || data.lat === undefined) continue;
+            const existingNumber = String(data.number || '').toLowerCase();
+            if (existingNumber === numberStr) {
+                const dist = this.calculateDistance(lat, lon, data.lat, data.lon);
+                const isDuplicate = dist < DUPLICATE_DISTANCE;
+                console.log(`${SCRIPT_NAME}: Global HN ${number}: ${data.lat.toFixed(6)}, ${data.lon.toFixed(6)} - Distanz: ${dist.toFixed(1)}m ${isDuplicate ? '(DUPLIKAT!)' : '(OK)'}`);
+                globalCount++;
+            }
+        }
+
+        if (globalCount === 0) {
+            console.log(`${SCRIPT_NAME}: Keine globale HN ${number} gefunden`);
+        }
+
+        // SCHRITT 4: Zusammenfassung
+        console.log(`${SCRIPT_NAME}: === ZUSAMMENFASSUNG ===`);
+        const duplicateReasons = [];
+
+        // Prüfe alle Kriterien
+        if (existingHN.has(numberStr)) {
+            const positions = existingHN.get(numberStr);
+            const realPositions = positions.filter(p => !p.isDummy);
+            const duplicatePositions = realPositions.filter(p => this.calculateDistance(lat, lon, p.lat, p.lon) < DUPLICATE_DISTANCE);
+
+            if (duplicatePositions.length > 0) {
+                duplicateReasons.push(`Existierende HN: ${duplicatePositions.length} zu nah`);
+            } else if (positions.some(p => p.isDummy) && realPositions.length === 0) {
+                duplicateReasons.push(`Existierende HN: nur Dummy-Positionen`);
+            }
+        }
+
+        const duplicateSegments = foundSegments.filter(s => s.hasCoords && s.isDuplicate);
+        if (duplicateSegments.length > 0) {
+            duplicateReasons.push(`Fallback: ${duplicateSegments.length} zu nah`);
+        }
+
+        const globalDuplicates = Array.from(globalImportedHN.values()).filter(data => {
+            if (!data || data.lon === undefined || data.lat === undefined) return false;
+            const existingNumber = String(data.number || '').toLowerCase();
+            if (existingNumber !== numberStr) return false;
+            return this.calculateDistance(lat, lon, data.lat, data.lon) < DUPLICATE_DISTANCE;
+        });
+
+        if (globalDuplicates.length > 0) {
+            duplicateReasons.push(`Global: ${globalDuplicates.length} zu nah`);
+        }
+
+        if (duplicateReasons.length > 0) {
+            console.log(`${SCRIPT_NAME}: ❌ DUPLIKAT ERKANNT: ${duplicateReasons.join(', ')}`);
+        } else {
+            console.log(`${SCRIPT_NAME}: ✅ KEIN DUPLIKAT - Import möglich`);
+        }
+
+        console.log(`${SCRIPT_NAME}: === DEBUG ENDE ===`);
+    }
+
+    // DEBUG: Analysiere die letzte Speicher-Fehler
+    debugLastSaveError() {
+        console.log(`${SCRIPT_NAME}: === LETZTE SPEICHER-FEHLER ANALYSE ===`);
+
+        if (SaveErrorHandler.lastSaveErrors.length === 0) {
+            console.log(`${SCRIPT_NAME}: Keine Speicher-Fehler vorhanden`);
+            return;
+        }
+
+        for (const error of SaveErrorHandler.lastSaveErrors) {
+            console.log(`${SCRIPT_NAME}: Fehler-Typ: ${error.type}`);
+            console.log(`${SCRIPT_NAME}: Original-Nachricht: ${error.originalMessage}`);
+            console.log(`${SCRIPT_NAME}: Details:`, error.details);
+
+            if (error.details?.houseNumber) {
+                console.log(`${SCRIPT_NAME}: Problematische HN: ${error.details.houseNumber}`);
+                // Automatische Debug-Prüfung für diese HN
+                // (Koordinaten müssten manuell eingegeben werden)
+            }
+        }
+
+        console.log(`${SCRIPT_NAME}: Für detaillierte Analyse verwende:`);
+        console.log(`${SCRIPT_NAME}: importController.debugCheckDuplicate('NUMMER', lat, lon)`);
+    }
+
+    // DEBUG: Analysiere alle pending HN auf potentielle Duplikate
+    debugAnalyzePendingHN() {
+        console.log(`${SCRIPT_NAME}: === PENDING HN DUPLIKAT-ANALYSE ===`);
+
+        if (pendingHouseNumbers.size === 0) {
+            console.log(`${SCRIPT_NAME}: Keine pending HN vorhanden`);
+            return;
+        }
+
+        console.log(`${SCRIPT_NAME}: Analysiere ${pendingHouseNumbers.size} pending HN...`);
+
+        const pendingList = Array.from(pendingHouseNumbers.values());
+        const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20;
+        let suspiciousCount = 0;
+
+        // Scanne existierende HN einmal
+        const existingHN = this.scanVisibleHouseNumbers();
+        console.log(`${SCRIPT_NAME}: ${existingHN.size} verschiedene HN-Nummern in WME gefunden`);
+
+        for (const hn of pendingList) {
+            const numberStr = String(hn.number).trim().toLowerCase();
+            let isSuspicious = false;
+            let suspiciousReasons = [];
+
+            // Prüfe gegen existierende HN
+            if (existingHN.has(numberStr)) {
+                const positions = existingHN.get(numberStr);
+                const realPositions = positions.filter(p => !p.isDummy);
+
+                for (const pos of realPositions) {
+                    const dist = this.calculateDistance(hn.lat, hn.lon, pos.lat, pos.lon);
+                    if (dist < DUPLICATE_DISTANCE) {
+                        isSuspicious = true;
+                        suspiciousReasons.push(`Existierende HN: ${dist.toFixed(1)}m`);
+                        break;
+                    }
+                }
+
+                if (!isSuspicious && positions.some(p => p.isDummy) && realPositions.length === 0) {
+                    isSuspicious = true;
+                    suspiciousReasons.push(`Existierende HN: nur Dummy-Positionen`);
+                }
+            }
+
+            // Prüfe gegen andere pending HN
+            for (const otherHN of pendingList) {
+                if (otherHN === hn) continue;
+                if (String(otherHN.number).trim().toLowerCase() !== numberStr) continue;
+
+                const dist = this.calculateDistance(hn.lat, hn.lon, otherHN.lat, otherHN.lon);
+                if (dist < DUPLICATE_DISTANCE) {
+                    isSuspicious = true;
+                    suspiciousReasons.push(`Andere pending HN: ${dist.toFixed(1)}m`);
+                    break;
+                }
+            }
+
+            if (isSuspicious) {
+                suspiciousCount++;
+                console.log(`${SCRIPT_NAME}: ⚠️ VERDÄCHTIG: HN ${hn.number} bei ${hn.lat.toFixed(6)}, ${hn.lon.toFixed(6)} - ${suspiciousReasons.join(', ')}`);
+            }
+        }
+
+        console.log(`${SCRIPT_NAME}: ${suspiciousCount}/${pendingList.length} pending HN sind verdächtig`);
+
+        if (suspiciousCount > 0) {
+            console.log(`${SCRIPT_NAME}: Für detaillierte Analyse einer spezifischen HN verwende:`);
+            console.log(`${SCRIPT_NAME}: importController.debugCheckDuplicate('NUMMER', lat, lon)`);
+        }
+
+        console.log(`${SCRIPT_NAME}: === ANALYSE ENDE ===`);
+    }
+
+    // DEBUG: Analysiere spezifische Koordinaten auf Duplikate
+    debugCheckCoordinates(lat, lon) {
+        console.log(`${SCRIPT_NAME}: === KOORDINATEN-ANALYSE ===`);
+        console.log(`${SCRIPT_NAME}: Analysiere Position ${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+
+        const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20;
+
+        // Finde alle HN in der Nähe
+        const nearbyHN = [];
+
+        // Aus existierenden HN
+        const existingHN = this.scanVisibleHouseNumbers();
+        for (const [number, positions] of existingHN.entries()) {
+            for (const pos of positions) {
+                if (pos.isDummy) continue;
+                const dist = this.calculateDistance(lat, lon, pos.lat, pos.lon);
+                if (dist < 100) { // 100m Radius für Analyse
+                    nearbyHN.push({
+                        number: number,
+                        lat: pos.lat,
+                        lon: pos.lon,
+                        distance: dist,
+                        isDuplicate: dist < DUPLICATE_DISTANCE,
+                        source: 'existing'
+                    });
+                }
+            }
+        }
+
+        // Aus pending HN
+        for (const hn of pendingHouseNumbers.values()) {
+            const dist = this.calculateDistance(lat, lon, hn.lat, hn.lon);
+            if (dist < 100 && dist > 0) { // Nicht die gleiche Position
+                nearbyHN.push({
+                    number: hn.number,
+                    lat: hn.lat,
+                    lon: hn.lon,
+                    distance: dist,
+                    isDuplicate: dist < DUPLICATE_DISTANCE,
+                    source: 'pending'
+                });
+            }
+        }
+
+        // Aus global importierten HN
+        for (const data of globalImportedHN.values()) {
+            if (!data || data.lon === undefined || data.lat === undefined) continue;
+            const dist = this.calculateDistance(lat, lon, data.lat, data.lon);
+            if (dist < 100 && dist > 0) {
+                nearbyHN.push({
+                    number: data.number,
+                    lat: data.lat,
+                    lon: data.lon,
+                    distance: dist,
+                    isDuplicate: dist < DUPLICATE_DISTANCE,
+                    source: 'global'
+                });
+            }
+        }
+
+        // Sortiere nach Distanz
+        nearbyHN.sort((a, b) => a.distance - b.distance);
+
+        console.log(`${SCRIPT_NAME}: ${nearbyHN.length} HN in 100m Umkreis gefunden:`);
+
+        for (const hn of nearbyHN) {
+            const status = hn.isDuplicate ? 'DUPLIKAT!' : 'OK';
+            console.log(`${SCRIPT_NAME}: HN ${hn.number} (${hn.source}): ${hn.distance.toFixed(1)}m - ${status}`);
+        }
+
+        const duplicates = nearbyHN.filter(hn => hn.isDuplicate);
+        if (duplicates.length > 0) {
+            console.log(`${SCRIPT_NAME}: ❌ ${duplicates.length} Duplikate gefunden - Import würde fehlschlagen`);
+        } else {
+            console.log(`${SCRIPT_NAME}: ✅ Keine Duplikate - Import sollte möglich sein`);
+        }
+
+        console.log(`${SCRIPT_NAME}: === KOORDINATEN-ANALYSE ENDE ===`);
+        return nearbyHN;
+    }
+
     async processHouseNumber(houseNumber) {
         try {
+            // SCHRITT 1: Prüfe ob HN blockiert ist
+            const segmentId = houseNumber.segmentId || 'unknown';
+            if (BlockedHouseNumbers.isBlocked(houseNumber.number, segmentId)) {
+                importStats.skipped++;
+                console.log(`${SCRIPT_NAME}: HN ${houseNumber.number} übersprungen (blockiert)`);
+                return;
+            }
+
             // Nächstes Segment finden MIT Details
             const findResult = wmeManager.findNearestSegment(
                 houseNumber.lon,
@@ -4405,8 +6354,8 @@ class ImportController {
             `;
             pauseDiv.innerHTML = `
                 <div style="font-size: 24px; margin-bottom: 10px;">⏸️</div>
-                <div style="font-weight: bold; margin-bottom: 10px;">AUTO-PAUSE</div>
-                <div style="margin-bottom: 15px;">${importedCount} HN importiert.<br><b>Bitte jetzt SPEICHERN!</b><br>(Strg+S)</div>
+                <div style="font-weight: bold; margin-bottom: 10px;">AUTO-PAUSE + VERIFIZIERUNG</div>
+                <div style="margin-bottom: 15px;">${importedCount} HN importiert.<br>🔍 <b>Duplikat-Prüfung läuft...</b><br>Dann bitte <b>SPEICHERN!</b> (Strg+S)</div>
                 <button id="hn-pause-continue" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px; font-weight: bold;">▶️ Fortfahren</button>
                 <button id="hn-pause-stop" style="background: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">⏹️ Stopp</button>
             `;
@@ -4506,6 +6455,14 @@ function onImportComplete() {
     log(`Import abgeschlossen: ${importStats.successful} erfolgreich, ${importStats.skipped} übersprungen, ${importStats.failed} Fehler`,
         importStats.failed > 0 ? 'warning' : 'success');
 
+    // AUTOMATISCHE SEGMENT-PRÜFUNG nach Import
+    if (importStats.successful > 0) {
+        log('🔍 Starte automatische Duplikat-Prüfung aller betroffenen Segmente...', 'info');
+        setTimeout(() => {
+            performPostImportDuplicateCheck();
+        }, 2000); // 2 Sekunden warten damit WME die neuen HN verarbeitet hat
+    }
+
     // Missing Streets Zusammenfassung
     if (importReport.missingStreets.size > 0) {
         log(`📍 ${importReport.missingStreets.size} Straßen ohne Segment gefunden`, 'warning');
@@ -4554,6 +6511,397 @@ function onImportComplete() {
 }
 
 // ============================================================================
+// AUTO-PAUSE DUPLIKAT-PRÜFUNG - Schnelle Verifizierung während Auto-Pause
+// ============================================================================
+async function performAutoPauseDuplicateCheck() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            log('🔍 Starte Duplikat-Verifizierung...', 'info');
+
+            // Warte kurz damit WME die HN verarbeitet hat
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const duplicatesFound = [];
+            let segmentsChecked = 0;
+            let totalHNChecked = 0;
+
+            // ================================================================
+            // SCHRITT 1: Sammle alle Segment-IDs aus pendingHouseNumbers
+            // ================================================================
+            const affectedSegmentIds = new Set();
+            const pendingBySegment = new Map(); // segmentId -> [{number, key, data}]
+
+            log(`🔍 Analysiere ${pendingHouseNumbers.size} pending HN...`, 'info');
+
+            for (const [key, data] of pendingHouseNumbers.entries()) {
+                if (!data.segmentId) continue;
+
+                const segId = String(data.segmentId);
+                affectedSegmentIds.add(segId);
+
+                if (!pendingBySegment.has(segId)) {
+                    pendingBySegment.set(segId, []);
+                }
+                pendingBySegment.get(segId).push({
+                    number: String(data.number).trim().toLowerCase(),
+                    key: key,
+                    data: data
+                });
+                totalHNChecked++;
+            }
+
+            log(`🔍 ${affectedSegmentIds.size} Segmente mit pending HN gefunden`, 'info');
+
+            // ================================================================
+            // SCHRITT 2: Prüfe PENDING HN auf Duplikate (gleiche Nummer, gleiches Segment)
+            // ================================================================
+            for (const [segId, pendingList] of pendingBySegment.entries()) {
+                if (pendingList.length < 2) continue; // Keine Duplikate möglich
+
+                segmentsChecked++;
+
+                // Gruppiere pending HN nach Nummer
+                const numberGroups = new Map();
+                for (const item of pendingList) {
+                    if (!numberGroups.has(item.number)) {
+                        numberGroups.set(item.number, []);
+                    }
+                    numberGroups.get(item.number).push(item);
+                }
+
+                // Finde Duplikate in pending HN
+                for (const [number, items] of numberGroups.entries()) {
+                    if (items.length > 1) {
+                        // DUPLIKAT GEFUNDEN in pending HN!
+                        const streetName = items[0].data.street || `Segment ${segId}`;
+                        duplicatesFound.push({
+                            number: number,
+                            street: streetName,
+                            segmentId: segId,
+                            count: items.length,
+                            source: 'pending',
+                            keys: items.map(i => i.key)
+                        });
+                        log(`⚠️ PENDING DUPLIKAT: HN ${number} auf ${streetName} (${items.length}x im Import)`, 'warning');
+                    }
+                }
+            }
+
+            // ================================================================
+            // SCHRITT 3: Prüfe gegen EXISTIERENDE HN auf den Segmenten
+            // ================================================================
+            for (const segId of affectedSegmentIds) {
+                try {
+                    const segment = W?.model?.segments?.getObjectById?.(segId) ||
+                                   W?.model?.segments?.objects?.[segId];
+
+                    if (!segment?.attributes) continue;
+
+                    const existingHN = segment.attributes.houseNumbers || [];
+                    if (existingHN.length === 0) continue;
+
+                    // Sammle existierende HN-Nummern
+                    const existingNumbers = new Map(); // number -> count
+                    for (const hn of existingHN) {
+                        const num = String(hn?.number || hn?.attributes?.number || '').trim().toLowerCase();
+                        if (!num) continue;
+                        existingNumbers.set(num, (existingNumbers.get(num) || 0) + 1);
+                    }
+
+                    // Prüfe pending HN gegen existierende
+                    const pendingList = pendingBySegment.get(segId) || [];
+                    for (const item of pendingList) {
+                        if (existingNumbers.has(item.number)) {
+                            // DUPLIKAT: Pending HN existiert bereits auf diesem Segment!
+                            const streetName = segment.attributes?.primaryStreetName ||
+                                             segment.attributes?.name ||
+                                             item.data.street ||
+                                             `Segment ${segId}`;
+
+                            duplicatesFound.push({
+                                number: item.number,
+                                street: streetName,
+                                segmentId: segId,
+                                count: existingNumbers.get(item.number) + 1,
+                                source: 'existing',
+                                keys: [item.key]
+                            });
+                            log(`⚠️ EXISTIERENDES DUPLIKAT: HN ${item.number} auf ${streetName} existiert bereits!`, 'warning');
+                        }
+                    }
+
+                    // Prüfe auch existierende HN untereinander auf Duplikate
+                    for (const [num, count] of existingNumbers.entries()) {
+                        if (count > 1) {
+                            const streetName = segment.attributes?.primaryStreetName ||
+                                             segment.attributes?.name ||
+                                             `Segment ${segId}`;
+
+                            duplicatesFound.push({
+                                number: num,
+                                street: streetName,
+                                segmentId: segId,
+                                count: count,
+                                source: 'segment'
+                            });
+                        }
+                    }
+
+                } catch (e) {
+                    console.error(`${SCRIPT_NAME}: Fehler bei Segment ${segId}:`, e);
+                }
+            }
+
+            log(`🔍 Verifizierung: ${segmentsChecked} Segmente, ${totalHNChecked} pending HN geprüft`, 'info');
+
+            // ================================================================
+            // SCHRITT 4: Prüfe ActionManager auf AddHouseNumber Actions
+            // ================================================================
+            try {
+                if (W?.model?.actionManager) {
+                    const actions = W.model.actionManager.getActions?.() ||
+                                   W.model.actionManager._actions ||
+                                   W.model.actionManager.actions || [];
+
+                    const hnActionsBySegment = new Map(); // segmentId -> [{number, action}]
+
+                    for (const action of actions) {
+                        // Prüfe ob es eine AddHouseNumber Action ist
+                        const actionType = action?.constructor?.name || action?.type || '';
+                        if (actionType.includes('HouseNumber') || actionType.includes('AddHN')) {
+                            const segId = String(action?.segmentId || action?.segment?.attributes?.id || action?._segmentId || '');
+                            const number = String(action?.number || action?.houseNumber || action?._number || '').trim().toLowerCase();
+
+                            if (segId && number) {
+                                if (!hnActionsBySegment.has(segId)) {
+                                    hnActionsBySegment.set(segId, []);
+                                }
+                                hnActionsBySegment.get(segId).push({ number, action });
+                            }
+                        }
+                    }
+
+                    // Prüfe auf Duplikate in Actions
+                    for (const [segId, actionList] of hnActionsBySegment.entries()) {
+                        if (actionList.length < 2) continue;
+
+                        const numberGroups = new Map();
+                        for (const item of actionList) {
+                            if (!numberGroups.has(item.number)) {
+                                numberGroups.set(item.number, []);
+                            }
+                            numberGroups.get(item.number).push(item);
+                        }
+
+                        for (const [number, items] of numberGroups.entries()) {
+                            if (items.length > 1) {
+                                // Prüfe ob dieses Duplikat bereits gefunden wurde
+                                const alreadyFound = duplicatesFound.some(d =>
+                                    d.segmentId === segId && d.number === number
+                                );
+
+                                if (!alreadyFound) {
+                                    duplicatesFound.push({
+                                        number: number,
+                                        street: `Segment ${segId}`,
+                                        segmentId: segId,
+                                        count: items.length,
+                                        source: 'actionManager'
+                                    });
+                                    log(`⚠️ ACTION DUPLIKAT: HN ${number} auf Segment ${segId} (${items.length}x in Actions)`, 'warning');
+                                }
+                            }
+                        }
+                    }
+
+                    if (hnActionsBySegment.size > 0) {
+                        log(`🔍 ActionManager: ${actions.length} Actions, ${hnActionsBySegment.size} Segmente mit HN-Actions`, 'info');
+                    }
+                }
+            } catch (e) {
+                console.error(`${SCRIPT_NAME}: Fehler bei ActionManager-Prüfung:`, e);
+            }
+
+            if (duplicatesFound.length > 0) {
+                log(`⚠️ ${duplicatesFound.length} Duplikate gefunden!`, 'warning');
+
+                // Zeige alle gefundenen Duplikate
+                for (const dup of duplicatesFound) {
+                    log(`  🔄 HN ${dup.number} auf ${dup.street} (${dup.count}x, ${dup.source})`, 'warning');
+                }
+
+                log('💡 WICHTIG: Korrigiere diese VOR dem Speichern!', 'warning');
+                log('💡 Nutze "Duplikate entfernen" oder lösche manuell', 'warning');
+
+                // Aktiviere visuelle Transparenz automatisch
+                const visualCheckbox = document.getElementById('hn-visual-duplicates');
+                if (visualCheckbox && !visualCheckbox.checked) {
+                    visualCheckbox.checked = true;
+                    VisualDuplicateDetector.activate();
+                    log('👁️ Visuelle Transparenz aktiviert', 'info');
+                }
+
+            } else {
+                log(`✅ Keine Duplikate gefunden - Speichern sollte sicher sein`, 'success');
+            }
+
+            resolve(duplicatesFound);
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler bei Auto-Pause-Prüfung:`, e);
+            log('❌ Fehler bei Duplikat-Prüfung', 'error');
+            reject(e);
+        }
+    });
+}
+
+// ============================================================================
+// POST-IMPORT DUPLIKAT-PRÜFUNG - Vollständige Analyse nach Import-Abschluss
+// ============================================================================
+async function performPostImportDuplicateCheck() {
+    try {
+        log('🔍 Analysiere alle Segmente auf Duplikate...', 'info');
+
+        const duplicatesFound = [];
+        const segmentsChecked = new Set();
+        let totalHNChecked = 0;
+
+        // METHODE 1: Sammle alle betroffenen Segmente aus verschiedenen Quellen
+        const affectedSegments = new Set();
+
+        // Aus globalImportedHN die Segment-IDs sammeln
+        for (const [key, data] of globalImportedHN.entries()) {
+            if (data.segmentId) {
+                affectedSegments.add(data.segmentId);
+            }
+        }
+
+        // Aus pendingHouseNumbers die Segment-IDs sammeln
+        for (const [key, data] of pendingHouseNumbers.entries()) {
+            if (data.segmentId) {
+                affectedSegments.add(data.segmentId);
+            }
+        }
+
+        console.log(`${SCRIPT_NAME}: Gesammelte Segment-IDs:`, [...affectedSegments]);
+
+        // METHODE 2: Wenn keine Segmente gefunden, scanne alle sichtbaren Segmente
+        if (affectedSegments.size === 0) {
+            log('🔍 Keine betroffenen Segmente gefunden, scanne alle sichtbaren Segmente...', 'info');
+
+            try {
+                if (W?.model?.segments?.objects) {
+                    const allSegments = W.model.segments.objects;
+                    for (const segId in allSegments) {
+                        const segment = allSegments[segId];
+                        const houseNumbers = segment?.attributes?.houseNumbers || [];
+
+                        // Nur Segmente mit HN prüfen
+                        if (houseNumbers.length > 0) {
+                            affectedSegments.add(segId);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error(`${SCRIPT_NAME}: Fehler beim Sammeln aller Segmente:`, e);
+            }
+        }
+
+        log(`🔍 Prüfe ${affectedSegments.size} Segmente auf Duplikate...`, 'info');
+
+        if (affectedSegments.size === 0) {
+            log('⚠️ Keine Segmente zum Prüfen gefunden', 'warning');
+            return;
+        }
+
+        // METHODE 3: Prüfe jedes Segment auf Duplikate
+        for (const segmentId of affectedSegments) {
+            try {
+                const segment = W?.model?.segments?.getObjectById?.(segmentId) ||
+                               W?.model?.segments?.objects?.[segmentId];
+
+                if (!segment) {
+                    console.log(`${SCRIPT_NAME}: Segment ${segmentId} nicht gefunden`);
+                    continue;
+                }
+
+                segmentsChecked.add(segmentId);
+                const houseNumbers = segment.attributes?.houseNumbers || [];
+
+                console.log(`${SCRIPT_NAME}: Segment ${segmentId}: ${houseNumbers.length} Hausnummern`);
+
+                if (houseNumbers.length < 2) continue; // Keine Duplikate möglich
+
+                // Gruppiere HN nach Nummer
+                const hnGroups = new Map();
+
+                for (const hn of houseNumbers) {
+                    const number = hn?.number || hn?.attributes?.number;
+                    if (!number) continue;
+
+                    const numStr = String(number).trim().toLowerCase();
+                    if (!hnGroups.has(numStr)) {
+                        hnGroups.set(numStr, []);
+                    }
+                    hnGroups.get(numStr).push(hn);
+                    totalHNChecked++;
+                }
+
+                // Prüfe auf Duplikate
+                for (const [number, hnList] of hnGroups.entries()) {
+                    if (hnList.length > 1) {
+                        // Duplikat gefunden!
+                        const streetName = segment.attributes?.primaryStreetName ||
+                                         segment.attributes?.name ||
+                                         'Unbekannte Straße';
+
+                        duplicatesFound.push({
+                            number: number,
+                            street: streetName,
+                            segmentId: segmentId,
+                            count: hnList.length,
+                            houseNumbers: hnList
+                        });
+
+                        console.log(`${SCRIPT_NAME}: DUPLIKAT gefunden: HN ${number} auf ${streetName} (${hnList.length}x)`);
+                    }
+                }
+
+            } catch (e) {
+                console.error(`${SCRIPT_NAME}: Fehler bei Segment ${segmentId}:`, e);
+            }
+        }
+
+        // Ergebnis-Zusammenfassung
+        log(`🔍 Segment-Prüfung abgeschlossen: ${segmentsChecked.size} Segmente, ${totalHNChecked} Hausnummern geprüft`, 'info');
+
+        if (duplicatesFound.length > 0) {
+            log(`⚠️ ${duplicatesFound.length} Duplikate gefunden - WME wird diese beim Speichern melden`, 'warning');
+
+            // Zeige alle gefundenen Duplikate
+            for (const dup of duplicatesFound) {
+                log(`  🔄 HN ${dup.number} auf ${dup.street} (${dup.count}x)`, 'warning');
+            }
+
+            // Aktiviere visuelle Transparenz um Duplikate zu zeigen
+            const visualCheckbox = document.getElementById('hn-visual-duplicates');
+            if (visualCheckbox && !visualCheckbox.checked) {
+                visualCheckbox.checked = true;
+                VisualDuplicateDetector.activate();
+                log('👁️ Visuelle Transparenz automatisch aktiviert', 'info');
+            }
+
+        } else {
+            log('✅ Keine Duplikate gefunden - Import sauber!', 'success');
+        }
+
+    } catch (e) {
+        console.error(`${SCRIPT_NAME}: Fehler bei Post-Import-Prüfung:`, e);
+        log('❌ Fehler bei automatischer Duplikat-Prüfung', 'error');
+    }
+}
+
+// ============================================================================
 // BENUTZEROBERFLÄCHE - Gemäß WME API
 // ============================================================================
 function createUI(tabPane) {
@@ -4563,6 +6911,8 @@ function createUI(tabPane) {
                 #hn-import-container h4 { margin: 12px 0 6px; color: #333; border-bottom: 1px solid #2196F3; padding-bottom: 4px; font-size: 13px; }
                 #hn-import-container .form-group { margin-bottom: 10px; }
                 #hn-import-container label { display: block; margin-bottom: 3px; font-weight: bold; }
+                #hn-import-container .checkbox-label { display: flex; align-items: center; gap: 5px; font-weight: normal; }
+                #hn-import-container .checkbox-label input[type="checkbox"] { width: auto; margin: 0; }
                 #hn-import-container input, #hn-import-container select, #hn-import-container textarea {
                     width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; box-sizing: border-box;
                 }
@@ -4654,15 +7004,38 @@ function createUI(tabPane) {
 
             <h4>⚙️ Optionen</h4>
             <div class="form-group">
-                <label><input type="checkbox" id="hn-check-duplicates" checked> Duplikate prüfen</label>
+                <div class="checkbox-label">
+                    <input type="checkbox" id="hn-check-duplicates" checked>
+                    <span>Duplikate prüfen</span>
+                </div>
             </div>
             <div class="form-group">
-                <label><input type="checkbox" id="hn-auto-scan" checked> 🔄 Auto-Scan (Zoom 19 vor Import)</label>
-                <div style="font-size:9px;color:#666;margin-left:18px;">Scrollt automatisch durch den Bereich um existierende HN zu laden</div>
+                <div class="checkbox-label">
+                    <input type="checkbox" id="hn-visual-duplicates">
+                    <span>�️ Visuelle Duplikatserkennung</span>
+                </div>
+                <div style="font-size:9px;color:#666;margin-left:23px;">Alle HN werden transparent (80%) mit rotem Hintergrund für beste Erkennung</div>
             </div>
             <div class="form-group">
-                <label><input type="checkbox" id="hn-auto-pause" checked> ⏸️ Auto-Pause zum Speichern</label>
-                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;margin-left:18px;">
+                <div class="checkbox-label">
+                    <input type="checkbox" id="hn-auto-scan" checked>
+                    <span>🔄 Auto-Scan (Zoom 19 vor Import)</span>
+                </div>
+                <div style="font-size:9px;color:#666;margin-left:23px;">Scrollt automatisch durch den Bereich um existierende HN zu laden</div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox-label">
+                    <input type="checkbox" id="hn-manual-pause" checked>
+                    <span>⏸️ Manuelle Pause-Funktion</span>
+                </div>
+                <div style="font-size:9px;color:#666;margin-left:23px;">Ermöglicht Pausieren während Import für Korrekturen</div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox-label">
+                    <input type="checkbox" id="hn-auto-pause" checked>
+                    <span>⏸️ Auto-Pause + Verifizierung</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;margin-left:23px;">
                     <span style="font-size:10px;">Nach</span>
                     <input type="range" id="hn-auto-pause-count" min="50" max="500" step="10" value="50" style="flex:1;">
                     <span id="auto-pause-count-val" style="font-size:10px;min-width:35px;">50</span>
@@ -4672,8 +7045,11 @@ function createUI(tabPane) {
 
             <h4>⚡ Geschwindigkeit</h4>
             <div class="form-group">
-                <label><input type="checkbox" id="hn-parallel-import" checked> 🚀 Parallele Verarbeitung</label>
-                <div style="font-size:9px;color:#666;margin-left:18px;">Mehrere HN gleichzeitig importieren (schneller)</div>
+                <div class="checkbox-label">
+                    <input type="checkbox" id="hn-parallel-import" checked>
+                    <span>🚀 Parallele Verarbeitung</span>
+                </div>
+                <div style="font-size:9px;color:#666;margin-left:23px;">Mehrere HN gleichzeitig importieren (schneller)</div>
             </div>
             <div class="form-group">
                 <label>Geschwindigkeits-Profil:</label>
@@ -4708,6 +7084,20 @@ function createUI(tabPane) {
                 </div>
             </div>
 
+            <h4>� Blockie/rte Hausnummern (<span id="blocked-hn-count">0</span>)</h4>
+            <div class="form-group">
+                <div id="blocked-hn-list" style="background:#f9f9f9;border:1px solid #ddd;border-radius:3px;min-height:60px;">
+                    <div style="color:#666;font-style:italic;padding:10px;">Keine blockierten Hausnummern</div>
+                </div>
+                <div style="margin-top:5px;display:flex;gap:5px;">
+                    <button id="btn-clear-blocked" class="btn btn-danger" style="font-size:10px;">🗑️ Alle löschen</button>
+                    <button id="btn-restore-blocked" class="btn btn-success" style="font-size:10px;">↩️ Wiederherstellen</button>
+                </div>
+                <div style="font-size:9px;color:#666;margin-top:3px;">
+                    💡 Blockierte HN werden beim Import übersprungen. "Wiederherstellen" macht alle Blockierungen rückgängig.
+                </div>
+            </div>
+
             <h4>🚀 Import</h4>
             <div class="form-group">
                 <button id="btn-start-import" class="btn btn-success" disabled>▶️ Start</button>
@@ -4719,6 +7109,7 @@ function createUI(tabPane) {
             <div class="form-group">
                 <button id="btn-verify-hn" class="btn btn-warning" title="Prüft sichtbare HN auf Duplikate">🔍 Verifizieren</button>
                 <button id="btn-show-save-errors" class="btn btn-danger" title="Zeigt letzte Speicher-Fehler" style="display:none;">❌ Fehler</button>
+                <button id="btn-debug-duplicates" class="btn btn-secondary" title="Debug Duplikatserkennung">🐛 Debug</button>
             </div>
 
             <div class="progress-container">
@@ -4827,6 +7218,23 @@ function attachEventListeners() {
     document.getElementById('hn-auto-pause')?.addEventListener('change', (e) => {
         CONFIG.import.autoPauseEnabled = e.target.checked;
         log(`⏸️ Auto-Pause: ${e.target.checked ? 'AN' : 'AUS'}`, 'info');
+    });
+
+    // Visuelle Duplikatserkennung Toggle
+    document.getElementById('hn-visual-duplicates')?.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            VisualDuplicateDetector.activate();
+            log('👁️ Visuelle Transparenz aktiviert - alle HN werden transparent', 'success');
+        } else {
+            VisualDuplicateDetector.deactivate();
+            log('👁️ Visuelle Transparenz deaktiviert', 'info');
+        }
+    });
+
+    // Manuelle Pause-Funktion Toggle
+    document.getElementById('hn-manual-pause')?.addEventListener('change', (e) => {
+        CONFIG.import.manualPauseEnabled = e.target.checked;
+        log(`⏸️ Manuelle Pause-Funktion: ${e.target.checked ? 'AN' : 'AUS'}`, 'info');
     });
 
     document.getElementById('hn-auto-pause-count')?.addEventListener('input', (e) => {
@@ -4962,6 +7370,46 @@ function attachEventListeners() {
     // Verifizieren Button
     document.getElementById('btn-verify-hn')?.addEventListener('click', verifyHouseNumbers);
 
+    // Debug Duplikate Button
+    document.getElementById('btn-debug-duplicates')?.addEventListener('click', () => {
+        console.log(`${SCRIPT_NAME}: === DEBUG DUPLIKATSERKENNUNG ===`);
+
+        // Analysiere letzte Speicher-Fehler
+        importController.debugLastSaveError();
+
+        // Analysiere pending HN
+        importController.debugAnalyzePendingHN();
+
+        console.log(`${SCRIPT_NAME}: Verfügbare Debug-Funktionen:`);
+        console.log(`${SCRIPT_NAME}: importController.debugCheckDuplicate('NUMMER', lat, lon) - Detaillierte Analyse einer spezifischen HN`);
+        console.log(`${SCRIPT_NAME}: importController.debugCheckCoordinates(lat, lon) - Analysiere spezifische Koordinaten`);
+        console.log(`${SCRIPT_NAME}: importController.debugLastSaveError() - Letzte Speicher-Fehler`);
+        console.log(`${SCRIPT_NAME}: importController.debugAnalyzePendingHN() - Alle pending HN analysieren`);
+
+        // Zeige aktuelle Konfiguration
+        console.log(`${SCRIPT_NAME}: === AKTUELLE KONFIGURATION ===`);
+        console.log(`${SCRIPT_NAME}: Duplikat-Radius: ${CONFIG.import.duplicateRadius}m`);
+        console.log(`${SCRIPT_NAME}: Segment-Aware Distanz: ${CONFIG.import.segmentAwareRadius}m`);
+        console.log(`${SCRIPT_NAME}: Smart Detection: ${CONFIG.import.smartDuplicateDetection}`);
+        console.log(`${SCRIPT_NAME}: Verschiedene Segmente erlaubt: ${CONFIG.import.allowSameNumberDifferentSegments}`);
+        console.log(`${SCRIPT_NAME}: Gleiche Segmente erlaubt: ${CONFIG.import.allowSameNumberSameSegment} (min ${CONFIG.import.sameSegmentMinDistance}m)`);
+        console.log(`${SCRIPT_NAME}: Echte Koordinaten bevorzugen: ${CONFIG.import.preferRealCoordinates}`);
+        console.log(`${SCRIPT_NAME}: Pending HN: ${pendingHouseNumbers.size}`);
+        console.log(`${SCRIPT_NAME}: Global importierte HN: ${globalImportedHN.size}`);
+
+        const existingHN = importController.scanVisibleHouseNumbers();
+        console.log(`${SCRIPT_NAME}: Sichtbare HN-Nummern: ${existingHN.size}`);
+
+        // Wenn der Benutzer gerade einen Fehler hatte, zeige Hilfe
+        if (SaveErrorHandler.lastSaveErrors.length > 0) {
+            console.log(`${SCRIPT_NAME}: === HILFE FÜR AKTUELLE FEHLER ===`);
+            console.log(`${SCRIPT_NAME}: Du hattest gerade Speicher-Fehler. Für die Koordinaten aus der Fehlermeldung:`);
+            console.log(`${SCRIPT_NAME}: importController.debugCheckCoordinates(51.393113, 7.177710)`);
+        }
+
+        console.log(`${SCRIPT_NAME}: === DEBUG ENDE ===`);
+    });
+
     // Speicher-Fehler Button
     document.getElementById('btn-show-save-errors')?.addEventListener('click', () => {
         if (SaveErrorHandler.lastSaveErrors.length > 0) {
@@ -4993,6 +7441,63 @@ function attachEventListeners() {
 
     // Report kopieren
     document.getElementById('btn-copy-report')?.addEventListener('click', copyReportToClipboard);
+
+    // ========== BLOCKIERTE HAUSNUMMERN ==========
+
+    // Alle blockierten HN löschen
+    document.getElementById('btn-clear-blocked')?.addEventListener('click', () => {
+        if (confirm('Alle blockierten Hausnummern löschen?')) {
+            BlockedHouseNumbers.clear();
+            log('Alle blockierten HN gelöscht', 'success');
+        }
+    });
+
+    // Blockierte HN wiederherstellen
+    document.getElementById('btn-restore-blocked')?.addEventListener('click', () => {
+        const blocked = BlockedHouseNumbers.getAll();
+        const count = Object.keys(blocked).length;
+
+        if (count === 0) {
+            log('Keine blockierten HN zum Wiederherstellen', 'info');
+            return;
+        }
+
+        if (confirm(`${count} blockierte Hausnummern wiederherstellen?\n\nDiese können dann wieder importiert werden.`)) {
+            // Alle blockierten HN wieder zu pendingHouseNumbers hinzufügen
+            let restored = 0;
+            for (const [key, hnData] of Object.entries(blocked)) {
+                // Erstelle HN-Daten für pendingHouseNumbers
+                const mockHNData = {
+                    number: hnData.number,
+                    segmentId: hnData.segmentId,
+                    timestamp: Date.now()
+                };
+                pendingHouseNumbers.set(key, mockHNData);
+                restored++;
+            }
+
+            // Blocklist leeren
+            BlockedHouseNumbers.clear();
+
+            log(`✓ ${restored} HN wiederhergestellt und können wieder importiert werden`, 'success');
+        }
+    });
+
+    // UI für blockierte HN beim Start aktualisieren
+    setTimeout(() => {
+        BlockedHouseNumbers.updateUI();
+
+        // Repariere korrupten Titel
+        const headers = document.querySelectorAll('#hn-import-container h4');
+        for (const header of headers) {
+            if (header.textContent.includes('Blockie') || header.textContent.includes('?')) {
+                const countSpan = header.querySelector('#blocked-hn-count');
+                if (countSpan) {
+                    header.innerHTML = `Blockierte Hausnummern (<span id="blocked-hn-count">${countSpan.textContent}</span>)`;
+                }
+            }
+        }
+    }, 100);
 }
 
 // ============================================================================
@@ -6235,13 +8740,17 @@ function debugSegments() {
                 log(`segmentHouseNumbers Sample: number=${attrs?.number}, segID=${attrs?.segID}`, 'info');
                 log(`segmentHouseNumbers Keys: ${Object.keys(attrs || {}).join(', ')}`, 'info');
 
-                // Teste getByAttributes
-                if (W.model.segmentHouseNumbers.getByAttributes && attrs?.segID && attrs?.number) {
-                    const found = W.model.segmentHouseNumbers.getByAttributes({
-                        segID: attrs.segID,
-                        number: attrs.number
-                    });
-                    log(`getByAttributes Test: ${found?.length || 0} gefunden`, 'info');
+                // Teste moderne Suche
+                if (W.model.segmentHouseNumbers.objects && attrs?.segID && attrs?.number) {
+                    let found = 0;
+                    for (const hn of Object.values(W.model.segmentHouseNumbers.objects)) {
+                        const hnAttrs = hn?.attributes || hn;
+                        if (String(hnAttrs?.segID) === String(attrs.segID) &&
+                            String(hnAttrs?.number) === String(attrs.number)) {
+                            found++;
+                        }
+                    }
+                    log(`Moderne Suche Test: ${found} gefunden`, 'info');
                 }
             }
         } catch (e) {

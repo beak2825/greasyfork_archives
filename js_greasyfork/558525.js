@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JAV-JHS
 // @namespace    JAV-JHS
-// @version      3.3.6.005
+// @version      3.3.6.006
 // @author       JAV-JHS
 // @description  Jav-鉴黄师 收藏、屏蔽、标记已下载; 屏蔽标签、屏蔽演员、同步收藏演员、新作品检测; 免VIP查看热播、Top250排行榜、Fc2ppv、可查看所有评论信息、相关清单; 支持云盘备份; 以图识图; 字幕搜索; JavDb|JavBus
 // @license      MIT
@@ -1717,7 +1717,7 @@ window.ImageHoverPreview = class {
             header.className = "console-logger-header";
             const title = document.createElement("div");
             title.className = "console-logger-title";
-            title.textContent = "JHS V3.3.6.005";
+            title.textContent = "JHS V3.3.6.006";
             const controls = document.createElement("div");
             controls.className = "console-logger-controls";
             this.maximizeBtn = document.createElement("button");
@@ -9182,17 +9182,19 @@ class ScreenShotPlugin extends BasePlugin {
         return imgUrl;
     }
     async getJavStoreScreenShot(carNum2) {
-        let url = `https://javstore.net/search/${carNum2}.html`;
+        let url = `https://javstore.net/search?q=${carNum2}`;
         clog.log("正在解析缩略图:", url);
         let html = await gmHttp.get(url);
-        const $dom = utils.htmlTo$dom(html);
+        const $dom = utils.htmlTo$dom(html), tempCarNum = carNum2.toLowerCase().replace("fc2-", "");
         let detailPageUrl = null;
-        $dom.find("#content_news h3 span a").each((function() {
-            if ($(this).attr("title").toLowerCase().includes(carNum2.toLowerCase())) {
-                detailPageUrl = $(this).attr("href");
-                return !1;
+        const $itemList = $dom.find("main .grid a");
+        for (let i = 0; i < $itemList.length; i++) {
+            const href = $($itemList[i]).attr("href") || "";
+            if (href.toLowerCase().replace(/fc2-(ppv-)?/g, "").includes(tempCarNum)) {
+                detailPageUrl = new URL(href, "https://javstore.net").href;
+                break;
             }
-        }));
+        }
         if (!detailPageUrl) {
             clog.error("JavStore, 查询番号失败:", url);
             return null;
@@ -9266,7 +9268,7 @@ class ScreenShotPlugin extends BasePlugin {
         var _a2;
         console.error("获取缩略图失败:", null == (_a2 = null == error ? void 0 : error.message) ? void 0 : _a2.substring(0, 100));
         let differentCss = isJavBus ? "margin-top: 30px" : "margin-top: 50px";
-        $(".screen-container").html(`<div style="${differentCss}; cursor:auto;color:#000;">获取缩略图失败</div><br/><a href='#' class='retry-link'>点击重试</a> 或 <a class="check-link" href='https://javstore.net/search/${carNum2}.html' target='_blank'>前往确认</a>`).off("click", ".retry-link").off("click", ".check-link").on("click", ".retry-link", (async e => {
+        $(".screen-container").html(`<div style="${differentCss}; cursor:auto;color:#000;">获取缩略图失败</div><br/><a href='#' class='retry-link'>点击重试</a> 或 <a class="check-link" href='https://javstore.net/search?q=${carNum2}' target='_blank'>前往确认</a>`).off("click", ".retry-link").off("click", ".check-link").on("click", ".retry-link", (async e => {
             e.stopPropagation();
             e.preventDefault();
             $(".screen-container").html(`<div style="${differentCss};cursor:auto;color:#000;">正在重新加载...</div>`);
@@ -9279,7 +9281,7 @@ class ScreenShotPlugin extends BasePlugin {
         })).on("click", ".check-link", (async e => {
             e.stopPropagation();
             e.preventDefault();
-            window.open(`https://javstore.net/search/${carNum2}.html`, "_blank");
+            window.open(`https://javstore.net/search?q=${carNum2}`, "_blank");
         }));
     }
 }

@@ -3,8 +3,8 @@
 // @namespace    Tampermonkey Scripts
 // @match        *://www.youtube.com/*
 // @grant        none
-// @version      1.6.3
-// @author       
+// @version      1.6.4
+// @author       LQ He
 // @description  长按快捷键快速倍速播放（Z/Ctrl 2倍速，右方向键 3倍速）。视频控制栏添加倍速切换按钮，支持自定义倍速设置。YouTube 链接强制新标签页打开。
 // @license      MIT
 // @run-at       document-start
@@ -151,6 +151,64 @@
             return CONFIG.YOUTUBE_LINK_PATTERNS.some(pattern => url.includes(pattern));
         },
 
+        // 检查当前是否在视频播放页面
+        isWatchPage() {
+            return window.location.pathname === '/watch';
+        },
+
+        // 检查当前是否在首页
+        isHomePage() {
+            return window.location.pathname === '/' || window.location.pathname === '';
+        },
+
+        // 检查是否是左侧菜单栏链接
+        isSidebarLink(anchor) {
+            // 通过 DOM 结构匹配（最可靠的方式）
+            const isInGuide = anchor.closest('ytd-guide-renderer') ||       // 展开的侧边栏
+                anchor.closest('ytd-mini-guide-renderer') ||                 // 迷你侧边栏
+                anchor.closest('tp-yt-app-drawer') ||                        // 移动端侧边栏
+                anchor.closest('#guide');                                    // 侧边栏容器
+
+            const isSidebarElement = anchor.closest('ytd-guide-section-renderer') ||  // 侧边栏分区
+                anchor.closest('ytd-guide-entry-renderer') ||                          // 侧边栏条目
+                anchor.closest('tp-yt-paper-item');                                    // 侧边栏链接项
+
+            return isInGuide || isSidebarElement;
+        },
+
+        // 检查是否是需要强制新标签页打开的链接（无视当前页面）
+        isForceNewTabLink(href) {
+            const forceNewTabPatterns = [
+                'studio.youtube.com',                    // YouTube Studio
+                '/account',                              // 账号设置
+                '/premium'                               // YouTube Premium
+            ];
+            return forceNewTabPatterns.some(pattern => href.includes(pattern));
+        },
+
+        // 检查是否是 Shorts 入口链接
+        isShortsEntryLink(anchor) {
+            // 方式1：通过 title 属性识别
+            const title = anchor.getAttribute('title') || '';
+            if (title.toLowerCase() === 'shorts') {
+                return true;
+            }
+            // 方式2：通过内部文本识别（yt-formatted-string 包含 "Shorts"）
+            const formattedString = anchor.querySelector('yt-formatted-string.title');
+            if (formattedString && formattedString.textContent.trim().toLowerCase() === 'shorts') {
+                return true;
+            }
+            // 方式3：检查是否在 Shorts 相关的 guide-entry 中
+            const guideEntry = anchor.closest('ytd-guide-entry-renderer');
+            if (guideEntry) {
+                const titleElement = guideEntry.querySelector('yt-formatted-string.title');
+                if (titleElement && titleElement.textContent.trim().toLowerCase() === 'shorts') {
+                    return true;
+                }
+            }
+            return false;
+        },
+
         getVideoIdFromUrl(url) {
             try {
                 const urlObj = new URL(url, window.location.origin);
@@ -212,12 +270,55 @@
             if (!CONFIG.ENABLE_NEW_TAB_LINKS || event.ctrlKey || event.metaKey) return;
 
             const anchor = event.target.closest('a');
-            if (!anchor || !anchor.href) return;
+            if (!anchor) return;
 
             // 优先检查是否点击了功能按钮,如果是则不拦截
             if (NewTabModule.isActionButton(event.target)) {
                 return;
             }
+
+            // 特殊处理：播放页点击 Shorts 入口链接（可能没有 href 或 href="/"）
+            if (NewTabModule.isWatchPage() && NewTabModule.isShortsEntryLink(anchor)) {
+                event.preventDefault();
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                window.open('https://www.youtube.com/shorts', '_blank');
+                return;
+            }
+
+            // 如果没有 href，后续逻辑不处理
+            if (!anchor.href) return;
+
+            // 检查是否是需要强制新标签页打开的链接（account、premium、studio等）
+            // 无视当前页面是首页还是播放页
+            if (NewTabModule.isForceNewTabLink(anchor.href)) {
+                event.preventDefault();
+                event.stopPropagation();
+                window.open(anchor.href, '_blank');
+                return;
+            }
+
+            // 检查是否是左侧菜单栏链接
+            const isSidebar = NewTabModule.isSidebarLink(anchor);
+
+            // 如果是左侧菜单栏链接，根据当前页面决定行为
+            if (isSidebar) {
+                // 在首页时，强制不拦截，使用默认行为（当前页面打开）
+                if (NewTabModule.isHomePage()) {
+                    return;  // 直接返回，不执行后续任何拦截逻辑
+                }
+                // 在播放页面时，强制新标签页打开
+                if (NewTabModule.isWatchPage()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    window.open(anchor.href, '_blank');
+                    return;
+                }
+                // 其他页面（非首页、非播放页），左侧菜单栏也不拦截
+                return;
+            }
+
+            // 以下是非左侧菜单栏链接的处理逻辑
 
             // 检查是否是封面链接,如果是则允许新标签打开
             const isThumbnail = NewTabModule.isThumbnailLink(anchor);
