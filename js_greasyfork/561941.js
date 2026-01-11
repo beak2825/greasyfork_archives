@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         stable diffusion webui提示词分组器
 // @namespace    http://tampermonkey.net/
-// @version      2026-1-10.1
+// @version      2026-1-11.1.5
 // @description  用来在sdwebui上附加N个提示词输入框，方便分别输入提示词（如风景、人物、衣服）同时可以将提示词保存为json文件，方便读取
 // @author       ragnaDolphin
 // @match        *://127.0.0.1:7860/*
@@ -14,6 +14,17 @@
 
 (function() {
     'use strict';
+
+    let hasUnsavedChanges = false;
+
+    window.addEventListener('beforeunload', function(e) {
+        // 只有在有未保存更改时才显示提示
+        if (hasUnsavedChanges) {
+            e.preventDefault();
+            e.returnValue = '您有未保存的更改，确定要离开此页面吗？';
+            return '您有未保存的更改，确定要离开此页面吗？';
+        }
+    });
 
     // 目标输入框的选择器（针对txt2img提示框；如果img2img，改为 '#img2img_prompt textarea'）
     const targetInputSelector = '#txt2img_prompt_row';
@@ -423,6 +434,9 @@
 
                 // 创建文本输入框
                 const newInput = document.createElement('textarea');
+                newInput.addEventListener('input', function() {
+                    hasUnsavedChanges = true;
+                });
                 newInput.className = 'new-input';
                 newInput.placeholder = '输入提示词...';
                 newInput.style.backgroundColor = '#333';
@@ -630,6 +644,9 @@
                 }
             }
 
+            saveButton
+
+
             // "保存文本"按钮点击事件：保存所有文本框内容为JSON文件
             saveButton.addEventListener('click', function() {
                 const containers = document.querySelectorAll('.resizable-input-container');
@@ -667,6 +684,8 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
+
+                hasUnsavedChanges = false;
 
                 // alert(`已保存 ${data.length} 个文本框内容到JSON文件！`);
             });

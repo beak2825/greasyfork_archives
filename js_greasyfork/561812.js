@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         P3 – Auto Feed Alpha Puma
 // @namespace    https://tampermonkey.net/p3_auto_feed_alpha_bulletproof
-// @version      1.0
-// @description  Auto-feeds Alpha Puma when hunger > 50, highlights hungry Alphas, with persistent toggle bar.
+// @version      1.3
+// @description  Auto-feeds Alpha Puma when hunger > 49, highlights hungry Alphas, with persistent toggle bar.
 // @match        https://pocketpumapets.com/item_feed.php?id=*
 // @icon         https://www.pocketpumapets.com/favicon.ico
 // @grant        none
@@ -108,9 +108,16 @@
         console.log("[AutoFeed] Top Alpha hunger:", hunger);
 
         if (hunger > HUNGER_THRESHOLD) {
-            const form = document.forms.feeditem_form;
+            const radio = topRow.querySelector("input[type='radio'][name='puma_id']");
+            const form = radio ? radio.closest("form") : null;
+
             if (form) {
+                // ✅ ONLY ADDITION
+                const submitBtn = form.querySelector("#food_submit");
+                if (submitBtn) submitBtn.disabled = false;
+
                 console.log("[AutoFeed] Feeding Alpha Puma");
+                radio.checked = true;
                 form.submit();
                 setTimeout(() => location.reload(), 2000);
             }

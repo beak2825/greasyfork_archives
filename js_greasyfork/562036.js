@@ -19,7 +19,7 @@
     function readTimer() {
         // Find the timer span element using multiple methods
         let timerSpan = document.querySelector('span[role="alert"][aria-live="off"]');
-
+        
         // If not found, try looking for any span with role="alert" inside the war list
         if (!timerSpan) {
             const warList = document.querySelector('ul[class*="statsBox"]');
@@ -27,7 +27,7 @@
                 timerSpan = warList.querySelector('span[role="alert"]');
             }
         }
-
+        
         if (!timerSpan) {
             return null;
         }
@@ -35,7 +35,7 @@
         // Get all span children and extract their text content
         const spans = timerSpan.querySelectorAll('span');
         let timerText = '';
-
+        
         spans.forEach(span => {
             const text = span.textContent.trim();
             // Only add if it's a digit or colon
@@ -46,7 +46,7 @@
 
         // Parse the timer format DD:HH:MM:SS
         const parts = timerText.split(':');
-
+        
         if (parts.length !== 4) {
             return null;
         }
@@ -68,7 +68,7 @@
         if (!timerData) return null;
 
         const { days, hours, minutes, seconds } = timerData;
-
+        
         // Calculate total milliseconds remaining
         const totalMs = (days * 24 * 60 * 60 * 1000) +
                        (hours * 60 * 60 * 1000) +
@@ -77,15 +77,15 @@
 
         // Current time (in user's local timezone)
         const now = new Date();
-
+        
         // Calculate when the timer will reach zero (end time)
         const endTime = new Date(now.getTime() + totalMs);
-
+        
         // Round end time to nearest 5-minute mark
         const endTimeRounded = new Date(endTime);
         const mins = endTimeRounded.getMinutes();
         const remainder = mins % 5;
-
+        
         if (remainder < 2.5) {
             // Round down
             endTimeRounded.setMinutes(mins - remainder);
@@ -94,7 +94,7 @@
             endTimeRounded.setMinutes(mins + (5 - remainder));
         }
         endTimeRounded.setSeconds(0, 0); // Set seconds and milliseconds to 0
-
+        
         return {
             now,
             endTime: endTimeRounded,
@@ -104,31 +104,52 @@
 
     function displayInfo() {
         const timerData = readTimer();
-
+        
         if (!timerData) {
             return;
         }
-
+        
         const timeInfo = calculateEndTime(timerData);
-
+        
         if (!timeInfo) {
             return;
         }
-
+        
         // Find the timer element
         let timerSpan = document.querySelector('span[role="alert"][aria-live="off"]');
-
+        
         if (!timerSpan) {
             const warList = document.querySelector('ul[class*="statsBox"]');
             if (warList) {
                 timerSpan = warList.querySelector('span[role="alert"]');
             }
         }
-
+        
         if (timerSpan) {
+            // Check if war has started by looking for opponent or current block spans with content
+            const bottomBox = timerSpan.closest('li');
+            if (bottomBox) {
+                const opponentBlock = bottomBox.querySelector('span[class*="opponentBlock"]');
+                const currentBlock = bottomBox.querySelector('span[class*="currentBlock"]');
+                
+                // If either block has content (text length > 0), the war has started
+                const warStarted = (opponentBlock && opponentBlock.textContent.trim().length > 0) ||
+                                  (currentBlock && currentBlock.textContent.trim().length > 0);
+                
+                if (warStarted) {
+                    // War has started, remove the end time display if it exists
+                    const existingEndTime = timerSpan.nextElementSibling;
+                    if (existingEndTime && existingEndTime.classList.contains('timer-end-time-display')) {
+                        existingEndTime.remove();
+                    }
+                    return;
+                }
+            }
+            
+            // War hasn't started, show the end time
             // Check if we already added the end time after the timer
             let endTimeSpan = timerSpan.nextElementSibling;
-
+            
             if (!endTimeSpan || !endTimeSpan.classList.contains('timer-end-time-display')) {
                 endTimeSpan = document.createElement('span');
                 endTimeSpan.classList.add('timer-end-time-display');
@@ -139,7 +160,7 @@
                 `;
                 timerSpan.parentNode.insertBefore(endTimeSpan, timerSpan.nextSibling);
             }
-
+            
             // Format the end time (uses user's local timezone automatically)
             const endTimeStr = timeInfo.endTime.toLocaleString('en-US', {
                 month: '2-digit',
@@ -149,7 +170,7 @@
                 minute: '2-digit',
                 hour12: true
             });
-
+            
             endTimeSpan.textContent = endTimeStr;
         }
     }
@@ -172,7 +193,7 @@
 
         // Also try immediately in case it's already loaded
         setTimeout(displayInfo, 1000);
-
+        
         // Try again after a longer delay
         setTimeout(displayInfo, 3000);
     }

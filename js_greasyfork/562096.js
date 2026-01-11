@@ -1,77 +1,65 @@
 // ==UserScript==
-// @name         解决Via看MissAV的痛点
+// @name         解决Via的广告拦截问题（MissAV专用）
 // @namespace    https://viayoo.com/
 // @version      V2
 // @description  解决via用MissAV空白占位符和重定向到广告页面的问题
 // @author       Google Gemini
 // @run-at       document-end
-// @match        *://missav.ws/*
-// @grant        无
-// @downloadURL https://update.greasyfork.org/scripts/562096/%E8%A7%A3%E5%86%B3Via%E7%9C%8BMissAV%E7%9A%84%E7%97%9B%E7%82%B9.user.js
-// @updateURL https://update.greasyfork.org/scripts/562096/%E8%A7%A3%E5%86%B3Via%E7%9C%8BMissAV%E7%9A%84%E7%97%9B%E7%82%B9.meta.js
+// @match        https://missav.ws/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/562096/%E8%A7%A3%E5%86%B3Via%E7%9A%84%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E9%97%AE%E9%A2%98%EF%BC%88MissAV%E4%B8%93%E7%94%A8%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/562096/%E8%A7%A3%E5%86%B3Via%E7%9A%84%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E9%97%AE%E9%A2%98%EF%BC%88MissAV%E4%B8%93%E7%94%A8%EF%BC%89.meta.js
 // ==/UserScript==
 
 (function() {
-    // 1. 拦截广告跳转
-    const isAd = (u) => /diffusedpassion|tsyndicate|traffshop|popads|click|[0-9]{6,}/i.test(u);
-    const originalOpen = window.open;
-    window.open = function(u) {
-        if (u && isAd(u)) return null;
-        return originalOpen.apply(this, arguments);
-    };
+    // 1. 【安全第一】如果是验证码页面，脚本立即自杀，确保能通过验证
+    if (document.title.includes('请稍候') || document.querySelector('#cf-wrapper')) return;
 
-    // 2. 核心清理与保护逻辑
-    const sweep = () => {
-        // 白名单：包含这些关键字或特定图标类名的容器，绝对不执行任何 style 修改
-        const safeElements = /详情|女优消息|磁力下载|收藏|片单|下载|分享|菜单|语言|Language|CN|TW|JP/;
+    // 2. 【核心拦截】只拦截域名跳转，不干扰页面元素渲染
+    const adLog = /diffusedpassion|tsyndicate|traffshop|popads|click|[0-9]{6,}/i;
+    window.open = (u) => { if (u && adLog.test(u)) return null; };
+
+    // 3. 【静默样式】通过底层 CSS 抹除空白，这是最快、最省电的方法
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* 抹除你红圈标出的那些顽固黑块 */
+        #syndicated-content, .mg-ad-card, .mx-auto.text-center, 
+        .mb-4.mt-4:empty, div[class*="adv-"] { 
+            display: none !important; 
+            height: 0 !important; 
+            margin: 0 !important; 
+        }
+
+        /* 解决“粘在一起”的问题：强制给搜索框和图片留出间距 [针对图12/14] */
+        .input-group, #search-form { 
+            display: flex !important; 
+            margin: 15px 0 !important; 
+            min-height: 48px !important; 
+            visibility: visible !important;
+        }
+
+        /* 锁定菜单：防止语言栏乱跳 [针对图13] */
+        .dropdown-menu { z-index: 9999 !important; }
         
-        document.querySelectorAll('div').forEach(div => {
-            const h = div.offsetHeight;
-            const text = div.innerText.trim();
-            const className = div.className || "";
+        /* 列表页间距固定：防止图片挤在一起 */
+        .video-img-box { margin-bottom: 20px !important; }
+    `;
+    document.head.appendChild(style);
 
-            // --- 关键补丁：保护语言栏和顶栏图标 ---
-            // 只要包含国旗类名、语言选择器类名，或者文字匹配白名单，直接跳过
-            if (safeElements.test(text) || className.includes('nav') || className.includes('flag') || className.includes('dropdown')) {
-                // 确保它们可以正常显示和点击，但不允许脚本去挪动它们
-                div.style.setProperty('visibility', 'visible', 'important');
-                return; 
-            }
-
-            // --- 关键改进：保护图片和视频封面 ---
-            if (div.querySelector('img') || className.includes('poster') || className.includes('cover')) {
-                return; 
-            }
-
-            // --- 拦截逻辑：只针对真正无内容的黑块/占位符 ---
-            if (h > 45 && text === "" && !div.querySelector('video, img, svg, a, button')) {
-                // 排除播放器控制条
-                if (!className.includes('vjs') && !className.includes('player')) {
-                    div.style.setProperty('display', 'none', 'important');
+    // 4. 【被动清理】仅在页面加载完后执行一次手术，避免频繁扫描导致卡顿
+    const singleSweep = () => {
+        document.querySelectorAll('div').forEach(el => {
+            // 判定特征：高度>45px，没字，里面没图也没链接
+            if (el.offsetHeight > 45 && el.innerText.trim() === "" && !el.querySelector('img, a, video, input')) {
+                // 避开导航栏
+                if (!el.closest('nav, .navbar, .input-group')) {
+                    el.style.setProperty('display', 'none', 'important');
                 }
             }
         });
     };
 
-    // 3. 针对“点击弹出语言栏”的物理修复
-    // 有时是由于脚本删除了某些层，导致语言栏被“挤”到了屏幕中间触发了误点
-    document.addEventListener('mousedown', (e) => {
-        // 如果点击的是空白透明层，且该层不是语言切换器
-        const style = window.getComputedStyle(e.target);
-        if (parseInt(style.zIndex) > 10 && e.target.innerText.trim() === "" && !e.target.querySelector('img')) {
-            // 确认不是导航栏组件后移除
-            if (!e.target.className.includes('nav') && !e.target.className.includes('dropdown')) {
-                e.target.remove();
-            }
-        }
-    }, true);
-
-    // 4. 自动化与防抖执行
-    const observer = new MutationObserver(() => sweep());
-    if (document.body) {
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
-    sweep();
-    window.addEventListener('load', sweep);
+    // 仅在加载完成和 3 秒后各跑一次
+    window.addEventListener('load', singleSweep);
+    setTimeout(singleSweep, 3000);
 })();

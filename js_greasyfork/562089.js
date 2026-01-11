@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         2libra-enhance
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.2
 // @description  2libra.com 论坛增强：帖子快速预览、智能返回顶部
 // @author       twocold0451
 // @homepage     https://github.com/twocold0451/2libra-enhance
 // @supportURL   https://github.com/twocold0451/2libra-enhance/issues
 // @match        https://2libra.com/*
-// @grant        none
 // @license MIT
+// @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562089/2libra-enhance.user.js
 // @updateURL https://update.greasyfork.org/scripts/562089/2libra-enhance.meta.js
 // ==/UserScript==
@@ -242,21 +242,22 @@
             try {
                 const doc = iframe.contentDocument;
                 const css = `
-                    header, .navbar, footer, aside, .menu, [role="banner"], [role="contentinfo"] { display: none !important; }
-                    div.flex.items-center.justify-between { display: none !important; }
+                    header, .navbar, aside:not(.EmojiPickerReact), .menu:not(.dropdown-left), [role="banner"], [role="contentinfo"], footer.footer-center { display: none !important; }
+                    div.breadcrumbs.text-sm.overflow-visible { display: none !important; }
                     [data-main-left="true"], .flex-1 {
                         position: fixed !important;
                         top: 0 !important;
                         left: 0 !important;
                         width: 100vw !important;
                         height: 100vh !important;
-                        z-index: 2147483647 !important; 
+                        z-index: 2147483640 !important; 
                         background: var(--base-100, #fff) !important;
                         overflow-y: auto !important; 
                         padding: 20px !important;
                         margin: 0 !important;
                         border: none !important;
                     }
+                    .EmojiPickerReact { z-index: 2147483647 !important; }
                     body, html { overflow: hidden !important; }
                 `;
                 const style = doc.createElement('style');

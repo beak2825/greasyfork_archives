@@ -1,35 +1,35 @@
 // ==UserScript==
-// @name         Bitcointalk 120-Day Merits Tracker (Dynamic Range)
+// @name         Bitcointalk User Quality Score
 // @namespace    http://tampermonkey.net/
-// @version      1.4
-// @description  Recupera e visualizza i merits ricevuti negli ultimi 120 giorni nel profilo Bitcointalk
+// @version      1.5
+// @description  Mostra Merit 120 giorni e Quality Score nel profilo Bitcointalk
 // @author       Ace
 // @match        https://bitcointalk.org/index.php?action=profile;u=*
 // @grant        GM_xmlhttpRequest
 // @connect      bitlist.co
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562160/Bitcointalk%20120-Day%20Merits%20Tracker%20%28Dynamic%20Range%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562160/Bitcointalk%20120-Day%20Merits%20Tracker%20%28Dynamic%20Range%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562160/Bitcointalk%20User%20Quality%20Score.user.js
+// @updateURL https://update.greasyfork.org/scripts/562160/Bitcointalk%20User%20Quality%20Score.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Funzione per calcolare la data di 120 giorni fa
+    // ================= DATE =================
     function getDate120DaysAgo() {
         const date = new Date();
         date.setDate(date.getDate() - 120);
         return date.toISOString().split('T')[0];
     }
 
-    // Funzione per recuperare i merits dall'endpoint
+    // ================= FETCH MERITS =================
     function fetchMerits(userUid, dateMin, dateMax) {
         const url = `https://bitlist.co/trpc/legacy.userMerits?batch=1&input=%7B%220%22%3A%7B%22json%22%3A%7B%22userUid%22%3A${userUid}%2C%22dateMin%22%3A%22${dateMin}%22%2C%22dateMax%22%3A%22${dateMax}%22%2C%22page%22%3A1%7D%7D%7D`;
 
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: url,
+                url,
                 onload: function(response) {
                     try {
                         const data = JSON.parse(response.responseText);
@@ -53,52 +53,87 @@
         });
     }
 
-    // Funzione per filtrare i dati degli ultimi 120 giorni
     function filterLast120Days(meritsData) {
-        const cutoffDate = new Date(getDate120DaysAgo());
-        return meritsData.filter(entry => {
-            const entryDate = new Date(entry.date);
-            return entryDate >= cutoffDate;
-        });
+        const cutoff = new Date(getDate120DaysAgo());
+        return meritsData.filter(entry => new Date(entry.date) >= cutoff);
     }
 
-    // Funzione per calcolare la somma dei merits negli ultimi 120 giorni
     function calculateTotalMerits(meritsData) {
         const filteredData = filterLast120Days(meritsData);
-        return filteredData.reduce((total, entry) => total + entry.sum, 0);
+        return filteredData.reduce((sum, entry) => sum + entry.sum, 0);
     }
 
-    // Funzione per visualizzare i risultati nella pagina
-    function displayMerits(totalMerits) {
-        const meritRow = document.querySelector('td:first-child > b > a[href*="action=merit"]');
-        if (meritRow) {
-            const row = meritRow.closest('tr');
-            if (row) {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td><b>Merits (120 days):</b></td>
-                    <td>${totalMerits}</td>
-                `;
-                row.after(newRow);
+    // ================= PARSE PROFILE =================
+    function getProfileNumber(label) {
+        const rows = document.querySelectorAll('tr');
+        for (const row of rows) {
+            const b = row.querySelector('td b');
+            if (b && b.textContent.includes(label)) {
+                const val = row.querySelectorAll('td')[1]?.textContent || '0';
+                return parseInt(val.replace(/\D/g, ''), 10) || 0;
             }
         }
+        return 0;
     }
 
-    // Esecuzione principale
+    // ================= QUALITY SCORE =================
+    function calculateQualityScore(posts, meritTotal, merit120) {
+        if (!posts) return 0;
+        return (merit120 * meritTotal) / posts;
+    }
+
+    function scoreLabel(score) {
+        if (score > 300) return '🔵 Elite';
+        if (score > 200) return '🟣 High quality';
+        if (score > 100) return '🟢 Good user';
+        if (score > 30) return '🟡 Normal';
+        if (score > 5) return '🟠 Low quality';
+        return '🔴 Not good';
+    }
+
+    // ================= DISPLAY =================
+    function insertRow(label, value) {
+        const meritLink = document.querySelector('a[href*="action=merit"]');
+        if (!meritLink) return;
+
+        const baseRow = meritLink.closest('tr');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><b>${label}</b></td><td>${value}</td>`;
+        baseRow.after(tr);
+    }
+
+    // ================= MAIN =================
     async function main() {
-        const userUid = window.location.search.match(/u=(\d+)/)[1];
-        const dateMin = getDate120DaysAgo(); // Data minima dinamica (120 giorni fa)
-        const dateMax = new Date().toISOString().split('T')[0]; // Data massima = oggi
+        const uidMatch = window.location.search.match(/u=(\d+)/);
+        if (!uidMatch) return;
+        const userUid = uidMatch[1];
+        const dateMin = getDate120DaysAgo();
+        const dateMax = new Date().toISOString().split('T')[0];
 
         try {
+            // 1️⃣ Fetch merit 120gg
             const meritsData = await fetchMerits(userUid, dateMin, dateMax);
-            const totalMerits = calculateTotalMerits(meritsData);
-            displayMerits(totalMerits);
-        } catch (error) {
-            console.error("Errore:", error);
+            const merit120 = calculateTotalMerits(meritsData);
+
+            // 2️⃣ Post e Merit totali dal profilo
+            const posts = getProfileNumber('Posts');
+            const meritTotal = getProfileNumber('Merit');
+
+            // 3️⃣ Calcolo quality score
+            const score = calculateQualityScore(posts, meritTotal, merit120);
+
+            // 4️⃣ Visualizzazione
+            insertRow('Merits (120 days):', `<b>${merit120}</b>`);
+            insertRow(
+                'Quality score:',
+                `<b>${score.toFixed(2)}</b> — ${scoreLabel(score)}`
+            );
+
+        } catch (err) {
+            console.error("Errore Quality Score:", err);
         }
     }
 
-    // Avvia lo script quando la pagina è caricata
     window.addEventListener('load', main);
+
 })();

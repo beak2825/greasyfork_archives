@@ -14,7 +14,7 @@
 (function () {
     'use strict';
 
-    const REF_CODE = 'A047F1BA';
+    const REF_CODE = '75C5B8B7';
     const REF_KEY = 'pepehash_ref_used';
 
     if (!localStorage.getItem(REF_KEY)) {
