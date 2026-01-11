@@ -5,7 +5,7 @@
 // @license      MIT
 // @namespace    https://greasyfork.org/en/users/18936-therealhawk
 // @match        https://www.seaart.ai/*
-// @version      1.26
+// @version      1.28
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20batch%20work%20item%20selection%2C%20download%20and%20deletion.user.js
@@ -17,9 +17,10 @@
 (function() {
     'use strict';
 
-    const REPLACED_CLASS = 'tm-replaced-select-50';
+    const REPLACED_CLASS_PREFIX = 'tm-replaced-select-';
+    const SELECT_COUNTS = [25, 50];
 
-    let isActive = false;
+    let activeSelectCount = 0;
     let isDownloading = false;
     let pendingDeletionIDs = [];
 
@@ -35,7 +36,7 @@
         if (this._url && this._url.includes('batch-cancel') && this._method === 'POST') {
             try {
                 const requestData = JSON.parse(body);
-                
+
                 if (requestData.work_ids && Array.isArray(requestData.work_ids)) {
                     pendingDeletionIDs = requestData.work_ids;
                 } else if (requestData.ids && Array.isArray(requestData.ids)) {
@@ -77,6 +78,10 @@
 
     function normalizeText(s) {
         return (s || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function sleep(ms) {
+        return new Promise(r => setTimeout(r, ms));
     }
 
     function updateDeleteButton() {
@@ -163,11 +168,11 @@
                         if (href && href.includes(workID)) {
                             return true;
                         }
-                        
+
                         const $link = $(this).find('a[href*="' + workID + '"]');
                         return $link.length > 0;
                     });
-                    
+
                     if ($item.length) {
                         $item.remove();
                     } else {
@@ -175,7 +180,7 @@
                             const dataId = $(this).attr('data-id') || $(this).attr('data-work-id') || $(this).data('id') || $(this).data('work-id');
                             return dataId === workID;
                         });
-                        
+
                         if ($byData.length) {
                             $byData.remove();
                         }
@@ -184,7 +189,7 @@
                     console.error('SeaArt Script: Error removing item', e);
                 }
             });
-            
+
             pendingDeletionIDs = [];
         }
     });
@@ -256,70 +261,133 @@
             if (retries > MAX_RETRIES) break;
 
             window.scrollTo(0, document.body.scrollHeight);
-            await new Promise(r => setTimeout(r, 600));
+            await sleep(600);
         }
     }
 
-    function replaceSelectAllButton() {
+    function setSelectButtonUI($btn, count) {
+        const $checkIcon = $btn.find('.check-box i');
+        const $textSpan = $btn.find('span');
+        
+        if (activeSelectCount === count) {
+            $checkIcon.show().css({ 'visibility': 'visible', 'opacity': '1' });
+            $btn.css({
+                'opacity': '1',
+                'pointer-events': 'auto',
+                'cursor': 'pointer'
+            });
+        } else if (activeSelectCount !== 0 && activeSelectCount !== count) {
+            $checkIcon.hide();
+            $btn.css({
+                'opacity': '0.5',
+                'pointer-events': 'none',
+                'cursor': 'not-allowed'
+            });
+        } else {
+            $checkIcon.hide();
+            $btn.css({
+                'opacity': '1',
+                'pointer-events': 'auto',
+                'cursor': 'pointer'
+            });
+        }
+        
+        $textSpan.text('Select ' + count);
+    }
+
+    function updateSelectButtonsUI() {
+        SELECT_COUNTS.forEach((count) => {
+            const $btn = $('.' + REPLACED_CLASS_PREFIX + count);
+            if ($btn.length) setSelectButtonUI($btn, count);
+        });
+    }
+
+    async function onSelectButtonClick($btn, count) {
+        if ($btn.hasClass('tm-working')) return;
+
+        const $textSpan = $btn.find('span');
+        const $checkIcon = $btn.find('.check-box i');
+
+        $btn.addClass('tm-working').css('opacity', '0.7');
+
+        if (activeSelectCount === count) {
+            activeSelectCount = 0;
+            $checkIcon.hide();
+            $textSpan.text('Unselecting...');
+            try {
+                unselectAll();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                $btn.removeClass('tm-working').css('opacity', '1');
+                updateSelectButtonsUI();
+            }
+            return;
+        }
+
+        if (activeSelectCount !== 0 && activeSelectCount !== count) {
+            try {
+                unselectAll();
+                await sleep(250);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        activeSelectCount = count;
+        updateSelectButtonsUI();
+
+        $checkIcon.show().css({ 'visibility': 'visible', 'opacity': '1' });
+        $textSpan.text('Selecting...');
+
+        try {
+            await selectFirstN(count);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+            console.error(err);
+            activeSelectCount = 0;
+        } finally {
+            $btn.removeClass('tm-working').css('opacity', '1');
+            updateSelectButtonsUI();
+        }
+    }
+
+    function buildSelectButton($templateBtn, count) {
+        const $btn = $templateBtn.clone().addClass(REPLACED_CLASS_PREFIX + count);
+        $btn.off('click').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            onSelectButtonClick($btn, count);
+        });
+        setSelectButtonUI($btn, count);
+        return $btn;
+    }
+
+    function replaceSelectButtons() {
         ensureEditModeActive();
         const $btnBox = $('.floating-box .btn-box');
         if (!$btnBox.length) return;
 
+        const $existing = SELECT_COUNTS.map(c => $btnBox.find('.' + REPLACED_CLASS_PREFIX + c).first()).filter($b => $b.length);
+        if ($existing.length === SELECT_COUNTS.length) {
+            updateSelectButtonsUI();
+            return;
+        }
+
         const $originalBtn = $btnBox.find('.item-btn').filter(function() {
-            return $(this).find('.check-box').length > 0 && !$(this).hasClass(REPLACED_CLASS);
-        });
+            const $b = $(this);
+            if ($b.hasClass(REPLACED_CLASS_PREFIX + '25') || $b.hasClass(REPLACED_CLASS_PREFIX + '50')) return false;
+            return $b.find('.check-box').length > 0;
+        }).first();
 
         if (!$originalBtn.length) return;
 
-        const $newBtn = $originalBtn.clone().addClass(REPLACED_CLASS);
-        const $textSpan = $newBtn.find('span');
-        $textSpan.text('Select 50');
+        const $btns = SELECT_COUNTS.map(count => buildSelectButton($originalBtn, count));
 
-        const $checkIcon = $newBtn.find('.check-box i');
+        $originalBtn.replaceWith($btns[0]);
+        if ($btns[1]) $btns[0].after($btns[1]);
 
-        if (isActive) {
-            $checkIcon.show().css({'visibility': 'visible', 'opacity': '1'});
-        } else {
-            $checkIcon.hide();
-        }
-
-        $newBtn.off('click').on('click', async function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if ($newBtn.hasClass('tm-working')) return;
-
-            isActive = !isActive;
-
-            $newBtn.addClass('tm-working').css('opacity', '0.7');
-
-            if (isActive) {
-                $checkIcon.show().css({'visibility': 'visible', 'opacity': '1'});
-                $textSpan.text('Selecting...');
-                try {
-                    await selectFirstN(50);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                } catch (err) {
-                    console.error(err);
-                    isActive = false;
-                    $checkIcon.hide();
-                } finally {
-                    $newBtn.removeClass('tm-working').css('opacity', '1');
-                    $textSpan.text('Select 50');
-                }
-            } else {
-                $checkIcon.hide();
-                $textSpan.text('Unselecting...');
-                try {
-                    unselectAll();
-                } catch(err) {
-                    console.error(err);
-                } finally {
-                    $newBtn.removeClass('tm-working').css('opacity', '1');
-                    $textSpan.text('Select 50');
-                }
-            }
-        });
-        $originalBtn.replaceWith($newBtn);
+        updateSelectButtonsUI();
     }
 
     function removeSortAndPostButtons() {
@@ -348,12 +416,13 @@
     function cleanInterface() {
         removeSortAndPostButtons();
         updateDeleteButton();
+        updateSelectButtonsUI();
     }
 
     $(document).ready(function() {
         setInterval(() => {
             if ($('.manageGroup').length) {
-                replaceSelectAllButton();
+                replaceSelectButtons();
             }
             hookDownloadButton();
             hookDeleteButton();

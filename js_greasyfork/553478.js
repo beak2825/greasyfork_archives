@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWGiftHelper
 // @namespace       HWGiftHelper
-// @version         0.4.1
+// @version         0.4.2
 // @description     Gift helper for the game Hero Wars
 // @author          FatSwan
 // @license         Copyright FatSwan
@@ -215,16 +215,6 @@ this.getSignature = function(headers, data) {
     }
 
     return md5(sign.signature);
-}
-
-if (typeof HWHFuncs != 'undefined') {
-    this.send = this.HWHFuncs.send;
-    this.hideProgress = this.HWHFuncs.hideProgress;
-    this.setProgress = this.HWHFuncs.setProgress;
-    this.addProgress = this.HWHFuncs.addProgress;
-    this.getTimer = this.HWHFuncs.getTimer;
-    this.countdownTimer = this.HWHFuncs.countdownTimer;
-    this.popup = this.HWHFuncs.popup;
 }
 
 this.HWGFuncs = {
@@ -2258,7 +2248,7 @@ async function changeBornServer() {
 /**
  * Mission auto repeat
  **/
-this.sendsMission = async function (param) {
+this.sendsRepeatMission = async function (param) {
 	if (isStopSendMission) {
 		return;
 	}
@@ -2349,7 +2339,7 @@ this.sendsMission = async function (param) {
                     isStopSendMission = true;
                     setProgress('Mission finished.');
                 }
-				setTimeout(sendsMission, 1, param);
+				setTimeout(sendsRepeatMission, 1, param);
 			});
 		})
 	});
@@ -4101,6 +4091,24 @@ function callExtensionToClearCookies() {
     });
 }
 
+// 判断HWH插件是否加载
+function checkHWHLoaded() {
+    if (typeof HWHFuncs == 'undefined') {
+        return false;
+    }
+
+    // setup functions
+    this.send = this.HWHFuncs.send;
+    this.hideProgress = this.HWHFuncs.hideProgress;
+    this.setProgress = this.HWHFuncs.setProgress;
+    this.addProgress = this.HWHFuncs.addProgress;
+    this.getTimer = this.HWHFuncs.getTimer;
+    this.countdownTimer = this.HWHFuncs.countdownTimer;
+    this.popup = this.HWHFuncs.popup;
+
+    return true;
+}
+
 // 设置HWH插件的参数
 function setupHWHelperOptions() {
     localStorage.setItem('HeroWarsHelper:repeatMission', false);
@@ -4109,12 +4117,11 @@ function setupHWHelperOptions() {
     localStorage.setItem('HeroWarsHelper:countControl', false);
 }
 
-
 // pass mission
 let isStopSendMission = false;
 async function passMission(param) {
     isStopSendMission = false;
-    await sendsMission(param);
+    await sendsRepeatMission(param);
     while (isStopSendMission == false) {
         await sleep(5 * 1000);
     }
@@ -5124,7 +5131,8 @@ const sleep = (time) => new Promise((r) => setTimeout(r, time));
 // start auto login
 let intervalId = setInterval(onLoad, 2000);
 
-let autoRoadIntervalId = 0;
+// 自动重新加载页面
+let autoReloadIntervalId = 0;
 
 /**
  * 启动时自动运行任务
@@ -5141,6 +5149,11 @@ async function autoRunTaskOnStart() {
  * Game on load
  */
 async function onLoad() {
+    // check HWH is alive or not
+    if (checkHWHLoaded() == false) {
+        return;
+    }
+
     // Stop Interval
     clearInterval(intervalId);
 
@@ -5184,17 +5197,12 @@ async function onLoad() {
         }
 
         // 3分钟之后自动重新加载画面
-        autoRoadIntervalId = setInterval(reload, 3 * 60e3);
-        // TODO remove
-        // } else if (RunningTask == RunningTaskEnum.AoCAutoUpgrade) {
-        //     // startAoCAutoUpgrade();
-        //     startTask();
-        // }
+        autoReloadIntervalId = setInterval(reload, 3 * 60e3);
     } else {
         waitForGameLoaded();
 
-        // 10分钟之后自动重新加载画面
-        autoRoadIntervalId = setInterval(reload, 10 * 60e3);
+        // 8分钟之后自动重新加载画面
+        autoReloadIntervalId = setInterval(reload, 8 * 60e3);
     }
 }
 
@@ -5209,7 +5217,7 @@ async function waitForGameLoaded(){
 
 // 重启画面
 function reload() {
-    clearInterval(autoRoadIntervalId);
+    clearInterval(autoReloadIntervalId);
     location.reload();
 }
 

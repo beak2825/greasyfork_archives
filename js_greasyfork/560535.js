@@ -2,7 +2,7 @@
 // @name         Lolz Custom Mascotic
 // @namespace    http://tampermonkey.net/
 // @version      4.22
-// @author       MARYXANAX
+// @author       taskill
 // @license      MIT
 // @description  Custom mascot for lolz
 // @match        *://lolz.live/*

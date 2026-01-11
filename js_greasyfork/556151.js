@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         星穹云游戏防离线
+// @name         星穹云游戏防离线（兼容模式）
 // @namespace    http://tampermonkey.net/
 // @version      3.0
 // @description  每5秒肉眼可见抖动鼠标，无页面提示，避免离线检测
@@ -9,8 +9,8 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sr.mihoyo.com
 // @license      MIT
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/556151/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF.user.js
-// @updateURL https://update.greasyfork.org/scripts/556151/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/556151/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF%EF%BC%88%E5%85%BC%E5%AE%B9%E6%A8%A1%E5%BC%8F%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/556151/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF%EF%BC%88%E5%85%BC%E5%AE%B9%E6%A8%A1%E5%BC%8F%EF%BC%89.meta.js
 // ==/UserScript==
 
 (function() {

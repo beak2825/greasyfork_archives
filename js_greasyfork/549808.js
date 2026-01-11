@@ -1,16 +1,16 @@
    // ==UserScript==
-    // @name         TOLYATTI | 🍃Скрипт для Куратора Форума by H.Myrphy🍃
+    // @name         BLACK | 🖤 Скрипт для Куратора Форума by B.Capone 🖤
     // @namespace    https://forum.blackrussia.online
-    // @version      2.6
-    // @description  Специально для Черной России BLACK RUSSIA | TOLYATTI
-    // @author       H.Myrphy
+    // @version      2.8
+    // @description  Специально для Черной России BLACK RUSSIA | BLACK
+    // @author       B.Capone
     // @match        https://forum.blackrussia.online/threads/*
     // @include      https://forum.blackrussia.online/threads/
     // @grant        none
     // @license      MIT
     // @icon         https://sun9-43.userapi.com/s/v1/ig2/-ZAtpa31KeVZlwXmBb8Wne-09ZgrV36gKk682n7a6z0dfrQYIB04iyi_fYDE5P7fnpYucJTrpGs3BKnvzK05sIIb.jpg?quality=95&as=32x40,48x60,72x90,108x135,160x200,240x300,360x450,480x600,540x675,640x800,720x900&from=bu&u=F_J27far0eBEgv8vnfFCbeGCVLsUyaQDyguERaVlUX0&cs=720x0
-// @downloadURL https://update.greasyfork.org/scripts/549808/TOLYATTI%20%7C%20%F0%9F%8D%83%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20HMyrphy%F0%9F%8D%83.user.js
-// @updateURL https://update.greasyfork.org/scripts/549808/TOLYATTI%20%7C%20%F0%9F%8D%83%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20HMyrphy%F0%9F%8D%83.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/549808/BLACK%20%7C%20%F0%9F%96%A4%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20BCapone%20%F0%9F%96%A4.user.js
+// @updateURL https://update.greasyfork.org/scripts/549808/BLACK%20%7C%20%F0%9F%96%A4%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20BCapone%20%F0%9F%96%A4.meta.js
     // ==/UserScript==
      
     (function () {
@@ -36,11 +36,11 @@
         title: '| 🔥На рассмотрение🔥 |',
       content:
     "[HEADING=3][CENTER][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]{{ greeting }}, уважаемый(-ая) {{ user.mention }}.[/I][/COLOR][/SIZE][/FONT][/HEADING]"+
-    "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
+    "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
     "[HEADING=3][CENTER][I][B][I][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]Ваша жалоба взята на рассмотрение. Ожидайте пожалуйста ответа в ближайшее время.[/SIZE][/FONT][FONT=georgia][SIZE=4].[/I][/SIZE][/FONT][/CENTER]<br>" +
-    "[CENTER][IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG][/CENTER]<br>"+
-    "[HEADING=3][CENTER][I][B][I][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]Примечание:[/I][/COLOR][COLOR=rgb(255, 215, 0)] Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.[/COLOR][/SIZE][/FONT][/CENTER]<br>" +
-    "[CENTER][IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG][/CENTER]<br>"+
+        "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
+    "[HEADING=3][CENTER][I][B][I][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]Примечание:[/I][/COLOR][COLOR=rgb(255, 0, 0)] Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.[/COLOR][/SIZE][/FONT][/CENTER]<br>" +
+        "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
     "[HEADING=3][CENTER][I][B][I][FONT=georgia][SIZE=4][COLOR=#FF8C00][I]На рассмотрении.[/I][/COLOR][/SIZE][/FONT][/CENTER]",
        prefix: PIN_PREFIX,
       status:true,
@@ -54,15 +54,15 @@
             title: '| 🍃DM🍃 |',
           content:
          "[HEADING=3][CENTER][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]{{ greeting }}, уважаемый(-ая) {{ user.mention }}.[/I][/COLOR][/SIZE][/FONT][/HEADING]" +
-         "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
+         "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
          "[HEADING=3][CENTER][I][B][I][COLOR=rgb(169, 169, 169)][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]К нарушителю будут применены меры в соответствии со следующим пунктом общих правил проекта:[/I][/FONT][/SIZE]<br>" +
-         "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
+         "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
          "[HEADING=3][CENTER][I][B][I][COLOR=rgb(169, 169, 169)][FONT=georgia][QUOTE][COLOR=rgb(255,0,0)][SIZE=4]2.19.[/COLOR][/SIZE][/FONT][FONT=georgia][COLOR=rgb(255, 215, 0)][SIZE=4]Запрещен DM (DeathMatch) — убийство или нанесение урона без веской IC причины[COLOR=rgb(255,0,0)] | Jail 60 минут[/QUOTE][/FONT][/COLOR][/SIZE]" +
-         "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
+         "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
          "[HEADING=3][CENTER][I][B][I][FONT=georgia][COLOR=rgb(169, 169, 169)][SIZE=4][I]Примечание:[/I][/COLOR][COLOR=rgb(169, 169, 169)] Разрешен ответный DM в целях защиты, обязательно иметь видео доказательство в случае наказания администрации, нанесение урона по транспорту также является нарушением данного пункта правил.[/FONT][/SIZE]<br>" +
-         "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
+         "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
          "[HEADING=3][CENTER][I][B][I][FONT=georgia][COLOR=rgb(169, 169, 169)][SIZE=4][I]Примечание:[/I][/COLOR][COLOR=rgb(169, 169, 169)] Нанесение урона с целью защиты особняка или его территории, а также нанесение урона после ДТП не является веской IC причиной, для войны семей предусмотрено отдельное системное мероприятие.[/FONT][/SIZE]<br>" +
-         "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
+         "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
          "[HEADING=3][CENTER][I][B][I][COLOR=rgb(169, 169, 169)][FONT=georgia][SIZE=4][COLOR=#00FF00][I]Одобрено, закрыто.[/I][/COLOR][/SIZE][/FONT][/CENTER]",
             prefix: ACCEPT_PREFIX,
            status: false,
@@ -430,12 +430,12 @@
         {
             title: '| 🍃ГКФ/ЗГКФ🍃 |',
           content:
-        "[HEADING=3][CENTER][FONT=georgia][SIZE=4][COLOR=rgb(123, 104, 238)][I]{{ greeting }}, уважаемый(-ая) {{ user.mention }}.[/I][/COLOR][/SIZE][/FONT][/HEADING]"+
-        "[IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG]<br>"+
-        "[FONT=georgia][SIZE=4][COLOR=rgb(123, 104, 238)][I]Ваша жалоба передана на рассмотрение [COLOR=rgb(255, 215, 0)] Главному Куратору Форума и Заместителю Главного Куратора Форума [COLOR=rgb(123, 104, 238)][I][FONT=georgia][SIZE=4] Один из них тщательно изучит все обстоятельства и примет решение в соответствии с правилами.​ [/SIZE][/FONT][FONT=georgia][SIZE=4].[/I][/SIZE][/FONT][/CENTER]<br>" +
-        "[CENTER][IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG][/CENTER]<br>"+
-        "[CENTER][FONT=georgia][SIZE=4][COLOR=rgb(123, 104, 238)][I]Примечание:[/I][/COLOR][COLOR=rgb(255, 215, 0)] Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.[/COLOR][/SIZE][/FONT][/CENTER]<br>" +
-        "[CENTER][IMG width=695px]https://vk.com/doc758928850_688186340?hash=UW8BEhCZPSgxlTkUn7Rj7ub9Z1iRLf8cPDg0IKr2ZJX&dl=kmF1K5zQRlmUV1q2qnMzbgEYJJp0KzvzK4x8dVMpvtc&api=1&no_preview=1[/IMG][/CENTER]<br>"+
+        "[HEADING=3][CENTER][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]{{ greeting }}, уважаемый(-ая) {{ user.mention }}.[/I][/COLOR][/SIZE][/FONT][/HEADING]"+
+        "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
+        "[FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]Ваша жалоба передана на рассмотрение [COLOR=rgb(255, 0, 0)] Главному Куратору Форума и Заместителю Главного Куратора Форума [COLOR=rgb(169, 169, 169)][I][FONT=georgia][SIZE=4] Один из них тщательно изучит все обстоятельства и примет решение в соответствии с правилами.​ [/SIZE][/FONT][FONT=georgia][SIZE=4].[/I][/SIZE][/FONT][/CENTER]<br>" +
+        "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
+        "[CENTER][FONT=georgia][SIZE=4][COLOR=rgb(169, 169, 169)][I]Примечание:[/I][/COLOR][COLOR=rgb(255, 0, 0)] Просьба не создавать дубликаты данной темы, иначе ваш форумный аккаунт может быть заблокирован.[/COLOR][/SIZE][/FONT][/CENTER]<br>" +
+        "[IMG width=695px]https://s7.hostingkartinok.com/uploads/images/2015/09/86e13c0edc564a1c89d8778052174f57.png[/IMG]<br>"+
         "[CENTER][FONT=georgia][SIZE=4][COLOR=#FF8C00][I]На рассмотрении.[/I][/COLOR][/SIZE][/FONT][/CENTER]",
            prefix: PIN_PREFIX,
           status:true,

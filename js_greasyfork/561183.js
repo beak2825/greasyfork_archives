@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Optimiseur du Chat de la Foret - V1.9 (Link url Fix)
+// @name         Optimiseur du Chat de la Foret - V1.95 (Balise Code)
 // @namespace    https://greasyfork.org/users/1555347
-// @version      1.9
-// @description  Ajout URL / IMG / Quote / @. Fix : Les liens URL cassés.
+// @version      1.95
+// @description  Ajout URL / IMG / CODE / Quote / @.
 // @author       Jukop22
-// @match        https://www.pasla.com/*
+// @match        https://www.sharewood.tv/*
 // @grant        none
 // @license      MIT
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V19%20%28Link%20url%20Fix%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V19%20%28Link%20url%20Fix%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V195%20%28Balise%20Code%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V195%20%28Balise%20Code%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -71,7 +71,6 @@
 
         if (forceBreak && ed) {
             ed.focus();
-            // Ajout <br><br> + caractère invisible pour résister aux emojis
             document.execCommand('insertHTML', false, '<br><br>\u200B');
         }
         syncVue();
@@ -84,14 +83,22 @@
 
         box = ce('div');
         box.id = 'sw-prompt';
-        box.style.cssText = "display:none;flex-direction:row;align-items:center;gap:15px;padding:15px;background:#fff!important;border:2px solid #3498db;border-radius:6px;margin:5px 0;z-index:2147483647;width:100%;box-sizing:border-box;box-shadow:0 4px 15px rgba(0,0,0,.4);";
+        box.style.cssText = "display:none;flex-direction:row;align-items:flex-start;gap:15px;padding:15px;background:#fff!important;border:2px solid #3498db;border-radius:6px;margin:5px 0;z-index:2147483647;width:100%;box-sizing:border-box;box-shadow:0 4px 15px rgba(0,0,0,.4);";
 
+        // Ajout du textarea caché par défaut dans le HTML
         box.innerHTML = `
             <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
                 <div id="sw-confirm" style="display:none;font-weight:bold;color:#e74c3c;font-size:14px;">⚠️ Voulez-vous tout effacer ?</div>
                 <div id="sw-inputs">
-                    <div id="sw-row-txt"><label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:2px;">Texte :</label><input type="text" id="sw-in-txt" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;"></div>
-                    <div style="margin-top:5px;"><label id="sw-lbl-url" style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:2px;">URL :</label><input type="text" id="sw-in-url" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;"></div>
+                    <div id="sw-row-txt">
+                        <label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:2px;">Texte :</label>
+                        <input type="text" id="sw-in-txt" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;">
+                    </div>
+                    <div style="margin-top:5px;">
+                        <label id="sw-lbl-url" style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:2px;">URL :</label>
+                        <input type="text" id="sw-in-url" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;">
+                        <textarea id="sw-in-code" style="display:none;width:100%;height:100px;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;font-family:monospace;resize:vertical;box-sizing:border-box;"></textarea>
+                    </div>
                 </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:5px;min-width:80px;">
@@ -104,7 +111,7 @@
 
         const close = () => {
             box.style.display = 'none';
-            qs('#sw-in-url').value = qs('#sw-in-txt').value = '';
+            qs('#sw-in-url').value = qs('#sw-in-txt').value = qs('#sw-in-code').value = '';
             const em = qs('.emojionepicker-picker'); if(em) em.style.display = "block";
         };
 
@@ -121,12 +128,23 @@
                 if (ed) { ed.innerHTML = ""; const wbb = window.$(SELECTORS.INPUT).data("wbb"); if(wbb) wbb.sync(); }
                 syncVue("");
             } else {
-                const url = qs('#sw-in-url').value.trim();
                 const txt = qs('#sw-in-txt').value.trim();
-                if (url) {
-                    const bb = mode === 'IMG' ? `[img]${url}[/img] ` : (txt ? `[url=${url}][color=#6fa8dc][u][b]${txt}[/b][/u][/color][/url] ` : `[url=${url}][color=#6fa8dc][u][b]${url}[/b][/u][/color][/url] `);
-                    insert(bb);
+                let mainInput = "";
+                let bb = "";
+
+                if (mode === 'CODE') {
+                    // Pour le code, on récupère le contenu du textarea
+                    mainInput = qs('#sw-in-code').value.trim();
+                    if (mainInput) bb = `[code]${mainInput}[/code] `;
+                } else {
+                    // Pour IMG et URL, on récupère l'input text normal
+                    mainInput = qs('#sw-in-url').value.trim();
+                    if (mainInput) {
+                        if (mode === 'IMG') bb = `[img]${mainInput}[/img] `;
+                        else bb = txt ? `[url=${mainInput}][color=#6fa8dc][u][b]${txt}[/b][/u][/color][/url] ` : `[url=${mainInput}][color=#6fa8dc][u][b]${mainInput}[/b][/u][/color][/url] `;
+                    }
                 }
+                if (bb) insert(bb);
             }
             close();
         };
@@ -142,6 +160,7 @@
         const tools = [
             { id: 'sw-btn-url', l: '🔗', m: 'URL', t: 'Lien' },
             { id: 'sw-btn-img', l: '🖼️', m: 'IMG', t: 'Image' },
+            { id: 'sw-btn-code', l: '💻', m: 'CODE', t: 'Code' },
             { id: 'sw-btn-clear', l: '🗑️', m: 'CLEAR', t: 'Effacer' }
         ];
 
@@ -161,20 +180,44 @@
                 box.setAttribute('data-mode', tool.m);
                 const isClear = tool.m === 'CLEAR';
                 const isImg = tool.m === 'IMG';
+                const isCode = tool.m === 'CODE';
 
+                // Gestion affichage Confirmation vs Inputs
                 qs('#sw-confirm').style.display = isClear ? 'block' : 'none';
                 qs('#sw-inputs').style.display = isClear ? 'none' : 'block';
-                qs('#sw-row-txt').style.display = (isClear || isImg) ? 'none' : 'block';
+                // Gestion champ "Texte" (seulement pour URL)
+                qs('#sw-row-txt').style.display = (isClear || isImg || isCode) ? 'none' : 'block';
 
+                // Gestion switch Input simple vs Textarea pour le Code
+                const inputUrl = qs('#sw-in-url');
+                const inputCode = qs('#sw-in-code');
+                const lbl = qs('#sw-lbl-url');
+
+                if (isCode) {
+                    inputUrl.style.display = 'none';
+                    inputCode.style.display = 'block';
+                    lbl.textContent = "Collez votre code ici :";
+                } else {
+                    inputUrl.style.display = 'block';
+                    inputCode.style.display = 'none';
+                    lbl.textContent = isImg ? "URL de l'image :" : "URL du lien :";
+                }
+
+                // Boutons
                 const btnOk = qs('#sw-ok', box);
                 btnOk.textContent = isClear ? "Oui, effacer !" : "VALIDER";
                 btnOk.className = isClear ? "btn btn-xs btn-danger" : "btn btn-xs btn-primary";
-                qs('#sw-lbl-url').textContent = isImg ? "URL de l'image :" : "URL du lien :";
 
                 box.style.display = 'flex';
                 const em = qs('.emojionepicker-picker'); if(em) em.style.display = "none";
 
-                if (!isClear) setTimeout(() => qs(isImg ? '#sw-in-url' : '#sw-in-txt').focus(), 50);
+                if (!isClear) {
+                    setTimeout(() => {
+                        if (isCode) inputCode.focus();
+                        else if (isImg) inputUrl.focus();
+                        else qs('#sw-in-txt').focus();
+                    }, 50);
+                }
             };
             toolbar.appendChild(btn);
         });
@@ -214,10 +257,7 @@
                     const d = qs('.align-left', li);
                     if(d) {
                         msg = d.innerText.trim();
-                        // 1. Supprime les citations imbriquées (>> Pseudo : "...")
-                        // Regex : Cherche le motif du script (>> ... : "...") au début et l'efface
                         msg = msg.replace(/^>>\s+.*?\s+:\s+"[\s\S]*?"\s*/, "");
-                        // 2. Supprime les mentions (@Pseudo) restantes au début
                         msg = msg.replace(/^(@\S+\s*)+/, "").trim();
                     }
                 }

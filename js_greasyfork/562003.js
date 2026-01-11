@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Quick Deposit
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Quick Deposit cash to Ghost Trade / Faction Vault
 // @author       e7cf09 [3441977]
 // @icon         https://editor.torn.com/cd385b6f-7625-47bf-88d4-911ee9661b52-3441977.png
@@ -17,8 +17,7 @@
     'use strict';
 
     // ================= CONFIGURATION =================
-    const ENABLE_PANIC_MODE = true; // Enable red shield Panic Mode
-    const PANIC_THRESHOLD = 10000000; // Panic Threshold: Only triggers if balance exceeds this
+    const PANIC_THRESHOLD = 20000000; // Panic Threshold: Only triggers if balance exceeds this
     const STRICT_GHOST_MODE = true; // Relaxed matching for Ghost trades (if false, any trade found is used)
 
     // Shortcut Configuration (Use KeyboardEvent.code)
@@ -26,9 +25,11 @@
     const DEPOSIT_KEY = "Space";
     const GHOST_KEY = "KeyG";
     const RESET_KEY = "KeyR";
+    const PANIC_TOGGLE_KEY = "KeyP";
 
     // ================= CORE STATE =================
     const STORAGE_KEY = 'torn_tactical_ghost_id';
+    const PANIC_STATE_KEY = 'torn_tactical_panic_enabled';
     const GHOST_KEYWORD = 'ghost';
     const DEAD_SIGNALS = [
         "no trade was found", "trade has been accepted",
@@ -41,6 +42,10 @@
     let isJumping = false; // Separate lock for page jumps
     let panicOverlay = null;
     let isTradeDeadOnCurrentPage = false; // Flag: Whether the trade is confirmed dead on current page
+
+    // Initialize Panic State (Default: ON)
+    let isPanicEnabled = localStorage.getItem(PANIC_STATE_KEY) !== 'false';
+
 
     // ==========================================
     // === 1. SAFETY START & UTILITIES ===
@@ -126,7 +131,7 @@
     // --- Status Check Helpers ---
     function checkStatusRestrictions() {
         const icons = document.querySelectorAll('ul[class*="status-icons"] > li');
-        
+
         // Safety First: If status icons are not loaded yet, assume OK (Aggressive Mode)
         // We prefer to try and fail rather than blocking the user if the DOM is lagging
         if (icons.length === 0) {
@@ -152,9 +157,9 @@
                 status.canFaction = false;
                 status.reason = "HOSP/JAIL";
             }
-            
+
             // Check for Traveling
-            // The class name for traveling can vary (e.g. icon71 in user input), 
+            // The class name for traveling can vary (e.g. icon71 in user input),
             // but checking aria-label "Traveling" is more robust based on provided HTML
             if (ariaLabel.includes('Traveling')) {
                 status.canFaction = false;
@@ -167,12 +172,15 @@
     }
 
     function triggerPanicMode() {
-        if (!ENABLE_PANIC_MODE || currentBalance < PANIC_THRESHOLD) return;
-        
+        if (!isPanicEnabled || currentBalance < PANIC_THRESHOLD) {
+             if (isPanicLocked) manualDismiss();
+             return;
+        }
+
         // Check restrictions before triggering panic
         const status = checkStatusRestrictions();
         const ghostID = getGhostID();
-        
+
         // If we have Ghost ID, we only care if Ghost is allowed
         // If we don't have Ghost ID, we default to Faction, so Faction must be allowed
         const canExecute = ghostID ? status.canGhost : status.canFaction;
@@ -271,7 +279,7 @@
                 isJumping = true;
                 if (panicOverlay) panicOverlay.innerHTML = "JUMPING<br>TO GHOST";
                 setTimeout(() => { isJumping = false; }, 1500); // Safety unlock if page doesn't reload
-                
+
                 // Use replace to avoid history pollution if just switching params, but href assignment is safer for navigation
                 window.location.href = `https://www.torn.com/trade.php#step=addmoney&ID=${ghostID}`;
                 return;
@@ -288,7 +296,7 @@
 
             isSending = true;
             if (panicOverlay) panicOverlay.innerHTML = "DEPOSITING<br>TO GHOST";
-            
+
             // 1. Fill the input with the total amount
             amountInput.value = totalMoney;
             // Dispatch events to ensure any JS listeners pick up the change
@@ -306,12 +314,12 @@
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('disabled');
                 }
-                
+
                 // Immediate execution: No artificial delay
                 // The disabled check and removal happens synchronously above
                 submitBtn.click();
-                isJumping = false; 
-                
+                isJumping = false;
+
                 // isSending remains true until balance update clears it
             } else {
                 // Silent fail to allow retry
@@ -320,10 +328,10 @@
 
         } else {
             // Deposit to Faction
-            
+
             // Note: We check if the donation form is present first.
             const donationForm = document.querySelector('.give-money-form') || (document.querySelector('.input-money') ? document.querySelector('.input-money').closest('form') || document.querySelector('.input-money').closest('ul') : null);
-            
+
             if (!donationForm) {
                 const current = window.location.href;
                 const onTargetPage = current.includes('factions.php') && current.includes('step=your') && current.includes('type=1') && current.includes('tab=armoury');
@@ -334,7 +342,7 @@
                     isJumping = true;
                     if (panicOverlay) panicOverlay.innerHTML = "JUMPING<br>TO FACTION";
                     setTimeout(() => { isJumping = false; }, 1500); // Safety unlock if page doesn't reload
-                    
+
                     window.location.href = `https://www.torn.com/factions.php?step=your&type=1#/tab=armoury`;
                     return;
                 } else {
@@ -368,7 +376,7 @@
 
             // Determine Amount to Deposit
             let depositAmount = currentBalance;
-            
+
             // Try to get from data-money on input (most reliable for max amount)
             const dataMoney = amountInput.getAttribute('data-money');
             if (dataMoney) {
@@ -388,7 +396,7 @@
                  isSending = false;
                  return;
             }
-            
+
             // 2. Set Value
             amountInput.value = depositAmount;
             amountInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -402,7 +410,7 @@
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('disabled');
                 }
-                
+
                 if (panicOverlay) panicOverlay.innerHTML = "DEPOSITING<br>TO FACTION";
                 submitBtn.click();
                 // isSending remains true until balance update clears it
@@ -505,10 +513,58 @@
     // ==========================================
     // === 6. PANIC UI ===
     // ==========================================
-    
+
     function manualDismiss() {
         isPanicLocked = false;
         disablePanicOverlay();
+    }
+
+    // Toggle Panic Mode via Shortcut
+    function togglePanicMode() {
+        isPanicEnabled = !isPanicEnabled;
+        localStorage.setItem(PANIC_STATE_KEY, isPanicEnabled);
+
+        // Show Toast Feedback
+        showToast(`PANIC MODE <span style="color:${isPanicEnabled ? '#4dff4d' : '#ff4d4d'}">${isPanicEnabled ? 'ON' : 'OFF'}</span>`);
+
+        if (isPanicEnabled) {
+            // Re-evaluate if we should trigger panic immediately
+            if (currentBalance >= PANIC_THRESHOLD) {
+                setTimeout(() => {
+                    const status = checkStatusRestrictions();
+                    const ghostID = getGhostID();
+                    const canExecute = ghostID ? status.canGhost : status.canFaction;
+                    if (canExecute) triggerPanicMode();
+                }, 200);
+            }
+        } else {
+            manualDismiss();
+        }
+    }
+
+    function showToast(html) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 2147483647; background: rgba(0, 0, 0, 0.85); color: white;
+            font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;
+            padding: 12px 24px; border-radius: 8px; pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            opacity: 0; transition: opacity 0.3s ease-in-out;
+            text-align: center; border: 1px solid rgba(255,255,255,0.2);
+        `;
+        toast.innerHTML = `<div style="font-size:11px; color:#aaa; margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Quick Deposit</div>${html}`;
+
+        document.body.appendChild(toast);
+
+        // Fade In
+        requestAnimationFrame(() => toast.style.opacity = '1');
+
+        // Fade Out
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2000);
     }
 
     function updatePanicOverlay() {
@@ -545,7 +601,7 @@
         panicOverlay.style.display = 'block';
         if (!isSending && !isJumping) {
             // Predict action based on current state
-            
+
             // 1. Check for Confirmation Box
             let hasConfirm = false;
             const confirmBoxes = document.querySelectorAll('.cash-confirm');
@@ -567,7 +623,7 @@
                 const searchParams = new URLSearchParams(window.location.search);
                 const currentStep = hashParams.get('step') || searchParams.get('step');
                 const currentID = hashParams.get('ID') || searchParams.get('ID');
-                
+
                 const onGhostPage = window.location.href.includes('trade.php') &&
                                     currentStep === 'addmoney' &&
                                     currentID === ghostID;
@@ -580,12 +636,17 @@
             } else {
                 // Faction Mode
                 // Check if we are ready to deposit (form exists)
-                const donationForm = document.querySelector('.give-money-form') || 
-                                   (document.querySelector('.input-money') ? 
-                                    document.querySelector('.input-money').closest('form') || 
+                const donationForm = document.querySelector('.give-money-form') ||
+                                   (document.querySelector('.input-money') ?
+                                    document.querySelector('.input-money').closest('form') ||
                                     document.querySelector('.input-money').closest('ul') : null);
 
-                if (donationForm) {
+                // Also check if we are on the target URL (even if form is loading/missing)
+                // This prevents "JUMP TO FACTION" from showing when we are already there
+                const current = window.location.href;
+                const onTargetPage = current.includes('factions.php') && current.includes('step=your') && current.includes('type=1') && current.includes('tab=armoury');
+
+                if (donationForm || onTargetPage) {
                     panicOverlay.innerHTML = `DEPOSIT<br>${formatMoney(currentBalance)}`;
                 } else {
                     panicOverlay.innerHTML = `JUMP TO<br>FACTION`;
@@ -606,7 +667,7 @@
         const num = parseInt(val);
         if (!isNaN(num)) {
             currentBalance = num;
-            
+
             // Check restrictions again on balance update to auto-dismiss if status changed
             const status = checkStatusRestrictions();
             const ghostID = getGhostID();
@@ -630,10 +691,10 @@
 
     function handleGlobalInteraction(e) {
         if (!e.isTrusted) return; // Allow script-generated events
-        
+
         // Exclude interaction with specific UI elements to prevent blocking valid clicks
-        if (e.target.closest('#torn-tactical-deposit') || 
-            e.target.closest('button') || 
+        if (e.target.closest('#torn-tactical-deposit') ||
+            e.target.closest('button') ||
             e.target.closest('input[type="submit"]') ||
             e.target.closest('a.torn-btn')) {
             return;
@@ -663,6 +724,9 @@
                     }
                     safeInjectButton(); // Refresh UI
                 }
+            } else if (code === PANIC_TOGGLE_KEY) {
+                e.preventDefault();
+                togglePanicMode();
             }
         }
     }
@@ -671,10 +735,28 @@
         window.addEventListener(evt, handleGlobalInteraction, true);
     });
 
+    // Listen for storage changes to sync Panic Mode state across tabs
+    window.addEventListener('storage', (e) => {
+        if (e.key === PANIC_STATE_KEY) {
+            isPanicEnabled = e.newValue !== 'false';
+            if (!isPanicEnabled) {
+                manualDismiss();
+            } else {
+                // If enabled, check if we should trigger immediately
+                if (currentBalance >= PANIC_THRESHOLD) {
+                    const status = checkStatusRestrictions();
+                    const ghostID = getGhostID();
+                    const canExecute = ghostID ? status.canGhost : status.canFaction;
+                    if (canExecute) triggerPanicMode();
+                }
+            }
+        }
+    });
+
     // Monitor URL changes for SPA navigation (Hash changes) to clear Jump Lock immediately
     function handleUrlChange() {
         const ghostID = getGhostID();
-        
+
         // If we are locked in "JUMPING" state, check if we arrived
         if (isJumping && ghostID) {
              const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -690,7 +772,7 @@
                  isJumping = false;
              }
         }
-        
+
         // Always update overlay to reflect new URL state
         if (isPanicLocked) updatePanicOverlay();
     }
@@ -725,7 +807,7 @@
     // Instead of waiting for intervals, we listen for the box appearing
     const confirmObserver = new MutationObserver((mutations) => {
         if (!isSending) return; // Only relevant if we are in a deposit flow
-        
+
         for (const mutation of mutations) {
             if (mutation.type === 'childList' || mutation.type === 'attributes') {
                 const boxes = document.querySelectorAll('.cash-confirm');
@@ -755,7 +837,7 @@
                 safeInjectButton();
                 scanActiveTrades();
                 scanPageForDeadSignals();
-                
+
                 // Re-check panic eligibility when DOM changes (e.g. status icons update)
                 if (currentBalance >= PANIC_THRESHOLD) {
                     const status = checkStatusRestrictions();

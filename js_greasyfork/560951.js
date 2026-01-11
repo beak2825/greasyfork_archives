@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Black Russia | Скрипт для Кураторов Форума | SURGUT
 // @namespace    https://forum.blackrussia.online/
-// @version      4.1
+// @version      4.2
 // @description  Скрипт для Руководства Сервера
 // @author       Lukas_Platonov
 // @match        https://forum.blackrussia.online/threads/*
@@ -36,6 +36,15 @@ const buttons = [
 	  title: '--------------------------------------------------  Жалобы на игроков --------------------------------------------------',
 },
 {
+title: 'Передано Главному Куратору Форума',
+content:
+'[SIZE=4][FONT=courier new][CENTER]Здравствуйте.[/CENTER]<br><br>' +
+"[CENTER]Ваша жалоба передана Главному Куратору Форума.[/CENTER]<br><br>" +
+'[CENTER]Ожидайте ответа.[/CENTER][/FONT][/SIZE]',
+prefix: PIN_PREFIX,
+status: true,
+},
+{
 title: 'На рассмотрении',
 content:
 '[SIZE=4][FONT=courier new][CENTER]Здравствуйте.[/CENTER]<br><br>' +
@@ -58,7 +67,7 @@ title: 'Оск родных',
 content:
 '[SIZE=4][FONT=courier new][CENTER]Здравствуйте.[/CENTER]<br><br>' +
 "[CENTER]Игрок будет наказан по следующему пункту:[/CENTER]<br><br>" +
-"[CENTER]2.19. Запрещено оскорбление или косвенное упоминание родных вне зависимости от чата (IC или OOC) | Mute 120 минут / Ban 7 - 15 дней.[/CENTER]<br><br>" +
+"[CENTER]3.04. Запрещено оскорбление или косвенное упоминание родных вне зависимости от чата (IC или OOC) | Mute 120 минут / Ban 7 - 15 дней.[/CENTER]<br><br>" +
 '[CENTER]Одобрено, закрыто.[/CENTER][/FONT][/SIZE]',
 prefix: ACCEPT_PREFIX,
 status: false,

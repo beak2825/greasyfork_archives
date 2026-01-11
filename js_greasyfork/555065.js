@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HSGuru 中文美化脚本
 // @namespace    http://tampermonkey.net/
-// @version      0.9.6
+// @version      34.2.2.1
 // @description  将HSGuru网站的部分英文替换为中文，并提供界面美化。
 // @author       深海之鱼
 // @match        https://www.hsguru.com/*
@@ -2025,7 +2025,46 @@
 ['Axe of Cenarius', '塞纳留斯之斧'],
 ['Storm the Gates', '围攻城门'],
 ['Messmaker', '捣蛋林精'],
-['Welcome Home!', '欢迎回家！']
+['Welcome Home!', '欢迎回家！'],
+        // 永恒回响
+['Prescient Slitherdrake', '先觉蜿变幼龙'],
+['Omen of the End', '末世之兆'],
+['Crumblecrusher', '碎裂扫荡者'],
+['Morchie', '米罗克'],
+['Endtime Murozond', '末世的姆诺兹多'],
+['Finality', '最终定局'],
+['Chronikar', '克罗妮卡'],
+['Splintered Reality', '破碎现实'],
+['Triennium Rex', '三纪暴龙'],
+['Flames of Infinity', '无穷烈焰'],
+['Hand of Infinity', '无穷之手'],
+['Wings of Eternity', '永时之翼'],
+['Eventuality', '不测之变'],
+['Haywire Hornswog', '失控龙蛙'],
+['Acolyte of Infinity', '无穷助祭'],
+['Dimensional Weaponsmith', '次元武器匠'],
+['Time-Twisted Seer', '时光扭曲先知'],
+['Acceleration Aura', '加速光环'],
+['Press the Advantage', '发挥优势'],
+['Voodoo Totem', '巫毒图腾'],
+['Eternal Firebolt', '永时火焰箭'],
+['Jagged Edge of Time', '时光锯刃'],
+['Shade of the End Time', '时光之末的阴影'],
+['Synchronized Spark', '协作火花'],
+['Endtime Survivor', '末世幸存者'],
+['Remnant of Rage', '愤怒残魂'],
+['Eternal Toil', '永时困苦'],
+['Brutish Endmaw', '戮屠末日巨口'],
+['Enduring Roach', '永存蟑螂'],
+['Chronoclaws', '时空之爪'],
+['For All Time', '力敌万世'],
+['Fragment of Nothing', '虚无残遗'],
+['Wicked Blightspawn', '邪恶荒裔怪'],
+['Winged Aberration', '飞翼畸变体'],
+['Bitter End', '苦涩结局'],
+['Bygone Echoes', '旧时回响'],
+['Twilight Timereaver', '暮光时空撕裂者'],
+['Battle at the End Time', '征战时光之末']
     ]);
     // 卡组名称翻译规则
     const deckNameRules = {

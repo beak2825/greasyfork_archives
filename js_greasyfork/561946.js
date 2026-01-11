@@ -2,7 +2,7 @@
 // @name         Galgame 跨站搜索跳转助手
 // @description  主要在 Galgame 数据库之间实现搜索跳转。
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @author       Orchids
 // @match        https://vndb.org/*
 // @match        https://www.moyu.moe/*
@@ -28,6 +28,7 @@
 // @match        https://www.dmm.com/*
 // @match        https://www.dmm.co.jp/*
 // @match        https://sukebei.nyaa.si/*
+// @match        https://moepedia.net/*
 // @match        https://www.google.com/search*
 // @grant        none
 // @license      MIT
@@ -57,7 +58,7 @@
         { key: 'bracketL',  variants: ["[", "［", "【", "〔", "「", "『"] },
         { key: 'bracketR',  variants: ["]", "］", "】", "〕", "」", "』"] },
         { key: 'ellipsis',  variants: ["…", "⋯", "︙", "⁝", "..."] },
-        { key: 'quote',     variants: ["\"", "“", "”", "″", "＂", "«", "»"] }, // 引号组
+        { key: 'quote',     variants: ["\"", "“", "”", "″", "＂", "«", "»"] },
         { key: 'space',     variants: [" ", "\u3000", "_"] }
     ];
 
@@ -94,7 +95,8 @@
         "erogame": { keep: "×", replaceWith: " " },
         "koko": { keep: "×", replaceWith: " " },
         "ggbase": { keep: "ALL", replaceWith: "" },
-        "sukebei": { keep: "×", replaceWith: " " }
+        "sukebei": { keep: "×", replaceWith: " " },
+        "moepedia": { keep: "×", replaceWith: " " }
     };
 
     function toHalfWidth(str) {
@@ -163,16 +165,17 @@
         "seiya":    { name: "Seiya攻略", bg: "#2196F3", url: "https://seiya-saiga.com/game/kouryaku.html?cgsearch=" },
         "seiyasave":{ name: "Seiya存档", bg: "#673AB7", url: "https://seiya-saiga.com/save.html?cgsearch=" },
         "bgm":      { name: "BGM",    bg: "#F09199", url: "https://bgm.tv/subject_search/" },
-        "moyu":     { name: "MoYu",   bg: "#00BCD4", url: "https://www.moyu.moe/search?q=" },
+        "moyu":     { name: "Moyu",   bg: "#00BCD4", url: "https://www.moyu.moe/search?q=" },
         "2dfan":    { name: "2DFan",  bg: "#4CAF50", url: "https://2dfan.com/subjects/search?keyword=" },
         "ai2":      { name: "Ai2",    bg: "#9C27B0", url: "https://www.ai2.moe/search/?q=" },
         "dlsite":   { name: "DLsite", bg: "#2196F3", url: "https://www.dlsite.com/pro/fsr/=/keyword/" },
         "dmm":      { name: "DMM",    bg: "#FF9800", url: "https://www.dmm.com/search/=/searchstr=" },
         "fanza":    { name: "Fanza",  bg: "#E65100", url: "https://dlsoft.dmm.co.jp/search/?service=pcgame&searchstr=" },
         "erogame":  { name: "Erogame",bg: "#607D8B", url: "https://erogamescape.org/~ap2/ero/toukei_kaiseki/kensaku.php?category=game&word_category=name&mode=normal&word=" },
-        "koko":     { name: "Koko",   bg: "#455A64", url: "https://koko.kyara.top/kensaku.php?category=game&word_category=name&mode=normal&word=" },
+        "koko":     { name: "kyara",   bg: "#455A64", url: "https://koko.kyara.top/kensaku.php?category=game&word_category=name&mode=normal&word=" },
         "ggbase":   { name: "GGbase", bg: "#FF9800", url: "https://ggbases.dlgal.com/search.so?title=" },
-        "sukebei":  { name: "Sukebei",bg: "#3F51B5", url: "https://sukebei.nyaa.si/?f=0&c=0_0&q=" }
+        "sukebei":  { name: "Nyaa",bg: "#3F51B5", url: "https://sukebei.nyaa.si/?f=0&c=0_0&q=" },
+        "moepedia": { name: "Moepedia", bg: "#FF69B4", url: "https://moepedia.net/search/result/?s=" }
     };
 
     function createBtn(keyword, type) {
@@ -324,6 +327,11 @@
             if (!div) return null;
             let txt = (div.querySelector('a') && div.id === 'game_title') ? div.querySelector('a').textContent.trim() : div.innerText.split('\n')[0].split('（')[0].split('(')[0].trim();
             return { target: div, keyword: txt };
+        }},
+        { name: "Moepedia", check: () => location.hostname.includes('moepedia.net') && !location.href.includes('/search/result/'), run: () => {
+            const h1 = document.querySelector('h1');
+            if (!h1) return null;
+            return { target: h1, keyword: h1.textContent.trim() };
         }}
     ];
 
@@ -350,7 +358,7 @@
         
         const curH = location.hostname;
         const curP = location.pathname;
-        const targets = ['hitomi', 'eh', 'vndb', 'bgm', 'erogame', 'koko', 'seiya', 'seiyasave', 'moyu', '2dfan', 'ai2', 'dlsite', 'dmm', 'fanza', 'ggbase', 'sukebei'];
+        const targets = ['hitomi', 'eh', 'moepedia', 'vndb', 'bgm', 'erogame', 'koko', 'seiya', 'seiyasave', 'moyu', 'ai2', '2dfan', 'dlsite', 'dmm', 'fanza', 'ggbase', 'sukebei'];
         
         targets.forEach(t => {
             const engine = ENGINES[t];

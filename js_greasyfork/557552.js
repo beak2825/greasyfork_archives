@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.22.1
+// @version      1.23
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -442,7 +442,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         return el ? el.textContent.trim() : null;
     }
     const SCRIPT_VERSION_KEY = 'ascm_script_version_v2';
-    const currentVersion = GM_info.script.version;
+    const currentVersion = (typeof GM_info !== 'undefined' ? GM_info.script.version : 'dev');
     const lastRunVersion = await GM_getValue(SCRIPT_VERSION_KEY, null);
     if (currentVersion !== lastRunVersion) {
         const notificationEl = document.createElement('div');
@@ -8750,7 +8750,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             const cachedData = await GM_getValue(CARD_COUNT_CACHE_KEY, null);
 
             // Если не форсировано и кэш свежий (меньше 30 сек с последнего запроса), просто рисуем из кэша
-            if (!forceUpdate && cachedData && (now - cachedData.timestamp < 30000)) {
+            if (!forceUpdate && cachedData && (now - cachedData.timestamp < CARD_COUNT_UPDATE_INTERVAL)) {
                 updateAllCardCountDisplays(cachedData.text, cachedData.className);
                 return;
             }
@@ -10792,10 +10792,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         // # Основная функция инициализации, которая запускает все модули и добавляет все элементы UI на страницу.
         // ##################################################
         async function doActualInitialization() {
-            // ФИКС ОШИБОК САЙТА (ЧАТ + УВЕДОМЛЕНИЯ)
-            const siteFixes = ['lc_anim_bar_type', 'lc_interval', 'lc_timeout_min', 'lc_timeout_counter', 'lc_update_time', 'lc_page_id'];
-            siteFixes.forEach(f => { if (typeof unsafeWindow[f] === 'undefined') unsafeWindow[f] = 0; });
-            
+            //Разрешить уведомления с 20:58 до 21:07
             if (typeof unsafeWindow.__isNotifBlockedWindowUTC3 === 'function') {
                 unsafeWindow.__isNotifBlockedWindowUTC3 = () => false;
             }
@@ -11658,9 +11655,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     stopActiveCrystalOperations();
                 }
                 if (scriptEnabledWatch || crystalScriptEnabled) {
-                    if (scriptEnabledWatch && typeof unsafeWindow.updateCardCounter === 'function') {
-                        unsafeWindow.updateCardCounter();
-                    }
                     if (typeof unsafeWindow.tryToBecomeLeaderWatch === 'function') {
                         unsafeWindow.tryToBecomeLeaderWatch();
                     }
@@ -12755,8 +12749,12 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             try {
                 const response = await fetch(`${window.location.origin}/engine/ajax/controller.php?mod=light_chat`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
-                    body: new URLSearchParams({ 'mod': 'light_chat', 'do': 'update', 'page_id': '' })
+                    headers: {
+						'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+						'X-Requested-With': 'XMLHttpRequest',
+						'Accept': 'application/json, text/javascript, */*; q=0.01' // Добавляем как у сайта
+					},
+					body: new URLSearchParams({ 'do': 'update', 'page_id': '' }) // Убираем лишний 'mod'
                 });
 
                 // --- 2. ИСПРАВЛЕНИЕ ТАЙМЕРА (от 3-х секундного спама) ---
@@ -13308,6 +13306,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 
                     if (isLeaderWatch) {
                         if (typeof checkAndTriggerNewDay === 'function') checkAndTriggerNewDay();
+						if (scriptEnabledWatch) updateCardCounter(false); // Запрос профиля идет только если включен автосбор карт
                         const ld = localStorage.getItem(LEADER_KEY_WATCH);
                         try {
                             const d = JSON.parse(ld || '{}');
@@ -13524,25 +13523,32 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 const todayDateStr = moscowTime.toISOString().split('T')[0];
                 const lastCheckDate = await GM_getValue(NEW_DAY_CHECK_KEY, '');
                 if (lastCheckDate === todayDateStr) {
-                    return;
+                    return; // Сегодня сброс уже делали, выходим
                 }
-                const hours = moscowTime.getUTCHours();
-                const minutes = moscowTime.getUTCMinutes();
-                if (hours === 0 && minutes >= 1) {
+
+                // ПРАВКА: Проверяем, наступила ли календарная полночь
+                if (lastCheckDate !== todayDateStr) {
                     const isCollectionActuallyPaused = await GM_getValue(COLLECTION_PAUSED_KEY, false);
-                    const isPauseFeatureEnabledInSettings = await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
-                    const shouldTrigger = (isPauseFeatureEnabledInSettings && isCollectionActuallyPaused) || !isPauseFeatureEnabledInSettings;
-                    if (shouldTrigger) {
-                        if (!isPauseFeatureEnabledInSettings) {
-                            console.log('[New Day] Наступил новый день. Функция паузы отключена, выполняю проверку бонуса.');
-                        } else {
-                            console.log('[New Day] Наступил новый день и сбор на паузе. Выполняю проверку бонуса и сброс паузы.');
-                        }
+                    const pauseEnabled = await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
+                    // Проверяем, включен ли автоматический сбор карт в настройках (🎥)
+                    const isAutoWatchEnabled = localStorage.getItem(STORAGE_KEY_WATCH) === 'true';
+
+                    // УСЛОВИЕ СРАБАТЫВАНИЯ НОВОГО ДНЯ:
+                    // 1. Автосбор ВЫКЛЮЧЕН (пользователь собирает сам, значит даем бонус сразу)
+                    // 2. Либо автосбор ВКЛЮЧЕН, но лимит забит (сбор на паузе)
+                    // 3. Либо функция паузы вообще отключена в настройках
+                    const shouldTriggerNow = !isAutoWatchEnabled || isCollectionActuallyPaused || !pauseEnabled;
+
+                    if (shouldTriggerNow) {
+                        console.log('[New Day] Лимит исчерпан или пауза выключена. Активирую новый день и бонусы.');
+                        
+                        // Сначала записываем дату, чтобы избежать повторных запросов при лагах
                         await GM_setValue(NEW_DAY_CHECK_KEY, todayDateStr);
                         await triggerDailyBonusCheck();
                     } else {
-                        await GM_setValue(NEW_DAY_CHECK_KEY, todayDateStr);
-                        console.log('[New Day] Наступил новый день, но сбор еще не достиг лимита для паузы. Действий не требуется.');
+                        // Если мы НЕ на паузе - мы просто НИЧЕГО не делаем.
+                        // Скрипт продолжит собирать карты за "вчера", пока не упрется в лимит.
+                        // Как только упрется - сработает условие выше (в следующем цикле пульса).
                     }
                 }
             }
@@ -13630,11 +13636,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 pauseOnLimitEnabled = await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
 
                 if (isCollectionPaused && pauseOnLimitEnabled) {
-                    // Раз в 10 минут в фоновом режиме все равно проверяем профиль (на случай повышения уровня)
-                    const lastFetch = await GM_getValue('ascm_last_profile_fetch', 0);
-                    if (Date.now() - lastFetch > 600000) { 
-                        updateCardCounter(true); 
-                    }
                     console.log("[AutoWatch] Сбор на паузе (лимит). Ожидаю нового дня.");
                     return;
                 }
@@ -14788,54 +14789,65 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             for (const mutation of mutationsList) {
                 for (const addedNode of mutation.addedNodes) {
                     if (addedNode.nodeType === Node.ELEMENT_NODE && addedNode.matches('.ui-dialog')) {
-                        const addButtonsToModal = async (content) => {
-                            const isStarEnabled = await GM_getValue(STAR_BUTTON_ENABLED_KEY, true);
-                            if (isStarEnabled) addStarButton(content);
+                        // Вспомогательная функция для кнопок
+						const addButtonsToModal = async (content) => {
+							const isStarEnabled = await GM_getValue(STAR_BUTTON_ENABLED_KEY, true);
+							if (isStarEnabled) addStarButton(content);
+							const isLockEnabled = await GM_getValue(LOCK_BUTTON_ENABLED_KEY, true);
+							if (isLockEnabled) addLockButton(content);
+						};
 
-                            const isLockEnabled = await GM_getValue(LOCK_BUTTON_ENABLED_KEY, true);
-                            if (isLockEnabled) addLockButton(content);
-                        };
-                        const contentObserver = new MutationObserver((innerMutations, observer) => {
-                            const modalContent = addedNode.querySelector('#card-modal .modal__content');
-                            if (modalContent) {
-                                // Наш новый блок:
-                                const giftCard = modalContent.querySelector('#modal-gift-card');
-                                if (giftCard) {
-                                    (async () => {
-                                        const showDemandInGift = await GM_getValue('ascm_showDemandInGift', true); // Опция спроса в подарке
-                                        if (showDemandInGift) {
-                                            const img = giftCard.querySelector('.anime-cards__placeholder img');
-                                            const imgSrc = img?.getAttribute('src');
-                                            if (imgSrc) {
-                                                // Используем поиск по картинке из основной базы
-                                                await ensureDbLoaded();
-                                                const compositeKey = normalizeImagePath(imgSrc);
-                                                const foundId = cardImageIndex.get(compositeKey);
-                                                if (foundId) {
-                                                    const infoBox = giftCard.querySelector('.anime-cards__info');
-                                                    // Создаем контейнер для статистики
-                                                    const statsContainer = document.createElement('div');
-                                                    statsContainer.className = 'ca-card-demand-stats';
-                                                    statsContainer.style.marginTop = '10px';
-                                                    infoBox.appendChild(statsContainer);
-                                                    // Вызываем штатную функцию обновления инфо
-                                                    await updateCardInfo(foundId, giftCard, false);
-                                                }
-                                            }
-                                        }
-                                    })();
-                                }
-                                // Продолжение старого кода:
-                                addButtonsToModal(modalContent);
-                                observer.disconnect();
-                            }
-                        });
-                        contentObserver.observe(addedNode, { childList: true, subtree: true });
-                        const initialContent = addedNode.querySelector('#card-modal .modal__content');
-                        if (initialContent) {
-                            addButtonsToModal(initialContent);
-                            contentObserver.disconnect();
-                        }
+						// ПРАВКА: Новая вспомогательная функция для логики подарка
+						const processGiftCardLogic = async (dialogNode) => {
+							
+							// Если в окне есть наш контейнер для переплавки, значит она уже обработана. Выходим.
+							if (dialogNode.querySelector('#ascm-gift-demand-container')) return;
+							const giftCard = dialogNode.querySelector('#modal-gift-card');
+							if (!giftCard) return;
+
+							const showDemandInGift = await GM_getValue('ascm_showDemandInGift', true);
+							if (!showDemandInGift) return;
+
+							const img = giftCard.querySelector('.anime-cards__placeholder img');
+							const imgSrc = img?.getAttribute('src');
+							if (!imgSrc) return;
+
+							await ensureDbLoaded();
+							const compositeKey = normalizeImagePath(imgSrc);
+							const foundId = cardImageIndex.get(compositeKey);
+
+							console.log(`[ACM Gift] Картинка: ${compositeKey} | ID в базе: ${foundId}`);
+
+							if (foundId) {
+								const infoBox = giftCard.querySelector('.anime-cards__info');
+								if (infoBox) {
+									infoBox.querySelector('.ca-card-demand-stats')?.remove();
+									// ПРАВКА: Передаем infoBox (белое поле), чтобы статы были внутри него
+									await updateCardInfo(foundId, infoBox, false);
+								}
+							}
+						};
+
+						const contentObserver = new MutationObserver((innerMutations, observer) => {
+							const modalContent = addedNode.querySelector('#card-modal .modal__content');
+							if (modalContent) {
+								// Вызываем логику подарка
+								processGiftCardLogic(addedNode);
+								// Вызываем кнопки (i, замок)
+								addButtonsToModal(modalContent);
+								observer.disconnect();
+							}
+						});
+
+						contentObserver.observe(addedNode, { childList: true, subtree: true });
+
+						const initialContent = addedNode.querySelector('#card-modal .modal__content');
+						if (initialContent) {
+							// ПРАВКА: Добавляем вызов подарка и здесь тоже
+							processGiftCardLogic(addedNode);
+							addButtonsToModal(initialContent);
+							contentObserver.disconnect();
+						}
                     }
                 }
             }
@@ -19467,7 +19479,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             <div class="ascm-remelt-row" style="align-items: stretch; gap: 6px;">
                 <div class="ascm-remelt-group" title="Сколько оставить карт этого типа в инвентаре">
                     <label>Дубли</label>
-                    <input type="number" id="ascm-remelt-keep" class="ascm-remelt-field" min="0" style="height: 26px; width: 50px !important;">
+                    <div style="display: flex; gap: 3px; align-items: center;">
+                        <button id="ascm-remelt-keep-1-btn" class="ascm-remelt-small-btn">1</button>
+                        <input type="number" id="ascm-remelt-keep" class="ascm-remelt-field" min="0" style="height: 26px; width: 50px !important;">
+                    </div>
                 </div>
 
                 <div class="ascm-remelt-group" title="Число плавок (1 плавка = 3 карты)">
@@ -19475,7 +19490,8 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     <div style="display: flex; gap: 3px; align-items: center;">
                         <button id="ascm-remelt-min-btn" class="ascm-remelt-small-btn">1</button>
                         <input type="number" id="ascm-remelt-limit" class="ascm-remelt-field" min="1" style="height: 26px; width: 45px !important;">
-                        <button id="ascm-remelt-max-btn" class="ascm-remelt-small-btn">MAX</button>
+						<button id="ascm-remelt-10-btn" class="ascm-remelt-small-btn" style="margin-right: 2px;">10</button>
+						<button id="ascm-remelt-max-btn" class="ascm-remelt-small-btn">MAX</button>
                     </div>
                 </div>
 
@@ -19634,10 +19650,33 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             const r = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
             if (r) scanRemeltInventoryForRank(r);
         };
-        dashboard.querySelector('#ascm-remelt-mywish-btn').onclick = () => scanWishlistForRemelt(false);
+		// Логика кнопки "1" для дубликатов с выводом лога
+        dashboard.querySelector('#ascm-remelt-keep-1-btn').onclick = () => { 
+            const el = document.getElementById('ascm-remelt-keep');
+            el.value = 1; 
+            sccLog(`Изменено: Дубли -> 1`, 'info', true);
+            updateRemeltCalculation(); 
+            saveRemeltRankSettings(); 
+        };        dashboard.querySelector('#ascm-remelt-mywish-btn').onclick = () => scanWishlistForRemelt(false);
         dashboard.querySelector('#ascm-remelt-otherwish-btn').onclick = () => scanWishlistForRemelt(true);
         
-        dashboard.querySelector('#ascm-remelt-min-btn').onclick = () => { document.getElementById('ascm-remelt-limit').value = 1; updateRemeltCalculation(); saveRemeltRankSettings(); };
+        // Логика кнопки "1" для плавок с выводом лога
+        dashboard.querySelector('#ascm-remelt-min-btn').onclick = () => { 
+            const el = document.getElementById('ascm-remelt-limit');
+            el.value = 1; 
+            sccLog(`Изменено: Плавки -> 1`, 'info', true);
+            updateRemeltCalculation(); 
+            saveRemeltRankSettings(); 
+        };
+        // Логика кнопки "10" для плавок с выводом лога
+        dashboard.querySelector('#ascm-remelt-10-btn').onclick = () => { 
+            const el = document.getElementById('ascm-remelt-limit');
+            el.value = 10; 
+            sccLog(`Изменено: Плавки -> 10`, 'info', true);
+            updateRemeltCalculation(); 
+            saveRemeltRankSettings(); 
+        };
+        // Логика кнопки "MAX" для плавок с расчетом и выводом лога
         dashboard.querySelector('#ascm-remelt-max-btn').onclick = () => {
             const possibleText = document.getElementById('ascm-remelt-calc-result').querySelector('b')?.textContent;
             const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
@@ -19645,8 +19684,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 let val = parseInt(possibleText);
                 if (rank === 'a' && val > 5) val = 5;
                 document.getElementById('ascm-remelt-limit').value = val;
+                sccLog(`Изменено: Плавки -> ${val} (MAX)`, 'info', true);
             }
-            updateRemeltCalculation(); saveRemeltRankSettings();
+            updateRemeltCalculation(); 
+            saveRemeltRankSettings();
         };
 
         // КНОПКА ПОЛНОГО СБРОСА

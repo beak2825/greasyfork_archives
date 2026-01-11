@@ -3,7 +3,7 @@
 // @namespace    Tampermonkey Scripts
 // @match        *://www.youtube.com/*
 // @grant        none
-// @version      1.6.4
+// @version      1.6.5
 // @author       LQ He
 // @description  长按快捷键快速倍速播放（Z/Ctrl 2倍速，右方向键 3倍速）。视频控制栏添加倍速切换按钮，支持自定义倍速设置。YouTube 链接强制新标签页打开。
 // @license      MIT
@@ -209,6 +209,12 @@
             return false;
         },
 
+        // 检查是否是 YouTube Logo（首页链接）
+        isYouTubeLogoLink(anchor) {
+            return anchor.id === 'logo' ||
+                anchor.closest('ytd-topbar-logo-renderer') !== null;
+        },
+
         getVideoIdFromUrl(url) {
             try {
                 const urlObj = new URL(url, window.location.origin);
@@ -283,6 +289,14 @@
                 event.stopPropagation();
                 event.stopImmediatePropagation();
                 window.open('https://www.youtube.com/shorts', '_blank');
+                return;
+            }
+
+            // 特殊处理：播放页点击 YouTube Logo（首页链接）
+            if (NewTabModule.isWatchPage() && NewTabModule.isYouTubeLogoLink(anchor)) {
+                event.preventDefault();
+                event.stopPropagation();
+                window.open('https://www.youtube.com/', '_blank');
                 return;
             }
 

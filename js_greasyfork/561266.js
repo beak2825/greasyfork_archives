@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Revive Status Indicator
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Shows revive status icons for faction members in Torn
 // @author       You
 // @match        https://www.torn.com/factions.php*
@@ -18,25 +18,24 @@
 (function() {
     'use strict';
 
-    // Configuration - MINIMAL API CALLS
-    const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes cache
-    const FACTION_ID = null; // Set to specific faction ID, or null to auto-detect
-    const MIN_REFRESH_INTERVAL = 1 * 60 * 1000; // Minimum 2 minutes between API calls
-    const PAGE_CHANGE_DELAY = 3000; // 3 seconds delay after page navigation
-    const TOAST_DURATION = 2000; // 1.5 seconds for toast (shorter)
+    const CACHE_DURATION = 2 * 60 * 1000;
+    const FACTION_ID = null;
+    const MIN_REFRESH_INTERVAL = 2 * 60 * 1000;
+    const PAGE_CHANGE_DELAY = 3000;
+    const TOAST_DURATION = 2000;
 
-    // Get API key from storage or prompt
     let API_KEY = GM_getValue("torn_revive_api_key", null);
-
-    // Track last API call time per faction
     let lastApiCallTime = GM_getValue("last_api_call_time", {}) || {};
+    let reviveDataCache = GM_getValue("revive_data_cache", { data: {}, timestamp: 0 });
 
-    // Register menu command to set API key
+    const reviveIcons = {
+        revivable: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="fill: #4CAF50;"><circle cx="8" cy="8" r="7" stroke="#2E7D32" stroke-width="1"/><path d="M5 8L7 10L11 6" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+        notRevivable: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="fill: #F44336;"><circle cx="8" cy="8" r="7" stroke="#C62828" stroke-width="1"/><path d="M5 5L11 11M5 11L11 5" stroke="#C62828" stroke-width="2" stroke-linecap="round"/></svg>`,
+        unknown: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="fill: #9E9E9E;"><circle cx="8" cy="8" r="7" stroke="#757575" stroke-width="1"/><text x="8" y="12" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#757575">?</text></svg>`
+    };
+
     GM_registerMenuCommand("Set Torn API Key", () => {
-        let userInput = prompt(
-            "Enter Public API Key:",
-            API_KEY || ""
-        );
+        let userInput = prompt("Enter Public API Key:", API_KEY || "");
         if (userInput !== null) {
             API_KEY = userInput;
             GM_setValue("torn_revive_api_key", API_KEY);
@@ -44,50 +43,13 @@
         }
     });
 
-    // Cache storage
-    let reviveDataCache = GM_getValue("revive_data_cache", {
-        data: {},
-        timestamp: 0
-    });
-
-    // SVG icons for revive status
-    const reviveIcons = {
-        revivable: `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="fill: #4CAF50;">
-                <circle cx="8" cy="8" r="7" stroke="#2E7D32" stroke-width="1"/>
-                <path d="M5 8L7 10L11 6" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            </svg>
-        `,
-        notRevivable: `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="fill: #F44336;">
-                <circle cx="8" cy="8" r="7" stroke="#C62828" stroke-width="1"/>
-                <path d="M5 5L11 11M5 11L11 5" stroke="#C62828" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-        `,
-        unknown: `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" style="fill: #9E9E9E;">
-                <circle cx="8" cy="8" r="7" stroke="#757575" stroke-width="1"/>
-                <text x="8" y="12" text-anchor="middle" font-family="Arial" font-size="10" font-weight="bold" fill="#757575">?</text>
-            </svg>
-        `
-    };
-
-    // Toast notification system - only for important messages
     function showToast(message, type = "info", important = false) {
-        // Don't show toast for non-important messages
         if (!important) {
             console.log(`[Revive Status] ${message}`);
             return;
         }
 
-        const colors = {
-            success: "#4CAF50",
-            error: "#F44336",
-            info: "#2196F3",
-            warning: "#FF9800"
-        };
-
-        // Remove existing toasts
+        const colors = { success: "#4CAF50", error: "#F44336", info: "#2196F3", warning: "#FF9800" };
         document.querySelectorAll('.revive-toast').forEach(toast => toast.remove());
 
         const toast = document.createElement("div");
@@ -110,7 +72,6 @@
 
         document.body.appendChild(toast);
 
-        // Auto-remove after short duration
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.style.animation = "reviveToastFadeOut 0.3s ease-out";
@@ -119,23 +80,19 @@
         }, TOAST_DURATION);
     }
 
-    // Check if cache is valid
     function isCacheValid() {
         return Date.now() - reviveDataCache.timestamp < CACHE_DURATION;
     }
 
-    // Check if we should make API call (strict rate limiting)
     function shouldMakeApiCall(factionId) {
         const now = Date.now();
         const lastCall = lastApiCallTime[factionId] || 0;
 
-        // Don't make API call if we made one very recently
         if (now - lastCall < MIN_REFRESH_INTERVAL) {
             console.log(`[Revive Status] Skipping API call - too soon (${Math.round((now - lastCall)/1000)}s ago)`);
             return false;
         }
 
-        // If we have valid cache, don't make API call
         if (isCacheValid() && reviveDataCache.data[factionId]) {
             const cacheAge = Math.round((now - reviveDataCache.timestamp) / 60000);
             console.log(`[Revive Status] Using cache (${cacheAge} min old)`);
@@ -145,22 +102,18 @@
         return true;
     }
 
-    // Fetch faction data from Torn API with strict rate limiting
     async function fetchFactionData(factionId) {
         if (!API_KEY) {
             showToast("Set API key in Tampermonkey menu", "error", true);
             return null;
         }
 
-        // Check if we should make API call
         if (!shouldMakeApiCall(factionId)) {
-            // Return cached data if available
             return reviveDataCache.data[factionId] || null;
         }
 
         try {
             const url = `https://api.torn.com/v2/faction/${factionId}/members?striptags=true&key=${API_KEY}`;
-
             console.log(`[Revive Status] Making API call for faction ${factionId}`);
 
             const response = await new Promise((resolve, reject) => {
@@ -169,25 +122,20 @@
                     url: url,
                     onload: resolve,
                     onerror: reject,
-                    timeout: 10000 // 10 second timeout
+                    timeout: 10000
                 });
             });
 
-            // Update last call time and save
             lastApiCallTime[factionId] = Date.now();
             GM_setValue("last_api_call_time", lastApiCallTime);
 
             if (response.status === 200) {
                 const data = JSON.parse(response.responseText);
-
-                // Check for API errors
                 if (data.error) {
                     console.error(`[Revive Status] API Error: ${data.error.error}`);
-                    // Don't show toast for API errors unless it's important
                     return null;
                 }
 
-                // Create a map of member IDs to revive status
                 const reviveMap = {};
                 if (data.members && Array.isArray(data.members)) {
                     data.members.forEach(member => {
@@ -199,7 +147,6 @@
                     });
                 }
 
-                // Update cache and save
                 reviveDataCache.data[factionId] = reviveMap;
                 reviveDataCache.timestamp = Date.now();
                 GM_setValue("revive_data_cache", reviveDataCache);
@@ -216,46 +163,67 @@
         }
     }
 
-    // Get faction ID from current page
     function getFactionId() {
-        // If FACTION_ID is set in config, use it
         if (FACTION_ID) return FACTION_ID;
 
-        // Try to extract from URL
+        const url = window.location.href;
         const urlParams = new URLSearchParams(window.location.search);
         const step = urlParams.get("step");
+        const idParam = urlParams.get("ID");
 
-        if (step === "profile") {
-            return urlParams.get("ID");
+        if (step === "profile" && idParam) {
+            return idParam;
         }
 
-        // Try to find faction ID in the page
-        const factionLink = document.querySelector('a[href*="factions.php?step=profile&ID="]');
-        if (factionLink) {
-            const match = factionLink.href.match(/ID=(\d+)/);
-            if (match) return match[1];
+        if (url.includes("factions.php")) {
+            const patterns = [
+                /factions\.php.*[?&]ID=(\d+)/i,
+                /factions\.php.*[?&]id=(\d+)/i,
+                /factions\.php.*[?&]XID=(\d+)/i
+            ];
+
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+
+            const factionElements = [
+                'a[href*="factions.php?step=profile&ID="]',
+                '.faction-info [href*="ID="]',
+                '.members-list a[href*="ID="]',
+                'meta[content*="faction"]'
+            ];
+
+            for (const selector of factionElements) {
+                const element = document.querySelector(selector);
+                if (element) {
+                    const href = element.href || element.getAttribute('content') || '';
+                    const match = href.match(/ID=(\d+)/);
+                    if (match) return match[1];
+                }
+            }
         }
 
+        if (url.includes("profiles.php")) {
+            const factionLink = document.querySelector('a[href*="factions.php?step=profile&ID="]');
+            if (factionLink) {
+                const match = factionLink.href.match(/ID=(\d+)/);
+                if (match) return match[1];
+            }
+        }
+
+        console.warn("[Revive Status] Could not determine faction ID");
         return null;
     }
 
-    // Add revive icon to member row (silently)
     function addReviveIcon(row, memberId, reviveStatus) {
-        // Remove existing revive icon if present
         const existingIcon = row.querySelector('.revive-status-icon');
         if (existingIcon) existingIcon.remove();
 
-        // Create icon container
         const iconContainer = document.createElement('div');
         iconContainer.className = 'revive-status-icon';
-        iconContainer.style.cssText = `
-            display: inline-flex;
-            align-items: center;
-            margin-left: 8px;
-            cursor: help;
-        `;
+        iconContainer.style.cssText = `display: inline-flex; align-items: center; margin-left: 8px; cursor: help;`;
 
-        // Set icon based on revive status
         let icon, tooltip;
         if (reviveStatus === true) {
             icon = reviveIcons.revivable;
@@ -271,7 +239,6 @@
         iconContainer.innerHTML = icon;
         iconContainer.title = tooltip;
 
-        // Add to the row - try different positions
         const statusCell = row.querySelector('.status');
         const daysCell = row.querySelector('.days');
         const positionCell = row.querySelector('.position');
@@ -283,25 +250,20 @@
         } else if (positionCell) {
             positionCell.appendChild(iconContainer);
         } else {
-            // Add to the end of the row
             row.appendChild(iconContainer);
         }
 
-        // Add data attribute for filtering
         row.setAttribute('data-revivable', reviveStatus);
     }
 
-    // Wait for and integrate into the Member Filter section
     function waitForMemberFilter() {
         return new Promise((resolve) => {
-            // Check if already exists
             const existingFilter = document.querySelector('#memberFilter .revive__section-class');
             if (existingFilter) {
                 resolve(existingFilter);
                 return;
             }
 
-            // Set up observer to wait for member filter
             const observer = new MutationObserver((mutations, obs) => {
                 const memberFilter = document.querySelector('#memberFilter');
                 if (memberFilter) {
@@ -310,43 +272,26 @@
                 }
             });
 
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-
-            // Timeout after 10 seconds
-            setTimeout(() => {
-                observer.disconnect();
-                resolve(null);
-            }, 10000);
+            observer.observe(document.body, { childList: true, subtree: true });
+            setTimeout(() => { observer.disconnect(); resolve(null); }, 10000);
         });
     }
 
-    // Add revive filter section to Member Filter
     async function addReviveFilterToMemberFilter() {
         const memberFilter = await waitForMemberFilter();
         if (!memberFilter) {
-            console.log("[Revive Status] Member Filter not found, using fallback");
-            addFallbackFilter();
             return;
         }
 
-        // Check if revive section already exists
         if (memberFilter.querySelector('.revive__section-class')) {
-            console.log("[Revive Status] Revive filter already exists");
             return;
         }
 
-        // Find the content area
         const content = memberFilter.querySelector('.content');
         if (!content) {
-            console.log("[Revive Status] Could not find content area in Member Filter");
-            addFallbackFilter();
             return;
         }
 
-        // Create revive filter section
         const reviveSection = document.createElement('div');
         reviveSection.className = 'revive__section-class';
         reviveSection.innerHTML = `
@@ -367,7 +312,6 @@
             </div>
         `;
 
-        // Insert before the last section or at the end
         const lastSection = content.querySelector('.levelFilter__section-class') ||
                            content.querySelector('.status__section-class') ||
                            content.lastElementChild;
@@ -378,22 +322,17 @@
             content.appendChild(reviveSection);
         }
 
-        // Get checkbox and add event listener
         const checkbox = reviveSection.querySelector('.revive-filter-checkbox');
         if (checkbox) {
             checkbox.checked = GM_getValue("hide_non_revivable", false);
-
             checkbox.addEventListener('change', function() {
                 const hideNonRevivable = this.checked;
                 GM_setValue("hide_non_revivable", hideNonRevivable);
                 filterNonRevivableMembers(hideNonRevivable);
-
-                // Show brief toast
                 showToast(hideNonRevivable ? "Hiding non-revivable members" : "Showing all members", "info", true);
             });
         }
 
-        // Get refresh button and add event listener
         const refreshBtn = reviveSection.querySelector('.revive-refresh-btn');
         if (refreshBtn) {
             refreshBtn.addEventListener('click', async () => {
@@ -401,80 +340,14 @@
             });
         }
 
-        // Update cache info
         updateCacheInfo(reviveSection);
 
-        console.log("[Revive Status] Revive filter integrated into Member Filter");
-
-        // Apply saved filter preference
         const hideNonRevivable = GM_getValue("hide_non_revivable", false);
         if (hideNonRevivable) {
             filterNonRevivableMembers(true);
         }
     }
 
-    // Fallback if Member Filter not found
-    function addFallbackFilter() {
-        // Remove any existing fallback
-        document.querySelectorAll('.revive-filter-fallback').forEach(el => el.remove());
-
-        // Create fallback container
-        const fallback = document.createElement('div');
-        fallback.className = 'revive-filter-fallback tt-container rounding compact mt10';
-        fallback.style.cssText = `
-            margin-top: 10px;
-            padding: 10px;
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-        `;
-
-        fallback.innerHTML = `
-            <strong style="display: block; margin-bottom: 8px;">Revive Status Filter</strong>
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                    <input type="checkbox" id="revivable-only-fallback" class="revive-filter-checkbox">
-                    Hide non-revivable
-                </label>
-                <button class="revive-refresh-btn torn-btn btn-small" style="margin-left: auto;">
-                    <i class="fas fa-sync-alt" style="margin-right: 4px;"></i> Refresh
-                </button>
-            </div>
-        `;
-
-        // Insert after the member list or at appropriate location
-        const membersList = document.querySelector('.members-list, .f-war-list');
-        if (membersList) {
-            membersList.parentNode.insertBefore(fallback, membersList.nextSibling);
-        } else {
-            document.body.appendChild(fallback);
-        }
-
-        // Get checkbox and add event listener
-        const checkbox = fallback.querySelector('.revive-filter-checkbox');
-        if (checkbox) {
-            checkbox.checked = GM_getValue("hide_non_revivable", false);
-
-            checkbox.addEventListener('change', function() {
-                const hideNonRevivable = this.checked;
-                GM_setValue("hide_non_revivable", hideNonRevivable);
-                filterNonRevivableMembers(hideNonRevivable);
-
-                showToast(hideNonRevivable ? "Hiding non-revivable members" : "Showing all members", "info", true);
-            });
-        }
-
-        // Get refresh button and add event listener
-        const refreshBtn = fallback.querySelector('.revive-refresh-btn');
-        if (refreshBtn) {
-            refreshBtn.addEventListener('click', async () => {
-                await handleRefreshClick();
-            });
-        }
-
-        console.log("[Revive Status] Added fallback revive filter");
-    }
-
-    // Update cache information display
     function updateCacheInfo(container) {
         const cacheInfo = container.querySelector('.revive-cache-info');
         if (!cacheInfo) return;
@@ -500,7 +373,6 @@
         }
     }
 
-    // Handle refresh button click
     async function handleRefreshClick() {
         const factionId = getFactionId();
         const now = Date.now();
@@ -512,7 +384,6 @@
             return;
         }
 
-        // Clear only this faction's cache
         if (reviveDataCache.data[factionId]) {
             delete reviveDataCache.data[factionId];
             GM_setValue("revive_data_cache", reviveDataCache);
@@ -520,33 +391,27 @@
 
         await processMemberRows();
 
-        // Update cache info in all containers
-        document.querySelectorAll('.revive__section-class, .revive-filter-fallback').forEach(container => {
+        document.querySelectorAll('.revive__section-class').forEach(container => {
             updateCacheInfo(container);
         });
     }
 
-    // Filter non-revivable members
     function filterNonRevivableMembers(hide) {
         const memberRows = document.querySelectorAll('.table-row, .members-list li, .faction-member-row');
         let hiddenCount = 0;
 
         memberRows.forEach(row => {
             const isRevivable = row.getAttribute('data-revivable');
-
             if (hide && isRevivable === 'false') {
-                // Hide non-revivable members
                 if (row.style.display !== 'none') {
                     row.style.display = 'none';
                     hiddenCount++;
                 }
             } else {
-                // Show all members
                 row.style.display = '';
             }
         });
 
-        // Update statistics if they exist
         updateStatistics(hiddenCount, hide);
 
         if (hide && hiddenCount > 0) {
@@ -554,7 +419,6 @@
         }
     }
 
-    // Update statistics display
     function updateStatistics(hiddenCount, isFiltering) {
         const statCount = document.querySelector('.stat-count');
         const statTotal = document.querySelector('.stat-total');
@@ -570,7 +434,6 @@
         }
     }
 
-    // Process all member rows (silent operation)
     async function processMemberRows() {
         const factionId = getFactionId();
         if (!factionId) {
@@ -578,26 +441,20 @@
             return false;
         }
 
-        // Fetch revive data
         const reviveData = await fetchFactionData(factionId);
         if (!reviveData) return false;
 
-        // Find all member rows
         const memberRows = document.querySelectorAll('.table-row, .members-list li, .faction-member-row');
         let processedCount = 0;
 
         memberRows.forEach(row => {
-            // Try to find member ID in the row
             let memberId = null;
-
-            // Check for profile links
             const profileLink = row.querySelector('a[href*="/profiles.php?XID="], a[href*="profiles.php?XID="]');
             if (profileLink) {
                 const match = profileLink.href.match(/XID=(\d+)/);
                 if (match) memberId = match[1];
             }
 
-            // Check for user ID in data attributes
             if (!memberId) {
                 const userIdAttr = row.getAttribute('data-user-id') || row.getAttribute('data-player-id');
                 if (userIdAttr) memberId = userIdAttr;
@@ -609,74 +466,50 @@
             }
         });
 
-        // Add revive filter to Member Filter section
         await addReviveFilterToMemberFilter();
-
         return processedCount > 0;
     }
 
-    // Main initialization
     function init() {
-        // Check if we're on a faction members page
-        if (!window.location.href.includes('factions.php')) {
+        const url = window.location.href;
+        const isFactionPage =
+            url.includes('factions.php?step=profile') ||
+            url.includes('factions.php?step=your') ||
+            url.includes('factions.php#/') ||
+            (url.includes('factions.php') &&
+             (url.includes('ID=') ||
+              url.includes('XID=') ||
+              document.querySelector('.members-list, .faction-members, #faction-members')));
+
+        if (!isFactionPage) {
             return;
         }
 
-        // Add custom styles
+        const factionId = getFactionId();
+        if (!factionId) {
+            console.log("[Revive Status] Not a faction members page or couldn't detect faction ID");
+            return;
+        }
+
+        console.log(`[Revive Status] Initializing for faction ID: ${factionId}`);
+
         const styles = `
-            .revive-status-icon {
-                display: inline-flex;
-                align-items: center;
-                margin-left: 8px;
-                vertical-align: middle;
-            }
-            .revive-status-icon svg {
-                filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
-            }
-            .table-row:hover .revive-status-icon svg {
-                transform: scale(1.1);
-                transition: transform 0.2s;
-            }
-            .revive-filter-checkbox {
-                margin: 0;
-                cursor: pointer;
-            }
-            .revive-filter-checkbox:checked {
-                accent-color: #4CAF50;
-            }
-            .revive-refresh-btn {
-                background: #2196F3;
-                color: white;
-                border: none;
-                padding: 6px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-family: Arial, sans-serif;
-                font-size: 12px;
-                transition: background 0.2s;
-            }
-            .revive-refresh-btn:hover {
-                background: #1976D2;
-            }
-            .revive-refresh-btn:disabled {
-                background: #BDBDBD;
-                cursor: not-allowed;
-            }
-            @keyframes reviveToastSlideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes reviveToastFadeOut {
-                from { opacity: 1; }
-                to { opacity: 0; }
-            }
+            .revive-status-icon { display: inline-flex; align-items: center; margin-left: 8px; vertical-align: middle; }
+            .revive-status-icon svg { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2)); }
+            .table-row:hover .revive-status-icon svg { transform: scale(1.1); transition: transform 0.2s; }
+            .revive-filter-checkbox { margin: 0; cursor: pointer; }
+            .revive-filter-checkbox:checked { accent-color: #4CAF50; }
+            .revive-refresh-btn { background: #2196F3; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: Arial, sans-serif; font-size: 12px; transition: background 0.2s; }
+            .revive-refresh-btn:hover { background: #1976D2; }
+            .revive-refresh-btn:disabled { background: #BDBDBD; cursor: not-allowed; }
+            @keyframes reviveToastSlideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            @keyframes reviveToastFadeOut { from { opacity: 1; } to { opacity: 0; } }
         `;
 
         const styleSheet = document.createElement("style");
         styleSheet.textContent = styles;
         document.head.appendChild(styleSheet);
 
-        // Initial processing with delay
         setTimeout(async () => {
             const processed = await processMemberRows();
             if (processed) {
@@ -684,14 +517,12 @@
             }
         }, PAGE_CHANGE_DELAY);
 
-        // Observer for dynamic content
         let observerTimer;
         const observer = new MutationObserver((mutations) => {
             let shouldProcess = false;
 
             for (const mutation of mutations) {
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                    // Check if new member rows were added
                     const hasNewRows = Array.from(mutation.addedNodes).some(node => {
                         if (node.nodeType === Node.ELEMENT_NODE) {
                             return node.matches('.table-row, .members-list li, .faction-member-row') ||
@@ -706,7 +537,6 @@
                     }
                 }
 
-                // Check if member filter was added/modified
                 if (mutation.type === 'childList') {
                     const hasFilterChange = Array.from(mutation.addedNodes).some(node => {
                         if (node.nodeType === Node.ELEMENT_NODE) {
@@ -731,13 +561,9 @@
             }
         });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    // Wait for page to load
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {

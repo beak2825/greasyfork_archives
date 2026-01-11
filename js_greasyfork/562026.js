@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name        Vim for Google Docs - DocsKeys Port
+// @name        DocsKeys (Vim for Google Docs)
 // @namespace   http://tampermonkey.net/
-// @version     1.3.3
+// @version     1.3.4
 // @description Vim-style keyboard shortcuts for Google Docs. Ported from the DocsKeys extension.
 // @author      tirthd16 (Ported by icemoss)
 // @license     MIT
 // @match       https://docs.google.com/document/*
 // @grant       none
 // @run-at      document-idle
-// @downloadURL https://update.greasyfork.org/scripts/562026/Vim%20for%20Google%20Docs%20-%20DocsKeys%20Port.user.js
-// @updateURL https://update.greasyfork.org/scripts/562026/Vim%20for%20Google%20Docs%20-%20DocsKeys%20Port.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562026/DocsKeys%20%28Vim%20for%20Google%20Docs%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/562026/DocsKeys%20%28Vim%20for%20Google%20Docs%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -100,7 +100,6 @@
   function initDocsKeys() {
     const iframe = document.querySelector('iframe.docs-texteventtarget-iframe');
 
-    // Safety check: if iframe isn't ready yet
     if (!iframe || !iframe.contentDocument || !iframe.contentDocument.body) {
       setTimeout(initDocsKeys, 500);
       return;
@@ -110,9 +109,10 @@
 
     iframe.contentDocument.addEventListener('keydown', eventHandler, true);
 
-    const cursorTop = document.getElementsByClassName('kix-cursor-top')[0]; // element to edit to show normal vs insert mode
+    const cursorTop = document.getElementsByClassName('kix-cursor-top')[0];
     let mode = 'normal';
-    let tempnormal = false; // State variable for indicating temperory normal mode
+    let tempnormal = false;
+    let replaceCharMode = false;
     let multipleMotion = {
       times: 0,
       mode: 'normal',
@@ -146,15 +146,12 @@
       return { shift, [paragraphModifierKey]: true };
     }
 
-    // Send request to injected page script to simulate keypress
     function sendKeyEvent(key, mods = {}) {
       const keyCode = keyCodes[key];
       const defaultMods = { shift: false, control: false, alt: false, meta: false };
       const args = { keyCode, mods: { ...defaultMods, ...mods } };
 
       let detailData = args;
-
-      // Firefox Sandbox workaround for CustomEvents
       if (typeof cloneInto === 'function') {
         detailData = cloneInto(args, window);
       }
@@ -184,15 +181,15 @@
     }
 
     function switchModeToNormal() {
-      // If coming from visual line, collapse selection
       if (mode == 'visualLine' || mode == 'visual') {
-        sendKeyEvent('right'); // Collapse to right
-        sendKeyEvent('left'); // Adjustment
+        sendKeyEvent('right');
+        sendKeyEvent('left');
       }
 
       mode = 'normal';
 
-      // caret indicating visual mode (if elements exist)
+      replaceCharMode = false;
+
       if(cursorTop) {
         cursorTop.style.opacity = 1;
         cursorTop.style.display = 'block';
@@ -207,75 +204,40 @@
 
     let longStringOp = '';
 
-    function goToStartOfLine() {
-      sendKeyEvent('home');
-    }
-
-    function goToEndOfLine() {
-      sendKeyEvent('end');
-    }
-
-    function selectToStartOfLine() {
-      sendKeyEvent('home', { shift: true });
-    }
-
-    function selectToEndOfLine() {
-      sendKeyEvent('end', { shift: true });
-    }
-
-    function selectToStartOfWord() {
-      sendKeyEvent('left', wordMods(true));
-    }
-
-    function selectToEndOfWord() {
-      sendKeyEvent('right', wordMods(true));
-    }
-
-    function goToEndOfWord() {
-      sendKeyEvent('right', wordMods());
-    }
-
-    function goToStartOfWord() {
-      sendKeyEvent('left', wordMods());
-    }
-
+    function goToStartOfLine() { sendKeyEvent('home'); }
+    function goToEndOfLine() { sendKeyEvent('end'); }
+    function selectToStartOfLine() { sendKeyEvent('home', { shift: true }); }
+    function selectToEndOfLine() { sendKeyEvent('end', { shift: true }); }
+    function selectToStartOfWord() { sendKeyEvent('left', wordMods(true)); }
+    function selectToEndOfWord() { sendKeyEvent('right', wordMods(true)); }
+    function goToEndOfWord() { sendKeyEvent('right', wordMods()); }
+    function goToStartOfWord() { sendKeyEvent('left', wordMods()); }
     function selectInnerWord() {
       sendKeyEvent('left');
       sendKeyEvent('left', wordMods());
       sendKeyEvent('right', wordMods(true));
     }
-
     function goToTop() {
       sendKeyEvent('home', { control: true, shift: true });
       longStringOp = '';
     }
-
-    function selectToEndOfPara() {
-      sendKeyEvent('down', paragraphMods(true));
-    }
-
+    function selectToEndOfPara() { sendKeyEvent('down', paragraphMods(true)); }
     function goToEndOfPara(shift = false) {
       sendKeyEvent('down', paragraphMods(shift));
       sendKeyEvent('right', { shift });
     }
-
-    function goToStartOfPara(shift = false) {
-      sendKeyEvent('up', paragraphMods(shift));
-    }
-
+    function goToStartOfPara(shift = false) { sendKeyEvent('up', paragraphMods(shift)); }
     function addLineTop() {
       goToStartOfLine();
       sendKeyEvent('enter');
       sendKeyEvent('up');
       switchModeToInsert();
     }
-
     function addLineBottom() {
       goToEndOfLine();
       sendKeyEvent('enter');
       switchModeToInsert();
     }
-
     function handleAppend() {
       const cursor = document.getElementsByClassName('kix-cursor-top')[0];
       if (!cursor) {
@@ -283,10 +245,8 @@
         switchModeToInsert();
         return;
       }
-
       const originalTop = cursor.getBoundingClientRect().top;
       sendKeyEvent('right');
-
       setTimeout(() => {
         const newTop = cursor.getBoundingClientRect().top;
         if (newTop > originalTop + 10) {
@@ -295,110 +255,49 @@
         switchModeToInsert();
       }, 20);
     }
-
     function runLongStringOp(operation = longStringOp) {
       switch (operation) {
-        case 'c':
-          clickMenu(menuItems.cut);
-          switchModeToInsert();
-          break;
-        case 'd':
-          clickMenu(menuItems.cut);
-          mode = 'normal';
-          switchModeToNormal();
-          break;
-        case 'y':
-          clickMenu(menuItems.copy);
-          sendKeyEvent('left');
-          switchModeToNormal();
-          break;
-        case 'p':
-          clickMenu(menuItems.paste);
-          switchModeToNormal();
-          break;
-        case 'v':
-          break;
-        case 'g':
-          goToTop();
-          break;
+        case 'c': clickMenu(menuItems.cut); switchModeToInsert(); break;
+        case 'd': clickMenu(menuItems.cut); mode = 'normal'; switchModeToNormal(); break;
+        case 'y': clickMenu(menuItems.copy); sendKeyEvent('left'); switchModeToNormal(); break;
+        case 'p': clickMenu(menuItems.paste); switchModeToNormal(); break;
+        case 'v': break;
+        case 'g': goToTop(); break;
       }
     }
 
     function waitForSecondInput(key) {
       switch (key) {
-        case 'w':
-          goToStartOfWord();
-          waitForFirstInput(key);
-          break;
-        case 'p':
-          goToStartOfPara();
-          waitForFirstInput(key);
-          break;
-        default:
-          switchModeToNormal();
-          break;
+        case 'w': goToStartOfWord(); waitForFirstInput(key); break;
+        case 'p': goToStartOfPara(); waitForFirstInput(key); break;
+        default: switchModeToNormal(); break;
       }
     }
 
     function waitForTextObject(key) {
       switch (key) {
-        case 'w': // iw
-          selectInnerWord();
-          runLongStringOp();
-          break;
-        default:
-          switchModeToNormal();
-          break;
+        case 'w': selectInnerWord(); runLongStringOp(); break;
+        default: switchModeToNormal(); break;
       }
     }
 
     function waitForFirstInput(key) {
       switch (key) {
-        case 'i':
-          mode = 'waitForTextObject';
-          break;
-        case 'a':
-          mode = 'waitForTextObject';
-          break;
-        case 'w':
-          selectToEndOfWord();
-          runLongStringOp();
-          break;
-        case 'p':
-          selectToEndOfPara();
-          runLongStringOp();
-          break;
-        case '^':
-        case '_':
-        case '0':
-          selectToStartOfLine();
-          runLongStringOp();
-          break;
-        case '$':
-          selectToEndOfLine();
-          runLongStringOp();
-          break;
-        case longStringOp: // dd, cc, yy
-          goToStartOfLine();
-          selectToEndOfLine();
-          runLongStringOp();
-          break;
-        default:
-          switchModeToNormal();
+        case 'i': mode = 'waitForTextObject'; break;
+        case 'a': mode = 'waitForTextObject'; break;
+        case 'w': selectToEndOfWord(); runLongStringOp(); break;
+        case 'p': selectToEndOfPara(); runLongStringOp(); break;
+        case '^': case '_': case '0': selectToStartOfLine(); runLongStringOp(); break;
+        case '$': selectToEndOfLine(); runLongStringOp(); break;
+        case longStringOp: goToStartOfLine(); selectToEndOfLine(); runLongStringOp(); break;
+        default: switchModeToNormal();
       }
     }
 
     function waitForVisualInput(key) {
       switch (key) {
-        case 'w':
-          sendKeyEvent('left', { control: true });
-          goToStartOfWord();
-          selectToEndOfWord();
-          break;
-        case 'p':
-          goToStartOfPara();
-          goToEndOfPara(true);
-          break;
+        case 'w': sendKeyEvent('left', { control: true }); goToStartOfWord(); selectToEndOfWord(); break;
+        case 'p': goToStartOfPara(); goToEndOfPara(true); break;
       }
       mode = 'visualLine';
     }
@@ -408,17 +307,10 @@
         multipleMotion.times = Number(String(multipleMotion.times) + key);
         return;
       }
-
       switch (multipleMotion.mode) {
-        case 'normal':
-          repeatMotion(handleKeyEventNormal, multipleMotion.times, key);
-          break;
-        case 'visualLine':
-        case 'visual':
-          repeatMotion(handleKeyEventVisualLine, multipleMotion.times, key);
-          break;
+        case 'normal': repeatMotion(handleKeyEventNormal, multipleMotion.times, key); break;
+        case 'visualLine': case 'visual': repeatMotion(handleKeyEventVisualLine, multipleMotion.times, key); break;
       }
-
       mode = multipleMotion.mode;
     }
 
@@ -426,26 +318,38 @@
       if (['Shift', 'Meta', 'Control', 'Alt', ''].includes(e.key)) return;
 
       if (e.ctrlKey && mode === 'normal') {
-        if (e.key === 'u') {
-          e.preventDefault();
-          sendKeyEvent('pageup');
-          return;
-        }
-        if (e.key === 'd') {
-          e.preventDefault();
-          sendKeyEvent('pagedown');
-          return;
-        }
+        if (e.key === 'u') { e.preventDefault(); sendKeyEvent('pageup'); return; }
+        if (e.key === 'd') { e.preventDefault(); sendKeyEvent('pagedown'); return; }
+        if (e.key === 'r') { e.preventDefault(); clickMenu(menuItems.redo); return; }
       }
 
       if (e.ctrlKey && mode == 'insert' && e.key == 'o') {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        switchModeToNormal();
-        tempnormal = true;
-        return;
+        e.preventDefault(); e.stopImmediatePropagation();
+        switchModeToNormal(); tempnormal = true; return;
       }
+
+
+      if (mode === 'insert' && replaceCharMode) {
+          if (e.key === 'Escape') {
+              e.preventDefault();
+              switchModeToNormal();
+              return;
+          }
+          if (!e.ctrlKey && !e.altKey && !e.metaKey && e.key.length === 1) {
+              sendKeyEvent('delete');
+
+
+              setTimeout(() => {
+                  sendKeyEvent('left');
+                  switchModeToNormal();
+              }, 10);
+
+              return;
+          }
+      }
+
       if (e.altKey || e.ctrlKey || e.metaKey) return;
+
       if (e.key == 'Escape') {
         e.preventDefault();
         if (mode == 'visualLine' || mode == 'visual') {
@@ -454,141 +358,63 @@
         switchModeToNormal();
         return;
       }
+
       if (mode != 'insert') {
         e.preventDefault();
         switch (mode) {
-          case 'normal':
-            handleKeyEventNormal(e.key);
-            break;
-          case 'visual':
-          case 'visualLine':
-            handleKeyEventVisualLine(e.key);
-            break;
-          case 'waitForFirstInput':
-            waitForFirstInput(e.key);
-            break;
-          case 'waitForSecondInput':
-            waitForSecondInput(e.key);
-            break;
-          case 'waitForVisualInput':
-            waitForVisualInput(e.key);
-            break;
-          case 'waitForTextObject':
-            waitForTextObject(e.key);
-            break;
-          case 'multipleMotion':
-            handleMutlipleMotion(e.key);
-            break;
+          case 'normal': handleKeyEventNormal(e.key); break;
+          case 'visual': case 'visualLine': handleKeyEventVisualLine(e.key); break;
+          case 'waitForFirstInput': waitForFirstInput(e.key); break;
+          case 'waitForSecondInput': waitForSecondInput(e.key); break;
+          case 'waitForVisualInput': waitForVisualInput(e.key); break;
+          case 'waitForTextObject': waitForTextObject(e.key); break;
+          case 'multipleMotion': handleMutlipleMotion(e.key); break;
         }
       }
     }
 
     function handleKeyEventNormal(key) {
       if (/[1-9]/.test(key)) {
-        mode = 'multipleMotion';
-        multipleMotion.mode = 'normal';
-        multipleMotion.times = Number(key);
-        return;
+        mode = 'multipleMotion'; multipleMotion.mode = 'normal'; multipleMotion.times = Number(key); return;
       }
 
       switch (key) {
-        case 'h':
-          sendKeyEvent('left');
-          break;
-        case 'j':
-          sendKeyEvent('down');
-          break;
-        case 'k':
-          sendKeyEvent('up');
-          break;
-        case 'l':
-          sendKeyEvent('right');
-          break;
-        case '}':
-          goToEndOfPara();
-          break;
-        case '{':
-          goToStartOfPara();
-          break;
-        case 'b':
-          goToStartOfWord();
-          break;
-        case 'e':
-        case 'w':
-          goToEndOfWord();
-          break;
-        case 'g':
-          sendKeyEvent('home', { control: true });
-          break;
-        case 'G':
-          sendKeyEvent('end', { control: true });
-          break;
-        case 'c':
-        case 'd':
-        case 'y':
-          longStringOp = key;
-          mode = 'waitForFirstInput';
-          break;
-        case 'p':
-          clickMenu(menuItems.paste);
-          break;
-        case 'a':
-          handleAppend();
-          break;
-        case 'i':
-          switchModeToInsert();
-          break;
-        case '^':
-        case '_':
-        case '0':
-          goToStartOfLine();
-          break;
-        case '$':
-          goToEndOfLine();
-          break;
-        case 'I':
-          goToStartOfLine();
-          switchModeToInsert();
-          break;
-        case 'A':
-          goToEndOfLine();
-          switchModeToInsert();
-          break;
-        case 'v':
-          switchModeToVisual();
-          break;
-        case 'V':
-          switchModeToVisualLine();
-          break;
-        case 'o':
-          addLineBottom();
-          break;
-        case 'O':
-          addLineTop();
-          break;
-        case 'u':
-          clickMenu(menuItems.undo);
-          break;
+        case 'h': sendKeyEvent('left'); break;
+        case 'j': sendKeyEvent('down'); break;
+        case 'k': sendKeyEvent('up'); break;
+        case 'l': sendKeyEvent('right'); break;
+        case '}': goToEndOfPara(); break;
+        case '{': goToStartOfPara(); break;
+        case 'b': goToStartOfWord(); break;
+        case 'e': case 'w': goToEndOfWord(); break;
+        case 'g': sendKeyEvent('home', { control: true }); break;
+        case 'G': sendKeyEvent('end', { control: true }); break;
+        case 'c': case 'd': case 'y': longStringOp = key; mode = 'waitForFirstInput'; break;
+        case 'p': clickMenu(menuItems.paste); break;
+        case 'a': handleAppend(); break;
+        case 'i': switchModeToInsert(); break;
+        case '^': case '_': case '0': goToStartOfLine(); break;
+        case '$': goToEndOfLine(); break;
+        case 'I': goToStartOfLine(); switchModeToInsert(); break;
+        case 'A': goToEndOfLine(); switchModeToInsert(); break;
+        case 'v': switchModeToVisual(); break;
+        case 'V': switchModeToVisualLine(); break;
+        case 'o': addLineBottom(); break;
+        case 'O': addLineTop(); break;
+        case 'u': clickMenu(menuItems.undo); break;
+
         case 'r':
-          clickMenu(menuItems.redo);
+          replaceCharMode = true;
+          switchModeToInsert();
           break;
-        case '/':
-          clickMenu(menuItems.find);
-          break;
-        case 'x':
-          sendKeyEvent('delete');
-          break;
-        default:
-          return;
+
+        case '/': clickMenu(menuItems.find); break;
+        case 'x': sendKeyEvent('delete'); break;
+        default: return;
       }
       if (tempnormal) {
         tempnormal = false;
-        if (
-          mode != 'visual' &&
-          mode != 'visualLine' &&
-          mode != 'waitForFirstInput' &&
-          mode != 'waitForTextObject'
-        ) {
+        if (mode != 'visual' && mode != 'visualLine' && mode != 'waitForFirstInput' && mode != 'waitForTextObject') {
           switchModeToInsert();
         }
       }
@@ -596,75 +422,29 @@
 
     function handleKeyEventVisualLine(key) {
       if (/[1-9]/.test(key)) {
-        mode = 'multipleMotion';
-        multipleMotion.mode = 'visualLine';
-        multipleMotion.times = Number(key);
-        return;
+        mode = 'multipleMotion'; multipleMotion.mode = 'visualLine'; multipleMotion.times = Number(key); return;
       }
-
       switch (key) {
-        case '':
-          break;
-        case 'h':
-          sendKeyEvent('left', { shift: true });
-          break;
-        case 'j':
-          sendKeyEvent('down', { shift: true });
-          break;
-        case 'k':
-          sendKeyEvent('up', { shift: true });
-          break;
-        case 'l':
-          sendKeyEvent('right', { shift: true });
-          break;
-        case 'p':
-          clickMenu(menuItems.paste);
-          switchModeToNormal();
-          break;
-        case '}':
-          goToEndOfPara(true);
-          break;
-        case '{':
-          goToStartOfPara(true);
-          break;
-        case 'b':
-          selectToStartOfWord();
-          break;
-        case 'e':
-        case 'w':
-          selectToEndOfWord();
-          break;
-        case '^':
-        case '_':
-        case '0': 
-          selectToStartOfLine();
-          break;
-        case '$':
-          selectToEndOfLine();
-          break;
-        case 'G':
-          sendKeyEvent('end', { control: true, shift: true });
-          break;
-        case 'g':
-          sendKeyEvent('home', { control: true, shift: true });
-          break;
-        case 'c':
-        case 'd':
-        case 'y':
-          runLongStringOp(key);
-          break;
-        case 'i':
-        case 'a':
-          mode = 'waitForVisualInput';
-          break;
-        case 'x':
-          clickMenu(menuItems.cut);
-          switchModeToNormal();
-          break;
+        case '': break;
+        case 'h': sendKeyEvent('left', { shift: true }); break;
+        case 'j': sendKeyEvent('down', { shift: true }); break;
+        case 'k': sendKeyEvent('up', { shift: true }); break;
+        case 'l': sendKeyEvent('right', { shift: true }); break;
+        case 'p': clickMenu(menuItems.paste); switchModeToNormal(); break;
+        case '}': goToEndOfPara(true); break;
+        case '{': goToStartOfPara(true); break;
+        case 'b': selectToStartOfWord(); break;
+        case 'e': case 'w': selectToEndOfWord(); break;
+        case '^': case '_': case '0': selectToStartOfLine(); break;
+        case '$': selectToEndOfLine(); break;
+        case 'G': sendKeyEvent('end', { control: true, shift: true }); break;
+        case 'g': sendKeyEvent('home', { control: true, shift: true }); break;
+        case 'c': case 'd': case 'y': runLongStringOp(key); break;
+        case 'i': case 'a': mode = 'waitForVisualInput'; break;
+        case 'x': clickMenu(menuItems.cut); switchModeToNormal(); break;
       }
     }
 
-    // Menu interaction helpers
     let menuItemElements = {};
     let menuItems = {
       copy: { parent: 'Edit', caption: 'Copy' },
@@ -686,8 +466,7 @@
       if (el) return el;
       el = findMenuItem(menuItem);
       if (!el) {
-        if (!silenceWarning)
-          console.error('DocsKeys: Could not find menu item', menuItem.caption);
+        if (!silenceWarning) console.error('DocsKeys: Could not find menu item', menuItem.caption);
         return null;
       }
       return (menuItemElements[caption] = el);
@@ -701,11 +480,8 @@
       for (const el of Array.from(menuItemEls)) {
         const label = el.innerText;
         if (!label) continue;
-        if (isRegexp) {
-          if (caption.test(label)) return el;
-        } else {
-          if (label.startsWith(caption)) return el;
-        }
+        if (isRegexp) { if (caption.test(label)) return el; }
+        else { if (label.startsWith(caption)) return el; }
       }
       return null;
     }
@@ -714,10 +490,7 @@
       const eventSequence = ['mouseover', 'mousedown', 'mouseup', 'click'];
       for (const eventName of eventSequence) {
         const event = document.createEvent('MouseEvents');
-        event.initMouseEvent(
-          eventName, true, true, window, 1, x, y, x, y,
-          false, false, false, false, 0, null
-        );
+        event.initMouseEvent(eventName, true, true, window, 1, x, y, x, y, false, false, false, false, 0, null);
         el.dispatchEvent(event);
       }
     }
@@ -725,30 +498,19 @@
     function activateTopLevelMenu(menuCaption) {
       const buttons = Array.from(document.querySelectorAll('.menu-button'));
       const button = buttons.find((el) => el.innerText.trim() == menuCaption);
-      if (!button) {
-        console.error(`DocsKeys: Couldn't find top-level button ${menuCaption}`);
-        return;
-      }
+      if (!button) { console.error(`DocsKeys: Couldn't find top-level button ${menuCaption}`); return; }
       simulateClick(button);
       simulateClick(button);
     }
 
-    // Initialize to Normal Mode
     switchModeToNormal();
   }
 
-  // Helper to check for docs load
   function waitForDocs() {
-    // We check for the editor iframe
     const editor = document.querySelector('.docs-texteventtarget-iframe');
-    if (editor) {
-      initDocsKeys();
-    } else {
-      setTimeout(waitForDocs, 500);
-    }
+    if (editor) { initDocsKeys(); }
+    else { setTimeout(waitForDocs, 500); }
   }
 
-  // Start waiting
   waitForDocs();
-
 })();

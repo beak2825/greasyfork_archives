@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         QLDA
 // @namespace    https://cds.hcmict.io/
-// @version      2.2
+// @version      2.3
 // @description  Time Tracking Bot
 // @author       KhoaLam
 // @match        https://cds.hcmict.io/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=hcmtelecom.vn
-// @grant        none
+// @grant        GM_notification
 // @noframes
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/552517/QLDA.user.js
@@ -21,11 +21,12 @@ const DEV_ID = "-569248119";
 const API_URL = "https://api_cds.hcmict.io/api";
 const PROGRESS_THRESHOLD = 95;
 const STOP_THRESHOLD = 95;
+const LOGIN_WARNING_THRESHOLD = 900;
 const HOLIDAYS = [
 	"01/01/2025", "27/01/2025", "28/01/2025", "29/01/2025", "30/01/2025", "31/01/2025", "30/04/2025", "01/05/2025", "02/09/2025", // 2025
 	"01/01/2026", "16/02/2026", "17/02/2026", "18/02/2026", "19/02/2026", "20/02/2026", "30/04/2026", "01/05/2026", "02/09/2026"  // 2026
 ];
-const LOCAL_VERSION = "2.2";
+const LOCAL_VERSION = "2.3";
 const VERSION_CHECKER = {
 	url: "https://script.google.com/macros/s/AKfycbyMweWX-SdfLd4yIphIq-5mEesWraGxNicXQg0kSFQKf5Jc8ojBn87-3p7C_JWoUtVo/exec",
 	name: "QLDA Time Tracking",
@@ -769,7 +770,7 @@ function initPopup() {
 			logFooter.innerHTML += `<br><strong style="color: #aaa">Giờ Chạy còn thiếu: </strong>${(dashboard.standardHours * 0.75 - dashboard.actualHours).toFixed(2)}h`;
 		}
 		if (dashboard.totalHours < dashboard.actualHours) {
-			logFooter.innerHTML += `<br><strong style="color: #aaa">Cần thêm Giờ Giao: </strong>${(dashboard.actualHours - dashboard.totalHours).toFixed(2)}h`
+			logFooter.innerHTML += `<br><strong style="color: #aaa">Giờ Chạy thừa: </strong>${(dashboard.actualHours - dashboard.totalHours).toFixed(2)}h`
 		}
 		}
 		else {
@@ -838,7 +839,7 @@ class TaskUser {
 		}
 		catch (err) {
 			console.error("👾❌Error fetching user info:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getUserInfo] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getUserInfo]", DEV_ID);
 		}
 	}
 	static getCurrentUserId() {
@@ -943,7 +944,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getActualExecutionTime:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getActualExecutionTime] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getActualExecutionTime]", DEV_ID);
 		}
 		return {
 			timeProgress: -1,
@@ -982,7 +983,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in setStop:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [setStop] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [setStop]", DEV_ID);
 		}
 		return false;
 	}
@@ -996,7 +997,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getBoardId:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getBoardId] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getBoardId]", DEV_ID);
 		}
 	}
 	async getParentTask() {
@@ -1015,7 +1016,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getTaskInfo:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskInfo] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskInfo]", DEV_ID);
 		}
 		return null;
 	}
@@ -1066,7 +1067,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error getting month:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getMonth] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getMonth]", DEV_ID);
 		}
 		return -1;
 	}
@@ -1080,7 +1081,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error fetching standard hours:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchStandardHours] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchStandardHours]", DEV_ID);
 		}
 	}
 	async fetchActualHours(){
@@ -1097,7 +1098,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error fetching actual hours:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchActualHours] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchActualHours]", DEV_ID);
 		}
 
 	}
@@ -1229,14 +1230,14 @@ async function main() {
 		}
 		document.title =generateDocTitle(tick);
 		loginTime = getRemainingLoginTime();
-
-		if (loginTime < 900 && loginTime > 0 && !isLoginWarned) {
+		console.log("👾 Remaining login time (s):", loginTime);
+		if (loginTime < LOGIN_WARNING_THRESHOLD && loginTime > 0 && !isLoginWarned) {
 			if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-				await sendTelegramMessage("⚠️ Sắp hết phiên đăng nhập (< 15 phút). Vui lòng tải lại trang để đăng nhập lại.", USER_IDS[txtUser.value].telegramId);
+				await sendTelegramMessage("⚠️ Còn 15 phút nữa hết phiên đăng nhập, vui lòng chủ động đăng nhập lại.", USER_IDS[txtUser.value].telegramId);
 				isLoginWarned = true;
 			}
 		}
-		if (loginTime > 900) {
+		if (loginTime > LOGIN_WARNING_THRESHOLD) {
 			isLoginWarned = false;
 		}
 
@@ -1307,7 +1308,7 @@ async function main() {
 		}
 		catch (err) {
 			console.error("👾❌Error in main:", err);
-			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [main] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [main]", DEV_ID);
 		}
 		tick = 0;
 		return true;
@@ -1318,17 +1319,42 @@ async function main() {
 
 
 async function sendTelegramMessage(message, chatId) {
-	await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify({
-			chat_id: chatId,
-			text: message,
-			parse_mode: "HTML"
-		})
-	});
+	// Strip HTML for system notification
+	let plainMessage = message;
+	try {
+		let div = document.createElement("div");
+		div.innerHTML = message;
+		plainMessage = div.textContent || div.innerText || message;
+	} catch (e) {
+		plainMessage = message.replace(/<[^>]*>?/gm, '');
+	}
+
+	if (typeof GM_notification === 'function') {
+		GM_notification({
+			text: plainMessage,
+			title: "QLDA Bot",
+			timeout: 5000,
+		});
+	}
+
+	try {
+		const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+		const params = new URLSearchParams();
+		params.append('chat_id', chatId);
+		params.append('text', message);
+		params.append('parse_mode', 'HTML');
+
+		await fetch(url, {
+			method: "POST",
+			mode: "no-cors",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			body: params
+		});
+	} catch (e) {
+		console.error("👾❌ Telegram Fetch Error:", e);
+	}
 }
 
 function addPasteEvent(element) {

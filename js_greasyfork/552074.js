@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shikimori.one GIF inserter
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-01.4
+// @version      2026-01-11.3
 // @description  Come to Anime moments club 🎊 https://shikimori.one/clubs/5686-klub-anime-momentov 🎉! Add convenient Tenor.com gif image inserter into Shikimori.one comment editor. Initially a fork of "Gifs" script by Pirate~, but eventually rewritten entirely.
 // @author       AlexDEV.pro
 // @match        *://shikimori.one/*
@@ -19,12 +19,16 @@
     const clientKey = 'SGI';
 
     const lastUsedImagesStorageKey = 'sgiLastUsedImages';
-    const insertOptionWidthPxStorageKey = 'sgiInsertOptionWidthPx';
+    const insertOptionSizePxStorageKey = 'sgiInsertOptionSizePx';
+    const insertSizeModeIsHeightStorageKey = 'sgiInsertSizeModeIsHeight';
     const displayOptionSquareViewStorageKey = 'sgiDisplayOptionSquareView';
 
     const i18n = {
         en: {
-            insertWidthLabelText: 'Insert width (px):',
+            insertSizeLabelPart1Text: 'Insert⠀',
+            insertSizeModeWidthButtonText: 'width',
+            insertSizeModeHeightButtonText: 'height',
+            insertSizeLabelPart2Text: '⠀(px):',
             isCoverObjectFitCheckboxLabelText: 'Display square',
             loadMoreButtonText: 'More',
             searchQueryPrefixOptionAllText: 'All',
@@ -36,7 +40,10 @@
             dialogOpenButtonLegacyTitle: 'GIFs & stickers'
         },
         ru: {
-            insertWidthLabelText: 'Ширина вставки (пиксели):',
+            insertSizeLabelPart1Text: '',
+            insertSizeModeWidthButtonText: 'Ширина',
+            insertSizeModeHeightButtonText: 'Высота',
+            insertSizeLabelPart2Text: '⠀вставки (пиксели):',
             isCoverObjectFitCheckboxLabelText: 'Квадратное отображение',
             loadMoreButtonText: 'Ещё',
             searchQueryPrefixOptionAllText: 'Всё',
@@ -74,11 +81,12 @@
     // How close to the bottom before triggering load more function.
     const loadMoreTriggerDistancePx = 5;
 
-    const insertWidthMinPx = 40;
-    const insertWidthMaxPx = 840;
-    const insertWidthStepPx = 5;
-    const insertWidthPresetsPx = [40, 50, 60, 80, 90, 100, 110, 120, 150, 180, 200, 235];
-    let insertWidthDefaultPx = insertWidthPresetsPx[3];
+    const insertSizeMinPx = 40;
+    const insertSizeMaxPx = 840;
+    const insertSizeStepPx = 5;
+    const insertSizePresetsPx = [40, 50, 60, 80, 90, 100, 110, 120, 150, 180, 200, 235];
+    let insertSizePxDefault = insertSizePresetsPx[3];
+    let insertSizeModeIsHeightDefault = false;
 
     let displayOptionSquareDefault = true;
 
@@ -89,7 +97,7 @@
 
     let isLegacyEditorDetected = false;
     let searchRequestAbortController;
-    let popupContainerEl, insertWidthInputEl, searchQueryPrefixSelectEl, searchFilterSelectEl, searchInputEl, searchButtonEl, imagesContainerEl, resultsContainerEl, loadMoreButtonEl, lastUsedImagesContainerEl;
+    let popupContainerEl, insertSizeInputEl, searchQueryPrefixSelectEl, searchFilterSelectEl, searchInputEl, searchButtonEl, insertSizeModeButtonEl, imagesContainerEl, resultsContainerEl, loadMoreButtonEl, lastUsedImagesContainerEl;
 
     const lastUsedImageClickInterval = 500;
 
@@ -266,32 +274,48 @@
         searchGroupEl.appendChild(searchClearButtonEl);
         searchGroupEl.appendChild(searchButtonEl);
 
-        const insertWidthGroupEl = document.createElement('div');
-        insertWidthGroupEl.className = 'sgi-flex-wrap';
+        const insertSizeGroupEl = document.createElement('div');
+        insertSizeGroupEl.className = 'sgi-flex-wrap';
 
-        const insertWidthLabelEl = document.createElement('span');
-        insertWidthLabelEl.className = 'sgi-label sgi-no-selection';
-        insertWidthLabelEl.textContent = t.insertWidthLabelText;
+        const insertSizeLabelGroupEl = document.createElement('div');
+        const insertSizeLabelPart1El = document.createElement('span');
+        insertSizeLabelPart1El.className = 'sgi-label sgi-no-selection';
+        insertSizeLabelPart1El.textContent = t.insertSizeLabelPart1Text;
+        insertSizeModeButtonEl = document.createElement('button');
+        insertSizeModeButtonEl.id = 'sgi-insert-size-mode-button';
+        insertSizeModeButtonEl.type = 'button';
+        if (insertSizeModeIsHeightDefault) {
+            insertSizeModeButtonEl.textContent = t.insertSizeModeHeightButtonText;
+        } else {
+            insertSizeModeButtonEl.textContent = t.insertSizeModeWidthButtonText;
+        }
+        insertSizeModeButtonEl.addEventListener('click', handleInsertSizeToggle);
+        const insertSizeLabelPart2El = document.createElement('span');
+        insertSizeLabelPart2El.className = 'sgi-label sgi-no-selection';
+        insertSizeLabelPart2El.textContent = t.insertSizeLabelPart2Text;
+        insertSizeLabelGroupEl.appendChild(insertSizeLabelPart1El);
+        insertSizeLabelGroupEl.appendChild(insertSizeModeButtonEl);
+        insertSizeLabelGroupEl.appendChild(insertSizeLabelPart2El);
 
-        insertWidthInputEl = document.createElement('input');
-        insertWidthInputEl.id = 'sgi-insert-width-input';
-        insertWidthInputEl.type = 'number';
-        insertWidthInputEl.min = insertWidthMinPx;
-        insertWidthInputEl.max = insertWidthMaxPx;
-        insertWidthInputEl.step = insertWidthStepPx;
-        insertWidthInputEl.value = insertWidthDefaultPx;
-        insertWidthInputEl.addEventListener('change', (event) => Storage.set(insertOptionWidthPxStorageKey, event.target.value));
+        insertSizeInputEl = document.createElement('input');
+        insertSizeInputEl.id = 'sgi-insert-width-input';
+        insertSizeInputEl.type = 'number';
+        insertSizeInputEl.min = insertSizeMinPx;
+        insertSizeInputEl.max = insertSizeMaxPx;
+        insertSizeInputEl.step = insertSizeStepPx;
+        insertSizeInputEl.value = insertSizePxDefault;
+        insertSizeInputEl.addEventListener('change', (event) => Storage.set(insertOptionSizePxStorageKey, event.target.value));
 
-        insertWidthGroupEl.appendChild(insertWidthLabelEl);
-        insertWidthGroupEl.appendChild(insertWidthInputEl);
-        for(const presetValue of insertWidthPresetsPx) {
+        insertSizeGroupEl.appendChild(insertSizeLabelGroupEl);
+        insertSizeGroupEl.appendChild(insertSizeInputEl);
+        for(const presetValue of insertSizePresetsPx) {
             const insertWidthPresetButton = document.createElement('button');
 
             insertWidthPresetButton.type = 'button';
             insertWidthPresetButton.textContent = presetValue;
             insertWidthPresetButton.addEventListener('click', () => handlePresetClick(presetValue));
 
-            insertWidthGroupEl.appendChild(insertWidthPresetButton);
+            insertSizeGroupEl.appendChild(insertWidthPresetButton);
         }
 
         const displayOptionsGroupEl = document.createElement('div');
@@ -311,7 +335,7 @@
         displayOptionsGroupEl.appendChild(isCoverObjectFitCheckboxLabelEl);
 
         toolbarContainerEl.appendChild(searchGroupEl);
-        toolbarContainerEl.appendChild(insertWidthGroupEl);
+        toolbarContainerEl.appendChild(insertSizeGroupEl);
         toolbarContainerEl.appendChild(displayOptionsGroupEl);
 
         imagesContainerEl = document.createElement('div');
@@ -421,11 +445,23 @@
         }
     }
 
-    const handlePresetClick = (presetValue) => {
-        if (!insertWidthInputEl) throw new Error('No insert width element found.');
+    const handleInsertSizeToggle = () => {
+        insertSizeModeIsHeightDefault = !insertSizeModeIsHeightDefault;
 
-        insertWidthInputEl.value = presetValue;
-        Storage.set(insertOptionWidthPxStorageKey, presetValue)
+        Storage.set(insertSizeModeIsHeightStorageKey, insertSizeModeIsHeightDefault);
+
+        if (insertSizeModeIsHeightDefault) {
+            insertSizeModeButtonEl.textContent = t.insertSizeModeHeightButtonText;
+        } else {
+            insertSizeModeButtonEl.textContent = t.insertSizeModeWidthButtonText;
+        }
+    }
+
+    const handlePresetClick = (presetValue) => {
+        if (!insertSizeInputEl) throw new Error('No insert size element found.');
+
+        insertSizeInputEl.value = presetValue;
+        Storage.set(insertOptionSizePxStorageKey, presetValue)
     }
 
     const handleImageSelection = (editorEl, imgSrc, tenorPageUrl) => {
@@ -449,7 +485,7 @@
                     // Prepare insertion HTML. The line breaks are odd but they prevent unnecessary spaces while keeping it convenient to edit.
                     const htmlSnippet =
                           `<span data-vue-node-view-wrapper="" contenteditable="false" draggable="true" style="white-space: normal;"><span
-    class="b-image check-width" data-attrs="{&quot;id&quot;:null,&quot;src&quot;:&quot;${imgSrc}&quot;,&quot;isPoster&quot;:false,&quot;width&quot;:${insertWidthInputEl.value},&quot;height&quot;:null,&quot;isNoZoom&quot;:true,&quot;class&quot;:null}" data-image="[img]">
+    class="b-image check-width" data-attrs="{&quot;id&quot;:null,&quot;src&quot;:&quot;${imgSrc}&quot;,&quot;isPoster&quot;:false,&quot;width&quot;:${insertSizeModeIsHeightDefault ? 'null' : insertSizeInputEl.value},&quot;height&quot;:${insertSizeModeIsHeightDefault ? insertSizeInputEl.value : 'null'},&quot;isNoZoom&quot;:true,&quot;class&quot;:null}" data-image="[img]">
         <div class="controls">
             <a class="prosemirror-open" href="${imgSrc}" target="_blank"></a><!----><div class="delete"></div>
         </div>
@@ -487,7 +523,7 @@
 
                     // Insert text after caret/selection.
                     const selectionEndIndex = textAreaEl.selectionEnd;
-                    const text = `[img no-zoom width=${insertWidthInputEl.value}]${imgSrc}[/img]`;
+                    const text = `[img no-zoom ${insertSizeModeIsHeightDefault ? 'height' : 'width'}=${insertSizeInputEl.value}]${imgSrc}[/img]`;
                     textAreaEl.value = textAreaEl.value.slice(0, selectionEndIndex) + text + textAreaEl.value.slice(selectionEndIndex);
 
                     // Move caret after inserted text.
@@ -810,6 +846,7 @@
         imgEl.className = 'sgi-last-used-img';
         imgEl.src = url;
         imgEl.dataset.tenorPageUrl = tenorPageUrl;
+        imgEl.dataset.loading = 'lazy';
         imgEl.addEventListener('click', onLastUsedImageClick);
         imgEl.addEventListener('load', onImageLoad);
 
@@ -823,7 +860,8 @@
     }
 
     const restoreOptions = async () => {
-        insertWidthDefaultPx = await Storage.get(insertOptionWidthPxStorageKey, insertWidthDefaultPx);
+        insertSizePxDefault = await Storage.get(insertOptionSizePxStorageKey, insertSizePxDefault);
+        insertSizeModeIsHeightDefault = await Storage.get(insertSizeModeIsHeightStorageKey, insertSizeModeIsHeightDefault);
         displayOptionSquareDefault = await Storage.get(displayOptionSquareViewStorageKey, displayOptionSquareDefault);
     };
 
@@ -936,6 +974,7 @@
     // Local storage -> TemperMonkey/Userscripts storage migration.
     const legacyLastUsedImagesLocalStorageKey = 'sgiPopularImages';
     const legacyInsertOptionWidthLocalStorageKey = 'sgiInsertOptionWidth';
+    const legacyInsertOptionSizeLocalStorageKey = 'sgiInsertOptionWidthPx';
     const legacyDisplayOptionSquareLocalStorageKey = 'sgiDisplayOptionSquare';
     const renameLocalStorageKey = (oldKey, newKey) => {
         const value = localStorage.getItem(oldKey);
@@ -958,13 +997,14 @@
     const legacyStorageMigration = async () => {
         // Old storage keys to new keys.
         renameLocalStorageKey(legacyLastUsedImagesLocalStorageKey, lastUsedImagesStorageKey);
-        renameLocalStorageKey(legacyInsertOptionWidthLocalStorageKey, insertOptionWidthPxStorageKey);
+        renameLocalStorageKey(legacyInsertOptionWidthLocalStorageKey, insertOptionSizePxStorageKey);
+        renameLocalStorageKey(legacyInsertOptionSizeLocalStorageKey, insertOptionSizePxStorageKey);
         renameLocalStorageKey(legacyDisplayOptionSquareLocalStorageKey, displayOptionSquareViewStorageKey);
 
         // If GM API available, migrate from localStorage to GM storage (TemperMonkey/Userscripts own storage).
         if ((typeof GM !== 'undefined' && GM.setValue) || (typeof GM_setValue === 'function')) {
             await moveFromLocalStorageToGmStorage(lastUsedImagesStorageKey);
-            await moveFromLocalStorageToGmStorage(insertOptionWidthPxStorageKey);
+            await moveFromLocalStorageToGmStorage(insertOptionSizePxStorageKey);
             await moveFromLocalStorageToGmStorage(displayOptionSquareViewStorageKey);
         }
     }

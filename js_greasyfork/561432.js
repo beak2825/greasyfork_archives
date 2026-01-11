@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name               YouTube Video FREE Downloader✨🚀 - NO ADS🚫🌐 (EasyTube V1)
+// @name               YouTube Video 4K/HD Downloader✨🚀 - NO ADS🚫🌐 (EasyTube V1)
 // @name:vi            Trình tải video YouTube✨ - KHÔNG QUẢNG CÁO🚫
 // @name:zh-CN         YouTube 视频下载器✨ - 无广告🚫
 // @name:zh-TW         YouTube 影片下載器✨ - 無廣告🚫
@@ -40,8 +40,8 @@
 // @run-at             document-end
 // @icon               https://github.com/helloticc/TampermonkeyProjects/blob/main/EasyTube.png?raw=true
 // @license            MIT
-// @downloadURL https://update.greasyfork.org/scripts/561432/YouTube%20Video%20FREE%20Downloader%E2%9C%A8%F0%9F%9A%80%20-%20NO%20ADS%F0%9F%9A%AB%F0%9F%8C%90%20%28EasyTube%20V1%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561432/YouTube%20Video%20FREE%20Downloader%E2%9C%A8%F0%9F%9A%80%20-%20NO%20ADS%F0%9F%9A%AB%F0%9F%8C%90%20%28EasyTube%20V1%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561432/YouTube%20Video%204KHD%20Downloader%E2%9C%A8%F0%9F%9A%80%20-%20NO%20ADS%F0%9F%9A%AB%F0%9F%8C%90%20%28EasyTube%20V1%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561432/YouTube%20Video%204KHD%20Downloader%E2%9C%A8%F0%9F%9A%80%20-%20NO%20ADS%F0%9F%9A%AB%F0%9F%8C%90%20%28EasyTube%20V1%29.meta.js
 // ==/UserScript==
 
 const FALLBACK_TITLE = 'YouTube EasyTube';

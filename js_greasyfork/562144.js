@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn AH - Item search DB
 // @namespace    torn.com
-// @version      1.0.9
+// @version      1.1.0
 // @description  Floating movable panel + GET-ITEM buttons on amarket rows to display item stats/bonuses.
 // @author       SuperGogu [3580072]
 // @match        https://www.torn.com/amarket.php*
@@ -26,6 +26,7 @@
   const KEY_DB_LIMIT = 'sg_am_db_limit_v1';
   const KEY_STAT_RANGE = 'sg_am_stat_range_v1';
   const KEY_BONUS_RANGE = 'sg_am_bonus_range_v1';
+  const KEY_SETTINGS_VIS = 'sg_am_settings_vis_v1';
 
   const DEFAULT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzgN3pN3vrnUGd_7TuPXqJZt5b-dG1yLtnUbyYBFG_u6DcuuuhLKuM2J1CGLCM8O2c65w/exec';
   const DEFAULT_LIMIT = 50;
@@ -90,6 +91,29 @@
 
   function getBonusRange() {
     return clampStepHalf(GM_getValue(KEY_BONUS_RANGE, DEFAULT_BONUS_RANGE), 0, 2.5);
+  }
+
+  function isSettingsVisible() {
+    return GM_getValue(KEY_SETTINGS_VIS, true);
+  }
+
+  function applySettingsVisibility() {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+
+    const show = isSettingsVisible();
+    panel.classList.toggle('sg-settings-hidden', !show);
+
+    const btn = panel.querySelector('[data-sg="toggleSettings"]');
+    if (btn) {
+      btn.textContent = show ? '⚙▾' : '⚙▸';
+      btn.title = show ? 'Hide settings' : 'Show settings';
+    }
+  }
+
+  function setSettingsVisible(show) {
+    GM_setValue(KEY_SETTINGS_VIS, !!show);
+    applySettingsVisibility();
   }
 
   function decodeHtmlEntities(s) {
@@ -163,6 +187,20 @@
   border-bottom: 1px solid rgba(57,255,20,.35);
 }
 #${panelId} .sg-title{ font-weight:700; font-size:13px; color:${neon}; }
+#${panelId} .sg-right{ display:flex; align-items:center; gap:6px; }
+#${panelId} .sg-gear{
+  cursor:pointer;
+  font-weight:900;
+  font-size:12px;
+  line-height:16px;
+  padding:2px 8px;
+  border-radius:7px;
+  color:${neon};
+  border:1px solid rgba(57,255,20,.55);
+  background: rgba(0,0,0,.25);
+  user-select:none;
+}
+#${panelId} .sg-gear:hover{ background: rgba(57,255,20,.12); }
 #${panelId} .sg-x{
   cursor:pointer; font-weight:900; font-size:16px; line-height:16px;
   padding:2px 8px; border-radius:7px; color:#111; background:${neon};
@@ -231,6 +269,10 @@
   font-weight: 800;
 }
 
+#${panelId}.sg-settings-hidden [data-sg="settingsBlock"]{
+  display:none !important;
+}
+
 .${btnClass}{
   display:inline-flex; align-items:center; justify-content:center;
   width:16px; height:16px; margin-left:6px;
@@ -257,11 +299,11 @@
     GM_setValue(KEY_POS, { left, top });
   }
 
-  function setVisible(isVisible) {
-    GM_setValue(KEY_VIS, !!isVisible);
+  function setVisible(isVisibleFlag) {
+    GM_setValue(KEY_VIS, !!isVisibleFlag);
     const panel = document.getElementById(panelId);
     if (!panel) return;
-    panel.classList.toggle('hidden', !isVisible);
+    panel.classList.toggle('hidden', !isVisibleFlag);
   }
 
   function isVisible() {
@@ -284,42 +326,58 @@
     title.className = 'sg-title';
     title.textContent = 'AMarket Item';
 
+    const right = document.createElement('div');
+    right.className = 'sg-right';
+
+    const gear = document.createElement('div');
+    gear.className = 'sg-gear';
+    gear.setAttribute('data-sg', 'toggleSettings');
+    gear.addEventListener('click', () => setSettingsVisible(!isSettingsVisible()));
+    gear.addEventListener('mousedown', (e) => { e.stopPropagation(); });
+
     const x = document.createElement('div');
     x.className = 'sg-x';
     x.textContent = '×';
     x.addEventListener('click', () => setVisible(false));
+    x.addEventListener('mousedown', (e) => { e.stopPropagation(); });
+
+    right.appendChild(gear);
+    right.appendChild(x);
 
     head.appendChild(title);
-    head.appendChild(x);
+    head.appendChild(right);
 
     const body = document.createElement('div');
     body.className = 'sg-body';
     body.innerHTML = `
-      <div class="sg-sectionTitle">Settings</div>
-      <div class="sg-settings">
-        <div class="sg-set-row">
-          <div class="sg-set-label">
-            <span>Stat range</span>
-            <span>± <b data-sg="statRangeVal"></b></span>
+      <div data-sg="settingsBlock">
+        <div class="sg-sectionTitle">Settings</div>
+        <div class="sg-settings">
+          <div class="sg-set-row">
+            <div class="sg-set-label">
+              <span>Stat range</span>
+              <span>± <b data-sg="statRangeVal"></b></span>
+            </div>
+            <input data-sg="statRange" type="range" min="0" max="2.5" step="0.5">
           </div>
-          <input data-sg="statRange" type="range" min="0" max="2.5" step="0.5">
+
+          <div class="sg-set-row">
+            <div class="sg-set-label">
+              <span>Bonus value range</span>
+              <span>± <b data-sg="bonusRangeVal"></b></span>
+            </div>
+            <input data-sg="bonusRange" type="range" min="0" max="2.5" step="0.5">
+          </div>
+
+          <div class="sg-set-row" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <div class="sg-set-label" style="margin:0;"><span>Limit</span></div>
+            <input data-sg="limit" class="sg-num" type="number" min="1" max="300" step="1">
+          </div>
         </div>
 
-        <div class="sg-set-row">
-          <div class="sg-set-label">
-            <span>Bonus value range</span>
-            <span>± <b data-sg="bonusRangeVal"></b></span>
-          </div>
-          <input data-sg="bonusRange" type="range" min="0" max="2.5" step="0.5">
-        </div>
-
-        <div class="sg-set-row" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-          <div class="sg-set-label" style="margin:0;"><span>Limit</span></div>
-          <input data-sg="limit" class="sg-num" type="number" min="1" max="300" step="1">
-        </div>
+        <div class="sg-hr"></div>
       </div>
 
-      <div class="sg-hr"></div>
       <div class="sg-hint">Click <b>X</b> next to <b>Item seller</b> to display details and search your DB.</div>
       <div class="sg-hr"></div>
 
@@ -342,6 +400,7 @@
 
     head.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
+      if (e.target && (e.target.closest('.sg-x') || e.target.closest('.sg-gear'))) return;
       dragging = true;
       startX = e.clientX;
       startY = e.clientY;
@@ -372,6 +431,7 @@
     });
 
     initSettingsUI(panel);
+    applySettingsVisibility();
     return panel;
   }
 
@@ -516,56 +576,47 @@
     return `${n} (${String(val)})`;
   }
 
-    function renderResults(items, type, selectedItem) {
-        const { results } = panelEls();
-        if (!items || !items.length) { results.innerHTML = ''; return; }
+  function renderResults(items, type, selectedItem) {
+    const { results } = panelEls();
+    if (!items || !items.length) { results.innerHTML = ''; return; }
 
-        const fmtBonus = (name, val) => {
-            const n = String(name ?? '').trim();
-            if (!n || n === '-') return '-';
-            if (val == null || val === '') return n;
-            const num = parseFloat(String(val).replace('%', '').trim());
-            if (Number.isFinite(num)) return `${n} (${num}%)`;
-            return `${n} (${String(val)})`;
-        };
+    const cards = items.map(it => {
+      const name = safeTxt(it.name);
+      const end = (it.enddate || '').toString().trim();
+      const titleName = end ? `${name} (${end})` : name;
 
-        const cards = items.map(it => {
-            const name = safeTxt(it.name);
-            const end = (it.enddate || '').toString().trim();
-            const titleName = end ? `${name} (${end})` : name;
+      const b1 = fmtBonus(it.b1, it.b1v);
+      const b2 = fmtBonus(it.b2, it.b2v);
 
-            const b1 = fmtBonus(it.b1, it.b1v);
-            const b2 = fmtBonus(it.b2, it.b2v);
+      const topBidRaw = safeTxt(it.topBid);
 
-            const topBidRaw = safeTxt(it.topBid); // show exact like $1,400,000,017
+      const perfect = selectedItem ? isPerfectMatch(selectedItem, it) : false;
 
-            const perfect = selectedItem ? isPerfectMatch(selectedItem, it) : false;
+      let statLines = '';
+      if (type === 'weapon') {
+        statLines += `<div class="sg-mini"><span>Damage</span><span>${escapeHtml(safeTxt(it.dmg))}</span></div>`;
+        statLines += `<div class="sg-mini"><span>Accuracy</span><span>${escapeHtml(safeTxt(it.acc))}</span></div>`;
+      } else if (type === 'armor') {
+        statLines += `<div class="sg-mini"><span>Armor</span><span>${escapeHtml(safeTxt(it.arm))}</span></div>`;
+      }
 
-            let statLines = '';
-            if (type === 'weapon') {
-                statLines += `<div class="sg-mini"><span>Damage</span><span>${escapeHtml(safeTxt(it.dmg))}</span></div>`;
-                statLines += `<div class="sg-mini"><span>Accuracy</span><span>${escapeHtml(safeTxt(it.acc))}</span></div>`;
-            } else if (type === 'armor') {
-                statLines += `<div class="sg-mini"><span>Armor</span><span>${escapeHtml(safeTxt(it.arm))}</span></div>`;
-            }
+      statLines += `<div class="sg-mini"><span>Bonus 1</span><span title="${escapeHtml(b1)}">${escapeHtml(b1)}</span></div>`;
+      statLines += `<div class="sg-mini"><span>Bonus 2</span><span title="${escapeHtml(b2)}">${escapeHtml(b2)}</span></div>`;
+      statLines += `<div class="sg-mini"><span>TopBid</span><span>${escapeHtml(topBidRaw)}</span></div>`;
 
-            statLines += `<div class="sg-mini"><span>Bonus 1</span><span title="${escapeHtml(b1)}">${escapeHtml(b1)}</span></div>`;
-            statLines += `<div class="sg-mini"><span>Bonus 2</span><span title="${escapeHtml(b2)}">${escapeHtml(b2)}</span></div>`;
-            statLines += `<div class="sg-mini"><span>TopBid</span><span>${escapeHtml(topBidRaw)}</span></div>`;
+      return `<div class="sg-card ${perfect ? 'sg-perfect' : ''}">
+        <div class="sg-name" title="${escapeHtml(titleName)}">${escapeHtml(titleName)}</div>
+        ${statLines}
+      </div>`;
+    });
 
-            return `<div class="sg-card ${perfect ? 'sg-perfect' : ''}">
-      <div class="sg-name" title="${escapeHtml(titleName)}">${escapeHtml(titleName)}</div>
-      ${statLines}
-    </div>`;
-        });
-
-        results.innerHTML = cards.join('');
-    }
-
+    results.innerHTML = cards.join('');
+  }
 
   function buildDbQueryFromItem(data) {
     const q = new URLSearchParams();
 
+    q.set('name', data.name || '');
     q.set('range', String(getStatRange()));
     q.set('limit', String(getDbLimit()));
 
@@ -641,7 +692,6 @@
         return;
       }
 
-      // LOWEST first
       matches.sort((a, b) => (moneyToInt(a.topBid) ?? 9e18) - (moneyToInt(b.topBid) ?? 9e18));
 
       setStatus(`<strong>DB</strong>: found <b>${matches.length}</b> matches (sorted by Lowest bid).`);
@@ -655,6 +705,7 @@
     GM_registerMenuCommand('AH panel: Show', () => setVisible(true));
     GM_registerMenuCommand('AH panel: Hide', () => setVisible(false));
     GM_registerMenuCommand('AH panel: Toggle', () => setVisible(!isVisible()));
+    GM_registerMenuCommand('AH panel: Toggle settings', () => setSettingsVisible(!isSettingsVisible()));
 
     GM_registerMenuCommand('AH DB: Set endpoint', () => {
       const cur = GM_getValue(KEY_DB_ENDPOINT, '') || '';

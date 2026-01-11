@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.2.0
+// @version      2.3.0
 // @description  Pokechill 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -685,7 +685,7 @@
         "Vivillon": "彩粉蝶",
         "Litleo": "小狮狮",
         "Pyroar": "火炎狮",
-        "Flabébé": "花蓓蓓",
+        "Flabebe": "花蓓蓓",
         "Floette": "花叶蒂",
         "Florges": "花洁夫人",
         "Skiddo": "坐骑小羊",
@@ -788,7 +788,7 @@
         "Sandygast": "沙丘娃",
         "Palossand": "噬沙堡爷",
         "Pyukumuku": "拳海参",
-        "Type: Null": "属性：空",
+        "Type Null": "属性空",
         "Silvally": "银伴战兽",
         "Minior": "小陨星",
         "Komala": "树枕尾熊",
@@ -1085,6 +1085,13 @@
         "Magikarp Skelly": "骷髅 鲤鱼王",
         "Magikarp Soar": "腾跃 鲤鱼王",
         "Magikarp Tiger": "老虎 鲤鱼王",
+        //剑盾
+        "Zacian Crowned": "剑之王 苍响",
+        "Zamazenta Crowned": "盾之王 藏玛然特",
+        //蕾冠王
+        "Calyrex Ice": "白马蕾冠王",
+        "Calyrex Shadow": "黑马蕾冠王",
+
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced artikel-edit
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      0.9.0
+// @version      0.9.1
 // @description  Klon-Artikel Info | Vergleichslinks | Clone-Optionen | Grid Divider | Created-From-Info | Einstellungsmenü
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel?id=*
@@ -4853,31 +4853,65 @@
                             // Fokussiere das Input
                             reactSelectInput.focus();
                             
-                            // Versuche direkt den Text zu schreiben durch Zwischenablage
-                            navigator.clipboard.writeText(idsString).then(() => {
-                                // Fokus nochmal setzen
-                                reactSelectInput.focus();
-                                
-                                // Simuliere Paste-Event
-                                const dt = new DataTransfer();
-                                dt.setData('text/plain', idsString);
-                                
-                                const pasteEvent = new iframeWin.ClipboardEvent('paste', {
+                            // Methode 1: Native value setter für React-Inputs (funktioniert in Chrome und Firefox)
+                            try {
+                                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(iframeWin.HTMLInputElement.prototype, 'value').set;
+                                nativeInputValueSetter.call(reactSelectInput, idsString);
+                            } catch (e) {
+                                // Fallback: Direktes Setzen
+                                reactSelectInput.value = idsString;
+                            }
+                            
+                            // Feuere Input-Event für React (verschiedene Varianten für Browser-Kompatibilität)
+                            try {
+                                // Versuche InputEvent (moderner)
+                                const inputEvent = new iframeWin.InputEvent('input', {
                                     bubbles: true,
                                     cancelable: true,
-                                    clipboardData: dt
+                                    inputType: 'insertText',
+                                    data: idsString
                                 });
+                                reactSelectInput.dispatchEvent(inputEvent);
+                            } catch (e) {
+                                // Fallback: Standard Event
+                                const event = new iframeWin.Event('input', { bubbles: true });
+                                reactSelectInput.dispatchEvent(event);
+                            }
+                            
+                            // Zusätzlich Change-Event (manche React-Komponenten brauchen das)
+                            try {
+                                const changeEvent = new iframeWin.Event('change', { bubbles: true });
+                                reactSelectInput.dispatchEvent(changeEvent);
+                            } catch (e) {}
+                            
+                            // Methode 2: Simuliere Tastatureingabe (Fallback für React-Select)
+                            // React-Select verwendet onInputChange, das auf Keyboard-Events reagiert
+                            setTimeout(() => {
+                                // Setze nochmals den Wert
+                                try {
+                                    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(iframeWin.HTMLInputElement.prototype, 'value').set;
+                                    nativeInputValueSetter.call(reactSelectInput, idsString);
+                                } catch (e) {
+                                    reactSelectInput.value = idsString;
+                                }
                                 
-                                reactSelectInput.dispatchEvent(pasteEvent);
+                                // Feuere Events erneut
+                                reactSelectInput.dispatchEvent(new iframeWin.Event('input', { bubbles: true }));
+                                reactSelectInput.dispatchEvent(new iframeWin.Event('change', { bubbles: true }));
                                 
-                                // Auch execCommand versuchen
-                                iframeDoc.execCommand('insertText', false, idsString);
-                                
-                            }).catch(() => {
-                                // Fallback: execCommand
-                                reactSelectInput.focus();
-                                iframeDoc.execCommand('insertText', false, idsString);
-                            });
+                                // Simuliere keydown/keyup für das letzte Zeichen
+                                const lastChar = idsString.slice(-1);
+                                reactSelectInput.dispatchEvent(new iframeWin.KeyboardEvent('keydown', {
+                                    key: lastChar,
+                                    bubbles: true,
+                                    cancelable: true
+                                }));
+                                reactSelectInput.dispatchEvent(new iframeWin.KeyboardEvent('keyup', {
+                                    key: lastChar,
+                                    bubbles: true,
+                                    cancelable: true
+                                }));
+                            }, 100);
                             
                             // Delay basierend auf Anzahl der IDs
                             const delay = Math.max(2000, ids.length * 400);

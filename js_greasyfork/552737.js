@@ -40,59 +40,61 @@
 // @name:ug             ئەلالاشتۇرۇلغان Greasy Fork
 // @name:vi             Greasy Fork Nâng cao
 // @namespace           https://github.com/0H4S
-// @version             1.9
-// @description         Enhances Greasy Fork's interface and functionality: adds script icons, a full HTML toolbar for writing descriptions and comments, a direct script download button, metadata customization, and an AI translator.
-// @description:pt-BR   Torna o Greasy Fork mais funcional e visualmente agradável: adiciona ícones de scripts, barra de ferramentas HTML completa para editar descrições e comentários, botão de download direto de scripts, personalização via metadados e tradutor IA.
-// @description:zh-CN   美化 Greasy Fork 并增强功能：添加脚本图标、用于编写描述和评论的完整 HTML 工具栏、直接脚本下载按钮、元数据自定义以及 AI 翻译功能。
-// @description:zh-TW   美化 Greasy Fork 並增強功能：添加腳本圖示、用於編寫描述和評論的完整 HTML 工具列、直接腳本下載按鈕、元數據自定義以及 AI 翻譯功能。
-// @description:fr-CA   Améliore l'interface et les fonctionnalités de Greasy Fork : ajoute des icônes de scripts, une barre d'outils HTML complète pour rédiger des descriptions et des commentaires, un bouton de téléchargement direct de scripts, la personnalisation des métadonnées et un traducteur IA.
-// @description:ckb     ڕووکار وasîteyi Greasy Fork باشتر دەکات: ئایکۆنی سکریپت زیاد دەکات، تووڵباری HTML تەواو بۆ نووسینی وەسف و لێدوانەکان، دوگمەی داگرتنی ڕاستەوخۆی سکریپت، وەرگێڕی زیرەکی دەستکرد.
-// @description:ar      يحسن واجهة Greasy Fork ووظائفه: يضيف أيقونات للسكربتات، وشريط أدوات HTML كامل لكتابة الأوصاف والتعليقات، وزر تحميل مباشر للسكربت، وتخصيص البيانات الوصفية، ومترجم ذكاء اصطناعي.
-// @description:be      Паляпшае інтэрфейс і функцыянальнасць Greasy Fork: дадае значкі скрыптоў, поўную панэль інструментаў HTML для напісання апісанняў і каментарыяў, кнопку прамой загрузкі скрыптоў і перакладчык AI.
-// @description:bg      Подобрява интерфейса и функционалността на Greasy Fork: добавя икони на скриптове, пълна HTML лента с инструменти за писане на описания и коментари, бутон за директно изтегляне на скриптове и AI преводач.
-// @description:cs      Vylepšuje rozhraní a funkčnost Greasy Fork: přidává ikony skriptů, plný panel nástrojů HTML pro psaní popisů a komentářů, tlačítko přímého stahování skriptů, úpravy metadat a AI překladač.
-// @description:da      Forbedrer Greasy Forks grænseflade og funktionalitet: tilføjer skriptikoner, en komplet HTML-værktøjslinje til at skrive beskrivelser og kommentarer, en knap til direkte download af skripter og en AI-oversætter.
-// @description:de      Verbessert die Benutzeroberfläche und Funktionalität von Greasy Fork: Fügt Skript-Symbole, eine vollständige HTML-Symbolleiste zum Schreiben von Beschreibungen und Kommentaren, einen direkten Skript-Download-Button und einen KI-Übersetzer hinzu.
-// @description:el      Βελτιώνει τη διεπαφή και τη λειτουργικότητα του Greasy Fork: προσθέτει εικονίδια σεναρίων, πλήρη γραμμή εργαλείων HTML για τη σύνταξη περιγραφών και σχολίων, κουμπί άμεσης λήψης σεναρίων και μεταφραστή AI.
-// @description:en      Enhances Greasy Fork's interface and functionality: adds script icons, a full HTML toolbar for writing descriptions and comments, a direct script download button, metadata customization, and an AI translator.
-// @description:eo      Plibonigas la interfacon kaj funkciecon de Greasy Fork: aldonas skriptajn ikonojn, plenan HTML-ilobreton por verki priskribojn kaj komentojn, rektan skript-elŝutbutonon kaj AI-tradukilon.
-// @description:es      Mejora la interfaz y la funcionalidad de Greasy Fork: añade iconos de scripts, barra de herramientas HTML completa para escribir descripciones y comentarios, botón de descarga directa de scripts y traductor IA.
-// @description:fi      Parantaa Greasy Forkin käyttöliittymää ja toiminnallisuutta: lisää skriptikuvakkeet, täydellisen HTML-työkalurivin kuvausten ja kommenttien kirjoittamiseen, suoran skriptien latauspainikkeen ja tekoälykääntäjän.
-// @description:fr      Améliore l'interface et les fonctionnalités de Greasy Fork : ajoute des icônes de scripts, une barre d'outils HTML complète pour rédiger des descriptions et des commentaires, un bouton de téléchargement direct de scripts, la personnalisation des métadonnées et un traducteur IA.
-// @description:he      משפר את הממשק והפונקציונליות של Greasy Fork: מוסיף סמלי סקריפט, סרגל כלים HTML מלא לכתיבת תיאורים והערות, כפתור להורדה ישירה של סקריפטים, התאמה אישית של מטא נתונים ומתרגם AI.
-// @description:hr      Poboljšava sučelje i funkcionalnost Greasy Forka: dodaje ikone skripti, punu HTML alatnu traku za pisanje opisa i komentara, gumb za izravno preuzimanje skripti, prilagodbu metapodataka i AI prevoditelj.
-// @description:hu      Javítja a Greasy Fork felületét és funkcionalitását: szkriptikonokat, teljes HTML eszköztárat leírások és megjegyzések írásához, közvetlen szkriptletöltési gombot és MI fordítót ad hozzá.
-// @description:id      Meningkatkan antarmuka dan fungsionalitas Greasy Fork: menambahkan ikon skrip, bilah alat HTML lengkap untuk menulis deskripsi dan komentar, tombol unduhan skrip langsung, dan penerjemah AI.
-// @description:it      Migliora l'interfaccia e la funzionalità di Greasy Fork: aggiunge icone agli script, una barra degli strumenti HTML completa per scrivere descrizioni e commenti, un pulsante di download diretto degli script e un traduttore AI.
-// @description:ja      Greasy Forkのインターフェースと機能を強化します。スクリプトアイコン、説明やコメントを記述するための完全なHTMLツールバー、スクリプトの直接ダウンロードボタン、AI翻訳機能などを追加します。
-// @description:ka      აუმჯობესებს Greasy Fork-ის ინტერფეისს და ფუნქციონალს: ამატებს სკრიპტის ხატულებს, სრულ HTML ხელსაწყოთა ზოლს აღწერილობებისა და კომენტარების დასაწერად, სკრიპტების პირდაპირი ჩამოტვირთვის ღილაკს და AI თარჯიმანს.
-// @description:ko      Greasy Fork의 인터페이스와 기능을 향상시킵니다. 스크립트 아이콘, 설명 및 설명을 작성하기 위한 전체 HTML 툴바, 직접 스크립트 다운로드 버튼 및 AI 번역기를 추가합니다.
-// @description:mr      Greasy Fork चे इंटरफेस आणि कार्यक्षमता वाढवते: स्क्रिप्ट चिन्हे, वर्णन आणि टिप्पण्या लिहिण्यासाठी संपूर्ण HTML टूलबार, थेट स्क्रिप्ट डाउनलोड बटण आणि AI अनुवादक जोडते.
-// @description:nb      Forbedrer Greasy Forks grensesnitt og funksjonalitet: legger til skriptikoner, en full HTML-verktøylinje for å skrive beskrivelser og kommentarer, en knapp for direkte nedlasting av skript og en AI-oversetter.
-// @description:nl      Verbetert de interface en functionaliteit van Greasy Fork: voegt scriptpictogrammen, een volledige HTML-werkbalk voor het schrijven van beschrijvingen en opmerkingen, een knop voor het direct downloaden van scripts en een AI-vertaler toe.
-// @description:pl      Ulepsza interfejs i funkcjonalność Greasy Fork: dodaje ikony skryptów, pełny pasek narzędzi HTML do pisania opisów i komentarzy, przycisk bezpośredniego pobierania skryptów oraz tłumacz AI.
-// @description:ro      Îmbunătățește interfața și funcționalitatea Greasy Fork: adaugă pictograme de script, o bară de instrumente HTML completă pentru scrierea de descrieri și comentarii, buton de descărcare directă a scripturilor și traducător AI.
-// @description:ru      Улучшает интерфейс и функциональность Greasy Fork: добавляет значки скриптов, полную HTML-панель для написания описаний и комментариев, кнопку прямой загрузки скриптов и ИИ-переводчик.
-// @description:sk      Vylepšuje rozhranie a funkčnosť Greasy Fork: pridáva ikony skriptov, plný panel nástrojov HTML na písanie popisov a komentárov, tlačidlo priameho sťahovania skriptov a prekladač AI.
-// @description:sr      Побољшава интерфејс и функционалност Греаси Форк-а: додаје иконе скрипти, пуну ХТМЛ траку са алаткама за писање описа и коментара, дугме за директно преузимање скрипти и АИ преводиоца.
-// @description:sv      Förbättrar Greasy Forks gränssnitt och funktionalitet: lägger till skriptikoner, ett fullständigt HTML-verktygsfält för att skriva beskrivningar och kommentarer, en knapp för direkt nedladdning av skript och en AI-översättare.
-// @description:th      ปรับปรุงอินเทอร์เฟซและฟังก์ชันการทำงานของ Greasy Fork: เพิ่มไอคอนสคริปต์, แถบเครื่องมือ HTML เต็มรูปแบบสำหรับเขียนคำอธิบายและแสดงความคิดเห็น, ปุ่มดาวน์โหลดสคริปต์โดยตรง และตัวแปล AI
-// @description:tr      Greasy Fork'un arayüzünü ve işlevselliğini geliştirir: komut dosyası simgeleri, açıklamalar ve yorumlar yazmak için tam bir HTML araç çubuğu, doğrudan komut dosyası indirme düğmesi ve AI çevirmeni ekler.
-// @description:uk      Покращує інтерфейс та функціональність Greasy Fork: додає значки скриптів, повну панель інструментів HTML для написання описів та коментарів, кнопку прямого завантаження скриптів та перекладач ШІ.
-// @description:ug      Greasy Fork نىڭ كۆرۈنمە يۈزى ۋە ئىقتىدارىنى ئۆستۈرىدۇ: قوليازما سىنبەلگىسى ، چۈشەندۈرۈش ۋە باھا يېزىش ئۈچۈن تولۇق HTML قورال بالدىقى ، بىۋاسىتە قوليازما چۈشۈرۈش كۇنۇپكىسى ۋە AI تەرجىمانى قوشىدۇ.
-// @description:vi      Cải thiện giao diện và tính năng của Greasy Fork: thêm biểu tượng script, thanh công cụ HTML đầy đủ để viết mô tả và bình luận, nút tải xuống script trực tiếp và dịch giả AI.
+// @version             2.0
+// @description         Enhance Greasy Fork usability with this function package: adds identifier icons, full HTML toolbar to edit descriptions/comments, and a direct download button. Includes a translation feature for over 100 languages for page content and allows advanced customization via metadata. A technical tool designed to make script navigation and management much more practical.
+// @description:pt-BR   Melhore a usabilidade do Greasy Fork com este pacote de funções: adiciona ícones identificadores, barra de ferramentas HTML completa para editar descrições/comentários e botão de download direto. Inclui também um recurso de tradução para mais de 100 idiomas em cada conteúdo da página, além de permitir personalização avançada via metadados. Uma ferramenta técnica desenvolvida para tornar a navegação e a gestão de scripts muito mais prática e organizada.
+// @description:zh-CN   通过此功能包提高 Greasy Fork 的可用性：添加标识符图标、用于编辑描述/评论的完整 HTML 工具栏以及直接下载按钮。还包括页面内容的 100 多种语言翻译功能，并允许通过元数据进行高级自定义。旨在使脚本导航和管理更加实用和有条理的技术工具。
+// @description:zh-TW   透過此功能包提高 Greasy Fork 的可用性：新增識別圖示、用於編輯描述/評論的完整 HTML 工具列以及直接下載按鈕。還包括頁面內容的 100 多種語言翻譯功能，並允許透過元數據進行進階自訂。旨在使腳本導航和管理更加實用和有條理的技術工具。
+// @description:fr-CA   Améliorez l'utilisabilité de Greasy Fork avec cet ensemble de fonctionnalités : ajout d'icônes d'identification, barre d'outils HTML complète pour l'édition de descriptions/commentaires et bouton de téléchargement direct. Inclut également une fonction de traduction pour plus de 100 langues et permet une personnalisation avancée via métadonnées. Un outil technique conçu pour rendre la navigation et la gestion des scripts beaucoup plus pratiques.
+// @description:ckb     بەکارهێنانی Greasy Fork باشتر بکە بەم پاکێجە: زیادکردنی ئایکۆنەکانی ناسینەوە، تووڵباڕی HTMLـی تەواو بۆ دەستکاریکردنی وەسف/لێدوانەکان، و دوگمەی دابەزاندنی ڕاستەوخۆ. هەروەها تایبەتمەندی وەرگێڕان بۆ زیاتر لە 100 زمان بۆ ناوەڕۆکی پەڕەکە لەخۆ دەگرێت و ڕێگە بە دەستکاریکردنی پێشکەوتوو دەدات لە ڕێگەی مێتاداتاوە. ئامرازێکی تەکنیکی بۆ ئاسانکردنی بەڕێوەبردنی سکریپتەکان.
+// @description:ar      حسّن سهولة استخدام Greasy Fork باستخدام حزمة الميزات هذه: أضف أيقونات تعريفية، وشريط أدوات HTML كامل لتحرير الأوصاف/التعليقات، وزر تنزيل مباشر. يتضمن أيضًا ميزة ترجمة لأكثر من 100 لغة لمحتوى الصفحة ويسمح بالتخصيص المتقدم عبر البيانات الوصفية. أداة تقنية مصممة لجعل التنقل في النصوص وإدارتها أكثر عملية وتنظيمًا.
+// @description:be      Палепшыце зручнасць выкарыстання Greasy Fork з дапамогай гэтага пакета функцый: дадае значкі ідэнтыфікацыі, поўную панэль інструментаў HTML для рэдагавання апісанняў/каментарыяў і кнопку прамой загрузкі. Таксама ўключае функцыю перакладу на больш чым 100 моў для змесціва старонкі і дазваляе пашыраную наладу праз метаданыя. Тэхнічны інструмент, прызначаны для спрашчэння навігацыі і кіравання скрыптамі.
+// @description:bg      Подобрете използваемостта на Greasy Fork с този пакет от функции: добавя идентификационни икони, пълна HTML лента с инструменти за редактиране на описания/коментари и бутон за директно изтегляне. Включва също функция за превод на над 100 езика за съдържанието на страницата и позволява разширено персонализиране чрез метаданни. Технически инструмент, предназначен да направи навигацията и управлението на скриптове много по-практични.
+// @description:cs      Zlepšete použitelnost Greasy Fork pomocí tohoto balíčku funkcí: přidává identifikační ikony, plnohodnotný HTML panel nástrojů pro úpravu popisů/komentářů a tlačítko pro přímé stahování. Obsahuje také funkci překladu do více než 100 jazyků pro obsah stránky a umožňuje pokročilé přizpůsobení pomocí metadat. Technický nástroj navržený pro usnadnění navigace a správy skriptů.
+// @description:da      Forbedr brugervenligheden af Greasy Fork med denne funktionspakke: Tilføjer identifikationsikoner, en komplet HTML-værktøjslinje til redigering af beskrivelser/kommentarer og en knap til direkte download. Inkluderer også en oversættelsesfunktion til over 100 sprog for sideindhold og tillader avanceret tilpasning via metadata. Et teknisk værktøj designet til at gøre navigation og administration af scripts meget mere praktisk.
+// @description:de      Verbessern Sie die Benutzerfreundlichkeit von Greasy Fork mit diesem Funktionspaket: Fügt Identifikationssymbole, eine vollständige HTML-Symbolleiste zum Bearbeiten von Beschreibungen/Kommentaren und einen direkten Download-Button hinzu. Enthält außerdem eine Übersetzungsfunktion für über 100 Sprachen für Seiteninhalte und ermöglicht erweiterte Anpassungen über Metadaten. Ein technisches Tool, das die Navigation und Verwaltung von Skripten praktischer und organisierter macht.
+// @description:el      Βελτιώστε τη χρηστικότητα του Greasy Fork με αυτό το πακέτο λειτουργιών: προσθέτει εικονίδια αναγνώρισης, πλήρη γραμμή εργαλείων HTML για επεξεργασία περιγραφών/σχολίων και κουμπί άμεσης λήψης. Περιλαμβάνει επίσης λειτουργία μετάφρασης για περισσότερες από 100 γλώσσες για το περιεχόμενο της σελίδας και επιτρέπει προηγμένη προσαρμογή μέσω μεταδεδομένων. Ένα τεχνικό εργαλείο σχεδιασμένο για να κάνει την πλοήγηση και τη διαχείριση των σεναρίων πιο πρακτική.
+// @description:en      Enhance Greasy Fork usability with this function package: adds identifier icons, full HTML toolbar to edit descriptions/comments, and a direct download button. Includes a translation feature for over 100 languages for page content and allows advanced customization via metadata. A technical tool designed to make script navigation and management much more practical.
+// @description:eo      Plibonigu la uzeblon de Greasy Fork per ĉi tiu funkcia pakaĵo: aldonas identigilajn ikonojn, plenan HTML-ilobreton por redakti priskribojn/komentojn, kaj rektan elŝut-butonon. Ankaŭ inkluzivas traduk-funkcion por pli ol 100 lingvoj por paĝa enhavo kaj ebligas altnivelan agordon per metadatumoj. Teknika ilo desegnita por fari skripto-navigadon kaj administradon multe pli praktika.
+// @description:es      Mejore la usabilidad de Greasy Fork con este conjunto de funciones: añade iconos identificadores, barra de herramientas HTML completa para editar descripciones/comentarios y botón de descarga directa. Incluye también una función de traducción para más de 100 idiomas en cada contenido de la página, además de permitir personalización avanzada vía metadatos. Una herramienta técnica desarrollada para hacer la navegación y gestión de scripts mucho más práctica.
+// @description:fi      Paranna Greasy Forkin käytettävyyttä tällä toimintopaketilla: lisää tunnistekuvakkeet, täydellisen HTML-työkalurivin kuvausten/kommenttien muokkaamiseen ja suoran latauspainikkeen. Sisältää myös käännöstoiminnon yli 100 kielelle sivun sisällölle ja mahdollistaa edistyneen mukauttamisen metatietojen avulla. Tekninen työkalu, joka on suunniteltu tekemään skriptien navigoinnista ja hallinnasta paljon käytännöllisempää.
+// @description:fr      Améliorez l'utilisabilité de Greasy Fork avec cet ensemble de fonctionnalités : ajout d'icônes d'identification, barre d'outils HTML complète pour l'édition de descriptions/commentaires et bouton de téléchargement direct. Inclut également une fonction de traduction pour plus de 100 langues et permet une personnalisation avancée via métadonnées. Un outil technique conçu pour rendre la navigation et la gestion des scripts beaucoup plus pratiques.
+// @description:he      שפר את השימושיות של Greasy Fork עם חבילת פונקציות זו: מוסיפה סמלי זיהוי, סרגל כלים HTML מלא לעריכת תיאורים/הערות, וכפתור הורדה ישירה. כוללת גם תכונת תרגום ליותר מ-100 שפות עבור תוכן הדף ומאפשרת התאמה אישית מתקדמת באמצעות מטא-נתונים. כלי טכני שנועד להפוך את הניווט וניהול הסקריפטים למעשיים ומאורגנים הרבה יותר.
+// @description:hr      Poboljšajte iskoristivost Greasy Forka s ovim paketom funkcija: dodaje identifikacijske ikone, potpunu HTML alatnu traku za uređivanje opisa/komentara i gumb za izravno preuzimanje. Također uključuje značajku prijevoda za više od 100 jezika za sadržaj stranice i omogućuje naprednu prilagodbu putem metapodataka. Tehnički alat dizajniran kako bi navigaciju i upravljanje skriptama učinio mnogo praktičnijim.
+// @description:hu      Javítsa a Greasy Fork használhatóságát ezzel a funkciócsomaggal: azonosító ikonokat, teljes HTML eszköztárat ad a leírások/megjegyzések szerkesztéséhez, valamint közvetlen letöltési gombot. Tartalmaz továbbá egy fordítási funkciót több mint 100 nyelvre az oldal tartalmához, és lehetővé teszi a fejlett testreszabást metaadatokon keresztül. Egy technikai eszköz, amelyet arra terveztek, hogy a szkriptek navigációját és kezelését sokkal praktikusabbá tegye.
+// @description:id      Tingkatkan kegunaan Greasy Fork dengan paket fitur ini: menambahkan ikon pengenal, bilah alat HTML lengkap untuk mengedit deskripsi/komentar, dan tombol unduh langsung. Juga mencakup fitur terjemahan untuk lebih dari 100 bahasa untuk konten halaman dan memungkinkan penyesuaian tingkat lanjut melalui metadata. Alat teknis yang dirancang untuk membuat navigasi dan manajemen skrip menjadi jauh lebih praktis dan terorganisir.
+// @description:it      Migliora l'usabilità di Greasy Fork con questo pacchetto di funzioni: aggiunge icone identificative, barra degli strumenti HTML completa per la modifica di descrizioni/commenti e pulsante di download diretto. Include anche una funzione di traduzione per oltre 100 lingue per il contenuto della pagina e consente una personalizzazione avanzata tramite metadati. Uno strumento tecnico progettato per rendere la navigazione e la gestione degli script molto più pratica.
+// @description:ja      Greasy Forkのユーザビリティを向上させる機能パッケージ：識別アイコン、説明/コメント編集用の完全なHTMLツールバー、直接ダウンロードボタンを追加します。さらに、ページコンテンツの100以上の言語への翻訳機能や、メタデータによる高度なカスタマイズも可能です。スクリプトのナビゲーションと管理をより実用的かつ整理されたものにするために設計された技術ツールです。
+// @description:ka      გააუმჯობესეთ Greasy Fork-ის მოხმარება ამ ფუნქციების პაკეტით: ამატებს საიდენტიფიკაციო ხატულებს, სრულ HTML ინსტრუმენტთა ზოლს აღწერილობების/კომენტარების რედაქტირებისთვის და პირდაპირი ჩამოტვირთვის ღილაკს. ასევე მოიცავს თარგმნის ფუნქციას 100-ზე მეტი ენისთვის გვერდის შინაარსისთვის და იძლევა გაფართოებული პერსონალიზაციის საშუალებას მეტამონაცემების მეშვეობით. ტექნიკური ინსტრუმენტი, რომელიც შექმნილია სკრიპტების ნავიგაციისა და მართვის გასამარტივებლად.
+// @description:ko      Greasy Fork 사용성을 향상시키는 기능 패키지: 식별 아이콘, 설명/댓글 편집을 위한 전체 HTML 툴바, 직접 다운로드 버튼을 추가합니다. 페이지 콘텐츠에 대한 100개 이상의 언어 번역 기능과 메타데이터를 통한 고급 사용자 정의도 포함되어 있습니다. 스크립트 탐색 및 관리를 훨씬 더 실용적이고 체계적으로 만들기 위해 설계된 기술 도구입니다.
+// @description:mr      या फंक्शन पॅकेजसह Greasy Fork ची उपयोगिता वाढवा: आयडेंटिफायर आयकॉन, वर्णन/टिप्पण्या संपादित करण्यासाठी पूर्ण HTML टूलबार आणि थेट डाउनलोड बटण जोडते. तसेच पृष्ठ सामग्रीसाठी 100 हून अधिक भाषांसाठी भाषांतर वैशिष्ट्य समाविष्ट करते आणि मेटाडेटाद्वारे प्रगत कस्टमायझेशनला अनुमती देते. स्क्रिप्ट नेव्हिगेशन आणि व्यवस्थापन अधिक व्यावहारिक आणि व्यवस्थित करण्यासाठी डिझाइन केलेले तांत्रिक साधन.
+// @description:nb      Forbedre brukervennligheten til Greasy Fork med denne funksjonspakken: legger til identifikasjonsikoner, full HTML-verktøylinje for redigering av beskrivelser/kommentarer, og en knapp for direkte nedlasting. Inkluderer også en oversettelsesfunksjon for over 100 språk for sideinnhold og tillater avansert tilpasning via metadata. Et teknisk verktøy designet for å gjøre navigasjon og administrasjon av skript mye mer praktisk.
+// @description:nl      Verbeter de bruikbaarheid van Greasy Fork met dit functiepakket: voegt identificatie-pictogrammen, een volledige HTML-werkbalk voor het bewerken van beschrijvingen/opmerkingen en een directe downloadknop toe. Bevat ook een vertaalfunctie voor meer dan 100 talen voor pagina-inhoud en maakt geavanceerde aanpassing via metadata mogelijk. Een technische tool die is ontworpen om scriptnavigatie en -beheer veel praktischer en georganiseerder te maken.
+// @description:pl      Zwiększ użyteczność Greasy Fork dzięki temu pakietowi funkcji: dodaje ikony identyfikacyjne, pełny pasek narzędzi HTML do edycji opisów/komentarzy oraz przycisk bezpośredniego pobierania. Zawiera również funkcję tłumaczenia na ponad 100 języków dla treści strony i umożliwia zaawansowane dostosowywanie za pomocą metadanych. Narzędzie techniczne zaprojektowane w celu ułatwienia nawigacji i zarządzania skryptami.
+// @description:ro      Îmbunătățiți utilizarea Greasy Fork cu acest pachet de funcții: adaugă pictograme de identificare, bară de instrumente HTML completă pentru editarea descrierilor/comentariilor și buton de descărcare directă. Include, de asemenea, o funcție de traducere pentru mai mult de 100 de limbi pentru conținutul paginii și permite personalizarea avansată prin metadate. Un instrument tehnic conceput pentru a face navigarea și gestionarea scripturilor mult mai practică.
+// @description:ru      Улучшите удобство использования Greasy Fork с помощью этого пакета функций: добавляет значки идентификации, полную HTML-панель для редактирования описаний/комментариев и кнопку прямой загрузки. Также включает функцию перевода на более чем 100 языков для содержимого страницы и позволяет расширенную настройку через метаданные. Технический инструмент, предназначенный для упрощения навигации и управления скриптами.
+// @description:sk      Zlepšite použiteľnosť Greasy Fork pomocou tohto balíka funkcií: pridáva identifikačné ikony, úplný panel s nástrojmi HTML na úpravu popisov/komentárov a tlačidlo priameho sťahovania. Obsahuje tiež funkciu prekladu do viac ako 100 jazykov pre obsah stránky a umožňuje pokročilé prispôsobenie prostredníctvom metadát. Technický nástroj navrhnutý tak, aby navigácia a správa skriptov boli oveľa praktickejšie a organizovanejšie.
+// @description:sr      Poboljšajte upotrebljivost Greasy Fork-a sa ovim paketom funkcija: dodaje identifikacione ikone, punu HTML traku sa alatkama za uređivanje opisa/komentara i dugme za direktno preuzimanje. Takođe uključuje funkciju prevoda za više od 100 jezika za sadržaj stranice i omogućava napredno prilagođavanje putem metapodataka. Tehnička alatka dizajnirana da učini navigaciju i upravljanje skriptama mnogo praktičnijim.
+// @description:sv      Förbättra användbarheten av Greasy Fork med detta funktionspaket: lägger till identifieringsikoner, fullständig HTML-verktygsfält för redigering av beskrivningar/kommentarer och en knapp för direkt nedladdning. Inkluderar även en översättningsfunktion för över 100 språk för sidinnehåll och tillåter avancerad anpassning via metadata. Ett tekniskt verktyg utformat för att göra skriptnavigering och hantering mycket mer praktisk.
+// @description:th      ปรับปรุงความสามารถในการใช้งาน Greasy Fork ด้วยชุดฟังก์ชันนี้: เพิ่มไอคอนระบุตัวตน แถบเครื่องมือ HTML เต็มรูปแบบสำหรับแก้ไขคำอธิบาย/ความคิดเห็น และปุ่มดาวน์โหลดโดยตรง นอกจากนี้ยังมีฟีเจอร์การแปลภาษามากกว่า 100 ภาษาสำหรับเนื้อหาหน้าเว็บและอนุญาตให้ปรับแต่งขั้นสูงผ่านข้อมูลเมตา เครื่องมือทางเทคนิคที่ออกแบบมาเพื่อให้การนำทางและการจัดการสคริปต์ใช้งานได้จริงและเป็นระเบียบมากยิ่งขึ้น
+// @description:tr      Bu özellik paketiyle Greasy Fork'un kullanılabilirliğini artırın: tanımlayıcı simgeler, açıklamaları/yorumları düzenlemek için tam HTML araç çubuğu ve doğrudan indirme düğmesi ekler. Ayrıca sayfa içeriği için 100'den fazla dile çeviri özelliği içerir ve meta veriler aracılığıyla gelişmiş özelleştirmeye izin verir. Komut dosyası gezinmesini ve yönetimini çok daha pratik ve düzenli hale getirmek için tasarlanmış teknik bir araç.
+// @description:uk      Покращте зручність використання Greasy Fork за допомогою цього пакету функцій: додає значки ідентифікації, повну панель інструментів HTML для редагування описів/коментарів та кнопку прямого завантаження. Також включає функцію перекладу на понад 100 мов для вмісту сторінки та дозволяє розширене налаштування за допомогою метаданих. Технічний інструмент, розроблений для того, щоб зробити навігацію та керування скриптами набагато практичнішим.
+// @description:ug      بۇ ئىقتىدار بولىقى ئارقىلىق Greasy Fork نىڭ ئىشلىتىشچانلىقىنى ئۆستۈرۈڭ: كىملىك ​​سىنبەلگىسى ، چۈشەندۈرۈش / باھالارنى تەھرىرلەش ئۈچۈن تولۇق HTML قورال بالدىقى ۋە بىۋاسىتە چۈشۈرۈش كۇنۇپكىسى قوشىدۇ. ئۇ يەنە بەت مەزمۇنى ئۈچۈن 100 دىن ئارتۇق تىلغا تەرجىمە قىلىش ئىقتىدارىنى ئۆز ئىچىگە ئالغان بولۇپ ، مېتا سانلىق مەلۇმატ ئارقىلىق ئىلغار خاسلاشتۇرۇشقا يول قويىدۇ. قوليازما يولباشچىسى ۋە باشقۇرۇشنى تېخىمۇ ئەمەلىي ۋە تەشكىللىك قىلىش ئۈچۈن لايىھەلەنگەن تېخنىكىلىق قورال.
+// @description:vi      Cải thiện khả năng sử dụng của Greasy Fork với gói tính năng này: thêm các biểu tượng nhận dạng, thanh công cụ HTML đầy đủ để chỉnh sửa mô tả/bình luận và nút tải xuống trực tiếp. Cũng bao gồm tính năng dịch sang hơn 100 ngôn ngữ cho nội dung trang và cho phép tùy chỉnh nâng cao thông qua siêu dữ liệu. Một công cụ kỹ thuật được thiết kế để làm cho việc điều hướng và quản lý tập lệnh trở nên thực tế và có tổ chức hơn.
 // @author              OHAS
 // @license             CC-BY-NC-ND-4.0
-// @copyright           2025 OHAS. All Rights Reserved.
+// @copyright           2026 OHAS. All Rights Reserved.
 // @match               https://greasyfork.org/*
 // @match               https://cn-greasyfork.org/*
 // @match               https://sleazyfork.org/*
 // @icon                data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIG92ZXJmbG93PSJ2aXNpYmxlIj4KICAgIDxzdHlsZT4KICAgICAgICAuZGVzZW5oYXItY29udG9ybm8gewogICAgICAgICAgICBzdHJva2UtZGFzaGFycmF5OiAxMDA7CiAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAxMDA7CiAgICAgICAgICAgIGFuaW1hdGlvbjogZGVzZW5oYXItY29udG9ybm8gMTBzIGVhc2UtaW4tb3V0IGluZmluaXRlOwogICAgICAgIH0KCiAgICAgICAgLm9uZGEtcHJlZW5jaGltZW50byB7CiAgICAgICAgICAgIGFuaW1hdGlvbjogb25kYS1wcmVlbmNoaW1lbnRvIDEwcyBlYXNlLWluLW91dCBpbmZpbml0ZTsKICAgICAgICB9CgogICAgICAgIEBrZXlmcmFtZXMgZGVzZW5oYXItY29udG9ybm8gewogICAgICAgICAgICAwJSB7CiAgICAgICAgICAgICAgICBzdHJva2UtZGFzaG9mZnNldDogMTAwOwogICAgICAgICAgICAgICAgc3Ryb2tlOiAjZmZmZmZmZmY7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgMjUlIHsKICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAwOwogICAgICAgICAgICAgICAgc3Ryb2tlOiAjZmZmZmZmZmY7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgNzUlIHsKICAgICAgICAgICAgICAgIHN0cm9rZS1kYXNob2Zmc2V0OiAwOwogICAgICAgICAgICAgICAgc3Ryb2tlOiAjZmZmZmZmZmY7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgMTAwJSB7CiAgICAgICAgICAgICAgICBzdHJva2UtZGFzaG9mZnNldDogLTEwMDsKICAgICAgICAgICAgICAgIHN0cm9rZTogI2ZmZmZmZmZmOwogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICBAa2V5ZnJhbWVzIG9uZGEtcHJlZW5jaGltZW50byB7CiAgICAgICAgICAgIDAlIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgyNHB4KTsKICAgICAgICAgICAgICAgIGZpbGw6ICNmZmZmZmZmZjsKICAgICAgICAgICAgfQogICAgICAgICAgICAyNSUgewogICAgICAgICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDBweCk7CiAgICAgICAgICAgICAgICBmaWxsOiAjZmZmZmZmZmY7CiAgICAgICAgICAgIH0KICAgICAgICAgICAgNzUlIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgwcHgpOwogICAgICAgICAgICAgICAgZmlsbDogI2ZmZmZmZmZmOwogICAgICAgICAgICB9CiAgICAgICAgICAgIDEwMCUgewogICAgICAgICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDI0cHgpOwogICAgICAgICAgICAgICAgZmlsbDogI2ZmZmZmZmZmOwogICAgICAgICAgICB9CiAgICAgICAgfQogICAgPC9zdHlsZT4KICAgIDxkZWZzPgogICAgICAgIDxjbGlwUGF0aCBpZD0ibW9sZGUtZ2FyZm8iPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44OSAyLjIyN2EuMjguMjggMCAwIDEgLjI2Ni4wNzZsNS4wNjMgNS4wNjJjLjU0LjU0LjUwOSAxLjY1Mi0uMDMxIDIuMTkybDguNzcxIDguNzdjMS4zNTYgMS4zNTUtLjM2IDMuMDk3LTEuNzMgMS43MjhsLTguNzcyLTguNzdjLS41NC41NC0xLjY1MS41NzEtMi4xOTEuMDMxbC01LjA2My01LjA2Yy0uMzA0LS4zMDQuMzA0LS45MTEuNjA4LS42MDhsMy43MTQgMy43MTNMNy41OSA4LjI5N0wzLjg3NSA0LjU4MmMtLjMwNC0uMzA0LjMwNC0uOTExLjYwNy0uNjA3bDMuNzE1IDMuNzE0bDEuMDY3LTEuMDY2TDUuNTQ5IDIuOTFjLS4yMjgtLjIyOC4wNTctLjYyNi4zNDItLjY4M1oiLz4KICAgICAgICA8L2NsaXBQYXRoPgogICAgPC9kZWZzPgogICAgPGc+CiAgICAgICAgPHBhdGggZmlsbD0iIzAwMDAwMGZmIiBkPSJNMTIgMEM1LjM3NCAwIDAgNS4zNzUgMCAxMnM1LjM3NCAxMiAxMiAxMmM2LjYyNSAwIDEyLTUuMzc1IDEyLTEyUzE4LjYyNSAwIDEyIDAiLz4KICAgICAgICA8ZyBjbGlwLXBhdGg9InVybCgjbW9sZGUtZ2FyZm8pIj4KICAgICAgICAgICAgPHBhdGggY2xhc3M9Im9uZGEtcHJlZW5jaGltZW50byIgCiAgICAgICAgICAgICAgICAgIGQ9Ik0gLTIsMjQgTCAtMiwwIGMgNiwtNSA2LDUgMTIsMCBzIDYsLTUgMTIsMCBzIDYsLTUgMTIsMCBMIDMwLDI0IFoiLz4KICAgICAgICA8L2c+CiAgICAgICAgPHBhdGggY2xhc3M9ImRlc2VuaGFyLWNvbnRvcm5vIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgZD0iTTUuODkgMi4yMjdhLjI4LjI4IDAgMCAxIC4yNjYuMDc2bDUuMDYzIDUuMDYyYy41NC41NC41MDkgMS42NTItLjAzMSAyLjE5Mmw4Ljc3MSA4Ljc3YzEuMzU2IDEuMzU1LS4zNiAzLjA5Ny0xLjczIDEuNzI4bC04Ljc3Mi04Ljc3Yy0uNTQuNTQtMS42NTEuNTcxLTIuMTkxLjAzMWwtNS4wNjMtNS4wNmMtLjMwNC0uMzA0LjMwNC0uOTExLjYwOC0uNjA4bDMuNzE0IDMuNzEzTDcuNTkgOC4yOTdMMy44NzUgNC41ODJjLS4zMDQtLjMwNC4zMDQtLjkxMS42MDctLjYwN2wzLjcxNSAzLjcxNGwxLjA2Ny0xLjA2Nkw1LjU0OSAyLjkxYy0uMjI4LS4yMjguMDU3LS42MjYuMzQyLS42ODNaIi8+CiAgICA8L2c+Cjwvc3ZnPg==
-// @resource            customCSS https://cdn.jsdelivr.net/gh/0H4S/Better-Greasy-Fork/custom.css
+// @resource            customCSS https://cdn.jsdelivr.net/gh/0H4S/Better-Greasy-Fork@2.0/custom.css
 // @resource            iconsJSON https://cdn.jsdelivr.net/gh/0H4S/Better-Greasy-Fork/icons.json
 // @require             https://update.greasyfork.org/scripts/549920.js
 // @connect             gist.github.com
+// @connect             files.catbox.moe
 // @connect             update.greasyfork.org
+// @connect             translate.googleapis.com
 // @connect             generativelanguage.googleapis.com
 // @grant               GM_addStyle
 // @grant               GM_getValue
@@ -107,9 +109,9 @@
 // @compatible          firefox
 // @compatible          edge
 // @compatible          opera
-// @bgf-colorLT         #0059ffff
+// @bgf-colorLT         rgb(0, 0, 0)
 // @bgf-colorDT         #ffffffff
-// @bgf-copyright       [2025 OHAS. All Rights Reserved.](https://gist.github.com/0H4S/ae2fa82957a089576367e364cbf02438)
+// @bgf-copyright       [2026 OHAS. All Rights Reserved.](https://gist.github.com/0H4S/ae2fa82957a089576367e364cbf02438)
 // @bgf-compatible      brave, mobile
 // @bgf-social          https://github.com/0H4S
 // @contributionURL     https://linktr.ee/0H4S
@@ -119,90 +121,139 @@
 
 (function () {
     'use strict';
+    /*eslint-disable*/
     // ================
     // #region GLOBAL
     // ================
+
+    // --- VARIÁVEIS GLOBAIS ---
+    let currentLang         = 'en';
+    let languageModal       = null;
+    const CACHE_KEY         = 'Values';
+    const LANG_STORAGE_KEY  = 'UserScriptLang';
+    const LAST_TAG_TYPE_KEY = 'Tag';
+    const LAST_COLOR_KEY    = 'Color';
+
+    // --- NOTIFICADOR ---
+    const SCRIPT_CONFIG = { notificationsUrl: 'https://gist.github.com/0H4S/d55d216b4487d64c606abb5d4f097fe0', scriptVersion: '2.0', };
+    const notifier = new ScriptNotifier(SCRIPT_CONFIG);
+    notifier.run();
+
+    // --- IDIOMAS DO SCRIPT ---
     const allTranslations = {
-        'pt-BR': {
+    'pt-BR': {
+            // --- Configurações Gerais e Sistema ---
             langName:                         'Português (BR)',
             languageSettings:                 '🌐 Idioma',
+            force_update:                     '🔄️ Forçar Atualização',
+            settings:                         '⚙️ Configurações',
+            compatible_with:                  'Compatível com',
+            force_update_alert:               'O cache foi limpo. A página será recarregada para buscar os dados atualizados.',
+            downloading:                      'Baixando...',
+            selection:                        'Seleção',
+            trans_saved:                      'Configurações salvas!',
+
+            // --- Botões e Ações ---
             close:                            'Fechar',
             confirm:                          'Confirmar',
             cancel:                           'Cancelar',
             download:                         'Baixar',
-            compatible_with:                  'Compatível com',
-            force_update:                     '🔄️ Forçar Atualização',
-            force_update_alert:               'O cache foi limpo. A página será recarregada para buscar os dados atualizados.',
+            translate:                        'Traduzir',
+            trans_undo:                       'Desfazer',
+            trans_translating:                'Traduzindo...',
+
+            // --- Ferramentas de Formatação (Editor) ---
             titles:                           'Títulos',
-            title_placeholder:                'Título',
             bold:                             'Negrito',
-            bold_placeholder:                 'negrito',
             italic:                           'Itálico',
-            italic_placeholder:               'itálico',
             underline:                        'Sublinhado',
-            underline_placeholder:            'sublinhado',
             strikethrough:                    'Riscado',
-            strikethrough_placeholder:        'riscado',
             unordered_list:                   'Lista não ordenada',
             ordered_list:                     'Lista ordenada',
-            list_item_placeholder:            'Item',
             quote:                            'Citação',
             inline_code:                      'Código Inline',
-            inline_code_placeholder:          'código',
             code_block:                       'Bloco de Código',
-            code_block_placeholder:           'código aqui',
             horizontal_line:                  'Linha Horizontal',
             horizontal_line_style:            'Estilo da Linha Horizontal',
+            link:                             'Link',
+            image:                            'Imagem',
+            video:                            'Vídeo',
+            table:                            'Tabela',
+            subscript:                        'Subscrito',
+            superscript:                      'Sobrescrito',
+            highlight:                        'Marcação',
+            keyboard:                         'Teclado',
+            abbreviation:                     'Abreviação',
+            text_color:                       'Cor do Texto',
+            background_color:                 'Cor de Fundo',
+            details:                          'Seção Recolhível',
+            center:                           'Centralizar',
+            border_style:                     'Estilo da Borda',
+
+            // --- Placeholders (Campos de Preenchimento) ---
+            txt:                              'Texto',
+            title_placeholder:                'Título',
+            bold_placeholder:                 'negrito',
+            italic_placeholder:               'itálico',
+            underline_placeholder:            'sublinhado',
+            strikethrough_placeholder:        'riscado',
+            list_item_placeholder:            'Item',
+            inline_code_placeholder:          'código',
+            code_block_placeholder:           'código aqui',
+            link_text_placeholder:            'texto do link',
+            image_title_placeholder:          'ex: Minha bela imagem',
+            table_header_placeholder:         'Cabeçalho',
+            table_cell_placeholder:           'Célula',
+            subscript_placeholder:            'sub',
+            superscript_placeholder:          'sup',
+            highlight_placeholder:            'marcado',
+            keyboard_placeholder:             'Ctrl+C',
+            abbreviation_placeholder:         'HTML',
+            colored_text_placeholder:         'texto colorido',
+            colored_background_placeholder:   'fundo colorido',
+            details_summary_placeholder:      'Resumo ou Título',
+            details_content_placeholder:      'Conteúdo a ser ocultado...',
+            center_placeholder:               'texto centralizado',
+            trans_search_ph:                  'Buscar idioma...',
+
+            // --- Prompts e Entradas de Dados ---
             prompt_hr_size:                   'Tamanho (px)',
             prompt_hr_color:                  'Cor',
-            link:                             'Link',
             prompt_insert_url:                'Insira a URL:',
-            link_text_placeholder:            'texto do link',
-            image:                            'Imagem',
+            prompt_link_text:                 'Texto do link:',
             prompt_insert_image_url:          'Insira a URL da imagem (https):',
             prompt_image_title:               'Título da imagem (opcional):',
-            image_title_placeholder:          'ex: Minha bela imagem',
             prompt_image_width:               'Largura (opcional):',
             prompt_image_height:              'Altura (opcional):',
-            video:                            'Vídeo',
             prompt_video_type:                'Tipo de Vídeo',
-            video_type_embed:                 'Incorporado (YouTube, Bilibili)',
-            video_type_html5:                 'Vídeo HTML5 (URL direta)',
             prompt_video_poster_url:          'URL da Imagem de Capa (poster)',
             prompt_insert_video_url:          'Insira a URL do vídeo:',
             prompt_video_width:               'Largura (opcional):',
             prompt_video_height:              'Altura (opcional):',
-            alert_invalid_video_url:          'URL de vídeo inválida ou não suportada.',
-            table:                            'Tabela',
             prompt_columns:                   'Número de colunas:',
             prompt_rows:                      'Número de linhas:',
-            table_header_placeholder:         'Cabeçalho',
-            table_cell_placeholder:           'Célula',
-            subscript:                        'Subscrito',
-            subscript_placeholder:            'sub',
-            superscript:                      'Sobrescrito',
-            superscript_placeholder:          'sup',
-            highlight:                        'Marcação',
-            highlight_placeholder:            'marcado',
-            keyboard:                         'Teclado',
-            keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     'Abreviação',
+            prompt_abbreviation_text:         'Texto da abreviação:',
             prompt_abbreviation_meaning:      'Qual o significado da abreviação?',
-            abbreviation_placeholder:         'HTML',
-            text_color:                       'Cor do Texto',
-            colored_text_placeholder:         'texto colorido',
-            background_color:                 'Cor de Fundo',
-            colored_background_placeholder:   'fundo colorido',
-            details:                          'Seção Recolhível',
-            details_summary_placeholder:      'Resumo ou Título',
-            details_content_placeholder:      'Conteúdo a ser ocultado...',
-            center:                           'Centralizar',
-            center_placeholder:               'texto centralizado',
-            notFound:                         'Código não encontrado!',
-            scriptIdNotFound:                 'Não foi possível identificar o ID do script.',
-            downloading:                      'Baixando...',
-            downloadError:                    'Ocorreu um erro ao baixar o script.',
-            downloadTimeout:                  'O tempo para baixar o script esgotou.',
+            prompt_border_size:               'Tamanho da borda (px)',
+            prompt_border_color:              'Cor da borda',
+            prompt_border_tag_type:           'Tipo de Tag',
+            prompt_translate_to:              'Traduzir para:',
+
+            // --- Tradução e IA ---
+            mode:                             'Motor de Tradução',
+            prompt_ai_model:                  'Modelo IA:',
+            prompt_api_key:                   'Chave API (Gemini API):',
+            placeholder_api_key:              'Cole sua chave AIza... aqui',
+            api_help_title:                   'Como obter uma chave API Gratuita',
+            api_help_text:                    'O Google oferece uma cota gratuita generosa. Para usar, acesse o Google AI Studio no link abaixo, faça login com sua conta e clique em "Create API key". Basta copiar a chave gerada e colá-la no script.',
+            api_help_link_text:               'Obter Chave API',
+            api_help_tooltip:                 'Ajuda: Como obter uma chave',
+            trans_mode_google:                'Google Tradutor (Padrão)',
+            trans_mode_gemini:                'IA Gemini (Melhor qualidade)',
+            trans_target_lang:                'Idioma de Destino',
+            gemini_model_label:               'Modelo Gemini',
+
+            // --- Informações e Atalhos ---
             info_tooltip:                     'Atalhos',
             info_shortcuts_title:             'Atalhos do Teclado',
             info_header_shortcut:             'Atalho',
@@ -213,1178 +264,899 @@
             info_shortcut_ctrl_p:             'Envolve a seleção em um parágrafo <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>',
             info_shortcut_ctrl_m:             'Envolve a seleção em um bloco de código markdown.',
             info_shortcut_ctrl_space:         'Insere um espaço não separável <span style="color: #d21934;"><strong>;nbsp</strong></span>',
-            prompt_link_text:                 'Texto do link:',
-            prompt_abbreviation_text:         'Texto da abreviação:',
-            border_style:                     'Estilo da Borda',
-            prompt_border_size:               'Tamanho da borda (px)',
-            prompt_border_color:              'Cor da borda',
-            prompt_border_text:               'Texto',
-            prompt_border_tag_type:           'Tipo de Tag',
-            border_text_placeholder:          'Texto',
-            ai_translate:                     'Traduzir com IA',
+
+            // --- Alertas e Erros ---
+            alert_invalid_video_url:          'URL de vídeo inválida ou não suportada.',
             alert_text_empty:                 'A caixa de texto está vazia.',
-            prompt_translate_to:              'Traduzir para:',
-            prompt_ai_model:                  'Modelo IA:',
-            prompt_api_key:                   'Chave API (Gemini API):',
-            placeholder_api_key:              'Cole sua chave AIza... aqui',
             alert_translation_error:          'Erro na tradução: ',
+            notFound:                         'Código não encontrado!',
+            scriptIdNotFound:                 'Não foi possível identificar o ID do script.',
+            downloadError:                    'Ocorreu um erro ao baixar o script.',
+            downloadTimeout:                  'O tempo para baixar o script esgotou.',
             error_no_text:                    'A IA não retornou texto válido.',
             error_api_processing:             'Erro ao processar resposta da API.',
-            error_connection:                 'Erro de conexão com a internet.',
+            error_rede:                       'Erro de conexão.',
             error_generic:                    'Erro',
-            selection:                        'Seleção',
-            api_help_title:                   'Como obter uma chave API Gratuita',
-            api_help_text:                    'O Google oferece uma cota gratuita generosa. Para usar, acesse o Google AI Studio no link abaixo, faça login com sua conta e clique em "Create API key". Basta copiar a chave gerada e colá-la no script.',
-            api_help_link_text:               'Obter Chave API',
-            api_help_tooltip:                 'Ajuda: Como obter uma chave',
-            lang_en:                          'Inglês',
-            lang_pt_br:                       'Português (Brasil)',
-            lang_zh_cn:                       'Chinês (Simplificado)',
-            lang_zh_tw:                       'Chinês (Tradicional)',
-            lang_es:                          'Espanhol',
-            lang_fr:                          'Francês',
-            lang_ru:                          'Russo',
-            lang_de:                          'Alemão',
-            lang_ja:                          'Japonês',
-            lang_ko:                          'Coreano',
-            lang_ckb:                         'Curdo (Sorani)',
-            lang_ar:                          'Árabe',
-            lang_be:                          'Bielorrusso',
-            lang_bg:                          'Búlgaro',
-            lang_cs:                          'Tcheco',
-            lang_da:                          'Dinamarquês',
-            lang_el:                          'Grego',
-            lang_eo:                          'Esperanto',
-            lang_fi:                          'Finlandês',
-            lang_fr_ca:                       'Francês (Canadá)',
-            lang_he:                          'Hebraico',
-            lang_hr:                          'Croata',
-            lang_hu:                          'Húngaro',
-            lang_id:                          'Indonésio',
-            lang_it:                          'Italiano',
-            lang_ka:                          'Georgiano',
-            lang_mr:                          'Marati',
-            lang_nb:                          'Norueguês (Bokmål)',
-            lang_nl:                          'Holandês',
-            lang_pl:                          'Polonês',
-            lang_ro:                          'Romeno',
-            lang_sk:                          'Eslovaco',
-            lang_sr:                          'Sérvio',
-            lang_sv:                          'Sueco',
-            lang_th:                          'Tailandês',
-            lang_tr:                          'Turco',
-            lang_uk:                          'Ucraniano',
-            lang_ug:                          'Uigur',
-            lang_vi:                          'Vietnamita'
+            trans_err_gemini_key:             'Chave API do Gemini não configurada. Vá em Configurações > Tradução.'
         },
-        'en': {
+    'en': {
             langName:                         'English',
             languageSettings:                 '🌐 Language',
+            force_update:                     '🔄️ Force Update',
+            settings:                         '⚙️ Settings',
+            compatible_with:                  'Compatible with',
+            force_update_alert:               'Cache cleared. The page will reload to fetch updated data.',
+            downloading:                      'Downloading...',
+            selection:                        'Selection',
+            trans_saved:                      'Settings saved!',
             close:                            'Close',
             confirm:                          'Confirm',
             cancel:                           'Cancel',
             download:                         'Download',
-            compatible_with:                  'Compatible with',
-            force_update:                     '🔄️ Force Update',
-            force_update_alert:               'Cache cleared. The page will reload to fetch the updated data.',
+            translate:                        'Translate',
+            trans_undo:                       'Undo',
+            trans_translating:                'Translating...',
             titles:                           'Headings',
-            title_placeholder:                'Heading',
             bold:                             'Bold',
-            bold_placeholder:                 'bold text',
             italic:                           'Italic',
-            italic_placeholder:               'italic text',
             underline:                        'Underline',
-            underline_placeholder:            'underlined text',
             strikethrough:                    'Strikethrough',
-            strikethrough_placeholder:        'strikethrough text',
             unordered_list:                   'Unordered List',
             ordered_list:                     'Ordered List',
-            list_item_placeholder:            'Item',
             quote:                            'Quote',
             inline_code:                      'Inline Code',
-            inline_code_placeholder:          'code',
             code_block:                       'Code Block',
-            code_block_placeholder:           'code here',
             horizontal_line:                  'Horizontal Line',
             horizontal_line_style:            'Horizontal Line Style',
-            prompt_hr_size:                   'Size (px)',
-            prompt_hr_color:                  'Color',
             link:                             'Link',
-            prompt_insert_url:                'Enter the URL:',
-            link_text_placeholder:            'link text',
             image:                            'Image',
-            prompt_insert_image_url:          'Enter the image URL (https):',
-            prompt_image_title:               'Image title (optional):',
-            image_title_placeholder:          'e.g. My beautiful image',
-            prompt_image_width:               'Width (optional):',
-            prompt_image_height:              'Height (optional):',
             video:                            'Video',
-            prompt_video_type:                'Video Type',
-            video_type_embed:                 'Embed (YouTube, Bilibili)',
-            video_type_html5:                 'HTML5 Video (Direct URL)',
-            prompt_video_poster_url:          'Poster Image URL',
-            prompt_insert_video_url:          'Enter the video URL:',
-            prompt_video_width:               'Width (optional):',
-            prompt_video_height:              'Height (optional):',
-            alert_invalid_video_url:          'Invalid or unsupported video URL.',
             table:                            'Table',
-            prompt_columns:                   'Number of columns:',
-            prompt_rows:                      'Number of rows:',
+            subscript:                        'Subscript',
+            superscript:                      'Superscript',
+            highlight:                        'Highlight',
+            keyboard:                         'Keyboard Input',
+            abbreviation:                     'Abbreviation',
+            text_color:                       'Text Color',
+            background_color:                 'Background Color',
+            details:                          'Collapsible Section',
+            center:                           'Center',
+            border_style:                     'Border Style',
+            txt:                              'Text',
+            title_placeholder:                'Title',
+            bold_placeholder:                 'bold',
+            italic_placeholder:               'italic',
+            underline_placeholder:            'underline',
+            strikethrough_placeholder:        'strikethrough',
+            list_item_placeholder:            'Item',
+            inline_code_placeholder:          'code',
+            code_block_placeholder:           'code here',
+            link_text_placeholder:            'link text',
+            image_title_placeholder:          'e.g., My beautiful image',
             table_header_placeholder:         'Header',
             table_cell_placeholder:           'Cell',
-            subscript:                        'Subscript',
             subscript_placeholder:            'sub',
-            superscript:                      'Superscript',
             superscript_placeholder:          'sup',
-            highlight:                        'Highlight',
             highlight_placeholder:            'highlighted',
-            keyboard:                         'Keyboard',
             keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     'Abbreviation',
-            prompt_abbreviation_meaning:      'What does the abbreviation stand for?',
             abbreviation_placeholder:         'HTML',
-            text_color:                       'Text Color',
             colored_text_placeholder:         'colored text',
-            background_color:                 'Background Color',
             colored_background_placeholder:   'colored background',
-            details:                          'Collapsible section',
             details_summary_placeholder:      'Summary or Title',
             details_content_placeholder:      'Content to be hidden...',
-            center:                           'Center Align',
             center_placeholder:               'centered text',
-            notFound:                         'Code not found!',
-            scriptIdNotFound:                 'Could not identify the script ID.',
-            downloading:                      'Downloading...',
-            downloadError:                    'An error occurred while downloading the script.',
-            downloadTimeout:                  'The script download timed out.',
+            trans_search_ph:                  'Search language...',
+            prompt_hr_size:                   'Size (px)',
+            prompt_hr_color:                  'Color',
+            prompt_insert_url:                'Insert URL:',
+            prompt_link_text:                 'Link text:',
+            prompt_insert_image_url:          'Insert Image URL (https):',
+            prompt_image_title:               'Image Title (optional):',
+            prompt_image_width:               'Width (optional):',
+            prompt_image_height:              'Height (optional):',
+            prompt_video_type:                'Video Type',
+            prompt_video_poster_url:          'Cover Image URL (poster)',
+            prompt_insert_video_url:          'Insert Video URL:',
+            prompt_video_width:               'Width (optional):',
+            prompt_video_height:              'Height (optional):',
+            prompt_columns:                   'Number of columns:',
+            prompt_rows:                      'Number of rows:',
+            prompt_abbreviation_text:         'Abbreviation text:',
+            prompt_abbreviation_meaning:      'What is the meaning?',
+            prompt_border_size:               'Border size (px)',
+            prompt_border_color:              'Border color',
+            prompt_border_tag_type:           'Tag Type',
+            prompt_translate_to:              'Translate to:',
+            mode:                             'Translation Engine',
+            prompt_ai_model:                  'AI Model:',
+            prompt_api_key:                   'API Key (Gemini API):',
+            placeholder_api_key:              'Paste your AIza... key here',
+            api_help_title:                   'How to get a Free API Key',
+            api_help_text:                    'Google offers a generous free quota. To use it, access Google AI Studio via the link below, log in with your account, and click "Create API key". Copy the generated key and paste it into the script.',
+            api_help_link_text:               'Get API Key',
+            api_help_tooltip:                 'Help: How to get a key',
+            trans_mode_google:                'Google Translate (Default)',
+            trans_mode_gemini:                'Gemini AI (Best quality)',
+            trans_target_lang:                'Target Language',
+            gemini_model_label:               'Gemini Model',
             info_tooltip:                     'Shortcuts',
             info_shortcuts_title:             'Keyboard Shortcuts',
             info_header_shortcut:             'Shortcut',
             info_header_action:               'Action',
             info_shortcut_tab:                'Inserts a tab space',
             info_shortcut_shift_enter:        'Inserts a line break <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
-            info_shortcut_ctrl_d:             'Wraps the selection in a <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> tag',
-            info_shortcut_ctrl_p:             'Wraps the selection in a <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span> paragraph',
-            info_shortcut_ctrl_m:             'Wraps the selection in a markdown code block',
-            info_shortcut_ctrl_space:         'Inserts a non-breaking space <span style="color: #d21934;"><strong>;nbsp</strong></span>',
-            prompt_link_text:                 'Link text:',
-            prompt_abbreviation_text:         'Abbreviation text:',
-            border_style:                     'Border Style',
-            prompt_border_size:               'Border size (px)',
-            prompt_border_color:              'Border color',
-            prompt_border_text:               'Text',
-            prompt_border_tag_type:           'Tag Type',
-            border_text_placeholder:          'Text',
-            ai_translate:                     'Translate with AI',
+            info_shortcut_ctrl_d:             'Wraps selection in a <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> tag',
+            info_shortcut_ctrl_p:             'Wraps selection in a paragraph <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>',
+            info_shortcut_ctrl_m:             'Wraps selection in a markdown code block.',
+            info_shortcut_ctrl_space:         'Inserts a non-breaking space <span style="color: #d21934;"><strong>&nbsp;</strong></span>',
+            alert_invalid_video_url:          'Invalid or unsupported video URL.',
             alert_text_empty:                 'The text box is empty.',
-            prompt_translate_to:              'Translate to:',
-            prompt_ai_model:                  'AI Model:',
-            prompt_api_key:                   'API Key (Gemini API):',
-            placeholder_api_key:              'Paste your AIza key... here',
             alert_translation_error:          'Translation error: ',
-            error_no_text:                    'AI did not return valid text.',
+            notFound:                         'Code not found!',
+            scriptIdNotFound:                 'Could not identify the script ID.',
+            downloadError:                    'An error occurred while downloading the script.',
+            downloadTimeout:                  'Script download timed out.',
+            error_no_text:                    'AI returned no valid text.',
             error_api_processing:             'Error processing API response.',
-            error_connection:                 'Internet connection error.',
+            error_rede:                       'Connection error.',
             error_generic:                    'Error',
-            selection:                        'Selection',
-            api_help_title:                   'How to get a free API Key',
-            api_help_text:                    'Google offers a generous free quota. To use it, access Google AI Studio via the link below, log in with your account, and click "Create API key". Just copy the generated key and paste it into the script.',
-            api_help_link_text:               'Get API Key',
-            api_help_tooltip:                 'Help: How to get a key',
-            lang_en:                          'English',
-            lang_pt_br:                       'Portuguese (Brazil)',
-            lang_zh_cn:                       'Chinese (Simplified)',
-            lang_zh_tw:                       'Chinese (Traditional)',
-            lang_es:                          'Spanish',
-            lang_fr:                          'French',
-            lang_ru:                          'Russian',
-            lang_de:                          'German',
-            lang_ja:                          'Japanese',
-            lang_ko:                          'Korean',
-            lang_ckb:                         'Kurdish (Sorani)',
-            lang_ar:                          'Arabic',
-            lang_be:                          'Belarusian',
-            lang_bg:                          'Bulgarian',
-            lang_cs:                          'Czech',
-            lang_da:                          'Danish',
-            lang_el:                          'Greek',
-            lang_eo:                          'Esperanto',
-            lang_fi:                          'Finnish',
-            lang_fr_ca:                       'French (Canada)',
-            lang_he:                          'Hebrew',
-            lang_hr:                          'Croatian',
-            lang_hu:                          'Hungarian',
-            lang_id:                          'Indonesian',
-            lang_it:                          'Italian',
-            lang_ka:                          'Georgian',
-            lang_mr:                          'Marathi',
-            lang_nb:                          'Norwegian (Bokmål)',
-            lang_nl:                          'Dutch',
-            lang_pl:                          'Polish',
-            lang_ro:                          'Romanian',
-            lang_sk:                          'Slovak',
-            lang_sr:                          'Serbian',
-            lang_sv:                          'Swedish',
-            lang_th:                          'Thai',
-            lang_tr:                          'Turkish',
-            lang_uk:                          'Ukrainian',
-            lang_ug:                          'Uyghur',
-            lang_vi:                          'Vietnamese'
+            trans_err_gemini_key:             'Gemini API key not configured. Go to Settings > Translation.'
         },
-        'es': {
+    'zh-CN': {
+            langName:                         '简体中文',
+            languageSettings:                 '🌐 语言',
+            force_update:                     '🔄️ 强制更新',
+            settings:                         '⚙️ 设置',
+            compatible_with:                  '兼容于',
+            force_update_alert:               '缓存已清除。页面将重新加载以获取更新的数据。',
+            downloading:                      '下载中...',
+            selection:                        '选择',
+            trans_saved:                      '设置已保存！',
+            close:                            '关闭',
+            confirm:                          '确认',
+            cancel:                           '取消',
+            download:                         '下载',
+            translate:                        '翻译',
+            trans_undo:                       '撤销',
+            trans_translating:                '翻译中...',
+            titles:                           '标题',
+            bold:                             '粗体',
+            italic:                           '斜体',
+            underline:                        '下划线',
+            strikethrough:                    '删除线',
+            unordered_list:                   '无序列表',
+            ordered_list:                     '有序列表',
+            quote:                            '引用',
+            inline_code:                      '行内代码',
+            code_block:                       '代码块',
+            horizontal_line:                  '水平线',
+            horizontal_line_style:            '水平线样式',
+            link:                             '链接',
+            image:                            '图片',
+            video:                            '视频',
+            table:                            '表格',
+            subscript:                        '下标',
+            superscript:                      '上标',
+            highlight:                        '高亮',
+            keyboard:                         '键盘输入',
+            abbreviation:                     '缩写',
+            text_color:                       '文本颜色',
+            background_color:                 '背景颜色',
+            details:                          '折叠部分',
+            center:                           '居中',
+            border_style:                     '边框样式',
+            txt:                              '文本',
+            title_placeholder:                '标题',
+            bold_placeholder:                 '粗体',
+            italic_placeholder:               '斜体',
+            underline_placeholder:            '下划线',
+            strikethrough_placeholder:        '删除线',
+            list_item_placeholder:            '项目',
+            inline_code_placeholder:          '代码',
+            code_block_placeholder:           '在此输入代码',
+            link_text_placeholder:            '链接文本',
+            image_title_placeholder:          '例如：我的精美图片',
+            table_header_placeholder:         '表头',
+            table_cell_placeholder:           '单元格',
+            subscript_placeholder:            'sub',
+            superscript_placeholder:          'sup',
+            highlight_placeholder:            '高亮',
+            keyboard_placeholder:             'Ctrl+C',
+            abbreviation_placeholder:         'HTML',
+            colored_text_placeholder:         '彩色文本',
+            colored_background_placeholder:   '彩色背景',
+            details_summary_placeholder:      '摘要或标题',
+            details_content_placeholder:      '要隐藏的内容...',
+            center_placeholder:               '居中文本',
+            trans_search_ph:                  '搜索语言...',
+            prompt_hr_size:                   '大小 (px)',
+            prompt_hr_color:                  '颜色',
+            prompt_insert_url:                '插入 URL:',
+            prompt_link_text:                 '链接文本:',
+            prompt_insert_image_url:          '插入图片 URL (https):',
+            prompt_image_title:               '图片标题 (可选):',
+            prompt_image_width:               '宽度 (可选):',
+            prompt_image_height:              '高度 (可选):',
+            prompt_video_type:                '视频类型',
+            prompt_video_poster_url:          '封面图片 URL (海报)',
+            prompt_insert_video_url:          '插入视频 URL:',
+            prompt_video_width:               '宽度 (可选):',
+            prompt_video_height:              '高度 (可选):',
+            prompt_columns:                   '列数:',
+            prompt_rows:                      '行数:',
+            prompt_abbreviation_text:         '缩写文本:',
+            prompt_abbreviation_meaning:      '缩写的含义是什么？',
+            prompt_border_size:               '边框大小 (px)',
+            prompt_border_color:              '边框颜色',
+            prompt_border_tag_type:           '标签类型',
+            prompt_translate_to:              '翻译为:',
+            mode:                             '翻译引擎',
+            prompt_ai_model:                  'AI 模型:',
+            prompt_api_key:                   'API 密钥 (Gemini API):',
+            placeholder_api_key:              '在此粘贴您的 AIza... 密钥',
+            api_help_title:                   '如何获取免费 API 密钥',
+            api_help_text:                    'Google 提供慷慨的免费配额。要使用它，请通过下面的链接访问 Google AI Studio，登录您的帐户并点击 "Create API key"。复制生成的密钥并将其粘贴到脚本中。',
+            api_help_link_text:               '获取 API 密钥',
+            api_help_tooltip:                 '帮助：如何获取密钥',
+            trans_mode_google:                'Google 翻译 (默认)',
+            trans_mode_gemini:                'Gemini IA (最佳质量)',
+            trans_target_lang:                '目标语言',
+            gemini_model_label:               'Gemini 模型',
+            info_tooltip:                     '快捷键',
+            info_shortcuts_title:             '键盘快捷键',
+            info_header_shortcut:             '快捷键',
+            info_header_action:               '操作',
+            info_shortcut_tab:                '插入制表符空格',
+            info_shortcut_shift_enter:        '插入换行符 <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
+            info_shortcut_ctrl_d:             '用 <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> 标签包裹选区',
+            info_shortcut_ctrl_p:             '用段落 <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span> 包裹选区',
+            info_shortcut_ctrl_m:             '用 Markdown 代码块包裹选区',
+            info_shortcut_ctrl_space:         '插入不间断空格 <span style="color: #d21934;"><strong>&nbsp;</strong></span>',
+            alert_invalid_video_url:          '视频 URL 无效或不支持。',
+            alert_text_empty:                 '文本框为空。',
+            alert_translation_error:          '翻译错误：',
+            notFound:                         '未找到代码！',
+            scriptIdNotFound:                 '无法识别脚本 ID。',
+            downloadError:                    '下载脚本时出错。',
+            downloadTimeout:                  '脚本下载超时。',
+            error_no_text:                    'AI 未返回有效文本。',
+            error_api_processing:             '处理 API 响应时出错。',
+            error_rede:                       '连接错误。',
+            error_generic:                    '错误',
+            trans_err_gemini_key:             '未配置 Gemini API 密钥。请转到 设置 > 翻译。'
+        },
+    'es': {
             langName:                         'Español',
             languageSettings:                 '🌐 Idioma',
+            force_update:                     '🔄️ Forzar actualización',
+            settings:                         '⚙️ Configuración',
+            compatible_with:                  'Compatible con',
+            force_update_alert:               'Se ha borrado la caché. La página se recargará para obtener los datos actualizados.',
+            downloading:                      'Descargando...',
+            selection:                        'Selección',
+            trans_saved:                      '¡Configuración guardada!',
             close:                            'Cerrar',
             confirm:                          'Confirmar',
             cancel:                           'Cancelar',
             download:                         'Descargar',
-            compatible_with:                  'Compatible con',
-            force_update:                     '🔄️ Forzar actualización',
-            force_update_alert:               'La caché se limpió. La página se recargará para obtener los datos actualizados.',
+            translate:                        'Traducir',
+            trans_undo:                       'Deshacer',
+            trans_translating:                'Traduciendo...',
             titles:                           'Títulos',
-            title_placeholder:                'Título',
             bold:                             'Negrita',
-            bold_placeholder:                 'texto en negrita',
             italic:                           'Cursiva',
-            italic_placeholder:               'texto en cursiva',
             underline:                        'Subrayado',
-            underline_placeholder:            'texto subrayado',
             strikethrough:                    'Tachado',
-            strikethrough_placeholder:        'texto tachado',
-            unordered_list:                   'Lista sin ordenar',
+            unordered_list:                   'Lista desordenada',
             ordered_list:                     'Lista ordenada',
-            list_item_placeholder:            'Elemento',
             quote:                            'Cita',
             inline_code:                      'Código en línea',
-            inline_code_placeholder:          'código',
             code_block:                       'Bloque de código',
-            code_block_placeholder:           'código aquí',
             horizontal_line:                  'Línea horizontal',
-            horizontal_line_style:            'Estilo de Línea Horizontal',
-            prompt_hr_size:                   'Tamaño (px)',
-            prompt_hr_color:                  'Color',
+            horizontal_line_style:            'Estilo de línea horizontal',
             link:                             'Enlace',
-            prompt_insert_url:                'Introduzca la URL:',
-            link_text_placeholder:            'texto del enlace',
             image:                            'Imagen',
-            prompt_insert_image_url:          'Introduzca la URL de la imagen (https):',
-            prompt_image_title:               'Título de la imagen (opcional):',
-            image_title_placeholder:          'ej: Mi hermosa imagen',
-            prompt_image_width:               'Ancho (opcional):',
-            prompt_image_height:              'Alto (opcional):',
             video:                            'Video',
-            prompt_video_type:                'Tipo de Video',
-            video_type_embed:                 'Incrustado (YouTube, Bilibili)',
-            video_type_html5:                 'Video HTML5 (URL directa)',
-            prompt_video_poster_url:          'URL de la imagen de portada (póster)',
-            prompt_insert_video_url:          'Introduzca la URL del video:',
-            prompt_video_width:               'Ancho (opcional):',
-            prompt_video_height:              'Alto (opcional):',
-            alert_invalid_video_url:          'URL de video no válida o no compatible.',
             table:                            'Tabla',
-            prompt_columns:                   'Número de columnas:',
-            prompt_rows:                      'Número de filas:',
+            subscript:                        'Subíndice',
+            superscript:                      'Superíndice',
+            highlight:                        'Resaltado',
+            keyboard:                         'Entrada de teclado',
+            abbreviation:                     'Abreviatura',
+            text_color:                       'Color del texto',
+            background_color:                 'Color de fondo',
+            details:                          'Sección desplegable',
+            center:                           'Centrar',
+            border_style:                     'Estilo de borde',
+            txt:                              'Texto',
+            title_placeholder:                'Título',
+            bold_placeholder:                 'negrita',
+            italic_placeholder:               'cursiva',
+            underline_placeholder:            'subrayado',
+            strikethrough_placeholder:        'tachado',
+            list_item_placeholder:            'Elemento',
+            inline_code_placeholder:          'código',
+            code_block_placeholder:           'código aquí',
+            link_text_placeholder:            'texto del enlace',
+            image_title_placeholder:          'ej: Mi bella imagen',
             table_header_placeholder:         'Encabezado',
             table_cell_placeholder:           'Celda',
-            subscript:                        'Subíndice',
             subscript_placeholder:            'sub',
-            superscript:                      'Superíndice',
             superscript_placeholder:          'sup',
-            highlight:                        'Resaltado',
             highlight_placeholder:            'resaltado',
-            keyboard:                         'Teclado',
             keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     'Abreviatura',
-            prompt_abbreviation_meaning:      '¿Qué significa la abreviação?',
             abbreviation_placeholder:         'HTML',
-            text_color:                       'Color del texto',
             colored_text_placeholder:         'texto coloreado',
-            background_color:                 'Color de fondo',
             colored_background_placeholder:   'fondo coloreado',
-            details:                          'Sección Plegable',
             details_summary_placeholder:      'Resumen o Título',
-            details_content_placeholder:      'Contenido a ocultar...',
-            center:                           'Centrar',
+            details_content_placeholder:      'Contenido para ocultar...',
             center_placeholder:               'texto centrado',
-            notFound:                         '¡Código no encontrado!',
-            scriptIdNotFound:                 'No se pudo identificar el ID del script.',
-            downloading:                      'Descargando...',
-            downloadError:                    'Ocurrió un error al descargar el script.',
-            downloadTimeout:                  'Se agotó el tiempo de espera para la descarga del script.',
+            trans_search_ph:                  'Buscar idioma...',
+            prompt_hr_size:                   'Tamaño (px)',
+            prompt_hr_color:                  'Color',
+            prompt_insert_url:                'Insertar URL:',
+            prompt_link_text:                 'Texto del enlace:',
+            prompt_insert_image_url:          'Insertar URL de la imagen (https):',
+            prompt_image_title:               'Título de la imagen (opcional):',
+            prompt_image_width:               'Ancho (opcional):',
+            prompt_image_height:              'Alto (opcional):',
+            prompt_video_type:                'Tipo de video',
+            prompt_video_poster_url:          'URL de imagen de portada (poster)',
+            prompt_insert_video_url:          'Insertar URL del video:',
+            prompt_video_width:               'Ancho (opcional):',
+            prompt_video_height:              'Alto (opcional):',
+            prompt_columns:                   'Número de columnas:',
+            prompt_rows:                      'Número de filas:',
+            prompt_abbreviation_text:         'Texto de la abreviatura:',
+            prompt_abbreviation_meaning:      '¿Cuál es el significado?',
+            prompt_border_size:               'Tamaño del borde (px)',
+            prompt_border_color:              'Color del borde',
+            prompt_border_tag_type:           'Tipo de etiqueta',
+            prompt_translate_to:              'Traducir a:',
+            mode:                             'Motor de traducción',
+            prompt_ai_model:                  'Modelo IA:',
+            prompt_api_key:                   'Clave API (Gemini API):',
+            placeholder_api_key:              'Pega tu clave AIza... aquí',
+            api_help_title:                   'Cómo obtener una clave API gratuita',
+            api_help_text:                    'Google ofrece una cuota gratuita generosa. Para usarla, accede a Google AI Studio en el enlace de abajo, inicia sesión con tu cuenta y haz clic en "Create API key". Copia la clave generada y pégala en el script.',
+            api_help_link_text:               'Obtener Clave API',
+            api_help_tooltip:                 'Ayuda: Cómo obtener una clave',
+            trans_mode_google:                'Traductor de Google (Predeterminado)',
+            trans_mode_gemini:                'Gemini IA (Mejor calidad)',
+            trans_target_lang:                'Idioma de destino',
+            gemini_model_label:               'Modelo Gemini',
             info_tooltip:                     'Atajos',
-            info_shortcuts_title:             'Atajos de Teclado',
+            info_shortcuts_title:             'Atajos del teclado',
             info_header_shortcut:             'Atajo',
             info_header_action:               'Acción',
             info_shortcut_tab:                'Inserta un espacio de tabulación',
             info_shortcut_shift_enter:        'Inserta un salto de línea <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
             info_shortcut_ctrl_d:             'Envuelve la selección en una etiqueta <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span>',
             info_shortcut_ctrl_p:             'Envuelve la selección en un párrafo <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>',
-            info_shortcut_ctrl_m:             'Envuelve la selección en un bloque de código markdown',
-            info_shortcut_ctrl_space:         'Inserta un espacio no separable <span style="color: #d21934;"><strong>;nbsp</strong></span>',
-            prompt_link_text:                 'Texto del enlace:',
-            prompt_abbreviation_text:         'Texto de la abreviatura:',
-            border_style:                     'Estilo de Borde',
-            prompt_border_size:               'Tamaño del borde (px)',
-            prompt_border_color:              'Color del borde',
-            prompt_border_text:               'Texto',
-            prompt_border_tag_type:           'Tipo de Etiqueta',
-            border_text_placeholder:          'Texto',
-            ai_translate:                     'Traducir con IA',
+            info_shortcut_ctrl_m:             'Envuelve la selección en un bloque de código markdown.',
+            info_shortcut_ctrl_space:         'Inserta un espacio de no separación <span style="color: #d21934;"><strong>&nbsp;</strong></span>',
+            alert_invalid_video_url:          'URL de video no válida o no soportada.',
             alert_text_empty:                 'El cuadro de texto está vacío.',
-            prompt_translate_to:              'Traducir a:',
-            prompt_ai_model:                  'Modelo de IA:',
-            prompt_api_key:                   'Clave API (Gemini API):',
-            placeholder_api_key:              'Pegue su clave AIza... aquí',
-            alert_translation_error:          'Error de traducción: ',
+            alert_translation_error:          'Error en la traducción: ',
+            notFound:                         '¡Código no encontrado!',
+            scriptIdNotFound:                 'No se pudo identificar el ID del script.',
+            downloadError:                    'Ocurrió un error al descargar el script.',
+            downloadTimeout:                  'Se agotó el tiempo para descargar el script.',
             error_no_text:                    'La IA no devolvió texto válido.',
             error_api_processing:             'Error al procesar la respuesta de la API.',
-            error_connection:                 'Error de conexión a internet.',
+            error_rede:                       'Error de conexión.',
             error_generic:                    'Error',
-            selection:                        'Selección',
-            api_help_title:                   'Cómo obtener una clave API gratuita',
-            api_help_text:                    'Google ofrece una generosa cuota gratuita. Para usarla, acceda a Google AI Studio en el enlace de abajo, inicie sesión con su cuenta y haga clic en "Create API key". Simplemente copie la clave generada y péguela en el script.',
-            api_help_link_text:               'Obtener clave API',
-            api_help_tooltip:                 'Ayuda: Cómo obtener una clave',
-            lang_en:                          'Inglés',
-            lang_pt_br:                       'Portugués (Brasil)',
-            lang_zh_cn:                       'Chino (Simplificado)',
-            lang_zh_tw:                       'Chino (Tradicional)',
-            lang_es:                          'Español',
-            lang_fr:                          'Francés',
-            lang_ru:                          'Ruso',
-            lang_de:                          'Alemán',
-            lang_ja:                          'Japonés',
-            lang_ko:                          'Coreano',
-            lang_ckb:                         'Kurdo (Sorani)',
-            lang_ar:                          'Árabe',
-            lang_be:                          'Bielorrusso',
-            lang_bg:                          'Búlgaro',
-            lang_cs:                          'Checo',
-            lang_da:                          'Danés',
-            lang_el:                          'Griego',
-            lang_eo:                          'Esperanto',
-            lang_fi:                          'Finlandés',
-            lang_fr_ca:                       'Francés (Canadá)',
-            lang_he:                          'Hebreo',
-            lang_hr:                          'Croata',
-            lang_hu:                          'Húngaro',
-            lang_id:                          'Indonesio',
-            lang_it:                          'Italiano',
-            lang_ka:                          'Georgiano',
-            lang_mr:                          'Maratí',
-            lang_nb:                          'Noruego (Bokmål)',
-            lang_nl:                          'Neerlandés',
-            lang_pl:                          'Polaco',
-            lang_ro:                          'Rumano',
-            lang_sk:                          'Eslovaco',
-            lang_sr:                          'Serbio',
-            lang_sv:                          'Sueco',
-            lang_th:                          'Tailandés',
-            lang_tr:                          'Turco',
-            lang_uk:                          'Ucraniano',
-            lang_ug:                          'Uigur',
-            lang_vi:                          'Vietnamita'
+            trans_err_gemini_key:             'Clave API de Gemini no configurada. Ve a Configuración > Traducción.'
         },
-        'fr': {
+    'fr': {
             langName:                         'Français',
             languageSettings:                 '🌐 Langue',
+            force_update:                     '🔄️ Forcer la mise à jour',
+            settings:                         '⚙️ Paramètres',
+            compatible_with:                  'Compatible avec',
+            force_update_alert:               'Le cache a été vidé. La page va se recharger pour récupérer les données mises à jour.',
+            downloading:                      'Téléchargement...',
+            selection:                        'Sélection',
+            trans_saved:                      'Paramètres enregistrés !',
             close:                            'Fermer',
             confirm:                          'Confirmer',
             cancel:                           'Annuler',
             download:                         'Télécharger',
-            compatible_with:                  'Compatible avec',
-            force_update:                     '🔄️ Forcer la mise à jour',
-            force_update_alert:               'Cache vidé. La page va se recharger pour récupérer les données mises à jour.',
+            translate:                        'Traduire',
+            trans_undo:                       'Annuler',
+            trans_translating:                'Traduction...',
             titles:                           'Titres',
-            title_placeholder:                'Titre',
             bold:                             'Gras',
-            bold_placeholder:                 'texte en gras',
             italic:                           'Italique',
-            italic_placeholder:               'texte en italique',
             underline:                        'Souligné',
-            underline_placeholder:            'texte souligné',
             strikethrough:                    'Barré',
-            strikethrough_placeholder:        'texte barré',
-            unordered_list:                   'Liste non ordonnée',
+            unordered_list:                   'Liste à puces',
             ordered_list:                     'Liste ordonnée',
-            list_item_placeholder:            'Élément',
             quote:                            'Citation',
             inline_code:                      'Code en ligne',
-            inline_code_placeholder:          'code',
             code_block:                       'Bloc de code',
-            code_block_placeholder:           'code ici',
             horizontal_line:                  'Ligne horizontale',
             horizontal_line_style:            'Style de ligne horizontale',
-            prompt_hr_size:                   'Taille (px)',
-            prompt_hr_color:                  'Couleur',
             link:                             'Lien',
-            prompt_insert_url:                'Entrez l\'URL:',
-            link_text_placeholder:            'texte du lien',
             image:                            'Image',
-            prompt_insert_image_url:          'Entrez l\'URL de l\'image (https):',
-            prompt_image_title:               'Titre de l\'image (facultatif):',
-            image_title_placeholder:          'ex. Ma belle image',
-            prompt_image_width:               'Largeur (facultatif):',
-            prompt_image_height:              'Hauteur (facultatif):',
             video:                            'Vidéo',
-            prompt_video_type:                'Type de vidéo',
-            video_type_embed:                 'Intégrée (YouTube, Bilibili)',
-            video_type_html5:                 'Vidéo HTML5 (URL directe)',
-            prompt_video_poster_url:          'URL de l\'image d\'affiche',
-            prompt_insert_video_url:          'Entrez l\'URL de la vidéo:',
-            prompt_video_width:               'Largeur (facultatif):',
-            prompt_video_height:              'Hauteur (facultatif):',
-            alert_invalid_video_url:          'URL de vidéo invalide ou non prise en charge.',
             table:                            'Tableau',
-            prompt_columns:                   'Nombre de colonnes:',
-            prompt_rows:                      'Nombre de lignes:',
+            subscript:                        'Indice',
+            superscript:                      'Exposant',
+            highlight:                        'Surlignage',
+            keyboard:                         'Entrée clavier',
+            abbreviation:                     'Abréviation',
+            text_color:                       'Couleur du texte',
+            background_color:                 'Couleur de fond',
+            details:                          'Section repliable',
+            center:                           'Centrer',
+            border_style:                     'Style de bordure',
+            txt:                              'Texte',
+            title_placeholder:                'Titre',
+            bold_placeholder:                 'gras',
+            italic_placeholder:               'italique',
+            underline_placeholder:            'souligné',
+            strikethrough_placeholder:        'barré',
+            list_item_placeholder:            'Élément',
+            inline_code_placeholder:          'code',
+            code_block_placeholder:           'code ici',
+            link_text_placeholder:            'texte du lien',
+            image_title_placeholder:          'ex: Ma belle image',
             table_header_placeholder:         'En-tête',
             table_cell_placeholder:           'Cellule',
-            subscript:                        'Indice',
             subscript_placeholder:            'ind',
-            superscript:                      'Exposant',
             superscript_placeholder:          'exp',
-            highlight:                        'Surligner',
             highlight_placeholder:            'surligné',
-            keyboard:                         'Clavier',
             keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     'Abréviation',
-            prompt_abbreviation_meaning:      'Que signifie l\'abréviation?',
             abbreviation_placeholder:         'HTML',
-            text_color:                       'Couleur du texte',
             colored_text_placeholder:         'texte coloré',
-            background_color:                 'Couleur de fond',
             colored_background_placeholder:   'fond coloré',
-            details:                          'Section réductible',
             details_summary_placeholder:      'Résumé ou Titre',
             details_content_placeholder:      'Contenu à masquer...',
-            center:                           'Aligner au centre',
             center_placeholder:               'texte centré',
-            notFound:                         'Code non trouvé !',
-            scriptIdNotFound:                 'Impossible d\'identifier l\'ID du script.',
-            downloading:                      'Téléchargement en cours...',
-            downloadError:                    'Une erreur s\'est produite lors du téléchargement du script.',
-            downloadTimeout:                  'Le téléchargement du script a expiré.',
-            info_tooltip:                     'Raccourcis',
-            info_shortcuts_title:             'Raccourcis clavier',
-            info_header_shortcut:             'Raccourci',
-            info_header_action:               'Action',
-            info_shortcut_tab:                'Insère une tabulation.',
-            info_shortcut_shift_enter:        'Insère un saut de ligne <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
-            info_shortcut_ctrl_d:             'Enveloppe la sélection dans une balise <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span>',
-            info_shortcut_ctrl_p:             'Enveloppe la sélection dans un paragraphe <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>',
-            info_shortcut_ctrl_m:             'Enveloppe la sélection dans un bloc de code markdown',
-            info_shortcut_ctrl_space:         'Insère un espace insécable <span style="color: #d21934;"><strong>;nbsp</strong></span>',
-            prompt_link_text:                 'Texte du lien:',
-            prompt_abbreviation_text:         'Texte de l\'abréviation:',
-            border_style:                     'Style de bordure',
+            trans_search_ph:                  'Rechercher la langue...',
+            prompt_hr_size:                   'Taille (px)',
+            prompt_hr_color:                  'Couleur',
+            prompt_insert_url:                'Insérer l\'URL :',
+            prompt_link_text:                 'Texte du lien :',
+            prompt_insert_image_url:          'Insérer l\'URL de l\'image (https) :',
+            prompt_image_title:               'Titre de l\'image (optionnel) :',
+            prompt_image_width:               'Largeur (optionnel) :',
+            prompt_image_height:              'Hauteur (optionnel) :',
+            prompt_video_type:                'Type de vidéo',
+            prompt_video_poster_url:          'URL de l\'image de couverture (poster)',
+            prompt_insert_video_url:          'Insérer l\'URL de la vidéo :',
+            prompt_video_width:               'Largeur (optionnel) :',
+            prompt_video_height:              'Hauteur (optionnel) :',
+            prompt_columns:                   'Nombre de colonnes :',
+            prompt_rows:                      'Nombre de lignes :',
+            prompt_abbreviation_text:         'Texte de l\'abréviation :',
+            prompt_abbreviation_meaning:      'Quelle est la signification ?',
             prompt_border_size:               'Taille de la bordure (px)',
             prompt_border_color:              'Couleur de la bordure',
-            prompt_border_text:               'Texte',
             prompt_border_tag_type:           'Type de balise',
-            border_text_placeholder:          'Texte',
-            ai_translate:                     'Traduire avec l\'IA',
-            alert_text_empty:                 'La zone de texte est vide.',
-            prompt_translate_to:              'Traduire vers :',
+            prompt_translate_to:              'Traduire en :',
+            mode:                             'Moteur de traduction',
             prompt_ai_model:                  'Modèle IA :',
             prompt_api_key:                   'Clé API (Gemini API) :',
             placeholder_api_key:              'Collez votre clé AIza... ici',
-            alert_translation_error:          'Erreur de traduction : ',
-            error_no_text:                    'L\'IA n\'a pas renvoyé de texte valide.',
-            error_api_processing:             'Erreur lors du traitement de la réponse API.',
-            error_connection:                 'Erreur de connexion Internet.',
-            error_generic:                    'Erreur',
-            selection:                        'Sélection',
             api_help_title:                   'Comment obtenir une clé API gratuite',
-            api_help_text:                    'Google offre un quota gratuit généreux. Pour l\'utiliser, accédez à Google AI Studio via le lien ci-dessous, connectez-vous avec votre compte et cliquez sur "Create API key". Il suffit de copier la clé générée et de la coller dans le script.',
+            api_help_text:                    'Google offre un quota gratuit généreux. Pour l\'utiliser, accédez à Google AI Studio via le lien ci-dessous, connectez-vous avec votre compte et cliquez sur "Create API key". Copiez la clé générée et collez-la dans le script.',
             api_help_link_text:               'Obtenir une clé API',
             api_help_tooltip:                 'Aide : Comment obtenir une clé',
-            lang_en:                          'Anglais',
-            lang_pt_br:                       'Portugais (Brésil)',
-            lang_zh_cn:                       'Chinois (Simplifié)',
-            lang_zh_tw:                       'Chinois (Traditionnel)',
-            lang_es:                          'Espagnol',
-            lang_fr:                          'Français',
-            lang_ru:                          'Russe',
-            lang_de:                          'Allemand',
-            lang_ja:                          'Japonais',
-            lang_ko:                          'Coréen',
-            lang_ckb:                         'Kurde (Sorani)',
-            lang_ar:                          'Arabe',
-            lang_be:                          'Biélorusse',
-            lang_bg:                          'Bulgare',
-            lang_cs:                          'Tchèque',
-            lang_da:                          'Danois',
-            lang_el:                          'Grec',
-            lang_eo:                          'Espéranto',
-            lang_fi:                          'Finnois',
-            lang_fr_ca:                       'Français (Canada)',
-            lang_he:                          'Hébreu',
-            lang_hr:                          'Croate',
-            lang_hu:                          'Hongrois',
-            lang_id:                          'Indonésien',
-            lang_it:                          'Italien',
-            lang_ka:                          'Géorgien',
-            lang_mr:                          'Marathi',
-            lang_nb:                          'Norvégien (Bokmål)',
-            lang_nl:                          'Néerlandais',
-            lang_pl:                          'Polonais',
-            lang_ro:                          'Roumain',
-            lang_sk:                          'Slovaque',
-            lang_sr:                          'Serbe',
-            lang_sv:                          'Suédois',
-            lang_th:                          'Thaï',
-            lang_tr:                          'Turc',
-            lang_uk:                          'Ukrainien',
-            lang_ug:                          'Ouïghour',
-            lang_vi:                          'Vietnamien'
+            trans_mode_google:                'Google Traduction (Par défaut)',
+            trans_mode_gemini:                'Gemini IA (Meilleure qualité)',
+            trans_target_lang:                'Langue cible',
+            gemini_model_label:               'Modèle Gemini',
+            info_tooltip:                     'Raccourcis',
+            info_shortcuts_title:             'Raccourcis Clavier',
+            info_header_shortcut:             'Raccourci',
+            info_header_action:               'Action',
+            info_shortcut_tab:                'Insère un espace de tabulation',
+            info_shortcut_shift_enter:        'Insère un saut de ligne <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
+            info_shortcut_ctrl_d:             'Entoure la sélection d\'une balise <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span>',
+            info_shortcut_ctrl_p:             'Entoure la sélection d\'un paragraphe <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>',
+            info_shortcut_ctrl_m:             'Entoure la sélection d\'un bloc de code markdown.',
+            info_shortcut_ctrl_space:         'Insère une espace insécable <span style="color: #d21934;"><strong>&nbsp;</strong></span>',
+            alert_invalid_video_url:          'URL de vidéo invalide ou non prise en charge.',
+            alert_text_empty:                 'La zone de texte est vide.',
+            alert_translation_error:          'Erreur de traduction : ',
+            notFound:                         'Code introuvable !',
+            scriptIdNotFound:                 'Impossible d\'identifier l\'ID du script.',
+            downloadError:                    'Une erreur est survenue lors du téléchargement du script.',
+            downloadTimeout:                  'Le délai de téléchargement du script a expiré.',
+            error_no_text:                    'L\'IA n\'a renvoyé aucun texte valide.',
+            error_api_processing:             'Erreur lors du traitement de la réponse API.',
+            error_rede:                       'Erreur de connexion.',
+            error_generic:                    'Erreur',
+            trans_err_gemini_key:             'Clé API Gemini non configurée. Allez dans Paramètres > Traduction.'
         },
-        'ru': {
+    'ru': {
             langName:                         'Русский',
             languageSettings:                 '🌐 Язык',
+            force_update:                     '🔄️ Принудительное обновление',
+            settings:                         '⚙️ Настройки',
+            compatible_with:                  'Совместимо с',
+            force_update_alert:               'Кэш очищен. Страница будет перезагружена для получения обновленных данных.',
+            downloading:                      'Загрузка...',
+            selection:                        'Выделение',
+            trans_saved:                      'Настройки сохранены!',
             close:                            'Закрыть',
             confirm:                          'Подтвердить',
             cancel:                           'Отмена',
             download:                         'Скачать',
-            compatible_with:                  'Совместимо с',
-            force_update:                     '🔄️ Принудительное обновление',
-            force_update_alert:               'Кэш очищен. Страница будет перезагружена для получения обновленных данных.',
+            translate:                        'Перевести',
+            trans_undo:                       'Отменить',
+            trans_translating:                'Перевод...',
             titles:                           'Заголовки',
-            title_placeholder:                'Заголовок',
             bold:                             'Жирный',
-            bold_placeholder:                 'жирный текст',
             italic:                           'Курсив',
-            italic_placeholder:               'курсивный текст',
-            underline:                        'Подчёркнутый',
-            underline_placeholder:            'подчёркнутый текст',
-            strikethrough:                    'Зачёркнутый',
-            strikethrough_placeholder:        'зачёркнутый текст',
+            underline:                        'Подчеркнутый',
+            strikethrough:                    'Зачеркнутый',
             unordered_list:                   'Маркированный список',
             ordered_list:                     'Нумерованный список',
-            list_item_placeholder:            'Пункт',
             quote:                            'Цитата',
             inline_code:                      'Встроенный код',
-            inline_code_placeholder:          'код',
             code_block:                       'Блок кода',
-            code_block_placeholder:           'код здесь',
             horizontal_line:                  'Горизонтальная линия',
             horizontal_line_style:            'Стиль линии',
-            prompt_hr_size:                   'Размер (px)',
-            prompt_hr_color:                  'Цвет',
             link:                             'Ссылка',
-            prompt_insert_url:                'Введите URL:',
-            link_text_placeholder:            'текст ссылки',
             image:                            'Изображение',
-            prompt_insert_image_url:          'Введите URL изображения (https):',
-            prompt_image_title:               'Заголовок изображения (необязательно):',
-            image_title_placeholder:          'напр. Мое красивое изображение',
-            prompt_image_width:               'Ширина (необязательно):',
-            prompt_image_height:              'Высота (необязательно):',
             video:                            'Видео',
-            prompt_video_type:                'Тип видео',
-            video_type_embed:                 'Вставка (YouTube, Bilibili)',
-            video_type_html5:                 'HTML5 видео (прямая ссылка)',
-            prompt_video_poster_url:          'URL постера',
-            prompt_insert_video_url:          'Введите URL видео:',
-            prompt_video_width:               'Ширина (необязательно):',
-            prompt_video_height:              'Высота (необязательно):',
-            alert_invalid_video_url:          'Неверный или неподдерживаемый URL видео.',
             table:                            'Таблица',
-            prompt_columns:                   'Количество столбцов:',
-            prompt_rows:                      'Количество строк:',
+            subscript:                        'Подстрочный',
+            superscript:                      'Надстрочный',
+            highlight:                        'Выделение',
+            keyboard:                         'Клавиши',
+            abbreviation:                     'Аббревиатура',
+            text_color:                       'Цвет текста',
+            background_color:                 'Цвет фона',
+            details:                          'Сворачиваемый блок',
+            center:                           'По центру',
+            border_style:                     'Стиль границы',
+            txt:                              'Текст',
+            title_placeholder:                'Заголовок',
+            bold_placeholder:                 'жирный',
+            italic_placeholder:               'курсив',
+            underline_placeholder:            'подчеркнутый',
+            strikethrough_placeholder:        'зачеркнутый',
+            list_item_placeholder:            'Элемент',
+            inline_code_placeholder:          'код',
+            code_block_placeholder:           'код здесь',
+            link_text_placeholder:            'текст ссылки',
+            image_title_placeholder:          'напр.: Мое красивое фото',
             table_header_placeholder:         'Заголовок',
             table_cell_placeholder:           'Ячейка',
-            subscript:                        'Подстрочный',
-            subscript_placeholder:            'под',
-            superscript:                      'Надстрочный',
-            superscript_placeholder:          'над',
-            highlight:                        'Выделение',
-            highlight_placeholder:            'выделенный',
-            keyboard:                         'Клавиши',
+            subscript_placeholder:            'sub',
+            superscript_placeholder:          'sup',
+            highlight_placeholder:            'выделено',
             keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     'Аббревиатура',
-            prompt_abbreviation_meaning:      'Что означает эта аббревиатура?',
             abbreviation_placeholder:         'HTML',
-            text_color:                       'Цвет текста',
             colored_text_placeholder:         'цветной текст',
-            background_color:                 'Цвет фона',
             colored_background_placeholder:   'цветной фон',
-            details:                          'Сворачиваемый блок',
-            details_summary_placeholder:      'Заголовок (спойлер)',
+            details_summary_placeholder:      'Сводка или Заголовок',
             details_content_placeholder:      'Скрытый контент...',
-            center:                           'По центру',
             center_placeholder:               'текст по центру',
-            notFound:                         'Код не найден!',
-            scriptIdNotFound:                 'Не удалось определить ID скрипта.',
-            downloading:                      'Загрузка...',
-            downloadError:                    'Произошла ошибка при скачивании скрипта.',
-            downloadTimeout:                  'Время ожидания скачивания скрипта истекло.',
+            trans_search_ph:                  'Поиск языка...',
+            prompt_hr_size:                   'Размер (px)',
+            prompt_hr_color:                  'Цвет',
+            prompt_insert_url:                'Вставьте URL:',
+            prompt_link_text:                 'Текст ссылки:',
+            prompt_insert_image_url:          'Вставьте URL изображения (https):',
+            prompt_image_title:               'Название изображения (необязательно):',
+            prompt_image_width:               'Ширина (необязательно):',
+            prompt_image_height:              'Высота (необязательно):',
+            prompt_video_type:                'Тип видео',
+            prompt_video_poster_url:          'URL обложки (постер)',
+            prompt_insert_video_url:          'Вставьте URL видео:',
+            prompt_video_width:               'Ширина (необязательно):',
+            prompt_video_height:              'Высота (необязательно):',
+            prompt_columns:                   'Количество столбцов:',
+            prompt_rows:                      'Количество строк:',
+            prompt_abbreviation_text:         'Текст аббревиатуры:',
+            prompt_abbreviation_meaning:      'Что это означает?',
+            prompt_border_size:               'Размер границы (px)',
+            prompt_border_color:              'Цвет границы',
+            prompt_border_tag_type:           'Тип тега',
+            prompt_translate_to:              'Перевести на:',
+            mode:                             'Система перевода',
+            prompt_ai_model:                  'Модель ИИ:',
+            prompt_api_key:                   'Ключ API (Gemini API):',
+            placeholder_api_key:              'Вставьте ключ AIza... сюда',
+            api_help_title:                   'Как получить бесплатный API ключ',
+            api_help_text:                    'Google предлагает щедрую бесплатную квоту. Чтобы воспользоваться, перейдите в Google AI Studio по ссылке ниже, войдите в аккаунт и нажмите "Create API key". Скопируйте созданный ключ и вставьте его в скрипт.',
+            api_help_link_text:               'Получить API ключ',
+            api_help_tooltip:                 'Помощь: Как получить ключ',
+            trans_mode_google:                'Google Переводчик (По умолчанию)',
+            trans_mode_gemini:                'Gemini ИИ (Лучшее качество)',
+            trans_target_lang:                'Целевой язык',
+            gemini_model_label:               'Модель Gemini',
             info_tooltip:                     'Горячие клавиши',
             info_shortcuts_title:             'Сочетания клавиш',
             info_header_shortcut:             'Сочетание',
             info_header_action:               'Действие',
-            info_shortcut_tab:                'Вставляет отступ (Tab)',
-            info_shortcut_shift_enter:        'Вставляет перенос строки <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
+            info_shortcut_tab:                'Вставляет отступ (tab)',
+            info_shortcut_shift_enter:        'Вставляет разрыв строки <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
             info_shortcut_ctrl_d:             'Оборачивает выделение в тег <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span>',
             info_shortcut_ctrl_p:             'Оборачивает выделение в параграф <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>',
-            info_shortcut_ctrl_m:             'Оборачивает выделение в блок кода Markdown',
-            info_shortcut_ctrl_space:         'Вставляет неразрывный пробел <span style="color: #d21934;"><strong>;nbsp</strong></span>',
-            prompt_link_text:                 'Текст ссылки:',
-            prompt_abbreviation_text:         'Текст аббревиатуры:',
-            border_style:                     'Стиль границы',
-            prompt_border_size:               'Толщина границы (px)',
-            prompt_border_color:              'Цвет границы',
-            prompt_border_text:               'Текст',
-            prompt_border_tag_type:           'Тип тега',
-            border_text_placeholder:          'Текст',
-            ai_translate:                     'Перевод с помощью ИИ',
+            info_shortcut_ctrl_m:             'Оборачивает выделение в блок кода markdown.',
+            info_shortcut_ctrl_space:         'Вставляет неразрывный пробел <span style="color: #d21934;"><strong>&nbsp;</strong></span>',
+            alert_invalid_video_url:          'Неверный или неподдерживаемый URL видео.',
             alert_text_empty:                 'Текстовое поле пусто.',
-            prompt_translate_to:              'Перевести на:',
-            prompt_ai_model:                  'Модель ИИ:',
-            prompt_api_key:                   'Ключ API (Gemini API):',
-            placeholder_api_key:              'Вставьте ключ AIza... сюда',
             alert_translation_error:          'Ошибка перевода: ',
+            notFound:                         'Код не найден!',
+            scriptIdNotFound:                 'Не удалось определить ID скрипта.',
+            downloadError:                    'Произошла ошибка при загрузке скрипта.',
+            downloadTimeout:                  'Время загрузки скрипта истекло.',
             error_no_text:                    'ИИ не вернул корректный текст.',
             error_api_processing:             'Ошибка обработки ответа API.',
-            error_connection:                 'Ошибка подключения к интернету.',
+            error_rede:                       'Ошибка соединения.',
             error_generic:                    'Ошибка',
-            selection:                        'Выделение',
-            api_help_title:                   'Как получить бесплатный API-ключ',
-            api_help_text:                    'Google предлагает щедрую бесплатную квоту. Чтобы воспользоваться ею, перейдите в Google AI Studio по ссылке ниже, войдите в свой аккаунт и нажмите «Create API key». Просто скопируйте сгенерированный ключ и вставьте его в скрипт.',
-            api_help_link_text:               'Получить API-ключ',
-            api_help_tooltip:                 'Помощь: Как получить ключ',
-            lang_en:                          'Английский',
-            lang_pt_br:                       'Португальский (Бразилия)',
-            lang_zh_cn:                       'Китайский (Упрощенный)',
-            lang_zh_tw:                       'Китайский (Традиционный)',
-            lang_es:                          'Испанский',
-            lang_fr:                          'Французский',
-            lang_ru:                          'Русский',
-            lang_de:                          'Немецкий',
-            lang_ja:                          'Японский',
-            lang_ko:                          'Корейский',
-            lang_ckb:                          'Курдский (Сорани)',
-            lang_ar:                          'Арабский',
-            lang_be:                          'Белорусский',
-            lang_bg:                          'Болгарский',
-            lang_cs:                          'Чешский',
-            lang_da:                          'Датский',
-            lang_el:                          'Греческий',
-            lang_eo:                          'Эсперанто',
-            lang_fi:                          'Финский',
-            lang_fr_ca:                       'Французский (Канада)',
-            lang_he:                          'Иврит',
-            lang_hr:                          'Хорватский',
-            lang_hu:                          'Венгерский',
-            lang_id:                          'Индонезийский',
-            lang_it:                          'Итальянский',
-            lang_ka:                          'Грузинский',
-            lang_mr:                          'Маратхи',
-            lang_nb:                          'Норвежский (Букмол)',
-            lang_nl:                          'Голландский',
-            lang_pl:                          'Польский',
-            lang_ro:                          'Румынский',
-            lang_sk:                          'Словацкий',
-            lang_sr:                          'Сербский',
-            lang_sv:                          'Шведский',
-            lang_th:                          'Тайский',
-            lang_tr:                          'Турецкий',
-            lang_uk:                          'Украинский',
-            lang_ug:                          'Уйгурский',
-            lang_vi:                          'Вьетнамский'
+            trans_err_gemini_key:             'Ключ API Gemini не настроен. Перейдите в Настройки > Перевод.'
         },
-        'zh-CN': {
-            langName:                         '简体中文',
-            languageSettings:                 '🌐 语言',
-            close:                            '关闭',
-            confirm:                          '确认',
-            cancel:                           '取消',
-            download:                         '下载',
-            compatible_with:                  '兼容',
-            force_update:                     '🔄️ 强制更新',
-            force_update_alert:               '缓存已清除。页面将重新加载以获取最新数据。',
-            titles:                           '标题',
-            title_placeholder:                '标题',
-            bold:                             '粗体',
-            bold_placeholder:                 '粗体文本',
-            italic:                           '斜体',
-            italic_placeholder:               '斜体文本',
-            underline:                        '下划线',
-            underline_placeholder:            '下划线文本',
-            strikethrough:                    '删除线',
-            strikethrough_placeholder:        '删除线文本',
-            unordered_list:                   '无序列表',
-            ordered_list:                     '有序列表',
-            list_item_placeholder:            '项目',
-            quote:                            '引用',
-            inline_code:                      '行内代码',
-            inline_code_placeholder:          '代码',
-            code_block:                       '代码块',
-            code_block_placeholder:           '在此处编写代码',
-            horizontal_line:                  '水平线',
-            horizontal_line_style:            '水平线样式',
-            prompt_hr_size:                   '大小 (px)',
-            prompt_hr_color:                  '颜色',
-            link:                             '链接',
-            prompt_insert_url:                '请输入网址：',
-            link_text_placeholder:            '链接文本',
-            image:                            '图片',
-            prompt_insert_image_url:          '请输入图片网址 (https)：',
-            prompt_image_title:               '图片标题（可选）：',
-            image_title_placeholder:          '例如：我美丽的图片',
-            prompt_image_width:               '宽度（可选）：',
-            prompt_image_height:              '高度（可选）：',
-            video:                            '视频',
-            prompt_video_type:                '视频类型',
-            video_type_embed:                 '嵌入 (YouTube, 哔哩哔哩)',
-            video_type_html5:                 'HTML5 视频 (直接链接)',
-            prompt_video_poster_url:          '封面图片链接 (poster)',
-            prompt_insert_video_url:          '请输入视频网址：',
-            prompt_video_width:               '宽度（可选）：',
-            prompt_video_height:              '高度（可选）：',
-            alert_invalid_video_url:          '无效或不支持的视频网址。',
-            table:                            '表格',
-            prompt_columns:                   '列数：',
-            prompt_rows:                      '行数：',
-            table_header_placeholder:         '标题',
-            table_cell_placeholder:           '单元格',
-            subscript:                        '下标',
-            subscript_placeholder:            '下标',
-            superscript:                      '上标',
-            superscript_placeholder:          '上标',
-            highlight:                        '标记',
-            highlight_placeholder:            '标记',
-            keyboard:                         '键盘',
-            keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     '缩写',
-            prompt_abbreviation_meaning:      '缩写的含义是什么？',
-            abbreviation_placeholder:         'HTML',
-            text_color:                       '文字颜色',
-            colored_text_placeholder:         '彩色文本',
-            background_color:                 '背景颜色',
-            colored_background_placeholder:   '彩色背景',
-            details:                          '可折叠部分',
-            details_summary_placeholder:      '摘要或标题',
-            details_content_placeholder:      '要隐藏的内容...',
-            center:                           '居中',
-            center_placeholder:               '居中文字',
-            notFound:                         '未找到代码！',
-            scriptIdNotFound:                 '无法识别脚本 ID。',
-            downloading:                      '下载中...',
-            downloadError:                    '下载脚本时发生错误。',
-            downloadTimeout:                  '脚本下载超时。',
-            info_tooltip:                     '快捷方式',
-            info_shortcuts_title:             '键盘快捷键',
-            info_header_shortcut:             '快捷键',
-            info_header_action:               '功能',
-            info_shortcut_tab:                '插入一个制表符',
-            info_shortcut_shift_enter:        '插入一个换行符 <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>',
-            info_shortcut_ctrl_d:             '将所选内容包裹在 <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> 标签中',
-            info_shortcut_ctrl_p:             '将所选内容包裹在 <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span> 段落中',
-            info_shortcut_ctrl_m:             '将所选内容包裹在 markdown 代码块中',
-            info_shortcut_ctrl_space:         '插入不间断空格 <span style="color: #d21934;"><strong>;nbsp</strong></span>',
-            prompt_link_text:                 '链接文本：',
-            prompt_abbreviation_text:         '缩写文本：',
-            border_style:                     '边框样式',
-            prompt_border_size:               '边框大小 (px)',
-            prompt_border_color:              '边框颜色',
-            prompt_border_text:               '文本',
-            prompt_border_tag_type:           '标签类型',
-            border_text_placeholder:          '文本',
-            ai_translate:                     'AI 智能翻译',
-            alert_text_empty:                 '文本框为空。',
-            prompt_translate_to:              '翻译目标语言：',
-            prompt_ai_model:                  'AI 模型：',
-            prompt_api_key:                   'API 密钥 (Gemini API)：',
-            placeholder_api_key:              '在此粘贴您的 AIza 密钥...',
-            alert_translation_error:          '翻译错误：',
-            error_no_text:                    'AI 未返回有效文本。',
-            error_api_processing:             '处理 API 响应时出错。',
-            error_connection:                 '网络连接错误。',
-            error_generic:                    '错误',
-            selection:                        '选中内容',
-            api_help_title:                   '如何获取免费 API 密钥',
-            api_help_text:                    'Google 提供了慷慨的免费配额。如需使用，请通过下方链接访问 Google AI Studio，登录您的帐户并点击 “Create API key”。只需复制生成的密钥并将其粘贴到脚本中即可。',
-            api_help_link_text:               '获取 API 密钥',
-            api_help_tooltip:                 '帮助：如何获取密钥',
-            lang_en:                          '英语',
-            lang_pt_br:                       '葡萄牙语 (巴西)',
-            lang_zh_cn:                       '中文 (简体)',
-            lang_zh_tw:                       '中文 (繁体)',
-            lang_es:                          '西班牙语',
-            lang_fr:                          '法语',
-            lang_ru:                          '俄语',
-            lang_de:                          '德语',
-            lang_ja:                          '日语',
-            lang_ko:                          '韩语',
-            lang_ckb:                         '库尔德语 (索拉尼)',
-            lang_ar:                          '阿拉伯语',
-            lang_be:                          '白俄罗斯语',
-            lang_bg:                          '保加利亚语',
-            lang_cs:                          '捷克语',
-            lang_da:                          '丹麦语',
-            lang_el:                          '希腊语',
-            lang_eo:                          '世界语',
-            lang_fi:                          '芬兰语',
-            lang_fr_ca:                       '法语 (加拿大)',
-            lang_he:                          '希伯来语',
-            lang_hr:                          '克罗地亚语',
-            lang_hu:                          '匈牙利语',
-            lang_id:                          '印尼语',
-            lang_it:                          '意大利语',
-            lang_ka:                          '格鲁吉亚语',
-            lang_mr:                          '马拉地语',
-            lang_nb:                          '挪威语 (博克马尔)',
-            lang_nl:                          '荷兰语',
-            lang_pl:                          '波兰语',
-            lang_ro:                          '罗马尼亚语',
-            lang_sk:                          '斯洛伐克语',
-            lang_sr:                          '塞尔维亚语',
-            lang_sv:                          '瑞典语',
-            lang_th:                          '泰语',
-            lang_tr:                          '土耳其语',
-            lang_uk:                          '乌克兰语',
-            lang_ug:                          '维吾尔语',
-            lang_vi:                          '越南语'
-        },
-        'ja': {
+    'ja': {
             langName:                         '日本語',
             languageSettings:                 '🌐 言語',
+            force_update:                     '🔄️ 強制更新',
+            settings:                         '⚙️ 設定',
+            compatible_with:                  '対応バージョン',
+            force_update_alert:               'キャッシュがクリアされました。更新データを取得するためページを再読み込みします。',
+            downloading:                      'ダウンロード中...',
+            selection:                        '選択',
+            trans_saved:                      '設定を保存しました！',
             close:                            '閉じる',
             confirm:                          '確認',
             cancel:                           'キャンセル',
             download:                         'ダウンロード',
-            compatible_with:                  '互換性:',
-            force_update:                     '🔄️ 強制アップデート',
-            force_update_alert:               'キャッシュがクリアされました。ページがリロードされ、更新されたデータが取得されます。',
+            translate:                        '翻訳',
+            trans_undo:                       '元に戻す',
+            trans_translating:                '翻訳中...',
             titles:                           '見出し',
-            title_placeholder:                '見出し',
             bold:                             '太字',
-            bold_placeholder:                 '太字のテキスト',
             italic:                           '斜体',
-            italic_placeholder:               '斜体のテキスト',
             underline:                        '下線',
-            underline_placeholder:            '下線付きテキスト',
             strikethrough:                    '取り消し線',
-            strikethrough_placeholder:        '取り消し線付きテキスト',
-            unordered_list:                   '順序なしリスト',
-            ordered_list:                     '順序付きリスト',
-            list_item_placeholder:            'アイテム',
+            unordered_list:                   '箇条書き',
+            ordered_list:                     '番号付きリスト',
             quote:                            '引用',
             inline_code:                      'インラインコード',
-            inline_code_placeholder:          'コード',
             code_block:                       'コードブロック',
-            code_block_placeholder:           'ここにコード',
             horizontal_line:                  '水平線',
             horizontal_line_style:            '水平線のスタイル',
-            prompt_hr_size:                   'サイズ (px)',
-            prompt_hr_color:                  '色',
             link:                             'リンク',
-            prompt_insert_url:                'URLを入力してください:',
-            link_text_placeholder:            'リンクテキスト',
             image:                            '画像',
-            prompt_insert_image_url:          '画像URLを入力してください (https):',
-            prompt_image_title:               '画像のタイトル (任意):',
-            image_title_placeholder:          '例: 私の美しい画像',
-            prompt_image_width:               '幅 (任意):',
-            prompt_image_height:              '高さ (任意):',
             video:                            '動画',
-            prompt_video_type:                '動画タイプ',
-            video_type_embed:                 '埋め込み (YouTube, Bilibili)',
-            video_type_html5:                 'HTML5 ビデオ (直接URL)',
-            prompt_video_poster_url:          'ポスター画像のURL',
-            prompt_insert_video_url:          '動画URLを入力してください:',
-            prompt_video_width:               '幅 (任意):',
-            prompt_video_height:              '高さ (任意):',
-            alert_invalid_video_url:          '無効またはサポートされていない動画URLです。',
-            table:                            '表',
-            prompt_columns:                   '列数:',
-            prompt_rows:                      '行数:',
+            table:                            'テーブル',
+            subscript:                        '下付き文字',
+            superscript:                      '上付き文字',
+            highlight:                        'ハイライト',
+            keyboard:                         'キーボード入力',
+            abbreviation:                     '略語',
+            text_color:                       '文字色',
+            background_color:                 '背景色',
+            details:                          '折りたたみセクション',
+            center:                           '中央揃え',
+            border_style:                     '枠線のスタイル',
+            txt:                              'テキスト',
+            title_placeholder:                'タイトル',
+            bold_placeholder:                 '太字',
+            italic_placeholder:               '斜体',
+            underline_placeholder:            '下線',
+            strikethrough_placeholder:        '取り消し線',
+            list_item_placeholder:            '項目',
+            inline_code_placeholder:          'コード',
+            code_block_placeholder:           'ここにコードを入力',
+            link_text_placeholder:            'リンクのテキスト',
+            image_title_placeholder:          '例: 美しい風景',
             table_header_placeholder:         'ヘッダー',
             table_cell_placeholder:           'セル',
-            subscript:                        '下付き文字',
-            subscript_placeholder:            '下付き',
-            superscript:                      '上付き文字',
-            superscript_placeholder:          '上付き',
-            highlight:                        'ハイライト',
-            highlight_placeholder:            'ハイライトされたテキスト',
-            keyboard:                         'キーボード',
+            subscript_placeholder:            'sub',
+            superscript_placeholder:          'sup',
+            highlight_placeholder:            'ハイライト',
             keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     '略語',
-            prompt_abbreviation_meaning:      'この略語は何の略ですか？',
             abbreviation_placeholder:         'HTML',
-            text_color:                       '文字色',
             colored_text_placeholder:         '色付きテキスト',
-            background_color:                 '背景色',
             colored_background_placeholder:   '色付き背景',
-            details:                          '折りたたみ可能なセクション',
             details_summary_placeholder:      '概要またはタイトル',
-            details_content_placeholder:      '非表示にするコンテンツ...',
-            center:                           '中央揃え',
-            center_placeholder:               '中央揃えのテキスト',
-            notFound:                         'コードが見つかりません！',
-            scriptIdNotFound:                 'スクリプトIDを特定できませんでした。',
-            downloading:                      'ダウンロード中...',
-            downloadError:                    'スクリプトのダウンロード中にエラーが発生しました。',
-            downloadTimeout:                  'スクリプトのダウンロードがタイムアウトしました。',
+            details_content_placeholder:      '隠すコンテンツ...',
+            center_placeholder:               '中央揃えテキスト',
+            trans_search_ph:                  '言語を検索...',
+            prompt_hr_size:                   'サイズ (px)',
+            prompt_hr_color:                  '色',
+            prompt_insert_url:                'URLを入力:',
+            prompt_link_text:                 'リンクテキスト:',
+            prompt_insert_image_url:          '画像URLを入力 (https):',
+            prompt_image_title:               '画像タイトル (任意):',
+            prompt_image_width:               '幅 (任意):',
+            prompt_image_height:              '高さ (任意):',
+            prompt_video_type:                '動画タイプ',
+            prompt_video_poster_url:          'カバー画像URL (ポスター)',
+            prompt_insert_video_url:          '動画URLを入力:',
+            prompt_video_width:               '幅 (任意):',
+            prompt_video_height:              '高さ (任意):',
+            prompt_columns:                   '列数:',
+            prompt_rows:                      '行数:',
+            prompt_abbreviation_text:         '略語のテキスト:',
+            prompt_abbreviation_meaning:      '略語の意味は？',
+            prompt_border_size:               '枠線のサイズ (px)',
+            prompt_border_color:              '枠線の色',
+            prompt_border_tag_type:           'タグタイプ',
+            prompt_translate_to:              '翻訳先:',
+            mode:                             '翻訳エンジン',
+            prompt_ai_model:                  'AIモデル:',
+            prompt_api_key:                   'APIキー (Gemini API):',
+            placeholder_api_key:              'ここにAIza...キーを貼り付け',
+            api_help_title:                   '無料APIキーの取得方法',
+            api_help_text:                    'Googleは寛大な無料枠を提供しています。使用するには、以下のリンクからGoogle AI Studioにアクセスし、アカウントでログインして「Create API key」をクリックします。生成されたキーをコピーして、スクリプトに貼り付けてください。',
+            api_help_link_text:               'APIキーを取得',
+            api_help_tooltip:                 'ヘルプ: キーの取得方法',
+            trans_mode_google:                'Google翻訳 (デフォルト)',
+            trans_mode_gemini:                'Gemini AI (最高品質)',
+            trans_target_lang:                'ターゲット言語',
+            gemini_model_label:               'Geminiモデル',
             info_tooltip:                     'ショートカット',
             info_shortcuts_title:             'キーボードショートカット',
             info_header_shortcut:             'ショートカット',
-            info_header_action:               'アクション',
-            info_shortcut_tab:                'タブスペースを挿入します',
-            info_shortcut_shift_enter:        '改行 <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span> を挿入します',
-            info_shortcut_ctrl_d:             '選択範囲を <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> タグで囲みます',
-            info_shortcut_ctrl_p:             '選択範囲を <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span> 段落で囲みます',
-            info_shortcut_ctrl_m:             '選択範囲を Markdown コードブロックで囲みます',
-            info_shortcut_ctrl_space:         '改行しないスペース <span style="color: #d21934;"><strong>;nbsp</strong></span> を挿入します',
-            prompt_link_text:                 'リンクテキスト:',
-            prompt_abbreviation_text:         '略語テキスト:',
-            border_style:                     '枠線のスタイル',
-            prompt_border_size:               '枠線のサイズ (px)',
-            prompt_border_color:              '枠線の色',
-            prompt_border_text:               'テキスト',
-            prompt_border_tag_type:           'タグタイプ',
-            border_text_placeholder:          'テキスト',
-            ai_translate:                     'AI翻訳ツール',
+            info_header_action:               '動作',
+            info_shortcut_tab:                'タブスペースを挿入',
+            info_shortcut_shift_enter:        '改行 <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span> を挿入',
+            info_shortcut_ctrl_d:             '選択範囲を <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> タグで囲む',
+            info_shortcut_ctrl_p:             '選択範囲を段落 <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span> で囲む',
+            info_shortcut_ctrl_m:             '選択範囲をMarkdownコードブロックで囲む',
+            info_shortcut_ctrl_space:         'ノーブレークスペース <span style="color: #d21934;"><strong>&nbsp;</strong></span> を挿入',
+            alert_invalid_video_url:          '無効またはサポートされていない動画URLです。',
             alert_text_empty:                 'テキストボックスが空です。',
-            prompt_translate_to:              '翻訳先言語：',
-            prompt_ai_model:                  'AIモデル：',
-            prompt_api_key:                   'APIキー (Gemini API)：',
-            placeholder_api_key:              'AIzaキーをここに貼り付け...',
-            alert_translation_error:          '翻訳エラー： ',
-            error_no_text:                    'AIは有効なテキストを返しませんでした。',
+            alert_translation_error:          '翻訳エラー: ',
+            notFound:                         'コードが見つかりません！',
+            scriptIdNotFound:                 'スクリプトIDを特定できませんでした。',
+            downloadError:                    'スクリプトのダウンロード中にエラーが発生しました。',
+            downloadTimeout:                  'スクリプトのダウンロードがタイムアウトしました。',
+            error_no_text:                    'AIから有効なテキストが返されませんでした。',
             error_api_processing:             'API応答の処理中にエラーが発生しました。',
-            error_connection:                 'インターネット接続エラー。',
+            error_rede:                       '接続エラー。',
             error_generic:                    'エラー',
-            selection:                        '選択範囲',
-            api_help_title:                   '無料のAPIキーを取得する方法',
-            api_help_text:                    'Googleは寛大な無料枠を提供しています。利用するには、以下のリンクからGoogle AI Studioにアクセスし、アカウントでログインして「Create API key」をクリックしてください。生成されたキーをコピーして、スクリプトに貼り付けるだけです。',
-            api_help_link_text:               'APIキーを取得',
-            api_help_tooltip:                 'ヘルプ：キーの取得方法',
-            lang_en:                          '英語',
-            lang_pt_br:                       'ポルトガル語 (ブラジル)',
-            lang_zh_cn:                       '中国語 (簡体字)',
-            lang_zh_tw:                       '中国語 (繁体字)',
-            lang_es:                          'スペイン語',
-            lang_fr:                          'フランス語',
-            lang_ru:                          'ロシア語',
-            lang_de:                          'ドイツ語',
-            lang_ja:                          '日本語',
-            lang_ko:                          '韓国語',
-            lang_ckb:                         'クルド語 (ソラニー)',
-            lang_ar:                          'アラビア語',
-            lang_be:                          'ベラルーシ語',
-            lang_bg:                          'ブルガリア語',
-            lang_cs:                          'チェコ語',
-            lang_da:                          'デンマーク語',
-            lang_el:                          'ギリシャ語',
-            lang_eo:                          'エスペラント',
-            lang_fi:                          'フィンランド語',
-            lang_fr_ca:                       'フランス語 (カナダ)',
-            lang_he:                          'ヘブライ語',
-            lang_hr:                          'クロアチア語',
-            lang_hu:                          'ハンガリー語',
-            lang_id:                          'インドネシア語',
-            lang_it:                          'イタリア語',
-            lang_ka:                          'ジョージア語',
-            lang_mr:                          'マラーティー語',
-            lang_nb:                          'ノルウェー語 (ブークモール)',
-            lang_nl:                          'オランダ語',
-            lang_pl:                          'ポーランド語',
-            lang_ro:                          'ルーマニア語',
-            lang_sk:                          'スロバキア語',
-            lang_sr:                          'セルビア語',
-            lang_sv:                          'スウェーデン語',
-            lang_th:                          'タイ語',
-            lang_tr:                          'トルコ語',
-            lang_uk:                          'ウクライナ語',
-            lang_ug:                          'ウイグル語',
-            lang_vi:                          'ベトナム語'
+            trans_err_gemini_key:             'Gemini APIキーが設定されていません。設定 > 翻訳 に移動してください。'
         },
-        'ko': {
+    'ko': {
             langName:                         '한국어',
             languageSettings:                 '🌐 언어',
+            force_update:                     '🔄️ 강제 업데이트',
+            settings:                         '⚙️ 설정',
+            compatible_with:                  '호환성',
+            force_update_alert:               '캐시가 삭제되었습니다. 업데이트된 데이터를 가져오기 위해 페이지를 새로 고침합니다.',
+            downloading:                      '다운로드 중...',
+            selection:                        '선택',
+            trans_saved:                      '설정이 저장되었습니다!',
             close:                            '닫기',
             confirm:                          '확인',
             cancel:                           '취소',
             download:                         '다운로드',
-            compatible_with:                  '호환 가능:',
-            force_update:                     '🔄️ 강제 업데이트',
-            force_update_alert:               '캐시가 지워졌습니다. 페이지를 새로고침하여 업데이트된 데이터를 가져옵니다.',
+            translate:                        '번역',
+            trans_undo:                       '실행 취소',
+            trans_translating:                '번역 중...',
             titles:                           '제목',
-            title_placeholder:                '제목',
             bold:                             '굵게',
-            bold_placeholder:                 '굵은 텍스트',
             italic:                           '기울임꼴',
-            italic_placeholder:               '기울임꼴 텍스트',
             underline:                        '밑줄',
-            underline_placeholder:            '밑줄 친 텍스트',
             strikethrough:                    '취소선',
-            strikethrough_placeholder:        '취소선 텍스트',
-            unordered_list:                   '순서 없는 목록',
-            ordered_list:                     '순서 있는 목록',
-            list_item_placeholder:            '항목',
+            unordered_list:                   '글머리 기호 목록',
+            ordered_list:                     '번호 매기기 목록',
             quote:                            '인용',
             inline_code:                      '인라인 코드',
-            inline_code_placeholder:          '코드',
             code_block:                       '코드 블록',
-            code_block_placeholder:           '여기에 코드',
             horizontal_line:                  '가로줄',
             horizontal_line_style:            '가로줄 스타일',
-            prompt_hr_size:                   '크기 (px)',
-            prompt_hr_color:                  '색상',
             link:                             '링크',
-            prompt_insert_url:                'URL을 입력하세요:',
-            link_text_placeholder:            '링크 텍스트',
             image:                            '이미지',
-            prompt_insert_image_url:          '이미지 URL을 입력하세요 (https):',
-            prompt_image_title:               '이미지 제목 (선택 사항):',
-            image_title_placeholder:          '예: 내 아름다운 이미지',
-            prompt_image_width:               '너비 (선택 사항):',
-            prompt_image_height:              '높이 (선택 사항):',
             video:                            '동영상',
-            prompt_video_type:                '비디오 유형',
-            video_type_embed:                 '임베드 (YouTube, Bilibili)',
-            video_type_html5:                 'HTML5 비디오 (직접 URL)',
-            prompt_video_poster_url:          '포스터 이미지 URL',
-            prompt_insert_video_url:          '동영상 URL을 입력하세요:',
-            prompt_video_width:               '너비 (선택 사항):',
-            prompt_video_height:              '높이 (선택 사항):',
-            alert_invalid_video_url:          '잘못되었거나 지원되지 않는 동영상 URL입니다.',
             table:                            '표',
-            prompt_columns:                   '열 수:',
-            prompt_rows:                      '행 수:',
+            subscript:                        '아래 첨자',
+            superscript:                      '위 첨자',
+            highlight:                        '형광펜',
+            keyboard:                         '키보드 입력',
+            abbreviation:                     '약어',
+            text_color:                       '글자 색상',
+            background_color:                 '배경 색상',
+            details:                          '접이식 섹션',
+            center:                           '가운데 정렬',
+            border_style:                     '테두리 스타일',
+            txt:                              '텍스트',
+            title_placeholder:                '제목',
+            bold_placeholder:                 '굵게',
+            italic_placeholder:               '기울임꼴',
+            underline_placeholder:            '밑줄',
+            strikethrough_placeholder:        '취소선',
+            list_item_placeholder:            '항목',
+            inline_code_placeholder:          '코드',
+            code_block_placeholder:           '코드를 입력하세요',
+            link_text_placeholder:            '링크 텍스트',
+            image_title_placeholder:          '예: 멋진 이미지',
             table_header_placeholder:         '헤더',
             table_cell_placeholder:           '셀',
-            subscript:                        '아래 첨자',
-            subscript_placeholder:            '아래 첨자',
-            superscript:                      '위 첨자',
-            superscript_placeholder:          '위 첨자',
-            highlight:                        '강조',
-            highlight_placeholder:            '강조된 텍스트',
-            keyboard:                         '키보드',
+            subscript_placeholder:            'sub',
+            superscript_placeholder:          'sup',
+            highlight_placeholder:            '강조됨',
             keyboard_placeholder:             'Ctrl+C',
-            abbreviation:                     '약어',
-            prompt_abbreviation_meaning:      '이 약어는 무엇을 의미합니까?',
             abbreviation_placeholder:         'HTML',
-            text_color:                       '텍스트 색상',
-            colored_text_placeholder:         '색깔 있는 텍스트',
-            background_color:                 '배경색',
-            colored_background_placeholder:   '색깔 있는 배경',
-            details:                          '접을 수 있는 섹션',
+            colored_text_placeholder:         '색상 텍스트',
+            colored_background_placeholder:   '색상 배경',
             details_summary_placeholder:      '요약 또는 제목',
             details_content_placeholder:      '숨길 내용...',
-            center:                           '가운데 정렬',
-            center_placeholder:               '가운데 정렬된 텍스트',
-            notFound:                         '코드를 찾을 수 없습니다!',
-            scriptIdNotFound:                 '스크립트 ID를 식별할 수 없습니다.',
-            downloading:                      '다운로드 중...',
-            downloadError:                    '스크립트를 다운로드하는 동안 오류가 발생했습니다.',
-            downloadTimeout:                  '스크립트 다운로드 시간이 초과되었습니다.',
+            center_placeholder:               '가운데 정렬 텍스트',
+            trans_search_ph:                  '언어 검색...',
+            prompt_hr_size:                   '크기 (px)',
+            prompt_hr_color:                  '색상',
+            prompt_insert_url:                'URL 입력:',
+            prompt_link_text:                 '링크 텍스트:',
+            prompt_insert_image_url:          '이미지 URL 입력 (https):',
+            prompt_image_title:               '이미지 제목 (선택):',
+            prompt_image_width:               '너비 (선택):',
+            prompt_image_height:              '높이 (선택):',
+            prompt_video_type:                '동영상 유형',
+            prompt_video_poster_url:          '커버 이미지 URL (포스터)',
+            prompt_insert_video_url:          '동영상 URL 입력:',
+            prompt_video_width:               '너비 (선택):',
+            prompt_video_height:              '높이 (선택):',
+            prompt_columns:                   '열 개수:',
+            prompt_rows:                      '행 개수:',
+            prompt_abbreviation_text:         '약어 텍스트:',
+            prompt_abbreviation_meaning:      '의미는 무엇입니까?',
+            prompt_border_size:               '테두리 크기 (px)',
+            prompt_border_color:              '테두리 색상',
+            prompt_border_tag_type:           '태그 유형',
+            prompt_translate_to:              '번역 대상:',
+            mode:                             '번역 엔진',
+            prompt_ai_model:                  'AI 모델:',
+            prompt_api_key:                   'API 키 (Gemini API):',
+            placeholder_api_key:              '여기에 AIza... 키를 붙여넣으세요',
+            api_help_title:                   '무료 API 키를 얻는 방법',
+            api_help_text:                    'Google은 넉넉한 무료 할당량을 제공합니다. 사용하려면 아래 링크를 통해 Google AI Studio에 접속하여 계정으로 로그인한 후 "Create API key"를 클릭하세요. 생성된 키를 복사하여 스크립트에 붙여넣으세요.',
+            api_help_link_text:               'API 키 받기',
+            api_help_tooltip:                 '도움말: 키를 얻는 방법',
+            trans_mode_google:                'Google 번역 (기본값)',
+            trans_mode_gemini:                'Gemini AI (최고 품질)',
+            trans_target_lang:                '도착 언어',
+            gemini_model_label:               'Gemini 모델',
             info_tooltip:                     '단축키',
             info_shortcuts_title:             '키보드 단축키',
             info_header_shortcut:             '단축키',
             info_header_action:               '동작',
-            info_shortcut_tab:                '탭 공백을 삽입합니다',
-            info_shortcut_shift_enter:        '줄 바꿈 <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span>을 삽입합니다',
-            info_shortcut_ctrl_d:             '선택 항목을 <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> 태그로 래핑합니다',
-            info_shortcut_ctrl_p:             '선택한 내용을 <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span> 문단으로 감쌉니다',
-            info_shortcut_ctrl_m:             '선택한 내용을 마크다운 코드 블록으로 감쌉니다',
-            info_shortcut_ctrl_space:         '줄 바꿈되지 않는 공백 <span style="color: #d21934;"><strong>;nbsp</strong></span> 을 삽입합니다',
-            prompt_link_text:                 '링크 텍스트:',
-            prompt_abbreviation_text:         '약어 텍스트:',
-            border_style:                     '테두리 스타일',
-            prompt_border_size:               '테두리 크기 (px)',
-            prompt_border_color:              '테두리 색상',
-            prompt_border_text:               '텍스트',
-            prompt_border_tag_type:           '태그 유형',
-            border_text_placeholder:          '텍스트',
-            ai_translate:                     'AI 번역 도구',
+            info_shortcut_tab:                '탭 공백 삽입',
+            info_shortcut_shift_enter:        '줄 바꿈 <span style="color: #d21934;"><strong>&lt;br&gt;</strong></span> 삽입',
+            info_shortcut_ctrl_d:             '선택 영역을 <span style="color: #d21934;"><strong>&lt;div&gt;</strong></span> 태그로 감싸기',
+            info_shortcut_ctrl_p:             '선택 영역을 문단 <span style="color: #d21934;"><strong>&lt;p&gt;</strong></span>으로 감싸기',
+            info_shortcut_ctrl_m:             '선택 영역을 마크다운 코드 블록으로 감싸기',
+            info_shortcut_ctrl_space:         '줄 바꿈 없는 공백 <span style="color: #d21934;"><strong>&nbsp;</strong></span> 삽입',
+            alert_invalid_video_url:          '유효하지 않거나 지원되지 않는 동영상 URL입니다.',
             alert_text_empty:                 '텍스트 상자가 비어 있습니다.',
-            prompt_translate_to:              '번역 대상:',
-            prompt_ai_model:                  'AI 모델:',
-            prompt_api_key:                   'API 키 (Gemini API):',
-            placeholder_api_key:              '여기에 AIza 키를 붙여넣으세요...',
             alert_translation_error:          '번역 오류: ',
+            notFound:                         '코드를 찾을 수 없습니다!',
+            scriptIdNotFound:                 '스크립트 ID를 식별할 수 없습니다.',
+            downloadError:                    '스크립트를 다운로드하는 중 오류가 발생했습니다.',
+            downloadTimeout:                  '스크립트 다운로드 시간이 초과되었습니다.',
             error_no_text:                    'AI가 유효한 텍스트를 반환하지 않았습니다.',
-            error_api_processing:             'API 응답 처리 오류.',
-            error_connection:                 '인터넷 연결 오류.',
+            error_api_processing:             'API 응답 처리 중 오류가 발생했습니다.',
+            error_rede:                       '연결 오류.',
             error_generic:                    '오류',
-            selection:                        '선택 영역',
-            api_help_title:                   '무료 API 키를 발급받는 방법',
-            api_help_text:                    'Google은 넉넉한 무료 할당량을 제공합니다. 이용하려면 아래 링크에서 Google AI Studio에 접속하여 계정으로 로그인한 후 "Create API key"를 클릭하세요. 생성된 키를 복사하여 스크립트에 붙여넣기만 하면 됩니다.',
-            api_help_link_text:               'API 키 발급받기',
-            api_help_tooltip:                 '도움말: 키 발급 방법',
-            lang_en:                          '영어',
-            lang_pt_br:                       '포르투갈어 (브라질)',
-            lang_zh_cn:                       '중국어 (간체)',
-            lang_zh_tw:                       '중국어 (번체)',
-            lang_es:                          '스페인어',
-            lang_fr:                          '프랑스어',
-            lang_ru:                          '러시아어',
-            lang_de:                          '독일어',
-            lang_ja:                          '일본어',
-            lang_ko:                          '한국어',
-            lang_ckb:                         '쿠르드어 (소라니)',
-            lang_ar:                          '아랍어',
-            lang_be:                          '벨라루스어',
-            lang_bg:                          '불가리아어',
-            lang_cs:                          '체코어',
-            lang_da:                          '덴마크어',
-            lang_el:                          '그리스어',
-            lang_eo:                          '에스페란토',
-            lang_fi:                          '핀란드어',
-            lang_fr_ca:                       '프랑스어 (캐나다)',
-            lang_he:                          '히브리어',
-            lang_hr:                          '크로아티아어',
-            lang_hu:                          '헝가리어',
-            lang_id:                          '인도네시아어',
-            lang_it:                          '이탈리아어',
-            lang_ka:                          '조지아어',
-            lang_mr:                          '마라티어',
-            lang_nb:                          '노르웨이어 (보크몰)',
-            lang_nl:                          '네덜란드어',
-            lang_pl:                          '폴란드어',
-            lang_ro:                          '루마니아어',
-            lang_sk:                          '슬로바키아어',
-            lang_sr:                          '세르비아어',
-            lang_sv:                          '스웨덴어',
-            lang_th:                          '태국어',
-            lang_tr:                          '튀르키예어',
-            lang_uk:                          '우크라이나어',
-            lang_ug:                          '위구르어',
-            lang_vi:                          '베트남어'
-        }
+            trans_err_gemini_key:             'Gemini API 키가 설정되지 않았습니다. 설정 > 번역으로 이동하세요.'
+        },
+
     };
 
+    // --- CONSTANTES ---
     const translations = allTranslations;
-    const icons = JSON.parse(GM_getResourceText("iconsJSON"));
-    const myCss = GM_getResourceText("customCSS");
+    const icons        = JSON.parse(GM_getResourceText("iconsJSON"));
+    const myCss        = GM_getResourceText("customCSS");
 
+    // --- INJETAR CSS ---
     GM_addStyle(myCss);
 
-    function capitalizeCompatItem(item) {
-        return item.replace(/\b\w/g, char => char.toUpperCase());
-    }
-
-    let currentLang         = 'en';
-    let languageModal       = null;
-    const CACHE_KEY         = 'Values';
-    const LANG_STORAGE_KEY  = 'UserScriptLang';
-    const LAST_TAG_TYPE_KEY = 'Tag';
-    const LAST_COLOR_KEY    = 'Color';
-
-    const SCRIPT_CONFIG = {
-    notificationsUrl:   'https://gist.github.com/0H4S/d55d216b4487d64c606abb5d4f097fe0',
-    scriptVersion:      '1.9',
-    };
-    const notifier = new ScriptNotifier(SCRIPT_CONFIG);
-    notifier.run();
-
+    // --- FUNÇÕES DE TRADUÇÃO E IDIOMA ---
     function getTranslation(key) {
         return translations[currentLang] ?.[key] || translations.en[key];
     }
 
+    // --- GERENCIAR IDIOMA ---
     async function determineLanguage() {
         const savedLang = await GM_getValue(LANG_STORAGE_KEY);
         if (savedLang && translations[savedLang]) {
@@ -1403,16 +1175,14 @@
         else currentLang = 'en';
     }
 
+    // --- MENU DE IDIOMA ---
     function registerLanguageMenu() {
         GM_registerMenuCommand(getTranslation('languageSettings'), () => {
             showModal(languageModal);
         });
     }
 
-    function registerForceUpdateMenu() {
-        GM_registerMenuCommand(getTranslation('force_update'), forceUpdate);
-    }
-
+    // --- MODAL DE SELEÇÃO DE IDIOMA ---
     function showModal(modal) {
         if (!modal) return;
         modal.style.display = 'flex';
@@ -1423,6 +1193,7 @@
         }, 10);
     }
 
+    // --- MODAL DE SELEÇÃO DE IDIOMA ---
     function hideModal(modal) {
         if (!modal) return;
         const box = modal.querySelector('.lang-modal-box');
@@ -1433,6 +1204,7 @@
         }, 200);
     }
 
+    // --- CRIAR MODAL DE SELEÇÃO DE IDIOMA ---
     function createLanguageModal() {
         const overlay = document.createElement('div');
         overlay.className = 'lang-modal-overlay';
@@ -1467,10 +1239,21 @@
         return overlay;
     }
 
+    // --- MENU DE FORÇAR ATUALIZAÇÃO ---
+    function registerForceUpdateMenu() {
+        GM_registerMenuCommand(getTranslation('force_update'), forceUpdate);
+    }
+
+    // --- FORÇAR ATUALIZAÇÃO ---
     async function forceUpdate() {
         alert(getTranslation('force_update_alert'));
         await GM_deleteValue(CACHE_KEY);
         window.location.reload();
+    }
+
+    // --- FUNÇÕES AUXILIARES ---
+    function capitalizeCompatItem(item) {
+        return item.replace(/\b\w/g, char => char.toUpperCase());
     }
     // #endregion
 
@@ -1478,11 +1261,13 @@
     // #region ESTILIZAR
     // ================
 
+    // --- NORMALIZAR CAMINHO DO SCRIPT ---
     function isScriptPage() {
         const path = window.location.pathname;
         return /^\/([a-z]{2}(-[A-Z]{2})?\/)?scripts\/\d+-[^/]+$/.test(path);
     }
 
+    // --- ADICIONAR SEPARADOR ANTES DE INFORMAÇÕES ADICIONAIS ---
     function addAdditionalInfoSeparator() {
         const additionalInfo = document.getElementById('additional-info');
         if (additionalInfo && !additionalInfo.previousElementSibling?.matches('hr.bgs-info-separator')) {
@@ -1492,6 +1277,7 @@
         }
     }
 
+    // --- DESTACAR DESCRIÇÃO DO SCRIPT ---
     function highlightScriptDescription() {
         const descriptionElements = document.querySelectorAll('#script-description, .script-description.description');
         descriptionElements.forEach(element => {
@@ -1509,6 +1295,7 @@
         });
     }
 
+    // --- TORNAR DISCUSSÕES CLICÁVEIS ---
     function makeDiscussionClickable() {
         document.querySelectorAll('.discussion-list-container').forEach(container => {
             container.removeEventListener('click', handleDiscussionClick);
@@ -1516,6 +1303,7 @@
         });
     }
 
+    // --- MANIPULADOR DE CLIQUE EM DISCUSSÃO ---
     function handleDiscussionClick(e) {
         if (e.target.tagName === 'A' ||
             e.target.closest('a') ||
@@ -1530,6 +1318,7 @@
         }
     }
 
+    // --- APLICAR REALCE DE SINTAXE ---
     function applySyntaxHighlighting() {
         document.querySelectorAll('pre code').forEach(block => {
             if (block.dataset.highlighted === 'true') { return; }
@@ -1539,15 +1328,16 @@
         });
     }
 
+    // --- ESCAPAR HTML ---
     function escapeHtml(str) {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
+    // --- REALCE DE SINTAXE ---
     function highlight(code) {
         const keywords = new Set(['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'of', 'in', 'async', 'await', 'try', 'catch', 'new', 'import', 'export', 'from', 'class', 'extends', 'super', 'true', 'false', 'null', 'undefined', 'document', 'window']);
         const tokens = [];
         let cursor = 0;
-
         const tokenDefinitions = [
             { type: 'url',              regex: /^(https?:\/\/[^\s"'`<>]+)/ },
             { type: 'comment-special',  regex: /^(\/\/[^\r\n]*)/ },
@@ -1605,24 +1395,29 @@
     // #region ÍCONES
     // ================
 
+    // --- GERENCIAR CACHE DE ÍCONES ---
     let iconCache;
     const processedKeys = new Set();
 
+    // --- CARREGAR CACHE ---
     async function saveCache() {
         await GM_setValue(CACHE_KEY, iconCache);
     }
 
+    // --- NORMALIZAR CAMINHO DO SCRIPT ---
     function normalizeScriptPath(pathname) {
         let withoutLocale = pathname.replace(/^\/[a-z]{2}(?:-[A-Z]{2})?\//, '/');
         const match = withoutLocale.match(/^\/scripts\/\d+-.+?(?=\/|$)/);
         return match ? match[0] : null;
     }
 
+    // --- EXTRAIR ID DO SCRIPT DO CAMINHO NORMALIZADO ---
     function extractScriptIdFromNormalizedPath(normalized) {
         const match = normalized.match(/\/scripts\/(\d+)-/);
         return match ? match[1] : null;
     }
 
+    // --- APLICAR RECURSOS BGF (tamanho do ícone) ---
     function createIconElement(src, isHeader = false) {
         const img = document.createElement('img');
         img.src = src;
@@ -1652,6 +1447,7 @@
         return img;
     }
 
+    // --- EXTRAI METADADOS ---
     function extractMetadataFromContent(content) {
         if (typeof content !== 'string') return {};
         const metadata = {};
@@ -1671,9 +1467,7 @@
                     const colorMatch = value.match(colorRegex);
                     if (colorMatch) {
                         value = colorMatch[0];
-                    } else {
-                        value = value.split(',')[0].trim();
-                    }
+                    } else { value = value.split(',')[0].trim(); }
                 }
                 metadata[key] = value;
             }
@@ -1681,10 +1475,12 @@
         return metadata;
     }
 
+    // --- VALIDAR URL DO ÍCONE ---
     function isValidIconUrl(url) {
         return url && (url.startsWith('http') || url.startsWith(''));
     }
 
+    // --- PROCESSAR SCRIPT ---
     async function processScript(normalizedPath, targetElement, isHeader = false) {
         if (processedKeys.has(normalizedPath) && isHeader) {
             applyBfgFeatures(iconCache[normalizedPath]);
@@ -1702,10 +1498,8 @@
         const applyColorToBlockquote = (metadata) => {
             const blockquotes = document.querySelectorAll(`blockquote.script-description-blockquote[data-bgf-path="${normalizedPath}"]`);
             if (blockquotes.length === 0) return;
-
             const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const colorToApply = isDarkMode ? metadata.bgfColorDT : metadata.bgfColorLT;
-
             blockquotes.forEach(bq => {
                 if (colorToApply) {
                     bq.style.setProperty('border-left-color', colorToApply, 'important');
@@ -1768,6 +1562,7 @@
         });
     }
 
+    // --- PROCESSAR ELEMENTOS DE ÍCONE ---
     function handleScriptLink(linkEl) {
         if (linkEl._handled) return;
         linkEl._handled = true;
@@ -1781,6 +1576,7 @@
         } catch (e) {}
     }
 
+    // --- MANIPULAR H2 DO CABEÇALHO PRINCIPAL ---
     function handleMainHeaderH2() {
         const headers = document.querySelectorAll('header');
         for (const header of headers) {
@@ -1796,6 +1592,7 @@
         }
     }
 
+    // --- PROCESSAR ELEMENTOS DE ÍCONE ---
     function processIconElements() {
         document.querySelectorAll('a.script-link:not([data-icon-processed])')
             .forEach(el => {
@@ -1810,6 +1607,7 @@
     // #region METADADOS
     // ================
 
+    // --- APLICAR RECURSOS BGF (compatibilidade, direitos autorais, redes sociais) ---
     function applyBfgFeatures(metadata) {
         if (!metadata) return;
         applyBfgCompatibility(metadata.bgfCompatible);
@@ -1817,6 +1615,7 @@
         applyBfgSocial(metadata.bgfSocial);
     }
 
+    // --- APLICAR COMPATIBILIDADE BGF ---
     function applyBfgCompatibility(compatValue) {
         if (!compatValue) return;
         const compatDd = document.querySelector('dd.script-show-compatibility');
@@ -1845,6 +1644,7 @@
         });
     }
 
+    // --- REAPLICAR CORES DE BLOCKQUOTE AO MUDAR O TEMA (descrição do script) ---
     function reapplyAllBlockquoteColors() {
         const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const allBlockquotes = document.querySelectorAll('blockquote.script-description-blockquote[data-bgf-path]');
@@ -1861,11 +1661,13 @@
         });
     }
 
+    // --- CONFIGURAR OUVINTE DE MUDANÇA DE TEMA ---
     function setupThemeChangeListener() {
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         mediaQuery.addEventListener('change', reapplyAllBlockquoteColors);
     }
 
+    // --- APLICAR DIREITOS AUTORAIS BGF ---
     function applyBfgCopyright(copyrightValue) {
         if (!copyrightValue || document.querySelector('.script-show-copyright')) return;
         const copyrightRegex = /\[(.{1,50})\]\((https:\/\/gist\.github\.com\/[^)]+)\)/;
@@ -1892,6 +1694,7 @@
         licenseDd.after(copyrightDt, copyrightDd);
     }
 
+    // --- APLICAR REDES SOCIAIS BGF ---
     function applyBfgSocial(socialValue) {
         if (!socialValue || document.querySelector('.script-show-social')) return;
         const authorDd = document.querySelector('dd.script-show-author');
@@ -1948,12 +1751,57 @@
     }
     // #endregion
 
-    // ================
-    // #region EDITOR HTML
-    // ================
+    // ==========================================
+    // #region FUNÇÕES DE TRADUÇÃO
+    // ==========================================
 
-    async function translateWithGemini(text, targetLang, modelId, apiKey) {
+    // --- MOTOR DE TRADUÇÃO - GOOGLE TRADUTOR ---
+    function translateWithGoogle(text, targetLang) {
         return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                data: "q=" + encodeURIComponent(text),
+                onload: function(response) {
+                    if (response.status === 200) {
+                        try {
+                            const json = JSON.parse(response.responseText);
+                            let translated = "";
+                            if (json && json[0]) {
+                                json[0].forEach(seg => { if (seg[0]) translated += seg[0]; });
+                                resolve(translated);
+                            } else reject("Empty response from Google");
+                        } catch (e) { reject("JSON Parse Error"); }
+                    } else reject(`Google Error: ${response.status}`);
+                },
+                onerror: () => reject(getTranslation('error_rede'))
+            });
+        });
+    }
+
+    // --- MOTOR DE TRADUÇÃO - GEMINI ---
+    async function translateWithGemini(text, targetLang, modelId, apiKey, isHTML = false) {
+        return new Promise((resolve, reject) => {
+            let systemInstruction = "";
+            if (isHTML) {
+                systemInstruction = `
+                    You are a professional translator engine.
+                    Task: Translate the text content within the provided HTML to ${targetLang}.
+                    CRITICAL RULES:
+                    1. STRICTLY PRESERVE all HTML tags (<div>, <p>, <a>, <h1>, span, style, etc), attributes (href, class, style), and structure.
+                    2. Do NOT translate URLs, code blocks, or variable names.
+                    3. Only translate the human-readable text.
+                    4. Return ONLY the translated HTML code, no markdown block syntax (no \`\`\`).
+                `;
+            } else {
+                systemInstruction = `
+                    Translate the following text to ${targetLang}.
+                    Rules: Natural phrasing, correct grammar, no conversational filler. Return only the translation.
+                `;
+            }
             GM_xmlhttpRequest({
                 method: "POST",
                 url: `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`,
@@ -1961,23 +1809,7 @@
                 data: JSON.stringify({
                     contents: [{
                         parts: [{
-                            text: `Translate the following text to ${targetLang}.
-
-                            CRITICAL OUTPUT RULES:
-                            - Return ONLY the translated text.
-                            - Do NOT include conversational filler (e.g., "Here is the translation", "Sure").
-                            - Do NOT use Markdown code blocks (no \`\`\`).
-                            - Do NOT include explanations or notes.
-                            - Do NOT wrap the output in quotes unless the original text has them.
-
-                            CORE INSTRUCTIONS:
-                            1. Grammar & Correction: Ensure the translation is grammatically perfect and free of spelling errors. If the source text has structural flaws, fix them in the translated output to meet high linguistic standards.
-                            2. Native Coherence: The text must sound natural to a native speaker, prioritizing flow over literal word-for-word translation.
-                            3. Strict Fidelity: Do NOT summarize, remove, or add information. Keep the original meaning intact.
-                            4. Technical Safety: Do NOT translate or change HTML tags, Markdown syntax, URLs, or variable placeholders (like {{value}}).
-
-                            Text to translate:
-                            ${text}`
+                            text: `${systemInstruction}\n\nContent to translate:\n${text}`
                         }]
                     }]
                 }),
@@ -1985,12 +1817,15 @@
                     try {
                         if (response.status !== 200) {
                             const errorJson = JSON.parse(response.responseText);
-                            reject(`${getTranslation('error_generic')} ${response.status} (${modelId}): ${errorJson.error?.message || 'Desconhecido'}`);
+                            reject(`Gemini Error ${response.status}: ${errorJson.error?.message || 'Unknown'}`);
                             return;
                         }
                         const data = JSON.parse(response.responseText);
                         if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-                            resolve(data.candidates[0].content.parts[0].text.trim());
+                            let result = data.candidates[0].content.parts[0].text.trim();
+                            if (result.startsWith('```html')) result = result.replace(/^```html/, '').replace(/```$/, '');
+                            else if (result.startsWith('```')) result = result.replace(/^```/, '').replace(/```$/, '');
+                            resolve(result);
                         } else {
                             reject(getTranslation('error_no_text'));
                         }
@@ -1999,58 +1834,100 @@
                         reject(getTranslation('error_api_processing'));
                     }
                 },
-                onerror: (err) => reject(getTranslation('error_connection'))
+                onerror: (_err) => reject(getTranslation('error_rede'))
             });
         });
     }
 
-    function getTargetLanguages() {
-        return [
-            { value: 'English (EN)',                text: getTranslation('lang_en')    },
-            { value: 'Portuguese Brazil (PT-BR)',   text: getTranslation('lang_pt_br') },
-            { value: 'Chinese Simplified (ZH-CN)',  text: getTranslation('lang_zh_cn') },
-            { value: 'Chinese Traditional (ZH-TW)', text: getTranslation('lang_zh_tw') },
-            { value: 'Spanish (ES)',                text: getTranslation('lang_es')    },
-            { value: 'French (FR)',                 text: getTranslation('lang_fr')    },
-            { value: 'Russian (RU)',                text: getTranslation('lang_ru')    },
-            { value: 'German (DE)',                 text: getTranslation('lang_de')    },
-            { value: 'Japanese (JA)',               text: getTranslation('lang_ja')    },
-            { value: 'Korean (KO)',                 text: getTranslation('lang_ko')    },
-            { value: 'Kurdish (CKB)',               text: getTranslation('lang_ckb')   },
-            { value: 'Arabic (AR)',                 text: getTranslation('lang_ar')    },
-            { value: 'Belarusian (BE)',             text: getTranslation('lang_be')    },
-            { value: 'Bulgarian (BG)',              text: getTranslation('lang_bg')    },
-            { value: 'Czech (CS)',                  text: getTranslation('lang_cs')    },
-            { value: 'Danish (DA)',                 text: getTranslation('lang_da')    },
-            { value: 'Greek (EL)',                  text: getTranslation('lang_el')    },
-            { value: 'Esperanto (EO)',              text: getTranslation('lang_eo')    },
-            { value: 'Finnish (FI)',                text: getTranslation('lang_fi')    },
-            { value: 'French Canadian (FR-CA)',     text: getTranslation('lang_fr_ca') },
-            { value: 'Hebrew (HE)',                 text: getTranslation('lang_he')    },
-            { value: 'Croatian (HR)',               text: getTranslation('lang_hr')    },
-            { value: 'Hungarian (HU)',              text: getTranslation('lang_hu')    },
-            { value: 'Indonesian (ID)',             text: getTranslation('lang_id')    },
-            { value: 'Italian (IT)',                text: getTranslation('lang_it')    },
-            { value: 'Georgian (KA)',               text: getTranslation('lang_ka')    },
-            { value: 'Marathi (MR)',                text: getTranslation('lang_mr')    },
-            { value: 'Norwegian Bokmål (NB)',       text: getTranslation('lang_nb')    },
-            { value: 'Dutch (NL)',                  text: getTranslation('lang_nl')    },
-            { value: 'Polish (PL)',                 text: getTranslation('lang_pl')    },
-            { value: 'Romanian (RO)',               text: getTranslation('lang_ro')    },
-            { value: 'Slovak (SK)',                 text: getTranslation('lang_sk')    },
-            { value: 'Serbian (SR)',                text: getTranslation('lang_sr')    },
-            { value: 'Swedish (SV)',                text: getTranslation('lang_sv')    },
-            { value: 'Thai (TH)',                   text: getTranslation('lang_th')    },
-            { value: 'Turkish (TR)',                text: getTranslation('lang_tr')    },
-            { value: 'Ukrainian (UK)',              text: getTranslation('lang_uk')    },
-            { value: 'Uyghur (UG)',                 text: getTranslation('lang_ug')    },
-            { value: 'Vietnamese (VI)',             text: getTranslation('lang_vi')    }
-        ];
+    // --- FUNÇÃO PRINCIPAL DE TRADUÇÃO ---
+    async function performTranslation(text, targetLangOverride = null, isHTML = false) {
+        const cfg = getTransConfig();
+        const targetLang = targetLangOverride || cfg.lang;
+        if (cfg.mode === 'GEMINI') {
+            const apiKey = await GM_getValue('GOOGLE_AI_KEY', '');
+            const model = await GM_getValue('GOOGLE_AI_LAST_MODEL', 'gemini-3-flash-preview');
+            if (!apiKey) throw new Error(getTranslation('trans_err_gemini_key'));
+            return await translateWithGemini(text, targetLang, model, apiKey, isHTML);
+        } else {
+            return await translateWithGoogle(text, targetLang);
+        }
     }
 
+    // --- LISTA DE IDIOMAS ---
+    function getSortedLanguages() {
+        const allLangs = [
+            { code: "af",   name: "Afrikaans"             }, { code: "sq",      name: "Albanian"                }, { code: "am",    name: "Amharic"                 },
+            { code: "ar",   name: "Arabic"                }, { code: "hy",      name: "Armenian"                }, { code: "az",    name: "Azerbaijani"             },
+            { code: "eu",   name: "Basque"                }, { code: "be",      name: "Belarusian"              }, { code: "bn",    name: "Bengali"                 },
+            { code: "bs",   name: "Bosnian"               }, { code: "bg",      name: "Bulgarian"               }, { code: "ca",    name: "Catalan"                 },
+            { code: "ceb",  name: "Cebuano"               }, { code: "zh-CN",   name: "Chinese (Simplified)"    }, { code: "zh-TW", name: "Chinese (Traditional)"   },
+            { code: "co",   name: "Corsican"              }, { code: "hr",      name: "Croatian"                }, { code: "cs",    name: "Czech"                   },
+            { code: "da",   name: "Danish"                }, { code: "nl",      name: "Dutch"                   }, { code: "en",    name: "English"                 },
+            { code: "eo",   name: "Esperanto"             }, { code: "et",      name: "Estonian"                }, { code: "fi",    name: "Finnish"                 },
+            { code: "fr",   name: "French"                }, { code: "fy",      name: "Frisian"                 }, { code: "gl",    name: "Galician"                },
+            { code: "ka",   name: "Georgian"              }, { code: "de",      name: "German"                  }, { code: "el",    name: "Greek"                   },
+            { code: "gu",   name: "Gujarati"              }, { code: "ht",      name: "Haitian Creole"          }, { code: "ha",    name: "Hausa"                   },
+            { code: "haw",  name: "Hawaiian"              }, { code: "iw",      name: "Hebrew"                  }, { code: "hi",    name: "Hindi"                   },
+            { code: "hmn",  name: "Hmong"                 }, { code: "hu",      name: "Hungarian"               }, { code: "is",    name: "Icelandic"               },
+            { code: "ig",   name: "Igbo"                  }, { code: "id",      name: "Indonesian"              }, { code: "ga",    name: "Irish"                   },
+            { code: "it",   name: "Italian"               }, { code: "ja",      name: "Japanese"                }, { code: "jw",    name: "Javanese"                },
+            { code: "kn",   name: "Kannada"               }, { code: "kk",      name: "Kazakh"                  }, { code: "km",    name: "Khmer"                   },
+            { code: "ko",   name: "Korean"                }, { code: "ku",      name: "Kurdish (Kurmanji)"      }, { code: "ckb",   name: "Kurdish (Sorani)"        },
+            { code: "ky",   name: "Kyrgyz"                }, { code: "lo",      name: "Lao"                     }, { code: "la",    name: "Latin"                   },
+            { code: "lv",   name: "Latvian"               }, { code: "lt",      name: "Lithuanian"              }, { code: "lb",    name: "Luxembourgish"           },
+            { code: "mk",   name: "Macedonian"            }, { code: "mg",      name: "Malagasy"                }, { code: "ms",    name: "Malay"                   },
+            { code: "ml",   name: "Malayalam"             }, { code: "mt",      name: "Maltese"                 }, { code: "mi",    name: "Maori"                   },
+            { code: "mr",   name: "Marathi"               }, { code: "mn",      name: "Mongolian"               }, { code: "my",    name: "Myanmar (Burmese)"       },
+            { code: "ne",   name: "Nepali"                }, { code: "no",      name: "Norwegian"               }, { code: "ny",    name: "Nyanja (Chichewa)"       },
+            { code: "ps",   name: "Pashto"                }, { code: "fa",      name: "Persian"                 }, { code: "pl",    name: "Polish"                  },
+            { code: "pt",   name: "Portuguese (Portugal)" }, { code: "pt-BR",   name: "Portuguese (Brazil)"     }, { code: "pa",    name: "Punjabi"                 },
+            { code: "ro",   name: "Romanian"              }, { code: "ru",      name: "Russian"                 }, { code: "sm",    name: "Samoan"                  },
+            { code: "gd",   name: "Scots Gaelic"          }, { code: "sr",      name: "Serbian"                 }, { code: "st",    name: "Sesotho"                 },
+            { code: "sn",   name: "Shona"                 }, { code: "sd",      name: "Sindhi"                  }, { code: "si",    name: "Sinhala"                 },
+            { code: "sk",   name: "Slovak"                }, { code: "sl",      name: "Slovenian"               }, { code: "so",    name: "Somali"                  },
+            { code: "es",   name: "Spanish"               }, { code: "su",      name: "Sundanese"               }, { code: "sw",    name: "Swahili"                 },
+            { code: "sv",   name: "Swedish"               }, { code: "tl",      name: "Tagalog (Filipino)"      }, { code: "tg",    name: "Tajik"                   },
+            { code: "ta",   name: "Tamil"                 }, { code: "tt",      name: "Tatar"                   }, { code: "te",    name: "Telugu"                  },
+            { code: "th",   name: "Thai"                  }, { code: "tr",      name: "Turkish"                 }, { code: "uk",    name: "Ukrainian"               },
+            { code: "ur",   name: "Urdu"                  }, { code: "tk",      name: "Turkmen"                 }, { code: "ug",    name: "Uyghur"                  },
+            { code: "uz",   name: "Uzbek"                 }, { code: "vi",      name: "Vietnamese"              }, { code: "cy",    name: "Welsh"                   },
+            { code: "xh",   name: "Xhosa"                 }, { code: "yi",      name: "Yiddish"                 }, { code: "yo",    name: "Yoruba"                  },
+            { code: "zu",   name: "Zulu"                  }
+        ];
+        const priorities = ['en', 'zh-CN', 'zh-TW', 'pt-BR', 'es', 'fr', 'ja', 'ko', 'ru', 'de', 'it'];
+        const topList = [];
+        const otherList = [];
+        allLangs.forEach(lang => {
+            if (priorities.includes(lang.code)) {
+                topList.push(lang);
+            } else {
+                otherList.push(lang);
+            }
+        });
+        topList.sort((a, b) => priorities.indexOf(a.code) - priorities.indexOf(b.code));
+        otherList.sort((a, b) => a.name.localeCompare(b.name));
+        return [...topList, ...otherList].map(l => ({ value: l.code, text: l.name }));
+    }
+    const TRANS_CONFIG_KEY = 'TranslationConfig';
+
+    // --- CONFIGURAÇÃO DE TRADUÇÃO RÁPIDA ---
+    function getTransConfig() {
+        return GM_getValue(TRANS_CONFIG_KEY, {
+            mode: 'GOOGLE',
+            lang: navigator.language.startsWith('pt') ? 'pt-BR' : 'en'
+        });
+    }
+
+    // --- SALVAR CONFIGURAÇÃO DE TRADUÇÃO RÁPIDA ---
+    function saveTransConfig(cfg) {
+        GM_setValue(TRANS_CONFIG_KEY, cfg);
+    }
+
+    // --- MODELOS GEMINI ---
     function getGeminiModels() {
         return [
             { value: 'gemini-3-pro-preview',       text: 'Gemini 3 Pro Preview'     },
+            { value: 'gemini-3-flash-preview',     text: 'Gemini 3 Flash Preview'   },
             { value: 'gemini-2.5-pro',             text: 'Gemini 2.5 Pro'           },
             { value: 'gemini-2.5-flash',           text: 'Gemini 2.5 Flash'         },
             { value: 'gemini-2.5-flash-lite',      text: 'Gemini 2.5 Flash Lite'    },
@@ -2061,6 +1938,256 @@
         ];
     }
 
+    // --- ABRIR CONFIGURAÇÕES DE TRADUÇÃO ---
+    async function openTranslationSettings() {
+        if (document.querySelector('.bgf-trans-overlay')) return;
+        const cfg = getTransConfig();
+        const savedKey = await GM_getValue('GOOGLE_AI_KEY', '');
+        const savedModel = await GM_getValue('GOOGLE_AI_LAST_MODEL', 'gemini-3-flash-preview');
+        const overlay = document.createElement('div');
+        overlay.className = 'bgf-trans-overlay';
+        const modal = document.createElement('div');
+        modal.className = 'bgf-trans-modal';
+        const ICON_INFO = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+        modal.innerHTML = `
+            <form autocomplete="off" onsubmit="return false;" style="display:flex; flex-direction:column; gap:15px;">
+                <div>
+                    <label class="bgf-trans-label">${getTranslation('trans_target_lang')}</label>
+                    <div class="bgf-lang-container">
+                        <input type="text" class="bgf-lang-search" id="bgf-search"
+                               placeholder="${getTranslation('trans_search_ph')}"
+                               autocomplete="off" name="bgf-search-random-${Date.now()}">
+                        <ul class="bgf-lang-list" id="bgf-list"></ul>
+                    </div>
+                </div>
+                <div>
+                    <label class="bgf-trans-label">${getTranslation('mode') || 'Motor'}</label>
+                    <select id="bgf-mode" class="bgf-trans-select">
+                        <option value="GOOGLE" ${cfg.mode === 'GOOGLE' ? 'selected' : ''}>${getTranslation('trans_mode_google')}</option>
+                        <option value="GEMINI" ${cfg.mode === 'GEMINI' ? 'selected' : ''}>${getTranslation('trans_mode_gemini')}</option>
+                    </select>
+                </div>
+                <div id="bgf-gemini-opts" class="bgf-gemini-group" style="display:none;">
+                    <div style="margin-bottom:10px;">
+                        <label class="bgf-trans-label">${getTranslation('gemini_model_label')}</label>
+                        <select id="bgf-model" class="bgf-trans-select">
+                            ${getGeminiModels().map(m => `<option value="${m.value}" ${m.value === savedModel ? 'selected' : ''}>${m.text}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="bgf-trans-label" style="display:inline-block;">API Key</label>
+                        <span id="bgf-info-btn" class="bgf-info-icon" title="Ajuda API">${ICON_INFO}</span>
+                        <input type="password" id="bgf-key" class="bgf-trans-input"
+                               value="${savedKey}" placeholder="${getTranslation('placeholder_api_key')}"
+                               autocomplete="new-password" name="bgf-api-key-field">
+                    </div>
+                </div>
+                <div class="bgf-trans-actions">
+                    <button id="bgf-cancel" class="bgf-trans-btn bgf-btn-secondary">${getTranslation('cancel')}</button>
+                    <button id="bgf-save" class="bgf-trans-btn bgf-btn-primary">${getTranslation('confirm')}</button>
+                </div>
+            </form>
+        `;
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        const searchInput = modal.querySelector('#bgf-search');
+        const langList = modal.querySelector('#bgf-list');
+        const modeSelect = modal.querySelector('#bgf-mode');
+        const geminiOpts = modal.querySelector('#bgf-gemini-opts');
+        let currentLang = cfg.lang;
+        const toggleGemini = () => {
+            geminiOpts.style.display = modeSelect.value === 'GEMINI' ? 'block' : 'none';
+        };
+        modeSelect.addEventListener('change', toggleGemini);
+        toggleGemini();
+        modal.querySelector('#bgf-info-btn').onclick = (e) => {
+            e.preventDefault();
+            showApiKeyHelp();
+        };
+        const renderLangs = (filter = "") => {
+            langList.innerHTML = "";
+            const term = filter.toLowerCase();
+            getSortedLanguages().forEach(l => {
+                if(l.text.toLowerCase().includes(term) || l.value.includes(term)) {
+                    const li = document.createElement('li');
+                    li.className = `bgf-lang-option ${currentLang === l.value ? 'selected' : ''}`;
+                    li.textContent = l.text;
+                    li.onclick = () => {
+                        currentLang = l.value;
+                        renderLangs(filter);
+                    };
+                    langList.appendChild(li);
+                }
+            });
+        };
+        searchInput.addEventListener('input', (e) => renderLangs(e.target.value));
+        renderLangs();
+        modal.querySelector('#bgf-save').onclick = async (e) => {
+            e.preventDefault();
+            const newMode = modeSelect.value;
+            const newModel = modal.querySelector('#bgf-model').value;
+            const newKey = modal.querySelector('#bgf-key').value.trim();
+            saveTransConfig({ mode: newMode, lang: currentLang });
+            if(newMode === 'GEMINI') {
+                if(newKey) await GM_setValue('GOOGLE_AI_KEY', newKey);
+                await GM_setValue('GOOGLE_AI_LAST_MODEL', newModel);
+            }
+            overlay.remove();
+            showCustomAlert(getTranslation('trans_saved'));
+        };
+        modal.querySelector('#bgf-cancel').onclick = (e) => {
+            e.preventDefault();
+            overlay.remove();
+        };
+    }
+
+    // --- ÍCONES DE TRADUÇÃO ---
+    const ICN_TRANS = `<svg viewBox="0 0 20 20" width="12" height="12" fill="currentColor"><path d="m7.4 9 2.3 2.2-.9 2L6 10.4l-3.3 3.3-1.4-1.4L4.6 9l-.9-.9A6 6 0 0 1 2.4 6h2.2l.5.7.9.9.9-.9C7.5 6.1 8 4.8 8 4H0V2h5V0h2v2h5v2h-2c0 1.4-.7 3.2-1.7 4.1zm3.9 8L10 20H8l5-12h2l5 12h-2l-1.2-3zm.8-2h3.8L14 10.4z"/></svg>`;
+    const ICN_UNDO  = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>`;
+    const ICN_SPIN  = `<svg class="bgf-spin" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>`;
+
+    // --- DESCRIÇÃO ---
+    function processDescriptionTranslation() {
+        document.querySelectorAll('.script-description').forEach(el => {
+            if (el.querySelector('.bgf-translate-btn-desc')) return;
+            const btn = document.createElement('a');
+            btn.className = 'bgf-translate-btn-desc';
+            btn.href = '#';
+            btn.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+            if (el.firstChild) el.insertBefore(btn, el.firstChild);
+            else el.appendChild(btn);
+            let originalHTML = null;
+            let isTranslated = false;
+            btn.onclick = async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isTranslated && originalHTML) {
+                    el.innerHTML = originalHTML;
+                    isTranslated = false;
+                } else {
+                    btn.remove();
+                    originalHTML = el.innerHTML;
+                    const textToTranslate = el.innerText.trim();
+                    if (el.firstChild) el.insertBefore(btn, el.firstChild); else el.appendChild(btn);
+                    btn.innerHTML = `${ICN_SPIN} ${getTranslation('trans_translating')}`;
+                    btn.style.pointerEvents = 'none';
+                    try {
+                        const translation = await performTranslation(textToTranslate);
+                        const cfg = getTransConfig();
+                        let finalHtml = translation.replace(/\n/g, '<br>');
+                        if (cfg.mode === 'GEMINI') finalHtml = finalHtml.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                        el.innerHTML = `${finalHtml}<hr style="opacity:0.2; margin:10px 0;"><div style="opacity:0.6; font-size:0.9em; font-style:italic;">${originalHTML}</div>`;
+                        const undoBtn = document.createElement('a');
+                        undoBtn.className = 'bgf-translate-btn-desc';
+                        undoBtn.href='#';
+                        undoBtn.innerHTML = `${ICN_UNDO} ${getTranslation('trans_undo')}`;
+                        undoBtn.onclick = (ev) => { ev.preventDefault(); el.innerHTML = originalHTML; };
+                        el.insertBefore(undoBtn, el.firstChild);
+                        isTranslated = true;
+                    } catch (err) {
+                        showCustomAlert(err.message || err);
+                        btn.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+                    } finally { btn.style.pointerEvents = 'auto'; }
+                }
+            };
+        });
+    }
+
+    // --- INFORMAÇÃO ADICIONAL ---
+    function processAdditionalInfoTranslation() {
+        const el = document.querySelector('#additional-info');
+        if (!el || el.querySelector('.bgf-translate-btn-desc')) return;
+        const btn = document.createElement('a');
+        btn.className = 'bgf-translate-btn-desc';
+        btn.href = '#';
+        btn.style.marginBottom = '15px';
+        btn.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+        if (el.firstChild) el.insertBefore(btn, el.firstChild);
+        else el.appendChild(btn);
+        let originalHTML = null;
+        let isTranslated = false;
+        btn.onclick = async (e) => {
+            e.preventDefault();
+            if (isTranslated && originalHTML) {
+                el.innerHTML = originalHTML;
+                isTranslated = false;
+            } else {
+                btn.remove();
+                originalHTML = el.innerHTML;
+                if (el.firstChild) el.insertBefore(btn, el.firstChild); else el.appendChild(btn);
+                btn.innerHTML = `${ICN_SPIN} ${getTranslation('trans_translating')}`;
+                btn.style.pointerEvents = 'none';
+                try {
+                    const translation = await performTranslation(originalHTML, null, true);
+                    el.innerHTML = translation;
+                    const undoBtn = document.createElement('a');
+                    undoBtn.className = 'bgf-translate-btn-desc';
+                    undoBtn.style.marginBottom = '15px';
+                    undoBtn.href='#';
+                    undoBtn.innerHTML = `${ICN_UNDO} ${getTranslation('trans_undo')}`;
+                    undoBtn.onclick = (ev) => { ev.preventDefault(); el.innerHTML = originalHTML; };
+                    if(el.firstChild) el.insertBefore(undoBtn, el.firstChild);
+                    else el.appendChild(undoBtn);
+                    isTranslated = true;
+                } catch (err) {
+                    showCustomAlert("Erro: " + (err.message || err));
+                    btn.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+                } finally { btn.style.pointerEvents = 'auto'; }
+            }
+        };
+    }
+
+    // --- COMENTÁRIOS ---
+    function processCommentTranslation() {
+        document.querySelectorAll('.comment').forEach(comment => {
+            if (comment.querySelector('.bgf-translate-btn-comment')) return;
+            const meta = comment.querySelector('.comment-meta');
+            const body = comment.querySelector('.user-content');
+            if(!meta || !body) return;
+            const btnContainer = document.createElement('span');
+            btnContainer.className = 'comment-meta-item bgf-translate-btn-comment';
+            btnContainer.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+            const spacer = meta.querySelector('.comment-meta-spacer');
+            if (spacer) meta.insertBefore(btnContainer, spacer);
+            else meta.appendChild(btnContainer);
+            let originalHTML = null;
+            let isTranslated = false;
+            btnContainer.onclick = async () => {
+                if(isTranslated && originalHTML) {
+                    body.innerHTML = originalHTML;
+                    btnContainer.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+                    btnContainer.style.color = '';
+                    isTranslated = false;
+                } else {
+                    originalHTML = body.innerHTML;
+                    btnContainer.innerHTML = `${ICN_SPIN} ...`;
+                    try {
+                        const translation = await performTranslation(originalHTML, null, true);
+                        body.innerHTML = translation;
+                        btnContainer.innerHTML = `${ICN_UNDO} ${getTranslation('trans_undo')}`;
+                        btnContainer.style.color = '#00b1b8';
+                        isTranslated = true;
+                    } catch (err) {
+                        alert(err);
+                        btnContainer.innerHTML = `${ICN_TRANS} ${getTranslation('translate')}`;
+                    }
+                }
+            };
+        });
+    }
+
+    // --- EXECUTAR TRADUÇÕES ---
+    function runTranslations() {
+        processDescriptionTranslation();
+        processAdditionalInfoTranslation();
+        processCommentTranslation();
+    }
+
+    // ================
+    // #region EDITOR HTML
+    // ================
+
+    // --- INSERIR TEXTO ---
     function insertText(textarea, prefix, suffix = '', placeholder = '') {
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
@@ -2076,6 +2203,7 @@
         textarea.focus();
     }
 
+    // --- BOTÃO DA BARRA DE FERRAMENTAS ---
     function createToolbarButton(def) {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -2089,6 +2217,7 @@
         return btn;
     }
 
+    // --- CAIXAS DE DIÁLOGO ---
     function showCustomAlert(message) {
         const overlay = document.createElement('div');
         overlay.className = 'custom-prompt-overlay';
@@ -2108,17 +2237,19 @@
         closeBtn.focus();
     }
 
+    // --- MENU DE TRADUÇÃO TOOLBAR ---
     function showCustomPrompt({ inputs, onConfirm }) {
         const overlay = document.createElement('div');
         overlay.className = 'custom-prompt-overlay';
         const modal = document.createElement('div');
         modal.className = 'custom-prompt-box';
         const editorContainer = document.querySelector('.txt-editor-container');
-        modal.classList.add(editorContainer && editorContainer.classList.contains('dark-theme') ? 'dark-theme' : 'light-theme');
+        if(editorContainer) modal.classList.add(editorContainer.classList.contains('dark-theme') ? 'dark-theme' : 'light-theme');
         const form = document.createElement('form');
         const inputsMap = new Map();
         inputs.forEach(config => {
             const label = document.createElement('label');
+            label.dataset.fieldId = config.id;
             const labelTextContainer = document.createElement('div');
             labelTextContainer.style.display = 'flex';
             labelTextContainer.style.justifyContent = 'space-between';
@@ -2132,13 +2263,8 @@
                 helpIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
                 helpIcon.style.cursor = 'pointer';
                 helpIcon.style.opacity = '0.7';
-                helpIcon.title = getTranslation('api_help_tooltip');
-                helpIcon.addEventListener('mouseenter', () => helpIcon.style.opacity = '1');
-                helpIcon.addEventListener('mouseleave', () => helpIcon.style.opacity = '0.7');
-                helpIcon.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    config.helpAction();
-                });
+                helpIcon.title = getTranslation('api_help_tooltip') || "Help";
+                helpIcon.addEventListener('click', (e) => { e.preventDefault(); config.helpAction(); });
                 labelTextContainer.appendChild(helpIcon);
             }
             label.appendChild(labelTextContainer);
@@ -2149,39 +2275,46 @@
                     const option = document.createElement('option');
                     option.value = opt.value;
                     option.textContent = opt.text;
-                    if (config.value && opt.value === config.value) {
-                        option.selected = true;
-                    }
+                    if (config.value && opt.value === config.value) option.selected = true;
                     field.appendChild(option);
                 });
             } else {
                 field = document.createElement('input');
                 field.type = config.type || 'text';
-                field.placeholder = config.placeholder || '';
+                if(config.placeholder) field.placeholder = config.placeholder;
                 field.value = config.value || '';
-                field.required = config.required !== false;
-                if (config.type === 'number') field.min = '1';
+                if(config.required !== false) field.required = true;
             }
             label.appendChild(field);
             form.appendChild(label);
-            inputsMap.set(config.id, field);
+            inputsMap.set(config.id, { field, label });
+        });
+        inputs.forEach(config => {
+            if (config.onChange) {
+                const entry = inputsMap.get(config.id);
+                const handler = () => {
+                    config.onChange(entry.field.value, inputsMap);
+                };
+                entry.field.addEventListener('change', handler);
+                handler();
+            }
         });
         const buttons = document.createElement('div');
         buttons.className = 'custom-prompt-buttons';
         const confirmBtn = document.createElement('button');
         confirmBtn.type = 'submit';
-        confirmBtn.textContent = getTranslation('confirm');
+        confirmBtn.textContent = getTranslation('confirm') || 'OK';
         confirmBtn.className = 'custom-prompt-confirm';
         const cancelBtn = document.createElement('button');
         cancelBtn.type = 'button';
-        cancelBtn.textContent = getTranslation('cancel');
+        cancelBtn.textContent = getTranslation('cancel') || 'Cancel';
         cancelBtn.className = 'custom-prompt-cancel';
         cancelBtn.onclick = () => document.body.removeChild(overlay);
         form.onsubmit = (e) => {
             e.preventDefault();
             const results = {};
-            for (const [id, inputElement] of inputsMap.entries()) {
-                results[id] = inputElement.value;
+            for (const [id, entry] of inputsMap.entries()) {
+                results[id] = entry.field.value;
             }
             onConfirm(results);
             document.body.removeChild(overlay);
@@ -2191,9 +2324,11 @@
         modal.appendChild(form);
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
-        inputsMap.values().next().value.focus();
+        const firstInput = form.querySelector('input, select');
+        if(firstInput) firstInput.focus();
     }
 
+    // --- MENU DE INFORMAÇÕES ---
     function showInfoModal() {
         const overlay = document.createElement('div');
         overlay.className = 'custom-prompt-overlay info-modal-overlay';
@@ -2254,6 +2389,7 @@
         });
     }
 
+    // --- AJUDA SOBRE A CHAVE DE API ---
     function showApiKeyHelp() {
         const overlay = document.createElement('div');
         overlay.className = 'custom-prompt-overlay info-modal-overlay';
@@ -2307,6 +2443,7 @@
         document.addEventListener('keydown', escListener);
     }
 
+    // --- ATALHOS DE TEXTO E EDITOR DE TEXTO ---
     async function createTextStyleEditor(textarea) {
         if (textarea.dataset.editorApplied) return;
         textarea.dataset.editorApplied = 'true';
@@ -2340,18 +2477,23 @@
                 insertText(this, '&nbsp;', '', '');
             }
         });
+
+        // --- CONTAINER E BARRA DE FERRAMENTAS ---
         const container = document.createElement('div');
         container.className = 'txt-editor-container';
         const toolbar = document.createElement('div');
         toolbar.className = 'txt-editor-toolbar';
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
+        // --- APLICAR TEMA ---
         function applyTheme(isDark) {
             container.classList.toggle('dark-theme', isDark);
             container.classList.toggle('light-theme', !isDark);
         }
         applyTheme(mediaQuery.matches);
         mediaQuery.addEventListener('change', e => applyTheme(e.matches));
+
+        // --- FERRAMENTAS DA BARRA DE FERRAMENTAS ---
         const tools = [
             { type: 'select', title: getTranslation('titles'), options: { 'H1': '1', 'H2': '2', 'H3': '3', 'H4': '4', 'H5': '5', 'H6': '6' }, action: (val) => insertText(textarea, `<h${val}>`, `</h${val}>`, getTranslation('title_placeholder')) },
             { type: 'divider' },
@@ -2380,32 +2522,47 @@
             { title: getTranslation('highlight'),       label: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M3 1a1 1 0 0 0-1 1v2.5A1.5 1.5 0 0 0 3.5 6h-.05.1-.05 9-.05.1-.05A1.5 1.5 0 0 0 14 4.5V2a1 1 0 0 0-1-1zm0 6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2zm2 7.5V10h6v.74a1.5 1.5 0 0 1-.69 1.26l-4.54 2.92A.5.5 0 0 1 5 14.5"/></svg>', action: () => insertText(textarea, '<mark>', '</mark>', getTranslation('highlight_placeholder'))},
             { title: getTranslation('keyboard'),        label: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M3 4h10a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 13 12H3a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 3 4M0 5.5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3zm6.25 3.25a.75.75 0 0 0 0 1.5h3.5a.75.75 0 0 0 0-1.5zM4.5 6.5a1 1 0 1 1-2 0a1 1 0 0 1 2 0m2 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2m4-1a1 1 0 1 1-2 0a1 1 0 0 1 2 0m2 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2m-8 2a1 1 0 1 1-2 0a1 1 0 0 1 2 0m8 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2" clip-rule="evenodd"/></svg>', action: () => insertText(textarea, '<kbd>', '</kbd>', getTranslation('keyboard_placeholder'))},
             { title: getTranslation('abbreviation'),    label: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M20 424.229h20V279.771H20c-11.046 0-20-8.954-20-20V212c0-11.046 8.954-20 20-20h112c11.046 0 20 8.954 20 20v212.229h20c11.046 0 20 8.954 20 20V492c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20v-47.771c0-11.046 8.954-20 20-20zM96 0C56.235 0 24 32.235 24 72s32.235 72 72 72s72-32.235 72-72S135.764 0 96 0z"/></svg>', action: () => { const start = textarea.selectionStart; const end = textarea.selectionEnd; const selectedText = textarea.value.substring(start, end); showCustomPrompt({ inputs: [ { id: 'title', label: getTranslation('prompt_abbreviation_meaning'), required: true }, { id: 'text', label: getTranslation('prompt_abbreviation_text'), placeholder: getTranslation('abbreviation_placeholder'), value: selectedText, required: true } ], onConfirm: ({ title, text }) => { if (title && text) { const selectionMode = selectedText ? 'end' : 'select'; textarea.setRangeText(`<abbr title="${title}">${text}</abbr>`, start, end, selectionMode); textarea.focus();}}});}},
-            { title: getTranslation('ai_translate'),
+            {
+                title: getTranslation('translate'),
                 label: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="m7.4 9 2.3 2.2-.9 2L6 10.4l-3.3 3.3-1.4-1.4L4.6 9l-.9-.9A6 6 0 0 1 2.4 6h2.2l.5.7.9.9.9-.9C7.5 6.1 8 4.8 8 4H0V2h5V0h2v2h5v2h-2c0 1.4-.7 3.2-1.7 4.1zm3.9 8L10 20H8l5-12h2l5 12h-2l-1.2-3zm.8-2h3.8L14 10.4z"/></svg>',
                 action: async () => {
                     const start = textarea.selectionStart;
                     const end = textarea.selectionEnd;
-                    const hasSelection = start !== end;
-                    const selectedText = textarea.value.substring(start, end);
-                    const textToTranslate = hasSelection ? selectedText : textarea.value;
+                    const textToTranslate = (start !== end) ? textarea.value.substring(start, end) : textarea.value;
                     if (!textToTranslate.trim()) {
                         showCustomAlert(getTranslation('alert_text_empty'));
                         return;
                     }
-                    const savedKey = await GM_getValue('GOOGLE_AI_KEY', '');
-                    const lastModel = await GM_getValue('GOOGLE_AI_LAST_MODEL', 'gemini-2.5-flash');
-                    const lastLang = await GM_getValue('GOOGLE_AI_LAST_LANG', 'English');
-                    const promptLabel = hasSelection
-                        ? `${getTranslation('prompt_translate_to')} (${getTranslation('selection') || 'Selection'})`
-                        : getTranslation('prompt_translate_to');
+                    const lastEngine = await GM_getValue('TOOLBAR_LAST_ENGINE', 'GOOGLE');
+                    const lastModel  = await GM_getValue('GOOGLE_AI_LAST_MODEL', 'gemini-3-flash-preview');
+                    const lastLang   = await GM_getValue('GOOGLE_AI_LAST_LANG', 'English');
+                    const savedKey   = await GM_getValue('GOOGLE_AI_KEY', '');
                     showCustomPrompt({
                         inputs: [
                             {
                                 id: 'lang',
-                                label: promptLabel,
+                                label: getTranslation('trans_target_lang') || 'Idioma',
                                 type: 'select',
                                 value: lastLang,
-                                options: getTargetLanguages()
+                                options: getSortedLanguages()
+                            },
+                            {
+                                id: 'engine',
+                                label: getTranslation('lbl_mode') || 'Motor',
+                                type: 'select',
+                                value: lastEngine,
+                                options: [
+                                    { value: 'GOOGLE', text: getTranslation('trans_mode_google') },
+                                    { value: 'GEMINI', text: getTranslation('trans_mode_gemini') }
+                                ],
+                                onChange: (val, inputsMap) => {
+                                    const modelLabel = inputsMap.get('model').label;
+                                    if (val === 'GEMINI') {
+                                        modelLabel.style.display = 'block';
+                                    } else {
+                                        modelLabel.style.display = 'none';
+                                    }
+                                }
                             },
                             {
                                 id: 'model',
@@ -2413,37 +2570,30 @@
                                 type: 'select',
                                 value: lastModel,
                                 options: getGeminiModels()
-                            },
-                            {
-                                id: 'apikey',
-                                label: getTranslation('prompt_api_key'),
-                                type: 'text',
-                                value: savedKey,
-                                placeholder: getTranslation('placeholder_api_key'),
-                                required: true,
-                                helpAction: showApiKeyHelp
                             }
                         ],
-                        onConfirm: async ({ lang, model, apikey }) => {
-                            const cleanKey = apikey ? apikey.trim() : '';
-                            if (cleanKey && cleanKey !== savedKey) {
-                                await GM_setValue('GOOGLE_AI_KEY', cleanKey);
-                            }
-                            await GM_setValue('GOOGLE_AI_LAST_MODEL', model);
+                        onConfirm: async ({ lang, engine, model }) => {
+                            await GM_setValue('TOOLBAR_LAST_ENGINE', engine);
                             await GM_setValue('GOOGLE_AI_LAST_LANG', lang);
+                            await GM_setValue('GOOGLE_AI_LAST_MODEL', model);
                             const originalCursor = document.body.style.cursor;
                             document.body.style.cursor = 'wait';
                             textarea.disabled = true;
                             try {
-                                const result = await translateWithGemini(textToTranslate, lang, model, cleanKey);
-                                if (hasSelection) {
-                                    textarea.setRangeText(result, start, end, 'select');
+                                let result = "";
+                                if (engine === 'GOOGLE') {
+                                    result = await translateWithGoogle(textToTranslate, lang);
                                 } else {
-                                    textarea.value = result;
+                                    if (!savedKey) throw getTranslation('trans_err_gemini_key');
+                                    const isHTML = /<[a-z][\s\S]*>/i.test(textToTranslate);
+                                    result = await translateWithGemini(textToTranslate, lang, model, savedKey, isHTML);
                                 }
+                                if (start !== end) textarea.setRangeText(result, start, end, 'select');
+                                else textarea.value = result;
                                 textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
                             } catch (error) {
-                                showCustomAlert(getTranslation('alert_translation_error') + error);
+                                showCustomAlert(getTranslation('alert_translation_error') + "\n" + error);
                             } finally {
                                 document.body.style.cursor = originalCursor;
                                 textarea.disabled = false;
@@ -2492,7 +2642,7 @@
                 });
                 container.appendChild(select);
                 toolbar.appendChild(container);
-            } else if (tool.type === 'color-picker') {
+                } else if (tool.type === 'color-picker') {
                 const colorContainer = document.createElement('div');
                 colorContainer.className = 'txt-color-picker-container';
                 const input = document.createElement('input');
@@ -2574,7 +2724,7 @@
                         const lastTag = await GM_getValue(LAST_TAG_TYPE_KEY, 'span');
                         showCustomPrompt({
                             inputs: [
-                                { id: 'text',  label: getTranslation('prompt_border_text'),     type: 'text',   value: selectedText || getTranslation('border_text_placeholder') },
+                                { id: 'text',  label: getTranslation('prompt_border_text'),     type: 'text',   value: selectedText || getTranslation('txt') },
                                 { id: 'size',  label: getTranslation('prompt_border_size'),     type: 'number', value: '1' },
                                 { id: 'color', label: getTranslation('prompt_border_color'),    type: 'text',   value: input.value },
                                 { id: 'tag',   label: getTranslation('prompt_border_tag_type'), type: 'select', value: lastTag, options: [ { value: 'span', text: '<span>' }, { value: 'div', text: '<div>' } ] }
@@ -2593,12 +2743,9 @@
                         });
                     }
                 });
-
                 colorContainer.append(input, colorBtn, bgBtn, hrStyleBtn, borderStyleBtn);
                 toolbar.appendChild(colorContainer);
-            } else {
-                toolbar.appendChild(createToolbarButton(tool));
-            }
+            } else {toolbar.appendChild(createToolbarButton(tool));}
         }
         const infoButton = createToolbarButton({
             title: getTranslation('info_tooltip'),
@@ -2611,11 +2758,13 @@
         container.append(toolbar, textarea);
     }
 
+    // --- INICIALIZAÇÃO DO EDITOR ---
     function applyToAllTextareas() {
         const textareas = document.querySelectorAll('textarea:not(#script_version_code):not([data-editor-applied])');
         textareas.forEach(createTextStyleEditor);
     }
 
+    // --- HABILITAR EDITOR DE CÓDIGO FONTE ---
     function enableSourceEditorCheckbox() {
         const enableCheckbox = () => {
             const checkbox = document.getElementById('enable-source-editor-code');
@@ -2646,7 +2795,8 @@
         });
     }
 
-    function isMarkdownPage() {
+    // --- DETECTAR PÁGINAS QUE USAM EDITOR ---
+    function isHTMLPage() {
         const path = window.location.pathname;
         const markdownSegments = [ '/new', '/edit', '/feedback', '/discussions', '/conversations' ];
         if (path.includes('/sets/')) {
@@ -2660,25 +2810,26 @@
     // #region DOWNLOAD
     // ================
 
+    // --- DETECTAR PÁGINA DE SCRIPT ---
     function isCodePage() {
         return /^\/([a-z]{2}(-[A-Z]{2})?\/)?scripts\/\d+-.+\/code/.test(window.location.pathname);
     }
 
+    // --- NORMALIZAR CAMINHO DO SCRIPT ---
     function initializeDownloadButton() {
         const waitFor = (sel) =>
-            new Promise((resolve) => {
+        new Promise((resolve) => {
+            const el = document.querySelector(sel);
+            if (el) return resolve(el);
+            const obs = new MutationObserver(() => {
                 const el = document.querySelector(sel);
-                if (el) return resolve(el);
-                const obs = new MutationObserver(() => {
-                    const el = document.querySelector(sel);
-                    if (el) {
-                        obs.disconnect();
-                        resolve(el);
-                    }
-                });
-                obs.observe(document, { childList: true, subtree: true });
+                if (el) {
+                    obs.disconnect();
+                    resolve(el);
+                }
             });
-
+            obs.observe(document, { childList: true, subtree: true });
+        });
         waitFor('label[for="wrap-lines"]').then((label) => {
             const wrapLinesCheckbox = document.getElementById('wrap-lines');
             if (wrapLinesCheckbox) {
@@ -2697,7 +2848,6 @@
             btn.style.cursor = 'pointer';
             btn.addEventListener('mouseenter', () => btn.style.backgroundColor = '#1e971e');
             btn.addEventListener('mouseleave', () => btn.style.backgroundColor = '#005200');
-
             btn.addEventListener('click', () => {
                 const normalizedPath = normalizeScriptPath(window.location.pathname);
                 const scriptId = extractScriptIdFromNormalizedPath(normalizedPath);
@@ -2706,12 +2856,9 @@
                     alert(getTranslation('scriptIdNotFound'));
                     return;
                 }
-
                 const scriptUrl = `https://update.greasyfork.org/scripts/${scriptId}.js`;
-
                 btn.disabled = true;
                 btn.textContent = getTranslation('downloading');
-
                 GM_xmlhttpRequest({
                     method: 'GET',
                     url: scriptUrl,
@@ -2757,6 +2904,7 @@
     // #region INICIALIZAR
     // ================
 
+    // --- INICIAR SCRIPT ---
     async function start() {
         iconCache = await GM_getValue(CACHE_KEY, {});
         await determineLanguage();
@@ -2764,8 +2912,9 @@
         document.body.appendChild(languageModal);
         registerLanguageMenu();
         registerForceUpdateMenu();
+        GM_registerMenuCommand(`${getTranslation('settings')}`, openTranslationSettings);
         setupThemeChangeListener();
-        if (isMarkdownPage()) {
+        if (isHTMLPage()) {
             applyToAllTextareas();
             enableSourceEditorCheckbox();
         }
@@ -2779,17 +2928,19 @@
         }
         makeDiscussionClickable();
         applySyntaxHighlighting();
+        runTranslations();
         const observer = new MutationObserver(() => {
             processIconElements();
             highlightScriptDescription();
             if (isScriptPage()) {
                 addAdditionalInfoSeparator();
             }
-            if (isMarkdownPage()) {
+            if (isHTMLPage()) {
                 applyToAllTextareas();
             }
             makeDiscussionClickable();
             applySyntaxHighlighting();
+            runTranslations();
         });
         observer.observe(document.body, {
             childList: true,

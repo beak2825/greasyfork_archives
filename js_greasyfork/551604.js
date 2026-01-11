@@ -11,6 +11,8 @@
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_listValues
+// @grant        GM.xmlHttpRequest
+// @grant        GM_xmlhttpRequest
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/551604/pokespy.user.js
 // @updateURL https://update.greasyfork.org/scripts/551604/pokespy.meta.js
@@ -40,6 +42,9 @@
         
         // Cache duration
         CACHE_DURATION: 60000, // 1 minute (same for both modes)
+        
+        // eBay Browse API polling interval (ms)
+        API_POLL_INTERVAL: 18000, // 18 seconds - adjust this to change API polling frequency
     };
     
     debugLog(`🔧 Debug mode: ${DEBUG_MODE ? 'ENABLED' : 'DISABLED'}`);
@@ -153,6 +158,28 @@
                 }
             }
         });
+    }
+
+    // ============================================================================
+    // TITLE CLEANING UTILITY
+    // ============================================================================
+
+    // Clean eBay item titles by removing "Picture X of Y" text that appears in image alt attributes
+    function cleanEbayTitle(title) {
+        if (!title) return title;
+        
+        // Remove "- Picture X of Y" or " - Picture X of Y" patterns (common in eBay image alt text)
+        // Examples: "POKEMON CARD NAME - Picture 1 of 3" -> "POKEMON CARD NAME"
+        const cleaned = title
+            .replace(/\s*-\s*Picture\s+\d+\s+of\s+\d+\s*$/i, '')  // Remove from end
+            .replace(/\s*-\s*Picture\s+\d+\s+of\s+\d+/i, '')      // Remove from middle
+            .trim();
+        
+        if (cleaned !== title) {
+            debugLog(`🧹 Cleaned eBay title: "${title}" -> "${cleaned}"`);
+        }
+        
+        return cleaned;
     }
 
     // ============================================================================
@@ -373,6 +400,193 @@
     }
 
     // ============================================================================
+    // LISTING NOTES FUNCTIONALITY (SHARED BETWEEN SEARCH AND ITEM PAGES)
+    // ============================================================================
+
+    // Store and retrieve notes (using listing ID for portability)
+    function storeListingNote(listingId, noteData) {
+        const noteKey = `listing_note_${listingId}`;
+        GM_setValue(noteKey, {
+            rating: noteData.rating, // 'good', 'neutral', 'bad'
+            description: noteData.description,
+            timestamp: Date.now()
+        });
+        debugLog(`💾 Stored note for listing ID: ${listingId}`);
+    }
+
+    function getListingNote(listingId) {
+        const noteKey = `listing_note_${listingId}`;
+        return GM_getValue(noteKey, null);
+    }
+
+    // Helper functions for ratings
+    function getRatingIcon(rating) {
+        switch(rating) {
+            case 'good': return '✓';
+            case 'neutral': return '−';
+            case 'bad': return '✕';
+            default: return '📝';
+        }
+    }
+
+    function getRatingColor(rating) {
+        switch(rating) {
+            case 'good': return '#27ae60';
+            case 'neutral': return '#f39c12';
+            case 'bad': return '#e74c3c';
+            default: return 'rgba(255, 255, 255, 0.9)';
+        }
+    }
+
+    // Wrapper for item page that refreshes the panel after note changes
+    function openNoteModalWithRefresh(panel, listingId, rating, existingDescription = '') {
+        // Remove any existing modal
+        const existingModal = document.getElementById('pokespy-note-modal');
+        if (existingModal) existingModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'pokespy-note-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        `;
+
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: #2f3136;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease;
+        `;
+
+        const ratingColor = getRatingColor(rating);
+        const ratingIcon = getRatingIcon(rating);
+
+        modalContent.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: ${ratingColor}; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin-right: 12px;">
+                    ${ratingIcon}
+                </div>
+                <div>
+                    <div style="font-size: 18px; font-weight: bold;">Edit Note</div>
+                    <div style="font-size: 12px; opacity: 0.7;">${rating.charAt(0).toUpperCase() + rating.slice(1)} Rating</div>
+                </div>
+            </div>
+            <textarea id="pokespy-note-textarea" placeholder="Why did you choose this rating?" style="
+                width: 100%;
+                min-height: 120px;
+                padding: 12px;
+                background: #40444b;
+                border: 2px solid ${ratingColor};
+                border-radius: 8px;
+                color: white;
+                font-family: inherit;
+                font-size: 14px;
+                resize: vertical;
+                margin-bottom: 16px;
+            ">${existingDescription}</textarea>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button id="pokespy-note-cancel" style="
+                    padding: 10px 20px;
+                    background: #5865f2;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                ">Cancel</button>
+                <button id="pokespy-note-delete" style="
+                    padding: 10px 20px;
+                    background: #ed4245;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    display: ${existingDescription ? 'block' : 'none'};
+                ">Delete</button>
+                <button id="pokespy-note-save" style="
+                    padding: 10px 20px;
+                    background: ${ratingColor};
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                ">Save Note</button>
+            </div>
+        `;
+
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+
+        // Focus textarea
+        const textarea = document.getElementById('pokespy-note-textarea');
+        textarea.focus();
+
+        // Event handlers
+        document.getElementById('pokespy-note-cancel').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        document.getElementById('pokespy-note-delete').addEventListener('click', () => {
+            const noteKey = `listing_note_${listingId}`;
+            GM_deleteValue(noteKey);
+            
+            modal.remove();
+            
+            // Refresh the panel by reloading the page
+            window.location.reload();
+        });
+
+        document.getElementById('pokespy-note-save').addEventListener('click', () => {
+            const description = textarea.value.trim();
+            
+            storeListingNote(listingId, {
+                rating: rating,
+                description: description
+            });
+
+            modal.remove();
+            
+            // Refresh the panel by reloading the page
+            window.location.reload();
+        });
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        // Close on escape key
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    // ============================================================================
     // EBAY FUNCTIONALITY
     // ============================================================================
 
@@ -440,55 +654,6 @@
             return matchingSets;
         }
 
-        // Listen for manual price setting messages from popup windows
-        window.addEventListener('message', (event) => {
-            if (event.data && event.data.type === 'POKESPY_SET_MANUAL_PRICE') {
-                const { listingId, price, url } = event.data;
-                debugLog(`📥 Received manual price: $${price} for listing ${listingId}`);
-                
-                // Find the listing element
-                const listingElement = window.pokespyManualEdits?.[listingId];
-                if (!listingElement) {
-                    debugLog('⚠️ Could not find listing element for manual price');
-                    return;
-                }
-                
-                // Create manual price data
-                const manualPriceData = {
-                    cardName: 'Manual Entry',
-                    setName: '',
-                    prices: {
-                        'Ungraded': price,
-                        'PSA 9': null,
-                        'PSA 10': null
-                    },
-                    detectedGrade: null,
-                    extractedCardName: 'Manual',
-                    extractedSetName: '',
-                    imageUrl: null,
-                    pcUrl: url,
-                    isManual: true
-                };
-                
-                // Update or create the price display
-                updatePriceDisplay(listingElement, manualPriceData, null);
-                
-                // Color the eBay price
-                colorEbayPriceBasedOnComparison(listingElement, manualPriceData, null);
-                
-                // Store in cache with manual flag
-                const listingUrl = listingElement.querySelector('a.s-item__link')?.href || '';
-                if (listingUrl) {
-                    storeListingDisplayCache(listingUrl, {
-                        ...manualPriceData,
-                        timestamp: Date.now()
-                    });
-                }
-                
-                debugLog(`✅ Applied manual price: $${price}`);
-            }
-        });
-
         // Card number patterns - easy to add new ones
         const CARD_PATTERNS = [
             {
@@ -545,7 +710,7 @@
             const titleElement = listingElement.querySelector('.s-card__title .su-styled-text, [role="heading"] span, .s-item__title span, h3 span, .x-item-title-label span');
 
             if (titleElement) {
-                info.title = titleElement.textContent.trim();
+                info.title = cleanEbayTitle(titleElement.textContent.trim());
 
                 // Special case: Check for Black Star Promo patterns first
                 // "Mew ex SVP 053 Pokemon TCG Scarlet Violet 151 Black Star Promo" -> SVP = Scarlet & Violet Promo
@@ -1523,69 +1688,6 @@
             }
         }
 
-        // Add Manual Edit button to manually set price from PriceCharting
-        function addManualEditButton(listingElement) {
-            if (listingElement.querySelector('.pricecharting-manual-btn')) return;
-
-            const priceElement = listingElement.querySelector('.s-card__price, .s-item__price, .s-item__price-range, .notranslate');
-            if (!priceElement) return;
-
-            const button = document.createElement('button');
-            button.className = 'pricecharting-manual-btn';
-            button.textContent = '✏️';
-            button.title = 'Manually set price from PriceCharting';
-
-            Object.assign(button.style, {
-                display: 'inline-block',
-                marginLeft: '4px',
-                padding: '2px 6px',
-                background: '#3498db',
-                color: 'white',
-                border: 'none',
-                borderRadius: '3px',
-                fontSize: '11px',
-                fontWeight: 'bold',
-                verticalAlign: 'middle',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s'
-            });
-
-            if (!document.querySelector('#pricecharting-manual-button-styles')) {
-                const style = document.createElement('style');
-                style.id = 'pricecharting-manual-button-styles';
-                style.textContent = '.pricecharting-manual-btn:hover { background-color: #2980b9 !important; }';
-                document.head.appendChild(style);
-            }
-
-            button.addEventListener('click', async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const originalText = button.textContent;
-                button.textContent = '...';
-                button.disabled = true;
-
-                try {
-                    await openManualPriceEditor(listingElement);
-                } finally {
-                    button.textContent = originalText;
-                    button.disabled = false;
-                }
-            });
-
-            // Insert after the PC📊 (View) button or other buttons
-            const pcViewButton = listingElement.querySelector('.pricecharting-view-btn');
-            const pcDirectButton = listingElement.querySelector('.pricecharting-direct-btn');
-            
-            if (pcDirectButton && pcDirectButton.parentNode) {
-                pcDirectButton.parentNode.insertBefore(button, pcDirectButton.nextSibling);
-            } else if (pcViewButton && pcViewButton.parentNode) {
-                pcViewButton.parentNode.insertBefore(button, pcViewButton.nextSibling);
-            } else {
-                priceElement.parentNode.insertBefore(button, priceElement.nextSibling);
-            }
-        }
-
         // Calculate title similarity function (referenced in searchTCGdex)
         function calculateTitleSimilarity(ebayTitle, cardName) {
             if (!ebayTitle || !cardName) return 0;
@@ -2131,138 +2233,6 @@
             }
         }
 
-        // Function to open manual price editor
-        async function openManualPriceEditor(listingElement) {
-            try {
-                const listingInfo = extractListingInfo(listingElement);
-                debugLog('🔧 Opening manual price editor for:', listingInfo.title);
-
-                // Open PriceCharting in a new window
-                const searchQuery = encodeURIComponent(listingInfo.title || '');
-                const pcWindow = window.open(
-                    `https://www.pricecharting.com/search?q=${searchQuery}&type=prices`,
-                    'pcManualEditor',
-                    'width=1200,height=800,scrollbars=yes,resizable=yes'
-                );
-
-                if (!pcWindow) {
-                    alert('Please allow popups for this site to use the manual price editor.');
-                    return;
-                }
-
-                // Create a unique ID for this listing
-                const listingId = listingElement.getAttribute('data-gr') || 
-                                 listingElement.getAttribute('id') || 
-                                 `listing-${Date.now()}`;
-
-                // Store the listing element reference
-                window.pokespyManualEdits = window.pokespyManualEdits || {};
-                window.pokespyManualEdits[listingId] = listingElement;
-
-                // Inject a script into the popup window to add "Set Price" buttons
-                const injectionScript = `
-                    (function() {
-                        const listingId = '${listingId}';
-                        
-                        function addSetPriceButtons() {
-                            // Find all price elements on PriceCharting
-                            const priceElements = document.querySelectorAll('.price, .used_price, td:has(a[href*="/game/"])');
-                            
-                            priceElements.forEach((el) => {
-                                if (el.querySelector('.pokespy-set-price-btn')) return;
-                                
-                                // Try to extract price
-                                const priceText = el.textContent.trim();
-                                const priceMatch = priceText.match(/\\$([\\d,]+\\.?\\d*)/);
-                                
-                                if (priceMatch) {
-                                    const price = priceMatch[1].replace(',', '');
-                                    
-                                    const btn = document.createElement('button');
-                                    btn.className = 'pokespy-set-price-btn';
-                                    btn.textContent = '✓ Use This';
-                                    btn.style.cssText = \`
-                                        margin-left: 8px;
-                                        padding: 4px 8px;
-                                        background: #27ae60;
-                                        color: white;
-                                        border: none;
-                                        border-radius: 3px;
-                                        font-size: 11px;
-                                        font-weight: bold;
-                                        cursor: pointer;
-                                        transition: background 0.2s;
-                                    \`;
-                                    
-                                    btn.onmouseover = () => btn.style.background = '#229954';
-                                    btn.onmouseout = () => btn.style.background = '#27ae60';
-                                    
-                                    btn.onclick = () => {
-                                        // Send message to opener window
-                                        if (window.opener && !window.opener.closed) {
-                                            window.opener.postMessage({
-                                                type: 'POKESPY_SET_MANUAL_PRICE',
-                                                listingId: listingId,
-                                                price: parseFloat(price),
-                                                url: window.location.href
-                                            }, '*');
-                                            
-                                            btn.textContent = '✓ Set!';
-                                            btn.style.background = '#2ecc71';
-                                            setTimeout(() => window.close(), 1000);
-                                        }
-                                    };
-                                    
-                                    el.appendChild(btn);
-                                }
-                            });
-                        }
-                        
-                        // Add buttons when page loads
-                        if (document.readyState === 'loading') {
-                            document.addEventListener('DOMContentLoaded', addSetPriceButtons);
-                        } else {
-                            addSetPriceButtons();
-                        }
-                        
-                        // Re-add buttons after any DOM changes (for dynamic content)
-                        setTimeout(addSetPriceButtons, 1000);
-                        setTimeout(addSetPriceButtons, 2000);
-                    })();
-                `;
-
-                // Wait for the popup to load, then inject the script
-                const checkInterval = setInterval(() => {
-                    if (pcWindow.closed) {
-                        clearInterval(checkInterval);
-                        return;
-                    }
-                    
-                    try {
-                        if (pcWindow.document && pcWindow.document.readyState === 'complete') {
-                            clearInterval(checkInterval);
-                            const script = pcWindow.document.createElement('script');
-                            script.textContent = injectionScript;
-                            pcWindow.document.body.appendChild(script);
-                        }
-                    } catch (e) {
-                        // Cross-origin error - can't inject, but that's okay
-                        clearInterval(checkInterval);
-                    }
-                }, 100);
-
-                // Clean up after 5 minutes
-                setTimeout(() => {
-                    clearInterval(checkInterval);
-                }, 300000);
-
-            } catch (error) {
-                debugLog('❌ Error opening manual price editor:', error);
-                alert('Error opening price editor: ' + error.message);
-            }
-        }
-
-
         // --- Enhanced helper function for PriceCharting URL creation with all logic ---
         async function createPriceChartingUrl(cardNumber, setNumber, requestKey, listingElement, showPricePage) {
             try {
@@ -2770,11 +2740,6 @@
             });
         }
 
-        // Wrapper function for updating price display (used by manual edit and automatic updates)
-        function updatePriceDisplay(listingElement, pcData, detectedGrade) {
-            updateListingWithPriceChartingData(listingElement, pcData);
-        }
-
         // Update listing with PriceCharting data - Enhanced version with grade detection
         function updateListingWithPriceChartingData(listingElement, pcData) {
             debugLog('📊 Updating eBay listing with PriceCharting data:', pcData);
@@ -3263,6 +3228,31 @@
             return null;
         }
 
+        // Extract listing ID (item number) from listing element
+        function getListingId(listingElement) {
+            // Try to find the listing URL and extract ID
+            const linkElement = listingElement.querySelector('a[href*="/itm/"]');
+            if (linkElement) {
+                const match = linkElement.href.match(/\/itm\/(\d+)/);
+                if (match) {
+                    return match[1]; // Return the item number
+                }
+            }
+            
+            // Try data attributes
+            const itemId = listingElement.getAttribute('data-item-id') || 
+                          listingElement.getAttribute('listingid');
+            if (itemId) return itemId;
+            
+            // Fallback: use title as identifier
+            const titleElement = listingElement.querySelector('.s-card__title .su-styled-text, [role="heading"] span, .s-item__title span, h3 span, .x-item-title-label span');
+            if (titleElement) {
+                return `title_${titleElement.textContent.trim()}`;
+            }
+            
+            return null;
+        }
+
         // Check if listing has already been processed
         function isListingProcessed(listingElement) {
             // Check if display already exists
@@ -3276,6 +3266,353 @@
             }
             
             return false;
+        }
+
+        // Add notes button to listing
+        function addListingNotesButton(listingElement) {
+            // Don't add if already exists
+            if (listingElement.querySelector('.pokespy-notes-btn')) return;
+
+            // Find the watch button container
+            const watchContainer = listingElement.querySelector('.s-item__watchheart, .s-card__watchheart');
+            if (!watchContainer) return;
+
+            const listingId = getListingId(listingElement);
+            if (!listingId) return;
+
+            // Get existing note if any
+            const existingNote = getListingNote(listingId);
+
+            // Create notes button container
+            const notesContainer = document.createElement('div');
+            notesContainer.className = 'pokespy-notes-container';
+            notesContainer.style.cssText = `
+                position: absolute;
+                top: 45px;
+                right: 8px;
+                z-index: 100;
+            `;
+
+            // Main notes button
+            const mainButton = document.createElement('button');
+            mainButton.className = 'pokespy-notes-btn';
+            mainButton.innerHTML = existingNote ? getRatingIcon(existingNote.rating) : '📝';
+            mainButton.title = existingNote ? `Note: ${existingNote.rating}\n${existingNote.description || 'No description'}` : 'Add note';
+            mainButton.style.cssText = `
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: ${existingNote ? getRatingColor(existingNote.rating) : 'rgba(255, 255, 255, 0.9)'};
+                border: 2px solid ${existingNote ? '#fff' : '#ddd'};
+                cursor: pointer;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+                position: relative;
+            `;
+
+            // Rating options container (hidden by default)
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'pokespy-notes-options';
+            optionsContainer.style.cssText = `
+                position: absolute;
+                top: 0;
+                right: 0;
+                display: none;
+                pointer-events: auto;
+                width: 180px;
+                height: 180px;
+            `;
+
+            // Create rating buttons
+            const ratings = [
+                { type: 'good', icon: '✓', color: '#27ae60', label: 'Good' },
+                { type: 'neutral', icon: '−', color: '#f39c12', label: 'Neutral' },
+                { type: 'bad', icon: '✕', color: '#e74c3c', label: 'Bad' }
+            ];
+
+            ratings.forEach((rating, index) => {
+                const ratingBtn = document.createElement('button');
+                ratingBtn.className = `pokespy-rating-btn pokespy-rating-${rating.type}`;
+                ratingBtn.innerHTML = rating.icon;
+                ratingBtn.title = rating.label;
+                ratingBtn.style.cssText = `
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background: ${rating.color};
+                    border: 2px solid #fff;
+                    cursor: pointer;
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    opacity: 0;
+                    transform: translate(0, 0) scale(0);
+                    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease;
+                    pointer-events: all;
+                `;
+
+                ratingBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openNoteModal(listingElement, listingId, rating.type);
+                    hideOptions();
+                });
+
+                optionsContainer.appendChild(ratingBtn);
+            });
+
+            notesContainer.appendChild(mainButton);
+            notesContainer.appendChild(optionsContainer);
+
+            // Fan out animation
+            let isExpanded = false;
+            let hoverTimeout;
+
+            function showOptions() {
+                isExpanded = true;
+                optionsContainer.style.display = 'block';
+                
+                const positions = [
+                    { x: -45, y: 45 },   // Good: down-left
+                    { x: 0, y: 55 },     // Neutral: straight down
+                    { x: 45, y: 45 }     // Bad: down-right
+                ];
+                
+                const buttons = optionsContainer.querySelectorAll('.pokespy-rating-btn');
+                buttons.forEach((btn, index) => {
+                    setTimeout(() => {
+                        const pos = positions[index];
+                        btn.style.opacity = '1';
+                        btn.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(1)`;
+                    }, index * 100);
+                });
+            }
+
+            function hideOptions() {
+                isExpanded = false;
+                const buttons = optionsContainer.querySelectorAll('.pokespy-rating-btn');
+                buttons.forEach(btn => {
+                    btn.style.opacity = '0';
+                    btn.style.transform = 'translate(0, 0) scale(0)';
+                });
+                
+                setTimeout(() => {
+                    optionsContainer.style.display = 'none';
+                }, 300);
+            }
+
+            mainButton.addEventListener('mouseenter', () => {
+                if (!isExpanded) showOptions();
+            });
+
+            notesContainer.addEventListener('mouseleave', () => {
+                clearTimeout(hoverTimeout);
+                if (isExpanded) {
+                    setTimeout(hideOptions, 500);
+                }
+            });
+
+            mainButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (existingNote) {
+                    // If note exists, open modal to edit
+                    openNoteModal(listingElement, listingId, existingNote.rating, existingNote.description);
+                } else if (!isExpanded) {
+                    // If no note and not expanded, show options
+                    showOptions();
+                }
+            });
+
+            // Insert after watch button
+            watchContainer.parentNode.style.position = 'relative';
+            watchContainer.parentNode.appendChild(notesContainer);
+        }
+
+        // Open modal for note description
+        function openNoteModal(listingElement, listingId, rating, existingDescription = '') {
+            // Remove any existing modal
+            const existingModal = document.getElementById('pokespy-note-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'pokespy-note-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 999999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.2s ease;
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: #2f3136;
+                color: white;
+                padding: 24px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                animation: slideIn 0.3s ease;
+            `;
+
+            const ratingColor = getRatingColor(rating);
+            const ratingIcon = getRatingIcon(rating);
+
+            modalContent.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: ${ratingColor}; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin-right: 12px;">
+                        ${ratingIcon}
+                    </div>
+                    <div>
+                        <div style="font-size: 18px; font-weight: bold;">Add Note</div>
+                        <div style="font-size: 12px; opacity: 0.7;">${rating.charAt(0).toUpperCase() + rating.slice(1)} Rating</div>
+                    </div>
+                </div>
+                <textarea id="pokespy-note-textarea" placeholder="Why did you choose this rating?" style="
+                    width: 100%;
+                    min-height: 120px;
+                    padding: 12px;
+                    background: #40444b;
+                    border: 2px solid ${ratingColor};
+                    border-radius: 8px;
+                    color: white;
+                    font-family: inherit;
+                    font-size: 14px;
+                    resize: vertical;
+                    margin-bottom: 16px;
+                ">${existingDescription}</textarea>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button id="pokespy-note-cancel" style="
+                        padding: 10px 20px;
+                        background: #5865f2;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    ">Cancel</button>
+                    <button id="pokespy-note-delete" style="
+                        padding: 10px 20px;
+                        background: #ed4245;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        display: ${existingDescription ? 'block' : 'none'};
+                    ">Delete</button>
+                    <button id="pokespy-note-save" style="
+                        padding: 10px 20px;
+                        background: ${ratingColor};
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    ">Save Note</button>
+                </div>
+            `;
+
+            // Add animation styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideIn {
+                    from { transform: translateY(-20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            // Focus textarea
+            const textarea = document.getElementById('pokespy-note-textarea');
+            textarea.focus();
+
+            // Event handlers
+            document.getElementById('pokespy-note-cancel').addEventListener('click', () => {
+                modal.remove();
+            });
+
+            document.getElementById('pokespy-note-delete').addEventListener('click', () => {
+                const noteKey = `listing_note_${listingId}`;
+                GM_deleteValue(noteKey);
+                
+                // Update button
+                const notesBtn = listingElement.querySelector('.pokespy-notes-btn');
+                if (notesBtn) {
+                    notesBtn.innerHTML = '📝';
+                    notesBtn.title = 'Add note';
+                    notesBtn.style.background = 'rgba(255, 255, 255, 0.9)';
+                    notesBtn.style.borderColor = '#ddd';
+                }
+                
+                modal.remove();
+            });
+
+            document.getElementById('pokespy-note-save').addEventListener('click', () => {
+                const description = textarea.value.trim();
+                
+                storeListingNote(listingId, {
+                    rating: rating,
+                    description: description
+                });
+
+                // Update button
+                const notesBtn = listingElement.querySelector('.pokespy-notes-btn');
+                if (notesBtn) {
+                    notesBtn.innerHTML = getRatingIcon(rating);
+                    notesBtn.title = `Note: ${rating}\n${description || 'No description'}`;
+                    notesBtn.style.background = getRatingColor(rating);
+                    notesBtn.style.borderColor = '#fff';
+                }
+
+                modal.remove();
+            });
+
+            // Close on background click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+
+            // Close on escape key
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    modal.remove();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
         }
 
         // Update the addPriceChartingButtons function
@@ -3364,15 +3701,15 @@
                                     addGooglePriceChartingButton(listing, info.title);
                                     addPriceChartingViewButton(listing, info.cardNumber, info.setNumber, info.matchedPattern);
                                     addPriceChartingDirectButton(listing, info.cardNumber, info.setNumber, info.matchedPattern);
-                                    addManualEditButton(listing);
                                 } else if (info.setName) {
                                     addGooglePriceChartingButton(listing, info.title);
                                     addPriceChartingDirectButton(listing, null, null, 'title-based');
-                                    addManualEditButton(listing);
                                 } else {
                                     addGooglePriceChartingButton(listing, info.title);
-                                    addManualEditButton(listing);
                                 }
+                                
+                                // Add notes button
+                                addListingNotesButton(listing);
                             } else {
                                 // Display exists, but update price comparison dynamically
                                 const pcData = {
@@ -3410,17 +3747,17 @@
                         addGooglePriceChartingButton(listing, info.title);
                         addPriceChartingViewButton(listing, info.cardNumber, info.setNumber, info.matchedPattern);
                         addPriceChartingDirectButton(listing, info.cardNumber, info.setNumber, info.matchedPattern);
-                        addManualEditButton(listing);
                     } else if (info.setName) {
                         // No card number, but we have set name - add title-based search button
                         debugLog(`✅ Adding title-based search button for set: ${info.setName}`);
                         addGooglePriceChartingButton(listing, info.title);
                         addPriceChartingDirectButton(listing, null, null, 'title-based');
-                        addManualEditButton(listing);
                     } else {
                         addGooglePriceChartingButton(listing, info.title);
-                        addManualEditButton(listing);
                     }
+                    
+                    // Add notes button
+                    addListingNotesButton(listing);
                 }
 
                 processed = endIndex;
@@ -3461,9 +3798,25 @@
             `;
 
             panel.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 10px; color: #9b59b6; font-size: 14px;">💎 PokeSpy PC Control</div>
-                <div style="margin-bottom: 8px;">
-                    <button id="pokespy-check-all-btn" style="
+                <div style="font-weight: bold; margin-bottom: 10px; color: #9b59b6; font-size: 14px; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span>💎</span>
+                        <span>PokeSpy - Search Page</span>
+                    </div>
+                    <button id="pokespy-search-minimize-btn" style="
+                        background: transparent;
+                        border: none;
+                        color: #b9bbbe;
+                        font-size: 16px;
+                        cursor: pointer;
+                        padding: 4px;
+                        line-height: 1;
+                        transition: color 0.2s ease;
+                    " title="Minimize panel">−</button>
+                </div>
+                <div id="pokespy-search-panel-content">
+                    <div style="margin-bottom: 8px;">
+                        <button id="pokespy-check-all-btn" style="
                         width: 100%;
                         padding: 8px 12px;
                         background: linear-gradient(45deg, #9b59b6, #8e44ad);
@@ -3504,15 +3857,139 @@
                         transition: all 0.2s ease;
                     ">🗑️ Clear Cache</button>
                 </div>
-                <div style="font-size: 11px; opacity: 0.8; margin-top: 8px; padding-top: 8px; border-top: 1px solid #444;">
-                    <div>Status: <span id="pokespy-status" style="color: #43b581; font-weight: bold;">Ready</span></div>
-                    <div id="pokespy-progress" style="margin-top: 4px; display: none;">
-                        Progress: <span id="pokespy-progress-text" style="font-weight: bold;">0/0</span>
+                <div style="margin-bottom: 8px;">
+                    <button id="pokespy-hide-bad-btn" style="
+                        width: 100%;
+                        padding: 6px 10px;
+                        background: #e74c3c;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">✕ Hide Bad Listings</button>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <button id="pokespy-auto-refresh-btn" style="
+                        width: 100%;
+                        padding: 6px 10px;
+                        background: #3498db;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">🔄 Auto-Refresh OFF</button>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <button id="pokespy-discord-settings-btn" style="
+                        width: 100%;
+                        padding: 6px 10px;
+                        background: #5865f2;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">⚙️ Discord Webhook</button>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <button id="pokespy-ebay-api-settings-btn" style="
+                        width: 100%;
+                        padding: 6px 10px;
+                        background: #e67e22;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">🔑 eBay API Key</button>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <button id="pokespy-api-poll-btn" style="
+                        width: 100%;
+                        padding: 6px 10px;
+                        background: #16a085;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">📡 API Poll OFF</button>
+                </div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 8px; padding-top: 8px; border-top: 1px solid #444;">
+                        <div>Status: <span id="pokespy-status" style="color: #43b581; font-weight: bold;">Ready</span></div>
+                        <div id="pokespy-progress" style="margin-top: 4px; display: none;">
+                            Progress: <span id="pokespy-progress-text" style="font-weight: bold;">0/0</span>
+                        </div>
                     </div>
                 </div>
             `;
 
             document.body.appendChild(panel);
+
+            // Add minimize functionality
+            let isMinimized = false;
+            const minimizeBtn = document.getElementById('pokespy-search-minimize-btn');
+            const panelContent = document.getElementById('pokespy-search-panel-content');
+            const panelHeader = minimizeBtn.parentElement;
+            
+            // Create minimized icon
+            const minimizedIcon = document.createElement('div');
+            minimizedIcon.innerHTML = '💎';
+            minimizedIcon.style.cssText = `
+                font-size: 20px;
+                cursor: pointer;
+                display: none;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            minimizedIcon.title = 'Expand PokeSpy panel';
+            panel.appendChild(minimizedIcon);
+            
+            function toggleMinimize() {
+                isMinimized = !isMinimized;
+                if (isMinimized) {
+                    panelContent.style.display = 'none';
+                    panelHeader.style.display = 'none';
+                    minimizedIcon.style.display = 'flex';
+                    panel.style.minWidth = 'auto';
+                    panel.style.width = '40px';
+                    panel.style.height = '40px';
+                    panel.style.padding = '0';
+                } else {
+                    panelContent.style.display = 'block';
+                    panelHeader.style.display = 'flex';
+                    minimizedIcon.style.display = 'none';
+                    panel.style.minWidth = '220px';
+                    panel.style.width = 'auto';
+                    panel.style.height = 'auto';
+                    panel.style.padding = '12px';
+                }
+            }
+            
+            minimizeBtn.addEventListener('click', toggleMinimize);
+            minimizedIcon.addEventListener('click', toggleMinimize);
+            
+            minimizeBtn.addEventListener('mouseenter', () => {
+                minimizeBtn.style.color = '#ffffff';
+            });
+            minimizeBtn.addEventListener('mouseleave', () => {
+                minimizeBtn.style.color = '#b9bbbe';
+            });
 
             // Add hover effect for check all button
             const checkAllButton = document.getElementById('pokespy-check-all-btn');
@@ -3555,6 +4032,1069 @@
                     
                     alert(`✅ Cleared ${clearedCount} cached listing(s). Page will reload.`);
                     location.reload();
+                }
+            });
+
+            // Discord webhook settings modal
+            const discordSettingsBtn = document.getElementById('pokespy-discord-settings-btn');
+            const webhookUrl = GM_getValue('discord_webhook_url', '');
+            
+            // Update button text based on webhook status
+            if (webhookUrl) {
+                discordSettingsBtn.innerHTML = '✅ Discord Webhook';
+            }
+            
+            // eBay API key settings modal
+            const ebayApiSettingsBtn = document.getElementById('pokespy-ebay-api-settings-btn');
+            const ebayClientId = GM_getValue('ebay_client_id', '');
+            const ebayClientSecret = GM_getValue('ebay_client_secret', '');
+            
+            // Update button text based on API key status
+            if (ebayClientId && ebayClientSecret) {
+                ebayApiSettingsBtn.innerHTML = '✅ eBay API Key';
+            }
+            
+            ebayApiSettingsBtn.addEventListener('click', () => {
+                const currentClientId = GM_getValue('ebay_client_id', '');
+                const currentClientSecret = GM_getValue('ebay_client_secret', '');
+                const currentEnvironment = GM_getValue('ebay_api_environment', 'sandbox');
+                
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    z-index: 999999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
+                
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background: #2f3136;
+                    color: white;
+                    padding: 24px;
+                    border-radius: 12px;
+                    max-width: 650px;
+                    width: 90%;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                    max-height: 80vh;
+                    overflow-y: auto;
+                `;
+                
+                modalContent.innerHTML = `
+                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 24px;">🔑</span>
+                        eBay Developer API Credentials
+                    </div>
+                    <div style="margin-bottom: 16px; font-size: 13px; opacity: 0.9; line-height: 1.5;">
+                        <p style="margin: 0 0 12px 0;"><strong>⚠️ IMPORTANT: Use SANDBOX credentials for testing!</strong></p>
+                        <p style="margin: 0 0 12px 0;">To use the eBay Browse API:</p>
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <li>Go to <a href="https://developer.ebay.com/" target="_blank" style="color: #5865f2;">developer.ebay.com</a></li>
+                            <li>Sign in with your eBay account</li>
+                            <li>Go to <strong>My Account → Application Keys</strong></li>
+                            <li>Under <strong>Sandbox Keys</strong> section, click "Create a keyset" if you don't have one</li>
+                            <li>Find the <strong>OAuth credentials</strong> section</li>
+                            <li>Copy <strong>App ID (Client ID)</strong> and <strong>Cert ID (Client Secret)</strong></li>
+                        </ol>
+                        <p style="margin: 12px 0 0 0; font-size: 12px; opacity: 0.7; background: #e67e22; padding: 8px; border-radius: 4px;">
+                            💡 <strong>Tip:</strong> Production keys require approval and won't work for most apps. Start with Sandbox!
+                        </p>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; margin-bottom: 4px; font-size: 12px; opacity: 0.8;">Environment:</label>
+                        <select id="pokespy-environment-select" style="
+                            width: 100%;
+                            padding: 10px;
+                            background: #40444b;
+                            border: 2px solid #e67e22;
+                            border-radius: 6px;
+                            color: white;
+                            font-size: 12px;
+                        ">
+                            <option value="sandbox" ${currentEnvironment === 'sandbox' ? 'selected' : ''}>Sandbox (for testing)</option>
+                            <option value="production" ${currentEnvironment === 'production' ? 'selected' : ''}>Production (requires approval)</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="display: block; margin-bottom: 4px; font-size: 12px; opacity: 0.8;">App ID (Client ID):</label>
+                        <input type="text" id="pokespy-client-id-input" placeholder="YourAppName-YourApp-SBX-... (for Sandbox)" value="${currentClientId}" style="
+                            width: 100%;
+                            padding: 10px;
+                            background: #40444b;
+                            border: 2px solid #e67e22;
+                            border-radius: 6px;
+                            color: white;
+                            font-family: monospace;
+                            font-size: 11px;
+                        ">
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 4px; font-size: 12px; opacity: 0.8;">Cert ID (Client Secret):</label>
+                        <input type="password" id="pokespy-client-secret-input" placeholder="SBX-... (for Sandbox)" value="${currentClientSecret}" style="
+                            width: 100%;
+                            padding: 10px;
+                            background: #40444b;
+                            border: 2px solid #e67e22;
+                            border-radius: 6px;
+                            color: white;
+                            font-family: monospace;
+                            font-size: 11px;
+                        ">
+                    </div>
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button id="pokespy-api-key-cancel" style="
+                            padding: 10px 20px;
+                            background: #95a5a6;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">Cancel</button>
+                        <button id="pokespy-api-key-clear" style="
+                            padding: 10px 20px;
+                            background: #e74c3c;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            display: ${currentClientId || currentClientSecret ? 'block' : 'none'};
+                        ">Clear</button>
+                        <button id="pokespy-api-key-save" style="
+                            padding: 10px 20px;
+                            background: #e67e22;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">Save</button>
+                    </div>
+                `;
+                
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+                
+                const clientIdInput = document.getElementById('pokespy-client-id-input');
+                const clientSecretInput = document.getElementById('pokespy-client-secret-input');
+                const environmentSelect = document.getElementById('pokespy-environment-select');
+                clientIdInput.focus();
+                
+                document.getElementById('pokespy-api-key-cancel').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                document.getElementById('pokespy-api-key-clear').addEventListener('click', () => {
+                    GM_setValue('ebay_client_id', '');
+                    GM_setValue('ebay_client_secret', '');
+                    GM_setValue('ebay_api_environment', 'sandbox');
+                    GM_deleteValue('ebay_api_token');
+                    GM_deleteValue('ebay_api_token_expires');
+                    ebayApiSettingsBtn.innerHTML = '🔑 eBay API Key';
+                    modal.remove();
+                });
+                
+                document.getElementById('pokespy-api-key-save').addEventListener('click', () => {
+                    const clientId = clientIdInput.value.trim();
+                    const clientSecret = clientSecretInput.value.trim();
+                    const environment = environmentSelect.value;
+                    
+                    if (!clientId || !clientSecret) {
+                        alert('⚠️ Please enter both App ID (Client ID) and Cert ID (Client Secret)');
+                        return;
+                    }
+                    
+                    GM_setValue('ebay_client_id', clientId);
+                    GM_setValue('ebay_client_secret', clientSecret);
+                    GM_setValue('ebay_api_environment', environment);
+                    // Clear cached token when credentials change
+                    GM_deleteValue('ebay_api_token');
+                    GM_deleteValue('ebay_api_token_expires');
+                    ebayApiSettingsBtn.innerHTML = '✅ eBay API Key';
+                    modal.remove();
+                });
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.remove();
+                });
+            });
+            
+            discordSettingsBtn.addEventListener('click', () => {
+                const currentUrl = GM_getValue('discord_webhook_url', '');
+                
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    z-index: 999999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
+                
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background: #2f3136;
+                    color: white;
+                    padding: 24px;
+                    border-radius: 12px;
+                    max-width: 500px;
+                    width: 90%;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                `;
+                
+                modalContent.innerHTML = `
+                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 24px;">🔗</span>
+                        Discord Webhook Settings
+                    </div>
+                    <div style="margin-bottom: 12px; font-size: 13px; opacity: 0.8; line-height: 1.4;">
+                        Enter your Discord webhook URL to receive notifications when new listings appear in the top 8.
+                    </div>
+                    <input type="text" id="pokespy-webhook-input" placeholder="https://discord.com/api/webhooks/..." value="${currentUrl}" style="
+                        width: 100%;
+                        padding: 10px;
+                        background: #40444b;
+                        border: 2px solid #5865f2;
+                        border-radius: 6px;
+                        color: white;
+                        font-family: monospace;
+                        font-size: 12px;
+                        margin-bottom: 16px;
+                    ">
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button id="pokespy-webhook-cancel" style="
+                            padding: 10px 20px;
+                            background: #95a5a6;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">Cancel</button>
+                        <button id="pokespy-webhook-clear" style="
+                            padding: 10px 20px;
+                            background: #e74c3c;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            display: ${currentUrl ? 'block' : 'none'};
+                        ">Clear</button>
+                        <button id="pokespy-webhook-save" style="
+                            padding: 10px 20px;
+                            background: #5865f2;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        ">Save</button>
+                    </div>
+                `;
+                
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+                
+                const input = document.getElementById('pokespy-webhook-input');
+                input.focus();
+                
+                document.getElementById('pokespy-webhook-cancel').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                document.getElementById('pokespy-webhook-clear').addEventListener('click', () => {
+                    GM_setValue('discord_webhook_url', '');
+                    discordSettingsBtn.innerHTML = '⚙️ Discord Webhook';
+                    modal.remove();
+                });
+                
+                document.getElementById('pokespy-webhook-save').addEventListener('click', () => {
+                    const url = input.value.trim();
+                    if (url && !url.startsWith('https://discord.com/api/webhooks/')) {
+                        alert('Invalid Discord webhook URL. It should start with https://discord.com/api/webhooks/');
+                        return;
+                    }
+                    GM_setValue('discord_webhook_url', url);
+                    discordSettingsBtn.innerHTML = url ? '✅ Discord Webhook' : '⚙️ Discord Webhook';
+                    modal.remove();
+                });
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.remove();
+                });
+            });
+            
+            // Function to send listing to Discord webhook
+            async function sendToDiscord(listingData) {
+                const webhookUrl = GM_getValue('discord_webhook_url', '');
+                if (!webhookUrl) return;
+                
+                try {
+                    const embed = {
+                        title: listingData.title,
+                        url: listingData.url,
+                        color: 0x9b59b6, // Purple color
+                        fields: [
+                            {
+                                name: 'Price',
+                                value: listingData.price || 'N/A',
+                                inline: true
+                            },
+                            {
+                                name: 'Time Left',
+                                value: listingData.timeLeft || 'N/A',
+                                inline: true
+                            }
+                        ],
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    if (listingData.imageUrl) {
+                        embed.thumbnail = { url: listingData.imageUrl };
+                    }
+                    
+                    const payload = {
+                        content: '🆕 **New Listing Detected!**',
+                        embeds: [embed]
+                    };
+                    
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (response.ok) {
+                        debugLog('✅ Sent to Discord successfully');
+                    } else {
+                        debugLog('❌ Failed to send to Discord:', response.status, response.statusText);
+                    }
+                } catch (error) {
+                    debugLog('❌ Error sending to Discord:', error);
+                }
+            }
+            
+            // eBay API OAuth token management
+            async function getEbayApiToken() {
+                const clientId = GM_getValue('ebay_client_id', '');
+                const clientSecret = GM_getValue('ebay_client_secret', '');
+                
+                if (!clientId || !clientSecret) {
+                    debugLog('❌ No eBay API credentials configured');
+                    console.error('Missing credentials - Client ID:', clientId ? 'Set' : 'Missing', 'Client Secret:', clientSecret ? 'Set' : 'Missing');
+                    return null;
+                }
+                
+                // Check if we have a cached valid token
+                const cachedToken = GM_getValue('ebay_api_token', '');
+                const tokenExpires = GM_getValue('ebay_api_token_expires', 0);
+                
+                if (cachedToken && Date.now() < tokenExpires) {
+                    debugLog('✅ Using cached eBay API token');
+                    return cachedToken;
+                }
+                
+                // Get new token using Client Credentials grant
+                try {
+                    debugLog('🔄 Requesting new eBay API token...');
+                    const environment = GM_getValue('ebay_api_environment', 'sandbox');
+                    console.log('Environment:', environment);
+                    console.log('Client ID (first 10 chars):', clientId.substring(0, 10) + '...');
+                    console.log('Client Secret (first 5 chars):', clientSecret.substring(0, 5) + '...');
+                    
+                    const credentials = btoa(`${clientId}:${clientSecret}`);
+                    console.log('Base64 credentials (first 20 chars):', credentials.substring(0, 20) + '...');
+                    
+                    // Use sandbox or production endpoint based on environment
+                    const tokenUrl = environment === 'sandbox' 
+                        ? 'https://api.sandbox.ebay.com/identity/v1/oauth2/token'
+                        : 'https://api.ebay.com/identity/v1/oauth2/token';
+                    
+                    console.log('Token URL:', tokenUrl);
+                    
+                    return await new Promise((resolve, reject) => {
+                        GM.xmlHttpRequest({
+                            method: 'POST',
+                            url: tokenUrl,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Authorization': `Basic ${credentials}`
+                            },
+                            data: 'grant_type=client_credentials&scope=https://api.ebay.com/oauth/api_scope',
+                            onload: (response) => {
+                                console.log('eBay OAuth Response Status:', response.status);
+                                console.log('eBay OAuth Response:', response.responseText);
+                                
+                                if (response.status >= 200 && response.status < 300) {
+                                    try {
+                                        const data = JSON.parse(response.responseText);
+                                        const token = data.access_token;
+                                        const expiresIn = data.expires_in || 7200; // Default 2 hours
+                                        
+                                        // Cache token (expires 5 minutes early to be safe)
+                                        GM_setValue('ebay_api_token', token);
+                                        GM_setValue('ebay_api_token_expires', Date.now() + ((expiresIn - 300) * 1000));
+                                        
+                                        debugLog('✅ eBay API token acquired');
+                                        console.log('Token acquired, expires in:', expiresIn, 'seconds');
+                                        resolve(token);
+                                    } catch (err) {
+                                        console.error('Failed to parse token response:', err);
+                                        debugLog('❌ Failed to parse token response:', err);
+                                        resolve(null);
+                                    }
+                                } else {
+                                    console.error('Authentication failed:', response.status, response.responseText);
+                                    debugLog('❌ Failed to get eBay API token:', response.status, response.responseText);
+                                    
+                                    let errorMsg = 'Authentication failed: ';
+                                    try {
+                                        const errorData = JSON.parse(response.responseText);
+                                        errorMsg += errorData.error_description || errorData.error || response.responseText;
+                                    } catch {
+                                        errorMsg += response.responseText;
+                                    }
+                                    
+                                    alert('❌ eBay API authentication failed.\n\n' + errorMsg + '\n\nPlease verify:\n1. Client ID is correct (from Production keyset)\n2. Client Secret is correct\n3. You\'re using Production credentials (not Sandbox)\n\nCheck browser console for more details.');
+                                    resolve(null);
+                                }
+                            },
+                            onerror: (error) => {
+                                console.error('Network error getting eBay token:', error);
+                                debugLog('❌ Error getting eBay API token:', error);
+                                alert('❌ Cannot connect to eBay API. Network error.');
+                                resolve(null);
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error('Exception in getEbayApiToken:', error);
+                    debugLog('❌ Error getting eBay API token:', error);
+                    return null;
+                }
+            }
+            
+            // Extract current search filters from URL
+            function extractSearchFilters() {
+                const url = new URL(window.location.href);
+                const params = new URLSearchParams(url.search);
+                
+                console.log('📋 URL Parameters:', Object.fromEntries(params.entries()));
+                
+                // Map eBay _sop codes to Browse API sort values
+                const sortMap = {
+                    '1': 'price',              // Price + Shipping: lowest first
+                    '10': 'newlyListed',       // Best Match -> use newly listed for monitoring
+                    '12': '-price',            // Price + Shipping: highest first
+                    '15': '-endingSoonest',    // Time: ending soonest
+                    '16': 'price',             // Price: lowest first
+                    '17': '-price'             // Price: highest first
+                };
+                
+                const sopCode = params.get('_sop');
+                const apiSort = sopCode ? (sortMap[sopCode] || 'newlyListed') : 'newlyListed';
+                
+                // Extract common eBay search parameters
+                const filters = {
+                    q: params.get('_nkw') || params.get('q') || '', // Search query
+                    categoryId: params.get('_sacat') || params.get('_dcat') || params.get('categoryId'), // _dcat is also used
+                    sort: apiSort, // Use mapped sort value, default to newlyListed for monitoring
+                    buyingFormat: params.get('LH_BIN') === '1' ? 'FIXED_PRICE' : params.get('LH_Auction') === '1' ? 'AUCTION' : null,
+                    filter: [],
+                    limit: 40 // Get top 40 results to filter down
+                };
+                
+                console.log(`🔄 Sort: eBay code ${sopCode} -> API sort '${apiSort}'`);
+                
+                // Add price filters
+                const minPrice = params.get('_udlo');
+                const maxPrice = params.get('_udhi');
+                if (minPrice || maxPrice) {
+                    // eBay Browse API format: price:[min..max],priceCurrency:USD
+                    // Use {min} or {max} syntax for proper filtering
+                    const min = minPrice || '0';
+                    const max = maxPrice || '';
+                    if (max) {
+                        filters.filter.push(`price:[${min}..${max}],priceCurrency:USD`);
+                    } else {
+                        filters.filter.push(`price:[${min}..],priceCurrency:USD`);
+                    }
+                    console.log(`💰 Price filter: min=$${min}, max=$${max || 'none'}`);
+                }
+                
+                // Add condition filter
+                const condition = params.get('LH_ItemCondition');
+                if (condition) {
+                    filters.filter.push(`conditionIds:{${condition}}`);
+                }
+                
+                // Add location filter - US only
+                if (params.get('LH_PrefLoc') === '1' || params.get('LH_AV') === '1') {
+                    filters.filter.push('itemLocationCountry:US');
+                }
+                
+                const locatedIn = params.get('_fcid');
+                if (locatedIn) {
+                    filters.filter.push(`locatedIn:${locatedIn}`);
+                }
+                
+                // Add authenticity guarantee to buying options if requested
+                if (params.get('LH_AV') === '1') {
+                    // Will be combined with buyingOptions filter below
+                    filters.authenticityGuarantee = true;
+                    console.log('🔍 Authenticity Guarantee filter will be applied');
+                }
+                
+                // Add "New" filter if LH_Complete is set (completed listings)
+                if (params.get('LH_Complete') === '1') {
+                    filters.filter.push('listingStatus:COMPLETED');
+                }
+                
+                // Add "Sold" filter
+                if (params.get('LH_Sold') === '1') {
+                    filters.filter.push('listingStatus:SOLD');
+                }
+                
+                // Add shipping options
+                if (params.get('LH_FS') === '1') { // Free shipping
+                    filters.filter.push('deliveryOptions:{FREE_SHIPPING}');
+                }
+                
+                // Add filter for items listed in the last hour (for API polling freshness)
+                // This ensures we get recent items, not the same old "newly listed" items
+                const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+                filters.filter.push(`listingStartDate:[${oneHourAgo}..`);
+                console.log(`⏰ Filtering items listed since: ${oneHourAgo}`);
+                
+                // Check for custom "Graded" aspect filter
+                const graded = params.get('Graded');
+                const language = params.get('Language');
+                
+                // Build aspect_filter if we have aspect parameters
+                const aspectFilters = [];
+                
+                if (graded) {
+                    // Use the exact value from the URL parameter
+                    aspectFilters.push(`Graded:{${graded}}`);
+                }
+                
+                if (language) {
+                    aspectFilters.push(`Language:{${language}}`);
+                }
+                
+                // Store aspect filters separately - they need to be in aspect_filter parameter
+                filters.aspectFilter = aspectFilters.length > 0 ? aspectFilters : null;
+                filters.gradedFilter = graded; // Also store for backup client-side filtering
+                
+                console.log('🔍 Extracted filters:', filters);
+                
+                return filters;
+            }
+            
+            // Call eBay Browse API
+            async function searchEbayApi(filters) {
+                const token = await getEbayApiToken();
+                if (!token) {
+                    debugLog('❌ Cannot search: no valid API token');
+                    return null;
+                }
+                
+                try {
+                    // Build query parameters
+                    const params = new URLSearchParams();
+                    if (filters.q) params.append('q', filters.q);
+                    if (filters.categoryId) params.append('category_ids', filters.categoryId);
+                    if (filters.sort) params.append('sort', filters.sort);
+                    if (filters.limit) params.append('limit', filters.limit.toString());
+                    
+                    // Combine all filters into a single comma-separated string
+                    const allFilters = [...filters.filter];
+                    
+                    // Build buyingOptions filter (can have multiple values)
+                    const buyingOptions = [];
+                    if (filters.buyingFormat) {
+                        buyingOptions.push(filters.buyingFormat);
+                    }
+                    if (filters.authenticityGuarantee) {
+                        buyingOptions.push('AUTHENTICITY_GUARANTEE');
+                    }
+                    if (buyingOptions.length > 0) {
+                        allFilters.push(`buyingOptions:{${buyingOptions.join('|')}}`);
+                    }
+                    
+                    if (allFilters.length > 0) {
+                        params.append('filter', allFilters.join(','));
+                        console.log('🔧 Combined filters:', allFilters.join(','));
+                    }
+                    
+                    // Add aspect_filter if present (Graded, Language, etc.)
+                    if (filters.aspectFilter && filters.aspectFilter.length > 0) {
+                        // aspect_filter format: categoryId:CATEGORY_ID,AspectName:{Value}
+                        const aspectFilterStr = `categoryId:${filters.categoryId},${filters.aspectFilter.join(',')}`;
+                        params.append('aspect_filter', aspectFilterStr);
+                        console.log('🎯 Aspect filter:', aspectFilterStr);
+                    }
+                    
+                    // Use sandbox or production endpoint based on environment
+                    const environment = GM_getValue('ebay_api_environment', 'sandbox');
+                    const baseUrl = environment === 'sandbox'
+                        ? 'https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search'
+                        : 'https://api.ebay.com/buy/browse/v1/item_summary/search';
+                    
+                    const apiUrl = `${baseUrl}?${params.toString()}`;
+                    debugLog('📡 eBay API Request:', apiUrl);
+                    console.log('Using environment:', environment);
+                    console.log('API URL:', apiUrl);
+                    
+                    return await new Promise((resolve, reject) => {
+                        GM.xmlHttpRequest({
+                            method: 'GET',
+                            url: apiUrl,
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'X-EBAY-C-MARKETPLACE-ID': 'EBAY_US',
+                                'Accept': 'application/json'
+                            },
+                            onload: (response) => {
+                                if (response.status >= 200 && response.status < 300) {
+                                    try {
+                                        const data = JSON.parse(response.responseText);
+                                        debugLog('✅ eBay API Response:', data);
+                                        resolve(data);
+                                    } catch (err) {
+                                        debugLog('❌ Failed to parse API response:', err);
+                                        resolve(null);
+                                    }
+                                } else {
+                                    debugLog('❌ eBay API Error:', response.status, response.responseText);
+                                    resolve(null);
+                                }
+                            },
+                            onerror: (error) => {
+                                debugLog('❌ Error calling eBay API:', error);
+                                resolve(null);
+                            }
+                        });
+                    });
+                } catch (error) {
+                    debugLog('❌ Error calling eBay API:', error);
+                    return null;
+                }
+            }
+
+            // Auto-refresh functionality
+            let autoRefreshEnabled = false;
+            let autoRefreshInterval = null;
+            let seenListingIds = new Set(GM_getValue('seen_listing_ids', []));
+            const autoRefreshBtn = document.getElementById('pokespy-auto-refresh-btn');
+            
+            // Function to update tab badge
+            let originalTitle = document.title;
+            let newListingCount = 0;
+            
+            function updateTabBadge(count) {
+                newListingCount = count;
+                if (count > 0) {
+                    document.title = `(${count}) ${originalTitle}`;
+                } else {
+                    document.title = originalTitle;
+                }
+            }
+            
+            // Clear badge when page is focused
+            window.addEventListener('focus', () => {
+                if (newListingCount > 0) {
+                    debugLog('🔍 Page focused - clearing badge');
+                    updateTabBadge(0);
+                }
+            });
+            
+            // Function to play notification sound
+            function playNotificationSound() {
+                // Create a simple beep sound using Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800; // Frequency in Hz
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+            
+            // Function to get top 8 listing IDs
+            function getTop8ListingIds() {
+                const allListings = document.querySelectorAll('#srp-river-results .s-item, .srp-river-results .s-item, .s-item, .s-card, [data-testid="listing-card"]');
+                const listingIds = [];
+                
+                for (let i = 0; i < Math.min(8, allListings.length); i++) {
+                    const listingId = getListingId(allListings[i]);
+                    if (listingId) {
+                        listingIds.push(listingId);
+                    }
+                }
+                
+                return listingIds;
+            }
+            
+            // Function to check for new listings
+            function checkForNewListings() {
+                const allListings = document.querySelectorAll('#srp-river-results .s-item, .srp-river-results .s-item, .s-item, .s-card, [data-testid="listing-card"]');
+                const currentTop8 = [];
+                const currentTop8Data = [];
+                
+                // Get top 8 with their data
+                for (let i = 0; i < Math.min(8, allListings.length); i++) {
+                    const listing = allListings[i];
+                    const listingId = getListingId(listing);
+                    if (listingId) {
+                        currentTop8.push(listingId);
+                        
+                        // Extract listing data for Discord
+                        const titleElement = listing.querySelector('.s-item__title, h3 span, [role="heading"] span');
+                        const priceElement = listing.querySelector('.s-item__price, .s-card__price');
+                        const timeLeftElement = listing.querySelector('.s-item__time-left, .s-item__timeLeft, .s-item__time-end');
+                        const imageElement = listing.querySelector('.s-item__image-img, img');
+                        const linkElement = listing.querySelector('a.s-item__link, a[href*="/itm/"]');
+                        
+                        currentTop8Data.push({
+                            id: listingId,
+                            title: titleElement ? cleanEbayTitle(titleElement.textContent.trim()) : 'Unknown Item',
+                            price: priceElement ? priceElement.textContent.trim() : null,
+                            timeLeft: timeLeftElement ? timeLeftElement.textContent.trim() : null,
+                            imageUrl: imageElement ? imageElement.src : null,
+                            url: linkElement ? linkElement.href : `https://www.ebay.com/itm/${listingId}`
+                        });
+                    }
+                }
+                
+                const newListings = currentTop8.filter(id => !seenListingIds.has(id));
+                
+                if (newListings.length > 0) {
+                    debugLog(`🆕 Found ${newListings.length} new listing(s) in top 8!`);
+                    playNotificationSound();
+                    
+                    // Update tab badge
+                    updateTabBadge(newListings.length);
+                    
+                    // Send new listings to Discord
+                    newListings.forEach(newId => {
+                        const listingData = currentTop8Data.find(data => data.id === newId);
+                        if (listingData) {
+                            sendToDiscord(listingData);
+                        }
+                    });
+                    
+                    // Show notification
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = `🆕 ${newListings.length} new listing(s)!`;
+                    statusElement.style.color = '#f39c12';
+                    
+                    // Flash the status a few times
+                    let flashCount = 0;
+                    const flashInterval = setInterval(() => {
+                        statusElement.style.opacity = statusElement.style.opacity === '0' ? '1' : '0';
+                        flashCount++;
+                        if (flashCount >= 6) {
+                            clearInterval(flashInterval);
+                            statusElement.style.opacity = '1';
+                            setTimeout(() => {
+                                if (autoRefreshEnabled) {
+                                    statusElement.textContent = 'Auto-refresh active';
+                                    statusElement.style.color = '#3498db';
+                                }
+                            }, 2000);
+                        }
+                    }, 300);
+                }
+                
+                // Add current top 8 to seen listings
+                currentTop8.forEach(id => seenListingIds.add(id));
+                
+                // Save to persistent storage
+                GM_setValue('seen_listing_ids', Array.from(seenListingIds));
+                
+                debugLog(`📊 Tracking ${seenListingIds.size} total seen listings (current top 8: ${currentTop8.length})`);
+            }
+            
+            // Auto-refresh button handler
+            autoRefreshBtn.addEventListener('click', () => {
+                autoRefreshEnabled = !autoRefreshEnabled;
+                
+                if (autoRefreshEnabled) {
+                    // Enable auto-refresh
+                    autoRefreshBtn.innerHTML = '🔄 Auto-Refresh ON';
+                    autoRefreshBtn.style.background = '#27ae60';
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = 'Auto-refresh active';
+                    statusElement.style.color = '#3498db';
+                    
+                    // Check current top 8 immediately
+                    checkForNewListings();
+                    
+                    // Set up interval to refresh page every 5 seconds
+                    let countdown = 5;
+                    autoRefreshInterval = setInterval(() => {
+                        countdown--;
+                        if (countdown <= 0) {
+                            debugLog('🔄 Auto-refreshing page...');
+                            location.reload();
+                        } else {
+                            statusElement.textContent = `Refresh in ${countdown}s`;
+                        }
+                    }, 1000);
+                } else {
+                    // Disable auto-refresh
+                    autoRefreshBtn.innerHTML = '🔄 Auto-Refresh OFF';
+                    autoRefreshBtn.style.background = '#3498db';
+                    
+                    if (autoRefreshInterval) {
+                        clearInterval(autoRefreshInterval);
+                        autoRefreshInterval = null;
+                    }
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = 'Ready';
+                    statusElement.style.color = '#43b581';
+                }
+            });
+            
+            // On page load, if auto-refresh was enabled, re-enable it
+            const wasAutoRefreshEnabled = sessionStorage.getItem('pokespy_auto_refresh_enabled') === 'true';
+            if (wasAutoRefreshEnabled) {
+                // Small delay to ensure page is fully loaded
+                setTimeout(() => {
+                    autoRefreshBtn.click();
+                }, 1000);
+            }
+            
+            // Save auto-refresh state to session storage
+            window.addEventListener('beforeunload', () => {
+                sessionStorage.setItem('pokespy_auto_refresh_enabled', autoRefreshEnabled.toString());
+            });
+            
+            // API Polling functionality
+            let apiPollEnabled = false;
+            let apiPollInterval = null;
+            let apiSeenListingIds = new Set(GM_getValue('api_seen_listing_ids', []));
+            const apiPollBtn = document.getElementById('pokespy-api-poll-btn');
+            
+            // Function to check API results for new listings
+            async function checkApiForNewListings() {
+                // Only run if API polling is enabled
+                if (!apiPollEnabled) {
+                    return;
+                }
+                
+                const filters = extractSearchFilters();
+                debugLog('🔍 Current search filters:', filters);
+                
+                const results = await searchEbayApi(filters);
+                if (!results || !results.itemSummaries) {
+                    debugLog('⚠️ No results from eBay API');
+                    return;
+                }
+                
+                console.log('📊 eBay API Results:', results);
+                console.log(`📦 Found ${results.itemSummaries.length} items`);
+                
+                const newListings = [];
+                let displayIndex = 1;
+                
+                results.itemSummaries.forEach((item, index) => {
+                    const itemId = item.itemId;
+                    const isNew = !apiSeenListingIds.has(itemId);
+                    
+                    // Client-side filtering for graded cards if "Graded: No" was requested
+                    const filters = extractSearchFilters();
+                    let shouldSkip = false;
+                    
+                    if (filters.gradedFilter && filters.gradedFilter.toLowerCase() === 'no') {
+                        // Check if title contains grading company names
+                        const title = item.title.toUpperCase();
+                        const gradingKeywords = ['PSA', 'BGS', 'CGC', 'SGC', 'GRADED', 'BECKETT'];
+                        if (gradingKeywords.some(keyword => title.includes(keyword))) {
+                            shouldSkip = true;
+                        }
+                    }
+                    
+                    if (shouldSkip) return; // Skip this item
+                    
+                    console.log(`${displayIndex}. ${item.title}`);
+                    console.log(`   ID: ${itemId} ${isNew ? '🆕 NEW' : '(seen)'}`);
+                    console.log(`   Price: ${item.price?.value} ${item.price?.currency || ''}`);
+                    console.log(`   URL: ${item.itemWebUrl}`);
+                    
+                    displayIndex++;
+                    
+                    if (isNew) {
+                        newListings.push({
+                            id: itemId,
+                            title: item.title,
+                            price: item.price ? `${item.price.value} ${item.price.currency}` : 'N/A',
+                            timeLeft: item.itemEndDate ? new Date(item.itemEndDate).toLocaleString() : null,
+                            imageUrl: item.image?.imageUrl || item.thumbnailImages?.[0]?.imageUrl,
+                            url: item.itemWebUrl
+                        });
+                        apiSeenListingIds.add(itemId);
+                    }
+                });
+                
+                if (newListings.length > 0) {
+                    console.log(`\n🆕 Found ${newListings.length} NEW listing(s) via API!`);
+                    playNotificationSound();
+                    updateTabBadge(newListings.length);
+                    
+                    // Send to Discord if webhook is configured
+                    const webhookUrl = GM_getValue('discord_webhook_url', '');
+                    if (webhookUrl) {
+                        console.log('📤 Sending new listings to Discord...');
+                        for (const listing of newListings) {
+                            await sendToDiscord(listing);
+                        }
+                    }
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = `🆕 ${newListings.length} new via API!`;
+                    statusElement.style.color = '#f39c12';
+                    
+                    setTimeout(() => {
+                        if (apiPollEnabled) {
+                            statusElement.textContent = 'API polling active';
+                            statusElement.style.color = '#16a085';
+                        }
+                    }, 3000);
+                }
+                
+                // Save seen IDs
+                GM_setValue('api_seen_listing_ids', Array.from(apiSeenListingIds));
+                console.log(`📊 Tracking ${apiSeenListingIds.size} total API listings\n`);
+            }
+            
+            // API Poll button handler
+            apiPollBtn.addEventListener('click', async () => {
+                const clientId = GM_getValue('ebay_client_id', '');
+                const clientSecret = GM_getValue('ebay_client_secret', '');
+                
+                if (!clientId || !clientSecret) {
+                    alert('⚠️ Please configure your eBay API credentials first!\n\nYou need both Client ID and Client Secret from developer.ebay.com');
+                    ebayApiSettingsBtn.click();
+                    return;
+                }
+                
+                apiPollEnabled = !apiPollEnabled;
+                
+                if (apiPollEnabled) {
+                    apiPollBtn.innerHTML = '📡 API Poll ON';
+                    apiPollBtn.style.background = '#27ae60';
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = 'API polling active';
+                    statusElement.style.color = '#16a085';
+                    
+                    // Check immediately
+                    await checkApiForNewListings();
+                    
+                    // Then check at configured interval
+                    apiPollInterval = setInterval(async () => {
+                        await checkApiForNewListings();
+                    }, TIMING.API_POLL_INTERVAL);
+                } else {
+                    apiPollBtn.innerHTML = '📡 API Poll OFF';
+                    apiPollBtn.style.background = '#16a085';
+                    
+                    if (apiPollInterval) {
+                        clearInterval(apiPollInterval);
+                        apiPollInterval = null;
+                    }
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = 'Ready';
+                    statusElement.style.color = '#43b581';
+                }
+            });
+
+            // Hide bad listings button handler
+            let badListingsHidden = false;
+            const hideBadBtn = document.getElementById('pokespy-hide-bad-btn');
+            
+            hideBadBtn.addEventListener('click', () => {
+                badListingsHidden = !badListingsHidden;
+                
+                if (badListingsHidden) {
+                    // Hide all listings marked as bad
+                    let hiddenCount = 0;
+                    const allListings = document.querySelectorAll('#srp-river-results .s-item, .srp-river-results .s-item, .s-item, .s-card, [data-testid="listing-card"]');
+                    
+                    allListings.forEach(listing => {
+                        const listingId = getListingId(listing);
+                        if (listingId) {
+                            const note = getListingNote(listingId);
+                            if (note && note.rating === 'bad') {
+                                listing.style.display = 'none';
+                                listing.setAttribute('data-pokespy-hidden', 'true');
+                                hiddenCount++;
+                            }
+                        }
+                    });
+                    
+                    hideBadBtn.innerHTML = '👁️ Show Bad Listings';
+                    hideBadBtn.style.background = '#27ae60';
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = `Hidden ${hiddenCount} bad listing(s)`;
+                    statusElement.style.color = '#e67e22';
+                    setTimeout(() => {
+                        statusElement.textContent = 'Ready';
+                        statusElement.style.color = '#43b581';
+                    }, 3000);
+                } else {
+                    // Show all hidden listings
+                    const hiddenListings = document.querySelectorAll('[data-pokespy-hidden="true"]');
+                    hiddenListings.forEach(listing => {
+                        listing.style.display = '';
+                        listing.removeAttribute('data-pokespy-hidden');
+                    });
+                    
+                    hideBadBtn.innerHTML = '✕ Hide Bad Listings';
+                    hideBadBtn.style.background = '#e74c3c';
+                    
+                    const statusElement = document.getElementById('pokespy-status');
+                    statusElement.textContent = 'Showing all listings';
+                    statusElement.style.color = '#3498db';
+                    setTimeout(() => {
+                        statusElement.textContent = 'Ready';
+                        statusElement.style.color = '#43b581';
+                    }, 3000);
                 }
             });
 
@@ -3827,15 +5367,1223 @@
             }
         }
 
+        // Add control panel to item page (simplified version for single items)
+        function addItemPageControlPanel() {
+            console.log('🎛️ Adding item page control panel');
+            
+            // Don't add multiple panels
+            if (document.getElementById('pokespy-item-panel')) return;
+
+            const panel = document.createElement('div');
+            panel.id = 'pokespy-item-panel';
+            panel.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: #2f3136;
+                color: #ffffff;
+                padding: 12px;
+                border-radius: 8px;
+                z-index: 10000;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 12px;
+                border: 2px solid #3498db;
+                min-width: 220px;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+
+            // Extract item ID from URL
+            const match = window.location.href.match(/\/itm\/(\d+)/);
+            const listingId = match ? match[1] : 'Unknown';
+            
+            // Extract card info from page - try multiple selectors
+            let titleElement = document.querySelector('.x-item-title__mainTitle .ux-textspans');
+            if (!titleElement) {
+                titleElement = document.querySelector('.x-item-title__mainTitle span');
+            }
+            if (!titleElement) {
+                titleElement = document.querySelector('h1.x-item-title__mainTitle');
+            }
+            if (!titleElement) {
+                titleElement = document.querySelector('.x-item-title h1');
+            }
+            if (!titleElement) {
+                titleElement = document.querySelector('h1');
+            }
+            
+            const cardTitle = titleElement ? cleanEbayTitle(titleElement.textContent.trim()) : 'Unknown';
+            console.log('📝 Title element found:', !!titleElement);
+            console.log('📝 Extracted card title:', cardTitle);
+            
+            // Try to extract card info using the existing function
+            let cardInfo = { title: cardTitle, cardNumber: null, setNumber: null, fullCardNumber: null };
+            if (cardTitle && cardTitle !== 'Unknown') {
+                // Create a temporary wrapper to use extractListingInfo - use the same selector pattern
+                const tempWrapper = document.createElement('div');
+                const tempTitle = document.createElement('span');
+                tempTitle.className = 's-card__title';
+                const tempInnerSpan = document.createElement('span');
+                tempInnerSpan.className = 'su-styled-text';
+                tempInnerSpan.textContent = cardTitle;
+                tempTitle.appendChild(tempInnerSpan);
+                tempWrapper.appendChild(tempTitle);
+                
+                console.log('🔍 Created temp wrapper HTML:', tempWrapper.innerHTML);
+                
+                const extracted = extractListingInfo(tempWrapper);
+                console.log('🔍 extractListingInfo returned:', extracted);
+                
+                if (extracted && extracted.title) {
+                    cardInfo = extracted;
+                    console.log('✅ Extracted card info:', cardInfo);
+                    console.log('✅ Card number in info:', cardInfo.cardNumber);
+                    console.log('✅ Full card number in info:', cardInfo.fullCardNumber);
+                } else {
+                    console.log('⚠️ Could not extract card info, using title only');
+                }
+            } else {
+                console.log('❌ No title element found or title is Unknown');
+            }
+            
+            console.log('🎯 Final cardInfo object:', cardInfo);
+            console.log('🎯 Has card number?', !!(cardInfo.fullCardNumber || cardInfo.cardNumber));
+            
+            // Check if there's a note for this item
+            const existingNote = getListingNote(listingId);
+            
+            // Build note status display with description
+            let noteStatusHtml = '';
+            if (existingNote) {
+                const ratingColor = getRatingColor(existingNote.rating);
+                noteStatusHtml = `
+                    <div style="font-size: 12px; margin-bottom: 6px;">
+                        <span style="color: ${ratingColor}; font-weight: bold;">● ${existingNote.rating.toUpperCase()}</span>
+                    </div>
+                    ${existingNote.description ? `
+                        <div style="font-size: 11px; color: #dcddde; line-height: 1.4; padding: 6px; background: #36393f; border-radius: 3px; border-left: 3px solid ${ratingColor};">
+                            ${existingNote.description}
+                        </div>
+                    ` : '<div style="font-size: 11px; color: #72767d; font-style: italic;">No description</div>'}
+                `;
+            } else {
+                noteStatusHtml = '<span style="color: #95a5a6;">○ No note</span>';
+            }
+
+            const cardNumberDisplay = cardInfo.fullCardNumber || cardInfo.cardNumber || 'Not detected';
+            
+            panel.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 10px; color: #3498db; font-size: 14px; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span>💎</span>
+                        <span>PokeSpy - Item Page</span>
+                    </div>
+                    <button id="pokespy-minimize-btn" style="
+                        background: transparent;
+                        border: none;
+                        color: #b9bbbe;
+                        font-size: 16px;
+                        cursor: pointer;
+                        padding: 4px;
+                        line-height: 1;
+                        transition: color 0.2s ease;
+                    " title="Minimize panel">−</button>
+                </div>
+                <div id="pokespy-panel-content">
+                    <div style="margin-bottom: 8px; padding: 8px; background: #40444b; border-radius: 4px;">
+                        <div style="font-size: 11px; color: #b9bbbe; margin-bottom: 4px;">Card Info</div>
+                        <div style="font-size: 11px; color: #dcddde; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${cardTitle}">${cardTitle}</div>
+                        ${cardNumberDisplay !== 'Not detected' ? `<div style="font-size: 10px; color: #7289da;">Card #: ${cardNumberDisplay}</div>` : '<div style="font-size: 10px; color: #95a5a6; font-style: italic;">No card number detected</div>'}
+                    </div>
+                <div style="margin-bottom: 8px; padding: 8px; background: #40444b; border-radius: 4px;">
+                    <div style="font-size: 11px; color: #b9bbbe; margin-bottom: 4px;">Item ID</div>
+                    <div style="font-size: 11px; font-family: monospace; color: #7289da;">#${listingId}</div>
+                </div>
+                <div style="margin-bottom: 8px; padding: 8px; background: #40444b; border-radius: 4px; max-height: 150px; overflow-y: auto;">
+                    <div style="font-size: 11px; color: #b9bbbe; margin-bottom: 4px;">Note</div>
+                    ${noteStatusHtml}
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <button id="pokespy-item-edit-note" style="
+                        width: 100%;
+                        padding: 8px 12px;
+                        background: linear-gradient(45deg, #f39c12, #e67e22);
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        margin-bottom: 8px;
+                    ">${existingNote ? '✏️ Edit Note' : '📝 Add Note'}</button>
+                    <button id="pokespy-item-check-price" style="
+                        width: 100%;
+                        padding: 8px 12px;
+                        background: linear-gradient(45deg, #9b59b6, #8e44ad);
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">� Check PriceCharting</button>
+                    <button id="pokespy-item-google-search" style="
+                        width: 100%;
+                        padding: 8px 12px;
+                        background: linear-gradient(45deg, #e74c3c, #c0392b);
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        margin-top: 8px;
+                    ">🔍 Google Search PC</button>
+                </div>
+                    <div style="font-size: 10px; color: #72767d; text-align: center; margin-top: 8px;">
+                        Notes button on image ↗️
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(panel);
+
+            // Add minimize functionality
+            let isMinimized = false;
+            const minimizeBtn = document.getElementById('pokespy-minimize-btn');
+            const panelContent = document.getElementById('pokespy-panel-content');
+            const panelHeader = minimizeBtn.parentElement;
+            
+            // Create minimized icon
+            const minimizedIcon = document.createElement('div');
+            minimizedIcon.innerHTML = '💎';
+            minimizedIcon.style.cssText = `
+                font-size: 20px;
+                cursor: pointer;
+                display: none;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            minimizedIcon.title = 'Expand PokeSpy panel';
+            panel.appendChild(minimizedIcon);
+            
+            function toggleMinimize() {
+                isMinimized = !isMinimized;
+                if (isMinimized) {
+                    panelContent.style.display = 'none';
+                    panelHeader.style.display = 'none';
+                    minimizedIcon.style.display = 'flex';
+                    panel.style.minWidth = 'auto';
+                    panel.style.width = '40px';
+                    panel.style.height = '40px';
+                    panel.style.padding = '0';
+                } else {
+                    panelContent.style.display = 'block';
+                    panelHeader.style.display = 'flex';
+                    minimizedIcon.style.display = 'none';
+                    panel.style.minWidth = '220px';
+                    panel.style.width = 'auto';
+                    panel.style.height = 'auto';
+                    panel.style.padding = '12px';
+                }
+            }
+            
+            minimizeBtn.addEventListener('click', toggleMinimize);
+            minimizedIcon.addEventListener('click', toggleMinimize);
+            
+            minimizeBtn.addEventListener('mouseenter', () => {
+                minimizeBtn.style.color = '#ffffff';
+            });
+            minimizeBtn.addEventListener('mouseleave', () => {
+                minimizeBtn.style.color = '#b9bbbe';
+            });
+
+            // Add hover effect and functionality to Edit/Add Note button
+            const editNoteButton = document.getElementById('pokespy-item-edit-note');
+            editNoteButton.addEventListener('mouseenter', () => {
+                editNoteButton.style.transform = 'scale(1.05)';
+                editNoteButton.style.boxShadow = '0 4px 12px rgba(243, 156, 18, 0.4)';
+            });
+            editNoteButton.addEventListener('mouseleave', () => {
+                editNoteButton.style.transform = 'scale(1)';
+                editNoteButton.style.boxShadow = 'none';
+            });
+            editNoteButton.addEventListener('click', () => {
+                if (existingNote) {
+                    // Edit existing note - modal will update the panel on save/delete
+                    openNoteModalWithRefresh(panel, listingId, existingNote.rating, existingNote.description);
+                } else {
+                    // Show fan-out rating selector for new note
+                    showRatingSelector(panel, listingId);
+                }
+            });
+
+            // Add hover effect to PriceCharting button
+            const checkButton = document.getElementById('pokespy-item-check-price');
+            checkButton.addEventListener('mouseenter', () => {
+                checkButton.style.transform = 'scale(1.05)';
+                checkButton.style.boxShadow = '0 4px 12px rgba(155, 89, 182, 0.4)';
+            });
+            checkButton.addEventListener('mouseleave', () => {
+                checkButton.style.transform = 'scale(1)';
+                checkButton.style.boxShadow = 'none';
+            });
+            
+            // Add hover effect to Google search button
+            const googleButton = document.getElementById('pokespy-item-google-search');
+            googleButton.addEventListener('mouseenter', () => {
+                googleButton.style.transform = 'scale(1.05)';
+                googleButton.style.boxShadow = '0 4px 12px rgba(231, 76, 60, 0.4)';
+            });
+            googleButton.addEventListener('mouseleave', () => {
+                googleButton.style.transform = 'scale(1)';
+                googleButton.style.boxShadow = 'none';
+            });
+            
+            // Add functionality to Google search button - same as search page (uses full title)
+            googleButton.addEventListener('click', () => {
+                // Use full title like search page does
+                console.log('🔍 Google button clicked - cardTitle:', cardTitle);
+                console.log('🔍 Google button clicked - cardInfo.title:', cardInfo.title);
+                const googleUrl = `https://www.google.com/search?q=PriceCharting+${encodeURIComponent(cardTitle)}`;
+                console.log('🔗 Opening Google URL:', googleUrl);
+                window.open(googleUrl, '_blank');
+                
+                googleButton.textContent = '✅ Opened!';
+                setTimeout(() => {
+                    googleButton.textContent = '🔍 Google Search PC';
+                }, 2000);
+            });
+
+            // Add functionality to check price button
+            checkButton.addEventListener('click', async () => {
+                console.log('🔍 Check Price button clicked on item page');
+                console.log('📋 Card Title:', cardTitle);
+                console.log('📋 Card Info Object:', cardInfo);
+                console.log('📋 Full Card Number:', cardInfo.fullCardNumber);
+                console.log('📋 Card Number:', cardInfo.cardNumber);
+                console.log('📋 Set Number:', cardInfo.setNumber);
+                console.log('📋 Set Name:', cardInfo.setName);
+                
+                checkButton.disabled = true;
+                checkButton.textContent = '🔍 Searching...';
+                checkButton.style.background = '#95a5a6';
+                
+                try {
+                    // Create a fake listing element that extractListingInfo can work with (same as search page)
+                    const fakeListing = document.createElement('div');
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = 's-card__title';
+                    const titleText = document.createElement('span');
+                    titleText.className = 'su-styled-text';
+                    titleText.textContent = cardTitle;
+                    titleSpan.appendChild(titleText);
+                    fakeListing.appendChild(titleSpan);
+                    
+                    // Use the same function as search page
+                    const cardNumber = cardInfo.fullCardNumber || cardInfo.cardNumber;
+                    const setNumber = cardInfo.setNumber;
+                    
+                    // Store card data for PriceCharting to access
+                    const cardData = {
+                        cardNumber: cardNumber,
+                        setNumber: setNumber,
+                        ebayTitle: cardTitle
+                    };
+                    
+                    const requestKey = storePriceChartingRequest(cardData);
+                    
+                    // Use createPriceChartingUrl like search page does
+                    const finalUrl = await createPriceChartingUrl(cardNumber, setNumber, requestKey, fakeListing, false);
+                    
+                    if (finalUrl) {
+                        checkButton.textContent = '💰 Opening PC...';
+                        checkButton.style.background = '#27ae60';
+                        
+                        // Open PriceCharting in new tab (item page = view mode, not data sharing)
+                        window.open(finalUrl, '_blank');
+                        
+                        setTimeout(() => {
+                            checkButton.textContent = '✅ Opened!';
+                            setTimeout(() => {
+                                checkButton.textContent = '� Check PriceCharting';
+                                checkButton.style.background = 'linear-gradient(45deg, #9b59b6, #8e44ad)';
+                                checkButton.disabled = false;
+                            }, 2000);
+                        }, 500);
+                    } else {
+                        throw new Error('Could not create PriceCharting URL');
+                    }
+                } catch (error) {
+                    console.error('❌ Error checking price:', error);
+                    checkButton.textContent = '❌ ' + error.message.substring(0, 20);
+                    checkButton.style.background = '#e74c3c';
+                    setTimeout(() => {
+                        checkButton.textContent = '� Check PriceCharting';
+                        checkButton.style.background = 'linear-gradient(45deg, #9b59b6, #8e44ad)';
+                        checkButton.disabled = false;
+                    }, 3000);
+                }
+            });
+
+            console.log('✅ Item page control panel added with card info:', cardInfo);
+        }
+
+        // Add notes and rating display to watchlist items
+        function addWatchlistNotesDisplay() {
+            debugLog('🔍 Searching for watchlist items...');
+            
+            // Use MutationObserver to handle dynamic content loading
+            const processWatchlistItems = () => {
+                // Find all watchlist items using the structure from the provided HTML
+                const watchlistItems = document.querySelectorAll('.m-item-3');
+                debugLog(`Found ${watchlistItems.length} watchlist items`);
+                
+                watchlistItems.forEach((item, index) => {
+                    // Skip if already processed
+                    if (item.querySelector('.pokespy-watchlist-note')) {
+                        return;
+                    }
+                    
+                    // Extract listing ID from the item
+                    const itemIdAttr = item.querySelector('[data-itemid]')?.getAttribute('data-itemid') ||
+                                      item.querySelector('[item-id]')?.getAttribute('item-id');
+                    
+                    if (!itemIdAttr) {
+                        debugLog(`⚠️ Could not find item ID for watchlist item ${index + 1}`);
+                        return;
+                    }
+                    
+                    const listingId = itemIdAttr;
+                    debugLog(`Processing watchlist item ${index + 1}: ID ${listingId}`);
+                    
+                    // Get the note for this listing
+                    const note = getListingNote(listingId);
+                    
+                    if (!note) {
+                        debugLog(`  No note found for item ${listingId}`);
+                        return;
+                    }
+                    
+                    debugLog(`  ✓ Found note: ${note.rating} - "${note.description}"`);
+                    
+                    // Find the note container in the watchlist item
+                    const noteContainer = item.querySelector('.m-item-3-col__note [data-testid="user-note"]');
+                    
+                    if (!noteContainer) {
+                        debugLog(`  ⚠️ Could not find note container for item ${listingId}`);
+                        return;
+                    }
+                    
+                    // Create the note display element
+                    const noteDisplay = document.createElement('div');
+                    noteDisplay.className = 'pokespy-watchlist-note';
+                    
+                    const ratingColor = getRatingColor(note.rating);
+                    const ratingIcon = getRatingIcon(note.rating);
+                    
+                    noteDisplay.style.cssText = `
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 8px 12px;
+                        background: ${ratingColor};
+                        color: white;
+                        border-radius: 6px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        margin-top: 4px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    `;
+                    
+                    noteDisplay.innerHTML = `
+                        <div style="
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 50%;
+                            background: rgba(255, 255, 255, 0.3);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                            font-weight: bold;
+                            flex-shrink: 0;
+                        ">${ratingIcon}</div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: bold; text-transform: uppercase; font-size: 11px; opacity: 0.9; margin-bottom: 2px;">
+                                ${note.rating}
+                            </div>
+                            ${note.description ? `
+                                <div style="
+                                    font-size: 12px;
+                                    opacity: 0.95;
+                                    line-height: 1.4;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 2;
+                                    -webkit-box-orient: vertical;
+                                ">${note.description}</div>
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    // Add click handler to edit note
+                    noteDisplay.style.cursor = 'pointer';
+                    noteDisplay.title = 'Click to edit note';
+                    noteDisplay.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openWatchlistNoteModal(listingId, note.rating, note.description);
+                    });
+                    
+                    // Insert the note display
+                    noteContainer.appendChild(noteDisplay);
+                });
+            };
+            
+            // Initial processing
+            processWatchlistItems();
+            
+            // Set up MutationObserver to handle dynamic content
+            const observer = new MutationObserver((mutations) => {
+                // Debounce: only process if we haven't processed recently
+                if (observer.debounceTimer) {
+                    clearTimeout(observer.debounceTimer);
+                }
+                observer.debounceTimer = setTimeout(() => {
+                    processWatchlistItems();
+                }, 500);
+            });
+            
+            // Observe the watchlist container for changes
+            const watchlistContainer = document.querySelector('#gh-wl-list, .m-items, [role="main"]');
+            if (watchlistContainer) {
+                observer.observe(watchlistContainer, {
+                    childList: true,
+                    subtree: true
+                });
+                debugLog('✅ MutationObserver set up for watchlist updates');
+            } else {
+                debugLog('⚠️ Could not find watchlist container for observation');
+            }
+        }
+        
+        // Modal for editing notes on watchlist page
+        function openWatchlistNoteModal(listingId, rating, existingDescription = '') {
+            // Remove any existing modal
+            const existingModal = document.getElementById('pokespy-note-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'pokespy-note-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 999999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.2s ease;
+            `;
+
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: #2f3136;
+                color: white;
+                padding: 24px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                animation: slideIn 0.3s ease;
+            `;
+
+            const ratingColor = getRatingColor(rating);
+            const ratingIcon = getRatingIcon(rating);
+
+            modalContent.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: ${ratingColor}; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin-right: 12px;">
+                        ${ratingIcon}
+                    </div>
+                    <div>
+                        <div style="font-size: 18px; font-weight: bold;">Edit Note</div>
+                        <div style="font-size: 12px; opacity: 0.7;">${rating.charAt(0).toUpperCase() + rating.slice(1)} Rating</div>
+                    </div>
+                </div>
+                <textarea id="pokespy-note-textarea" placeholder="Why did you choose this rating?" style="
+                    width: 100%;
+                    min-height: 120px;
+                    padding: 12px;
+                    background: #40444b;
+                    border: 2px solid ${ratingColor};
+                    border-radius: 8px;
+                    color: white;
+                    font-family: inherit;
+                    font-size: 14px;
+                    resize: vertical;
+                    margin-bottom: 16px;
+                ">${existingDescription}</textarea>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button id="pokespy-note-cancel" style="
+                        padding: 10px 20px;
+                        background: #5865f2;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    ">Cancel</button>
+                    <button id="pokespy-note-delete" style="
+                        padding: 10px 20px;
+                        background: #ed4245;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        display: ${existingDescription ? 'block' : 'none'};
+                    ">Delete</button>
+                    <button id="pokespy-note-save" style="
+                        padding: 10px 20px;
+                        background: ${ratingColor};
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    ">Save Note</button>
+                </div>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            // Focus textarea
+            const textarea = document.getElementById('pokespy-note-textarea');
+            textarea.focus();
+
+            // Event handlers
+            document.getElementById('pokespy-note-cancel').addEventListener('click', () => {
+                modal.remove();
+            });
+
+            document.getElementById('pokespy-note-delete').addEventListener('click', () => {
+                const noteKey = `listing_note_${listingId}`;
+                GM_deleteValue(noteKey);
+                modal.remove();
+                // Refresh the page to update the display
+                window.location.reload();
+            });
+
+            document.getElementById('pokespy-note-save').addEventListener('click', () => {
+                const description = textarea.value.trim();
+                
+                storeListingNote(listingId, {
+                    rating: rating,
+                    description: description
+                });
+
+                modal.remove();
+                // Refresh the page to update the display
+                window.location.reload();
+            });
+
+            // Close on background click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+
+            // Close on escape key
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    modal.remove();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+        }
+
         // Initialize eBay functionality
         loadSetsCache();
 
         // Detect what page we're on and run appropriate functions
         const currentUrl = window.location.href;
+        console.log('🌐 Current URL:', currentUrl);
+        console.log('🔍 Is search page?', currentUrl.includes('/sch/') || currentUrl.includes('/b/'));
+        console.log('🔍 Is item page?', currentUrl.includes('/itm/'));
+        console.log('🔍 Is watchlist page?', currentUrl.includes('/mye/myebay/watchlist'));
+        
         if (currentUrl.includes('/sch/') || currentUrl.includes('/b/')) {
             debugLog('eBay search page detected');
+            console.log('📋 eBay search page detected');
             addPriceResearchTools();
+        } else if (currentUrl.includes('/itm/')) {
+            debugLog('eBay item page detected');
+            console.log('🖼️ eBay item page detected');
+            addNotesButtonToItemPage();
+            addItemPageControlPanel();
+        } else if (currentUrl.includes('/mye/myebay/watchlist')) {
+            debugLog('eBay watchlist page detected');
+            console.log('👁️ eBay watchlist page detected');
+            addWatchlistNotesDisplay();
         }
+    }
+
+    // Show rating selector with fan-out animation (for item page "Add Note" button)
+    function showRatingSelector(panel, listingId) {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'pokespy-rating-selector-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        `;
+
+        // Create selector container
+        const selectorContainer = document.createElement('div');
+        selectorContainer.style.cssText = `
+            background: #2f3136;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease;
+        `;
+
+        selectorContainer.innerHTML = `
+            <div style="color: white; font-size: 18px; font-weight: bold; margin-bottom: 24px; text-align: center;">
+                Choose a Rating
+            </div>
+            <div id="pokespy-rating-buttons" style="display: flex; gap: 20px; justify-content: center; position: relative;">
+                <button class="pokespy-rating-select" data-rating="good" style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background: #27ae60;
+                    border: 3px solid #fff;
+                    cursor: pointer;
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    transition: all 0.3s ease;
+                    opacity: 0;
+                    transform: scale(0);
+                ">✓</button>
+                <button class="pokespy-rating-select" data-rating="neutral" style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background: #f39c12;
+                    border: 3px solid #fff;
+                    cursor: pointer;
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    transition: all 0.3s ease;
+                    opacity: 0;
+                    transform: scale(0);
+                ">−</button>
+                <button class="pokespy-rating-select" data-rating="bad" style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background: #e74c3c;
+                    border: 3px solid #fff;
+                    cursor: pointer;
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    transition: all 0.3s ease;
+                    opacity: 0;
+                    transform: scale(0);
+                ">✕</button>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <button id="pokespy-rating-cancel" style="
+                    padding: 10px 20px;
+                    background: #5865f2;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                ">Cancel</button>
+            </div>
+        `;
+
+        overlay.appendChild(selectorContainer);
+        document.body.appendChild(overlay);
+
+        // Animate buttons in
+        const buttons = selectorContainer.querySelectorAll('.pokespy-rating-select');
+        buttons.forEach((btn, index) => {
+            setTimeout(() => {
+                btn.style.opacity = '1';
+                btn.style.transform = 'scale(1)';
+            }, index * 100);
+
+            // Hover effect
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'scale(1.1)';
+                btn.style.boxShadow = '0 6px 16px rgba(0,0,0,0.4)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+                btn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+            });
+
+            // Click handler
+            btn.addEventListener('click', () => {
+                const rating = btn.getAttribute('data-rating');
+                overlay.remove();
+                openNoteModalWithRefresh(panel, listingId, rating, '');
+            });
+        });
+
+        // Cancel button
+        document.getElementById('pokespy-rating-cancel').addEventListener('click', () => {
+            overlay.remove();
+        });
+
+        // Close on background click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+
+        // Close on escape key
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    // Add notes button to individual item page
+    function addNotesButtonToItemPage() {
+        console.log('🔧 addNotesButtonToItemPage called');
+        debugLog('🔧 addNotesButtonToItemPage called');
+        
+        // Wait for the page to load
+        let attempts = 0;
+        const maxAttempts = 30; // 15 seconds total
+        
+        const checkForImage = setInterval(() => {
+            attempts++;
+            const imageContainer = document.querySelector('.ux-image-carousel-container, .ux-image-carousel, .image-container');
+            const watchButton = document.querySelector('.x-watch-heart, .watchlink, [class*="watch"]');
+            
+            console.log(`Attempt ${attempts}/${maxAttempts} - Checking for elements...`, { 
+                imageContainer: !!imageContainer, 
+                watchButton: !!watchButton,
+                url: window.location.href
+            });
+            
+            if (imageContainer) {
+                clearInterval(checkForImage);
+                console.log('✅ Found image container:', imageContainer);
+                
+                // Extract listing ID from URL
+                const match = window.location.href.match(/\/itm\/(\d+)/);
+                if (!match) {
+                    debugLog('Could not extract item ID from URL');
+                    return;
+                }
+                
+                const listingId = match[1];
+                const existingNote = getListingNote(listingId);
+                
+                debugLog(`Adding notes button to item page for ID: ${listingId}`);
+                
+                // Main notes button - styled to match eBay's icon buttons
+                const mainButton = document.createElement('button');
+                mainButton.className = 'icon-btn pokespy-notes-btn';
+                mainButton.setAttribute('data-ebayui', '');
+                mainButton.type = 'button';
+                mainButton.setAttribute('aria-label', existingNote ? `Note: ${existingNote.rating}` : 'Add note');
+                mainButton.innerHTML = existingNote ? getRatingIcon(existingNote.rating) : '📝';
+                mainButton.title = existingNote ? `Note: ${existingNote.rating}\n${existingNote.description || 'No description'}` : 'Add note';
+                mainButton.style.cssText = `
+                    font-size: 20px;
+                    background: ${existingNote ? getRatingColor(existingNote.rating) : 'rgba(255, 255, 255, 0.95)'};
+                    border-radius: 50%;
+                    position: relative;
+                    transition: all 0.3s ease;
+                `;
+                
+                // Create notes container to hold button and fan-out options
+                const notesContainer = document.createElement('div');
+                notesContainer.className = 'pokespy-notes-container-item-page';
+                notesContainer.style.cssText = `
+                    position: relative;
+                    display: inline-block;
+                `;
+
+                // Rating options container (hidden by default)
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'pokespy-notes-options';
+                optionsContainer.style.cssText = `
+                    position: absolute;
+                    top: 0px;
+                    left: 20%;
+                    transform: translateX(5%);
+                    display: none;
+                    pointer-events: auto;
+                    width: 200px;
+                    height: 150px;
+                    margin-left: -100px;
+                `;
+
+                // Create rating buttons
+                const ratings = [
+                    { type: 'good', icon: '✓', color: '#27ae60', label: 'Good' },
+                    { type: 'neutral', icon: '−', color: '#f39c12', label: 'Neutral' },
+                    { type: 'bad', icon: '✕', color: '#e74c3c', label: 'Bad' }
+                ];
+
+                ratings.forEach((rating, index) => {
+                    const ratingBtn = document.createElement('button');
+                    ratingBtn.className = `pokespy-rating-btn pokespy-rating-${rating.type}`;
+                    ratingBtn.innerHTML = rating.icon;
+                    ratingBtn.title = rating.label;
+                    ratingBtn.style.cssText = `
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        background: ${rating.color};
+                        border: 2px solid #fff;
+                        cursor: pointer;
+                        font-size: 22px;
+                        font-weight: bold;
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                        position: absolute;
+                        top: 0;
+                        left: 100px;
+                        transform: translate(-50%, 0) scale(0);
+                        opacity: 0;
+                        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                        pointer-events: all;
+                    `;
+
+                    ratingBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openNoteModalForItemPage(listingId, rating.type, mainButton);
+                        hideOptions();
+                    });
+
+                    optionsContainer.appendChild(ratingBtn);
+                });
+
+                notesContainer.appendChild(mainButton);
+                notesContainer.appendChild(optionsContainer);
+
+                // Fan out animation
+                let isExpanded = false;
+                let hoverTimeout;
+
+                function showOptions() {
+                    isExpanded = true;
+                    optionsContainer.style.display = 'block';
+                    
+                    const buttons = optionsContainer.querySelectorAll('.pokespy-rating-btn');
+                    buttons.forEach((btn, index) => {
+                        setTimeout(() => {
+                            // Fan out downward in a horizontal arc
+                            // index 0 (good) = left, index 1 (neutral) = center, index 2 (bad) = right
+                            const positions = [
+                                { x: -50, y: 50 },   // Good: down-left
+                                { x: 0, y: 60 },     // Neutral: straight down
+                                { x: 50, y: 50 }     // Bad: down-right
+                            ];
+                            const pos = positions[index];
+                            
+                            btn.style.opacity = '1';
+                            btn.style.transform = `translate(calc(-50% + ${pos.x}px), ${pos.y}px) scale(1)`;
+                        }, index * 50);
+                    });
+                }
+
+                function hideOptions() {
+                    isExpanded = false;
+                    const buttons = optionsContainer.querySelectorAll('.pokespy-rating-btn');
+                    buttons.forEach(btn => {
+                        btn.style.opacity = '0';
+                        btn.style.transform = 'translateX(-50%) scale(0)';
+                    });
+                    
+                    setTimeout(() => {
+                        optionsContainer.style.display = 'none';
+                    }, 300);
+                }
+
+                mainButton.addEventListener('mouseenter', () => {
+                    if (!isExpanded) showOptions();
+                });
+
+                // Listen for mouse leave on the options container (which now has padding)
+                optionsContainer.addEventListener('mouseleave', () => {
+                    clearTimeout(hoverTimeout);
+                    if (isExpanded) {
+                        setTimeout(hideOptions, 300);
+                    }
+                });
+
+                // Also listen on the main container for extra safety
+                notesContainer.addEventListener('mouseleave', (e) => {
+                    // Only hide if we're not entering the options container
+                    if (!optionsContainer.contains(e.relatedTarget)) {
+                        clearTimeout(hoverTimeout);
+                        if (isExpanded) {
+                            setTimeout(hideOptions, 300);
+                        }
+                    }
+                });
+
+                mainButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (existingNote) {
+                        openNoteModalForItemPage(listingId, existingNote.rating, mainButton, existingNote.description);
+                    } else if (!isExpanded) {
+                        showOptions();
+                    }
+                });
+
+                // Insert into the top-right button area (before the watch heart)
+                const topRightButtons = document.querySelector('.ux-image-carousel-buttons__top-right');
+                if (topRightButtons) {
+                    // Insert before the watch heart button
+                    const watchHeart = topRightButtons.querySelector('.x-watch-heart');
+                    if (watchHeart) {
+                        topRightButtons.insertBefore(notesContainer, watchHeart);
+                        console.log('✅ Notes button added before watch heart');
+                    } else {
+                        topRightButtons.appendChild(notesContainer);
+                        console.log('✅ Notes button added to button area');
+                    }
+                    debugLog('✅ Notes button added to item page');
+                } else {
+                    // Fallback: just append to the image container itself
+                    console.log('⚠️ Could not find top-right buttons, appending to image container');
+                    imageContainer.style.position = 'relative';
+                    imageContainer.appendChild(notesContainer);
+                }
+            } else if (attempts >= maxAttempts) {
+                console.log('❌ Timed out waiting for elements');
+                clearInterval(checkForImage);
+            }
+        }, 500);
+
+        // Stop checking after 15 seconds
+        setTimeout(() => {
+            clearInterval(checkForImage);
+            console.log('⏱️ Stopped checking for item page elements');
+        }, 15000);
+    }
+
+    // Open note modal for item page (simplified without listingElement)
+    function openNoteModalForItemPage(listingId, rating, buttonElement, existingDescription = '') {
+        // Remove any existing modal
+        const existingModal = document.getElementById('pokespy-note-modal');
+        if (existingModal) existingModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'pokespy-note-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        `;
+
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: #2f3136;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease;
+        `;
+
+        const ratingColor = getRatingColor(rating);
+        const ratingIcon = getRatingIcon(rating);
+
+        modalContent.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: ${ratingColor}; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin-right: 12px;">
+                    ${ratingIcon}
+                </div>
+                <div>
+                    <div style="font-size: 18px; font-weight: bold;">Add Note</div>
+                    <div style="font-size: 12px; opacity: 0.7;">${rating.charAt(0).toUpperCase() + rating.slice(1)} Rating</div>
+                </div>
+            </div>
+            <textarea id="pokespy-note-textarea" placeholder="Why did you choose this rating?" style="
+                width: 100%;
+                min-height: 120px;
+                padding: 12px;
+                background: #40444b;
+                border: 2px solid ${ratingColor};
+                border-radius: 8px;
+                color: white;
+                font-family: inherit;
+                font-size: 14px;
+                resize: vertical;
+                margin-bottom: 16px;
+            ">${existingDescription}</textarea>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button id="pokespy-note-cancel" style="
+                    padding: 10px 20px;
+                    background: #5865f2;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                ">Cancel</button>
+                <button id="pokespy-note-delete" style="
+                    padding: 10px 20px;
+                    background: #ed4245;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    display: ${existingDescription ? 'block' : 'none'};
+                ">Delete</button>
+                <button id="pokespy-note-save" style="
+                    padding: 10px 20px;
+                    background: ${ratingColor};
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    cursor: pointer;
+                ">Save Note</button>
+            </div>
+        `;
+
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+
+        // Focus textarea
+        const textarea = document.getElementById('pokespy-note-textarea');
+        textarea.focus();
+
+        // Event handlers
+        document.getElementById('pokespy-note-cancel').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        document.getElementById('pokespy-note-delete').addEventListener('click', () => {
+            const noteKey = `listing_note_${listingId}`;
+            GM_deleteValue(noteKey);
+            
+            // Update button
+            if (buttonElement) {
+                buttonElement.innerHTML = '📝';
+                buttonElement.title = 'Add note';
+                buttonElement.style.background = 'rgba(255, 255, 255, 0.95)';
+                buttonElement.style.borderColor = '#ddd';
+            }
+            
+            modal.remove();
+        });
+
+        document.getElementById('pokespy-note-save').addEventListener('click', () => {
+            const description = textarea.value.trim();
+            
+            storeListingNote(listingId, {
+                rating: rating,
+                description: description
+            });
+
+            // Update button
+            if (buttonElement) {
+                buttonElement.innerHTML = getRatingIcon(rating);
+                buttonElement.title = `Note: ${rating}\n${description || 'No description'}`;
+                buttonElement.style.background = getRatingColor(rating);
+                buttonElement.style.borderColor = '#fff';
+            }
+
+            modal.remove();
+        });
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        // Close on escape key
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
     }
 
     // ============================================================================
@@ -4046,9 +6794,9 @@
                 const fallbackData = {
                     url: window.location.href,
                     title: document.title,
-                    cardName: cardData?.cardName || 'Unknown',
+                    cardName: cardData?.cardName ? cleanEbayTitle(cardData.cardName) : 'Unknown',
                     prices: {},
-                    extractedCardName: cardData?.cardName,
+                    extractedCardName: cardData?.cardName ? cleanEbayTitle(cardData.cardName) : null,
                     timestamp: Date.now(),
                     error: 'No prices found on page'
                 };
@@ -4076,7 +6824,7 @@
             const data = {
                 url: window.location.href,
                 title: document.title,
-                cardName: cardData?.cardName || 'Unknown',
+                cardName: cardData?.cardName ? cleanEbayTitle(cardData.cardName) : 'Unknown',
                 prices: {},
                 availability: '',
                 lastUpdated: '',
@@ -4213,7 +6961,7 @@
                 const headingText = fullPricesHeading.textContent.trim();
                 const titleMatch = headingText.match(/Full Price Guide: (.+?) #(\d+)/);
                 if (titleMatch) {
-                    data.extractedCardName = titleMatch[1];
+                    data.extractedCardName = cleanEbayTitle(titleMatch[1]);
                     data.extractedCardNumber = titleMatch[2];
                     debugLog(`📋 Extracted from heading: ${data.extractedCardName} #${data.extractedCardNumber}`);
                 }
@@ -4248,7 +6996,7 @@
                 // Match patterns like "CardName #SM210 Prices | Pokemon Promo | Pokemon Cards"
                 const pageTitleMatch = pageTitle.match(/^(.+?)\s+#([A-Z0-9]+)\s+Prices\s*\|/);
                 if (pageTitleMatch) {
-                    data.extractedCardName = pageTitleMatch[1];
+                    data.extractedCardName = cleanEbayTitle(pageTitleMatch[1]);
                     data.extractedCardNumber = pageTitleMatch[2];
                     debugLog(`📋 Extracted from page title: ${data.extractedCardName} #${data.extractedCardNumber}`);
                 }
@@ -4320,10 +7068,11 @@
         const pricedGrades = Object.values(extractedData.prices || {}).filter(p => p.hasPrice !== false && p.price !== 'Unpriced').length;
 
         let message = '';
+        const cardName = cleanEbayTitle(extractedData.extractedCardName || cardData?.cardName || 'Unknown');
         if (totalPrices > 0) {
             message = `
                 <strong>✅ Data Extracted for eBay</strong><br>
-                Card: ${extractedData.extractedCardName || cardData?.cardName || 'Unknown'}<br>
+                Card: ${cardName}<br>
                 Total grades: ${totalPrices}<br>
                 With prices: ${pricedGrades}<br>
                 <small>This data will appear in your eBay listing</small>
@@ -4331,7 +7080,7 @@
         } else {
             message = `
                 <strong>⚠️ Data Attempted for eBay</strong><br>
-                Card: ${extractedData.extractedCardName || cardData?.cardName || 'Unknown'}<br>
+                Card: ${cardName}<br>
                 No prices found on this page<br>
                 <small>eBay will show "Unpriced"</small>
             `;

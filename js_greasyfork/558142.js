@@ -3,13 +3,13 @@
 // @namespace   https://greasyfork.org/users/1545341
 // @match       *://www.abcya.com/*
 // @grant       GM_getResourceText
-// @version     2.4
+// @version     2.5
 // @license     MIT
 // @author      abcenjoyer
 // @description User script to bypass the paywall on ABCya games. Fullscreen button support requires synchronous page mode to work reliably, if you're using Violentmonkey on a Chromium-based browser.
 // @run-at      document-start
 // @inject-into page
-// @resource    main.js https://www.abcya.com/client/main-57a8e779cb9fe9a9c09a.js
+// @resource    main.js https://www.abcya.com/client/main-353a87d78169b430c481.js
 // @noframes
 // @downloadURL https://update.greasyfork.org/scripts/558142/ABCya%20Games%20Paywall%20Bypass.user.js
 // @updateURL https://update.greasyfork.org/scripts/558142/ABCya%20Games%20Paywall%20Bypass.meta.js

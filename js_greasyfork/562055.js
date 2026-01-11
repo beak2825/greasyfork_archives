@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UUTIX Helper (v13)
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-10.13
+// @version      2026-01-10.13.1
 // @description  分步复查：入口按钮监听“已订阅→购买”后点击；场次/票价/数量每步必须确认完成才进入下一步；场次=1跳过切换与loading；最后狂点購買，但点到后不立刻停——严格等待跳转到購物車页再停止。
 // @author       You
 // @match        https://www.uutix.com/detail?pId=*
@@ -21,7 +21,7 @@
   let runToken = 0;
 
   GM_addStyle(`
-    * { transition:none !important; animation:none !important; }
+    #uutix-helper-panel * { transition:none !important; animation:none !important; }
     #uutix-helper-panel{
       all: initial; position: fixed; top: 20px; right: 20px; z-index: 99999;
       background:#fff; border:1px solid #e0e0e0; border-radius:12px; padding:18px;
@@ -335,94 +335,103 @@
     if (!txt) return false;
     if (txt.includes('已訂閱') || txt.includes('已订阅') || txt.includes('訂閱') || txt.includes('订阅')) return false;
 
-    return /購買|购买|立即購買|立即购买|Buy|BuyNow|下單|下单|結算|结算|搶購|抢购/.test(txt);
+    return /購買門票|購買|购买|立即購買|立即购买|Buy|BuyNow|下單|下单|結算|结算|搶購|抢购/.test(txt);
   }
 
   async function waitEntryBecomeBuyAndClick(token) {
-    const btn = await waitFor(() => getEntryButton(), token, 30000, 50, '找不到入口按钮（detail-normal-button）');
+  const btn = await waitFor(
+    () => getEntryButton(),
+    token,
+    30000,
+    50,
+    '找不到入口按钮（detail-normal-button）'
+  );
 
-    if (isEntryBuyReady(btn)) {
-      updateStatus('检测到购买状态：点击入口按钮...', '#007bff');
-      btn.click();
-      return true;
-    }
+  updateStatus('等待入口按钮变为购买状态...', '#17a2b8');
 
-    updateStatus('入口为已订阅：等待按钮变为购买状态...', '#17a2b8');
+  let clickTimer = null;
 
-    const parent = btn.parentElement || document.querySelector('.detail__info-btn') || document.body;
-
-    return await new Promise((resolve, reject) => {
-      let finished = false;
-      const timeout = setTimeout(() => {
-        if (finished) return;
-        finished = true;
-        clearEntryObserver();
-        reject(new Error('等待入口按钮变为购买状态超时'));
-      }, 6 * 60 * 1000);
-
-      entryObserver = new MutationObserver(() => {
-        try {
-          if (!isRunning || token !== runToken) {
-            if (finished) return;
-            finished = true;
-            clearTimeout(timeout);
-            clearEntryObserver();
-            reject(new Error('已停止'));
-            return;
-          }
-          const cur = getEntryButton();
-          if (cur && isEntryBuyReady(cur)) {
-            if (finished) return;
-            finished = true;
-            clearTimeout(timeout);
-            clearEntryObserver();
-            updateStatus('已切换为购买状态：点击入口按钮...', '#007bff');
-            cur.click();
-            resolve(true);
-          }
-        } catch (_) {}
-      });
-
-      try {
-        entryObserver.observe(parent, {
-          subtree: true,
-          childList: true,
-          attributes: true,
-          characterData: true,
-          attributeFilter: ['class', 'style', 'disabled', 'aria-disabled']
-        });
-      } catch (_) {
-        clearEntryObserver();
-      }
-
-      (async () => {
-        while (!finished) {
-          try {
-            await ensureNotStopped(token);
-            const cur = getEntryButton();
-            if (cur && isEntryBuyReady(cur)) {
-              finished = true;
-              clearTimeout(timeout);
-              clearEntryObserver();
-              updateStatus('已切换为购买状态：点击入口按钮...', '#007bff');
-              cur.click();
-              resolve(true);
-              return;
-            }
-            await sleep(80);
-          } catch (e) {
-            if (!finished) {
-              finished = true;
-              clearTimeout(timeout);
-              clearEntryObserver();
-              reject(e);
-            }
-            return;
-          }
-        }
-      })();
-    });
+  function hasEnteredNextStep() {
+    return (
+      document.querySelector('.show-area') ||
+      document.querySelector('.multiple-ticket-area') ||
+      document.querySelector('.price-wrapper')
+    );
   }
+
+  function startClicking() {
+    if (clickTimer) return;
+
+    updateStatus('入口为购买状态：持续点击入口按钮...', '#007bff');
+
+    clickTimer = setInterval(() => {
+      try {
+        if (!isRunning || token !== runToken) {
+          clearInterval(clickTimer);
+          clickTimer = null;
+          return;
+        }
+
+        if (hasEnteredNextStep()) {
+          clearInterval(clickTimer);
+          clickTimer = null;
+          updateStatus('已进入下一步界面 ✅', '#28a745');
+          return;
+        }
+
+        const cur = getEntryButton();
+        if (cur && isEntryBuyReady(cur)) {
+          cur.click();
+        }
+      } catch (_) {}
+    }, 50); // 👈 入口点击频率（20ms）
+  }
+
+  // 情况 1：一开始就是购买状态
+  if (isEntryBuyReady(btn)) {
+    startClicking();
+  }
+
+  // 情况 2：从“已订阅”变“购买”
+  const parent =
+    btn.parentElement ||
+    document.querySelector('.detail__info-btn') ||
+    document.body;
+
+  entryObserver = new MutationObserver(() => {
+    try {
+      if (!isRunning || token !== runToken) return;
+
+      const cur = getEntryButton();
+      if (cur && isEntryBuyReady(cur)) {
+        startClicking();
+      }
+    } catch (_) {}
+  });
+
+  try {
+    entryObserver.observe(parent, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      characterData: true,
+      attributeFilter: ['class', 'style', 'disabled', 'aria-disabled']
+    });
+  } catch (_) {}
+
+  // 阻塞等待：直到真正进入下一步
+  await waitUntil(
+    () => hasEnteredNextStep(),
+    token,
+    6 * 60 * 1000,
+    50,
+    '等待进入下一步界面超时'
+  );
+
+  clearEntryObserver();
+  return true;
+}
+
 
   // --------------------------
   // Step 1：场次（sessionPosition=1 跳过）

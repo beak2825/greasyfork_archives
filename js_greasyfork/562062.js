@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Item Market Undercutter
+// @name         Item Market Best Price Helper
 // @author       srsbsns
 // @version      1.1
 // @description  Auto-fill prices $1 below market lowest on Item Market
@@ -13,8 +13,8 @@
 // @connect      api.torn.com
 // @license      MIT
 // @namespace    srsbsns
-// @downloadURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Undercutter.user.js
-// @updateURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Undercutter.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Best%20Price%20Helper.user.js
+// @updateURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Best%20Price%20Helper.meta.js
 // ==/UserScript==
 
 (() => {

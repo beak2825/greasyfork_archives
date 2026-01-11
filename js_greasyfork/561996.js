@@ -1,347 +1,532 @@
 // ==UserScript==
-// @name         Torn Territory Wall Helper 
+// @name         Territory War Helper
 // @namespace    https://torn.com/
-// @version      01.09.2026.12.25
-// @description  Territory wall helper
+// @version      01.11.2026.23.52
+// @description  Territory war helper: Seats, Score, TIMER, Projected end score, Current pace, Seat requirements, and Defenders "hold to guarantee". Correctly binds to the ACTIVE WAR TILE by matching the territory (terrName) to avoid pulling wrong score/timer/seats from other wars.
 // @author       KillerCleat [2842410]
 // @match        https://www.torn.com/factions.php*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561996/Torn%20Territory%20Wall%20Helper.user.js
-// @updateURL https://update.greasyfork.org/scripts/561996/Torn%20Territory%20Wall%20Helper.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561996/Territory%20War%20Helper.user.js
+// @updateURL https://update.greasyfork.org/scripts/561996/Territory%20War%20Helper.meta.js
 // ==/UserScript==
 
 /*
 NOTES & REQUIREMENTS
-Version: 01.09.2026.12.25
+Version: 01.11.2026.23.52
 Author: KillerCleat [2842410]
+
+Fix in this version:
+- Seat counts are now mapped using tile text (defending/assaulting) + left/right order
+  instead of relying on enemy-count/your-count classes (which are inconsistent).
 */
 
-const MY_FACTION_ID = 0;   // change when you change factions
-const TOTAL_SPOTS = 14;
-
 (function () {
-  'use strict';
+  "use strict";
 
-  const $ = (s) => document.querySelector(s);
+  // =========================
+  // CONFIG (EDIT THIS)
+  // =========================
+  const MY_FACTION_ID = 0; // Change when you change factions
 
-  function num(v) {
-    if (v === null || v === undefined) return null;
-    const cleaned = String(v).replace(/[^\d]/g, '');
-    if (!cleaned) return 0;
-    const n = parseInt(cleaned, 10);
+  // =========================
+  // CONSTANTS / IDS
+  // =========================
+  const BOX_ID = "kc-wall-box";
+  const STYLE_ID = "kc-wall-style";
+  const INJECTED_FLAG = "data-kc-id-injected";
+
+  // =========================
+  // UTILS
+  // =========================
+  function $(sel, root = document) {
+    return root.querySelector(sel);
+  }
+
+  function $all(sel, root = document) {
+    return Array.from(root.querySelectorAll(sel));
+  }
+
+  function toIntSafe(str) {
+    const n = parseInt(String(str).replace(/[^\d-]/g, ""), 10);
     return Number.isFinite(n) ? n : 0;
   }
 
-  function fmt(n) {
-    if (!Number.isFinite(n)) return '0';
-    return Math.round(n).toLocaleString('en-US');
+  function fmtNum(n) {
+    const x = Math.round(n);
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  function secondsFromWords(text) {
-    if (!text) return null;
-    const t = String(text).toLowerCase();
-    const d = (t.match(/(\d+)\s*days?/) || [])[1];
-    const h = (t.match(/(\d+)\s*hours?/) || [])[1];
-    const m = (t.match(/(\d+)\s*minutes?/) || [])[1];
-    const s = (t.match(/(\d+)\s*seconds?/) || [])[1];
-    if ([d, h, m, s].some(v => v === undefined)) return null;
-
-    const dd = parseInt(d, 10);
-    const hh = parseInt(h, 10);
-    const mm = parseInt(m, 10);
-    const ss = parseInt(s, 10);
-    if (![dd, hh, mm, ss].every(Number.isFinite)) return null;
-
-    return (dd * 86400) + (hh * 3600) + (mm * 60) + ss;
+  function clamp(n, min, max) {
+    return Math.max(min, Math.min(max, n));
   }
 
-  function ddhhmmss(totalSeconds) {
-    if (!Number.isFinite(totalSeconds)) return '00:00:00:00';
-    let s = Math.max(0, Math.floor(totalSeconds));
-
-    const dd = Math.floor(s / 86400); s %= 86400;
-    const hh = Math.floor(s / 3600);  s %= 3600;
-    const mm = Math.floor(s / 60);
+  // Expects seconds, returns "DD:HH:MM:SS"
+  function fmtTimerDDHHMMSS(totalSeconds) {
+    const s = Math.max(0, Math.floor(totalSeconds));
+    const dd = Math.floor(s / 86400);
+    const hh = Math.floor((s % 86400) / 3600);
+    const mm = Math.floor((s % 3600) / 60);
     const ss = s % 60;
 
-    const p2 = (n) => String(n).padStart(2, '0');
-    return `${p2(dd)}:${p2(hh)}:${p2(mm)}:${p2(ss)}`;
+    const pad2 = (v) => String(v).padStart(2, "0");
+    return `${pad2(dd)}:${pad2(hh)}:${pad2(mm)}:${pad2(ss)}`;
   }
 
-  function isWar() {
-    return typeof location.hash === 'string' && location.hash.startsWith('#/war/');
+  function parseDDHHMMSS(text) {
+    const t = String(text || "").replace(/\s+/g, "");
+    const m = t.match(/^(\d{1,3}):(\d{2}):(\d{2}):(\d{2})$/);
+    if (!m) return null;
+    const dd = toIntSafe(m[1]);
+    const hh = toIntSafe(m[2]);
+    const mm = toIntSafe(m[3]);
+    const ss = toIntSafe(m[4]);
+    return dd * 86400 + hh * 3600 + mm * 60 + ss;
   }
 
-  function extractFactionIdFromHref(href) {
-    if (!href) return null;
-    const m = String(href).match(/[?&]ID=(\d+)/i);
-    return m ? parseInt(m[1], 10) : null;
+  // Walk up until predicate matches
+  function closestUp(node, predicate, maxSteps = 30) {
+    let cur = node;
+    for (let i = 0; i < maxSteps && cur; i++) {
+      if (predicate(cur)) return cur;
+      cur = cur.parentElement;
+    }
+    return null;
   }
 
-  // Determine which faction is DEFENDING and which is ATTACKING from the header text around links.
-  function getWarFactionRoles(headerEl) {
-    if (!headerEl) return { defenderId: null, attackerId: null };
+  // =========================
+  // ACTIVE WAR HEADER PARSE
+  // =========================
+  function parseWarHeaderInfo() {
+    const info = $(".faction-war-info");
+    if (!info) return null;
 
-    const links = Array.from(headerEl.querySelectorAll('a[href*="factions.php?step=profile&ID="]'));
-    if (!links.length) return { defenderId: null, attackerId: null };
+    const title = $(".faction-war-info .raid-title", info) || info;
+    const text = title ? title.textContent : info.textContent;
+    const isAssaulting = /is\s+assaulting/i.test(text);
+    const isDefending = /is\s+defending/i.test(text);
 
-    let defenderId = null;
-    let attackerId = null;
+    const factionLinks = $all('a[href*="factions.php?step=profile"][href*="ID="]', info);
+    const firstFactionLink = factionLinks[0] || null;
+    const secondFactionLink = factionLinks[1] || null;
 
+    const firstId = firstFactionLink ? toIntSafe(new URL(firstFactionLink.href, location.origin).searchParams.get("ID")) : 0;
+    const secondId = secondFactionLink ? toIntSafe(new URL(secondFactionLink.href, location.origin).searchParams.get("ID")) : 0;
+
+    const firstName = firstFactionLink ? firstFactionLink.textContent.trim() : "";
+    const secondName = secondFactionLink ? secondFactionLink.textContent.trim() : "";
+
+    // Territory short name is the city link text in header
+    const terrLink = $('.faction-war-info a[href*="/city.php#terrName="]');
+    const territory = terrLink ? terrLink.textContent.trim() : "";
+
+    let attackerId = 0, defenderId = 0, attackerName = "", defenderName = "";
+    if (isAssaulting) {
+      attackerId = firstId; attackerName = firstName;
+      defenderId = secondId; defenderName = secondName;
+    } else if (isDefending) {
+      defenderId = firstId; defenderName = firstName;
+      attackerId = secondId; attackerName = secondName;
+    } else {
+      attackerId = firstId; attackerName = firstName;
+      defenderId = secondId; defenderName = secondName;
+    }
+
+    return {
+      infoEl: info,
+      territory,
+      isAssaulting,
+      isDefending,
+      attackerId,
+      attackerName,
+      defenderId,
+      defenderName
+    };
+  }
+
+  // =========================
+  // FIND THE CORRECT WAR TILE
+  // =========================
+  function findActiveWarTileByTerritory(territory) {
+    if (!territory) return null;
+
+    const terrLinks = $all('a[href*="/city.php#terrName="]').filter(a => a.textContent.trim() === territory);
+    if (!terrLinks.length) return null;
+
+    for (const a of terrLinks) {
+      const tile = closestUp(a, (el) => {
+        return !!el.querySelector?.(".faction-progress-wrap .score")
+          && !!el.querySelector?.(".faction-progress-wrap .timer")
+          && !!el.querySelector?.(".member-count .count");
+      }, 40);
+
+      if (tile) return tile;
+    }
+
+    return null;
+  }
+
+  // =========================
+  // FIXED: SCORE/TIMER/SEATS FROM TILE
+  // =========================
+  function parseScoreTimerCountsFromTile(tile) {
+    if (!tile) return null;
+
+    const scoreEl = $(".faction-progress-wrap .score", tile);
+    const timerEl = $(".faction-progress-wrap .timer", tile);
+
+    if (!scoreEl || !timerEl) return null;
+
+    const rawScore = scoreEl.textContent.trim(); // "198,246 / 250,000"
+    const parts = rawScore.split("/");
+    const score = parts[0] ? toIntSafe(parts[0]) : 0;
+    const target = parts[1] ? toIntSafe(parts[1]) : 0;
+
+    const secondsLeft = parseDDHHMMSS(timerEl.textContent.trim());
+    if (secondsLeft === null) return null;
+
+    // IMPORTANT:
+    // Read the two seat counts in order (LEFT then RIGHT).
+    const counts = $all(".member-count .count", tile).map(e => toIntSafe(e.textContent));
+    const leftCount = Number.isFinite(counts[0]) ? counts[0] : 0;
+    const rightCount = Number.isFinite(counts[1]) ? counts[1] : 0;
+
+    // Decide which side is defending vs assaulting using tile text.
+    // Example tile strings:
+    // - "HT defending LAA from Inglorious Basterds" => LEFT = defenders, RIGHT = attackers
+    // - "Violent Resolution assaulting MAA held ..." => LEFT = attackers, RIGHT = defenders
+    const tileText = tile.textContent.toLowerCase();
+
+    let attackers = 0;
+    let defenders = 0;
+
+    if (tileText.includes(" defending ")) {
+      defenders = leftCount;
+      attackers = rightCount;
+    } else if (tileText.includes(" assaulting ")) {
+      attackers = leftCount;
+      defenders = rightCount;
+    } else {
+      // Fallback if Torn changes words: keep old assumption but still stable left/right
+      attackers = leftCount;
+      defenders = rightCount;
+    }
+
+    return { score, target, secondsLeft, attackers, defenders };
+  }
+
+  // =========================
+  // TOTAL SEATS FROM OPEN WAR TABLE
+  // =========================
+  function parseTotalSeatsFromOpenWarTable() {
+    const warTable = $(".faction-war .members-list");
+    if (!warTable) return null;
+
+    const rows = $all(":scope > li", warTable);
+    const seatRows = rows.filter((li) => !!$(".id.left", li));
+    const total = seatRows.length;
+    return total > 0 ? total : null;
+  }
+
+  // =========================
+  // FACTION ID INJECTION
+  // =========================
+  function injectFactionIdsInline() {
+    const info = $(".faction-war-info");
+    if (!info) return;
+
+    const links = $all('a[href*="factions.php?step=profile"][href*="ID="]', info);
     links.forEach((a) => {
-      const id = extractFactionIdFromHref(a.getAttribute('href'));
+      if (a.getAttribute(INJECTED_FLAG) === "1") return;
+
+      const id = toIntSafe(new URL(a.href, location.origin).searchParams.get("ID"));
       if (!id) return;
 
-      // Look at nearby text to decide role
-      const prevText = (a.previousSibling && a.previousSibling.textContent) ? a.previousSibling.textContent.toLowerCase() : '';
-      const nextText = (a.nextSibling && a.nextSibling.textContent) ? a.nextSibling.textContent.toLowerCase() : '';
+      a.title = `Faction ID: ${id}`;
+      a.setAttribute(INJECTED_FLAG, "1");
 
-      // Example: "Warhawks is defending ..."
-      if (nextText.includes(' is defending')) defenderId = id;
+      const span = document.createElement("span");
+      span.className = "kc-faction-id-inline";
+      span.textContent = ` [${id}]`;
+      span.style.fontSize = "11px";
+      span.style.opacity = "0.75";
+      span.style.marginLeft = "2px";
+      span.style.userSelect = "text";
 
-      // Example: "... assaulted by Bleed"
-      if (prevText.includes('assaulted by') || prevText.includes('assaulting')) attackerId = id;
-      if (prevText.includes(' which is assaulted by')) attackerId = id;
-    });
-
-    // Fallback: if we only found one role, try to infer from order.
-    // In Torn header, defender faction link appears before the words "is defending", attacker link appears after "assaulted by".
-    // If still missing, assume first faction link is defender and last is attacker.
-    if (!defenderId && links.length >= 1) defenderId = extractFactionIdFromHref(links[0].getAttribute('href'));
-    if (!attackerId && links.length >= 2) attackerId = extractFactionIdFromHref(links[links.length - 1].getAttribute('href'));
-
-    return { defenderId, attackerId };
-  }
-
-  // Styles (locked cream)
-  if (!$('#kc-wall-style')) {
-    const st = document.createElement('style');
-    st.id = 'kc-wall-style';
-    st.textContent = `
-#kc-wall-box{
-  margin-top:8px;
-  padding:10px 12px;
-  background:#f3efe4;
-  border:1px solid #d8d3c7;
-  border-radius:6px;
-  font-size:13.5px;
-  line-height:1.5;
-  color:#111;
-  pointer-events:none;
-}
-#kc-wall-box .row{ margin:3px 0; font-weight:400; }
-#kc-wall-box .section{ margin-top:8px; padding-top:8px; border-top:1px solid #d8d3c7; }
-#kc-wall-box .safe{ color:#1b5e20; font-weight:400; }
-#kc-wall-box .danger{ color:#b71c1c; font-weight:400; }
-
-.kc-faction-id-inline{
-  margin-left:6px;
-  opacity:0.75;
-  font-size:12.5px;
-  pointer-events:none;
-}
-`;
-    document.head.appendChild(st);
-  }
-
-  // Add faction IDs (hover + inline) to header faction links
-  function decorateFactionLinks() {
-    const header = $('.faction-war-info');
-    if (!header) return;
-
-    const links = header.querySelectorAll('a[href*="factions.php?step=profile&ID="]');
-    if (!links || links.length === 0) return;
-
-    links.forEach((a) => {
-      const id = extractFactionIdFromHref(a.getAttribute('href'));
-      if (!id) return;
-
-      // Hover tooltip
-      const desiredTitle = `Faction ID: ${id}`;
-      if (!a.title || a.title.indexOf('Faction ID:') === -1) {
-        a.title = desiredTitle;
-      }
-
-      // Inline [#####] next to the link (avoid duplicates)
-      if (a.dataset.kcIdInjected === '1') return;
-
-      const span = document.createElement('span');
-      span.className = 'kc-faction-id-inline';
-      span.textContent = `[${id}]`;
-
-      a.insertAdjacentElement('afterend', span);
-      a.dataset.kcIdInjected = '1';
+      a.insertAdjacentElement("afterend", span);
     });
   }
 
-  function render() {
-    if (!isWar()) {
-      $('#kc-wall-box')?.remove();
-      return;
-    }
+  // =========================
+  // STYLES
+  // =========================
+  function ensureStyles() {
+    if (document.getElementById(STYLE_ID)) return;
 
-    const header = $('.faction-war-info');
-    if (!header) return;
-
-    decorateFactionLinks();
-
-    let box = $('#kc-wall-box');
-    if (!box) {
-      box = document.createElement('div');
-      box.id = 'kc-wall-box';
-      header.after(box);
-    }
-
-    // Roles
-    const { defenderId, attackerId } = getWarFactionRoles(header);
-    const isYourWar = (defenderId === MY_FACTION_ID) || (attackerId === MY_FACTION_ID);
-    const youAreDefender = (defenderId === MY_FACTION_ID);
-    const youAreAttacker = (attackerId === MY_FACTION_ID);
-
-    // Seats (from the progress panel)
-    const attackers = num($('.enemy-count')?.innerText);
-    const defenders = num($('.your-count')?.innerText);
-    const empty = Math.max(0, TOTAL_SPOTS - attackers - defenders);
-
-    // Score
-    const scoreTxt = $('.score')?.innerText || '';
-    const parts = scoreTxt.split('/');
-    const cur = parts.length > 0 ? num(parts[0]) : null;
-    const tgt = parts.length > 1 ? num(parts[1]) : null;
-
-    // Time left
-    const secsLeft = secondsFromWords(header.innerText);
-
-    if (cur === null || tgt === null || !Number.isFinite(secsLeft) || secsLeft <= 0) {
-      box.innerHTML = `<div class="row">Waiting for war data…</div>`;
-      return;
-    }
-
-    const left = Math.max(0, tgt - cur);
-
-    // Current net rate (attackers gain, defenders reduce)
-    const rate = attackers - defenders;
-
-    // Required rate to finish
-    const needRate = (left === 0) ? 0 : Math.ceil(left / secsLeft);
-
-    // HARD LIMIT: if needRate > 14 then attackers cannot win even with all seats
-    const impossibleByRateCap = (left > 0 && needRate > TOTAL_SPOTS);
-
-    // Current pace: are attackers winning at current seats?
-    const attackersWinAtCurrent = (!impossibleByRateCap && left > 0 && rate > 0 && rate >= needRate);
-
-    // Max attackers outcome
-    const maxAtkSecondsNeeded = (left === 0) ? 0 : (left / TOTAL_SPOTS);
-    const maxAtkPossible = !impossibleByRateCap && (maxAtkSecondsNeeded <= secsLeft);
-
-    // ROLE-AWARE status line
-    // - For defenders: SAFE if attackers are NOT winning at current pace
-    // - For attackers: WINNING if attackers ARE winning at current pace
-    // - If not your war: talk about DEFENDERS
-    let statusLineText = '';
-    let statusClass = 'safe';
-
-    if (isYourWar) {
-      if (youAreDefender) {
-        statusLineText = `YOUR FACTION (DEFENDING): ${attackersWinAtCurrent ? 'IN DANGER' : 'SAFE'}`;
-        statusClass = attackersWinAtCurrent ? 'danger' : 'safe';
-      } else if (youAreAttacker) {
-        statusLineText = `YOUR FACTION (ATTACKING): ${attackersWinAtCurrent ? 'WINNING' : 'LOSING'}`;
-        statusClass = attackersWinAtCurrent ? 'safe' : 'danger';
-      } else {
-        // Should not happen, but keep sane fallback
-        statusLineText = `YOUR FACTION: ${attackersWinAtCurrent ? 'IN DANGER' : 'SAFE'}`;
-        statusClass = attackersWinAtCurrent ? 'danger' : 'safe';
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `
+      #${BOX_ID}{
+        background: #f3efe3;
+        border: 1px solid #cfc7b8;
+        border-radius: 4px;
+        padding: 10px 12px;
+        margin: 10px 0 12px 0;
+        color: #333;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 1.45;
       }
-    } else {
-      statusLineText = `DEFENDERS: ${attackersWinAtCurrent ? 'IN DANGER' : 'SAFE'}`;
-      statusClass = attackersWinAtCurrent ? 'danger' : 'safe';
-    }
-
-    const statusHtml = `<span class="${statusClass}">${statusLineText}</span>`;
-
-    // Current pace line
-    let currentPaceLine = 'CURRENT PACE: DEFENDERS HOLD';
-    if (left === 0) {
-      currentPaceLine = 'CURRENT PACE: TARGET ALREADY REACHED';
-    } else if (attackersWinAtCurrent) {
-      const winSec = Math.ceil(left / rate);
-      currentPaceLine = `CURRENT PACE: ATTACKERS WIN IN ${ddhhmmss(winSec)}`;
-    } else if (impossibleByRateCap) {
-      currentPaceLine = 'CURRENT PACE: DEFENDERS HOLD (ATTACKERS CANNOT REACH TARGET IN TIME)';
-    }
-
-    // Projected score at current pace
-    const projected = Math.max(0, Math.min(tgt, cur + (rate * secsLeft)));
-
-    // TO WIN line (only meaningful if maxAtkPossible)
-    let toWinLine = '';
-    if (left === 0) {
-      toWinLine = 'TO WIN: NOT NEEDED';
-    } else if (!maxAtkPossible) {
-      toWinLine = 'TO WIN: NOT POSSIBLE (NOT ENOUGH TIME)';
-    } else if (rate >= needRate) {
-      toWinLine = 'TO WIN: ATTACKERS ALREADY HAVE ENOUGH SEATS';
-    } else {
-      // Best case: taking a defender seat shifts net by +2
-      let seatsNeededToWin = Math.ceil((needRate - rate) / 2);
-      seatsNeededToWin = Math.max(0, Math.min(TOTAL_SPOTS, seatsNeededToWin));
-      toWinLine = `TO WIN: ATTACKERS MUST GAIN ${seatsNeededToWin} SEATS`;
-    }
-
-    // TO HOLD line
-    let toHoldLine = '';
-    if (left === 0) {
-      toHoldLine = 'TO HOLD: ALREADY HELD';
-    } else if (!maxAtkPossible) {
-      toHoldLine = 'TO HOLD: GUARANTEED (ATTACKERS CANNOT REACH TARGET)';
-    } else if (rate < needRate) {
-      toHoldLine = 'TO HOLD: DEFENDERS ALREADY HOLD';
-    } else {
-      let seatsNeededToHold = Math.ceil((rate - (needRate - 1)) / 2);
-      seatsNeededToHold = Math.max(0, Math.min(TOTAL_SPOTS, seatsNeededToHold));
-      toHoldLine = `TO HOLD: DEFENDERS MUST GAIN ${seatsNeededToHold} SEATS`;
-    }
-
-    // Defender lock time (your request)
-    let guaranteeLine = '';
-    if (left === 0) {
-      guaranteeLine = 'DEFENDERS: ALREADY WON';
-    } else if (!maxAtkPossible) {
-      guaranteeLine = 'ATTACKERS: NOT POSSIBLE (EVEN WITH ALL 14)';
-    } else {
-      const lockSeconds = Math.ceil(secsLeft - maxAtkSecondsNeeded);
-      if (lockSeconds <= 0) {
-        guaranteeLine = 'DEFENDERS: NO GUARANTEED LOCK YET (ATTACKERS STILL HAVE ENOUGH TIME)';
-      } else {
-        guaranteeLine = `DEFENDERS: HOLD FOR ${ddhhmmss(lockSeconds)} TO GUARANTEE WIN`;
+      #${BOX_ID} .row{
+        margin: 2px 0;
+        white-space: normal;
       }
-    }
-
-    box.innerHTML = `
-<div class="row">SEATS: ATTACKERS ${attackers} | DEFENDERS ${defenders} | EMPTY ${empty} (TOTAL 14)</div>
-<div class="row">SCORE: ${fmt(cur)} / ${fmt(tgt)}</div>
-<div class="row">TIMER: ${ddhhmmss(secsLeft)}</div>
-<div class="row">${statusHtml}</div>
-
-<div class="section">
-  <div class="row">PROJECTED (CURRENT): ${fmt(projected)} / ${fmt(tgt)}</div>
-  <div class="row">${currentPaceLine}</div>
-</div>
-
-<div class="section">
-  <div class="row">
-    IF ATTACKERS TAKE ALL 14: ${maxAtkPossible ? `WIN IN ${ddhhmmss(maxAtkSecondsNeeded)}` : 'NOT POSSIBLE'}
-  </div>
-  <div class="row">${toWinLine}</div>
-  <div class="row">${toHoldLine}</div>
-  <div class="row">${guaranteeLine}</div>
-</div>
-`;
+      #${BOX_ID} .section{
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #d7cfbf;
+      }
+      #${BOX_ID} .good{
+        color: #1f7a1f;
+        font-weight: normal;
+      }
+      #${BOX_ID} .bad{
+        color: #b12828;
+        font-weight: normal;
+      }
+      #${BOX_ID} .muted{
+        opacity: 0.9;
+      }
+    `;
+    document.head.appendChild(style);
   }
 
-  render();
-  setInterval(render, 2000);
-  window.addEventListener('hashchange', render);
+  // =========================
+  // RENDER BOX
+  // =========================
+  function row(html) {
+    return `<div class="row">${html}</div>`;
+  }
+
+  function section(lines) {
+    return `<div class="section">${lines.map((t) => row(t)).join("\n")}</div>`;
+  }
+
+  function getOrCreateBox(infoEl) {
+    let box = document.getElementById(BOX_ID);
+    if (box) return box;
+
+    box = document.createElement("div");
+    box.id = BOX_ID;
+    infoEl.insertAdjacentElement("afterend", box);
+    return box;
+  }
+
+  // =========================
+  // CORE MATH / LINES
+  // =========================
+  function computeAndRender() {
+    const header = parseWarHeaderInfo();
+    if (!header) return;
+
+    const tile = findActiveWarTileByTerritory(header.territory);
+    const tileData = parseScoreTimerCountsFromTile(tile);
+
+    if (!tileData) return;
+
+    const totalSeatsFromTable = parseTotalSeatsFromOpenWarTable();
+    const totalSeats = totalSeatsFromTable !== null ? totalSeatsFromTable : (tileData.attackers + tileData.defenders);
+
+    const attackersSeats = tileData.attackers;
+    const defendersSeats = tileData.defenders;
+    const emptySeats = Math.max(0, totalSeats - attackersSeats - defendersSeats);
+
+    const score = tileData.score;
+    const target = tileData.target;
+    const secondsLeft = tileData.secondsLeft;
+
+    // TT scoring rule
+    const rate = attackersSeats - defendersSeats;
+    const projectedRaw = score + rate * secondsLeft;
+    const projectedEnd = clamp(projectedRaw, 0, target);
+
+    let paceLine = "CURRENT PACE: STALLED";
+    if (rate > 0) paceLine = "CURRENT PACE: ATTACKERS GAINING";
+    if (rate < 0) paceLine = "CURRENT PACE: DEFENDERS PUSHING BACK";
+
+    const myIsAttacker = header.attackerId === MY_FACTION_ID;
+    const myIsDefender = header.defenderId === MY_FACTION_ID;
+    const myInWar = myIsAttacker || myIsDefender;
+
+    let statusText = "";
+    let statusClass = "muted";
+
+    if (myInWar) {
+      if (myIsDefender) {
+        const safe = projectedEnd < target;
+        statusText = `YOUR FACTION (DEFENDING): ${safe ? "SAFE" : "DANGER"}`;
+        statusClass = safe ? "good" : "bad";
+      } else {
+        const onTrack = projectedEnd >= target;
+        statusText = `YOUR FACTION (ATTACKING): ${onTrack ? "ON TRACK" : "BEHIND"}`;
+        statusClass = onTrack ? "good" : "bad";
+      }
+    } else {
+      const defenderSafe = projectedEnd < target;
+      statusText = `DEFENDING FACTION (${header.defenderName || "UNKNOWN"}): ${defenderSafe ? "SAFE" : "DANGER"}`;
+      statusClass = defenderSafe ? "good" : "bad";
+    }
+
+    const rateAll = totalSeats;
+    const remainingNeeded = target - score;
+
+    let allTakeLine = "";
+    if (rateAll <= 0) {
+      allTakeLine = `IF ATTACKERS TAKE ALL ${totalSeats}: NOT POSSIBLE`;
+    } else if (remainingNeeded <= 0) {
+      allTakeLine = `IF ATTACKERS TAKE ALL ${totalSeats}: ALREADY WON`;
+    } else {
+      const secToWinAll = Math.ceil(remainingNeeded / rateAll);
+      if (secToWinAll <= secondsLeft) {
+        allTakeLine = `IF ATTACKERS TAKE ALL ${totalSeats}: WIN IN ${fmtTimerDDHHMMSS(secToWinAll)}`;
+      } else {
+        allTakeLine = `IF ATTACKERS TAKE ALL ${totalSeats}: NOT POSSIBLE`;
+      }
+    }
+
+    let attackersNeedSeatsLine = "";
+    const maxAttackerGain = Math.max(0, totalSeats - attackersSeats);
+    let needGain = null;
+
+    if (target <= 0) {
+      needGain = 0;
+    } else {
+      for (let g = 0; g <= maxAttackerGain; g++) {
+        const r = (attackersSeats + g) - defendersSeats;
+        const end = clamp(score + r * secondsLeft, 0, target);
+        if (end >= target) {
+          needGain = g;
+          break;
+        }
+      }
+    }
+
+    if (needGain === null) {
+      attackersNeedSeatsLine = `TO WIN: NOT POSSIBLE (SEAT LIMIT)`;
+    } else if (needGain === 0) {
+      attackersNeedSeatsLine = `TO WIN: ATTACKERS ALREADY ON PACE`;
+    } else {
+      attackersNeedSeatsLine = `TO WIN: ATTACKERS MUST GAIN ${needGain} SEATS`;
+    }
+
+    let defendersHoldLine = "";
+    if (projectedEnd < target) {
+      defendersHoldLine = `TO HOLD: DEFENDERS ALREADY HOLD`;
+    } else {
+      const maxDefGain = Math.max(0, totalSeats - defendersSeats);
+      let needDef = null;
+      for (let g = 0; g <= maxDefGain; g++) {
+        const r = attackersSeats - (defendersSeats + g);
+        const end = clamp(score + r * secondsLeft, 0, target);
+        if (end < target) {
+          needDef = g;
+          break;
+        }
+      }
+      if (needDef === null) defendersHoldLine = `TO HOLD: NOT POSSIBLE (SEAT LIMIT)`;
+      else if (needDef === 0) defendersHoldLine = `TO HOLD: DEFENDERS ALREADY HOLD`;
+      else defendersHoldLine = `TO HOLD: DEFENDERS MUST GAIN ${needDef} SEATS`;
+    }
+
+    let guaranteeLine = "";
+    if (rateAll <= 0 || target <= 0) {
+      guaranteeLine = `DEFENDERS: HOLD FOR N/A`;
+    } else if (remainingNeeded <= 0) {
+      guaranteeLine = `DEFENDERS: HOLD FOR 00:00:00:00 TO GUARANTEE WIN`;
+    } else {
+      const latestTimeAttackersNeedAtFull = Math.floor(remainingNeeded / rateAll);
+      const holdNeeded = secondsLeft - latestTimeAttackersNeedAtFull;
+
+      if (holdNeeded <= 0) {
+        guaranteeLine = `DEFENDERS: CANNOT GUARANTEE YET`;
+      } else if (holdNeeded > secondsLeft) {
+        guaranteeLine = `DEFENDERS: HOLD FOR N/A`;
+      } else {
+        guaranteeLine = `DEFENDERS: HOLD FOR ${fmtTimerDDHHMMSS(holdNeeded)} TO GUARANTEE WIN`;
+      }
+    }
+
+    const headerSentence = header.isAssaulting
+      ? `${header.attackerName} is assaulting ${header.territory || "TERRITORY"} which is currently held by ${header.defenderName}`
+      : `${header.defenderName} is defending ${header.territory || "TERRITORY"} which is assaulted by ${header.attackerName}`;
+
+    const terr = header.territory ? ` (${header.territory})` : "";
+    let modeLine = "";
+    if (myInWar) {
+      modeLine = myIsDefender ? `MODE: DEFENDING${terr}` : `MODE: ATTACKING${terr}`;
+    } else {
+      modeLine = `MODE: OBSERVING${terr}`;
+    }
+
+    ensureStyles();
+    const box = getOrCreateBox(header.infoEl);
+
+    const lines = [];
+    lines.push(row(modeLine));
+    lines.push(row(headerSentence));
+    lines.push(row(`SEATS: ATTACKERS ${attackersSeats} | DEFENDERS ${defendersSeats} | EMPTY ${emptySeats} (TOTAL ${totalSeats})`));
+    lines.push(row(`SCORE: ${fmtNum(score)} / ${fmtNum(target)}`));
+    lines.push(row(`TIMER: ${fmtTimerDDHHMMSS(secondsLeft)}`));
+    lines.push(row(`<span class="${statusClass}">${statusText}</span>`));
+
+    lines.push(section([
+      `PROJECTED (END): ${fmtNum(projectedEnd)} / ${fmtNum(target)}`,
+      paceLine
+    ]));
+
+    lines.push(section([
+      allTakeLine,
+      attackersNeedSeatsLine,
+      defendersHoldLine,
+      guaranteeLine
+    ]));
+
+    box.innerHTML = lines.join("\n");
+  }
+
+  // =========================
+  // BOOT
+  // =========================
+  function tick() {
+    try {
+      injectFactionIdsInline();
+      computeAndRender();
+    } catch (e) {
+      // silent
+    }
+  }
+
+  function boot() {
+    ensureStyles();
+    tick();
+
+    const mo = new MutationObserver(() => {
+      if (boot._raf) return;
+      boot._raf = requestAnimationFrame(() => {
+        boot._raf = null;
+        tick();
+      });
+    });
+
+    mo.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();

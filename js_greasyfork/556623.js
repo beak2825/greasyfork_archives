@@ -7,6 +7,7 @@
 // @match               https://mega4upload.net/*
 // @match               *://upfion.com/*
 // @match               *://upfiles.com/*
+// @match               *://uploady.io/*
 // @match               https://www.up-4ever.net/*
 // @include             *://frdl.*/*
 // @include             *://fredl.*/*
@@ -23,7 +24,7 @@
 // @match               https://financemonk.*/*
 // @grant               GM.addStyle
 // @run-at              document-start
-// @version             3.0.7
+// @version             3.0.8
 // @description         Removes unnecessary bloat from multiple file hosting and download sites to make download links more accessible
 // @license             GPL-3.0-only
 // @downloadURL https://update.greasyfork.org/scripts/556623/Mobilism%20Download%20Links%20Clean%20Bloat.user.js
@@ -48,6 +49,15 @@
         addCSS(`
             .premiumTable,
             .footer,
+            .fs-5,
+            .mb-4>p,
+            .shadow-sm,
+            .p-0,
+            .my-5,
+            .p-0,
+            .mb-4>ul,
+            .border-warning,
+            form[method="POST"]>center,
             .header-row {
                 display: none !important;
             }
@@ -99,6 +109,7 @@
             div[id="container"] > h2,
             .recommended,
             .page-buffer,
+            #container > [src],
             .free-class > b,
             .premium-class {
                 display: none !important;
@@ -159,6 +170,7 @@
     else if (domain === "cloudfam.io" || domain === "www.cloudfam.io") {
         addCSS(`
             .border-b,
+            .premium,
             .text-center,
             .cf-footer,
             .cf-header,
@@ -188,6 +200,29 @@
             iframe[width="280"],
             .py-3,
             .navbar {
+                display: none !important;
+            }
+        `);
+    }
+
+    // Uploady
+    else if (domain === "uploady.io" || domain === "www.uploady.io") {
+        addCSS(`
+            .header-row,
+            .premium,
+            .danger,
+            .negative,
+            #free-header,
+            .upgrade-cta,
+            #premiumplans,
+            .footer,
+            .dl-wait-upsell,
+            .captcha-upsell,
+            .col-md-4,
+            .mt-3,
+            .col-md-8,
+            .row,
+            .mt-2 {
                 display: none !important;
             }
         `);

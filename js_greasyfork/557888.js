@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        网页字体替换
 // @namespace   http://tampermonkey.net/
-// @version      1.0.2
-// @description   该脚本允许你将所有网页的字体替换为你本地的任意字体
+// @version      1.0.3
+// @description   该脚本允许你将所有网页的字体替换为你本地的任意字体。支持任意格式。
 // @author       Kyurin
 // @match        *://*/*
 // @grant        GM_setValue
@@ -17,24 +17,45 @@
 // @downloadURL https://update.greasyfork.org/scripts/557888/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2.user.js
 // @updateURL https://update.greasyfork.org/scripts/557888/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2.meta.js
 // ==/UserScript==
-
+ 
 (function() {
     'use strict';
-
+ 
     if (window.top !== window.self) return;
-
+ 
     const CONFIG = {
         CHUNK_SIZE: 1024 * 1024,
         DB_PREFIX: "FONT_DATA_",
         META_KEY: "FONT_META",
+        VAR_KEY: "IS_VARIABLE_FONT", // 新增：存储是否为可变字体的状态
         CUSTOM_FAMILY: "UserLocalFont"
     };
-
+ 
+    // 读取用户设置，默认为 false (即默认当作普通静态字体处理，兼容性最好)
+    const isVariableFont = GM_getValue(CONFIG.VAR_KEY, false);
+ 
     function injectGlobalStyles(blobUrl) {
         let css = "";
-
+ 
         // ==========================================
-        // 1. 字体定义 (劫持列表)
+        // 关键逻辑：根据模式决定 CSS 属性
+        // ==========================================
+        let fontFaceProps = `src: url('${blobUrl}'); font-display: swap;`;
+        
+        if (isVariableFont) {
+            //如果是可变字体，显式声明支持的字重范围，让浏览器调用字体内部轴
+            fontFaceProps += `
+                font-weight: 1 1000;
+                font-stretch: 50% 200%;
+            `;
+        } else {
+            // 如果是普通字体，不声明 font-weight。
+            // 这样当网页需要 bold 时，浏览器会进行 "Synthetic Bold" (伪粗体/描边加粗)，
+            // 避免出现"虽然加粗了但看起来还是细体"的 Bug。
+        }
+ 
+        // ==========================================
+        // 1. 字体定义
         // ==========================================
         const hijackList = [
             "TwitterChirp", "TwitterChirpExtendedHeavy", "Chirp",
@@ -49,20 +70,16 @@
             "Heiti SC", "SimHei", "SimSun", "Noto Sans SC", "Source Han Sans SC",
             "IBM Plex Sans", "Reddit Sans", "Noto Sans"
         ];
-
+ 
         hijackList.forEach(name => {
-            css += `@font-face { font-family: '${name}'; src: url('${blobUrl}'); font-display: swap; }`;
+            css += `@font-face { font-family: '${name}'; ${fontFaceProps} }`;
         });
-
-        css += `@font-face { font-family: '${CONFIG.CUSTOM_FAMILY}'; src: url('${blobUrl}'); font-display: swap; }`;
-
+ 
+        css += `@font-face { font-family: '${CONFIG.CUSTOM_FAMILY}'; ${fontFaceProps} }`;
+ 
         // ==========================================
-        // 2. 智能替换规则 (Smart Replacement)
+        // 2. 替换规则
         // ==========================================
-        // 核心修改：使用 :not() 排除器。
-        // 凡是类名中包含 icon, mdi (B站), fa (FontAwesome) 等特征的，
-        // 脚本完全不介入，让它使用网页原本的 CSS 设置。
-        
         const targetSelectors = [
             "body", "p", "article", "section", "blockquote",
             "h1", "h2", "h3", "h4", "h5", "h6",
@@ -72,22 +89,19 @@
             "nav", "[role='link']", "[role='button']", "[role='menuitem']",
             "[dir='auto']", "[dir='ltr']", "[lang]"
         ];
-
-        // 排除列表：这些特征绝对不碰
+ 
         const excludePatterns = [
             '[class*="icon"]',
             '[class*="Icon"]',
             '[class*="symbol"]',
-            '[class*="fa-"]', // FontAwesome
-            '[class*="mdi"]', // Material Design Icons (Bilibili/Bewly)
+            '[class*="fa-"]',
+            '[class*="mdi"]',
             '[class*="glyph"]',
-            '[class*="bi-"]', // Bootstrap
+            '[class*="bi-"]',
             '.material-icons',
             '.google-material-icons'
         ];
-
-        // 生成类似: div:not([class*="icon"]):not([class*="mdi"]) { ... } 的规则
-        // 这样可以最大程度保护图标，同时替换文字
+ 
         const notClause = excludePatterns.map(p => `:not(${p})`).join("");
         
         css += `
@@ -95,62 +109,31 @@
                 font-family: "${CONFIG.CUSTOM_FAMILY}", "TwitterChirp", "Inter", "Microsoft YaHei", sans-serif !important;
             }
         `;
-
+ 
         // ==========================================
-        // 3. 特殊修复区 (Bilibili / ArXiv)
+        // 3. 修复与白名单
         // ==========================================
         css += `
-            /* B站字幕单独强制替换 */
             .bpx-player-subtitle-panel-text,
             .bpx-player-subtitle-wrap span,
-            .bilibili-player-video-subtitle {
-                font-family: "${CONFIG.CUSTOM_FAMILY}", sans-serif !important;
+            .bilibili-player-video-subtitle { font-family: "${CONFIG.CUSTOM_FAMILY}", sans-serif !important; }
+            
+            .ltx_text, .ltx_title, .ltx_abstract, .ltx_font_bold { font-family: "${CONFIG.CUSTOM_FAMILY}", sans-serif !important; }
+            
+            .material-icons-extended, [class*="google-material-icons"], .goog-te-gadget-icon {
+                font-family: "Material Icons Extended", "Google Material Icons", "Material Icons", "Material Symbols Outlined" !important;
             }
             
-            /* ArXiv / LaTeX 修复 */
-            .ltx_text, .ltx_title, .ltx_abstract, .ltx_font_bold {
-                 font-family: "${CONFIG.CUSTOM_FAMILY}", sans-serif !important;
-            }
-        `;
-
-        // ==========================================
-        // 4. 图标保护白名单 (Icon Protection)
-        // ==========================================
-        // 这里只保留必须显式声明字体的规则 (如 Google 翻译)
-        // 对于其他的图标，上面的 :not() 规则已经让脚本“放过”它们了
-        
-        const protectedIconFonts = [
-            'Material Icons Extended', // Google Translate 核心修复
-            'Google Material Icons',
-            'Material Icons',
-            'Material Design Icons',   // Bilibili / Bewly
-            'FontAwesome', 
-            'Material Symbols Outlined'
-        ];
-        
-        // 针对 Google 翻译等顽固分子，强制指定字体列表
-        css += `
-            .material-icons-extended, 
-            [class*="google-material-icons"],
-            .goog-te-gadget-icon {
-                font-family: ${protectedIconFonts.map(f => `"${f}"`).join(", ")} !important;
-                font-weight: normal !important;
-                font-style: normal !important;
-            }
-            
-            /* 代码块字体保护 */
             pre, code, kbd, samp, .monaco-editor, .code-block, textarea.code {
                 font-family: "Space Mono", "Consolas", monospace !important;
                 font-variant-ligatures: none;
             }
             
-            /* 数学公式保护 */
-            .MathJax, .MathJax *, .mjx-container, .mjx-container *,
-            .ltx_Math, .ltx_equation, .ltx_equation *, math, math * {
+            .MathJax, .MathJax *, .mjx-container, .mjx-container *, math, math * {
                 font-family: "Latin Modern Math", serif !important;
             }
         `;
-
+ 
         if (typeof GM_addStyle !== 'undefined') {
             GM_addStyle(css);
         } else {
@@ -158,10 +141,10 @@
             styleEl.innerHTML = css;
             document.head.appendChild(styleEl);
         }
-
+ 
         setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
     }
-
+ 
     const Storage = {
         save: function(file) {
             const reader = new FileReader();
@@ -174,8 +157,8 @@
                     for (let i = 0; i < totalChunks; i++) {
                         GM_setValue(`${CONFIG.DB_PREFIX}${i}`, base64.slice(i * CONFIG.CHUNK_SIZE, (i + 1) * CONFIG.CHUNK_SIZE));
                     }
-                    GM_setValue(CONFIG.META_KEY, { name: file.name, type: file.type, totalChunks: totalChunks });
-                    alert("✅ 字体上传成功。");
+                    GM_setValue(CONFIG.META_KEY, { name: file.name, type: file.type || "font/ttf", totalChunks: totalChunks });
+                    alert(`✅ 字体 [${file.name}] 上传成功。\n注意：如果是可变字体，请在菜单中开启“可变字体模式”以获得最佳效果。`);
                     location.reload();
                 } catch (err) {
                     alert("❌ 保存失败：空间不足。");
@@ -194,7 +177,6 @@
                             if (chunk) chunks.push(chunk);
                         }
                         if (chunks.length !== meta.totalChunks) throw new Error("Corrupted data");
-                        
                         fetch(`data:${meta.type};base64,${chunks.join('')}`)
                             .then(res => res.blob())
                             .then(blob => resolve(blob))
@@ -214,25 +196,48 @@
             });
         }
     };
-
+ 
     function init() {
+        // ==========================================
+        // 菜单：上传字体
+        // ==========================================
         GM_registerMenuCommand("📂 上传字体文件", () => {
             const input = document.createElement('input');
             input.type = 'file';
             input.style.display = 'none';
-            input.accept = ".ttf,.otf,.woff,.woff2";
+            input.accept = ".ttf,.otf,.woff,.woff2,.ttc";
             input.onchange = e => { if(e.target.files[0]) Storage.save(e.target.files[0]); };
             document.body.appendChild(input);
             input.click();
             document.body.removeChild(input);
         });
-        GM_registerMenuCommand("🗑️ 恢复默认", () => {
-            if(confirm("确定恢复默认吗?")) { Storage.clear(); location.reload(); }
+ 
+        // ==========================================
+        // 菜单：切换可变字体模式
+        // ==========================================
+        // 根据当前状态显示不同的图标和文字
+        const modeStatus = isVariableFont ? "✅ 开启 (Variable)" : "❌ 关闭 (Static)";
+        GM_registerMenuCommand(`🔠 可变字体模式: ${modeStatus}`, () => {
+            const newState = !isVariableFont;
+            GM_setValue(CONFIG.VAR_KEY, newState);
+            const msg = newState 
+                ? "模式已开启：\n适用于 Variable Fonts (可变字体)。\n浏览器将使用字体内部的字重轴。" 
+                : "模式已关闭：\n适用于普通静态字体 (Static Fonts)。\n浏览器将自动生成伪粗体。";
+            alert(msg);
+            location.reload();
         });
+ 
+        // ==========================================
+        // 菜单：恢复默认
+        // ==========================================
+        GM_registerMenuCommand("🗑️ 恢复默认", () => {
+            if(confirm("确定清空字体数据并恢复默认吗?")) { Storage.clear(); location.reload(); }
+        });
+ 
         Storage.load().then(blob => {
             if(blob) injectGlobalStyles(URL.createObjectURL(blob));
         }).catch(e => console.error("FontLoader Error:", e));
     }
-
+ 
     init();
 })();

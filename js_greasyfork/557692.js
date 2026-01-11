@@ -2,9 +2,9 @@
 // @name         Cookie Clicker Ultimate Automation
 // @name:zh-TW   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
 // @name:zh-CN   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
-// @version      9.1.3.1
+// @version      9.1.3.2
 // @description  Automated clicker, auto-buy, auto-harvest, garden manager (5 slots), stock market, season manager, Santa evolver, Smart Sugar Lump harvester, Dragon Aura management, and the new Gambler feature.
-// @description:zh-TW 全功能自動掛機腳本 v9.1.3.1 Safe Restart Protocol
+// @description:zh-TW 全功能自動掛機腳本 v9.1.3.2 Safe Restart Protocol
 // @author       You & AI Architect
 // @match        https://wws.justnainai.com/*
 // @match        https://orteil.dashnet.org/cookieclicker/*
@@ -22,6 +22,8 @@
 
 /*
 變更日誌 (Changelog):
+v9.1.3.2 UI Sync Fix (2026):
+  - [UI Fix] Godzamok: 修復戒嚴結束後，花園側邊欄「突變管理」按鈕未同步更新顯示（仍顯示為「否」）的視覺 Bug。現在狀態恢復時會強制刷新該按鈕。
 v9.1.3.1 UI Event Fix (2026):
   - [UI Fix] Garden Protection: 修復花園側邊欄嵌入式「開/鎖」按鈕點擊無反應的問題，改為直接調用核心邏輯 (Direct Call)，不再依賴大面板事件傳遞。
 v9.1.3 Safe Restart Protocol (2026):
@@ -37,13 +39,6 @@ v9.1.2 Virtual Lock Hardening (2026):
 v9.1.1 Smart Locking Protocol (2026):
   - [Logic Fix] Godzamok: 修復 Godzamok 戰術結束後強制解除支出鎖定的問題。
   - [Feature] Godzamok: 新增智慧鎖定記憶 (Smart Locking)，現在會記憶觸發前的鎖定狀態，並在結束後準確還原，而非無腦解鎖。
-v9.1.0.1 Hotfix (2026):
-  - [UI Fix] UI.bindEvents: 修復主面板「突變管理」開關無法同步更新花園側邊欄按鈕狀態的問題。
-v9.1.0 UI & Logic Overhaul (2026):
-  - [Logic Fix] Garden: 修正存檔時迴圈變數錯誤導致陣型全空的問題。
-  - [Feature] Garden: 新增多汁女王甜菜 (JQB) 保護協議，成熟自動收割糖塊，其餘時間絕對豁免。
-  - [UI Enhancement] Garden Protection: 側邊欄與大面板新增「突變管理」獨立開關。
-  - [UI] Settings: 新增外部鏈結區塊。
 */
 
 (function() {
@@ -780,7 +775,7 @@ v9.1.0 UI & Logic Overhaul (2026):
                         color: white; padding: 15px; font-weight: bold; font-size: 18px;
                         cursor: move; display: flex; justify-content: space-between; align-items: center;
                     ">
-                        <span>🍪 控制面板 v9.1.3.1</span>
+                        <span>🍪 控制面板 v9.1.3.2</span>
                         <div class="cc-close-btn" id="main-panel-close">✕</div>
                     </div>
                     <div id="global-status-bar" style="
@@ -3489,7 +3484,7 @@ GodzamokCombo: {
                 }
             },
 
-            scheduleRestoration: function() {
+				scheduleRestoration: function() {
                 const R = Runtime.GodzamokState;
                 if (R.mutationRestoreTimer) clearTimeout(R.mutationRestoreTimer);
 
@@ -3499,7 +3494,15 @@ GodzamokCombo: {
                         Config.Flags.GardenMutation = true;
                         GM_setValue('isGardenMutationEnabled', true);
                         $('#chk-garden-mutation').prop('checked', true);
+
+                        // 1. 更新 Grid 面板按鈕
                         if (UI.GardenGrid && UI.GardenGrid.updateButtonState) UI.GardenGrid.updateButtonState();
+
+                        // 2. [v9.1.3.2 Fix] 關鍵修復：強制同步側邊欄 (Embedded) 按鈕狀態
+                        if (UI.GardenProtection && UI.GardenProtection.updateEmbeddedState) {
+                            UI.GardenProtection.updateEmbeddedState();
+                        }
+
                         Logger.success('Godzamok', '🕊️ 戒嚴結束：花園突變已自動恢復');
                         R.wasMutationEnabled = false;
                     }

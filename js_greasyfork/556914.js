@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QwenPersona
 // @namespace    https://www.kev1nweng.space
-// @version      1767977197
+// @version      1768097158
 // @description  一个便于用户自定义、保存并同步 Qwen Chat 自定义角色的 Tampermonkey 脚本。A Tampermonkey script for customizing user-defined personas in Qwen Chat.
 // @author       小翁同学 (kev1nweng)
 // @license      AGPL-3.0
@@ -359,6 +359,17 @@
       try {
         const stored = localStorage.getItem(CONSTANTS.STORAGE.CHAT_MAP);
         State.chatPersonaMap = stored ? JSON.parse(stored) : {};
+
+        // Cleanup any pseudo-IDs that might have leaked into the map
+        const pseudoNames = ["new", "new-chat", "start", "create", "home", "null", "undefined"];
+        let changed = false;
+        pseudoNames.forEach((id) => {
+          if (State.chatPersonaMap[id]) {
+            delete State.chatPersonaMap[id];
+            changed = true;
+          }
+        });
+        if (changed) Storage.saveChatPersonaMap();
       } catch (e) {
         State.chatPersonaMap = {};
       }
@@ -2222,15 +2233,27 @@
 
   // ==================== Chat Service ====================
   const ChatManager = {
+    isPseudoId(id) {
+      if (!id) return true;
+      const pseudoIds = new Set([
+        "new",
+        "new-chat",
+        "create",
+        "start",
+        "home",
+        "null",
+        "undefined",
+        "test",
+      ]);
+      return pseudoIds.has(id.toLowerCase());
+    },
+
     getCurrentChatId(url = location.pathname) {
       const match = url.match(/\/(?:c|chat)\/([a-zA-Z0-9-]+)/);
       const id = match ? match[1] : null;
       if (!id) return null;
 
-      // Qwen often uses pseudo routes like /c/new for the start screen.
-      // Treat these as "no real chat" to avoid persisting mappings to a shared key.
-      const pseudoIds = new Set(["new", "create", "start", "home", "null", "undefined"]);
-      if (pseudoIds.has(id.toLowerCase())) {
+      if (ChatManager.isPseudoId(id)) {
         Debug.log("getCurrentChatId pseudo route", { url, id });
         return null;
       }
@@ -2371,6 +2394,15 @@
           currChatId,
           mappedTo: State.selectedPersonaId,
         });
+      }
+
+      // If we navigated FROM a real chat TO the start page/pseudo route, 
+      // reset the persona to "No Persona" to avoid carrying over selection 
+      // from the previous chat session into the next one unexpectedly.
+      if (prevChatId && !currChatId) {
+        console.log("[QwenPersona] Navigated away from chat, resetting persona");
+        Debug.log("Resetting persona on navigation to home", { prevChatId });
+        PersonaManager.selectPersona(null);
       }
 
       // Bridge: if we just sent the first message of a new chat, bind the pending persona
@@ -2608,21 +2640,8 @@
       });
 
       if (!chatId) {
-        // New chat start page: Qwen currently uses the site root (/).
-        // On this screen we show "No Persona" by default (no per-chat mapping exists yet).
-        // This also avoids accidentally carrying persona selection across chats.
-        const isRootHome = location.pathname === "/" || location.pathname === "";
-        const isPseudoStart = /\/(?:c|chat)\/(new|create|start|home)(?:\/|$)/i.test(
-          location.pathname
-        );
-        if ((isRootHome || isPseudoStart) && State.selectedPersonaId) {
-          Debug.log("Home/New page detected, resetting persona to None", {
-            url: location.href,
-            pathname: location.pathname,
-            selectedPersonaId: State.selectedPersonaId,
-          });
-          PersonaManager.selectPersona(null);
-        }
+        // We are on Home or a Pseudo route (/c/new, /c/new-chat etc).
+        // Selection is maintained manually here or reset via navigation logic.
         return;
       }
 
@@ -2914,6 +2933,13 @@
     UI.waitForNavbar();
 
     ChatManager.startUrlMonitor();
+
+    // Reset to "No Persona" on initial load if we start on the home page or a pseudo-chat page
+    const startId = ChatManager.getCurrentChatId();
+    if (!startId) {
+      console.log("[QwenPersona] Starting on home/pseudo page, resetting persona");
+      PersonaManager.selectPersona(null);
+    }
 
     window.personaManager = {
       closeModal: UI.closeModal,

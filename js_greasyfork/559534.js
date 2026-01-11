@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         ✈️ Travel HUD Mini (Colour Coded + Points Value)
+// @name         ✈️ Points museum
 // @namespace    http://tampermonkey.net/
-// @version      3.3.1
-// @description  Compact travel points tracker with colour coding, flags, API key setup, and points value estimation.
+// @version      3.5.0
+// @description  Compact travel points tracker with colour coding, flags, API key setup, points value estimation, dual bottleneck warnings, and sorted items.
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Travel%20HUD%20Mini%20%28Colour%20Coded%20%2B%20Points%20Value%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Travel%20HUD%20Mini%20%28Colour%20Coded%20%2B%20Points%20Value%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Points%20museum.user.js
+// @updateURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Points%20museum.meta.js
 // ==/UserScript==
 
 (function () {
@@ -235,7 +235,7 @@ GM_addStyle(`
 }
 `);
 
-/* ================= EXISTING STYLES (Keep all existing styles) ================= */
+/* ================= EXISTING STYLES ================= */
 GM_addStyle(`
 /* Animation keyframes */
 @keyframes fadeSlide {
@@ -678,6 +678,45 @@ GM_addStyle(`
     padding: 1px 2px;
 }
 
+/* Support Footer */
+#${PANEL_ID} .support-footer {
+    padding: 8px 12px;
+    background: linear-gradient(145deg, rgba(30, 40, 55, 0.8), rgba(20, 30, 45, 0.9));
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+    text-align: center;
+    font-size: 9px;
+    color: #ffd700;
+    margin-top: 4px;
+    backdrop-filter: blur(4px);
+    position: relative;
+    z-index: 2;
+}
+
+#${PANEL_ID} .support-footer a {
+    color: #ffd700;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+#${PANEL_ID} .support-footer a:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.4);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    transform: translateY(-1px);
+}
+
+#${PANEL_ID} .support-footer .heart {
+    color: #ff6b6b;
+    animation: subtleFloat 2s ease-in-out infinite;
+    display: inline-block;
+    margin: 0 4px;
+}
+
 /* Responsive */
 @media (max-height: 600px) {
     #${PANEL_ID} {
@@ -690,6 +729,10 @@ GM_addStyle(`
         padding: 2px 10px;
         min-height: 20px;
         gap: 6px;
+    }
+    #${PANEL_ID} .support-footer {
+        padding: 6px 10px;
+        font-size: 8.5px;
     }
 }
 
@@ -918,6 +961,7 @@ function showApiManagementMenu() {
         ` : `
             <div class="menu-item" data-action="add">Add API Key</div>
         `}
+        <div class="menu-item" data-action="support">❤️ Support Development</div>
         <div class="menu-item" data-action="help">API Key Help</div>
     `;
     
@@ -933,6 +977,15 @@ function showApiManagementMenu() {
         .menu-item:hover {
             background: rgba(64, 156, 255, 0.15);
             color: #ffffff;
+        }
+        .menu-item[data-action="support"] {
+            color: #ffd700;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            margin-top: 4px;
+        }
+        .menu-item[data-action="support"]:hover {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffff00;
         }
     `);
     
@@ -966,6 +1019,11 @@ function showApiManagementMenu() {
                     GM_setValue('tornAPIKey', '');
                     showNotification('API key removed. Please refresh the page.');
                 }
+                break;
+            case 'support':
+                // Open Supernova's profile for support
+                window.open('https://www.torn.com/profiles.php?XID=2637223', '_blank');
+                showNotification('Thank you for considering support! ❤️');
                 break;
             case 'help':
                 alert(`🔑 API KEY SETUP GUIDE:
@@ -1228,11 +1286,61 @@ function calcSet(inventory, items) {
     return { sets, remaining };
 }
 
-function lowest(remaining, items) {
-    const min = Math.min(...Object.values(remaining));
-    const key = Object.keys(remaining).find(k => remaining[k] === min);
-    const item = Object.values(items).find(i => i.s === key);
-    return min >= 0 && item ? `Need ${key} → ${item.loc}` : null;
+/* ================= UPDATED: FIND TWO LOWEST ITEMS PER CATEGORY ================= */
+function lowestTwo(inventory, items, sets) {
+    // Create array of items with their counts AFTER sets have been subtracted
+    const itemCounts = Object.entries(items).map(([name, data]) => {
+        const count = inventory[name] || 0;
+        const remaining = count - sets;
+        return {
+            name,
+            code: data.s,
+            location: data.loc,
+            count: remaining
+        };
+    });
+    
+    // Sort by remaining count (ascending - lowest first)
+    itemCounts.sort((a, b) => a.count - b.count);
+    
+    // Take the two lowest items
+    const lowestItems = itemCounts.slice(0, 2);
+    
+    // Filter out items that are not actually low (count >= 5)
+    const lowItems = lowestItems.filter(item => item.count < 5);
+    
+    if (lowItems.length === 0) {
+        return null; // No items are low
+    }
+    
+    // Create warning message with both items
+    const warningParts = lowItems.map(item => `${item.code} → ${item.location}`);
+    
+    // Join with " & " if we have two items
+    if (warningParts.length === 2) {
+        return `Need ${warningParts[0]} & ${warningParts[1]}`;
+    } else {
+        return `Need ${warningParts[0]}`;
+    }
+}
+
+/* ================= GET SORTED ITEMS FOR DISPLAY ================= */
+function getSortedItems(inventory, items, sets) {
+    // Create array of items with their counts AFTER sets have been subtracted
+    const itemCounts = Object.entries(items).map(([name, data]) => {
+        const count = inventory[name] || 0;
+        const remaining = count - sets;
+        return {
+            name,
+            data,
+            remaining
+        };
+    });
+    
+    // Sort by remaining count (ascending - lowest first)
+    itemCounts.sort((a, b) => a.remaining - b.remaining);
+    
+    return itemCounts;
 }
 
 /* ================= GET STATUS CLASS FOR ABROAD ITEMS ================= */
@@ -1290,11 +1398,12 @@ async function render() {
         
         // Process groups with colour codes
         for (const [groupName, group] of Object.entries(GROUPS)) {
-            const { sets, remaining } = calcSet(inventory, group.items);
+            const { sets } = calcSet(inventory, group.items);
             totalSets += sets;
             totalPoints += sets * group.pts;
             
-            const warning = lowest(remaining, group.items);
+            // Use the new lowestTwo function to find TWO bottlenecks
+            const warning = lowestTwo(inventory, group.items, sets);
             if (warning) {
                 html += `<div class="a">${warning}</div>`;
             }
@@ -1304,20 +1413,14 @@ async function render() {
                               groupName === 'Prehistoric' ? 'PREHIST' : 'FLOWERS';
             html += `<div class="t">${groupTitle}</div>`;
             
-            // Calculate remaining for each item in the set
-            const itemRemaining = {};
-            Object.keys(group.items).forEach(key => {
-                const shortCode = group.items[key].s;
-                const localCount = inventory[key] || 0;
-                itemRemaining[shortCode] = localCount - sets; // Remaining after sets
-            });
+            // Get items SORTED from lowest to highest remaining
+            const sortedItems = getSortedItems(inventory, group.items, sets);
             
-            // Add rows with colour coding (showing only remaining)
-            Object.entries(group.items).forEach(([name, data]) => {
+            // Add rows with colour coding (showing only remaining) - IN SORTED ORDER
+            sortedItems.forEach(({ name, data, remaining }) => {
                 const abroadCount = abroad[name] || 0;
                 const statusClass = getStatusClass(name, abroadCount);
                 const rgb = hexToRgb(data.color);
-                const remaining = itemRemaining[data.s];
                 
                 html += `
                 <div class="r" style="
@@ -1370,6 +1473,16 @@ async function render() {
             <span>${fossil}</span>
             <span class="${getStatusClass('Patagonian Fossil', fossilAbroad)}">${fossilAbroad}</span>
             <span>AR 🇦🇷</span>
+        </div>`;
+        
+        // ========== SUPPORT FOOTER ==========
+        html += `
+        <div class="support-footer">
+            <span class="heart">❤️</span>
+            <a href="https://www.torn.com/profiles.php?XID=2637223" target="_blank" title="Support Supernova's development">
+                Support Development
+            </a>
+            <span class="heart">❤️</span>
         </div>`;
         
         // ========== POINTS VALUE CALCULATION ==========
@@ -1429,6 +1542,12 @@ async function render() {
                     Only "Display" permission is needed.<br><br>
                     Right-click toggle to manage API key.
                 </span>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 215, 0, 0.2);">
+                    <a href="https://www.torn.com/profiles.php?XID=2637223" target="_blank" 
+                       style="color: #ffd700; text-decoration: none; font-weight: 600;">
+                        ❤️ Support Development
+                    </a>
+                </div>
             </div>
         `;
     }

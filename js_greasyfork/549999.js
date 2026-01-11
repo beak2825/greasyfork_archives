@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio 汉化脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.8.0
+// @version      1.8.1
 // @description  将 Google AI Studio (aistudio.google.com) 页面的主要 UI 元素翻译为中文，已更新Gemini3等
 // @match        https://aistudio.google.com/*
 // @grant        none
@@ -31,13 +31,13 @@
     ['Get API key', '获取 API 密钥'], ['Help', '帮助'], ['Settings', '设置'], ['Create new', '新建'],['Build your ideas with Gemini', '与Gemini一起构建您的想法'],
     ['Switch to a paid API key to unlock higher quota and more features.', '切换到付费API密钥以解锁更高配额和更多功能。'],['Stream, Imagen and Veo have moved to the model picker in chat!', 'Stream、Imagen和Veo都有移动到这里的实验区聊天！'],
     ['Model', '模型'], ['Run', '运行'], ['Run settings', '运行设置'], ['Untitled prompt', '无标题提示'],['Set the thinking level', '设置思考等级'],['Let it snow', '下雪特效'],
-    ['This model is not stable and may not be suitable for production use.', '该模型不稳定，可能不适合生产环境使用。'],['Thinking level', '思考等级'],['High', '高'],
-    ['Off', '关闭'],['Block none', '无屏蔽'],['Block few', '屏蔽少数'],['Block some', '屏蔽一些'],['Block most', '屏蔽大部分'],['View status', '查看状态'],['Submit prompt key', '发送消息'],
+    ['This model is not stable and may not be suitable for production use.', '该模型不稳定，可能不适合生产环境使用。'],['Thinking level', '思考等级'],['High', '高'],['Remove Grounding with Google Search', '移除 Google 搜索基座'],
+    ['Off', '关闭'],['Block none', '无屏蔽'],['Block few', '屏蔽少数'],['Block some', '屏蔽一些'],['Block most', '屏蔽大部分'],['View status', '查看状态'],['Submit prompt key', '发送消息'],[' Remove URL context', '移除网址上下文'],
     ['Enter a prompt here', '在此处输入提示'], ['Add an example', '添加示例'], ['Input', '输入'], ['Output', '输出'],['Do not run safety filters', '不运行安全过滤器'],['Home', '主页'],['Copied to clipboard', '已复制到剪贴板'],
     ['Get code', '获取代码'], ['Save', '保存'], ['Chat', '聊天'], ['Stream', '流式'], ['Generate media', '生成媒体'],['Run prompt', '输入提示'],['Reset defaults', '恢复默认设置'],['Insert images, videos, audio, or files', '插入图像、视频、音频，或文件'],
-    ['Build', '构建'], ['History', '历史记录'], ['Dashboard', '仪表盘'], ['Documentation', '文档'],['Generate structured output', '生成结构化输出'],['Dangerous Content', '危险内容'],['Type', '类型'],
-    ['Total API Requests per Day', '每天的 API 请求总数'],['Total API Errors per Day', '每天的 API 错误总数'],['Studio', '实验室'],['My history', '我的对话历史'],['Open in Drive', '在云端硬盘打开'],['Description', '描述'],
-    ['Temperature', '温度'], ['Top-K', 'Top‑K'], ['Top-P', 'Top‑P'], ['Advanced settings', '高级设置'],['Lets Gemini use code to solve complex tasks', '让 Gemini 使用代码来解决复杂的任务'],['No Data Available', '没有可用数据'],
+    ['Build', '构建'], ['History', '历史记录'], ['Dashboard', '仪表盘'], ['Documentation', '文档'],['Generate structured output', '生成结构化输出'],['Dangerous Content', '危险内容'],['Type', '类型'],['Developer docs', '开发者文档'],['Speech to text', '语音转文本'],
+    ['Total API Requests per Day', '每天的 API 请求总数'],['Total API Errors per Day', '每天的 API 错误总数'],['Studio', '实验室'],['My history', '我的对话历史'],['Open in Drive', '在云端硬盘打开'],['Description', '描述'],[' Remove Structured outputs', '移除结构化输出'],
+    ['Temperature', '温度'], ['Top-K', 'Top‑K'], ['Top-P', 'Top‑P'], ['Advanced settings', '高级设置'],['Lets Gemini use code to solve complex tasks', '让 Gemini 使用代码来解决复杂的任务'],['No Data Available', '没有可用数据'],[' Remove Function calling', '移除函数调用'],
     ['Safety settings', '安全设置'], ['Edit', '编辑'], ['Stop sequences', '停止序列'], ['Add stop sequence', '添加停止序列'],['Probability threshold for top-p sampling', 'top-p 采样概率阈值'],['Cancel generation', '取消生成'],['Updated','更新'],
     ['Output length', '输出长度'], ['Tools', '工具'], ['URL context', 'URL 上下文'], ['Structured output', '结构化输出'],['Maximum number of tokens in response', '响应中的最大令牌数'],['Ready to chat!', '准备好聊天了！'],['Ready to chat','准备好聊天了！'],
     ['Code execution', '代码执行'], ['Function calling', '函数调用'], ['Grounding with Google Search', '启用 Google 搜索基座'],['Usage & Billing', '使用情况和计费'],['Low', '低'],['Medium', '中'],['Saved to Drive', '保存至云端硬盘'],['Link a paid API key here.', '在此处链接付费API密钥。'],
@@ -135,6 +135,20 @@
     ['Create a new app', '创建新应用'],
     ['Search for an app', '搜索应用'],
     ['No apps yet. As you build and view apps, they\'ll appear here.', '尚无应用。您构建和查看的应用将显示在此处。'],
+    ['Back to start', '返回首页'],
+    ['Code assistant', '代码助手'],
+    ['Preview', '预览'],
+    ['Code', '代码'],
+    ['Fullscreen', '全屏'],
+    ['Device', '设备'],
+    ['Delete app', '删除应用'],
+    ['Copy app', '复制应用'],
+    ['Download app', '下载应用'],
+    ['Share app', '分享应用'],
+    ['Select device preview', '选择设备预览'],
+    ['Open version history', '查看历史版本'],
+    ['Switch to API Key for your app', '为您的APP切换API Key'],
+    [' Edit app name and description', '编辑项目名称与概述'],
     // —— Build (构建应用) 模板卡片 ——
     ['Supercharge your apps with AI', '用 AI 为您的应用赋能'],
     ['Nano banana powered app', 'Nano Banana 驱动的应用'],

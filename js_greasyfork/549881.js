@@ -2,7 +2,7 @@
 // @name            YouTube Helper API
 // @author          ElectroKnight22
 // @namespace       electroknight22_helper_api_namespace
-// @version         0.9.7.1
+// @version         0.9.7.2
 // @license         MIT
 // @description     A helper api for YouTube scripts that provides easy and consistent access for commonly needed functions, objects, and values.
 // ==/UserScript==
@@ -95,93 +95,81 @@ const youtubeHelperApi = (function () {
     // --- END DEBUG SYSTEM ---
 
     // --- GM API SHIM ---
-    const gmCapabilities = {
-        isModern: false,
-        isLegacy: false,
-        features: {},
-    };
+    const gmCapabilities = { isModern: false, isLegacy: false, features: {} };
 
     (function performGmShim() {
-        const KNOWN_GM_GLOBALS = [
-            'setValue',
-            'getValue',
-            'deleteValue',
-            'listValues',
-            'getResourceText',
-            'getResourceURL',
-            'addStyle',
-            'addElement',
-            'registerMenuCommand',
-            'unregisterMenuCommand',
-            'openInTab',
-            'notification',
-            'setClipboard',
-            'contextMenu',
-            'xmlhttpRequest',
-            'download',
-            'webRequest',
-            'cookie',
-            'saveTab',
-            'getTab',
-            'getTabs',
-            'log',
-            'info',
-            'print',
-        ];
+        const API_MAP = {
+            setValue: ['setValue', 'GM_setValue'],
+            getValue: ['getValue', 'GM_getValue'],
+            deleteValue: ['deleteValue', 'GM_deleteValue'],
+            listValues: ['listValues', 'GM_listValues'],
+            getResourceText: ['getResourceText', 'GM_getResourceText'],
+            getResourceURL: ['getResourceURL', 'GM_getResourceURL'],
+            addStyle: ['addStyle', 'GM_addStyle'],
+            addElement: ['addElement', 'GM_addElement'],
+            registerMenuCommand: ['registerMenuCommand', 'GM_registerMenuCommand'],
+            unregisterMenuCommand: ['unregisterMenuCommand', 'GM_unregisterMenuCommand'],
+            openInTab: ['openInTab', 'GM_openInTab'],
+            notification: ['notification', 'GM_notification'],
+            setClipboard: ['setClipboard', 'GM_setClipboard'],
+            contextMenu: ['contextMenu', 'GM_contextMenu'],
+            xmlhttpRequest: ['xmlHttpRequest', 'GM_xmlhttpRequest'],
+            download: ['download', 'GM_download'],
+            webRequest: ['webRequest', 'GM_webRequest'],
+            cookie: ['cookie', 'GM_cookie'],
+            saveTab: ['saveTab', 'GM_saveTab'],
+            getTab: ['getTab', 'GM_getTab'],
+            getTabs: ['getTabs', 'GM_getTabs'],
+            log: ['log', 'GM_log'],
+            info: ['info', 'GM_info'],
+            print: ['print', 'GM_print'],
+        };
 
         const realGM = typeof GM !== 'undefined' ? GM : {};
-        const isModernEnv = typeof GM !== 'undefined';
+        gmCapabilities.isModern = typeof GM !== 'undefined';
 
-        const checkFeature = (name) => {
-            const legacyName = `GM_${name}`;
-            const legacyExists = typeof window[legacyName] !== 'undefined';
-            const modernExists = isModernEnv && name in realGM;
+        Object.entries(API_MAP).forEach(([stdName, [modernProp, legacyGlobal]]) => {
+            const hasModern = gmCapabilities.isModern && (Reflect.has(realGM, modernProp) || Reflect.has(realGM, stdName));
+            const hasLegacy = typeof window[legacyGlobal] !== 'undefined';
 
-            return legacyExists || modernExists;
-        };
+            gmCapabilities.features[stdName] = hasModern || hasLegacy;
 
-        gmCapabilities.isModern = isModernEnv;
-
-        gmCapabilities.features = {
-            storage: checkFeature('setValue'),
-            menu: checkFeature('registerMenuCommand'),
-            network: checkFeature('xmlhttpRequest') || (isModernEnv && 'xmlHttpRequest' in realGM),
-            clipboard: checkFeature('setClipboard'),
-            tabs: checkFeature('openInTab'),
-            ui: checkFeature('addStyle'),
-        };
-
-        const GMFallbackAsync = async (...args) => {
-            debug.logAll('GM.* (Async) call shimmed:', args);
-            return undefined;
-        };
-        const GMFallbackSync = (...args) => {
-            debug.logAll('GM_* (Sync) call shimmed:', args);
-            return undefined;
-        };
-
-        const gmProxyHandler = {
-            get: (target, prop, receiver) => {
-                if (Reflect.has(target, prop)) return Reflect.get(target, prop, receiver);
-                if (prop === 'info') return { script: { version: '0.0.0' }, scriptHandler: 'Shim', version: '0.0.0' };
-                return GMFallbackAsync;
-            },
-        };
+            if (hasLegacy) gmCapabilities.isLegacy = true;
+            if (!hasLegacy) {
+                window[legacyGlobal] = stdName === 'info' ? { script: { version: '0.0.0' }, scriptHandler: 'Shim' } : () => undefined;
+            }
+        });
 
         try {
-            window.GM = new Proxy(realGM, gmProxyHandler);
+            const proxyHandler = {
+                get(target, prop) {
+                    if (prop === 'info') return target.info ?? { script: { version: '0.0.0' } };
+
+                    let realProp = prop;
+                    if (API_MAP[prop]) realProp = API_MAP[prop][0];
+
+                    if (Reflect.has(target, realProp)) {
+                        const val = target[realProp];
+                        return typeof val === 'function' ? val.bind(target) : val;
+                    }
+
+                    return () => {
+                        const dummyPromise = Promise.resolve({ responseText: '', status: 200, statusText: 'OK' });
+                        dummyPromise.abort = () => {
+                            console.warn('[YouTube Helper API] Abort called on missing GM shim');
+                        };
+                        return dummyPromise;
+                    };
+                },
+            };
+
+            const descriptor = Object.getOwnPropertyDescriptor(window, 'GM');
+            if (!descriptor || descriptor.configurable || descriptor.writable) {
+                window.GM = new Proxy(realGM, proxyHandler);
+            }
         } catch (error) {
             console.warn('[YouTube Helper API] Failed to patch window.GM', error);
         }
-
-        KNOWN_GM_GLOBALS.forEach((name) => {
-            const key = `GM_${name}`;
-            if (typeof window[key] !== 'undefined') {
-                gmCapabilities.isLegacy = true;
-            } else {
-                window[key] = name === 'info' ? { script: { version: '0.0.0' }, scriptHandler: 'Shim' } : GMFallbackSync;
-            }
-        });
     })();
     // --- GM API SHIM END ---
 
@@ -214,14 +202,23 @@ const youtubeHelperApi = (function () {
         {},
         {
             get(target, property) {
-                return (...args) => {
-                    if (!appState.player.api) return console.warn(`YouTube player API not ready.`);
-                    if (typeof appState.player.api[property] === 'function') {
-                        return appState.player.api[property](...args);
-                    } else {
-                        console.warn(`Method "${property}" does not exist on the YouTube player API.`);
-                    }
-                };
+                if (!appState.player.api) {
+                    console.warn(`YouTube Helper API not ready.`);
+                    return undefined;
+                }
+                const value = appState.player.api[property];
+
+                if (typeof value === 'function') {
+                    return (...args) => {
+                        try {
+                            return value.apply(appState.player.api, args);
+                        } catch (e) {
+                            console.error(`API Call Error [${String(property)}]:`, e);
+                        }
+                    };
+                }
+
+                return value;
             },
         },
     );

@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         X-GUI CLIENT FOR BLOOKET
 // @namespace    http://tampermonkey.net/
-// @version      6.69x
+// @version      6.70x
 // @description  NOT PATCHED ANYMORE, THE BEST GUI ON THE WEB! ADVANCED ANTIBAN AND TONS OF FEATURES {CHEAT} {HACK} {CLIENT}
 // @author       Tony-the-best
 // @run-at       document-end
@@ -19,6 +19,10 @@
 
 
 
+
+
+
+
 /*!
 * sweetalert2 v11.26.17
 * Released under the MIT License.
@@ -31,7 +35,7 @@
 /**
  * @license AGPL-3.0
  * Blooket Cheats
- * Copyright (C) 2023-present 05Konz/Xullys/redhorse26/landsedge/Tony-the-best
+ * Copyright (C) 2023-present 05Konz/Xullys/redhorse26/landsedge
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
@@ -52,9 +56,9 @@
 
 /* THE UPDATE CHECKER IS ADDED DURING COMMIT PREP, THERE MAY BE REDUNDANT CODE, DO NOT TOUCH */
 
-console.log("%c X-GUI CLIENT LOADED! ENJOY! %c\n Created by Tony-the-best on GitHub", "color: #0bc2cf; font-size: 3rem", "color: #8000ff; font-size: 1rem");
+console.log("%c X-GUI CLIENT LOADED! ENJOY! %c\n Created by Xullys on GitHub", "color: #0bc2cf; font-size: 3rem", "color: #8000ff; font-size: 1rem");
 console.log("%c gui.js", "color: #0bc2cf; font-size: 1rem");
-console.log("%c Star the GitHub repo! %c https://github.com/Tony-the-best", "color: #ffd000; font-size: 1rem", "color: #8000ff; font-size: 1rem");
+console.log("%c Star the GitHub repo! %c https://github.com/xgui-client/X-GUI-BLOOKET-CLIENT", "color: #ffd000; font-size: 1rem", "color: #8000ff; font-size: 1rem");
 
 (() => {
     let iframe = document.querySelector("iframe");
@@ -74,7 +78,7 @@ console.log("%c Star the GitHub repo! %c https://github.com/Tony-the-best", "col
     const timeProcessed = 1747005941679;
     let latestProcess = -1;
     const cheat = (async () => {
-        const versionName = "6.69x";
+        const versionName = "6.70x";
         const gui = document.createElement("div");
         Object.assign(gui.style, {
             top: window.innerHeight / 2 - 250 + "px",
@@ -140,7 +144,7 @@ console.log("%c Star the GitHub repo! %c https://github.com/Tony-the-best", "col
                 const date = new Date();
                 date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
                 const expires = "expires=" + date.toUTCString();
-                document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};${expires};path=/`;
+                document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))}; domain=.blooket.com; ${expires};path=/`;
             },
             getCookie: (name) => {
                 const nameEQ = name + "=";
@@ -502,7 +506,23 @@ button,
         // CLOSE
         const closeControl = document.createElement("div");
         closeControl.innerHTML = `<i class="xgui-i xgui-close"></i>`;
-        closeControl.onclick = () => gui.remove();
+        closeControl.onclick = () => {
+            // Check if animations are enabled
+            const animationsEnabled = getCookieValue("animationsEnabled");
+            
+            if (animationsEnabled) {
+                // Add fade out animation before closing
+                const animationDuration = 0.3; // 300ms
+                gui.style.animation = `guiFadeOut ${animationDuration}s ease-out forwards`;
+                gui.style.pointerEvents = 'none'; // Prevent interaction during animation
+                setTimeout(() => {
+                    gui.remove();
+                }, animationDuration * 1000);
+            } else {
+                // No animation, immediately close
+                gui.remove();
+            }
+        };
 
         // APPEND
         controls.append(moveControl, minimizeControl, closeControl);
@@ -1103,6 +1123,52 @@ button,
             logMessages.innerHTML = "";
             Logs.addLog("Cleared Logs");
         };
+
+        // Helper function to create a function from user code
+        // Handles various input formats: function declarations, arrow functions, IIFEs, or raw code
+        function createFunctionFromCode(code, ...params) {
+            try {
+                // Trim the code
+                code = code.trim();
+                
+                // Check if it's an IIFE (Immediately Invoked Function Expression)
+                // Pattern: (function(...) {...})() or ((...) => {...})() or (() => {...})()
+                const iifePattern = /^\(.*\)\(\);?$/s;
+                if (iifePattern.test(code)) {
+                    // Wrap the IIFE in a function that will execute it when called
+                    // This allows us to store the IIFE and run it later
+                    return new Function(code);
+                }
+                
+                // Check if it's a complete function definition (function(...) { ... })
+                if (code.startsWith('function')) {
+                    // Extract the function by evaluating it
+                    // Wrap in parentheses to make it an expression
+                    return eval(`(${code})`);
+                }
+                
+                // Check if it's an arrow function
+                if (code.includes('=>')) {
+                    // Wrap in parentheses to make it an expression
+                    return eval(`(${code})`);
+                }
+                
+                // Otherwise, treat it as a function body
+                // If params are provided, use them
+                if (params.length > 0) {
+                    return new Function(...params, code);
+                } else {
+                    return new Function(code);
+                }
+            } catch (error) {
+                console.error('Error creating function from code:', error);
+                console.error('Code:', code);
+                // Return a no-op function on error
+                return function() {
+                    console.error('Failed to execute custom module due to syntax error');
+                };
+            }
+        }
 
         const cheats = {
             global: {
@@ -2729,31 +2795,97 @@ button,
                         name: "Sell Duplicate Blooks",
                         description: "Sell all duplicate blooks leaving you with 1 each",
                         run: async function() {
-                            if (window.location.pathname.startsWith("/blooks")) {
-                                if (confirm(`Are you sure you want to sell your dupes? (Legendaries and rarer will not be sold)`)) {
-                                    let stateNode = getStateNode();
-                                    let now = Date.now(),
-                                        results = "";
-                                    for (const blook in stateNode.state.blookData)
-                                        if (stateNode.state.blookData[blook] > 1) {
-                                            stateNode.setState({
-                                                blook,
-                                                numToSell: stateNode.state.blookData[blook] - 1
+                            if (!window.location.pathname.startsWith("/blooks")) {
+                                alert("This can only be run on the Blooks page. Please go to https://dashboard.blooket.com/blooks");
+                            } else {
+                                if (confirm("Are you sure you want to sell your duplicates? This will sell everything except Legendary and above, leaving you with 1 of each blook.")) {
+                                    
+                                    async function sellBlook(blookName, quantity) {
+                                        const formData = new FormData();
+                                        formData.append('1_blook', blookName);
+                                        formData.append('1_quantity', quantity.toString());
+                                        formData.append('0', '[{"status":"UNSET","message":"","fieldErrors":{}},"$K1"]');
+                                        try {
+                                            const response = await fetch('https://dashboard.blooket.com/blooks', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'next-action': '504d5bfe3d4b01def79630a2138ec4f50f85bee9',
+                                                    'accept': 'text/x-component',
+                                                    'next-router-state-tree': '%5B%22%22%2C%7B%22children%22%3A%5B%22(routes)%22%2C%7B%22children%22%3A%5B%22(dashboard)%22%2C%7B%22children%22%3A%5B%22blooks%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D'
+                                                },
+                                                body: formData
                                             });
-                                            if (!["Uncommon", "Rare", "Epic"].includes(document.querySelector("[class*='highlightedRarity']").innerText.trim())) continue;
-                                            results += `    ${blook} ${stateNode.state.blookData[blook] - 1}\n`;
-                                            await stateNode.sellBlook({
-                                                preventDefault: () => {}
-                                            }, true);
+                                            if (response.ok) {
+                                                console.log(`Successfully sold ${quantity}x ${blookName}`);
+                                            } else {
+                                                console.error(`Failed to sell ${blookName}: ${response.status}`);
+                                            }
+                                        } catch (err) {
+                                            console.error("Network error during sale:", err);
                                         }
-                                    alert(`(${Date.now() - now}ms) Results:\n${results.trim()}`);
+                                    }
+                                    
+                                    window.blookslist = (() => {
+                                        const anyEl = document.querySelector('*');
+                                        const fiberKey = Object.keys(anyEl).find(k => k.startsWith('__reactFiber$'));
+                                        let fiber = anyEl[fiberKey];
+                                        while (fiber && fiber.return) {
+                                            fiber = fiber.return;
+                                        }
+                                        const path = "child.child.child.child.child.child.child.child.child.child.sibling.child.child.child.child.child.child.child.child.sibling.child.child.sibling.child.child.child.child.sibling.child.sibling.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.sibling.child.sibling.sibling.sibling.sibling.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.child.sibling.child.child";
+                                        let target = fiber;
+                                        path.split('.').forEach(key => {
+                                            target = target ? target[key] : null;
+                                        });
+                                        return target?.memoizedProps?.blooks;
+                                    })();
+                                    
+                                    let key = "konzpack",
+                                        propCall = Object.prototype.hasOwnProperty.call;
+                                    let webpack = webpackChunk_N_E.push([
+                                        [key],
+                                        { [key]: () => {} },
+                                        function (func) {
+                                            Object.prototype.hasOwnProperty.call = function () {
+                                                Object.defineProperty(arguments[0], key, { set: () => {}, configurable: true });
+                                                return (Object.prototype.hasOwnProperty.call = propCall).apply(this, arguments);
+                                            };
+                                            return func;
+                                        },
+                                    ]);
+                                    
+                                    const blookData = webpack(4927).nK;
+                                    const prices = {
+                                        Uncommon: 5,
+                                        Rare: 20,
+                                        Epic: 75,
+                                        Legendary: 200,
+                                        Chroma: 300,
+                                        Unique: 350,
+                                        Mystical: 1000,
+                                    };
+                                    
+                                    let sellAmt = 0;
+                                    let sellBlookAmt = 0;
+                                    
+                                    for (let blook of blookslist) {
+                                        console.log(blook);
+                                        let rarity = blookData[blook.blook].rarity;
+                                        console.log(rarity);
+                                        if (blook.quantity > 1 && ["Uncommon","Rare","Epic"].includes(rarity)){
+                                            await sellBlook(blook.blook, blook.quantity - 1);
+                                            sellBlookAmt += blook.quantity - 1;
+                                            sellAmt += prices[rarity] * (blook.quantity - 1);
+                                        }
+                                    }
+                                    
+                                    alert("Sold " + sellBlookAmt + " blooks for " + sellAmt + " Tokens.");
                                 }
-                            } else alert("This can only be ran in the Blooks page.");
-                        },
-                    },
+                            }
+                        }
+                    }
                 ],
             },
-            // === START: extras category to add into the 'cheats' object ===
             extras: {
                 img: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDI0MCAyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBvbHlnb24gZmlsbD0iI2ZkZDAyOSIgcG9pbnRzPSIxMjAsMTggMTUxLDk0IDI0MCw5NCAxNjgsMTQ4IDE5NSwyMzAgMTIwLDE4MyA0NSwyMzAgNzIsMTQ4IDAsOTQgODksOTQiLz48L3N2Zz4=",
 
@@ -3712,7 +3844,7 @@ custom_modules: {
                 return {
                     name: module.name,
                     description: defaultDescription,
-                    run: new Function(module.code)
+                    run: createFunctionFromCode(module.code)
                 };
             } else if (module.type === 'toggle') {
                 return {
@@ -3721,7 +3853,7 @@ custom_modules: {
                     type: 'toggle',
                     enabled: false,
                     data: null,
-                    run: new Function(module.code)
+                    run: createFunctionFromCode(module.code)
                 };
             } else if (module.type === 'edit') {
                 return {
@@ -3731,7 +3863,7 @@ custom_modules: {
                         name: 'Value',
                         type: 'string'
                     }],
-                    run: new Function('value', module.code)
+                    run: createFunctionFromCode(module.code, 'value')
                 };
             }
         });
@@ -3963,7 +4095,7 @@ custom_modules: {
                         description: "Sets amount of gold",
                         inputs: [{
                             name: "Gold",
-                            type: "number",
+                            type: "text",
                         }, ],
                         run: function(gold) {
                             let stateNode = getStateNode();
@@ -3991,7 +4123,7 @@ custom_modules: {
                             },
                             {
                                 name: "Gold",
-                                type: "number",
+                                type: "text",
                             },
                         ],
                         run: function(player, gold) {
@@ -4655,7 +4787,7 @@ custom_modules: {
                         description: "Sets crypto",
                         inputs: [{
                             name: "Amount",
-                            type: "number",
+                            type: "text",
                         }, ],
                         run: function(amount) {
                             let stateNode = getStateNode();
@@ -4705,6 +4837,82 @@ custom_modules: {
                         },
                     },
                     {
+    name: "Spam Hack Screen",
+    description: "Continuously shows hack screen on target player.",
+    type: "toggle",
+    enabled: false,
+    data: null,
+    inputs: [{
+        name: "Player",
+        type: "options",
+        options: () => {
+            let stateNode = getStateNode();
+            return stateNode.props.liveGameController._liveApp
+                ? new Promise(res =>
+                    stateNode.props.liveGameController.getDatabaseVal(
+                        "c",
+                        players => players && res(Object.keys(players))
+                    )
+                )
+                : [];
+        }
+    }],
+    run: function(target) {
+        if (!this.enabled) {
+            this.enabled = true;
+            
+            if (!target) {
+                this.enabled = false;
+                return;
+            }
+
+            let stateNode = getStateNode();
+            const stealAmount = 0.00000000000000000000000000000000000000000000000000000000000000000000000001;
+
+            this.data = setInterval(() => {
+                stateNode.props.liveGameController.getDatabaseVal("c", (players) => {
+                    let player;
+                    if (
+                        players &&
+                        (player = Object.entries(players).find(
+                            x => x[0].toLowerCase() === target.toLowerCase()
+                        ))
+                    ) {
+                        const available = Number(player[1].cr) || 0;
+                        const steal = Math.min(stealAmount, available);
+                        
+                        if (steal <= 0) return;
+
+                        const currentCrypto = Number(stateNode.state.crypto) || 0;
+                        const newCrypto = currentCrypto + steal;
+
+                        stateNode.setState({
+                            crypto: newCrypto,
+                            crypto2: newCrypto
+                        });
+
+                        stateNode.props.liveGameController.setVal({
+                            path: "c/" + stateNode.props.client.name,
+                            val: {
+                                b: stateNode.props.client.blook,
+                                p: stateNode.state.password,
+                                cr: newCrypto,
+                                tat: player[0] + ":" + steal
+                            },
+                        });
+                    }
+                });
+            }, 500);
+        } else {
+            this.enabled = false;
+            if (this.data) {
+                clearInterval(this.data);
+                this.data = null;
+            }
+        }
+    },
+},
+                    {
 
                         name: "Steal Player's Crypto",
                         description: "Steals all of someone's crypto",
@@ -4712,28 +4920,55 @@ custom_modules: {
                             name: "Player",
                             type: "options",
                             options: () => {
-                                let stateNode = getStateNode();
-                                return stateNode.props.liveGameController._liveApp ? new Promise((res) => stateNode.props.liveGameController.getDatabaseVal("c", (players) => players && res(Object.keys(players)))) : [];
-                            },
-                        }, ],
-                        run: function(target) {
-                            let stateNode = getStateNode();
-                            stateNode.props.liveGameController.getDatabaseVal("c", (players) => {
-                                let player;
-                                if (players && (player = Object.entries(players).find((x) => x[0].toLowerCase() == target.toLowerCase()))) {
-                                    const cr = player[1].cr;
-                                    stateNode.setState({
-                                        crypto: stateNode.state.crypto + cr,
-                                        crypto2: stateNode.state.crypto + cr,
-                                    });
-                                    stateNode.props.liveGameController.setVal({
-                                        path: "c/" + stateNode.props.client.name,
-                                        val: {
-                                            b: stateNode.props.client.blook,
-                                            p: stateNode.state.password,
-                                            cr: stateNode.state.crypto + cr,
-                                            tat: player[0] + ":" + cr,
-                                        },
+                let stateNode = getStateNode();
+                return stateNode.props.liveGameController._liveApp
+                    ? new Promise(res =>
+                        stateNode.props.liveGameController.getDatabaseVal(
+                            "c",
+                            players => players && res(Object.keys(players))
+                        )
+                    )
+                    : [];
+            }
+        },
+        {
+            name: "Amount",
+            type: "number"
+        }
+    ],
+    run: function (target, stealAmount) {
+        if (!target || !Number.isFinite(stealAmount) || stealAmount <= 0) return;
+
+        let stateNode = getStateNode();
+
+        stateNode.props.liveGameController.getDatabaseVal("c", (players) => {
+            let player;
+            if (
+                players &&
+                (player = Object.entries(players).find(
+                    x => x[0].toLowerCase() === target.toLowerCase()
+                ))
+            ) {
+                const available = Number(player[1].cr) || 0;
+                const steal = Math.min(stealAmount, available);
+                if (steal <= 0) return;
+
+                const currentCrypto = Number(stateNode.state.crypto) || 0;
+                const newCrypto = currentCrypto + steal;
+
+                stateNode.setState({
+                    crypto: newCrypto,
+                    crypto2: newCrypto
+                });
+
+                stateNode.props.liveGameController.setVal({
+                    path: "c/" + stateNode.props.client.name,
+                    val: {
+                        b: stateNode.props.client.blook,
+                        p: stateNode.state.password,
+                        cr: newCrypto,
+                        tat: player[0] + ":" + steal
+                    },
                                     });
                                 }
                             });
@@ -5120,7 +5355,7 @@ custom_modules: {
                         description: "Sets weight",
                         inputs: [{
                             name: "Weight",
-                            type: "number",
+                            type: "text",
                         }, ],
                         run: function(weight) {
                             let stateNode = getStateNode();
@@ -5217,7 +5452,7 @@ custom_modules: {
                     type: "button",
                     inputs: [{
                         name: "Weight",
-                        type: "number"
+                        type: "text"
                     }, ],
                     run: function(weight) {
 
@@ -10339,9 +10574,18 @@ custom_modules: {
 
             const cheatsPage = document.createElement("div");
             cheatsPage.className = classes.contentPage;
+            
+            if (mode === 'custom_modules') {
+                cheatsPage.dataset.customModulesPage = 'true';
+                customModulesPageRef = cheatsPage;
+            }
 
             const cheatsList = document.createElement("div");
             cheatsList.className = classes.cheatsList + " " + classes.noScroll;
+            
+            if (mode === 'custom_modules') {
+                customModulesCheatsList = cheatsList;
+            }
 
             const inputElements = [];
             cheatsPage.onPath = () => inputElements.forEach((x) => x());
@@ -10628,7 +10872,11 @@ custom_modules: {
                         if (cheatsPage.querySelector && cheatsPage.querySelector('.xgui-csp-notice')) return;
                         const notice = document.createElement("div");
                         notice.className = 'xgui-csp-notice';
-                        try { if (!cheatsPage.style.position || cheatsPage.style.position === 'static') cheatsPage.style.position = 'relative'; } catch (e) {}
+                        try { 
+                            if (!cheatsPage.style.position || cheatsPage.style.position === 'static') cheatsPage.style.position = 'relative';
+                            // Allow content to extend beyond the cheatsPage bounds
+                            cheatsPage.style.overflow = 'visible';
+                        } catch (e) {}
                         notice.style.cssText = `
                             position: absolute;
                             inset: 0;
@@ -10640,6 +10888,7 @@ custom_modules: {
                             text-align: center;
                             background: transparent;
                             padding: 20px;
+                            overflow: visible !important;
                         `;
 
                         const content = document.createElement('div');
@@ -10967,6 +11216,7 @@ custom_modules: {
 
         // Versions array (30 versions, highest to lowest)
         const versions = [
+            ["Version 6.70x", "ADDED SMOOTH GUI ANIMATIONS, FIXED CUSTOM MODULE BUGS, ALLOWED TEXT VALUES FOR STATS, FIXED CRYPTO STEALING, ADDED SPAM CRYPTO HACK, UPDATED ICONS, FIXED STORAGE SYNC, AND UPDATED CREDITS.", "null"],
             ["Version 6.69x", "ADDED CSP DETECTOR FOR CUSTOM MODULES, FIXED CUSTOM MODULES BUG, FIXED STORAGE ISSUE ADDED IMAGE FIX AND ADDED FREE PLUS!.", "null"],
             ["Version 6.68x", "ADDED SMOOTH ANIMATIONS FOR X-GUI, ADDED CUSTOM MODULES, AND NOW YOU CAN DRAG THE TOP AREA.", "null"],
             ["Version 6.67x", "ADDED SWAL ALERTS! TOGGLE, ADDED UNSUPPORTED GAMEMODE WARNINGS, AND MOVED SETTINGS MENU.", "null"],
@@ -11181,7 +11431,7 @@ custom_modules: {
         function setCookie(name, value, days = 365) {
             const expires = new Date(Date.now() + days * 864e5).toUTCString();
             const domain = location.hostname.split('.').slice(-2).join('.'); // save on root domain
-            document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; domain=.${domain}; SameSite=Lax`;
+            document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; domain=.blooket.com; SameSite=Lax`;
         }
 
         function getCookie(name) {
@@ -11826,6 +12076,27 @@ custom_modules: {
 const modulePage = document.createElement("div");
 modulePage.className = classes.favoritesPage || "favoritesPage";
 
+// JavaScript minification function
+function minifyJS(code) {
+    try {
+        return code
+            // Remove single-line comments
+            .replace(/\/\/.*$/gm, '')
+            // Remove multi-line comments
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            // Remove extra whitespace
+            .replace(/\s+/g, ' ')
+            // Remove whitespace around operators and punctuation
+            .replace(/\s*([{}();,:<>!=+\-*/%&|?])\s*/g, '$1')
+            // Remove whitespace after keywords
+            .replace(/\b(return|var|let|const|if|else|for|while|function|class)\s+/g, '$1 ')
+            .trim();
+    } catch (e) {
+        console.error('Minification error:', e);
+        return code; // Return original code if minification fails
+    }
+}
+
 Object.assign(modulePage.style, {
     display: "flex",
     flexDirection: "column",
@@ -12136,7 +12407,6 @@ moduleStyle.textContent = `
 `;
 document.head.appendChild(moduleStyle);
 
-// Header
 const modTitle = document.createElement("div");
 modTitle.innerHTML = `
     <div style="
@@ -12189,7 +12459,7 @@ createBtn.onclick = async () => {
         html:
             '<input id="swal-name" class="swal2-input" placeholder="Module Name" style="margin-bottom: 10px;">' +
             '<textarea id="swal-desc" class="swal2-textarea" placeholder="Description (optional)" style="height: 80px; margin-bottom: 10px;"></textarea>' +
-            '<select id="swal-type" class="swal2-select" style="margin-bottom: 10px;"><option value="execute">Execute Button</option><option value="toggle">Toggle</option><option value="edit">Value Edit</option></select>' +
+            '<select id="swal-type" class="swal2-select" style="background: #1a1625 !important; border: 1px solid #fff !important; color: rgba(255,255,255,.75) !important; padding: 10px 15px; border-radius: 8px; line-height: 1.6;"><option value="execute" style="background: #1a1625; color: #e0e7ff;">Execute Button</option><option value="toggle" style="background: #1a1625; color: #e0e7ff;">Toggle</option><option value="edit" style="background: #1a1625; color: #e0e7ff; margin-bottom: 10px;">Value Edit</option></select>' +
             '<textarea id="swal-code" class="swal2-textarea" placeholder="JavaScript Code" style="height: 150px; font-family: monospace;"></textarea>',
         focusConfirm: false,
         width: '600px',
@@ -12215,7 +12485,7 @@ createBtn.onclick = async () => {
                 name: name,
                 description: document.getElementById('swal-desc').value,
                 type: document.getElementById('swal-type').value,
-                code: code
+                code: minifyJS(code) 
             };
         }
     });
@@ -12226,7 +12496,6 @@ createBtn.onclick = async () => {
         updateButtonGrid();
         refreshClearButton();
 
-        // Refresh the modules in the gamemodes list
         refreshCustomModulesUI();
 
         Sweetalert2.fire('Success', 'Module created successfully', 'success');
@@ -12276,6 +12545,7 @@ importBtn.onclick = async () => {
             updateButtonGrid();
             refreshClearButton();
             Sweetalert2.fire('Success', 'Module(s) imported successfully', 'success');
+            refreshCustomModulesUI();
         } catch (e) {
             Sweetalert2.fire('Error', 'Invalid JSON format', 'error');
         }
@@ -12370,7 +12640,7 @@ function refreshCustomModulesUI() {
             return {
                 name: module.name,
                 description: defaultDescription,
-                run: new Function(module.code)
+                run: createFunctionFromCode(module.code)
             };
         } else if (module.type === 'toggle') {
             return {
@@ -12379,7 +12649,7 @@ function refreshCustomModulesUI() {
                 type: 'toggle',
                 enabled: false,
                 data: null,
-                run: new Function(module.code)
+                run: createFunctionFromCode(module.code)
             };
         } else if (module.type === 'edit') {
             return {
@@ -12389,7 +12659,7 @@ function refreshCustomModulesUI() {
                     name: 'Value',
                     type: 'string'
                 }],
-                run: new Function('value', module.code)
+                run: createFunctionFromCode(module.code, 'value')
             };
         }
     });
@@ -12397,75 +12667,153 @@ function refreshCustomModulesUI() {
     cheats.custom_modules.cheats = customCheats;
 
     // Rebuild the custom modules list in the UI
-    const allGamemodes = document.querySelectorAll('[class*="gamemode"]');
-    let customModuleGamemode = null;
+    // Use the stored reference to the custom modules page
+    if (customModulesPageRef && customModulesCheatsList) {
+        // Clear existing cheats
+        customModulesCheatsList.innerHTML = '';
 
-    for (const gamemode of allGamemodes) {
-        if (gamemode.textContent.includes('Custom Modules')) {
-            customModuleGamemode = gamemode;
-            break;
-        }
-    }
+        // Rebuild all custom module cheats
+        for (const cheat of customCheats) {
+                const cheatElement = document.createElement("div");
+                const cheatTop = document.createElement("div");
+                cheatTop.className = classes.cheatTop;
 
-    if (customModuleGamemode) {
-        // Find the corresponding cheatsPage by looking at the onclick handler
-        const cheatsPages = document.querySelectorAll('[class*="contentPage"]');
+                const cheatInfo = document.createElement("div");
+                cheatInfo.className = classes.cheatInfo;
+                const cheatName = document.createElement("span");
+                cheatName.innerText = cheat.name;
+                cheatName.className = classes.cheatName;
 
-        for (const cheatsPage of cheatsPages) {
-            const cheatsList = cheatsPage.querySelector('[class*="cheatsList"]');
-            if (cheatsList && cheatsPage.textContent.includes(customCheats.map(c => c.name).join(''))) {
-                // This is likely the custom modules list
-                cheatsList.innerHTML = '';
+                const cheatDescription = document.createElement("span");
+                cheatDescription.innerText = cheat.description;
+                cheatDescription.className = classes.cheatDescription;
+                cheatInfo.append(cheatName, cheatDescription);
+                cheatElement.append(cheatTop);
 
-                for (const cheat of customCheats) {
-                    const cheatElement = document.createElement("div");
-                    const cheatTop = document.createElement("div");
-                    cheatTop.className = classes.cheatTop;
+                // Handle inputs if the cheat has them
+                const inputs = [];
+                if (Array.isArray(cheat.inputs)) {
+                    const cheatInputs = document.createElement("div");
+                    cheatInputs.className = classes.cheatInputs;
+                    for (const input of cheat.inputs) {
+                        const inputElement = document.createElement("div");
+                        const inputName = document.createElement("span");
+                        inputName.innerText = input.name;
+                        inputElement.append(inputName);
+                        cheatInputs.append(inputElement);
 
-                    const cheatInfo = document.createElement("div");
-                    cheatInfo.className = classes.cheatInfo;
-                    const cheatName = document.createElement("span");
-                    cheatName.innerText = cheat.name;
-                    cheatName.className = classes.cheatName;
+                        if (input.type == "options") {
+                            const inputField = document.createElement("select");
+                            inputField.dataset[datasets.type] = "options";
+                            inputElement.append(inputField);
+                            inputs.push(inputField);
+                            let curField = inputField;
+                            const updateOptions = () => {
+                                let choose = input.options;
 
-                    const cheatDescription = document.createElement("span");
-                    cheatDescription.innerText = cheat.description;
-                    cheatDescription.className = classes.cheatDescription;
-                    cheatInfo.append(cheatName, cheatDescription);
-                    cheatTop.append(cheatInfo);
+                                const newInputField = document.createElement("select");
+                                newInputField.dataset[datasets.type] = "options";
+                                inputs[inputs.indexOf(curField)] = newInputField;
+                                curField.replaceWith(newInputField);
+                                curField = newInputField;
 
-                    const runButton = document.createElement("div");
-                    runButton.className = classes.runCheat;
-                    if (cheat.type == "toggle") {
-                        runButton.innerText = "Toggle On";
-                        runButton.classList.add(classes.toggleCheat);
-                    } else {
-                        runButton.innerText = "Execute";
-                    }
-
-                    runButton.onclick = () => {
-                        try {
-                            cheat.run.apply(cheat, []);
-                            if (cheat.type == "toggle") {
-                                cheat.enabled = !cheat.enabled;
-                                runButton.innerText = "Toggle " + (cheat.enabled ? "Off" : "On");
-                                runButton.classList.toggle(classes.active, cheat.enabled);
-                                Logs.addLog(`Toggled "${cheat.name}" ${cheat.enabled ? "on" : "off"}`, cheat.enabled ? "var(--toggleOn)" : "var(--toggleOff)");
-                            } else {
-                                Logs.addLog(`Ran "${cheat.name}"`, "var(--highlight)");
+                                if (typeof choose == "function")
+                                    try {
+                                        choose = choose();
+                                    } catch {
+                                        choose = []
+                                    }
+                                if (choose instanceof Promise) {
+                                    const waiting = document.createElement("option");
+                                    waiting.value = '""';
+                                    waiting.innerHTML = "Loading Options...";
+                                    curField.append(waiting);
+                                    choose.then((choices) => {
+                                        if (choices?.length > 0) {
+                                            curField.innerHTML = "";
+                                            for (const choice of choices) {
+                                                const option = document.createElement("option");
+                                                option.value = JSON.stringify(choice?.value ?? choice);
+                                                option.innerHTML = choice?.name || choice;
+                                                curField.append(option);
+                                            }
+                                        } else {
+                                            const newInputField = document.createElement("input");
+                                            inputs[inputs.indexOf(curField)] = newInputField;
+                                            curField.replaceWith(newInputField);
+                                            newInputField.dataset[datasets.type] = "string";
+                                            newInputField.placeholder = input.name;
+                                            curField = newInputField;
+                                        }
+                                    });
+                                } else {
+                                    if (choose?.length > 0) {
+                                        for (const choice of choose) {
+                                            const option = document.createElement("option");
+                                            option.value = JSON.stringify(choice?.value ?? choice);
+                                            option.innerHTML = choice?.name || choice;
+                                            curField.append(option);
+                                        }
+                                    } else {
+                                        const newInputField = document.createElement("input");
+                                        inputs[inputs.indexOf(curField)] = newInputField;
+                                        curField.replaceWith(newInputField);
+                                        newInputField.dataset[datasets.type] = "string";
+                                        newInputField.placeholder = input.name;
+                                        curField = newInputField;
+                                    }
+                                }
+                            };
+                            updateOptions();
+                        } else {
+                            const inputField = document.createElement("input");
+                            inputField.dataset[datasets.type] = input.type;
+                            if (input.type == "number") {
+                                inputField.type = "number";
+                                inputField.min = input.min;
+                                inputField.max = input.max;
+                                inputField.value = input.value || (input.min ?? 0);
                             }
-                        } catch (err) {
-                            Logs.addLog(`Error running "${cheat.name}": ${err.message}`, "var(--error)");
+                            inputField.placeholder = input.name;
+                            inputElement.append(inputField);
+                            inputs.push(inputField);
                         }
-                    };
-
-                    cheatTop.append(runButton);
-                    cheatElement.append(cheatTop);
-                    cheatsList.append(cheatElement);
+                    }
+                    cheatElement.append(cheatInputs);
                 }
-                break;
+                cheatTop.append(cheatInfo);
+
+                const runButton = document.createElement("div");
+                runButton.className = classes.runCheat;
+                if (cheat.type == "toggle") {
+                    runButton.innerText = "Toggle On";
+                    runButton.classList.add(classes.toggleCheat);
+                } else {
+                    runButton.innerText = "Execute";
+                }
+
+                runButton.onclick = () => {
+                    try {
+                        cheat.run.apply(
+                            cheat,
+                            inputs.map((x) => (x.dataset[datasets.type] == "number" ? parseFloat("0" + x.value) : x.dataset[datasets.type] == "options" ? JSON.parse(x.value) : x.value))
+                        );
+                        if (cheat.type == "toggle") {
+                            cheat.enabled = !cheat.enabled;
+                            runButton.innerText = "Toggle " + (cheat.enabled ? "Off" : "On");
+                            runButton.classList.toggle(classes.active, cheat.enabled);
+                            Logs.addLog(`Toggled "${cheat.name}" ${cheat.enabled ? "on" : "off"}`, cheat.enabled ? "var(--toggleOn)" : "var(--toggleOff)");
+                        } else {
+                            Logs.addLog(`Ran "${cheat.name}"`, "var(--highlight)");
+                        }
+                    } catch (err) {
+                        Logs.addLog(`Error running "${cheat.name}": ${err.message}`, "var(--error)");
+                    }
+                };
+
+                cheatTop.append(runButton);
+                customModulesCheatsList.append(cheatElement);
             }
-        }
     }
 }
 
@@ -12576,6 +12924,21 @@ function(amount) {
         val: amount
     });
 }</div>
+            </div>
+
+            <div class="docSection">
+                <div class="docSubtitle">Code Format Options</div>
+                <div class="docText">
+                    You can write your code in any of these formats:
+                </div>
+                <ul class="docList">
+                    <li><span class="docHighlight">Function declaration:</span> function() { /* code */ } or function(param) { /* code */ }</li>
+                    <li><span class="docHighlight">Arrow function:</span> () => { /* code */ } or (param) => { /* code */ }</li>
+                    <li><span class="docHighlight">Function body only:</span> Just write the code without function wrapper</li>
+                </ul>
+                <div class="docText">
+                    All three formats work equally well - choose whichever you prefer!
+                </div>
             </div>
 
             <div class="docSection">
@@ -12719,7 +13082,7 @@ async function editModule(index) {
                 name: name,
                 description: document.getElementById('swal-desc').value,
                 type: document.getElementById('swal-type').value,
-                code: code
+                code: minifyJS(code) // Minify code before saving
             };
         }
     });
@@ -12787,19 +13150,22 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
 
         const licenseMessage = document.createElement("div");
         licenseMessage.className = classes.licenseMessage;
-        licenseMessage.innerHTML = `<i class="fas fa-file-alt" style="line-height: 1;aspect-ratio: 1 / 1;height: 20px;display: inline-grid;place-items: center;"></i> This script is licensed under <a style="color: var(--highlight);" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPL-3.0</a>, read more <a style="color: var(--highlight);" target="_blank" href="https:/.com/Blooket-Council/Blooket-Cheats?tab=readme-ov-file#licensing">here</a>.<br>`;
+        licenseMessage.innerHTML = `<i class="fas fa-file-alt" style="line-height: 1;aspect-ratio: 1 / 1;height: 20px;display: inline-grid;place-items: center;"></i> This script is licensed under <a style="color: var(--highlight);" target="_blank" href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPL-3.0</a>, read more <a style="color: var(--highlight);" target="_blank" href="https://github.com/Blooket-Council/Blooket-Cheats?tab=readme-ov-file#licensing">here</a>.<br>`;
 
         const copyrightTag = document.createElement("span");
         copyrightTag.className = classes.copyrightTag;
 
-        copyrightTag.innerText = `Copyright © ${new Date().getFullYear()} 05Konz`;
+        copyrightTag.innerText = `Copyright © ${new Date().getFullYear()} Xully`;
 
         const codingCredits = document.createElement("ul");
         codingCredits.className = classes.codingCredits;
 
-        codingCredits.append(createCredit("GUI Design + Creation", "05Konz+XullysFN"));
-        codingCredits.append(createCredit("Anti-Suspend", "CryptoDude3+XullysFN"));
-        codingCredits.append(createCredit("Blooket Cheats", 'gliz <i class="fas fa-long-arrow-alt-right"></i> Minesraft2 <i class="fas fa-long-arrow-alt-right"></i> 05Konz <i class="fas fa-long-arrow-alt-right"></i> XullysFN'));
+        codingCredits.append(createCredit("Owner", "Xully"));
+        codingCredits.append(createCredit("Full GUI Dev", "Cathead+landsedge"));
+        codingCredits.append(createCredit("Module Dev", "redhorse26"));
+        codingCredits.append(createCredit("Design+Module Dev", "Lil Skittle"));
+        codingCredits.append(createCredit("Contributor", "DannyDan"));
+        codingCredits.append(createCredit("Original Blooket Cheats", 'gliz <i class="fas fa-long-arrow-alt-right"></i> Minesraft2 <i class="fas fa-long-arrow-alt-right"></i> 05Konz'));
 
         const creditLinks = document.createElement("ul");
         creditLinks.className = classes.creditLinks;
@@ -13112,7 +13478,7 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         function setCookie(name, value, days = 365) {
             const expireDate = new Date();
             expireDate.setTime(expireDate.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expireDate.toUTCString()}; path=/`;
+            document.cookie = `${name}=${encodeURIComponent(value)}; domain=.blooket.com; expires=${expireDate.toUTCString()}; path=/`; 
         }
 
 
@@ -13755,13 +14121,18 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
       </svg>`,
 
                 gamepad: `
-      <svg xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 24 24" width="1em" height="1em"
-           fill="none" stroke="currentColor"
-           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="8" width="20" height="8" rx="2"></rect>
-        <path d="M7 12h4M9 10v4"></path>
-      </svg>`,
+    <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 24 24" width="1em" height="1em"
+       fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19.07 1.29l-1.41 1.41 1.11 1.11-2.22 2.22-3.84-3.84-1.41 1.42 1.11 1.11L2.2 14.93l6.14 6.14 10.21-10.2 1.11 1.11 1.41-1.41-3.84-3.84 2.22-2.22 1.11 1.11 1.41-1.41-2.83-2.83z"/>
+    <line x1="1.29" y1="21.29" x2="4.22" y2="18.36"/>
+    <line x1="7.66" y1="16.34" x2="5.64" y2="14.32"/>
+    <line x1="9.48" y1="14.52" x2="7.05" y2="12.09"/>
+    <line x1="11.29" y1="12.71" x2="9.88" y2="11.29"/>
+    <line x1="13.11" y1="10.89" x2="11.7" y2="9.48"/>
+  </svg>
+`,
 
                 star: `
       <svg xmlns="http://www.w3.org/2000/svg"
@@ -13780,24 +14151,19 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         <path d="M7 3h10v4a5 5 0 01-10 0V3z"/>
       </svg>`,
                 alt: `
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 24 24"
-     width="1em" height="1em"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="1.8"
-     stroke-linecap="round"
-     stroke-linejoin="round">
-
-  <!-- main user -->
-  <circle cx="9" cy="8" r="3"/>
-  <path d="M3.5 18c0-3 3-5 5.5-5s5.5 2 5.5 5"/>
-
-  <!-- alt user -->
-  <circle cx="17" cy="9" r="2.5"/>
-  <path d="M14.5 18c.2-2.2 2.1-3.8 4.5-3.8"/>
-
-</svg>
+    <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 24 24" width="1em" height="1em"
+       fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="5.8" cy="16.32" r="2.39"/>
+    <path d="M1.5,23.48V23a4.3,4.3,0,0,1,4.3-4.3h0A4.3,4.3,0,0,1,10.09,23v.48"/>
+    <circle cx="18.2" cy="3.91" r="2.39"/>
+    <path d="M13.91,11.07v-.48A4.29,4.29,0,0,1,18.2,6.3h0a4.29,4.29,0,0,1,4.3,4.29v.48"/>
+    <polyline points="15.7 15.72 18.68 12.75 21.66 15.72"/>
+    <path d="M18.68,13v2.86A5.73,5.73,0,0,1,13,21.57h0"/>
+    <polyline points="8.3 8.32 5.32 11.3 2.34 8.32"/>
+    <path d="M5.32,11.07V8.2a5.72,5.72,0,0,1,5.73-5.72h0"/>
+  </svg>
 `,
                 client: `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -13853,47 +14219,13 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
 
                 // === NEW PERFECT OUTLINE COG ===
                 cog: `
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 24 24"
-     width="1em" height="1em"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="1.8"
-     stroke-linecap="round"
-     stroke-linejoin="round"
-     preserveAspectRatio="xMidYMid meet">
-
-  <!-- center gear circle -->
-  <circle cx="12" cy="12" r="3"></circle>
-
-  <!-- 6 symmetrical gear arms -->
-  <path d="
-    M12 2.5
-    l1.2 .3
-    a2 2 0 0 1 1.4 1.4l.3 1.2
-    1.7.7
-    a2 2 0 0 1 1 1l.7 1.7
-    1.2.3
-    a2 2 0 0 1 1.4 1.4l.3 1.2
-    -.3 1.2
-    a2 2 0 0 1 -1.4 1.4l-1.2.3
-    -.7 1.7
-    a2 2 0 0 1 -1 1l-1.7.7
-    -.3 1.2
-    a2 2 0 0 1 -1.4 1.4l-1.2.3
-    -1.2-.3
-    a2 2 0 0 1 -1.4 -1.4l-.3 -1.2
-    -1.7 -.7
-    a2 2 0 0 1 -1 -1l-.7 -1.7
-    -1.2 -.3
-    a2 2 0 0 1 -1.4 -1.4L2.5 12
-    l.3 -1.2
-    a2 2 0 0 1 1.4 -1.4l1.2 -.3
-    .7 -1.7
-    a2 2 0 0 1 1 -1l1.7 -.7
-    .3 -1.2
-    a2 2 0 0 1 1.4 -1.4l1.2 -.3Z" />
-</svg>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 24 24" width="1em" height="1em"
+       fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M13.7654 2.15224C13.3978 2 12.9319 2 12 2C11.0681 2 10.6022 2 10.2346 2.15224C9.74457 2.35523 9.35522 2.74458 9.15223 3.23463C9.05957 3.45834 9.0233 3.7185 9.00911 4.09799C8.98826 4.65568 8.70226 5.17189 8.21894 5.45093C7.73564 5.72996 7.14559 5.71954 6.65219 5.45876C6.31645 5.2813 6.07301 5.18262 5.83294 5.15102C5.30704 5.08178 4.77518 5.22429 4.35436 5.5472C4.03874 5.78938 3.80577 6.1929 3.33983 6.99993C2.87389 7.80697 2.64092 8.21048 2.58899 8.60491C2.51976 9.1308 2.66227 9.66266 2.98518 10.0835C3.13256 10.2756 3.3397 10.437 3.66119 10.639C4.1338 10.936 4.43789 11.4419 4.43786 12C4.43783 12.5581 4.13375 13.0639 3.66118 13.3608C3.33965 13.5629 3.13248 13.7244 2.98508 13.9165C2.66217 14.3373 2.51966 14.8691 2.5889 15.395C2.64082 15.7894 2.87379 16.193 3.33973 17C3.80568 17.807 4.03865 18.2106 4.35426 18.4527C4.77508 18.7756 5.30694 18.9181 5.83284 18.8489C6.07289 18.8173 6.31632 18.7186 6.65204 18.5412C7.14547 18.2804 7.73556 18.27 8.2189 18.549C8.70224 18.8281 8.98826 19.3443 9.00911 19.9021C9.02331 20.2815 9.05957 20.5417 9.15223 20.7654C9.35522 21.2554 9.74457 21.6448 10.2346 21.8478C10.6022 22 11.0681 22 12 22C12.9319 22 13.3978 22 13.7654 21.8478C14.2554 21.6448 14.6448 21.2554 14.8477 20.7654C14.9404 20.5417 14.9767 20.2815 14.9909 19.902C15.0117 19.3443 15.2977 18.8281 15.781 18.549C16.2643 18.2699 16.8544 18.2804 17.3479 18.5412C17.6836 18.7186 17.927 18.8172 18.167 18.8488C18.6929 18.9181 19.2248 18.7756 19.6456 18.4527C19.9612 18.2105 20.1942 17.807 20.6601 16.9999C21.1261 16.1929 21.3591 15.7894 21.411 15.395C21.4802 14.8691 21.3377 14.3372 21.0148 13.9164C20.8674 13.7243 20.6602 13.5628 20.3387 13.3608C19.8662 13.0639 19.5621 12.558 19.5621 11.9999C19.5621 11.4418 19.8662 10.9361 20.3387 10.6392C20.6603 10.4371 20.8675 10.2757 21.0149 10.0835C21.3378 9.66273 21.4803 9.13087 21.4111 8.60497C21.3592 8.21055 21.1262 7.80703 20.6602 7C20.1943 6.19297 19.9613 5.78945 19.6457 5.54727C19.2249 5.22436 18.693 5.08185 18.1671 5.15109C17.9271 5.18269 17.6837 5.28136 17.3479 5.4588C16.8545 5.71959 16.2644 5.73002 15.7811 5.45096C15.2977 5.17191 15.0117 4.65566 14.9909 4.09794C14.9767 3.71848 14.9404 3.45833 14.8477 3.23463C14.6448 2.74458 14.2554 2.35523 13.7654 2.15224Z"/>
+  </svg>
 `,
 
                 mobile: `
@@ -13905,14 +14237,15 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         <circle cx="12" cy="18" r="1" fill="currentColor"></circle>
       </svg>`,
 
-                code: `
-      <svg xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 24 24" width="1em" height="1em"
-           fill="none" stroke="currentColor"
-           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="16 18 22 12 16 6"/>
-        <polyline points="8 6 2 12 8 18"/>
-      </svg>`,
+                info: `
+       <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 24 24" width="1em" height="1em"
+       fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/>
+    <line x1="12" y1="11" x2="12" y2="17"/>
+    <circle cx="12" cy="8" r="0.5" fill="currentColor"/>
+  </svg>`,
 
                 // === NEW CHANGELOG SVG ===
                 changelog: `
@@ -13936,24 +14269,13 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
       </svg>`,
       module: `
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 24 24"
+     viewBox="0 0 16 16"
      width="1em" height="1em"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="1.8"
-     stroke-linecap="round"
-     stroke-linejoin="round">
-
-  <!-- top module -->
-  <rect x="3" y="3" width="8" height="8" rx="2"/>
-  <rect x="13" y="3" width="8" height="8" rx="2"/>
-
-  <!-- bottom module -->
-  <rect x="8" y="13" width="8" height="8" rx="2"/>
-
-  <!-- connection hints -->
-  <line x1="7" y1="11" x2="12" y2="13"/>
-  <line x1="17" y1="11" x2="12" y2="13"/>
+     fill="currentColor"
+     preserveAspectRatio="xMidYMid meet">
+  <path d="M8.01005 0.858582L6.01005 14.8586L7.98995 15.1414L9.98995 1.14142L8.01005 0.858582Z"></path>
+  <path d="M12.5 11.5L11.0858 10.0858L13.1716 8L11.0858 5.91422L12.5 4.5L16 8L12.5 11.5Z"></path>
+  <path d="M2.82843 8L4.91421 10.0858L3.5 11.5L0 8L3.5 4.5L4.91421 5.91422L2.82843 8Z"></path>
 </svg>
 `
             };
@@ -13992,7 +14314,7 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         createSidebarPath("Custom Modules", "module", modulePage);
         createSidebarPath("Changelog", "changelog", changelogPage);
         createSidebarPath("Settings", "cog", settingsPage);
-        createSidebarPath("Info/Credits", "code", creditsPage);
+        createSidebarPath("Info/Credits", "info", creditsPage);
 
 
 
@@ -14098,7 +14420,11 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
             // Create notice overlay
             const notice = document.createElement("div");
             notice.className = 'xgui-csp-notice';
-            try { if (!targetPage.style.position || targetPage.style.position === 'static') targetPage.style.position = 'relative'; } catch (e) {}
+            try { 
+                if (!targetPage.style.position || targetPage.style.position === 'static') targetPage.style.position = 'relative';
+                // Allow content to extend beyond the targetPage bounds
+                targetPage.style.overflow = 'visible';
+            } catch (e) {}
             notice.style.cssText = `
                 position: absolute;
                 inset: 0;
@@ -14110,6 +14436,7 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
                 text-align: center;
                 background: transparent;
                 padding: 20px;
+                overflow: visible !important;
             `;
 
             const content = document.createElement('div');
@@ -14130,7 +14457,7 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
                     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
                     0 25px 70px rgba(138, 43, 226, 0.2) !important;
                 text-align: center !important;
-                margin-top: -20px !important;
+                margin-top: -40px !important;
             `;
 
             const iconWrapper = document.createElement("div");
@@ -14342,23 +14669,19 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
                 if (window.xguiAnimationsEnabled) {
                     const animationDuration = 0.1;
                     if (isHiding) {
-                        // Fade out animation
                         gui.style.animation = `guiFadeOut ${animationDuration}s ease-out`;
                         setTimeout(() => {
                             gui.style.display = "none";
-                            gui.style.animation = ""; // Clear animation after hiding
+                            gui.style.animation = ""; 
                         }, animationDuration * 1000);
                     } else {
-                        // Fade in animation
                         gui.style.display = "block";
                         gui.style.animation = `guiFadeIn ${animationDuration}s ease-out`;
-                        // Clears the animation after it completes
                         setTimeout(() => {
                             gui.style.animation = "";
                         }, animationDuration * 0.1);
                     }
                 } else {
-                    // No animation, just instantantly toggle
                     gui.style.animation = "none";
                     gui.style.display = isHiding ? "none" : "block";
                 }
@@ -14371,12 +14694,28 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         }
 
         function close() {
-            gui.remove();
-            clearInterval(Logs.interval);
-            for (const category in cheats)
-                for (const cheat of cheats[category].cheats)
-                    if (cheat.enabled) cheat.run();
-            window.removeEventListener("keydown", keydown);
+            const animationsEnabled = getCookieValue("animationsEnabled");
+            
+            if (animationsEnabled) {
+                const animationDuration = 0.3; 
+                gui.style.animation = `guiFadeOut ${animationDuration}s ease-out forwards`;
+                gui.style.pointerEvents = 'none'; 
+                setTimeout(() => {
+                    gui.remove();
+                    clearInterval(Logs.interval);
+                    for (const category in cheats)
+                        for (const cheat of cheats[category].cheats)
+                            if (cheat.enabled) cheat.run();
+                    window.removeEventListener("keydown", keydown);
+                }, animationDuration * 1000);
+            } else {
+                gui.remove();
+                clearInterval(Logs.interval);
+                for (const category in cheats)
+                    for (const cheat of cheats[category].cheats)
+                        if (cheat.enabled) cheat.run();
+                window.removeEventListener("keydown", keydown);
+            }
         }
 
         function getStateNode() {
@@ -14423,5 +14762,3 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
 
     }
 })();
-
-

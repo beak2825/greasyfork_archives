@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NodeSeek & DeepFlood 双边会晤
 // @namespace    http://www.nodeseek.com/
-// @version      1.0.4
+// @version      1.0.5
 // @description  在NodeSeek和DeepFlood之间阅读对方站点的帖子
 // @author       dabao
 // @match        *://www.nodeseek.com/*
@@ -44,7 +44,7 @@
             // 目标站点需要移除的元素
             REMOVE_ELEMENTS: 'body > header, body > footer, #nsk-left-panel-container, #nsk-right-panel-container',
             // iframe 内容选择器
-            POST_LIST: 'ul.post-list',
+            POST_LIST: 'ul.post-list:not(.topic-carousel-panel)',
             PAGER_TOP: 'div.nsk-pager.pager-top',
             PAGER_BOTTOM: 'div.nsk-pager.pager-bottom',
             SORTER: 'div.sorter',

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрипт для ЗГС/ГС
 // @namespace    https://forum.blackrussia.online/
-// @version      0.2
+// @version      0.3
 // @description  Created for GOSS and OPG
 // @author       Artem_Gogol
 // @match        https://forum.blackrussia.online/threads/*
@@ -36,7 +36,7 @@
       title: 'Одобрено, закрыто',
       content: "[B][CENTER][COLOR=#ff0000][ICODE]Здравствуйте, уважаемый {{ user.name }} [/ICODE][/COLOR][/CENTER][/B]<br><br>"+
         '[B][CENTER][url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>'+
-        "[CENTER][COLOR=#FFFF00][ICODE]Лидер получит наказание, больше такого не повторится.[/ICODE][/COLOR][/CENTER]<br>" +
+        "[CENTER][COLOR=#FFFF00][ICODE]С лидером будет проведена необходимая работа.[/ICODE][/COLOR][/CENTER]<br>" +
         '[url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>' +
 		'[Color=AQUA][CENTER][ICODE]Спасибо за Ваше обращение!<br>Приятной игры.[/ICODE][/CENTER][/color]' +
         '[url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>'+
@@ -82,25 +82,11 @@
 	  status: false,
     },
          {
-      title: 'Снятие наказания, беседа с лд',
+      title: 'Снятие наказания + работа с лд',
       content:
 		"[B][CENTER][COLOR=#ff0000][ICODE]Здравствуйте, уважаемый {{ user.name }} [/ICODE][/COLOR][/CENTER][/B]<br><br>"+
         '[B][CENTER][url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>'+
-        "[CENTER][COLOR=#FFFF00][ICODE]Наказание будет снято, а с лидером будет проведена профилактическая беседа.[/ICODE][/COLOR][/CENTER]<br>" +
-		'[url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>' +
-		'[CENTER][ICODE]Спасибо за Ваше обращение!<br>Приятной игры.[/ICODE][/CENTER]' +
-        '[url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>'+
-		'[Color=#00FF00][FONT=times new roman][CENTER][I][ICODE]✿❯────「Рассмотрено, закрыто」────❮✿[/ICODE][/I][/CENTER][/color][/FONT]'+
-        '[RIGHT][B][COLOR=#ff0000]Полезные ссылки.[/COLOR][/B]'+ '[RIGHT][/RIGHT] '+ "[SIZE=3][FONT=georgia]Заявление на пост Агента Поддержки - [URL]https://forum.blackrussia.online/forums/%D0%90%D0%B3%D0%B5%D0%BD%D1%82%D1%8B-%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B8.3173/[/URL]" + '[RIGHT][/RIGHT] '+ "Заявление на пост Лидера - [URL]https://forum.blackrussia.online/forums/%D0%9B%D0%B8%D0%B4%D0%B5%D1%80%D1%8B.3174/[/URL] [/FONT][/SIZE][/RIGHT]",
-      prefix: ODOBRENO_PREFIX,
-	  status: false,
-    },
-        {
-      title: 'Беседа с лд',
-      content:
-		"[B][CENTER][COLOR=#ff0000][ICODE]Здравствуйте, уважаемый {{ user.name }} [/ICODE][/COLOR][/CENTER][/B]<br><br>"+
-        '[B][CENTER][url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>'+
-        "[CENTER][COLOR=#FFFF00][ICODE]С лидером будет проведена профилактическая беседа.[/ICODE][/COLOR][/CENTER]<br>" +
+        "[CENTER][COLOR=#FFFF00][ICODE]Наказание будет снято.<br>С лидером будет проведена необходимая работа.[/ICODE][/COLOR][/CENTER]<br>" +
 		'[url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>' +
 		'[CENTER][ICODE]Спасибо за Ваше обращение!<br>Приятной игры.[/ICODE][/CENTER]' +
         '[url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>'+

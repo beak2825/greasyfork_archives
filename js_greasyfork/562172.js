@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                 Temporary-Script-Storage
 // @namespace            github.com/JasonAMelancon
-// @version              1.0.1
+// @version              1.0.2
 // @description          Sets a maximum age (minimum one day) for script storage values, after which they are deleted
 // @description:af       Stel 'n maksimum ouderdom (minimum een dag) vir skripbergingwaardes, waarna dit verwyder word
 // @description:am       ለስክሪፕት መ stor ዋጋዎች ከዚህ በኋላ የሚያጥፉትን የከፍተኛ ዕድሜ (አንድ ቀን የመነሳት ከፍተኛ) ማስተካከያ ይቀርባል
@@ -189,7 +189,7 @@ class TTLStorage {
     /**
      * Instantiate the storage class.
      * @param lifetime The length of time in ms that must elapse after setting a value before it
-     * will be deleted by a call to sweepExpiredEntries().
+     * will be deleted by a call to sweepExpiredEntries(). Must be at least one day; 30 days is the default. 
      */
     constructor(lifetime) {
         if (lifetime !== undefined) {

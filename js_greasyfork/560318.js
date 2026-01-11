@@ -14,7 +14,7 @@
 // @grant           GM_xmlhttpRequest
 // @match           https://x.com/*
 // @match           https://twitter.com/*
-// @version         1.0.3
+// @version         1.1.0
 // @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js
 // @downloadURL https://update.greasyfork.org/scripts/560318/TwitterX%20Media%20Downloader.user.js
 // @updateURL https://update.greasyfork.org/scripts/560318/TwitterX%20Media%20Downloader.meta.js
@@ -29,8 +29,6 @@
  * License: MIT License
  */
 
-/* jshint esversion: 8 */
-
 // ==========================================
 // Constants & Configuration
 // ==========================================
@@ -43,6 +41,11 @@ const MEDIA_SELECTOR = [
     'div[aria-labelledby]>div:first-child>div[role="button"][tabindex="0"]'
 ].join(',');
 
+const WHATS_NEW = [
+    'Added the ability to look at and manage download history.',
+    'Added the ability to export download history.'
+];
+
 const TMD = (function () {
     // ==========================================
     // State Variables
@@ -53,12 +56,12 @@ const TMD = (function () {
     // ==========================================
     // Helper Functions (Private)
     // ==========================================
-    
+
     // Safely extract tweet ID from URL, handling params like ?newtwitter=true
     const getId = url => url.split('/status/').pop().split(/[/?#]/)[0];
 
     // Sanitize string for markdown/filenames
-    const cleanText = str => str.replace(/([\\/|*?:"\u200b-\u200d\u2060\ufeff]|🔞)/g, c => INVALID_CHARS[c] || '');
+    const cleanText = str => str.replace(/([\\/|*?:\"\u200b-\u200d\u2060\ufeff]|🔞)/g, c => INVALID_CHARS[c] || '');
 
     // Check if website is in dark mode
     const updateTheme = () => {
@@ -89,11 +92,12 @@ const TMD = (function () {
 
             // Fix: Bind 'this' to settings so it functions correctly when called from menu
             GM_registerMenuCommand((this.language[navigator.language] || this.language.en).settings, () => this.settings());
-            GM_registerMenuCommand('Export History (Markdown)', async () => this.exportHistory());
+            GM_registerMenuCommand('View History', () => this.viewHistory());
+            GM_registerMenuCommand('Export History (JSON)', async () => this.exportHistory());
 
             lang = this.language[document.querySelector('html').lang] || this.language.en;
             host = location.hostname;
-            is_tweetdeck = host.indexOf('tweetdeck') >= 0;
+            is_tweetdeck = host.includes('tweetdeck');
 
             // Load history from storage into memory cache
             await this.history_load();
@@ -102,6 +106,9 @@ const TMD = (function () {
 
             // Initial theme check
             updateTheme();
+
+            // Check for version update
+            this.checkVersion();
 
             // Observer to detect new tweets and theme changes
             new MutationObserver(ms => {
@@ -120,13 +127,50 @@ const TMD = (function () {
         },
 
         // ==========================================
+        // What's New Logic
+        // ==========================================
+        checkVersion: async function() {
+            const lastVersion = await GM_getValue('last_version', '0.0.0');
+            if (lastVersion !== GM_info.script.version) {
+                setTimeout(() => this.showWhatsNew(), 1500);
+            }
+        },
+
+        showWhatsNew: function() {
+            const createElement = (parent, tagName, content, className) => {
+                let el = document.createElement(tagName);
+                if (content) el.innerHTML = content;
+                if (className) el.className = className;
+                parent.appendChild(el); return el;
+            };
+
+            const modal = createElement(document.body, 'div', '', 'tmd-wn-modal');
+
+            const header = createElement(modal, 'div', '', 'tmd-wn-header');
+            const title = createElement(header, 'div', 'WHAT\'S NEW', 'tmd-wn-title');
+            createElement(title, 'span', `v${GM_info.script.version}`, 'tmd-wn-tag');
+
+            const closeBtn = createElement(header, 'div', '×', 'tmd-wn-close');
+            closeBtn.onclick = () => {
+                GM_setValue('last_version', GM_info.script.version);
+                modal.style.transform = 'translateX(120%)';
+                setTimeout(() => modal.remove(), 500);
+            };
+
+            const list = createElement(modal, 'ul', '', 'tmd-wn-list');
+            WHATS_NEW.forEach(item => {
+                createElement(list, 'li', item);
+            });
+        },
+
+        // ==========================================
         // History Management (Refactored)
         // ==========================================
-        
+
         history_load: async function() {
             // 1. Load standard GM storage
             let gm_data = await GM_getValue('download_history', []);
-            
+
             // 2. Load legacy localStorage (migration path)
             let ls_data = JSON.parse(localStorage.getItem('history') || '[]');
 
@@ -142,7 +186,7 @@ const TMD = (function () {
 
         history_add: async function(val) {
             let prevSize = history_cache.size;
-            
+
             // Handle both single string and array of strings
             if (Array.isArray(val)) {
                 val.forEach(v => history_cache.add(v));
@@ -164,14 +208,190 @@ const TMD = (function () {
         history_clear: async function() {
             // 1. Clear memory cache
             history_cache.clear();
-            
+
             // 2. Clear persistent storage
             await GM_setValue('download_history', []);
-            
+
             // 3. Visual Feedback: Reset all "Completed" buttons on the page to "Download"
             document.querySelectorAll('.tmd-down.completed').forEach(btn => {
                 this.status(btn, 'download', lang.download);
             });
+        },
+
+        // ==========================================
+        // View History
+        // ==========================================
+        viewHistory: async function() {
+            const createElement = (parent, tagName, content, className) => {
+                let el = document.createElement(tagName);
+                if (content !== undefined) {
+                    if (tagName === 'input') el.value = content;
+                    else el.innerHTML = content;
+                }
+                if (className) el.className = className;
+                parent.appendChild(el); return el;
+            };
+
+            let overlay = createElement(document.body, 'div', '', 'tmd-overlay');
+            let isOverlayClick;
+            overlay.onmousedown = e => isOverlayClick = e.target === overlay;
+            overlay.onmouseup = e => { if (isOverlayClick && e.target === overlay) overlay.remove(); };
+
+            let modal = createElement(overlay, 'div', '', 'tmd-modal');
+            createElement(modal, 'h3', 'Download History');
+
+            let layout = createElement(modal, 'div', '', 'tmd-history-layout');
+
+            let listContainer = createElement(layout, 'div', '', 'tmd-history-list');
+            let previewContainer = createElement(layout, 'div', '', 'tmd-preview-pane');
+            createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
+
+            let historyList = Array.from(history_cache);
+            if (historyList.length === 0) {
+                listContainer.innerHTML = '';
+                createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
+            } else {
+                let grouped = new Set();
+                historyList.reverse().forEach(id => grouped.add(id.split('_')[0]));
+                let uniqueIds = Array.from(grouped);
+
+                uniqueIds.forEach(realId => {
+                    let row = this.createHistoryRow(realId, modal, listContainer, previewContainer, createElement);
+                    listContainer.appendChild(row);
+                });
+            }
+
+            let footer = createElement(modal, 'div', '', 'tmd-footer');
+            footer.style.cssText = 'display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;';
+
+            let leftGroup = createElement(footer, 'div', '');
+            leftGroup.style.cssText = 'display: flex; gap: 10px;';
+
+            let clearBtn = createElement(leftGroup, 'button', 'Clear History', 'tmd-btn');
+            clearBtn.style.cssText = 'background-color: var(--tmd-state-fail); border-color: var(--tmd-state-fail); color: var(--tmd-text-btn); width: auto; padding: 8px 16px; font-size: 13px; margin: 0;';
+            clearBtn.onclick = () => {
+                if (confirm('Are you sure you want to clear all history?')) {
+                    this.history_clear();
+                    listContainer.innerHTML = '';
+                    createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
+                    previewContainer.innerHTML = '';
+                    createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
+                }
+            };
+
+            let exportBtn = createElement(leftGroup, 'button', 'Export JSON', 'tmd-btn');
+            exportBtn.style.cssText = 'background-color: var(--tmd-state-done); border-color: var(--tmd-state-done); color: var(--tmd-icon-color); width: auto; padding: 8px 16px; font-size: 13px; margin: 0;';
+            exportBtn.onclick = () => this.exportHistory();
+
+            let closeBtn = createElement(footer, 'button', 'Close', 'tmd-btn');
+            closeBtn.style.cssText = 'width: auto; padding: 8px 24px; font-size: 13px; margin: 0;';
+            closeBtn.onclick = () => overlay.remove();
+        },
+
+        createHistoryRow: function(realId, modal, listContainer, previewContainer, createElement) {
+            let row = document.createElement('div');
+            row.className = 'tmd-history-row';
+
+            let link = createElement(row, 'a', realId, 'tmd-history-link');
+            link.href = '#';
+            link.onclick = async (e) => {
+                e.preventDefault();
+                modal.classList.add('tmd-expanded');
+
+                listContainer.querySelectorAll('.tmd-history-row').forEach(r => r.classList.remove('active'));
+                row.classList.add('active');
+
+                previewContainer.innerHTML = '';
+
+                let closePreview = createElement(previewContainer, 'div', '×', 'tmd-preview-close');
+                closePreview.onclick = () => {
+                    modal.classList.remove('tmd-expanded');
+                    listContainer.querySelectorAll('.tmd-history-row').forEach(r => r.classList.remove('active'));
+                    previewContainer.innerHTML = '';
+                    createElement(previewContainer, 'div', 'Select a download to view details.', 'tmd-preview-placeholder');
+                };
+
+                let loading = createElement(previewContainer, 'div', 'Loading preview...', 'tmd-preview-loading');
+
+                try {
+                    let json = await this.fetchJson(realId);
+                    let tweet = json.legacy;
+                    let user = json.core.user_results.result.legacy;
+
+                    loading.remove();
+
+                    this.createPreviewCard(tweet, user, previewContainer, createElement);
+
+                } catch (err) {
+                    console.error(err);
+                    loading.textContent = 'Error loading preview. Tweet might be deleted or private.';
+                }
+            };
+
+            let extLink = createElement(row, 'a', '&#x2197;', 'tmd-history-ext');
+            extLink.href = `https://x.com/i/web/status/${realId}`;
+            extLink.target = '_blank';
+            extLink.title = 'Open in new tab';
+
+            let delBtn = createElement(row, 'button', 'DELETE', 'tmd-btn-sm');
+            delBtn.onclick = async () => {
+                if(confirm(`Remove ${realId} and all its media from history?`)) {
+                    let toRemove = [];
+                    history_cache.forEach(k => {
+                        if (k === realId || k.startsWith(realId + '_')) toRemove.push(k);
+                    });
+                    toRemove.forEach(k => history_cache.delete(k));
+
+                    await this.history_save();
+                    row.remove();
+                    if (history_cache.size === 0) {
+                        listContainer.innerHTML = '';
+                        createElement(listContainer, 'div', 'No history found.', 'tmd-history-empty');
+                    }
+
+                    let btn = document.querySelector(`.tmd-down[data-status-id="${realId}"]`);
+                    if(btn) {
+                        if (btn.dataset.statusId === realId) this.status(btn, 'download', lang.download);
+                    }
+                    document.querySelectorAll(`.tmd-down[data-status-id="${realId}"]`).forEach(imgBtn => {
+                        this.status(imgBtn, 'download', lang.download);
+                    });
+                }
+            };
+
+            return row;
+        },
+
+        createPreviewCard: function(tweet, user, container, createElement) {
+            let card = createElement(container, 'div', '', 'tmd-preview-card');
+
+            let header = createElement(card, 'div', '', 'tmd-card-header');
+            let avatar = createElement(header, 'img', '', 'tmd-card-avatar');
+            avatar.src = user.profile_image_url_https;
+            let userInfo = createElement(header, 'div', '', 'tmd-card-user');
+            createElement(userInfo, 'div', user.name, 'tmd-card-name');
+            createElement(userInfo, 'div', `@${user.screen_name}`, 'tmd-card-handle');
+
+            let fullText = tweet.full_text || '';
+            createElement(card, 'div', fullText, 'tmd-card-text');
+
+            let media = tweet.extended_entities?.media || tweet.media;
+            if (media && media.length) {
+                let mediaContainer = createElement(card, 'div', '', 'tmd-card-media');
+                mediaContainer.classList.add(`tmd-media-${Math.min(media.length, 4)}`);
+
+                media.forEach(m => {
+                    let url = m.media_url_https;
+                    if (m.type === 'video' || m.type === 'animated_gif') {
+                        url = m.media_url_https; // Use thumbnail for video
+                    }
+                    let img = createElement(mediaContainer, 'img', '', 'tmd-card-img');
+                    img.src = url;
+                });
+            }
+
+            let date = new Date(tweet.created_at);
+            createElement(card, 'div', date.toLocaleString(), 'tmd-card-date');
         },
 
         // ==========================================
@@ -183,41 +403,57 @@ const TMD = (function () {
                 const historyList = Array.from(history_cache);
                 if (!historyList.length) return;
 
-                const markdownContent = '# Twitter/X Media Downloader history\n\n' +
-                    (await Promise.all(historyList.map(id => this.generateMarkdown(id)))).join('\n');
+                const jsonContent = (await Promise.all(historyList.map(id => this.generateLogEntry(id))))
+                    .filter(entry => entry !== null);
 
-                const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
+                const blob = new Blob([JSON.stringify(jsonContent, null, 4)], { type: 'application/json;charset=utf-8' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `twitter_download_history_(${historyList.length}).md`;
+                link.download = `twitter_download_history_(${historyList.length}).json`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(link.href);
             } catch (error) {
                 console.error('Error exporting history:', error);
-                alert('An error occurred while exporting Markdown history.');
+                alert('An error occurred while exporting JSON history.');
             }
         },
 
-        generateMarkdown: async function (tweet_id, fetch = true) {
+        generateLogEntry: async function (tweet_id, fetch = true) {
             // Skip individual image history entries (e.g., 12345_1) when generating generic tweet history
-            if (tweet_id.includes('_')) return ''; 
+            if (tweet_id.includes('_')) return null;
 
-            if (!fetch) return `[Tweet] - ${tweet_id} (https://x.com/i/web/status/${tweet_id})`;
+            if (!fetch) {
+                return {
+                    tweet_id: tweet_id,
+                    url: `https://x.com/i/web/status/${tweet_id}`,
+                    error: 'Fetch disabled'
+                };
+            }
 
             try {
                 let json = await this.fetchJson(tweet_id);
                 let tweet = json.quoted_status_result?.result?.legacy?.media || json.quoted_status_result?.result?.legacy || json.legacy;
                 let user = json.core.user_results.result.legacy;
-                
+
                 // Clean inputs
                 let user_name = cleanText(user.name);
                 let full_text = cleanText(tweet.full_text.split('\n').join(' ').replace(/\s*https:\/\/t\.co\/\w+/g, ''));
 
-                return `[${user_name} (@${user.screen_name})](https://x.com/i/web/status/${tweet_id})\n>  ${full_text}\n`;
-            } catch (e) {
-                return `[Error] - Could not fetch ${tweet_id}`;
+                return {
+                    screen_name: user.screen_name,
+                    user_name: user_name,
+                    tweet_text: full_text,
+                    tweet_id: tweet_id,
+                    url: `https://x.com/${user.screen_name}/status/${tweet_id}`
+                };
+            } catch {
+                return {
+                    tweet_id: tweet_id,
+                    url: `https://x.com/i/web/status/${tweet_id}`,
+                    error: 'Could not fetch details'
+                };
             }
         },
 
@@ -226,11 +462,11 @@ const TMD = (function () {
         // ==========================================
         detect: function (node) {
             // Standard: Check if node is ARTICLE or contains one
-            let article = (node.tagName == 'ARTICLE' && node) || (node.tagName == 'DIV' && (node.querySelector('article') || node.closest('article')));
+            let article = (node.tagName === 'ARTICLE' && node) || (node.tagName === 'DIV' && (node.querySelector('article') || node.closest('article')));
             if (article) this.addButtonTo(article);
 
             // Standard: Check if node is listitem (media tab)
-            let listitems = (node.tagName == 'LI' && node.getAttribute('role') == 'listitem' && [node]) || (node.tagName == 'DIV' && node.querySelectorAll('li[role="listitem"]'));
+            let listitems = (node.tagName === 'LI' && node.getAttribute('role') === 'listitem' && [node]) || (node.tagName === 'DIV' && node.querySelectorAll('li[role="listitem"]'));
             if (listitems) this.addButtonToMedia(listitems);
         },
 
@@ -240,7 +476,7 @@ const TMD = (function () {
             if (!statusLink) return;
 
             let status_id = getId(statusLink.href);
-            
+
             // =================================================================
             // Main Button Logic (For Videos, GIFs, or Main Container)
             // =================================================================
@@ -249,7 +485,7 @@ const TMD = (function () {
                 let btn_group = article.querySelector('div[role="group"]:last-of-type, ul.tweet-actions, ul.tweet-detail-actions');
                 if (btn_group) {
                     let existingBtn = btn_group.querySelector('.tmd-down:not(.tmd-img)');
-                    
+
                     // Cleanup Stale Button (Recycled DOM Node)
                     if (existingBtn && existingBtn.dataset.statusId !== status_id) {
                         existingBtn.remove();
@@ -260,12 +496,11 @@ const TMD = (function () {
                     let is_exist = history_cache.has(status_id);
 
                     if (!existingBtn) {
-                        // Create Button
                         let btn_share = Array.from(btn_group.querySelectorAll(':scope>div>div, li.tweet-action-item>a, li.tweet-detail-action-item>a')).pop().parentNode;
                         let btn_down = btn_share.cloneNode(true);
-                        
+
                         btn_down.querySelector('button').removeAttribute('disabled');
-                        
+
                         if (is_tweetdeck) {
                             btn_down.firstElementChild.innerHTML = `<svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">${this.svg}</svg>`;
                             btn_down.firstElementChild.removeAttribute('rel');
@@ -274,20 +509,15 @@ const TMD = (function () {
                             btn_down.querySelector('svg').innerHTML = this.svg;
                         }
 
-                        // Store ID on button for future staleness checks
                         btn_down.dataset.statusId = status_id;
                         this.status(btn_down, 'tmd-down');
 
-                        // Insert
                         btn_group.insertBefore(btn_down, btn_share.nextSibling);
-                        
-                        // Setup logic
+
                         this.status(btn_down, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
                         btn_down.onclick = () => this.click(btn_down, status_id, is_exist);
                     } else {
-                        // Button exists & ID matches: Update status
                         this.status(existingBtn, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
-                        // Ensure click handler has latest state
                         existingBtn.onclick = () => this.click(existingBtn, status_id, is_exist);
                     }
                 }
@@ -296,19 +526,30 @@ const TMD = (function () {
             // =================================================================
             // Multiple Images Logic
             // =================================================================
-            let imgs = article.querySelectorAll('a[href*="/photo/"]');
+            let imgs = article.querySelectorAll('a[href*="/photo/"], div[data-testid="videoComponent"]');
             if (imgs.length > 0) {
                 let main_status_id = status_id;
                 let all_images_downloaded = true;
 
                 imgs.forEach(img => {
-                    let urlParts = img.href.split('/status/');
+                    let urlParts;
+                    if (img.tagName === 'A') {
+                        urlParts = img.href.split('/status/');
+                    } else {
+                        // Always use parent status_id for video components (non-links)
+                        // This avoids incorrect parsing from window.location.href on feeds/timelines
+                        urlParts = [null, status_id + '/video/1'];
+                    }
+
                     if (urlParts.length < 2) return;
 
                     let specific_id = urlParts[1].split('/')[0];
                     let index = urlParts[1].split('/').pop().split(/[/?#]/)[0];
+                    // If index isn't a number (e.g. '1'), default to 1
+                    if (isNaN(parseInt(index))) index = 1;
+
                     let img_uid = `${specific_id}_${index}`;
-                    
+
                     // Check history using Set
                     let is_exist = history_cache.has(img_uid) || history_cache.has(specific_id);
                     if (!is_exist) all_images_downloaded = false;
@@ -330,10 +571,15 @@ const TMD = (function () {
                         btn_down.dataset.statusId = specific_id;
 
                         this.status(btn_down, is_exist ? 'completed' : 'download');
-                        
+
+                        // For videos, the parent might need relative positioning if not already
+                        if (img.tagName === 'DIV') {
+                            img.style.position = 'relative';
+                        }
+
                         img.parentNode.classList.add('tmd-img-parent');
                         img.parentNode.appendChild(btn_down);
-                        
+
                         btn_down.onclick = e => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -342,17 +588,17 @@ const TMD = (function () {
                             this.click(btn_down, specific_id, current_exist, index);
                         };
                     } else {
-                         // Update status
-                         this.status(existingImgBtn, is_exist ? 'completed' : 'download');
+                        // Update status
+                        this.status(existingImgBtn, is_exist ? 'completed' : 'download');
                     }
                 });
 
                 // Update Main Button if all images are done
                 if (all_images_downloaded && media) {
-                     let mainBtn = article.querySelector('.tmd-down:not(.tmd-img)');
-                     if (mainBtn && !history_cache.has(main_status_id)) {
-                         this.status(mainBtn, 'completed', lang.completed);
-                     }
+                    let mainBtn = article.querySelector('.tmd-down:not(.tmd-img)');
+                    if (mainBtn && !history_cache.has(main_status_id)) {
+                        this.status(mainBtn, 'completed', lang.completed);
+                    }
                 }
             }
         },
@@ -364,7 +610,7 @@ const TMD = (function () {
 
                 let status_id = getId(statusLink.href);
                 let is_exist = history_cache.has(status_id);
-                
+
                 let existingBtn = li.querySelector('.tmd-down.tmd-media');
 
                 // Cleanup Stale Button
@@ -378,7 +624,7 @@ const TMD = (function () {
                     btn_down.innerHTML = `<div><div><svg viewBox="0 0 24 24" style="width: 18px; height: 18px;">${this.svg}</svg></div></div>`;
                     btn_down.classList.add('tmd-down', 'tmd-media');
                     btn_down.dataset.statusId = status_id;
-                    
+
                     this.status(btn_down, is_exist ? 'completed' : 'download', is_exist ? lang.completed : lang.download);
                     li.appendChild(btn_down);
                     btn_down.onclick = () => this.click(btn_down, status_id, is_exist);
@@ -397,13 +643,13 @@ const TMD = (function () {
             return new Promise(resolve => {
                 const overlay = document.createElement('div');
                 overlay.className = 'tmd-overlay';
-                
+
                 const dialog = document.createElement('div');
                 dialog.className = 'tmd-modal';
-                
+
                 const title = document.createElement('h3');
                 title.innerText = `${lang.choose}`;
-                
+
                 const container = document.createElement('div');
                 container.style.cssText = 'display:flex;flex-direction:column;gap:12px;';
 
@@ -427,7 +673,7 @@ const TMD = (function () {
                 dialog.append(title, container);
                 overlay.appendChild(dialog);
                 document.body.appendChild(overlay);
-                
+
                 overlay.onclick = e => { if (e.target === overlay) { resolve(null); overlay.remove(); }};
             });
         },
@@ -439,10 +685,10 @@ const TMD = (function () {
             let out = (await GM_getValue('filename', FILENAME_PATTERN)).split('\n').join('');
             let save_history = await GM_getValue('save_history', true);
             let json;
-            
+
             try {
                 json = await this.fetchJson(status_id);
-            } catch (e) {
+            } catch {
                 return this.status(btn, 'failed', 'API Error');
             }
 
@@ -457,20 +703,20 @@ const TMD = (function () {
             // If we have an index (specific photo download), we don't need the dialog.
             if (index) {
                 if (hasOriginal) {
-                     tweet = json.legacy;
-                     user = json.core.user_results.result.legacy;
+                    tweet = json.legacy;
+                    user = json.core.user_results.result.legacy;
                 } else if (hasQuoted) {
-                     tweet = quotedResult.legacy;
-                     user = quotedResult.core.user_results.result.legacy;
-                     // In individual mode, status_id is usually correct, but let's be safe
-                     download_id = tweet.id_str;
+                    tweet = quotedResult.legacy;
+                    user = quotedResult.core.user_results.result.legacy;
+                    // In individual mode, status_id is usually correct, but let's be safe
+                    download_id = tweet.id_str;
                 } else {
-                     return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
+                    return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
                 }
             } else if (hasOriginal && hasQuoted) {
                 let originalUser = `${json.core?.user_results?.result?.legacy?.name} @${json.core?.user_results?.result?.legacy?.screen_name}`;
                 let quotedUser = `${quotedResult?.core?.user_results?.result?.legacy?.name} @${quotedResult?.core?.user_results?.result?.legacy?.screen_name}`;
-                
+
                 let choice = await this.selectTweetDialog(originalUser, quotedUser);
                 if (!choice) return this.status(btn, 'download', lang.download);
 
@@ -478,7 +724,7 @@ const TMD = (function () {
                 tweet = target.legacy;
                 user = target.core.user_results.result.legacy;
                 // Update ID if we switched targets
-                download_id = tweet.id_str; 
+                download_id = tweet.id_str;
             } else if (hasQuoted) {
                 tweet = quotedResult.legacy;
                 user = quotedResult.core.user_results.result.legacy;
@@ -488,7 +734,7 @@ const TMD = (function () {
                 user = json.core.user_results.result.legacy;
             }
 
-            let datetime = out.match(/\{date-time(-local)?:[^{}]+\}/) ? out.match(/\{date-time(?:-local)?:([^{}]+)\}/)[1].replace(/[\\/|<>*?:"]/g, v => INVALID_CHARS[v] || '') : 'YYYYMMDD-hhmmss';
+            let datetime = out.match(/\{date-time(-local)?:[^{}]+\}/) ? out.match(/\{date-time(?:-local)?:([^{}]+)\}/)[1].replace(/[\\/|<>*?:\"]/g, v => INVALID_CHARS[v] || '') : 'YYYYMMDD-hhmmss';
             let info = {
                 'status-id': download_id, // Use actual ID
                 'user-name': cleanText(user.name),
@@ -499,7 +745,7 @@ const TMD = (function () {
             };
 
             let medias = tweet.extended_entities?.media || tweet.media;
-            
+
             if (json?.card) return this.status(btn, 'failed', 'Links not supported');
             if (!Array.isArray(medias)) return this.status(btn, 'failed', 'MEDIA_NOT_FOUND');
 
@@ -507,7 +753,7 @@ const TMD = (function () {
             let isIndividual = false;
 
             if (index) {
-                let mediaIndex = parseInt(index) - 1; 
+                let mediaIndex = parseInt(index) - 1;
                 if (medias[mediaIndex]) {
                     mediaToDownload = [medias[mediaIndex]];
                     isIndividual = true;
@@ -521,10 +767,10 @@ const TMD = (function () {
                 let zipName = out.replace(/\.?\{file-ext\}/, '').replace(/\{([^{}:]+)(:[^{}]+)?\}/g, (match, name) => info[name] || match);
 
                 let tasks = mediaToDownload.map((media, i) => {
-                    let url = media.type == 'photo' ? media.media_url_https + ':orig' : media.video_info.variants.filter(n => n.content_type == 'video/mp4').sort((a, b) => b.bitrate - a.bitrate)[0].url;
+                    let url = media.type === 'photo' ? media.media_url_https + ':orig' : media.video_info.variants.filter(n => n.content_type === 'video/mp4').sort((a, b) => b.bitrate - a.bitrate)[0].url;
                     let ext = url.split('/').pop().split(/[:?]/).shift().split('.').pop();
                     // If individual, use index from arg, else loop index
-                    let idx = isIndividual ? (parseInt(index) - 1) : i; 
+                    let idx = isIndividual ? (parseInt(index) - 1) : i;
                     let filename = (out.replace(/\.?\{file-ext\}/, '') + ((medias.length > 1 || index) && !out.match('{file-name}') ? '-' + idx : '') + '.' + ext).replace(/\{([^{}:]+)(:[^{}]+)?\}/g, (match, name) => info[name] || match);
                     return { url: url, name: filename };
                 });
@@ -536,7 +782,7 @@ const TMD = (function () {
                     if (isIndividual) {
                         // 1. Save specific image history (e.g. 12345_1)
                         let imgUid = `${download_id}_${index}`;
-                        await this.history_add(imgUid); 
+                        await this.history_add(imgUid);
 
                         // 2. Check if all sibling images are now downloaded
                         let article = btn.closest('article');
@@ -544,7 +790,7 @@ const TMD = (function () {
                             let allImgs = Array.from(article.querySelectorAll('.tmd-down.tmd-img'));
                             // Filter to only buttons belonging to THIS tweet (Using download_id)
                             let siblingImgs = allImgs.filter(b => b.dataset.statusId === download_id);
-                            
+
                             // Check if all siblings are done (either just done, or in history)
                             let allDone = siblingImgs.every(b => {
                                 let uid = b.dataset.imgUid;
@@ -557,15 +803,15 @@ const TMD = (function () {
                                 let targetMainBtn = mainBtns.find(b => b.dataset.statusId === download_id);
                                 if (targetMainBtn) {
                                     this.status(targetMainBtn, 'completed', lang.completed);
-                                    this.history_add(download_id); 
+                                    this.history_add(download_id);
                                 }
                             }
                         }
                     } else {
                         // Batch download
                         // 1. Save main ID (of the actual content downloaded)
-                        this.history_add(download_id); 
-                        
+                        this.history_add(download_id);
+
                         // 2. Save all individual IDs for this tweet
                         let individualIds = medias.map((_, i) => `${download_id}_${i+1}`);
                         this.history_add(individualIds);
@@ -576,12 +822,12 @@ const TMD = (function () {
                             let allImgs = Array.from(article.querySelectorAll('.tmd-down.tmd-img'));
                             // Filter to match download_id so we don't color original images if we downloaded quoted (or vice versa)
                             allImgs.filter(b => b.dataset.statusId === download_id)
-                                   .forEach(b => this.status(b, 'completed', lang.completed));
-                            
+                                .forEach(b => this.status(b, 'completed', lang.completed));
+
                             // Also update any matching main buttons (e.g. if quoted tweet has its own container)
                             let allMainBtns = Array.from(article.querySelectorAll('.tmd-down:not(.tmd-img)'));
                             allMainBtns.filter(b => b.dataset.statusId === download_id)
-                                       .forEach(b => this.status(b, 'completed', lang.completed));
+                                .forEach(b => this.status(b, 'completed', lang.completed));
                         }
                     }
                 };
@@ -601,7 +847,7 @@ const TMD = (function () {
                 add: function (taskList, btn, packaging, zipName, onComplete) {
                     tasks.push(...taskList);
                     this.update();
-                    
+
                     const handleComplete = () => {
                         this.status(btn, 'completed', lang.completed);
                         if (onComplete) onComplete();
@@ -614,9 +860,9 @@ const TMD = (function () {
                             thread++; this.update();
                             return new Promise((resolve, reject) => {
                                 GM_xmlhttpRequest({
-                                    method: "GET",
+                                    method: 'GET',
                                     url: task.url,
-                                    responseType: "arraybuffer",
+                                    responseType: 'arraybuffer',
                                     onload: (response) => {
                                         if (response.status >= 200 && response.status < 300) {
                                             zip.file(task.name, response.response);
@@ -625,36 +871,36 @@ const TMD = (function () {
                                             reject(new Error(`HTTP ${response.status}`));
                                         }
                                     },
-                                    onerror: (e) => reject(new Error("Network Error")),
-                                    onabort: () => reject(new Error("Aborted"))
+                                    onerror: () => reject(new Error('Network Error')),
+                                    onabort: () => reject(new Error('Aborted'))
                                 });
                             })
-                            .then(() => {
-                                tasks = tasks.filter(t => t.url !== task.url);
-                            })
-                            .catch(e => {
-                                failed++;
-                                tasks = tasks.filter(t => t.url !== task.url);
-                                console.error(`Download failed for ${task.name}:`, e);
-                            })
-                            .finally(() => {
-                                thread--;
-                                this.update();
-                            });
+                                .then(() => {
+                                    tasks = tasks.filter(t => t.url !== task.url);
+                                })
+                                .catch(e => {
+                                    failed++;
+                                    tasks = tasks.filter(t => t.url !== task.url);
+                                    console.error(`Download failed for ${task.name}:`, e);
+                                })
+                                .finally(() => {
+                                    thread--;
+                                    this.update();
+                                });
                         });
 
                         Promise.allSettled(promises).then(() => {
                             if (Object.keys(zip.files).length > 0) {
                                 zip.generateAsync({ type: 'blob' }).then(content => {
-                                    let a = document.createElement('a'); 
-                                    a.href = URL.createObjectURL(content); 
-                                    a.download = `${zipName}.zip`; 
+                                    let a = document.createElement('a');
+                                    a.href = URL.createObjectURL(content);
+                                    a.download = `${zipName}.zip`;
                                     a.click();
                                     handleComplete();
                                     setTimeout(() => URL.revokeObjectURL(a.href), 60000);
                                 }).catch(err => {
-                                     console.error("ZIP Generation Error:", err);
-                                     this.status(btn, 'failed', 'ZIP Error');
+                                    console.error('ZIP Generation Error:', err);
+                                    this.status(btn, 'failed', 'ZIP Error');
                                 });
                             } else {
                                 this.status(btn, 'failed', 'All downloads failed');
@@ -667,17 +913,17 @@ const TMD = (function () {
                             thread++; this.update();
                             GM_download({
                                 url: task.url, name: task.name,
-                                onload: () => { 
-                                    thread--; 
-                                    tasks = tasks.filter(t => t.url !== task.url); 
-                                    handleComplete(); 
-                                    this.update(); 
+                                onload: () => {
+                                    thread--;
+                                    tasks = tasks.filter(t => t.url !== task.url);
+                                    handleComplete();
+                                    this.update();
                                 },
-                                onerror: e => { 
-                                    thread--; failed++; 
-                                    tasks = tasks.filter(t => t.url !== task.url); 
-                                    this.status(btn, 'failed', e.details.current); 
-                                    this.update(); 
+                                onerror: e => {
+                                    thread--; failed++;
+                                    tasks = tasks.filter(t => t.url !== task.url);
+                                    this.status(btn, 'failed', e.details.current);
+                                    this.update();
                                 }
                             });
                         });
@@ -716,88 +962,170 @@ const TMD = (function () {
         },
 
         settings: async function () {
-            const $el = (p, t, c, k) => {
-                let e = document.createElement(t);
-                if (c !== undefined) {
-                    if (t === 'input') {
-                        if (c === 'checkbox') e.type = 'checkbox';
-                        else e.value = c;
-                    } else if (t === 'textarea') {
-                        e.value = c;
+            const createElement = (parent, tagName, content, className) => {
+                let el = document.createElement(tagName);
+                if (content !== undefined) {
+                    if (tagName === 'input') {
+                        if (content === 'checkbox') el.type = 'checkbox';
+                        else el.value = content;
+                    } else if (tagName === 'textarea') {
+                        el.value = content;
                     } else {
-                        e.innerHTML = c;
+                        el.innerHTML = content;
                     }
                 }
-                if (k) e.className = k;
-                p.appendChild(e); return e;
+                if (className) el.className = className;
+                parent.appendChild(el); return el;
             };
 
-            let w = $el(document.body, 'div', '', 'tmd-overlay');
-            let wc; w.onmousedown = e => wc = e.target == w; w.onmouseup = e => { if (wc && e.target == w) w.remove(); };
+            let overlay = createElement(document.body, 'div', '', 'tmd-overlay');
+            let isOverlayClick;
+            overlay.onmousedown = e => isOverlayClick = e.target === overlay;
+            overlay.onmouseup = e => { if (isOverlayClick && e.target === overlay) overlay.remove(); };
 
-            let d = $el(w, 'div', '', 'tmd-modal');
-            let t = $el(d, 'h3', lang.dialog.title);
-            let o = $el(d, 'div', '', 'tmd-option-group');
+            let modal = createElement(overlay, 'div', '', 'tmd-modal');
+            createElement(modal, 'h3', lang.dialog.title);
+            let optionGroup = createElement(modal, 'div', '', 'tmd-option-group');
 
-            // Save History
-            let shl = $el(o, 'label', lang.dialog.save_history, 'tmd-label');
-            let shi = $el(shl, 'input', 'checkbox');
-            shi.checked = await GM_getValue('save_history', true);
-            shi.onchange = () => GM_setValue('save_history', shi.checked);
+            let historyLabel = createElement(optionGroup, 'label', lang.dialog.save_history, 'tmd-label');
+            let historyInput = createElement(historyLabel, 'input', 'checkbox');
+            historyInput.checked = await GM_getValue('save_history', true);
+            historyInput.onchange = () => GM_setValue('save_history', historyInput.checked);
 
-            let clr = $el(shl, 'label', lang.dialog.clear_history, 'tmd-link');
-            clr.onclick = (e) => {
+            let clearLink = createElement(historyLabel, 'label', lang.dialog.clear_history, 'tmd-link');
+            clearLink.onclick = (e) => {
                 e.preventDefault();
-                if (confirm(lang.dialog.clear_confirm)) { 
+                if (confirm(lang.dialog.clear_confirm)) {
                     this.history_clear(); // UPDATED
                 }
             };
 
-            // Packaging
-            let sep = $el(o, 'label', lang.enable_packaging, 'tmd-label');
-            let sepi = $el(sep, 'input', 'checkbox');
-            sepi.checked = await GM_getValue('enable_packaging', true);
-            sepi.onchange = () => GM_setValue('enable_packaging', sepi.checked);
+            let pkgLabel = createElement(optionGroup, 'label', lang.enable_packaging, 'tmd-label');
+            let pkgInput = createElement(pkgLabel, 'input', 'checkbox');
+            pkgInput.checked = await GM_getValue('enable_packaging', true);
+            pkgInput.onchange = () => GM_setValue('enable_packaging', pkgInput.checked);
 
-            // Filename
-            let fd = $el(d, 'div', '', 'tmd-option-group');
-            $el(fd, 'label', lang.dialog.pattern, 'tmd-label');
-            let fi = $el(fd, 'textarea', await GM_getValue('filename', FILENAME_PATTERN), 'tmd-textarea');
-            fi.addEventListener('mousedown', e => e.stopPropagation()); // Prevent drag/selection issues if parent has listeners
+            let fileGroup = createElement(modal, 'div', '', 'tmd-option-group');
             
-            let ft = $el(fd, 'div', `
+            let previewContainer = createElement(fileGroup, 'div', '', 'tmd-preview-box');
+            previewContainer.style.cssText = 'margin-bottom: 10px; padding: 8px; background: rgba(29, 161, 242, 0.1); border: 1px solid rgba(29, 161, 242, 0.3); border-radius: 4px; font-size: 12px; font-family: monospace; word-break: break-all; color: var(--tmd-text);';
+            createElement(previewContainer, 'div', 'Preview:', 'tmd-preview-label').style.fontWeight = 'bold';
+            let previewText = createElement(previewContainer, 'div', '', 'tmd-preview-text');
+
+            createElement(fileGroup, 'label', lang.dialog.pattern, 'tmd-label');
+            let fileInput = createElement(fileGroup, 'textarea', await GM_getValue('filename', FILENAME_PATTERN), 'tmd-textarea');
+            fileInput.addEventListener('mousedown', e => e.stopPropagation()); // Prevent drag/selection issues if parent has listeners
+
+            const mockData = {
+                'user-name': 'KanashiiWolf',
+                'user-id': 'kanashiiwolf',
+                'status-id': '1234567890987654321',
+                'date-time': '20231231-235959',
+                'date-time-local': '20231231-185959',
+                'full-text': 'Hello world',
+                'file-type': 'photo',
+                'file-name': 'E8x...jpg'
+            };
+
+            const updatePreview = () => {
+                let val = fileInput.value;
+                // Handle complex date-time replacement first if present
+                val = val.replace(/\{date-time(-local)?:[^{}]+\}/g, (_match) => {
+                    // Just use a static example for complex dates in preview to avoid reimplementing formatDate here
+                    return '31-DEC-23 23.59'; 
+                });
+                
+                // Replace standard tags
+                Object.keys(mockData).forEach(key => {
+                    const regex = new RegExp(`\{${key}\}`, 'g');
+                    val = val.replace(regex, mockData[key]);
+                });
+                
+                // Add extension example
+                previewText.textContent = val.replace(/\.?\{file-ext\}/, '') + '.jpg';
+            };
+
+            fileInput.addEventListener('input', updatePreview);
+
+            let tagsContainer = createElement(fileGroup, 'div', `
                 <span class="tmd-tag" title="user name">{user-name}</span>
                 <span class="tmd-tag" title="The user name after @ sign.">{user-id}</span>
                 <span class="tmd-tag" title="example: 1234567890987654321">{status-id}</span>
                 <span class="tmd-tag" title="{date-time} : Posted time in UTC.\n{date-time-local} : Your local time zone.\n\nDefault:\nYYYYMMDD-hhmmss => 20201231-235959\n\nExample of custom:\n{date-time:DD-MMM-YY hh.mm} => 31-DEC-21 23.59">{date-time}</span>
                 <span class="tmd-tag" title="Text content in tweet.">{full-text}</span>
-                <span class="tmd-tag" title="Type of &#34;video&#34; or &#34;photo&#34; or &#34;gif&#34;.">{file-type}</span>
+                <span class="tmd-tag" title="Type of \"video\" or \"photo\" or \"gif\".">{file-type}</span>
                 <span class="tmd-tag" title="Original filename from URL.">{file-name}</span>`, 'tmd-tags');
-            
-            ft.querySelectorAll('.tmd-tag').forEach(tag => {
+
+            tagsContainer.querySelectorAll('.tmd-tag').forEach(tag => {
                 tag.onclick = () => {
-                    let s = fi.selectionStart, e = fi.selectionEnd;
+                    let s = fileInput.selectionStart, e = fileInput.selectionEnd;
                     // Use textContent to get the text exactly as it is in the HTML, avoiding CSS transforms (uppercase)
                     let text = tag.textContent;
-                    fi.value = fi.value.substring(0, s) + text + fi.value.substring(e);
-                    fi.selectionStart = fi.selectionEnd = s + text.length; fi.focus();
+                    fileInput.value = fileInput.value.substring(0, s) + text + fileInput.value.substring(e);
+                    fileInput.selectionStart = fileInput.selectionEnd = s + text.length; fileInput.focus();
+                    updatePreview();
                 };
             });
 
-            // Footer
-            let footer = $el(d, 'div', '', 'tmd-footer');
-            let saveBtn = $el(footer, 'button', lang.dialog.save, 'tmd-btn');
-            saveBtn.onclick = async () => { await GM_setValue('filename', fi.value); w.remove(); };
+            updatePreview();
+
+            let footer = createElement(modal, 'div', '', 'tmd-footer');
+            let saveBtn = createElement(footer, 'button', lang.dialog.save, 'tmd-btn');
+            saveBtn.onclick = async () => { await GM_setValue('filename', fileInput.value); overlay.remove(); };
         },
 
         fetchJson: async function (status_id) {
-            let base = `https://${host}/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId`;
-            let vars = { tweetId: status_id, with_rux_injections: false, includePromotedContent: true, withCommunity: true, withQuickPromoteEligibilityTweetFields: true, withBirdwatchNotes: true, withVoice: true, withV2Timeline: true };
-            let feats = { articles_preview_enabled: true, c9s_tweet_anatomy_moderator_badge_enabled: true, communities_web_enable_tweet_community_results_fetch: false, creator_subscriptions_quote_tweet_preview_enabled: false, creator_subscriptions_tweet_preview_api_enabled: false, freedom_of_speech_not_reach_fetch_enabled: true, graphql_is_translatable_rweb_tweet_is_translatable_enabled: true, longform_notetweets_consumption_enabled: false, longform_notetweets_inline_media_enabled: true, longform_notetweets_rich_text_read_enabled: false, premium_content_api_read_enabled: false, profile_label_improvements_pcf_label_in_post_enabled: true, responsive_web_edit_tweet_api_enabled: false, responsive_web_enhance_cards_enabled: false, responsive_web_graphql_exclude_directive_enabled: false, responsive_web_graphql_skip_user_profile_image_extensions_enabled: false, responsive_web_graphql_timeline_navigation_enabled: false, responsive_web_grok_analysis_button_from_backend: false, responsive_web_grok_analyze_button_fetch_trends_enabled: false, responsive_web_grok_analyze_post_followups_enabled: false, responsive_web_grok_image_annotation_enabled: false, responsive_web_grok_share_attachment_enabled: false, responsive_web_grok_show_grok_translated_post: false, responsive_web_jetfuel_frame: false, responsive_web_media_download_video_enabled: false, responsive_web_twitter_article_tweet_consumption_enabled: true, rweb_tipjar_consumption_enabled: true, rweb_video_screen_enabled: false, standardized_nudges_misinfo: true, tweet_awards_web_tipping_enabled: false, tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true, tweetypie_unmention_optimization_enabled: false, verified_phone_label_enabled: false, view_counts_everywhere_api_enabled: true };
-            
+            const base = `https://${host}/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId`;
+            const vars = {
+                tweetId: status_id,
+                with_rux_injections: false,
+                includePromotedContent: true,
+                withCommunity: true,
+                withQuickPromoteEligibilityTweetFields: true,
+                withBirdwatchNotes: true,
+                withVoice: true,
+                withV2Timeline: true
+            };
+            const feats = {
+                articles_preview_enabled: true,
+                c9s_tweet_anatomy_moderator_badge_enabled: true,
+                communities_web_enable_tweet_community_results_fetch: false,
+                creator_subscriptions_quote_tweet_preview_enabled: false,
+                creator_subscriptions_tweet_preview_api_enabled: false,
+                freedom_of_speech_not_reach_fetch_enabled: true,
+                graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+                longform_notetweets_consumption_enabled: false,
+                longform_notetweets_inline_media_enabled: true,
+                longform_notetweets_rich_text_read_enabled: false,
+                premium_content_api_read_enabled: false,
+                profile_label_improvements_pcf_label_in_post_enabled: true,
+                responsive_web_edit_tweet_api_enabled: false,
+                responsive_web_enhance_cards_enabled: false,
+                responsive_web_graphql_exclude_directive_enabled: false,
+                responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+                responsive_web_graphql_timeline_navigation_enabled: false,
+                responsive_web_grok_analysis_button_from_backend: false,
+                responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+                responsive_web_grok_analyze_post_followups_enabled: false,
+                responsive_web_grok_image_annotation_enabled: false,
+                responsive_web_grok_share_attachment_enabled: false,
+                responsive_web_grok_show_grok_translated_post: false,
+                responsive_web_jetfuel_frame: false,
+                responsive_web_media_download_video_enabled: false,
+                responsive_web_twitter_article_tweet_consumption_enabled: true,
+                rweb_tipjar_consumption_enabled: true,
+                rweb_video_screen_enabled: false,
+                standardized_nudges_misinfo: true,
+                tweet_awards_web_tipping_enabled: false,
+                tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+                tweetypie_unmention_optimization_enabled: false,
+                verified_phone_label_enabled: false,
+                view_counts_everywhere_api_enabled: true
+            };
+
             let c = this.getCookie();
             let h = { authorization: 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-twitter-active-user': 'yes', 'x-twitter-client-language': c.lang, 'x-csrf-token': c.ct0 };
-            if (c.ct0?.length == 32) h['x-guest-token'] = c.gt;
+            if (c.ct0?.length === 32) h['x-guest-token'] = c.gt;
 
             try {
                 let url = encodeURI(`${base}?variables=${JSON.stringify(vars)}&features=${JSON.stringify(feats)}`);
@@ -854,7 +1182,7 @@ const TMD = (function () {
                 --tmd-shadow: 5px 5px 0px rgba(0,0,0,1);
                 --tmd-radius: 0px;
                 --tmd-font: "Courier New", monospace;
-                
+
                 /* State Colors (Light Mode) */
                 --tmd-state-down: #00f3ff; /* Cyan */
                 --tmd-state-done: #39ff14; /* Green */
@@ -875,7 +1203,7 @@ const TMD = (function () {
                 --tmd-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
                 --tmd-radius: 2px;
                 --tmd-font: "Consolas", "Monaco", monospace;
-                
+
                 /* State Colors (Dark Mode) */
                 --tmd-state-down: #00f3ff;
                 --tmd-state-done: #39ff14;
@@ -886,7 +1214,7 @@ const TMD = (function () {
             }
 
             .tmd-down {margin-left: 12px; order: 99;}
-            
+
             /* Define local scoped variable for the specific state */
             .tmd-down { --btn-color: var(--tmd-state-down); }
             .tmd-down.completed { --btn-color: var(--tmd-state-done); }
@@ -903,7 +1231,7 @@ const TMD = (function () {
                 opacity: 1 !important;
                 transition: all 0.1s ease !important;
             }
-            
+
             /* Specific Selector to Target Button Background Hover */
             .tmd-down button:hover > div {
                 transform: translate(2px, 2px) !important;
@@ -916,13 +1244,13 @@ const TMD = (function () {
                 fill: var(--tmd-icon-color) !important;
                 filter: none !important;
             }
-            
+
             /* Ensure paths inherit the forced color */
             .tmd-down svg path, .tmd-down svg rect, .tmd-down svg circle {
                 fill: currentColor !important;
                 stroke: none !important;
             }
-            
+
             /* Loading Spinner needs Stroke, not Fill */
             .tmd-down svg g.loading path, .tmd-down svg g.loading circle {
                 fill: none !important;
@@ -931,7 +1259,7 @@ const TMD = (function () {
 
             /* Media overlay buttons */
             .tmd-down.tmd-img {
-                position: absolute; left: 10px; top: 10px; 
+                position: absolute; left: 10px; top: 10px;
                 z-index: 999;
                 display: none; /* HIDDEN BY DEFAULT */
             }
@@ -957,7 +1285,7 @@ const TMD = (function () {
                 fill: var(--tmd-icon-color) !important;
                 margin: 4px;
             }
-            
+
             .tmd-down g {display: none;}
             .tmd-down.download g.download, .tmd-down.completed g.completed, .tmd-down.loading g.loading,.tmd-down.failed g.failed {display: unset;}
             .tmd-down.loading svg {animation: spin 1s linear infinite;}
@@ -985,13 +1313,89 @@ const TMD = (function () {
                 text-transform: uppercase;
                 letter-spacing: 1px;
                 z-index: 2147483647;
+                transition: width 0.3s, max-width 0.3s;
             }
+            .tmd-modal.tmd-expanded { width: 900px; max-width: 95vw; }
+            .tmd-history-layout { display: flex; gap: 0; height: 400px; transition: gap 0.3s; }
+            .tmd-modal.tmd-expanded .tmd-history-layout { gap: 16px; }
+
+            .tmd-history-list {
+                flex: 1; overflow-y: auto;
+                border: 1px solid var(--tmd-border);
+                background: rgba(0,0,0,0.2);
+                margin-bottom: 0; padding: 4px;
+                transition: flex 0.3s;
+            }
+            .tmd-preview-pane {
+                flex: 0; width: 0; overflow: hidden;
+                border: 0; opacity: 0; transition: all 0.3s;
+                display: flex; justify-content: center; align-items: center;
+                background: rgba(0,0,0,0.1); position: relative;
+            }
+            .tmd-modal.tmd-expanded .tmd-preview-pane {
+                flex: 1.5; width: auto; opacity: 1;
+                border: 1px solid var(--tmd-border);
+                padding: 10px;
+            }
+            .tmd-preview-close {
+                position: absolute; top: 10px; right: 10px;
+                width: 24px; height: 24px;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer; z-index: 10;
+                background: var(--tmd-state-fail);
+                color: var(--tmd-icon-color);
+                border: 2px solid var(--tmd-text);
+                box-shadow: 3px 3px 0px var(--tmd-shadow-color);
+                font-size: 16px; font-weight: bold;
+                transition: all 0.1s;
+                text-transform: none;
+            }
+            .tmd-preview-close:hover {
+                transform: translate(1px, 1px);
+                box-shadow: 2px 2px 0px var(--tmd-shadow-color);
+            }
+            .tmd-preview-placeholder, .tmd-preview-loading { color: var(--tmd-text); opacity: 0.7; font-size: 14px; text-align: center; }
+
+            /* Native Preview Card */
+            .tmd-preview-card {
+                background: rgba(0,0,0,0.1); border-radius: 12px;
+                padding: 12px; width: 100%; box-sizing: border-box;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                text-transform: none; letter-spacing: normal;
+                border: 1px solid var(--tmd-border);
+            }
+            .tmd-card-header { display: flex; align-items: center; margin-bottom: 10px; }
+            .tmd-card-avatar { width: 36px; height: 36px; border-radius: 50%; margin-right: 10px; }
+            .tmd-card-user { display: flex; flex-direction: column; }
+            .tmd-card-name { font-weight: bold; font-size: 14px; color: var(--tmd-text); }
+            .tmd-card-handle { font-size: 13px; color: var(--tmd-text); opacity: 0.7; }
+            .tmd-card-text { font-size: 14px; margin-bottom: 10px; color: var(--tmd-text); white-space: pre-wrap; line-height: 1.4; }
+
+            .tmd-card-media {
+                display: grid; gap: 2px; margin-bottom: 10px; border-radius: 8px; overflow: hidden;
+                width: 100%;
+            }
+            /* Grid layouts */
+            .tmd-media-1 { grid-template-columns: 1fr; }
+            .tmd-media-2 { grid-template-columns: 1fr 1fr; }
+            .tmd-media-3 { grid-template-columns: 1fr 1fr; } /* 3rd item often spans or is in row 2 */
+            .tmd-media-4 { grid-template-columns: 1fr 1fr; }
+
+            .tmd-card-img {
+                width: 100%; height: auto; max-height: 250px;
+                object-fit: contain; /* Ensure full image is visible */
+                background: #000; /* Letterboxing background */
+                display: block; margin: 0 auto;
+            }
+
+            .tmd-card-date { font-size: 12px; color: var(--tmd-text); opacity: 0.6; }
+
             .tmd-modal h3 {
                 margin: 0 0 20px 0; text-align: center;
                 font-size: 20px; font-weight: 700;
                 text-shadow: 0 0 5px var(--tmd-text);
             }
-            
+
             /* Buttons */
             .tmd-btn {
                 background: var(--tmd-accent); color: var(--tmd-text-btn);
@@ -1005,8 +1409,8 @@ const TMD = (function () {
                 letter-spacing: 1px;
                 box-shadow: 0 0 10px var(--tmd-accent);
             }
-            .tmd-btn:hover { 
-                background-color: var(--tmd-accent-hover); 
+            .tmd-btn:hover {
+                background-color: var(--tmd-accent-hover);
                 box-shadow: 0 0 20px var(--tmd-accent);
             }
             .tmd-btn.secondary {
@@ -1014,8 +1418,8 @@ const TMD = (function () {
                 border: 1px solid var(--tmd-accent);
                 box-shadow: none;
             }
-            .tmd-btn.secondary:hover { 
-                background-color: var(--tmd-hover); 
+            .tmd-btn.secondary:hover {
+                background-color: var(--tmd-hover);
                 box-shadow: 0 0 10px var(--tmd-accent);
             }
             .tmd-btn.text {
@@ -1024,8 +1428,8 @@ const TMD = (function () {
                 border: none; box-shadow: none;
                 opacity: 0.7;
             }
-            .tmd-btn.text:hover { 
-                opacity: 1; text-decoration: underline; 
+            .tmd-btn.text:hover {
+                opacity: 1; text-decoration: underline;
                 background: transparent; box-shadow: none;
             }
 
@@ -1040,17 +1444,17 @@ const TMD = (function () {
                 display: flex; justify-content: space-between; align-items: center;
                 margin: 12px 0; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--tmd-text);
             }
-            .tmd-label input { 
-                margin: 0; width: 16px; height: 16px; 
+            .tmd-label input {
+                margin: 0; width: 16px; height: 16px;
                 accent-color: var(--tmd-accent);
                 cursor: pointer;
             }
             .tmd-link {
-                color: var(--tmd-accent); font-size: 12px; margin-left: 10px; 
+                color: var(--tmd-accent); font-size: 12px; margin-left: 10px;
                 cursor: pointer; text-decoration: none; border-bottom: 1px dotted var(--tmd-accent);
             }
             .tmd-link:hover { color: var(--tmd-text); border-bottom-style: solid; }
-            
+
             .tmd-textarea {
                 width: 100%; min-height: 80px;
                 background: rgba(0,0,0,0.3); color: var(--tmd-text);
@@ -1063,7 +1467,7 @@ const TMD = (function () {
                 cursor: text !important;
             }
             .tmd-textarea:focus { outline: none; border-color: var(--tmd-accent); box-shadow: 0 0 5px var(--tmd-accent); }
-            
+
             .tmd-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
             .tmd-tag {
                 background-color: transparent;
@@ -1074,8 +1478,8 @@ const TMD = (function () {
                 transition: 0.2s; font-family: var(--tmd-font);
             }
             .tmd-tag:hover { background-color: var(--tmd-accent); color: var(--tmd-text-btn); box-shadow: 0 0 8px var(--tmd-accent); }
-            
-            .tmd-footer { margin-top: 12px; }
+
+            .tmd-footer { margin-top: 12px;}
 
             /* Notifier */
             .tmd-notifier {
@@ -1094,9 +1498,70 @@ const TMD = (function () {
             .tmd-notifier label:nth-child(1):before {background-image:url("data:image/svg+xml;charset=utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 stroke=%22cyan%22 fill=%22none%22 stroke-width=%222%22><path d=%22M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83%22/></svg>"); animation: spin 2s linear infinite;}
             .tmd-notifier label:nth-child(2):before {background-image:url("data:image/svg+xml;charset=utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 stroke=%22lime%22 fill=%22none%22 stroke-width=%222%22><path d=%22M5 13l4 4L19 7%22/></svg>");}
             .tmd-notifier label:nth-child(3):before {background-image:url("data:image/svg+xml;charset=utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 stroke=%22red%22 fill=%22none%22 stroke-width=%222%22><path d=%22M18 6L6 18M6 6l12 12%22/></svg>");}
+
+            /* History List Styles */
+            .tmd-history-list {
+                max-height: 300px; overflow-y: auto;
+                border: 1px solid var(--tmd-border);
+                background: rgba(0,0,0,0.2);
+                margin-bottom: 12px; padding: 4px;
+            }
+            .tmd-history-row {
+                display: flex; justify-content: space-between; align-items: center;
+                padding: 6px; border-bottom: 1px dashed var(--tmd-border);
+                transition: background 0.2s;
+            }
+            .tmd-history-row.active { background: var(--tmd-hover); border-left: 3px solid var(--tmd-accent); }
+            .tmd-history-row:last-child { border-bottom: none; }
+            .tmd-history-link {
+                color: var(--tmd-text); text-decoration: none; font-size: 13px;
+            }
+            .tmd-history-ext {
+                margin-left: 8px; margin-right: auto;
+                color: var(--tmd-accent); text-decoration: none;
+                font-size: 14px; cursor: pointer;
+            }
+            .tmd-history-link:hover { color: var(--tmd-accent); text-decoration: underline; }
+            .tmd-history-empty { padding: 20px; text-align: center; font-style: italic; opacity: 0.7; }
+
+            .tmd-btn-sm {
+                background: transparent; color: var(--tmd-state-fail);
+                border: 1px solid var(--tmd-state-fail);
+                font-size: 10px; padding: 2px 6px; cursor: pointer;
+                font-family: var(--tmd-font);
+            }
+            .tmd-btn-sm:hover { background: var(--tmd-state-fail); color: var(--tmd-text-btn); }
+
+            /* What's New Modal */
+            .tmd-wn-modal {
+                position: fixed; top: 20px; right: 20px; width: 300px;
+                background: var(--tmd-bg-modal); color: var(--tmd-text);
+                border: 2px solid var(--tmd-border); border-radius: var(--tmd-radius);
+                padding: 16px; box-shadow: var(--tmd-shadow);
+                font-family: var(--tmd-font); z-index: 2147483647;
+                animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                backdrop-filter: blur(10px);
+            }
+            @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
+
+            .tmd-wn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+            .tmd-wn-title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+            .tmd-wn-tag { background: var(--tmd-accent); color: var(--tmd-text-btn); font-size: 10px; padding: 2px 6px; border-radius: var(--tmd-radius); }
+
+            .tmd-wn-close {
+                cursor: pointer; width: 24px; height: 24px;
+                display: flex; align-items: center; justify-content: center;
+                border: 1px solid var(--tmd-text); color: var(--tmd-text);
+                transition: all 0.1s;
+            }
+            .tmd-wn-close:hover { background: var(--tmd-accent); border-color: var(--tmd-accent); color: var(--tmd-text-btn); }
+
+            .tmd-wn-list { list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 1.5; opacity: 0.9; }
+            .tmd-wn-list li { margin-bottom: 8px; display: flex; gap: 8px; }
+            .tmd-wn-list li:before { content: ">"; color: var(--tmd-accent); font-weight: bold; }
         `,
 
-        css_ss: ``,
+        css_ss: '',
 
         svg: `
             <g class="download"><path d="M2 6 L6 2 H18 L22 6 V18 L18 22 H6 L2 18 Z M7 9 H12 V11 H7 Z M13 9 H17 V11 H13 Z M8 15 H16 V17 H8 Z" fill="currentColor" fill-rule="evenodd"/></g>

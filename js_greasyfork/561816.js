@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADallower
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-07
+// @version      2026-01-11
 // @description  makes your ads much better
 // @author       hackatimefraud
 // @match        https://*/*
@@ -16,14 +16,20 @@
 // @updateURL https://update.greasyfork.org/scripts/561816/ADallower.meta.js
 // ==/UserScript==
 
-(function() {
-    'use strict';
+/* jshint esversion: 11 */
 
-    const ONLY_ADS = true; // true = only replace images from known ad domains
-    const BACKEND = "https://ads.shymike.dev"; // what url to use for the backend
+(function () {
+    "use strict";
+
+    const ONLY_ADS = true; // true = only replace ADs
+    const BACKEND = "https://ads.shymike.dev"; // which url to use for the backend
     const IMAGE_EXT_RE = /\.(png|jpe?g|gif|webp|avif|bmp|svg)(\?.*)?$/i; // regex fallback for image urls
-    const FALLBACK_PIXEL = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    const FALLBACK_PIXEL =
+        "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
+    /**
+     * replace iframe ads
+     */
     function handleIframe(iframe) {
         if (!iframe || !iframe.src) return;
 
@@ -39,16 +45,9 @@
         }
     }
 
-
-    function isAdIframe(iframe) {
-        try {
-            const src = iframe.src;
-            return src && isAdUrl(src);
-        } catch {
-            return false;
-        }
-    }
-
+    /**
+     * replace background ads in an element
+     */
     function replaceBackgroundAds(el) {
         if (document.readyState === "loading") return;
         if (!el || el.nodeType !== 1) return;
@@ -68,8 +67,9 @@
         }
     }
 
-
-
+    /**
+     * check if a hostname matches a blocklist rule
+     */
     function hostnameMatches(hostname, rule) {
         if (rule.startsWith("*.")) {
             return hostname.endsWith(rule.slice(1));
@@ -77,6 +77,9 @@
         return hostname === rule || hostname.endsWith("." + rule);
     }
 
+    /**
+     * check if a url is an ad based on the blocklist
+     */
     function isAdUrl(url) {
         if (ONLY_ADS && BLOCKLIST.length === 0) return false;
 
@@ -87,9 +90,7 @@
             return false;
         }
 
-        return BLOCKLIST.some(rule =>
-            hostnameMatches(parsed.hostname, rule)
-        );
+        return BLOCKLIST.some((rule) => hostnameMatches(parsed.hostname, rule));
     }
 
     // check how many images the server has
@@ -97,58 +98,82 @@
     GM_xmlhttpRequest({
         method: "GET",
         url: `${BACKEND}/count`,
-        onload: function(response) {
+        onload: function (response) {
             totalImages = parseInt(response.responseText, 10) || 0;
-        }
-    })
+        },
+    });
 
-    /*
-    * convert an ArrayBuffer to a data URL
-    */
+    /**
+     * convert an ArrayBuffer to a data URL
+     */
     function bufferToDataUrl(buffer, contentType) {
         const bytes = new Uint8Array(buffer);
         let binary = "";
-        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        for (let i = 0; i < bytes.length; i++)
+            binary += String.fromCharCode(bytes[i]);
         const base64 = btoa(binary);
         const type = contentType || "image/png";
         return `data:${type};base64,${base64}`;
     }
 
     let cachedImages = {}; // cache each image index's promise
-    /*
-    * fetch a replament image from the backend
-    */
+
+    /**
+     * fetch a replament image from the backend
+     */
     function fetchReplacement() {
         const index = Math.floor(Math.random() * totalImages);
         if (cachedImages[index]) {
             return cachedImages[index];
         }
 
-        let imageResponse = new Promise(resolve => {
+        let imageResponse = new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: `${BACKEND}/image/${index}`,
                 responseType: "arraybuffer",
-                onload: resp => {
+                onload: (resp) => {
                     const header = resp.responseHeaders || "";
                     const match = header.match(/content-type:\s*([^\n;]+)/i);
                     const contentType = match ? match[1].trim() : "image/png";
                     try {
-                        const dataUrl = bufferToDataUrl(resp.response, contentType);
+                        const dataUrl = bufferToDataUrl(
+                            resp.response,
+                            contentType
+                        );
                         resolve({ dataUrl, index, source: "backend" });
                     } catch (e) {
-                        console.warn(`ADallower: failed to parse replacement index ${index}, using fallback`, e);
-                        resolve({ dataUrl: FALLBACK_PIXEL, index, source: "fallback" });
+                        console.warn(
+                            `ADallower: failed to parse replacement index ${index}, using fallback`,
+                            e
+                        );
+                        resolve({
+                            dataUrl: FALLBACK_PIXEL,
+                            index,
+                            source: "fallback",
+                        });
                     }
                 },
                 onerror: () => {
-                    console.warn(`ADallower: error fetching replacement index ${index}, using fallback`);
-                    resolve({ dataUrl: FALLBACK_PIXEL, index, source: "fallback" });
+                    console.warn(
+                        `ADallower: error fetching replacement index ${index}, using fallback`
+                    );
+                    resolve({
+                        dataUrl: FALLBACK_PIXEL,
+                        index,
+                        source: "fallback",
+                    });
                 },
                 ontimeout: () => {
-                    console.warn(`ADallower: timeout fetching replacement index ${index}, using fallback`);
-                    resolve({ dataUrl: FALLBACK_PIXEL, index, source: "fallback" });
-                }
+                    console.warn(
+                        `ADallower: timeout fetching replacement index ${index}, using fallback`
+                    );
+                    resolve({
+                        dataUrl: FALLBACK_PIXEL,
+                        index,
+                        source: "fallback",
+                    });
+                },
             });
         });
 
@@ -156,68 +181,72 @@
         return imageResponse;
     }
 
-    /*
-    * use the headers to check if it's an image request
-    */
+    /**
+     * use the headers to check if it's an image request
+     */
     function headerAccept(headers) {
         if (!headers) return null;
         try {
             if (headers.get) return headers.get("accept");
-        } catch (_) { /* ignore */ }
+        } catch (_) {
+            /* ignore */
+        }
         if (Array.isArray(headers)) {
-            const match = headers.find(([k]) => String(k).toLowerCase() === "accept");
+            const match = headers.find(
+                ([k]) => String(k).toLowerCase() === "accept"
+            );
             return match ? match[1] : null;
         }
-        if (typeof headers === "object") return headers["accept"] || headers["Accept"] || null;
+        if (typeof headers === "object")
+            return headers.accept || header.Accept || null;
         return null;
     }
 
-    /*
-    * check if the request looks like an image request
-    */
+    /**
+     * check if the request looks like an image request
+     */
     function looksLikeImageRequest(input, init) {
         const url = typeof input === "string" ? input : input?.url;
         if (url) {
             try {
                 const { pathname } = new URL(url, location.href);
                 if (IMAGE_EXT_RE.test(pathname)) return true;
-            } catch (_) { /* ignore parse errors */ }
+            } catch (_) {
+                /* ignore parse errors */
+            }
         }
 
-        const accept = headerAccept(init?.headers) || headerAccept(input?.headers);
-        return typeof accept === "string" && accept.toLowerCase().includes("image");
+        const accept =
+            headerAccept(init?.headers) || headerAccept(input?.headers);
+        return (
+            typeof accept === "string" && accept.toLowerCase().includes("image")
+        );
     }
 
-    /*
-    * patch the page's fetch function to intercept image requests
-    */
+    // patch the page's fetch function to intercept image requests
     const originalFetch = window.fetch;
-        window.fetch = function(input, init) {
-            const url = typeof input === "string" ? input : input?.url;
+    window.fetch = function (input, init) {
+        const url = typeof input === "string" ? input : input?.url;
 
-            if (
-                looksLikeImageRequest(input, init) &&
-                (!ONLY_ADS || (url && isAdUrl(url)))
-            ) {
-                return fetchReplacement().then(({ dataUrl }) => {
-                    return originalFetch(dataUrl, init);
-                });
-            }
+        if (
+            looksLikeImageRequest(input, init) &&
+            (!ONLY_ADS || (url && isAdUrl(url)))
+        ) {
+            return fetchReplacement().then(({ dataUrl }) => {
+                return originalFetch(dataUrl, init);
+            });
+        }
 
-            return originalFetch(input, init);
-        };
-
+        return originalFetch(input, init);
+    };
 
     const OriginalXHR = window.XMLHttpRequest;
     class RedirectingXHR extends OriginalXHR {
-        open(method, url, async = true, user, password) {
+        open(method, url, user, password, async = true) {
             const shouldReplace =
-                looksLikeImageRequest(url) &&
-                (!ONLY_ADS || isAdUrl(url));
+                looksLikeImageRequest(url) && (!ONLY_ADS || isAdUrl(url));
 
-            const target = shouldReplace
-                ? `${BACKEND}/image/${Math.floor(Math.random() * totalImages)}`
-                : url;
+            const target = shouldReplace ? `${BACKEND}/image/${Math.floor(Math.random() * totalImages)}` : url;
 
             return super.open(method, target, async, user, password);
         }
@@ -227,18 +256,18 @@
     GM_xmlhttpRequest({
         method: "GET",
         url: "https://raw.githubusercontent.com/sjhgvr/oisd/main/domainswild2_small.txt",
-        onload: function(response) {
+        onload: function (response) {
             BLOCKLIST = response.responseText
                 .split("\n")
-                .map(l => l.trim())
-                .filter(l => l && !l.startsWith("#"));
+                .map((l) => l.trim())
+                .filter((l) => l && !l.startsWith("#"));
 
             // Re-scan images now that ads are detectable
-            document.querySelectorAll("img").forEach(img => {
+            document.querySelectorAll("img").forEach((img) => {
                 delete img.dataset.processed;
                 handleImage(img);
             });
-        }
+        },
     });
 
     /**
@@ -274,7 +303,9 @@
         }
     }
 
-    // intercept images while they load
+    /**
+     * intercept images while they load
+     */
     function interceptBeforeLoad(event) {
         const node = event.target;
         if (!(node instanceof HTMLImageElement)) return;
@@ -293,11 +324,8 @@
         });
     }
 
-
-    /**
-     * the all seeing eye (that slows doen your browser)
-     */
-    const observer = new MutationObserver(mutations => {
+    // the all seeing eye (that slows down your browser)
+    const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
             for (const node of mutation.addedNodes) {
                 if (!(node instanceof HTMLElement)) continue;
@@ -321,12 +349,11 @@
         }
     });
 
-
     observer.observe(document.documentElement, {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ["src", "srcset"]
+        attributeFilter: ["src", "srcset"],
     });
 
     window.addEventListener("beforeload", interceptBeforeLoad, true);

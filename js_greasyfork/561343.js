@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.4
+// @version      1.0.5
 // @description  🔥 解锁海角社区全部付费视频（包括短视频,封禁用户视频），去弹窗、去广告、自动展开帖子，不限量观看、下载视频，可复制播放链接
 // @namespace    海角社区
 // @author       fanqiechaodan
@@ -12,6 +12,8 @@
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
 // @grant        GM_xmlhttpRequest
+// @connect      gqkp.yidajichang.top
+// @connect      gqkl.yidajichang.top
 // @require      https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.8/hls.min.js
 // @require      https://cdn.jsdelivr.net/npm/jsencrypt@3.2.1/bin/jsencrypt.min.js
 // @run-at       document-start
@@ -698,21 +700,35 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
                 document.removeEventListener('keydown', handleEscKey);
             }
         };
+        document.addEventListener('keydown', handleEscKey);
+        document.body.appendChild(videoContainer);
+        videoContainer.addEventListener('click', (e) => {
+            if (e.target === videoContainer) {
+
+            }
+        });
     }
 
     const BASE_URL = 'https://gqkl.yidajichang.top';
     const REGISTER_URL = 'https://gqkp.yidajichang.top';
     function removeDialog() {
-        const dialog = document.querySelector('[role="dialog"].luodiconfirm');
-        if (dialog && dialog.style.display !== 'none') {
-            dialog.querySelector('.van-dialog__confirm')?.click();
+        const phoneDialog = document.querySelector('[role="dialog"].luodiconfirm');
+        if (phoneDialog && phoneDialog.style.display !== 'none') {
+            phoneDialog.querySelector('.van-dialog__confirm')?.click();
             document.body.style.overflow = 'auto !important';
-            dialog.remove();
+            phoneDialog.remove();
         }
+        const pcDialog = document.querySelector('[role="dialog"].luodiye_dialog');
+        if (pcDialog && pcDialog.style.display !== 'none') {
+            pcDialog.querySelector('.el-button.el-button--primary.is-round')?.click();
+            document.body.style.overflow = 'auto !important';
+            pcDialog.remove();
+        }
+
     }
     function removeAds() {
         const removeSelectors = {
-            multi: ['.page-container', '.containeradvertising', '.van-overlay', '.topbanmer', '.bannerliststyle'],
+            multi: ['.page-container', '.containeradvertising', '.van-overlay', '.topbanmer', '.bannerliststyle', '.el-dialog__wrapper'],
             single: ['.custom_carousel', '.btnbox', '.addbox','.html-bottom-box']
         };
         removeSelectors.multi.forEach(sel => document.querySelectorAll(sel).forEach(el => el.remove()));
@@ -753,9 +769,9 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
             updateStatus('复制失败，请手动复制');
         }
     }
-    setInterval(function() {
-        Function("debugger")();
-    }, 50);
+     setInterval(function() {
+         Function("debugger")();
+     }, 50);
     function updateStatus(message) {
         const statusEl = document.getElementById('detectionStatus');
         if (statusEl) {

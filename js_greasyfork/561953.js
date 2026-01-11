@@ -4,7 +4,7 @@
 // @name:zh-TW   X/Twitter 純淨瀏覽 & 一鍵下載
 // @name:en      X/Twitter Pure Experience & Downloader
 // @name:ja      X/Twitter きれいな閲覧体験＆ワンクリックダウンローダー
-// @version      8.9.1
+// @version      9.2.1
 // @description  无损性能！在时间线实现完美的“纯净浏览”体验（去广告、去侧边栏、宽屏），同时提供邦邦硬的“媒体一键下载”功能（视频/图片/GIF）。完美适配手机端，解决下载卡顿问题。
 // @description:zh-CN 无损性能！在时间线实现完美的“纯净浏览”体验（去广告、去侧边栏、宽屏），同时提供邦邦硬的“媒体一键下载”功能（视频/图片/GIF）。完美适配手机端，解决下载卡顿问题。
 // @description:zh-TW 無損效能！在時間線實現完美的「純淨瀏覽」體驗（去廣告、去側邊欄、寬螢幕），同時提供強大的「媒體一鍵下載」功能（影片/圖片/GIF）。完美適配手機端。
@@ -32,9 +32,9 @@
 // @updateURL https://update.greasyfork.org/scripts/561953/XTwitter%20%E7%BA%AF%E5%87%80%E6%B5%8F%E8%A7%88%20%20%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD.meta.js
 // ==/UserScript==
 
-/* V8.9 移植修复说明:
-   1. 核心 API 移植：直接使用了 "X Likes 下载器 v2.1.16" 中验证有效的 Query ID (2ICDjqPd...) 和完整参数列表。
-   2. 解决了因接口哈希变更导致的 HTTP 400 问题。
+/* V9.2.1 更新说明:
+   1. 🔧 修复下载 400 报错：彻底回滚下载核心到 V8.9.1 稳定版（移除不稳定的动态 ID 提取）。
+   2. 🧠 智能隐藏转推：不再误伤“置顶推文”！利用 JS 智能识别“已置顶”关键字，只精准屏蔽“已转帖”、“已喜欢”等干扰内容。
 */
 
 (function() {
@@ -147,6 +147,12 @@
         }
     };
 
+    const I18n = {
+        'en': { 'settings': 'Settings', 'save': 'Save & Refresh', 'close': 'Close', 'hideRight': 'Hide Right Sidebar', 'hideRT': 'Hide Retweets', 'alignLeft': 'Align Left', 'wide': 'Widescreen', 'width': 'Width', 'blocker': 'Blocker', 'add': 'Add' },
+        'zh-CN': { 'settings': '布局设置', 'save': '保存并刷新', 'close': '关闭', 'hideRight': '隐藏右侧栏', 'hideRT': '隐藏转发 (保留置顶)', 'alignLeft': '靠左对齐', 'wide': '更宽推文区域', 'width': '宽度(px)', 'blocker': '屏蔽词管理', 'add': '添加' },
+        'ja': { 'settings': '設定', 'save': '保存して更新', 'close': '閉じる', 'hideRight': '右カラム非表示', 'hideRT': 'リポスト非表示', 'alignLeft': '左揃え', 'wide': '投稿エリア拡大', 'width': '幅(px)', 'blocker': 'ブロック管理', 'add': '追加' }
+    }[navigator.language] || { 'settings': 'Settings', 'save': 'Save', 'close': 'Close' };
+
     // =========================================================================
     // 🟡 模块 1: CSS 魔法师
     // =========================================================================
@@ -162,9 +168,10 @@
             if (s.hideRightColumn) css += `[data-testid="sidebarColumn"] { display: none !important; }`;
             if (s.hideOther) css += `a[href*="ads.twitter.com"], [data-testid="trend"] { opacity: 0.8; }`;
             if (s.hideSelectors) css += `div[data-testid="super-upsell-UpsellCardRenderProperties"], div[data-testid="verified_profile_upsell"] { display: none !important; }`;
-            if (s.hideRetweets) {
-                css += `div[data-testid="cellInnerDiv"]:has([data-testid="socialContext"] path[d^="M4.75"]) { display: none !important; }`;
-            }
+            
+            // 注意：V9.2 移除了这里的“核弹级” CSS 隐藏，改为在 ModuleBlocker 中使用 JS 智能判断
+            // 从而实现“隐藏转发但保留置顶”
+
             if (s.useLargerCSS) {
                 css += `div[data-testid="sidebarColumn"] { padding-left: 20px; }`;
                 if (s.alignLeft) {
@@ -174,22 +181,50 @@
                 }
             }
             GM_addStyle(css);
-            if (window.innerWidth > 600) this.createMenu();
+            this.createMenu();
         },
         createMenu() {
-            GM_registerMenuCommand(Config.layout.hideRightColumn ? '显示右侧栏' : '隐藏右侧栏', () => {
-                 Config.layout.hideRightColumn = !Config.layout.hideRightColumn;
-                 Config.saveLayout(); location.reload();
+            GM_registerMenuCommand(I18n['settings'], () => {
+                if (document.getElementById('x-helper-settings')) return;
+                const panel = document.createElement('div');
+                panel.id = 'x-helper-settings';
+                panel.innerHTML = `
+                    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:20px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.3); z-index:99999; min-width:300px; color:black;">
+                        <h3 style="margin-top:0; text-align:center;">${I18n['settings']}</h3>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <label><input type="checkbox" id="cfg_hideRight" ${Config.layout.hideRightColumn?'checked':''}> ${I18n['hideRight']}</label>
+                            <label><input type="checkbox" id="cfg_hideRT" ${Config.layout.hideRetweets?'checked':''}> ${I18n['hideRT']}</label>
+                            <label><input type="checkbox" id="cfg_alignLeft" ${Config.layout.alignLeft?'checked':''}> ${I18n['alignLeft']}</label>
+                            <label><input type="checkbox" id="cfg_wide" ${Config.layout.useLargerCSS?'checked':''}> ${I18n['wide']}</label>
+                            <label>${I18n['width']}: <input type="number" id="cfg_width" value="${Config.layout.cssWidth}" style="width:60px"></label>
+                        </div>
+                        <div style="margin-top:15px; display:flex; gap:10px;">
+                            <button id="btn_save" style="flex:1; background:#1d9bf0; color:white; border:none; padding:8px; border-radius:4px; cursor:pointer;">${I18n['save']}</button>
+                            <button id="btn_close" style="flex:1; background:#ccc; border:none; padding:8px; border-radius:4px; cursor:pointer;">${I18n['close']}</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(panel);
+                document.getElementById('btn_close').onclick = () => panel.remove();
+                document.getElementById('btn_save').onclick = () => {
+                    Config.layout.hideRightColumn = document.getElementById('cfg_hideRight').checked;
+                    Config.layout.hideRetweets = document.getElementById('cfg_hideRT').checked;
+                    Config.layout.alignLeft = document.getElementById('cfg_alignLeft').checked;
+                    Config.layout.useLargerCSS = document.getElementById('cfg_wide').checked;
+                    Config.layout.cssWidth = parseInt(document.getElementById('cfg_width').value) || 680;
+                    Config.saveLayout();
+                    location.reload();
+                };
             });
         }
     };
 
     // =========================================================================
-    // 🔴 模块 2: 屏蔽器
+    // 🔴 模块 2: 屏蔽器 (核心升级：智能识别)
     // =========================================================================
     const ModuleBlocker = {
         init() {
-            GM_addStyle(`#blocker-float-btn { position: fixed; bottom: 150px; right: 28px; width: 36px; height: 36px; background: #1d9bf0; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99998; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 0.8; }`);
+            GM_addStyle(`#blocker-float-btn { position: fixed; bottom: 180px; right: 20px; width: 36px; height: 36px; background: #1d9bf0; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 99998; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 0.8; }`);
             const btn = document.createElement('div');
             btn.id = 'blocker-float-btn'; btn.innerText = '🛡️'; btn.onclick = () => this.showPanel();
             document.body.appendChild(btn);
@@ -233,6 +268,27 @@
         },
         checkAndHide(tweetNode) {
             if (tweetNode.dataset.xChecked) return tweetNode.dataset.xBlocked === 'true';
+            
+            // 🛡️ 智能隐藏转推逻辑 (JS版)
+            if (Config.layout.hideRetweets) {
+                // 查找社交标签容器 (包含“已转帖”、“已置顶”等)
+                const socialContext = tweetNode.querySelector('[data-testid="socialContext"]');
+                if (socialContext) {
+                    const text = socialContext.textContent;
+                    // ✅ 白名单：如果是“已置顶”或“Pinned”，则放行
+                    if (text.includes('已置顶') || text.includes('Pinned')) {
+                        // 这是一个置顶推文，不隐藏
+                    } else {
+                        // 🚫 黑名单：其他的（转推、喜欢、关注等）统统隐藏
+                        const cell = tweetNode.closest('[data-testid="cellInnerDiv"]');
+                        if (cell) cell.style.display = 'none'; else tweetNode.style.display = 'none';
+                        tweetNode.dataset.xChecked = 'true'; tweetNode.dataset.xBlocked = 'true';
+                        return true;
+                    }
+                }
+            }
+
+            // 🚫 关键词屏蔽逻辑
             if (Config.blocker.regex) {
                 const text = Utils.getSafeText(tweetNode.querySelector('[data-testid="tweetText"]'));
                 const user = Utils.getSafeText(tweetNode.querySelector('[data-testid="User-Name"]'));
@@ -249,7 +305,7 @@
     };
 
     // =========================================================================
-    // 🔵 模块 3: 下载器
+    // 🔵 模块 3: 下载器 (核心回滚：使用 V8.9.1 稳定版参数)
     // =========================================================================
     const ModuleDownloader = {
         init() { GM_addStyle(`.tmd-down { display:inline-grid; margin-left:2px; cursor:pointer; } .tmd-down:hover svg { color:#1d9bf0; } .tmd-loading svg { animation:spin 1s linear infinite; } @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }`); },
@@ -281,13 +337,15 @@
                 const date = Utils.formatDate(timeStr);
 
                 let media = [];
+                // 1. 图片处理
                 tweetNode.querySelectorAll('img[src*="pbs.twimg.com/media"]').forEach(img => {
                     media.push({ url: img.src.replace(/name=[^&]+/, 'name=large'), ext: 'jpg' });
                 });
 
+                // 2. 视频处理 (API)
                 if (tweetNode.querySelector('video')) {
                     const apiData = await this.fetchAPI(pid);
-                    if (!apiData) throw new Error("Fetch API Failed");
+                    if (!apiData) throw new Error("Fetch API Failed (Network/Auth)");
                     
                     const result = apiData.data?.tweetResult?.result;
                     const legacy = result?.tweet?.legacy || result?.legacy;
@@ -319,7 +377,7 @@
             } catch (e) { 
                 console.error(e); 
                 btn.style.color = '#f4212e';
-                alert(`Download Failed!\nError: ${e.message}`);
+                alert(`Download Failed!\nError: ${e.message}\n\nTip: Refresh the page (F5) if you see 403/429 errors.`);
             } finally { 
                 btn.classList.remove('tmd-loading'); 
             }
@@ -337,7 +395,7 @@
             if (gt) headers['x-guest-token'] = gt;
             if (ct0) { headers['x-csrf-token'] = ct0; } else { headers['x-twitter-auth-type'] = 'OAuth2Session'; }
 
-            // ✅ 核心修复：直接使用 "X Likes 下载器" 的 Query ID 和完整参数
+            // ✅ 核心回滚：使用 V8.9.1 (Source: X Likes) 的稳定参数
             const variables = {
                 'tweetId': pid,
                 'with_rux_injections': false,
@@ -379,7 +437,7 @@
                 'view_counts_everywhere_api_enabled': true
             };
 
-            // 注意：这里的 Hash ID 改成了 "2ICDjqPd..."
+            // 使用验证通过的 Query ID
             const url = `https://x.com/i/api/graphql/2ICDjqPd81tulZcYrtpTuQ/TweetResultByRestId?variables=${encodeURIComponent(JSON.stringify(variables))}&features=${encodeURIComponent(JSON.stringify(features))}`;
             
             try { 

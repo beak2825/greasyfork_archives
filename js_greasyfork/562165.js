@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Stocks - Dollar Input Box
 // @author       srsbsns
-// @version      2.1
+// @version      2.4
 // @description  Adds a dollar input box that auto-calculates shares with $1M button
 // @match        https://www.torn.com/page.php?sid=stocks*
 // @run-at       document-end
@@ -72,26 +72,38 @@
     }
   `);
 
-  let currentStockPrice = 0;
-
-  // Get current stock price from the page
+  // Get current stock price from the active stock
   function getCurrentStockPrice() {
-    // Look for the stockPrice element
-    const priceElement = document.querySelector('.stockPrice___WCQuw .price___CTjJE, [class*="stockPrice"] [class*="price"]');
-    if (priceElement) {
-      const priceText = priceElement.textContent.replace(/\s/g, '');
-      const price = parseFloat(priceText);
-      if (price > 0) {
-        console.log('Found stock price:', price);
-        return price;
+    // Strategy 1: Find the active owned tab, then find its sibling price tab
+    const activeOwnedTab = document.querySelector('li.stockOwned___eXJed.active___IUYLC[id="ownedTab"]');
+
+    if (activeOwnedTab) {
+      // The price tab should be a sibling (same parent)
+      const parent = activeOwnedTab.parentElement;
+      if (parent) {
+        const priceTab = parent.querySelector('li.stockPrice___WCQuw[id="priceTab"]');
+        if (priceTab) {
+          // Get the price from the price___CTjJE div
+          const priceDiv = priceTab.querySelector('.price___CTjJE');
+          if (priceDiv) {
+            // Extract all the numbers (they're in separate spans)
+            const priceText = priceDiv.textContent.replace(/\s/g, '');
+            const price = parseFloat(priceText);
+            if (price > 0) {
+              console.log('Found stock price from active stock price tab:', price);
+              return price;
+            }
+          }
+        }
       }
     }
 
-    // Fallback: look for aria-label with price
-    const priceTab = document.querySelector('[data-name="priceTab"], [id="priceTab"]');
+    // Strategy 2: Use aria-label from the price tab if available
+    const priceTab = document.querySelector('li.stockPrice___WCQuw[id="priceTab"]');
     if (priceTab) {
       const ariaLabel = priceTab.getAttribute('aria-label');
       if (ariaLabel) {
+        // Example: "Share stock price: $809.63. Increased by 17.17 dollars / 2.17 percents"
         const match = ariaLabel.match(/price:\s*\$([0-9,.]+)/i);
         if (match) {
           const price = parseFloat(match[1].replace(/,/g, ''));
@@ -101,6 +113,18 @@
       }
     }
 
+    // Strategy 3: Fallback - look for any visible price element
+    const priceElement = document.querySelector('.stockPrice___WCQuw .price___CTjJE');
+    if (priceElement) {
+      const priceText = priceElement.textContent.replace(/\s/g, '');
+      const price = parseFloat(priceText);
+      if (price > 0) {
+        console.log('Found stock price (fallback):', price);
+        return price;
+      }
+    }
+
+    console.log('Could not find stock price');
     return 0;
   }
 
@@ -130,7 +154,7 @@
 
     console.log('Adding dollar input box');
 
-    currentStockPrice = getCurrentStockPrice();
+    const currentStockPrice = getCurrentStockPrice();
     if (!currentStockPrice) {
       console.log('No stock price found, skipping');
       return;
@@ -158,12 +182,16 @@
     const dollarInput = wrapper.querySelector('.stock-dollar-input');
     const millionBtn = wrapper.querySelector('.stock-million-btn');
 
-    // Update shares as user types dollars
+    // Update shares as user types dollars - GET FRESH PRICE EACH TIME
     dollarInput.addEventListener('input', () => {
       const dollarAmount = parseFloat(dollarInput.value.replace(/,/g, '')) || 0;
 
       if (dollarAmount > 0) {
-        const shares = dollarsToShares(dollarAmount, currentStockPrice);
+        // Get the current stock price dynamically
+        const freshPrice = getCurrentStockPrice();
+        console.log('Calculating with fresh price:', freshPrice);
+
+        const shares = dollarsToShares(dollarAmount, freshPrice);
 
         // Auto-fill the shares input
         setInputValue(sharesInput, shares.toString());
@@ -193,7 +221,7 @@
 
   // Main function to inject dollar boxes
   function injectDollarBoxes() {
-    currentStockPrice = getCurrentStockPrice();
+    const currentStockPrice = getCurrentStockPrice();
 
     if (currentStockPrice === 0) {
       console.log('Stock price not found yet, will retry...');

@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Torn Loadout
 // @namespace    jfk.portal
-// @version      1.3.2
+// @version      1.3.5
 // @description  Shows defender loadout on the attack loader page. If gear isn't readable yet, waits for Start/Join fight, then posts on first readable payload. Includes history tabs (up to 5) with time-ago labels. Auto light/dark theming.
 // @author       HuzGPT
+// IMPORTANT: gunshop "spy" can still land on the attack loader page, but it may load gear via different loader/XHR calls
+// than the normal attack flow. We keep this userscript scoped to the attack loader page.
 // @match        https://www.torn.com/loader.php?sid=attack*
 // @run-at       document-start
 // @grant        GM_getValue
@@ -23,6 +25,7 @@
     /* ======================== Config ======================== */
     const API_BASE = 'https://api.justferkillin.com/api';
     const LOADOUT_ENDPOINT = '/loadouts/record';
+    const TOUCH_ENDPOINT = '/loadouts/touch';
 
     const AUTO_PUSH = true;
     const DEBUG_VIEW = false;
@@ -30,7 +33,7 @@
     const DEBUG_LOG = false;
 
     const DUMMY_ON_EMPTY = false;    // show a dummy when nothing readable (debug)
-    const POST_DUMMY = false;        // don't POST dummy by default
+    const POST_DUMMY = false;        // if DUMMY_ON_EMPTY, also POST dummy to backend (debug)
     const FALLBACK_TO_BACKEND = true;
 
     // History tabs
@@ -38,7 +41,6 @@
     const HISTORY_LIMIT = 5;         // max snapshots to show in tabs (newest first)
 
     const postedForAttackId = new Set();
-    let postedOnceThisPage = false;
 
     // When gear initially isn't readable, arm a watcher that waits for Start/Join click (or the button disappearing),
     // then post as soon as the next attackData shows readable items.
@@ -116,6 +118,15 @@
     const log = (...a) => { if (DEBUG_LOG) console.log('[JFK-LOADOUT]', ...a); };
     const toNumber = x => (Number.isFinite(Number(x)) ? Number(x) : null);
     const stripHtml = s => (s ? String(s).replace(/<[^>]*>/g, ' ').trim() : null);
+    const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
+    const pickFirstObj = (...vals) => {
+        for (const v of vals) if (isObj(v)) return v;
+        return {};
+    };
+
+    function safeJsonParse(text) {
+        try { return JSON.parse(text); } catch { return null; }
+    }
 
     function gmFetch(method, path, query = {}, body = null) {
         const base = API_BASE.replace(/\/+$/, '');
@@ -683,8 +694,33 @@
     /* ======================== Payload + dedupe ======================== */
     function buildPayload(json) {
         const DB = json?.DB || {};
-        const defenderUser = DB.defenderUser || {};
-        const defenderItems = DB.defenderItems || {};
+        // Torn has changed attackData shapes a few times; be generous with key names.
+        // We only need: defender user + defender item slots.
+        const defenderUser = pickFirstObj(
+            DB.defenderUser,
+            DB.defender_user,
+            DB.opponentUser,
+            DB.opponent_user,
+            DB.targetUser,
+            DB.target_user,
+            DB.defender,
+            DB.opponent,
+            DB.target,
+        );
+
+        const rawDefenderItems = pickFirstObj(
+            DB.defenderItems,
+            DB.defender_items,
+            DB.opponentItems,
+            DB.opponent_items,
+            DB.targetItems,
+            DB.target_items,
+            DB.defenderGear,
+            DB.opponentGear,
+            DB.targetGear,
+            DB.defender_items_map,
+        );
+        const defenderItems = isObj(rawDefenderItems?.items) ? rawDefenderItems.items : rawDefenderItems;
 
         const fallbackId = getUser2IdFromUrl();
         const defender = {
@@ -700,8 +736,9 @@
 
         for (const slotKey in defenderItems) {
             const slot = defenderItems[slotKey];
-            if (!slot?.item?.[0]) continue;
-            const it = slot.item[0];
+            // Torn sometimes returns slot.item as array or object depending on loader payload.
+            const it = Array.isArray(slot?.item) ? slot.item[0] : slot?.item;
+            if (!it) continue;
 
             if (WEAPON_KEYS.has(slotKey)) {
                 const w = mapWeapon(it);
@@ -735,6 +772,104 @@
         };
     }
 
+    /**
+     * Try to build a loadout payload from non-attack contexts (e.g. gunshop spy).
+     * We intentionally do NOT render UI for these; we only POST to backend when we can extract items.
+     */
+    function tryBuildPayloadFromAny(json, { page = null } = {}) {
+        try {
+            if (!json) return null;
+            // If it already looks like our payload shape, accept it.
+            if (json?.defender?.user_id && json?.context?.captured_at) {
+                return json;
+            }
+
+            // Most Torn loader payloads use the same "DB" shape.
+            if (json?.DB) {
+                const p = buildPayload(json);
+                if (p?.defender?.user_id) {
+                    if (page) p.context.page = page;
+                    return p;
+                }
+            }
+
+            // Some pages may return the "DB" object directly.
+            if (json?.defenderUser || json?.defenderItems || json?.defender_user || json?.defender_items) {
+                const p = buildPayload({ DB: json });
+                if (p?.defender?.user_id) {
+                    if (page) p.context.page = page;
+                    return p;
+                }
+            }
+
+            // Last resort: scan the payload for something that looks like a defenderItems slot map.
+            // This helps when Torn changes key names for gunshop spy payloads.
+            const found = findSlotMapInObject(json);
+            if (found?.defenderItems) {
+                const p = buildPayload({ DB: { defenderUser: found.defenderUser || {}, defenderItems: found.defenderItems } });
+                if (p?.defender?.user_id) {
+                    if (page) p.context.page = page;
+                    return p;
+                }
+            }
+        } catch (e) {
+            log('tryBuildPayloadFromAny error:', e?.message || e);
+        }
+        return null;
+    }
+
+    function looksLikeSlotMap(obj) {
+        if (!isObj(obj)) return false;
+        // Must contain at least 2 known slot keys
+        const keys = Object.keys(obj);
+        let hits = 0;
+        for (const k of keys) {
+            if (WEAPON_KEYS.has(k) || ARMOUR_KEYS.has(k)) hits++;
+        }
+        if (hits < 2) return false;
+        // And at least one slot should contain an item object/array with a name.
+        for (const k of keys) {
+            if (!(WEAPON_KEYS.has(k) || ARMOUR_KEYS.has(k))) continue;
+            const slot = obj[k];
+            const it = Array.isArray(slot?.item) ? slot.item[0] : slot?.item;
+            const name = it?.name;
+            if (name && typeof name === 'string' && name.toLowerCase() !== 'unknown') return true;
+        }
+        return false;
+    }
+
+    function findSlotMapInObject(root) {
+        // BFS with depth/size caps to avoid heavy scans.
+        const MAX_NODES = 2500;
+        const q = [{ v: root, d: 0 }];
+        let nodes = 0;
+        while (q.length) {
+            const { v, d } = q.shift();
+            if (!isObj(v) || d > 8) continue;
+            nodes++;
+            if (nodes > MAX_NODES) break;
+
+            // Direct slot map?
+            if (looksLikeSlotMap(v)) {
+                return { defenderItems: v, defenderUser: null };
+            }
+
+            // Common container shapes: { defenderItems: {...}, defenderUser: {...} }
+            if (looksLikeSlotMap(v.defenderItems || v.defender_items || v.opponentItems || v.opponent_items || v.targetItems || v.target_items)) {
+                return {
+                    defenderItems: v.defenderItems || v.defender_items || v.opponentItems || v.opponent_items || v.targetItems || v.target_items,
+                    defenderUser: v.defenderUser || v.defender_user || v.opponentUser || v.opponent_user || v.targetUser || v.target_user || null,
+                };
+            }
+
+            for (const k of Object.keys(v)) {
+                const child = v[k];
+                if (isObj(child)) q.push({ v: child, d: d + 1 });
+            }
+        }
+        return null;
+    }
+
     function djb2(str) { let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h) ^ str.charCodeAt(i); return (h >>> 0).toString(16); }
     function stableSig(payload) {
         const norm = {
@@ -754,6 +889,8 @@
         return djb2(JSON.stringify(norm));
     }
     const lastSigKey = (userId) => `JFK_LOADOUT_LASTSIG_${userId || 'unknown'}`;
+    const lastPostKey = (userId) => `JFK_LOADOUT_LASTPOST_${userId || 'unknown'}`; // epoch seconds
+    const DEDUPE_WINDOW_SEC = 86400; // 24 hours: allow reposting same loadout after this to refresh "last seen"
 
     function summarizeBody(body) {
         try {
@@ -781,9 +918,6 @@
                 log('Skipping send: already posted for attack_id', attackId);
                 updateStatusBadge({ state: 'deduped', at: Date.now() }); return;
             }
-        } else if (postedOnceThisPage) {
-            log('Skipping send: already posted once this page (no attack_id)');
-            updateStatusBadge({ state: 'deduped', at: Date.now() }); return;
         }
 
         const uid = payload?.defender?.user_id || 'unknown';
@@ -792,8 +926,36 @@
             const key = lastSigKey(uid);
             const prev = GM_getValue(key, '');
             if (prev === sig) {
-                log('No change in gear signature → not posting.', { user: uid, sig });
-                updateStatusBadge({ state: 'deduped', at: Date.now() }); return;
+                const nowSec = Math.floor(Date.now() / 1000);
+                const lastPostSec = Number(GM_getValue(lastPostKey(uid), 0) || 0);
+                const ageSec = lastPostSec > 0 ? (nowSec - lastPostSec) : null;
+
+                // If within 24h, do nothing.
+                if (ageSec != null && ageSec < DEDUPE_WINDOW_SEC) {
+                    log('No change in gear signature (within 24h) → not posting.', { user: uid, sig, ageSec });
+                    updateStatusBadge({ state: 'deduped', at: Date.now() });
+                    return;
+                }
+
+                // After 24h, do NOT re-send the whole loadout. Just "touch" the existing snapshot so
+                // the UI can show an updated "last spied" date without storing duplicates.
+                log('Same gear signature but older than 24h (or unknown last post) → touching backend date only.', { user: uid, sig, ageSec });
+                try {
+                    await apiPOST(TOUCH_ENDPOINT, {
+                        user_id: Number(uid),
+                        sig,
+                        captured_at: nowSec,
+                        name: payload?.defender?.name ?? null,
+                        faction_id: payload?.defender?.faction_id ?? null,
+                        faction_name: payload?.defender?.faction_name ?? null,
+                    });
+                    GM_setValue(lastPostKey(uid), nowSec);
+                    updateStatusBadge({ state: 'touched', at: Date.now() });
+                    return;
+                } catch (e) {
+                    // If touch fails (older backend), fall back to posting.
+                    log('Touch failed; falling back to full POST:', e?.message || e);
+                }
             }
             GM_setValue(key, sig); // optimistic
         }
@@ -806,7 +968,9 @@
             log('Posted loadout snapshot (backend response):', res);
             updateStatusBadge({ state: 'posted', at: Date.now() });
             if (attackId != null) postedForAttackId.add(attackId);
-            else postedOnceThisPage = true;
+            if (DEDUPE_LOCAL) {
+                GM_setValue(lastPostKey(uid), Math.floor(Date.now() / 1000));
+            }
         } catch (e) {
             try {
                 if (DEDUPE_LOCAL) {
@@ -920,6 +1084,10 @@
             unsafeWindow.fetch = async (...args) => {
                 const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || '');
                 const isAttackData = url.includes('/loader.php?sid=attackData');
+                const isLoaderSid = /\/loader\.php\?sid=/i.test(url);
+                const maybeSpyRelevant =
+                    !isAttackData &&
+                    (isLoaderSid || /spy|gunshop|shop|loadout|equipment/i.test(url));
 
                 const res = await bound(...args);
 
@@ -942,6 +1110,27 @@
                                         try {
                                             snaps = await fetchAllSnapshotsForUser(uid, { limit: HISTORY_LIMIT, groupByAttack: false });
                                         } catch { }
+                                    }
+
+                                    // Debug: force a dummy loadout panel (and optionally POST) even when Torn won't reveal gear yet.
+                                    // This helps validate "loader-only" posting without needing to Start/Join.
+                                    if (DUMMY_ON_EMPTY) {
+                                        const dummy = makeDummyPayload();
+                                        // ensure we keep the same user_id if Torn provided it
+                                        if (uid && dummy?.defender) dummy.defender.user_id = Number(uid);
+                                        if (payload?.defender?.name && dummy?.defender) dummy.defender.name = payload.defender.name;
+                                        dummy.context.page = location.pathname + location.search;
+
+                                        renderRightPanel(dummy.weapons, dummy.armour, dummy.defender, {
+                                            forceShow: true,
+                                            dummy: true,
+                                            status: { state: POST_DUMMY ? 'dummy-posting' : 'dummy', at: Date.now() },
+                                        });
+
+                                        if (POST_DUMMY) {
+                                            await maybeSend(dummy);
+                                        }
+                                        return;
                                     }
 
                                     if (snaps && snaps.length > 0) {
@@ -1000,6 +1189,30 @@
                         }
                     });
                 }
+                // gunshop / spy / other contexts: attempt extract + POST only (no UI)
+                else if (maybeSpyRelevant) {
+                    try {
+                        const cloned = res.clone();
+                        // Some endpoints lie about content-type; use a cheap text guard then parse.
+                        cloned.text().then(async (txt) => {
+                            if (!txt || typeof txt !== 'string') return;
+                            const t0 = txt.trim();
+                            if (!(t0.startsWith('{') || t0.startsWith('['))) return;
+                            // avoid accidentally parsing massive pages
+                            if (t0.length > 5_000_000) return;
+                            const json = safeJsonParse(t0);
+                            if (!json) return;
+                            const payload = tryBuildPayloadFromAny(json, { page: location.pathname + location.search });
+                            if (!payload) return;
+                            // Ensure page context for non-attack sources
+                            payload.context = payload.context || {};
+                            if (!payload.context.captured_at) payload.context.captured_at = Math.floor(Date.now() / 1000);
+                            if (!payload.context.page) payload.context.page = location.pathname + location.search;
+                            // Do not post dummies; only when we can extract items
+                            await maybeSend(payload);
+                        }).catch(() => { /* ignore */ });
+                    } catch { /* ignore */ }
+                }
 
                 return res;
             };
@@ -1007,6 +1220,45 @@
             log('attackData hook installed (full logic).');
         };
         waitForFetch();
+    })();
+
+    /* ======================== XHR interception (gunshop spy often uses XHR) ======================== */
+    (function hookXHR() {
+        const XHR = unsafeWindow?.XMLHttpRequest;
+        if (!XHR || !XHR.prototype) return;
+
+        const origOpen = XHR.prototype.open;
+        const origSend = XHR.prototype.send;
+
+        XHR.prototype.open = function (method, url, ...rest) {
+            try { this._jfk_url = url; } catch { }
+            return origOpen.call(this, method, url, ...rest);
+        };
+
+        XHR.prototype.send = function (body) {
+            try {
+                this.addEventListener('load', () => {
+                    try {
+                        const url = this.responseURL || this._jfk_url || '';
+                        if (!url || !/spy|gunshop|shop|loadout|equipment/i.test(url)) return;
+                        const text = this.responseText;
+                        if (!text || typeof text !== 'string') return;
+                        // quick JSON guard
+                        const t0 = text.trim();
+                        if (!(t0.startsWith('{') || t0.startsWith('['))) return;
+                        const json = JSON.parse(text);
+                        const payload = tryBuildPayloadFromAny(json, { page: location.pathname + location.search });
+                        if (!payload) return;
+                        payload.context = payload.context || {};
+                        if (!payload.context.captured_at) payload.context.captured_at = Math.floor(Date.now() / 1000);
+                        if (!payload.context.page) payload.context.page = location.pathname + location.search;
+                        // Fire and forget; do not block XHR handlers
+                        maybeSend(payload).catch(() => { });
+                    } catch { /* ignore */ }
+                });
+            } catch { /* ignore */ }
+            return origSend.call(this, body);
+        };
     })();
 
     // Restore last status

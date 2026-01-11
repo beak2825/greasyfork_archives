@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         智能链接工具
 // @namespace    http://tampermonkey.net/
-// @version      6.2.1
+// @version      6.2.3
 // @description  多功能浮动按钮工具：打开App + 复制链接 + 可视化搜索 + 阅读列表 + 链接净化，支持拖动和全局位置记忆
 // @author       YourName
 // @match        *://*/*
@@ -196,7 +196,7 @@
         domainUrlSchemes: {
             // 示例：'example.com': 'myapp://'
         },
-        seGlobalScheme: false,
+        useGlobalScheme: false,
         buttonSize: 28,
         domainPatterns: {},
         searchEngines: {
@@ -352,6 +352,18 @@
             iosChunkSize: 200
         }
     };
+
+
+    // 工具函数：HTML转义，防止XSS
+    function escapeHTML(str) {
+        if (!str && str !== 0) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 
     let config = { ...defaultConfig };
     try {
@@ -1246,15 +1258,26 @@
             const trimmedText = searchText.trim();
 
             if (config.enableDirectSearch) {
-                // 直接搜索模式
-                performSearch(trimmedText, config.defaultSearchEngine, config.searchMode);
+                if (config.visualSearchMode === 'multi') {
+                    const currentConfig = config.searchConfigs[config.currentSearchConfig] || config.searchConfigs['default'];
+                    performMultiSearch(trimmedText, currentConfig);
+                } else {
+                    performSearch(trimmedText, config.defaultSearchEngine, config.searchMode);
+                }
             } else {
-                // 显示搜索面板
-                showSearchPanel(trimmedText, true);
+                if (config.visualSearchMode === 'multi') {
+                    showMultiSearchPanel(trimmedText);
+                } else {
+                    showSearchPanel(trimmedText, true);
+                }
             }
         } else if (searchText !== null) {
             // 用户点了确定但输入为空，还是打开搜索面板
-            showSearchPanel('', true);
+            if (config.visualSearchMode === 'multi') {
+                showMultiSearchPanel('');
+            } else {
+                showSearchPanel('', true);
+            }
         }
     }
 
@@ -1737,7 +1760,7 @@
                 <select id="search-config-select" class="elegant-select">
                     ${Object.keys(config.searchConfigs).map(key => `
                         <option value="${key}" ${key === config.currentSearchConfig ? 'selected' : ''}>
-                            ${config.searchConfigs[key].name}
+                            ${escapeHTML(config.searchConfigs[key].name)}
                         </option>
                     `).join('')}
                 </select>
@@ -1754,7 +1777,7 @@
             </div>
 
             <div class="config-description">
-                ${currentConfig.description || '暂无描述'}
+                ${escapeHTML(currentConfig.description || '暂无描述')}
             </div>
         </div>
 
@@ -1768,9 +1791,9 @@
             </div>
             <div class="quick-links-grid">
                 ${currentConfig.quickLinks.map(link => `
-                    <div class="quick-link-item" data-url="${link.url}">
+                    <div class="quick-link-item" data-url="${escapeHTML(link.url)}">
                         <div class="quick-link-icon">🌐</div>
-                        <div class="quick-link-name">${link.name}</div>
+                        <div class="quick-link-name">${escapeHTML(link.name)}</div>
                     </div>
                 `).join('')}
             </div>
@@ -1780,7 +1803,7 @@
                 <!-- 搜索文本输入 -->
                 <div class="input-group">
             <label style="display: block; margin-bottom: 8px; font-weight: 600;">搜索文本</label>
-            <textarea id="search-text" class="form-textarea" placeholder="输入要搜索的文本">${selectedText}</textarea>
+            <textarea id="search-text" class="form-textarea" placeholder="输入要搜索的文本">${escapeHTML(selectedText)}</textarea>
         </div>
                 <div style="display: flex; gap: 8px; margin-bottom: 16px;">
                     <button class="btn btn-primary" id="btn-visual-select" style="flex: 1;">🔍 可视化选择</button>
@@ -1794,17 +1817,17 @@
                     ${availableEngines.map(key => {
             const engine = config.searchEngines[key];
             const isSelected = currentConfig.engines.includes(key);
-            let iconDisplay = engine.icon;
+            let iconDisplay = escapeHTML(engine.icon);
             if (isImageUrl(engine.icon)) {
-                iconDisplay = `<img src="${engine.icon}" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle; border-radius: 2px;" onerror="handleImageError(this)">`;
+                iconDisplay = `<img src="${escapeHTML(engine.icon)}" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle; border-radius: 2px;" onerror="handleImageError(this)">`;
             }
 
             return `
                             <div class="checkbox-item engine-checkbox-item" data-engine="${key}">
                                 <input type="checkbox" id="engine-${key}" ${isSelected ? 'checked' : ''}>
                                 <div class="checkbox-info">
-                                    <div class="checkbox-title">${iconDisplay} ${engine.name}</div>
-                                    <div class="checkbox-desc">${engine.webUrl || engine.appUrl}</div>
+                                    <div class="checkbox-title">${iconDisplay} ${escapeHTML(engine.name)}</div>
+                                    <div class="checkbox-desc">${escapeHTML(engine.webUrl || engine.appUrl)}</div>
                                 </div>
                             </div>
                         `;
@@ -2109,7 +2132,7 @@
             const configItem = configs[key];
             const engineNames = configItem.engines.map(engineKey => {
                 const engine = config.searchEngines[engineKey];
-                return engine ? engine.name : engineKey;
+                return escapeHTML(engine ? engine.name : engineKey);
             }).join(', ');
 
             const linkCount = configItem.quickLinks ? configItem.quickLinks.length : 0;
@@ -2117,14 +2140,14 @@
             return `
         <div class="config-management-item ${key === config.currentSearchConfig ? 'active-config' : ''}">
             <div class="config-item-header">
-                <div class="config-name">${configItem.name}</div>
+                <div class="config-name">${escapeHTML(configItem.name)}</div>
                 <div class="config-stats">
                     ${configItem.engines.length > 0 ? `<span class="stat-badge engine-count">${configItem.engines.length}引擎</span>` : ''}
                     ${linkCount > 0 ? `<span class="stat-badge link-count">${linkCount}链接</span>` : ''}
                 </div>
             </div>
             <div class="config-engines">${engineNames || '无搜索引擎'}</div>
-            <div class="config-description">${configItem.description || '暂无描述'}</div>
+            <div class="config-description">${escapeHTML(configItem.description || '暂无描述')}</div>
             <div class="config-actions">
                 <!-- 🆕 链接管理按钮 -->
                 <button class="btn btn-primary" data-config="${key}" data-action="links" title="管理链接">
@@ -2155,7 +2178,7 @@
                     <div style="font-size: 13px; color: #1565c0; line-height: 1.4;">
                         • 创建不同的搜索配置组合，快速切换常用搜索引擎组合<br>
                         • 默认配置无法删除，但可以编辑<br>
-                        • 当前使用: <strong>${configs[config.currentSearchConfig]?.name || '默认配置'}</strong>
+                        • 当前使用: <strong>${escapeHTML(configs[config.currentSearchConfig]?.name || '默认配置')}</strong>
                     </div>
                 </div>
 
@@ -4404,12 +4427,12 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         const schemeListHTML = Object.keys(domainSchemes).map(domain => `
                 <div class="pattern-item">
                     <div class="pattern-info">
-                        <div class="pattern-domain">${domain} ${domain === currentDomain ? '<span style="color: #4CAF50; font-size: 12px;">(当前网站)</span>' : ''}</div>
-                        <div class="pattern-regex">${domainSchemes[domain]}</div>
+                        <div class="pattern-domain">${escapeHTML(domain)} ${domain === currentDomain ? '<span style="color: #4CAF50; font-size: 12px;">(当前网站)</span>' : ''}</div>
+                        <div class="pattern-regex">${escapeHTML(domainSchemes[domain])}</div>
                     </div>
                     <div class="pattern-actions">
-                        <button class="btn-small btn-edit" data-domain="${domain}">编辑</button>
-                        <button class="btn-small btn-delete" data-domain="${domain}">删除</button>
+                        <button class="btn-small btn-edit" data-domain="${escapeHTML(domain)}">编辑</button>
+                        <button class="btn-small btn-delete" data-domain="${escapeHTML(domain)}">删除</button>
                     </div>
                 </div>
             `).join('');
@@ -4429,7 +4452,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
 
                     <div class="input-group" style="margin-top: 16px;">
                         <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1a1a1a;">通用URL Scheme</label>
-                        <input type="text" id="global-scheme-input" value="${config.urlScheme}" class="form-input" placeholder="例如: teak-http:// 或 myapp://">
+                        <input type="text" id="global-scheme-input" value="${escapeHTML(config.urlScheme)}" class="form-input" placeholder="例如: teak-http:// 或 myapp://">
                         <div style="font-size: 12px; color: #666; margin-top: 4px;">
                             所有网站默认使用的URL Scheme格式
                         </div>
@@ -4440,7 +4463,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
             <div style="font-weight: 600; color: #2e7d32; margin-bottom: 4px;">📊 功能状态</div>
             <div style="font-size: 13px; color: #2e7d32;">
                 • 工作模式: <strong>${config.useGlobalScheme ? '全局通用模式' : '域名专用模式'}</strong><br>
-                • 当前域名: <strong>${currentDomain}</strong><br>
+                • 当前域名: <strong>${escapeHTML(currentDomain)}</strong><br>
                 • 功能说明: <strong>${getCurrentSchemeInfo()}</strong>
             </div>
         </div>
@@ -4673,7 +4696,11 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
     // 工具函数
     // ================================
     function showDirectSearchPanel() {
-        showSearchPanel('', false); // 空文本，不显示模式选择
+        if (config.visualSearchMode === 'multi') {
+            showMultiSearchPanel('');
+        } else {
+            showSearchPanel('', false);
+        }
     }
 
     function showNotification(message, type = 'info') {
@@ -6312,10 +6339,10 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
             const engine = config.searchEngines[key];
 
             // 🆕 修改：支持图片链接和emoji
-            let iconDisplay = engine.icon;
+            let iconDisplay = escapeHTML(engine.icon);
             if (isImageUrl(engine.icon)) {
                 // 如果是图片链接，显示图片
-                iconDisplay = `<img src="${engine.icon}" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle; border-radius: 3px;" onerror="handleImageError(this)">`;
+                iconDisplay = `<img src="${escapeHTML(engine.icon)}" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle; border-radius: 3px;" onerror="handleImageError(this)">`;
             }
 
             const hasWebUrl = engine.webUrl && engine.webUrl.trim() !== '';
@@ -6329,8 +6356,8 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         <input type="radio" name="searchEngine" value="${key}" ${key === config.defaultSearchEngine ? 'checked' : ''} class="option-radio">
                         <div class="option-icon">${iconDisplay}</div>
                         <div class="option-info">
-                            <div class="option-title">${engine.name}</div>
-                            <div class="option-desc" style="color: ${(config.searchMode === 'web' && !hasWebUrl) || (config.searchMode === 'app' && !hasAppUrl) ? '#dc3545' : '#666'}">${displayUrl}</div>
+                            <div class="option-title">${escapeHTML(engine.name)}</div>
+                            <div class="option-desc" style="color: ${(config.searchMode === 'web' && !hasWebUrl) || (config.searchMode === 'app' && !hasAppUrl) ? '#dc3545' : '#666'}">${escapeHTML(displayUrl)}</div>
                         </div>
                     </div>
                 `;
@@ -6340,7 +6367,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                         <div class="panel-content">
                             <div class="input-group">
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600;">搜索文本</label>
-                                <textarea id="search-text" class="form-textarea" placeholder="输入要搜索的文本，或使用可视化选择">${selectedText}</textarea>
+                                <textarea id="search-text" class="form-textarea" placeholder="输入要搜索的文本，或使用可视化选择">${escapeHTML(selectedText)}</textarea>
                             </div>
 
                             <div style="display: flex; gap: 8px; margin-bottom: 16px;">
@@ -6901,7 +6928,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                                     white-space: nowrap;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
-                                ">${item.title} <span class="badge" style="margin-left:8px; font-size:11px; color:#4b5563; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:2px 8px;">${item.category || config.defaultReadingCategory || '未分类'}</span></div>
+                                ">${escapeHTML(item.title)} <span class="badge" style="margin-left:8px; font-size:11px; color:#4b5563; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:2px 8px;">${escapeHTML(item.category || config.defaultReadingCategory || '未分类')}</span></div>
                                 <div class="reading-list-url" style="
                                     color: #7f8c8d;
                                     font-size: 12px;
@@ -6909,7 +6936,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
                                     white-space: nowrap;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
-                                ">${item.url}</div>
+                                ">${escapeHTML(item.url)}</div>
                                 <div class="reading-list-date" style="
                                     color: #95a5a6;
                                     font-size: 11px;
@@ -8283,12 +8310,12 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
         const domainListHTML = Object.keys(config.domainPatterns).map(domain => `
                         <div class="pattern-item">
                             <div class="pattern-info">
-                                <div class="pattern-domain">${domain}</div>
-                                <div class="pattern-regex">${config.domainPatterns[domain]}</div>
+                                <div class="pattern-domain">${escapeHTML(domain)}</div>
+                                <div class="pattern-regex">${escapeHTML(config.domainPatterns[domain])}</div>
                             </div>
                             <div class="pattern-actions">
-                                <button class="btn-small btn-edit" data-domain="${domain}">编辑</button>
-                                <button class="btn-small btn-delete" data-domain="${domain}">删除</button>
+                                <button class="btn-small btn-edit" data-domain="${escapeHTML(domain)}">编辑</button>
+                                <button class="btn-small btn-delete" data-domain="${escapeHTML(domain)}">删除</button>
                             </div>
                         </div>
                     `).join('');
@@ -12556,7 +12583,7 @@ input.eh-input,.eh-textarea{width: -webkit-fill-available !important;}
             if(!c.token || !c.username || !c.repo) throw new Error("配置不完整");
 
             const ext = blob.type.split('/')[1] || 'png';
-            const fname = `${Date.now()}_${Math.random().toString(36).substr(2,4)}.${ext}`;
+            const fname = `${Date.now()}_${Math.random().toString(36).substring(2, 6)}.${ext}`;
             const path = c.folder ? `${c.folder}/${fname}` : fname;
 
             // GitHub API 上传

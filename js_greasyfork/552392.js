@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz API Module
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      0.2.5
+// @version      0.2.6
 // @description  Module for interacting with the MusicBrainz API.
 // @author       chaban
 // @tag          ai-created
@@ -244,6 +244,15 @@ class MusicBrainzAPI {
     invalidateCacheForUrl(url) {
         const urls = Array.isArray(url) ? url : [url];
         urls.forEach(u => this.cache.delete(u));
+    }
+
+    /**
+     * Synchronously retrieves a value from the cache if available.
+     * @param {string} url - The URL to check.
+     * @returns {object|undefined} The cached response or undefined if not cached.
+     */
+    getFromCache(url) {
+        return this.cache.get(url);
     }
 }
 

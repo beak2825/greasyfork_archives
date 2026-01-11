@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         4khd 广告屏蔽
 // @namespace    https://viayoo.com
-// @version      0.52
+// @version      1.5
 // @description  移除4khd广告，兼容原生和GM环境。
 // @author       Via
 // @license      MIT
@@ -25,153 +25,217 @@
     const doc = document;
 
     const AD_SELECTORS = '.exo_wrapper,.popup,.centbtd,.exo-native-widget,.exo-native-widget-outer-container,ins[data-processed="true"],.popup-iframe,ins.adsbynetwork,.wb-contai,iframe[src*="pemsrv"],iframe[src*="magsrv"],iframe[src*="exoclick"]';
-    const BLOCK_PATTERNS = [/magsrv|pemsrv|ad-provider\.js|disabley|ad-provider|exoclick|ads?[0-9]*\.|popunder|venor|popup|fxuuid|jduuid|linkSens|uuid|splash\.php/i];
+    const BLOCK_REGEX = /magsrv|pemsrv|ad-provider\.js|disabley|ad-provider|exoclick|ads?[0-9]*\.|popunder|venor|popup|fxuuid|jduuid|linkSens|uuid|splash\.php/i;
+    const PROTECT_REGEX = /popMagic|pemsrv|splash\.php|exoJsPop|BetterJsPop|disable-devtool|DisableDevtool|exoclick|magsrv/i;
 
-    let lastDomain = location.hostname;
+    const currentHostname = location.hostname;
+    const fuzzyDomain = currentHostname.replace(/\d+/g, '').replace(/\.+$/, '');
 
-    const cleanStorage = () => {
-        ['storedResult','inData','extranks','Better','linkSens','jduuid','adshsi','inData2','BetterJsPop_lastOpenedAt'].forEach(k => {
-            localStorage.removeItem(k); 
-            sessionStorage.removeItem(k);
+    function initStorageLock() {
+        const PROTECT_KEYS = new Set(['inData', 'inData2', 'requestClosed', 'ccc-my_favorite_post']);
+        const COOKIE_BLOCK_RE = /fxuuid|jduuid|adsie/i;
+        const WIN_PROPS = ['DisableDevtool', 'AdProvider', 'adConfig', 'popMagic', 'exoJsPop101', 'exoclick', 'exoJsPop'];
+        const hostname = location.hostname;
+        const expired = "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        ['fxuuid', 'jduuid', 'adsie'].forEach(name => {
+            doc.cookie = name + expired;
+            doc.cookie = name + expired + "; domain=" + hostname;
+            doc.cookie = name + expired + "; domain=." + hostname;
         });
-        ['adsie','jduuid'].forEach(n => {
-            document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-            document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.${location.hostname}`;
-            document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${location.hostname}`;
-        });
-    };
-
-    const checkDomainChange = () => {
-        const cur = location.hostname;
-        if (cur !== lastDomain) { 
-            cleanStorage(); 
-            lastDomain = cur; 
+        const orgGet = Storage.prototype.getItem;
+        const orgSet = Storage.prototype.setItem;
+        Storage.prototype.getItem = function(key) {
+            if (key === 'inData') return 'true';
+            if (key === 'inData2') return '0';
+            return orgGet.apply(this, arguments);
+        };
+        Storage.prototype.setItem = function(key, value) {
+            if (PROTECT_KEYS.has(key)) return;
+            return orgSet.apply(this, arguments);
+        };
+        const cookieDesc = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') || Object.getOwnPropertyDescriptor(HTMLDocument.prototype, 'cookie');
+        if (cookieDesc?.configurable) {
+            Object.defineProperty(doc, 'cookie', {
+                get: () => cookieDesc.get.call(doc),
+                set: (val) => {
+                    if (COOKIE_BLOCK_RE.test(val)) return;
+                    cookieDesc.set.call(doc, val);
+                },
+                configurable: true
+            });
         }
-    };
-
-    if (hasGM) {
-        GM_addStyle(`${AD_SELECTORS}{display:none!important;visibility:hidden!important}`);
-    } else {
-        const s = doc.createElement('style');
-        s.textContent = `${AD_SELECTORS}{display:none!important;visibility:hidden!important}`;
-        (doc.head || doc.documentElement).appendChild(s);
-    }
-
-    ['DisableDevtool','AdProvider','adConfig','popMagic','exoJsPop101','exoclick','exoJsPop'].forEach(p => {
-        Object.defineProperty(win, p, {value: null, writable: false, configurable: false});
-    });
-
-    const shouldBlock = url => url && BLOCK_PATTERNS.some(p => p.test(url));
-    const blockDangerousClick = e => {
-        if (!e.isTrusted) return;
-        const t = e.target;
-        if (t.closest('a, button, [role="button"], [onclick]') && 
-            (shouldBlock(t.href) || shouldBlock(t.getAttribute('data-url')))) {
-            e.preventDefault(); 
-            e.stopPropagation(); 
-            e.stopImmediatePropagation();
-            return false;
-        }
-    };
-
-    doc.addEventListener('click', blockDangerousClick, true);
-    doc.addEventListener('mousedown', blockDangerousClick, true);
-
-    window.open = new Proxy(window.open, {
-        apply: (t, th, args) => shouldBlock(args[0]) ? null : t.apply(th, args)
-    });
-    
-    window.fetch = new Proxy(window.fetch, {
-        apply: (t, th, args) => shouldBlock(args[0]?.url || args[0]) ? 
-            Promise.resolve(new Response('', {status: 204})) : 
-            t.apply(th, args)
-    });
-
-    const originalXHRopen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function() {
-        if (shouldBlock(arguments[1])) {
-            this._blocked = true;
-            return;
-        }
-        return originalXHRopen.apply(this, arguments);
-    };
-
-    const originalXHRSend = XMLHttpRequest.prototype.send;
-    XMLHttpRequest.prototype.send = function() {
-        return this._blocked ? undefined : originalXHRSend.apply(this, arguments);
-    };
-
-    const originalAddEvent = EventTarget.prototype.addEventListener;
-    EventTarget.prototype.addEventListener = function(type, listener, options) {
-        if (type === 'click' && typeof listener === 'function') {
-            const str = listener.toString();
-            if (/popMagic|pemsrv|splash\.php|exoJsPop|BetterJsPop/.test(str)) return;
-        }
-        return originalAddEvent.call(this, type, listener, options);
-    };
-
-    doc.querySelector = new Proxy(doc.querySelector, {
-        apply(target, thisArg, args) {
-            return args[0] === "[disable-devtool-auto]" ? null : target.apply(thisArg, args);
-        }
-    });
-
-    const originalEval = win.eval;
-    win.eval = code => {
-        if (typeof code === 'string' && /disable-devtool|DisableDevtool/i.test(code)) return;
-        return originalEval.call(win, code);
-    };
-
-    const originalFunction = win.Function;
-    win.Function = (...args) => {
-        const body = args[args.length - 1];
-        if (typeof body === 'string' && /disable-devtool|DisableDevtool/i.test(body)) return () => {};
-        return originalFunction(...args);
-    };
-
-    const observer = new MutationObserver(muts => {
-        muts.forEach(mut => {
-            mut.addedNodes.forEach(node => {
-                if (node.nodeType !== 1) return;
-                if (node.tagName === 'SCRIPT') {
-                    const txt = node.textContent || '';
-                    const src = node.src || '';
-                    if (txt.includes('popMagic') || txt.includes('splash.php') || txt.includes('BetterJsPop') || /disable-devtool|DisableDevtool|pemsrv|magsrv|exoclick/i.test(txt + src)) {
-                        node.remove(); 
-                        return;
-                    }
-                }
+        WIN_PROPS.forEach(p => {
+            Object.defineProperty(win, p, {
+                value: null,
+                writable: false,
+                configurable: false
             });
         });
-    });
-    
-    observer.observe(doc.documentElement, {childList: true, subtree: true});
-
-    const aggressiveClean = () => {
-        doc.querySelectorAll(AD_SELECTORS).forEach(el => el.remove());
-        cleanStorage();
-    };
-
-    setInterval(aggressiveClean, 500);
-
-    if (doc.readyState === 'loading') {
-        doc.addEventListener('DOMContentLoaded', aggressiveClean);
-    } else {
-        aggressiveClean();
     }
 
-    const originalPushState = history.pushState;
-    const originalReplaceState = history.replaceState;
-    
-    history.pushState = function() {
-        const result = originalPushState.apply(this, arguments);
-        setTimeout(checkDomainChange, 0);
-        return result;
-    };
-    
-    history.replaceState = function() {
-        const result = originalReplaceState.apply(this, arguments);
-        setTimeout(checkDomainChange, 0);
-        return result;
-    };
+    function initAdBlocker() {
+        const css = `${AD_SELECTORS}{display:none!important;visibility:hidden!important;width:0!important;height:0!important;opacity:0!important;pointer-events:none!important;}`;
+        if (hasGM) {
+            GM_addStyle(css);
+        } else {
+            if (!doc.getElementById('viayoo-clean-style')) {
+                const s = doc.createElement('style');
+                s.id = 'viayoo-clean-style';
+                s.textContent = css;
+                (doc.head || doc.documentElement).appendChild(s);
+            }
+        }
+    }
+
+    function checkExternal(href) {
+        try {
+            const url = new URL(href, location.href);
+            return !url.hostname.includes('4khd') && !url.hostname.includes(fuzzyDomain);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function initEventListeners() {
+        const blockExternalLinks = (e) => {
+            if (!e.isTrusted) return;
+            const a = e.target.closest('a, area');
+            if (a?.href && checkExternal(a.href) && (a.target === '_blank' || e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+        };
+        doc.addEventListener('click', blockExternalLinks, true);
+    }
+
+    function initNetworkInterceptors() {
+        win.open = new Proxy(win.open, {
+            apply: (t, th, args) => (args[0] && (BLOCK_REGEX.test(args[0]) || checkExternal(args[0]))) ? null : Reflect.apply(t, th, args)
+        });
+        win.fetch = new Proxy(win.fetch, {
+            apply: (t, th, args) => {
+                const url = args[0]?.url || args[0];
+                if (typeof url === 'string' && BLOCK_REGEX.test(url)) {
+                    return Promise.resolve(new Response('', {
+                        status: 200,
+                        statusText: 'OK'
+                    }));
+                }
+                return Reflect.apply(t, th, args);
+            }
+        });
+        const orgOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(_, url) {
+            if (typeof url === 'string' && BLOCK_REGEX.test(url)) {
+                this._blocked = true;
+                return;
+            }
+            return orgOpen.apply(this, arguments);
+        };
+        const orgSend = XMLHttpRequest.prototype.send;
+        XMLHttpRequest.prototype.send = function() {
+            if (this._blocked) {
+                this.dispatchEvent(new Event('load'));
+                this.dispatchEvent(new Event('readystatechange'));
+                return;
+            }
+            return orgSend.apply(this, arguments);
+        };
+    }
+
+    function initMutationObserver() {
+        const observer = new MutationObserver(muts => {
+            muts.forEach(mut => {
+                mut.addedNodes.forEach(node => {
+                    if (node.nodeType !== 1) return;
+                    if (node.tagName === 'SCRIPT' && PROTECT_REGEX.test(node.textContent + node.src)) {
+                        node.remove();
+                        return;
+                    }
+                    if (node.matches?.(AD_SELECTORS)) {
+                        node.remove();
+                    } else {
+                        node.querySelectorAll?.(AD_SELECTORS).forEach(el => el.remove());
+                    }
+                });
+            });
+        });
+        observer.observe(doc.documentElement, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    function addImageButtons() {
+        const style = doc.createElement('style');
+        style.textContent = `
+            .img-button-container{position:absolute;bottom:15px;right:10px;display:flex;gap:8px;z-index:100}
+            .img-btn{padding:8px 16px;border:1px solid rgba(255,255,255,0.25);border-radius:16px;cursor:pointer;font-size:13px;font-weight:600;backdrop-filter:blur(16px);background:rgba(255,255,255,0.3);color:#1C2526;transition:all 0.2s;font-family:sans-serif}
+            @media (prefers-color-scheme:dark){.img-btn{background:rgba(40,40,40,0.3);color:#f0f0f0}}
+            .img-btn:hover{background:rgba(255,255,255,0.4);transform:translateY(-1px)}
+            .image-wrapper{position:relative;display:inline-block}
+        `;
+        doc.head.appendChild(style);
+
+        const processImages = () => {
+            doc.querySelectorAll('#basicExample > a.imageLink').forEach(link => {
+                if (link.querySelector('.img-button-container')) return;
+                const wrapper = doc.createElement('div');
+                wrapper.className = 'image-wrapper';
+                link.parentNode.insertBefore(wrapper, link);
+                wrapper.appendChild(link);
+                const container = doc.createElement('div');
+                container.className = 'img-button-container';
+                const btn = doc.createElement('button');
+                btn.className = 'img-btn';
+                btn.textContent = '打开';
+                const img = link.querySelector('img');
+                const url = img?.src || img?.dataset?.src || link.href;
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const a = doc.createElement('a');
+                    a.href = url;
+                    a.download = url.split('/').pop();
+                    a.click();
+                };
+                container.appendChild(btn);
+                wrapper.appendChild(container);
+            });
+        };
+        const imageObserver = new MutationObserver(processImages);
+        imageObserver.observe(doc.body || doc.documentElement, {
+            childList: true,
+            subtree: true
+        });
+        processImages();
+    }
+
+    function aggressiveClean() {
+        doc.querySelectorAll(AD_SELECTORS).forEach(el => el.remove());
+        if (!hasGM && !doc.getElementById('viayoo-clean-style')) {
+            initAdBlocker();
+        }
+    }
+
+    function initPeriodicCleanup() {
+        setInterval(aggressiveClean, 1000);
+    }
+
+    function initAll() {
+        initStorageLock();
+        initAdBlocker();
+        initEventListeners();
+        initNetworkInterceptors();
+        initMutationObserver();
+        initPeriodicCleanup();
+        aggressiveClean();
+        addImageButtons();
+    }
+
+    if (doc.readyState === 'loading') {
+        doc.addEventListener('DOMContentLoaded', initAll);
+    } else {
+        initAll();
+    }
 })();

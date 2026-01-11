@@ -3,7 +3,7 @@
 // @namespace    http://torn.com/
 // @version      10.6
 // @description  Manual Scrape: Bazaar (Own Stock: x#) | Market (Stock x#). Excludes Market AddListing.
-// @author       Gemini
+// @author       srsbsns
 // @match        *://www.torn.com/item.php*
 // @match        *://www.torn.com/page.php?sid=ItemMarket*
 // @match        *://www.torn.com/bazaar.php?userId=*

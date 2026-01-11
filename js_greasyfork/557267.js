@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.4
+// @version      1.0.6
 // @description  海角社区视频解锁观看及下载，无限制播放下载 | 官网：https://khsy.cc
 // @author       khsy.cc
 // @include      *://hj*.*/*
@@ -46,7 +46,7 @@
 
     const CONFIG = {
         SERVER_BASE: 'https://khsy.cc',
-        SCRIPT_VERSION: '1.0.4',
+        SCRIPT_VERSION: '1.0.6',
         SCRIPT_ID: 557267,
         UPDATE_URL: 'https://www.tampermonkey.net/script_installation.php#url=https://update.sleazyfork.org/scripts/557267/%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA.user.js',
         UPDATE_CHECK_INTERVAL: 12 * 60 * 60 * 1000,
@@ -92,7 +92,7 @@
 
                         if (res.ok) {
                             const data = await res.json();
-                            
+
                             // GreasyFork API返回的版本号在 version 字段中
                             this.latestVersion = data.version || null;
 
@@ -2497,7 +2497,7 @@
             this.updateModalOpen = true;
 
             const currentVersion = CONFIG.SCRIPT_VERSION;
-            
+
             // 🔥 先显示弹窗（使用缓存的数据或显示检测中）
             let latestVersion = UpdateChecker.latestVersion || '检测中...';
             let hasUpdate = UpdateChecker.hasUpdate;
@@ -2565,7 +2565,7 @@
                     // 更新弹窗内容
                     const versionEl = document.getElementById('khsy-latest-version');
                     const statusEl = document.getElementById('khsy-update-status');
-                    
+
                     if (versionEl && statusEl) {
                         const newLatestVersion = UpdateChecker.latestVersion || '检测失败';
                         const newHasUpdate = UpdateChecker.hasUpdate;
@@ -3449,6 +3449,26 @@
                                         }
                                     } catch (e) {
                                         body.content += insertDom;
+                                    }
+                                } else if (body.content && hasImages && Object.keys(allImages).length > 0) {
+                                    // 🔥 处理金币贴图片显示
+                                    let imagesDom = '<div class="unlocked-images-container">';
+                                    Object.entries(allImages).forEach(([id, url]) => {
+                                        imagesDom += `<img src="${url}" data-id="${id}" style="max-width:100%; margin:10px 0;" />`;
+                                    });
+                                    imagesDom += '</div>';
+
+                                    try {
+                                        const regRep = /class="sell_line2"\>[^\<]+<\/span>/.exec(body.content);
+                                        if (regRep && regRep[0]) {
+                                            body.content = body.content
+                                                .replace('<span class="sell-btn"', '<div id="wt-resources-box"><div class="sell-btn "')
+                                                .replace(regRep[0], regRep[0] + imagesDom + '</div></div>');
+                                        } else {
+                                            body.content += imagesDom;
+                                        }
+                                    } catch (e) {
+                                        body.content += imagesDom;
                                     }
                                 }
 

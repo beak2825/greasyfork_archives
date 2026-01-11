@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stellar Blade Wplace Tool
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  JSON Config + Custom Overlay Delete + Region Status System (Chunks Disabled)
 // @author       luke77_7
 // @match        https://wplace.live/*
@@ -18,7 +18,7 @@
 // 🆕 GITHUB JSON CONFIGURATION
 // ============================================
 const GITHUB_CONFIG = {
-  JSON_URL: 'https://raw.githubusercontent.com/SEU_USER/SEU_REPO/main/overlays.json',
+  JSON_URL: 'https://raw.githubusercontent.com/kwbr1/Nk-SB-ov/refs/heads/main/overlays.json',
   CACHE_DURATION: 5 * 60 * 1000, // 5 minutos
   FALLBACK_CHECK_INTERVAL: 60 * 1000 // 1 minuto
 };

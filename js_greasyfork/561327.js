@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         PTA清空题库工具 (自动过弹窗版)
-// @version      1.0.7
-// @description  清空PTA平台已提交编程题代码，自动屏蔽"系统可能不会保存更改"的弹窗，支持菜单拖动
+// @name         PTA清空题库工具 (增强版-支持选择题)
+// @version      1.0.8
+// @description  清空PTA平台已提交编程题代码及选择题选项，自动屏蔽弹窗，支持菜单拖动
 // @author       Shen
 // @match        https://pintia.cn/problem-sets/*/exam/problems/type/*
 // @match        https://pintia.cn/problem-sets/*/exam/problems/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @namespace https://greasyfork.org/users/1555804
-// @downloadURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E8%87%AA%E5%8A%A8%E8%BF%87%E5%BC%B9%E7%AA%97%E7%89%88%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E8%87%AA%E5%8A%A8%E8%BF%87%E5%BC%B9%E7%AA%97%E7%89%88%29.meta.js
+// @namespace    https://greasyfork.org/users/1555804
+// @downloadURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E5%A2%9E%E5%BC%BA%E7%89%88-%E6%94%AF%E6%8C%81%E9%80%89%E6%8B%A9%E9%A2%98%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E5%A2%9E%E5%BC%BA%E7%89%88-%E6%94%AF%E6%8C%81%E9%80%89%E6%8B%A9%E9%A2%98%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -19,12 +19,12 @@
     // === 存储键名配置 ===
     const CONFIG_KEY = 'pta_clear_config';
     const MENU_STATE_KEY = 'pta_menu_collapsed';
-    const TASK_QUEUE_KEY = 'pta_task_queue';           // 任务队列
-    const TASK_RUNNING_KEY = 'pta_task_is_running';    // 运行状态
-    const TASK_RETURN_URL_KEY = 'pta_return_url';      // 返回地址
-    const TASK_TOTAL_KEY = 'pta_task_total';           // 总任务数
-    
-    // === 新增：位置记忆键名 ===
+    const TASK_QUEUE_KEY = 'pta_task_queue';            // 任务队列
+    const TASK_RUNNING_KEY = 'pta_task_is_running';     // 运行状态
+    const TASK_RETURN_URL_KEY = 'pta_return_url';       // 返回地址
+    const TASK_TOTAL_KEY = 'pta_task_total';            // 总任务数
+
+    // === 位置记忆键名 ===
     const MENU_POS_TOP_KEY = 'pta_menu_pos_top';
     const MENU_POS_LEFT_KEY = 'pta_menu_pos_left';
 
@@ -62,17 +62,32 @@
         return config.enabledSets.includes(currentId);
     }
 
-    // 清空当前题目的代码编辑器
-    function clearCurrentEditor(silent = false) {
+    // --- 修改点1：升级清空逻辑，支持代码编辑器和复选框 ---
+    function clearCurrentProblem(silent = false) {
+        let cleared = false;
+
+        // 1. 清空代码编辑器 (针对编程题)
         const editor = document.querySelector('.cm-content[role="textbox"]');
         if (editor) {
             editor.textContent = '';
             const event = new Event('input', { bubbles: true });
             editor.dispatchEvent(event);
-            if (!silent) console.log('当前题目代码已清空');
-            return true;
+            cleared = true;
         }
-        return false;
+
+        // 2. 清空复选框和单选框 (针对选择题)
+        // 查找所有已选中的输入框
+        const checkedInputs = document.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked');
+        if (checkedInputs.length > 0) {
+            checkedInputs.forEach(input => {
+                // 在现代框架中，模拟点击通常比修改 checked 属性更有效，能触发 UI 更新
+                input.click();
+            });
+            cleared = true;
+        }
+
+        if (!silent && cleared) console.log('当前题目内容已清空');
+        return cleared;
     }
 
     function waitForElement(selector, timeout = 5000) {
@@ -96,18 +111,21 @@
         const queue = [];
 
         problemLinks.forEach(link => {
-            const checkIcon = link.querySelector('.PROBLEM_ACCEPTED_iri62');
+            // 这里假设 .PROBLEM_ACCEPTED_iri62 是已提交/通过的标志
+            // 如果 "提交过但错误" 的题目也需要清空，可能需要调整这个选择器，或者移除判断直接全部清空
+            const checkIcon = link.querySelector('.PROBLEM_ACCEPTED_iri62') || link.querySelector('.PROBLEM_PARTIALLY_ACCEPTED_...');// 视情况添加其他状态
+            // 目前只清空已有标记的，如果想清空所有，去掉 if checkIcon 即可
             if (checkIcon) {
                 queue.push(link.href);
             }
         });
 
         if (queue.length === 0) {
-            alert('当前页面没有找到已提交的题目！');
+            alert('当前页面没有找到已完成的题目！');
             return;
         }
 
-        if (!confirm(`找到 ${queue.length} 个已提交题目。\n\n点击确定后，脚本将自动跳转并逐个清空。\n请勿关闭浏览器！`)) {
+        if (!confirm(`找到 ${queue.length} 个已提交题目。\n\n点击确定后，脚本将自动跳转并逐个清空（含代码和选项）。\n请勿关闭浏览器！`)) {
             return;
         }
 
@@ -121,32 +139,35 @@
 
     function processNextTask() {
         const queue = GM_getValue(TASK_QUEUE_KEY, []);
-        
+
         if (queue.length === 0) {
             finishTask();
             return;
         }
 
         const nextUrl = queue[0];
-        
+
         if (window.location.href !== nextUrl) {
             suppressLeaveWarning();
             window.location.href = nextUrl;
         } else {
             showProcessingOverlay(queue.length);
-            
-            waitForElement('.cm-content[role="textbox"]').then((editor) => {
-                if (editor) {
-                    clearCurrentEditor(true);
-                    
+
+            // --- 修改点2：等待逻辑增加对 input 的检测 ---
+            // 等待 编辑器 OR 复选框 OR 单选框 出现
+            waitForElement('.cm-content[role="textbox"], input[type="checkbox"], input[type="radio"]').then((element) => {
+                if (element) {
+                    // 找到了元素，执行清空
+                    clearCurrentProblem(true);
+
                     setTimeout(() => {
-                        queue.shift(); 
+                        queue.shift();
                         GM_setValue(TASK_QUEUE_KEY, queue);
                         suppressLeaveWarning();
                         processNextTask();
                     }, 500);
                 } else {
-                    console.warn('未找到编辑器，跳过此题');
+                    console.warn('未找到编辑器或选项，可能是非交互题型，跳过此题');
                     queue.shift();
                     GM_setValue(TASK_QUEUE_KEY, queue);
                     suppressLeaveWarning();
@@ -263,7 +284,7 @@
                     <button class="pta-remove-btn" data-set-id="${setId}" style="padding: 5px 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">删除</button>
                 </div>
             `).join('');
-            
+
             document.querySelectorAll('.pta-remove-btn').forEach(btn => {
                 btn.onclick = function() {
                     const setId = this.getAttribute('data-set-id');
@@ -299,35 +320,33 @@
         overlay.onclick = () => { panel.style.display = 'none'; overlay.style.display = 'none'; };
     }
 
-    // === 新增：使元素可拖拽函数 ===
+    // 使元素可拖拽函数
     function makeDraggable(element, handle) {
         let isDragging = false;
         let startX, startY, initialLeft, initialTop;
 
         handle.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // 防止选中文本
+            e.preventDefault();
             isDragging = true;
             startX = e.clientX;
             startY = e.clientY;
-            
-            // 获取当前位置，如果没有设置过left/top，则获取计算样式
+
             const rect = element.getBoundingClientRect();
             initialLeft = rect.left;
             initialTop = rect.top;
-            
+
             handle.style.cursor = 'grabbing';
-            element.style.transition = 'none'; // 拖动时禁用过渡动画
+            element.style.transition = 'none';
         });
 
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
-            
-            // 更新位置
+
             element.style.left = `${initialLeft + dx}px`;
             element.style.top = `${initialTop + dy}px`;
-            element.style.right = 'auto'; // 清除right属性，防止冲突
+            element.style.right = 'auto';
             element.style.bottom = 'auto';
         });
 
@@ -335,7 +354,6 @@
             if (isDragging) {
                 isDragging = false;
                 handle.style.cursor = 'move';
-                // 拖动结束后保存位置
                 GM_setValue(MENU_POS_TOP_KEY, element.style.top);
                 GM_setValue(MENU_POS_LEFT_KEY, element.style.left);
             }
@@ -346,15 +364,12 @@
         if (document.getElementById('pta-helper-container')) return;
 
         let isCollapsed = GM_getValue(MENU_STATE_KEY, false);
-
-        // 获取保存的位置，如果没有则使用默认位置（右上角）
         const savedTop = GM_getValue(MENU_POS_TOP_KEY);
         const savedLeft = GM_getValue(MENU_POS_LEFT_KEY);
-        
+
         const mainContainer = document.createElement('div');
         mainContainer.id = 'pta-helper-container';
-        
-        // 初始样式设置
+
         let posStyle = '';
         if (savedTop && savedLeft) {
             posStyle = `top: ${savedTop}; left: ${savedLeft};`;
@@ -365,7 +380,7 @@
         mainContainer.style.cssText = `
             position: fixed; ${posStyle} z-index: 99999;
             display: flex; flex-direction: column; align-items: flex-end;
-            user-select: none; /* 防止拖动时选中文字 */
+            user-select: none;
         `;
 
         const toggleBtn = document.createElement('button');
@@ -383,15 +398,6 @@
             display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; gap: 10px; width: 100%;
         `;
 
-        toggleBtn.onmousedown = (e) => {
-             // 简单的点击判断：如果鼠标按下和松开位置偏移很小，视为点击，否则是拖拽
-             // 但由于我们把事件绑定在makeDraggable里处理，这里只处理点击切换逻辑
-             // 实际在mouseup中可以通过判断是否有位移来决定是否触发click，
-             // 为了简化，这里保留点击功能，拖拽由makeDraggable接管。
-             // 由于拖拽会触发 click，我们加个简单的延时锁或者允许共存（通常不影响）
-        };
-
-        // 处理点击切换菜单（解决拖拽和点击的冲突：如果只是短暂点击未移动，则切换）
         let startX, startY;
         toggleBtn.addEventListener('mousedown', function(e) {
             startX = e.clientX;
@@ -400,7 +406,6 @@
         toggleBtn.addEventListener('click', function(e) {
             const moveX = Math.abs(e.clientX - startX);
             const moveY = Math.abs(e.clientY - startY);
-            // 如果移动距离小于5像素，视为点击，执行切换
             if (moveX < 5 && moveY < 5) {
                 isCollapsed = !isCollapsed;
                 contentContainer.style.display = isCollapsed ? 'none' : 'flex';
@@ -415,12 +420,13 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2); width: 100%;
         `;
 
+        // --- 修改点3：更新按钮点击事件 ---
         const clearCurrentBtn = document.createElement('button');
         clearCurrentBtn.textContent = '清空当前题目';
         clearCurrentBtn.style.cssText = btnStyle + 'background: #3b82f6;';
         clearCurrentBtn.onclick = () => {
             if (!isCurrentSetEnabled()) return alert('请先在“管理题目集”中启用当前题库');
-            if (confirm('确定清空当前代码？')) clearCurrentEditor();
+            if (confirm('确定清空当前题目（代码或选项）？')) clearCurrentProblem();
         };
 
         const clearAllBtn = document.createElement('button');
@@ -446,7 +452,6 @@
         mainContainer.appendChild(contentContainer);
         document.body.appendChild(mainContainer);
 
-        // 启用拖拽：拖拽 toggleBtn，移动 mainContainer
         makeDraggable(mainContainer, toggleBtn);
     }
 

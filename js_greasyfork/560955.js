@@ -1,20 +1,22 @@
 // ==UserScript==
 // @name         SupabaseClientTest
 // @namespace    SupabaseClientTest
-// @version      1.2
+// @version      1.3
 // @description  和所有人在线交流，安全匿名，无需账号，无需客户端，保护隐私，在线网页聊天室
 // @match        https://*/*
-// @grant        GM_xmlhttpRequest
+// @license      MIT
+// @grant        GM_log
+// @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_deleteValue
-// @run-at       document-start
-// @license      MIT
+// @grant        GM_xmlhttpRequest
+// @run-at       document-body
 // @connect      supabase.co
 // @require      https://unpkg.com/@supabase/supabase-js@2.49.3/dist/umd/supabase.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.1.5/hls.min.js
-// @require      https://scriptcat.org/lib/5007/1.0.0/supabaseClientLibrary.js#sha256=6c8d52294e43c5f69f05b666f387328a540951d2d7adb80de68fa793fba567dd
-// @require      https://scriptcat.org/lib/5008/1.0.0/chatRoomLibrary.js#sha256=bb9051b859303bec9d390d184ec8989f3f2728b2dd067205f358ff48cd1201fc
+// @require      https://scriptcat.org/lib/5007/1.0.1/supabaseClientLibrary.js#sha384=An/EKSp9xaz4YGHGLWUZYfW1950+SEeQhsmfjbbAfh8GOY8dHA7ZMuwEhnEq4gVJ
+// @require      https://scriptcat.org/lib/5008/1.0.3/chatRoomLibrary.js#sha384=Rot5TRczD6A15DdM28xrwncuNdle1gd2ChGSanpvMRNQZiF62lgbqhdVI9bRYOMz
 // @downloadURL https://update.greasyfork.org/scripts/560955/SupabaseClientTest.user.js
 // @updateURL https://update.greasyfork.org/scripts/560955/SupabaseClientTest.meta.js
 // ==/UserScript==
@@ -26,15 +28,14 @@
 
 (async () => {
     'use strict';
-    console.log(`正在初始化...`);
 
     // 初始化UI
     const chatRoom = await ChatRoomLibrary.initUI();
-    chatRoom.setTitle('在线匿名网页聊天室');
-    
+    chatRoom.setTitle('在线网页聊天室');
+
     // 初始化
     const user_id = await SbCLi.init();
-    console.log('用户ID:', user_id);
+    GM_log('用户ID:', user_id);
     
     /*// 发送消息
     const res = await SbCLi.sendMessage({
@@ -61,7 +62,7 @@
     }
 
     // 加载历史消息
-    let hisdata = await SbCLi.loadHistory(20);
+    let hisdata = await SbCLi.loadHistory(50, 'all');
     if (hisdata) {
         hisdata.reverse().forEach(msg => { chatRoom.addMsgCard(msg) });
     }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [银河奶牛]康康运气 modified
 // @namespace    http://tampermonkey.net/
-// @version      0.0.0
+// @version      0.0.1
 // @description  .
 // @author       MagnoliaCoco
 // @license      MIT
@@ -7391,7 +7391,7 @@ Chart.register(TracePlugin);
             let profit = income;
             const chestCost = Market.chestCosts[openedItem.hrid];
             if (chestCost) {
-                const { keyAsk, keyBid, entryAsk, entryBid } = chestCost;
+                const { keyAsk = 0, keyBid = 0, entryAsk = 0, entryBid = 0 } = chestCost;
                 const cost = priceType === 'bid' ? keyAsk + entryAsk : keyBid + entryBid;
                 profit -= cost * openedItem.count;
             }

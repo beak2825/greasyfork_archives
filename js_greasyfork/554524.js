@@ -97,6 +97,7 @@
         };
     }
 
+    const css = (strings, ...values) => strings.reduce((res, str, i) => res + str + (values[i] ?? ''), '');
     // 加载依赖资源
     function loadDependencies() {
         // 加载diff2html样式
@@ -117,7 +118,7 @@
 
         // 加载自定义样式
         const style = document.createElement('style');
-        style.textContent = `
+        style.textContent = css`
             #wikiRelDiff {
                 position: fixed;
                 top: 50%;
@@ -157,7 +158,7 @@
                 border: 1px solid rgba(255, 153, 0, 0.3);
                 border-radius: 8px;
                 color: #856404;
-                word-break: break-word;
+                overflow-wrap: break-word;
             }
             #wikiRelDiff .staff-error-section {
                 padding: 10px 12px;
@@ -166,7 +167,7 @@
                 border: 1px solid rgba(255, 99, 71, 0.3);
                 border-radius: 8px;
                 color: #8B0000;
-                word-break: break-word;
+                overflow-wrap: break-word;
             }
             #wikiRelDiff .staff-warning-title, #wikiRelDiff .staff-error-title {
                 font-size: 14px;

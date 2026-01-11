@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Training Companion
+// @name         IQRPG Training Companion
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-10
-// @description  IQRPG XP Panel using Vue expRemaining + +XP lines + 100-action rolling buffer + 6s actions + soft reset per skill
+// @version      2026-01-12
+// @description  IQRPG XP Panel using Vue expRemaining + +XP lines + 100-action rolling buffer + 6s actions + soft reset per skill + interval-based engine (no stutter)
 // @author       Timpp0
 // @match        https://iqrpg.com/*
 // @match        https://www.iqrpg.com/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562136/Training%20Companion.user.js
-// @updateURL https://update.greasyfork.org/scripts/562136/Training%20Companion.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562136/IQRPG%20Training%20Companion.user.js
+// @updateURL https://update.greasyfork.org/scripts/562136/IQRPG%20Training%20Companion.meta.js
 // ==/UserScript==
 
 (function () {
@@ -53,10 +53,8 @@
      * XP TRACKING STATE
      ******************************/
     let lastSkill = null;
-
     let xpBuffer = [];
     const BUFFER_SIZE = 100;
-
     let lastXpEventKey = null;
 
     /*******************************
@@ -73,7 +71,7 @@
         wrapper.innerHTML = `
           <div class="main-section__title clickable"
                style="cursor:pointer; display:flex; justify-content:center; align-items:center; gap:0.5rem;">
-            <p>Training Companion</p>
+            <p>IQRPG Training Companion</p>
             <span class="grey-text" style="font-size:0.9rem"></span>
           </div>
           <div class="main-section__body" style="display:block">
@@ -183,7 +181,7 @@
     function updateXPHour(avgXp) {
         const panel = document.querySelector('#training-companion-panel');
         if (!panel) return;
-        const xpHr = avgXp == null ? null : avgXp * 600; // 6s per action
+        const xpHr = avgXp == null ? null : avgXp * 600;
         panel.querySelector('.xphr').textContent =
             xpHr == null ? "-" : Math.round(xpHr).toLocaleString();
     }
@@ -256,7 +254,7 @@
             xpRemaining = vue.expRemaining;
         }
 
-        // Fallback if Vue somehow missing (should rarely happen)
+        // Fallback if Vue missing
         if (xpRemaining == null) {
             const xpCurrent = XP_TABLE[level];
             const xpNext = XP_TABLE[level + 1];
@@ -304,8 +302,6 @@
     /*******************************
      * PANEL INJECTION LOOP
      *******************************/
-    let gridObserverAttached = false;
-
     const injectInterval = setInterval(() => {
         const anchor = [...document.querySelectorAll('div.grey-text')]
             .find(el => el.textContent.includes("Total Level"));
@@ -316,34 +312,12 @@
             buildPanel(anchor);
         }
 
-        if (!gridObserverAttached) {
-            attachGameGridObserver();q
-            gridObserverAttached = true;
-        }
-
         clearInterval(injectInterval);
+
+        // Start stable interval engine
+        setInterval(processTick, 300);
     }, 500);
 
-    /*******************************
-     * GAME-GRID OBSERVER (autos tick)
-     *******************************/
-    function attachGameGridObserver() {
-        function tryAttach() {
-            const grid = document.querySelector('.game-grid');
-            if (!grid) {
-                setTimeout(tryAttach, 500);
-                return;
-            }
-
-            const observer = new MutationObserver(() => {
-                clearTimeout(window._companionTick);
-                window._companionTick = setTimeout(processTick, 50);
-            });
-
-            observer.observe(grid, { childList: true, subtree: true });
-        }
-
-        tryAttach();
-    }
-// By Timpp0
 })();
+
+// Made by Timpp0

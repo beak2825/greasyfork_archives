@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         地牢计算器
 // @namespace    http://tampermonkey.net/
-// @version      0.32
+// @version      0.34
 // @description  计算地牢利润
 // @author       dying084
 // @match        https://www.milkywayidle.com/*
@@ -31,7 +31,8 @@
         const __tm_style = document.createElement('style');
         __tm_style.textContent = `
     :host {font-family: "Microsoft YaHei", sans-serif;}
-    #tm-toggle-btn {position: fixed; top: 130px; right: 20px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; z-index: 10000;}
+    #tm-toggle-btn {position: fixed; top: 130px; right: 20px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; touch-action: none; user-select: none; z-index: 10000;}
+    #tm-toggle-btn.dragging {cursor: pointer;}
     #tm-draggable-box {position: fixed; top: 100px; left: 250px; width: 900px; background: white; border: 1px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 8px; display: none; z-index: 9999; font-size: 10px;}
     #tm-drag-header {padding: 10px; background: #007bff; color: white; cursor: move; border-top-left-radius: 8px; border-top-right-radius: 8px; user-select: none; display: flex; align-items: center; gap: 10px;}
     #tm-drag-header select {background: white; color: #333; border: none; border-radius: 4px; padding: 4px 8px; font-size: 14px; cursor: pointer;}
@@ -150,6 +151,88 @@
     const buffCheck = draggableBox.querySelector('#tm-buff-check');
     const buffSelect = draggableBox.querySelector('#tm-buff-select');
 
+    // 在 Shadow Root 层面捕获删除相关事件，确保即便页面阻止默认行为，我们也能手动执行删除
+    __TM_SHADOW_ROOT__.addEventListener('keydown', function (e) {
+        if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+        const path = e.composedPath ? e.composedPath() : (e.path || []);
+        const inside = path.some(node => node && node.getRootNode && node.getRootNode() === __TM_SHADOW_ROOT__);
+        if (!inside) return;
+        const handled = performManualDelete(e.key === 'Backspace');
+        if (handled) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            saveData();
+        }
+    }, true);
+
+    __TM_SHADOW_ROOT__.addEventListener('beforeinput', function (e) {
+        const t = e.inputType || '';
+        if (!t.startsWith('delete')) return;
+        const path = e.composedPath ? e.composedPath() : (e.path || []);
+        const inside = path.some(node => node && node.getRootNode && node.getRootNode() === __TM_SHADOW_ROOT__);
+        if (!inside) return;
+        const isBackward = t === 'deleteContentBackward';
+        const handled = performManualDelete(isBackward);
+        if (handled) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            saveData();
+            return;
+        }
+        // 处理插入（例如选中文本后输入新字符替换）
+        if (t.startsWith('insert')) {
+            const text = e.data || '';
+            if (text && performManualInsert(text)) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                saveData();
+            }
+        }
+    }, true);
+
+    // 将重复的可编辑单元格处理逻辑封装成函数，便于在每次重渲染后调用
+    function attachEditableHandlers(tableEl) {
+        if (!tableEl) return;
+        tableEl.querySelectorAll('td[contenteditable="true"]').forEach(td => {
+            if (td.dataset._editableHandlerAttached) return;
+            td.dataset._editableHandlerAttached = '1';
+            td.addEventListener('input', saveData);
+            td.addEventListener('keydown', function (e) {
+                if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+                // 先阻止向上和同目标的其它监听器，以避免页面拦截或阻止默认行为
+                try { e.stopImmediatePropagation(); e.stopPropagation(); } catch (err) {}
+                const handled = performManualDelete(e.key === 'Backspace');
+                if (handled) {
+                    e.preventDefault();
+                    saveData();
+                }
+                // 未处理则不 preventDefault，允许浏览器继续执行默认删除（这通常会在连续按键时生效）
+            }, true);
+            td.addEventListener('beforeinput', function (e) {
+                // 先阻止向上和同目标的其它监听器，避免页面阻断默认行为
+                try { e.stopImmediatePropagation(); e.stopPropagation(); } catch (err) {}
+                const t = e.inputType || '';
+                if (t.startsWith('delete')) {
+                    const handled = performManualDelete(t === 'deleteContentBackward');
+                    if (handled) {
+                        e.preventDefault();
+                        saveData();
+                        return;
+                    }
+                }
+                // 处理插入（例如选中文本后输入新字符或粘贴）
+                if (t.startsWith('insert')) {
+                    const text = e.data || '';
+                    if (text && performManualInsert(text)) {
+                        e.preventDefault();
+                        saveData();
+                    }
+                }
+                // 如果都未处理，允许默认行为继续
+            }, true);
+        });
+    }
+
     thirdTableContainer.insertAdjacentElement('afterend', fetchPriceBtn);
     thirdTableContainer.insertAdjacentElement('afterend', calcKeyBtn);
 
@@ -182,7 +265,62 @@
         localStorage.setItem('globalEnhance', enhanceSelect.value);
     });
 
-    toggleBtn.onclick = () => {
+    const savedTogglePos = localStorage.getItem('tmToggleBtnPos');
+    if (savedTogglePos) {
+        try {
+            const pos = JSON.parse(savedTogglePos);
+            if (pos.left) toggleBtn.style.left = pos.left;
+            if (pos.top) toggleBtn.style.top = pos.top;
+            toggleBtn.style.right = 'auto';
+        } catch (e) { }
+    }
+
+    const DRAG_THRESHOLD = 8; 
+    let draggingToggle = false;
+    let toggleStartX = 0, toggleStartY = 0, toggleStartLeft = 0, toggleStartTop = 0;
+    let toggleDragged = false;
+
+    toggleBtn.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        try { toggleBtn.setPointerCapture(e.pointerId); } catch (err) {}
+        draggingToggle = true;
+        toggleDragged = false;
+        toggleStartX = e.clientX;
+        toggleStartY = e.clientY;
+        const rect = toggleBtn.getBoundingClientRect();
+        toggleStartLeft = parseInt(toggleBtn.style.left || rect.left);
+        toggleStartTop = parseInt(toggleBtn.style.top || rect.top);
+        toggleBtn.classList.add('dragging');
+    });
+
+    document.addEventListener('pointermove', e => {
+        if (!draggingToggle) return;
+        const dx = e.clientX - toggleStartX;
+        const dy = e.clientY - toggleStartY;
+        if (!toggleDragged && Math.hypot(dx, dy) > DRAG_THRESHOLD) toggleDragged = true;
+        if (toggleDragged) {
+            toggleBtn.style.left = (toggleStartLeft + dx) + 'px';
+            toggleBtn.style.top = (toggleStartTop + dy) + 'px';
+            toggleBtn.style.right = 'auto';
+        }
+    });
+
+    document.addEventListener('pointerup', e => {
+        if (!draggingToggle) return;
+        draggingToggle = false;
+        try { toggleBtn.releasePointerCapture(e.pointerId); } catch (err) {}
+        toggleBtn.classList.remove('dragging');
+        if (toggleDragged) {
+            localStorage.setItem('tmToggleBtnPos', JSON.stringify({left: toggleBtn.style.left, top: toggleBtn.style.top}));
+            // 阻止紧跟着的 click 事件
+            toggleBtn.dataset._preventClick = '1';
+            setTimeout(() => { delete toggleBtn.dataset._preventClick; }, 0);
+        }
+    });
+
+    toggleBtn.onclick = (e) => {
+        // 如果刚刚发生了拖动，则忽略本次点击
+        if (toggleBtn.dataset._preventClick) return;
         draggableBox.style.display = draggableBox.style.display === 'none' ? 'block' : 'none';
     };
 
@@ -1296,8 +1434,9 @@
         const rightSaved = JSON.parse(localStorage.getItem(sceneKey) || 'null')?.rightTable || sceneTables[scene].right;
         leftTable.innerHTML = generateTableHTML(leftSaved);
         rightTable.innerHTML = generateTableHTML(rightSaved);
-        [...leftTable.querySelectorAll('td[contenteditable="true"]'),
-        ...rightTable.querySelectorAll('td[contenteditable="true"]')].forEach(td => td.addEventListener('input', saveData));
+        // 为所有可编辑单元格挂载统一的处理器（使用 attachEditableHandlers）
+        attachEditableHandlers(leftTable);
+        attachEditableHandlers(rightTable);
 
         const comboKey = `${scene}_${tier}`;
         const comboSaved = JSON.parse(localStorage.getItem(comboKey) || 'null');
@@ -1323,7 +1462,7 @@
             ];
             const thirdSaved = JSON.parse(localStorage.getItem(comboKey) || 'null')?.thirdTable || thirdData;
             thirdTable.innerHTML = generateTableHTML(thirdSaved);
-            [...thirdTable.querySelectorAll('td[contenteditable="true"]')].forEach(td => td.addEventListener('input', saveData));
+            attachEditableHandlers(thirdTable);
             attachClickToAdopt(thirdTable);
         }
 
@@ -1331,6 +1470,10 @@
         rightTable.innerHTML = generateTableHTML(rightSaved);
         attachClickToAdopt(leftTable);
         attachClickToAdopt(rightTable);
+        // 重新挂载可编辑单元格的处理器（因为上面重写了 innerHTML，会移除之前绑定的事件）
+        attachEditableHandlers(leftTable);
+        attachEditableHandlers(rightTable);
+        attachEditableHandlers(thirdTable);
         [leftTable, rightTable, thirdTable].forEach(table => {
             if (!table || !table.querySelector('thead')) return;
             const headers = table.querySelectorAll('thead th');
@@ -1399,6 +1542,255 @@
     }
 
     function readTable(tableEl) { return Array.from(tableEl.querySelectorAll('tr')).map(tr => Array.from(tr.querySelectorAll('td,th')).map(td => td.textContent.trim())); }
+
+    // 处理在 Shadow DOM 内删除的兼容逻辑：当页面阻止默认删除行为时，我们在单元格上手动执行删除
+    function handleDeleteKey(e) {
+        const isBackward = e.key === 'Backspace';
+        if (performManualDelete(isBackward)) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            saveData();
+        }
+    }
+
+    function handleDeleteBeforeInput(e) {
+        const t = e.inputType || '';
+        if (!t.startsWith('delete')) return;
+        const isBackward = t === 'deleteContentBackward';
+        if (performManualDelete(isBackward)) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            saveData();
+        }
+    }
+
+    function performManualDelete(isBackward) {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return false;
+        const range = sel.getRangeAt(0);
+        // 确保 selection 位于我们的 Shadow Root 中
+        const root = range.startContainer && range.startContainer.getRootNode ? range.startContainer.getRootNode() : document;
+        if (root !== __TM_SHADOW_ROOT__) return false;
+        if (!range.collapsed) {
+            range.deleteContents();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            return true;
+        }
+
+        // 试图删除当前位置的字符，如果直接在文本节点内无法删除，则寻找相邻文本节点
+        let node = range.startContainer;
+        let offset = range.startOffset;
+
+        function findPreviousTextNode(node) {
+            // 从给定节点向左遍历查找文本节点
+            let cur = node;
+            // 如果是文本节点，先尝试其前面的同级节点
+            if (cur.nodeType === Node.TEXT_NODE) {
+                if (cur.previousSibling) cur = cur.previousSibling;
+                else cur = cur.parentNode;
+            }
+            while (cur) {
+                // 如果有子节点，取最右下的后代
+                if (cur.lastChild) {
+                    cur = cur.lastChild;
+                    continue;
+                }
+                if (cur.nodeType === Node.TEXT_NODE) return cur;
+                if (cur.previousSibling) cur = cur.previousSibling;
+                else cur = cur.parentNode;
+            }
+            return null;
+        }
+
+        function findNextTextNode(node) {
+            let cur = node;
+            if (cur.nodeType === Node.TEXT_NODE) {
+                if (cur.nextSibling) cur = cur.nextSibling;
+                else cur = cur.parentNode;
+            }
+            while (cur) {
+                if (cur.nodeType === Node.TEXT_NODE) return cur;
+                if (cur.firstChild) {
+                    cur = cur.firstChild;
+                    continue;
+                }
+                if (cur.nextSibling) cur = cur.nextSibling;
+                else cur = cur.parentNode;
+            }
+            return null;
+        }
+
+        // 文本节点内可直接删除的情形
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (isBackward) {
+                if (offset > 0) {
+                    node.deleteData(offset - 1, 1);
+                    range.setStart(node, offset - 1);
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                    return true;
+                }
+                // offset == 0 时，寻找前一个文本节点并删除最后一位
+                const prev = findPreviousTextNode(node);
+                if (prev && prev.data.length > 0) {
+                    const newOffset = prev.data.length - 1;
+                    prev.deleteData(newOffset, 1);
+                    // 如果 prev 变空，移除节点，调整范围
+                    if (prev.data.length === 0) {
+                        const parent = prev.parentNode;
+                        parent && parent.removeChild(prev);
+                    }
+                    range.setStart(prev, Math.max(0, newOffset));
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                    return true;
+                }
+            } else {
+                if (offset < node.data.length) {
+                    node.deleteData(offset, 1);
+                    range.setStart(node, offset);
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                    return true;
+                }
+                // offset at end,寻找下一个文本节点并删除首位
+                const next = findNextTextNode(node);
+                if (next && next.data.length > 0) {
+                    next.deleteData(0, 1);
+                    if (next.data.length === 0) {
+                        const parent = next.parentNode;
+                        parent && parent.removeChild(next);
+                    }
+                    range.setStart(node, offset);
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // 如果容器是元素节点（例如光标位于元素子节点之间），尝试查找前/后文本节点
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            if (isBackward) {
+                // 寻找在 (node, offset) 之前的文本节点
+                // 检查子节点 offset-1
+                let candidate = null;
+                if (offset > 0) candidate = node.childNodes[offset - 1];
+                else candidate = node;
+                // 如果 candidate 存在，查找其最右文本后代
+                if (candidate) {
+                    let cur = candidate;
+                    while (cur && cur.nodeType !== Node.TEXT_NODE) {
+                        if (cur.lastChild) cur = cur.lastChild; else break;
+                    }
+                    if (cur && cur.nodeType === Node.TEXT_NODE && cur.data.length > 0) {
+                        // 删除最后一位
+                        const newOffset = cur.data.length - 1;
+                        cur.deleteData(newOffset, 1);
+                        if (cur.data.length === 0) cur.parentNode && cur.parentNode.removeChild(cur);
+                        range.setStart(cur, Math.max(0, newOffset));
+                        range.collapse(true);
+                        sel.removeAllRanges(); sel.addRange(range);
+                        return true;
+                    }
+                }
+                // 向上查找前一个文本节点
+                const prev = findPreviousTextNode(node);
+                if (prev && prev.data.length > 0) {
+                    const newOffset = prev.data.length - 1;
+                    prev.deleteData(newOffset, 1);
+                    if (prev.data.length === 0) prev.parentNode && prev.parentNode.removeChild(prev);
+                    range.setStart(prev, Math.max(0, newOffset));
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                    return true;
+                }
+            } else {
+                // forward delete: 寻找 offset 的后继文本节点
+                let candidate = null;
+                if (offset < node.childNodes.length) candidate = node.childNodes[offset];
+                if (candidate) {
+                    let cur = candidate;
+                    while (cur && cur.nodeType !== Node.TEXT_NODE) {
+                        if (cur.firstChild) cur = cur.firstChild; else break;
+                    }
+                    if (cur && cur.nodeType === Node.TEXT_NODE && cur.data.length > 0) {
+                        cur.deleteData(0, 1);
+                        if (cur.data.length === 0) cur.parentNode && cur.parentNode.removeChild(cur);
+                        range.setStart(node, offset);
+                        range.collapse(true);
+                        sel.removeAllRanges(); sel.addRange(range);
+                        return true;
+                    }
+                }
+                const next = findNextTextNode(node);
+                if (next && next.data.length > 0) {
+                    next.deleteData(0, 1);
+                    if (next.data.length === 0) next.parentNode && next.parentNode.removeChild(next);
+                    range.setStart(node, offset);
+                    range.collapse(true);
+                    sel.removeAllRanges(); sel.addRange(range);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // 在选区处手动插入文本（用于替换选中文本或在被页面阻止默认插入时回退）
+    function performManualInsert(text) {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return false;
+        const range = sel.getRangeAt(0);
+        const root = range.startContainer && range.startContainer.getRootNode ? range.startContainer.getRootNode() : document;
+        if (root !== __TM_SHADOW_ROOT__) return false;
+        // 删除当前选区内容（如果有）
+        if (!range.collapsed) {
+            range.deleteContents();
+        }
+        if (!text) return true; // 仅删除的情况
+
+        let node = range.startContainer;
+        let offset = range.startOffset;
+
+        // 如果光标位于文本节点内，直接插入到该文本节点以便保持连续性
+        if (node.nodeType === Node.TEXT_NODE) {
+            node.insertData(offset, text);
+            range.setStart(node, offset + text.length);
+            range.collapse(true);
+            sel.removeAllRanges(); sel.addRange(range);
+            return true;
+        }
+
+        // 如果光标位于元素节点之间，尝试将文本合并到相邻的文本节点（前或后）
+        const prev = (offset > 0) ? node.childNodes[offset - 1] : null;
+        const next = (offset < node.childNodes.length) ? node.childNodes[offset] : null;
+        if (prev && prev.nodeType === Node.TEXT_NODE) {
+            prev.insertData(prev.data.length, text);
+            range.setStart(prev, prev.data.length);
+            range.collapse(true);
+            sel.removeAllRanges(); sel.addRange(range);
+            return true;
+        }
+        if (next && next.nodeType === Node.TEXT_NODE) {
+            next.insertData(0, text);
+            range.setStart(next, text.length);
+            range.collapse(true);
+            sel.removeAllRanges(); sel.addRange(range);
+            return true;
+        }
+
+        // 退而求其次，插入新文本节点
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+        range.setStartAfter(textNode);
+        range.collapse(true);
+        sel.removeAllRanges(); sel.addRange(range);
+        return true;
+    }
 
     async function fetchMarketData() {
         try {
@@ -1720,7 +2112,8 @@
         '秘法要塞_T0', '秘法要塞_T1', '秘法要塞_T2',
         '海盗基地_T0', '海盗基地_T1', '海盗基地_T2',
         '奇幻洞穴', '阴森马戏团', '秘法要塞', '海盗基地',
-        "globalBag", "globalBuff", "globalEnhance", "globalBuffLevel"
+        "globalBag", "globalBuff", "globalEnhance", "globalBuffLevel",
+        "tmToggleBtnPos"
     ];
     clearStorageBtn.addEventListener('click', function () {
         clearList.forEach(key => localStorage.removeItem(key));
@@ -1728,4 +2121,3 @@
 
     renderTables();
 })();
-

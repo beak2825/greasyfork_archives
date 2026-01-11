@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.8.1
+// @version      1.8.7
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -38,48 +38,25 @@
 
     GM_registerMenuCommand('Clear all data', () => {
         if (!window.confirm('Clear all data?')) return;
-        GM_setValue("TMN_ARBITRAGE_INPUTS", '{}');
-        GM_setValue("TMN_AUTO_OC_PREF", '');
-        //GM_setValue("TMN_CAPTCHA_KEY", '');
-        GM_setValue("TMN_CAR_PREF", '');
-        GM_setValue("TMN_EXPERIENCE", '');
-        GM_setValue("TMN_LAST_NEW_MAIL", '');
-        GM_setValue("TMN_LEAD_OC_TYPE", '');
-        GM_setValue("TMN_NEXT_DTM", '');
-        GM_setValue("TMN_NEXT_FLIGHT", '');
-        GM_setValue("TMN_NEXT_JET_FLIGHT", '');
-        GM_setValue("TMN_NEXT_OC", '');
-        GM_setValue("TMN_NEXT_TRAVEL", '');
-        GM_setValue("TMN_OC_POSITION", '');
-        GM_setValue("TMN_OVERLAY_ACCOUNT_SECTION_MINIMIZED", '');
-        GM_setValue("TMN_OVERLAY_ARBITRAGE_SECTION_MINIMIZED", '');
-        GM_setValue("TMN_OVERLAY_MINIMIZED", '');
-        GM_setValue("TMN_OVERLAY_OC_SECTION_MINIMIZED", '');
-        //GM_setValue("TMN_PASSWORD", '');
-        GM_setValue("TMN_PLAYER", '{}');
-        GM_setValue("TMN_SCRIPT_STATES", '{}');
-        GM_setValue("TMN_SENTENCE_LENGTH", '');
-
-        // GM_setValue('TMN_ARBITRAGE_INPUTS', '{}');
-        // GM_setValue('TMN_AUTO_OC_PREF', '');
-        // GM_setValue('TMN_BF_TOKEN', '');
-        // //GM_setValue('TMN_CAPTCHA_KEY', '');
-        // GM_setValue('TMN_EXPERIENCE', '');
-        // GM_setValue('TMN_LAST_NEW_MAIL', '');
-        // GM_setValue('TMN_LAST_SYDNEY_SPAWN_TIME', '');
-        // GM_setValue('TMN_NEXT_BOOZE', '');
-        // GM_setValue('TMN_NEXT_CRIME', '');
-        // GM_setValue('TMN_NEXT_DTM', '');
-        // GM_setValue('TMN_NEXT_FLIGHT', '');
-        // GM_setValue('TMN_NEXT_GTA', '');
-        // GM_setValue('TMN_NEXT_JET_FLIGHT', '');
-        // GM_setValue('TMN_NEXT_OC', '');
-        // GM_setValue('TMN_OC_INPUTS', '');
-        // GM_setValue('TMN_OVERLAY_MINIMIZED_STATES', '{}');
-        // //GM_setValue('TMN_PASSWORD', '');
-        // GM_setValue('TMN_PLAYER', '{}');
-        // GM_setValue('TMN_SCRIPT_STATES', '{}');
-        // GM_setValue('TMN_SENTENCE_LENGTH', '');
+        GM_setValue('TMN_ARBITRAGE_INPUTS', '{}');
+        GM_setValue('TMN_BF_TOKEN', '');
+        //GM_setValue('TMN_CAPTCHA_KEY', '');
+        GM_setValue('TMN_EXPERIENCE', '');
+        GM_setValue('TMN_LAST_NEW_MAIL', '{}');
+        GM_setValue('TMN_NEXT_SYDNEY_SPAWN_TIME', '0');
+        GM_setValue('TMN_NEXT_BOOZE', '');
+        GM_setValue('TMN_NEXT_CRIME', '');
+        GM_setValue('TMN_NEXT_DTM', '');
+        GM_setValue('TMN_NEXT_FLIGHT', '');
+        GM_setValue('TMN_NEXT_GTA', '');
+        GM_setValue('TMN_NEXT_JET_FLIGHT', '');
+        GM_setValue('TMN_NEXT_OC', '');
+        GM_setValue('TMN_OC_INPUTS', '{}');
+        GM_setValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}');
+        GM_setValue('TMN_PASSWORD', '');
+        GM_setValue('TMN_PLAYER', '{"name": "TMN_PLAYER"}');
+        GM_setValue('TMN_SCRIPT_STATES', '{}');
+        GM_setValue('TMN_SENTENCE_LENGTH', '');
     });
 
     if (!page.endsWith('trade.aspx')) {
@@ -116,6 +93,7 @@
     // Run on all pages
     const lblMsg = $('#ctl00_lblMsg').text();
     if (lblMsg.includes('You are in jail! You will stay in for')) HandleJail();
+    $('#divStats').css({ height: 'unset', overflow: 'unset' });
     //if (!isFullHealth()) window.top.location.href = 'credits.aspx?autoheal'; return;
 
     (function AddOverlay() {
@@ -164,7 +142,7 @@
             GM_setValue('TMN_SCRIPT_STATES', JSON.stringify(savedScriptStates));
 
             const savedOverlaySectionsMinimized = Object.assign({}, defaultOverlaySectionStates, JSON.parse(GM_getValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}')));
-            const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{}'))?.name || '';
+            const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{ "name": "TMN_PLAYER" }')).name;
             const savedPassword = GM_getValue('TMN_PASSWORD', '');
             const savedCaptchaKey = GM_getValue('TMN_CAPTCHA_KEY', '');
             
@@ -174,19 +152,25 @@
 
             const offsetRight = $('.personalbtn').css('display') === 'inline-block' ? '67px' : '16px';
             $('<style>').text(`
-                #tmn-overlay::-webkit-scrollbar { width: 10px; }
-                #tmn-overlay::-webkit-scrollbar-track { background: #1c1f26; border-radius: 11px; }
-                #tmn-overlay::-webkit-scrollbar-thumb { background-color: #444; border-radius: 11px; border: 2px solid #1c1f26; }
-                #tmn-overlay::-webkit-scrollbar-thumb:hover { background-color: #666; }
-                #tmn-overlay input:not([type="checkbox"]), .overlay-menu {
-                    width: 100%;
-                    /*max-width: 240px;*/
+                #tmn-overlay-section::-webkit-scrollbar { width: 10px; }
+                #tmn-overlay-section::-webkit-scrollbar-track { background: #1c1f26; border-radius: 11px; }
+                #tmn-overlay-section::-webkit-scrollbar-thumb { background-color: #444; border-radius: 11px; border: 2px solid #1c1f26; }
+                #tmn-overlay-section::-webkit-scrollbar-thumb:hover { background-color: #666; }
+                #tmn-overlay-section * {
                     box-sizing: border-box;
+                }
+                #tmn-overlay-section input:not([type="checkbox"]), .overlay-menu {
+                    width: 100%;
                 }
 
                 #ctl00_userInfo_lblUpdateTime {
                     color: yellow;
                     font-weight: bold;
+                }
+
+                .section-content {
+                    position: relative;
+                    width: 230px;
                 }
                 
                 // /* ---------- BASE ---------- */
@@ -334,7 +318,8 @@
                 padding: '6px', fontFamily: 'monospace', fontSize: '14px', margin: '4px 0 0 0',
                 display: savedOCInputs['AutoOCPref'] === 'Auto Accept Specific' ? 'block' : 'none'
             }).on('input', function () {
-                GM_setValue('TMN_OC_LEADER_NAMES', $(this).val());
+                savedOCInputs['SpecificLeaderNames'] = $(this).val()
+                GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
             });
 
             // Position Dropdown
@@ -433,7 +418,7 @@
                 GM_setValue('TMN_ARBITRAGE_INPUTS', JSON.stringify(savedArbitrageInputs));
             });
 
-            const $buyCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', maxWidth: '240px' }).append($buyCreditsPriceInput, $buyCreditsQuantityInput);
+            const $buyCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }).append($buyCreditsPriceInput, $buyCreditsQuantityInput);
 
             const $sellCreditsLabel = $('<label>', { text: 'Sell Credits ($ / #):' }).css({ display: 'block', margin: '12px 0 0 0', padding: 0 });
             const $sellCreditsPriceInput = $('<input>', { type: 'number' }).val(savedArbitrageInputs['SellCreditsPrice']).css({
@@ -452,7 +437,7 @@
                 GM_setValue('TMN_ARBITRAGE_INPUTS', JSON.stringify(savedArbitrageInputs));
             });
 
-            const $sellCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', maxWidth: '240px' }).append($sellCreditsPriceInput, $sellCreditsQuantityInput);
+            const $sellCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }).append($sellCreditsPriceInput, $sellCreditsQuantityInput);
 
             // Append Arbitrage section
             $arbitrageSectionContent.append($moneyOnHandLabel, $moneyOnHandInput, $buyCreditsLabel, $buyCreditsWrapper, $sellCreditsLabel, $sellCreditsWrapper);
@@ -460,7 +445,7 @@
 
             // ---------------- SCRIPT TOGGLES ----------------
             const $scriptLabel = $('<label>', { html: 'Enabled Scripts:' }).css({ margin: '12px 0 0 0', padding: 0 })
-            const $scriptDropdown = $('<div>', { id: 'script-dropdown' }).css({ width: '240px' });
+            const $scriptDropdown = $('<div>', { id: 'script-dropdown' });
             const $scriptToggle = $('<div>', { text: 'Select Scripts ▼' }).css({
                 background: '#2a2f3a', padding: '6px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #444'
             });
@@ -584,8 +569,8 @@
                 $ocTypeLabel.css('display', value === 'Lead OC' ? 'block' : 'none');
                 $ocTypeDropdown.css('display', value === 'Lead OC' ? 'block' : 'none');
                 $leaderInputs.css('display', value === 'Lead OC' ? 'block' : 'none');
-                $carPrefLabel.css( 'display', value === 'Lead OC' ? 'none' : (posText.includes('TP') || posText.includes('Any')) ? 'block' : 'none');
-                $carDropdown.css( 'display', value === 'Lead OC' ? 'none' : (posText.includes('TP') || posText.includes('Any')) ? 'block' : 'none');
+                $carPrefLabel.css( 'display', value === 'Lead OC' ? 'none' : (position.includes('TP') || position.includes('Any')) ? 'block' : 'none');
+                $carDropdown.css( 'display', value === 'Lead OC' ? 'none' : (position.includes('TP') || position.includes('Any')) ? 'block' : 'none');
                 $addToClassifiedsLabel.css( 'display', value === 'Lead OC' ? 'none' : 'block');
             });
 
@@ -711,25 +696,19 @@
                 const rankbarHtml = ` <a href="statistics.aspx?p=p"><span id="ctl00_userInfo_lblRankbarPerc" class="usrinfovalue" /*style="color: blue; font-weight: bold;*/">(${CalculateRankPercent(GM_getValue('TMN_EXPERIENCE', '?'))}%)</span></a>`
                 $('#ctl00_userInfo_lblrank').after(rankbarHtml);
             }
-
-            function CalculateRankPercent(exp) {
-                if (exp === '?') return '?';
-                const savedExp = GM_getValue('TMN_EXPERIENCE', 0);
-                const ranks = [ 'Scum', 'Wannabe', 'Thug', 'Criminal', 'Gangster', 'Hitman', 'Hired Gunner', 'Assassin', 'Boss', 'Don', 'Enemy of the State', 'Global Threat', 'Global Dominator', 'Global Disaster', 'Legend' ];
-                const rankId = ranks.indexOf($('#ctl00_userInfo_lblrank').text());
-                const totalExpAmts = [0, 5, 20, 80, 140, 220, 320, 450, 600, 800, 1100, 1500, 2000, 3000, 3000 ];
-                const perRankReq = [5, 15, 60, 60, 80, 100, 130, 150, 200, 300, 400, 500, 1000, 2000, 2000 ];
-                GM_setValue('TMN_EXPERIENCE', Math.max(savedExp, exp));
-                const rankPerc = (exp - totalExpAmts[rankId]) / perRankReq[rankId] * 100;
-                return FormatPercent(rankPerc);
-            }
-
-            function FormatPercent(rankPerc) {
-                let formattedPerc = rankPerc.toFixed(2).replace('.', ',').replace(/,(\d*[1-9])0+$|,0+$/,',$1').replace(/,$/, '');
-
-                return formattedPerc;
-            }
         };
+
+        function CalculateRankPercent(exp) {
+            if (exp === '?') return '?';
+            const savedExp = GM_getValue('TMN_EXPERIENCE', 0);
+            const ranks = [ 'Scum', 'Wannabe', 'Thug', 'Criminal', 'Gangster', 'Hitman', 'Hired Gunner', 'Assassin', 'Boss', 'Don', 'Enemy of the State', 'Global Threat', 'Global Dominator', 'Global Disaster', 'Legend' ];
+            const rankId = ranks.indexOf($('#ctl00_userInfo_lblrank').text());
+            const totalExpAmts = [0, 5, 20, 80, 140, 220, 320, 450, 600, 800, 1100, 1500, 2000, 3000, 3000 ];
+            const perRankReq = [5, 15, 60, 60, 80, 100, 130, 150, 200, 300, 400, 500, 1000, 2000, 2000 ];
+            GM_setValue('TMN_EXPERIENCE', Math.max(savedExp, exp));
+            const rankPerc = (exp - totalExpAmts[rankId]) / perRankReq[rankId] * 100;
+            return rankPerc.toFixed(2).replace('.', ',').replace(/,(\d*[1-9])0+$|,0+$/,',$1').replace(/,$/, '');
+        }
 
         function AddPersonalStatsInterceptor() {
             if (interceptorInstalled) return;
@@ -773,9 +752,15 @@
         };
 
         // ---- the callable function ----
-        const run = () => {
+        const run = async () => {
             AddPersonalStatsInterceptor();
-            UpdateRankbar();
+            await UpdateRankbar();
+            $('#ctl00_userInfo_spnRankBar a').on('click', function(e) {
+                const rankbar = $('#ctl00_userInfo_lblRankbarPerc');
+                const toggledValue = rankbar.text().includes('%') ? GM_getValue('TMN_EXPERIENCE') : `${CalculateRankPercent(GM_getValue('TMN_EXPERIENCE', '?'))}%`
+                e.preventDefault();
+                rankbar.text(`(${toggledValue})`);
+            });
         };
 
         // ---- run immediately ----
@@ -784,14 +769,6 @@
         // ---- return for later calls ----
         return run;
     })();
-
-    function isFullHealth() {
-        const $health = $('#ctl00_userInfo_lblhealth');
-        if ($health.length) {
-            if (parseInt($health.text(), 10) == 100) return true;
-            else return false;
-        }
-    }
 
     let notifyQueue = Promise.resolve();
     function Notify(msg) {
@@ -1020,10 +997,10 @@
         // Apply offsets
         const nextOC = lastOC + 6 * 60 * 60 * 1000;
         const nextDTM = lastDTM + 2 * 60 * 60 * 1000;
-        if (!(GM_getValue('TMN_NEXT_OC') === Infinity && now > nextOC)) {
+        if (!(GM_getValue('TMN_NEXT_OC') === 'Doing One' && now > nextOC)) {
             GM_setValue('TMN_NEXT_OC', nextOC);
         }
-        if (!(GM_getValue('TMN_NEXT_DTM') === Infinity && now > nextDTM)) {
+        if (!(GM_getValue('TMN_NEXT_DTM') === 'Doing One' && now > nextDTM)) {
             GM_setValue('TMN_NEXT_DTM', nextDTM);
         }
         GM_setValue('TMN_NEXT_CRIME', lastCrime + 2 * 60 * 1000);
@@ -1079,6 +1056,26 @@
 
     function isMobile() {
         return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+    
+
+    function isFullHealth() {
+        const $health = $('#ctl00_userInfo_lblhealth');
+        if ($health.length) {
+            if (parseInt($health.text(), 10) == 100) return true;
+            else return false;
+        }
+    }
+    
+    function isWaitingForSpawningBullets() {
+        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
+        const now = Date.now();
+        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
+        const nextSydneySpawnTime = GM_getValue('TMN_NEXT_SYDNEY_SPAWN_TIME', 0);
+        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 2.5 * 60000;
+        const canFly = now >= GM_getValue('TMN_NEXT_JET_FLIGHT', Infinity);
+        const notInOCorDTM = GM_getValue('TMN_NEXT_OC') != 'Doing One' && GM_getValue('TMN_NEXT_DTM') != 'Doing One';
+        return campingBullets && sydneyBFSpawningShortly && canFly && notInOCorDTM;
     }
 
     function OnLoginPage() {
@@ -1571,14 +1568,10 @@
         const nextCrime = GM_getValue('TMN_NEXT_CRIME', 0);
         const nextGTA = GM_getValue('TMN_NEXT_GTA', 0);
         const now = Date.now();
-        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 2.5 * 60000;
-        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
 
-        if (now > nextBooze && savedScriptStates.Booze && !waitingForSpawningBullets) location.href = 'crimes.aspx?p=b'
-        else if (now > nextCrime && savedScriptStates.Crimes && !waitingForSpawningBullets) location.href = 'crimes.aspx'
-        else if (now > nextGTA && savedScriptStates.GTA && !waitingForSpawningBullets) location.href = 'crimes.aspx?p=g'
+        if (now > nextBooze && savedScriptStates.Booze && !isWaitingForSpawningBullets()) location.href = 'crimes.aspx?p=b'
+        else if (now > nextCrime && savedScriptStates.Crimes && !isWaitingForSpawningBullets()) location.href = 'crimes.aspx'
+        else if (now > nextGTA && savedScriptStates.GTA && !isWaitingForSpawningBullets()) location.href = 'crimes.aspx?p=g'
         else if (!location.href.includes('jail.aspx')) location.href = 'jail.aspx';
     }
 
@@ -1593,7 +1586,7 @@
         } else if (!savedScriptStates.Jail && !isMobile()) {
             return;
         }
-
+        
         if (window.self == window.top) {
             if (document.referrer?.includes('scriptCheck')) {
                 setTimeout(() => { location.href = defaultPage }, 500);
@@ -1602,15 +1595,11 @@
                 return;
             }
         }
-
+        
+        
+        if (isWaitingForSpawningBullets() && !isMobile()) return;
+        
         const now = Date.now();
-        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 120000;
-        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
-
-        if (waitingForSpawningBullets && !isMobile()) return;
-
         const sentenceLength = parseInt(GM_getValue('TMN_SENTENCE_LENGTH', '')) || 0;
         const lblMsg = $('#ctl00_lblMsg').text();
         if (lblMsg.includes('failed') || lblMsg.includes('You cannot load')) {
@@ -1635,7 +1624,7 @@
         if ((savedScriptStates.Crimes && now > nextCrimeTime) || (savedScriptStates.GTA && now > nextGTATime) || (savedScriptStates.Booze && now > nextBoozeTime)) {
             const nextTime = Math.min(Math.min(nextCrimeTime, nextGTATime), nextBoozeTime);
             const nextAction = nextTime == nextCrimeTime ? 'crimes' : nextTime == nextGTATime ? 'GTA' : 'booze';
-            if (waitingForSpawningBullets) Log('Pausing crimes. Waiting for bullets to spawn.');
+            if (isWaitingForSpawningBullets()) Log('Pausing crimes. Waiting for bullets to spawn.');
             else Log(`Pausing jail script to do ${nextAction}`);
 
             const checkTimers = setInterval(() => {
@@ -1700,14 +1689,9 @@
             } else if (!isMobile()) return;
         }
 
+        if (isWaitingForSpawningBullets() && !isMobile()) return;
+        
         const now = Date.now();
-        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 120000;
-        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
-
-        if (waitingForSpawningBullets && !isMobile()) return;
-
         const lblMsg = $('#ctl00_lblMsg').text() || $('#ctl00_main_lblResult').text();
         const consoleMsg = window.top.$('#console').text();
         if (lblMsg.includes('You were successful') || lblMsg.includes('Unfortunately') || lblMsg.includes('shit')) {
@@ -1742,14 +1726,9 @@
 
         if (window.self == window.top && !isMobile()) return;
 
+        if (isWaitingForSpawningBullets() && !isMobile()) return;
+        
         const now = Date.now();
-        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 120000;
-        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
-
-        if (waitingForSpawningBullets && !isMobile()) return;
-
         const lblMsg = $('#ctl00_lblMsg').text();
         const lblResult = $('#ctl00_main_lblResult').text();
         const consoleMsg = window.top.$('#console').text();
@@ -1878,7 +1857,11 @@
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
         const startOCBtn = savedOCInputs['LeaderInputs']['Type'] === 'National Bank' ? $('#ctl00_main_btnStartOCRobBank') : savedOCInputs['LeaderInputs']['Type'] === 'Casino' ? $('#ctl00_main_btnStartOCRobCasino') : $('#ctl00_main_btnStartOCRobArmoury');
+        const $playerRow = $(`tr:contains(${TMN_PLAYER})`);
         const lblMsg = $('#ctl00_lblMsg');
+
+        if ($playerRow.length) GM_setValue('TMN_NEXT_OC', 'Doing One');
+        console.log(GM_getValue('TMN_NEXT_OC'));
         if (!savedScriptStates.OC) return;
 
         if (lblMsg.text().includes('jail')) {
@@ -1897,8 +1880,6 @@
         } else if (lblMsg.text().includes('successfully committed ')) {
             LogCountdown(3000, 1000, 'Returning to home', () => { location.href = defaultPage });
         } else if (!lblMsg[0] || lblMsg.text().includes('successfully') || lblMsg.text().includes('Invitation has been sent')) {
-            const $playerRow = $(`tr:contains(${TMN_PLAYER})`);
-            if ($playerRow.length) GM_setValue('TMN_NEXT_OC', Infinity);
             const amReady = $playerRow.find('td').eq(3).text().includes('Ready');
             const curCity = $('#ctl00_userInfo_lblcity').text().trim();
             // const position = location.href.split('pos=')[1]; //2 Transporter 3 WeaponMaster 4 ExplosiveExpert
@@ -1995,6 +1976,9 @@
 
     function DTMScript() {
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
+        const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{ "name": "TMN_PLAYER" }')).name;
+        const $playerRow = $(`tr:contains(${savedUsername})`);
+        if ($playerRow.length) GM_setValue('TMN_NEXT_DTM', 'Doing One');
         if (!savedScriptStates.DTM) return;
 
         const lblMsg = $('#ctl00_lblMsg').text();
@@ -2003,7 +1987,6 @@
         if (lblMsg.includes('jail')) {
             return;
         } else if ((!lblMsg[0] || lblMsg.includes('successfully accepted') || lblMsg.includes(`You've started `)) && ($('#ctl00_main_pnlDTMParticipant')[0] || $('#ctl00_main_pnlDTMLeader')[0])) {
-            GM_setValue('TMN_NEXT_DTM', Infinity);
             const leading = $('#ctl00_main_pnlDTMLeader')[0] || btnComplete;
             let quantity = leading && $('#ctl00_main_pnlDTMLeader')[0].textContent || $('#ctl00_main_pnlDTMParticipant')[0].textContent;
             quantity = quantity.split('carry is ')[1].split('\n')[0] * 1;
@@ -2067,7 +2050,7 @@
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{}'))?.name || '';
+        const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{ "name": "TMN_PLAYER" }')).name;
         if (!savedScriptStates['Auto Arbitrage']) return;
 
         const MAX_ACTIVE_OFFERS = 5;
@@ -2282,8 +2265,8 @@
 
         setTimeout(() => { location.href = defaultPage }, 3 * 60000);
 
-        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const $sydneySpawnDiv = $('<div>', {id: 'sydney-spawn', text: `Next Sydney Spawn: ${new Date(NEXT_SYDNEY_SPAWN_TIME).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })}`}).appendTo($divContentIn);
+        const nextSydneySpawnTime = GM_getValue('TMN_NEXT_SYDNEY_SPAWN_TIME', Infinity);
+        const $sydneySpawnDiv = $('<div>', {id: 'sydney-spawn', text: `Next Sydney Spawn: ${new Date(nextSydneySpawnTime).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })}`}).appendTo($divContentIn);
 
         let pollBFTimer;
         if (!submit) {
@@ -2340,11 +2323,11 @@
         const lblMsg = $('#ctl00_lblMsg').text();
         const flightRegex = /Welcome to .+ - .+!/;
         const hasFlown = flightRegex.test($("div:contains('Welcome to')").last().text());
-        const LAST_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity);
-        const NEXT_SYDNEY_SPAWN_TIME = LAST_SYDNEY_SPAWN_TIME + 120 * 60000;
+        const nextSydneySpawnTime = GM_getValue('TMN_NEXT_SYDNEY_SPAWN_TIME', 0);
+        const notInOCorDTM = GM_getValue('TMN_NEXT_OC') != 'Doing One' && GM_getValue('TMN_NEXT_DTM') != 'Doing One';
         const now = Date.now()
 
-        if (NEXT_SYDNEY_SPAWN_TIME - now <= 120000 && NEXT_SYDNEY_SPAWN_TIME - now >= 115000) {
+        if (isWaitingForSpawningBullets() && nextSydneySpawnTime - now <= 120000 && nextSydneySpawnTime - now >= 115000) {
             UniversalCaptchaSolve('6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM');
         }
 
@@ -2373,10 +2356,11 @@
                 const isWithinOneMinute = diffMs <= 60000 * 1;
 
                 if (!isWithinOneMinute) {
-                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || now.getTime() > NEXT_SYDNEY_SPAWN_TIME) {
+                    if (nextSydneySpawnTime == 0 || now.getTime() > nextSydneySpawnTime) {
                         if (text.includes('Sydney') && text.includes('FMJ')) {
-                            Log('Last Sydney BF spawn time updated.');
-                            GM_setValue('TMN_LAST_SYDNEY_SPAWN_TIME', shoutDate.getTime());
+                            Log('Next Sydney BF spawn time updated.');
+                            console.log(shoutDate.getTime() + 120 * 60000);
+                            GM_setValue('TMN_NEXT_SYDNEY_SPAWN_TIME', shoutDate.getTime() + 120 * 60000);
                             break;
                         }
                         continue;
@@ -2391,7 +2375,7 @@
 
                     if (destCity == currentCity) {
                         window.top.location.href = "/authenticated/store.aspx?p=b";
-                    } else {
+                    } else if (notInOCorDTM) {
                         const nextJetFlight = GM_getValue('TMN_NEXT_JET_FLIGHT', Infinity);
                         if (now >= nextJetFlight) window.top.location.href = `travel.aspx?d=${destCity}&bb=true`;
                         break;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name porn视频下载
 // @namespace https://gitee.com/u2222223/greasyfork_scripts/raw/master/porn/index.js
-// @version 5.2.0
+// @version 2026.01.10
 // @description 成人脚本，未满18禁止使用！！sex视频一键下载，多清晰度，支持pornhub、cam4等30个网站，需要翻墙：https://www.empflix.com | https://www.eporner.com | https://www.xvideos.com | https://www.xnxx.com | https://hellporno.net | https://xhamster.com | 
 https://www.pornhat.com | https://www.manyvids.com | https://www.moviefap.com | https://nonktube.com | https://noodlemagazine.com | https://cn.pornhub.com | https://www.redtube.com | https://spankbang.com | https://www.youjizz.com | https://avjiali.com | https://japan-whores.com | https://faptor.com | https://www.ifuckedyourgf.com | https://www.fucker.com | https://xhand.net | https://www.xozilla.xxx | https://www.babestube.com | https://w1mp.com | https://www.sexlikereal.com | https://tour1.pornbox.com | https://cn.xgroovy.com | https://zh.cam4.com | https://www.cammodels.com | https://some.porn
 // @icon https://ei.phncdn.com/www-static/favicon.ico
@@ -68,6 +68,8 @@ https://www.pornhat.com | https://www.manyvids.com | https://www.moviefap.com | 
 // @connect npornbox.com
 // @connect nxgroovy.com
 // @connect njappornxl.com
+// @connect xnxx.com
+// @connect xnxx-cdn.com
 // @connect naipornvideos.com
 // @connect nextremewhores.com
 // @connect nxxjap.com
@@ -94,6 +96,38 @@ https://www.pornhat.com | https://www.manyvids.com | https://www.moviefap.com | 
 // @connect npornoxo.com
 // @connect spankbang.com
 // @connect hls-uranus.sb-cd.com
+// @connect xvideos-cdn.com
+// @connect www.empflix.com
+// @connect www.eporner.com
+// @connect www.xvideos.com
+// @connect www.xnxx.com
+// @connect hellporno.net
+// @connect xhamster.com
+// @connect www.pornhat.com
+// @connect www.manyvids.com
+// @connect www.moviefap.com
+// @connect nonktube.com
+// @connect noodlemagazine.com
+// @connect cn.pornhub.com
+// @connect www.redtube.com
+// @connect spankbang.com
+// @connect www.youjizz.com
+// @connect avjiali.com
+// @connect japan-whores.com
+// @connect faptor.com
+// @connect www.ifuckedyourgf.com
+// @connect www.fucker.com
+// @connect xhand.net
+// @connect www.xozilla.xxx
+// @connect www.babestube.com
+// @connect w1mp.com
+// @connect www.sexlikereal.com
+// @connect tour1.pornbox.com
+// @connect cn.xgroovy.com
+// @connect zh.cam4.com
+// @connect www.cammodels.com
+// @connect some.porn
+// @connect *
 // @connect localhost
 // @grant        GM_addElement
 // @grant        GM_addStyle

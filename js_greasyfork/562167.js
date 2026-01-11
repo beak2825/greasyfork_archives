@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Prolific Enhancer
 // @namespace   Violentmonkey Scripts
-// @version      1.0
+// @version      1.1
 // @description  Provides enhanced functionalities to Prolific.
 // @author       Chantu
-// @license MIT
+// @license      MIT
 // @match        *://app.prolific.com/*
 // @grant        GM.notification
 // @grant GM.getValue
@@ -43,11 +43,7 @@
     const NOTIFY_TTL_MS = 24 * 60 * 60 * 1000;
 
     function getElementFingerprint(element) {
-        const text = element.textContent
-            .trim()
-            .replace(/\s+/g, "")
-            .replace(/\d+/g, "");
-        return `${text}`;
+        return element.dataset.testid;
     }
 
     async function saveElementFingerprint(element) {
@@ -73,9 +69,7 @@
     }
 
     async function extractSurveys() {
-        const surveys = document.querySelectorAll(
-            "section.available-studies-section li"
-        );
+        const surveys = document.querySelectorAll('li[data-testid^="study-"]');
         for (const survey of surveys) {
             const isNewFingerprint = await saveElementFingerprint(survey);
             if (isNewFingerprint && document.hidden) {
@@ -93,21 +87,30 @@
         return m ? parseFloat(m[0]) : NaN;
     }
 
+    function rateToColor(rate, min = 7, max = 15) {
+        const clamped = Math.min(Math.max(rate, min), max);
+
+        const logMin = Math.log(min);
+        const logMax = Math.log(max);
+        const logRate = Math.log(Math.max(clamped, min));
+
+        const ratio = (logRate - logMin) / (logMax - logMin);
+        const bias = Math.pow(ratio, 0.6); // Adjust bias for better color distribution
+
+        const r = Math.round(255 * (1 - bias));
+        const g = Math.round(255 * bias);
+
+        return `rgba(${r}, ${g}, 0, 0.63)`;
+    }
+
     // Function to apply the appropriate background color to the element
     function highlightElement(element) {
         const rate = extractHourlyRate(element.textContent);
 
+        element.style.backgroundColor = rateToColor(rate);
         // Set default styles
+        element.style.padding = "3px 4px";
         element.style.borderRadius = "4px";
-
-        if (rate <= 7.79) {
-            element.style.backgroundColor = "#ff000075";
-        } else if (rate >= 7.8 && rate <= 9.5) {
-            element.style.backgroundColor = "#ffff0075";
-        } else if (rate >= 9.51) {
-            element.style.backgroundColor = "#00ff0075";
-        }
-        // Set the font color to black
         element.style.color = "black";
     }
 
@@ -125,7 +128,36 @@
         }
     }
 
+    function addDirectSurveyLinks() {
+        const surveys = document.querySelectorAll('li[data-testid^="study-"]');
+        for (const survey of surveys) {
+            const testid = survey.getAttribute("data-testid");
+            const surveyId = testid.replace("study-", "");
+            const studyContent = survey.querySelector("div.study-content");
+            if (studyContent && !studyContent.querySelector(".prolific-link")) {
+                const container = document.createElement("div");
+                const link = document.createElement("a");
+                container.appendChild(link);
+                link.href = `https://app.prolific.com/studies/${surveyId}`;
+                link.textContent = "Take part in this study";
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.className = "prolific-link";
+                link.style.padding = "8px 24px";
+                link.style.borderRadius = "4px";
+                link.style.fontSize = "0.9em";
+                link.style.backgroundColor = "#0a3c95";
+                link.style.color = "white";
+                link.style.cursor = "pointer";
+                studyContent.appendChild(container);
+
+                container.style.padding = "0 16px 8px 16px";
+            }
+        }
+    }
+
     async function applyEnhancements() {
+        addDirectSurveyLinks();
         highlightHourlyRates();
         await extractSurveys();
     }

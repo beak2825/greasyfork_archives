@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         DaringInventoryV1
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-02
+// @version      2026-01-11
 // @description  Prices for loot
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js
 // @author       MOTRIMG
-// @match        https://motr-online.com/*
-// @match        http://motr-online.com/*
+// @match        https://motr-online.com/members/charinfo/invertory/*
 // @license      WTFPL
 // @run-at document-end
 // @downloadURL https://update.greasyfork.org/scripts/561231/DaringInventoryV1.user.js
@@ -28,7 +27,7 @@ function getElementByXPath(xpathExpression, contextNode = document) {
 }
 
 const htmlString = '<th style="cursor: pointer" onclick="tblSort2.initSort(4, this);">Цена гильдии</th>';
-const htmlStringNPCprice = '<th style="cursor: pointer" onclick="tblSort2.initSort(5, this);">Продажа в NPC</th>';
+const htmlStringNPCprice = '<th style="cursor: pointer" onclick="tblSort2.initSort(5, this);">Продажа в NPC +24%</th>';
 const htmlStringQuest = '<th style="cursor: pointer" onclick="tblSort2.initSort(6, this);">Квестовый</th>';
 
 function addColumn(string_to_make) {
@@ -59,17 +58,12 @@ fetch(url)
     console.log(data.table.rows);
     console.log(data.table.rows.length);
     addColumn(htmlString);
-    addColumn(htmlStringNPCprice);
-    //addColumn(htmlStringQuest);
     try {
-        //const firstRowValue = data.table.rows[0].c[1].v; // Value of B1 (assuming header row not counted in 'rows')
-        //console.log("Value:", firstRowValue);
-
         var table = getElementByXPath('//*[@id="idTbl2"]');
         for (let i = 0; i < table.rows.length; i++) { //для каждой строчки таблицы из кафры
             for(let j = 0; j < data.table.rows.length; j++) { //сверяем со строчкой из google-sheets
                 if (table.rows[i].cells[1].innerText == data.table.rows[j].c[0].v){
-                    table.rows[i].cells[4].innerText = data.table.rows[j].c[1].v
+                    table.rows[i].cells[4].innerText = Math.trunc(Number(data.table.rows[j].c[1].v))
                 }
             }
         }
@@ -81,6 +75,10 @@ fetch(url)
     .catch(err => console.error('Error fetching data:', err));
 
 
+
+
+let result
+let item_id
 const urlQuest = "https://docs.google.com/spreadsheets/d/1-h_UMxI9rBu31KNZ84bBxP-8nkcQkpKC6aALlACjfDY/gviz/tq?sheet=%D0%9D%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D1%8FID";
 fetch(urlQuest)
     .then(res => res.text())
@@ -90,6 +88,7 @@ fetch(urlQuest)
     const data = JSON.parse(jsonText);
     console.log(data.table.rows);
     console.log(data.table.rows.length);
+    addColumn(htmlStringNPCprice);
     addColumn(htmlStringQuest);
     try {
         const firstRowValue = data.table.rows[0].c[1].v; // Value of B1 (assuming header row not counted in 'rows')
@@ -98,7 +97,13 @@ fetch(urlQuest)
         var table = getElementByXPath('//*[@id="idTbl2"]');
         for (let i = 0; i < table.rows.length; i++) { //для каждой строчки таблицы из кафры
             for(let j = 0; j < data.table.rows.length; j++) { //сверяем со строчкой из google-sheets
-                if (table.rows[i].cells[1].innerText == data.table.rows[j].c[1].v){
+
+                result = table.rows[i].cells[0].outerHTML.match(/\d+/g)
+                item_id = result[1]
+
+                //if (table.rows[i].cells[1].innerText == data.table.rows[j].c[1].v){
+                if (item_id == data.table.rows[j].c[0].v){
+                    table.rows[i].cells[5].innerText = data.table.rows[j].c[6].v
                     if (data.table.rows[j].c[5].v === 1){
                         table.rows[i].cells[6].innerText = "+"
                     }
@@ -108,7 +113,6 @@ fetch(urlQuest)
     } catch (error) {
         console.log("Could not find cell value. Check data structure.");
     }
-
 })
     .catch(err => console.error('Error fetching data:', err));
 

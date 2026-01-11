@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name               Script Notifier
 // @namespace          http://github.com/0H4S
-// @version            2.0
+// @version            2.2
 // @author             OHAS
 // @description        Sistema de notificação para UserScripts.
 // @license            CC-BY-NC-ND-4.0
-// @copyright          2025 OHAS. All Rights Reserved. (https://gist.github.com/0H4S/ae2fa82957a089576367e364cbf02438)
+// @copyright          2026 OHAS. All Rights Reserved. (https://gist.github.com/0H4S/ae2fa82957a089576367e364cbf02438)
 // ==/UserScript==
 
 /*
     Copyright Notice & Terms of Use
-    Copyright © 2025 OHAS. All Rights Reserved.
+    Copyright © 2026 OHAS. All Rights Reserved.
 
     This software is the exclusive property of OHAS and is licensed for personal, non-commercial use only.
 
@@ -218,9 +218,10 @@ class ScriptNotifier {
         container.className = 'notification-container';
         const notificationType = notification.type || 'info';
         container.dataset.type = notificationType;
-        if (notification.customColor) {
-            container.style.borderLeftColor = notification.customColor;
-            container.style.setProperty('--type-color', notification.customColor);
+        const finalColor = this._resolveThemeColor(notification.customColor);
+        if (finalColor) {
+            container.style.borderLeftColor = finalColor;
+            container.style.setProperty('--type-color', finalColor);
         }
         let iconHTML = this.icons[notificationType] || this.icons['info'];
         if (notification.customIconSvg) {
@@ -248,7 +249,7 @@ class ScriptNotifier {
         `;
         this._setSafeInnerHTML(container, notificationHTML);
         if (notification.buttons && notification.buttons.length > 0) {
-            const buttonsContainer = this._createButtons(notification.buttons, notification.id);
+            const buttonsContainer = this._createButtons(notification.buttons, notification.id, notification);
             container.querySelector('.notification-content').appendChild(buttonsContainer);
         }
         this.shadowRoot.appendChild(container);
@@ -266,6 +267,19 @@ class ScriptNotifier {
                 this._openExpandedView(notification);
             };
         }
+    }
+    _resolveThemeColor(colorInput) {
+        if (!colorInput) return null;
+        if (typeof colorInput === 'string') return colorInput;
+        if (typeof colorInput === 'object') {
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isDark) {
+                return colorInput.te || colorInput.tc;
+            } else {
+                return colorInput.tc || colorInput.te;
+            }
+        }
+        return null;
     }
     _openExpandedView(notification) {
         this._ensureHostElement();
@@ -322,7 +336,7 @@ class ScriptNotifier {
             setTimeout(() => lightbox.remove(), 300);
         };
     }
-    _createButtons(buttonDataArray, notificationId) {
+    _createButtons(buttonDataArray, notificationId, notification) {
         const buttonsContainer = document.createElement('div');
         buttonsContainer.className = 'notification-buttons';
         buttonDataArray.forEach((buttonData, index) => {
@@ -330,14 +344,16 @@ class ScriptNotifier {
             const buttonText = this._getTranslatedText(buttonData.text);
             this._setSafeInnerHTML(button, this._prepareMessageHTML(buttonText));
             button.className = 'notification-button';
-            if (buttonData.backgroundColor) {
-                button.style.backgroundColor = buttonData.backgroundColor;
+            const finalBgColor = this._resolveThemeColor(buttonData.backgroundColor);
+            if (finalBgColor) {
+                button.style.backgroundColor = finalBgColor;
                 button.classList.add('custom-bg');
             } else if (index === 0) {
-                button.classList.add('primary');
+                button.classList.add('primary'); 
             }
-            if (buttonData.textColor) {
-                button.style.color = buttonData.textColor;
+            const finalTextColor = this._resolveThemeColor(buttonData.textColor);
+            if (finalTextColor) {
+                button.style.color = finalTextColor;
             }
             button.onclick = (e) => {
                 e.stopPropagation();
@@ -345,6 +361,11 @@ class ScriptNotifier {
                     switch (buttonData.action) {
                         case 'open_url': window.location.href = buttonData.value; break;
                         case 'open_url_new_tab': window.open(buttonData.value, '_blank'); break;
+                        case 'open_expanded_view':
+                            if (notification && notification.expanded && notification.expanded.content) {
+                                this._openExpandedView(notification);
+                            }
+                            break;
                     }
                 }
                 this._dismissNotification(notificationId);
@@ -418,9 +439,9 @@ class ScriptNotifier {
     }
     async _initializeLanguage() {
         const supportedLanguages = [
-            'pt-BR', 'zh-CN', 'ckb', 'ar', 'be', 'bg', 'cs', 'da', 'de', 'el',
-            'en', 'eo', 'es', 'fi', 'fr', 'he', 'hr', 'hu', 'id', 'it', 'ja',
-            'ka', 'ko', 'mr', 'nb', 'nl', 'pl', 'ro', 'ru', 'sk', 'sr', 'sv',
+            'pt-BR', 'zh-CN', 'ckb', 'ar', 'be', 'bg', 'cs', 'da', 'de', 'el', 
+            'en', 'eo', 'es', 'fi', 'fr', 'he', 'hr', 'hu', 'id', 'it', 'ja', 
+            'ka', 'ko', 'mr', 'nb', 'nl', 'pl', 'ro', 'ru', 'sk', 'sr', 'sv', 
             'th', 'tr', 'uk', 'ug', 'vi'
         ];
         let lang = this.forcedLang || await GM_getValue(this.LANG_STORAGE_KEY) || navigator.language || 'en';
@@ -476,7 +497,7 @@ class ScriptNotifier {
     async _registerUserCommands() {
         const notificationsEnabled = await GM_getValue(this.NOTIFICATIONS_ENABLED_KEY, true);
         const toggleCommandText = notificationsEnabled
-            ? this._getUIText('disableNotificationsCmd')
+            ? this._getUIText('disableNotificationsCmd') 
             : this._getUIText('enableNotificationsCmd');
         GM_registerMenuCommand(this._getUIText('showAllNotificationsCmd'), () => this.forceShowAllNotifications());
         GM_registerMenuCommand(toggleCommandText, async () => {
@@ -727,6 +748,10 @@ class ScriptNotifier {
         return `
             :host {
                 --sn-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                --sn-font-family-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+                --sn-font-size-title: 16px;
+                --sn-font-size-body: 14px;
+                --sn-font-weight-title: 600;
                 --sn-color-background: #fff;
                 --sn-color-text-primary: #000;
                 --sn-color-text-secondary: #333;
@@ -752,26 +777,25 @@ class ScriptNotifier {
                 --sn-spacing: 20px;
                 --sn-icon-size: 24px;
                 --sn-image-size: 48px;
-                --sn-font-size-title: 16px;
-                --sn-font-size-body: 14px;
-                --sn-font-weight-title: 600;
                 --sn-message-max-height: 110px;
                 --sn-animation-duration-fast: 0.2s;
                 --sn-animation-duration-medium: 0.4s;
                 --sn-animation-duration-slow: 0.8s;
+                --sn-code-bg: rgba(0, 0, 0, 0.06);
+                --sn-code-text: #c7254e;
+                --sn-code-block-bg: #f8f9fa;
+                --sn-code-block-border: #e9ecef;
+                --sn-table-border: #dee2e6;
+                --sn-table-stripe: rgba(0, 0, 0, 0.02);
+                --sn-table-header-bg: rgba(0, 0, 0, 0.04);
             }
-
             @media (prefers-color-scheme: dark) {
                 :host {
-                    --sn-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                     --sn-color-background: #333;
                     --sn-color-text-primary: #fff;
                     --sn-color-text-secondary: #ddd;
                     --sn-color-border: #444;
-                    --sn-color-link: currentColor;
-                    --sn-color-link-underline: currentColor;
                     --sn-color-dismiss: #aaa;
-                    --sn-color-dismiss-hover: #ff4d4d;
                     --sn-color-expand-hover: #3b82f6;
                     --sn-shadow-default: 0 8px 20px rgba(0, 0, 0, 0.5);
                     --sn-shadow-button-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -781,24 +805,32 @@ class ScriptNotifier {
                     --sn-scrollbar-thumb: #666;
                     --sn-scrollbar-thumb-hover: #888;
                     --sn-button-hover-bg: #777;
-                    --sn-button-hover-text: #fff;
-                    --sn-border-radius: 12px;
-                    --sn-border-radius-small: 6px;
-                    --sn-padding: 16px;
-                    --sn-notification-width: 380px;
-                    --sn-spacing: 20px;
-                    --sn-icon-size: 24px;
-                    --sn-image-size: 48px;
-                    --sn-font-size-title: 16px;
-                    --sn-font-size-body: 14px;
-                    --sn-font-weight-title: 600;
-                    --sn-message-max-height: 110px;
-                    --sn-animation-duration-fast: 0.2s;
-                    --sn-animation-duration-medium: 0.4s;
-                    --sn-animation-duration-slow: 0.8s;
+                    --sn-code-bg: rgba(255, 255, 255, 0.15);
+                    --sn-code-text: #ff7b72;
+                    --sn-code-block-bg: rgba(0, 0, 0, 0.3);
+                    --sn-code-block-border: #444;
+                    --sn-table-border: #555;
+                    --sn-table-stripe: rgba(255, 255, 255, 0.05);
+                    --sn-table-header-bg: rgba(255, 255, 255, 0.1);
                 }
             }
-
+            .notification-container,
+            .modal-card,
+            .notification-container *,
+            .modal-card * {
+                font-family: var(--sn-font-family) !important;
+                box-sizing: border-box;
+            }
+            .notification-container code,
+            .notification-container pre,
+            .notification-container kbd,
+            .notification-container samp,
+            .modal-card code,
+            .modal-card pre,
+            .modal-card kbd,
+            .modal-card samp {
+                font-family: var(--sn-font-family-code) !important;
+            }
             .notification-container {
                 position: fixed;
                 top: 0;
@@ -821,35 +853,27 @@ class ScriptNotifier {
                 align-items: flex-start;
                 padding-right: 8px;
             }
-
             .notification-container.animate-in {
                 opacity: 1;
                 transform: translateX(0);
-                transition: transform var(--sn-animation-duration-slow) cubic-bezier(0.22, 1.6, 0.5, 1), opacity var(--sn-animation-duration-medium) ease-out, top var(--sn-animation-duration-slow) cubic-bezier(0.22, 1.6, 0.5, 1);
+                transition: transform var(--sn-animation-duration-slow) cubic-bezier(0.22, 1.6, 0.5, 1), 
+                            opacity var(--sn-animation-duration-medium) ease-out, 
+                            top var(--sn-animation-duration-slow) cubic-bezier(0.22, 1.6, 0.5, 1);
             }
-
             .notification-container.animate-out {
                 opacity: 0;
                 transform: translateX(120%);
-                transition: transform var(--sn-animation-duration-medium) cubic-bezier(0.6, -0.28, 0.735, 0.045), opacity var(--sn-animation-duration-medium) ease-out, top var(--sn-animation-duration-medium) ease-out;
+                transition: transform var(--sn-animation-duration-medium) cubic-bezier(0.6, -0.28, 0.735, 0.045), 
+                            opacity var(--sn-animation-duration-medium) ease-out, 
+                            top var(--sn-animation-duration-medium) ease-out;
             }
-
-            .notification-container[data-type="success"] {
-                --type-color: #22c55e;
-            }
-
-            .notification-container[data-type="warning"] {
-                --type-color: #f97316;
-            }
-
-            .notification-container[data-type="info"] {
-                --type-color: #3b82f6;
-            }
+            .notification-container[data-type="success"] { --type-color: #22c55e; }
+            .notification-container[data-type="warning"] { --type-color: #f97316; }
+            .notification-container[data-type="info"]    { --type-color: #3b82f6; }
 
             .notification-container[data-type] {
                 border-left-color: var(--type-color);
             }
-
             .notification-icon {
                 width: var(--sn-icon-size);
                 height: var(--sn-icon-size);
@@ -857,7 +881,6 @@ class ScriptNotifier {
                 flex-shrink: 0;
                 color: var(--type-color);
             }
-
             .notification-image {
                 width: var(--sn-image-size);
                 height: var(--sn-image-size);
@@ -866,19 +889,16 @@ class ScriptNotifier {
                 flex-shrink: 0;
                 margin-right: 15px;
             }
-
             .notification-content {
                 flex-grow: 1;
                 word-break: break-word;
             }
-
             .notification-title {
                 margin: 0 0 8px;
                 font-size: var(--sn-font-size-title);
                 font-weight: var(--sn-font-weight-title);
                 color: var(--sn-color-text-primary);
             }
-
             .notification-message {
                 font-size: var(--sn-font-size-body);
                 line-height: 1.5;
@@ -886,13 +906,11 @@ class ScriptNotifier {
                 overflow-y: auto;
                 padding-right: 8px;
             }
-
             .notification-message ul,
             .notification-message ol {
                 padding-left: 1.5rem;
                 margin: 0.5rem 0;
             }
-
             .notification-message blockquote {
                 margin: 0.5em 0;
                 padding: 0.5em 1em;
@@ -900,19 +918,16 @@ class ScriptNotifier {
                 background-color: var(--sn-card-background);
                 border-left: 4px solid var(--sn-card-border);
             }
-
             .notification-message a,
             .notification-title a {
                 color: var(--sn-color-link);
                 text-decoration: none;
             }
-
             .notification-message a:hover,
             .notification-title a:hover {
                 text-decoration: underline;
                 text-decoration-color: var(--sn-color-link-underline);
             }
-
             .dismiss-button,
             .expand-button {
                 background: none;
@@ -929,22 +944,21 @@ class ScriptNotifier {
                 transition: background-color 0.2s, color 0.2s, transform 0.2s;
                 align-self: flex-start;
             }
-
             .dismiss-button:hover,
             .expand-button:hover {
                 background-color: rgba(0, 0, 0, 0.05);
                 transform: scale(1.1);
             }
-
             .dismiss-button:hover {
                 color: var(--sn-color-dismiss-hover);
                 transform: rotate(90deg);
             }
-
             .expand-button:hover {
                 color: var(--sn-color-expand-hover);
             }
-
+            .expand-button:active {
+                transform: scale(0.95);
+            }
             .notification-actions {
                 display: flex;
                 flex-direction: row;
@@ -953,11 +967,54 @@ class ScriptNotifier {
                 margin-left: 8px;
                 flex-shrink: 0;
             }
-
-            .expand-button:active {
-                transform: scale(0.95);
+            .notification-buttons {
+                margin-top: 12px;
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
             }
-
+            .notification-button {
+                background-color: var(--sn-color-border);
+                color: var(--sn-color-text-secondary);
+                border: none;
+                border-radius: var(--sn-border-radius-small);
+                padding: 6px 12px;
+                font-size: var(--sn-font-size-body);
+                font-weight: 500;
+                cursor: pointer;
+                transition: transform var(--sn-animation-duration-fast) ease-in-out, 
+                            box-shadow var(--sn-animation-duration-fast) ease-in-out, 
+                            background-color var(--sn-animation-duration-fast) ease-in-out, 
+                            filter var(--sn-animation-duration-fast) ease-in-out, 
+                            color var(--sn-animation-duration-fast) ease-in-out;
+            }
+            .notification-button:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--sn-shadow-button-hover);
+                filter: brightness(1.15);
+            }
+            .notification-button:not(.custom-bg):hover {
+                background-color: var(--sn-button-hover-bg);
+                color: var(--sn-button-hover-text);
+                filter: brightness(1);
+            }
+            .notification-button:active {
+                transform: translateY(0);
+                box-shadow: none;
+                transition-duration: 0.1s;
+            }
+            .notification-button.primary {
+                background-color: var(--sn-color-link);
+                color: #fff;
+            }
+            .notification-button.primary:hover {
+                background-color: var(--sn-color-link);
+                color: #fff;
+                filter: brightness(1.1);
+            }
+            .notification-button.custom-bg:hover {
+                filter: brightness(1.15);
+            }
             .modal-overlay {
                 position: fixed;
                 top: 0;
@@ -974,17 +1031,8 @@ class ScriptNotifier {
                 backdrop-filter: blur(4px);
                 transition: opacity 0.3s ease, visibility 0.3s;
             }
-
-            .modal-overlay.animate-in {
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .modal-overlay.animate-out {
-                opacity: 0;
-                visibility: hidden;
-            }
-
+            .modal-overlay.animate-in { opacity: 1; visibility: visible; }
+            .modal-overlay.animate-out { opacity: 0; visibility: hidden; }
             .modal-card {
                 background-color: var(--sn-color-background);
                 color: var(--sn-color-text-primary);
@@ -1001,17 +1049,8 @@ class ScriptNotifier {
                 transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
                 border: 1px solid rgba(255, 255, 255, 0.1);
             }
-
-            .modal-overlay.animate-in .modal-card {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            .modal-overlay.animate-out .modal-card {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-
+            .modal-overlay.animate-in .modal-card { transform: scale(1); opacity: 1; }
+            .modal-overlay.animate-out .modal-card { transform: scale(0.9); opacity: 0; }
             .modal-header {
                 padding: 15px 20px;
                 border-bottom: 1px solid var(--sn-color-border);
@@ -1021,14 +1060,12 @@ class ScriptNotifier {
                 position: relative;
                 background: linear-gradient(to bottom, var(--sn-color-background), rgba(0, 0, 0, 0.02));
             }
-
             .modal-title {
                 margin: 0;
                 font-size: 18px;
                 font-weight: 700;
                 text-align: center;
             }
-
             .modal-close-btn {
                 position: absolute;
                 right: 15px;
@@ -1043,12 +1080,10 @@ class ScriptNotifier {
                 transition: all 0.2s;
                 display: flex;
             }
-
             .modal-close-btn:hover {
                 background-color: rgba(0, 0, 0, 0.1);
                 color: var(--sn-color-dismiss-hover);
             }
-
             .modal-body {
                 padding: 30px;
                 overflow-y: auto;
@@ -1056,17 +1091,8 @@ class ScriptNotifier {
                 line-height: 1.7;
                 text-align: left;
             }
-
-            .modal-body>*:first-child {
-                margin-top: 0 !important;
-                padding-top: 0 !important;
-            }
-
-            .modal-body>*:last-child {
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
-            }
-
+            .modal-body>*:first-child { margin-top: 0 !important; padding-top: 0 !important; }
+            .modal-body>*:last-child { margin-bottom: 0 !important; padding-bottom: 0 !important; }
             .modal-body img,
             .modal-body video {
                 display: block;
@@ -1076,16 +1102,23 @@ class ScriptNotifier {
                 border-radius: 8px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
-
             .modal-body img {
                 cursor: zoom-in;
                 transition: transform 0.2s;
             }
-
-            .modal-body img:hover {
-                transform: scale(1.01);
+            .modal-body img:hover { transform: scale(1.01); }
+            .modal-body ul,
+            .modal-body ol {
+                padding-left: 1.5rem;
+                margin: 0.5rem 0;
             }
-
+            .modal-body blockquote {
+                margin: 0.5em 0;
+                padding: 0.5em 1em;
+                border-radius: 0;
+                background-color: var(--sn-card-background);
+                border-left: 4px solid var(--sn-card-border);
+            }
             .lightbox-overlay {
                 position: fixed;
                 top: 0;
@@ -1101,11 +1134,7 @@ class ScriptNotifier {
                 transition: opacity 0.3s ease;
                 cursor: zoom-out;
             }
-
-            .lightbox-overlay.visible {
-                opacity: 1;
-            }
-
+            .lightbox-overlay.visible { opacity: 1; }
             .lightbox-img {
                 max-width: 95vw;
                 max-height: 95vh;
@@ -1115,98 +1144,85 @@ class ScriptNotifier {
                 transform: scale(0.9);
                 transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
             }
-
-            .lightbox-overlay.visible .lightbox-img {
-                transform: scale(1);
-            }
-
-            .modal-body::-webkit-scrollbar {
-                width: 8px;
-            }
-
-            .modal-body::-webkit-scrollbar-track {
-                background: transparent;
-            }
-
-            .modal-body::-webkit-scrollbar-thumb {
-                background: #bbb;
+            .lightbox-overlay.visible .lightbox-img { transform: scale(1); }
+            .modal-body::-webkit-scrollbar { width: 8px; }
+            .modal-body::-webkit-scrollbar-track { background: transparent; }
+            .modal-body::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+            .modal-body::-webkit-scrollbar-thumb:hover { background: #999; }
+            .notification-message::-webkit-scrollbar { width: 6px; }
+            .notification-message::-webkit-scrollbar-track { background: var(--sn-scrollbar-track); border-radius: 3px; }
+            .notification-message::-webkit-scrollbar-thumb { background: var(--sn-scrollbar-thumb); border-radius: 3px; }
+            .notification-message::-webkit-scrollbar-thumb:hover { background: var(--sn-scrollbar-thumb-hover); }
+            .notification-message code,
+            .modal-body code {
+                font-size: 0.9em !important;
+                color: var(--sn-code-text);
+                background-color: var(--sn-code-bg);
+                padding: 2px 5px;
                 border-radius: 4px;
+                word-wrap: break-word;
             }
-
-            .modal-body::-webkit-scrollbar-thumb:hover {
-                background: #999;
-            }
-
-            .notification-buttons {
-                margin-top: 12px;
-                display: flex;
-                gap: 8px;
-                flex-wrap: wrap;
-            }
-
-            .notification-button {
-                background-color: var(--sn-color-border);
-                color: var(--sn-color-text-secondary);
-                border: none;
+            .notification-message pre,
+            .modal-body pre {
+                background-color: var(--sn-code-block-bg);
+                border: 1px solid var(--sn-code-block-border);
                 border-radius: var(--sn-border-radius-small);
-                padding: 6px 12px;
-                font-size: var(--sn-font-size-body);
-                font-weight: 500;
-                cursor: pointer;
-                transition: transform var(--sn-animation-duration-fast) ease-in-out, box-shadow var(--sn-animation-duration-fast) ease-in-out, background-color var(--sn-animation-duration-fast) ease-in-out, filter var(--sn-animation-duration-fast) ease-in-out, color var(--sn-animation-duration-fast) ease-in-out;
+                padding: 12px;
+                margin: 10px 0;
+                font-size: 0.85em !important;
+                color: var(--sn-color-text-primary);
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                word-break: break-word !important;
+                max-height: 300px;
+                overflow-y: auto;
             }
-
-            .notification-button:hover {
-                transform: translateY(-2px);
-                box-shadow: var(--sn-shadow-button-hover);
-                filter: brightness(1.15);
+            .notification-message pre code,
+            .modal-body pre code {
+                background-color: transparent !important;
+                color: inherit !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                font-size: inherit !important;
             }
-
-            .notification-button:not(.custom-bg):hover {
-                background-color: var(--sn-button-hover-bg);
-                color: var(--sn-button-hover-text);
-                filter: brightness(1);
+            .notification-message pre code,
+            .modal-body pre code {
+                background-color: transparent;
+                color: inherit;
+                padding: 0;
+                border-radius: 0;
             }
-
-            .notification-button:active {
-                transform: translateY(0);
-                box-shadow: none;
-                transition-duration: 0.1s;
+            .notification-message table,
+            .modal-body table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 12px 0;
+                font-size: 0.9em;
+                background-color: transparent;
             }
-
-            .notification-button.primary {
-                background-color: var(--sn-color-link);
-                color: #fff;
+            .notification-message th,
+            .notification-message td,
+            .modal-body th,
+            .modal-body td {
+                padding: 8px 10px;
+                border: 1px solid var(--sn-table-border);
+                text-align: center;
+                vertical-align: middle;
             }
-
-            .notification-button.primary:hover {
-                background-color: var(--sn-color-link);
-                color: #fff;
-                filter: brightness(1.1);
+            .notification-message th,
+            .modal-body th {
+                background-color: var(--sn-table-header-bg);
+                font-weight: 600;
+                color: var(--sn-color-text-primary);
             }
-
-            .notification-button.custom-bg:hover {
-                filter: brightness(1.15);
+            .notification-message tr:nth-child(even),
+            .modal-body tr:nth-child(even) {
+                background-color: var(--sn-table-stripe);
             }
-
-            .notification-message::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            .notification-message::-webkit-scrollbar-track {
-                background: var(--sn-scrollbar-track);
-                border-radius: 3px;
-            }
-
-            .notification-message::-webkit-scrollbar-thumb {
-                background: var(--sn-scrollbar-thumb);
-                border-radius: 3px;
-            }
-
-            .notification-message::-webkit-scrollbar-thumb:hover {
-                background: var(--sn-scrollbar-thumb-hover);
-            }
-
+            .notification-message pre::-webkit-scrollbar { width: 6px; height: 6px; }
+            .notification-message pre::-webkit-scrollbar-track { background: transparent; }
+            .notification-message pre::-webkit-scrollbar-thumb { background: var(--sn-scrollbar-thumb); border-radius: 3px; }
+            .notification-message pre::-webkit-scrollbar-thumb:hover { background: var(--sn-scrollbar-thumb-hover); }
         `;
     }
 }

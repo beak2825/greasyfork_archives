@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.9.3-alpha
+// @version      0.9.6-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -47,28 +47,27 @@ var version = GM_info.script.version;
             checkIntervalMs: 300000  // 5 minutos entre verificações quando aguardando regeneração
         },
         wave: {
-            enabled: true,
+            enabled: false,
             parallelAttacks: 10,
             skillId: -2,
             minDelayBetweenAttacks: 30,
-            damageTarget: 3000000,
-            autoFSP: true,
-            minStaminaForFSP: 100,
+            damageTarget: 5000000,
+            autoFSP: false,
+            minStaminaForFSP: 50,
             lootDeadBeforeFSP: true,
             monsterFilter: {
-                includeNames: [],  // Whitelist - only target these names (empty = all)
-                excludeNames: []   // Blacklist - skip these names
+                includeNames: [],
+                excludeNames: [],
             }
         },
         dungeonWave: {
-            // enabled: true,  // ← ADICIONAR ISTO - necessário para module activation
             priorityMode: 'lowest_hp',
             minMobHp: 4000000,
             monsterFilter: {
                 maxHp: 0,
                 minDamage: 0,
-                includeNames: [],  // Whitelist - only target these names
-                excludeNames: []   // Blacklist - skip these names
+                includeNames: [],
+                excludeNames: []
             },
             loot: {
                 enabled: true,
@@ -90,13 +89,13 @@ var version = GM_info.script.version;
             delayVariation: 0.3,
             randomizeDelays: true,
             smartDamage: {
-                enabled: false,
+                enabled: true,
                 skills: {
                     slash: { skillId: 0, damageLimit: 0, name: 'Slash' },
-                    powerSlash: { skillId: -1, damageLimit: 320000, name: 'Power Slash' },
-                    heroicSlash: { skillId: -2, damageLimit: 1600000, name: 'Heroic Slash' },
-                    ultimateSlash: { skillId: -3, damageLimit: 3400000, name: 'Ultimate Slash' },
-                    legendarySlash: { skillId: -4, damageLimit: 6800000, name: 'Legendary Slash' }
+                    powerSlash: { skillId: -1, damageLimit: 1000000, name: 'Power Slash' },
+                    heroicSlash: { skillId: -2, damageLimit: 6000001, name: 'Heroic Slash' },
+                    ultimateSlash: { skillId: -3, damageLimit: 10000001, name: 'Ultimate Slash' },
+                    legendarySlash: { skillId: -4, damageLimit: 20000001, name: 'Legendary Slash' }
                 }
             }
         },
@@ -117,12 +116,12 @@ var version = GM_info.script.version;
             password: ''
         },
         pvp: {
-            enabled: true,// Enable/disable PvP automation
-            autoMode: 'limited',
+            enabled: true,
+            autoMode: 'all',
             limitedBattles: 10,
             autoSurrender: false,
-            autoSurrenderThreshold: 10,  // % HP to trigger surrender
-            ultraFastMode: true,  // Ultra Fast PvP mode (attacks via GM_xmlhttpRequest)
+            autoSurrenderThreshold: 10,
+            ultraFastMode: true,
             ultraFastConfig: {
                 skillId: 0,  // 0 = Slash (1 token), -1 = Power Slash (5 tokens, 10x damage)
                 minDelayBetweenAttacks: 50,  // ms between attacks (minimum possible)
@@ -131,15 +130,15 @@ var version = GM_info.script.version;
                 maxConsecutiveBattles: 30,  // Max battles per session (0 = unlimited)
                 useSmartRotation: false,  // Use smart skill rotation pattern
                 smartRotationPattern: [
-                    { skill: 18, count: 1 },  // 1x skill 18
-                    { skill: 9, count: 1 },   // 1x skill 9
-                    { skill: -1, count: 1 },  // 1x skill -1
-                    { skill: 0, count: 9 }    // 9x skill 0
+                    { skill: 18, count: 1 },
+                    { skill: 9, count: 1 },
+                    { skill: -1, count: 1 },
+                    { skill: 0, count: 9 }
                 ]
             }
         },
         ui: {
-            activeTab: 'quick', // 'quick' | 'farm' | 'dungeon' | 'battle' | 'pvp' | 'interface'
+            activeTab: 'profiles',
             panel: {
                 width: PANEL_WIDTH_PX,
                 position: null,
@@ -147,7 +146,7 @@ var version = GM_info.script.version;
             },
             logFloater: {
                 enabled: true,
-                position: 'bottom-right', // 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
+                position: 'bottom-right',
                 minimized: false
             },
             panelStates: {
@@ -166,7 +165,7 @@ var version = GM_info.script.version;
             toasts: {
                 enabled: true,
                 durationMs: 4500,
-                position: 'bottom-right'
+                position: 'top-right'
             }
         },
         floatingHelpers: {
@@ -201,27 +200,28 @@ var version = GM_info.script.version;
             note: 'Update these values manually. Check your equipped items by clicking Info buttons in inventory.php'
         },
         ultraFastAttack: {
-            enabled: false,
-            maxParallelBattles: 5,  // Number of monsters to join/attack simultaneously
-            maxConcurrentBattles: 5,  // Max battles you can join at once in the wave (server limit)
-            attacksPerMonster: 1,  // Number of attacks before leaving
-            skillId: -2,  // Skill to use for attacks (0 = Slash, -1 = Power Slash, etc.)
-            delayBetweenBatches: 3000,  // Delay between batches of parallel operations (ms)
-            delayAfterJoin: 500,  // ⏳ CRITICAL: Delay after joins complete, before starting attacks (ms) - prevents race condition
-            monsterNames: [],  // Filter by monster names (empty = all available)
-            minMobHp: 100000,  // Minimum HP to consider
-            priorityMode: 'lowest_hp',  // 'lowest_hp' | 'highest_hp' | 'random'
-            autoReturnToWave: true  // Automatically return to wave after batch completes
+            enabled: true,
+            maxParallelBattles: 20,
+            maxConcurrentBattles: 10,
+            attacksPerMonster: 1,
+            skillId: -2,
+            delayBetweenBatches: 3000,
+            delayAfterJoin: 500,
+            monsterNames: [],
+            minMobHp: 100000,
+            priorityMode: 'lowest_hp',
+            autoReturnToWave: true
         },
         ultraFastLoot: {
-            enabled: false,
-            maxParallelLoots: 10,  // Number of monsters to loot simultaneously
-            delayBetweenLoots: 100,  // Delay between individual loot requests (ms)
-            autoLootAfterFarm: false,  // Auto-loot after ultraFastAttack completes
-            onlyEligible: true,  // Only loot monsters the user has joined
+            enabled: true,
+            maxParallelLoots: 10,
+            delayBetweenLoots: 100,
+            autoLootAfterFarm: false,
+            onlyEligible: true,
+            lootSpecialBossBeforeFSP: true,
             filters: {
-                monsterNames: [],  // Filter by monster names (empty = all)
-                excludeNames: []  // Exclude specific monster names
+                monsterNames: [],
+                excludeNames: []
             }
         },
         ultraFastStamina: {
@@ -231,42 +231,49 @@ var version = GM_info.script.version;
             reactionType: '1'  // Reaction type: '1' (👍), '2' (❤️), '3' (😂), '4' (😮), '5' (😢)
         },
         ultraFastDungeon: {
-            enabled: false,
-            maxParallelBattles: 5,  // Number of monsters to attack simultaneously
-            attacksPerMonster: 3,  // Number of attacks per monster before checking
-            delayBetweenBatches: 2000,  // Delay between batches (ms)
+            enabled: true,
+            maxParallelBattles: 20,
+            attacksPerMonster: 10,
+            delayBetweenBatches: 2000,
             monsterFilter: {
                 maxHp: 0,
                 minDamage: 0,
-                includeNames: [],  // Whitelist - only target these names
-                excludeNames: []   // Blacklist - skip these names
+                includeNames: [],
+                excludeNames: []
             },
-            minMobHp: 1000000,  // Minimum HP to consider
-            priorityMode: 'lowest_damage',  // 'lowest_damage' | 'highest_damage' | 'lowest_hp' | 'highest_hp'
-            checkJoined: true,  // Check monsters you've already joined
-            checkNotJoined: true,  // Check monsters not yet joined
-            useSmartDamage: true,  // Use smart damage calculation to respect thresholds
+            minMobHp: 1000000,
+            priorityMode: 'lowest_damage',
+            checkJoined: true,
+            checkNotJoined: true,
+            useSmartDamage: true,
             damageThresholds: {
-                default: 3000000,  // Default damage limit for most monsters
-                magus: 1000000     // Damage limit for Magus monsters
+                default: 3000000,
+                magus: 1000000
             },
-            safetyMargin: 1,  // Stop at 95% of threshold to avoid overshooting (0.0-1.0)
-            respectExpLimit: true  // Never exceed 20% of monster's total HP (required for full EXP on kill)
+            safetyMargin: 1,
+            respectExpLimit: true,
+            monsterNames: ['magus:5000000', 'rukka:6000000', 'gorvash:20000000']
         },
         specialBossFarm: {
-            enabled: false,
-            targetDamage: 50000000,  // 50M damage minimum for special loot
-            skillId: -2,  // Skill to use (-2 = 50 stamina, -3 = 100 stamina, -4 = 200 stamina)
-            parallelAttacks: 5,  // Number of simultaneous attacks per boss
-            minDelayBetweenAttacks: 50,  // Minimum delay between attack rounds (ms)
-            autoStaminaPotion: true,  // Automatically use stamina potions when low
-            minStaminaForPotion: 100,  // Use potion if stamina below this value
-            lootDeadBeforeFSP: true,  // Try looting dead monsters before FSP during boss farm (may trigger level up)
-            checkInterval: 300000,  // 5 minutes (300000ms) - wait time if no bosses found
-            bossNames: ['General', 'Seraph', 'King', 'Empress', 'Bastion', 'Oathkeeper']  // Boss keywords to search for
+            enabled: true,
+            targetDamage: 1000000000,
+            skillId: -2,
+            parallelAttacks: 5,
+            minDelayBetweenAttacks: 50,
+            autoStaminaPotion: true,
+            minStaminaForPotion: 50,
+            lootDeadBeforeFSP: true,
+            checkInterval: 300000,
+            bossNames: ['General', 'Seraph', 'King', 'Empress', 'Bastion', 'Oathkeeper']
         },
         imageBlocker: {
             enabled: false  // Block images to reduce bandwidth and improve performance
+        },
+        merchantAutoBuy: {
+            enabled: false,
+            checkInterval: 3600000,  // Check every hour (1h)
+            autoNotify: true,  // Notify when renewal is near
+            retryAfterInsufficientGold: 3600000  // Retry after 1 hour if not enough gold
         }
     });
 
@@ -1875,7 +1882,16 @@ var version = GM_info.script.version;
             timers.clear();
         }
 
-        return { addInterval, addTimeout, clear, disposeAll };
+        return { 
+            addInterval, 
+            addTimeout, 
+            clear, 
+            disposeAll,
+            // Aliases for convenience
+            repeat: addInterval,
+            timeout: addTimeout,
+            dispose: disposeAll
+        };
     }
 
     function createEventBus() {
@@ -2162,6 +2178,382 @@ var version = GM_info.script.version;
                 
                 logger.info(`💊 Heal Potion disponível: ${heal.quantity}x`);
                 return useItem(heal.invId, 'Heal Potion');
+            }
+        };
+    }
+
+    // ==================== MERCHANT SERVICE ====================
+    // Automated merchant purchases with weekly renewal and gold management
+    
+    /**
+     * Create Merchant Auto-Buy service
+     * Handles weekly automated purchases from merchant
+     * 
+     * @param {Object} context - Script context
+     * @returns {Object} Merchant service
+     */
+    function createMerchantService(context) {
+        const { logger, http, config, notifications, numbers, storage } = context;
+        
+        const MERCHANT_PRIORITIES = [
+            { name: 'Small Stamina Potion', price: 50, priority: 1, checkPrice: true },
+            { name: 'Arcane Treat S', priority: 2 },
+            { name: 'Any Egg', priority: 3, oneTimeBuy: true, pattern: /Egg$/i },
+            { name: 'Arcane Treat M', priority: 4 },
+            { name: 'Full Stamina Potion', price: 1000, priority: 5, minGold: 10000000 }
+        ];
+        
+        return {
+            /**
+             * Get current gold from page
+             */
+            getCurrentGold() {
+                // Try merchant page goldBalance element first
+                const goldBalanceEl = context.dom.query('#goldBalance');
+                if (goldBalanceEl) {
+                    const goldText = goldBalanceEl.textContent.trim();
+                    logger.debug(`Gold text from #goldBalance: "${goldText}"`);
+                    const parsed = numbers.parse(goldText);
+                    logger.debug(`Parsed gold: ${parsed}`);
+                    return parsed;
+                }
+                
+                // Fallback: try generic selectors
+                const goldText = context.dom.query('.gold-display, .gold-count, [class*="gold"]')?.textContent;
+                if (goldText) {
+                    return numbers.parse(goldText);
+                }
+                
+                // Try to get from stats header
+                const statsText = document.body.textContent;
+                const goldMatch = statsText.match(/🪙\s*([\d,]+)/);
+                if (goldMatch) {
+                    return numbers.parse(goldMatch[1]);
+                }
+                
+                logger.warn('Could not find gold amount on page');
+                return 0;
+            },
+            
+            /**
+             * Check if week has passed since last purchase
+             */
+            shouldPerformWeeklyPurchase() {
+                const lastPurchase = storage.get('merchant.lastWeeklyPurchase', 0);
+                const now = Date.now();
+                const weekInMs = 7 * 24 * 60 * 60 * 1000;
+                const timeSince = now - lastPurchase;
+                return timeSince >= weekInMs;
+            },
+            
+            /**
+             * Scan merchant page for available items
+             */
+            async scanMerchantItems() {
+                try {
+                    const result = await http.get('/merchant.php', { parseJson: false });
+                    if (!result.success) {
+                        logger.error('Failed to fetch merchant page:', result.message);
+                        return [];
+                    }
+                    
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(result.data, 'text/html');
+                    const items = [];
+                    
+                    // Parse merchant items from page - real structure
+                    const itemCards = doc.querySelectorAll('.card[data-merch-id]');
+                    logger.debug(`Found ${itemCards.length} card elements`);
+                    
+                    itemCards.forEach(card => {
+                        const merchId = card.getAttribute('data-merch-id');
+                        const price = parseInt(card.getAttribute('data-price'), 10) || 0;
+                        const currency = card.getAttribute('data-currency');
+                        const maxQuantity = parseInt(card.getAttribute('data-maxq'), 10) || 0;
+                        const bought = parseInt(card.getAttribute('data-bought'), 10) || 0;
+                        const remaining = maxQuantity - bought;
+                        
+                        const nameEl = card.querySelector('.name');
+                        const name = nameEl ? nameEl.textContent.trim() : '';
+                        
+                        // Check if buy button is disabled
+                        const buyBtn = card.querySelector('.buy-btn');
+                        const disabled = buyBtn ? buyBtn.hasAttribute('disabled') : true;
+                        
+                        logger.debug(`Scanning: ${name}, currency="${currency}", price=${price}, remaining=${remaining}, disabled=${disabled}`);
+                        
+                        if (merchId && name && !disabled && remaining > 0) {
+                            items.push({ 
+                                name, 
+                                price, 
+                                merchId, 
+                                remaining,
+                                currency,
+                                maxQuantity,
+                                bought
+                            });
+                            logger.debug(`✓ Added: ${name}, price: ${price} ${currency}, remaining: ${remaining}`);
+                        } else if (merchId && name) {
+                            logger.debug(`✗ Skipped ${name}: disabled=${disabled}, remaining=${remaining}`);
+                        }
+                    });
+                    
+                    logger.info(`Found ${items.length} available merchant items`);
+                    return items;
+                } catch (error) {
+                    logger.error('Error scanning merchant items:', error);
+                    return [];
+                }
+            },
+            
+            /**
+             * Purchase specific item
+             */
+            async buyItem(merchId, quantity = 1) {
+                try {
+                    logger.info(`Attempting to buy item (merch_id: ${merchId}, qty: ${quantity})`);
+                    
+                    const result = await http.post('/merchant_buy.php', `merch_id=${merchId}&qty=${quantity}`);
+                    
+                    if (result.success && result.data) {
+                        const data = result.data;
+                        
+                        // Check if purchase was successful
+                        if (data.status === 'success') {
+                            logger.info(`✅ Purchase completed! Remaining: ${data.remaining}`);
+                            logger.info(`💰 Gold: ${data.gold}, 💎 Gems: ${data.gems}`);
+                            return { 
+                                success: true, 
+                                message: data.message,
+                                remaining: data.remaining,
+                                gold: data.gold,
+                                gems: data.gems,
+                                currency: data.currency
+                            };
+                        } else {
+                            logger.warn(`Purchase failed: ${data.message || 'Unknown error'}`);
+                            return { success: false, message: data.message || 'Purchase failed' };
+                        }
+                    }
+                    
+                    logger.warn('Purchase response invalid:', result);
+                    return { success: false, message: result.message || 'Invalid response' };
+                } catch (error) {
+                    logger.error('Error buying item:', error);
+                    return { success: false, message: error.message };
+                }
+            },
+            
+            /**
+             * Perform weekly automated purchases
+             */
+            async performWeeklyPurchases() {
+                if (!this.shouldPerformWeeklyPurchase()) {
+                    const lastPurchase = storage.get('merchant.lastWeeklyPurchase', 0);
+                    const nextPurchase = lastPurchase + (7 * 24 * 60 * 60 * 1000);
+                    const timeLeft = nextPurchase - Date.now();
+                    const hoursLeft = Math.ceil(timeLeft / (60 * 60 * 1000));
+                    
+                    logger.info(`⏰ Weekly purchase already done. Next in ${hoursLeft} hours`);
+                    return { success: false, message: `Already purchased this week. Next in ${hoursLeft}h` };
+                }
+                
+                logger.info('🛒 Starting weekly merchant purchases...');
+                notifications?.info('Starting merchant auto-buy');
+                
+                // Get current gold
+                const currentGold = this.getCurrentGold();
+                logger.info(`💰 Current gold: ${numbers.format(currentGold)}`);
+                
+                // Scan available items
+                const items = await this.scanMerchantItems();
+                if (items.length === 0) {
+                    logger.warn('No merchant items found');
+                    return { success: false, message: 'No items found' };
+                }
+                
+                // Get previously bought eggs (one-time items)
+                const boughtEggs = storage.get('merchant.boughtEggs', []);
+                
+                const results = [];
+                let totalSpent = 0;
+                let insufficientGold = false;
+                
+                // Sort by priority
+                const sortedPriorities = [...MERCHANT_PRIORITIES].sort((a, b) => a.priority - b.priority);
+                
+                for (const priority of sortedPriorities) {
+                    // Check if we have minimum gold required
+                    if (priority.minGold && currentGold < priority.minGold) {
+                        logger.info(`⏩ Skipping ${priority.name} (requires ${numbers.format(priority.minGold)} gold)`);
+                        continue;
+                    }
+                    
+                    // Find matching item
+                    let matchingItem = null;
+                    if (priority.pattern) {
+                        matchingItem = items.find(item => priority.pattern.test(item.name));
+                    } else {
+                        matchingItem = items.find(item => item.name === priority.name);
+                    }
+                    
+                    if (!matchingItem) {
+                        logger.debug(`Item not found: ${priority.name}`);
+                        continue;
+                    }
+                    
+                    // **CRITICAL: NEVER buy with gems**
+                    if (matchingItem.currency !== 'gold') {
+                        logger.warn(`❌ SKIPPING ${matchingItem.name} - currency is ${matchingItem.currency} (ONLY BUY WITH GOLD!)`);
+                        continue;
+                    }
+                    
+                    // Check if it's a one-time buy and already bought
+                    if (priority.oneTimeBuy) {
+                        if (boughtEggs.includes(matchingItem.name)) {
+                            logger.info(`⏩ Already bought: ${matchingItem.name} (one-time item)`);
+                            continue;
+                        }
+                    }
+                    
+                    // Verify price if needed (avoid gems)
+                    if (priority.checkPrice && matchingItem.price !== priority.price) {
+                        logger.warn(`⚠️ Price mismatch for ${priority.name}: expected ${priority.price}g, found ${matchingItem.price}`);
+                        logger.warn('❌ SKIPPING - might be wrong item!');
+                        continue;
+                    }
+                    
+                    // Check if we have enough gold
+                    const goldNeeded = matchingItem.price * matchingItem.remaining;
+                    if ((currentGold - totalSpent) < goldNeeded) {
+                        logger.warn(`⚠️ Insufficient gold for ${matchingItem.name} (need ${numbers.format(goldNeeded)}, have ${numbers.format(currentGold - totalSpent)})`);
+                        insufficientGold = true;
+                        results.push({
+                            item: matchingItem.name,
+                            success: false,
+                            message: 'Insufficient gold'
+                        });
+                        continue;
+                    }
+                    
+                    // Purchase the item
+                    logger.info(`🛒 Buying ${matchingItem.name} x${matchingItem.remaining} (${numbers.format(goldNeeded)} gold)`);
+                    const purchaseResult = await this.buyItem(matchingItem.merchId, matchingItem.remaining);
+                    
+                    if (purchaseResult.success) {
+                        totalSpent += goldNeeded;
+                        
+                        // Track one-time purchases
+                        if (priority.oneTimeBuy) {
+                            boughtEggs.push(matchingItem.name);
+                            storage.set('merchant.boughtEggs', boughtEggs);
+                        }
+                        
+                        notifications?.success(`Bought ${matchingItem.name} x${matchingItem.remaining}`);
+                    }
+                    
+                    results.push({
+                        item: matchingItem.name,
+                        success: purchaseResult.success,
+                        message: purchaseResult.message,
+                        spent: goldNeeded
+                    });
+                    
+                    // Small delay between purchases
+                    await sleep(500);
+                }
+                
+                // Helper to get next Monday at 00:00
+                const getNextMonday = () => {
+                    const now = new Date();
+                    const dayOfWeek = now.getDay(); // 0=Sunday, 1=Monday, 2=Tuesday, etc.
+                    const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek) % 7 || 7;
+                    
+                    const nextMonday = new Date(now);
+                    nextMonday.setDate(now.getDate() + daysUntilMonday);
+                    nextMonday.setHours(0, 0, 0, 0);
+                    
+                    return nextMonday.getTime();
+                };
+                
+                // Update last purchase timestamp based on results
+                const successCount = results.filter(r => r.success).length;
+                const skippedCount = results.filter(r => !r.success && r.message !== 'Insufficient gold').length;
+                
+                if (successCount > 0) {
+                    // Purchases were made successfully - schedule for next Monday
+                    const nextMonday = getNextMonday();
+                    storage.set('merchant.lastWeeklyPurchase', nextMonday - 7 * 24 * 60 * 60 * 1000); // Set as if purchased Monday last week
+                    logger.info(`✅ Weekly purchases complete: ${successCount}/${results.length} items bought`);
+                    logger.info(`💰 Total spent: ${numbers.format(totalSpent)} gold`);
+                    const daysUntilMonday = Math.ceil((nextMonday - Date.now()) / (24 * 60 * 60 * 1000));
+                    logger.info(`⏰ Next merchant check scheduled for Monday in ${daysUntilMonday} days`);
+                    notifications?.success(`Merchant: ${successCount} items bought! Next check on Monday`);
+                } else if (insufficientGold) {
+                    // Not enough gold - retry in 1 hour
+                    storage.set('merchant.nextRetryTime', Date.now() + config.get().merchantAutoBuy.retryAfterInsufficientGold);
+                    logger.warn('⏰ Insufficient gold. Will retry in 1 hour');
+                    notifications?.warn('Merchant: Not enough gold, will retry in 1h');
+                } else if (results.length === 0 || skippedCount === results.length) {
+                    // No items available to purchase (all already bought or not in priority list)
+                    // Schedule next check for next Monday (shop reset)
+                    const nextMonday = getNextMonday();
+                    storage.set('merchant.lastWeeklyPurchase', nextMonday - 7 * 24 * 60 * 60 * 1000); // Set as if purchased Monday last week
+                    const daysUntilMonday = Math.ceil((nextMonday - Date.now()) / (24 * 60 * 60 * 1000));
+                    logger.info('ℹ️ No items available for purchase (shop already cleared or items not in priority list)');
+                    logger.info(`⏰ Next merchant check scheduled for Monday in ${daysUntilMonday} days`);
+                    notifications?.info(`Merchant: Shop cleared, next check on Monday (in ${daysUntilMonday} days)`);
+                } else {
+                    logger.warn('❌ No purchases were successful');
+                }
+                
+                return { success: true, results, totalSpent, insufficientGold };
+            },
+            
+            /**
+             * Check and notify if week is approaching
+             */
+            checkWeeklyRenewal() {
+                const lastPurchase = storage.get('merchant.lastWeeklyPurchase', 0);
+                
+                // If never purchased before, don't show misleading negative hours
+                if (lastPurchase === 0) {
+                    logger.debug('⏰ No previous purchase - will purchase on next check');
+                    return;
+                }
+                
+                const now = Date.now();
+                const nextPurchase = lastPurchase + (7 * 24 * 60 * 60 * 1000);
+                const timeLeft = nextPurchase - now;
+                const hoursLeft = Math.ceil(timeLeft / (60 * 60 * 1000));
+                
+                if (hoursLeft <= 24 && hoursLeft > 0) {
+                    logger.info(`⏰ Merchant renewal in ${hoursLeft} hours`);
+                    if (config.get().merchantAutoBuy?.autoNotify) {
+                        notifications?.info(`Merchant renewal in ${hoursLeft}h`);
+                    }
+                } else if (hoursLeft > 24) {
+                    const daysLeft = Math.floor(hoursLeft / 24);
+                    logger.debug(`⏰ Next merchant purchase in ${daysLeft}d ${hoursLeft % 24}h`);
+                } else {
+                    logger.debug('⏰ Merchant purchase is overdue');
+                }
+            },
+            
+            /**
+             * Check if it's time to retry after insufficient gold
+             */
+            shouldRetryAfterInsufficientGold() {
+                const nextRetry = storage.get('merchant.nextRetryTime', 0);
+                if (nextRetry === 0) return false;
+                
+                const now = Date.now();
+                if (now >= nextRetry) {
+                    // Clear retry timestamp
+                    storage.set('merchant.nextRetryTime', 0);
+                    return true;
+                }
+                return false;
             }
         };
     }
@@ -6540,6 +6932,189 @@ var version = GM_info.script.version;
         return { root: host, shadow: shadow.getElementById('autods-app') };
     }
 
+    /**
+     * Create Wave View Navigation Service
+     * Manages switching between alive/dead monsters views on wave pages
+     * 
+     * @param {Object} context - Script context (logger, etc.)
+     * @returns {Object} View navigation service
+     * @returns {function(): boolean} isDeadMonstersView - Check if in dead view
+     * @returns {function(): Promise<boolean>} switchToDeadMonstersView - Switch to dead view
+     * @returns {function(): Promise<boolean>} switchToAliveMonstersView - Switch to alive view
+     * @returns {function(): Promise<boolean>} ensureAliveMonstersView - Ensure in alive view
+     * 
+     * @example
+     * const viewNav = context.waveViewNavigation;
+     * if (!viewNav.isDeadMonstersView()) {
+     *   await viewNav.switchToDeadMonstersView();
+     * }
+     */
+    function createWaveViewNavigationService(context) {
+        const { logger } = context;
+        
+        return {
+            /**
+             * Verifica se está na view de dead monsters
+             * @returns {boolean} - true se estiver na view de dead monsters
+             */
+            isDeadMonstersView() {
+                const toggleBtn = document.querySelector('button[onclick*="toggleDead"], #toggleDeadBtn');
+                if (toggleBtn) {
+                    const text = toggleBtn.textContent || '';
+                    return text.includes('Show Alive') || text.includes('🙈');
+                }
+                
+                // Alternativa: verificar se URL tem dead=1 ou se botão tem emoji específico
+                const buttons = document.querySelectorAll('button');
+                for (const btn of buttons) {
+                    const text = btn.textContent || '';
+                    if (text.includes('Show Alive')) return true;
+                    if (text.includes('Show unclaimed')) return false;
+                }
+                
+                return false;
+            },
+            
+            /**
+             * Muda para view de dead monsters com verificação robusta
+             * @returns {Promise<boolean>} - true se conseguiu mudar
+             */
+            async switchToDeadMonstersView() {
+                if (this.isDeadMonstersView()) {
+                    logger.debug('💀 Já está na view de dead monsters');
+                    return true;
+                }
+                
+                // Procurar botão "Show unclaimed monsters" (👁️)
+                const buttons = document.querySelectorAll('button');
+                for (const btn of buttons) {
+                    const text = btn.textContent || '';
+                    if (text.includes('Show unclaimed') || (text.includes('👁️') && text.includes('unclaimed'))) {
+                        logger.info('💀 Mudando para unclaimed monsters view...');
+                        
+                        // Capturar estado ANTES do clique
+                        const wasDeadView = this.isDeadMonstersView();
+                        
+                        // Clicar no botão
+                        btn.click();
+                        
+                        // Aguardar e verificar mudança com retries (delays aumentados)
+                        const maxRetries = 5;
+                        const retryDelays = [500, 800, 1200, 1500, 2000];
+                        
+                        for (let i = 0; i < maxRetries; i++) {
+                            await sleep(retryDelays[i]);
+                            
+                            const isDeadNow = this.isDeadMonstersView();
+                            
+                            if (isDeadNow && !wasDeadView) {
+                                logger.info(`✅ [Dead View] Mudança confirmada após ${retryDelays[i]}ms`);
+                                
+                                // Pausa adicional para garantir que os monster cards carreguem no DOM
+                                logger.debug('💀 Aguardando carregamento dos monster cards...');
+                                await sleep(800);
+                                
+                                return true;
+                            }
+                            
+                            logger.debug(`💀 [Dead View] Tentativa ${i + 1}/${maxRetries}: isDeadView=${isDeadNow}`);
+                        }
+                        
+                        // Se chegou aqui, pode ter mudado mas não detectamos
+                        const finalCheck = this.isDeadMonstersView();
+                        if (finalCheck) {
+                            logger.warn('⚠️ [Dead View] Mudança detectada após retries (lento)');
+                            
+                            // Pausa adicional mesmo neste caso
+                            await sleep(800);
+                            
+                            return true;
+                        }
+                        
+                        logger.warn('⚠️ [Dead View] Botão clicado mas mudança não confirmada');
+                        return false;
+                    }
+                }
+                
+                logger.warn('⚠️ Botão de toggle para dead monsters não encontrado');
+                return false;
+            },
+            
+            /**
+             * Muda para view de alive monsters com verificação robusta
+             * @returns {Promise<boolean>} - true se conseguiu mudar
+             */
+            async switchToAliveMonstersView() {
+                if (!this.isDeadMonstersView()) {
+                    logger.debug('✅ Já está na view de alive monsters');
+                    return true;
+                }
+                
+                // Procurar botão "Show Alive monsters" (🙈)
+                const buttons = document.querySelectorAll('button');
+                for (const btn of buttons) {
+                    const text = btn.textContent || '';
+                    if (text.includes('Show Alive') || (text.includes('🙈') && text.includes('Alive'))) {
+                        logger.info('✅ Voltando para alive monsters view...');
+                        
+                        // Capturar estado ANTES do clique
+                        const wasDeadView = this.isDeadMonstersView();
+                        
+                        // Clicar no botão
+                        btn.click();
+                        
+                        // Aguardar e verificar mudança com retries (delays aumentados)
+                        const maxRetries = 5;
+                        const retryDelays = [500, 800, 1200, 1500, 2000];
+                        
+                        for (let i = 0; i < maxRetries; i++) {
+                            await sleep(retryDelays[i]);
+                            
+                            const isDeadNow = this.isDeadMonstersView();
+                            
+                            if (!isDeadNow && wasDeadView) {
+                                logger.info(`✅ [Alive View] Mudança confirmada após ${retryDelays[i]}ms`);
+                                
+                                // Pausa adicional para garantir que os monster cards carreguem no DOM
+                                logger.debug('✅ Aguardando carregamento dos monster cards...');
+                                await sleep(800);
+                                
+                                return true;
+                            }
+                            
+                            logger.debug(`✅ [Alive View] Tentativa ${i + 1}/${maxRetries}: isDeadView=${isDeadNow}`);
+                        }
+                        
+                        // Se chegou aqui, pode ter mudado mas não detectamos
+                        const finalCheck = this.isDeadMonstersView();
+                        if (!finalCheck) {
+                            logger.warn('⚠️ [Alive View] Mudança detectada após retries (lento)');
+                            
+                            // Pausa adicional mesmo neste caso
+                            await sleep(800);
+                            
+                            return true;
+                        }
+                        
+                        logger.warn('⚠️ [Alive View] Botão clicado mas mudança não confirmada');
+                        return false;
+                    }
+                }
+                
+                logger.warn('⚠️ Botão de toggle para alive monsters não encontrado');
+                return false;
+            },
+            
+            /**
+             * Garante que está na view de alive monsters
+             * @returns {Promise<boolean>} - true se estiver ou conseguiu mudar
+             */
+            async ensureAliveMonstersView() {
+                return this.switchToAliveMonstersView();
+            }
+        };
+    }
+
     function createModuleRegistry(logger) {
         const modules = [];
 
@@ -6688,60 +7263,46 @@ var version = GM_info.script.version;
                 
                 if (currentStamina < skillCost) {
                     // Check if should use FSP
-                    if ((cfg.wave.autoFSP || cfg.wave.lootDeadBeforeFSP || cfg.wave.lootSpecialBossBeforeFSP) && currentStamina < (cfg.wave.minStaminaForFSP || 100)) {
+                    if ((cfg.wave.autoFSP || cfg.wave.lootDeadBeforeFSP) && currentStamina < (cfg.wave.minStaminaForFSP || 100)) {
                         logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}). Tentando recuperar...`);
                         
                         // 🆕 Verificar se já tentamos loot dead e devemos ir direto para FSP
                         const skipLootDead = sessionStorage.getItem('autods_skip_loot_dead_use_fsp');
-                        const skipLootSpecialBoss = sessionStorage.getItem('autods_skip_loot_special_boss_use_fsp');
                         
-                        // 🆕 PRIORIDADE 1: ANTES de usar FSP, tentar lootar dead monsters normais para possível level up
+                        // 🆕 ANTES de usar FSP, tentar lootar dead monsters (incluindo special bosses) para possível level up
+                        // lootDeadMonsters já gerencia TUDO: normal monsters + special bosses (100B+)
                         if (cfg.wave.lootDeadBeforeFSP !== false && !skipLootDead) {
-                            logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters...');
-                            const deadMonstersLooted = await this.tryLootDeadMonstersBeforeFSP(context);
+                            logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters (incluindo special bosses)...');
                             
-                            if (deadMonstersLooted) {
-                                // Verificar se stamina recuperou com level up
-                                const newStamina = context.stamina.getCurrent();
-                                logger.info(`💀 [LOOT DEAD] Processo concluído! Nova stamina: ${newStamina}`);
-                                if (newStamina >= skillCost) {
-                                    logger.info('🎉 Stamina recuperada após loot! Level up detectado.');
-                                    await this.ensureAliveMonstersView(context);
-                                    continue; // Continuar loop sem usar FSP
-                                }
-                                logger.info(`💀 [LOOT DEAD] Stamina ainda baixa (${newStamina}). Tentando special bosses...`);
+                            // Chamar lootDeadMonsters diretamente do ultraFastLootModule
+                            const lootModule = context.moduleRegistry?.getModule('ultraFastLoot');
+                            if (!lootModule || typeof lootModule.lootDeadMonsters !== 'function') {
+                                logger.error('❌ [LOOT DEAD] ultraFastLootModule ou lootDeadMonsters não encontrado');
+                                sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
                             } else {
-                                logger.info(`💀 [LOOT DEAD] Retornou false (sem loot). Continuando para special bosses...`);
+                                const lootResult = await lootModule.lootDeadMonsters(context);
+                                
+                                if (lootResult.levelUp) {
+                                    // Level up detectado! Stamina recuperou
+                                    const newStamina = context.stamina.getCurrent();
+                                    logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${newStamina}`);
+                                    if (newStamina >= skillCost) {
+                                        logger.info('🎉 Stamina recuperada após loot! Continuando wave farm...');
+                                        continue; // Continuar loop sem usar FSP
+                                    }
+                                }
+                                
+                                if (lootResult.count === 0) {
+                                    logger.info('💀 [LOOT DEAD] Nenhum dead monster looteado. Tentando FSP...');
+                                    sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
+                                } else {
+                                    logger.info(`💀 [LOOT DEAD] ${lootResult.count} monster(s) looteado(s), mas stamina não recuperou. Tentando FSP...`);
+                                }
                             }
-                            // Se retornou false, a flag já foi setada dentro da função
-                            // A página pode ter recarregado, então este código pode não executar
                         } else if (skipLootDead) {
-                            logger.info('💀 [LOOT DEAD] Flag detectada - pulando loot dead, indo para special bosses ou FSP...');
+                            logger.info('💀 [LOOT DEAD] Flag detectada - pulando loot dead, indo para FSP...');
                             // Limpar flag após usar
                             sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                        }
-                        
-                        // 🆕 PRIORIDADE 2: Tentar lootar SPECIAL BOSSES (100B+ HP) para possível level up
-                        logger.debug(`👑 [CHECK] Verificando condições para loot special boss: cfg.lootSpecialBossBeforeFSP=${cfg.wave.lootSpecialBossBeforeFSP}, skipFlag=${!!skipLootSpecialBoss}`);
-                        if (cfg.wave.lootSpecialBossBeforeFSP !== false && !skipLootSpecialBoss) {
-                            logger.info('👑 [SPECIAL BOSS LOOT] Tentando lootar special bosses...');
-                            const specialBossRecovered = await this.tryLootSpecialBosses(context, skillCost);
-                            
-                            if (specialBossRecovered) {
-                                logger.info('🎉 [SPECIAL BOSS LOOT] Stamina recuperada após loot de special boss!');
-                                // Limpar AMBAS as flags para poder tentar novamente no próximo ciclo
-                                sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                                sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
-                                await this.ensureAliveMonstersView(context);
-                                continue; // Continuar loop sem usar FSP
-                            }
-                            logger.info('👑 [SPECIAL BOSS LOOT] Stamina não recuperou. Tentando FSP...');
-                        } else if (skipLootSpecialBoss) {
-                            logger.info('👑 [SPECIAL BOSS LOOT] Flag detectada - pulando loot special boss, indo para FSP...');
-                            // Limpar flag após usar
-                            sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
-                        } else {
-                            logger.info('👑 [SPECIAL BOSS LOOT] Pulado - configuração desabilitada ou flag ativa');
                         }
                         
                         // Tentar usar FSP
@@ -6753,9 +7314,8 @@ var version = GM_info.script.version;
                             const fspUsed = await context.inventory.useFullStaminaPotion();
                             if (fspUsed) {
                                 logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
-                                // Limpar AMBAS as flags ao usar FSP com sucesso (reset completo)
+                                // Limpar flag ao usar FSP com sucesso (reset completo)
                                 sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                                sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
                                 await sleep(500);
                                 window.location.href = window.location.href;
                                 return;
@@ -6765,11 +7325,10 @@ var version = GM_info.script.version;
                         }
                     }
                     
-                    // 🆕 Após todo o processo de stamina recovery, limpar flags para próxima tentativa
-                    // Isso permite tentar loot dead/special boss novamente após aguardar regeneração
-                    logger.debug('🔄 Limpando flags de loot para permitir nova tentativa após regeneração...');
+                    // 🆕 Após todo o processo de stamina recovery, limpar flag para próxima tentativa
+                    // Isso permite tentar loot dead novamente após aguardar regeneração
+                    logger.debug('🔄 Limpando flag de loot para permitir nova tentativa após regeneração...');
                     sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                    sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
                     
                     // Wait for stamina regen
                     logger.info(`⏳ Stamina baixa (${currentStamina}). Aguardando regeneração...`);
@@ -6889,245 +7448,6 @@ var version = GM_info.script.version;
 
         
         /**
-         * 🆕 Tenta lootar dead monsters antes de usar FSP
-         * Retorna true se fez loot (pode ter subido de nível)
-         */
-        async tryLootDeadMonstersBeforeFSP(context) {
-            const { logger } = context;
-            
-            // 1. PRIMEIRO: Alternar para dead monsters view para poder ver quantos há
-            logger.info('💀 [LOOT DEAD] Alternando para view de dead monsters...');
-            const switchedToDead = await this.switchToDeadMonstersView(context);
-            if (!switchedToDead) {
-                logger.warn('⚠️ [LOOT DEAD] Não foi possível mudar para view de dead monsters');
-                return false;
-            }
-            
-            // 2. Aguardar página atualizar + retry loop para conexões lentas
-            logger.info('💀 [LOOT DEAD] Aguardando página atualizar (com retry para conexões lentas)...');
-            let unclaimedCount = 0;
-            const maxRetries = 5;
-            const retryDelays = [1000, 1500, 2000, 3000, 4000]; // Aumenta progressivamente
-            
-            for (let retryIdx = 0; retryIdx < maxRetries; retryIdx++) {
-                await sleep(retryDelays[retryIdx]);
-                unclaimedCount = this.getUnclaimedKillsCount();
-                logger.debug(`💀 [LOOT DEAD] Tentativa ${retryIdx + 1}/${maxRetries}: ${unclaimedCount} dead monsters encontrados`);
-                
-                // Se encontrou algum, pode continuar
-                if (unclaimedCount > 0) {
-                    logger.info(`💀 [LOOT DEAD] ✅ Dead monsters detectados na tentativa ${retryIdx + 1}`);
-                    break;
-                }
-            }
-            
-            logger.info(`💀 [LOOT DEAD] Dead monsters encontrados (final): ${unclaimedCount}`);
-            
-            if (unclaimedCount === 0) {
-                logger.info('💀 [LOOT DEAD] Nenhum dead monster para lootar.');
-                // 🆕 Setar flag ANTES de voltar para alive view (pois pode recarregar)
-                logger.info('💀 [LOOT DEAD] Setando flag para usar FSP após reload...');
-                sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
-                // NÃO voltar para alive view aqui - deixar para tryLootSpecialBosses decidir
-                logger.info('💀 [LOOT DEAD] Mantendo dead view para possível loot de special bosses...');
-                return false;
-            }
-            
-            logger.info(`💀 [LOOT DEAD] ${unclaimedCount} dead monsters disponíveis - executando loot...`);
-            
-            // 3. Executar Ultra Fast Loot nos dead monsters
-            const looted = await this.executeQuickDeadLoot(context);
-            logger.info(`💀 [LOOT DEAD] Loot executado: ${looted ? 'SUCESSO' : 'FALHA'}`);
-            
-            // 🆕 Se SUCESSO, voltar para alive view
-            if (looted) {
-                logger.info('💀 [LOOT DEAD] Voltando para alive monsters view após sucesso...');
-                await this.switchToAliveMonstersView(context);
-                await sleep(1000);
-                return true;
-            }
-            
-            // 🆕 Se falhou (todos bosses filtrados), setar flag e MANTER dead view
-            logger.info('💀 [LOOT DEAD] Setando flag para pular loot dead na próxima tentativa...');
-            sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
-            logger.info('💀 [LOOT DEAD] Mantendo dead view para possível loot de special bosses...');
-            
-            // NÃO voltar para alive view - deixar tryLootSpecialBosses fazer isso
-            // Isso evita reload desnecessário entre as duas tentativas de loot
-            
-            return false;
-        },
-        
-        /**
-         * Tenta lootar SPECIAL BOSSES (100B+ HP) um por vez para recuperar stamina via level up
-         * @param {Object} context - Script context
-         * @param {number} skillCost - Stamina cost needed
-         * @returns {Promise<boolean>} - true se stamina recuperou, false caso contrário
-         */
-        async tryLootSpecialBosses(context, skillCost) {
-            const { logger, notifications, numbers } = context;
-            
-            const BOSS_HP_THRESHOLD = 100_000_000_000; // 100B
-            
-            // 🆕 CAPTURAR EXP E STAMINA INICIAIS (antes de qualquer loot)
-            const initialStamina = context.stamina.getCurrent();
-            const initialExpInfo = context.loot.getPlayerExpInfo(); // Reutilizar função do lootService
-            
-            if (!initialExpInfo) {
-                logger.warn('⚠️ [SPECIAL BOSS LOOT] Não foi possível obter informações de EXP iniciais');
-                sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
-                return false;
-            }
-            
-            logger.info(`👑 [SPECIAL BOSS LOOT] Estado inicial: Stamina=${initialStamina}, EXP=${numbers.format(initialExpInfo.currentExp)}/${numbers.format(initialExpInfo.maxExp)} (${initialExpInfo.percent.toFixed(2)}%)`);
-            
-            // Variável para simular acúmulo de EXP
-            let simulatedCurrentExp = initialExpInfo.currentExp;
-            
-            // 1. Verificar se já está em dead monsters view (pode ter vindo de tryLootDeadMonstersBeforeFSP)
-            if (!this.isDeadMonstersView()) {
-                logger.info('👑 [SPECIAL BOSS LOOT] Alternando para view de dead monsters...');
-                const switchedToDead = await this.switchToDeadMonstersView(context);
-                if (!switchedToDead) {
-                    logger.warn('⚠️ [SPECIAL BOSS LOOT] Não foi possível mudar para view de dead monsters');
-                    sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
-                    await this.switchToAliveMonstersView(context);
-                    return false;
-                }
-            } else {
-                logger.info('👑 [SPECIAL BOSS LOOT] Já está em dead monsters view - continuando...');
-            }
-            
-            // 2. Aguardar e fazer retry para detectar dead monsters
-            logger.info('👑 [SPECIAL BOSS LOOT] Aguardando página atualizar...');
-            const maxRetries = 5;
-            const retryDelays = [1000, 1500, 2000, 3000, 4000];
-            
-            let specialBossCards = [];
-            
-            for (let retryIdx = 0; retryIdx < maxRetries; retryIdx++) {
-                await sleep(retryDelays[retryIdx]);
-                
-                // Procurar dead monsters
-                let cards = Array.from(document.querySelectorAll('.monster-card[data-dead="1"]'));
-                if (cards.length === 0) {
-                    cards = Array.from(document.querySelectorAll('.monster-card'));
-                    cards = cards.filter(card => {
-                        const hpText = card.textContent || '';
-                        return hpText.includes('0 /') || /HP[:\s]*0[^0-9]/.test(hpText);
-                    });
-                }
-                
-                // Filtrar APENAS special bosses (100B+ HP)
-                specialBossCards = [];
-                for (const card of cards) {
-                    const hpRow = Array.from(card.querySelectorAll('.stat-row')).find(row => row.querySelector('.stat-icon.hp'));
-                    const hpValueNode = hpRow?.querySelector('.stat-value');
-                    const hpText = hpValueNode?.textContent ?? '';
-                    const hpMatch = hpText.match(/(\d{1,3}(?:,\d{3})*|\d+)\s*\/\s*(\d{1,3}(?:,\d{3})*|\d+)/);
-                    const hp = hpMatch ? numberFromText(hpMatch[2]) : null;
-                    
-                    // APENAS special bosses (100B+)
-                    if (hp && hp >= BOSS_HP_THRESHOLD) {
-                        const nameElement = card.querySelector('h3, .monster-name, .card-title');
-                        const monsterName = nameElement ? nameElement.textContent.trim() : 'Unknown';
-                        
-                        let monsterId = card.getAttribute('data-monster-id');
-                        if (!monsterId) {
-                            const link = card.querySelector('a[href*="battle.php"]');
-                            if (link) {
-                                const match = link.href.match(/[?&]id=(\d+)/);
-                                monsterId = match ? match[1] : null;
-                            }
-                        }
-                        
-                        if (monsterId) {
-                            specialBossCards.push({ monsterId, name: monsterName, hp });
-                        }
-                    }
-                }
-                
-                logger.debug(`👑 [SPECIAL BOSS LOOT] Tentativa ${retryIdx + 1}/${maxRetries}: ${specialBossCards.length} special bosses encontrados`);
-                
-                if (specialBossCards.length > 0) {
-                    logger.info(`👑 [SPECIAL BOSS LOOT] ✅ Special bosses detectados na tentativa ${retryIdx + 1}`);
-                    break;
-                }
-            }
-            
-            if (specialBossCards.length === 0) {
-                logger.info('👑 [SPECIAL BOSS LOOT] Nenhum special boss para lootar.');
-                sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
-                await this.switchToAliveMonstersView(context);
-                await sleep(1000);
-                return false;
-            }
-            
-            logger.info(`👑 [SPECIAL BOSS LOOT] ${specialBossCards.length} special bosses disponíveis - looteando UM POR VEZ...`);
-            
-            // 3. Lootar special bosses UM POR VEZ, verificando stamina após cada loot
-            const userId = context.userSession.getUserId();
-            if (!userId) {
-                logger.error('❌ [SPECIAL BOSS LOOT] User ID não encontrado');
-                sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
-                await this.switchToAliveMonstersView(context);
-                return false;
-            }
-            
-            let looted = 0;
-            for (const boss of specialBossCards) {
-                logger.info(`👑 [SPECIAL BOSS LOOT] Looteando ${boss.name} (${formatNumber(boss.hp)} HP)...`);
-                
-                try {
-                    const result = await context.http.lootMonster(boss.monsterId, userId);
-                    
-                    if (result.success) {
-                        looted++;
-                        
-                        // 🆕 EXTRAIR EXP GANHO DA RESPOSTA
-                        const expGained = result.data?.rewards?.exp || 0;
-                        
-                        logger.info(`✅ [SPECIAL BOSS LOOT] ${boss.name} looteado! +${numbers.format(expGained)} EXP`);
-                        notifications.success(`👑 ${boss.name} looteado! +${numbers.format(expGained)} EXP`, 2000);
-                        
-                        // 🆕 SIMULAR ACÚMULO DE EXP
-                        simulatedCurrentExp += expGained;
-                        
-                        // 🆕 DETECTAR LEVEL UP (EXP ultrapassou o máximo)
-                        const leveledUp = simulatedCurrentExp >= initialExpInfo.maxExp;
-                        
-                        if (leveledUp) {
-                            logger.info(`🎉 [SPECIAL BOSS LOOT] LEVEL UP DETECTADO! (${numbers.format(initialExpInfo.currentExp)} + ${numbers.format(expGained)} >= ${numbers.format(initialExpInfo.maxExp)})`);
-                            logger.info(`🎉 [SPECIAL BOSS LOOT] Stamina recuperada após ${looted} loot(s)! Voltando para wave...`);
-                            notifications.success(`🎉 Level up! Stamina recuperada após ${looted} special boss(es)`, 3000);
-                            await this.switchToAliveMonstersView(context);
-                            await sleep(1000);
-                            return true;
-                        }
-                        
-                        // Log progress
-                        const expNeeded = initialExpInfo.maxExp - simulatedCurrentExp;
-                        logger.info(`👑 [SPECIAL BOSS LOOT] Progresso: ${numbers.format(simulatedCurrentExp)}/${numbers.format(initialExpInfo.maxExp)} (faltam ${numbers.format(expNeeded)} XP para level up)`);
-                    } else {
-                        logger.warn(`⚠️ [SPECIAL BOSS LOOT] Falha ao lootar ${boss.name}: ${result.message}`);
-                    }
-                } catch (error) {
-                    logger.error(`❌ [SPECIAL BOSS LOOT] Erro ao lootar ${boss.name}:`, error);
-                }
-                
-                // Delay entre loots (1 segundo)
-                await sleep(1000);
-            }
-            
-            // Se chegou aqui, looteou todos mas stamina não recuperou
-            logger.info(`👑 [SPECIAL BOSS LOOT] ${looted} special boss(es) looteado(s), mas stamina não recuperou.`);
-            sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
-            await this.switchToAliveMonstersView(context);
-            await sleep(1000);
-            return false;
-        },
-        
-        /**
          * Obtém contador de dead monsters (Unclaimed kills)
          * Mais robusto: tenta múltiplas formas de detecção para conexões lentas
          */
@@ -7172,84 +7492,34 @@ var version = GM_info.script.version;
         
         /**
          * Verifica se está na view de dead monsters
+         * @deprecated Use context.waveViewNavigation.isDeadMonstersView() instead
          */
         isDeadMonstersView() {
-            const toggleBtn = document.querySelector('button[onclick*="toggleDead"], #toggleDeadBtn');
-            if (toggleBtn) {
-                const text = toggleBtn.textContent || '';
-                return text.includes('Show Alive') || text.includes('🙈');
-            }
-            
-            // Alternativa: verificar se URL tem dead=1 ou se botão tem emoji específico
-            const buttons = document.querySelectorAll('button');
-            for (const btn of buttons) {
-                const text = btn.textContent || '';
-                if (text.includes('Show Alive')) return true;
-                if (text.includes('Show unclaimed')) return false;
-            }
-            
-            return false;
+            return context.waveViewNavigation?.isDeadMonstersView() ?? false;
         },
         
         /**
          * Muda para view de dead monsters
+         * @deprecated Use context.waveViewNavigation.switchToDeadMonstersView() instead
          */
         async switchToDeadMonstersView(context) {
-            const { logger } = context;
-            
-            if (this.isDeadMonstersView()) {
-                logger.debug('💀 Já está na view de dead monsters');
-                return true;
-            }
-            
-            // Procurar botão "Show unclaimed monsters" (👁️)
-            const buttons = document.querySelectorAll('button');
-            for (const btn of buttons) {
-                const text = btn.textContent || '';
-                if (text.includes('Show unclaimed') || (text.includes('👁️') && text.includes('unclaimed'))) {
-                    logger.info('💀 Mudando para unclaimed monsters view...');
-                    btn.click();
-                    await sleep(500);
-                    return true;
-                }
-            }
-            
-            logger.warn('⚠️ Botão de toggle para dead monsters não encontrado');
-            return false;
+            return context.waveViewNavigation?.switchToDeadMonstersView() ?? false;
         },
         
         /**
          * Muda para view de alive monsters
+         * @deprecated Use context.waveViewNavigation.switchToAliveMonstersView() instead
          */
         async switchToAliveMonstersView(context) {
-            const { logger } = context;
-            
-            if (!this.isDeadMonstersView()) {
-                logger.debug('✅ Já está na view de alive monsters');
-                return true;
-            }
-            
-            // Procurar botão "Show Alive monsters" (🙈)
-            const buttons = document.querySelectorAll('button');
-            for (const btn of buttons) {
-                const text = btn.textContent || '';
-                if (text.includes('Show Alive') || (text.includes('🙈') && text.includes('Alive'))) {
-                    logger.info('✅ Voltando para alive monsters view...');
-                    btn.click();
-                    await sleep(500);
-                    return true;
-                }
-            }
-            
-            logger.warn('⚠️ Botão de toggle para alive monsters não encontrado');
-            return false;
+            return context.waveViewNavigation?.switchToAliveMonstersView() ?? false;
         },
         
         /**
          * Garante que está na view de alive monsters
+         * @deprecated Use context.waveViewNavigation.ensureAliveMonstersView() instead
          */
         async ensureAliveMonstersView(context) {
-            return this.switchToAliveMonstersView(context);
+            return context.waveViewNavigation?.ensureAliveMonstersView() ?? false;
         },
         
         /**
@@ -7258,6 +7528,18 @@ var version = GM_info.script.version;
          * 🆕 Agora com detecção de level up para parar quando stamina recupera
          */
         async executeQuickDeadLoot(context) {
+            // 🆕 USAR FUNÇÃO CENTRALIZADA DO ultraFastLootModule
+            const lootModule = context.moduleRegistry?.getModule('ultraFastLoot');
+            if (!lootModule || typeof lootModule.lootDeadMonsters !== 'function') {
+                context.logger.warn('⚠️ [WaveModule] ultraFastLootModule não disponível');
+                return { looted: false, levelUp: false };
+            }
+            
+            return await lootModule.lootDeadMonsters(context);
+        },
+        
+        // 🗑️ OLD IMPLEMENTATION - MANTIDA COMO BACKUP
+        async executeQuickDeadLootOLD(context) {
             const { logger, numbers } = context;
             
             const BOSS_HP_THRESHOLD = 100_000_000_000;
@@ -7712,16 +7994,32 @@ var version = GM_info.script.version;
                     // 🆕 Tentar loot de dead monsters para possível level up
                     if (cfg.wave.lootDeadBeforeFSP !== false && !skipLootDead) {
                         logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters...');
-                        const looted = await this.tryLootDeadMonstersBeforeFSP(context);
-                        if (looted) {
-                            currentStamina = context.stamina.getCurrent();
-                            logger.info(`💀 [LOOT DEAD] Loot concluído! Nova stamina: ${currentStamina}`);
-                            if (currentStamina >= skillCost) {
-                                logger.info(`🎉 Stamina recuperada (${currentStamina})! Continuando ataques...`);
-                                await this.ensureAliveMonstersView(context);
-                                continue; // Continuar loop de ataques
+                        
+                        // Chamar lootDeadMonsters diretamente do ultraFastLootModule
+                        const lootModule = context.moduleRegistry?.getModule('ultraFastLoot');
+                        if (!lootModule || typeof lootModule.lootDeadMonsters !== 'function') {
+                            logger.error('❌ [LOOT DEAD] ultraFastLootModule ou lootDeadMonsters não encontrado');
+                            sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
+                        } else {
+                            const lootResult = await lootModule.lootDeadMonsters(context);
+                            
+                            if (lootResult.levelUp) {
+                                // Level up detectado! Stamina recuperou
+                                currentStamina = context.stamina.getCurrent();
+                                logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${currentStamina}`);
+                                if (currentStamina >= skillCost) {
+                                    logger.info(`🎉 Stamina recuperada (${currentStamina})! Continuando ataques...`);
+                                    await this.ensureAliveMonstersView(context);
+                                    continue; // Continuar loop de ataques
+                                }
                             }
-                            logger.info(`💀 [LOOT DEAD] Stamina ainda baixa (${currentStamina}/${skillCost}). Tentando FSP...`);
+                            
+                            if (lootResult.count === 0) {
+                                logger.info('💀 [LOOT DEAD] Nenhum dead monster looteado. Tentando FSP...');
+                                sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
+                            } else if (!lootResult.levelUp) {
+                                logger.info(`💀 [LOOT DEAD] ${lootResult.count} monster(s) looteado(s), mas stamina não recuperou. Tentando FSP...`);
+                            }
                         }
                         // Se retornou false, a flag já foi setada dentro da função
                     } else if (skipLootDead) {
@@ -7968,16 +8266,32 @@ var version = GM_info.script.version;
                     // 🆕 Tentar loot de dead monsters para possível level up
                     if (cfg.wave.lootDeadBeforeFSP !== false && !skipLootDead) {
                         logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters...');
-                        const looted = await this.tryLootDeadMonstersBeforeFSP(context);
-                        if (looted) {
-                            const newStamina = context.stamina.getCurrent();
-                            logger.info(`💀 [LOOT DEAD] Loot concluído! Nova stamina: ${newStamina}`);
-                            if (newStamina >= skillCost) {
-                                logger.info(`🎉 Stamina recuperada (${newStamina})! Continuando ataques...`);
-                                await this.ensureAliveMonstersView(context);
-                                continue; // Continuar loop de ataques
+                        
+                        // Chamar lootDeadMonsters diretamente do ultraFastLootModule
+                        const lootModule = context.moduleRegistry?.getModule('ultraFastLoot');
+                        if (!lootModule || typeof lootModule.lootDeadMonsters !== 'function') {
+                            logger.error('❌ [LOOT DEAD] ultraFastLootModule ou lootDeadMonsters não encontrado');
+                            sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
+                        } else {
+                            const lootResult = await lootModule.lootDeadMonsters(context);
+                            
+                            if (lootResult.levelUp) {
+                                // Level up detectado! Stamina recuperou
+                                const newStamina = context.stamina.getCurrent();
+                                logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${newStamina}`);
+                                if (newStamina >= skillCost) {
+                                    logger.info(`🎉 Stamina recuperada (${newStamina})! Continuando ataques...`);
+                                    await this.ensureAliveMonstersView(context);
+                                    continue; // Continuar loop de ataques
+                                }
                             }
-                            logger.info(`💀 [LOOT DEAD] Stamina ainda baixa (${newStamina}). Tentando FSP...`);
+                            
+                            if (lootResult.count === 0) {
+                                logger.info('💀 [LOOT DEAD] Nenhum dead monster looteado.');
+                                sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
+                            } else if (!lootResult.levelUp) {
+                                logger.info(`💀 [LOOT DEAD] ${lootResult.count} monster(s) looteado(s), mas stamina não recuperou.`);
+                            }
                         }
                         // Se retornou false, a flag já foi setada dentro da função
                     } else if (skipLootDead) {
@@ -8747,12 +9061,19 @@ var version = GM_info.script.version;
                 const hpValueNode = hpRow?.querySelector('.stat-value');
                 const hpText = hpValueNode?.textContent ?? '';
                 
-                // Parse max HP from "current / max" format
+                // Parse current HP and max HP from "current / max" format
                 const hpMatch = hpText.match(/(\d{1,3}(?:,\d{3})*|\d+)\s*\/\s*(\d{1,3}(?:,\d{3})*|\d+)/);
-                const hp = hpMatch ? numberFromText(hpMatch[2]) : null;  // hpMatch[2] is max HP
+                const currentHp = hpMatch ? numberFromText(hpMatch[1]) : null;  // hpMatch[1] is current HP
+                const maxHp = hpMatch ? numberFromText(hpMatch[2]) : null;  // hpMatch[2] is max HP
 
-                // 🆕 BOSS DETECTION: Any mob with 100B+ HP is considered a boss
-                if (!hp || hp < BOSS_HP_THRESHOLD) {
+                // 🆕 BOSS DETECTION: Any mob with 100B+ max HP is considered a boss
+                if (!maxHp || maxHp < BOSS_HP_THRESHOLD) {
+                    continue;
+                }
+
+                // 🆕 SKIP DEAD BOSSES: Ignore bosses with 0 HP (already dead/lootable)
+                if (!currentHp || currentHp === 0) {
+                    logger.debug(`👑 ${monsterName}: Ignorando boss morto (HP: 0)`);
                     continue;
                 }
 
@@ -8793,14 +9114,15 @@ var version = GM_info.script.version;
                     card,
                     name: monsterName,
                     monsterId,
-                    hp,
+                    hp: maxHp,
+                    currentHp,
                     hasJoined,
                     canJoin,
                     button,
                     currentDamage: 0
                 });
 
-                logger.info(`👑 Boss detectado: ${monsterName} (HP: ${formatNumber(hp)}, ID: ${monsterId}, ${hasJoined ? 'JOINED' : 'NOT JOINED'})`);
+                logger.info(`👑 Boss detectado: ${monsterName} (HP: ${formatNumber(currentHp)}/${formatNumber(maxHp)}, ID: ${monsterId}, ${hasJoined ? 'JOINED' : 'NOT JOINED'})`);
             }
 
             return bosses;
@@ -8918,24 +9240,23 @@ var version = GM_info.script.version;
                         if (cfg.lootDeadBeforeFSP !== false && currentStamina < (cfg.minStaminaForPotion || 100)) {
                             logger.info('💀 [SPECIAL BOSS] Tentando lootar dead monsters antes de usar FSP...');
                             
-                            // Usar função do ultraFastWaveModule se disponível
-                            const waveModule = context.moduleRegistry?.getModule('ultraFastWave');
-                            if (waveModule && typeof waveModule.tryLootDeadMonstersBeforeFSP === 'function') {
-                                const deadLooted = await waveModule.tryLootDeadMonstersBeforeFSP(context);
+                            // 🆕 USAR FUNÇÃO CENTRALIZADA DO ultraFastLootModule
+                            const lootModule = context.moduleRegistry?.getModule('ultraFastLoot');
+                            if (lootModule && typeof lootModule.lootDeadMonsters === 'function') {
+                                const lootResult = await lootModule.lootDeadMonsters(context);
                                 
-                                if (deadLooted) {
+                                if (lootResult.looted) {
                                     const newStamina = context.stamina.getCurrent();
                                     logger.info(`💀 [SPECIAL BOSS] Loot concluído! Nova stamina: ${newStamina}`);
                                     
-                                    if (newStamina >= skillCost) {
+                                    if (lootResult.levelUp || newStamina >= skillCost) {
                                         logger.info('🎉 [SPECIAL BOSS] Stamina recuperada via loot! Continuando farm...');
-                                        await waveModule.ensureAliveMonstersView(context);
                                         continue;
                                     }
                                     logger.info(`💀 [SPECIAL BOSS] Stamina ainda baixa (${newStamina}). Tentando FSP...`);
                                 }
                             } else {
-                                logger.warn('⚠️ [SPECIAL BOSS] ultraFastWaveModule não disponível para loot dead.');
+                                logger.warn('⚠️ [SPECIAL BOSS] ultraFastLootModule não disponível para loot dead.');
                             }
                         }
                         
@@ -9739,7 +10060,7 @@ var version = GM_info.script.version;
             }
 
             const cfg = context.config.get().ultraFastLoot;
-            const { logger, loot, numbers } = context;
+            const { logger, loot, numbers, notifications } = context;
 
             this.state.running = true;
             this.state.stats = {
@@ -9938,6 +10259,241 @@ var version = GM_info.script.version;
             }
         },
 
+        /**
+         * 🆕 FUNÇÃO PÚBLICA: Lootar dead monsters com detecção de level up
+         * Pode ser chamada por qualquer módulo (ultraFastWave, specialBossFarm, etc)
+         * 
+         * Características:
+         * - 🆕 Faz switch de view automaticamente se estiver em página de wave
+         * - 🆕 Detecta e filtra special bosses (100B+ HP) - loota UM POR UM
+         * - Processa monsters normais em batches de 10
+         * - Detecção matemática de level up (simulatedCurrentExp)
+         * - Para quando detecta level up
+         * - 🆕 Volta para alive view automaticamente se estiver em wave page
+         */
+        async lootDeadMonsters(context) {
+            const { logger, loot, numbers, notifications } = context;
+            
+            // 🆕 DETECTAR SE ESTÁ EM PÁGINA DE WAVE (para fazer switch de view)
+            const isWavePage = /active_wave\.php|wave\.php/i.test(context.location.pathname);
+            
+            // 🆕 MUDAR PARA DEAD VIEW SE ESTIVER EM WAVE PAGE
+            if (isWavePage) {
+                logger.debug('💀 [LootDeadMonsters] Mudando para dead monsters view...');
+                await context.waveViewNavigation.switchToDeadMonstersView();
+                await sleep(500); // Wait for view to load
+            }
+            
+            // Scan dead monsters
+            const cards = context.dom.queryAll('.monster-card');
+            const deadMonsters = [];
+            
+            // 🆕 BOSS DETECTION THRESHOLD: 100B (same as specialBossFarm)
+            const BOSS_HP_THRESHOLD = 100_000_000_000;
+            
+            for (const card of cards) {
+                const nameNode = card.querySelector('h3, h4, .monster-name');
+                const monsterName = nameNode?.textContent?.trim() || 'Unknown';
+                
+                const button = card.querySelector('button');
+                const buttonText = button?.textContent?.toLowerCase() || '';
+                
+                if (buttonText.includes('loot') || buttonText.includes('claim')) {
+                    const link = card.querySelector('a[href*="battle.php"]');
+                    const idMatch = link?.href?.match(/id=(\d+)/);
+                    const monsterId = idMatch?.[1];
+                    
+                    if (monsterId) {
+                        // 🆕 EXTRAIR HP PARA DETECTAR SPECIAL BOSSES
+                        const hpRow = Array.from(card.querySelectorAll('.stat-row')).find(row => row.querySelector('.stat-icon.hp'));
+                        const hpValueNode = hpRow?.querySelector('.stat-value');
+                        const hpText = hpValueNode?.textContent ?? '';
+                        
+                        // Parse HP - format: "0 / 100,000,000"
+                        const hpMatch = hpText.match(/(\d{1,3}(?:,\d{3})*|\d+)\s*\/\s*(\d{1,3}(?:,\d{3})*|\d+)/);
+                        const maxHp = hpMatch ? numberFromText(hpMatch[2]) : 0;
+                        
+                        // 🆕 MARCAR SE É SPECIAL BOSS (100B+)
+                        const isSpecialBoss = maxHp >= BOSS_HP_THRESHOLD;
+                        
+                        deadMonsters.push({ 
+                            monsterId, 
+                            name: monsterName, 
+                            card, 
+                            maxHp,
+                            isSpecialBoss 
+                        });
+                    }
+                }
+            }
+            
+            if (deadMonsters.length === 0) {
+                logger.info('💀 [LootDeadMonsters] Nenhum dead monster elegível');
+                
+                // 🆕 VOLTAR PARA ALIVE VIEW SE ESTIVER EM WAVE PAGE
+                if (isWavePage) {
+                    await context.waveViewNavigation.switchToAliveMonstersView();
+                }
+                
+                return { looted: false, levelUp: false, summary: null, count: 0 };
+            }
+            
+            // 🆕 SEPARAR SPECIAL BOSSES de monsters normais
+            const specialBosses = deadMonsters.filter(m => m.isSpecialBoss);
+            const normalMonsters = deadMonsters.filter(m => !m.isSpecialBoss);
+            
+            logger.info(`💀 [LootDeadMonsters] Total: ${deadMonsters.length} (${specialBosses.length} bosses 100B+, ${normalMonsters.length} normais)`);
+            
+            // 🆕 VERIFICAR SE LOOT DE SPECIAL BOSS ESTÁ HABILITADO
+            const lootSpecialBossConfigCheck = context.config.get().ultraFastLoot?.lootSpecialBossBeforeFSP ?? true;
+            if (specialBosses.length > 0 && !lootSpecialBossConfigCheck) {
+                logger.info(`👑 [LootDeadMonsters] ${specialBosses.length} special boss(es) NÃO serão looteados (lootSpecialBossBeforeFSP = false)`);
+            }
+            
+            // 🆕 CAPTURAR EXP INICIAL
+            const initialExpInfo = loot.getPlayerExpInfo();
+            let simulatedCurrentExp = initialExpInfo?.currentExp || 0;
+            
+            if (initialExpInfo) {
+                logger.info(`💀 [LootDeadMonsters] EXP inicial: ${numbers.format(initialExpInfo.currentExp)}/${numbers.format(initialExpInfo.maxExp)} (${initialExpInfo.percent.toFixed(2)}%)`);
+            }
+            
+            // Get user ID
+            const userId = context.userSession.getUserId();
+            if (!userId) {
+                logger.error('💀 [LootDeadMonsters] User ID não encontrado');
+                
+                // 🆕 VOLTAR PARA ALIVE VIEW SE ESTIVER EM WAVE PAGE
+                if (isWavePage) {
+                    await context.waveViewNavigation.switchToAliveMonstersView();
+                }
+                
+                return { looted: false, levelUp: false, summary: null, count: 0 };
+            }
+            
+            const summary = loot.createSummary();
+            let totalLooted = 0;
+            let levelUpDetected = false;
+            
+            
+            // 🆕 PRIORIDADE 1: LOOTAR MONSTERS NORMAIS EM BATCHES (se não teve level up ainda)
+            if (!levelUpDetected && normalMonsters.length > 0) {
+                logger.info(`💀 [LootDeadMonsters] Looteando ${normalMonsters.length} monster(s) normal(is) em batches...`);
+                
+                const batchSize = 10;
+                for (let i = 0; i < normalMonsters.length; i += batchSize) {
+                    if (levelUpDetected) {
+                        logger.warn(`⏹️ [LootDeadMonsters] Level up detectado! Parando loot`);
+                        break;
+                    }
+                    
+                    const batch = normalMonsters.slice(i, i + batchSize);
+                    const expBeforeBatch = summary.exp;
+                    
+                    // Loot batch in parallel
+                    const promises = batch.map(m => loot.lootWaveMonster(m.monsterId, userId));
+                    const results = await Promise.all(promises);
+                    
+                    // Update summary
+                    let batchSuccessCount = 0;
+                    for (const result of results) {
+                        if (result.success) {
+                            loot.updateSummary(summary, result);
+                            totalLooted++;
+                            batchSuccessCount++;
+                        }
+                    }
+                    
+                    // 🆕 VERIFICAR LEVEL UP após batch
+                    const batchExpGained = summary.exp - expBeforeBatch;
+                    
+                    if (batchSuccessCount > 0) {
+                        logger.info(`💀 Batch ${Math.floor(i / batchSize) + 1}: ${batchSuccessCount}/${batch.length} loots, +${numbers.format(batchExpGained)} EXP`);
+                    }
+                    
+                    if (initialExpInfo && batchExpGained > 0) {
+                        simulatedCurrentExp += batchExpGained;
+                        
+                        const leveledUp = simulatedCurrentExp >= initialExpInfo.maxExp;
+                        
+                        if (leveledUp) {
+                            logger.warn(`🎉 [LootDeadMonsters] LEVEL UP DETECTADO! (EXP: ${numbers.format(simulatedCurrentExp)} >= ${numbers.format(initialExpInfo.maxExp)})`);
+                            notifications.success(`🎉 Level up! Stamina recuperada após ${totalLooted} loot(s)`, 3000);
+                            levelUpDetected = true;
+                            break;
+                        }
+                        
+                        logger.debug(`💀 [LootDeadMonsters] Progresso: ${numbers.format(simulatedCurrentExp)}/${numbers.format(initialExpInfo.maxExp)} (faltam ${numbers.format(initialExpInfo.maxExp - simulatedCurrentExp)} XP)`);
+                    }
+                    
+                    await sleep(100); // Small delay between batches
+                }
+            }
+
+            // 🆕 PRIORIDADE 2: LOOTAR SPECIAL BOSSES UM POR UM (não em batch)
+            // 🆕 SOMENTE SE A OPÇÃO lootSpecialBossBeforeFSP ESTIVER HABILITADA
+            const lootSpecialBossConfig = context.config.get().ultraFastLoot?.lootSpecialBossBeforeFSP ?? true;
+            
+            if (specialBosses.length > 0 && lootSpecialBossConfig) {
+                logger.info(`👑 [LootDeadMonsters] Looteando ${specialBosses.length} special boss(es) UM POR UM...`);
+                
+                for (const boss of specialBosses) {
+                    if (levelUpDetected) {
+                        logger.warn(`⏹️ [LootDeadMonsters] Level up detectado! Parando loot de bosses`);
+                        break;
+                    }
+                    
+                    const expBeforeLoot = summary.exp;
+                    
+                    // Loot boss (ONE AT A TIME)
+                    const result = await loot.lootWaveMonster(boss.monsterId, userId);
+                    
+                    if (result.success) {
+                        loot.updateSummary(summary, result);
+                        totalLooted++;
+                        
+                        logger.info(`👑 ✅ ${boss.name} (${numbers.format(boss.maxHp)} HP): +${numbers.format(result.exp)} EXP, +${numbers.format(result.gold)} Gold`);
+                        
+                        // 🆕 VERIFICAR LEVEL UP após cada boss
+                        const bossExpGained = summary.exp - expBeforeLoot;
+                        
+                        if (initialExpInfo && bossExpGained > 0) {
+                            simulatedCurrentExp += bossExpGained;
+                            
+                            const leveledUp = simulatedCurrentExp >= initialExpInfo.maxExp;
+                            
+                            if (leveledUp) {
+                                logger.warn(`🎉 [LootDeadMonsters] LEVEL UP DETECTADO após loot de boss! (EXP: ${numbers.format(simulatedCurrentExp)} >= ${numbers.format(initialExpInfo.maxExp)})`);
+                                notifications.success(`🎉 Level up! Stamina recuperada após loot de ${boss.name}`, 3000);
+                                levelUpDetected = true;
+                                break;
+                            }
+                        }
+                        
+                        // Delay após cada boss (evitar spam)
+                        await sleep(200);
+                    } else {
+                        logger.warn(`👑 ❌ ${boss.name}: Falha no loot - ${result.message}`);
+                    }
+                }
+            }
+            
+            logger.info(`✅ [LootDeadMonsters] Loot concluído: ${totalLooted}/${deadMonsters.length} monsters, ${numbers.format(summary.exp)} EXP, ${numbers.format(summary.gold)} Gold`);
+            
+            // 🆕 VOLTAR PARA ALIVE VIEW SE ESTIVER EM WAVE PAGE
+            if (isWavePage) {
+                logger.debug('✅ [LootDeadMonsters] Voltando para alive monsters view...');
+                await context.waveViewNavigation.switchToAliveMonstersView();
+            }
+            
+            return {
+                looted: totalLooted > 0,
+                levelUp: levelUpDetected,
+                summary: summary,
+                count: totalLooted
+            };
+        },
+        
         async scanLootTargets(context) {
             const cfg = context.config.get().ultraFastLoot;
             const isGuildDungeon = /guild_dungeon_location\.php/i.test(context.location.pathname);
@@ -16381,6 +16937,12 @@ var version = GM_info.script.version;
                                                 <span>👑 Special Boss Farm</span>
                                             </label>
                                         </div>
+                                        <div class="autods-status-item">
+                                            <label class="autods-checkbox">
+                                                <input type="checkbox" data-config="merchantAutoBuy.enabled" data-label="Merchant Auto-Buy" data-toast="1" />
+                                                <span>🛒 Merchant Auto-Buy</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -16392,22 +16954,20 @@ var version = GM_info.script.version;
                                     <input type="checkbox" data-config="wave.enabled" data-label="Ultra Fast Wave" data-toast="0" />
                                     <span>⚡ Ativar Ultra Fast Mode</span>
                                 </label>
-                                <p class="autods-info" style="font-size:11px;">Modo paralelo de ataques rápidos após entrar na batalha.</p>
                                 
                                 <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">🎯 Filtro de Monstros</h6>
                                 <label class="autods-field">
-                                    <span>Incluir (Whitelist)</span>
-                                    <textarea data-config="wave.monsterFilter.includeNames" data-config-format="csv" data-label="Incluir Monstros" placeholder="Deixar vazio para incluir todos. Um nome por linha. Ex:
+                                    <span>Include (Whitelist)</span>
+                                    <textarea data-config="wave.monsterFilter.includeNames" data-config-format="csv" data-label="Incluir Monstros" placeholder="If empty, attack all. One name per line. Ex:
 Orc Warrior
 Troll Brawler" rows="2"></textarea>
                                 </label>
                                 <label class="autods-field">
-                                    <span>Excluir (Blacklist)</span>
-                                    <textarea data-config="wave.monsterFilter.excludeNames" data-config-format="csv" data-label="Excluir Monstros" placeholder="Monstros a ignorar. Um nome por linha. Ex:
+                                    <span>Exclude (Blacklist)</span>
+                                    <textarea data-config="wave.monsterFilter.excludeNames" data-config-format="csv" data-label="Excluir Monstros" placeholder="Monsters to ignore. One name per line. Ex:
 Mini Boss
 Event Monster" rows="2"></textarea>
                                 </label>
-                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Use <strong>Incluir</strong> para atacar APENAS esses monstros, ou <strong>Excluir</strong> para pular certos monstros.</p>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
@@ -16450,11 +17010,6 @@ Event Monster" rows="2"></textarea>
                                     <span>💀 Lootar Dead Monsters antes de usar FSP</span>
                                 </label>
                                 <p class="autods-info" style="font-size:10px;margin-top:4px;">Tenta lootar dead monsters para recuperar stamina via level up antes de gastar FSP.</p>
-                                <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="wave.lootSpecialBossBeforeFSP" data-label="Loot Special Boss antes FSP" data-toast="0" />
-                                    <span>👑 Lootar Special Bosses (100B+ HP) antes de usar FSP</span>
-                                </label>
-                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Após lootar dead monsters normais, tenta lootar special bosses (100B+) um por vez para recuperar stamina via level up. Ordem: dead normal → special boss → FSP.</p>
                             </div>
 
                             <!-- Tab: Special Boss Farm -->
@@ -16606,10 +17161,10 @@ Troll Brawler" rows="2"></textarea>
                                 <p class="autods-info" style="font-size:10px; margin-top: 4px;">Se ativado, iniciará automaticamente o loot após farm terminar.</p>
                                 
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="ultraFastLoot.onlyEligible" data-label="Only Eligible" data-toast="0" />
-                                    <span>✓ Apenas monstros que você entrou</span>
+                                    <input type="checkbox" data-config="ultraFastLoot.lootSpecialBossBeforeFSP" data-label="Loot Special Boss" data-toast="0" />
+                                    <span>👑 Lootar Special Bosses (100B+ HP)</span>
                                 </label>
-                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Se desativado, looterá monstros que outros jogadores mataram.</p>
+                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Se ativado, loota special bosses UM POR UM para recuperar stamina via level up.</p>
                                 
                                 <label class="autods-field">
                                     <span>Incluir Nomes</span>
@@ -16627,7 +17182,6 @@ Scout" rows="2"></textarea>
                                 </label>
                                 <p class="autods-info" style="font-size:10px; margin-top: 4px;">Blacklist: estes mobs serão ignorados.</p>
                                 
-                                <p class="autods-info" style="font-size:10px; margin-top: 12px; padding: 8px; background: rgba(74, 158, 255, 0.1); border-left: 3px solid #4a9eff; border-radius: 3px;">⚠️ Mobs com 100B+ HP são automaticamente ignorados (bosses para loot manual)</p>
                             </div>
 
                             <!-- Tab: Ultra Fast Boss -->
@@ -17010,6 +17564,16 @@ Magus" rows="2"></textarea>
                                         <span>Sempre desbloquear botões de ataque</span>
                                     </label>
                                 </div>
+                                
+                                <div class="autods-subsection">
+                                    <h5>🛒 Merchant</h5>
+                                    <button id="autods-reset-merchant-schedule" class="autods-button-action" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s;">
+                                        🔄 Resetar Agendamento do Merchant
+                                    </button>
+                                    <p class="autods-info" style="font-size: 11px; color: #aaa; margin-top: 8px;">
+                                        Limpa os timestamps e força uma nova verificação na próxima hora.
+                                    </p>
+                                </div>
                             </div>
 
                             <!-- Tab: Profiles -->
@@ -17333,6 +17897,22 @@ Magus" rows="2"></textarea>
                     console.log('[UI] ✅ Boss RESET button handler triggered!');
                     context.logger.info('[UI] 🔄 Resetando Ultra Fast Boss...');
                     this.resetUltraFastBoss(context);
+                    return;
+                }
+                
+                // Merchant Schedule Reset
+                if (target.id === 'autods-reset-merchant-schedule' || target.closest('#autods-reset-merchant-schedule')) {
+                    event.preventDefault();
+                    context.logger.info('[UI] 🔄 Resetando agendamento do Merchant...');
+                    
+                    // Clear timestamps
+                    context.storage.remove('merchant.lastWeeklyPurchase');
+                    context.storage.remove('merchant.nextRetryTime');
+                    
+                    context.logger.info('✅ Agendamento do Merchant resetado!');
+                    context.logger.info('⏰ Nova verificação será feita na próxima hora');
+                    context.notifications?.success('Merchant: Agendamento resetado! Próxima verificação em 1h');
+                    
                     return;
                 }
             });
@@ -20628,12 +21208,17 @@ Magus" rows="2"></textarea>
         const stamina = createStaminaReader();
         const inventory = createInventoryService(tempContext);
         
+        // Initialize merchant service (requires http service, so we'll do it after http)
+        
         // Initialize Phase 2 services (Completed 11/12/2025)
         const http = createHttpService(tempContext);
         const notifications = createNotificationService(tempContext);
         
         // Initialize combat service AFTER http (needs http.attackWaveMonsterDirect etc.)
         const combat = createCombatService({ ...tempContext, http });
+        
+        // Initialize Wave View Navigation Service BEFORE context (needed in context object)
+        const waveViewNavigation = createWaveViewNavigationService({ logger });
         
         // NOTE: Phase 2 services are available but not yet fully integrated
         // Old functions like joinBattleDirectly() still use GM_xmlhttpRequest directly
@@ -20656,6 +21241,7 @@ Magus" rows="2"></textarea>
             document,
             window,
             moduleRegistry,
+            waveViewNavigation,
             // Phase 1 centralized services
             stamina,
             inventory,
@@ -20666,11 +21252,95 @@ Magus" rows="2"></textarea>
             // Phase 3 utilities
         };
         
+        // Create merchant service after context (needs numbers service)
+        // Numbers service will be added below
+        let merchantService = null;
+        
         // Initialize Phase 3 Services (Battle stats, monster scanning, user session, number formatting)
         context.battleStats = createBattleStatsService(context);
         context.monsterScanner = createMonsterScannerService(context);
         context.userSession = createUserSessionService(context);
         context.numbers = createNumberFormattingService();
+        
+        // Initialize merchant service now that numbers service is available
+        merchantService = createMerchantService(context);
+        context.merchant = merchantService;
+        
+        // Schedule merchant checks if enabled
+        if (cfg.merchantAutoBuy?.enabled) {
+            logger.info('🛒 Merchant Auto-Buy enabled');
+            
+            // Run initial check immediately
+            (async () => {
+                try {
+                    // Show status on first load
+                    const lastPurchase = storage.get('merchant.lastWeeklyPurchase', 0);
+                    const nextRetry = storage.get('merchant.nextRetryTime', 0);
+                    
+                    if (lastPurchase === 0) {
+                        logger.info('🛒 First time setup - no previous purchase recorded');
+                        logger.info('💡 Merchant will check for purchases on next scheduled run');
+                    } else {
+                        const now = Date.now();
+                        const weekInMs = 7 * 24 * 60 * 60 * 1000;
+                        const nextPurchase = lastPurchase + weekInMs;
+                        const timeLeft = nextPurchase - now;
+                        
+                        if (timeLeft > 0) {
+                            const daysLeft = Math.floor(timeLeft / (24 * 60 * 60 * 1000));
+                            const hoursLeft = Math.floor((timeLeft % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                            logger.info(`⏰ Next merchant purchase in: ${daysLeft}d ${hoursLeft}h`);
+                        } else {
+                            logger.info('✅ Merchant purchase is available now!');
+                        }
+                    }
+                    
+                    // Check if retry is pending
+                    if (nextRetry > 0) {
+                        const now = Date.now();
+                        const retryTimeLeft = nextRetry - now;
+                        if (retryTimeLeft > 0) {
+                            const minutesLeft = Math.ceil(retryTimeLeft / (60 * 1000));
+                            logger.info(`🔄 Retry scheduled in ${minutesLeft} minutes (insufficient gold)`);
+                        }
+                    }
+                    
+                    // Check if it's time for weekly purchase
+                    if (merchantService.shouldPerformWeeklyPurchase()) {
+                        logger.info('🛒 Time for weekly merchant purchases!');
+                        await merchantService.performWeeklyPurchases();
+                    }
+                    
+                    // Check if we should retry after insufficient gold
+                    if (merchantService.shouldRetryAfterInsufficientGold()) {
+                        logger.info('🛒 Retrying merchant purchases after insufficient gold');
+                        await merchantService.performWeeklyPurchases();
+                    }
+                    
+                    // Show renewal notification if close
+                    merchantService.checkWeeklyRenewal();
+                } catch (error) {
+                    logger.error('Error in initial merchant check:', error);
+                }
+            })();
+            
+            // Check weekly renewal every hour
+            scheduler.repeat(async () => {
+                merchantService.checkWeeklyRenewal();
+                
+                // Check if it's time for weekly purchase
+                if (merchantService.shouldPerformWeeklyPurchase()) {
+                    logger.info('🛒 Time for weekly merchant purchases!');
+                    await merchantService.performWeeklyPurchases();
+                }
+                
+                // Check if we should retry after insufficient gold
+                if (merchantService.shouldRetryAfterInsufficientGold()) {
+                    logger.info('🛒 Retrying merchant purchases after insufficient gold');
+                    await merchantService.performWeeklyPurchases();
+                }
+            }, cfg.merchantAutoBuy.checkInterval);
+        }
         
         // Initialize Unified Loot Service (Phase 4 - Unified loot management)
         context.loot = createLootService(context);
@@ -20688,6 +21358,7 @@ Magus" rows="2"></textarea>
         globalWindow.autoDSServices = {
             dataExtractor: context.dataExtractor,
             damageCalculator: context.damageCalculator,
+            merchant: context.merchant,  // Expose merchant for testing
             context: context,  // Expose full context for debugging
             version: SCRIPT_VERSION
         };
@@ -20770,4 +21441,3 @@ Magus" rows="2"></textarea>
     }
 
 })();
-
