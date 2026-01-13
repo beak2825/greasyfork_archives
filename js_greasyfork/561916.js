@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux.do 帖子导出到 Notion
 // @namespace    https://linux.do/
-// @version      1.1.4
+// @version      1.1.6
 // @description  导出 Linux.do 帖子到 Notion（支持筛选、图片引用、丰富格式、文件附件）
 // @author       flobby
 // @license      MIT
@@ -1751,15 +1751,54 @@
             const savedMiniX = GM_getValue(K.MINI_POS_X, null);
             const savedMiniY = GM_getValue(K.MINI_POS_Y, null);
 
+            // 确保位置在屏幕范围内的函数
+            const ensureMiniTabInBounds = () => {
+                const rect = miniTab.getBoundingClientRect();
+                const maxX = window.innerWidth - rect.width;
+                const maxY = window.innerHeight - rect.height;
+
+                let currentX = rect.left;
+                let currentY = rect.top;
+                let needsUpdate = false;
+
+                if (currentX < 0 || currentX > maxX || currentY < 0 || currentY > maxY) {
+                    currentX = Math.max(0, Math.min(currentX, maxX));
+                    currentY = Math.max(0, Math.min(currentY, maxY));
+                    needsUpdate = true;
+                }
+
+                if (needsUpdate) {
+                    miniTab.style.right = "auto";
+                    miniTab.style.bottom = "auto";
+                    miniTab.style.transform = "none";
+                    miniTab.style.left = currentX + "px";
+                    miniTab.style.top = currentY + "px";
+                    GM_setValue(K.MINI_POS_X, currentX);
+                    GM_setValue(K.MINI_POS_Y, currentY);
+                }
+            };
+
             if (savedMiniX !== null && savedMiniY !== null) {
-                miniTab.style.left = savedMiniX + "px";
-                miniTab.style.top = savedMiniY + "px";
+                // 检查保存的位置是否在当前屏幕范围内
+                const maxX = window.innerWidth - 140; // 最小宽度约140px
+                const maxY = window.innerHeight - 50;  // 最小高度约50px
+                const safeX = Math.max(0, Math.min(savedMiniX, maxX));
+                const safeY = Math.max(0, Math.min(savedMiniY, maxY));
+                miniTab.style.left = safeX + "px";
+                miniTab.style.top = safeY + "px";
             } else {
                 // 默认位置：右侧中间
                 miniTab.style.right = "16px";
                 miniTab.style.top = "50%";
                 miniTab.style.transform = "translateY(-50%)";
             }
+
+            // 监听窗口大小变化，确保标签始终在屏幕内
+            window.addEventListener("resize", () => {
+                if (miniTab.style.display !== "none") {
+                    ensureMiniTabInBounds();
+                }
+            });
 
             // 根据状态显示对应的UI
             if (isMinimized) {
@@ -2344,19 +2383,111 @@
     // -----------------------
     // 入口
     // -----------------------
+    let lastUrl = "";
+    let lastTopicId = null;
+
     function init() {
         const topicId = getTopicId();
-        if (!topicId) return;
 
-        ui.init();
-        ui.btnNotion.addEventListener("click", exportToNotion);
+        // 不在帖子页面时隐藏面板
+        if (!topicId) {
+            if (ui.container) {
+                ui.container.style.display = "none";
+            }
+            lastTopicId = null;
+            return;
+        }
 
-        // 最小化标签的快速导出按钮
-        const miniExportBtn = document.querySelector("#ld-mini-export");
-        if (miniExportBtn) {
-            miniExportBtn.addEventListener("click", exportToNotion);
+        // 在帖子页面时显示/初始化面板
+        if (ui.container) {
+            ui.container.style.display = "";
+        } else {
+            ui.init();
+            ui.btnNotion.addEventListener("click", exportToNotion);
+
+            const miniExportBtn = document.querySelector("#ld-mini-export");
+            if (miniExportBtn) {
+                miniExportBtn.addEventListener("click", exportToNotion);
+            }
+        }
+
+        lastTopicId = topicId;
+    }
+
+    function checkUrlChange() {
+        const currentUrl = window.location.href;
+        const currentTopicId = getTopicId();
+
+        // URL 变化或帖子 ID 变化时重新初始化
+        if (currentUrl !== lastUrl || currentTopicId !== lastTopicId) {
+            lastUrl = currentUrl;
+            init();
         }
     }
 
-    window.addEventListener("load", init);
+    // 立即执行一次初始化
+    (function immediateInit() {
+        lastUrl = window.location.href;
+        init();
+    })();
+
+    // DOMContentLoaded 时再次检查
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+            lastUrl = window.location.href;
+            init();
+        });
+    }
+
+    // load 事件时再次检查
+    window.addEventListener("load", () => {
+        lastUrl = window.location.href;
+        init();
+    });
+
+    // 监听浏览器前进/后退
+    window.addEventListener("popstate", () => {
+        setTimeout(checkUrlChange, 50);
+    });
+
+    // 拦截 pushState/replaceState（SPA导航核心）
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args) {
+        originalPushState.apply(this, args);
+        setTimeout(checkUrlChange, 50);
+        setTimeout(checkUrlChange, 200);
+    };
+
+    history.replaceState = function (...args) {
+        originalReplaceState.apply(this, args);
+        setTimeout(checkUrlChange, 50);
+        setTimeout(checkUrlChange, 200);
+    };
+
+    // 监听 Discourse 的页面切换事件
+    document.addEventListener("page:change", checkUrlChange);
+    document.addEventListener("turbo:load", checkUrlChange);
+
+    // 使用 MutationObserver 监听 body 变化（Discourse 会替换主内容区域）
+    const bodyObserver = new MutationObserver(() => {
+        const topicId = getTopicId();
+        if (topicId && !ui.container) {
+            init();
+        } else if (topicId && ui.container && ui.container.style.display === "none") {
+            ui.container.style.display = "";
+        }
+    });
+
+    if (document.body) {
+        bodyObserver.observe(document.body, { childList: true, subtree: false });
+    } else {
+        document.addEventListener("DOMContentLoaded", () => {
+            bodyObserver.observe(document.body, { childList: true, subtree: false });
+        });
+    }
+
+    // 备用：定期检查（处理边缘情况）
+    setInterval(checkUrlChange, 500);
 })();

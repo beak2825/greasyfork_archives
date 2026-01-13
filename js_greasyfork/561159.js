@@ -5,7 +5,7 @@
 // @author                                      Zbouibe
 // @copyright                                   2026 Zbouibe
 // @license                                     All Rights Reserved
-// @version                                     1.0.1
+// @version                                     1.0.2
 // @description                                 Zbouibe's User eXperience
 // @description:en                              Zbouibe's User eXperience
 // @icon                                        data:image/png;base64,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
@@ -29,23 +29,20 @@
 // @connect                                     rnb-api.beta.gouv.fr
 // @connect                                     cadastre.data.gouv.fr
 // @connect                                     api-lannuaire.service-public.gouv.fr
+// @connect                                     api.search.brave.com
 //
 // @downloadURL https://update.greasyfork.org/scripts/561159/WME%20ZUX.user.js
 // @updateURL https://update.greasyfork.org/scripts/561159/WME%20ZUX.meta.js
 // ==/UserScript==
 
-!function () {return; const btn = document.createElement('button'); btn.textContent = '...'; btn.disabled = true; Object.assign(btn.style, { position: 'fixed', top: '10px', left: '50%', zIndex: '9999', cursor: 'pointer' }); btn.addEventListener('click', () => { mainActivity(); btn.remove(); }); setTimeout(() => { btn.disabled = false; btn.textContent = 'ZUX'; }, 5000); document.body.appendChild(btn); }()
-
-mainActivity();
-function mainActivity() {
+(() => {
     "use strict";
-
-    GM_addStyle(`@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css');`);
+    GM_addStyle(`@import url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css');`);
 
     //#region .Variables Globales
     let wmeSDK,
         wmeMap = [],
-        debug = true;
+        debug;
 
     let // NOTES
         currentCategory;
@@ -80,7 +77,8 @@ function mainActivity() {
         ui_SpeedControl = true,
         ui_TypesControl = true,
         ui_AdressControl = true,
-        ui_NumberControl = true;
+        ui_NumberControl = true,
+        ui_compactMode;
 
     let // MASS DELETE
         del_rpp,
@@ -101,6 +99,7 @@ function mainActivity() {
         _setLog("🔄️ Enregistrement des évènements WME");
         wmeSDK.Events.on({ eventName: "wme-map-move-end", eventHandler: () => { init_WzEvents("map-move-end") } });
         wmeSDK.Events.on({ eventName: 'wme-save-finished', eventHandler: (e) => { if (e.success) init_WzEvents("save-finished") } });
+        wmeSDK.Events.on({ eventName: 'wme-user-settings-changed', eventHandler: () => { init_WzEvents("user-settings-changed") } });
         wmeSDK.Events.on({ eventName: "wme-feature-editor-opened", eventHandler: (e) => { if (e.featureType === "segment") init_WzEvents("feature-editor-opened") } });
 
         // Récupération des infos de la carte
@@ -111,6 +110,9 @@ function mainActivity() {
 
         init_Sidebar();
         ui_SetLocationInfo();
+        ui_setEditCounter();
+        ui_setZoomLevel();
+        ui_CompactMode();
     });
 
     function init_Sidebar() {
@@ -119,137 +121,143 @@ function mainActivity() {
             t.tabLabel.innerText = "ZUX";
             t.tabLabel.title = "Zbouibe's User eXperience";
             t.tabPane.innerHTML = `
-                <div id="zux-tabs-menu" style="position:absolute;right:-105px;opacity:.5;display:flex;align-items:center;gap:5px;">
-                    <div id="zux-tabs-extended-menu" style="user-select:none;font-size:12px;"></div>
-                    <div id="zux-tabs-extend-menu" style="background:#fff;border-radius:5px;height:50px;width:20px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;cursor:pointer;user-select:none;"><</div>
-                </div>
-                <div id="zux-tabs-content" style="min-height:70dvh"></div>
-            `;
+                    <div id="zux-tabs-menu" style="position:absolute;right:-105px;opacity:.5;display:flex;align-items:center;gap:5px;">
+                        <div id="zux-tabs-extended-menu" style="user-select:none;font-size:12px;"></div>
+                        <div id="zux-tabs-extend-menu" style="background:#fff;border-radius:5px;height:50px;width:20px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;cursor:pointer;user-select:none;"><</div>
+                    </div>
+                    <div id="zux-tabs-content" style="min-height:70dvh"></div>
+                `;
 
-            [{ // Notes
+            [{ // Accueil
+                title: null, icon: null,
+                content: `
+                        <div style="text-align:center;width:100%"></div>
+                    `,
+                id: null
+            }, { // Notes
                 title: "Notes", icon: `<i class="fa-regular fa-clipboard" style="font-size:17px;"></i>`,
                 content: `
-                    <div id="noteList" style="overflow: auto;  height: 50dvh;">
-                        <div id="note-categories" style="display: flex;  justify-content: space-between;  font-weight: bold;  text-align: center;">
-                            <div id="zux-tab-note-faire" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Faire</div>
-                            <div id="zux-tab-note-surv" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Surveiller</div>
-                            <div id="zux-tab-note-autre" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Autres</div>
+                        <div id="noteList" style="overflow: auto;  height: 50dvh;">
+                            <div id="note-categories" style="display: flex;  justify-content: space-between;  font-weight: bold;  text-align: center;">
+                                <div id="zux-tab-note-faire" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Faire</div>
+                                <div id="zux-tab-note-surv" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Surveiller</div>
+                                <div id="zux-tab-note-autre" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Autres</div>
+                            </div>
+                            <div id="zux-tab-note-ajouter" style="text-align: center;  font-size: 20px;  border-top: 1px solid #e1e1e1ff;  border-bottom: 1px solid #e1e1e1ff;  cursor: pointer;  padding: 10px;">+</div>
                         </div>
-                        <div id="zux-tab-note-ajouter" style="text-align: center;  font-size: 20px;  border-top: 1px solid #e1e1e1ff;  border-bottom: 1px solid #e1e1e1ff;  cursor: pointer;  padding: 10px;">+</div>
-                    </div>
-                `,
+                    `,
                 id: []
             }, { // Adresses
                 title: "Adresses", icon: `<i class="fa-regular fa-house" style="font-size:17px;"></i>`,
                 content: `
-                    <span id="load-address">Adresses affichées : 0</span>
-                    <hr>
-                    <div id="zux-ban-check-1"></div>
-                    <hr>
-                    <div id="zux-ban-check-2"></div>
-                    <style>
-                        .zux-button {
-                            background: #0099ff;
-                            color: #ffffff;
-                            border-radius: 20px;
-                            height: 40px;
-                            border: none;
-                            padding: 12px;
-                            font-weight: bold;
-                            display: flex;
-                            align-items: center;
-                        }
+                        <span id="load-address" style="margin:15px">Adresses affichées : 0</span>
+                        <hr>
+                        <div id="zux-ban-check-1" style="margin:15px"></div>
+                        <hr>
+                        <div id="zux-ban-check-2" style="margin:15px"></div>
+                        <style>
+                            .zux-button {
+                                background: #0099ff;
+                                color: #ffffff;
+                                border-radius: 20px;
+                                height: 40px;
+                                border: none;
+                                padding: 12px;
+                                font-weight: bold;
+                                display: flex;
+                                align-items: center;
+                            }
 
-                        .zux-button:hover {
-                            background: #0585dc;
-                        }
+                            .zux-button:hover {
+                                background: #0585dc;
+                            }
 
-                        .zux-button:active {
-                            background: #0a71b7;
-                        }
-                        .zux-btn-red-1 {
-                            cursor: pointer;
-                            color: #e42828;
-                            padding: 0 15px;
-                            border-radius: 100px;
-                            height: 40px;
-                            font-size: 13px;
-                            font-weight: 500;
-                            display: flex;
-                            align-items: center;
-                            background-color: #f2f4f7;
-                            border: 1px solid white;
-                            width: fit-content;
-                            user-select: none;
-                        }
+                            .zux-button:active {
+                                background: #0a71b7;
+                            }
+                            .zux-btn-red-1 {
+                                cursor: pointer;
+                                color: #e42828;
+                                padding: 0 15px;
+                                border-radius: 100px;
+                                height: 40px;
+                                font-size: 13px;
+                                font-weight: 500;
+                                display: flex;
+                                align-items: center;
+                                background-color: #f2f4f7;
+                                border: 1px solid white;
+                                width: fit-content;
+                                user-select: none;
+                            }
 
-                        .zux-btn-red-1:hover {
-                            background-color: #f3edf0;
-                        }
+                            .zux-btn-red-1:hover {
+                                background-color: #f3edf0;
+                            }
 
-                        .zux-btn-red-1:active {
-                            background-color: #f3e3e6;
-                        }
+                            .zux-btn-red-1:active {
+                                background-color: #f3e3e6;
+                            }
 
-                        .zux-btn-red-1:focus:hover {
-                            border: 1px solid #e42828;
-                        }
+                            .zux-btn-red-1:focus:hover {
+                                border: 1px solid #e42828;
+                            }
 
-                        .zux-btn-1 {
-                            cursor: pointer;
-                            color: #0075e3;
-                            padding: 0 12px;
-                            border-radius: 100px;
-                            height: 40px;
-                            font-size: 13px;
-                            font-weight: 500;
-                            display: flex;
-                            align-items: center;
-                            background-color: #f2f4f7;
-                            border: 1px solid white;
-                            width: fit-content;
-                            user-select: none;
-                        }
+                            .zux-btn-1 {
+                                cursor: pointer;
+                                color: #0075e3;
+                                padding: 0 12px;
+                                border-radius: 100px;
+                                height: 40px;
+                                font-size: 13px;
+                                font-weight: 500;
+                                display: flex;
+                                align-items: center;
+                                background-color: #f2f4f7;
+                                border: 1px solid white;
+                                width: fit-content;
+                                user-select: none;
+                            }
 
-                        .zux-btn-1:hover {
-                            background-color: #e9f0f7;
-                        }
+                            .zux-btn-1:hover {
+                                background-color: #e9f0f7;
+                            }
 
-                        .zux-btn-1:active {
-                            background-color: #d1e7f8;
-                        }
+                            .zux-btn-1:active {
+                                background-color: #d1e7f8;
+                            }
 
-                        .zux-btn-1:focus:hover {
-                            border: 1px solid #0075e3;
-                        }
-                    </style>
-                    <div id="ban-add-button"style="display: flex;  gap: 10px;  margin-top: 10px;  justify-content: space-between;">
-                        <div id="ban-left-button" style="display: flex;  gap: 2px;">
-                            <button id="zux-tab-ban-ajouter-hn" class="zux-button" style="border-radius: 25px 0px 0px 25px;">Ajouter HN</button>
-                            <button id="zux-tab-ban-auto-hn" class="zux-button" style="border-radius: 0px 25px 25px 0px;  background: none;  color: black;  border: 3px solid #09f;  padding: 7px;">A</button>
+                            .zux-btn-1:focus:hover {
+                                border: 1px solid #0075e3;
+                            }
+                        </style>
+                        <div id="ban-add-button"style="display: flex;  gap: 10px;  margin: 15px;  justify-content: space-between;">
+                            <div id="ban-left-button" style="display: flex;  gap: 2px;">
+                                <button id="zux-tab-ban-ajouter-hn" class="zux-button" style="border-radius: 25px 0px 0px 25px;">Ajouter HN</button>
+                                <button id="zux-tab-ban-auto-hn" class="zux-button" style="border-radius: 0px 25px 25px 0px;  background: none;  color: black;  border: 3px solid #09f;  padding: 7px;">A</button>
+                            </div>
+                            <div id="ban-right-button" style="display: flex;  gap: 2px;margin: 15px;">
+                                <button id="zux-tab-ban-ajouter-rpp" class="zux-button" style="border-radius: 25px 0px 0px 25px;">Ajouter RPP</button>
+                                <button id="zux-tab-ban-auto-rpp" class="zux-button" style="border-radius: 0px 25px 25px 0px;  background: none;  color: black;  border: 3px solid #09f;  padding: 7px;">A</button>
+                            </div>
+                        </div><br>
+                        <div id="ban-add-info" style="margin:15px">
+                            <b>Erreur survenu pendant l'ajout</b><br>
+                            <span id="ban-add-info-list"></span>
+                            <span style="display:flex;justify-content: space-between">
+                                <span id="ban-add-info-counter">0 erreur</span>
+                                <b id="ban-add-info-clear">Tout effacer</b>
+                            </span>
                         </div>
-                        <div id="ban-right-button" style="display: flex;  gap: 2px;">
-                            <button id="zux-tab-ban-ajouter-rpp" class="zux-button" style="border-radius: 25px 0px 0px 25px;">Ajouter RPP</button>
-                            <button id="zux-tab-ban-auto-rpp" class="zux-button" style="border-radius: 0px 25px 25px 0px;  background: none;  color: black;  border: 3px solid #09f;  padding: 7px;">A</button>
+                        <hr>
+                        <div style="padding:10px;" style="margin:15px">
+                            <button id="upload-btn" class="zux-button">📂 Importer un fichier CSV BAN</button>
+                            <input type="file" id="csv-input" accept=".csv" style="display:none;">
+                            <select id="commune-select" style="display: none;  margin-bottom: 10px;  padding: 5px;  width: 100%;  font-family: monospace;"></select>
+                            <select id="voie-select" style="display: none;  margin-bottom: 10px;  padding: 5px;  width: 100%;  font-family: monospace;"></select>
+                            <div id="list-ban" style="border: 1px solid #ccc;  background: #fafafa;  max-height: 550px;  overflow: auto;  font-family: monospace;  white-space: nowrap;  padding: 10px;"></div>
                         </div>
-                    </div><br>
-                    <div id="ban-add-info">
-                        <b>Erreur survenu pendant l'ajout</b><br>
-                        <span id="ban-add-info-list"></span>
-                        <span style="display:flex;justify-content: space-between">
-                            <span id="ban-add-info-counter">0 erreur</span>
-                            <b id="ban-add-info-clear">Tout effacer</b>
-                        </span>
-                    </div>
-                    <hr>
-                    <div style="padding:10px;">
-                        <button id="upload-btn" class="zux-button">📂 Importer un fichier CSV BAN</button>
-                        <input type="file" id="csv-input" accept=".csv" style="display:none;">
-                        <select id="commune-select" style="display: none;  margin-bottom: 10px;  padding: 5px;  width: 100%;  font-family: monospace;"></select>
-                        <select id="voie-select" style="display: none;  margin-bottom: 10px;  padding: 5px;  width: 100%;  font-family: monospace;"></select>
-                        <div id="list-ban" style="border: 1px solid #ccc;  background: #fafafa;  max-height: 550px;  overflow: auto;  font-family: monospace;  white-space: nowrap;  padding: 10px;"></div>
-                    </div>
-                `,
+                    `,
                 id: [
                     { type: "check", container: "zux-ban-check-1", text: "Afficher les adresses", id: "zux-tab-ban-afficher" },
                     { type: "check", container: "zux-ban-check-1", text: "Surligner la rue survolée", id: "zux-tab-ban-surlign" },
@@ -260,14 +268,14 @@ function mainActivity() {
             }, { // Gomme
                 title: "Gomme", icon: `<i class="fa-solid fa-eraser" style="font-size:17px;"></i>`,
                 content: `
-                    <span>Choisissez les éléments à supprimer:</span>
-                    <div id="zux-md-del" style="display: flex; justify-content: space-between;"><div class="controls-container" style="display:none;"></div></div><br>
-                    <div id="zux-md-pref"></div>
-                    <button id="clearBtn" class="zux-btn-red-1">
-                        <i class="w-icon w-icon-trash" slot="left-icon"></i>
-                        Supprimer la sélection
-                    </button>
-                `,
+                        <span style="margin: 15px;">Choisissez les éléments à supprimer:</span>
+                        <div id="zux-md-del" style="display: flex; justify-content: space-between;margin: 15px;"><div class="controls-container" style="display:none;"></div></div><br>
+                        <div id="zux-md-pref" style="margin: 15px;"></div>
+                        <button id="clearBtn" class="zux-btn-red-1">
+                            <i class="w-icon w-icon-trash" slot="left-icon"></i>
+                            Supprimer la sélection
+                        </button>
+                    `,
                 id: [
                     { type: "chip", container: "zux-md-del", text: "RPP", id: "zux-tab-md-rpp" },
                     { type: "chip", container: "zux-md-del", text: "HN", id: "zux-tab-md-hn" },
@@ -277,56 +285,56 @@ function mainActivity() {
                 ]
             }, { // Cadastre
                 title: "Cadastre", icon: `<i class="fa-solid fa-layer-group" style="font-size:17px;"></i>`,
-                content: `
-                    <div id="zux-tab-cadastre-pref"></div>
-                    <div id="zux-tab-cadastre-select-1"><div style="color:#202124;font-size:12px;font-weight:500;margin-bottom: 8px;">Types disponibles</div></div>
+                content: `<div  style="margin:15px">
+                        <div id="zux-tab-cadastre-pref"></div>
+                        <div id="zux-tab-cadastre-select-1"><div style="color:#202124;font-size:12px;font-weight:500;margin-bottom: 8px;">Types disponibles</div></div>
 
-                    <div id="liste-communes">
-                        <strong>Cadastres disponibles :</strong><br><br>
-                        <div id="commune-dropdown"></div>
-                    </div>
-                    <br><br>
-                    <div class="moButtons" style="display: flex;  gap: 10px;">
-                        <div id="zux-tab-cadastre-add-layer" class="zux-button">Afficher le cadastres</div>
-                        <div id="zux-cadastre-clear" class="zux-button">Nettoyer</div>
-                    </div><br>
-                    <b>Attention, le système n'est pas optimisé et la modification est directe</b>
-                    <strong>Remplissage</strong><br>
-                    <div class="divInv">
-                        <div>Couleur</div>
-                        <input type="color" id="fillColor" value="#00ff00">
-                    </div>
-                    <div class="divInv">
-                        <div>Opacité</div>
-                        <input type="range" id="fillOpacity" min="0" max="1" step="0.1" value="0.4">
-                    </div><br>
-                    <strong>Bordure</strong><br>
-                    <div class="divInv">
-                        <div>Couleur</div>
-                        <input type="color" id="strokeColor" value="#ff0000">
-                    </div>
-                    <div class="divInv">
-                        <div>Épaisseur</div>
-                        <input type="number" id="strokeWidth" min="1" max="10" value="2">
-                    </div>
-                    <div class="divInv">
-                        <div>Opacité</div>
-                        <input type="range" id="fillOpacity" min="0" max="1" step="0.1" value="0.4">
-                    </div><br>
-                    <strong>Point</strong><br>
-                    <div class="divInv">
-                        <div>Couleur</div>
-                        <input type="color" id="pointColor" value="#000000">
-                    </div>
-                    <div class="divInv">
-                        <div>Taille</div>
-                        <input type="number" id="pointSize" min="1" max="20" value="8">
-                    </div>
-                    <div class="divInv">
-                        <div>Opacité</div>
-                        <input type="range" id="pointOpacity" min="0" max="1" step="0.1" value="1.0">
-                    </div>
-                `,
+                        <div id="liste-communes">
+                            <strong>Cadastres disponibles :</strong><br><br>
+                            <div id="commune-dropdown"></div>
+                        </div>
+                        <br><br>
+                        <div class="moButtons" style="display: flex;  gap: 10px;">
+                            <div id="zux-tab-cadastre-add-layer" class="zux-button">Afficher le cadastres</div>
+                            <div id="zux-cadastre-clear" class="zux-button">Nettoyer</div>
+                        </div><br>
+                        <b>Attention, le système n'est pas optimisé et la modification est directe</b>
+                        <strong>Remplissage</strong><br>
+                        <div class="divInv">
+                            <div>Couleur</div>
+                            <input type="color" id="fillColor" value="#00ff00">
+                        </div>
+                        <div class="divInv">
+                            <div>Opacité</div>
+                            <input type="range" id="fillOpacity" min="0" max="1" step="0.1" value="0.4">
+                        </div><br>
+                        <strong>Bordure</strong><br>
+                        <div class="divInv">
+                            <div>Couleur</div>
+                            <input type="color" id="strokeColor" value="#ff0000">
+                        </div>
+                        <div class="divInv">
+                            <div>Épaisseur</div>
+                            <input type="number" id="strokeWidth" min="1" max="10" value="2">
+                        </div>
+                        <div class="divInv">
+                            <div>Opacité</div>
+                            <input type="range" id="fillOpacity" min="0" max="1" step="0.1" value="0.4">
+                        </div><br>
+                        <strong>Point</strong><br>
+                        <div class="divInv">
+                            <div>Couleur</div>
+                            <input type="color" id="pointColor" value="#000000">
+                        </div>
+                        <div class="divInv">
+                            <div>Taille</div>
+                            <input type="number" id="pointSize" min="1" max="20" value="8">
+                        </div>
+                        <div class="divInv">
+                            <div>Opacité</div>
+                            <input type="range" id="pointOpacity" min="0" max="1" step="0.1" value="1.0">
+                        </div></div>
+                    `,
                 id: [
                     { type: "check", container: "zux-tab-cadastre-pref", text: "Activer le script", id: "zux-tab-cadastre-active" },
                     { type: "check", container: "zux-tab-cadastre-pref", text: "Afficher les polygones", id: "zux-tab-cadastre-polygons" },
@@ -343,8 +351,8 @@ function mainActivity() {
             }, { // Interface
                 title: "Interface", icon: `<i class="fa-solid fa-display" style="font-size:17px;"></i>`,
                 content: `
-                    <div id="zux-ui-checkbox"></div>
-                `,
+                        <div id="zux-ui-checkbox" style="margin: 15px;"></div>
+                    `,
                 id: [
                     { type: "check", container: "zux-ui-checkbox", text: "Annuler tout", id: "zux-tab-ui-undoAll" },
                     { type: "check", container: "zux-ui-checkbox", text: "Liens vers cartes tiers", id: "zux-tab-ui-links" },
@@ -357,25 +365,45 @@ function mainActivity() {
             }, { // Infobulle
                 title: "Infobulle", icon: `<i class="fa-solid fa-circle-info" style="font-size:17px;"></i>`,
                 content: `
-                    <i class="fa-solid fa-spinner fa-spin-pulse" style="width:100%;font-size:100px;"></i>
-                    <button id="bouton_secret">Bouton secret, ne pas appuyer</button>
-                `,
+                        <i class="fa-solid fa-spinner fa-spin-pulse" style="width:100%;font-size:100px;"></i>
+                        <button id="bouton_secret">Bouton secret, ne pas appuyer</button>
+                    `,
                 id: []
             }, { // Chat
                 title: "Chat", icon: `<i class="fa-solid fa-headset" style="font-size:17px;"></i>`,
                 content: `
-                    <input type="search" placeholder="Effectuez une recherche Waze" id="zux-chat-input" style="width:100%;border-radius:100px;padding:5px 10px;border:1px solid #ccc;outline: none;margin-bottom:10px;">
-                    <div id="chat_container" style="width:100%;height:100%"></div>
-                `,
+                        <input type="search" placeholder="Effectuez une recherche Waze" id="zux-chat-input" style="width: 90%;border-radius:100px;padding:5px 10px;border:1px solid #ccc;outline: none;margin-bottom:10px;margin-left: 10px;">
+                        <div id="chat_container" style="width:100%;height:100%;padding-right: 15px;"></div>
+                    `,
                 id: []
             }].forEach((el, i, arr) => {
+                // Création de la page d'accueil
+                if (i === 0) {
+                    const userName = wmeSDK.State.getUserInfo().userName;
+                    wmeSDK.DataModel.Users.getUserProfile({ userName: userName }).then(profile => {
+                        const date = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+                        const heure = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(':', 'h');
+                        const dailyEditCount = profile.dailyEditCount[profile.dailyEditCount.length - 1];
+
+                        $id("zux-tabs-content").innerHTML = el.content;
+                        $sel("#zux-tabs-content div").innerText = `
+                            Bonjour ${userName}\n
+                            Nous sommes le ${date}\n
+                            Il est actuellement ${(heure)}\n
+                            Aujourd’hui tu as fait ${dailyEditCount} ${dailyEditCount < 2 ? "édition" : "éditions"}
+                        `;
+                    });
+
+                    return;
+                }
+
                 // Création des boutons du menu
                 const div = document.createElement("div");
                 div.id = "zux-tab-" + el.title + "-title";
                 div.className = "zux-tab-menu-title";
                 div.innerText = el.title;
                 Object.assign(div.style, { width: "75px", height: "75px", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "#fff", color: "#55595e", cursor: "pointer" });
-                if (i === 0) div.style.borderRadius = "10px 10px 0 0";
+                if (i === 1) div.style.borderRadius = "10px 10px 0 0";
                 if (i === arr.length - 1) div.style.borderRadius = "0 0 10px 10px";
                 div.insertAdjacentHTML('afterbegin', el.icon);
                 div.addEventListener("mouseenter", () => { if (div.className !== "zux-tab-menu-title-active") div.style.backgroundColor = "#f6f6f6"; });
@@ -545,6 +573,7 @@ function mainActivity() {
                 _setLog("ℹ️🌐 Information de la carte WME : ", wmeMap);
 
                 ui_SetLocationInfo();
+                ui_setZoomLevel();
 
                 // CADASTRE
                 populateCommuneDropdown();
@@ -553,10 +582,13 @@ function mainActivity() {
                 showAddress();
                 break;
             case "save-finished":
-                setEditCounter();
+                ui_setEditCounter();
                 break;
             case "feature-editor-opened":
                 setEditPanel();
+                break;
+            case "user-settings-changed":
+                ui_CompactMode();
                 break;
         }
     }
@@ -565,22 +597,22 @@ function mainActivity() {
         const div = document.createElement("div");
         div.className = "controls-container";
         div.innerHTML = `
-            <wz-checkbox id="${id}">
-                <template>
-                    <span tabindex="0">
-                        <label class="wz-checkbox" tabindex="-1">
-                            <input type="checkbox">
-                                <div class="border">
-                                    <div class="fill"></div>
-                                    <div class="mask"></div>
-                                </div>
-                                <slot></slot>
-                        </label>
-                    </span>
-                </template>${text}
-            <input type="checkbox" style="display:none;visibility:hidden;">
-            </wz-checkbox>
-        `;
+                <wz-checkbox id="${id}">
+                    <template>
+                        <span tabindex="0">
+                            <label class="wz-checkbox" tabindex="-1">
+                                <input type="checkbox">
+                                    <div class="border">
+                                        <div class="fill"></div>
+                                        <div class="mask"></div>
+                                    </div>
+                                    <slot></slot>
+                            </label>
+                        </span>
+                    </template>${text}
+                <input type="checkbox" style="display:none;visibility:hidden;">
+                </wz-checkbox>
+            `;
         $id(container).append(div);
     }
 
@@ -588,16 +620,16 @@ function mainActivity() {
         const div = document.createElement("div");
         div.className = "controls-container";
         div.innerHTML = `
-            <wz-checkable-chip size="md" id="${id}">
-                <template>
-                    <div tabindex="0" class="wz-chip md outline">
-                        <span class="text">
-                            <slot></slot>
-                        </span>
-                    </div>
-                </template>${text}
-            </wz-checkable-chip>
-        `;
+                <wz-checkable-chip size="md" id="${id}">
+                    <template>
+                        <div tabindex="0" class="wz-chip md outline">
+                            <span class="text">
+                                <slot></slot>
+                            </span>
+                        </div>
+                    </template>${text}
+                </wz-checkable-chip>
+            `;
         $id(container).append(div);
     }
 
@@ -606,32 +638,32 @@ function mainActivity() {
         sel.id = id;
         sel.setAttribute("value", value);
         sel.innerHTML = `
-            <template shadowrootmode = "open">
-                <div class="wz-select">
-                    <div class="select-wrapper" id="select-wrapper">
-                        <div tabindex="0" class="select-box">
-                            <div class="selected-value-wrapper">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M12 15C11.73 15 11.48 14.89 11.29 14.71L7.32998 10.71C6.93998 10.32 6.93998 9.69 7.32998 9.3C7.71998 8.91 8.34998 8.91 8.73998 9.3L12 12.58L15.29 9.29C15.68 8.9 16.31 8.9 16.7 9.29C17.09 9.68 17.09 10.31 16.7 10.7L12.7 14.7C12.52 14.89 12.27 15 12 15Z">
-                                    </path>
-                                </svg>
-                            </div>
-                        </div>
-                        <wz-menu>
-                            <template shadowrootmode="open">
-                                <div class="upper-menu wz-menu">
-                                    <div class="options-container" style="display: contents;">
-                                        <div class="options-wrapper" tabindex="0"></div>
-                                    </div>
+                <template shadowrootmode = "open">
+                    <div class="wz-select">
+                        <div class="select-wrapper" id="select-wrapper">
+                            <div tabindex="0" class="select-box">
+                                <div class="selected-value-wrapper">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M12 15C11.73 15 11.48 14.89 11.29 14.71L7.32998 10.71C6.93998 10.32 6.93998 9.69 7.32998 9.3C7.71998 8.91 8.34998 8.91 8.73998 9.3L12 12.58L15.29 9.29C15.68 8.9 16.31 8.9 16.7 9.29C17.09 9.68 17.09 10.31 16.7 10.7L12.7 14.7C12.52 14.89 12.27 15 12 15Z">
+                                        </path>
+                                    </svg>
                                 </div>
-                            </template>
-                            <slot></slot>
-                        </wz-menu>
+                            </div>
+                            <wz-menu>
+                                <template shadowrootmode="open">
+                                    <div class="upper-menu wz-menu">
+                                        <div class="options-container" style="display: contents;">
+                                            <div class="options-wrapper" tabindex="0"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <slot></slot>
+                            </wz-menu>
+                        </div>
                     </div>
-                </div>
-            </template >
-        `;
+                </template >
+            `;
         $id(container).append(sel);
     }
 
@@ -642,10 +674,10 @@ function mainActivity() {
         const tpl = document.createElement("template");
         tpl.setAttribute("shadowrootmode", "open");
         tpl.innerHTML = `
-            <div class="wz-menu-item">
-                <slot></slot>
-            </div >
-        `;
+                <div class="wz-menu-item">
+                    <slot></slot>
+                </div >
+            `;
 
         option.append(tpl, document.createTextNode(text));
         $id(select).append(option);
@@ -667,18 +699,18 @@ function mainActivity() {
         else console.error(prefix, stylePrefix, ...args);
     }
 
-    function _inPoly(point, vs, mode = "some") {
+    function _inPoly(point, area, mode = "some") {
         if (!del_onlyArea) return true;
 
         const isPoint = !Array.isArray(point[0]);
         if (!isPoint) {
-            const bools = point.map((p) => _inPoly(p, vs, mode));
+            const bools = point.map((p) => _inPoly(p, area, mode));
             return mode === "every" ? bools.every(Boolean) : bools.some(Boolean);
         }
         const x = point[0], y = point[1];
         let inside = false;
-        for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-            const xi = vs[i][0], yi = vs[i][1], xj = vs[j][0], yj = vs[j][1];
+        for (let i = 0, j = area.length - 1; i < area.length; j = i++) {
+            const xi = area[i][0], yi = area[i][1], xj = area[j][0], yj = area[j][1];
             const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
             if (intersect) inside = !inside;
         }
@@ -790,13 +822,13 @@ function mainActivity() {
             noteContent.style.padding = "10px";
             noteContent.id = "note_" + n.id;
             noteContent.innerHTML = `
-                    <div>
-                        <span>${n.content}</span>
-                        <br>
-                            <i style="color:#aaa">${formatDate()} - ${timeAgo()}</i>
-                    </div>
-                    <i class="w-icon w-icon-recenter" id="noteCoords_${n.id}" style="cursor:pointer;"></i>
-                    `;
+                        <div>
+                            <span>${n.content}</span>
+                            <br>
+                                <i style="color:#aaa">${formatDate()} - ${timeAgo()}</i>
+                        </div>
+                        <i class="w-icon w-icon-recenter" id="noteCoords_${n.id}" style="cursor:pointer;"></i>
+                        `;
             noteList.appendChild(noteContent);
 
             // clic pour recentrer la carte
@@ -1135,12 +1167,12 @@ function mainActivity() {
                     if (!building) {
                         addAddress(type, ban_lon, ban_lat, number, streetName, cityName, ban_lon, ban_lat);
                         $id("ban-add-info-list").innerHTML += `
-                            <div id="${ban_lon} ${ban_lat}"style="cursor: pointer;  border-radius: 10px;  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);  padding: 10px;  background-color: rgb(255, 200, 0);">
-                                <b>Aucun batiment trouvé</b><br>
-                                <span>${number} ${streetName}</span><br>
-                                <span>${cityName}</span>
-                            </div><br>
-                                `;
+                                <div id="${ban_lon} ${ban_lat}"style="cursor: pointer;  border-radius: 10px;  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);  padding: 10px;  background-color: rgb(255, 200, 0);">
+                                    <b>Aucun batiment trouvé</b><br>
+                                    <span>${number} ${streetName}</span><br>
+                                    <span>${cityName}</span>
+                                </div><br>
+                                    `;
                         $id(ban_lon + " " + ban_lat).addEventListener("click", () => {
                             wmeSDK.Map.setMapCenter({ lonLat: { lon: ban_lon, lat: ban_lat }, zoomLevel: 20 });
                         });
@@ -1318,9 +1350,9 @@ function mainActivity() {
 
                     // contenu HTML
                     lineDiv.innerHTML = `
-                                            <div class="infoMid" style="color: rgb(150,150,150); font-size: 12px;">${d.commune || ''}</div>
-                                            <div class="infoLeft" style="font-size: 15px; font-weight: bold;">${d.num || ''} ${d.voie || ''}</div>
-                                            `;
+                                                <div class="infoMid" style="color: rgb(150,150,150); font-size: 12px;">${d.commune || ''}</div>
+                                                <div class="infoLeft" style="font-size: 15px; font-weight: bold;">${d.num || ''} ${d.voie || ''}</div>
+                                                `;
 
                     // survol gris clair
                     lineDiv.addEventListener('mouseover', () => {
@@ -1620,41 +1652,12 @@ function mainActivity() {
         if (!parent) return setTimeout(ui_setCrosshair, 500);
 
         const container = document.createElement("div");
-        container.style.position = "absolute";
-        container.style.display = "flex";
-        container.style.height = "100%";
-        container.style.width = "100%";
-        container.style.zIndex = "99999";
-        container.style.pointerEvents = "none";
-        container.style.alignItems = "center";
-        container.style.justifyContent = "center";
+        Object.assign(container.style, { position: "absolute", display: "flex", height: "100%", width: "100%", zIndex: "99999", pointerEvents: "none", alignItems: "center", justifyContent: "center" });
         parent.prepend(container);
 
         const crosshair = document.createElement("div");
-        crosshair.style.height = "15px";
-        crosshair.style.width = "15px";
-        crosshair.style.pointerEvents = "none";
-        crosshair.style.backgroundColor = "#f00";
-        crosshair.style.border = "solid";
-        crosshair.style.borderColor = "#fff #000";
-        crosshair.style.borderRadius = "50%";
+        Object.assign(crosshair.style, { height: "15px", width: "15px", pointerEvents: "none", backgroundColor: "#f00", border: "solid", borderColor: "#fff #000", borderRadius: "50%" });
         container.append(crosshair);
-    })();
-
-    // Dynamique
-    (function setZoomLevel() {
-        if (!ui_zoom) return;
-        const $ = $sel(".zoom-bar-container");
-        if (!$) return setTimeout(setZoomLevel, 500);
-        let $$ = $id("zux-zoom-display");
-        if (!$$) {
-            $$ = document.createElement("div");
-            $$.id = "zux-zoom-display";
-            $$.style.fontWeight = "bold";
-            $$.style.fontSize = "15px";
-            $.insertBefore($$, $.children[1])
-        }
-        $$.textContent = wmeMap.zoomLevel;
     })();
 
     (function ui_setLinks() {
@@ -1662,6 +1665,7 @@ function mainActivity() {
 
         const parent = $sel(".WazeControlPermalink");
         if (!parent) return setTimeout(ui_setLinks, 500);
+        parent.style.gap = "10px";
 
         [["BAN", "https://adresse.data.gouv.fr/carte-base-adresse-nationale#{lat}_{lon}_{zoom}"],
         ["Cadastre", "https://cadastre.data.gouv.fr/map?style=ortho#{zoom}/{lat}/{lon}"],
@@ -1670,7 +1674,6 @@ function mainActivity() {
         ["Earth", "https://earth.google.com/web/search/{lat},+{lon}"]
         ].forEach(([name, template]) => {
             const div = document.createElement("div");
-            div.className = "zux-external-maps-link";
             div.innerText = name;
             div.style.cursor = "pointer";
             div.addEventListener("click", () => {
@@ -1683,9 +1686,25 @@ function mainActivity() {
             });
             parent.prepend(div);
         });
-
-        parent.style.gap = "10px";
     })();
+
+    // Dynamique
+    function ui_setZoomLevel() {
+        if (!ui_zoom) return;
+
+        const parent = $sel(".zoom-bar-container");
+        if (!parent) return setTimeout(ui_setZoomLevel, 500);
+
+        let div = $id("zux-zoom-display");
+        if (!div) {
+            div = document.createElement("div");
+            div.id = "zux-zoom-display";
+            div.style.fontWeight = "bold";
+            div.style.fontSize = "15px";
+            parent.insertBefore(div, parent.children[1])
+        }
+        div.innerText = wmeMap.zoomLevel;
+    }
 
     async function ui_SetLocationInfo() {
         if (!ui_city) return;
@@ -1741,7 +1760,7 @@ function mainActivity() {
         _setLog("🌍ℹ️ Mise à jour des infos de localisation terminée");
     };
 
-    (function ui_setEditCounter() {
+    function ui_setEditCounter() {
         if (!ui_counter) return;
 
         const parent = $sel(".secondary-toolbar-actions.user-toolbar");
@@ -1751,15 +1770,17 @@ function mainActivity() {
         let div = $id("zux-edit-counter");
         if (!div) {
             div = document.createElement("a");
+            div.id = "zux-edit-counter";
+            div.target = "_blank";
+            div.href = "https://www.waze.com/fr/user/editor/" + userName;
             Object.assign(div.style, { color: "#3c4043", fontSize: "15px", fontWeight: "bold", textDecoration: "none", marginRight: "10px" });
             parent.insertBefore(div, parent.children[1]);
         }
 
-        wmeSDK.DataModel.Users.getUserProfile({ userName: userName }).then(profile => {
-            div.href = "https://www.waze.com/fr/user/editor/" + userName;
-            div.innerText = profile.dailyEditCount[profile.dailyEditCount.length - 1] + " - " + profile.totalEditCount;
+        wmeSDK.DataModel.Users.getUserProfile({ userName: userName }).then(p => {
+            div.innerText = p.dailyEditCount[p.dailyEditCount.length - 1] + " - " + p.totalEditCount;
         });
-    })();
+    }
 
     // Différé
     function setEditPanel() {
@@ -1958,6 +1979,64 @@ function mainActivity() {
             });
         }
     };
+
+    function ui_CompactMode() {
+        if (!ui_compactMode) return;
+        const isCompactMode = wmeSDK.Settings.getUserSettings({ isCompactMode: false }).isCompactMode;
+        // On cherche si le style existe déjà via un id
+        let style = document.getElementById("i-style");
+
+        if (!style) {
+            // Si pas encore créé, on le crée
+            style = document.createElement("style");
+            style.id = "i-style"; // On lui met un id pour pouvoir le retrouver
+            document.head.appendChild(style);
+        }
+
+        if (isCompactMode) {
+            style.textContent = `
+                    i {
+                        font-size: 20px;
+                    }
+                    .wz-navigation-drawer.collapsed-labeled {
+                        width: 50px;
+                    }
+                `;
+        } else {
+            style.textContent = null;
+        }
+
+        const drawer = $id("drawer");
+
+        // Shadow root du drawer principal
+        const shadowDrawer = drawer?.shadowRoot;
+        if (shadowDrawer) {
+            const mainDrawer = shadowDrawer.querySelector(".wz-navigation-drawer.collapsed-labeled");
+            if (mainDrawer) {
+                mainDrawer.style.width = isCompactMode ? "50px" : "80px";
+            }
+        }
+
+        // Fonction pour appliquer les styles aux boutons des items
+        const applyItemButtonStyles = () => {
+            const items = drawer?.querySelectorAll("wz-navigation-item");
+            if (!items || items.length === 0) return setTimeout(applyItemButtonStyles, 100);
+
+            items.forEach((item) => {
+                // Shadow root 1 du wz-navigation-item
+                const shadow1 = item.shadowRoot;
+                if (!shadow1) return;
+
+                const drawerDiv = shadow1.querySelector(".wz-navigation-item.collapsed-labeled");
+                if (drawerDiv) drawerDiv.style.width = isCompactMode ? "50px" : "80px";
+
+                const button = shadow1.querySelector(".navigation-button");
+                if (button) button.style.width = isCompactMode ? "50px" : "80px";
+            });
+        };
+        applyItemButtonStyles();
+    }
+
     //#endregion
 
     //#region _Chat
@@ -2006,4 +2085,4 @@ function mainActivity() {
         });
     }
     //#endregion
-}
+})();

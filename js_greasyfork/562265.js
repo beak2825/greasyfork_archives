@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Quick Deposit
 // @namespace    http://tampermonkey.net/
-// @version      1.2.3
+// @version      1.2.5
 // @description  Quick Deposit cash to Ghost Trade / Company Vault / Faction Vault
 // @author       e7cf09 [3441977]
 // @icon         https://editor.torn.com/cd385b6f-7625-47bf-88d4-911ee9661b52-3441977.png
@@ -18,8 +18,11 @@
     'use strict';
 
     // CONFIG & STATE
+    // USAGE: Set PANIC_THRESHOLD for auto-triggers. Map physical keys in KEYS object.
+    // EXAMPLES: Empty: [], Single: ["KeyA"], Multiple: ["ControlLeft", "KeyA"]
     const CONFIG = {
-        THRESHOLD: 20000000,
+        PANIC_THRESHOLD: 20000000, // Panic Threshold: Only triggers if balance exceeds this
+        STRICT_GHOST_MODE: true, // Relaxed matching for Ghost trades (if false, any trade found is used)
         KEYS: { 
             FACTION: ["Space"], 
             GHOST: ["KeyG"], 
@@ -124,7 +127,7 @@
         if (STATE.balance <= 0) {
             STATE.locks.sending = false;
             dismissPanic();
-        } else if (STATE.balance >= CONFIG.THRESHOLD && STATE.panic) {
+        } else if (STATE.balance >= CONFIG.PANIC_THRESHOLD && STATE.panic) {
             const s = getStatus();
             if (STATE.ghostID ? s.ghost : s.faction) triggerPanic();
         } else if (STATE.locks.panic) {
@@ -134,7 +137,7 @@
     }
 
     function triggerPanic() {
-        if (!STATE.panic || STATE.balance < CONFIG.THRESHOLD) return;
+        if (!STATE.panic || STATE.balance < CONFIG.PANIC_THRESHOLD) return;
         const s = getStatus();
         if (!(STATE.ghostID && s.ghost) && !s.company && !s.faction) return;
         
@@ -226,21 +229,22 @@
         } else if (target === 'company') {
             const url = window.location.href;
             const onPage = url.includes('companies.php') && url.includes('option=funds');
-            const container = qs('.funds-cont');
+            
+            // Precise selector for Deposit Input (vs Withdraw)
+            const input = qs('input[aria-labelledby="deposit-label"][type="text"]');
 
-            if (!container) {
+            if (!input) {
                 if (!onPage) return jump(`https://www.torn.com/companies.php?step=your&type=1#/option=funds`, "JUMPING<br>TO COMPANY");
                 return;
             }
             
-            const input = container.querySelector('.input-money');
-            if (!input) return;
-
             STATE.locks.sending = true;
             if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO COMPANY";
             setVal(input, input.getAttribute('data-money') || STATE.balance);
             
-            const btn = container.querySelector('.deposit.btn-wrap button');
+            const container = input.closest('.funds-cont');
+            const btn = container ? container.querySelector('.deposit.btn-wrap button') : null;
+            
             if (btn) {
                 btn.disabled = false;
                 btn.click();
@@ -426,7 +430,7 @@
         if (id) { STATE.ghostID = id; localStorage.setItem('torn_tactical_ghost_id', id); injectBtn(); }
         
         qsa('ul.trade-list-container > li').forEach(li => {
-            if (li.innerText.toLowerCase().includes('ghost')) {
+            if (!CONFIG.STRICT_GHOST_MODE || li.innerText.toLowerCase().includes('ghost')) {
                 const mid = li.querySelector('a.btn-wrap')?.href.match(/ID=(\d+)/);
                 if (mid) { STATE.ghostID = mid[1]; localStorage.setItem('torn_tactical_ghost_id', mid[1]); injectBtn(); }
             }

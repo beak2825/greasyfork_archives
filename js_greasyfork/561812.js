@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         P3 – Auto Feed Alpha Puma
 // @namespace    https://tampermonkey.net/p3_auto_feed_alpha_bulletproof
-// @version      1.3
+// @version      1.5
 // @description  Auto-feeds Alpha Puma when hunger > 49, highlights hungry Alphas, with persistent toggle bar.
 // @match        https://pocketpumapets.com/item_feed.php?id=*
 // @icon         https://www.pocketpumapets.com/favicon.ico
 // @grant        none
 // @run-at       document-idle
-// @license      MIT
+// @license MIT
+
 // @downloadURL https://update.greasyfork.org/scripts/561812/P3%20%E2%80%93%20Auto%20Feed%20Alpha%20Puma.user.js
 // @updateURL https://update.greasyfork.org/scripts/561812/P3%20%E2%80%93%20Auto%20Feed%20Alpha%20Puma.meta.js
 // ==/UserScript==
@@ -21,26 +22,18 @@
 
     let enabled = localStorage.getItem(STORAGE_KEY) !== "false";
 
-    /* ---------- WAIT FOR TABLE ---------- */
     function waitForAlphaTable(callback, attempts = 0) {
         const tables = [...document.querySelectorAll("table.centerdiv")];
         const alphaTable = tables.find(t =>
             t.querySelector("input[type='radio'][name='puma_id']")
         );
 
-        if (alphaTable) {
-            callback(alphaTable);
-        } else if (attempts < 20) {
-            setTimeout(() => waitForAlphaTable(callback, attempts + 1), 300);
-        } else {
-            console.error("[AutoFeed] Alpha table not found.");
-        }
+        if (alphaTable) callback(alphaTable);
+        else if (attempts < 20) setTimeout(() => waitForAlphaTable(callback, attempts + 1), 300);
     }
 
-    /* ---------- TOGGLE BAR ---------- */
     function addBar() {
         const bar = document.createElement("div");
-        bar.id = "p3-auto-feed-bar";
         bar.style.cssText = `
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -51,25 +44,17 @@
             z-index: 99999;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         `;
 
         const label = document.createElement("span");
         label.textContent = "P3 Auto Feed Alpha Puma";
 
         const btn = document.createElement("button");
-        btn.style.cssText = `
-            padding: 3px 10px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            color: #fff;
-            font-size: 12px;
-        `;
 
         function sync() {
             btn.textContent = enabled ? "Stop" : "Start";
             btn.style.background = enabled ? "#c0392b" : "#27ae60";
+            btn.style.color = "#fff";
         }
 
         btn.onclick = () => {
@@ -84,54 +69,45 @@
         document.body.style.marginTop = "34px";
     }
 
-    /* ---------- PROCESS TABLE ---------- */
     function process(alphaTable) {
         const rows = [...alphaTable.querySelectorAll("tr")].slice(1);
-        if (!rows.length) return;
-
-        rows.forEach(row => {
-            const cells = row.querySelectorAll("td");
-            if (!cells[3]) return;
-
-            const hunger = parseInt(cells[3].textContent.trim(), 10);
-            if (hunger > HUNGER_THRESHOLD) {
-                row.style.background = "#ffd6d6";
-                cells[3].style.fontWeight = "bold";
-            }
-        });
-
-        if (!enabled) return;
+        if (!rows.length || !enabled) return;
 
         const topRow = rows[0];
-        const hunger = parseInt(topRow.querySelectorAll("td")[3].textContent.trim(), 10);
+        const cells = topRow.querySelectorAll("td");
+        if (!cells[3]) return;
 
-        console.log("[AutoFeed] Top Alpha hunger:", hunger);
+        const hunger = parseInt(cells[3].textContent.trim(), 10);
 
         if (hunger > HUNGER_THRESHOLD) {
-            const radio = topRow.querySelector("input[type='radio'][name='puma_id']");
-            const form = radio ? radio.closest("form") : null;
+            const radio = topRow.querySelector("input[name='puma_id']");
+            const form = radio?.closest("form");
+            if (!form) return;
 
-            if (form) {
-                // ✅ ONLY ADDITION
-                const submitBtn = form.querySelector("#food_submit");
-                if (submitBtn) submitBtn.disabled = false;
+            radio.checked = true;
 
-                console.log("[AutoFeed] Feeding Alpha Puma");
-                radio.checked = true;
+            if (form.requestSubmit) {
+                form.requestSubmit();
+            } else {
                 form.submit();
-                setTimeout(() => location.reload(), 2000);
             }
+
+            // ✅ Chromebook-safe reload
+            setTimeout(() => {
+                window.location.href = window.location.href;
+            }, 3500);
         }
     }
 
-    /* ---------- INIT ---------- */
     addBar();
 
     waitForAlphaTable(alphaTable => {
         process(alphaTable);
 
         setTimeout(() => {
-            if (enabled) location.reload();
+            if (enabled) {
+                window.location.href = window.location.href;
+            }
         }, REFRESH_MS);
     });
 

@@ -5,14 +5,19 @@
 // @license      MIT
 // @namespace    https://greasyfork.org/en/users/18936-therealhawk
 // @match        https://www.seaart.ai/*
-// @version      1.28
+// @version      1.53
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js
-// @grant        none
+// @connect      cdn.seaart.ai
+// @connect      seaart.ai
+// @connect      www.seaart.ai
+// @connect      *
+// @grant        GM_xmlhttpRequest
+// @grant        GM_download
 // @downloadURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20batch%20work%20item%20selection%2C%20download%20and%20deletion.user.js
 // @updateURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20batch%20work%20item%20selection%2C%20download%20and%20deletion.meta.js
 // ==/UserScript==
 
-/* globals $, jQuery */
+/* globals $ */
 
 (function() {
     'use strict';
@@ -23,58 +28,156 @@
     let activeSelectCount = 0;
     let isDownloading = false;
     let pendingDeletionIDs = [];
+    let blockedZipUrl = null;
 
-    const originalOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function(method, url) {
+    function resolveUrl(url) {
+        if (!url) return url;
+        if (url.startsWith('http')) return url;
+        if (url.startsWith('//')) return window.location.protocol + url;
+        return window.location.origin + (url.startsWith('/') ? '' : '/') + url;
+    }
+
+    const originalCreateElement = document.createElement;
+    document.createElement = function(tagName) {
+        const el = originalCreateElement.apply(this, arguments);
+        if (tagName.toLowerCase() === 'a') {
+            const originalClick = el.click;
+            el.click = function() {
+                if (blockedZipUrl && this.href && this.href.includes(blockedZipUrl)) {
+                    return;
+                }
+                return originalClick.apply(this, arguments);
+            };
+        }
+        return el;
+    };
+
+    const originalWindowOpen = window.open;
+    window.open = function(url, target, features) {
+        if (blockedZipUrl && url && url.includes(blockedZipUrl)) {
+            return null;
+        }
+        return originalWindowOpen.apply(this, arguments);
+    };
+
+    const XHR = XMLHttpRequest.prototype;
+    const originalOpen = XHR.open;
+    const originalSend = XHR.send;
+
+    XHR.open = function(method, url) {
         this._url = url;
         this._method = method;
         return originalOpen.apply(this, arguments);
     };
 
-    const originalSend = XMLHttpRequest.prototype.send;
-    XMLHttpRequest.prototype.send = function(body) {
+    XHR.send = function(body) {
+        if (this._url && this._url.includes('/resource/batchImagesZip')) {
+            this.addEventListener('load', function() {
+                try {
+                    if (!this.responseText) return;
+                    const res = JSON.parse(this.responseText);
+
+                    if (res && res.data && res.data.url && res.data.url.trim() !== '') {
+                        const url = res.data.url;
+                        blockedZipUrl = url;
+                        downloadAndVerify(url);
+                    } else if (res && res.status && (res.status.code === 10000 || res.status === 10000)) {
+                         const $btn = $('.tm-download-active span');
+                         if($btn.length && $btn.text() !== 'Processing...') {
+                             $btn.text('Processing...');
+                         }
+                    }
+                } catch (e) {}
+            });
+        }
+
         if (this._url && this._url.includes('batch-cancel') && this._method === 'POST') {
             try {
                 const requestData = JSON.parse(body);
-
                 if (requestData.work_ids && Array.isArray(requestData.work_ids)) {
                     pendingDeletionIDs = requestData.work_ids;
                 } else if (requestData.ids && Array.isArray(requestData.ids)) {
                     pendingDeletionIDs = requestData.ids;
                 }
-            } catch (e) {
-                console.error('SeaArt Script: Error parsing request body', e);
-            }
-        }
+            } catch (e) {}
 
-        this.addEventListener('load', function() {
-            if (this._url && this._url.includes('/resource/batchImagesZip')) {
-                try {
-                    const res = JSON.parse(this.responseText);
-                    if (res && res.data && res.data.url) {
-                        $(document).trigger('seaart_download_ready');
-                    }
-                } catch (e) {
-                    console.error('SeaArt Script: Error parsing XHR response', e);
-                }
-            }
-
-            if (this._url && this._url.includes('batch-cancel') && this._method === 'POST') {
-                try {
+            this.addEventListener('load', function() {
+                 try {
                     const res = JSON.parse(this.responseText);
                     if (res && res.status && (res.status.code === 10000 || res.status === 10000)) {
                         setTimeout(() => {
                             $(document).trigger('seaart_items_deleted');
-                        }, 100);
+                        }, 500);
                     }
-                } catch (e) {
-                    console.error('SeaArt Script: Error parsing Delete response', e);
-                }
-            }
-        });
+                } catch (e) {}
+            });
+        }
 
         return originalSend.apply(this, arguments);
     };
+
+    function triggerDownloadState(state, progress) {
+        $(document).trigger('seaart_download_update', { state, progress });
+    }
+
+    function downloadAndVerify(url) {
+        const absoluteUrl = resolveUrl(url);
+        const fileName = absoluteUrl.split('/').pop().split('?')[0] || 'seaart_batch.zip';
+
+        triggerDownloadState('Verifying', 0);
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: absoluteUrl,
+            responseType: 'blob',
+            onprogress: function(e) {
+                if (e.lengthComputable) {
+                    const percent = Math.floor((e.loaded / e.total) * 100);
+                    triggerDownloadState('Downloading', percent);
+                }
+            },
+            onload: function(response) {
+                if (response.status >= 200 && response.status < 300) {
+                    const blob = response.response;
+                    const contentLength = response.responseHeaders.match(/content-length:\s*(\d+)/i);
+                    const expectedSize = contentLength ? parseInt(contentLength[1], 10) : null;
+
+                    if (expectedSize && blob.size !== expectedSize) {
+                        triggerDownloadState('Corrupt');
+                        const serverMB = (blob.size / (1024 * 1024)).toFixed(2);
+                        const expectedMB = (expectedSize / (1024 * 1024)).toFixed(2);
+                        alert(`Download failed validation. Server sent ${serverMB} MB, expected ${expectedMB} MB.`);
+                        return;
+                    }
+
+                    saveFile(blob, fileName);
+                    triggerDownloadState('Complete');
+                } else {
+                    triggerDownloadState('Error');
+                }
+            },
+            onerror: function(err) {
+                triggerDownloadState('Error');
+            }
+        });
+    }
+
+    function saveFile(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+
+        if (a.click) {
+             a.click();
+        }
+
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+    }
 
     function normalizeText(s) {
         return (s || '').replace(/\s+/g, ' ').trim();
@@ -84,20 +187,55 @@
         return new Promise(r => setTimeout(r, ms));
     }
 
+    function addCustomStyles() {
+        if ($('#tm-custom-styles').length) return;
+        const style = document.createElement('style');
+        style.id = 'tm-custom-styles';
+        style.textContent = `
+            .tm-select-btn {
+                color: #fff !important;
+                opacity: 1 !important;
+                cursor: pointer !important;
+                pointer-events: auto !important;
+                transition: background-color 0.2s ease, opacity 0.2s ease;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .tm-select-btn:hover {
+                background-color: rgba(255, 255, 255, 0.15) !important;
+            }
+            .tm-select-btn span {
+                color: #fff !important;
+            }
+            .tm-select-btn-disabled {
+                opacity: 0.5 !important;
+                pointer-events: none !important;
+                cursor: not-allowed !important;
+                background-color: transparent !important;
+            }
+            .tm-select-btn-disabled span {
+                color: rgba(255, 255, 255, 0.5) !important;
+            }
+            .tm-disabled-state {
+                opacity: 0.5 !important;
+                pointer-events: none !important;
+                cursor: not-allowed !important;
+            }
+            .tm-download-complete span {
+                color: #4caf50 !important;
+            }
+            .tm-download-error span {
+                color: #f44336 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     function updateDeleteButton() {
         const $deleteBtn = $('.floating-box .btn-box .item-btn').filter((i, el) => normalizeText($(el).text()) === 'Delete');
         if (isDownloading) {
-            $deleteBtn.css({
-                'opacity': '0.5',
-                'pointer-events': 'none',
-                'cursor': 'not-allowed'
-            });
+            $deleteBtn.addClass('tm-disabled-state');
         } else {
-            $deleteBtn.css({
-                'opacity': '1',
-                'pointer-events': 'auto',
-                'cursor': 'pointer'
-            });
+            $deleteBtn.removeClass('tm-disabled-state');
         }
     }
 
@@ -111,17 +249,10 @@
             if ($btn.hasClass('tm-download-hooked')) return;
 
             $btn.addClass('tm-download-hooked');
-
             $btn.on('click', function() {
                 const $txt = $btn.find('span').length ? $btn.find('span') : $btn;
                 $txt.text('Fetching');
-                $btn.addClass('tm-download-active');
-                $btn.css({
-                    'opacity': '0.6',
-                    'pointer-events': 'none',
-                    'cursor': 'not-allowed'
-                });
-
+                $btn.addClass('tm-download-active tm-disabled-state');
                 isDownloading = true;
                 updateDeleteButton();
             });
@@ -140,58 +271,87 @@
         });
     }
 
-    $(document).on('seaart_download_ready', function() {
-        isDownloading = false;
-        updateDeleteButton();
+    function forceGridRepack() {
+        window.dispatchEvent(new Event('resize'));
+        setTimeout(() => {
+            const $activeFilter = $('.item-filter.active').first();
+            if ($activeFilter.length) {
+                nativeClick($activeFilter[0]);
+            }
+        }, 100);
+    }
 
+    $(document).on('seaart_download_update', function(e, data) {
         const $btn = $('.tm-download-active');
-        if ($btn.length) {
-            const $txt = $btn.find('span').length ? $btn.find('span') : $btn;
+        if (!$btn.length) return;
 
+        const $txt = $btn.find('span').length ? $btn.find('span') : $btn;
+
+        if (data.state === 'Downloading') {
+            $txt.text(`DL ${data.progress}%`);
+        } else if (data.state === 'Verifying') {
+            $txt.text('Verifying...');
+        } else if (data.state === 'Complete') {
             $txt.text('Complete');
-            $btn.css({
-                'opacity': '1',
-                'pointer-events': 'auto',
-                'cursor': 'pointer'
-            });
-
-            $btn.removeClass('tm-download-active').addClass('tm-download-complete');
+            $btn.removeClass('tm-disabled-state tm-download-active').addClass('tm-download-complete');
+            isDownloading = false;
+            updateDeleteButton();
+        } else if (data.state === 'Error' || data.state === 'Corrupt') {
+            $txt.text('Download');
+            $btn.removeClass('tm-disabled-state tm-download-active tm-download-error');
+            isDownloading = false;
+            updateDeleteButton();
         }
     });
 
     $(document).on('seaart_items_deleted', function() {
+        // Reset Download Button State
+        const $dlBtn = $('.floating-box .btn-box .item-btn').filter(function() {
+            return $(this).hasClass('tm-download-hooked');
+        });
+        if ($dlBtn.length) {
+            $dlBtn.removeClass('tm-download-active tm-download-complete tm-download-error tm-disabled-state');
+            const $txt = $dlBtn.find('span').length ? $dlBtn.find('span') : $dlBtn;
+            $txt.text('Download');
+            isDownloading = false;
+        }
+
         if (pendingDeletionIDs && pendingDeletionIDs.length > 0) {
+            let removedCount = 0;
             pendingDeletionIDs.forEach((workID) => {
                 try {
                     let $item = $('.waterfall-item').filter(function() {
                         const href = $(this).attr('href');
-                        if (href && href.includes(workID)) {
-                            return true;
-                        }
-
+                        if (href && href.includes(workID)) return true;
                         const $link = $(this).find('a[href*="' + workID + '"]');
                         return $link.length > 0;
                     });
 
                     if ($item.length) {
                         $item.remove();
+                        removedCount++;
                     } else {
                         const $byData = $('.waterfall-item').filter(function() {
                             const dataId = $(this).attr('data-id') || $(this).attr('data-work-id') || $(this).data('id') || $(this).data('work-id');
                             return dataId === workID;
                         });
-
                         if ($byData.length) {
                             $byData.remove();
+                            removedCount++;
                         }
                     }
-                } catch (e) {
-                    console.error('SeaArt Script: Error removing item', e);
-                }
+                } catch (e) {}
             });
-
             pendingDeletionIDs = [];
+
+            if (removedCount > 0) {
+                forceGridRepack();
+            }
         }
+
+        activeSelectCount = 0;
+        updateSelectButtonsUI();
+        updateDeleteButton();
     });
 
     function ensureEditModeActive() {
@@ -202,11 +362,14 @@
     }
 
     function nativeClick(element) {
-        element.dispatchEvent(new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        }));
+        if (element.click) {
+            element.click();
+        } else {
+            element.dispatchEvent(new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true
+            }));
+        }
     }
 
     function unselectAll() {
@@ -268,30 +431,18 @@
     function setSelectButtonUI($btn, count) {
         const $checkIcon = $btn.find('.check-box i');
         const $textSpan = $btn.find('span');
-        
+        $btn.removeAttr('style');
+
         if (activeSelectCount === count) {
             $checkIcon.show().css({ 'visibility': 'visible', 'opacity': '1' });
-            $btn.css({
-                'opacity': '1',
-                'pointer-events': 'auto',
-                'cursor': 'pointer'
-            });
+            $btn.addClass('tm-select-btn').removeClass('tm-select-btn-disabled');
         } else if (activeSelectCount !== 0 && activeSelectCount !== count) {
             $checkIcon.hide();
-            $btn.css({
-                'opacity': '0.5',
-                'pointer-events': 'none',
-                'cursor': 'not-allowed'
-            });
+            $btn.addClass('tm-select-btn tm-select-btn-disabled');
         } else {
             $checkIcon.hide();
-            $btn.css({
-                'opacity': '1',
-                'pointer-events': 'auto',
-                'cursor': 'pointer'
-            });
+            $btn.addClass('tm-select-btn').removeClass('tm-select-btn-disabled');
         }
-        
         $textSpan.text('Select ' + count);
     }
 
@@ -308,7 +459,8 @@
         const $textSpan = $btn.find('span');
         const $checkIcon = $btn.find('.check-box i');
 
-        $btn.addClass('tm-working').css('opacity', '0.7');
+        $btn.addClass('tm-working');
+        $btn.css('opacity', '0.7');
 
         if (activeSelectCount === count) {
             activeSelectCount = 0;
@@ -317,9 +469,8 @@
             try {
                 unselectAll();
             } catch (err) {
-                console.error(err);
             } finally {
-                $btn.removeClass('tm-working').css('opacity', '1');
+                $btn.removeClass('tm-working').css('opacity', '');
                 updateSelectButtonsUI();
             }
             return;
@@ -330,7 +481,6 @@
                 unselectAll();
                 await sleep(250);
             } catch (err) {
-                console.error(err);
             }
         }
 
@@ -344,21 +494,26 @@
             await selectFirstN(count);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
-            console.error(err);
             activeSelectCount = 0;
         } finally {
-            $btn.removeClass('tm-working').css('opacity', '1');
+            $btn.removeClass('tm-working').css('opacity', '');
             updateSelectButtonsUI();
         }
     }
 
     function buildSelectButton($templateBtn, count) {
         const $btn = $templateBtn.clone().addClass(REPLACED_CLASS_PREFIX + count);
+
+        $btn.removeClass('disabled is-disabled');
+        $btn.removeAttr('disabled');
+        $btn.attr('aria-disabled', 'false');
+
         $btn.off('click').on('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             onSelectButtonClick($btn, count);
         });
+
         setSelectButtonUI($btn, count);
         return $btn;
     }
@@ -420,6 +575,7 @@
     }
 
     $(document).ready(function() {
+        addCustomStyles();
         setInterval(() => {
             if ($('.manageGroup').length) {
                 replaceSelectButtons();
@@ -427,7 +583,7 @@
             hookDownloadButton();
             hookDeleteButton();
             cleanInterface();
-        }, 1000);
+        }, 100);
     });
 
 })();

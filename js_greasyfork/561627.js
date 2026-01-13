@@ -291,26 +291,34 @@
     // -------------------------------------------------------------------------
     //  Layout Logic (New)
     // -------------------------------------------------------------------------
+    
+    // ★追加: 画面幅に応じたデフォルトのグリッド列数を返す関数
+    function getDefaultGridColumns() {
+        const width = window.innerWidth;
+        if (width <= 767) return 3; // スマホ縦
+        if (width <= 1024) return 4; // スマホ横・タブレット
+        return 5; // PC
+    }
 
-    // ★追加: 実行中の状態を保持する変数
+    // ★変更: 初期値を固定の4ではなく、画面幅に合わせる
     let runtimeLayoutMode = 'list';
-    let runtimeGridColumns = 4;
+    let runtimeGridColumns = getDefaultGridColumns();
 
-    // ★追加: 初期化用 (Mainのinitから呼ぶ)
+    // 初期化用
     function initLayout(settings) {
         settings = settings || Storage.loadSettings();
         
-        // ★修正: 同期モードがONのときだけストレージの値をロードする
         if (settings.syncMode) {
             runtimeLayoutMode = (settings.ui && settings.ui.layoutMode) || 'list';
-            runtimeGridColumns = (settings.ui && settings.ui.gridColumns) || 4;
+            // ★変更: 保存値がない場合は画面幅に合わせる
+            runtimeGridColumns = (settings.ui && settings.ui.gridColumns) || getDefaultGridColumns();
         } else {
-            // 同期OFFならデフォルト値（リスト、4列）で初期化
+            // 同期OFFならデフォルト
             runtimeLayoutMode = 'list';
-            runtimeGridColumns = 4;
+            // ★変更: 固定の4ではなく画面幅に合わせる
+            runtimeGridColumns = getDefaultGridColumns();
         }
         
-        // 適用
         reapplyCurrentLayout();
     }
 
@@ -349,7 +357,7 @@
         // 同期ONならストレージの値を正としてランタイムを更新
         // 同期OFFならランタイム値を維持（何もしない）
         if (settings.syncMode) {
-            runtimeGridColumns = (settings.ui && settings.ui.gridColumns) || 4;
+            runtimeGridColumns = (settings.ui && settings.ui.gridColumns) || getDefaultGridColumns();
         }
         
         // CSS変数をセット (常に runtimeGridColumns を使う)
@@ -567,6 +575,55 @@
         syncThumbnailSliderUI(1.0);
     }
 
+    // -------------------------------------------------------------------------
+    //  Grid Details Logic
+    // -------------------------------------------------------------------------
+
+    // 実行中の状態保持
+    let runtimeShowGridDetails = false;
+
+    function initGridDetails(settings) {
+        settings = settings || Storage.loadSettings();
+        
+        if (settings.syncMode) {
+            runtimeShowGridDetails = (settings.ui && settings.ui.showGridDetails) || false;
+        } else {
+            runtimeShowGridDetails = false;
+        }
+        
+        applyGridDetails();
+    }
+
+    function toggleGridDetails(isActive) {
+        runtimeShowGridDetails = isActive;
+        applyGridDetails();
+        
+        // 保存
+        if (Storage.updateUI) {
+            Storage.updateUI('showGridDetails', isActive);
+        }
+    }
+
+    function applyGridDetails() {
+        // htmlタグにクラスを付与することで制御 (DOM書き換えに強い)
+        if (runtimeShowGridDetails) {
+            document.documentElement.classList.add('htf-show-grid-details');
+        } else {
+            document.documentElement.classList.remove('htf-show-grid-details');
+        }
+    }
+
+    function resetGridDetails() {
+        runtimeShowGridDetails = false;
+        applyGridDetails();
+        
+        // ボタンの見た目もリセットする必要があるため、UI側でクラス操作が必要だが、
+        // LogicからはDOM操作(クラス着脱)のみ行う。
+        // ボタンのactiveクラス操作はUI側のイベントリスナーや保存時処理で行う。
+        const btn = document.querySelector('.tool-btn.details-btn');
+        if (btn) btn.classList.remove('active');
+    }
+
     // グローバル公開
     window.HitomiFilterLogic = {
         toggleState,
@@ -593,6 +650,11 @@
         resetThumbnailSlider,
         initLayout,           // ★追加
         reapplyCurrentLayout, // ★追加
-        resetLayoutSettings   // ★追加
+        resetLayoutSettings,   // ★追加
+        getDefaultGridColumns, // ★追加: UI側でも使うため公開
+        initGridDetails,   // ★追加
+        toggleGridDetails, // ★追加
+        applyGridDetails,  // ★追加
+        resetGridDetails   // ★追加
     };
 })(window);

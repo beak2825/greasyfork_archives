@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RockyIdle 增强辅助 (30秒版 + 视觉反馈 + 开关 + 防休眠)
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.6
 // @description  每隔30秒自动点击 Boost，带有视觉提示、拖动开关及静默音频防休眠
 // @author       Gemini
 // @match        https://rockyidle.com/*
@@ -15,7 +15,7 @@
     'use strict';
 
     let isRunning = true;
-    const INTERVAL_MS = 30000; // 设置为 30000 毫秒 (30秒)
+    const INTERVAL_MS = 10000; // 设置为 30000 毫秒 (30秒)
 
     // --- 1. 创建 UI 样式 ---
     const style = document.createElement('style');

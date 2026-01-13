@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         RID Avito
 // @namespace    cloge0.rid.avito
-// @version      1.6 Smart Zones
+// @version      1.7 Smart Zones
 // @description  Automated Reserve Filter by @cloge0. Protected.
 // @author       @cloge0
 // @copyright    2024, @cloge0. All rights reserved.
+// @license      MIT
 // @match        https://www.avito.ru/*
 // @exclude      https://www.avito.ru/profile/*
 // @exclude      https://www.avito.ru/additem*

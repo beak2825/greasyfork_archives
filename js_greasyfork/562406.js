@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name        批量复制未下载作品链接（基于ExHentai Lanraragi Checker脚本）
-// @namespace   https://github.com/Putarku
+// @name        批量复制未下载作品链接（基于ExHentai Lanraragi Checker）
+// @namespace   https://github.com/slqy123/userscripts
 // @match       https://exhentai.org/*
 // @match       https://e-hentai.org/*
 // @grant       GM_setClipboard
@@ -11,8 +11,8 @@
 // @version     1.0
 // @author      sitiyou
 // @description Floating panel for copying ExHentai/E-Hentai gallery links)
-// @downloadURL https://update.greasyfork.org/scripts/562406/%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E6%9C%AA%E4%B8%8B%E8%BD%BD%E4%BD%9C%E5%93%81%E9%93%BE%E6%8E%A5%EF%BC%88%E5%9F%BA%E4%BA%8EExHentai%20Lanraragi%20Checker%E8%84%9A%E6%9C%AC%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/562406/%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E6%9C%AA%E4%B8%8B%E8%BD%BD%E4%BD%9C%E5%93%81%E9%93%BE%E6%8E%A5%EF%BC%88%E5%9F%BA%E4%BA%8EExHentai%20Lanraragi%20Checker%E8%84%9A%E6%9C%AC%EF%BC%89.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562406/%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E6%9C%AA%E4%B8%8B%E8%BD%BD%E4%BD%9C%E5%93%81%E9%93%BE%E6%8E%A5%EF%BC%88%E5%9F%BA%E4%BA%8EExHentai%20Lanraragi%20Checker%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/562406/%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E6%9C%AA%E4%B8%8B%E8%BD%BD%E4%BD%9C%E5%93%81%E9%93%BE%E6%8E%A5%EF%BC%88%E5%9F%BA%E4%BA%8EExHentai%20Lanraragi%20Checker%EF%BC%89.meta.js
 // ==/UserScript==
 
 (function() {

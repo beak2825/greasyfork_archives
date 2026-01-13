@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Torn Quick Items + Armoury (Glass UI + Fac Use)
 // @namespace    https://torn.com/
-// @version      1.3.8
+// @version      1.3.9
 // @description  Torns Quick Items Script
-// @match        https://www.torn.com/*
+// @match        https://www.torn.com/item*
+// @match        https://www.torn.com/factions.php?step=your#/tab=armoury*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @run-at       document-idle

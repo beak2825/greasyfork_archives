@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         salesDrive_send_to_print
 // @namespace    http://tampermonkey.net/
-// @version      1.03
+// @version      1.04
 // @description  Відправка замовлення на пошту при статусі "В друці"
 // @author       LanNet
 // @match        https://e-oboi.salesdrive.me/ua/index.html?formId=1*
@@ -24,6 +24,9 @@
 
     // Зберігаємо оброблені рядки, щоб не додавати кнопки повторно
     const processedRows = new Set();
+    
+    // Флаг для запобігання паралельному виконанню processRowsWithStatus
+    let isProcessingRows = false;
 
     // Функція для завантаження PDF файлу та конвертації в base64
     async function downloadPDFAsBase64(url) {
@@ -863,9 +866,33 @@
             return;
         }
         
-        // Перевіряємо, чи вже додали кнопку
+        // Перевіряємо, чи вже додали кнопку в row
         if (row.querySelector('.send-to-print-btn')) {
+            console.log('ℹ️ Кнопка вже існує в row, пропускаємо');
             return;
+        }
+        
+        // Перевіряємо, чи вже додали кнопку в межах statusBadge або його батьківських елементів
+        if (statusBadge) {
+            // Шукаємо кнопку в батьківському елементі statusBadge
+            const parentElement = statusBadge.parentNode;
+            if (parentElement) {
+                const existingButton = parentElement.querySelector('.send-to-print-btn');
+                if (existingButton) {
+                    console.log('ℹ️ Кнопка вже існує в батьківському елементі statusBadge, видаляємо дублікати');
+                    // Видаляємо всі існуючі кнопки в межах батьківського елемента
+                    const allButtons = parentElement.querySelectorAll('.send-to-print-btn');
+                    allButtons.forEach(btn => {
+                        // Видаляємо контейнер кнопки, якщо він існує
+                        const container = btn.parentElement;
+                        if (container && (container.style.marginTop === '5px' || container.classList.contains('form-group'))) {
+                            container.remove();
+                        } else {
+                            btn.remove();
+                        }
+                    });
+                }
+            }
         }
         
         // Перевіряємо наявність файлу перед показом кнопки
@@ -1163,8 +1190,28 @@
 
         buttonContainer.appendChild(button);
         
+        // ФІНАЛЬНА перевірка перед вставкою: видаляємо всі існуючі кнопки в межах батьківського елемента
+        if (statusBadge && statusBadge.parentNode) {
+            const parentElement = statusBadge.parentNode;
+            const existingButtons = parentElement.querySelectorAll('.send-to-print-btn');
+            if (existingButtons.length > 0) {
+                console.log('⚠️ Знайдено ' + existingButtons.length + ' існуючих кнопок перед вставкою, видаляємо їх');
+                existingButtons.forEach(btn => {
+                    // Видаляємо контейнер кнопки, якщо він існує
+                    const container = btn.parentElement;
+                    if (container && (container.style.marginTop === '5px' || container.classList.contains('form-group'))) {
+                        container.remove();
+                    } else {
+                        btn.remove();
+                    }
+                });
+            }
+        }
+        
         // Вставляємо кнопку після статусу
-        statusBadge.parentNode.insertBefore(buttonContainer, statusBadge.nextSibling);
+        if (statusBadge && statusBadge.parentNode) {
+            statusBadge.parentNode.insertBefore(buttonContainer, statusBadge.nextSibling);
+        }
     }
 
     // Функція для показу повідомлень
@@ -1228,20 +1275,29 @@
     }
 
     async function processRowsWithStatus() {
-        // Перевіряємо, чи сторінка готова до обробки
-        if (!isPageReady()) {
-            console.log('⏳ Сторінка ще не готова, чекаємо...');
-            // Чекаємо трохи і повторюємо спробу
-            setTimeout(() => {
-                processRowsWithStatus().catch(error => {
-                    console.error('Помилка в processRowsWithStatus (retry after wait):', error);
-                });
-            }, 500);
+        // Запобігаємо паралельному виконанню
+        if (isProcessingRows) {
+            console.log('⏳ processRowsWithStatus вже виконується, пропускаємо');
             return;
         }
         
-        // Шукаємо всі рядки в таблиці замовлень
-        const rows = document.querySelectorAll('tr.price-to-order, tr[ng-repeat*="order"], tr[ng-repeat*="item"]');
+        isProcessingRows = true;
+        
+        try {
+            // Перевіряємо, чи сторінка готова до обробки
+            if (!isPageReady()) {
+                console.log('⏳ Сторінка ще не готова, чекаємо...');
+                // Чекаємо трохи і повторюємо спробу
+                setTimeout(() => {
+                    processRowsWithStatus().catch(error => {
+                        console.error('Помилка в processRowsWithStatus (retry after wait):', error);
+                    });
+                }, 500);
+                return;
+            }
+            
+            // Шукаємо всі рядки в таблиці замовлень
+            const rows = document.querySelectorAll('tr.price-to-order, tr[ng-repeat*="order"], tr[ng-repeat*="item"]');
         
         // Використовуємо for...of для підтримки await
         for (const row of rows) {
@@ -1267,8 +1323,18 @@
                 const isVDruci = statusText === 'В друці' || statusText.toLowerCase().includes('в друці');
                 
                 if (isGotuemo || isVDruci) {
-                    await createSendToPrintButton(row, statusBadge);
-                    processedRows.add(rowId);
+                    // Перевіряємо наявність кнопки перед створенням
+                    const hasButtonInRow = row.querySelector('.send-to-print-btn');
+                    const parentElement = statusBadge.parentNode;
+                    const hasButtonInParent = parentElement && parentElement.querySelector('.send-to-print-btn');
+                    
+                    if (!hasButtonInRow && !hasButtonInParent) {
+                        await createSendToPrintButton(row, statusBadge);
+                        processedRows.add(rowId);
+                    } else {
+                        console.log('ℹ️ Кнопка вже існує для рядка, пропускаємо');
+                        processedRows.add(rowId);
+                    }
                 }
             }
         }
@@ -1282,25 +1348,39 @@
             
             if (isGotuemo || isVDruci) {
                 const row = badge.closest('tr') || badge.closest('div') || badge.parentElement;
-                if (row && !row.querySelector('.send-to-print-btn')) {
+                
+                // Перевіряємо наявність кнопки в row та в батьківському елементі badge
+                const hasButtonInRow = row && row.querySelector('.send-to-print-btn');
+                const parentElement = badge.parentNode;
+                const hasButtonInParent = parentElement && parentElement.querySelector('.send-to-print-btn');
+                
+                if (!hasButtonInRow && !hasButtonInParent) {
                     await createSendToPrintButton(row, badge);
+                    badge.classList.add('send-to-print-processed');
+                } else {
+                    console.log('ℹ️ Кнопка вже існує для цього статусу, пропускаємо');
                     badge.classList.add('send-to-print-processed');
                 }
             }
         }
 
-        // Обробка сторінки деталей замовлення (форма зі статусом)
-        // Перевіряємо, чи вже обробляли сторінку деталей, щоб уникнути подвійної обробки
-        if (!isProcessingDetailsPage && !detailsPageProcessed) {
-            isProcessingDetailsPage = true;
-            try {
-                await processOrderDetailsPage();
-                detailsPageProcessed = true;
-            } catch (error) {
-                console.error('Помилка обробки сторінки деталей:', error);
-            } finally {
-                isProcessingDetailsPage = false;
+            // Обробка сторінки деталей замовлення (форма зі статусом)
+            // Перевіряємо, чи вже обробляли сторінку деталей, щоб уникнути подвійної обробки
+            if (!isProcessingDetailsPage && !detailsPageProcessed) {
+                isProcessingDetailsPage = true;
+                try {
+                    await processOrderDetailsPage();
+                    detailsPageProcessed = true;
+                } catch (error) {
+                    console.error('Помилка обробки сторінки деталей:', error);
+                } finally {
+                    isProcessingDetailsPage = false;
+                }
             }
+        } catch (error) {
+            console.error('Помилка в processRowsWithStatus:', error);
+        } finally {
+            isProcessingRows = false;
         }
     }
 
@@ -2107,7 +2187,6 @@
 
     // Захист від зациклення - debounce для обробки змін
     let processTimeout = null;
-    let isProcessing = false;
     
     // Спостерігач за змінами в DOM з debounce
     const observer = new MutationObserver((mutations) => {
@@ -2203,12 +2282,10 @@
         
         // Встановлюємо новий таймер (чекаємо 500мс після останньої зміни)
         processTimeout = setTimeout(() => {
-            if (!isProcessing) {
-                isProcessing = true;
+            // Використовуємо isProcessingRows замість isProcessing для уніфікованого захисту
+            if (!isProcessingRows) {
                 processRowsWithStatus().catch(error => {
                     console.error('Помилка в processRowsWithStatus (observer):', error);
-                }).finally(() => {
-                    isProcessing = false;
                 });
             }
         }, shouldProcess ? 300 : 500); // Менша затримка, якщо знайшли релевантні елементи
@@ -2222,33 +2299,43 @@
             lastProcessedUrl = currentUrl;
             detailsPageProcessed = false;
             isProcessingDetailsPage = false;
+            // Очищаємо processedRows при зміні URL, щоб обробити нові рядки
+            processedRows.clear();
             
             // Запускаємо обробку після зміни URL (з кількома спробами для AngularJS)
             setTimeout(() => {
-                processRowsWithStatus().catch(error => {
-                    console.error('Помилка в processRowsWithStatus (checkUrlChange):', error);
-                });
+                if (!isProcessingRows) {
+                    processRowsWithStatus().catch(error => {
+                        console.error('Помилка в processRowsWithStatus (checkUrlChange):', error);
+                    });
+                }
             }, 500);
             
             // Додаткова спроба через 1.5 секунди
             setTimeout(() => {
-                processRowsWithStatus().catch(error => {
-                    console.error('Помилка в processRowsWithStatus (checkUrlChange retry):', error);
-                });
+                if (!isProcessingRows) {
+                    processRowsWithStatus().catch(error => {
+                        console.error('Помилка в processRowsWithStatus (checkUrlChange retry):', error);
+                    });
+                }
             }, 1500);
             
             // Ще одна спроба через 3 секунди
             setTimeout(() => {
-                processRowsWithStatus().catch(error => {
-                    console.error('Помилка в processRowsWithStatus (checkUrlChange retry 2):', error);
-                });
+                if (!isProcessingRows) {
+                    processRowsWithStatus().catch(error => {
+                        console.error('Помилка в processRowsWithStatus (checkUrlChange retry 2):', error);
+                    });
+                }
             }, 3000);
             
             // Остання спроба через 5 секунд
             setTimeout(() => {
-                processRowsWithStatus().catch(error => {
-                    console.error('Помилка в processRowsWithStatus (checkUrlChange retry 3):', error);
-                });
+                if (!isProcessingRows) {
+                    processRowsWithStatus().catch(error => {
+                        console.error('Помилка в processRowsWithStatus (checkUrlChange retry 3):', error);
+                    });
+                }
             }, 5000);
         }
     }
@@ -2266,32 +2353,43 @@
         detailsPageProcessed = false;
         isProcessingDetailsPage = false;
         lastProcessedUrl = window.location.href;
+        // Очищаємо processedRows при зміні hash, щоб обробити нові рядки
+        processedRows.clear();
+        
         // Запускаємо обробку після зміни hash (з кількома спробами та збільшеними затримками)
         setTimeout(() => {
-            processRowsWithStatus().catch(error => {
-                console.error('Помилка в processRowsWithStatus (hashchange):', error);
-            });
+            if (!isProcessingRows) {
+                processRowsWithStatus().catch(error => {
+                    console.error('Помилка в processRowsWithStatus (hashchange):', error);
+                });
+            }
         }, 500);
         
         // Додаткова спроба через 1.5 секунди
         setTimeout(() => {
-            processRowsWithStatus().catch(error => {
-                console.error('Помилка в processRowsWithStatus (hashchange retry):', error);
-            });
+            if (!isProcessingRows) {
+                processRowsWithStatus().catch(error => {
+                    console.error('Помилка в processRowsWithStatus (hashchange retry):', error);
+                });
+            }
         }, 1500);
         
         // Ще одна спроба через 3 секунди (для повільних завантажень)
         setTimeout(() => {
-            processRowsWithStatus().catch(error => {
-                console.error('Помилка в processRowsWithStatus (hashchange retry 2):', error);
-            });
+            if (!isProcessingRows) {
+                processRowsWithStatus().catch(error => {
+                    console.error('Помилка в processRowsWithStatus (hashchange retry 2):', error);
+                });
+            }
         }, 3000);
         
         // Остання спроба через 5 секунд (для дуже повільних завантажень)
         setTimeout(() => {
-            processRowsWithStatus().catch(error => {
-                console.error('Помилка в processRowsWithStatus (hashchange retry 3):', error);
-            });
+            if (!isProcessingRows) {
+                processRowsWithStatus().catch(error => {
+                    console.error('Помилка в processRowsWithStatus (hashchange retry 3):', error);
+                });
+            }
         }, 5000);
     });
 
@@ -2482,3 +2580,4 @@
         console.error('Помилка в processRowsWithStatus (initial):', error);
     });
 })();
+

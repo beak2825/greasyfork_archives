@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SpankBang Video Downloader
 // @namespace    everywhere
-// @version      0.1
+// @version      0.2
 // @description  download videos from spankbang.com
 // @author       ladroop
 // @match        https://spankbang.com/*/video/*
@@ -63,21 +63,32 @@
         insert.appendChild(newlielem);
     },2000);
 
-        function dlselected(){
-            var downloadurl=document.getElementById("downloadselect").options[document.getElementById("downloadselect").selectedIndex].value;
-            var filename=document.location.href.split("/")[5]+".mp4";
-            document.getElementById("downloading").style.display="block";
-            document.getElementById("waiting").style.display="none";
-            var download = GM_download({
-                url: downloadurl,
-                name: filename,
-                onload: dlready,
-             });
-        }
+    function dlselected(){
+        var downloadurl=document.getElementById("downloadselect").options[document.getElementById("downloadselect").selectedIndex].value;
+        var filename=document.location.href.split("/")[5].replaceAll("+", "_")+".mp4";
+        document.getElementById("downloading").style.display="block";
+        document.getElementById("waiting").style.display="none";
+        var download = GM_download({
+            url: downloadurl,
+            name: filename,
+            onload: dlready,
+            onerror: dlfail,
+        });
+    }
 
-        function dlready(){
+    function dlready(){
+        document.getElementById("downloading").style.display="none";
+        document.getElementById("waiting").style.display="block";
+        document.getElementById("downloadselect").selectedIndex=0;
+    }
+    function dlfail(){
+        document.getElementById("downloading").innerHTML="ERROR !";
+        setTimeout(function(){
+            document.getElementById("downloading").innerHTML="Downloading ...";
             document.getElementById("downloading").style.display="none";
             document.getElementById("waiting").style.display="block";
             document.getElementById("downloadselect").selectedIndex=0;
-        }
+        },5000);
+    }
+
 })();

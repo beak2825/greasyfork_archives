@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         SinoSoft-禅道优化
+// @name         禅道Bug剩余天数提醒 + 标签管理增强版
 // @namespace    http://tampermonkey.net/
-// @version      2..0.1
+// @version      2.0.2
 // @description  在禅道Bug列表中添加剩余天数列，支持标签管理、分组查看、筛选等功能
 // @author       You
 // @match        https://www.j-do.cn:9012/zentao/bug-browse-*
@@ -11,8 +11,8 @@
 // @grant        none
 // @run-at       document-end
 // @license All Rights Reserved
-// @downloadURL https://update.greasyfork.org/scripts/561909/SinoSoft-%E7%A6%85%E9%81%93%E4%BC%98%E5%8C%96.user.js
-// @updateURL https://update.greasyfork.org/scripts/561909/SinoSoft-%E7%A6%85%E9%81%93%E4%BC%98%E5%8C%96.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561909/%E7%A6%85%E9%81%93Bug%E5%89%A9%E4%BD%99%E5%A4%A9%E6%95%B0%E6%8F%90%E9%86%92%20%2B%20%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E5%A2%9E%E5%BC%BA%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/561909/%E7%A6%85%E9%81%93Bug%E5%89%A9%E4%BD%99%E5%A4%A9%E6%95%B0%E6%8F%90%E9%86%92%20%2B%20%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86%E5%A2%9E%E5%BC%BA%E7%89%88.meta.js
 // ==/UserScript==
 
 (function () {
@@ -61,6 +61,7 @@
 
     // 获取默认统计规则
     getDefaultStatisticsRules() {
+      return [];
     },
 
     // 保存数据
@@ -343,7 +344,7 @@
   // ==================== 统计计算引擎 ====================
   const StatisticsEngine = {
     calculate(rows) {
-      const rules = BugDataManager.getStatisticsRules();
+      const rules = BugDataManager.getStatisticsRules() || [];
       const results = [];
 
       rules.forEach(rule => {

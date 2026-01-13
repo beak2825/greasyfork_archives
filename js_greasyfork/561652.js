@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn Attack – Temporary Effects Viewer (UserID prompt)
 // @namespace    https://torn.com/
-// @version      1.6
-// @description  Shows currentTemporaryEffects applied to your player during attacks; asks for UserID on first run
+// @version      1.7
+// @description  Shows currentTemporaryEffects applied to your player and counts attackers already in the loader
 // @match        https://www.torn.com/loader.php?sid=attack&user*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/561652/Torn%20Attack%20%E2%80%93%20Temporary%20Effects%20Viewer%20%28UserID%20prompt%29.user.js
@@ -13,23 +13,35 @@
     'use strict';
 
     const STORAGE_KEY = 'tm_tempEffectsUserID';
-    let MY_USER_ID = localStorage.getItem(STORAGE_KEY);
+
+    let MY_USER_ID = parseInt(localStorage.getItem(STORAGE_KEY)) || null;
     let effectsBox = null;
+    let attackersInLoader = 0;
 
     /* ---------------- utils ---------------- */
 
-    function findCurrentTemporaryEffects(obj) {
+    function deepFind(obj, keyName) {
         if (!obj || typeof obj !== 'object') return null;
 
-        if (obj.currentTemporaryEffects) {
-            return obj.currentTemporaryEffects;
-        }
+        if (obj[keyName] !== undefined) return obj[keyName];
 
         for (const key in obj) {
-            const found = findCurrentTemporaryEffects(obj[key]);
-            if (found) return found;
+            const found = deepFind(obj[key], keyName);
+            if (found !== null) return found;
         }
         return null;
+    }
+
+    function findCurrentTemporaryEffects(obj) {
+        return deepFind(obj, 'currentTemporaryEffects');
+    }
+
+    function findAttackerUser(obj) {
+        return deepFind(obj, 'attackerUser');
+    }
+
+    function findCurrentDefends(obj) {
+        return deepFind(obj, 'currentDefends');
     }
 
     /* ---------------- UI ---------------- */
@@ -52,37 +64,11 @@
             border-radius: 6px;
             font-size: 12px;
             margin-right: 10px;
-            min-width: 140px;
+            min-width: 160px;
         `;
 
-        if (!MY_USER_ID) {
-            // Show input box if userID not set
-            effectsBox.innerHTML = `
-                <label style="font-weight:bold;margin-bottom:2px;">Enter Your UserID:</label>
-                <input type="text" id="tm-userid-input" placeholder="UserID" style="width:100%;padding:2px 4px;border-radius:4px;border:none;font-size:12px;">
-            `;
-            header.appendChild(effectsBox);
-
-            const input = effectsBox.querySelector('#tm-userid-input');
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    const val = parseInt(input.value.trim());
-                    if (!isNaN(val)) {
-                        MY_USER_ID = val;
-                        localStorage.setItem(STORAGE_KEY, val);
-                        updateUI([]); // switch to temp effects UI
-                    } else {
-                        alert('Please enter a valid numeric UserID.');
-                    }
-                }
-            });
-
-            return;
-        }
-
-        // If userID exists, normal temp effects placeholder
-        effectsBox.innerHTML = '<b>Temp Effects</b><span>None</span>';
         header.appendChild(effectsBox);
+        updateUI([]);
     }
 
     function renderEffect(effect) {
@@ -109,28 +95,58 @@
 
     function updateUI(effects) {
         ensureUI();
-        if (!effectsBox || !MY_USER_ID) return;
+        if (!effectsBox) return;
+
+        let html = `
+            <span style="font-weight:bold;">
+                Attackers in loader: ${attackersInLoader}
+            </span>
+            <b style="margin-top:4px;">Temp Effects</b>
+        `;
 
         if (!effects || effects.length === 0) {
-            effectsBox.innerHTML = '<b>Temp Effects</b><span>None</span>';
-            return;
+            html += `<span>None</span>`;
+        } else {
+            html += effects.map(renderEffect).join('');
         }
 
-        effectsBox.innerHTML =
-            `<b>Temp Effects</b>` +
-            effects.map(renderEffect).join('');
+        effectsBox.innerHTML = html;
     }
 
     /* ---------------- Data processing ---------------- */
 
     function processResponse(data) {
-        if (!MY_USER_ID) return; // wait until userID is set
+        if (!data || typeof data !== 'object') return;
+
+        // Auto-detect own UserID
+        if (!MY_USER_ID) {
+            const attackerUser = findAttackerUser(data);
+            if (attackerUser?.userID) {
+                MY_USER_ID = attackerUser.userID;
+                localStorage.setItem(STORAGE_KEY, MY_USER_ID);
+            }
+        }
+
+        // Count attackers in loader
+        const defends = findCurrentDefends(data);
+        if (Array.isArray(defends)) {
+            const uniqueAttackers = new Set(
+                defends.map(d => d.attackerID).filter(Boolean)
+            );
+            attackersInLoader = uniqueAttackers.size;
+        } else {
+            attackersInLoader = 0;
+        }
+
+        if (!MY_USER_ID) return;
 
         const effectsObj = findCurrentTemporaryEffects(data);
-        if (!effectsObj) return;
+        if (!effectsObj) {
+            updateUI([]);
+            return;
+        }
 
-        // debug hook (optional)
-        window.__lastAttackResponse = effectsObj;
+        window.__lastAttackResponse = data; // debug hook
 
         updateUI(effectsObj[MY_USER_ID] || []);
     }

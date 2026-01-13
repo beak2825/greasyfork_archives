@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               LANraragi 推荐栏
 // @namespace     https://github.com/Kelcoin
-// @version            1.3
+// @version            1.3.1
 // @description     基于标签为 LANraragi 阅读器下方推荐区：猜你喜欢 & 同作者
 // @author             Kelcoin
 // @match              *://*/reader?id=*
@@ -36,34 +36,79 @@
 
         // 自定义权重 可自行按照偏好新增和修改
         customhWeightTags: {
-            'female:netorare': 5,
-            'female:mind control': 3,
-            'female:corruption': 3,
-            'female:tomboy': 5,
+            'female:ahegao': 1.5,
+            'female:anal intercourse': 2,
+            'female:anal': 2,
+            'female:bbw': 4,
+            'female:beauty mark': 1.5,
+            'female:big ass': 1.5,
             'female:big breast': 2,
-            'female:pantyhose': 2,
-            'female:stockings': 2,
-            'female:lolicon': 5,
-            'female:harem': 5,
-            'female:futanari': 5,
-            'female:anal': 3,
-            'female:public use': 5,
-            'female:bbw': 5,
-            'female:yuri': 5,
-            'female:anal intercourse': 3,
-            'female:paizuri': 2,
+            'female:bikini': 1.5,
+            'female:blowjob': 1.5,
+            'female:bondage': 2,
+            'female:cheating': 2,
+            'female:corruption': 2,
             'female:dark skin': 2,
-            'female:huge breasts': 3,
+            'female:defloration': 2,
             'female:dickgirl on female': 3,
-            'female:hairy': 3,
-            'male:netorare': 5,
+            'female:double penetration': 2,
+            'female:exhibitionism': 1.5,
+            'female:femdom': 3,
+            'female:fingering': 1.5,
+            'female:futanari': 5,
+            'female:glasses': 1.5,
+            'female:gloves': 1.5,
+            'female:gyaru': 3,
+            'female:hairy': 2,
+            'female:handjob': 1.5,
+            'female:harem': 3,
+            'female:huge breasts': 2,
+            'female:impregnation': 2,
+            'female:kemonomimi': 2,
+            'female:kissing': 1.5,
+            'female:lactation': 2,
+            'female:lingerie': 2,
+            'female:lolicon': 5,
+            'female:masturbation': 1.5,
+            'female:milf': 3,
+            'female:mind control': 3,
+            'female:mother': 3,
+            'female:nakadashi': 2,
+            'female:netorare': 3,
+            'female:paizuri': 1.5,
+            'female:pantyhose': 2,
+            'female:ponytail': 1.5,
+            'female:public use': 3,
+            'female:rape': 3,
+            'female:schoolgirl uniform': 1.5,
+            'female:sex toys': 1.5,
+            'female:shemale': 4,
+            'female:sister': 2,
+            'female:squirting': 1.5,
+            'female:stockings': 2,
+            'female:sweating': 1.5,
+            'female:swimsuit': 1.5,
+            'female:tomboy': 4,
+            'female:yuri': 3,
+            'male:anal': 3,
+            'male:bbm': 3,
+            'male:big penis': 1.5,
+            'male:condom': 1.5,
+            'male:crossdressing': 3,
+            'male:dark skin': 3,
+            'male:dilf': 3,
+            'male:gender change': 4,
+            'male:harem': 3,
+            'male:netorare': 3,
+            'male:shotacon': 3,
             'male:tomgirl': 5,
-            'male:harem': 5,
-            'male:shotacon': 2,
-            'male:gender change': 5,
-            'male:virginity': 2,
-            'mixed:incest': 5,
+            'male:virginity': 3,
+            'male:yaoi': 4,
+            'mixed:ffm threesome': 2,
             'mixed:group': 2,
+            'mixed:incest': 3,
+            'mixed:mmf threesome': 2,
+            'other:3d': 3,
             'parody:': 2,
             'character:': 2,
             'cosplayer:': 3,
@@ -523,24 +568,24 @@
 
         const candidateTags = tagsStr.split(',');
         const len = candidateTags.length;
-
+        
         let totalScore = 0;
-
+        
         const hasWeightMap = !!customWeightMap;
 
         for (let i = 0; i < len; i++) {
             const rawTag = candidateTags[i];
             if (!rawTag) continue;
-
+            
             const tag = rawTag.trim().toLowerCase();
             if (!tag) continue;
 
             if (sourceTagsLower.has(tag)) {
-                let rawPoints = 1;
+                let rawPoints = 1; 
 
                 if (hasWeightMap) {
                     const exactWeight = customWeightMap[tag];
-
+                    
                     if (exactWeight !== undefined) {
                         rawPoints = exactWeight;
                     } else {
@@ -548,7 +593,7 @@
                         if (colonIndex > 0) {
                             const namespaceKey = tag.slice(0, colonIndex + 1);
                             const nsWeight = customWeightMap[namespaceKey];
-
+                            
                             if (nsWeight !== undefined) {
                                 rawPoints = nsWeight;
                             }
@@ -820,7 +865,7 @@
                     </div>
                 </div>
                 <div id="lrr-rec-view-sim" class="lrr-rec-scroll-view">
-                    <div class="lrr-rec-loading">正在分析标签并搜索...</div>
+                    <div class="lrr-rec-loading">正在生成推荐...</div>
                 </div>
                 <div id="lrr-rec-view-artist" class="lrr-rec-scroll-view lrr-rec-view-hidden"></div>
             </div>
@@ -887,7 +932,7 @@
                 switchTab('sim');
             }
         };
-
+        
         btnArtist.onclick = () => {
             const isCollapsed = container.classList.contains('collapsed');
             const isActive = btnArtist.classList.contains('active');
@@ -946,10 +991,10 @@
         // ==========================================
         // 核心构建逻辑
         // ==========================================
-
+        
         async function buildYouMayLikeData() {
             if (remainingTotal <= 0) return [];
-
+            
             const viewLimit = Math.min(CONFIG.perViewLimit, remainingTotal);
 
             const pickTags = (namespaces, fallbackNamespaces) => {

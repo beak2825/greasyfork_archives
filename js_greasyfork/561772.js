@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name         X Reels ++ NSFW ecchi ver. (Fork)
-// @name:en         X Reels ++ NSFW ecchi ver. (Fork)
+// @name:en      X Reels ++ NSFW ecchi ver. (Fork)
 // @namespace    http://tampermonkey.net/
 // @version      28.8.18
-// @description  Transforms the X/Twitter feed into a full-screen viewer with keyboard & mouse wheel navigation, smart auto-scroll, playback speed control, and a robust follow-and-return action.
 // @description:en  Transforms the X/Twitter feed into a full-screen viewer with keyboard & mouse wheel navigation, smart auto-scroll, playback speed control, and a robust follow-and-return action.
-// @author       sukimono, Original Author: Kristijan1001
+// @author       sukimono
 // @match        https://twitter.com/*
 // @match        https://x.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=x.com
 // @grant        none
 // @license      MIT
+// @description Transforms the X/Twitter feed into a full-screen viewer with keyboard & mouse wheel navigation, smart auto-scroll, playback speed control, and a robust follow-and-return action.
 // @downloadURL https://update.greasyfork.org/scripts/561772/X%20Reels%20%2B%2B%20NSFW%20ecchi%20ver%20%28Fork%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/561772/X%20Reels%20%2B%2B%20NSFW%20ecchi%20ver%20%28Fork%29.meta.js
 // ==/UserScript==
@@ -40,6 +40,9 @@
             this.savedScrollPosition = 0;
             this.mutationObserver = null;
             this.isReturningFromFollow = false;
+            this.savedOverflowY = document.documentElement.style.overflowY || '';
+            this.dateButton = null;
+            this.datePanel = null;
 
             // Updated: Parse potentially existing smart value (-1)
             this.autoScrollDelay = parseInt(localStorage.getItem('xreels_autoScrollDelay') || '0', 10);
@@ -170,6 +173,10 @@
                 console.error('❌ No media found on screen. Scroll down and try again.');
                 return;
             }
+            if (this.savedOverflowY === null) {
+                this.savedOverflowY = document.documentElement.style.overflowY || '';
+            }
+            document.documentElement.style.overflowY = 'scroll';
             this.isActive = true;
             this.createContainer();
             this.navigateToPost(firstPostWithMedia);
@@ -231,9 +238,17 @@
             this.exitButton = null;
             this.scrollUpButton = null;
             this.scrollDownButton = null;
+            this.dateButton = null;
+            this.datePanel = null;
             this.savedScrollPosition = 0;
             this.disconnectObserver();
             this.isReturningFromFollow = false;
+            document.documentElement.style.overflowY = this.savedOverflowY || '';
+
+            // 再起動できるように終了後リフレッシュ
+            setTimeout(() => {
+                window.location.reload();
+            }, 150);
         }
 
         createContainer() {
@@ -242,7 +257,7 @@
             this.container.id = 'tiktok-feed-container';
             this.container.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                background: rgba(0, 0, 0, 0.2); z-index: 2147483647;
+                background: rgba(0, 0, 0, 0.05); z-index: 2147483647;
                 pointer-events: none; overflow: hidden;
             `;
 
@@ -317,6 +332,10 @@
                             <span class="blur-label">Blur: Off</span>
                         </button>
 
+                        <button id="xreels-date-toggle" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(21, 128, 61, 0.25) 100%); border: 1px solid rgba(34, 197, 94, 0.6); border-radius: 12px; padding: 8px 12px; color: white; font-size: 12px; font-weight: 700; cursor: pointer; backdrop-filter: blur(14px) saturate(160%); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); transition: all 0.3s ease; pointer-events: auto; display: flex; align-items: center; gap: 6px;">
+                            <span class="date-label">Date</span>
+                        </button>
+
                         <div style="color: white; background: rgba(0,0,0,0.6); padding: 8px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; pointer-events: auto; cursor: pointer;" id="xreels-autoscroll-container">
                             <span>Auto: <span id="xreels-autoscroll-display" style="color: #FF6F61;">Off</span></span>
                             <span style="color: #FF6F61;">▼</span>
@@ -324,6 +343,9 @@
                         <div id="xreels-autoscroll-menu" style="display: none; position: absolute; top: 90px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 10px; padding: 8px; backdrop-filter: blur(10px); pointer-events: auto; z-index: 10000000;">
                             <div class="autoscroll-option" data-value="0" style="padding: 8px 16px; cursor: pointer; color: #FF6F61; border-radius: 5px; transition: background 0.2s;">Off</div>
                             <div class="autoscroll-option" data-value="-1" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">Auto (Smart)</div>
+                            <div class="autoscroll-option" data-value="10" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">0.01s</div>
+                            <div class="autoscroll-option" data-value="100" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">0.1s</div>
+                            <div class="autoscroll-option" data-value="300" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">0.3s</div>
                             <div class="autoscroll-option" data-value="600" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">0.6s</div>
                             <div class="autoscroll-option" data-value="1000" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">1s</div>
                             <div class="autoscroll-option" data-value="2000" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">2s</div>
@@ -332,6 +354,10 @@
                             <div class="autoscroll-option" data-value="8000" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">8s</div>
                             <div class="autoscroll-option" data-value="30000" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">30s</div>
                             <div class="autoscroll-option" data-value="60000" style="padding: 8px 16px; cursor: pointer; color: white; border-radius: 5px; transition: background 0.2s;">60s</div>
+                        </div>
+
+                        <div id="xreels-date-panel" style="display: none; position: absolute; top: 180px; right: 20px; width: 260px; background: rgba(0,0,0,0.85); border-radius: 12px; padding: 12px; backdrop-filter: blur(12px); pointer-events: auto; z-index: 10000001; border: 1px solid rgba(34, 197, 94, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                            <div class="date-panel-body" style="color: white; font-size: 12px; display: flex; flex-direction: column; gap: 8px;"></div>
                         </div>
                     </div>
 
@@ -436,6 +462,8 @@
             this.prevPostsPanel = this.container.querySelector('#prev-posts-panel');
             this.nextPostsPanel = this.container.querySelector('#next-posts-panel');
             this.blurToggleButton = this.container.querySelector('#tiktok-blur-toggle');
+            this.dateButton = this.container.querySelector('#xreels-date-toggle');
+            this.datePanel = this.container.querySelector('#xreels-date-panel');
 
             this.likeButton.addEventListener('click', () => this.toggleLike());
             this.followButton.addEventListener('click', () => this.toggleFollow());
@@ -450,6 +478,24 @@
                 this.blurToggleButton.addEventListener('click', (e) => {
                     e.stopPropagation();
                     this.toggleBlur();
+                });
+            }
+
+            if (this.dateButton && this.datePanel) {
+                this.dateButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = this.datePanel.style.display !== 'none';
+                    this.datePanel.style.display = isOpen ? 'none' : 'block';
+                    if (!isOpen) {
+                        this.updateDatePanel();
+                    }
+                });
+                document.addEventListener('click', (e) => {
+                    if (!this.isActive) return;
+                    if (!this.datePanel || this.datePanel.style.display === 'none') return;
+                    if (!this.datePanel.contains(e.target) && e.target !== this.dateButton) {
+                        this.datePanel.style.display = 'none';
+                    }
                 });
             }
 
@@ -523,7 +569,7 @@
             const menu = document.getElementById('xreels-autoscroll-menu');
             const display = document.getElementById('xreels-autoscroll-display');
 
-            const timeLabels = { 0: 'Off', '-1': 'Auto (Smart)', 1000: '1s', 2000: '2s', 3000: '3s', 5000: '5s', 8000: '8s', 30000: '30s', 60000: '60s' };
+            const timeLabels = { 0: 'Off', '-1': 'Auto (Smart)', 10: '0.01s', 100: '0.1s', 300: '0.3s', 600: '0.6s', 1000: '1s', 2000: '2s', 3000: '3s', 5000: '5s', 8000: '8s', 30000: '30s', 60000: '60s' };
             display.textContent = timeLabels[this.autoScrollDelay] || 'Off';
 
             container.addEventListener('click', (e) => {
@@ -607,6 +653,11 @@
                     const video = this.activeDisplayedMediaElement;
                     this.videoEndedListener = () => {
                         if (!this.isActive) return;
+                        // リスナーを即座に削除（重複実行防止）
+                        if (this.videoEndedListener) {
+                            video.removeEventListener('ended', this.videoEndedListener);
+                            this.videoEndedListener = null;
+                        }
                         this.maybeDeferAutoAdvance(() => {
                             const mediaNavigated = this.handleMediaNavigation('next');
                             if (!mediaNavigated) {
@@ -923,8 +974,9 @@
             const iconUrl = currentMedia.icon || this.getIconFromArticle(this.activePost.element);
             const timestampText = this.getTimestampText(currentMedia);
             const metaParts = [];
-            if (authorHandle) metaParts.push(`@${authorHandle}`);
-            if (timestampText) metaParts.push(timestampText);
+            if (authorHandle) metaParts.push(`<span class="meta-handle">@${authorHandle}</span>`);
+            if (timestampText) metaParts.push(`<span class="meta-time">${timestampText}</span>`);
+            if (currentMedia.repostTimestampText) metaParts.push(`<span class="meta-repost" style="color:#22c55e; text-shadow: 0 0 2px #000, 0 0 4px #000;">Repost: ${currentMedia.repostTimestampText}</span>`);
             const metaLine = metaParts.join(' · ');
 
             const infoEl = this.container.querySelector('.info');
@@ -936,11 +988,13 @@
                     ${iconHtml}
                     <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 2px;">
                         <div class="author-name" style="font-weight: 700; margin-bottom: 0; ${authorHandle ? 'cursor: pointer;' : ''}">${authorName}</div>
-                        <div class="main-post-meta" style="color: rgba(255,255,255,0.8); font-weight: 600; ${metaStyle}">${metaLine}</div>
+                        <div class="main-post-meta" style="color: rgba(255,255,255,0.9); font-weight: 600; ${metaStyle}">${metaLine}</div>
                     </div>
                 </div>
-                <div class="main-post-text" style="line-height: 1.5; opacity: 0.95;">${tweetText}</div>
+                <div class="main-post-text" style="line-height: 1.5; opacity: 0.95; color: #22c55e; text-shadow: 0 0 2px #000, 0 0 4px #000;">${tweetText}</div>
             `;
+
+            this.updateDatePanel();
 
             const authorElement = this.container.querySelector('.author-name');
             if (authorElement && authorHandle) {
@@ -969,6 +1023,87 @@
             this.updateLikeButtonState();
             this.updateFollowButtonState();
             this.applyMainTextStyles();
+        }
+
+        updateDatePanel() {
+            if (!this.datePanel) return;
+            const body = this.datePanel.querySelector('.date-panel-body');
+            if (!body) return;
+
+            const currentMedia = (this.activePost && this.activePost.mediaItems) ? this.activePost.mediaItems[this.activePost.currentMediaIndex] : null;
+            if (!currentMedia) {
+                body.innerHTML = '<div style="color: rgba(255,255,255,0.75);">No active post</div>';
+                return;
+            }
+
+            const baseDate = this.getTimestampText(currentMedia) || 'N/A';
+            const repostDate = currentMedia.repostTimestampText || '';
+            const isRepost = Boolean(repostDate);
+
+            const primaryLabel = isRepost ? 'Repost Date' : 'Post Date';
+            const primaryValue = isRepost ? repostDate : baseDate;
+
+            const primaryIso = (isRepost ? currentMedia.repostTimestampIso : currentMedia.timestampIso) || '';
+            const dateForCalendar = primaryIso ? new Date(primaryIso) : new Date(primaryValue);
+            const safeDate = isNaN(dateForCalendar.getTime()) ? new Date() : dateForCalendar;
+            const calendarHtml = this.renderCalendar(safeDate);
+
+            const originalLine = isRepost && baseDate
+                ? `<div style="font-size: 11px; color: rgba(255,255,255,0.75);">Original: ${baseDate}</div>`
+                : '';
+
+            body.innerHTML = `
+                <div style="display:flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,0.85); font-weight: 700;">${primaryLabel}<span style="font-size: 11px; color: rgba(255,255,255,0.6);">${this.activePost.id ? '#' + this.activePost.id : ''}</span></div>
+                <div style="margin-top: 6px; padding: 10px; border-radius: 10px; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); color: #22c55e; text-shadow: 0 0 2px #000, 0 0 4px #000; font-weight: 700;">${primaryValue}</div>
+                ${originalLine}
+                <div style="margin-top: 8px;">${calendarHtml}</div>
+            `;
+        }
+
+        renderCalendar(dateObj) {
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth();
+            const day = dateObj.getDate();
+
+            const firstDay = new Date(year, month, 1);
+            const startWeekday = firstDay.getDay(); // 0 Sun
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const weeks = [];
+            let week = new Array(startWeekday).fill('');
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                week.push(d);
+                if (week.length === 7) {
+                    weeks.push(week);
+                    week = [];
+                }
+            }
+            if (week.length > 0) {
+                while (week.length < 7) week.push('');
+                weeks.push(week);
+            }
+
+            const monthLabel = dateObj.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+
+            const rows = weeks.map(w => {
+                const cells = w.map(value => {
+                    if (!value) return '<div style="width: 32px; height: 32px; opacity: 0.25;"></div>';
+                    const isToday = value === day;
+                    const baseStyle = 'width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;';
+                    const highlight = isToday ? 'background: rgba(34,197,94,0.25); border:1px solid rgba(34,197,94,0.7); color:#22c55e; text-shadow:0 0 2px #000,0 0 4px #000;' : 'color: rgba(255,255,255,0.8);';
+                    return `<div style="${baseStyle}${highlight}">${value}</div>`;
+                }).join('');
+                return `<div style="display:flex; gap:4px; margin-bottom:4px;">${cells}</div>`;
+            }).join('');
+
+            const weekdayRow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div style="width:32px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,0.6);">${d}</div>`).join('');
+
+            return `
+                <div style="color: rgba(255,255,255,0.9); font-weight: 700; margin-bottom: 4px;">${monthLabel}</div>
+                <div style="display:flex; gap:4px; margin-bottom:4px;">${weekdayRow}</div>
+                ${rows}
+            `;
         }
 
         showLoadingIndicator(message = 'Loading...') {
@@ -1049,6 +1184,9 @@
                 let text = '';
                 let icon = '';
                 let timestampText = '';
+                let timestampIso = '';
+                let repostTimestampText = '';
+                let repostTimestampIso = '';
 
                 const authorEl = contextEl.querySelector('[data-testid="User-Name"] [dir="ltr"]');
                 if (authorEl) {
@@ -1107,6 +1245,7 @@
                         const parsed = new Date(iso);
                         if (!isNaN(parsed.getTime())) {
                             timestampText = parsed.toLocaleString();
+                            timestampIso = iso;
                         }
                     }
                     if (!timestampText) {
@@ -1114,7 +1253,28 @@
                     }
                 }
 
-                return { author, handle, text, icon, timestampText };
+                const socialContextEl = targetArticleElement.querySelector('[data-testid="socialContext"]');
+                const socialText = socialContextEl ? socialContextEl.textContent.trim() : '';
+                const isRepost = /Reposted|Repost|リポスト/.test(socialText);
+                if (isRepost) {
+                    const repostTimeEl = socialContextEl ? socialContextEl.querySelector('time') : null;
+                    const candidateTime = repostTimeEl || timeEl;
+                    if (candidateTime) {
+                        const iso = candidateTime.getAttribute('datetime');
+                        if (iso) {
+                            const parsed = new Date(iso);
+                            if (!isNaN(parsed.getTime())) {
+                                repostTimestampText = parsed.toLocaleString();
+                                repostTimestampIso = iso;
+                            }
+                        }
+                        if (!repostTimestampText) {
+                            repostTimestampText = candidateTime.textContent ? candidateTime.textContent.trim() : '';
+                        }
+                    }
+                }
+
+                return { author, handle, text, icon, timestampText, timestampIso, repostTimestampText, repostTimestampIso };
             };
 
             const resolveContext = (mediaEl) => {
@@ -1133,7 +1293,7 @@
 
                 const contextElement = resolveContext(mediaEl);
                 const isMain = contextElement === targetArticleElement;
-                const { author, handle, text, icon, timestampText } = extractMetadata(contextElement, isMain);
+                const { author, handle, text, icon, timestampText, timestampIso, repostTimestampText, repostTimestampIso } = extractMetadata(contextElement, isMain);
 
                 if (mediaEl.tagName === 'VIDEO' && this.isValidMedia(mediaEl)) {
                     foundMediaItems.push({
@@ -1146,7 +1306,10 @@
                         handle: handle,
                         text: text,
                         icon: icon,
-                        timestampText: timestampText
+                        timestampText: timestampText,
+                        timestampIso: timestampIso,
+                        repostTimestampText: repostTimestampText,
+                        repostTimestampIso: repostTimestampIso
                     });
                     addedElements.add(mediaEl);
                 } else if (mediaEl.tagName === 'IMG' && !mediaEl.src.includes('video_thumb') && this.isValidMedia(mediaEl)) {
@@ -1161,7 +1324,10 @@
                         handle: handle,
                         text: text,
                         icon: icon,
-                        timestampText: timestampText
+                        timestampText: timestampText,
+                        timestampIso: timestampIso,
+                        repostTimestampText: repostTimestampText,
+                        repostTimestampIso: repostTimestampIso
                     });
                     addedElements.add(mediaEl);
                 }
@@ -1176,6 +1342,8 @@
             }
 
             this.activePost = { id: postTweetId, element: targetArticleElement, mediaItems: foundMediaItems, currentMediaIndex: 0 };
+            const nextStackTarget = this.findNextMediaArticle(targetArticleElement, false);
+            this.stackTimelineForNextPost(nextStackTarget);
             document.body.style.scrollBehavior = 'auto';
             this.attemptScrollToPost(targetArticleElement);
 
@@ -1267,7 +1435,7 @@
                 position: relative;
                 width: 100%;
                 height: 100%;
-                background: black;
+                background: transparent;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1280,10 +1448,12 @@
                 object-fit: contain;
                 border-radius: 0;
                 display: block;
-                background: black;
+                background: transparent;
             `;
 
-            videoElement.loop = true; // GIFや動画をループ再生
+            // Smart mode での無限ループ防止: loop=false に設定
+            // Smart mode ではビデオの ended イベントで次へ進むため、ループさせてはいけない
+            videoElement.loop = (this.autoScrollDelay !== -1); // Smart mode の場合は false
             videoElement.muted = false; // 音声を有効に
             videoElement.controls = false;
             videoElement.volume = 0.05; // 5%に固定
@@ -1826,7 +1996,7 @@
                 height: 100%;
                 object-fit: contain;
                 border-radius: 0;
-                background: black;
+                background: transparent;
             `;
             if (this.blurEnabled) {
                 img.style.filter = 'blur(16px)';
@@ -1864,33 +2034,74 @@
             this.activeDisplayedMediaElement = null;
         }
 
-        handlePostNavigation(direction) {
-            if (this.isNavigating) return;
+        stackTimelineForNextPost(nextArticleElement) {
+            if (!this.activePost || !this.activePost.element) return;
 
-            let nextPostElement = null;
-            if (direction === 'prev') {
-                nextPostElement = this.findNextMediaArticle(this.activePost.element, true);
-            } else {
-                nextPostElement = this.findNextMediaArticle(this.activePost.element, false);
+            const allArticles = Array.from(document.querySelectorAll('article[role="article"]'));
+            const allowed = new Set([this.activePost.element]);
+            if (nextArticleElement && this.hasTargetContentWarning(nextArticleElement)) {
+                allowed.add(nextArticleElement);
             }
 
+            allArticles.forEach(article => {
+                // フィルタリングに通過しないポストは常に非表示
+                if (!this.hasTargetContentWarning(article)) {
+                    if (!this.hiddenPosts.includes(article)) {
+                        this.hiddenPosts.push(article);
+                    }
+                    article.style.display = 'none';
+                    return;
+                }
+
+                // フィルタリング通過ポストは表示。特別扱いが必要なら allowed に追加する
+                article.style.display = '';
+            });
+        }
+
+        async waitForNextPostBelowCurrent(maxWaitMs = 4000, pollInterval = 250) {
+            if (!this.activePost || !this.activePost.element) return null;
+
+            const deadline = Date.now() + maxWaitMs;
+            while (Date.now() < deadline) {
+                this.hideNonFilteredPosts();
+                this.stackTimelineForNextPost(null);
+
+                const candidate = this.findNextMediaArticle(this.activePost.element, false);
+                if (candidate) {
+                    return candidate;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, pollInterval));
+            }
+
+            return null;
+        }
+
+        async handlePostNavigation(direction) {
+            if (this.isNavigating) return;
+            if (!this.activePost || !this.activePost.element) return;
+
+            this.isNavigating = true;
+
+            if (direction === 'prev') {
+                const prevPostElement = this.findNextMediaArticle(this.activePost.element, true);
+                this.isNavigating = false;
+                if (prevPostElement) {
+                    this.navigateToPost(prevPostElement);
+                }
+                return;
+            }
+
+            this.showLoadingIndicator('Waiting for next filtered post...');
+            const nextPostElement = await this.waitForNextPostBelowCurrent();
+            this.hideLoadingIndicator();
+            this.isNavigating = false;
+
             if (nextPostElement) {
+                this.stackTimelineForNextPost(nextPostElement);
                 this.navigateToPost(nextPostElement);
             } else {
-                this.showLoadingIndicator('No more visible posts. Scrolling to load more...');
-                const currentScrollY = window.scrollY;
-                window.scrollBy({ top: 500, behavior: 'auto' });
-
-                setTimeout(() => {
-                    this.hideLoadingIndicator();
-                    const newlyLoadedPost = this.findNextMediaArticle(this.activePost.element, false);
-                    if (newlyLoadedPost && newlyLoadedPost !== this.activePost.element) {
-                        this.navigateToPost(newlyLoadedPost);
-                    } else {
-                        window.scrollTo({ top: currentScrollY, behavior: 'auto' });
-                        console.log('No new media posts found after scrolling.');
-                    }
-                }, 2000);
+                console.log('No filtered next post available yet.');
             }
         }
 
@@ -2080,7 +2291,9 @@
             });
             // 配列をクリア
             this.hiddenPosts = [];
-        }        setupEventListeners() {
+        }
+
+        setupEventListeners() {
             if (this.boundHandleWheel) {
                 document.removeEventListener('wheel', this.boundHandleWheel, { passive: false, capture: true });
                 document.removeEventListener('keydown', this.boundHandleKeydown, { capture: true });

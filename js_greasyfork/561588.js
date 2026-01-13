@@ -5,9 +5,17 @@
 // @description Storage library for Hitomi.la Type Filter Buttons
 // @grant GM_getValue
 // @grant GM_setValue
+// @grant GM_xmlhttpRequest
 // ==/UserScript==
 (function(window) {
     'use strict';
+
+    // ★新規追加: jsonbin.io の設定
+    // ここに取得した BIN_ID と API_KEY を入力してください
+    const JSONBIN_CONFIG = {
+        BIN_ID: "6963dd9043b1c97be9292cb1",      // 例: "65a1b2..."
+        API_KEY: "$2a$10$RGLr4Eo/GYLCm.lcxSYSUOQuCfiJwE5lrEw7/3mX2wfDWGs/FE/HK"  // 例: "$2a$10$..."
+    };
 
     const STORAGE_KEY = 'hitomi_filter_settings_v6';
     
@@ -18,6 +26,7 @@
         syncMode: true,
         excludeList: [
             'tag:anthology',
+            'tag:no_penetration',
             'male:shota',
             'male:urethra_insertion',
             'female:futanari',
@@ -59,6 +68,7 @@
         },
         ui: {
             seriesFilter: false,
+            showGridDetails: false,
             layoutMode: 'list',
             gridColumns: 4,
             thumbnailScale: 1.0,
@@ -133,6 +143,122 @@
         }
     }
 
+    // ★新規追加: クラウド保存・読み込みロジック
+    function _saveCloudData(data) {
+        return new Promise((resolve, reject) => {
+            if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) {
+                // 設定が空なら何もしない
+                return resolve();
+            }
+            GM_xmlhttpRequest({
+                method: "PUT",
+                url: `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`,
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Master-Key": JSONBIN_CONFIG.API_KEY
+                },
+                data: JSON.stringify(data),
+                onload: function(response) {
+                    if (response.status === 200) {
+                        resolve(response);
+                        console.log('[Cloud] Save:', response);
+                    } else {
+                        console.error('[Storage] Cloud Save Error:', response.statusText);
+                        reject(new Error(`Save Error: ${response.status}`));
+                    }
+                },
+                onerror: function(err) {
+                    console.error('[Storage] Cloud Network Error:', err);
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    function _fetchCloudData() {
+        return new Promise((resolve, reject) => {
+            if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) {
+                return resolve(null);
+            }
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`,
+                headers: {
+                    "X-Master-Key": JSONBIN_CONFIG.API_KEY
+                },
+                onload: function(response) {
+                    if (response.status === 200) {
+                        try {
+                            const json = JSON.parse(response.responseText);
+                            // Jsonbin v3 は "record" キーの中にデータが入っている
+                            resolve(json.record);
+                            console.log('[Cloud] fetch:', json.record);
+                        } catch (e) {
+                            reject(new Error("JSON Parse Error"));
+                        }
+                    } else {
+                        console.error('[Storage] Cloud Load Error:', response.statusText);
+                        reject(new Error(`Load Error: ${response.status}`));
+                    }
+                },
+                onerror: function(err) {
+                    console.error('[Storage] Cloud Network Error:', err);
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    // ★新規追加: クラウドからデータを取得してローカル設定を更新 (起動時用)
+    async function syncFromCloud() {
+        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+        try {
+            // console.log('[Storage] Syncing from cloud...');
+            const cloudData = await _fetchCloudData();
+            if (cloudData) {
+                const settings = loadSettings();
+                let changed = false;
+
+                // excludeList の同期
+                if (Array.isArray(cloudData.excludeList)) {
+                    settings.excludeList = cloudData.excludeList;
+                    changed = true;
+                }
+                // strongBlockList の同期
+                if (Array.isArray(cloudData.strongBlockList)) {
+                    settings.strongBlockList = cloudData.strongBlockList;
+                    changed = true;
+                }
+
+                if (changed) {
+                    _save(settings); // ローカル保存 & キャッシュ更新
+                    console.log('[Storage] Synced with cloud data.');
+                }
+            }
+        } catch (e) {
+            console.warn('[Storage] Sync skipped or failed:', e);
+        }
+    }
+
+    // ★新規追加: 現在のローカル設定の一部をクラウドへアップロード (保存時用)
+    async function syncToCloud() {
+        if (!JSONBIN_CONFIG.BIN_ID || !JSONBIN_CONFIG.API_KEY) return;
+        const settings = loadSettings();
+        // 共有したいデータのみ抽出
+        const dataToSave = {
+            excludeList: settings.excludeList,
+            strongBlockList: settings.strongBlockList
+        };
+        try {
+            await _saveCloudData(dataToSave);
+            console.log('[Storage] Uploaded to cloud.');
+        } catch (e) {
+            console.warn('[Storage] Upload failed:', e);
+        }
+    }
+
+
+
     function updateState(key, value) {
         const settings = loadSettings();
         if (!settings.syncMode) return;
@@ -164,6 +290,9 @@
         }
         
         _save(settings);
+
+        // ★追加: 設定保存時にクラウドへも同期する (非同期実行)
+        syncToCloud();
     }
 
     function setSyncMode(isSyncOn) {
@@ -189,6 +318,8 @@
         updateConfig,
         setSyncMode,
         updateUI, // ★追加
+        syncFromCloud, // ★追加
+        syncToCloud,   // ★追加
         defaults: DEFAULT_SETTINGS
     };
 })(window);

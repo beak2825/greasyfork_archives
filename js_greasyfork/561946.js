@@ -2,7 +2,7 @@
 // @name         Galgame 跨站搜索跳转助手
 // @description  主要在 Galgame 数据库之间实现搜索跳转。
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @author       Orchids
 // @match        https://vndb.org/*
 // @match        https://www.moyu.moe/*
@@ -35,10 +35,10 @@
 // @downloadURL https://update.greasyfork.org/scripts/561946/Galgame%20%E8%B7%A8%E7%AB%99%E6%90%9C%E7%B4%A2%E8%B7%B3%E8%BD%AC%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/561946/Galgame%20%E8%B7%A8%E7%AB%99%E6%90%9C%E7%B4%A2%E8%B7%B3%E8%BD%AC%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
-
+ 
 (function () {
     'use strict';
-
+ 
     const SYMBOL_GROUPS = [
         { key: 'wave',      variants: ["~", "～", "〜", "〰", "∼", "⁓"] },
         { key: 'cross',     variants: ["x", "X", "×", "✕", "✖", "✗", "✘", "⨉", "⨯"] },
@@ -61,7 +61,7 @@
         { key: 'quote',     variants: ["\"", "“", "”", "″", "＂", "«", "»"] },
         { key: 'space',     variants: [" ", "\u3000", "_"] }
     ];
-
+ 
     const SITE_PREFERENCES = {
         "JAPANESE": {
             wave: "～", cross: "×", dot: "・", dash: "－",
@@ -78,7 +78,7 @@
             ellipsis: "...", quote: "\""
         }
     };
-
+ 
     const ENGINE_SPECIFIC_RULES = {
         "hitomi": { keep: "×", replaceWith: " " },
         "eh": { keep: "×", replaceWith: " " },
@@ -98,12 +98,12 @@
         "sukebei": { keep: "×", replaceWith: " " },
         "moepedia": { keep: "×", replaceWith: " " }
     };
-
+ 
     function toHalfWidth(str) {
         if (!str) return "";
         return str.replace(/[！-～]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xfee0)).replace(/\u3000/g, ' ');
     }
-
+ 
     function adaptSymbols(str, targetStyle = "JAPANESE") {
         if (!str) return "";
         let result = str;
@@ -120,9 +120,9 @@
         });
         return result;
     }
-
+ 
     function hasJapanese(str) { return /[\u3040-\u30ff]/.test(str); }
-
+ 
     function normalizeForMatch(str) {
         if (!str) return "";
         let s = adaptSymbols(toHalfWidth(str).toLowerCase(), "GLOBAL");
@@ -130,18 +130,28 @@
             .replace(/\s+/g, '')
             .replace(/誠也の部屋|攻略|游戏|版|修正/g, '');
     }
-
+ 
     function getSmartKeyword(input, engineType) {
         if (!input) return "";
         let kw = input.trim();
         kw = kw.replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
         kw = kw.replace(/[\r\n\u200B-\u200D\uFEFF]/g, " ").replace(/\s+/g, " ");
         
+        kw = kw.replace(/[&?]_(?:gl|ga).*$/gi, '');
+        kw = kw.replace(/[?&]utm_.*?=.*?(&|$)/gi, '');
+        
+        kw = kw.replace(/【.*?】|\[.*?\]|\(.*?\)|「.*?」|『.*?』/g, ' ');
+        
+        kw = kw.replace(/\s+for\s+(?:Win|Windows|PC|Mac|OS|XP|Vista)\s*\d*/gi, ' ');
+        kw = kw.replace(/(?:\s|^)(?:Win|Windows|PC版|Mac版)\s*\d*(?:\s|$)/gi, ' ');
+        kw = kw.replace(/(?:^|\s)(?:DL版|対応版|限定版|特典付き?|通常版|期間限定|DMM特典|.*?アワード|.*?賞|受?賞|周年記念|完整版|本体|汉化版)(?:\s|$)/gi, ' ');
+        kw = kw.replace(/\s+for\s*$/gi, ' ');
+
         kw = kw.replace(/\[(?:gemini|gpt|claude|deepseek|qwen|kimi|llama|flux|sdxl|sd|o1|o3|o4).*?\]/gi, '');
         kw = kw.replace(/\[(?:内嵌|汉化|补丁|分卷|合集|站内存储|修正|本体|首发|ADV|GAL|纯爱|含本体|tg直链下载).*?\]/gi, '');
         
         const rule = ENGINE_SPECIFIC_RULES[engineType] || { keep: "", replaceWith: " " };
-
+ 
         if (rule.keep !== "ALL") {
             const keepChars = rule.keep || "";
             SYMBOL_GROUPS.forEach(group => {
@@ -152,12 +162,11 @@
                     kw = kw.split(v).join(replacement);
                 });
             });
-            kw = kw.replace(/\[.*?\]|\{.*?\}|【.*?】|「.*?」|『.*?』/g, ' ');
         }
         
         return kw.replace(/\u3000/g, ' ').replace(/\s+/g, ' ').trim();
     }
-
+ 
     const ENGINES = {
         "hitomi":   { name: "Hitomi", bg: "#F06292", url: "https://hitomi.la/search.html?" },
         "eh":       { name: "EH",     bg: "#5C4033", url: "https://e-hentai.org/?f_search=" },
@@ -177,12 +186,12 @@
         "sukebei":  { name: "Nyaa",bg: "#3F51B5", url: "https://sukebei.nyaa.si/?f=0&c=0_0&q=" },
         "moepedia": { name: "Moepedia", bg: "#FF69B4", url: "https://moepedia.net/search/result/?s=" }
     };
-
+ 
     function createBtn(keyword, type) {
         const engine = ENGINES[type];
         let searchWord = getSmartKeyword(keyword, type);
-        if (!searchWord) return null;
-
+        if (!searchWord || searchWord.length < 2) return null;
+ 
         const a = document.createElement('a');
         let encoded = encodeURIComponent(searchWord);
         if (type === 'dlsite') {
@@ -198,17 +207,21 @@
         a.textContent = `🔍 ${engine.name}`;
         a.onmouseover = () => a.style.filter = 'brightness(0.85)';
         a.onmouseout = () => a.style.filter = 'none';
-        a.onclick = (e) => e.stopPropagation();
+        a.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.open(finalUrl, '_blank');
+        };
         return a;
     }
-
+ 
     function handleSeiyaLogic() {
         if (!location.hostname.includes('seiya-saiga.com')) return;
         const params = new URLSearchParams(location.search);
         const searchRaw = params.get('cgsearch');
         if (!searchRaw) return;
         const searchFinger = normalizeForMatch(searchRaw);
-
+ 
         if (location.pathname.includes('save.html')) {
             const rows = Array.from(document.querySelectorAll('tr'));
             let bestRow = null, bestScore = -1;
@@ -234,7 +247,7 @@
             }
             return;
         }
-
+ 
         if (location.pathname.includes('kouryaku.html') || location.pathname.includes('galge.html')) {
             const links = document.querySelectorAll('a[href*=".html"]');
             let bestLink = null, bestScore = -1;
@@ -268,7 +281,7 @@
             }
         }
     }
-
+ 
     const SITES = [
         { name: "VNDB", check: () => location.hostname.includes('vndb.org') && location.pathname.startsWith('/v'), run: () => {
             const h1 = Array.from(document.querySelectorAll('h1')).find(h => !h.closest('header') && h.offsetParent !== null);
@@ -301,7 +314,11 @@
         }},
         { name: "2DFan", check: () => /2dfan|2dfdf|2dfmax|fan2d|galge/.test(location.hostname), run: () => {
             const h3 = Array.from(document.querySelectorAll('h3')).find(h => !h.classList.contains('site-name') && h.offsetParent !== null);
-            if (!h3) return null;
+            if (!h3) {
+                const searchInput = document.querySelector('input[name="keyword"]');
+                if (searchInput) return { target: searchInput.parentElement, keyword: searchInput.value };
+                return null;
+            }
             let kw = new URLSearchParams(location.search).get('keyword') || h3.textContent.trim();
             for (let el of document.querySelectorAll('p, td, span')) {
                 if (el.textContent.includes('原名')) { kw = el.textContent.replace(/.*原名[:：]/, '').trim(); break; }
@@ -319,8 +336,13 @@
             return kw ? { target: document.querySelector('.search_result_title') || document.body, keyword: kw } : null;
         }},
         { name: "DMM", check: () => /dmm\.(co\.jp|com)/.test(location.hostname), run: () => {
-            const h1 = document.getElementById('title') || document.querySelector('h1');
-            return h1 ? { target: h1, keyword: h1.textContent.trim() } : null;
+            const h1 = document.getElementById('work_name') || 
+                       document.querySelector('.productTitle__item--headline') || 
+                       document.querySelector('h1[data-e2e-title-in-product-detail]') ||
+                       document.getElementById('title') || 
+                       document.querySelector('h1');
+            if (!h1 || h1.closest('.breadcrumb') || h1.offsetWidth === 0) return null;
+            return { target: h1, keyword: h1.textContent.trim() };
         }},
         { name: "ErogameScape", check: () => /erogamescape\.org|koko\.kyara\.top/.test(location.hostname), run: () => {
             const div = document.getElementById('game_title') || document.getElementById('soft-title');
@@ -334,7 +356,7 @@
             return { target: h1, keyword: h1.textContent.trim() };
         }}
     ];
-
+ 
     function main() {
         if (location.hostname.includes('google.com') && location.search.includes('site:seiya-saiga.com')) {
             const q = new URLSearchParams(location.search).get('q').replace('site:seiya-saiga.com', '').trim();
@@ -351,9 +373,11 @@
         if (!site) return;
         let item = site.run();
         if (!item || !item.target || item.target.hasAttribute('data-cg-added')) return;
+        
         const cont = document.createElement('div');
         cont.className = 'cg-search-toolbar';
-        cont.style.cssText = 'display:inline-flex !important; flex-wrap:wrap !important; gap:2px !important; margin:5px 0 !important; padding:4px !important; background:transparent !important; border-radius:4px !important; isolation:isolate !important; z-index:1 !important; max-width:100% !important; border:none !important; padding-right:10px !important; pointer-events: auto !important; position: relative !important;';
+        cont.style.cssText = 'display:flex !important; flex-wrap:wrap !important; gap:2px !important; margin:10px 0 !important; padding:6px !important; background:rgba(0,0,0,0.03) !important; border-radius:6px !important; isolation:isolate !important; z-index:9999 !important; width: fit-content !important; min-width: 250px !important; border:none !important; pointer-events: auto !important; position: relative !important; clear: both !important;';
+        
         if (site.name === "Bangumi") cont.style.marginLeft = "250px";
         
         const curH = location.hostname;
@@ -371,16 +395,18 @@
             if (t === '2dfan' && /2dfan|2dfdf|2dfmax|fan2d|galge/.test(curH)) return;
             if ((t === 'erogame' || t === 'koko') && /erogamescape|kyara\.top/.test(curH)) return;
             if (t === 'bgm' && /bgm\.tv|bangumi\.tv/.test(curH)) return;
-
+ 
             const btn = createBtn(item.keyword, t);
             if (btn) cont.appendChild(btn);
         });
+ 
+        if (cont.children.length === 0) return;
 
         if (site.name === "VNDB") item.target.parentNode.insertBefore(cont, item.target);
         else item.target.parentNode.insertBefore(cont, item.target.nextSibling);
         item.target.setAttribute('data-cg-added', 'true');
     }
-
+ 
     const observer = new MutationObserver(() => main());
     observer.observe(document.body, { childList: true, subtree: true });
     main();

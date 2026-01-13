@@ -189,9 +189,25 @@ function injectStyles() {
 }
 
 
-/* 不要な詳細情報は隠す */
-.gallery-content.layout-grid table,
-.gallery-content.layout-grid .relatedtags { display: none !important; }
+/* ★変更: 詳細表示モード(.htf-show-grid-details)が有効でない場合のみ隠す */
+html:not(.htf-show-grid-details) .gallery-content.layout-grid table,
+html:not(.htf-show-grid-details) .gallery-content.layout-grid .relatedtags { 
+    display: none !important; 
+}
+
+/* 詳細表示時のスタイル微調整 (必要に応じて) */
+@media (max-width: 767px) {
+    .gallery-content.layout-grid td {
+        width: 0 !important;
+    }
+    .gallery-content.layout-grid li,
+    .gallery-content.layout-grid a {
+        padding: 0 !important;
+    }
+    .gallery-content.layout-grid .dj-content {
+        font-size: 13px;
+    }
+}
 
 .gallery-content.layout-grid .date { display: none !important; }
 

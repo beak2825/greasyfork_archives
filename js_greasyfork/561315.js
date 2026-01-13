@@ -2,7 +2,7 @@
 // @name         ChatGPT Quick Search
 // @namespace    http://tampermonkey.net/
 // @version      1.4
-// @description  通过快捷键快速激活/退出 ChatGPT 搜索模式。使用 Cmd/Ctrl+Shift+K 切换搜索模式。
+// @description  通过快捷键快速激活/退出 ChatGPT 搜索模式。使用 Cmd/Ctrl+Shift+I 切换搜索模式。
 // @author       Lovecrafx
 // @license      MIT
 // @match        https://chatgpt.com/*

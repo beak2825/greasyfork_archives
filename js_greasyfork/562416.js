@@ -96,7 +96,7 @@
         });
 
         jwInstance.on('volume', (event) => {
-            volumeOverlay.innerText = `Vol: ${event.volume}%`;
+            volumeOverlay.innerText = `${event.volume}%`;
             triggerOverlay(volumeOverlay, 'volume');
         });
     }

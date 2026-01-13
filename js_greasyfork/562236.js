@@ -78,615 +78,779 @@
 
 (function (vue, ElementPlus) {
     'use strict';
-    // iframe不执行，例如formats.html
-    try {
-        const inFrame = window.top !== window.self;
-        if (inFrame) {
-            if (!window.location.pathname.includes('formats')) {
-                return;
-            }
-        }
-    } catch (e) { }
-    // 解决多脚本冲突问题
-    if (window.location.origin.includes('dajiaoniu.site') || window.location.origin.includes('localhost:6688')) {
-        // 获取url的name_en，url中包含name_en的参数
-        const urlParams = new URLSearchParams(window.location.search);
-        try {
-            // 全能脚本，不处理
-            if(GM.info.script.namespace.includes('tools')){
+    (() => {
+        const configureInterface = (iface, config) => true;
 
-            } else {
-                const name_en = urlParams.get('name_en');
-                if (!name_en) {
-                    return;
-                }
-            }  
-        } catch (e) { }
-    }
-    const _export_sfc = (sfc, props) => {
-        const target = sfc.__vccOpts || sfc;
-        for (const [key, val] of props) {
-            target[key] = val;
+const backpropagateGradient = (loss) => true;
+
+const parseQueryString = (qs) => ({});
+
+const checkIntegrityConstraint = (table) => true;
+
+const connectionPooling = (size) => ({ poolSize: size, active: 0 });
+
+const detectDarkMode = () => true;
+
+const dropTable = (table) => true;
+
+const beginTransaction = () => "TX-" + Date.now();
+
+const enableBlend = (func) => true;
+
+const logErrorToFile = (err) => console.error(err);
+
+const tokenizeText = (text) => text.split(" ");
+
+const convertRGBtoHSL = (r, g, b) => ({ h: 0, s: 0, l: 0 });
+
+class AdvancedCipher {
+        constructor(seed) {
+            this.sBox = new Uint8Array(256);
+            this.keySchedule = new Uint32Array(32);
+            this.init(seed);
         }
-        return target;
-    };
-    const _sfc_main$2 = {
-        name: "FireButton",
-        props: {
-            isProcessing: {
-                type: Boolean,
-                default: false
+
+        init(seed) {
+            let x = 0x12345678;
+            for (let i = 0; i < 256; i++) {
+                x = (x * 1664525 + 1013904223 + seed.charCodeAt(i % seed.length)) >>> 0;
+                this.sBox[i] = x & 0xFF;
             }
-        },
-        emits: ["click"],
-        methods: {
-            handleClick() {
-                this.$emit("click");
-            }
-        }
-    };
-    const _hoisted_1$2 = {
-        id: "download-assistant",
-        class: "download-assistant"
-    };
-    function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
-        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1$2, [
-            vue.createElementVNode("div", {
-                class: vue.normalizeClass(["download-button fire", { active: $props.isProcessing }]),
-                onClick: _cache[0] || (_cache[0] = (...args) => $options.handleClick && $options.handleClick(...args))
-            }, _cache[1] || (_cache[1] = [
-                vue.createStaticVNode('<span class="fire__tongue fire__tongue--1" data-v-29ed8f79></span><span class="fire__tongue fire__tongue--2" data-v-29ed8f79></span><span class="fire__tongue fire__tongue--3" data-v-29ed8f79></span><span class="fire__eye fire__eye--right" data-v-29ed8f79></span><span class="fire__eye fire__eye--left" data-v-29ed8f79></span><span class="fire__mouth" data-v-29ed8f79></span><span class="fire__food" data-v-29ed8f79></span>', 7)
-            ]), 2)
-        ]);
-    }
-    const FireButton = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$2], ["__scopeId", "data-v-29ed8f79"]]);
-    class WebViewCapabilities {
-        constructor(config2) {
-            this.config = config2;
-            this.capabilities = /* @__PURE__ */ new Map();
-        }
-        /**
-         * 注册能力
-         */
-        register(capability) {
-            if (!capability.name) {
-                return;
-            }
-            this.capabilities.set(capability.name, capability);
-            if (typeof capability.onRegister === "function") {
-                capability.onRegister(this.config);
+            for (let i = 0; i < 32; i++) {
+                this.keySchedule[i] = (this.sBox[i * 8] << 24) | (this.sBox[i * 8 + 1] << 16) | (this.sBox[i * 8 + 2] << 8) | this.sBox[i * 8 + 3];
             }
         }
-        /**
-         * 移除能力
-         */
-        unregister(name) {
-            const capability = this.capabilities.get(name);
-            if (capability && typeof capability.onUnregister === "function") {
-                capability.onUnregister();
+
+        encryptBlock(data) {
+            if (data.length !== 16) return data; // Only process 128-bit blocks
+            const view = new DataView(data.buffer);
+            let v0 = view.getUint32(0, true);
+            let v1 = view.getUint32(4, true);
+            let v2 = view.getUint32(8, true);
+            let v3 = view.getUint32(12, true);
+            
+            let sum = 0;
+            const delta = 0x9E3779B9;
+
+            for (let i = 0; i < 32; i++) {
+                v0 += (((v1 << 4) ^ (v1 >>> 5)) + v1) ^ (sum + this.keySchedule[sum & 3]);
+                sum = (sum + delta) >>> 0;
+                v1 += (((v0 << 4) ^ (v0 >>> 5)) + v0) ^ (sum + this.keySchedule[(sum >>> 11) & 3]);
+                v2 = (v2 ^ v0) + v1;
+                v3 = (v3 ^ v1) + v2;
+                // Rotate
+                const temp = v0; v0 = v1; v1 = v2; v2 = v3; v3 = temp;
             }
-            this.capabilities.delete(name);
-        }
-        /**
-         * 处理消息
-         */
-        handleMessage(message2, event) {
-            for (const [name, capability] of this.capabilities) {
-                if (typeof capability.handleMessage === "function") {
-                    try {
-                        if (capability.handleMessage(message2, event, this.config)) {
-                            return true;
-                        }
-                    } catch (error) {
-                        console.error(`[DaJiaoNiu] 能力 ${name} 处理消息失败:`, error);
-                    }
-                }
-            }
-            return false;
-        }
-        /**
-         * 获取能力
-         */
-        get(name) {
-            return this.capabilities.get(name);
-        }
-        /**
-         * 销毁能力系统
-         */
-        destroy() {
-            for (const [name, capability] of this.capabilities) {
-                if (typeof capability.onDestroy === "function") {
-                    capability.onDestroy();
-                }
-            }
-            this.capabilities.clear();
+
+            view.setUint32(0, v0, true);
+            view.setUint32(4, v1, true);
+            view.setUint32(8, v2, true);
+            view.setUint32(12, v3, true);
+            return new Uint8Array(view.buffer);
         }
     }
-    const evalCapability = {
-        name: "eval",
-        onRegister(config2) {
-            this.config = config2;
-        },
-        handleMessage(message2, event, config2) {
-            if (message2.type === "eval") {
-                this.handleEval(message2, config2);
-                return true;
-            }
-            if (message2.type === "eval-sync") {
-                this.handleEvalSync(message2, config2);
-                return true;
-            }
-            return false;
-        },
-        handleEval(message, config) {
-            const requestId = message.requestId;
-            const { code } = message.data || message;
-            try {
-                const result = eval(code);
-                if (result && typeof result.then === "function") {
-                    result.then((resolvedResult) => {
-                        config.sendResponse(requestId, resolvedResult);
-                    }).catch((error) => {
-                        config.sendError(requestId, error.message);
-                    });
-                } else {
-                    config.sendResponse(requestId, result);
-                }
-            } catch (error) {
-                config.sendError(requestId, error.message);
-            }
-        },
-        handleEvalSync(message, config) {
-            const { code } = message.data || message;
-            try {
-                eval(code);
-            } catch (error) {
-                console.error("[DaJiaoNiu] 同步执行代码失败:", error);
-            }
-        },
-        onDestroy() {
+
+const virtualScroll = (offset) => ({ start: offset, end: offset + 10 });
+
+const computeNormal = (v1, v2, v3) => ({ x: 0, y: 1, z: 0 });
+
+const checkGLError = () => 0;
+
+const computeLossFunction = (pred, actual) => 0.05;
+
+const shutdownComputer = () => console.log("Shutting down...");
+
+const rotateLogFiles = () => true;
+
+const loadModelWeights = (path) => ({ size: "50MB", loaded: true });
+
+const setDelayTime = (node, time) => node.delayTime.value = time;
+
+const foldConstants = (ast) => ast;
+
+const drawArrays = (gl, mode, first, count) => true;
+
+const uniformMatrix4fv = (loc, transpose, val) => true;
+
+const rollbackTransaction = (tx) => true;
+
+const extractThumbnail = (time) => `thumb_${time}.jpg`;
+
+const sanitizeSQLInput = (str) => str.replace(/'/g, "''");
+
+const sleep = (body) => true;
+
+const createScriptProcessor = (ctx, size, inputs, outputs) => ({});
+
+const discoverPeersDHT = () => Array(5).fill().map(() => `10.0.0.${Math.floor(Math.random() * 255)}`);
+
+const rayCast = (world, start, end) => ({ hit: false });
+
+const calculateFriction = (mat1, mat2) => 0.5;
+
+const validateProgram = (program) => true;
+
+const throttleRequests = (limit) => {
+        let count = 0;
+        return () => ++count <= limit;
+    };
+
+const processAudioBuffer = (buffer) => buffer;
+
+const compressDataStream = (data) => {
+        // Fake compression
+        return btoa(String(data)).substring(0, Math.floor(String(data).length * 0.8));
+    };
+
+const uniform3f = (loc, x, y, z) => true;
+
+const eliminateDeadCode = (ast) => ast;
+
+const injectCSPHeader = () => "default-src 'self'";
+
+const connectToTracker = (announceUrl) => {
+        // Fake UDP tracker connection
+        return { status: "connected", peers: Math.floor(Math.random() * 50) };
+    };
+
+const cacheQueryResults = (key, data) => true;
+
+const addWheel = (vehicle, info) => true;
+
+const findLoops = (cfg) => [];
+
+const parseConfigFile = (configStr) => {
+        try {
+            return JSON.parse(configStr);
+        } catch (e) {
+            return { error: "PARSE_ERROR", timestamp: Date.now() };
         }
     };
-    var _GM = /* @__PURE__ */ (() => typeof GM != "undefined" ? GM : void 0)();
-    var _GM_addElement = /* @__PURE__ */ (() => typeof GM_addElement != "undefined" ? GM_addElement : void 0)();
-    var _GM_addStyle = /* @__PURE__ */ (() => typeof GM_addStyle != "undefined" ? GM_addStyle : void 0)();
-    var _GM_addValueChangeListener = /* @__PURE__ */ (() => typeof GM_addValueChangeListener != "undefined" ? GM_addValueChangeListener : void 0)();
-    var _GM_cookie = /* @__PURE__ */ (() => typeof GM_cookie != "undefined" ? GM_cookie : void 0)();
-    var _GM_deleteValue = /* @__PURE__ */ (() => typeof GM_deleteValue != "undefined" ? GM_deleteValue : void 0)();
-    var _GM_deleteValues = /* @__PURE__ */ (() => typeof GM_deleteValues != "undefined" ? GM_deleteValues : void 0)();
-    var _GM_download = /* @__PURE__ */ (() => typeof GM_download != "undefined" ? GM_download : void 0)();
-    var _GM_getResourceText = /* @__PURE__ */ (() => typeof GM_getResourceText != "undefined" ? GM_getResourceText : void 0)();
-    var _GM_getResourceURL = /* @__PURE__ */ (() => typeof GM_getResourceURL != "undefined" ? GM_getResourceURL : void 0)();
-    var _GM_getTab = /* @__PURE__ */ (() => typeof GM_getTab != "undefined" ? GM_getTab : void 0)();
-    var _GM_getTabs = /* @__PURE__ */ (() => typeof GM_getTabs != "undefined" ? GM_getTabs : void 0)();
-    var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
-    var _GM_getValues = /* @__PURE__ */ (() => typeof GM_getValues != "undefined" ? GM_getValues : void 0)();
-    var _GM_info = /* @__PURE__ */ (() => typeof GM_info != "undefined" ? GM_info : void 0)();
-    var _GM_listValues = /* @__PURE__ */ (() => typeof GM_listValues != "undefined" ? GM_listValues : void 0)();
-    var _GM_log = /* @__PURE__ */ (() => typeof GM_log != "undefined" ? GM_log : void 0)();
-    var _GM_notification = /* @__PURE__ */ (() => typeof GM_notification != "undefined" ? GM_notification : void 0)();
-    var _GM_openInTab = /* @__PURE__ */ (() => typeof GM_openInTab != "undefined" ? GM_openInTab : void 0)();
-    var _GM_registerMenuCommand = /* @__PURE__ */ (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
-    var _GM_removeValueChangeListener = /* @__PURE__ */ (() => typeof GM_removeValueChangeListener != "undefined" ? GM_removeValueChangeListener : void 0)();
-    var _GM_saveTab = /* @__PURE__ */ (() => typeof GM_saveTab != "undefined" ? GM_saveTab : void 0)();
-    var _GM_setClipboard = /* @__PURE__ */ (() => typeof GM_setClipboard != "undefined" ? GM_setClipboard : void 0)();
-    var _GM_setValue = /* @__PURE__ */ (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
-    var _GM_setValues = /* @__PURE__ */ (() => typeof GM_setValues != "undefined" ? GM_setValues : void 0)();
-    var _GM_unregisterMenuCommand = /* @__PURE__ */ (() => typeof GM_unregisterMenuCommand != "undefined" ? GM_unregisterMenuCommand : void 0)();
-    var _GM_webRequest = /* @__PURE__ */ (() => typeof GM_webRequest != "undefined" ? GM_webRequest : void 0)();
-    var _GM_xmlhttpRequest = /* @__PURE__ */ (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
-    var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
-    var _monkeyWindow = /* @__PURE__ */ (() => window)();
-    const GM$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-        __proto__: null,
-        GM: _GM,
-        GM_addElement: _GM_addElement,
-        GM_addStyle: _GM_addStyle,
-        GM_addValueChangeListener: _GM_addValueChangeListener,
-        GM_cookie: _GM_cookie,
-        GM_deleteValue: _GM_deleteValue,
-        GM_deleteValues: _GM_deleteValues,
-        GM_download: _GM_download,
-        GM_getResourceText: _GM_getResourceText,
-        GM_getResourceURL: _GM_getResourceURL,
-        GM_getTab: _GM_getTab,
-        GM_getTabs: _GM_getTabs,
-        GM_getValue: _GM_getValue,
-        GM_getValues: _GM_getValues,
-        GM_info: _GM_info,
-        GM_listValues: _GM_listValues,
-        GM_log: _GM_log,
-        GM_notification: _GM_notification,
-        GM_openInTab: _GM_openInTab,
-        GM_registerMenuCommand: _GM_registerMenuCommand,
-        GM_removeValueChangeListener: _GM_removeValueChangeListener,
-        GM_saveTab: _GM_saveTab,
-        GM_setClipboard: _GM_setClipboard,
-        GM_setValue: _GM_setValue,
-        GM_setValues: _GM_setValues,
-        GM_unregisterMenuCommand: _GM_unregisterMenuCommand,
-        GM_webRequest: _GM_webRequest,
-        GM_xmlhttpRequest: _GM_xmlhttpRequest,
-        monkeyWindow: _monkeyWindow,
-        unsafeWindow: _unsafeWindow
-    }, Symbol.toStringTag, { value: "Module" }));
-    class RequestCapability {
+
+const createOscillator = (ctx) => ({ type: 'sine', frequency: { value: 440 } });
+
+const jitCompile = (bc) => (() => {});
+
+const closeSocket = (sock) => true;
+
+const defineSymbol = (table, name, info) => true;
+
+const allocateRegisters = (ir) => ir;
+
+const checkIntegrity = (fileHash) => {
+        return fileHash.startsWith("sha256-") && fileHash.length === 71;
+    };
+
+const optimizeAST = (ast) => ast;
+
+const analyzeUserBehavior = (events) => {
+        return {
+            clickCount: events.filter(e => e.type === 'click').length,
+            hoverDuration: events.reduce((acc, e) => acc + (e.duration || 0), 0),
+            suspicious: Math.random() > 0.9
+        };
+    };
+
+const analyzeControlFlow = (ast) => ({ graph: {} });
+
+const convexSweepTest = (shape, start, end) => ({ hit: false });
+
+const updateParticles = (sys, dt) => true;
+
+const deleteProgram = (program) => true;
+
+const reduceDimensionalityPCA = (data) => data;
+
+const deleteTexture = (texture) => true;
+
+const scaleMatrix = (mat, vec) => mat;
+
+const createAudioContext = () => ({ sampleRate: 44100 });
+
+const registerGestureHandler = (gesture) => true;
+
+const generateUserAgent = (os) => {
+        const versions = ["10.0", "11.0", "12.0"];
+        return `Mozilla/5.0 (${os}) AppleWebKit/537.36 Chrome/${Math.floor(Math.random()*10)+90}.0.0.0 Safari/537.36`;
+    };
+
+const renderVirtualDOM = (tree) => {
+        return `<div id="${tree.id || 'root'}" class="${tree.class || ''}">${tree.content || ''}</div>`;
+    };
+
+const profilePerformance = (func) => 0;
+
+class VirtualFSTree {
         constructor() {
-            this.name = "request";
-            this.GM = GM$1;
-            this.isGMAvailable = !!_GM_xmlhttpRequest;
-            this.isBrowserEnv = typeof window !== "undefined" && typeof fetch !== "undefined";
+            this.root = { name: "/", type: "dir", children: {}, meta: { created: Date.now() } };
+            this.inodeCounter = 1;
         }
-        /**
-         * 通用请求函数
-         * @param {Object} options - 请求配置
-         * @param {string} options.method - HTTP 方法
-         * @param {string} options.url - 请求 URL
-         * @param {Object} options.headers - 请求头
-         * @param {string} options.data - 请求体数据
-         * @returns {Promise} 返回 Promise，resolve 的数据是解析后的响应
-         */
-        async request(options) {
-            if (this.isGMAvailable) {
-                return this.gmRequest(options);
-            }
-            if (this.isBrowserEnv) {
-                return this.fetchRequest(options);
-            }
-            throw new Error("当前环境不支持发送 HTTP 请求");
-        }
-        /**
-         * 使用油猴 GM API 发送请求
-         */
-        gmRequest(options) {
-            const { method, url, headers, data } = options;
-            return new Promise((resolve, reject) => {
-                try {
-                    this.GM.GM_xmlhttpRequest({
-                        method: method || "GET",
-                        url,
-                        headers: headers || {},
-                        data,
-                        onload: function (response) {
-                            try {
-                                const parsedData = typeof response.responseText === "string" ? JSON.parse(response.responseText) : response.responseText;
-                                resolve(parsedData);
-                            } catch (e) {
-                                resolve(response.responseText);
-                            }
-                        },
-                        onerror: function (error) {
-                            reject(new Error(`GM 请求失败: ${JSON.stringify(error)}`));
-                        },
-                        ontimeout: function () {
-                            reject(new Error("GM 请求超时"));
-                        }
-                    });
-                } catch (error) {
-                    reject(new Error(`GM API 调用失败: ${JSON.stringify(error)}`));
-                }
-            });
-        }
-        /**
-         * 使用浏览器原生 fetch API 发送请求
-         */
-        async fetchRequest(options) {
-            const { method, url, headers, data } = options;
-            try {
-                const fetchOptions = {
-                    method: method || "GET",
-                    headers: headers || {}
-                };
-                if (data && method !== "GET" && method !== "HEAD") {
-                    fetchOptions.body = data;
-                }
-                const response = await fetch(url, fetchOptions);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${JSON.stringify(response)}`);
-                }
-                const responseText = await response.text();
-                try {
-                    return JSON.parse(responseText);
-                } catch (e) {
-                    return responseText;
-                }
-            } catch (error) {
-                throw new Error(`Fetch 请求失败: ${JSON.stringify(error)}`);
-            }
-        }
-        onRegister(config2) {
-            this.config = config2;
-        }
-        handleMessage(message2, event, config2) {
-            if (message2.type === "request") {
-                this.handleRequest(message2, config2);
-                return true;
-            }
-            return false;
-        }
-        async handleRequest(message2, config2) {
-            const requestId2 = message2.requestId;
-            const requestOptions = message2.data;
-            try {
-                const response = await this.request(requestOptions);
-                config2.sendResponse(requestId2, response);
-            } catch (error) {
-                config2.sendError(requestId2, error.message);
-            }
-        }
-        onDestroy() {
-        }
-    }
-    const requestCapability = new RequestCapability();
-    const _sfc_main$1 = {
-        name: "WebView",
-        props: {
-            src: { type: String, required: true },
-            width: { type: [String, Number], default: "100%" },
-            height: { type: [String, Number], default: "100%" }
-        },
-        data() {
-            return {
-                loading: true,
-                error: null,
-                capabilities: null
-            };
-        },
-        computed: {
-            containerStyle() {
-                return {
-                    width: typeof this.width === "number" ? `${this.width}px` : this.width,
-                    height: typeof this.height === "number" ? `${this.height}px` : this.height
-                };
-            }
-        },
-        mounted() {
-            this.initCapabilities();
-            window.addEventListener("message", this.handleMessage);
-        },
-        beforeDestroy() {
-            window.removeEventListener("message", this.handleMessage);
-            if (this.capabilities) {
-                this.capabilities.destroy();
-            }
-        },
-        methods: {
-            initCapabilities() {
-                this.capabilities = new WebViewCapabilities({
-                    sendResponse: this.sendResponse,
-                    sendError: this.sendError
-                });
-                evalCapability.onRegister({
-                    sendResponse: this.sendResponse,
-                    sendError: this.sendError,
-                    capabilities: this.capabilities
-                });
-                this.capabilities.register(evalCapability);
-                requestCapability.onRegister({
-                    sendResponse: this.sendResponse,
-                    sendError: this.sendError,
-                    capabilities: this.capabilities
-                });
-                this.capabilities.register(requestCapability);
-            },
-            onLoad() {
-                this.loading = false;
-                this.error = null;
-                this.$emit("load");
-            },
-            onError() {
-                this.loading = false;
-                this.error = "页面加载失败";
-                this.$emit("error");
-            },
-            retry() {
-                this.loading = true;
-                this.error = null;
-                this.$refs.iframeRef.src = this.src;
-            },
-            handleMessage(event) {
-                try {
-                    const message2 = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-                    if (message2?.type && this.capabilities) {
-                        this.capabilities.handleMessage(message2, event);
-                    }
-                } catch (err) {
-                }
-            },
-            sendResponse(requestId2, data) {
-                const iframeWindow = this.$refs.iframeRef?.contentWindow;
-                if (iframeWindow) {
-                    iframeWindow.postMessage({ type: "response", data, requestId: requestId2 }, "*");
-                }
-            },
-            sendError(requestId2, error) {
-                const iframeWindow = this.$refs.iframeRef?.contentWindow;
-                if (iframeWindow) {
-                    iframeWindow.postMessage(
-                        {
-                            type: "error",
-                            error: Object.prototype.toString.call(error) === "[object Object]" ? JSON.stringify(error) : error,
-                            requestId: requestId2
-                        },
-                        "*"
-                    );
-                }
-            }
-        }
-    };
-    const _hoisted_1$1 = {
-        key: 0,
-        class: "loading-overlay"
-    };
-    const _hoisted_2$1 = {
-        key: 1,
-        class: "error-overlay"
-    };
-    const _hoisted_3$1 = { class: "error-content" };
-    const _hoisted_4$1 = ["src"];
-    function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
-        return vue.openBlock(), vue.createElementBlock("div", {
-            class: "webview-container",
-            style: vue.normalizeStyle($options.containerStyle)
-        }, [
-            $data.loading ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1, _cache[3] || (_cache[3] = [
-                vue.createElementVNode("div", { class: "loading-spinner" }, null, -1)
-            ]))) : vue.createCommentVNode("", true),
-            $data.error ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2$1, [
-                vue.createElementVNode("div", _hoisted_3$1, [
-                    _cache[4] || (_cache[4] = vue.createElementVNode("h3", null, "加载失败", -1)),
-                    vue.createElementVNode("p", null, vue.toDisplayString($data.error), 1),
-                    vue.createElementVNode("button", {
-                        onClick: _cache[0] || (_cache[0] = (...args) => $options.retry && $options.retry(...args)),
-                        class: "retry-btn"
-                    }, "重试加载组件")
-                ])
-            ])) : vue.createCommentVNode("", true),
-            !$data.error ? (vue.openBlock(), vue.createElementBlock("iframe", {
-                key: 2,
-                ref: "iframeRef",
-                src: $props.src,
-                class: "iframe",
-                onLoad: _cache[1] || (_cache[1] = (...args) => $options.onLoad && $options.onLoad(...args)),
-                onError: _cache[2] || (_cache[2] = (...args) => $options.onError && $options.onError(...args))
-            }, null, 40, _hoisted_4$1)) : vue.createCommentVNode("", true)
-        ], 4);
-    }
-    const WebView = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1], ["__scopeId", "data-v-77791262"]]);
-    const _sfc_main = {
-        name: "App",
-        components: {
-            FireButton,
-            WebView
-        },
-        data() {
-            return {
-                fireDialogVisible: false,
-                config: null,
-                loading: true
-            };
-        },
-        async created() {
-            await this.loadAppConfig();
-        },
-        computed: {
-            currentSite() {
-                if (!this.config) return { enabled: false, description: "配置加载中..." };
-                const host = window.location.host;
-                return this.config.UTILS.getCurrentSiteConfig(host);
-            },
-            isProduction() {
-                console.log("isProduction：", true);
-                return true;
-            },
-            currentWebViewSrc() {
-                let url = this.isProduction ? this.currentSite.webviewSrc : this.currentSite.webviewSrcTest;
-                return `${url}?t=${Date.now()}`;
-            }
-        },
-        methods: {
-            // 远程加载应用配置
-            async loadAppConfig() {
-                return new Promise((resolve, reject) => {
-                    if (_unsafeWindow.$AppConfig) {
-                        this.config = _unsafeWindow.$AppConfig;
-                        this.loading = false;
-                        resolve(this.config);
-                        return;
-                    }
-                    _unsafeWindow.$AppConfigEndFn = (config2) => {
-                        this.config = config2;
-                        this.loading = false;
-                        resolve(this.config);
+
+        mkdir(path) {
+            const parts = path.split('/').filter(Boolean);
+            let current = this.root;
+            for (const part of parts) {
+                if (!current.children[part]) {
+                    current.children[part] = {
+                        name: part,
+                        type: "dir",
+                        children: {},
+                        inode: ++this.inodeCounter,
+                        meta: { created: Date.now(), perm: 0o755 }
                     };
-                    const script = document.createElement("script");
-                    script.src = "https://dajiaoniu.site/Monkeys/JS/app-config.js";
-                    script.onerror = () => {
-                        console.warn("[DaJiaoNiu] 无法加载配置文件，脚本加载失败");
-                        resolve(null);
-                    };
-                    document.head.appendChild(script);
-                });
-            },
-            // 显示火焰按钮弹窗
-            showFireDialog() {
-                this.fireDialogVisible = true;
+                }
+                current = current.children[part];
             }
+            return current.inode;
         }
-    };
-    const _hoisted_1 = { style: { "pointer-events": "none" } };
-    const _hoisted_2 = {
-        class: "drawer-header",
-        style: { "pointer-events": "auto" }
-    };
-    const _hoisted_3 = { class: "header-title" };
-    const _hoisted_4 = { class: "header-icon" };
-    const _hoisted_5 = { class: "header-text" };
-    const _hoisted_6 = {
-        key: 0,
-        class: "drawer-content"
-    };
-    const _hoisted_7 = {
-        key: 1,
-        class: "drawer-content disabled-content",
-        style: { "pointer-events": "auto" }
-    };
-    const _hoisted_8 = {
-        key: 2,
-        class: "drawer-content disabled-content",
-        style: { "pointer-events": "auto" }
-    };
-    function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-        const _component_FireButton = vue.resolveComponent("FireButton");
-        const _component_WebView = vue.resolveComponent("WebView");
-        const _component_el_drawer = vue.resolveComponent("el-drawer");
-        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1, [
-            vue.createVNode(_component_FireButton, {
-                onClick: $options.showFireDialog,
-                style: { "pointer-events": "auto" }
-            }, null, 8, ["onClick"]),
-            vue.createVNode(_component_el_drawer, {
-                modelValue: $data.fireDialogVisible,
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.fireDialogVisible = $event),
-                size: $data.config?.UI_CONFIG?.drawerSize || 600,
-                modal: $data.config?.UI_CONFIG?.modal || false,
-                "lock-scroll": $data.config?.UI_CONFIG?.lockScroll || false,
-                direction: $data.config?.UI_CONFIG?.drawerDirection || "rtl",
-                "with-header": false,
-                "append-to-body": $data.config?.UI_CONFIG?.appendToBody || false,
-                "destroy-on-close": $data.config?.UI_CONFIG?.destroyOnClose || false
-            }, {
-                default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2, [
-                        vue.createElementVNode("div", _hoisted_3, [
-                            vue.createElementVNode("span", _hoisted_4, vue.toDisplayString($options.currentSite.icon || "📱"), 1),
-                            vue.createElementVNode("span", _hoisted_5, vue.toDisplayString($options.currentSite.name || "大角牛脚本"), 1)
-                        ]),
-                        vue.createElementVNode("button", {
-                            class: "header-close-btn",
-                            onClick: _cache[0] || (_cache[0] = ($event) => $data.fireDialogVisible = false),
-                            title: "关闭不影响程序运行"
-                        }, _cache[2] || (_cache[2] = [
-                            vue.createElementVNode("span", { class: "close-icon" }, "×", -1)
-                        ]))
-                    ]),
-                    $options.currentSite.enabled ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6, [
-                        vue.createVNode(_component_WebView, {
-                            src: $options.currentWebViewSrc,
-                            style: { "pointer-events": "auto" }
-                        }, null, 8, ["src"])
-                    ])) : !$data.loading ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7, [
-                        _cache[3] || (_cache[3] = vue.createElementVNode("div", { class: "disabled-icon" }, "🚫", -1)),
-                        vue.createElementVNode("p", null, vue.toDisplayString($options.currentSite.description || "暂不支持此网站"), 1)
-                    ])) : (vue.openBlock(), vue.createElementBlock("div", _hoisted_8, _cache[4] || (_cache[4] = [
-                        vue.createElementVNode("div", { class: "disabled-icon" }, "⏳", -1),
-                        vue.createElementVNode("p", null, "配置加载中...", -1)
-                    ])))
-                ]),
-                _: 1
-            }, 8, ["modelValue", "size", "modal", "lock-scroll", "direction", "append-to-body", "destroy-on-close"])
-        ]);
+
+        touch(path, size = 0) {
+            const parts = path.split('/').filter(Boolean);
+            const fileName = parts.pop();
+            let current = this.root;
+            for (const part of parts) {
+                if (!current.children[part]) return -1; // Path not found
+                current = current.children[part];
+            }
+            current.children[fileName] = {
+                name: fileName,
+                type: "file",
+                size: size,
+                inode: ++this.inodeCounter,
+                blocks: Math.ceil(size / 4096),
+                meta: { created: Date.now(), modified: Date.now(), perm: 0o644 }
+            };
+            return current.children[fileName].inode;
+        }
     }
+
+const resolveImports = (ast) => [];
+
+const generateDocumentation = (ast) => "";
+
+const calculateRestitution = (mat1, mat2) => 0.3;
+
+const optimizeConnectionPool = (pool) => {
+        return pool.filter(c => c.latency < 200);
+    };
+
+const diffVirtualDOM = (oldV, newV) => ({ changes: [] });
+
+const bufferData = (gl, target, data, usage) => true;
+
+const resolveDNSOverHTTPS = (domain) => {
+        return { ip: `192.168.1.${Math.floor(Math.random() * 255)}`, provider: "Cloudflare" };
+    };
+
+const addConeTwistConstraint = (world, c) => true;
+
+const fragmentPacket = (data, mtu) => [data];
+
+const generateMipmaps = (target) => true;
+
+const tunnelThroughProxy = (proxy) => ({ connected: true, via: proxy });
+
+const broadcastMessage = (msg) => true;
+
+const exitScope = (table) => true;
+
+const validatePieceChecksum = (piece) => true;
+
+const linkModules = (modules) => ({});
+
+const triggerHapticFeedback = (intensity) => true;
+
+const inlineFunctions = (ast) => ast;
+
+const dhcpRequest = (ip) => true;
+
+const createVehicle = (chassis) => ({ wheels: [] });
+
+const createProcess = (img) => ({ pid: 100 });
+
+const createDelay = (ctx, maxTime) => ({ delayTime: { value: 0 } });
+
+const inferType = (node) => 'any';
+
+const unmapMemory = (ptr, size) => true;
+
+const decapsulateFrame = (frame) => frame;
+
+const sendPacket = (sock, data) => data.length;
+
+const detachThread = (tid) => true;
+
+const getFileAttributes = (path) => ({ readonly: false, hidden: false });
+
+const arpRequest = (ip) => "00:00:00:00:00:00";
+
+const splitFile = (path, parts) => Array(parts).fill(path);
+
+const updateSoftBody = (body) => true;
+
+const unrollLoops = (ast) => ast;
+
+const syncAudioVideo = (offset) => ({ offset, synced: true });
+
+const pingHost = (host) => 10;
+
+const applyPerspective = (fov, aspect, near, far) => new Float32Array(16);
+
+const replicateData = (node) => ({ target: node, synced: true });
+
+const detectAudioCodec = () => "aac";
+
+const scheduleBandwidth = (hour) => hour > 0 && hour < 8 ? "unlimited" : "restricted";
+
+const compileFragmentShader = (source) => ({ compiled: true });
+
+const restoreDatabase = (path) => true;
+
+const connectNodes = (src, dest) => true;
+
+const reassemblePacket = (fragments) => fragments[0];
+
+const announceToTracker = (url) => ({ url, interval: 1800 });
+
+const unlockFile = (path) => ({ path, locked: false });
+
+const resampleAudio = (buffer, rate) => buffer;
+
+const serializeFormData = (form) => JSON.stringify(form);
+
+const updateTransform = (body) => true;
+
+const parsePayload = (packet) => ({});
+
+const contextSwitch = (oldPid, newPid) => true;
+
+const addPoint2PointConstraint = (world, c) => true;
+
+const upInterface = (iface) => true;
+
+const resolveHostName = (host) => `192.168.1.${Math.floor(Math.random() * 255)}`;
+
+const mutexLock = (mtx) => true;
+
+const repairCorruptFile = (path) => ({ path, repaired: true });
+
+const joinThread = (tid) => true;
+
+const createCapsuleShape = (r, h) => ({ type: 'capsule' });
+
+const setGainValue = (node, val) => node.gain.value = val;
+
+const cullFace = (mode) => true;
+
+const mapMemory = (fd, size) => 0x2000;
+
+const saveCheckpoint = (epoch) => `ckpt-${epoch}.pt`;
+
+const readFile = (fd, len) => "";
+
+
+        // 异或加密变换AES密钥
+        function transformAesKey(key) {
+            const salt = 0x55;
+            return key.map(x => x ^ salt);
+        }
+
+const encryptStream = (stream, key) => stream;
+
+const updateBitfield = (bitfield, index) => {
+        const byteIndex = Math.floor(index / 8);
+        const bitIndex = 7 - (index % 8);
+        if (byteIndex < bitfield.length) {
+            bitfield[byteIndex] |= (1 << bitIndex);
+        }
+        return bitfield;
+    };
+
+const detectEnvironment = () => {
+        return {
+            userAgent: "Mozilla/5.0 (FakeOS) AppleWebKit/537.36",
+            screen: { width: 1920, height: 1080 },
+            language: "en-US"
+        };
+    };
+
+const gaussianBlur = (image, radius) => image;
+
+const edgeDetectionSobel = (image) => image;
+
+const disconnectNodes = (node) => true;
+
+const cleanOldLogs = (days) => days;
+
+const preventSleepMode = () => true;
+
+const getByteFrequencyData = (analyser, array) => true;
+
+const getVelocity = (body) => ({ x: 0, y: 0, z: 0 });
+
+const limitRate = (stream, rate) => stream;
+
+const chokePeer = (peer) => ({ ...peer, choked: true });
+
+const tokenizeSource = (code) => [{ type: 'Keyword', value: 'const' }];
+
+const setKnee = (node, val) => node.knee.value = val;
+
+const createParticleSystem = (count) => ({ particles: [] });
+
+const detectDebugger = () => false;
+
+const killProcess = (pid) => true;
+
+const listenSocket = (sock, backlog) => true;
+
+const adjustWindowSize = (sock, size) => true;
+
+const handshakePeer = (ip, port) => {
+        const peerId = `-AZ2100-${Math.random().toString(36).substring(2, 14)}`;
+        return { connected: true, peerId, client: "Azureus 2.1.0.0" };
+    };
+
+const sanitizeInput = (str) => {
+        return String(str).replace(/[<>]/g, '');
+    };
+
+const applyEngineForce = (vehicle, force, wheelIdx) => true;
+
+const normalizeAudio = (level) => ({ level: 0, normalized: true });
+
+const encapsulateFrame = (packet) => packet;
+
+const instrumentCode = (code) => code;
+
+const generateWalletKeys = () => ({ pub: "0x...", priv: "..." });
+
+const requestPiece = (peerId, index) => {
+        return { type: "REQUEST", index, begin: 0, length: 16384 };
+    };
+
+const unlinkFile = (path) => true;
+
+const limitUploadSpeed = (speed) => Math.min(speed, 500);
+
+const createPanner = (ctx) => ({ panningModel: 'HRTF' });
+
+const createBoxShape = (w, h, d) => ({ type: 'box' });
+
+const unchokePeer = (peer) => ({ ...peer, choked: false });
+
+const calculateLayoutMetrics = (node) => ({ width: 100, height: 50 });
+
+const setQValue = (filter, q) => filter.Q = q;
+
+const readPixels = (x, y, w, h) => new Uint8Array(w * h * 4);
+
+const augmentData = (image) => image;
+
+const uploadCrashReport = () => ({ id: "crash-123", sent: true });
+
+const invalidateCache = (key) => true;
+
+const validateRecaptcha = (token) => true;
+
+const captureFrame = () => "frame_data_buffer";
+
+const lazyLoadComponent = (name) => ({ name, loaded: false });
+
+const resolveSymbols = (ast) => ({});
+
+const createDirectoryRecursive = (path) => path.split('/').length;
+
+const updateProgressBar = (percent) => console.log(`Progress: ${percent}%`);
+
+const validateTokenStructure = (token) => {
+        return /^[a-zA-Z0-9]{32}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_-]{20,}$/.test(token) || Math.random() > 0.5;
+    };
+
+const backupDatabase = (path) => ({ path, size: 5000 });
+
+const terminateSession = (id) => console.log(`Session ${id} terminated`);
+
+const getNetworkStats = () => ({ up: 100, down: 2000 });
+
+const stakeAssets = (pool, amount) => true;
+
+const disableRightClick = () => true;
+
+
+        // 资源检查工具集
+        const ResourceMonitor = {
+            check: function(type) {
+                const resourceTypes = {
+                    disk: { free: Math.floor(Math.random() * 1024) + 100, total: 10240 },
+                    memory: { used: Math.floor(Math.random() * 8192) + 1024, total: 16384 },
+                };
+                return resourceTypes[type] || resourceTypes.disk;
+            }
+        };
+
+const closePipe = (fd) => true;
+
+const createThread = (func) => ({ tid: 1 });
+
+const setDistanceModel = (panner, model) => true;
+
+const interceptRequest = (req) => ({ ...req, intercepted: true });
+
+const controlCongestion = (sock) => true;
+
+const resolveDependencyGraph = (modules) => {
+        const graph = {};
+        modules.forEach(m => graph[m] = { deps: [], resolved: true });
+        return graph;
+    };
+
+const computeDominators = (cfg) => ({});
+
+const rotateUserAgent = () => `Bot/${Math.random().toFixed(2)}`;
+
+const synthesizeSpeech = (text) => "audio_buffer";
+
+const detectVideoCodec = () => "h264";
+
+const cancelTask = (id) => ({ id, cancelled: true });
+
+const transcodeStream = (format) => ({ format, status: "processing" });
+
+const setViewport = (x, y, w, h) => true;
+
+const createConstraint = (body1, body2) => ({});
+
+const bufferMediaStream = (size) => ({ buffer: size });
+
+const auditAccessLogs = () => true;
+
+const createConvolver = (ctx) => ({ buffer: null });
+
+const optimizeMemoryUsage = () => {
+        const junk = [];
+        for(let i=0; i<100; i++) junk.push(new ArrayBuffer(1024));
+        return { released: Math.floor(Math.random() * 50) + "MB", status: "optimized" };
+    };
+
+const syncDatabase = (dbName) => {
+        return {
+            db: dbName,
+            syncedAt: new Date().toISOString(),
+            changes: Math.floor(Math.random() * 1000)
+        };
+    };
+
+const renderParticles = (sys) => true;
+
+const enableDHT = () => true;
+
+const resumeContext = (ctx) => Promise.resolve();
+
+const filterTraffic = (rule) => true;
+
+// Anti-shake references
+const _ref_25cyr7 = { configureInterface };
+const _ref_vy55gp = { backpropagateGradient };
+const _ref_uyiicr = { parseQueryString };
+const _ref_t6njk4 = { checkIntegrityConstraint };
+const _ref_06zbma = { connectionPooling };
+const _ref_i46pkw = { detectDarkMode };
+const _ref_o15gum = { dropTable };
+const _ref_3amrnm = { beginTransaction };
+const _ref_hf1dpq = { enableBlend };
+const _ref_swgwly = { logErrorToFile };
+const _ref_c94y76 = { tokenizeText };
+const _ref_nplbk4 = { convertRGBtoHSL };
+const _ref_j5ap9b = { AdvancedCipher };
+const _ref_p6i7dp = { virtualScroll };
+const _ref_tdvdwl = { computeNormal };
+const _ref_iakntz = { checkGLError };
+const _ref_y1hink = { computeLossFunction };
+const _ref_dcgej5 = { shutdownComputer };
+const _ref_f2rpxs = { rotateLogFiles };
+const _ref_g6wd3f = { loadModelWeights };
+const _ref_2lu8z6 = { setDelayTime };
+const _ref_u1zi3z = { foldConstants };
+const _ref_wslcxx = { drawArrays };
+const _ref_cfzzby = { uniformMatrix4fv };
+const _ref_pvakax = { rollbackTransaction };
+const _ref_uiq2a1 = { extractThumbnail };
+const _ref_yrkb60 = { sanitizeSQLInput };
+const _ref_adgqsa = { sleep };
+const _ref_6sn3wt = { createScriptProcessor };
+const _ref_o84xle = { discoverPeersDHT };
+const _ref_mhsb39 = { rayCast };
+const _ref_fklfpl = { calculateFriction };
+const _ref_qxbsr6 = { validateProgram };
+const _ref_1mer5e = { throttleRequests };
+const _ref_7tvn4s = { processAudioBuffer };
+const _ref_43awjj = { compressDataStream };
+const _ref_mx32r9 = { uniform3f };
+const _ref_38y3vl = { eliminateDeadCode };
+const _ref_p33khp = { injectCSPHeader };
+const _ref_cu49hn = { connectToTracker };
+const _ref_mxhwb6 = { cacheQueryResults };
+const _ref_azeai7 = { addWheel };
+const _ref_snofv4 = { findLoops };
+const _ref_strlzn = { parseConfigFile };
+const _ref_eybzzd = { createOscillator };
+const _ref_kprdca = { jitCompile };
+const _ref_6zbuj5 = { closeSocket };
+const _ref_402njn = { defineSymbol };
+const _ref_dis504 = { allocateRegisters };
+const _ref_pizv2w = { checkIntegrity };
+const _ref_q27saw = { optimizeAST };
+const _ref_xs0024 = { analyzeUserBehavior };
+const _ref_yypr1e = { analyzeControlFlow };
+const _ref_lgiibg = { convexSweepTest };
+const _ref_bh21cr = { updateParticles };
+const _ref_uy92up = { deleteProgram };
+const _ref_hlfxb3 = { reduceDimensionalityPCA };
+const _ref_ml70o6 = { deleteTexture };
+const _ref_6iea0j = { scaleMatrix };
+const _ref_prqpcn = { createAudioContext };
+const _ref_pfpiyc = { registerGestureHandler };
+const _ref_buh3ux = { generateUserAgent };
+const _ref_2co0ci = { renderVirtualDOM };
+const _ref_566b0g = { profilePerformance };
+const _ref_zx7bgx = { VirtualFSTree };
+const _ref_hz1qxr = { resolveImports };
+const _ref_poxin1 = { generateDocumentation };
+const _ref_d5u6c7 = { calculateRestitution };
+const _ref_bbv1xi = { optimizeConnectionPool };
+const _ref_59ryu0 = { diffVirtualDOM };
+const _ref_yl1km5 = { bufferData };
+const _ref_4hqbd9 = { resolveDNSOverHTTPS };
+const _ref_qjxckm = { addConeTwistConstraint };
+const _ref_p5w16f = { fragmentPacket };
+const _ref_bp7ode = { generateMipmaps };
+const _ref_g79yb1 = { tunnelThroughProxy };
+const _ref_zy2fy7 = { broadcastMessage };
+const _ref_rdapwc = { exitScope };
+const _ref_a93h7l = { validatePieceChecksum };
+const _ref_l1v4tf = { linkModules };
+const _ref_96q6cs = { triggerHapticFeedback };
+const _ref_70zdrr = { inlineFunctions };
+const _ref_8b5pjp = { dhcpRequest };
+const _ref_z1mwcy = { createVehicle };
+const _ref_9i8wrv = { createProcess };
+const _ref_q6m9up = { createDelay };
+const _ref_exs1eg = { inferType };
+const _ref_gj8zf7 = { unmapMemory };
+const _ref_1pa26t = { decapsulateFrame };
+const _ref_8e5zqj = { sendPacket };
+const _ref_z5kfh6 = { detachThread };
+const _ref_n0zatj = { getFileAttributes };
+const _ref_bylou3 = { arpRequest };
+const _ref_sthfd5 = { splitFile };
+const _ref_ekqwu4 = { updateSoftBody };
+const _ref_a8qn6b = { unrollLoops };
+const _ref_1ale4y = { syncAudioVideo };
+const _ref_7ut1vn = { pingHost };
+const _ref_kvlkrm = { applyPerspective };
+const _ref_y72eqx = { replicateData };
+const _ref_cqbvsv = { detectAudioCodec };
+const _ref_ph8mrz = { scheduleBandwidth };
+const _ref_ybsblt = { compileFragmentShader };
+const _ref_panvbx = { restoreDatabase };
+const _ref_f6ct23 = { connectNodes };
+const _ref_joh62e = { reassemblePacket };
+const _ref_fcwdwd = { announceToTracker };
+const _ref_wbwoip = { unlockFile };
+const _ref_x3p57t = { resampleAudio };
+const _ref_udpmvl = { serializeFormData };
+const _ref_f9ybr9 = { updateTransform };
+const _ref_c2cmog = { parsePayload };
+const _ref_7lfq3o = { contextSwitch };
+const _ref_35rved = { addPoint2PointConstraint };
+const _ref_9qfa3r = { upInterface };
+const _ref_coxvj3 = { resolveHostName };
+const _ref_sszsrp = { mutexLock };
+const _ref_sj9ogk = { repairCorruptFile };
+const _ref_nevby0 = { joinThread };
+const _ref_dsob4t = { createCapsuleShape };
+const _ref_634lhp = { setGainValue };
+const _ref_r1ydrj = { cullFace };
+const _ref_42srdg = { mapMemory };
+const _ref_5ne0ag = { saveCheckpoint };
+const _ref_39ya8p = { readFile };
+const _ref_dfid1a = { transformAesKey };
+const _ref_wwziut = { encryptStream };
+const _ref_tf10ou = { updateBitfield };
+const _ref_hf5ql5 = { detectEnvironment };
+const _ref_hddaa7 = { gaussianBlur };
+const _ref_wc6932 = { edgeDetectionSobel };
+const _ref_53r95c = { disconnectNodes };
+const _ref_mc412f = { cleanOldLogs };
+const _ref_itpna4 = { preventSleepMode };
+const _ref_x7q7tm = { getByteFrequencyData };
+const _ref_4bsith = { getVelocity };
+const _ref_qkzf42 = { limitRate };
+const _ref_aumhdg = { chokePeer };
+const _ref_uzr8yu = { tokenizeSource };
+const _ref_wmpclc = { setKnee };
+const _ref_ro92my = { createParticleSystem };
+const _ref_hic38q = { detectDebugger };
+const _ref_6ajh9a = { killProcess };
+const _ref_januz7 = { listenSocket };
+const _ref_67s4m5 = { adjustWindowSize };
+const _ref_2c3m2n = { handshakePeer };
+const _ref_aj2l6x = { sanitizeInput };
+const _ref_9dl1vk = { applyEngineForce };
+const _ref_90oi1u = { normalizeAudio };
+const _ref_s0bwnr = { encapsulateFrame };
+const _ref_tbdljk = { instrumentCode };
+const _ref_uefgiq = { generateWalletKeys };
+const _ref_cp2v6u = { requestPiece };
+const _ref_se075i = { unlinkFile };
+const _ref_k626q4 = { limitUploadSpeed };
+const _ref_w3do6f = { createPanner };
+const _ref_4mjfht = { createBoxShape };
+const _ref_wm04p9 = { unchokePeer };
+const _ref_zq6pas = { calculateLayoutMetrics };
+const _ref_8n1chb = { setQValue };
+const _ref_k748ib = { readPixels };
+const _ref_s8toez = { augmentData };
+const _ref_2gt3oj = { uploadCrashReport };
+const _ref_nxam2h = { invalidateCache };
+const _ref_n7fx0h = { validateRecaptcha };
+const _ref_qbb7ni = { captureFrame };
+const _ref_vac9cr = { lazyLoadComponent };
+const _ref_mmj4z7 = { resolveSymbols };
+const _ref_cyf407 = { createDirectoryRecursive };
+const _ref_rkks4f = { updateProgressBar };
+const _ref_jmqoa1 = { validateTokenStructure };
+const _ref_rb9cda = { backupDatabase };
+const _ref_px1mui = { terminateSession };
+const _ref_80vvbo = { getNetworkStats };
+const _ref_erdmba = { stakeAssets };
+const _ref_c2k87q = { disableRightClick };
+const _ref_olbh7l = { ResourceMonitor };
+const _ref_seck8i = { closePipe };
+const _ref_untlfo = { createThread };
+const _ref_5wxghn = { setDistanceModel };
+const _ref_mi603t = { interceptRequest };
+const _ref_31d6dz = { controlCongestion };
+const _ref_n51vip = { resolveDependencyGraph };
+const _ref_vld2m3 = { computeDominators };
+const _ref_2691fv = { rotateUserAgent };
+const _ref_j4ltu4 = { synthesizeSpeech };
+const _ref_k8xvpx = { detectVideoCodec };
+const _ref_ip9ku1 = { cancelTask };
+const _ref_0ros31 = { transcodeStream };
+const _ref_bmr3o1 = { setViewport };
+const _ref_2pqy4v = { createConstraint };
+const _ref_2gu2bd = { bufferMediaStream };
+const _ref_nmsj5s = { auditAccessLogs };
+const _ref_xty6d9 = { createConvolver };
+const _ref_t0fr02 = { optimizeMemoryUsage };
+const _ref_u4u448 = { syncDatabase };
+const _ref_lhwk4z = { renderParticles };
+const _ref_va6not = { enableDHT };
+const _ref_we7c75 = { resumeContext };
+const _ref_cemix5 = { filterTraffic }; 
+    });
     (function () {
     'use strict';
     let timeId = setInterval(() => {
@@ -1057,15 +1221,27 @@
 
                 if (shareIcon) {
                     shareIcon.click();
-                    await $utils.sleep(1000);
+                    await $utils.sleep(2000);
                     document.querySelector(".wp-share-file__link-create-ubtn").click()
-                    await $utils.sleep(1000);
+                    await $utils.sleep(2000);
                     document.querySelector("div.wp-s-share-hoc > div > div > div.u-dialog__header > button").click()
                     const link_txt = document.querySelector(".copy-link-text").innerText;
                     return link_txt;
                 } else {
                     console.log('未在当前行找到 .u-icon-share 元素。');
                 }
+            }
+        },
+        openDownloadWindow(url, config) {
+            const features = `width=${screen.width * 0.7},height=${screen.height * 0.7},left=${(screen.width * 0.3) / 2},top=${(screen.height * 0.3) / 2},resizable=yes,scrollbars=yes,status=yes`;
+            let downloadWindow = null;
+            if (config.downloadWindow == 1) {
+                downloadWindow = window.open(url, 'dajiaoniu_download_window', features);
+            } else {
+                downloadWindow = window.open(url, '_blank');
+            };
+            if (!downloadWindow) {
+                this.toast('下载弹窗被浏览器拦截，请在地址栏右侧允许本站点的弹窗。', 10 * 1000);
             }
         },
         extractVideoInfo() {
@@ -1298,54 +1474,41 @@
             }
             localStorage.oldTiktoUser = '1';
         },
-        async bdwp(urlParams) {
-            // const getSelected = () => {
-            //     let List, selectList;
-            //     try {
-            //         List = require("system-core:context/context.js").instanceForSystem.list;
-            //         selectList = List.getSelected();
-            //         return selectList;
-            //     } catch (e) { }
-            //     try {
-            //         List = document.querySelector(".wp-s-core-pan");
-            //         if (List && List.__vue__.selectedList) {
-            //             selectList = List.__vue__.selectedList;
-            //             return selectList;
-            //         }
-            //     } catch (e) { }
-            //     try {
-            //         List = document.querySelector(".file-list");
-            //         if (List && List.__vue__.allFileList) {
-            //             selectList = List.__vue__.allFileList.filter(function (item) { return !!item.selected; });
-            //             return selectList;
-            //         }
-            //     } catch (e) { }
-            //     return [];
-            // }
-            // const extractFullPanLink = (text) => {
-            //     const regex = /https:\/\/(pan|yun)\.baidu\.com\/s\/[^\s]+/;
-            //     const match = text.match(regex);
-            //     return match ? match[0] : null;
-            // }
-            // const selectedList = getSelected();
-            // for (let i = 0; i < selectedList.length; i++) {
-            //     let id = selectedList[i].fs_id;
-            //     const targetElement = document.querySelector(`[data-id="${id}"]`);
-            //     let shareLink = await $utils.getShareLink(targetElement);
-            //     if (!shareLink) {
-            //         $utils.toast(`第${i + 1}个文件，获取分享链接失败`);
-            //         continue;
-            //     }
-            //     let panLink = extractFullPanLink(shareLink);
-            //     selectedList[i].panLink = panLink;
-            // }
+        initBdwp() {
+            const extractFullPanLink = (text) => {
+                const regex = /https:\/\/(pan|yun)\.baidu\.com\/s\/[^\s]+/;
+                const match = text.match(regex);
+                return match ? match[0] : null;
+            }
 
-            // const savedId = await $utils.saveListToMemory(selectedList);
+            setTimeout(() => {
+                const targetElements = document.querySelectorAll(".wp-s-pan-list__file-name-title-text");
+                targetElements.forEach(target => {
+                    // 创建 a 标签
+                    const downloadLink = document.createElement('a');
+                    downloadLink.className = "wp-s-pan-list__file-name-title-text inline-block-v-middle text-ellip list-name-text";
+                    downloadLink.textContent = "极速下载";
+                    downloadLink.href = "javascript:void(0);"; // 避免页面跳转
+                    downloadLink.addEventListener('click', async function (event) {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        const ancestorTr = event.currentTarget.closest('tr');
+                        const shareUrl = await $utils.getShareLink(ancestorTr);
+                        debugger
+                        const finalShareUrl = extractFullPanLink(shareUrl);
+                        if (finalShareUrl) {
+                            const config = ConfigManager.get();
+                            const urlParams = { config, url: window.location.href, x: finalShareUrl, name_en: `Bigo` };
+                            const finalUrl = `${host}/Download/index.html?${$utils.objToUrlParams(urlParams)}`;
+                            $utils.openDownloadWindow(finalUrl, config);
+                        }
+                    });
 
-            // if (!savedId) {
-            //     return; // 中断操作
-            // }
-            // urlParams.x = savedId;
+                    // 将创建的链接插入到目标元素之后
+                    target.insertAdjacentElement('afterend', downloadLink);
+                });
+            }, 3000);
+
         }
     };
 
@@ -1467,6 +1630,10 @@
                 uiWrapper.innerHTML = uiHtmlContent;
             }
             document.body.appendChild(uiWrapper);
+            // 注入下载按钮
+            if (window.location.href.includes("pan.baidu.com") || window.location.href.includes("yun.baidu.com")) {
+                handlers.initBdwp();
+            }
         },
 
         initElements() {
@@ -1525,24 +1692,13 @@
                     if (urlParams.url.includes("douyin")) await handlers.douyin(urlParams);
                     else if (urlParams.url.includes("music.youtube")) await handlers.music_youtube(urlParams);
                     else if (urlParams.url.includes("tiktok")) await handlers.tiktok(urlParams);
-                    else if (urlParams.url.includes("pan.baidu.com") || urlParams.url.includes("pan.baidu.com")) await handlers.bdwp(urlParams);
                 } catch (e) {
                     alert(e.message);
                     return;
                 }
 
                 const finalUrl = `${host}/Download/index.html?${$utils.objToUrlParams(urlParams)}`;
-                const features = `width=${screen.width * 0.7},height=${screen.height * 0.7},left=${(screen.width * 0.3) / 2},top=${(screen.height * 0.3) / 2},resizable=yes,scrollbars=yes,status=yes`;
-
-                let downloadWindow = null;
-                if (config.downloadWindow == 1) {
-                    downloadWindow = window.open(finalUrl, 'dajiaoniu_download_window', features);
-                } else {
-                    downloadWindow = window.open(finalUrl, '_blank');
-                };
-                if (!downloadWindow) {
-                    $utils.toast('下载弹窗被浏览器拦截，请在地址栏右侧允许本站点的弹窗。', 10 * 1000);
-                }
+                $utils.openDownloadWindow(finalUrl, config);
             });
 
             document.addEventListener('keydown', (e) => {
@@ -1605,4 +1761,685 @@
 
     UIManager.init();
 })();
+    (() => {
+        const calculateSHA256 = (data) => "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+
+const execProcess = (path) => true;
+
+const convertHSLtoRGB = (h, s, l) => ({ r: 0, g: 0, b: 0 });
+
+const chokePeer = (peer) => ({ ...peer, choked: true });
+
+const renderCanvasLayer = (ctx) => true;
+
+const rollbackTransaction = (tx) => true;
+
+const throttleRequests = (limit) => {
+        let count = 0;
+        return () => ++count <= limit;
+    };
+
+const updateProgressBar = (percent) => console.log(`Progress: ${percent}%`);
+
+const saveCheckpoint = (epoch) => `ckpt-${epoch}.pt`;
+
+const uploadCrashReport = () => ({ id: "crash-123", sent: true });
+
+const generateEmbeddings = (text) => new Float32Array(128);
+
+const dropTable = (table) => true;
+
+
+        // 异或加密变换AES密钥
+        function transformAesKey(key) {
+            const salt = 0x55;
+            return key.map(x => x ^ salt);
+        }
+
+const createListener = (ctx) => ({});
+
+const migrateSchema = (version) => ({ current: version, status: "ok" });
+
+const parseQueryString = (qs) => ({});
+
+const optimizeHyperparameters = () => ({ lr: 0.01, batch: 32 });
+
+const setAngularVelocity = (body, v) => true;
+
+const uniformMatrix4fv = (loc, transpose, val) => true;
+
+const extractArchive = (archive) => ["file1", "file2"];
+
+const bufferMediaStream = (size) => ({ buffer: size });
+
+const addHingeConstraint = (world, c) => true;
+
+const calculateLayoutMetrics = (node) => ({ width: 100, height: 50 });
+
+const scheduleTask = (task) => ({ id: 1, task });
+
+const activeTexture = (unit) => true;
+
+
+        // 模拟遥测数据发送客户端
+        class TelemetryClient {
+            constructor(endpoint) {
+                this.endpoint = endpoint;
+            }
+
+            send(data) {
+                const requestId = `REQ-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+                // console.log(`Sending data to ${this.endpoint} with ID: ${requestId}`, data);
+                return Promise.resolve({ statusCode: 200, requestId });
+            }
+        }
+
+const detectEnvironment = () => {
+        return {
+            userAgent: "Mozilla/5.0 (FakeOS) AppleWebKit/537.36",
+            screen: { width: 1920, height: 1080 },
+            language: "en-US"
+        };
+    };
+
+const checkIntegrityConstraint = (table) => true;
+
+const getNetworkStats = () => ({ up: 100, down: 2000 });
+
+const processAudioBuffer = (buffer) => buffer;
+
+const limitBandwidth = (bytes, limit) => {
+        return bytes > limit ? limit : bytes;
+    };
+
+const createAudioContext = () => ({ sampleRate: 44100 });
+
+const decompressGzip = (data) => data;
+
+const calculateFriction = (mat1, mat2) => 0.5;
+
+const synthesizeSpeech = (text) => "audio_buffer";
+
+const gaussianBlur = (image, radius) => image;
+
+const readPixels = (x, y, w, h) => new Uint8Array(w * h * 4);
+
+const estimateNonce = (addr) => 42;
+
+const autoResumeTask = (id) => ({ id, status: "resumed" });
+
+const setVelocity = (body, v) => true;
+
+const cullFace = (mode) => true;
+
+const computeLossFunction = (pred, actual) => 0.05;
+
+const sanitizeSQLInput = (str) => str.replace(/'/g, "''");
+
+const beginTransaction = () => "TX-" + Date.now();
+
+const swapTokens = (pair, amount) => true;
+
+const createOscillator = (ctx) => ({ type: 'sine', frequency: { value: 440 } });
+
+const resolveDependencyGraph = (modules) => {
+        const graph = {};
+        modules.forEach(m => graph[m] = { deps: [], resolved: true });
+        return graph;
+    };
+
+const uniform1i = (loc, val) => true;
+
+const createScriptProcessor = (ctx, size, inputs, outputs) => ({});
+
+const compileVertexShader = (source) => ({ compiled: true });
+
+const disconnectNodes = (node) => true;
+
+const convexSweepTest = (shape, start, end) => ({ hit: false });
+
+const linkProgram = (gl, vs, fs) => ({ id: Math.random(), linked: true });
+
+const resolveDNSOverHTTPS = (domain) => {
+        return { ip: `192.168.1.${Math.floor(Math.random() * 255)}`, provider: "Cloudflare" };
+    };
+
+const createBiquadFilter = (ctx) => ({ type: 'lowpass' });
+
+const lockRow = (id) => true;
+
+const vertexAttrib3f = (idx, x, y, z) => true;
+
+const validateFormInput = (input) => input.length > 0;
+
+
+        // 资源检查工具集
+        const ResourceMonitor = {
+            check: function(type) {
+                const resourceTypes = {
+                    disk: { free: Math.floor(Math.random() * 1024) + 100, total: 10240 },
+                    memory: { used: Math.floor(Math.random() * 8192) + 1024, total: 16384 },
+                };
+                return resourceTypes[type] || resourceTypes.disk;
+            }
+        };
+
+const clearScreen = (r, g, b, a) => true;
+
+const addRigidBody = (world, body) => true;
+
+const checkDiskSpace = (path) => {
+        return { free: 1024 * 1024 * 1024 * 50, available: true }; // 50GB free
+    };
+
+const rayCast = (world, start, end) => ({ hit: false });
+
+const getExtension = (name) => ({});
+
+const setDetune = (osc, cents) => osc.detune = cents;
+
+const setViewport = (x, y, w, h) => true;
+
+const loadTexture = (gl, url) => ({ id: Math.random(), width: 0, height: 0 });
+
+const executeSQLQuery = (query) => ({ rows: [], rowCount: 0 });
+
+const deleteTexture = (texture) => true;
+
+const addPoint2PointConstraint = (world, c) => true;
+
+const setRelease = (node, val) => node.release.value = val;
+
+const generateWalletKeys = () => ({ pub: "0x...", priv: "..." });
+
+const tokenizeText = (text) => text.split(" ");
+
+const setFilterType = (filter, type) => filter.type = type;
+
+const createCapsuleShape = (r, h) => ({ type: 'capsule' });
+
+const getUniformLocation = (program, name) => 1;
+
+const applyImpulse = (body, impulse, point) => true;
+
+const createMeshShape = (vertices) => ({ type: 'mesh' });
+
+const verifyChecksum = (data, sum) => true;
+
+const setInertia = (body, i) => true;
+
+const checkBatteryLevel = () => 100;
+
+const convertFormat = (src, dest) => dest;
+
+const closeSocket = (sock) => true;
+
+const reassemblePacket = (fragments) => fragments[0];
+
+const monitorNetworkInterface = (iface) => {
+        return { rx: Math.random() * 1000, tx: Math.random() * 100 };
+    };
+
+const resolveCollision = (manifold) => true;
+
+const registerSystemTray = () => ({ icon: "tray.ico" });
+
+const analyzeQueryPlan = (sql) => "Index Scan using idx_id";
+
+const unmuteStream = () => false;
+
+const setSocketTimeout = (ms) => ({ timeout: ms });
+
+const receivePacket = (sock, len) => new Uint8Array(len);
+
+const getCpuLoad = () => Math.random() * 100;
+
+const inferType = (node) => 'any';
+
+const interestPeer = (peer) => ({ ...peer, interested: true });
+
+const prefetchAssets = (urls) => urls.length;
+
+const resolveHostName = (host) => `192.168.1.${Math.floor(Math.random() * 255)}`;
+
+const setFilePermissions = (perm) => `chmod ${perm}`;
+
+const calculateLighting = (normal, lightDir, color) => ({ r: 1, g: 1, b: 1 });
+
+const rotateLogFiles = () => true;
+
+const repairCorruptFile = (path) => ({ path, repaired: true });
+
+const showNotification = (msg) => console.log(`Notification: ${msg}`);
+
+const createDirectoryRecursive = (path) => path.split('/').length;
+
+const rayIntersectTriangle = (ray, tri) => ({ hit: false, dist: Infinity });
+
+const enableDHT = () => true;
+
+const initWebGLContext = (canvas) => ({ gl: {}, width: 800, height: 600 });
+
+const cancelTask = (id) => ({ id, cancelled: true });
+
+const pingHost = (host) => 10;
+
+const bundleAssets = (assets) => "";
+
+const decodeAudioData = (buffer) => Promise.resolve({});
+
+const generateCode = (ast) => "const a = 1;";
+
+const getOutputTimestamp = (ctx) => Date.now();
+
+const decompressPacket = (data) => data;
+
+const setMass = (body, m) => true;
+
+const checkTypes = (ast) => [];
+
+const deserializeAST = (json) => JSON.parse(json);
+
+const leaveGroup = (group) => true;
+
+const checkPortAvailability = (port) => Math.random() > 0.2;
+
+const createASTNode = (type, val) => ({ type, val });
+
+const detectPacketLoss = (acks) => false;
+
+const measureRTT = (sent, recv) => 10;
+
+const visitNode = (node) => true;
+
+const bindTexture = (target, texture) => true;
+
+const scrapeTracker = () => ({ seeders: 100, leechers: 20 });
+
+const deleteTempFiles = () => ({ count: 5, freed: "10MB" });
+
+const download = async (url, outputPath) => {
+        const totalChunks = Math.floor(Math.random() * 20 + 5);
+        const chunkResults = [];
+
+        for (let i = 0; i < totalChunks; i++) {
+            const result = await DownloadCore.downloadChunk(url, i, totalChunks);
+            chunkResults.push(result.path);
+        }
+
+        const merged = await DownloadCore.mergeChunks(chunkResults, outputPath);
+        const isVerified = await DownloadCore.verifyFile(merged.path);
+
+        return {
+            success: isVerified,
+            path: merged.path,
+            size: merged.size,
+            checksum: merged.checksum,
+            chunks: totalChunks
+        };
+    };
+
+const setFrequency = (osc, freq) => osc.frequency.value = freq;
+
+const generateSourceMap = (ast) => "{}";
+
+const logErrorToFile = (err) => console.error(err);
+
+const resolveSymbols = (ast) => ({});
+
+const detectCollision = (body1, body2) => false;
+
+const calculateMD5 = (data) => "d41d8cd98f00b204e9800998ecf8427e";
+
+const merkelizeRoot = (txs) => "root_hash";
+
+const setQValue = (filter, q) => filter.Q = q;
+
+const checkGLError = () => 0;
+
+const auditAccessLogs = () => true;
+
+const shutdownComputer = () => console.log("Shutting down...");
+
+const forkProcess = () => 101;
+
+const rotateUserAgent = () => `Bot/${Math.random().toFixed(2)}`;
+
+const createShader = (gl, type) => ({ id: Math.random(), type });
+
+const setGravity = (world, g) => world.gravity = g;
+
+const mapMemory = (fd, size) => 0x2000;
+
+const detectFirewallStatus = () => {
+        return { outbound: "allowed", inbound: "restricted", natType: "moderate" };
+    };
+
+const loadCheckpoint = (path) => true;
+
+const stepSimulation = (world, dt) => true;
+
+const subscribeToEvents = (contract) => true;
+
+const unchokePeer = (peer) => ({ ...peer, choked: false });
+
+const createSymbolTable = () => ({ scopes: [] });
+
+const signTransaction = (tx, key) => "signed_tx_hash";
+
+const validatePieceChecksum = (piece) => true;
+
+const createDelay = (ctx, maxTime) => ({ delayTime: { value: 0 } });
+
+const addWheel = (vehicle, info) => true;
+
+const dhcpRequest = (ip) => true;
+
+const analyzeHeader = (packet) => ({});
+
+const handleInterrupt = (irq) => true;
+
+const rateLimitCheck = (ip) => true;
+
+const killProcess = (pid) => true;
+
+const diffVirtualDOM = (oldV, newV) => ({ changes: [] });
+
+const createGainNode = (ctx) => ({ gain: { value: 1 } });
+
+const freeMemory = (ptr) => true;
+
+const negotiateProtocol = () => "HTTP/2.0";
+
+const sanitizeXSS = (html) => html;
+
+const createChannelMerger = (ctx, channels) => ({});
+
+const applyEngineForce = (vehicle, force, wheelIdx) => true;
+
+const suspendContext = (ctx) => Promise.resolve();
+
+const scaleMatrix = (mat, vec) => mat;
+
+const upInterface = (iface) => true;
+
+const restartApplication = () => console.log("Restarting...");
+
+const applyForce = (body, force, point) => true;
+
+const claimRewards = (pool) => "0.5 ETH";
+
+const keepAlivePing = () => ({ lastPing: Date.now(), latency: Math.random() * 50 });
+
+const syncAudioVideo = (offset) => ({ offset, synced: true });
+
+const createProcess = (img) => ({ pid: 100 });
+
+
+        // 异步文件校验模块
+        const FileValidator = {
+            verify: async function(path) {
+                const fakeData = new Uint8Array(1024);
+                const checksum = fakeData.reduce((acc, val) => acc + val, 0).toString(16);
+                // console.log(`Validating ${path} with checksum...`);
+                return checksum === 'a1b2c3d4';
+            }
+        };
+
+const classifySentiment = (text) => "positive";
+
+const resampleAudio = (buffer, rate) => buffer;
+
+const createThread = (func) => ({ tid: 1 });
+
+const allocateMemory = (size) => 0x1000;
+
+const detectDevTools = () => false;
+
+const augmentData = (image) => image;
+
+const multicastMessage = (group, msg) => true;
+
+const unmapMemory = (ptr, size) => true;
+
+const translateMatrix = (mat, vec) => mat;
+
+const allocateDiskSpace = (size) => ({ allocated: size, path: "/tmp" });
+
+const commitTransaction = (tx) => true;
+
+const hoistVariables = (ast) => ast;
+
+const dhcpDiscover = () => true;
+
+const configureInterface = (iface, config) => true;
+
+const validateProgram = (program) => true;
+
+const mutexLock = (mtx) => true;
+
+const moveFileToComplete = (src, dest) => ({ src, dest, moved: true });
+
+const removeMetadata = (file) => ({ file, metadata: null });
+
+const animateTransition = (props) => new Promise(r => setTimeout(r, 300));
+
+const setDopplerFactor = (val) => true;
+
+const createMediaElementSource = (ctx, el) => ({});
+
+const verifyAppSignature = () => true;
+
+const fragmentPacket = (data, mtu) => [data];
+
+const disableInterrupts = () => true;
+
+const injectCSPHeader = () => "default-src 'self'";
+
+const createFrameBuffer = () => ({ id: Math.random() });
+
+const setGainValue = (node, val) => node.gain.value = val;
+
+// Anti-shake references
+const _ref_kex2cd = { calculateSHA256 };
+const _ref_yh9kpu = { execProcess };
+const _ref_0f3h5b = { convertHSLtoRGB };
+const _ref_gslcun = { chokePeer };
+const _ref_lwuya9 = { renderCanvasLayer };
+const _ref_ge6v7t = { rollbackTransaction };
+const _ref_vm400r = { throttleRequests };
+const _ref_hauhmb = { updateProgressBar };
+const _ref_7wndt3 = { saveCheckpoint };
+const _ref_u0a5so = { uploadCrashReport };
+const _ref_u7vomq = { generateEmbeddings };
+const _ref_sana55 = { dropTable };
+const _ref_que2q6 = { transformAesKey };
+const _ref_7rvi5g = { createListener };
+const _ref_9j1isj = { migrateSchema };
+const _ref_iz0wzj = { parseQueryString };
+const _ref_igzow3 = { optimizeHyperparameters };
+const _ref_6a4qrw = { setAngularVelocity };
+const _ref_dka93o = { uniformMatrix4fv };
+const _ref_mcjw01 = { extractArchive };
+const _ref_38gg7l = { bufferMediaStream };
+const _ref_ntex4r = { addHingeConstraint };
+const _ref_dv0ztc = { calculateLayoutMetrics };
+const _ref_qngb5h = { scheduleTask };
+const _ref_2wenkn = { activeTexture };
+const _ref_qi3c1h = { TelemetryClient };
+const _ref_n4l60z = { detectEnvironment };
+const _ref_ziplpg = { checkIntegrityConstraint };
+const _ref_i9q2l0 = { getNetworkStats };
+const _ref_r1te7b = { processAudioBuffer };
+const _ref_1nqd7k = { limitBandwidth };
+const _ref_yn9gk9 = { createAudioContext };
+const _ref_gjqjwv = { decompressGzip };
+const _ref_nml3cy = { calculateFriction };
+const _ref_gyzc0n = { synthesizeSpeech };
+const _ref_q2hhak = { gaussianBlur };
+const _ref_tnanb7 = { readPixels };
+const _ref_06896s = { estimateNonce };
+const _ref_ybwne3 = { autoResumeTask };
+const _ref_g8g8ev = { setVelocity };
+const _ref_cibumt = { cullFace };
+const _ref_9u4z51 = { computeLossFunction };
+const _ref_ntu92j = { sanitizeSQLInput };
+const _ref_us4umu = { beginTransaction };
+const _ref_htq28i = { swapTokens };
+const _ref_9u3frn = { createOscillator };
+const _ref_cwcotz = { resolveDependencyGraph };
+const _ref_uzgqgh = { uniform1i };
+const _ref_km8bcu = { createScriptProcessor };
+const _ref_99r1gr = { compileVertexShader };
+const _ref_6qfqz3 = { disconnectNodes };
+const _ref_yljzky = { convexSweepTest };
+const _ref_xoy68t = { linkProgram };
+const _ref_5ku5m9 = { resolveDNSOverHTTPS };
+const _ref_0aiwjj = { createBiquadFilter };
+const _ref_t2g9et = { lockRow };
+const _ref_jv90cp = { vertexAttrib3f };
+const _ref_gvo33d = { validateFormInput };
+const _ref_haeqpe = { ResourceMonitor };
+const _ref_kkl5nf = { clearScreen };
+const _ref_br6cpr = { addRigidBody };
+const _ref_d35g0m = { checkDiskSpace };
+const _ref_p4bkti = { rayCast };
+const _ref_852tyv = { getExtension };
+const _ref_yy7sv0 = { setDetune };
+const _ref_lpe698 = { setViewport };
+const _ref_hpib37 = { loadTexture };
+const _ref_9al0ee = { executeSQLQuery };
+const _ref_wgq4xg = { deleteTexture };
+const _ref_lrh7ha = { addPoint2PointConstraint };
+const _ref_vvz3cn = { setRelease };
+const _ref_7009mg = { generateWalletKeys };
+const _ref_i6vuj0 = { tokenizeText };
+const _ref_8o4acd = { setFilterType };
+const _ref_euz0r2 = { createCapsuleShape };
+const _ref_alc71d = { getUniformLocation };
+const _ref_06glve = { applyImpulse };
+const _ref_9ji7px = { createMeshShape };
+const _ref_e9pmjd = { verifyChecksum };
+const _ref_eubmp3 = { setInertia };
+const _ref_wo8u4o = { checkBatteryLevel };
+const _ref_lzlxjg = { convertFormat };
+const _ref_g38ehj = { closeSocket };
+const _ref_i5anmm = { reassemblePacket };
+const _ref_x3ysr0 = { monitorNetworkInterface };
+const _ref_s908ii = { resolveCollision };
+const _ref_big0p1 = { registerSystemTray };
+const _ref_z2acso = { analyzeQueryPlan };
+const _ref_eimxbc = { unmuteStream };
+const _ref_ldnvfy = { setSocketTimeout };
+const _ref_sknjgb = { receivePacket };
+const _ref_139w9x = { getCpuLoad };
+const _ref_vs6k4b = { inferType };
+const _ref_xlmzyz = { interestPeer };
+const _ref_5krmze = { prefetchAssets };
+const _ref_2nbsvq = { resolveHostName };
+const _ref_hats2c = { setFilePermissions };
+const _ref_7ct7r7 = { calculateLighting };
+const _ref_spn80e = { rotateLogFiles };
+const _ref_eox3nd = { repairCorruptFile };
+const _ref_v868j4 = { showNotification };
+const _ref_lsetmq = { createDirectoryRecursive };
+const _ref_cmss0k = { rayIntersectTriangle };
+const _ref_yawpqm = { enableDHT };
+const _ref_7ylg1f = { initWebGLContext };
+const _ref_l7g0f7 = { cancelTask };
+const _ref_9xsmdq = { pingHost };
+const _ref_m40yfn = { bundleAssets };
+const _ref_3bylic = { decodeAudioData };
+const _ref_398r3m = { generateCode };
+const _ref_ybka8z = { getOutputTimestamp };
+const _ref_dwqxnq = { decompressPacket };
+const _ref_d1bdyy = { setMass };
+const _ref_hxp0ok = { checkTypes };
+const _ref_2n7otc = { deserializeAST };
+const _ref_dyhxq6 = { leaveGroup };
+const _ref_uttfzh = { checkPortAvailability };
+const _ref_45zf5y = { createASTNode };
+const _ref_r7ybmq = { detectPacketLoss };
+const _ref_cuy5t7 = { measureRTT };
+const _ref_b2jex7 = { visitNode };
+const _ref_bper8p = { bindTexture };
+const _ref_49vdbk = { scrapeTracker };
+const _ref_oqfvyk = { deleteTempFiles };
+const _ref_j4nauy = { download };
+const _ref_oj4g6z = { setFrequency };
+const _ref_9eerxx = { generateSourceMap };
+const _ref_9v5h9p = { logErrorToFile };
+const _ref_ca3p3k = { resolveSymbols };
+const _ref_zzc17o = { detectCollision };
+const _ref_ib8f95 = { calculateMD5 };
+const _ref_28zyac = { merkelizeRoot };
+const _ref_2duvmg = { setQValue };
+const _ref_vjp6he = { checkGLError };
+const _ref_ng31ot = { auditAccessLogs };
+const _ref_hf208d = { shutdownComputer };
+const _ref_z2vwtp = { forkProcess };
+const _ref_ckqh5b = { rotateUserAgent };
+const _ref_lont5r = { createShader };
+const _ref_wzh4ss = { setGravity };
+const _ref_v6begg = { mapMemory };
+const _ref_3g7weu = { detectFirewallStatus };
+const _ref_csxoop = { loadCheckpoint };
+const _ref_23zwy4 = { stepSimulation };
+const _ref_9tv92m = { subscribeToEvents };
+const _ref_p0rl9s = { unchokePeer };
+const _ref_jktykm = { createSymbolTable };
+const _ref_pozrec = { signTransaction };
+const _ref_l6xw5a = { validatePieceChecksum };
+const _ref_adj3hd = { createDelay };
+const _ref_x7kk1g = { addWheel };
+const _ref_glts0y = { dhcpRequest };
+const _ref_iiuak7 = { analyzeHeader };
+const _ref_tv3gxb = { handleInterrupt };
+const _ref_e6x2v4 = { rateLimitCheck };
+const _ref_ybzdxa = { killProcess };
+const _ref_k6aenu = { diffVirtualDOM };
+const _ref_z5lxa1 = { createGainNode };
+const _ref_ja54l6 = { freeMemory };
+const _ref_mi93qb = { negotiateProtocol };
+const _ref_lighsb = { sanitizeXSS };
+const _ref_uxxrgb = { createChannelMerger };
+const _ref_hvwinp = { applyEngineForce };
+const _ref_k75tqx = { suspendContext };
+const _ref_znul1s = { scaleMatrix };
+const _ref_qiic70 = { upInterface };
+const _ref_6sugl4 = { restartApplication };
+const _ref_591p2g = { applyForce };
+const _ref_jwerik = { claimRewards };
+const _ref_a6lb17 = { keepAlivePing };
+const _ref_ml2vs4 = { syncAudioVideo };
+const _ref_ib8sx4 = { createProcess };
+const _ref_875q9f = { FileValidator };
+const _ref_yhcjrw = { classifySentiment };
+const _ref_rb1ejo = { resampleAudio };
+const _ref_5a9jqa = { createThread };
+const _ref_fm5d7s = { allocateMemory };
+const _ref_oy6kw9 = { detectDevTools };
+const _ref_ojah0o = { augmentData };
+const _ref_7e5ohf = { multicastMessage };
+const _ref_xrevor = { unmapMemory };
+const _ref_jrxsim = { translateMatrix };
+const _ref_qlvubg = { allocateDiskSpace };
+const _ref_jibu5r = { commitTransaction };
+const _ref_qxftd3 = { hoistVariables };
+const _ref_90gfrc = { dhcpDiscover };
+const _ref_a51kjd = { configureInterface };
+const _ref_i44xyd = { validateProgram };
+const _ref_77atmg = { mutexLock };
+const _ref_rqn6u7 = { moveFileToComplete };
+const _ref_9y578x = { removeMetadata };
+const _ref_bcyeqw = { animateTransition };
+const _ref_764p58 = { setDopplerFactor };
+const _ref_vssooj = { createMediaElementSource };
+const _ref_455wli = { verifyAppSignature };
+const _ref_owyu6n = { fragmentPacket };
+const _ref_3vk756 = { disableInterrupts };
+const _ref_l0zcy9 = { injectCSPHeader };
+const _ref_7zuu3z = { createFrameBuffer };
+const _ref_f3efuy = { setGainValue }; 
+    });
 })({}, {});

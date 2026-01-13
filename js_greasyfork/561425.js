@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Torrent Mod Toolkit
+// @name         Torrent Mod Toolkit - Non stable
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1.10
+// @version      1.3
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -22,14 +22,14 @@
 // @run-at       document-idle
 
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/561425/Torrent%20Mod%20Toolkit.user.js
-// @updateURL https://update.greasyfork.org/scripts/561425/Torrent%20Mod%20Toolkit.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561425/Torrent%20Mod%20Toolkit%20-%20Non%20stable.user.js
+// @updateURL https://update.greasyfork.org/scripts/561425/Torrent%20Mod%20Toolkit%20-%20Non%20stable.meta.js
 // ==/UserScript==
 
 (function () {
     "use strict";
 
-    const version = "1.2.1.10";
+    const version = "1.3";
 
     var mediainfo;
     var uniqueId;
@@ -43,7 +43,7 @@
 
     const ATH_SEARCH_URL = "https://aither.cc/torrents?imdbId=";
     const AVISTAZ_SEARCH_URL = "https://avistaz.to/movies?search=&imdb=";
-    const BHD_SEARCH_URL = "https://beyond-hd.me/torrents/all?search=&doSearch=Search&imdb=";
+    const BHD_SEARCH_URL = "https://beyond-hd.me/torrents/all?search=&imdb=";
     const BLU_SEARCH_URL = "https://blutopia.cc/torrents?imdbId=";
     const BTN_SEARCH_URL = "https://broadcasthe.net/torrents.php?tvdb=";
     const FL_SEARCH_URL = "https://filelist.io/browse.php?search=";
@@ -62,25 +62,25 @@
     const AUD_SEARCH_URL = "https://audiences.me/torrents.php?search=";
     const HHAN_SEARCH_URL = "https://hhanclub.top/torrents.php?search=";
     const ANT_SEARCH_URL = "https://anthelion.me/torrents.php?searchstr=";
+    const AB_SEARCH_URL = "https://animebytes.tv/torrents.php?searchstr=";
+    const CAPY_SEARCH_URL = "https://capybara.cc/torrents?imdbId=";
+    const FNP_SEARCH_URL = "https://fearnopeer.com/torrents?imdbId=";
+    const SPL_SEARCH_URL = "https://sportscult.org/browse.php?search=";
+    const GPW_SEARCH_URL = "https://greatposterwall.com/torrents.php?searchstr=";
+    const PTER_SEARCH_URL = "https://pterclub.net/torrents.php?search=";
+    const OMG_SEARCH_URL = "https://omgwtfnzbs.org/browse.php?search=";
 
     const SRRDB_SEARCH_URL = `https://srrdb.com/browse/imdb:`;
 
     const CONFIG_URL = "https://gitea.okami.icu/Dooky/Toolkitconfig/raw/branch/main/config.json";
-
     const CONFIG_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
     const TRACKER_CONFIGS = {
-        'BLU': {
-            name: 'Blutopia',
-            searchUrl: BLU_SEARCH_URL,
-            loggedOutRegex: /Cloudflare|Ray ID|Forgot your password|Service Unavailable/,
-            matchRegex: /torrent-search--list__overview/,
-            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
-            positiveMatch: true,
-            idType: 'imdb'
-        },
         'ATH': {
             name: 'Aither',
+            buttonId: 'athButton',
+            displayOrder: 1,
+            icon: 'data:image/png;base64,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',
             searchUrl: ATH_SEARCH_URL,
             loggedOutRegex: /Cloudflare|Ray ID|Forgot your password/,
             matchRegex: /torrent-search--list__overview/,
@@ -88,25 +88,23 @@
             positiveMatch: true,
             idType: 'imdb'
         },
-        'BHD': {
-            name: 'Beyond-HD',
-            searchUrl: BHD_SEARCH_URL,
-            loggedOutRegex: /FORGET PASSWORD/,
-            matchRegex: />N\/A</,
-            seedingRegex: /<i class="fal fa-seedling" title="Seeding"/,
-            positiveMatch: false,
-            idType: 'imdb'
-        },
         'PTP': {
             name: 'PassThePopcorn',
+            buttonId: 'ptpButton',
+            displayOrder: 2,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAV1BMVEUAAAD///9oiM2CacFm5Mj/jGb842dn3auC3X/z82j/uWZw14xudcRwbsBmpdz83GZm4NBq26KP4Hrm9Wr/rmdmr91u2ZNmntln5L/902b/l2Zt1otnseEVRKmYAAAAeUlEQVRIx+3WtwqAMBCAYU2zpNlii+//nAZFCDooSIaQ+5fjhm89LoNCl7u+TpCvM8kopUNda81YVfVu78rS8rEtCkJI4/ZNKYSQkBJjfJerk4sv+SHnUxo1/ZMCJEiQIKOV8pKPe8s8aa317q3x7m2SxfUnxCWhAO24CSsei22B/wAAAABJRU5ErkJggg==',
             searchUrl: PTP_SEARCH_URL,
-            loggedOutRegex: /Forgot your password|Cloudflare/,
-            matchRegex: /No torrents found/,
+            loggedOutRegex: /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
+            matchRegex: /Your search did not match anything/,
+            seedingRegex: /title="Seeding"/,
             positiveMatch: false,
             idType: 'imdb'
         },
         'BTN': {
             name: 'BroadcastTheNet',
+            buttonId: 'btnButton',
+            displayOrder: 3,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==',
             searchUrl: BTN_SEARCH_URL,
             loggedOutRegex: /Lost your password\?|Service Temporarily Unavailable/,
             matchRegex: /action=download/,
@@ -116,19 +114,279 @@
         },
         'HDB': {
             name: 'HDBits',
+            buttonId: 'hdbButton',
+            displayOrder: 4,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVPZHWjt8exxNNfdIV1ipuNorP+/v7Y3+RqcToTAAAA4ElEQVQoz6XITW6DMBCG4ZF8AkjcrkEh2RpNLgA22RvhsEZqZy6QmOt3DKpUWVlUyuufT3qgzvoHVFlQVOmU6W4fFFmvoJYpZep6Az+z9z5WMxFx4T3okrXW8VnS5UKLQJg5BB+fMvqTdIAwsg4hNmNyajYIvxDO3xncBaaR1nWl08jTNN2XAYaeUk3PgxtuAq5n51w8yQzutrg/IPPxlcH5IdDtsA0dHdiOr2jjoWNrZ3mAHaO9xmNLa6QHCrRsEeOhJeIGEQGzXoAyZn8qLYJSYIxRW2AUSOkzkNrl/X4ALOVfoodI6RkAAAAASUVORK5CYII=',
             searchUrl: HDB_SEARCH_URL,
-            loggedOutRegex: /You appear to have cookies disabled./,
+            loggedOutRegex: /Make sure your passcode generating|nginx/,
             matchRegex: /Nothing here!/,
+            seedingRegex: /tag tag_seeding/,
             positiveMatch: false,
             idType: 'imdb'
         },
         'LST': {
             name: 'LST.gg',
+            buttonId: 'lstButton',
+            displayOrder: 5,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAAKlJREFUKM990rERgzAMBVCnYISk8DQZgQJR0KfxPmwQF9aUkZSzv/8dBwXwsCRzlpJfD5G3Pfo79HRsYwFLyx8roiwOUR6HKItjRAqSZFzI9wqMBVg9HxVyFdm1iap+U24iRZVwDmjH4TglbhdogBWoMxTYrdqAlBliSUABPn0lx69EzuaoBN8n8LKvh/rOhvkMCDfnlgA6+Nv+oI3cYG49hoLHhQeJRuwHxie7qwtJseAAAAAASUVORK5CYII=',
             searchUrl: LST_SEARCH_URL,
-            loggedOutRegex: /Cloudflare|Ray ID|Forgot your password/,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot Your Password|Forgot your password|Service Unavailable/,
             matchRegex: /torrent-search--list__overview/,
             seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
             positiveMatch: true,
+            idType: 'imdb'
+        },
+        'BLU': {
+            name: 'Blutopia',
+            buttonId: 'bluButton',
+            displayOrder: 6,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAABc90AaMX+//8AVcJElNyDtui51vILVXb+AAAAAXRSTlMAQObYZgAAAklJREFUSMeV1U1z2jAQBmBygHMkTLjWio3PoALXRrWdKx+GXksx+JzYcf5+d+uPXTuCmb6TyUyGR+uVNhaDXoabwd1shfLvfDwUQiilbhY5CQSQp1vlG6B8e3kC9Bi+nAAVoeVNpGmEu+HdtZmlraBeBcU5rwgovylPibVOlQpDxXrd8gJ7rZfGPRxkqExT48SAqyHe9Jp9XswOxTcADwy8IiiUZ/zsc+0A+NEFco9gCUu9MAf4pYLM9Rp+sLZnBb7Wf2AfCYK9TvrAOc60llA7VZAoQ7Bh5yCfPgKtHQDvCLw47YGodMZav0GVuUHRB06W4CYwywrgI34DGNVTenOdcwWqcQQSftGsZOmKDvCOpgOCFFAF6oO4dIAsX3ogShUHcYEqJ+AFDgfyl+iDi0HQ/r9+uII/ot6k8muAT+gC72o6YFqdFQE4RszsH3gQMnvhYGUMdoDDbEDZA8dEcVD3KCJdJzkZG5AwTJqW5RGubuMRoCZlQGBh+Ds+rEeVE1iHPeCuPDHVLO8cjGD1tKQWWZv0dsvjKeBg0QUoRMxBoboA43OQWoDA7q8Q3E1iA/DBMoQ8A1AdsG2HXUwuh12MA6crCEH77id7nCVUsgExhoV5mWnvrOcE2C0Y6Lk6p9EamvjOZkUXwOS6k+P5z6WJrokViNAVr8txobzQVODx603qr/NENXEHTUb8llJtbJe5s18ZumVt4nlh6LK3ibiwredbUbSBXk4cPP7XlxqJBkzgj5uC1tsCgA7QGgSDexkKuFzvi/4B/QXy6uI0Y3ArsgAAAABJRU5ErkJggg==',
+            searchUrl: BLU_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot your password|Service Unavailable/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'BHD': {
+            name: 'Beyond-HD',
+            buttonId: 'bhdButton',
+            displayOrder: 7,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAAAmaMr9/f+On/YhYNjYAAAAAXRSTlMAQObYZgAAAQxJREFUOMuF1M3NgkAQBmA5WIL9UIIHBhIPfPevBIxlUAIHh3DkbBUWISWYmBj3ndl3lTXOQeXJzk/iLBsLkXKTRCHyLhKCz1vAngcsPg7wyM6hYoYFezKHGcyRJLJQpFByClZFzfqKqhHaHhBrHmZ8R+gMYpP/wdo4LJOBd9Wz9wU0Or5DrWrgY6j6ZIC76iWBv0Vf8XCo1aI3aPCIMmFyZITOgA4wRWgBc4SGJQAochZALDIQUKRPoM7CDNghxaH6AocsDIAtYFwAe0Cnc6tTCqPIYlD4H9kGKAHH18cNEEY9cacADCwMo1rBaulWa/lrkysuP0uwKi8mYX3F8peQOV8uMo/kXwYU+/UEaSw57h3Xy84AAAAASUVORK5CYII=',
+            searchUrl: BHD_SEARCH_URL,
+            loggedOutRegex: /FORGET PASSWORD/,
+            matchRegex: />N\/A</,
+            seedingRegex: /<i class="fal fa-seedling" title="Seeding"/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'AB': {
+            name: 'AnimeBytes',
+            buttonId: 'abButton',
+            displayOrder: 8,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAElBMVEUAAADtEGrwLXzzXJr3ibb5r827H5vkAAAAAXRSTlMAQObYZgAAAWZJREFUSMeFld1xhDAMhNc/945MCjgzKQCSBiAVXPpvJheMkS3L431iTp9XK3EeIGWXFT39PAFHb33q9RgAHPSvoNbpbQC6tLf185jNQOOxEU0ADGXNIvvleuT6ybN8OsIOMsaWT2ykW6QDAqC1MgjgFjKnT4YNQKmcfj23lDbdpohF5goIKE6xWxPTlIEeSo9YDe3aHmIrPoptWuIhALGt5x1rrV59FSLyEG2OcE/+qghTLNNfDx2LHVYDEDmlEYDoMXUAx8ChAsjAR94KOiFmRDGm2GbIAGRKCaxdIM/bmzMDUxeIeZxavxIIIwfqjEn307PztmD0lCQAGcK1AK2dv5QlrUdkwFPWS+tARZxJvRml264YUJkncIISsMQEN6gvBhMrHo4qsSFLAmYEuBGAOALMCMAQOEaAGwEwIwBDwLaVpQKwyfrsSqDdVgAE4KOoM6B4zLyd6uMubkADAPvXsnz7qusfG/ZZ3SUO5DgAAAAASUVORK5CYII=',
+            searchUrl: AB_SEARCH_URL,
+            loggedOutRegex: /Forgot your username|Ray ID/,
+            matchRegex: /Translation: No search results/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'FL': {
+            name: 'FileList',
+            buttonId: 'flButton',
+            displayOrder: 9,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAElBMVEUfotUje54mZHwpTFssLS8shKW30acsAAAANElEQVQI12MIhQKGEBcwcMXLcGZgMIAwWFzgDAUww4mBGcJwZHERgOhicXFgYHElymSYMwA+oyC+xS3dSAAAAABJRU5ErkJggg==',
+            searchUrl: FL_SEARCH_URL,
+            loggedOutRegex: /Login on any IP/,
+            matchRegex: /Nu s-a găsit nimic!/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'AVISTAZ': {
+            name: 'AvistaZ',
+            buttonId: 'avistazButton',
+            displayOrder: 10,
+            icon: 'data:image/png;base64,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',
+            searchUrl: AVISTAZ_SEARCH_URL,
+            loggedOutRegex: /Forgot Your Password/,
+            matchRegex: /class="overlay-container"|class="movie-poster/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'CAPY': {
+            name: 'Capybara',
+            buttonId: 'capyButton',
+            displayOrder: 11,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEUAAAD+sQDn43jsAAAAAXRSTlMAQObYZgAAAIdJREFUGNONzCESwkAQBMBLnVi5Nu6+gcuXkCgukifg8g1kBJKCJwQUNg+gskxmVFxWTNfObV3aOS2zuYjXTOLHNRZuH5KDb6bSI5CVWMRKQS7oSIPEL1mdCRdFdKIK3QuVs07eYiTTXTzAN6YrGH24gWcqoA7JD6Aj50JOTo7Wk9zbljbtmD8BcWoj5tHinwAAAABJRU5ErkJggg==',
+            searchUrl: CAPY_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Esqueceu sua senha|Service Unavailable/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'FNP': {
+            name: 'FearNoPeer',
+            buttonId: 'fnpButton',
+            displayOrder: 12,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUBAQHY2NhHR0eUlJSEE9rLAAAAwElEQVQoz93NIQ7CMBQG4H9rJiYq52dq8PNc4rUVC6mf2QEWsnCHBYtZQsYBSAhi4Q4NBoFGYTAYeN1usT9pm6/vTx6WkGFYnZ7AZTgyPBG1QEGG744BRtk5INvgwFBWWQYfxG9VJyXXaiAXtpjhIKyoMxdqvvqmZeq8KywiokaWcu3HUOEtSsuRKmoZLyiT3Ii2gDBA0fc7/puxlx9B4EQauKcmMgGpRmyE4YcjGTrWcpqoBrjicf5NkxEhOZaRP01rNfngb+g+AAAAAElFTkSuQmCC',
+            searchUrl: FNP_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'HDT': {
+            name: 'HDTorrents',
+            buttonId: 'hdtButton',
+            displayOrder: 13,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAHlBMVEUAAABRUVFhYWEdHR13d3dCQkKRkZGwsLDt7e3Pz89GPqTkAAAArElEQVQoz2MYQBAoKCgYCgQGUD6Lk5KSkiAQKEEFFGEqGQXAFLMDXC+ExazA7MwQwurmysDgDBEQYJ3MoMHePiMBJqAAFNBkT2BqQhaQZEtgSIcJODA2hXoCBcQNlGECHR3TgQLhCIHGUHc2B2SBZgZxFgcGNwZhqADQ0DAWBeYimIACWCBRPQEhkMwQwpSexAATQPhFAUI5ovmWwcxJCQQUBV0QIQYBAQz0AgBNDR38O7n/UwAAAABJRU5ErkJggg==',
+            searchUrl: HDT_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|not authorized to view this/,
+            matchRegex: /No torrents here/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'PHD': {
+            name: 'PrivateHD',
+            buttonId: 'phdButton',
+            displayOrder: 14,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAAAAADruwrhuSTly2XNpRHkwT7NrTZrvVs/AAAAAXRSTlMAQObYZgAAAIJJREFUKM+t0U0KgCAQhuG6Qf/7hA4gEa0FqXV1giBoHYbn7xuJSJTa+G5mfHYykac4fUruty2plQdiG5IwUEhMKaTJwAg4xSbRIADVDtCrPjCq1Qs9NsXVhJET5C3FFwPcCx225QVZg22uZ4Ks/gJGEZSMYGIm53Nh4PcuzimdY7td+tEu563AqZYAAAAASUVORK5CYII=',
+            searchUrl: PHD_MOVIES_SEARCH_URL,
+            urlTv: PHD_TV_SEARCH_URL, // Use TV shows URL when torrent type is 'tv'
+            loggedOutRegex: /Forgot Your Password/,
+            matchRegex: /class="overlay-container"|class="movie-poster/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'HUNO': {
+            name: 'hawkeuno',
+            buttonId: 'hunoButton',
+            displayOrder: 15,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAolBMVEUAAAAAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAtPbjdHoAUnYAtPbjdHoAUnYAUnYAtPbjdHoPqeXTcnoAtPbjdHoAtPbjdHoAUnYcVnYAj8YAY4wAWH7VcnqcaXlVX3cqWHcAru4ApOEAg7YAfa4Als6OZ3hxY3jR+GyyAAAAJHRSTlMAQECgoPDwEBBgYCAg0NDAwICAMDDg4LCw4JCQkIBwcPDgUFBi1PguAAABu0lEQVRYw+2W2XKCQBBFAdkiOy4gbonOjNFoTEzy/78WUGCmZVqtwkfOa9e9xfRGKx0dHXIcNWcgiwy1HPe2eBGQEi8bAPHUpyXhEjNRAwIYvVSR/pgCQk0iH3A5t1gVkTWXc4vhtX5BpPQsW6dSllDfIwivbxRBh3qM988P1OEhPWMPOLyg+i+Wc6AY/bL6BqY/blnBniKYl45ICMY3O7NBH5Ge++fGA0r+KIbWzKCRRFFvRApOrGRDC8Z6HKdmI48WlEfWJa+FxY5V7HP5JWN2DC1sWAKjniDLIz+s5kB9u54r4NCHLxAm0BqduMFmbAuTCd/gEU4EhnPLOGD8YsrxFSLgKCITrp+AgEsFRANPAcy4wQxGfMQgUABzbjCHkbC1wTOf0DqJoIyZIrASy7gWI1NQxraN1L6VLQKohsm4HiazGiYKsJsLMYiixOD7hI+zmcZxKFmLDsE4Vp/wSzFcsJPRlYbq9dZL9e5a391Z6yXZzR8Lqp+2/bU97efKO6dJxjsfUvQVxJEdGGoR0WQHhis7cRIo9/iJ40N5qqFHVmLUDQ2PrLqJzbQ8slDUHEsWsLUcpaOjQ84/6BL1Frw7jUYAAAAASUVORK5CYII=',
+            searchUrl: HUNO_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Forgot Your Password|Forgot your password|Service Unavailable/,
+            matchRegex: /torrent-listings-name/,
+            seedingRegex: /fal fa-leaf|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'ULCX': {
+            name: 'UploadCX',
+            buttonId: 'ulcxButton',
+            displayOrder: 16,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEUCAgL////39/fm5uZwcHBKSkoyMjKgoKDkmP8gAAAAWElEQVQI12MAAvYCBghwUoHQLIKCDmCGo5KSCFhAKNhUESTErspsEARRzmwAJPAy0tKYFNLSGBiCBQVDXAUFTRkUgUSwYLkwgyAYlAoyOENYJgwsSmDgAADO1wwnzE+V3gAAAABJRU5ErkJggg==',
+            searchUrl: ULCX_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot Your Password|Forgot your password|Service Unavailable/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'SPL': {
+            name: 'SeedPool',
+            buttonId: 'splButton',
+            displayOrder: 17,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAw1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQ+P/M8f/L7/+73f4aHyUOFBvW/v/X/P/U+//C5/+/5v/A4/+32/+20/GmyvCsyumTsdNre4pdboA/T2E0OTwsMTcgKTQsLzIcJjEWFhTS+f/O8//H7f/J7P/E6f+84P+11vi01fWrz/Ww0O+jxOeXttiGpsqBoMGSqLx9m7yLorl5kq1vg5ljfJlvf49AVGpWYGg3R1lAR04nMT0vMzcLDxQEBwsMCwoHCAnmygrtAAAAB3RSTlMA5bJ+ciy5LvMwCgAAAK9JREFUGNNlT9UOw0AMO2ibK4zKvHbMzPz/X7XrdZsqzQ+RE8uKjQrIlGBMqIw+kECgZkjlrpT72VQPSkW/u1qrn0vcD/ACuG5b3VHPeYKMaDYb7/w620S2lwBQRJYdS50GBtTYiTsJwuvmQGtzGtVjPjHCxtzTdX7Zq7k4ED7TYeMCCweEhYpMbiOcrApG+dsCD59Z+o0T+RvsyGwWAEi/6JnZ1GJQKuXSMBH6X/03UswNMDkCCoYAAAAASUVORK5CYII=',
+            searchUrl: SPL_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'MTV': {
+            name: 'MoreThanTV',
+            buttonId: 'mtvButton',
+            displayOrder: 18,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAACLAAB/AACXAgK2Hh7sfn68KSnUcnKlERHMVVXJBgbHNzfbYGCpAgLFRUXsbm7V8QghAAAAAXRSTlMAQObYZgAAAdRJREFUSMfV1L9LAmEYB/B3sTKNejJSCYK3SBrveoemoOEdghYXERpqSK4hBLejiAaFcHTMRQj/gSaXEhpaDB3MOZBWSfoDgnpePeX1uvfewaW+w9293Oee9wfcQ/5dSs79WgUCzr2rLJEbXIO6mWZ1r3ApvnMENdWxgCZJzdsw8c1x6jE1jnxEdqNfsw6KhQIwGGWZ3o9B+qrcq2UQMGaCJJ4mAS8WO4yBJLZGwEZg8WJBfL4xCj5vE1dSqZNvJ1+3FIASv7zrQIjCpi8ILP8CZ5PDHTeoG/7gw1zyBS0T/EGV6gBMB4K8AxDjnIuf4pnzQzeYacMwhlPMDUKvDoji4A6dEqwSEsZqJTeYH0zBACL4bOLVDQINnHjtxQRAALCu2ibO3iUtfFKBqljeKcC+CrScMsqTxPVFcRMRJQi2YRXPLK4EovylCYYa4HUPd6IAeMwLIEIUIEaSuEq8e4KsOOrdkDjyJU/QAkxcrBIMT4DFBahTgJInCFQRrJAjk0UU/0U4+3ZTwmZj5yTgl+nBItWAOQ1YzANQuVM2G+V+76FmWVaGi+SpBNIXFdEmmdzkKA4SXn2SSX3SGAG7MaxgYgUpCblD2s1ypS+WwMc5/yR/Ij/XK54cbp5ZdAAAAABJRU5ErkJggg==',
+            searchUrl: MTV_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|forgotten password/,
+            matchRegex: /action=download/,
+            seedingRegex: /Currently Seeding Torrent/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'OLDT': {
+            name: 'OldToons',
+            buttonId: 'oldtButton',
+            displayOrder: 19,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAACYmp39/f2Ih4nXmBl1cm+7t7KxpJ3u7e3MycaqezHb2dimi2hXQjnxwK7778qB5DraAAAAAXRSTlMAQObYZgAAA2RJREFUSMfNlF9IFEEcx1cDU+yhH9NZUYKOoMb10LCsGdLbgLT50LGcQiVoVmoRnVlmWnAplXYvdqVWR0WwdbEeIYJFSiF2/VFECP+E0j5J+CI+GoGwzdx5d3txU68ODMvufPb3+/7+zE/aXOtmz3/OzbK8f51nydWuQdFhMdtN5HD1gtC61l4EblMxRT7SiayQ3G/gEIp42gzEUfWppEfal5r5sCoDlKz1ejL3eFMCt5dkQLnzT070n01t4c5PAEf19/dmlUDF1hUCSHPnzp2SBACzgGTN3zcoSuMVAqDM+/aIwszWALl95kyNsBK9LkTwjTkxkK/BlYai5+4GIeFslt1EQRpTKfSikIMlN8skoU6CkL+jWBaa6ARAQxjXCU0AA/wYFyCBiQwOnMK4kJQKPQC6hLGTQGqgCUCGUowxQd7UTQfIBYcYAIhXHKeQcKwWgAHNObx4DmbGaZebxgwoLsSAuu1c0cqClGFU2oACAHAg1MEA7qFfMScmp5dswBYmkhTwRDRwRXsNXa1YXbbJzSIgl+ZzoJW93dJVgwaTAKlO3jXUyTPlYS9PdHWSvmZAUhxn/XUx4OrpgREOJPdtt4/EgJwH45fpi+lkIMOpAQOK2BTJOzM7E6ah1dYkIPMR4eUc9krpgQuzpmEElxOJ8nE1w7whigmbFm9/mMPH9deNto6V/Sw23hD5rF9Gb1dovSf1Km+8UE0sCQ0+mQHtsJ1JkNrqzYmQNyGvk/CL5wIAOVrrrCqzLWgLcF8lYoccgJzoL0ZIp+NxoPuNlEkiAIIDkS93DZXSirx4lgfZP0RhjIais3RHMBSmdCwGdERmTB8BRFD0itAjzx4btPyvCQCgbEjYT19a6+VtdCJp3KQxD1DKo34XLu+2fusBXf1qB7YwmcjDTS2qnkLLCh8JT44lXYyYhOxFw1NkWSPqq6xrHTbgHjgAopO7sGerZf2iA9c/7o6NyfMYAwNK4lf9orVGQ5/z0jcCuNYf6LqvuR07R2vbo7WvtNbp0YS+h10Y4z6lDHd1RwdhtvElbMtDGo6sANvOdzWRYlB1L61I5GgoAjSyHe1JaRsdkM6piY7qx7i4vjZQ29I45OzhEsKqV8rWQzXxlqm/2uLlz643LVLk4nD/YRoUzqupVh78VJm0OdYfHiUPXpH3KX8AAAAASUVORK5CYII=',
+            searchUrl: OLDT_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'AUD': {
+            name: 'Audiences',
+            buttonId: 'audButton',
+            displayOrder: 20,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEXi4uIGBgZ0dHSsrKx+oK7NAAABfUlEQVQ4y72QoU7DUBSGL1sm1oHsI9R0BlNTA3aCZBn724klMHAYxgOQ1EwMX4+BNG3F3oBr9ggVGBzJ0iZzGEw5t7TcU4XbnyYn/e6593w54pDplqUqZ6WsQR8IqGRY1qAHnFN5jxvgoDr7eG2ABVy3OkwP49Yb4dicCR7cWtOWBh4cn4MORiuPgyOsRuDgBF+PkAz0YS0QMNDzzAm561jTbE6qOuYsnIVjBuicehgIJ/Ba7lgA3L2DC2DrcdE16OOiW1CT5KI+SJWJkghXdfxsnl1hyczVCpm7+lFQi15i6fhMFTe4e/FIVa8YFMdnK1Zg5Wnzp5iyhjaXddHmAJg7mStA7nrFCug1m6jTqNL5fVl+Uk9jDnW7BzTuAAI1C9PGHJBKA7X7v4mifOMa0W7YiY3UlgrsI3cQ7YdGPEjjChSFa8i8cN8MmYgKDKmjSGwxSPNfYBPICwXc4O9KkbilIb83QuRp9eguUY8m1GE/s7FqSlc0ORXiWBwmP6Rhqjkj5tQlAAAAAElFTkSuQmCC',
+            searchUrl: AUD_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+            matchRegex: /Nothing found|没有种子|沒有種子/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'HHAN': {
+            name: 'HHanClub',
+            buttonId: 'hhanButton',
+            displayOrder: 21,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEX/Wj3+8vAVLMrsAAAAZElEQVQY053QMQrAIAwF0C8ZHHsEj1qP5lFyBMdCwfSrlbYIHczw3xIS+LA2b/JWKfCwBJACjuBwQBSoRCGJkRbQHzKjExpmM1yY0Afloxu/yrjiKi6inu4VZOboJcBOsn8bvABlfn9fBntNQQAAAABJRU5ErkJggg==',
+            searchUrl: HHAN_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|type="password" name="password"/,
+            matchRegex: /Nothing found|没有种子|沒有種子/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'GPW': {
+            name: 'GreatPosterWall',
+            buttonId: 'gpwButton',
+            displayOrder: 22,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABJAgMAAAD542j/AAAADFBMVEUAAAAvnMErkbQoh6jzaF/zAAAAAXRSTlMAQObYZgAAAP1JREFUOMuV1D0SgjAQBeAgpnBGyhzBI9DHG6TICgUFjb1HYLyD9/FoTnTdJPsYBykoPpK3m5/BrD+NBxlAaAah5eCVEEUQQvEgQcmZpkJ2KaWOXpV7LQ4aQrEbpNkgbZIAY1A8iNHVI8hYidPB5qGDTQp+/luqB8FSVIujd/As0BFdZZ2SUUsLYk4fWaqGdcuFHHnhWfZcLYtFySvn7bGeRfqxAWQ0TuTGHweRwN1GkZFlkmVEvsazCPGYhYWL9d/JMi29RNJ4S1O1i8WJ/BTPWwbishgtA4sViSCBpdHBptXBuaEL3I9JxOYYFa3uvHSjj6ysP8CtVz+8TuAFMuyeWfAUrHEAAAAASUVORK5CYII=',
+            searchUrl: GPW_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|remember me|保持登录/,
+            matchRegex: /first 0 matches|显示前 0 条匹配/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'PTER': {
+            name: 'PTerClub',
+            buttonId: 'pterButton',
+            displayOrder: 23,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACRlBMVEUAAAD/5M0AAxcBAAsABA4GCREBAAkAAQIAAAwAAgf79/WYXCmYVR8WIS9aPCaHUyQIGCtKNSYAAA8ABBcAAAn/5tAAAAL/5cv/59FmZm8AAAD99OlGW3L///8AAAD////EZhs7MS7mklD2ji4wLC7lgiz/q2P/oUnsk0eeYC8oJyxlSCmxZBw5IAj/oVf/mUFyQSAHDhcdIixONiP/t3PNhEe2eUwzNUA7MDD/p1kWHC7/s2F4UixAKh4WJDjTm2UGFSkUGisqKCkZFybYiU9LQjYADSH/o17jrojSjkwkMj9dTzgDIkEAGjwADiMADCH5y6aBWjiAXkj6q3oqPUoNMEoAAAA3LSf/uYAABRsAAAAAAxj5tnz/2bi2k2sAAhX/47wAABr/5bMdISf/3L3/z6P/zaL/4sr/9d8GEh0AAAAAAAgAEy//7NPQyL///fn/8+gAAAAEAAD/+fP/69f///8AAAD/9eokNkLw7OozPk4AAAD/eQD/bwD/fgz/fQH/fgD/gQD/ewD/dwD/ggD/cgD/hAD/dQD/aAD/YAD/ZACGVSydXimqZSj/lRvgdxnxfBP/gw7/hQj/igP/bACbYTKTWy7/iibAbSbYdyHQciFwQR7/iRz/jgb/hwD/hQD/agCFWTr/lDVZQTX/nzJgRTJ2TjBQPTDWeiz/mitqRytFNSudXymYXCm3aCMhHiCUVR/zfx3mfR3/hBj/eBjZcBT7cxL/hQ75fQ7kYg3/kwz3eQjxdAP3cwD/awD/WwD/VgD5VgCM/EvEAAAAfHRSTlMAWmhYPR2DXlIkI/Lw6OPj4tbWvnt5cGlaVjY1LRQUDP37+ff39/X19fXz8/Pz8fHx8e3t6+vp5+Xj4+Hh4dvZ2dfV1dPTz83Ly8vLycnHx8XBv729vbe1s6+vqaejn52Zj4uHhYN8dm5oaGRaVExKSkhGQkIuLCoiIBYI3zbhUQAAAeFJREFUOMvFkFVz21AQhW9lrJOGG27KzMzMzMzMzO2qumDLkiExhbHMzNz+s65GM1bciV6T7233nJndc0j34Csp7ZVBSQW53t/Se29S4ncySO6rHDG7b9pQ2BwMyJ3RqlcXfNU6plw1ddf6qB8yCDzYMpdS+c8wHzEon9WYZIxREKgFqZ+1w9Ct2RR9+l5iUPy6Nhp5kZX1QwHgsdqXkTdTNy58pwrg+rjzBLnkliTJcXD6dwZA5585LRW5Tk4cqaC9o956lLifUQ5CPmDm2jXvowqQajmS1m/vrGN4NXDCHD15Dfj4r/rjVhfLXuEm9f6yOTr71OAYGn+BGJibRmMzvJ85SncZB9B3WHU6hsQYhlxZtsKwVE74zAUE5FKSpuixgkV8m1Mw6NCxo3sGG80pv5cTi/2PMESweukiSGmhkOCo6x8qLL2qMMIARMuqHEUIo1HO9U9XiMW1BQ1+rK5mTbaqIJSqP5fcJJ24OMmI1T5m7YBkIhGPv23KLSMZnBr4hYFozV38ZPTknPzth53kP9wPKXbfOnbGhhuuKtIFu8MUMES+k3SNa10UQ8hPzxEbyvOa8Eftns/O4B0VUznXZhI7iu8n2ljb3822hm3P68Lh5mlnbQ0Oj9fr8NwiPcQ/+8G7/8ts2csAAAAASUVORK5CYII=',
+            searchUrl: PTER_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|SSL \(HTTPS\)|Err code/,
+            matchRegex: /Nothing found!|没有种子|沒有種子/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'OMG': {
+            name: 'OMG',
+            buttonId: 'omgButton',
+            displayOrder: 24,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUnKCcK/AIhjCEWzhXijGvaAAAA+UlEQVQoz63PMU4DMRAF0MFWChNtS05giQusaGnpaH7sIlrtBSKtqAISwuIMy3KHpE7vQ2DRIBRKIlFSL409s+lx5SeNZv4nmo+B+O2x4r/C6BjGUx0LZpFMV1CHT+ULFhqBNwzmMX4U9ObmuhesI2M4g4xdKEeMmi5ltY1k7sZDjrMhu0aOp90upaeU472gWVKV483x1ZHiRFVrD4O0SH7B25+b1RVD3fb2/6AnmH037rXAAFiOuZN63//cA4549GGXIi+h3ClDOtmQpp1q6WTac+mkPUkKcuGNoQHPYxXQMexxG4bTowLj+ehx+9tOOrlQoBI2dPL+ANGlVMkfLQX5AAAAAElFTkSuQmCC',
+            searchUrl: OMG_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot your username/,
+            matchRegex: /returned no results/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'ANT': {
+            name: 'Anthelion',
+            buttonId: 'antButton',
+            displayOrder: 25,
+            icon: 'data:image/png;base64,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',
+            searchUrl: ANT_SEARCH_URL,
+            loggedOutRegex: /You appear to have cookies disabled./,
+            matchRegex: /Your search did not match anything/,
+            seedingRegex: /tl_seeding/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'CHD': {
+            name: 'CHDBits',
+            buttonId: 'chdButton',
+            displayOrder: 26,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAFVBMVEUAAADi7fn+//+WAAD2+f3w9fvq8vrkuS/pAAAAAXRSTlMAQObYZgAAAI9JREFUOMtjoA9gUcIADmAJJ0wJFbCEigsGcCJTQjUUAwSRKaGWhgGS8EsoigkmApEgBCSCeEIQCTAbKg5RJISswxgMDMEcqFFgpcLGEADmCCFJQIWwSBiC9BgKYpUAy2BKKCkbAxFJEkCAXwflEgjnEvYgZpAQCkSoFkw7kMFIkgjBlHAFS7Bi5toABroAAIi8c+o/9ah1AAAAAElFTkSuQmCC',
+            searchUrl: CHD_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+            matchRegex: /Nothing found|没有种子|沒有種子/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'SRRDB': {
+            name: 'srrDB',
+            buttonId: 'srrdbButton',
+            displayOrder: 27,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAC7u7v///+ZzP/Mmf+Z/5n/mZn//2b/mWaMjIxymL6Ycr5yvnK+cnK+vky+ckxUcY1xVI1nZ2dUjVSNVFSNjTiNVDi2juC+AAAABHRSTlN9PL4AffGBGQAAAMlJREFUWMPtlzcOwzAQBElLVKZy/v9DjXVBLK5Q4StkyJxygJ3uCNAk1qRfY2xi7CtV8LLGpCqw1/EJ7ENFDDvcOTXEdMIdY02MRwhgzwU47LkAhz0XQqASwDUCuFoQAzHwtIDqmPTnrOBJga0viX6Dm9ucaGe4pSuIbgkB7LkAhz0X4LDnQgiUArhcAFcIYiAGnhZQHJPunH/oRbo/sHpH+BXOu4xw/jKAPRfgsOfCZcAJ4DJBDMTAPwR0x6Q/53u/rkb9+VZ//9+xTWbto7vDzQAAAABJRU5ErkJggg==',
+            searchUrl: SRRDB_SEARCH_URL,
+            loggedOutRegex: /./,
+            matchRegex: /No results/,
+            positiveMatch: false,
             idType: 'imdb'
         }
     };
@@ -217,6 +475,9 @@
         }
     ];
 
+    // Config loading for homeTrackerConfig only (tracker button data is hardcoded)
+    var externalConfigData = null;
+
     function validateConfig(config) {
         if (!config || typeof config !== 'object') return false;
         if (!config.homeTrackers || !Array.isArray(config.homeTrackers)) return false;
@@ -225,30 +486,20 @@
                 return false;
             }
         }
-
         return true;
     }
 
     function convertExternalConfigToInternal(externalConfig) {
         const internalConfig = [];
-
         for (const tracker of externalConfig.homeTrackers) {
             const entry = {
                 url: tracker.url,
                 releaseGroups: tracker.releaseGroups
             };
-
-            if (tracker.urlTv) {
-                entry.urlTv = tracker.urlTv;
-            }
-
-            if (tracker.extraParams) {
-                entry.extraParams = tracker.extraParams;
-            }
-
+            if (tracker.urlTv) entry.urlTv = tracker.urlTv;
+            if (tracker.extraParams) entry.extraParams = tracker.extraParams;
             internalConfig.push(entry);
         }
-
         return internalConfig;
     }
 
@@ -306,6 +557,28 @@
         });
     }
 
+    function loadConfig(forceRefresh = false) {
+        fetchExternalConfig(forceRefresh).then(result => {
+            const { config: externalConfig, fromCache } = result;
+            if (externalConfig) {
+                const converted = convertExternalConfigToInternal(externalConfig);
+                if (converted.length > 0) {
+                    homeTrackerConfig = converted;
+                    externalConfigData = externalConfig;
+                    updateNeedsTitleSearch(externalConfig);
+                    buildHomeTrackerLink();
+
+                    if (!fromCache) {
+                        showToast("✓ Config updated from external source", 3000);
+                    }
+                    renderToolkit();
+                }
+            } else if (forceRefresh) {
+                showToast("⚠ Using hardcoded config (external fetch failed)", 3000);
+            }
+        });
+    }
+
     var externalConfigData = null;
 
     /**
@@ -321,6 +594,9 @@
     }
 
     function buildHomeTrackerLink() {
+        // Clear home tracker link at the start so it only gets set if a valid tracker is found
+        home_tracker_link = null;
+
         if (!activeTemplate) return;
 
         const release_group = activeTemplate.extractReleaseGroup();
@@ -356,33 +632,65 @@
                 if (trackerConfig.extraParams) {
                     home_tracker_link += trackerConfig.extraParams;
                 }
+
+                // Add filter parameters if enabled and tracker supports them
+                const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+                const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+
+                // Determine if tracker supports &name= parameter (UNIT3D trackers)
+                const unit3dTrackers = ['LST', 'BLU', 'ATH', 'HUNO', 'ULCX', 'CAPY', 'FNP', 'OLDT'];
+                const trackerCode = getTrackerCodeFromUrl(trackerConfig.url);
+                const supportsNameParam = unit3dTrackers.includes(trackerCode);
+
+                if (supportsNameParam && (useResolutionFilter || useReleaseGroupFilter)) {
+                    const filterParts = [];
+
+                    if (useResolutionFilter) {
+                        const resolution = currentResolution || extractResolutionFromTitle();
+                        if (resolution) {
+                            filterParts.push(resolution);
+                        }
+                    }
+
+                    if (useReleaseGroupFilter && release_group) {
+                        filterParts.push(release_group);
+                    }
+
+                    if (filterParts.length > 0) {
+                        const filterString = filterParts.join(' ');
+                        home_tracker_link += '&name=' + encodeURIComponent(filterString);
+                    }
+                }
             }
         }
     }
 
-    function loadConfig(forceRefresh = false) {
-        fetchExternalConfig(forceRefresh).then(result => {
-            const { config: externalConfig, fromCache } = result;
-            if (externalConfig) {
-                const converted = convertExternalConfigToInternal(externalConfig);
-                if (converted.length > 0) {
-                    homeTrackerConfig = converted;
-                    externalConfigData = externalConfig;
-                    updateNeedsTitleSearch(externalConfig);
+    function getTrackerCodeFromUrl(url) {
+        // Map URLs to tracker codes
+        const urlMap = {
+            'lst.gg': 'LST',
+            'blutopia.cc': 'BLU',
+            'aither.cc': 'ATH',
+            'hawke.uno': 'HUNO',
+            'upload.cx': 'ULCX',
+            'capybarabr.com': 'CAPY',
+            'fearnopeer.com': 'FNP',
+            'oldtoons.world': 'OLDT',
+            'beyond-hd.me': 'BHD',
+            'passthepopcorn.me': 'PTP',
+            'broadcasthe.net': 'BTN'
+        };
 
-                    // Rebuild home tracker link with new config
-                    buildHomeTrackerLink();
-
-                    if (!fromCache) {
-                        showToast("✓ Config updated from external source", 3000);
-                    }
-                    renderToolkit();
-                }
-            } else if (forceRefresh) {
-                showToast("⚠ Using hardcoded config (external fetch failed)", 3000);
+        for (const [domain, code] of Object.entries(urlMap)) {
+            if (url.includes(domain)) {
+                return code;
             }
-        });
+        }
+
+        return null;
     }
+
+    // loadConfig() and loadTrackerConfigs() removed - all config now hardcoded
 
     function getSearchUrlByCode(code) {
         if (externalConfigData && externalConfigData.homeTrackers) {
@@ -443,54 +751,7 @@
     }
 
     function extractTorrentTitle(releaseGroup = null) {
-        // For title-based trackers, skip filename extraction and use page title instead
-        const isTitleBased = releaseGroup && needsTitleSearch(releaseGroup);
-
-        if (!isTitleBased && file_structure) {
-            const firstFilename = file_structure.split('\n')[0].trim();
-            if (firstFilename) {
-                let nameWithoutExt = firstFilename.replace(/\.(mkv|mp4|avi|m4v)$/i, '');
-                nameWithoutExt = nameWithoutExt.replace(/S(\d{1,2})E\d{1,2}/gi, 'S$1');
-                nameWithoutExt = nameWithoutExt.replace(/E\d{1,2}$/i, '');
-                nameWithoutExt = nameWithoutExt.replace(/[-.]([A-Za-z0-9]+)$/, '');
-                const parts = nameWithoutExt.split('.');
-                const titleParts = [];
-                let foundSeason = false;
-
-                for (let i = 0; i < parts.length; i++) {
-                    const part = parts[i];
-
-                    if (/^S\d{1,2}$/i.test(part)) {
-                        titleParts.push(part);
-                        foundSeason = true;
-                        if (i + 1 < parts.length) {
-                            const nextPart = parts[i + 1];
-                            const isTechnicalSpec = /^\d{4}$/.test(nextPart) ||
-                                                 /^\d+p$/i.test(nextPart) ||
-                                                 /^\d+i$/i.test(nextPart) ||
-                                                 /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(nextPart);
-                            if (!isTechnicalSpec) {
-                                break;
-                            }
-                        } else {
-                            break;
-                        }
-                        continue;
-                    }
-
-                    if (/^\d{4}$/.test(part) || /^\d+p$/i.test(part) || /^\d+i$/i.test(part) ||
-                        /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(part)) {
-                        break;
-                    }
-                    titleParts.push(part);
-                }
-
-                if (titleParts.length > 0) {
-                    return titleParts.join(' ');
-                }
-            }
-        }
-
+        // Try page title first
         let title = document.querySelector("h1.torrent__name");
 
         if (!title) {
@@ -510,6 +771,25 @@
             .replace(/(\s+)E\d{1,2}\s*$/i, '$1')
             .replace(/\s+/g, ' ')
             .trim();
+
+        // Handle AKA pattern - take part before "AKA" and optionally add year/season/episode from after
+        const akaIndex = cleanedTitle.search(/\s+AKA\s+/i);
+        if (akaIndex !== -1) {
+            const beforeAka = cleanedTitle.substring(0, akaIndex).trim();
+            const afterAka = cleanedTitle.substring(akaIndex);
+            const yearMatch = afterAka.match(/\b(19|20)\d{2}\b/);
+            const seasonEpisodeMatch = afterAka.match(/\b(S\d+E\d+)\b/i);
+            const seasonPackMatch = afterAka.match(/\b(S\d+)\b/i);
+            if (seasonEpisodeMatch) {
+                cleanedTitle = beforeAka + ' ' + seasonEpisodeMatch[1];
+            } else if (seasonPackMatch) {
+                cleanedTitle = beforeAka + ' ' + seasonPackMatch[1];
+            } else if (yearMatch) {
+                cleanedTitle = beforeAka + ' ' + yearMatch[0];
+            } else {
+                cleanedTitle = beforeAka;
+            }
+        }
 
         if (releaseGroup) {
             const rgPattern = new RegExp(`\\s*[-\\s]+${releaseGroup.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'i');
@@ -581,7 +861,55 @@
             return titleWords.join(' ');
         }
 
-        return cleanedTitle;
+        if (cleanedTitle) {
+            return cleanedTitle;
+        }
+
+        // Fallback to file structure if page title fails
+        if (file_structure) {
+            const firstFilename = file_structure.split('\n')[0].trim();
+            if (firstFilename) {
+                let nameWithoutExt = firstFilename.replace(/\.(mkv|mp4|avi|m4v)$/i, '');
+                nameWithoutExt = nameWithoutExt.replace(/S(\d{1,2})E\d{1,2}/gi, 'S$1');
+                nameWithoutExt = nameWithoutExt.replace(/E\d{1,2}$/i, '');
+                nameWithoutExt = nameWithoutExt.replace(/[-.]([A-Za-z0-9]+)$/, '');
+                const parts = nameWithoutExt.split('.');
+                const titleParts = [];
+
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+
+                    if (/^S\d{1,2}$/i.test(part)) {
+                        titleParts.push(part);
+                        if (i + 1 < parts.length) {
+                            const nextPart = parts[i + 1];
+                            const isTechnicalSpec = /^\d{4}$/.test(nextPart) ||
+                                                 /^\d+p$/i.test(nextPart) ||
+                                                 /^\d+i$/i.test(nextPart) ||
+                                                 /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(nextPart);
+                            if (!isTechnicalSpec) {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                        continue;
+                    }
+
+                    if (/^\d{4}$/.test(part) || /^\d+p$/i.test(part) || /^\d+i$/i.test(part) ||
+                        /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(part)) {
+                        break;
+                    }
+                    titleParts.push(part);
+                }
+
+                if (titleParts.length > 0) {
+                    return titleParts.join(' ');
+                }
+            }
+        }
+
+        return null;
     }
     /**
      * Helper function to create a toast notification element
@@ -634,8 +962,20 @@
                 resolve('error');
                 return;
             }
+            const titleBasedTrackers = ['HHAN', 'CHD', 'AUD', 'ANT', 'PTER'];
+            let searchUrl;
 
-            const searchUrl = config.searchUrl + searchId;
+            if (titleBasedTrackers.includes(trackerCode)) {
+                const torrentTitle = extractTorrentTitle();
+                if (torrentTitle) {
+                    searchUrl = config.searchUrl + encodeURIComponent(torrentTitle);
+                } else {
+                    searchUrl = config.searchUrl;
+                }
+            } else {
+                searchUrl = config.searchUrl + searchId;
+            }
+
             const timeout = 15000;
 
             console.log(`[TMT] Checking ${trackerCode} at: ${searchUrl}`);
@@ -652,7 +992,7 @@
                         resolve('logged_out');
                         return;
                     }
-                    if (response.status >= 500 || (response.status >= 400 && response.status !== 403)) {
+                    if (response.status >= 400) {
                         console.log(`[TMT] ${trackerCode}: error (HTTP ${response.status})`);
                         resolve('error');
                         return;
@@ -663,11 +1003,9 @@
                         return;
                     }
 
-                    // Check for basic match first
                     const matchFound = response.responseText.match(config.matchRegex);
                     const isPositiveMatch = config.positiveMatch || false;
 
-                    // If basic match indicates "missing", return immediately
                     if (isPositiveMatch && !matchFound) {
                         console.log(`[TMT] ${trackerCode}: missing (no basic match)`);
                         resolve('missing');
@@ -679,7 +1017,6 @@
                         return;
                     }
 
-                    // If we have resolution or release group filters, check for them in the response
                     if (resolution || releaseGroup) {
                         let filterMatched = true;
 
@@ -754,50 +1091,348 @@
         const loadButton = document.getElementById('tmt-load-links');
         if (loadButton) {
             loadButton.disabled = true;
-            loadButton.textContent = 'Checking...';
+            loadButton.textContent = 'Searching...';
         }
         const tvdbId = extractTVDB();
-
-        // Extract resolution and release group from current page
-        const useResolutionFilter = document.getElementById('tmt-filter-resolution')?.checked || false;
-        const useReleaseGroupFilter = document.getElementById('tmt-filter-release-group')?.checked || false;
+        const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+        const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
 
         const resolution = useResolutionFilter ? (currentResolution || extractResolutionFromTitle()) : null;
         const releaseGroup = useReleaseGroupFilter ? currentReleaseGroup : null;
 
         console.log(`[TMT] Checking with filters: resolution=${resolution}, releaseGroup=${releaseGroup}`);
-
-        const trackerButtons = {
-            'BLU': { buttonId: 'bluButton', id: imdbId },
-            'ATH': { buttonId: 'athButton', id: imdbId },
-            'BHD': { buttonId: 'bhdButton', id: imdbId },
-            'PTP': { buttonId: 'ptpButton', id: imdbId },
-            'BTN': { buttonId: 'btnButton', id: tvdbId },
-            'HDB': { buttonId: 'hdbButton', id: imdbId },
-            'LST': { buttonId: 'lstButton', id: imdbId }
-        };
-        Object.values(trackerButtons).forEach(tracker => {
-            applyTrackerState(tracker.buttonId, 'loading');
+        const enabledTrackers = getEnabledTrackers();
+        const trackerButtons = {};
+        enabledTrackers.forEach(code => {
+            const config = TRACKER_CONFIGS[code];
+            if (config) {
+                trackerButtons[code] = {
+                    buttonId: config.buttonId,
+                    id: config.idType === 'tvdb' ? tvdbId : imdbId
+                };
+            }
         });
+
+        const availableTrackers = {};
         let delay = 0;
+        const promises = [];
+
         for (const [code, tracker] of Object.entries(trackerButtons)) {
-            setTimeout(async () => {
-                if (!tracker.id) {
-                    applyTrackerState(tracker.buttonId, 'error');
-                    return;
-                }
-                const state = await checkTrackerAvailability(code, tracker.id, resolution, releaseGroup);
-                applyTrackerState(tracker.buttonId, state);
-            }, delay);
+            const promise = new Promise((resolve) => {
+                setTimeout(async () => {
+                    if (!tracker.id) {
+                        resolve();
+                        return;
+                    }
+                    const state = await checkTrackerAvailability(code, tracker.id, resolution, releaseGroup);
+                    console.log(`[TMT] ${code}: ${state}`);
+
+                    if (state === 'found' || state === 'seeding') {
+                        availableTrackers[code] = {
+                            id: tracker.id,
+                            state: state
+                        };
+                    }
+                    resolve();
+                }, delay);
+            });
+            promises.push(promise);
             delay += 500;
         }
-        setTimeout(() => {
-            if (loadButton) {
-                loadButton.disabled = false;
-                loadButton.textContent = 'Load Links';
+
+        await Promise.all(promises);
+        const torrentType = activeTemplate && activeTemplate.extractTorrentType ? activeTemplate.extractTorrentType() : null;
+        generateTrackerButtons(availableTrackers, torrentType);
+
+        if (loadButton) {
+            loadButton.disabled = false;
+            loadButton.textContent = 'Finished';
+        }
+        showToast(`Tracker check complete - ${Object.keys(availableTrackers).length} found`);
+    }
+
+    function initializeSettingsModal() {
+        let settingsSidebar = document.getElementById('tmt-settings-sidebar');
+
+        // Only create sidebar elements once
+        if (!settingsSidebar) {
+            settingsSidebar = document.createElement('div');
+            settingsSidebar.id = 'tmt-settings-sidebar';
+            settingsSidebar.innerHTML = `
+                <div id="tmt-settings-content">
+                    <span id="tmt-settings-close">&times;</span>
+                    <h3>Tracker Settings</h3>
+
+                    <section>
+                        <h4>Search Options</h4>
+                        <label>
+                            <input type="checkbox" id="tmt-setting-filter-resolution" />
+                            Filter by resolution
+                        </label>
+                        <label>
+                            <input type="checkbox" id="tmt-setting-filter-release-group" />
+                            Filter by release group
+                        </label>
+                        <label>
+                            <input type="checkbox" id="tmt-setting-auto-load" />
+                            Always auto-load tracker links
+                        </label>
+                    </section>
+
+                    <section>
+                        <h4>Static Tracker Buttons (Always Visible)</h4>
+                        <small style="color: #a0a0a0; display: block; margin-bottom: 10px;">Select trackers to always display in the top row (before search)</small>
+                        <div id="tmt-static-tracker-checkboxes"></div>
+                    </section>
+
+                    <section>
+                        <h4>Searchable Trackers</h4>
+                        <small style="color: #a0a0a0; display: block; margin-bottom: 10px;">Select trackers to check when searching (bottom row after search)</small>
+                        <div id="tmt-searchable-tracker-checkboxes"></div>
+                    </section>
+                </div>
+            `;
+            document.body.appendChild(settingsSidebar);
+            const closeBtn = document.getElementById('tmt-settings-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    settingsSidebar.classList.remove('open');
+                });
             }
-            showToast('Tracker check complete');
-        }, delay + 2000);
+            window.addEventListener('click', (e) => {
+                if (e.target === settingsSidebar) {
+                    settingsSidebar.classList.remove('open');
+                }
+            });
+            document.getElementById('tmt-setting-filter-resolution').addEventListener('change', (e) => {
+                GM_setValue('tmt_filter_resolution', e.target.checked);
+            });
+
+            document.getElementById('tmt-setting-filter-release-group').addEventListener('change', (e) => {
+                GM_setValue('tmt_filter_release_group', e.target.checked);
+            });
+
+            document.getElementById('tmt-setting-auto-load').addEventListener('change', (e) => {
+                GM_setValue('tmt_auto_load', e.target.checked);
+                const loadBtn = document.getElementById('tmt-load-links');
+                if (loadBtn) {
+                    if (e.target.checked) {
+                        loadBtn.style.display = 'none';
+                        if (imdbId) {
+                            checkAllTrackers();
+                        }
+                    } else {
+                        loadBtn.style.display = '';
+                    }
+                }
+            });
+        }
+        const filterByResolution = GM_getValue('tmt_filter_resolution', false);
+        const filterByReleaseGroup = GM_getValue('tmt_filter_release_group', false);
+        const autoLoad = GM_getValue('tmt_auto_load', false);
+
+        document.getElementById('tmt-setting-filter-resolution').checked = filterByResolution;
+        document.getElementById('tmt-setting-filter-release-group').checked = filterByReleaseGroup;
+        document.getElementById('tmt-setting-auto-load').checked = autoLoad;
+        if (!settingsSidebar.dataset.populated) {
+            populateTrackerCheckboxes();
+            settingsSidebar.dataset.populated = 'true';
+        }
+
+        const settingsBtn = document.getElementById('tmt-settings-btn');
+        if (settingsBtn) {
+            const newSettingsBtn = settingsBtn.cloneNode(true);
+            settingsBtn.parentNode.replaceChild(newSettingsBtn, settingsBtn);
+
+            newSettingsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                settingsSidebar.classList.toggle('open');
+            });
+        }
+    }
+
+    function getEnabledTrackers() {
+        return GM_getValue('tmt_enabled_trackers', Object.keys(TRACKER_CONFIGS));
+    }
+
+    function saveEnabledTrackers(trackers) {
+        GM_setValue('tmt_enabled_trackers', trackers);
+    }
+
+    function populateTrackerCheckboxes() {
+        const staticContainer = document.getElementById('tmt-static-tracker-checkboxes');
+        const searchableContainer = document.getElementById('tmt-searchable-tracker-checkboxes');
+        if (!staticContainer || !searchableContainer) return;
+
+        const enabledTrackers = getEnabledTrackers();
+        const staticTrackers = getStaticTrackers();
+
+        const sortedCodes = Object.keys(TRACKER_CONFIGS)
+            .sort((a, b) => TRACKER_CONFIGS[a].displayOrder - TRACKER_CONFIGS[b].displayOrder);
+
+        sortedCodes.forEach(code => {
+            const config = TRACKER_CONFIGS[code];
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.dataset.tracker = code;
+            checkbox.checked = staticTrackers.includes(code);
+
+            checkbox.addEventListener('change', (e) => {
+                let currentStatic = getStaticTrackers();
+                if (e.target.checked) {
+                    if (!currentStatic.includes(code)) {
+                        currentStatic.push(code);
+                    }
+                } else {
+                    currentStatic = currentStatic.filter(c => c !== code);
+                }
+                saveStaticTrackers(currentStatic);
+                renderToolkit();
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(` ${config.name} (${code})`));
+            staticContainer.appendChild(label);
+        });
+
+        sortedCodes.forEach(code => {
+            const config = TRACKER_CONFIGS[code];
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.dataset.tracker = code;
+            checkbox.checked = enabledTrackers.includes(code);
+
+            checkbox.addEventListener('change', (e) => {
+                let enabled = getEnabledTrackers();
+                if (e.target.checked) {
+                    if (!enabled.includes(code)) {
+                        enabled.push(code);
+                    }
+                } else {
+                    enabled = enabled.filter(c => c !== code);
+                }
+                saveEnabledTrackers(enabled);
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(` ${config.name} (${code})`));
+            searchableContainer.appendChild(label);
+        });
+    }
+
+    function generateTrackerButtons(availableTrackers, torrentType = null) {
+        const container = document.getElementById('dynamic-tracker-row');
+        if (!container) return;
+        container.innerHTML = '';
+        const enabledTrackers = getEnabledTrackers();
+        const sortedTrackers = Object.keys(availableTrackers)
+            .filter(code => enabledTrackers.includes(code))
+            .filter(code => {
+                const state = availableTrackers[code].state;
+                return state === 'found' || state === 'seeding';
+            })
+            .sort((a, b) => TRACKER_CONFIGS[a].displayOrder - TRACKER_CONFIGS[b].displayOrder);
+
+        if (sortedTrackers.length > 0) {
+            container.style.display = ''; 
+            sortedTrackers.forEach(code => {
+                const config = TRACKER_CONFIGS[code];
+                const tracker = availableTrackers[code];
+                let searchUrl = (config.urlTv && torrentType === 'tv') ? config.urlTv : config.searchUrl;
+                searchUrl = searchUrl || getSearchUrlByCode(code);
+                const titleBasedTrackers = ['HHAN', 'CHD', 'AUD', 'ANT', 'PTER'];
+                let finalUrl;
+
+                if (titleBasedTrackers.includes(code)) {
+                    const torrentTitle = extractTorrentTitle();
+                    if (torrentTitle) {
+                        finalUrl = searchUrl + encodeURIComponent(torrentTitle);
+                    } else {
+                        finalUrl = searchUrl;
+                    }
+                } else {
+                    finalUrl = searchUrl + tracker.id;
+                }
+
+                const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+                const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+                const unit3dTrackers = ['LST', 'BLU', 'ATH', 'HUNO', 'ULCX', 'CAPY', 'FNP', 'OLDT'];
+                const supportsNameParam = unit3dTrackers.includes(code);
+
+                if (supportsNameParam && (useResolutionFilter || useReleaseGroupFilter)) {
+                    const filterParts = [];
+
+                    if (useResolutionFilter) {
+                        const resolution = currentResolution || extractResolutionFromTitle();
+                        if (resolution) {
+                            filterParts.push(resolution);
+                        }
+                    }
+
+                    if (useReleaseGroupFilter && currentReleaseGroup) {
+                        filterParts.push(currentReleaseGroup);
+                    }
+
+                    if (filterParts.length > 0) {
+                        const filterString = filterParts.join(' ');
+                        finalUrl += '&name=' + encodeURIComponent(filterString);
+                    }
+                }
+
+                // BHD uses search parameter for filters (format: ?search=1080p pter&imdb=tt3283556)
+                if (code === 'BHD' && (useResolutionFilter || useReleaseGroupFilter)) {
+                    const filterParts = [];
+
+                    if (useResolutionFilter) {
+                        const resolution = currentResolution || extractResolutionFromTitle();
+                        if (resolution) {
+                            filterParts.push(resolution);
+                        }
+                    }
+
+                    if (useReleaseGroupFilter && currentReleaseGroup) {
+                        filterParts.push(currentReleaseGroup);
+                    }
+
+                    if (filterParts.length > 0) {
+                        const filterString = filterParts.join(' ');
+                        // BHD URL format: https://beyond-hd.me/torrents/all?search=&imdb=tt3283556
+                        // We need to replace "search=" with "search=1080p+pter"
+                        finalUrl = finalUrl.replace('search=&', 'search=' + encodeURIComponent(filterString) + '&');
+                    }
+                }
+
+                const link = document.createElement('a');
+                link.id = config.buttonId;
+                link.href = finalUrl;
+                link.target = '_blank';
+
+                const img = document.createElement('img');
+                img.width = 20;
+                img.height = 20;
+                img.title = config.name;
+                img.src = config.icon;
+                if (tracker.state) {
+                    if (tracker.state === 'found') {
+                        img.classList.add('tracker-found');
+                    } else if (tracker.state === 'seeding') {
+                        img.classList.add('tracker-seeding');
+                    }
+                }
+
+                link.appendChild(img);
+                container.appendChild(link);
+                link.addEventListener('click', () => {
+                    storeDataForForceLoad();
+                });
+            });
+        } else {
+            container.style.display = 'none';
+        }
     }
 
     function filterMkvFilenames(fileStructure) {
@@ -834,7 +1469,6 @@
         if (titleElement) {
             fullTitle = (titleElement.innerText || titleElement.textContent || "").trim();
         } else if (window.location.hostname === 'beyond-hd.me') {
-            // BHD specific: title is in table row with Name
             const nameRow = Array.from(document.querySelectorAll('tr.dotborder')).find(row => {
                 const firstTd = row.querySelector('td:first-child');
                 return firstTd && firstTd.textContent.trim() === 'Name';
@@ -1117,6 +1751,102 @@
         }, 30000);
     }
 
+    function getStaticTrackers() {
+        const defaults = ['AB', 'SRRDB', 'OMG'];
+        const saved = GM_getValue('staticTrackers', JSON.stringify(defaults));
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            return defaults;
+        }
+    }
+
+    function saveStaticTrackers(trackers) {
+        GM_setValue('staticTrackers', JSON.stringify(trackers));
+    }
+
+    function getTrackerUrl(trackerCode, imdbId, tvdbId = null, torrentType = null) {
+        const config = TRACKER_CONFIGS[trackerCode];
+        if (!config) return '#';
+
+        if (trackerCode === 'OMG') {
+            const omgTitle = extractOMGSearchTitle();
+            return omgTitle ? OMG_SEARCH_URL + encodeURIComponent(omgTitle) : OMG_SEARCH_URL;
+        }
+
+        if (trackerCode === 'AB') {
+            const abTitle = extractAnimebytesSearchTitle();
+            return abTitle ? AB_SEARCH_URL + encodeURIComponent(abTitle) : AB_SEARCH_URL;
+        }
+
+        const titleBasedTrackers = ['HHAN', 'CHD', 'AUD', 'ANT', 'PTER'];
+        if (titleBasedTrackers.includes(trackerCode)) {
+            const torrentTitle = extractTorrentTitle();
+            if (torrentTitle) {
+                let baseUrl = (config.urlTv && torrentType === 'tv') ? config.urlTv : config.searchUrl;
+                return baseUrl ? baseUrl + encodeURIComponent(torrentTitle) : '#';
+            }
+            let baseUrl = (config.urlTv && torrentType === 'tv') ? config.urlTv : config.searchUrl;
+            return baseUrl || '#';
+        }
+        const id = (config.idType === 'tvdb') ? tvdbId : imdbId;
+        let baseUrl = (config.urlTv && torrentType === 'tv') ? config.urlTv : config.searchUrl;
+
+        if (!baseUrl || !id) {
+            return baseUrl || '#';
+        }
+
+        let finalUrl = baseUrl + id;
+
+        // Add filter parameters if enabled and tracker supports them
+        const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+        const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+
+        // Determine if tracker supports &name= parameter (UNIT3D trackers)
+        const unit3dTrackers = ['LST', 'BLU', 'ATH', 'HUNO', 'ULCX', 'CAPY', 'FNP', 'OLDT'];
+        const supportsNameParam = unit3dTrackers.includes(trackerCode);
+
+        if (supportsNameParam && (useResolutionFilter || useReleaseGroupFilter)) {
+            const filterParts = [];
+
+            if (useResolutionFilter) {
+                const resolution = currentResolution || extractResolutionFromTitle();
+                if (resolution) {
+                    filterParts.push(resolution);
+                }
+            }
+
+            if (useReleaseGroupFilter && currentReleaseGroup) {
+                filterParts.push(currentReleaseGroup);
+            }
+
+            if (filterParts.length > 0) {
+                const filterString = filterParts.join(' ');
+                finalUrl += '&name=' + encodeURIComponent(filterString);
+            }
+        }
+
+        return finalUrl;
+    }
+
+    function generateStaticRowHtml(imdbId, tvdbId) {
+        const staticTrackers = getStaticTrackers();
+        if (staticTrackers.length === 0) return '';
+
+        return staticTrackers.map(code => {
+            const config = TRACKER_CONFIGS[code];
+            if (!config) return '';
+
+            const url = getTrackerUrl(code, imdbId, tvdbId);
+            const icon = config.icon || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+            return `
+                <a href="${url}" target="_blank">
+                    <img width="20" height="20" title="${config.name}" src="${icon}" />
+                </a>
+            `;
+        }).join('');
+    }
 
     /*
     * Inserts the toolkit into the DOM
@@ -1134,9 +1864,9 @@
         let fileStructureDisabled = activeTemplate && file_structure ? `` : ` disabled `;
         let homeTrackerDisabled = activeTemplate && home_tracker_link ? `` : ` disabled `;
 
-        var mediainfoButtonHtml = `<button id="copyFullMediainfoBtn"` + mediainfoDisabled + `" >Copy mediainfo</button>`;
-        var uniqueIdButtonHtml = `<button id="copyUniqueIDBtn"`+ uniqueIdDisabled +`">Copy Unique ID</button>`;
-        var fileStructureButtonHtml = `<button id="copyFileStructureBtn"` + fileStructureDisabled + `>Copy file name(s)</button>`;
+        var mediainfoButtonHtml = `<button id="copyFullMediainfoBtn"`+ mediainfoDisabled +`>Copy mediainfo</button>`;
+        var uniqueIdButtonHtml = `<button id="copyUniqueIDBtn"`+ uniqueIdDisabled +`>Copy Unique ID</button>`;
+        var fileStructureButtonHtml = `<button id="copyFileStructureBtn"`+ fileStructureDisabled +`>Copy file name(s)</button>`;
         var homeTrackerButtonHtml = `<button id="homeTrackerBtn"`+ homeTrackerDisabled +`>Go to home tracker</button>`;
 
         const isAither = window.location.hostname.includes('aither.cc');
@@ -1169,25 +1899,27 @@
         const tvdbId = extractTVDB();
 
         toolkitDiv.innerHTML = `
-        <div class="header">${CONFIG_URL ? `<a href="#" id="tmt-refresh-config" title="Force refresh config from external source"><img width="20" height="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAE/SURBVDhPvdSxSxxREMfxj3ELm1RqY9AmsfKsrMQ0gXQ22ulfcH/Gcn9CWnsRK68RtBZ7SZfYWZpGG+Hg8Gxm5TnsniKSLwzsm3m/Yd6b2ccHM5MdiUVsYSXWN7jEv7TvVXoYYoxJsnHEelnURR+jlkTZRtjP4kw/ia5RYzesDt8kjv0tJyjpFZU9YoAqbwpfje85kBkWlQ1ycAo/sZmdi0UDrjsqa2Mdd7jNx98pqqvLwBSWYowa3V8sfIpgM2fwu/juosIplgvfKk5m8Qvb+BKB+biT82hOGxM8RKc3wneEQzhIozLB8Ut9J3Wh2WmcFc6KwAXmXupaqYqZHEdjn/mMK/yJI7+FQVHEMAfFHX4t1j86xqeKZI+RbIS1vCmzF4Jpv15j/SzOzOO+pVHZRm9J1rCGk/c8X//tgX03Tz/1cLHeVV33AAAAAElFTkSuQmCC" /></a>` : ''}<button id="tmt-load-links" title="Check tracker availability">Load Links</button><div class="center"><b>Torrent Mod Toolkit v` + version + `</b></div><button id="toggleToolkitBtn">▼</button></div>
+        <div class="header">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+                ${CONFIG_URL ? `<a href="#" id="tmt-refresh-config" title="Force refresh config from external source"><img width="20" height="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAE/SURBVDhPvdSxSxxREMfxj3ELm1RqY9AmsfKsrMQ0gXQ22ulfcH/Gcn9CWnsRK68RtBZ7SZfYWZpGG+Hg8Gxm5TnsniKSLwzsm3m/Yd6b2ccHM5MdiUVsYSXWN7jEv7TvVXoYYoxJsnHEelnURR+jlkTZRtjP4kw/ia5RYzesDt8kjv0tJyjpFZU9YoAqbwpfje85kBkWlQ1ycAo/sZmdi0UDrjsqa2Mdd7jNx98pqqvLwBSWYowa3V8sfIpgM2fwu/juosIplgvfKk5m8Qvb+BKB+biT82hOGxM8RKc3wneEQzhIozLB8Ut9J3Wh2WmcFc6KwAXmXupaqYqZHEdjn/mMK/yJI7+FQVHEMAfFHX4t1j86xqeKZI+RbIS1vCmzF4Jpv15j/SzOzOO+pVHZRm9J1rCGk/c8X//tgX03Tz/1cLHeVV33AAAAAElFTkSuQmCC" /></a>` : ''}
+            </div>
+            <div class="center"><b>Torrent Mod Toolkit v` + version + `</b></div>
+            <button id="toggleToolkitBtn">▼</button>
+        </div>
         <div class="body">
-        <div class="center pad">
-          <a href="${athUrl + imdbId}" id="athButton" target="_blank"><img width="20" height="20" title="ATH" src="data:image/png;base64,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" /></a>
-          <a href="${ptpUrl + imdbId}" id="ptpButton" target="_blank"><img width="20" height="20" title="PTP" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAV1BMVEUAAAD///9oiM2CacFm5Mj/jGb842dn3auC3X/z82j/uWZw14xudcRwbsBmpdz83GZm4NBq26KP4Hrm9Wr/rmdmr91u2ZNmntln5L/902b/l2Zt1otnseEVRKmYAAAAeUlEQVRIx+3WtwqAMBCAYU2zpNlii+//nAZFCDooSIaQ+5fjhm89LoNCl7u+TpCvM8kopUNda81YVfVu78rS8rEtCkJI4/ZNKYSQkBJjfJerk4sv+SHnUxo1/ZMCJEiQIKOV8pKPe8s8aa317q3x7m2SxfUnxCWhAO24CSsei22B/wAAAABJRU5ErkJggg==" /></a>
-          <a href="${btnUrl + tvdbId}" id="btnButton" target="_blank"><img width="20" height="20" title="BTN" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==" /></a>
-          <a href="${hdbUrl + imdbId}" id="hdbButton" target="_blank"><img width="20" height="20" title="HDB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVPZHWjt8exxNNfdIV1ipuNorP+/v7Y3+RqcToTAAAA4ElEQVQoz6XITW6DMBCG4ZF8AkjcrkEh2RpNLgA22RvhsEZqZy6QmOt3DKpUWVlUyuufT3qgzvoHVFlQVOmU6W4fFFmvoJYpZep6Az+z9z5WMxFx4T3okrXW8VnS5UKLQJg5BB+fMvqTdIAwsg4hNmNyajYIvxDO3xncBaaR1nWl08jTNN2XAYaeUk3PgxtuAq5n51w8yQzutrg/IPPxlcH5IdDtsA0dHdiOr2jjoWNrZ3mAHaO9xmNLa6QHCrRsEeOhJeIGEQGzXoAyZn8qLYJSYIxRW2AUSOkzkNrl/X4ALOVfoodI6RkAAAAASUVORK5CYII=" /></a>
-          <a href="${lstUrl + imdbId}" id="lstButton" target="_blank"><img width="20" height="20" title="LST" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAAKlJREFUKM990rERgzAMBVCnYISk8DQZgQJR0KfxPmwQF9aUkZSzv/8dBwXwsCRzlpJfD5G3Pfo79HRsYwFLyx8roiwOUR6HKItjRAqSZFzI9wqMBVg9HxVyFdm1iap+U24iRZVwDmjH4TglbhdogBWoMxTYrdqAlBliSUABPn0lx69EzuaoBN8n8LKvh/rOhvkMCDfnlgA6+Nv+oI3cYG49hoLHhQeJRuwHxie7qwtJseAAAAAASUVORK5CYII=" /></a>
-          <a href="${bluUrl + imdbId}" id="bluButton" target="_blank"><img width="20" height="20" title="BLU" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAABc90AaMX+//8AVcJElNyDtui51vILVXb+AAAAAXRSTlMAQObYZgAAAklJREFUSMeV1U1z2jAQBmBygHMkTLjWio3PoALXRrWdKx+GXksx+JzYcf5+d+uPXTuCmb6TyUyGR+uVNhaDXoabwd1shfLvfDwUQiilbhY5CQSQp1vlG6B8e3kC9Bi+nAAVoeVNpGmEu+HdtZmlraBeBcU5rwgovylPibVOlQpDxXrd8gJ7rZfGPRxkqExT48SAqyHe9Jp9XswOxTcADwy8IiiUZ/zsc+0A+NEFco9gCUu9MAf4pYLM9Rp+sLZnBb7Wf2AfCYK9TvrAOc60llA7VZAoQ7Bh5yCfPgKtHQDvCLw47YGodMZav0GVuUHRB06W4CYwywrgI34DGNVTenOdcwWqcQQSftGsZOmKDvCOpgOCFFAF6oO4dIAsX3ogShUHcYEqJ+AFDgfyl+iDi0HQ/r9+uII/ot6k8muAT+gC72o6YFqdFQE4RszsH3gQMnvhYGUMdoDDbEDZA8dEcVD3KCJdJzkZG5AwTJqW5RGubuMRoCZlQGBh+Ds+rEeVE1iHPeCuPDHVLO8cjGD1tKQWWZv0dsvjKeBg0QUoRMxBoboA43OQWoDA7q8Q3E1iA/DBMoQ8A1AdsG2HXUwuh12MA6crCEH77id7nCVUsgExhoV5mWnvrOcE2C0Y6Lk6p9EamvjOZkUXwOS6k+P5z6WJrokViNAVr8txobzQVODx603qr/NENXEHTUb8llJtbJe5s18ZumVt4nlh6LK3ibiwredbUbSBXk4cPP7XlxqJBkzgj5uC1tsCgA7QGgSDexkKuFzvi/4B/QXy6uI0Y3ArsgAAAABJRU5ErkJggg==" /></a>
-          <a href="${bhdUrl + imdbId}" id="bhdButton" target="_blank"><img width="20" height="20" title="BHD" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAAAmaMr9/f+On/YhYNjYAAAAAXRSTlMAQObYZgAAAQxJREFUOMuF1M3NgkAQBmA5WIL9UIIHBhIPfPevBIxlUAIHh3DkbBUWISWYmBj3ndl3lTXOQeXJzk/iLBsLkXKTRCHyLhKCz1vAngcsPg7wyM6hYoYFezKHGcyRJLJQpFByClZFzfqKqhHaHhBrHmZ8R+gMYpP/wdo4LJOBd9Wz9wU0Or5DrWrgY6j6ZIC76iWBv0Vf8XCo1aI3aPCIMmFyZITOgA4wRWgBc4SGJQAochZALDIQUKRPoM7CDNghxaH6AocsDIAtYFwAe0Cnc6tTCqPIYlD4H9kGKAHH18cNEEY9cacADCwMo1rBaulWa/lrkysuP0uwKi8mYX3F8peQOV8uMo/kXwYU+/UEaSw57h3Xy84AAAAASUVORK5CYII=" /></a>
-          <a href="${ANIMEBYTES_SEARCH_URL}" target="_blank"><img width="20" height="20" title="AB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAElBMVEUAAADtEGrwLXzzXJr3ibb5r827H5vkAAAAAXRSTlMAQObYZgAAAWZJREFUSMeFld1xhDAMhNc/945MCjgzKQCSBiAVXPpvJheMkS3L431iTp9XK3EeIGWXFT39PAFHb33q9RgAHPSvoNbpbQC6tLf185jNQOOxEU0ADGXNIvvleuT6ybN8OsIOMsaWT2ykW6QDAqC1MgjgFjKnT4YNQKmcfj23lDbdpohF5goIKE6xWxPTlIEeSo9YDe3aHmIrPoptWuIhALGt5x1rrV59FSLyEG2OcE/+qghTLNNfDx2LHVYDEDmlEYDoMXUAx8ChAsjAR94KOiFmRDGm2GbIAGRKCaxdIM/bmzMDUxeIeZxavxIIIwfqjEn307PztmD0lCQAGcK1AK2dv5QlrUdkwFPWS+tARZxJvRml264YUJkncIISsMQEN6gvBhMrHo4qsSFLAmYEuBGAOALMCMAQOEaAGwEwIwBDwLaVpQKwyfrsSqDdVgAE4KOoM6B4zLyd6uMubkADAPvXsnz7qusfG/ZZ3SUO5DgAAAAASUVORK5CYII=" /></a>
-          <a href="${srrdbUrl + imdbId}" target="_blank"><img width="20" height="20" title="srrDB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAC7u7v///+ZzP/Mmf+Z/5n/mZn//2b/mWaMjIxymL6Ycr5yvnK+cnK+vky+ckxUcY1xVI1nZ2dUjVSNVFSNjTiNVDi2juC+AAAABHRSTlN9PL4AffGBGQAAAMlJREFUWMPtlzcOwzAQBElLVKZy/v9DjXVBLK5Q4StkyJxygJ3uCNAk1qRfY2xi7CtV8LLGpCqw1/EJ7ENFDDvcOTXEdMIdY02MRwhgzwU47LkAhz0XQqASwDUCuFoQAzHwtIDqmPTnrOBJga0viX6Dm9ucaGe4pSuIbgkB7LkAhz0X4LDnQgiUArhcAFcIYiAGnhZQHJPunH/oRbo/sHpH+BXOu4xw/jKAPRfgsOfCZcAJ4DJBDMTAPwR0x6Q/53u/rkb9+VZ//9+xTWbto7vDzQAAAABJRU5ErkJggg==" /></a>
-          <a href="${OMG_SEARCH_URL}" target="_blank"><img width="20" height="20" title="OMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAItSURBVDhP7ZQ5b9wwEIW/ISVK8q609toGDOQA4gAGfHRp0uT/d2nSB46DOMfa68XKuiVOinXWF5LCSZlHEMS84XvDYoZyfHikKvwzmFuzp7g+1piHxF0Iei9eFX9scheGtei+GBS9J1ZEV+djjnUh8/uKD/lf8Z9fLUdHR6riKWyJJEArxF2M9RZFqWyJJopXSOoI8YYyLrHpKu9rJagCki4CBDk4PtB+syMaxfh2IIwdaqH6XOLHnmSaoI1igwCbGK5mCybPMtqrDucc6j3xJCY/W2KvAuT1231tw5ZwHqJ4rAlpNhqmB1OWs5z+U0coIcYYejew+26H0/en7Fzu0mkLBoZwYOtkk8sPlxjZEWRusHuW6E2MOwiIi4jBDBRfronjiGargSmEvaX8WrL9apvedkhiiJ47AJYXOdnhBKMKgQSIGObnc+q6Ay90ZY/TEFUlyC3aKqpQz2oWxQJ34qikoMwrqr6ibweGuseE1yF+rPgfA2mZUp/W1K4mnAQoEEQOMYahH1AUYy1plFF8KxiNRtAoEREb2wn52TXGzz2T3QyZGobS47KQbD9l9vECUjAvhS7tsHuWLusIppY2b5CF0OYd3ijjw5T8e85Gk6zappeOIfNICt11z3AxkMQJ7oWjKAucddRVTbQRUy1LkjhBxgIC2ivFecm4HxEQrAxvm1RBQW4aVR9Nzyqnq0u33J3f5d4si8rajBvxw7Xm9XbfxR8/h6fgv+Hf4ycOpP6O76NlNwAAAABJRU5ErkJggg==" /></a>
+        <!-- Static tracker buttons row (always visible) -->
+        <div id="static-tracker-row" class="center pad" style="margin-bottom: 6px;">
+            ${generateStaticRowHtml(imdbId, tvdbId)}
+        </div>
+        <!-- Dynamic tracker buttons row (populated after search) -->
+        <div id="dynamic-tracker-row" class="center pad" style="display: none;">
+            <!-- Populated by generateTrackerButtons() -->
+        </div>
+        <div style="display: flex; gap: 6px;">
+            <button id="tmt-load-links" title="Check tracker availability" style="flex: 1;">Search</button>
+            <button id="tmt-settings-btn" title="Tracker checking settings" style="flex: 1;">Settings</button>
         </div>
         <div><span class="uid">UID: ${uniqueId ? uniqueId : ''}</span></div>
-        <div class="tmt-filters">
-            <label class="tmt-filter-label"><input type="checkbox" id="tmt-filter-resolution"> Filter by resolution</label>
-            <label class="tmt-filter-label"><input type="checkbox" id="tmt-filter-release-group"> Filter by release group</label>
-        </div>
         ` + mediainfoButtonHtml + `
         ` + uniqueIdButtonHtml + `
         ` + fileStructureButtonHtml + `
@@ -1338,6 +2070,9 @@
             });
         }
 
+        // Initialize settings modal (only once)
+        initializeSettingsModal();
+
         const trackerButtons = document.querySelectorAll('.center.pad a[target="_blank"]');
         trackerButtons.forEach(button => {
             if (button.id === 'athButton') return;
@@ -1351,6 +2086,18 @@
             loadLinksButton.addEventListener('click', () => {
                 checkAllTrackers();
             });
+
+            // Hide/show Load Links button based on auto-load setting
+            const autoLoad = GM_getValue('tmt_auto_load', false);
+            if (autoLoad) {
+                loadLinksButton.style.display = 'none';
+                // Auto-load tracker links
+                if (imdbId) {
+                    setTimeout(() => checkAllTrackers(), 1000);
+                }
+            } else {
+                loadLinksButton.style.display = '';
+            }
         }
     }
 
@@ -2935,7 +3682,7 @@
           background-color: transparent !important;
       }
 
-      #torrentModToolkit button {
+      #torrentModToolkit button:not(#tmt-load-links):not(#tmt-settings-btn) {
           display: block !important;
           width: 100% !important;
           margin-top: 6px !important;
@@ -3003,7 +3750,7 @@
           cursor: pointer !important;
       }
 
-      #torrentModToolkit button[disabled] {
+      #torrentModToolkit button:not(#tmt-load-links):not(#tmt-settings-btn)[disabled] {
           background: #181C25 !important;
       }
 
@@ -3133,24 +3880,26 @@
 
 
         #tmt-load-links {
-            padding: 2px 8px;
-            margin-left: 5px;
-            cursor: pointer;
-            background-color: #F5C518;
-            color: #000;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            font-weight: bold;
-            font-size: 11px;
+            display: block !important;
+            width: 100% !important;
+            margin-top: 6px !important;
+            padding: 2px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            background: #2e3445 !important;
+            background-color: #2e3445 !important;
+            color: white !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
         }
 
         #tmt-load-links:hover {
-            background-color: #FFD700;
+            background: #2d6cd3 !important;
         }
 
         #tmt-load-links:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+            background: #181C25 !important;
+            cursor: not-allowed !important;
             opacity: 0.6;
         }
 
@@ -3163,7 +3912,7 @@
             border: 2px solid rgb(0, 220, 220) !important;
             border-radius: 3px;
         }
-
+N
         .tracker-loading {
             opacity: 0.6;
             animation: pulse 1.5s infinite;
@@ -3366,10 +4115,93 @@
             background: rgba(158, 158, 158, 0.2);
             color: #9e9e9e;
         }
+
+        /* Settings Button */
+        #tmt-settings-btn {
+            display: block !important;
+            width: 100% !important;
+            margin-top: 6px !important;
+            padding: 2px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            background: #2e3445 !important;
+            background-color: #2e3445 !important;
+            color: white !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+        }
+
+        #tmt-settings-btn:hover {
+            background: #2d6cd3 !important;
+        }
+
+        /* Settings Sidebar */
+        #tmt-settings-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background-color: #1e2332;
+            border-right: 1px solid #888;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000000;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #fff;
+        }
+
+        #tmt-settings-sidebar.open {
+            transform: translateX(0);
+        }
+
+        #tmt-settings-content h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        #tmt-settings-content h4 {
+            margin: 20px 0 10px 0;
+            color: #F5C518;
+            font-size: 14px;
+        }
+
+        #tmt-settings-content section {
+            margin-bottom: 25px;
+        }
+
+        #tmt-settings-content label {
+            display: block;
+            margin: 10px 0;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        #tmt-settings-content input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        #tmt-settings-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        #tmt-settings-close:hover,
+        #tmt-settings-close:focus {
+            color: #fff;
+        }
     `);
 
     setupToast();
-    loadConfig(false);
+    loadConfig(false); // Load homeTrackerConfig from external source
     function initToolkit() {
         const isAnimebytes = window.location.hostname.includes('animebytes.tv');
         const isAnthelion = window.location.hostname.includes('anthelion.me');

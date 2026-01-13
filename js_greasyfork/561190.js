@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              LANraragi 现代主题
 // @namespace    https://github.com/Kelcoin
-// @version           3.3.3
+// @version           3.3.4
 // @description    更现代化、简介、美观的 LANraragi 主题
 // @author            Kelcoin
 // @include           https://lanraragi*/*
@@ -412,7 +412,15 @@
 
     .Toastify__toast-container {
         z-index: 9999;
-        padding: 0 !important;
+        padding: 12px !important; 
+        
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        
+        pointer-events: none !important;
+        height: auto !important;
+        max-height: 100vh !important;
     }
 
     .Toastify__toast-container--top-left {
@@ -428,15 +436,16 @@
     .Toastify__toast-container--bottom-left {
         bottom: 18px !important;
         left: 18px !important;
+        flex-direction: column-reverse !important; 
     }
 
     .Toastify__toast-container--bottom-right {
         bottom: 18px !important;
         right: 18px !important;
+        flex-direction: column-reverse !important;
     }
 
     .Toastify__toast {
-
         background: var(--glass-bg, rgba(10, 12, 18, 0.9)) !important;
         border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.08)) !important;
         border-radius: var(--radius-lg, 12px) !important;
@@ -448,11 +457,17 @@
         padding: 12px 16px !important;
         min-width: 280px !important;
         max-width: 440px !important;
-
         box-sizing: border-box !important;
-        overflow: hidden !important;
-
+        
         border-radius: var(--radius-lg, 12px) !important;
+
+        #transform: none !important;
+        position: relative !important;
+        inset: auto !important;
+        margin: 0 !important;
+        
+        pointer-events: auto !important;
+        overflow: hidden !important;
     }
 
     .Toastify__toast-theme--light {
@@ -468,12 +483,14 @@
         padding: 0 !important;
         font-size: 14px !important;
         line-height: 1.55 !important;
+        width: 100% !important; 
     }
 
     .Toastify__toast-icon {
         width: 24px !important;
         height: 24px !important;
         flex-shrink: 0 !important;
+        margin-top: 2px !important; 
     }
 
     .Toastify__toast-icon svg {
@@ -498,8 +515,17 @@
         color: var(--accent-warning, #f4c96b) !important;
     }
 
-    .Toastify__toast-body > div {
+    .Toastify__toast-body > div:last-child {
         color: var(--text-secondary, #a9b4c8) !important;
+        
+        flex: 1 1 auto !important;
+        min-width: 0 !important; 
+
+        word-break: break-all !important;
+        overflow-wrap: anywhere !important;
+        white-space: pre-wrap !important;
+        
+        padding-right: 5px !important; 
     }
 
     .Toastify__toast-body h2,
@@ -515,6 +541,7 @@
         opacity: 0.8 !important;
         align-self: flex-start !important;
         margin-left: 8px !important;
+        flex-shrink: 0 !important; 
 
         transition: opacity 0.18s ease, transform 0.18s ease !important;
     }
@@ -566,6 +593,73 @@
             rgba(244, 201, 107, 0.18),
             var(--accent-warning, #f4c96b)
         ) !important;
+    }
+
+    .Toastify__toast .Toastify__progress-bar {
+        animation-delay: 0s !important;
+        animation-play-state: running !important;
+        transition-delay: 0s !important;
+    }
+
+    @keyframes toast-slide-in-from-left {
+        0% {
+            transform: translateX(-40px);
+            opacity: 0;
+        }
+        60% {
+            transform: translateX(6px);
+            opacity: 1;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes toast-slide-in-from-right {
+        0% {
+            transform: translateX(40px);
+            opacity: 0;
+        }
+        60% {
+            transform: translateX(-6px);
+            opacity: 1;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes toast-slide-out-left {
+        0% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        100% {
+            transform: translateX(-40px);
+            opacity: 0;
+        }
+    }
+
+    .Toastify__toast.Toastify__bounce-enter--top-left,
+    .Toastify__toast.Toastify__bounce-enter--bottom-left {
+        animation-name: toast-slide-in-from-left !important;
+        transform-origin: center left !important;
+    }
+
+    .Toastify__toast.Toastify__bounce-enter--top-right,
+    .Toastify__toast.Toastify__bounce-enter--bottom-right {
+        animation-name: toast-slide-in-from-right !important;
+        transform-origin: center right !important;
+    }
+
+    .Toastify__toast.Toastify__bounce-exit--top-left,
+    .Toastify__toast.Toastify__bounce-exit--bottom-left,
+    .Toastify__toast.Toastify__bounce-exit--top-right,
+    .Toastify__toast.Toastify__bounce-exit--bottom-right {
+        animation-name: toast-slide-out-left !important;
+        transform-origin: center left !important;
     }
 
     #editArchiveForm {
@@ -713,6 +807,46 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+    }
+
+    #editArchiveForm table tbody tr:nth-child(5) {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        margin-bottom: 20px !important; /* 与下方按钮拉开距离 */
+        background: transparent !important;
+        border: none !important;
+    }
+
+    #editArchiveForm table tbody tr:nth-child(5) > td:first-child {
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        padding: 10px 0 6px 0 !important; 
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: var(--text-primary) !important;
+        line-height: 1.4 !important;
+    }
+
+    #editArchiveForm table tbody tr:nth-child(5) > td:nth-child(2) {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    #editArchiveForm .tagger.wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 0 !important;
+        background: rgba(12, 14, 20, 0.4) !important;
+        border: 1px solid var(--glass-border) !important;
+        box-sizing: border-box !important;
+    }
+
+    #editArchiveForm table tbody tr:nth-child(5) br {
+        display: none !important;
     }
 
     .tagger {
@@ -1456,7 +1590,7 @@
         position: static !important;
         top: auto !important;
         left: auto !important;
-        transform: none !important;
+        transform: none;
         width: auto !important;
         display: block !important;
         margin: 0 !important;
@@ -3066,7 +3200,7 @@
 
     @media (max-width: 768px) {
         div.sni img {
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         }
 
         .tippy-box {

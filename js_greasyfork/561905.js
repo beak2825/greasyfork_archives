@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         飞书文档-目录层级编号（清理脏数据版）
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  为飞书文档目录添加层级编号，每次执行先清理目录容器内的旧编号（脏数据），支持菜单/目录触发
 // @author       onionycs
 // @match        *://*.feishu.cn/*
@@ -25,11 +25,31 @@
             placeholderClass: 'fixed-size-list-placeholder'// 占位项过滤
         },
         styles: {
+            // 编号基础样式 + Active目录项样式（核心新增）
             serialNumber: `
+                /* 目录编号基础样式 */
                 .auto-generated-serial-number {
                     color: blue !important;
                     margin-right: 4px;
                     font-weight: normal;
+                }
+
+                /* Active目录项样式（覆盖编号+文本） */
+                li.catalogue__list-item.active {
+                    background-color: yellow !important;
+                    color: red !important;
+                    font-weight: bold !important;
+                }
+
+                /* Active目录项的编号也改为红色（覆盖基础蓝色） */
+                li.catalogue__list-item.active .auto-generated-serial-number {
+                    color: red !important;
+                }
+
+                /* 提升样式优先级，确保覆盖飞书默认样式 */
+                li.catalogue__list-item.active .text {
+                    color: red !important;
+                    background-color: transparent !important; /* 避免文本容器覆盖背景 */
                 }
             `
         }
@@ -42,7 +62,7 @@
             const styleEl = document.createElement('style');
             styleEl.textContent = css;
             document.head.appendChild(styleEl);
-            console.error('[Utils] 编号样式已注入');
+            console.error('[Utils] 编号+Active样式已注入');
         },
 
         // 等待元素加载（兜底）
@@ -89,7 +109,7 @@
             // 第一步：先清理旧编号
             this.clearOldNumbers();
 
-            // 第二步：注入样式
+            // 第二步：注入样式（含Active样式）
             Utils.injectStyles(CONFIG.styles.serialNumber);
 
             // 第三步：获取所有目录容器
@@ -208,6 +228,8 @@
         console.error(`\n🚀 飞书文档目录编号脚本初始化`);
         // 等待目录容器加载
         await Utils.waitForElement(CONFIG.selectors.catalogueList);
+        // 先注入一次样式（确保Active样式生效）
+        Utils.injectStyles(CONFIG.styles.serialNumber);
         // 绑定目录项触发事件
         CatalogueSerialNumber.bindTriggerEvent();
         console.error(`✅ 脚本初始化完成`);
@@ -216,7 +238,7 @@
     // 注册油猴菜单（手动触发）
     GM_registerMenuCommand('📌 生成/更新目录层级编号', () => {
         CatalogueSerialNumber.generateNumbers();
-        alert('✅ 目录编号已更新！\n（可查看控制台日志 F12 了解详情）');
+        alert('✅ 目录编号已更新！\n（Active目录项已标红+黄色背景）');
     });
 
     // 页面加载完成后初始化

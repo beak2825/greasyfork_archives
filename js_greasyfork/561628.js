@@ -167,6 +167,35 @@
         bottomContainer.appendChild(seriesFilterBtn);
     }
 
+    // ★追加: グリッド詳細表示ボタンの生成
+    function createGridDetailsButton(container) {
+        const btn = document.createElement('div');
+        btn.className = 'tool-btn details-btn';
+        // アイコン + テキスト
+        btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" style="margin-right:6px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>Detail`;
+        btn.title = 'グリッド表示時に詳細情報を表示';
+        
+        const settings = Storage.loadSettings();
+        let isActive = (settings.ui && settings.ui.showGridDetails) || false;
+        if (!settings.syncMode) isActive = false;
+        
+        if (isActive) btn.classList.add('active');
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const currentActive = btn.classList.contains('active');
+            if (!currentActive) {
+                btn.classList.add('active');
+                Logic.toggleGridDetails(true);
+            } else {
+                btn.classList.remove('active');
+                Logic.toggleGridDetails(false);
+            }
+        });
+
+        container.appendChild(btn);
+    }
+
     function openConfigModal() {
         if(document.getElementById('hitomi-filter-modal-overlay')) return;
         const currentSettings = Storage.loadSettings();
@@ -508,6 +537,7 @@
                     Logic.resetUI();
                     if (typeof Logic.resetThumbnailSlider === 'function') Logic.resetThumbnailSlider();
                     if (typeof Logic.resetLayoutSettings === 'function') Logic.resetLayoutSettings();
+                    if (typeof Logic.resetGridDetails === 'function') Logic.resetGridDetails(); // ★追加
                     updateLayoutButtonVisual('list');
                 } else if (!oldSyncMode && tempSyncMode) {
                     Logic.cleanInputForSync();
@@ -539,6 +569,17 @@
                     // ★追加: 強力ブロックも適用 (Config閉じた直後にも反映させたい場合)
                     Logic.applyStrongBlock(settings);
 
+                    // ▼▼▼ ここに追加します ▼▼▼
+                    // ★追加: 詳細表示設定の復元
+                    if (typeof Logic.initGridDetails === 'function') Logic.initGridDetails(settings);
+                    const isDetailsActive = (settings.ui && settings.ui.showGridDetails);
+                    const dBtn = document.querySelector('.tool-btn.details-btn');
+                    if (dBtn) {
+                        if (isDetailsActive) dBtn.classList.add('active');
+                        else dBtn.classList.remove('active');
+                    }
+                    // ▲▲▲ ここまで ▲▲▲
+
                     Logic.syncButtonsFromInput();
                     Logic.syncDropdownItems();
                 }
@@ -547,10 +588,14 @@
         });
     }
 
-    function createLayoutButton(container) {
+// ★変更: 引数に settings を追加 (これを忘れるとエラーになります)
+    function createLayoutButton(container, settings) {
         const Utils = window.HitomiFilterUtils;
         const Logic = window.HitomiFilterLogic;
         const Storage = window.HitomiFilterStorage;
+        
+        // 設定が渡されていなければロード
+        settings = settings || Storage.loadSettings();
 
         const wrapper = document.createElement('div');
         wrapper.className = 'layout-btn-wrapper';
@@ -558,9 +603,13 @@
         const triggerBtn = document.createElement('div');
         triggerBtn.className = 'tool-btn layout-trigger-btn';
         triggerBtn.title = 'レイアウト切替';
-
-        // 現在のモードを取得してアイコン設定
-        const currentMode = (Storage.loadSettings().ui && Storage.loadSettings().ui.layoutMode) || 'list';
+        
+        // 同期モードがOFFなら、強制的に「リスト」として初期表示する
+        let currentMode = 'list';
+        if (settings.syncMode) {
+            currentMode = (settings.ui && settings.ui.layoutMode) || 'list';
+        }
+        
         triggerBtn.innerHTML = Utils.LAYOUT_ICONS[currentMode] || Utils.LAYOUT_ICONS.list;
 
         const dropdown = document.createElement('div');
@@ -568,68 +617,64 @@
 
         const options = [
             { label: 'List', value: 'list', icon: Utils.LAYOUT_ICONS.list },
-            { label: 'Grid', value: 'grid', icon: Utils.LAYOUT_ICONS.grid, hasColumns: true } // ★追加フラグ
+            { label: 'Grid', value: 'grid', icon: Utils.LAYOUT_ICONS.grid, hasColumns: true }
         ];
 
         options.forEach(opt => {
             const item = document.createElement('div');
             item.className = 'layout-option';
-            // ★追加: 後でJavaScriptから特定できるように data-value を付与
-            item.dataset.value = opt.value;
+            item.dataset.value = opt.value; // 表示更新用
             item.style.display = 'flex';
             item.style.justifyContent = 'space-between';
             item.style.alignItems = 'center';
-            item.style.position = 'relative'; // サブメニューの位置基準
-
+            item.style.position = 'relative';
+            
             if (opt.value === currentMode) item.classList.add('active');
-
-            // 左側: アイコンとラベル
+            
             const labelSpan = document.createElement('span');
             labelSpan.innerHTML = `${opt.icon} <span style="margin-left:8px">${opt.label}</span>`;
             labelSpan.style.display = 'flex';
             labelSpan.style.alignItems = 'center';
             item.appendChild(labelSpan);
 
-            // ★変更: グリッドの場合の列数選択UI (数値表示 + サブメニュー)
+            // グリッドの場合の列数選択UI
             if (opt.hasColumns) {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'grid-col-wrapper';
+                const colWrapper = document.createElement('div');
+                colWrapper.className = 'grid-col-wrapper';
 
-                // 現在の設定値
-                const currentCols = (Storage.loadSettings().ui && Storage.loadSettings().ui.gridColumns) || 4;
+                // ★変更: 固定値4ではなく、Logic側の関数を使ってデフォルト値を決定
+                let currentCols;
+                if (settings.syncMode) {
+                    currentCols = (settings.ui && settings.ui.gridColumns) || Logic.getDefaultGridColumns();
+                } else {
+                    currentCols = Logic.getDefaultGridColumns();
+                }
 
-                // 数値表示部分 (縦棒含む)
                 const valDisplay = document.createElement('div');
                 valDisplay.className = 'grid-current-val';
                 valDisplay.textContent = currentCols;
-                wrapper.appendChild(valDisplay);
+                colWrapper.appendChild(valDisplay);
 
-                // サブメニュー
                 const submenu = document.createElement('div');
                 submenu.className = 'grid-submenu';
 
                 // 1〜10の選択肢生成 (表示はCSSで制御)
-                // ★変更: ループ上限を 5 から 10 に変更
                 for (let i = 1; i <= 10; i++) {
                     const subItem = document.createElement('div');
                     subItem.className = 'grid-submenu-item';
                     subItem.textContent = i;
-                    subItem.dataset.val = i; // CSSでの制御用
+                    subItem.dataset.val = i;
                     if (i === currentCols) subItem.classList.add('active');
 
-                    // クリックイベント
                     subItem.addEventListener('click', (e) => {
-                        e.stopPropagation(); // 親への伝播を止める
+                        e.stopPropagation();
 
-                        // 1. ロジック適用と保存
                         Logic.changeGridColumns(i);
-
-                        // 2. UI更新
+                        
                         valDisplay.textContent = i;
                         submenu.querySelectorAll('.grid-submenu-item').forEach(el => el.classList.remove('active'));
                         subItem.classList.add('active');
 
-                        // 3. モード切替 (もしグリッドじゃなければ)
                         if (!item.classList.contains('active')) {
                             triggerBtn.innerHTML = opt.icon;
                             dropdown.querySelectorAll('.layout-option').forEach(el => el.classList.remove('active'));
@@ -637,57 +682,47 @@
                             Logic.applyLayout(opt.value);
                         }
 
-                        // 4. 全てのメニューを閉じる
                         submenu.classList.remove('show');
                         dropdown.classList.remove('show');
                     });
 
                     submenu.appendChild(subItem);
                 }
-                wrapper.appendChild(submenu);
+                colWrapper.appendChild(submenu);
 
-                // ★追加: スマホ対応 (タップで開閉トグル)
+                // スマホ対応: タップで開閉
                 valDisplay.addEventListener('click', (e) => {
-                    e.stopPropagation(); // 親のレイアウト切替を阻止
+                    e.stopPropagation();
                     submenu.classList.toggle('show');
                 });
 
-                // マウスオーバーでサブメニュー表示 (一度開いたら閉じない)
-                // ★変更: マウスオーバーでサブメニュー表示 (PC用)
-                // ホバー操作が可能なデバイスでのみ mouseenter イベントを登録する
+                // PC対応: ホバーで開く
                 if (window.matchMedia('(hover: hover)').matches) {
                     valDisplay.addEventListener('mouseenter', () => {
                         submenu.classList.add('show');
                     });
                 }
 
-                // ※「マウスを離しても非表示にならない」は、mouseleaveイベントを設定しないことで実現
-                // 閉じるのは「数字クリック」または「ドキュメント全体のクリック(既存)」で行う
-
-                item.appendChild(wrapper);
+                item.appendChild(colWrapper);
             }
-
-            // 項目全体のクリックイベント (レイアウト切替)
+            
             item.addEventListener('click', (e) => {
-                // サブメニュー内をクリックした場合は反応させない
-                if (e.target.closest('.grid-submenu')) return;
+                if (e.target.closest('.grid-submenu') || e.target.closest('.grid-current-val')) return;
 
                 e.stopPropagation();
                 triggerBtn.innerHTML = opt.icon;
                 dropdown.querySelectorAll('.layout-option').forEach(el => el.classList.remove('active'));
                 item.classList.add('active');
                 dropdown.classList.remove('show');
-
-                // サブメニューも閉じる
+                
                 const openSubmenu = item.querySelector('.grid-submenu');
                 if (openSubmenu) openSubmenu.classList.remove('show');
-
+                
                 Logic.applyLayout(opt.value);
             });
             dropdown.appendChild(item);
         });
 
-        // ドキュメントクリックでサブメニューも閉じるように追加
         document.addEventListener('click', () => {
             dropdown.classList.remove('show');
             document.querySelectorAll('.grid-submenu').forEach(el => el.classList.remove('show'));
@@ -834,6 +869,7 @@
         createToolButtons,
         openConfigModal,
         createLayoutButton, // 追加
+        createGridDetailsButton, // ★追加
         createThumbnailSlider, // ★追加
         updateLayoutButtonVisual, // ★追加
         updateGridColumnVisual // ★追加

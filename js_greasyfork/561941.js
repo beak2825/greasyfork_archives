@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         stable diffusion webui提示词分组器
 // @namespace    http://tampermonkey.net/
-// @version      2026-1-11.1.5
+// @version      2026-1-11.1.6
 // @description  用来在sdwebui上附加N个提示词输入框，方便分别输入提示词（如风景、人物、衣服）同时可以将提示词保存为json文件，方便读取
 // @author       ragnaDolphin
 // @match        *://127.0.0.1:7860/*
@@ -693,6 +693,14 @@
             // 在创建主容器后，添加拖拽功能
             // 在 mainContainer 创建后，添加以下代码：
 
+            // 调整文本框高度的函数
+            function adjustTextareaHeight(textInput) {
+                // 重置高度为auto，以便计算正确的高度
+                textInput.style.height = 'auto';
+                // 设置高度为滚动高度（内容实际高度）
+                textInput.style.height = textInput.scrollHeight + 'px';
+            }
+
             // 添加拖拽功能
             mainContainer.addEventListener('dragover', function(e) {
                 e.preventDefault();
@@ -754,6 +762,7 @@
                                 const resizableInput = createResizableInput(item.title);
                                 resizableInput.input.value = item.content;
                                 inputsContainer.appendChild(resizableInput.container);
+                                adjustTextareaHeight(resizableInput.input);
                             }
                         });
 
@@ -816,6 +825,7 @@
                                     const resizableInput = createResizableInput(item.title);
                                     resizableInput.input.value = item.content;
                                     inputsContainer.appendChild(resizableInput.container);
+                                    adjustTextareaHeight(resizableInput.input);
                                 }
                             });
 

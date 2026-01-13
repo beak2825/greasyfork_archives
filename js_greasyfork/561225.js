@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         豆瓣想读-ZLibrary助手
+// @name         豆瓣想读-ZLibrary+山西省图看板
 // @namespace    http://tampermonkey.net/
-// @version      1.7
-// @description  在豆瓣书籍信息上方直接嵌入Z-Library搜索结果，支持自定义域名
-// @author       Jaywxl
+// @version      2.1
+// @description  仅在想读页面显示借阅看板，风格统一，支持自定义Token
+// @author       Jaywxl & Assistant
 // @match        https://book.douban.com/people/*/wish*
 // @match        https://book.douban.com/mine?status=wish*
 // @match        https://book.douban.com/subject/*
@@ -14,52 +14,69 @@
 // @connect      *
 // @run-at       document-end
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561225/%E8%B1%86%E7%93%A3%E6%83%B3%E8%AF%BB-ZLibrary%E5%8A%A9%E6%89%8B.user.js
-// @updateURL https://update.greasyfork.org/scripts/561225/%E8%B1%86%E7%93%A3%E6%83%B3%E8%AF%BB-ZLibrary%E5%8A%A9%E6%89%8B.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561225/%E8%B1%86%E7%93%A3%E6%83%B3%E8%AF%BB-ZLibrary%2B%E5%B1%B1%E8%A5%BF%E7%9C%81%E5%9B%BE%E7%9C%8B%E6%9D%BF.user.js
+// @updateURL https://update.greasyfork.org/scripts/561225/%E8%B1%86%E7%93%A3%E6%83%B3%E8%AF%BB-ZLibrary%2B%E5%B1%B1%E8%A5%BF%E7%9C%81%E5%9B%BE%E7%9C%8B%E6%9D%BF.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // --- 域名配置逻辑 ---
-    // 默认域名，如果无法访问，用户可以通过菜单更改
     const DEFAULT_DOMAIN = 'zh.z-library.ec';
     let currentDomain = GM_getValue('zlib_domain', DEFAULT_DOMAIN);
+    let libToken = GM_getValue('lib_token', '');
 
-    // 注册菜单命令
+    // --- 菜单配置 ---
     GM_registerMenuCommand("🔧 设置 Z-Lib 域名", () => {
-        const newDomain = prompt("请输入 Z-Library 域名 (例如: zh.z-library.se 或 z-library.do)\n当前域名: " + currentDomain, currentDomain);
-        if (newDomain !== null && newDomain.trim() !== "") {
-            // 清理用户输入的协议头和结尾斜杠
-            const cleanDomain = newDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
-            GM_setValue('zlib_domain', cleanDomain);
-            alert("域名已更新为: " + cleanDomain + "\n页面即将刷新以应用设置。");
+        const newDomain = prompt("请输入 Z-Library 域名:", currentDomain);
+        if (newDomain) {
+            GM_setValue('zlib_domain', newDomain.replace(/^https?:\/\//, '').replace(/\/$/, ''));
             location.reload();
         }
     });
 
+    GM_registerMenuCommand("🔑 设置图书馆 Token", () => {
+        const newToken = prompt("请输入图书馆 Authorization Token:", libToken);
+        if (newToken !== null) {
+            GM_setValue('lib_token', newToken.trim());
+            location.reload();
+        }
+    });
+
+    // --- 样式注入 ---
     const style = document.createElement('style');
     style.innerHTML = `
-        .zlib-box {
-            margin: 0 0 10px 0;
-            padding: 10px;
+        /* 借阅看板 & ZLib 盒子 统一风格 */
+        .zlib-box, .lib-dashboard-box {
+            margin: 0 0 15px 0;
+            padding: 12px;
             border: 1px dashed #007722;
             background-color: #f6f9f2;
             font-size: 13px;
             border-radius: 6px;
             clear: both;
         }
-        .zlib-header {
+        .lib-header, .zlib-header {
             font-weight: bold;
             color: #007722;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 3px;
+            padding-bottom: 5px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
-        .zlib-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-        .zlib-item {
+        .lib-header a { color: #007722; text-decoration: none; }
+        .lib-header a:hover { text-decoration: underline; }
+
+        /* 网格布局 */
+        .lib-list, .zlib-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        /* 每一项的卡片样式 */
+        .lib-item, .zlib-item {
             background: #fff;
             border: 1px solid #eee;
             padding: 8px;
@@ -68,34 +85,104 @@
             flex-direction: column;
             transition: all 0.2s;
         }
-        .zlib-item:hover { border-color: #007722; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .zlib-link {
+        .lib-item:hover, .zlib-item:hover { border-color: #007722; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .lib-title, .zlib-link {
             color: #37a;
-            text-decoration: none;
             font-weight: bold;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+            text-decoration: none;
             overflow: hidden;
-            line-height: 1.4;
-        }
-        .zlib-author {
-            color: #666;
-            font-size: 12px;
-            margin: 2px 0;
-            font-style: italic;
-            overflow: hidden;
-            white-space: nowrap;
             text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
         }
-        .zlib-meta { color: #888; font-size: 11px; margin-top: auto; padding-top: 4px; }
-        .zlib-tag { background: #eef; color: #66b; padding: 1px 4px; border-radius: 2px; margin-right: 3px; }
+        .lib-info { color: #666; font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between; }
+
+        /* 倒计时标签 */
+        .days-tag { padding: 1px 5px; border-radius: 3px; font-weight: bold; color: #fff; font-size: 11px; }
+        .days-safe { background: #52c41a; }
+        .days-warning { background: #faad14; }
+        .days-danger { background: #ff4d4f; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
     `;
     document.head.appendChild(style);
 
-    function init() {
-        const items = document.querySelectorAll('.subject-item, .interest-list .item, #wrapper');
+    // --- 日期处理 ---
+    function getDaysInfo(retuDateStr) {
+        const year = retuDateStr.substring(0, 4);
+        const month = retuDateStr.substring(4, 6);
+        const day = retuDateStr.substring(6, 8);
+        const target = new Date(`${year}-${month}-${day}`);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+        let type = "days-safe";
+        if (diff <= 3) type = "days-danger";
+        else if (diff <= 7) type = "days-warning";
+        return { diff, type, date: `${year}-${month}-${day}` };
+    }
+
+    // --- 图书馆数据请求 ---
+    function fetchLibraryData(callback) {
+        if (!libToken) return callback(null);
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: "https://uilas.sxlib.org.cn/prod-api/readerBook/renewBookList?sortField=loanDate&sortBy=desc",
+            headers: { "Authorization": libToken, "istoken": "true" },
+            onload: (res) => {
+                try {
+                    const data = JSON.parse(res.responseText);
+                    callback(data.code === 200 ? data.data : null);
+                } catch (e) { callback(null); }
+            },
+            onerror: () => callback(null)
+        });
+    }
+
+    // --- 渲染借阅看板 ---
+    function renderDashboard(books) {
+        // 只在"想读"页面触发
+        if (!location.href.includes('mine?status=wish')) return;
+
+        const container = document.querySelector('#content .grid-16-8 .article') || document.querySelector('#content');
+        if (!container) return;
+
+        const board = document.createElement('div');
+        board.className = 'lib-dashboard-box';
         
+        let itemsHtml = books.map(book => {
+            const info = getDaysInfo(book.retudate);
+            return `
+                <div class="lib-item">
+                    <div class="lib-title" title="${book.title}">${book.title}</div>
+                    <div class="lib-info">
+                        <span>到期: ${info.date}</span>
+                        <span class="days-tag ${info.type}">${info.diff}天</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        board.innerHTML = `
+            <div class="lib-header">
+                <a href="https://uilas.sxlib.org.cn/NTRdrLogin.do#/personal" target="_blank">📚 陕西省图借阅看板 </a>
+                <span style="font-weight:normal; font-size:10px; color:#999;">共借阅 ${books.length} 本</span>
+            </div>
+            <div class="lib-list">${itemsHtml}</div>
+        `;
+        container.insertBefore(board, container.firstChild);
+    }
+
+    function init() {
+        // 1. 如果在想读页面，加载看板
+        if (location.href.includes('mine?status=wish')) {
+            fetchLibraryData((books) => {
+                if (books && books.length > 0) renderDashboard(books);
+            });
+        }
+
+        // 2. 加载 Z-Lib 搜索框 (原有逻辑)
+        const items = document.querySelectorAll('.subject-item, .interest-list .item, #wrapper');
         items.forEach((item) => {
             if (item.getAttribute('data-zlib-loaded') || (item.id === 'wrapper' && !document.querySelector('#info'))) return;
             item.setAttribute('data-zlib-loaded', 'true');
@@ -107,17 +194,10 @@
             if (item.classList.contains('subject-item') || item.classList.contains('item')) {
                 const titleLink = item.querySelector('.info h2 a') || item.querySelector('.title a');
                 const pubDiv = item.querySelector('.pub, .meta');
-                
-                if (titleLink) {
-                    bookTitle = titleLink.textContent.replace(/\s+/g, ' ').trim().split(' ')[0].split('（')[0].split(':')[0];
-                }
-                if (pubDiv) {
-                    const rawAuthor = pubDiv.textContent.split('/')[0].trim();
-                    bookAuthor = rawAuthor.replace(/\[.*?\]/g, '').trim();
-                }
+                if (titleLink) bookTitle = titleLink.textContent.replace(/\s+/g, ' ').trim().split(' ')[0].split('（')[0].split(':')[0];
+                if (pubDiv) bookAuthor = pubDiv.textContent.split('/')[0].trim().replace(/\[.*?\]/g, '').trim();
                 targetContainer = item.querySelector('.info') || item;
-            } 
-            else if (item.id === 'wrapper') {
+            } else if (item.id === 'wrapper') {
                 const titleNode = document.querySelector('h1 span');
                 bookTitle = titleNode ? titleNode.textContent.trim() : "";
                 const infoSpans = document.querySelectorAll('#info span.pl');
@@ -136,76 +216,54 @@
             zBox.className = 'zlib-box';
             zBox.innerHTML = `
                 <div class="zlib-header">
-                    <span>Z-Lib 搜索: ${bookTitle} ${bookAuthor}</span>
-                    <span style="font-weight:normal; font-size:10px; color:#999;">来源: ${currentDomain}</span>
+                    <span>Z-Lib 搜索: ${bookTitle}</span>
+                    <span style="font-weight:normal; font-size:10px; color:#999;">${currentDomain}</span>
                 </div>
                 <div class="zlib-content">查询中...</div>`;
             
-            if (targetContainer && targetContainer.firstChild) {
-                targetContainer.insertBefore(zBox, targetContainer.firstChild);
-            } else if (targetContainer) {
-                targetContainer.appendChild(zBox);
-            }
-
+            if (targetContainer) targetContainer.insertBefore(zBox, targetContainer.firstChild);
             fetchZLib(bookTitle, bookAuthor, zBox);
         });
     }
 
     function fetchZLib(title, author, container) {
         const query = `${title} ${author}`.trim();
-        // 使用配置的域名组装 URL
         const url = `https://${currentDomain}/s/?q=${encodeURIComponent(query)}`;
-        
         GM_xmlhttpRequest({
             method: "GET",
             url: url,
             onload: function(response) {
-                // 如果返回 403 或 404，可能是域名失效
                 if (response.status !== 200) {
-                    container.querySelector('.zlib-content').innerHTML = `<span style="color:orange;">域名可能失效 (HTTP ${response.status})，请在脚本菜单中更换新域名。</span>`;
+                    container.querySelector('.zlib-content').innerHTML = `域名失效`;
                     return;
                 }
-
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(response.responseText, "text/html");
                 const books = doc.querySelectorAll('z-bookcard');
                 const content = container.querySelector('.zlib-content');
-
                 if (!books || books.length === 0) {
-                    content.innerHTML = `<span style="color: #999;">未找到相关资源</span>`;
+                    content.innerHTML = `<span style="color: #999;">未找到资源</span>`;
                     return;
                 }
-
                 let html = `<div class="zlib-list">`;
-                const limit = Math.min(books.length, 6);
-
+                const limit = Math.min(books.length, 4);
                 for (let i = 0; i < limit; i++) {
                     const b = books[i];
-                    const zTitle = b.querySelector('[slot="title"]')?.textContent.trim() || "未知书名";
-                    const zAuthor = b.querySelector('[slot="author"]')?.textContent.trim() || "未知作者";
-                    const bSize = b.getAttribute('filesize') || "未知大小";
-                    const bExt = b.getAttribute('extension') || "未知格式";
+                    const zTitle = b.querySelector('[slot="title"]')?.textContent.trim() || "未知";
+                    const bSize = b.getAttribute('filesize') || "";
+                    const bExt = b.getAttribute('extension') || "";
                     const bHref = `https://${currentDomain}` + b.getAttribute('href');
-
                     html += `
                         <div class="zlib-item">
                             <a class="zlib-link" href="${bHref}" target="_blank" title="${zTitle}">${zTitle}</a>
-                            <div class="zlib-author" title="${zAuthor}">${zAuthor}</div>
-                            <div class="zlib-meta">
-                                <span class="zlib-tag">${bExt.toUpperCase()}</span>
-                                <span>${bSize}</span>
-                            </div>
-                        </div>
-                    `;
+                            <div class="lib-info"><span>${bExt.toUpperCase()}</span> <span>${bSize}</span></div>
+                        </div>`;
                 }
                 html += `</div>`;
                 content.innerHTML = html;
-            },
-            onerror: () => {
-                container.querySelector('.zlib-content').innerHTML = `<span style="color:red;">无法访问 ${currentDomain}，请检查域名是否被墙或通过脚本菜单更换。</span>`;
             }
         });
     }
 
-    setTimeout(init, 1200);
+    setTimeout(init, 1000);
 })();
