@@ -1,9 +1,9 @@
-﻿﻿﻿﻿﻿// ==UserScript==
-// @name   King BLUE script
+// ==UserScript==
+// @name         King BLUE script
 // @namespace    https://forum.kingrussia.com/index.php*
-// @version      1.0.8
+// @version      1.2.2
 // @description  Версия для сервера BLUE
-// @author       Manjiro_Sano | VK - https://vk.com/1manjiro
+// @author       Mark_Belf | VK - https://vk.com/mark17babanin
 // @match        https://forum.kingrussia.com/index.php*
 // @include      https://forum.kingrussia.com/index.php*
 // @grant        none
@@ -29,8 +29,8 @@
 
     const biography = [
         {
-            title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Свой ответ для жалобы✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
-            dpstyle: 'oswald: 3px;   color: #fff; background: #7851A9; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
+ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Свой ответ для жалобы✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
+            dpstyle: 'font-family: Oswald; font-size:10px; color: #fff; background: #7851A9; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
         },
         {
             title: 'Одобрено',
@@ -68,9 +68,9 @@
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
-        {
-            title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Передано✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
-            dpstyle: 'oswald: 10px;   color: #fff; background: #DAA520; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
+        {         
+title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Передано✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #DAA520; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
         },
         {
             title: 'Специальному Администратору',
@@ -124,8 +124,8 @@
             status: true,
         },
         {
-            title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Статус одобрено✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
-            dpstyle: 'oswald: 10px;   color: #fff; background: #008000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
+ title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Статус одобрено✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #008000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
         },
         {
             title: 'NonRP Обман',
@@ -332,8 +332,8 @@
             status: false,
         },
         {
-            title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Статус отказано✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
-            dpstyle: 'oswald: 10px;   color: #fff; background: #8B0000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
+title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Статус отказано✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #8B0000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
         },
         {
             title: 'Администрация не может выдать наказание',
@@ -529,8 +529,8 @@
 
     const biography2 = [
         {
-            title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп биографий✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
-            dpstyle: 'oswald: 3px;   color: #fff; background: #7851A9; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
+title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп биографий✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #7851A9; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
         },
         {
             title: 'Взять рп биографию на рассмотрение',
@@ -541,50 +541,77 @@
                 "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
-            title: 'Одобреная рп биография',
+            title: 'Отказаная рп биография',
             dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgb(152, 251, 152, 0.5)',
             content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]" +
                 "[B][CENTER][FONT=Arial][size=14px]Ваша рп биография была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Одобрено.[/COLOR][/FONT][/size][/CENTER]<br><br>" +
+                "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Отказано..[/COLOR][/FONT][/size][/CENTER]<br><br>" +
                 "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
         {
-            title: 'Отказаная рп биография',
-            dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgb(255, 36, 0, 0.5)',
-            content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]<br>" +
-                "[B][CENTER][FONT=Arial][size=14px]Рассмотрев вашу рп биографию.[/FONT][/size][/CENTER]<br><br>" +
-                "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - Одобрено[/FONT][/size][/CENTER]<br><br>" +
-                "[B][CENTER][FONT=Arial][size=14px][COLOR=#ff0000][/COLOR][/FONT][/size][/CENTER]<br><br>" +
-                "[CENTER][size=15px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
+            title: 'Одобреная рп биография',
+            dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgb(152, 251, 152, 0.5)',
+            content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]" +
+                "[B][CENTER][FONT=Arial][size=14px]Ваша рп биография была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Одобрено[/COLOR][/FONT][/size][/CENTER]<br><br>" +
+                "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
                 "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
-            prefix: CLOSE_PREFIX,
-            status: false,
+        },
+        {
+title: '╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴✅️Ответы Рп ситуаций✅️╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴╴',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #7851A9; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #7851A9',
+        },
+        {
+            title: 'Взять рп ситуацию на рассмотрение',
+            dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgb(255, 215, 0)',
+            content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]Ваша рп ситуация находится - [COLOR=#FFA500]На рассмотрении...[/COLOR][/FONT][/size][/CENTER]<br><br>" +
+                "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+        },
+        {
+            title: 'Отказаная рп ситуация',
+            dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgb(152, 251, 152, 0.5)',
+            content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]" +
+                "[B][CENTER][FONT=Arial][size=14px]Ваша рп ситуация была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Отказано[/COLOR][/FONT][/size][/CENTER]<br><br>" +
+                "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
+        },
+        {
+            title: 'Одобреная рп ситуация',
+            dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgb(152, 251, 152, 0.5)',
+            content: "[B][CENTER][FONT=Arial][size=14px][CENTER]Приветствую, уважаемый игрок [COLOR=orange] {{ user.name }}[/color].[/FONT][/size][/CENTER]" +
+                "[B][CENTER][FONT=Arial][size=14px]Ваша рп ситуация была рассмотрена.[/FONT][/size][/CENTER][/B]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]Выношу вердикт - [COLOR=#00FF00]Одобрено[/COLOR][/FONT][/size][/CENTER]<br><br>" +
+                "[B][CENTER][size=14px][font=Arial]Благодарим вас за ваше обращение.[/size][/font][/CENTER]<br>" +
+                "[B][CENTER][FONT=Arial][size=14px]С уважением, Старшая Администрация [COLOR=rgb(255,200,0)]King Russia[/color].[/FONT][/size][/CENTER][/B]",
         },
     ];
 
     const tasks = [
         {
             title: 'В заявки с ответом на игроков(отказ)',
-            dpstyle: 'oswald: 3px;     color: #fff; background: #8B0000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #8B0000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
             prefix: UNACCEPT_PREFIX,
             move: 162,
         },
         {
             title: 'В заявки с ответом на лд(отказ)',
-            dpstyle: 'oswald: 3px;     color: #fff; background: #8B0000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #8B0000; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
             prefix: UNACCEPT_PREFIX,
             move: 165,
         },
         {
             title: 'В заявки с ответом на игроков(одобрено)',
-            dpstyle: 'oswald: 3px;     color: #fff; background: #228B22; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #228B22; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
             prefix: ACCEPT_PREFIX,
             move: 162,
         },
         {
             title: 'В заявки с ответом на лд(одобрено)',
-            dpstyle: 'oswald: 3px;     color: #fff; background: #228B22; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
+            dpstyle: 'font-family: Oswald; font-size: 10px; color: #fff; background: #228B22; box-shadow: 0 0 2px 0 rgba(0,0,0,0.14),0 2px 2px 0 rgba(0,0,0,0.12),0 1px 3px 0 rgba(0,0,0,0.2); border: none; border-color: #32CD32',
             prefix: ACCEPT_PREFIX,
             move: 165,
         },
@@ -595,7 +622,7 @@
         $('body').append('<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>');
 
         addButton('ОТВЕТЫ', 'selectBiographyAnswer', 'border-radius: 13px; margin-right: 5px; margin-left: 5px; margin-bottom: 5px; border: 2px solid; background: #FF8C00');
-        addButton('Для РП БИО', 'selectBiographyAnswer2', 'border-radius: 13px; margin-right: 5px; margin-left: 5px; margin-bottom: 5px; border: 2px solid; background: #483D8B');
+        addButton('Для РП БИО/ЖБ', 'selectBiographyAnswer2', 'border-radius: 13px; margin-right: 5px; margin-left: 5px; margin-bottom: 5px; border: 2px solid; background: #483D8B');
         addButton('Главный Администратор', 'GlavAdm', 'border-radius: 13px; margin-right: 5px; margin-bottom: 5px; border: 2px solid; border-color: rgb(139, 0, 0);');
         addButton('Технический Отдел', 'techspec', 'border-radius: 13px; margin-right: 5px; margin-bottom: 5px; border: 2px solid; border-color: rgb(0, 0, 255);');
         addButton('На рассмотрении', 'pin', 'border-radius: 13px; margin-right: 5px; margin-bottom: 5px; border: 2px solid; border-color: rgb(255, 215, 0);');
@@ -677,8 +704,8 @@
         $('div.fr-element.fr-view p').append(template(data));
         $('a.overlay-titleCloser').trigger('click');
 
-        if (send == true) {
-            editThreadData(biography[id].move, biography[id].prefix, biography[id].status, biography[id].open);
+        if (send == true && biography[id].prefix) {
+            editThreadData2(biography[id].prefix, biography[id].status);
             $('.button--icon.button--icon--reply.rippleButton').trigger('click');
         }
     }
@@ -691,14 +718,26 @@
         $('div.fr-element.fr-view p').append(template(data));
         $('a.overlay-titleCloser').trigger('click');
 
-        if (send == true) {
-            editThreadData(biography2[id].move, biography2[id].prefix, biography2[id].status, biography2[id].open);
+        if (send == true && biography2[id].prefix) {
+            editThreadData2(biography2[id].prefix, biography2[id].status);
             $('.button--icon.button--icon--reply.rippleButton').trigger('click');
         }
     }
 
     function getThreadData() {
-        const authorID = $('a.username')[0].attributes['data-user-id'].nodeValue;
+        const authorElement = $('a.username')[0];
+        if (!authorElement) {
+            return {
+                user: {
+                    id: 0,
+                    name: 'Игрок',
+                    mention: '[USER=0]Игрок[/USER]',
+                },
+                greeting: () => 'Добрый день',
+            };
+        }
+        
+        const authorID = authorElement.getAttribute('data-user-id');
         const authorName = $('a.username').html();
         const hours = new Date().getHours();
         return {
@@ -718,112 +757,61 @@
         };
     }
 
-    function editThreadData(move, prefix, pin = false, open = false) {
-        // Получаем заголовок темы, так как он необходим при запросе
-        const threadTitle = $('.p-title-value')[0].lastChild.textContent;
-
-        if (pin == false) {
-            fetch(`${document.URL}edit`, {
-                method: 'POST',
-                body: getFormData({
-                    prefix_id: prefix,
-                    title: threadTitle,
-                    _xfToken: XF.config.csrf,
-                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
-                    _xfWithData: 1,
-                    _xfResponseType: 'json',
-                }),
-            }).then(() => location.reload());
-        } else if (pin == true && open) {
-            fetch(`${document.URL}edit`, {
-                method: 'POST',
-                body: getFormData({
-                    prefix_id: prefix,
-                    discussion_open: 1,
-                    title: threadTitle,
-                    sticky: 1,
-                    _xfToken: XF.config.csrf,
-                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
-                    _xfWithData: 1,
-                    _xfResponseType: 'json',
-                }),
-            }).then(() => location.reload());
-        } else {
-            fetch(`${document.URL}edit`, {
-                method: 'POST',
-                body: getFormData({
-                    prefix_id: prefix,
-                    title: threadTitle,
-                    sticky: 1,
-                    _xfToken: XF.config.csrf,
-                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
-                    _xfWithData: 1,
-                    _xfResponseType: 'json',
-                }),
-            }).then(() => location.reload());
-        }
-        if (move > 0) {
-            moveThread(prefix, move);
-        }
-    }
-
     function editThreadData2(prefix, pin = false) {
         // Получаем заголовок темы, так как он необходим при запросе
-        const threadTitle = $('.p-title-value')[0].lastChild.textContent;
-
-        if (pin == false) {
-            fetch(`${document.URL}edit`, {
-                method: 'POST',
-                body: getFormData({
-                    prefix_id: prefix,
-                    title: threadTitle,
-                    _xfToken: XF.config.csrf,
-                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
-                    _xfWithData: 1,
-                    _xfResponseType: 'json',
-                }),
-            }).then(() => location.reload());
-        } else if (pin == true) {
-            fetch(`${document.URL}edit`, {
-                method: 'POST',
-                body: getFormData({
-                    prefix_id: prefix,
-                    title: threadTitle,
-                    pin: 1,
-                    _xfToken: XF.config.csrf,
-                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
-                    _xfWithData: 1,
-                    _xfResponseType: 'json',
-                }),
-            }).then(() => location.reload());
+        const threadTitleElement = $('.p-title-value')[0];
+        if (!threadTitleElement) {
+            console.error('Не найден элемент с заголовком темы');
+            return;
         }
+        
+        const threadTitle = threadTitleElement.lastChild ? threadTitleElement.lastChild.textContent : threadTitleElement.textContent;
+
+        const formData = new FormData();
+        formData.append('prefix_id', prefix);
+        formData.append('title', threadTitle);
+        formData.append('_xfToken', XF.config.csrf);
+        formData.append('_xfRequestUri', document.URL.split(XF.config.url.fullBase)[1]);
+        formData.append('_xfWithData', 1);
+        formData.append('_xfResponseType', 'json');
+        
+        if (pin) {
+            formData.append('sticky', 1);
+        }
+
+        fetch(`${document.URL}edit`, {
+            method: 'POST',
+            body: formData,
+        }).then(() => location.reload());
     }
 
     function moveThread(prefix, type) {
         // Функция перемещения тем
-        const threadTitle = $('.p-title-value')[0].lastChild.textContent;
+        const threadTitleElement = $('.p-title-value')[0];
+        if (!threadTitleElement) {
+            console.error('Не найден элемент с заголовком темы');
+            return;
+        }
+        
+        const threadTitle = threadTitleElement.lastChild ? threadTitleElement.lastChild.textContent : threadTitleElement.textContent;
+
+        const formData = new FormData();
+        formData.append('prefix_id', prefix);
+        formData.append('title', threadTitle);
+        formData.append('target_node_id', type);
+        formData.append('redirect_type', 'none');
+        formData.append('notify_watchers', 1);
+        formData.append('starter_alert', 1);
+        formData.append('starter_alert_reason', "");
+        formData.append('_xfToken', XF.config.csrf);
+        formData.append('_xfRequestUri', document.URL.split(XF.config.url.fullBase)[1]);
+        formData.append('_xfWithData', 1);
+        formData.append('_xfResponseType', 'json');
 
         fetch(`${document.URL}move`, {
             method: 'POST',
-            body: getFormData({
-                prefix_id: prefix,
-                title: threadTitle,
-                target_node_id: type,
-                redirect_type: 'none',
-                notify_watchers: 1,
-                starter_alert: 1,
-                starter_alert_reason: "",
-                _xfToken: XF.config.csrf,
-                _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
-                _xfWithData: 1,
-                _xfResponseType: 'json',
-            }),
+            body: formData,
         }).then(() => location.reload());
     }
-
-    function getFormData(data) {
-        const formData = new FormData();
-        Object.entries(data).forEach(i => formData.append(i[0], i[1]));
-        return formData;
-    }
 })();
+

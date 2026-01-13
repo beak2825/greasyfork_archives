@@ -4,7 +4,7 @@
 // @description  Améliore l'interface de Kraland
 // @author       Somin
 // @namespace    somin
-// @version      beta.0.3
+// @version      beta.0.11
 // @match        http://www.kraland.org/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kraland.org
 // @grant        none
@@ -66,12 +66,11 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     var tailleMaxImgEvenement = 100;
     // Taille en % du cadre (défaut: 100)
 
+    const EpinglerLesMenus = false;
+    // true pour épingler les menus de Kraland
+
     var PoliceDeCaracteres = "" ;
     // mettez la police de votre choix entre les guillemets. (Par défaut : "")
-
-    // var pageAccueil = [2,1,0];
-    // 2=Cybermonde, 1=Forum, 0=Bienvenue
-    // Mettez les cadres dans l'ordre de vos préférences
 
     var Goupil=false;
     // true pour désactiver les smileys Poule, false sinon
@@ -120,6 +119,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     var theUrl=window.location.href;
 
     var aparam={
+        pinup: EpinglerLesMenus,
         avaFora: tailleDesAvatarsForum,
         avaIg: tailleDesAvatarsJeu,
         avaOrder: tailleDesAvatarsPopup,
@@ -130,7 +130,6 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         colorL: -1,
         tCache: maxCache,
         goupil: Goupil,
-        //motd: pageAccueil,
         erlite: true,
         avaItem: 32,
         evNb: actionsParPage,
@@ -153,33 +152,56 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     var savedTxtData=[];
 
     //--- Initialisation
-    globalki();
-    const navbar=document.querySelector('#navbar');
-    var kili, lia;
-    if(navbar){
-        kili=navbar.querySelector('li.dropdown.active');
-        if(kili){
-            lia=kili.querySelector('a').textContent.trim().split(/\s+/)[0];
-        }else{
-            motd();
-        }
-
-        switch(lia){
-        case 'Jouer' :
-            play();
-            break;
-        case 'Forum' :
-            forum();
-            break;
-        case 'Monde' :
-            monde();
-            break;
-        default:
-            return;
+    const navBrand=document.querySelector('nav a.navbar-brand');
+    if(navBrand){
+        switch(navBrand.href){
+            case 'http://www.kraland.org/accueil' :
+                main();
+                break;
+            case 'http://www.kraland.org/map/cybermonde' :
+                cybermap();
+                break;
+            case 'http://www.kraland.org/help':
+                //help();
+                break;
+            default:
+                return;
         }
     }else{
-        //vérifier si rapport privé ou carte cybermondiale
+       // check rapport privé
+        let myTab=document.querySelector('#myTab');
+        if(myTab){rp();}
+    }
 
+    function main(){
+        globalki();
+        let navbar=document.querySelector('#navbar');
+        var kili, lia;
+        if(navbar){
+            kili=navbar.querySelector('li.dropdown.active');
+            if(kili){
+                lia=kili.querySelector('a').textContent.trim().split(/\s+/)[0];
+            }else{
+                motd();
+            }
+
+            switch(lia){
+                case 'Jouer' :
+                    play();
+                    break;
+                case 'Forum' :
+                    forum();
+                    break;
+                case 'Monde' :
+                    monde();
+                    break;
+                default:
+                    return;
+            }
+        }else{
+            console.log('err not main');
+            return;
+        }
     }
 
     function globalki(){
@@ -193,8 +215,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         //--- gestion pub et top
         var topKi=document.querySelector('#top');
         topKi.style.height='auto';
-        var noad=document.createElement('button');
         /*
+        var noad=document.createElement('button');
         if(sessionStorage.noad){removetop();}else{
             noad.type='button';
             noad.value='';
@@ -244,23 +266,52 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     }
 
     function play(){
+        //pinup();
+
+        var content=document.querySelector('#content');
+        //content.style.display='flex';
+        var row=document.querySelector('#content');
+        //row.style.display='flex';
+
+        var cLeft=document.querySelector('#col-left');
+        cLeft.style.width='fit-content';
+
         var cRight=document.querySelector('#col-right');
+        //cRight.style.flex='1';
 
-        // pj side
+        var containerf=cRight.querySelector('.container-fluid');
+        containerf.style.padding='0px';
+        containerf.style.margin='0px';
+
+        var mBottomSize='5px'; // taille de marge inférieure entre les panels
+        //--- pj side
         let pjSide=cRight.querySelector('.dashboard');
-        let panelBody=pjSide.querySelectorAll('.panel-body');
-        for(let i=0;i<panelBody.length;i++){
-            panelBody[i].style.paddingTop='0px';
-            panelBody[i].style.paddingBottom='0px';
-            panelBody[i].style.paddingLeft='0px';
-            panelBody[i].style.paddingRight='2px';
-
-            let pLink=panelBody[i].querySelector('td').querySelectorAll('a');
+        let panelDefault=pjSide.querySelectorAll('.panel-default');
+        for(let i=0;i<panelDefault.length;i++){
+            panelDefault[i].style.marginBottom=mBottomSize;
+            //panelDefault[i].style.minWidth='fit-content';
+            //panelDefault[i].style.maxWidth='50%';
+            //panelDefault[i].style.float='left';
+            let panelHeading=panelDefault[i].querySelector('.panel-heading');
+            panelHeading.style.padding='5px';
+            let panelBody=panelDefault[i].querySelector('.panel-body');
+            panelBody.style.paddingTop='0px';
+            panelBody.style.paddingBottom='0px';
+            panelBody.style.paddingLeft='0px';
+            panelBody.style.paddingRight='2px';
+            let pLink=panelBody.querySelector('td').querySelectorAll('a');
             for(let j=0;j<pLink.length;j++){
                 pLink[j].style.clear = 'both';
-                //pLink[j].style.overflow = 'hidden';
+                let aColor=getComputedStyle(pLink[j]).borderBottomColor;
                 pLink[j].style.border='none';
                 pLink[j].style.padding='0px';
+                //pLink[j].style.display = 'block';
+                pLink[j].style.overflow = 'hidden';
+                pLink[j].style.textDecoration = 'none';
+                if(j>0 && pLink.length>0){
+                    pLink[j].style.borderTop = '2px solid';
+                    pLink[j].style.borderTopColor = aColor;
+                }
                 let ava=pLink[j].querySelector('img.pull-left');
                 ava.style.margin='5px';
                 ava.style.width=aparam.avaIg+'px';
@@ -291,6 +342,9 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
         let bpanels=bSide.querySelectorAll('.panel.panel-default');
         for(let i=0;i<bpanels.length;i++){
+            bpanels[i].style.marginBottom=mBottomSize;
+            let panelTitle=bpanels[i].querySelector('.panel-heading');
+            panelTitle.style.padding='5px';
             let boxType=bpanels[i].querySelector('h3').lastChild.textContent.trim();
             //console.log(boxType);
             switch(boxType){
@@ -312,26 +366,48 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
 
         function bStyle(bbox){
-
+            let abox=bbox.querySelector('a');
+            abox.style.border='none';
+            abox.style.padding='0px';
+            let pbody=bbox.querySelector('.panel-body');
+            pbody.style.paddingBottom='5px';
+            pbody.style.paddingTop='5px';
+            let pdb=bbox.querySelector('.panel-body .row .progress');
+            pdb.style.marginBottom='0px';
         }
 
         function cStyle(cbox){
-
+            gStyle(cbox);
         }
 
         function mStyle(mbox){
-            let items=mbox.querySelectorAll('.panel-body');
-            for(let i=0;i<items.length;i++){
-                items[i].style.padding='0px';
-                let itemLink=items[i].querySelector('a');
-                itemLink.style.border='none';
-            }
+            gStyle(mbox);
         }
 
         function iStyle(ibox){
-
+            gStyle(ibox);
         }
 
+        function gStyle(bpanel){
+            let pbody=bpanel.querySelector('.panel-body');
+            pbody.style.padding='0px';
+
+            let items=pbody.querySelectorAll('a');
+            for(let i=0;i<items.length;i++){
+                items[i].style.padding='5px';
+                items[i].style.borderBottom='none';
+                items[i].style.borderLeft='none';
+                items[i].style.borderRight='none';
+            }
+            let titleh=pbody.querySelectorAll('div.list-group-item');
+            for(let i=0;i<titleh.length;i++){
+                titleh[i].style.padding='5px';
+                titleh[i].style.borderBottom='none';
+                titleh[i].style.borderLeft='none';
+                titleh[i].style.borderRight='none';
+                //titleh[i].querySelector('h4').style.fontWeight='bold';
+            }
+        }
     }
 
     function forum(){
@@ -348,6 +424,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
         function topicSetUp(){
             // sujet
+/*
             cRight.style.width=aparam.twidth+'%';
             if(aparam.twidth<=80){
                 cLeft.remove();
@@ -356,7 +433,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 let fw=parseFloat(aparam.twidth);
                 let cleftWidth=(100-fw);
                 cLeft.style.maxWidth=cleftWidth+'%';
-            }
+            }*/
+            pinup();
 
             // avatar & cartouche
             var userinfo=document.querySelectorAll('div.user-info');
@@ -410,7 +488,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                             logoEmp.style.height='auto';
                     }
                 }
-                if(cart){
+                if(rangImgDiv){
                     cart.appendChild(rangImgDiv);
                     let rangImg=rangImgDiv.querySelector('img');
                     if(!aparam.ffonction){
@@ -424,7 +502,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 }
             }
 
-            // post
+            //--- post
             var bquote=cRight.querySelectorAll('blockquote');
             if(bquote.length>0){
                 for(let i=0;i<bquote.length;i++){
@@ -439,6 +517,9 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             }catch(err){
                 console.log(err);
             }
+
+
+            ezSpoiler();
         }
 
         function forumSetUp(){
@@ -462,15 +543,13 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                     cRight.style.paddingLeft='0%';
                     cRight.style.paddingRight='0%';
                 }
+                let allurl=document.querySelectorAll('a');
+                allurl.forEach(u=>{u.style.textDecoration='none';})
             }
         }
     }
 
     function monde(){
-        var cRight=document.querySelector('#col-right');
-        var cLeft=document.querySelector('#col-left');
-        var row=document.querySelector('#content .row');
-
         //--- naviguer avec les flèches
         try{
             let currentp=document.getElementById('col-right').querySelector('ul.pagination li.active');
@@ -478,7 +557,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }catch(err){
             console.log(err);
         }
-
+        pinup();
+        ezSpoiler();
     }
 
     //------------ flèches pour navigation --------------
@@ -518,4 +598,105 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         });
     }
 
+    function cybermap(){
+        let mapCont=document.querySelector('#mapname-container');
+
+
+        /*mapCont.style.textAlign='center';
+        mapCont.parentNode.style.removeProperty('left');
+        mapCont.parentNode.query
+
+        mapCont.parentNode.parentNode.style.width='100%';
+        mapCont.parentNode.parentNode.style.textAlign='center';
+        mapCont.parentNode.parentNode.style.display='flex';
+        mapCont.parentNode.parentNode.style.alignItems='center';
+        mapCont.parentNode.parentNode.style.justifyContent='center';
+        */
+
+    }
+
+    function rp(){
+        // bg-info
+        var newEv=document.querySelectorAll('.bg-info');
+        for(let i=0;i<newEv.length;i++){
+            newEv[i].style.backgroundColor=getComputedStyle(document.body).backgroundColor;
+            newEv[i].style.borderLeft = '1px solid red';
+            /*if(i===newEv.length-1){
+                newEv[i].style.borderBottom = '2px solid red';
+            }*/
+        }
+        ezSpoiler();
+    }
+
+    //+------------ Ergonomie des Spoiler --------------+
+    function ezSpoiler(){
+        var allspoiler=kdocument.querySelectorAll(".pre-spoiler");
+        for(let i=0;i<allspoiler.length;i++){
+            allspoiler[i].addEventListener("click",displayB,false);
+        }
+    }
+    function displayB(){
+        this.parentNode.querySelector(".spoiler").style.display="";
+        this.removeEventListener("click", displayB);
+        this.addEventListener("click",displayN,false);
+    }
+    function displayN(){
+        this.parentNode.querySelector(".spoiler").style.display="none";
+        this.removeEventListener("click",displayN);
+        this.addEventListener("click",displayB,false);
+    }
+
+    //+------------ Epingler les menus ---------------+
+    function pinup(){
+        var cLeft=document.querySelector('#col-left');
+        var cRight=document.querySelector('#col-right');
+        var content=document.querySelector('#content');
+        content.style.width='100%';
+        var row=content.querySelector('.row');
+        if(!aparam.pinup){
+            row.style.display = 'flex';
+            row.style.flexDirection = 'row';
+            row.style.width = '100%';
+
+            cLeft.style.flex = '0 0 auto';
+            cLeft.style.width = 'fit-content';
+
+            let hr=cLeft.querySelector('hr')
+            if(hr){
+                    hr.style.marginTop='3px';
+                    hr.style.marginBottom='3px';
+            }
+            cRight.style.width = 'auto';
+            cRight.style.display = 'flex';
+            cRight.style.flex = '1 1 0';
+            cRight.style.flexDirection = 'column';
+        }else{
+            const navbar = document.querySelector('nav');
+            const footer = document.querySelector('footer');
+            const parent = document.querySelector('#content');
+            document.querySelector('#top-link').remove();
+
+            const navbarHeight = navbar.offsetHeight;
+            const footerHeight = footer.offsetHeight;
+
+            parent.style.height = `calc(100vh - ${navbarHeight + footerHeight}px)`;
+            parent.style.display = 'flex';
+            parent.style.flexDirection = 'row';
+            parent.style.overflow = 'hidden';
+
+            // cLeft
+            const cLeft = document.querySelector('#col-left');
+            cLeft.style.width = 'fit-content';
+            cLeft.style.overflow = 'hidden';
+
+            // cRight
+            const cRight = document.querySelector('#col-right');
+            cRight.style.display = 'flex';
+            cRight.style.flexDirection = 'column';
+            cRight.style.flex = '1 1 0';
+            cRight.style.minWidth = '0';
+            cRight.style.height = '100%';
+            cRight.style.overflowY = 'auto';
+        }
+    }
 })();

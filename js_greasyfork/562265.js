@@ -1,693 +1,303 @@
 // ==UserScript==
-// @name         Torn Quick Deposit Early Access
+// @name         Torn Quick Deposit
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Quick Deposit cash to Ghost Trade / Faction Vault
+// @version      1.2.3
+// @description  Quick Deposit cash to Ghost Trade / Company Vault / Faction Vault
 // @author       e7cf09 [3441977]
 // @icon         https://editor.torn.com/cd385b6f-7625-47bf-88d4-911ee9661b52-3441977.png
+
 // @match        https://www.torn.com/*
 // @run-at       document-start
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562265/Torn%20Quick%20Deposit%20Early%20Access.user.js
-// @updateURL https://update.greasyfork.org/scripts/562265/Torn%20Quick%20Deposit%20Early%20Access.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562265/Torn%20Quick%20Deposit.user.js
+// @updateURL https://update.greasyfork.org/scripts/562265/Torn%20Quick%20Deposit.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // ================= CONFIGURATION =================
-    const PANIC_THRESHOLD = 20000000; // Panic Threshold: Only triggers if balance exceeds this
-    const STRICT_GHOST_MODE = true; // Relaxed matching for Ghost trades (if false, any trade found is used)
+    // CONFIG & STATE
+    const CONFIG = {
+        THRESHOLD: 20000000,
+        KEYS: { 
+            FACTION: ["Space"], 
+            GHOST: ["KeyG"], 
+            COMPANY: ["KeyC"], 
+            RESET: ["KeyR"], 
+            PANIC: ["KeyP"],
+            EXECUTE: ["KeyE"] // Auto-deposit / Panic Execute
+        },
+        DEAD_SIGNALS: ["no trade was found", "trade has been accepted", "declined", "cancelled", "locked"]
+    };
+    
+    const STATE = {
+        balance: 0,
+        panic: localStorage.getItem('torn_tactical_panic_enabled') !== 'false',
+        ghostID: localStorage.getItem('torn_tactical_ghost_id'),
+        locks: { panic: false, sending: false, jumping: false, dead: false },
+        els: { overlay: null, btn: null }
+    };
 
-    // Shortcut Configuration (Use KeyboardEvent.code)
-    // Common codes: "Space", "KeyG", "KeyD", "Enter", "ControlLeft", etc.
-    const DEPOSIT_KEY = "Space";
-    const GHOST_KEY = "KeyG";
-    const COMPANY_KEY = "KeyC";
-    const RESET_KEY = "KeyR";
-    const PANIC_TOGGLE_KEY = "KeyP";
+    // UTILS
+    const qs = (s, p=document) => p.querySelector(s);
+    const qsa = (s, p=document) => p.querySelectorAll(s);
+    const fmt = (n) => "$" + parseInt(n).toLocaleString('en-US');
+    const setStyle = (el, css) => Object.assign(el.style, css);
+    
+    // NETWORK INTERCEPT
+    const intercept = (proto, method, handler) => {
+        const orig = proto[method];
+        proto[method] = function(...args) {
+            handler(this, args);
+            return orig.apply(this, args);
+        };
+    };
 
-    // ================= CORE STATE =================
-    const STORAGE_KEY = 'torn_tactical_ghost_id';
-    const PANIC_STATE_KEY = 'torn_tactical_panic_enabled';
-    const GHOST_KEYWORD = 'ghost';
-    const DEAD_SIGNALS = [
-        "no trade was found", "trade has been accepted",
-        "trade has been declined", "trade has been cancelled","this trade is currently locked",
-    ];
-
-    let currentBalance = 0;
-    let isPanicLocked = false;
-    let isSending = false;
-    let isJumping = false; // Separate lock for page jumps
-    let panicOverlay = null;
-    let isTradeDeadOnCurrentPage = false; // Flag: Whether the trade is confirmed dead on current page
-
-    // Initialize Panic State (Default: ON)
-    let isPanicEnabled = localStorage.getItem(PANIC_STATE_KEY) !== 'false';
-
-
-    // ==========================================
-    // === 1. SAFETY START & UTILITIES ===
-    // ==========================================
-    const getRfcv = () => document.cookie.match(/(?:^|; )rfc_id=([^;]*)/)?.[1];
-    const getGhostID = () => localStorage.getItem(STORAGE_KEY);
-    const formatMoney = (num) => "$" + parseInt(num).toLocaleString('en-US');
-
-    // ==========================================
-    // === 2. NETWORK INTERCEPTION ===
-    // ==========================================
-    // Intercept XHR to detect trade expiration
-    const originalOpen = XMLHttpRequest.prototype.open;
-    const originalSend = XMLHttpRequest.prototype.send;
-    XMLHttpRequest.prototype.open = function(method, url) { this._url = url; return originalOpen.apply(this, arguments); };
-    XMLHttpRequest.prototype.send = function() {
-        this.addEventListener('load', function() {
-            if (this._url && this._url.includes('trade.php')) analyzeNetworkResponse(this.responseText);
+    intercept(XMLHttpRequest.prototype, 'open', (xhr, args) => xhr._url = args[1]);
+    intercept(XMLHttpRequest.prototype, 'send', (xhr) => {
+        xhr.addEventListener('load', () => {
+            if (xhr._url?.includes('trade.php')) checkDeadTrade(xhr.responseText);
         });
-        return originalSend.apply(this, arguments);
+    });
+
+    const origFetch = window.fetch;
+    window.fetch = async (...args) => {
+        const res = await origFetch(...args);
+        const url = args[0]?.toString() || '';
+        if (url.match(/sidebar|user/)) {
+            res.clone().json().then(d => updateBalance(d?.user?.money || d?.sidebarData?.user?.money)).catch(()=>{});
+        }
+        return res;
     };
 
-    // Intercept Fetch to get Balance
-    const originalFetch = window.fetch;
-    window.fetch = async function(...args) {
-        const response = await originalFetch.apply(this, args);
-        const url = args[0] ? args[0].toString() : '';
-        if (url.includes('sidebar') || url.includes('user')) {
-            try {
-                const clone = response.clone();
-                clone.json().then(data => {
-                    const money = data?.user?.money || data?.sidebarData?.user?.money;
-                    if (money) updateBalance(money);
-                }).catch(() => {});
-            } catch(e) {}
-        }
-        return response;
-    };
-
-    function analyzeNetworkResponse(text) {
-        if (!text || text.length < 20) return;
-        const lower = text.toLowerCase();
-        for (const signal of DEAD_SIGNALS) {
-            if (lower.includes(signal)) {
-                if (localStorage.getItem(STORAGE_KEY)) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    safeInjectButton(); // Refresh button status
-                }
-                break;
-            }
-        }
-    }
-
-    // ==========================================
-    // === 3. PANIC SYSTEM (WebSocket & UI) ===
-    // ==========================================
-    const OriginalWebSocket = window.WebSocket;
+    // WEBSOCKET INTERCEPT
+    const OrigWS = window.WebSocket;
     window.WebSocket = function(url, protocols) {
-        const ws = new OriginalWebSocket(url, protocols);
-        ws.addEventListener('message', function(event) {
-            const data = event.data;
-            if (typeof data === 'string') {
-                if (data.includes('attack-effects')) {
-                    triggerPanicMode();
-                }
-                if (data.includes('updateMoney')) {
-                    try {
-                        const match = data.match(/"money"\s*:\s*(\d+)/);
-                        if (match) {
-                             updateBalance(match[1]);
-                        }
-                    } catch(e) {}
-                }
-            }
+        const ws = new OrigWS(url, protocols);
+        ws.addEventListener('message', e => {
+            if (typeof e.data !== 'string') return;
+            if (e.data.includes('attack-effects')) triggerPanic();
+            const m = e.data.match(/"money"\s*:\s*(\d+)/);
+            if (m) updateBalance(m[1]);
         });
         return ws;
     };
-    window.WebSocket.prototype = OriginalWebSocket.prototype;
-    ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'].forEach(prop => {
-        window.WebSocket[prop] = OriginalWebSocket[prop];
-    });
+    window.WebSocket.prototype = OrigWS.prototype;
 
-    // --- Status Check Helpers ---
-    function checkStatusRestrictions() {
-        const icons = document.querySelectorAll('ul[class*="status-icons"] > li');
-
-        // Safety First: If status icons are not loaded yet, assume OK (Aggressive Mode)
-        // We prefer to try and fail rather than blocking the user if the DOM is lagging
-        if (icons.length === 0) {
-            return {
-                canFaction: true,
-                canGhost: true,
-                canCompany: false, // Default false if icons not loaded, safer than assuming director
-                reason: "NO_ICONS"
-            };
+    // LOGIC
+    function checkDeadTrade(text) {
+        if (!text || text.length < 20) return;
+        if (CONFIG.DEAD_SIGNALS.some(s => text.toLowerCase().includes(s))) {
+            if (STATE.ghostID) {
+                localStorage.removeItem('torn_tactical_ghost_id');
+                STATE.ghostID = null;
+                injectBtn();
+            }
         }
+    }
 
-        let isHospOrJail = false;
-        let isTraveling = false;
-        let isDirector = false;
+    function getStatus() {
+        const icons = qsa('ul[class*="status-icons"] > li');
+        if (!icons.length) return { faction: true, ghost: true, company: false, reason: "LOADING" }; // Aggressive default
+
+        let s = { faction: true, ghost: true, company: false, reason: "" };
+        let isHosp = false, isTravel = false;
 
         icons.forEach(li => {
-            const className = li.className;
-            const ariaLabel = li.querySelector('a')?.getAttribute('aria-label') || "";
-
-            if (className.includes('icon15') || className.includes('icon16')) isHospOrJail = true;
-            if (ariaLabel.includes('Traveling')) isTraveling = true;
-            if (className.includes('icon73')) isDirector = true;
+            if (li.className.match(/icon1[56]/)) isHosp = true;
+            if (li.querySelector('a')?.getAttribute('aria-label')?.includes('Traveling')) isTravel = true;
+            if (li.className.includes('icon73')) s.company = true;
         });
 
-        let status = {
-            canFaction: true,
-            canGhost: true,
-            canCompany: isDirector,
-            reason: ""
+        if (isHosp) { s.faction = s.company = false; s.reason = "HOSP/JAIL"; }
+        else if (isTravel) { s.faction = s.ghost = s.company = false; s.reason = "TRAVEL"; }
+        return s;
+    }
+
+    function updateBalance(val) {
+        if (!val) return;
+        const num = parseInt(typeof val === 'object' ? val.value : val);
+        if (isNaN(num)) return;
+        
+        STATE.balance = num;
+        if (STATE.balance <= 0) {
+            STATE.locks.sending = false;
+            dismissPanic();
+        } else if (STATE.balance >= CONFIG.THRESHOLD && STATE.panic) {
+            const s = getStatus();
+            if (STATE.ghostID ? s.ghost : s.faction) triggerPanic();
+        } else if (STATE.locks.panic) {
+            dismissPanic();
+        }
+        if (STATE.locks.panic) updateOverlay();
+    }
+
+    function triggerPanic() {
+        if (!STATE.panic || STATE.balance < CONFIG.THRESHOLD) return;
+        const s = getStatus();
+        if (!(STATE.ghostID && s.ghost) && !s.company && !s.faction) return;
+        
+        STATE.locks.panic = true;
+        updateOverlay();
+    }
+
+    function dismissPanic() {
+        STATE.locks.panic = false;
+        if (STATE.els.overlay) STATE.els.overlay.style.display = 'none';
+    }
+
+    async function executeDeposit(mode = 'auto') {
+        // 1. Handle Confirmation Boxes immediately
+        const box = Array.from(qsa('.cash-confirm')).find(b => b.offsetParent && b.style.display !== 'none');
+        if (box) {
+            if (box.querySelector('.yes')) {
+                if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING...";
+                box.querySelector('.yes').click();
+                STATE.locks.sending = false;
+                return;
+            }
+        }
+        
+        // Reset sending lock if confirmation box is gone (User clicked No/Cancel)
+        if (!box && STATE.locks.sending) {
+            // Check if we are stuck in sending state without a box
+            // This happens if user clicked No, or closed the modal
+            STATE.locks.sending = false;
+        }
+
+        if (STATE.locks.sending) return;
+        const status = getStatus();
+        
+        // Determine Target Mode
+        let target = mode;
+        if (mode === 'auto') {
+            if (STATE.ghostID && status.ghost) target = 'ghost';
+            else if (status.company) target = 'company';
+            else if (status.faction) target = 'faction';
+            else return;
+        }
+
+        // Validate Target with strict mode checks
+        if (target === 'ghost' && (!STATE.ghostID || !status.ghost)) {
+            if (mode !== 'auto') return; // Strict fail for manual mode
+            target = status.company ? 'company' : (status.faction ? 'faction' : null);
+        }
+        if (target === 'company' && !status.company) {
+            if (mode !== 'auto') return; // Strict fail for manual mode
+            target = 'faction';
+        }
+        if (!target || (target === 'faction' && !status.faction)) return;
+
+        // EXECUTION
+        const setVal = (input, val) => {
+            input.value = val;
+            ['input', 'change', 'blur'].forEach(e => input.dispatchEvent(new Event(e, { bubbles: true })));
         };
 
-        if (isHospOrJail) {
-            status.canFaction = false;
-            status.canGhost = true; // Ghost is allowed in Jail/Hosp
-            status.canCompany = false;
-            status.reason = "HOSP/JAIL";
-        } else if (isTraveling) {
-            status.canFaction = false;
-            status.canGhost = false;
-            status.canCompany = false;
-            status.reason = "TRAVELING";
-        }
+        const jump = (url, msg) => {
+            if (STATE.locks.jumping) return;
+            STATE.locks.jumping = true;
+            if (STATE.els.overlay) STATE.els.overlay.innerHTML = msg;
+            setTimeout(() => STATE.locks.jumping = false, 1500);
+            window.location.href = url;
+        };
 
-        return status;
-    }
+        if (target === 'ghost') {
+            const url = window.location.href;
+            const onPage = url.includes('trade.php') && url.includes('step=addmoney') && url.includes(STATE.ghostID);
+            
+            if (!onPage) return jump(`https://www.torn.com/trade.php#step=addmoney&ID=${STATE.ghostID}`, "JUMPING<br>TO GHOST");
 
-    function triggerPanicMode() {
-        if (!isPanicEnabled || currentBalance < PANIC_THRESHOLD) {
-             if (isPanicLocked) manualDismiss();
-             return;
-        }
+            const input = qs('input[name="amount"]');
+            if (!input) return;
+            
+            STATE.locks.sending = true;
+            if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO GHOST";
+            setVal(input, input.getAttribute('data-money') || STATE.balance);
+            
+            const btn = input.form?.querySelector('input[type="submit"], button') || qs('input[value="Change"]');
+            if (btn) {
+                btn.disabled = false;
+                btn.click();
+                STATE.locks.jumping = false;
+            } else STATE.locks.sending = false;
 
-        // Check restrictions before triggering panic
-        const status = checkStatusRestrictions();
-        const ghostID = getGhostID();
+        } else if (target === 'company') {
+            const url = window.location.href;
+            const onPage = url.includes('companies.php') && url.includes('option=funds');
+            const container = qs('.funds-cont');
 
-        // Priority: Ghost > Company > Faction
-        // We need at least one valid method
-        let canExecute = false;
-
-        if (ghostID && status.canGhost) {
-            canExecute = true;
-        } else if (status.canCompany) {
-            canExecute = true;
-        } else if (status.canFaction) {
-            canExecute = true;
-        }
-
-        if (!canExecute) {
-            return;
-        }
-
-        isPanicLocked = true;
-        updatePanicOverlay();
-    }
-    // ==========================================
-    // === 4. TACTICAL LOGIC ===
-    // ==========================================
-
-    // Mode: 'auto' (priority), 'faction' (force faction), 'ghost' (force G-Bank)
-    async function executeTacticalDeposit(mode = 'auto') {
-        // 1. Priority Check: Existing Confirmation Box
-        // This must happen BEFORE isSending check to allow immediate confirmation
-        const confirmBoxes = document.querySelectorAll('.cash-confirm');
-        for (const box of confirmBoxes) {
-            if (box.offsetParent !== null && box.style.display !== 'none') {
-                const yesBtn = box.querySelector('.yes');
-                if (yesBtn) {
-                    if (panicOverlay) panicOverlay.innerHTML = "DEPOSITING...";
-                    yesBtn.click();
-                    isSending = false;
-                    return;
-                }
-            }
-        }
-
-        // Allow execution even if balance is 0 to ensure feedback, checks will happen inside
-        if (isSending) return;
-
-        // Check Status Restrictions
-        const status = checkStatusRestrictions();
-        if (!status.canFaction && !status.canGhost && !status.canCompany) {
-            // If loading, silent fail to allow retry once loaded
-            if (status.reason === "LOADING...") {
+            if (!container) {
+                if (!onPage) return jump(`https://www.torn.com/companies.php?step=your&type=1#/option=funds`, "JUMPING<br>TO COMPANY");
                 return;
             }
-            return;
-        }
+            
+            const input = container.querySelector('.input-money');
+            if (!input) return;
 
-        const ghostID = getGhostID();
-        let useGhost = false;
-        let useCompany = false;
+            STATE.locks.sending = true;
+            if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO COMPANY";
+            setVal(input, input.getAttribute('data-money') || STATE.balance);
+            
+            const btn = container.querySelector('.deposit.btn-wrap button');
+            if (btn) {
+                btn.disabled = false;
+                btn.click();
+            } else STATE.locks.sending = false;
 
-        if (mode === 'faction') {
-            useGhost = false;
-            useCompany = false;
-        } else if (mode === 'ghost') {
-            useGhost = true; // Strict Ghost Mode: If ID is missing, it should fail
-            useCompany = false;
-        } else if (mode === 'company') {
-            useGhost = false;
-            useCompany = true; // Strict Company Mode
-        } else {
-            // mode === 'auto' -> Priority: Ghost > Company > Faction
-            if (ghostID) {
-                useGhost = true;
-            } else if (status.canCompany) {
-                useCompany = true;
-            } else {
-                // Default to Faction
-            }
-        }
+        } else { // Faction
+            const form = qs('.give-money-form') || qs('.input-money')?.closest('form');
+            const onPage = window.location.href.includes('factions.php') && window.location.href.includes('tab=armoury');
 
-        // Apply restrictions
-        if (useGhost) {
-             if (!ghostID) {
-                 if (mode === 'ghost') {
-                      return;
-                 }
-                 useGhost = false; // Auto fallback
-                 // Re-evaluate Company vs Faction fallback
-                 if (status.canCompany) useCompany = true;
-             } else if (!status.canGhost) {
-                 if (mode === 'ghost') {
-                      return;
-                 }
-                 useGhost = false;
-                 // Re-evaluate Company vs Faction fallback
-                 if (status.canCompany) useCompany = true;
-             }
-        }
-
-        // If we fell back or started with Company, check Company restrictions
-        if (useCompany && !useGhost) { // Ensure ghost isn't active
-            if (!status.canCompany) {
-                if (mode === 'company') {
-                    return;
-                }
-                useCompany = false; // Fallback to Faction
-            }
-        }
-
-        if (!useGhost && !useCompany && !status.canFaction) {
-             return;
-        }
-
-        const rfcv = getRfcv();
-        if (!rfcv) {
-            return;
-        }
-
-        if (useGhost) {
-            // Loose Location Check: Match step=addmoney and ID=[GhostID] in either hash or search
-            const hashParams = new URLSearchParams(window.location.hash.substring(1));
-            const searchParams = new URLSearchParams(window.location.search);
-
-            const currentStep = hashParams.get('step') || searchParams.get('step');
-            const currentID = hashParams.get('ID') || searchParams.get('ID');
-
-            const onTargetPage = window.location.href.includes('trade.php') &&
-                                 currentStep === 'addmoney' &&
-                                 currentID === ghostID;
-
-            if (!onTargetPage) {
-                // Prevent multiple jump attempts
-                if (isJumping) return;
-                isJumping = true;
-                if (panicOverlay) panicOverlay.innerHTML = "JUMPING<br>TO GHOST";
-                setTimeout(() => { isJumping = false; }, 1500); // Safety unlock if page doesn't reload
-
-                // Use replace to avoid history pollution if just switching params, but href assignment is safer for navigation
-                window.location.href = `https://www.torn.com/trade.php#step=addmoney&ID=${ghostID}`;
+            if (!form) {
+                if (!onPage) return jump(`https://www.torn.com/factions.php?step=your&type=1#/tab=armoury`, "JUMPING<br>TO FACTION");
+                qs('a[href*="tab=armoury"]')?.click();
                 return;
             }
 
-            // On the correct page, grab the total money from DOM
-            const amountInput = document.querySelector('input[name="amount"]');
-            const totalMoney = amountInput ? amountInput.getAttribute('data-money') : null;
+            const input = form.querySelector('.input-money');
+            if (!input) return;
 
-            if (!totalMoney) {
-                // Silent fail to allow retry
-                return;
+            STATE.locks.sending = true;
+            if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO FACTION";
+            
+            let amt = input.getAttribute('data-money');
+            if (!amt) {
+                const txt = form.querySelector('.i-have')?.innerText.replace(/[$,]/g, '');
+                if (txt && !isNaN(txt)) amt = txt;
             }
-
-            isSending = true;
-            if (panicOverlay) panicOverlay.innerHTML = "DEPOSITING<br>TO GHOST";
-
-            // 1. Fill the input with the total amount
-            amountInput.value = totalMoney;
-            // Dispatch events to ensure any JS listeners pick up the change
-            amountInput.dispatchEvent(new Event('input', { bubbles: true }));
-            amountInput.dispatchEvent(new Event('change', { bubbles: true }));
-            amountInput.dispatchEvent(new Event('blur', { bubbles: true })); // Some frameworks validate on blur
-
-            // 2. Find and click the native 'Change' button
-            const form = amountInput.form;
-            const submitBtn = form ? form.querySelector('input[type="submit"], button[type="submit"]') : document.querySelector('input[type="submit"][value="Change"], button[type="submit"][value="Change"]');
-
-            if (submitBtn) {
-                // Check if button is disabled (Torn UI often disables buttons until validation passes)
-                if (submitBtn.disabled || submitBtn.classList.contains('disabled')) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('disabled');
-                }
-
-                // Immediate execution: No artificial delay
-                // The disabled check and removal happens synchronously above
-                submitBtn.click();
-                isJumping = false;
-
-                // isSending remains true until balance update clears it
-            } else {
-                // Silent fail to allow retry
-                isSending = false; // Reset if we couldn't click
-            }
-
-        } else if (useCompany) {
-            // Deposit to Company
-            const fundsContainer = document.querySelector('.funds-cont');
-
-            // Check if we are on the target page
-            const current = window.location.href;
-            const onTargetPage = current.includes('companies.php') && current.includes('step=your') && current.includes('type=1') && current.includes('option=funds');
-
-            if (!fundsContainer) {
-                if (!onTargetPage) {
-                    // Jump to Company Funds
-                    if (isJumping) return;
-                    isJumping = true;
-                    if (panicOverlay) panicOverlay.innerHTML = "JUMPING<br>TO COMPANY";
-                    setTimeout(() => { isJumping = false; }, 1500);
-
-                    window.location.href = `https://www.torn.com/companies.php?step=your&type=1#/option=funds`;
-                    return;
-                } else {
-                    // On page but no container? Maybe loading or needs refresh.
-                    // Silent fail to allow retry
-                    return;
-                }
-            }
-
-            if (currentBalance <= 0) return;
-
-            isSending = true;
-
-            // 1. Find Input
-            const amountInput = fundsContainer.querySelector('.input-money');
-            if (!amountInput) {
-                isSending = false;
-                return;
-            }
-
-            // 2. Determine Amount
-            let depositAmount = currentBalance;
-            const dataMoney = amountInput.getAttribute('data-money');
-            if (dataMoney) depositAmount = dataMoney;
-
-            if (!depositAmount || depositAmount <= 0) {
-                 isSending = false;
-                 return;
-            }
-
-            // 3. Set Value
-            amountInput.value = depositAmount;
-            amountInput.dispatchEvent(new Event('input', { bubbles: true }));
-            amountInput.dispatchEvent(new Event('change', { bubbles: true }));
-
-            // 4. Click Deposit
-            const submitBtn = fundsContainer.querySelector('.deposit.btn-wrap button.torn-btn');
-            if (submitBtn) {
-                if (submitBtn.disabled || submitBtn.classList.contains('disabled')) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('disabled');
-                }
-
-                if (panicOverlay) panicOverlay.innerHTML = "DEPOSITING<br>TO COMPANY";
-                submitBtn.click();
-            } else {
-                isSending = false;
-            }
-
-        } else {
-            // Deposit to Faction
-
-            // Note: We check if the donation form is present first.
-            const donationForm = document.querySelector('.give-money-form') || (document.querySelector('.input-money') ? document.querySelector('.input-money').closest('form') || document.querySelector('.input-money').closest('ul') : null);
-
-            if (!donationForm) {
-                const current = window.location.href;
-                const onTargetPage = current.includes('factions.php') && current.includes('step=your') && current.includes('type=1') && current.includes('tab=armoury');
-
-                if (!onTargetPage) {
-                    // Prevent multiple jump attempts
-                    if (isJumping) return;
-                    isJumping = true;
-                    if (panicOverlay) panicOverlay.innerHTML = "JUMPING<br>TO FACTION";
-                    setTimeout(() => { isJumping = false; }, 1500); // Safety unlock if page doesn't reload
-
-                    window.location.href = `https://www.torn.com/factions.php?step=your&type=1#/tab=armoury`;
-                    return;
-                } else {
-                     // We are on the target page URL, but form is missing.
-                     // Try to click the Armoury tab just in case it's not active or needs refresh
-                     const armouryTab = document.querySelector('a[href*="tab=armoury"]');
-                     if (armouryTab) {
-                         armouryTab.click();
-                         return;
-                     }
-
-                     // Silent fail to allow retry
-                     return;
-                }
-            }
-
-            if (currentBalance <= 0) {
-                 // Do not dismiss panic overlay here
-                 return;
-            }
-
-            isSending = true;
-
-            // 1. Find Input and Determine Amount
-            const amountInput = donationForm.querySelector('.input-money[type="text"]');
-            if (!amountInput) {
-                 // Silent fail to allow retry
-                 isSending = false;
-                 return;
-            }
-
-            // Determine Amount to Deposit
-            let depositAmount = currentBalance;
-
-            // Try to get from data-money on input (most reliable for max amount)
-            const dataMoney = amountInput.getAttribute('data-money');
-            if (dataMoney) {
-                depositAmount = dataMoney;
-            } else {
-                // Fallback: Try to read from "You have $X" text
-                const iHaveEl = donationForm.querySelector('.i-have');
-                if (iHaveEl) {
-                    const text = iHaveEl.innerText.replace(/[$,]/g, '');
-                    if (text && !isNaN(text)) {
-                        depositAmount = text;
-                    }
-                }
-            }
-
-            if (!depositAmount || depositAmount <= 0) {
-                 isSending = false;
-                 return;
-            }
-
-            // 2. Set Value
-            amountInput.value = depositAmount;
-            amountInput.dispatchEvent(new Event('input', { bubbles: true }));
-            amountInput.dispatchEvent(new Event('change', { bubbles: true }));
-            amountInput.dispatchEvent(new Event('blur', { bubbles: true }));
-
-            // 3. Find Button
-            const submitBtn = donationForm.querySelector('button.torn-btn');
-            if (submitBtn) {
-                 if (submitBtn.disabled || submitBtn.classList.contains('disabled')) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('disabled');
-                }
-
-                if (panicOverlay) panicOverlay.innerHTML = "DEPOSITING<br>TO FACTION";
-                submitBtn.click();
-                // isSending remains true until balance update clears it
-            } else {
-                // Silent fail to allow retry
-                isSending = false;
-            }
+            setVal(input, amt || STATE.balance);
+            
+            const btn = form.querySelector('button.torn-btn');
+            if (btn) {
+                btn.disabled = false;
+                btn.click();
+            } else STATE.locks.sending = false;
         }
     }
 
-    // ==========================================
-    // === 5. UI INJECTION ===
-    // ==========================================
-
-    let injectTimeout;
-    function safeInjectButton() {
-        if (injectTimeout) clearTimeout(injectTimeout);
-        injectTimeout = setTimeout(realInjectButton, 100);
-    }
-
-    function realInjectButton() {
-        const moneyEl = document.getElementById('user-money');
-        if (!moneyEl) return;
-
-        const container = moneyEl.closest('p') || moneyEl.parentElement;
-        if (!container) return;
-
-        let btn = document.getElementById('torn-tactical-deposit');
-        if (!btn) {
-            btn = document.createElement('a');
-            btn.id = 'torn-tactical-deposit';
-            btn.href = '#';
-
-            const refLink = document.querySelector('a[aria-label*="Use"], a[href*="sid=points"], a[href*="sid=awards"]');
-            if (refLink) {
-                btn.className = refLink.className;
-            } else {
-                btn.style.cssText = 'margin-left: 10px; cursor: pointer; color: #999; text-decoration: none; font-size: 11px;';
-            }
-            btn.style.marginLeft = '8px';
-
-            btn.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation();
-                executeTacticalDeposit('auto');
-            });
-        }
-
-        if (moneyEl && moneyEl.parentNode) {
-            if (moneyEl.nextSibling !== btn) {
-                 moneyEl.parentNode.insertBefore(btn, moneyEl.nextSibling);
-            }
-        }
-
-        const ghostID = getGhostID();
-        if (ghostID) {
-            btn.innerText = '[ghost]';
-            btn.title = `Ghost Trade Ready (ID: ${ghostID})`;
-            btn.style.color = '';
-        } else {
-            // Check status for title
-            const status = checkStatusRestrictions();
-            btn.innerText = '[deposit]';
-            btn.style.color = '';
-            if (status.canCompany) {
-                btn.title = "Deposit to Company Vault";
-            } else {
-                btn.title = "Deposit to Faction Vault";
-            }
-        }
-    }
-
-    function scanActiveTrades() {
-        if (!window.location.href.includes('trade.php')) return;
-        if (isTradeDeadOnCurrentPage) return;
-
-        if (window.location.href.includes('ID=')) {
-             const params = new URLSearchParams(window.location.hash.substring(1) || window.location.search);
-             const id = params.get('ID');
-             if (id) saveGhostID(id);
-        }
-
-        const trades = document.querySelectorAll('ul.trade-list-container > li');
-        if (trades.length === 0) return;
-        trades.forEach(trade => {
-            const userEl = trade.querySelector('.user.name');
-            const linkEl = trade.querySelector('a.btn-wrap');
-            if (userEl && linkEl) {
-                const name = userEl.innerText.toLowerCase();
-                const isGhost = name.includes(GHOST_KEYWORD);
-                const isValid = STRICT_GHOST_MODE ? isGhost : true;
-                if (isValid) {
-                    const match = linkEl.href.match(/ID=(\d+)/);
-                    if (match) saveGhostID(match[1]);
-                }
-            }
-        });
-    }
-
-    function saveGhostID(id) {
-        if (localStorage.getItem(STORAGE_KEY) !== id) {
-            localStorage.setItem(STORAGE_KEY, id);
-            safeInjectButton();
-        }
-    }
-
-    // ==========================================
-    // === 6. PANIC UI ===
-    // ==========================================
-
-    function manualDismiss() {
-        isPanicLocked = false;
-        disablePanicOverlay();
-    }
-
-    // Toggle Panic Mode via Shortcut
-    function togglePanicMode() {
-        isPanicEnabled = !isPanicEnabled;
-        localStorage.setItem(PANIC_STATE_KEY, isPanicEnabled);
-
-        // Show Toast Feedback
-        showToast(`PANIC MODE <span style="color:${isPanicEnabled ? '#4dff4d' : '#ff4d4d'}">${isPanicEnabled ? 'ON' : 'OFF'}</span>`);
-
-        if (isPanicEnabled) {
-            // Re-evaluate if we should trigger panic immediately
-            if (currentBalance >= PANIC_THRESHOLD) {
-                setTimeout(() => {
-                    const status = checkStatusRestrictions();
-                    const ghostID = getGhostID();
-                    const canExecute = ghostID ? status.canGhost : status.canFaction;
-                    if (canExecute) triggerPanicMode();
-                }, 200);
-            }
-        } else {
-            manualDismiss();
-        }
-    }
-
+    // UI COMPONENTS
     function showToast(html) {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed; top: 15%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 2147483647; background: rgba(0, 0, 0, 0.85); color: white;
-            font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;
-            padding: 12px 24px; border-radius: 8px; pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            opacity: 0; transition: opacity 0.3s ease-in-out;
-            text-align: center; border: 1px solid rgba(255,255,255,0.2);
-        `;
-        toast.innerHTML = `<div style="font-size:11px; color:#aaa; margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Quick Deposit</div>${html}`;
-
-        document.body.appendChild(toast);
-
-        // Fade In
-        requestAnimationFrame(() => toast.style.opacity = '1');
-
-        // Fade Out
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 2000);
+        const t = document.createElement('div');
+        t.innerHTML = `<div style="font-size:11px;color:#aaa;margin-bottom:4px;text-transform:uppercase;">Quick Deposit</div>${html}`;
+        setStyle(t, {
+            position: 'fixed', top: '15%', left: '50%', transform: 'translate(-50%, -50%)',
+            zIndex: 2147483647, background: 'rgba(0,0,0,0.85)', color: 'white',
+            padding: '12px 24px', borderRadius: '8px', pointerEvents: 'none',
+            opacity: 0, transition: 'opacity 0.3s', textAlign: 'center', border: '1px solid #ffffff33'
+        });
+        document.body.appendChild(t);
+        requestAnimationFrame(() => t.style.opacity = '1');
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2000);
     }
 
-    function updatePanicOverlay() {
-        if (!isPanicLocked || currentBalance <= 0) {
-            disablePanicOverlay(); return;
-        }
-        if (!panicOverlay) {
-            panicOverlay = document.createElement('div');
-            panicOverlay.id = 'torn-panic-overlay';
+    function updateOverlay() {
+        if (!STATE.locks.panic || STATE.balance <= 0) return dismissPanic();
+        
+        if (!STATE.els.overlay) {
+            const d = document.createElement('div');
+            d.id = 'torn-panic-overlay';
             let css = `position: fixed; z-index: 2147483647; background: rgba(255, 0, 0, 0.9); color: white;
                 font-family: 'Arial Black', sans-serif; font-size: 14px; text-align: center;
                 padding: 10px 20px; border-radius: 30px; border: 3px solid white;
@@ -696,311 +306,175 @@
             // Default to off-screen, will be moved by mousemove
             css += `top: -999px; left: -999px; transform: translate(-50%, -50%);`;
 
-            panicOverlay.style.cssText = css;
-            document.body.appendChild(panicOverlay);
-
-            // Click listener for the Panic Button
-            panicOverlay.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation();
-                executeTacticalDeposit('auto');
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (isPanicLocked && panicOverlay) {
-                    panicOverlay.style.left = e.clientX + 'px';
-                    panicOverlay.style.top = e.clientY + 'px';
+            d.style.cssText = css;
+            d.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); executeDeposit('auto'); });
+            document.addEventListener('mousemove', e => {
+                if (STATE.locks.panic) {
+                    d.style.left = e.clientX + 'px';
+                    d.style.top = e.clientY + 'px';
                 }
             });
+            document.body.appendChild(d);
+            STATE.els.overlay = d;
         }
-        panicOverlay.style.display = 'block';
-        if (!isSending && !isJumping) {
-            // Predict action based on current state
+        
+        STATE.els.overlay.style.display = 'block';
+        if (STATE.locks.sending || STATE.locks.jumping) return;
 
-            // 1. Check for Confirmation Box
-            let hasConfirm = false;
-            const confirmBoxes = document.querySelectorAll('.cash-confirm');
-            for (const box of confirmBoxes) {
-                if (box.offsetParent !== null && box.style.display !== 'none' && box.querySelector('.yes')) {
-                    hasConfirm = true;
+        // Determine Text
+        let txt = "JUMP TO<br>FACTION";
+        if (qs('.cash-confirm')) {
+            txt = "CONFIRM<br>DEPOSIT";
+        } else {
+            const s = getStatus();
+            
+            if (STATE.ghostID && s.ghost) {
+                const on = window.location.href.includes(STATE.ghostID);
+                txt = on ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>GHOST</span>` : "JUMP TO<br>GHOST";
+            } else if (s.company) {
+                const on = window.location.href.includes('companies.php') && window.location.href.includes('funds');
+                txt = on ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>COMPANY</span>` : "JUMP TO<br>COMPANY";
+            } else {
+                const form = qs('.give-money-form');
+                if (form) txt = `DEPOSIT<br>${fmt(STATE.balance)}`;
+            }
+        }
+        
+        if (STATE.els.overlay.innerHTML !== txt) STATE.els.overlay.innerHTML = txt;
+    }
+
+    function injectBtn() {
+        const moneyEl = document.getElementById('user-money');
+        if (!moneyEl) return;
+        
+        if (!STATE.els.btn) {
+            const b = document.createElement('a');
+            b.id = 'torn-tactical-deposit';
+            b.href = '#';
+            b.style.marginLeft = '10px';
+            b.style.cursor = 'pointer';
+            
+            const ref = qs('a[aria-label*="Use"], a[href*="sid=points"]');
+            if (ref) b.className = ref.className;
+            else setStyle(b, { color: '#999', fontSize: '11px', textDecoration: 'none' });
+            
+            b.addEventListener('click', (e) => { e.preventDefault(); executeDeposit('auto'); });
+            STATE.els.btn = b;
+        }
+
+        if (moneyEl.parentNode && moneyEl.nextSibling !== STATE.els.btn) {
+            moneyEl.parentNode.insertBefore(STATE.els.btn, moneyEl.nextSibling);
+        }
+
+        const s = getStatus();
+        let txt, title;
+        if (STATE.ghostID) {
+            txt = '[ghost]';
+            title = `Ghost ID: ${STATE.ghostID}`;
+        } else {
+            txt = '[deposit]';
+            title = s.company ? "Company Vault" : "Faction Vault";
+        }
+        
+        if (STATE.els.btn.innerText !== txt) STATE.els.btn.innerText = txt;
+        if (STATE.els.btn.title !== title) STATE.els.btn.title = title;
+    }
+
+    // EVENT LISTENERS
+    window.addEventListener('keydown', e => {
+        if (!e.isTrusted || e.target.matches('input, textarea') || e.target.isContentEditable) return;
+        const k = e.code;
+        
+        // Helper to check if key matches any in the list
+        const isKey = (type) => CONFIG.KEYS[type] && CONFIG.KEYS[type].includes(k);
+        
+        // Prevent default if it's any of our keys
+        if (Object.values(CONFIG.KEYS).flat().includes(k)) e.preventDefault();
+        
+        if (isKey('FACTION')) executeDeposit('faction');
+        if (isKey('GHOST') && STATE.ghostID) executeDeposit('ghost');
+        if (isKey('COMPANY')) executeDeposit('company');
+        if (isKey('EXECUTE')) executeDeposit('auto');
+        if (isKey('RESET')) {
+            localStorage.removeItem('torn_tactical_ghost_id');
+            STATE.ghostID = null;
+            injectBtn();
+            showToast("GHOST ID CLEARED");
+        }
+        if (isKey('PANIC')) {
+            STATE.panic = !STATE.panic;
+            localStorage.setItem('torn_tactical_panic_enabled', STATE.panic);
+            showToast(`PANIC MODE <span style="color:${STATE.panic?'#4dff4d':'#ff4d4d'}">${STATE.panic?'ON':'OFF'}</span>`);
+            if (STATE.panic) updateBalance(STATE.balance); // Trigger check
+            else dismissPanic();
+        }
+    });
+
+    window.addEventListener('hashchange', () => {
+        if (STATE.locks.jumping && STATE.ghostID && window.location.href.includes(STATE.ghostID)) STATE.locks.jumping = false;
+        if (STATE.locks.panic) updateOverlay();
+    });
+
+    // INIT
+    const scanTrades = () => {
+        if (!window.location.href.includes('trade.php')) return;
+        if (qs('.info-msg, .error-msg')?.innerText.match(new RegExp(CONFIG.DEAD_SIGNALS.join('|'), 'i'))) {
+            STATE.ghostID = null; localStorage.removeItem('torn_tactical_ghost_id'); injectBtn(); return;
+        }
+        
+        const id = new URLSearchParams(window.location.search).get('ID');
+        if (id) { STATE.ghostID = id; localStorage.setItem('torn_tactical_ghost_id', id); injectBtn(); }
+        
+        qsa('ul.trade-list-container > li').forEach(li => {
+            if (li.innerText.toLowerCase().includes('ghost')) {
+                const mid = li.querySelector('a.btn-wrap')?.href.match(/ID=(\d+)/);
+                if (mid) { STATE.ghostID = mid[1]; localStorage.setItem('torn_tactical_ghost_id', mid[1]); injectBtn(); }
+            }
+        });
+    };
+
+    let init = false;
+    const start = () => {
+        if (init) return;
+        init = true;
+        
+        // Initial Balance Check from DOM
+        const moneyEl = document.getElementById('user-money');
+        if (moneyEl) {
+            const val = moneyEl.getAttribute('data-money') || moneyEl.innerText.replace(/[^\d]/g, '');
+            if (val) updateBalance(val);
+        }
+
+        // Observers
+        new MutationObserver((mutations) => {
+            let ignore = true;
+            for (const m of mutations) {
+                if (!m.target.id?.includes('torn-') && 
+                    !m.target.closest?.('#torn-tactical-deposit') && 
+                    !m.target.closest?.('#torn-panic-overlay')) {
+                    ignore = false;
                     break;
                 }
             }
-            if (hasConfirm) {
-                panicOverlay.innerHTML = "CONFIRM<br>DEPOSIT";
-                return;
-            }
+            if (ignore) return;
 
-            const ghostID = getGhostID();
-            if (ghostID) {
-                // Ghost Mode
-                const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                const searchParams = new URLSearchParams(window.location.search);
-                const currentStep = hashParams.get('step') || searchParams.get('step');
-                const currentID = hashParams.get('ID') || searchParams.get('ID');
-
-                const onGhostPage = window.location.href.includes('trade.php') &&
-                                    currentStep === 'addmoney' &&
-                                    currentID === ghostID;
-
-                if (onGhostPage) {
-                    panicOverlay.innerHTML = `DEPOSIT<br>${formatMoney(currentBalance)}<br><span style='font-size:10px'>GHOST</span>`;
-                } else {
-                    panicOverlay.innerHTML = `JUMP TO<br>GHOST`;
-                }
-            } else if (status.canCompany) {
-                // Company Mode
-                const fundsContainer = document.querySelector('.funds-cont');
-
-                // Check if we are on the target page
-                const current = window.location.href;
-                const onTargetPage = current.includes('companies.php') && current.includes('step=your') && current.includes('type=1') && current.includes('option=funds');
-
-                if (fundsContainer || onTargetPage) {
-                    panicOverlay.innerHTML = `DEPOSIT<br>${formatMoney(currentBalance)}<br><span style='font-size:10px'>COMPANY</span>`;
-                } else {
-                    panicOverlay.innerHTML = `JUMP TO<br>COMPANY`;
-                }
-            } else {
-                // Faction Mode
-                // Check if we are ready to deposit (form exists)
-                const donationForm = document.querySelector('.give-money-form') ||
-                                   (document.querySelector('.input-money') ?
-                                    document.querySelector('.input-money').closest('form') ||
-                                    document.querySelector('.input-money').closest('ul') : null);
-
-                // Also check if we are on the target URL (even if form is loading/missing)
-                // This prevents "JUMP TO FACTION" from showing when we are already there
-                const current = window.location.href;
-                const onTargetPage = current.includes('factions.php') && current.includes('step=your') && current.includes('type=1') && current.includes('tab=armoury');
-
-                if (donationForm || onTargetPage) {
-                    panicOverlay.innerHTML = `DEPOSIT<br>${formatMoney(currentBalance)}`;
-                } else {
-                    panicOverlay.innerHTML = `JUMP TO<br>FACTION`;
-                }
-            }
-        }
-    }
-
-    function disablePanicOverlay() { if (panicOverlay) panicOverlay.style.display = 'none'; }
-
-    // ==========================================
-    // === 7. INITIALIZATION ===
-    // ==========================================
-
-    function updateBalance(rawMoney) {
-        let val = rawMoney;
-        if (typeof rawMoney === 'object' && rawMoney?.value) val = rawMoney.value;
-        const num = parseInt(val);
-        if (!isNaN(num)) {
-            currentBalance = num;
-
-            // Check restrictions again on balance update to auto-dismiss if status changed
-            const status = checkStatusRestrictions();
-            const ghostID = getGhostID();
-
-            // Priority: Ghost > Company > Faction
-            let canExecute = false;
-            if (ghostID && status.canGhost) canExecute = true;
-            else if (status.canCompany) canExecute = true;
-            else if (status.canFaction) canExecute = true;
-
-            if (currentBalance >= PANIC_THRESHOLD && canExecute) {
-                triggerPanicMode();
-            } else {
-                if (isPanicLocked) manualDismiss();
-                // If balance drops below threshold, we assume deposit succeeded or user spent money.
-                // Reset sending state so we don't get stuck in "DEPOSITING" if user somehow gets money again quickly.
-                isSending = false;
-            }
-            if (isPanicLocked) updatePanicOverlay();
-            if (currentBalance <= 0) {
-                manualDismiss();
-                isSending = false;
-            }
-        }
-    }
-
-    function handleGlobalInteraction(e) {
-        if (!e.isTrusted) return; // Allow script-generated events
-
-        // Exclude interaction with specific UI elements to prevent blocking valid clicks
-        if (e.target.closest('#torn-tactical-deposit') ||
-            e.target.closest('button') ||
-            e.target.closest('input[type="submit"]') ||
-            e.target.closest('a.torn-btn')) {
-            return;
-        }
-
-        const tag = document.activeElement.tagName.toLowerCase();
-        if (tag === 'input' || tag === 'textarea' || document.activeElement.isContentEditable) return;
-
-        if (e.type === 'keydown' && !e.repeat) {
-            const code = e.code;
-            if (code === DEPOSIT_KEY || code === GHOST_KEY || code === COMPANY_KEY) {
-                e.preventDefault();
-                if (DEPOSIT_KEY === GHOST_KEY) executeTacticalDeposit('auto');
-                else if (code === DEPOSIT_KEY) executeTacticalDeposit('faction');
-                else if (code === GHOST_KEY) {
-                     if (!getGhostID()) return; // Strict Ghost Shortcut: Do nothing if no ID
-                     executeTacticalDeposit('ghost');
-                }
-                else if (code === COMPANY_KEY) {
-                    executeTacticalDeposit('company');
-                }
-            } else if (code === RESET_KEY) {
-                e.preventDefault();
-                if (localStorage.getItem(STORAGE_KEY)) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    if (panicOverlay) {
-                        panicOverlay.innerHTML = "GHOST ID<br>CLEARED";
-                        panicOverlay.style.display = 'block';
-                        setTimeout(manualDismiss, 1000);
-                    }
-                    safeInjectButton(); // Refresh UI
-                }
-            } else if (code === PANIC_TOGGLE_KEY) {
-                e.preventDefault();
-                togglePanicMode();
-            }
-        }
-    }
-
-    ['click', 'mousedown', 'mouseup', 'keydown', 'keypress', 'keyup'].forEach(evt => {
-        window.addEventListener(evt, handleGlobalInteraction, true);
-    });
-
-    // Listen for storage changes to sync Panic Mode state across tabs
-    window.addEventListener('storage', (e) => {
-        if (e.key === PANIC_STATE_KEY) {
-            isPanicEnabled = e.newValue !== 'false';
-            if (!isPanicEnabled) {
-                manualDismiss();
-            } else {
-                // If enabled, check if we should trigger immediately
-                if (currentBalance >= PANIC_THRESHOLD) {
-                    const status = checkStatusRestrictions();
-                    const ghostID = getGhostID();
-                    const canExecute = ghostID ? status.canGhost : status.canFaction;
-                    if (canExecute) triggerPanicMode();
-                }
-            }
-        }
-    });
-
-    // Monitor URL changes for SPA navigation (Hash changes) to clear Jump Lock immediately
-    function handleUrlChange() {
-        const ghostID = getGhostID();
-
-        // If we are locked in "JUMPING" state, check if we arrived
-        if (isJumping && ghostID) {
-             const hashParams = new URLSearchParams(window.location.hash.substring(1));
-             const searchParams = new URLSearchParams(window.location.search);
-             const currentStep = hashParams.get('step') || searchParams.get('step');
-             const currentID = hashParams.get('ID') || searchParams.get('ID');
-
-             const onGhostPage = window.location.href.includes('trade.php') &&
-                                 currentStep === 'addmoney' &&
-                                 currentID === ghostID;
-
-             if (onGhostPage) {
-                 isJumping = false;
-             }
-        }
-
-        // Always update overlay to reflect new URL state
-        if (isPanicLocked) updatePanicOverlay();
-    }
-
-    window.addEventListener('hashchange', handleUrlChange);
-    window.addEventListener('popstate', handleUrlChange);
-
-    function scanPageForDeadSignals() {
-        const msgElements = document.querySelectorAll('.info-msg, .error-msg, .confirm-risk-list, .msg-wrap, .alert-box');
-        let combinedText = "";
-        msgElements.forEach(el => combinedText += el.innerText + " ");
-
-        if (combinedText.length < 10) {
-             combinedText = document.title + " " + (document.querySelector('h4')?.innerText || "");
-        }
-
-        const lower = combinedText.toLowerCase();
-        for (const signal of DEAD_SIGNALS) {
-            if (lower.includes(signal)) {
-                isTradeDeadOnCurrentPage = true;
-                if (localStorage.getItem(STORAGE_KEY)) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    safeInjectButton();
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Use MutationObserver to speed up confirmation box detection
-    // Instead of waiting for intervals, we listen for the box appearing
-    const confirmObserver = new MutationObserver((mutations) => {
-        if (!isSending) return; // Only relevant if we are in a deposit flow
-
-        for (const mutation of mutations) {
-            if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                const boxes = document.querySelectorAll('.cash-confirm');
-                for (const box of boxes) {
-                    if (box.offsetParent !== null && box.style.display !== 'none') {
-                        // Box is visible!
-                        // We don't auto-click anymore, just update internal state if needed
-                        return;
-                    }
-                }
-            }
-        }
-    });
-
-    function initUI() {
-        try { if (typeof sidebarData !== 'undefined') updateBalance(sidebarData?.user?.money); } catch(e){ }
-        try {
-            const moneyEl = document.getElementById('user-money');
-            if (moneyEl && moneyEl.getAttribute('data-money')) {
-                updateBalance(moneyEl.getAttribute('data-money'));
-            }
-        } catch(e) { }
-
-        const observer = new MutationObserver(() => {
-            if (injectTimeout) clearTimeout(injectTimeout);
-            injectTimeout = setTimeout(() => {
-                safeInjectButton();
-                scanActiveTrades();
-                scanPageForDeadSignals();
-
-                // Re-check panic eligibility when DOM changes (e.g. status icons update)
-                if (currentBalance >= PANIC_THRESHOLD) {
-                    const status = checkStatusRestrictions();
-                    const ghostID = getGhostID();
-                    const canExecute = ghostID ? status.canGhost : status.canFaction;
-
-                    if (canExecute) {
-                        if (!isPanicLocked) triggerPanicMode();
-                    } else {
-                        // Only dismiss if NOT loading, to avoid flashing off during page transitions
-                        if (status.reason !== "LOADING..." && isPanicLocked) manualDismiss();
-                    }
-                }
-            }, 200); // Debounce all heavy DOM scans
-        });
-
-        if (document.body) {
-            observer.observe(document.body, { childList: true, subtree: true });
-            confirmObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
-            safeInjectButton();
-            scanPageForDeadSignals();
-        }
-    }
+            injectBtn();
+            scanTrades();
+            // Removed updateBalance(STATE.balance) to prevent loop
+        }).observe(document, { childList: true, subtree: true });
+        
+        // Early Init
+        if (moneyEl) injectBtn();
+    };
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initUI);
-    } else {
-        initUI();
-    }
+        // Fast track
+        const early = new MutationObserver(() => {
+            if (qs('#user-money')) { injectBtn(); }
+            if (document.body) { start(); early.disconnect(); }
+        });
+        early.observe(document.documentElement, { childList: true, subtree: true });
+        document.addEventListener('DOMContentLoaded', start);
+    } else start();
 
 })();

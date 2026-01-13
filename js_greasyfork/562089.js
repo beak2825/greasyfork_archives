@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2libra-enhance
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6.1
 // @description  2libra.com 论坛增强：帖子快速查看、智能返回顶部
 // @author       twocold0451
 // @homepage     https://github.com/twocold0451/2libra-enhance
@@ -229,13 +229,7 @@
         .sk-cube-grid .sk-cube:nth-child(8) { animation-delay: 0.1s; }
         .sk-cube-grid .sk-cube:nth-child(9) { animation-delay: 0.2s; }
         .libra-quick-btn {
-            position: absolute; /* 绝对定位，脱离文档流，不影响父元素高度 */
-            left: 100%; /* 位于父元素右侧 */
-            top: 50%;
-            transform: translateY(-50%); /* 垂直居中 */
-            margin-left: 10px;
-            white-space: nowrap;
-            
+            position: absolute;
             padding: 2px 8px;
             font-size: 12px;
             cursor: pointer;
@@ -243,16 +237,17 @@
             background-color: var(--color-primary, #4a00ff);
             color: #fff;
             border: none;
-            display: none; /* 默认隐藏 */
+            display: none;
+            white-space: nowrap;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(-50%);
             transition: opacity 0.2s;
         }
         
-        /* 
-           使用自定义类名控制显示 
-           当鼠标悬停在被脚本标记为帖子的元素(.libra-post-item)上时，显示按钮
-        */
         .libra-post-item:hover .libra-quick-btn {
-            display: inline-block;
+            display: block;
+            opacity: 1;
         }
 
         .libra-quick-btn:hover {
@@ -630,12 +625,14 @@
 
         // 查找帖子标题链接
         const titleLink = timeEl.parentElement.parentElement.querySelector('a.link');
-
         if (!titleLink || titleLink.tagName !== 'A') return;
 
-        // 标记为已添加（如果还没有标记）
-        if (!li.dataset.libraQuickBtnAdded) {
-            li.dataset.libraQuickBtnAdded = 'true';
+        // 查找元数据行 (标题下面的 div flex items-center gap-2)
+        const metaRow = timeEl.closest('.flex.items-center.gap-2');
+        if (!metaRow) return;
+
+        // 标记为已添加（如果还没有标记），用于CSS hover
+        if (!li.classList.contains('libra-post-item')) {
             li.classList.add('libra-post-item');
         }
 
@@ -666,15 +663,17 @@
             if (titleLink.title === '点击快速查看') {
                 titleLink.title = '';
             }
-            // 注意：由于事件监听器是通过addEventListener添加的，我们无法直接移除
-            // 但在下次启用时会重新检查，所以这里不需要额外处理
         }
 
+        let btn = li.querySelector('.libra-quick-btn');
         // 添加快速查看按钮（如果还没有添加）
-        const parent = timeEl.parentElement;
-        if (parent && !parent.querySelector('.libra-quick-btn')) {
-            parent.style.position = 'relative';
-            const btn = document.createElement('button');
+        if (!btn) {
+            // 确保metaRow的父元素有定位上下文
+            if (getComputedStyle(metaRow.parentElement).position === 'static') {
+                metaRow.parentElement.style.position = 'relative';
+            }
+
+            btn = document.createElement('button');
             btn.className = 'libra-quick-btn';
             btn.textContent = CONFIG.btnText;
             btn.onclick = (e) => {
@@ -682,8 +681,32 @@
                 e.stopPropagation();
                 openModal(titleLink.href, titleLink.textContent);
             };
-            parent.appendChild(btn);
+            // 插入到metaRow的父元素中
+            metaRow.parentElement.appendChild(btn);
+            
+            li.dataset.libraQuickBtnAdded = 'true';
         }
+
+        // 计算内容实际宽度：找到最右侧子元素的边缘
+        const children = Array.from(metaRow.children).filter(c => getComputedStyle(c).display !== 'none');
+        let contentRightEdge = 0;
+        if (children.length > 0) {
+            // 取所有子元素中最靠右的那个边缘
+            children.forEach(child => {
+                const right = child.offsetLeft + child.offsetWidth;
+                if (right > contentRightEdge) contentRightEdge = right;
+            });
+        } else {
+            contentRightEdge = metaRow.offsetWidth;
+        }
+
+        // 按钮位置 = metaRow 的起点 + 内容实际右边缘 + 间距
+        const leftPos = metaRow.offsetLeft + contentRightEdge + 8;
+        btn.style.left = `${leftPos}px`;
+        
+        // 垂直居中对齐到 metaRow
+        const topPos = metaRow.offsetTop + (metaRow.offsetHeight / 2);
+        btn.style.top = `${topPos}px`;
     }
 
     // 策略1：鼠标移入监听 (Lazy Load)

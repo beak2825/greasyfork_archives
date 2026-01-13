@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Item Market Best Price Helper
+// @name         Item Market Selling Helper
 // @author       srsbsns
-// @version      1.1
-// @description  Auto-fill prices $1 below market lowest on Item Market
+// @version      1.9
+// @description  Auto-fill prices $1 below market lowest on Item Market with MV% indicator
 // @match        https://www.torn.com/page.php?sid=ItemMarket*
 // @run-at       document-end
 // @grant        GM_addStyle
@@ -13,8 +13,8 @@
 // @connect      api.torn.com
 // @license      MIT
 // @namespace    srsbsns
-// @downloadURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Best%20Price%20Helper.user.js
-// @updateURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Best%20Price%20Helper.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Selling%20Helper.user.js
+// @updateURL https://update.greasyfork.org/scripts/562062/Item%20Market%20Selling%20Helper.meta.js
 // ==/UserScript==
 
 (() => {
@@ -91,13 +91,46 @@
       display: block !important;
       visibility: visible !important;
     }
+
+    /* MV Percentage Indicator */
+    .im-mv-indicator {
+      display: inline-block !important;
+      margin-left: 8px !important;
+      font-weight: bold !important;
+      font-size: 12px !important;
+      padding: 2px 6px !important;
+      border-radius: 3px !important;
+      white-space: nowrap !important;
+    }
+
+    .im-mv-indicator.good {
+      color: #00ff00 !important;
+      background: rgba(0, 255, 0, 0.1) !important;
+    }
+
+    .im-mv-indicator.warning {
+      color: #ffa500 !important;
+      background: rgba(255, 165, 0, 0.1) !important;
+    }
+
+    .im-mv-indicator.danger {
+      color: #ff0000 !important;
+      background: rgba(255, 0, 0, 0.1) !important;
+    }
+
+    /* Hide indicators on confirm screen */
+    [class*="confirm"] .im-mv-indicator,
+    [class*="Confirm"] .im-mv-indicator {
+      display: none !important;
+    }
   `);
 
   // ---- Page helpers ----
   const onItemMarket = () => /sid=ItemMarket/i.test(location.search || location.href);
   const onAddListing = () => onItemMarket() && /#\/addListing/i.test(location.hash || '');
   const onViewListing = () => onItemMarket() && /#\/viewListing/i.test(location.hash || '');
-  const onListingPage = () => onAddListing() || onViewListing();
+  const onConfirmScreen = () => onItemMarket() && /#\/addListing\/confirm/i.test(location.hash || '');
+  const onListingPage = () => (onAddListing() || onViewListing()) && !onConfirmScreen();
 
   const selPriceInputs = [
     'div.input-money-group input.input-money[type="text"]',
@@ -264,19 +297,68 @@
     }
   }
 
-  // ---- Show market info ----
-  function showMarketInfo(wrapper, message, type = 'info') {
-    // Remove existing info
-    const existing = wrapper.querySelector('.im-market-info, .im-loading, .im-error');
+  // ---- Show MV percentage indicator ----
+  function showMVIndicator(container, price, itemId) {
+    // Remove existing indicator
+    const existing = container.querySelector('.im-mv-indicator');
     if (existing) existing.remove();
 
-    if (!message) return;
+    if (!cat || !cat.byId[itemId]) return;
 
-    const info = document.createElement('span');
-    info.className = type === 'error' ? 'im-error' : (type === 'loading' ? 'im-loading' : 'im-market-info');
-    info.textContent = message;
+    const item = cat.byId[itemId];
+    const mv = item.mv;
+    const npcPrice = item.sell; // NPC shop sell price
 
-    wrapper.appendChild(info);
+    if (!mv || mv === 0) return;
+
+    const pctDiff = ((price - mv) / mv) * 100;
+    const indicator = document.createElement('span');
+    indicator.className = 'im-mv-indicator';
+
+    let colorClass = 'good';
+    let text = '';
+
+    if (pctDiff < -20) {
+      // More than 20% below MV - danger (way too cheap!)
+      colorClass = 'danger';
+      text = `${Math.round(pctDiff)}% MV`;
+    } else if (pctDiff < 0) {
+      // Below MV but less than 20%
+      colorClass = 'warning';
+      text = `${Math.round(pctDiff)}% MV`;
+    } else if (pctDiff === 0) {
+      colorClass = 'good';
+      text = `At MV`;
+    } else {
+      // Above MV
+      colorClass = 'good';
+      text = `+${Math.round(pctDiff)}% MV`;
+    }
+
+    indicator.classList.add(colorClass);
+    indicator.textContent = text;
+
+    // Calculate actual profit after 5% market fee
+    const actualProfit = Math.floor(price * 0.95); // Market takes 5% fee
+
+    // Build concise tooltip
+    let tooltip = `MV: $${mv.toLocaleString()}\nYour price: $${price.toLocaleString()} → $${actualProfit.toLocaleString()} (after 5% fee)`;
+
+    if (npcPrice && npcPrice > 0) {
+      tooltip += `\nNPC price: $${npcPrice.toLocaleString()}`;
+
+      if (actualProfit < npcPrice) {
+        const loss = npcPrice - actualProfit;
+        tooltip += `\n⚠️ Item market LOSS: $${loss.toLocaleString()}!`;
+      } else {
+        const profit = actualProfit - npcPrice;
+        tooltip += `\n✓ Profit vs NPC: +$${profit.toLocaleString()}`;
+      }
+    }
+
+    indicator.title = tooltip;
+
+    container.appendChild(indicator);
   }
 
   // ---- Attach checkbox ----
@@ -294,6 +376,19 @@
     input.type = 'checkbox';
     input.id = `im-market-${itemId || Math.random()}`;
 
+    // Function to update MV indicator based on current price
+    const updateIndicator = () => {
+      // Remove commas from the price string before parsing
+      const priceText = (priceInput.value || '').replace(/,/g, '');
+      const currentPrice = Number(priceText);
+      if (currentPrice && currentPrice > 0) {
+        showMVIndicator(container, currentPrice, itemId);
+      }
+    };
+
+    // Listen for manual price changes
+    priceInput.addEventListener('input', updateIndicator);
+    priceInput.addEventListener('change', updateIndicator);
 
     input.addEventListener('change', async () => {
       if (input.checked) {
@@ -307,6 +402,10 @@
             await new Promise(resolve => {
               requestAnimationFrame(() => {
                 applyPrice(priceInput, newPrice);
+
+                // Show MV indicator
+                showMVIndicator(container, newPrice, itemId);
+
                 resolve();
               });
             });
@@ -319,8 +418,11 @@
           // Error - uncheck the box
           input.checked = false;
         }
+      } else {
+        // When unchecked, remove the indicator
+        const indicator = container.querySelector('.im-mv-indicator');
+        if (indicator) indicator.remove();
       }
-      // When unchecked, do nothing (keep the price)
     });
 
     container.appendChild(input);
@@ -372,12 +474,25 @@
   let timeout = null;
   const mo = new MutationObserver(() => {
     if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => annotate(), 300);
+    timeout = setTimeout(() => {
+      // Remove indicators if on confirm screen
+      if (onConfirmScreen()) {
+        document.querySelectorAll('.im-mv-indicator').forEach(el => el.remove());
+      } else {
+        annotate();
+      }
+    }, 300);
   });
   mo.observe(document.documentElement, { childList: true, subtree: true });
 
   window.addEventListener('hashchange', () => {
-    setTimeout(() => annotate(true), 300);
+    setTimeout(() => {
+      if (onConfirmScreen()) {
+        document.querySelectorAll('.im-mv-indicator').forEach(el => el.remove());
+      } else {
+        annotate(true);
+      }
+    }, 300);
   });
 
   setTimeout(() => annotate(), 1000);

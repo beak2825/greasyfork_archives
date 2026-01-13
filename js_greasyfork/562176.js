@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         doubleD
 // @namespace    discord-decode
-// @version      1.2
+// @version      1.3
 // @author       natek
 // @description  adds a decode button for invisible steganography messages on discord web
 // @match        https://discord.com/*
@@ -138,7 +138,7 @@
             markup.textContent = decoded;
 
             // apply styling
-            markup.style.color = '#2e7d32';
+            markup.style.color = '#7289da';
             markup.style.fontStyle = 'italic';
 
             markup.dataset.decoded = 'true';

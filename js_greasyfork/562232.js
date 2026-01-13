@@ -2,7 +2,7 @@
 // @name asobichannel视频下载
 // @namespace https://gitee.com/u2222223/greasyfork_scripts/raw/master/asobichannel/index.js
 // @version 2026.01.10
-// @description 一键下载56视频，支持4K/1080P/720P多画质。
+// @description 一键下载asobichannel视频，支持4K/1080P/720P多画质。
 // @icon https://asobichannel.asobistore.jp/favicon.ico
 // @match *://asobichannel.asobistore.jp/*
 // @match *://dajiaoniu.site/* 
