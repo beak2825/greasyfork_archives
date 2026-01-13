@@ -2,7 +2,7 @@
 // @name         Semprot Helpers
 // @description  Semprot Helper
 // @author       Pommpol
-// @version      2026-01-10
+// @version      2026-01-12
 // @match        https://www.semprot.com/threads/*
 // @match        https://www.semprot.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=semprot.com
@@ -394,7 +394,6 @@
         return container;
     }
     function iframeSpawn(url){
-
         const container = document.createElement("div")
         container.classList.add("container-iframe");
 
@@ -440,6 +439,7 @@
                         event.preventDefault();
                         event.stopPropagation();
                         embedurl = `https://${url.hostname}/embed/${url.pathname}`
+                        console.log(embedurl)
                     }
                     else if(url.hostname == "streamtape.com" || url.hostname == "streamtape.cc"){
                         event.preventDefault();
@@ -463,8 +463,8 @@
                         })
                             .catch(err => console.error('Error:', err));
                     }
-                    break;
                     if (embedurl){
+                        console.log("trying embed");
                         iframe = iframeSpawn(embedurl);
                         event.target.appendChild(iframe);
                     }
@@ -473,7 +473,8 @@
                 // Check if the clicked element is an <img>
             case 'img':
                 url = new URL(event.target.src);
-                if(url.hostname == "imagebam.com"){
+                console.log(url)
+                if(url.hostname == "imagebam.com" || url.hostname == "thumbs4.imagebam.com"){
                     if(GM_getValue('imageBamLoader', false)){
                         const parentLink = event.target.closest('a');
                         if(parentLink){
@@ -487,7 +488,6 @@
                                 getImageBamSrc(parentLink.href)
                                     .then(src => {
                                     imgSwapperElement(event.target,event.target.src,src);
-
                                     if (src) console.log('Image src:', src);
                                     else console.log('Image not found : ',parentLink.href);})
                                     .catch(err => console.error('Error:', err));

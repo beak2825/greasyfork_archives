@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         IMDb - Highest Rated by Role
 // @namespace    https://greasyfork.org/en/users/1552401-chipfin
-// @version      1.1.0
-// @description  Turns role labels (Actor, Director, Producer, etc.) under the name header into links that open IMDb search sorted by user rating using fixed credit_categories IDs.
+// @version      1.1.1
+// @description  Turns role labels (Actor, Director, Producer, etc. under the name header) into links opening highest-rated IMDb searches.
+// @icon         https://web.archive.org/web/20100218184601im_/http://i.imdb.com/favicon.ico
 // @author       Gemini
 // @license      MIT
 // @match        https://www.imdb.com/name/*

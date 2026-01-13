@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bunpro Review Type Changer
 // @namespace    https://bunpro.jp/
-// @version      1.3
+// @version      1.4
 // @description  Dashboard modal to bulk-change review input types
 // @match        https://bunpro.jp/*
 // @grant        none
@@ -309,7 +309,7 @@
             const streakMax = Number(modal.querySelector("#bp-streak-max").value);
 
             let affected = 0;
-            status.innerHTML = '<span class="bp-spinner"> Running...'
+            status.innerHTML = '<span class="bp-spinner"></span> Running...'
 
             for (const level of levels) {
                 let page = 1;

@@ -4,7 +4,7 @@
 // @description  one click at a time
 // @author       Ben
 // @match        *.outwar.com/*
-// @version      40
+// @version      41
 // @grant        GM_xmlhttpRequest
 // @license      MIT
 // @run-at       document-start
@@ -8433,20 +8433,28 @@ async function raidResults(){
 
 
 async function changeFaction(profileData){
-    GM_addStyle(` .codex-img { width: calc(10% - 10px); margin: 5px; box-shadow: 0 0 3px rgba(0, 0, 0, 0.5); } `)
+    GM_addStyle(`
+        .codex-img { width: calc(10% - 10px); margin: 5px; box-shadow: 0 0 3px rgba(0, 0, 0, 0.5); cursor: pointer; }
+        .codex-complete { filter: saturate(2) opacity(1); }
+        .codex-incomplete { filter: saturate(0) opacity(0.33); }
+    `)
 
     document.querySelector("#content-header-row > div > h1").remove();
 
     const rightContent = document.querySelector("#content-header-row > div > div > div:nth-child(2)");
     const completedCodex = document.querySelector("#content-header-row > div > div > div > div.mt-3 > div > div.widget-content.widget-content-area").innerHTML;
-    const completedArray = completedCodex.match(/Triworld Codex Chapter [0-9]+/g) || [];
+    const completedArray = completedCodex.match(/Triworld Codex Chapter [0-9]+/g) || []
     const imgArray = [];
-    for (let i = 0; i < completedArray.length; i++) {
-        imgArray.push(`<img src="images/items/tiupgrade${completedArray[i].match(/[0-9]+/i)}.png" class="codex-img">`);
+    const codexInfo = await info("Codex Info");
+    for (let i = 1; i < 51; i++) {
+        const src = codexInfo[i];
+        console.log(src);
+        const style = completedArray.includes(`Triworld Codex Chapter ${i}`) ? 'codex-complete' : 'codex-incomplete'
+        imgArray.push(`<img src="images/items/tiupgrade${i}.png" class="codex-img ${style}" onmouseover="statspopup(event,'${src}')" onmouseout="kill()">`);
     };
     rightContent.outerHTML = `
     <div class="col-12 col-md-8">
-    <div class="widget mb-3" id="codexContainer"><h3>COMPLETED CODEX</h3><span style="display:inline-block;text-align:left;">${imgArray.join('')}</span></div>
+    <div class="widget mb-3" id="codexContainer"><h3>CODEX LOG</h3><span style="display:inline-block;text-align:left;">${imgArray.join('')}</span><i>Mouseover codex chapter to see where to find it</i></div>
     <div class="widget mb-3"><h3>LOYALTY RANKINGS</h3>
     <div id="loyaltyRankings"><img src="https://studiomoxxi.com/moxximod/loading-gif.gif" height="90px" width="90px"></div>
     </div>
@@ -9745,6 +9753,7 @@ async function closedPvpNew(profileData,server,charid){
             skillsData[char.charid] = profileDataTarget.skills.images;
 
             const cop = profileDataTarget.skills.data.find(i => i.name == "Circle of Protection")?.time || "-";
+            const copIcon = cop == "-" ? "" : `<img src="images/skills/circleofprotection.png" class="small-table-img" onmouseover="popup(event,'<b>Circle of Protection</b>')" onmouseout="kill()">`;
 
             const negs = [];
             const negSkillsReceived = profileData.skills.data.filter(i => i.cast == char.name);
@@ -9802,7 +9811,7 @@ async function closedPvpNew(profileData,server,charid){
                     `<td>${ele}</td>` +
                     `<td>${char.wins}</td>` +
                     `<td>${char.damage}</td>` +
-                    `<td>${cop}</td>` +
+                    `<td>${cop.toString()} ${copIcon}</td>` +
                     `<td><a href="javascript:void(0)" class="skill-counter" data-id="${char.charid}" data-name="${char.name}">${skillsLength}</a></td>` +
                     `<td>${negs.join('')}</td>` +
                     `<td>${char.attacks}</td>` +
@@ -9849,7 +9858,7 @@ async function closedPvpNew(profileData,server,charid){
             });
         };
 
-        sortableTables();
+        await sortableTables();
     };
 
 
@@ -12000,7 +12009,7 @@ async function mvHalloween(rgas,string){
     const table = async (i) => {
         const mr = i.home.maxrage;
         const rpt = i.home.rageperturn;
-        const components = (await backpack(i.quset, "Server Components")).quantity
+        const components = (await backpack(i.quest, "Server Components")).quantity
         let queststep;
         if (i.questnum.match(/Server Components:<\/b> [0-9]+\/[0-9]+/i)){
             const componentsNeeded = i.questnum.match(/Server Components:<\/b> [0-9]+\/([0-9]+)/i)[1];
@@ -13153,7 +13162,7 @@ async function info(request){
             [`Boost Four`,`/images/items/icon_vial_red.jpg`],
             [`Boost Five`,`/images/items/icon_vial_yellow.jpg`]
         ]
-    } else if (request = "Cost to Full Gem"){
+    } else if (request == "Cost to Full Gem"){
         return {
             "Common": [10, 9, 7, 4, 0],
             "Uncommon": [20, 18, 14, 8, 0],
@@ -13164,7 +13173,7 @@ async function info(request){
             "King": [320, 288, 216, 128, 0],
             "Mythic": [400, 360, 280, 160, 0]
         };
-    } else if (request = "Cost to One Gem"){
+    } else if (request == "Cost to One Gem"){
         return {
             "Common":[1,2,3,4,0],
             "Uncommon":[2,4,6,8,0],
@@ -13174,6 +13183,59 @@ async function info(request){
             "Brutal":[24,48,72,96,0],
             "King":[32,64,96,128,0],
             "Mythic":[40,80,120,160,0]
+        }
+    } else if (request == "Codex Info"){
+        return {
+            1: "Alvar loyalty level 3",
+            2: "Alvar loyalty level 6",
+            3: "Delruk loyalty level 3",
+            4: "Delruk loyalty level 6",
+            5: "Vordyn loyalty level 3",
+            6: "Vordyn loyalty level 6",
+            7: "Complete Twilight Grove quest",
+            8: "Level 95",
+            9: "Triworld Experience Ward drops from Simulation boss or buy in treasury (level 95 quest)",
+            10: "Quest to kill Dragon of the Grove (hard to kill mob. level 95 quest)",
+            11: "DC mobs: Nightstalker Goblin, Mechsect, Mosstile, Deathdiver, Armorsaur, Goblin Loyalist, Zarclax, Crypkin, Triworld Basilisk, Roxxiq",
+            12: "DC mobs: Alvar Winglord, Hardened Gorilla, Seelak, Aejahar, Mikrit, Hellspider Collection, Tiesor",
+            13: "DC mobs: Gobsler",
+            14: "DC mobs: Spirak, Refuge Ogre, Engrossed Fleshbeast, Snatak, Seerak, Chaos Infected Rat, Vordyn Blockade",
+            15: "DC mobs: Grove Predator, Grand Treant",
+            16: "DC mobs: Triworld Arachnid, Demak, Zarclax, Amphar, Ghourach, Crocodillian Swordsmith, Ryvara, Batallion Guard, Refuge Experiment, Houghar",
+            17: "Alvar Tincture Bearer (high rage mobs)",
+            18: "Delruk Tincture Bearer (high rage mobs)",
+            19: "Vordyn Tincture Bearer (high rage mobs)",
+            20: "Tenacious Alvar Patron (high rage mobs)",
+            21: "Tenacious Delruk Patron (high rage mobs)",
+            22: "Tenacious Vordyn Patron (high rage mobs)",
+            23: "Elemental Precision Adversary (long respawn mob)",
+            24: "Powerful Preceision Adversary (long respawn mob)",
+            25: "Chaotic Precision Adversary (long respawn mob)",
+            26: "Alvar Elite Antagonist (room 43173)",
+            27: "Delruk Elite Antagonist (room 42903)",
+            28: "Vordyn Elite Antagonist (room 43049)",
+            29: "Dropped by Aiyuken (hard to kill mob in room 1066)",
+            30: "Triworld Simulation (boss drop)",
+            31: "Triworld Simulation (boss drop)",
+            32: "Animation of Versatility (god drop)",
+            33: "Animation of Elements (god drop)",
+            34: "Animation of Power (god drop)",
+            35: "Animation of Chaos (god drop)",
+            36: "Animation of Supremacy (god drop)",
+            37: "Gladiator of Loyalty (Alvar)",
+            38: "Gladiator of Loyalty (Delruk)",
+            39: "Gladiator of Loyalty (Vordyn)",
+            40: "Amalgamation Raid (Alvar)",
+            41: "Amalgamation Raid (Delruk)",
+            42: "Amalgamation Raid (Vordyn)",
+            43: "Amalgamation Raid (Triworld)",
+            44: "Faction Brawl (Alvar)",
+            45: "Faction Brawl (Delruk)",
+            46: "Faction Brawl (Vordyn)",
+            47: "Echo dungeon (Alvar)",
+            48: "Echo dungeon (Delruk)",
+            49: "Echo dungeon (Vordyn)",
+            50: "Echo dungeon"
         }
     } else {
         return 'error';

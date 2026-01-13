@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name         8chan sounds player
-// @version      2.3.0_0052
+// @version      2.3.0_0053
 // @namespace    8chanss
 // @description  Play that faggy music weeb boi
 // @author       original by: RCC; ported to 8chan by: soundboy_1459944
 // @website      https://greasyfork.org/en/scripts/533468
-// @match        *://*.8chan.moe/*/*/*.html
-// @match        *://*.8chan.se/*/*/*.html
-// @match        *://*.8chan.st/*/*/*.html
-// @match        *://*.8chan.cc/*/*/*.html
-// @match        *://*.8ch.moe/*/*/*.html
-// @match        *://*.alephchvkipd2houttjirmgivro5pxullvcgm4c47ptm7mhubbja6kad.onion/*/*/*.html
+// @match        *://*.8chan.moe/*/*/*.html*
+// @match        *://*.8chan.se/*/*/*.html*
+// @match        *://*.8chan.st/*/*/*.html*
+// @match        *://*.8chan.cc/*/*/*.html*
+// @match        *://*.8ch.moe/*/*/*.html*
+// @match        *://*.alephchvkipd2houttjirmgivro5pxullvcgm4c47ptm7mhubbja6kad.onion/*/*/*.html*
 // @connect      4chan.org
 // @connect      4channel.org
 // @connect      a.4cdn.org
@@ -1405,9 +1405,9 @@
 				}],
 				default:
 					'<div class="${ns}-col" style="margin-left: 4px;">\n' +
-					' <span style="padding-right: 4px;">sound-post</span>\n' +
-					' <span style="padding-right: 8px; min-width: calc(40px); text-align: right;">sound-filesize</span>\n' +
-					' <span style="padding-right: 8px; min-width: calc(40px);">.sound-extension</span>\n' +
+					' <span style="padding-right: 0.8em;">sound-post</span>\n' +
+					' <span style="padding-right: 0.5em; min-width: calc(40px); text-align: right;">sound-filesize</span>\n' +
+					' <span style="padding-right: 0.5em; min-width: calc(40px);">.sound-extension</span>\n' +
 					' <span class="${ns}-truncate-text">sound-name</span>\n' +
 					' h:{menu-button}\n' +
 					'</div>',
@@ -1570,14 +1570,16 @@
 
 		];
 	}),
-	/* 3 - Main Entry Point
-		•	Initialization sequence:
-			a.	Waits for DOM/4chan X readiness
-			b.	Sets up mutation observer for dynamic content
-			c.	Triggers initial page scan
-		•	Handles both:
-			o	Native 4chan interface
-			o	4chan X extension environment
+	/* 2 - Core Player Setup
+		•	Initializes the main Player object with:
+			o	Component references (controls, playlist, etc.)
+			o	Template system
+			o	Event system
+		•	Key functions:
+			o	initialize(): Bootstraps all components
+			o	compareIds(): For sorting sounds
+			o	acceptedSound(): Validates URLs against allowlist
+			o	syncTab(): Handles cross-tab synchronization
 	*/
 	(function(module, exports, __webpack_require__) {
 
@@ -1734,14 +1736,15 @@
 			(Player[name].atRoot || []).forEach(k => Player[k] = Player[name][k]);
 		}
 	}),
-	// 3 - Main Entry Point
-	//	•	Initialization sequence:
-	//		a.	Waits for DOM/4chan X readiness
-	//		b.	Sets up mutation observer for dynamic content
-	//		c.	Triggers initial page scan
-	//	•	Handles both:
-	//		o	Native 4chan interface
-	//		o	4chan X extension environment
+	/* 3 - Main Entry Point
+		•	Initialization sequence:
+			a.	Waits for DOM/4chan X readiness
+			b.	Sets up mutation observer for dynamic content
+			c.	Triggers initial page scan
+		•	Handles both:
+			o	Native 4chan interface
+			o	4chan X extension environment
+	*/
 	(function(module, __webpack_exports__, __webpack_require__) {
 		"use strict";
 		__webpack_require__.r(__webpack_exports__);

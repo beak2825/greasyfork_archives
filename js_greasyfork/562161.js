@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         Gemini2Markdown
 // @namespace    https://greasyfork.org/en/users/1552401-chipfin
-// @version      1.6.5
+// @version      1.6.6
 // @description  Exports Google Gemini chats to Markdown. Captures "Show Thinking", auto-detects model names, and loads full history.
+// @icon64       https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Google_Gemini_icon_2025.svg/64px-Google_Gemini_icon_2025.svg.png
 // @match        https://gemini.google.com/*
 // @grant        none
 // @license      MIT

@@ -1,19 +1,18 @@
 // ==UserScript==
-// @name         DuoHacker Duolingo Cheat
-// @description  DuoHacker is the Best-Free-Powerful Duolingo cheat with Fast Farming XP and Gems , High Farming streaks.
+// @name         Duolingo DuoHacker
+// @description  Best Free Duolingo Hack with XP Farming, Gems Farming, Streaks Farming, even Free Supers are here!
 // @namespace    https://twisk.fun
-// @version      1.0.2
+// @version      1.1.0
 // @author       mintdevs
 // @match        https://*.duolingo.com/*
 // @match        https://*.duolingo.cn/*
 // @icon         https://github.com/helloticc/DuoHacker/blob/main/DuoHacker.png?raw=true
 // @grant        none
 // @license      MIT
-// @grant GM_openInTab
-// @downloadURL https://update.greasyfork.org/scripts/561041/DuoHacker%20Duolingo%20Cheat.user.js
-// @updateURL https://update.greasyfork.org/scripts/561041/DuoHacker%20Duolingo%20Cheat.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561041/Duolingo%20DuoHacker.user.js
+// @updateURL https://update.greasyfork.org/scripts/561041/Duolingo%20DuoHacker.meta.js
 // ==/UserScript==
-const VERSION = "1.0.1";
+const VERSION = "1.1.0";
 const SAFE_DELAY = 2000;
 const FAST_DELAY = 300;
 let jwt, defaultHeaders, userInfo, sub;
@@ -466,7 +465,7 @@ const initInterface = () => {
     <div id="_header">
       <div class="_header_top">
         <div class="_brand">
-<a href="https://twisk.fun" target="_blank" rel="noopener noreferrer">
+<a href="#" target="_blank" rel="noopener noreferrer">
   <div class="_logo_container">
     <div class="_logo"
          style="
@@ -491,23 +490,28 @@ const initInterface = () => {
     </div>
   </div>
 </a>
-<a href="https://twisk.fun" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+<a href="#" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
   <div class="_brand_text">
     <h1>DuoHacker</h1>
-    <span class="_version_badge">Basic</span>
+    
   </div>
 </a>
         </div>
-        <div id="_hh_notice" class="_hh_notice" role="status" aria-live="polite">
-  <div class="_hh_notice_left">
-    <div class="_hh_notice_title">Join our server</div>
-    <div class="_hh_notice_sub">Get update announcements & changelogs.</div>
-  </div>
-  <button id="_hh_join_btn" class="_hh_notice_btn" type="button">
-    Join
-  </button>
-</div>
-        <div class="_header_controls">
+<div class="_header_controls">
+<button id="_hh_bell_btn" class="_control_btn _bell" title="Announcements" aria-label="Announcements">
+  <svg class="_hh_bell_svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+    <path d="M12 22a2.5 2.5 0 0 0 2.45-2H9.55A2.5 2.5 0 0 0 12 22Z" fill="currentColor"></path>
+    <path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2Z" fill="currentColor" opacity=".9"></path>
+  </svg>
+  <span id="_hh_bell_badge" class="_hh_bell_badge" aria-hidden="true">1</span>
+</button>
+
+<button id="_hh_settings_btn" class="_control_btn _settings" title="Settings" aria-label="Settings">
+  <svg class="_hh_gear_svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.11-.2-.35-.28-.57-.2l-2.39.96c-.5-.38-1.04-.7-1.64-.94l-.47-2.55c-.04-.22-.24-.38-.47-.38h-3.86c-.23 0-.43.16-.47.38l-.47 2.55c-.6.24-1.15.56-1.64.94l-2.39-.96c-.22-.08-.46 0-.57.2L2.71 7.93c-.11.2-.06.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.11.2.35.28.57.2l2.39-.96c.5.38 1.04.7 1.64.94l.47 2.55c.04.22.24.38.47.38h3.86c.23 0 .43-.16.47-.38l.47-2.55c.6-.24 1.15-.56 1.64-.94l2.39.96c.22.08.46 0 .57-.2l1.92-3.32c.11-.2.06-.47-.12-.61l-2.03-1.58ZM12 15.6c-1.99 0-3.6-1.61-3.6-3.6S10.01 8.4 12 8.4s3.6 1.61 3.6 3.6-1.61 3.6-3.6 3.6Z"/>
+  </svg>
+</button>
+
 <button id="_minimize_btn" class="_control_btn _minimize" title="Minimize">
             <span style="font-size: 18px;">➖</span>
 </button>
@@ -657,33 +661,13 @@ const initInterface = () => {
         <div id="_console_output" class="_console">
           <div class="_log_entry _info">
             <span class="_log_time">${new Date().toLocaleTimeString()}</span>
-            <span class="_log_msg">DuoHacker Basic initialized</span>
+            <span class="_log_msg">DuoHacker initialized</span>
           </div>
         </div>
       </div>
     </div>
 <div class="_footer">
-    <span>© 2026 DuoHacker Lite</span>
-    <div class="_footer_socials">
-<a href="https://twisk.fun/discord" target="_blank" title="Discord">
-  <img
-    alt="Discord"
-    src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%20256%20256%27%20preserveAspectRatio%3D%27xMidYMid%20meet%27%3E%3Cg%20transform%3D%27translate(0%2C24)%27%3E%3Cpath%20fill%3D%27%23fff%27%20d%3D%27M216.9%2016.5A208.1%20208.1%200%200%200%20164.7%200c-2.3%204-4.4%208.2-6.2%2012.5a192.5%20192.5%200%200%200-61%200C95.6%208.2%2093.4%204%2091.1%200A208.3%20208.3%200%200%200%2038.9%2016.5C6.6%2064.6-2%20111.4%201.8%20157.6c18.9%2014%2041%2024.8%2064.7%2031.6%205.2-7.1%209.8-14.7%2013.6-22.8-7.5-2.8-14.7-6.2-21.6-10.1%201.8-1.3%203.6-2.7%205.2-4.1%2041.7%2019.6%2086.9%2019.6%20128.1%200%201.7%201.4%203.4%202.8%205.2%204.1-6.9%204-14.1%207.3-21.6%2010.1%203.9%208.1%208.5%2015.7%2013.6%2022.8%2023.7-6.8%2045.8-17.6%2064.7-31.6%204.5-54-7.7-100.3-37.4-141.1ZM85.8%20135.3c-12.5%200-22.8-11.5-22.8-25.6%200-14%2010.1-25.6%2022.8-25.6%2012.7%200%2023%2011.5%2022.8%2025.6%200%2014.1-10.1%2025.6-22.8%2025.6Zm84.4%200c-12.5%200-22.8-11.5-22.8-25.6%200-14%2010.1-25.6%2022.8-25.6%2012.7%200%2023%2011.5%2022.8%2025.6%200%2014.1-10.1%2025.6-22.8%2025.6Z%27/%3E%3C/g%3E%3C/svg%3E"
-  />
-</a>
-        <a href="https://greasyfork.org/en/users/1510019-duohackerdevs" target="_blank" title="Greasy Fork">
-            <img
-              alt="Greasy Fork"
-              src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Crect%20x%3D%273%27%20y%3D%274%27%20width%3D%2718%27%20height%3D%2716%27%20rx%3D%272%27%20fill%3D%27none%27%20stroke%3D%27%23fff%27%20stroke-width%3D%272%27/%3E%3Cpath%20d%3D%27M7%208h10M7%2012h10M7%2016h7%27%20stroke%3D%27%23fff%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E"
-            >
-        </a>
-        <a href="https://twisk.fun" target="_blank" title="Website">
-            <img
-              alt="Website"
-              src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23FFF%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%2710%27/%3E%3Cline%20x1%3D%272%27%20y1%3D%2712%27%20x2%3D%2722%27%20y2%3D%2712%27/%3E%3Cpath%20d%3D%27M12%202a15.3%2015.3%200%200%201%204%2010%2015.3%2015.3%200%200%201-4%2010%2015.3%2015.3%200%200%201-4-10%2015.3%2015.3%200%200%201%204-10z%27/%3E%3C/svg%3E"
-            >
-        </a>
-    </div>
+    <span>© 2026 DuoHacker</span>
 </div>
   </div>
 <div id="_fab_container">
@@ -735,7 +719,7 @@ style.textContent = `
   justify-content: space-between;
   gap: 12px;
   background:
-    linear-gradient(90deg, rgba(131,100,243,.18), rgba(130,152,237,.12), rgba(129,203,230,.16)),
+    linear-gradient(90deg, rgba(var(--hh-purple-rgb), .18), rgba(var(--hh-indigo-rgb), .12), rgba(var(--hh-cyan-rgb), .16)),
     rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.14);
   backdrop-filter: blur(16px) saturate(160%);
@@ -797,15 +781,16 @@ style.textContent = `
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(92vw, 920px);
+  transform: translate(-50%, -50%) scale(var(--hh-ui-scale, 1));
+  transform-origin: center;
+width: min(92vw, 920px);
   max-height: min(90vh, 820px);
   z-index: 9999;
   border-radius: var(--r-lg);
   overflow: hidden;
   background:
-    radial-gradient(1200px 600px at 8% 8%, rgba(131,100,243,.28), transparent 55%),
-    radial-gradient(1000px 520px at 92% 12%, rgba(129,203,230,.22), transparent 55%),
+    radial-gradient(1200px 600px at 8% 8%, rgba(var(--hh-purple-rgb), .28), transparent 55%),
+    radial-gradient(1000px 520px at 92% 12%, rgba(var(--hh-cyan-rgb), .22), transparent 55%),
     rgba(255,255,255,.06);
   backdrop-filter: blur(var(--blur)) saturate(var(--sat));
   -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--sat));
@@ -819,9 +804,9 @@ style.textContent = `
   padding: 16px 18px;
   background: linear-gradient(
     90deg,
-    rgba(131,100,243,.18),
-    rgba(130,152,237,.12),
-    rgba(129,203,230,.16)
+    rgba(var(--hh-purple-rgb), .18),
+    rgba(var(--hh-indigo-rgb), .12),
+    rgba(var(--hh-cyan-rgb), .16)
   );
   border-bottom: 1px solid rgba(255,255,255,.10);
 }
@@ -854,6 +839,11 @@ style.textContent = `
   color: var(--text-0);
   cursor: pointer;
   transition: transform var(--t), background var(--t), border-color var(--t);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
 }
 ._control_btn:hover{
   transform: translateY(-1px);
@@ -883,7 +873,7 @@ style.textContent = `
   width: 56px; height: 56px;
   border-radius: 16px;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(131,100,243,.75), rgba(129,203,230,.65));
+  background: linear-gradient(135deg, rgba(var(--hh-purple-rgb), .75), rgba(var(--hh-cyan-rgb), .65));
   box-shadow: 0 10px 28px rgba(0,0,0,.22);
   display:flex; align-items:center; justify-content:center;
   color: white;
@@ -948,9 +938,9 @@ style.textContent = `
 }
 ._mode_card:hover{ transform: translateY(-2px); background: rgba(255,255,255,.10); }
 ._mode_card._active{
-  border-color: rgba(130,152,237,.55);
+  border-color: rgba(var(--hh-indigo-rgb), .55);
   background:
-    linear-gradient(90deg, rgba(131,100,243,.18), rgba(129,203,230,.14));
+    linear-gradient(90deg, rgba(var(--hh-purple-rgb), .18), rgba(var(--hh-cyan-rgb), .14));
 }
 ._mode_card h4{ margin: 6px 0 6px; color: var(--text-0); font-size: 14px; }
 ._mode_card p{ margin: 0 0 10px; color: var(--text-1); font-size: 12px; }
@@ -1034,9 +1024,9 @@ style.textContent = `
 }
 ._log_time{ color: var(--text-2); }
 ._log_msg{ color: var(--text-1); }
-._log_entry._success ._log_msg{ color: rgba(129,203,230,.95); }
+._log_entry._success ._log_msg{ color: rgba(var(--hh-cyan-rgb), .95); }
 ._log_entry._error ._log_msg{ color: rgba(255,120,120,.95); }
-._log_entry._info ._log_msg{ color: rgba(130,152,237,.95); }
+._log_entry._info ._log_msg{ color: rgba(var(--hh-indigo-rgb), .95); }
 /* Footer */
 ._footer{
   padding: 12px 18px;
@@ -1051,7 +1041,7 @@ style.textContent = `
   width: 58px; height: 58px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,.16);
-  background: linear-gradient(90deg, rgba(131,100,243,.85), rgba(130,152,237,.80), rgba(129,203,230,.80));
+  background: linear-gradient(90deg, rgba(var(--hh-purple-rgb), .85), rgba(var(--hh-indigo-rgb), .80), rgba(var(--hh-cyan-rgb), .80));
   box-shadow: 0 18px 40px rgba(0,0,0,.35);
   transition: transform var(--t), filter var(--t);
 }
@@ -1093,12 +1083,854 @@ style.textContent = `
   display: block;
   object-fit: cover;
 }
+
+  #_hh_updates_notice._hh_un_closing{ animation: none; }
+  #_hh_updates_notice ._hh_un_btn{ transition: none; }
+}
+
+
+/* --- Announcements bell + dash (optional) --- */
+._header_controls ._control_btn._bell{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+._header_controls ._control_btn._bell ._hh_bell_svg{
+  display:block;
+  color: rgba(255,255,255,.92);
+}
+._hh_bell_badge{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .2px;
+  color: #fff;
+  background: #ff3b30;
+  border: 2px solid rgba(18,18,20,.95);
+  box-shadow: 0 6px 14px rgba(0,0,0,.25);
+}
+
+/* Panel */
+#_hh_announce_panel{
+  position: fixed;
+  width: min(360px, calc(100vw - 24px));
+  max-width: 360px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(18,18,20,.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--sh-2);
+  z-index: 2147483646;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  display: none;
+  transform-origin: top right;
+}
+#_hh_announce_panel._open{
+  animation: _hh_ap_in .22s cubic-bezier(.2,.8,.2,1) both;
+}
+#_hh_announce_panel._hh_ap_closing{
+  animation: _hh_ap_out .18s ease both;
+}
+
+#_hh_announce_panel ._hh_ap_head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 12px 12px 8px;
+}
+#_hh_announce_panel ._hh_ap_title{
+  font-weight: 900;
+  font-size: 13px;
+  color: rgba(255,255,255,.95);
+  letter-spacing: .3px;
+}
+#_hh_announce_panel ._hh_ap_x{
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#_hh_announce_panel ._hh_ap_x:hover{ background: rgba(255,255,255,.10); }
+
+#_hh_announce_panel ._hh_ap_body{ padding: 0 12px 12px; }
+#_hh_announce_panel ._hh_ap_card{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  padding: 12px;
+}
+#_hh_announce_panel ._hh_ap_card_title{
+  font-weight: 900;
+  font-size: 13px;
+  color: rgba(255,255,255,.95);
+  margin-bottom: 6px;
+}
+#_hh_announce_panel ._hh_ap_card_sub{
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: rgba(255,255,255,.76);
+  margin-bottom: 10px;
+}
+#_hh_announce_panel ._hh_ap_actions{
+  display:flex;
+  gap: 8px;
+}
+#_hh_announce_panel ._hh_ap_btn{
+  appearance:none;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+#_hh_announce_panel ._hh_ap_btn:hover{ background: rgba(255,255,255,.10); }
+#_hh_announce_panel ._hh_ap_btn:active{ transform: translateY(1px); }
+#_hh_announce_panel ._hh_ap_btn._primary{
+  border-color: rgba(var(--hh-purple-rgb), .35);
+  background: rgba(var(--hh-purple-rgb), .22);
+}
+#_hh_announce_panel ._hh_ap_btn._primary:hover{ background: rgba(var(--hh-purple-rgb), .30); }
+
+@keyframes _hh_ap_in{
+  from{ opacity: 0; transform: translateY(-4px) scale(.98); }
+  to  { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes _hh_ap_out{
+  from{ opacity: 1; transform: translateY(0) scale(1); }
+  to  { opacity: 0; transform: translateY(-2px) scale(.985); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #_hh_announce_panel._open{ animation: none; }
+  #_hh_announce_panel._hh_ap_closing{ animation: none; }
+  #_hh_announce_panel ._hh_ap_btn{ transition: none; }
+}
+
+
+/* Make header control SVGs perfectly centered */
+._control_btn svg{ display:block; pointer-events:none; }
+._control_btn._bell ._hh_bell_svg{ transform: translateY(0.5px); } /* optical centering */
+._control_btn._settings ._hh_gear_svg{ transform: translateY(0.5px); }
+
+
+
+/* --- Settings panel (Theme) --- */
+#_hh_settings_panel{
+  position: fixed;
+  width: min(420px, calc(100vw - 24px));
+  max-width: 420px;
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(18,18,20,.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--sh-2);
+  z-index: 2147483646;
+  display: none;
+  transform-origin: top right;
+}
+#_hh_settings_panel._open{ animation: _hh_sp_in .22s cubic-bezier(.2,.8,.2,1) both; }
+#_hh_settings_panel._hh_sp_closing{ animation: _hh_sp_out .18s ease both; }
+
+#_hh_settings_panel ._hh_sp_head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 12px 12px 8px;
+}
+#_hh_settings_panel ._hh_sp_title{
+  font-weight: 950;
+  font-size: 13px;
+  color: rgba(255,255,255,.95);
+  letter-spacing: .35px;
+}
+#_hh_settings_panel ._hh_sp_x{
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#_hh_settings_panel ._hh_sp_x:hover{ background: rgba(255,255,255,.10); }
+
+#_hh_settings_panel ._hh_sp_body{ padding: 0 12px 12px; display:flex; flex-direction:column; gap: 12px; }
+#_hh_settings_panel ._hh_sp_section{
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  padding: 12px;
+}
+#_hh_settings_panel ._hh_sp_h2{
+  font-weight: 950;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.92);
+  margin-bottom: 8px;
+  letter-spacing: .25px;
+}
+#_hh_settings_panel ._hh_sp_note{
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: rgba(255,255,255,.72);
+  margin-bottom: 8px;
+}
+
+#_hh_settings_panel ._hh_sp_grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+#_hh_settings_panel ._hh_sp_field{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+}
+#_hh_settings_panel ._hh_sp_field span{
+  font-size: 11.5px;
+  color: rgba(255,255,255,.78);
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+}
+#_hh_settings_panel ._hh_sp_field b{ font-weight: 950; color: rgba(255,255,255,.92); }
+#_hh_settings_panel ._hh_sp_field input[type="color"]{
+  width: 100%;
+  height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  padding: 4px;
+  cursor: pointer;
+}
+#_hh_settings_panel ._hh_sp_field input[type="range"]{ width: 100%; }
+#_hh_settings_panel ._hh_sp_field._wide{ grid-column: 1 / -1; }
+
+#_hh_settings_panel ._hh_sp_actions{
+  display:flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+#_hh_settings_panel ._hh_sp_btn{
+  appearance:none;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+#_hh_settings_panel ._hh_sp_btn:hover{ background: rgba(255,255,255,.10); }
+#_hh_settings_panel ._hh_sp_btn:active{ transform: translateY(1px); }
+#_hh_settings_panel ._hh_sp_btn._primary{
+  border-color: rgba(var(--hh-purple-rgb), .35);
+  background: rgba(var(--hh-purple-rgb), .22);
+}
+#_hh_settings_panel ._hh_sp_btn._primary:hover{ background: rgba(var(--hh-purple-rgb), .30); }
+
+#_hh_settings_panel ._hh_sp_code{
+  width: 100%;
+  min-height: 78px;
+  resize: vertical;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(10,10,12,.35);
+  color: rgba(255,255,255,.92);
+  padding: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+@keyframes _hh_sp_in{
+  from{ opacity: 0; transform: translateY(-4px) scale(.985); }
+  to  { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes _hh_sp_out{
+  from{ opacity: 1; transform: translateY(0) scale(1); }
+  to  { opacity: 0; transform: translateY(-2px) scale(.985); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #_hh_settings_panel._open{ animation: none; }
+  #_hh_settings_panel._hh_sp_closing{ animation: none; }
+  #_hh_settings_panel ._hh_sp_btn{ transition: none; }
+}
+
 `;
 document.head.appendChild(style);
     const container = document.createElement("div");
     container.innerHTML = containerHTML;
     document.body.appendChild(container);
     setInterfaceVisible(true);
+
+    // --- Announcements bell (Discord updates) ---
+    // Note: This is optional and does NOT gate any functionality.
+    const DISCORD_UPDATES_URL = "https://twisk.fun/discord";
+    const ANNOUNCEMENTS_SEEN_KEY = "_hh_ann_seen_v1";
+
+    const hasSeenAnnouncement = () => {
+        try { return Boolean(localStorage.getItem(ANNOUNCEMENTS_SEEN_KEY)); } catch { return false; }
+    };
+    const markAnnouncementSeen = () => {
+        try { localStorage.setItem(ANNOUNCEMENTS_SEEN_KEY, String(Date.now())); } catch {}
+        const badge = document.getElementById("_hh_bell_badge");
+        if (badge) badge.style.display = "none";
+        const bell = document.getElementById("_hh_bell_btn");
+        if (bell) bell.setAttribute("data-hh-hasnew", "false");
+    };
+
+    const setBellNewState = () => {
+        const badge = document.getElementById("_hh_bell_badge");
+        const bell = document.getElementById("_hh_bell_btn");
+        if (!badge || !bell) return;
+        const isNew = !hasSeenAnnouncement();
+        badge.style.display = isNew ? "inline-flex" : "none";
+        bell.setAttribute("data-hh-hasnew", isNew ? "true" : "false");
+    };
+
+    const ensureAnnouncementPanel = () => {
+        let panel = document.getElementById("_hh_announce_panel");
+        if (panel) return panel;
+
+        panel = document.createElement("div");
+        panel.id = "_hh_announce_panel";
+        panel.setAttribute("role", "dialog");
+        panel.setAttribute("aria-modal", "false");
+        panel.setAttribute("aria-label", "Announcements");
+        panel.innerHTML = `
+          <div class="_hh_ap_head">
+            <div class="_hh_ap_title">Announcements</div>
+            <button type="button" class="_hh_ap_x" id="_hh_ap_x" aria-label="Close">×</button>
+          </div>
+          <div class="_hh_ap_body">
+            <div class="_hh_ap_card">
+              <div class="_hh_ap_card_title">Get update announcements</div>
+              <div class="_hh_ap_card_sub">Optional: join our Discord for changelogs and release notes.</div>
+              <div class="_hh_ap_actions">
+                <button type="button" class="_hh_ap_btn _primary" id="_hh_ap_join">Join</button>
+                <button type="button" class="_hh_ap_btn" id="_hh_ap_close">Close</button>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(panel);
+
+        const closePanel = () => {
+            panel.classList.add("_hh_ap_closing");
+            panel.addEventListener("animationend", () => {
+                panel.classList.remove("_open", "_hh_ap_closing");
+                panel.style.display = "none";
+            }, { once: true });
+            setTimeout(() => {
+                panel.classList.remove("_open", "_hh_ap_closing");
+                panel.style.display = "none";
+            }, 250);
+        };
+
+        document.getElementById("_hh_ap_x")?.addEventListener("click", () => closePanel());
+        document.getElementById("_hh_ap_close")?.addEventListener("click", () => closePanel());
+        document.getElementById("_hh_ap_join")?.addEventListener("click", () => {
+            window.open(DISCORD_UPDATES_URL, "_blank", "noopener,noreferrer");
+            markAnnouncementSeen();
+            closePanel();
+        });
+
+        // Click outside closes
+        document.addEventListener("mousedown", (e) => {
+            if (!panel.classList.contains("_open")) return;
+            const bell = document.getElementById("_hh_bell_btn");
+            if (panel.contains(e.target)) return;
+            if (bell && bell.contains(e.target)) return;
+            closePanel();
+        });
+
+        // ESC closes
+        document.addEventListener("keydown", (e) => {
+            if (e.key !== "Escape") return;
+            if (!panel.classList.contains("_open")) return;
+            closePanel();
+        });
+
+        // Expose for toggler
+        panel._hhClose = closePanel;
+        return panel;
+    };
+
+    const positionPanelNearBell = (panel) => {
+        const bell = document.getElementById("_hh_bell_btn");
+        if (!bell || !panel) return;
+
+        const rect = bell.getBoundingClientRect();
+        const margin = 10;
+
+        // Set visible for measurement
+        panel.style.display = "block";
+        panel.style.left = "0px";
+        panel.style.top = "0px";
+
+        const pw = panel.offsetWidth || 320;
+        const ph = panel.offsetHeight || 220;
+
+        let top = rect.bottom + margin;
+        let left = rect.right - pw;
+
+        // Clamp to viewport
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        if (left < margin) left = margin;
+        if (left + pw > vw - margin) left = vw - margin - pw;
+
+        if (top + ph > vh - margin) {
+            // Place above if not enough space below
+            top = rect.top - margin - ph;
+        }
+        if (top < margin) top = margin;
+
+        panel.style.left = `${Math.round(left)}px`;
+        panel.style.top = `${Math.round(top)}px`;
+    };
+
+    const toggleAnnouncements = () => {
+        const panel = ensureAnnouncementPanel();
+        const isOpen = panel.classList.contains("_open");
+        if (isOpen) {
+            panel._hhClose?.();
+            return;
+        }
+
+        positionPanelNearBell(panel);
+        panel.classList.add("_open");
+        panel.classList.remove("_hh_ap_closing");
+        panel.style.display = "block";
+
+        // Mark as seen once user opens the announcements dash
+        if (!hasSeenAnnouncement()) markAnnouncementSeen();
+    };
+
+    // Wire bell button
+    const initAnnouncementsBell = () => {
+        const bell = document.getElementById("_hh_bell_btn");
+        if (!bell) return;
+        setBellNewState();
+
+        bell.addEventListener("click", (e) => {
+            e.preventDefault();
+            toggleAnnouncements();
+        });
+        // Reposition on resize/scroll if open
+        window.addEventListener("resize", () => {
+            const panel = document.getElementById("_hh_announce_panel");
+            if (panel?.classList.contains("_open")) positionPanelNearBell(panel);
+        });
+        window.addEventListener("scroll", () => {
+            const panel = document.getElementById("_hh_announce_panel");
+            if (panel?.classList.contains("_open")) positionPanelNearBell(panel);
+        }, true);
+    };
+
+    initAnnouncementsBell();
+
+
+    // --- Theme + Settings (export/import) ---
+    const THEME_STORAGE_KEY = "_hh_theme_v1";
+
+    const THEME_DEFAULT = {
+        // Primary gradient colors used by the UI
+        purple: "#8364f3",
+        indigo: "#8298ed",
+        cyan: "#81cbe6",
+        // UI controls
+        scale: 1.0,      // 0.85 - 1.25
+        radius: 16,      // px
+        blur: 18         // px
+    };
+
+    const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+    const safeJsonParse = (str) => {
+        try { return JSON.parse(str); } catch { return null; }
+    };
+
+    const b64EncodeUtf8 = (str) => {
+        try { return btoa(unescape(encodeURIComponent(str))); } catch { return ""; }
+    };
+    const b64DecodeUtf8 = (b64) => {
+        try { return decodeURIComponent(escape(atob(b64))); } catch { return null; }
+    };
+
+    const normalizeTheme = (t) => {
+        const out = { ...THEME_DEFAULT, ...(t || {}) };
+        // sanitize
+        const isHex = (v) => typeof v === "string" && /^#([0-9a-fA-F]{6})$/.test(v.trim());
+        if (!isHex(out.purple)) out.purple = THEME_DEFAULT.purple;
+        if (!isHex(out.indigo)) out.indigo = THEME_DEFAULT.indigo;
+        if (!isHex(out.cyan)) out.cyan = THEME_DEFAULT.cyan;
+
+        out.scale = clamp(Number(out.scale) || THEME_DEFAULT.scale, 0.85, 1.25);
+        out.radius = clamp(Math.round(Number(out.radius) || THEME_DEFAULT.radius), 10, 28);
+        out.blur = clamp(Math.round(Number(out.blur) || THEME_DEFAULT.blur), 8, 28);
+
+        return out;
+    };
+
+    const getStoredTheme = () => {
+        try {
+            const raw = localStorage.getItem(THEME_STORAGE_KEY);
+            if (!raw) return { ...THEME_DEFAULT };
+            return normalizeTheme(safeJsonParse(raw));
+        } catch {
+            return { ...THEME_DEFAULT };
+        }
+    };
+
+    const saveTheme = (theme) => {
+        try { localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme)); } catch {}
+    };
+
+    const hexToRgb = (hex) => {
+        const h = String(hex || '').trim().replace('#','');
+        if (!/^[0-9a-fA-F]{6}$/.test(h)) return '131,100,243';
+        const r = parseInt(h.slice(0,2), 16);
+        const g = parseInt(h.slice(2,4), 16);
+        const b = parseInt(h.slice(4,6), 16);
+        return `${r},${g},${b}`;
+    };
+
+    const applyTheme = (theme) => {
+        const t = normalizeTheme(theme);
+        let styleEl = document.getElementById("_hh_theme_style");
+        if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = "_hh_theme_style";
+            document.head.appendChild(styleEl);
+        }
+        const rSm = clamp(t.radius - 4, 6, 24);
+        const rMd = t.radius;
+        const rLg = clamp(t.radius + 6, 10, 36);
+
+        styleEl.textContent = `:root{
+  --hh-purple: ${t.purple};
+  --hh-indigo: ${t.indigo};
+  --hh-cyan: ${t.cyan};
+
+  /* Backwards-compat tokens used by existing UI */
+  --purple: ${t.purple};
+  --indigo: ${t.indigo};
+  --cyan: ${t.cyan};
+
+  /* RGB helpers for alpha backgrounds */
+  --hh-purple-rgb: ${hexToRgb(t.purple)};
+  --hh-indigo-rgb: ${hexToRgb(t.indigo)};
+  --hh-cyan-rgb: ${hexToRgb(t.cyan)};
+
+  --hh-ui-scale: ${t.scale};
+  --blur: ${t.blur}px;
+
+  /* Radius tokens used throughout */
+  --r-sm: ${rSm}px;
+  --r-md: ${rMd}px;
+  --r-lg: ${rLg}px;
+}`.trim();
+        return t;
+    };
+
+    // Apply theme on load
+    let _hhTheme = applyTheme(getStoredTheme());
+
+    const ensureSettingsPanel = () => {
+        let panel = document.getElementById("_hh_settings_panel");
+        if (panel) return panel;
+
+        panel = document.createElement("div");
+        panel.id = "_hh_settings_panel";
+        panel.setAttribute("role", "dialog");
+        panel.setAttribute("aria-modal", "false");
+        panel.setAttribute("aria-label", "Settings");
+        panel.innerHTML = `
+          <div class="_hh_sp_head">
+            <div class="_hh_sp_title">Settings</div>
+            <button type="button" class="_hh_sp_x" id="_hh_sp_x" aria-label="Close">×</button>
+          </div>
+
+          <div class="_hh_sp_body">
+            <div class="_hh_sp_section">
+              <div class="_hh_sp_h2">Theme</div>
+
+              <div class="_hh_sp_grid">
+                <label class="_hh_sp_field">
+                  <span>Gradient 1</span>
+                  <input id="_hh_th_purple" type="color" value="${_hhTheme.purple}" />
+                </label>
+
+                <label class="_hh_sp_field">
+                  <span>Gradient 2</span>
+                  <input id="_hh_th_indigo" type="color" value="${_hhTheme.indigo}" />
+                </label>
+
+                <label class="_hh_sp_field">
+                  <span>Gradient 3</span>
+                  <input id="_hh_th_cyan" type="color" value="${_hhTheme.cyan}" />
+                </label>
+
+                <label class="_hh_sp_field _wide">
+                  <span>UI scale <b id="_hh_th_scale_label">${_hhTheme.scale.toFixed(2)}×</b></span>
+                  <input id="_hh_th_scale" type="range" min="0.85" max="1.25" step="0.01" value="${_hhTheme.scale}">
+                </label>
+
+                <label class="_hh_sp_field _wide">
+                  <span>Corner radius <b id="_hh_th_radius_label">${_hhTheme.radius}px</b></span>
+                  <input id="_hh_th_radius" type="range" min="10" max="28" step="1" value="${_hhTheme.radius}">
+                </label>
+
+                <label class="_hh_sp_field _wide">
+                  <span>Blur <b id="_hh_th_blur_label">${_hhTheme.blur}px</b></span>
+                  <input id="_hh_th_blur" type="range" min="8" max="28" step="1" value="${_hhTheme.blur}">
+                </label>
+              </div>
+
+              <div class="_hh_sp_actions">
+                <button type="button" class="_hh_sp_btn" id="_hh_th_reset">Reset</button>
+                <button type="button" class="_hh_sp_btn _primary" id="_hh_th_save">Save</button>
+              </div>
+            </div>
+
+            <div class="_hh_sp_section">
+              <div class="_hh_sp_h2">Theme code</div>
+              <div class="_hh_sp_note">
+                Export your theme as a code other users can paste to apply the same look.
+              </div>
+              <textarea id="_hh_th_code" class="_hh_sp_code" spellcheck="false" placeholder="Theme code will appear here..."></textarea>
+
+              <div class="_hh_sp_actions">
+                <button type="button" class="_hh_sp_btn" id="_hh_th_export">Export</button>
+                <button type="button" class="_hh_sp_btn _primary" id="_hh_th_import">Import & Apply</button>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(panel);
+
+        const closePanel = () => {
+            panel.classList.add("_hh_sp_closing");
+            panel.addEventListener("animationend", () => {
+                panel.classList.remove("_open", "_hh_sp_closing");
+                panel.style.display = "none";
+            }, { once: true });
+            setTimeout(() => {
+                panel.classList.remove("_open", "_hh_sp_closing");
+                panel.style.display = "none";
+            }, 240);
+        };
+
+        panel._hhClose = closePanel;
+
+        document.getElementById("_hh_sp_x")?.addEventListener("click", () => closePanel());
+
+        // Click outside closes
+        document.addEventListener("mousedown", (e) => {
+            if (!panel.classList.contains("_open")) return;
+            const btn = document.getElementById("_hh_settings_btn");
+            if (panel.contains(e.target)) return;
+            if (btn && btn.contains(e.target)) return;
+            closePanel();
+        });
+
+        // ESC closes
+        document.addEventListener("keydown", (e) => {
+            if (e.key !== "Escape") return;
+            if (!panel.classList.contains("_open")) return;
+            closePanel();
+        });
+
+        const readInputs = () => normalizeTheme({
+            purple: document.getElementById("_hh_th_purple")?.value,
+            indigo: document.getElementById("_hh_th_indigo")?.value,
+            cyan: document.getElementById("_hh_th_cyan")?.value,
+            scale: document.getElementById("_hh_th_scale")?.value,
+            radius: document.getElementById("_hh_th_radius")?.value,
+            blur: document.getElementById("_hh_th_blur")?.value
+        });
+
+        const syncLabels = () => {
+            const t = readInputs();
+            const sL = document.getElementById("_hh_th_scale_label");
+            const rL = document.getElementById("_hh_th_radius_label");
+            const bL = document.getElementById("_hh_th_blur_label");
+            if (sL) sL.textContent = `${t.scale.toFixed(2)}×`;
+            if (rL) rL.textContent = `${t.radius}px`;
+            if (bL) bL.textContent = `${t.blur}px`;
+        };
+
+        const onChangeLive = () => {
+            const t = readInputs();
+            _hhTheme = applyTheme(t);
+            syncLabels();
+        };
+
+        ["_hh_th_purple","_hh_th_indigo","_hh_th_cyan"].forEach(id => {
+            document.getElementById(id)?.addEventListener("input", onChangeLive);
+        });
+        ["_hh_th_scale","_hh_th_radius","_hh_th_blur"].forEach(id => {
+            document.getElementById(id)?.addEventListener("input", onChangeLive);
+        });
+
+        document.getElementById("_hh_th_save")?.addEventListener("click", () => {
+            const t = readInputs();
+            _hhTheme = applyTheme(t);
+            saveTheme(_hhTheme);
+            logToConsole("Theme saved.", "success");
+        });
+
+        document.getElementById("_hh_th_reset")?.addEventListener("click", () => {
+            _hhTheme = applyTheme({ ...THEME_DEFAULT });
+            saveTheme(_hhTheme);
+            // Reset UI inputs
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = String(val); };
+            setVal("_hh_th_purple", _hhTheme.purple);
+            setVal("_hh_th_indigo", _hhTheme.indigo);
+            setVal("_hh_th_cyan", _hhTheme.cyan);
+            setVal("_hh_th_scale", _hhTheme.scale);
+            setVal("_hh_th_radius", _hhTheme.radius);
+            setVal("_hh_th_blur", _hhTheme.blur);
+            syncLabels();
+            logToConsole("Theme reset.", "info");
+        });
+
+        document.getElementById("_hh_th_export")?.addEventListener("click", () => {
+            const t = readInputs();
+            const code = b64EncodeUtf8(JSON.stringify(t));
+            const ta = document.getElementById("_hh_th_code");
+            if (ta) ta.value = code;
+        });
+
+        document.getElementById("_hh_th_import")?.addEventListener("click", () => {
+            const ta = document.getElementById("_hh_th_code");
+            const raw = (ta?.value || "").trim();
+            if (!raw) { logToConsole("Paste a theme code first.", "warn"); return; }
+
+            const jsonStr = b64DecodeUtf8(raw);
+            if (!jsonStr) { logToConsole("Invalid theme code.", "error"); return; }
+
+            const obj = safeJsonParse(jsonStr);
+            if (!obj) { logToConsole("Invalid theme JSON.", "error"); return; }
+
+            const t = normalizeTheme(obj);
+            _hhTheme = applyTheme(t);
+            saveTheme(_hhTheme);
+
+            // Update inputs
+            const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = String(val); };
+            setVal("_hh_th_purple", _hhTheme.purple);
+            setVal("_hh_th_indigo", _hhTheme.indigo);
+            setVal("_hh_th_cyan", _hhTheme.cyan);
+            setVal("_hh_th_scale", _hhTheme.scale);
+            setVal("_hh_th_radius", _hhTheme.radius);
+            setVal("_hh_th_blur", _hhTheme.blur);
+            syncLabels();
+            logToConsole("Theme imported & applied.", "success");
+        });
+
+        syncLabels();
+        return panel;
+    };
+
+    const positionPanelNearButton = (panel, btnId) => {
+        const btn = document.getElementById(btnId);
+        if (!btn || !panel) return;
+
+        const rect = btn.getBoundingClientRect();
+        const margin = 10;
+
+        panel.style.display = "block";
+        panel.style.left = "0px";
+        panel.style.top = "0px";
+
+        const pw = panel.offsetWidth || 360;
+        const ph = panel.offsetHeight || 420;
+
+        let top = rect.bottom + margin;
+        let left = rect.right - pw;
+
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        if (left < margin) left = margin;
+        if (left + pw > vw - margin) left = vw - margin - pw;
+
+        if (top + ph > vh - margin) {
+            top = rect.top - margin - ph;
+        }
+        if (top < margin) top = margin;
+
+        panel.style.left = `${Math.round(left)}px`;
+        panel.style.top = `${Math.round(top)}px`;
+    };
+
+    const toggleSettings = () => {
+        const panel = ensureSettingsPanel();
+        const isOpen = panel.classList.contains("_open");
+        if (isOpen) { panel._hhClose?.(); return; }
+
+        positionPanelNearButton(panel, "_hh_settings_btn");
+        panel.classList.add("_open");
+        panel.classList.remove("_hh_sp_closing");
+        panel.style.display = "block";
+    };
+
+    const initSettingsButton = () => {
+        const btn = document.getElementById("_hh_settings_btn");
+        if (!btn) return;
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            toggleSettings();
+        });
+        window.addEventListener("resize", () => {
+            const panel = document.getElementById("_hh_settings_panel");
+            if (panel?.classList.contains("_open")) positionPanelNearButton(panel, "_hh_settings_btn");
+        });
+        window.addEventListener("scroll", () => {
+            const panel = document.getElementById("_hh_settings_panel");
+            if (panel?.classList.contains("_open")) positionPanelNearButton(panel, "_hh_settings_btn");
+        }, true);
+    };
+
+    initSettingsButton();
+
+
 };
 const addEventListeners = () => {
     document.getElementById('_fab')?.addEventListener('click', toggleInterface);
@@ -1138,17 +1970,6 @@ const addEventListeners = () => {
             logToConsole('Console cleared', 'info');
         }
     });
-    const DISCORD_URL = "https://twisk.fun/discord";
-function openDiscordNewTab(){
-  try{
-    GM_openInTab(DISCORD_URL, { active: true, insert: true, setParent: true });
-  }catch{
-    window.open(DISCORD_URL, "_blank", "noopener,noreferrer");
-  }
-}
-document.getElementById("_hh_join_btn")?.addEventListener("click", () => {
-  openDiscordNewTab();
-});
 };
 (async () => {
     try {
@@ -1157,7 +1978,7 @@ document.getElementById("_hh_join_btn")?.addEventListener("click", () => {
         addEventListeners();
         const success = await initializeFarming();
         if (success) {
-            logToConsole('DuoHacker Basic ready', 'success');
+            logToConsole('DuoHacker ready', 'success');
         } else {
             logToConsole('Failed to initialize. Please make sure you are logged in to Duolingo.', 'error');
         }

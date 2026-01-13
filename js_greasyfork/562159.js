@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Reddit Free Awards – Posts & Comments (Queued + Toggle)
 // @namespace    https://tampermonkey.net/reddit-free-awards-toggle-floating
-// @version      3.4.0
+// @author       dapro26
+// @version      3.4.2
 // @description  One-click free awards for posts & comments with floating toggle and rate-limit safe queue
 // @match        https://www.reddit.com/*
 // @grant        none
@@ -163,27 +164,37 @@
     });
   };
 
-  const injectPostButtons = (uid) => {
-    document.querySelectorAll("shreddit-post").forEach(post => {
-      if (!isEnabled() || post.dataset.freeAwardInjected) return;
-      if (post.getAttribute("author-id") === uid) return;
+const injectPostButtons = (uid) => {
+  document.querySelectorAll("shreddit-post").forEach(post => {
+    if (!isEnabled() || post.dataset.freeAwardInjected) return;
+    if (post.getAttribute("author-id") === uid) return;
 
-      const thingId = post.id || post.getAttribute("postid");
-      if (!thingId) return;
+    const thingId = post.id || post.getAttribute("postid");
+    if (!thingId) return;
 
-      const wrap = document.createElement("div");
-      wrap.className = "free-award-wrap";
-      wrap.style.cssText = "display:inline-flex;gap:4px;margin-left:8px;";
+    const wrap = document.createElement("div");
+    wrap.className = "free-award-wrap";
+    wrap.style.cssText = "display:inline-flex;gap:4px;margin-left:8px;";
 
-      AWARDS.forEach(a => wrap.appendChild(createAwardButton(a, thingId)));
+    AWARDS.forEach(a => wrap.appendChild(createAwardButton(a, thingId)));
 
-      const target = post.querySelector('[slot="post-award"]') || post.querySelector("award-button");
-      if (target) {
-        target.after(wrap);
-        post.dataset.freeAwardInjected = "true";
-      }
-    });
-  };
+    let target =
+      post.querySelector('[slot="post-award"]') ||
+      post.querySelector("award-button");
+
+    // 🔑 SHADOW DOM FALLBACK
+    if (!target && post.shadowRoot) {
+      target =
+        post.shadowRoot.querySelector('[slot="post-award"]') ||
+        post.shadowRoot.querySelector("award-button");
+    }
+
+    if (target) {
+      target.after(wrap);
+      post.dataset.freeAwardInjected = "true";
+    }
+  });
+};
 
   /* ===================== FLOATING TOGGLE ===================== */
 

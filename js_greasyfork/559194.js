@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LMArena | Floating Copy Buttons
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      3.1
+// @version      3.2
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Adds floating copy buttons for code blocks and chat messages
@@ -78,6 +78,11 @@
     // - Fix: Message buttons now appear for streaming messages during active conversations.
     //   (MutationObserver was only detecting messages inside newly added `ol` containers,
     //    not individual message elements added to an existing container.)
+    //
+    // v3.2
+    // - Fix: AI message copy button no longer overlaps code block header buttons.
+    //   * Messages that are predominantly code (>70% height) hide the message button entirely.
+    //   * Mixed-content messages use collision detection to reposition the button safely.
     //
     // ═══════════════════════════════════════════════════════════════════════
     // DISCARDED BRANCH (Concept Only)
@@ -324,16 +329,105 @@
         return Math.max(minY, Math.min(maxY, y));
     }
 
+    // Check if two rectangles overlap
+    function rectsOverlap(r1, r2) {
+        return !(r1.right < r2.left ||
+                 r1.left > r2.right ||
+                 r1.bottom < r2.top ||
+                 r1.top > r2.bottom);
+    }
+
+    // Check if a message is predominantly code (>70% of visible height)
+    function isCodeDominantMessage(el) {
+        const prose = el.querySelector('.no-scrollbar .prose');
+        if (!prose) return false;
+
+        const codeBlocks = el.querySelectorAll('[data-code-block="true"]');
+        if (codeBlocks.length === 0) return false;
+
+        const proseRect = prose.getBoundingClientRect();
+        if (proseRect.height === 0) return false;
+
+        let codeHeight = 0;
+        codeBlocks.forEach(block => {
+            codeHeight += block.getBoundingClientRect().height;
+        });
+
+        // If code takes up > 70% of the message height, consider it code-dominant
+        return (codeHeight / proseRect.height) > 0.7;
+    }
+
+    // Get bounding rects of all code block headers within an element
+    function getCodeBlockHeaderRects(el) {
+        const rects = [];
+        const codeBlocks = el.querySelectorAll('[data-code-block="true"]');
+
+        codeBlocks.forEach(block => {
+            // Check for our custom header button first, then native header
+            const header = block.querySelector('.fcb-code-header') ||
+                           block.querySelector('.flex.items-center.justify-between.border-b');
+            if (header) {
+                const rect = header.getBoundingClientRect();
+                if (rect.width > 0 && rect.height > 0) {
+                    rects.push(rect);
+                }
+            }
+        });
+
+        return rects;
+    }
+
+    // Find a Y position that avoids collision with code block headers
+    function avoidHeaderCollision(sourceEl, x, y, size, bounds, padding) {
+        const headerRects = getCodeBlockHeaderRects(sourceEl);
+        if (headerRects.length === 0) return y;
+
+        const btnRect = { left: x, right: x + size, top: y, bottom: y + size };
+
+        // Find any colliding header
+        const collision = headerRects.find(hr => rectsOverlap(btnRect, hr));
+        if (!collision) return y;
+
+        // Try positioning below the colliding header
+        const belowY = collision.bottom + padding;
+        if (belowY + size <= bounds.bottom - padding) {
+            const newBtnRect = { left: x, right: x + size, top: belowY, bottom: belowY + size };
+            const newCollision = headerRects.find(hr => rectsOverlap(newBtnRect, hr));
+            if (!newCollision) return belowY;
+        }
+
+        // Try positioning above all code blocks
+        const codeBlocks = sourceEl.querySelectorAll('[data-code-block="true"]');
+        if (codeBlocks.length > 0) {
+            const topMost = Math.min(...Array.from(codeBlocks).map(b => b.getBoundingClientRect().top));
+            const aboveY = topMost - size - padding;
+            if (aboveY >= bounds.top + padding) {
+                return aboveY;
+            }
+        }
+
+        // No valid position found - signal to hide
+        return null;
+    }
+
     // ═══════════════════════════════════════════════════════════════════════
     // POSITIONING STRATEGIES
     // ═══════════════════════════════════════════════════════════════════════
 
-    function positionBeside(btn, targetEl, size, padding, side, offset) {
+    function positionBeside(btn, targetEl, size, padding, side, offset, sourceEl) {
         const safeZone = getSafeZone();
         const minVisible = size + padding * 2;
         const bounds = getVisibleBounds(targetEl, safeZone);
 
         if (!bounds || bounds.height < minVisible) {
+            return hideButton(btn);
+        }
+
+        const isUser = side === 'left';
+
+        // For AI messages: hide button if message is code-dominant
+        // (code blocks have their own copy mechanisms)
+        if (!isUser && sourceEl && isCodeDominantMessage(sourceEl)) {
             return hideButton(btn);
         }
 
@@ -346,12 +440,14 @@
         const fitsBeside = besideX >= padding && besideX + size <= window.innerWidth - padding;
 
         let x;
+        let inOverlayMode = false;
 
         if (fitsBeside) {
             // Position beside the message
             x = besideX;
         } else {
             // Fallback: overlay on the message
+            inOverlayMode = true;
             const overlayPadding = CONFIG.message.overlayPadding;
 
             if (side === 'left') {
@@ -368,6 +464,16 @@
 
         // Calculate Y position (vertically centered within visible bounds)
         let y = bounds.top + (bounds.height / 2) - (size / 2);
+
+        // For AI messages in overlay mode: check for collision with code block headers
+        if (!isUser && inOverlayMode && sourceEl) {
+            const adjustedY = avoidHeaderCollision(sourceEl, x, y, size, bounds, padding);
+            if (adjustedY === null) {
+                return hideButton(btn);
+            }
+            y = adjustedY;
+        }
+
         const clampedY = clampY(y, bounds, size, padding);
 
         if (clampedY === null) {
@@ -1077,7 +1183,7 @@
             type: isUser ? 'user' : 'ai',
             target,
             sourceEl: el,
-            update: () => positionBeside(btn, target, size, padding, msgConfig.side, offset),
+            update: () => positionBeside(btn, target, size, padding, msgConfig.side, offset, el),
             getContent: () => getMessageContent(el, isUser),
             getDragContent: () => getMessageMarkdown(el, isUser),
             getNativeButton: () => findNativeCopyButton(el)

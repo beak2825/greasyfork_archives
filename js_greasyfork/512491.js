@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn City Chain Watch Alert
 // @namespace    http://tampermonkey.net/
-// @version      5.7
+// @version      5.8
 // @description  Enhanced chain timer alert with advanced customization and preferences panel
 // @author       Codex234
 // @match        https://www.torn.com/*
@@ -420,6 +420,41 @@ function monitorChain() {
         updateContainerPosition(container, title, content);
 
         console.debug('[ChainWatch] UI initialization complete');
+        // Automatically display the script version from the header
+        const scriptVersion = (typeof GM_info !== 'undefined' ? GM_info.script.version :
+                               typeof GM !== 'undefined' && GM.info ? GM.info.script.version :
+                               '5.8');  // fallback if metadata unavailable
+
+        const versionText = createElement('div', {
+            textContent: `Version ${scriptVersion}`,
+            style: {
+                position: 'absolute',
+                bottom: '8px',
+                right: '10px',
+                fontSize: '10px',
+                color: '#555555',          // medium gray as requested
+                pointerEvents: 'none',
+                opacity: '0.8',
+                zIndex: '10'
+            }
+        });
+
+        // Make container relative for absolute positioning
+        container.style.position = 'relative';
+
+        // Add version text to the expandable content area only
+        content.appendChild(versionText);
+
+        // Show/hide version text when panel expands/collapses
+        const updateVersionVisibility = () => {
+            versionText.style.display = settings.contentVisible ? 'block' : 'none';
+        };
+
+        updateVersionVisibility();  // initial state
+
+        title.addEventListener('click', updateVersionVisibility);
+        container.style.position = 'relative';
+        container.appendChild(versionText);
     }
 
     function createExpandableSection(titleText, contentId, contentElement, isDarkMode) {

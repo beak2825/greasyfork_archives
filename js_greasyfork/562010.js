@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         EarnPepe Faucet Rotator PRO
 // @namespace    https://earnpepe.online/
-// @version      1.3
+// @version      1.4
 // @description  Fully automated faucet rotator for EarnPepe
 // @author       Rubystance
 // @license      MIT
@@ -18,6 +18,46 @@ const WALLET = 'YOUR_FAUCETPAY_EMAIL_HERE'; // << YOUR_FAUCETPAY_EMAIL
 const MAX = 1000;
 const STORE = 'ep-claims';
 let minimized = false;
+
+let humanClicks = 0;
+let allowCollect = false;
+
+function resetHumanGate(){
+    humanClicks = 0;
+    allowCollect = false;
+    console.log('[EarnPepe] Gate reset');
+}
+
+if (location.href.includes('/app/faucet')) resetHumanGate();
+
+document.addEventListener('click', e=>{
+    const img = e.target.closest('img');
+    if(!img) return;
+    if(
+        img.src.startsWith('data:image') ||
+        img.closest('.iconcaptcha') ||
+        img.closest('.iconcaptcha-modal')
+    ){
+        if(!allowCollect){
+            humanClicks++;
+            console.log(`[EarnPepe] Clique ${humanClicks}/3`);
+            if(humanClicks >= 3){
+                allowCollect = true;
+                console.log('[EarnPepe] Gate liberado');
+            }
+        }
+    }
+}, true);
+
+setInterval(()=>{
+    if(!allowCollect) return;
+    const btn = document.querySelector('.claim-button.step4');
+    if(btn && !btn.disabled && btn.offsetParent !== null){
+        btn.click();
+        allowCollect = false;
+    }
+},300);
+/* ======================================================== */
 
 const REF_KEY = 'ep-ref-used';
 if (!localStorage.getItem(REF_KEY)) {
@@ -102,15 +142,10 @@ function nextFaucet(){
 
   const i = links.findIndex(a => a.classList.contains('text-primary'));
   const next = links[(i + 1) % links.length];
-
   if (!next) return null;
-
   const url = new URL(next.href);
   const currency = url.searchParams.get('currency');
-
-  return {
-    href: `/app/faucet?currency=${currency}`
-  };
+  return { href: `/app/faucet?currency=${currency}` };
 }
 
 setInterval(()=>{
@@ -132,7 +167,7 @@ new MutationObserver(() => {
 new MutationObserver(() => {
   const ok = document.querySelector('.iconcaptcha-modal__body-title');
   const collectBtn = document.querySelector('.claim-button.step4');
-  if(ok && ok.textContent.includes('Verification complete') && collectBtn && !collectBtn.disabled){
+  if(ok && ok.textContent.includes('Verification complete') && collectBtn && !collectBtn.disabled && allowCollect){
     collectBtn.click();
   }
 }).observe(document.body,{childList:true,subtree:true});
@@ -190,7 +225,6 @@ if(location.href.includes('/app/faucet')){
     const s=$('#swal2-title');
     if(s && !rotated){
       const txt = s.textContent.trim();
-
       if(txt === 'Great!'){
         rotated=true;
         claims[currency]++;
@@ -199,7 +233,6 @@ if(location.href.includes('/app/faucet')){
         const next=nextFaucet();
         if(next) setTimeout(()=>location.href=next.href,1200);
       }
-
       if(txt === 'Failed!'){
         rotated=true;
         const next=nextFaucet();

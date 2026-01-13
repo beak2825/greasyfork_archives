@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X+
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.3
 // @description  Fix nav with Minimal Twitter
 // @author       the3ash
 // @match        https://x.com/*
@@ -14,12 +14,14 @@
 
 (function () {
   GM_addStyle(`
-.css-175oi2r.r-aqfbo4.r-1pi2tsx.r-1xcajam.r-ipm5af{
-   left:0 !important;
+header[role="banner"],
+div:has(> div > div > div > nav[aria-label="主要"]),
+div:has(> div > div > div > nav[aria-label="Primary"]) {
+   left: 0 !important;
 }
 
-.r-ero68b{
-  min-width: 108px !important;
+a[href="/i/jf/creators/studio"] {
+    display: none !important;
 }
     `);
 })();

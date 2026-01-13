@@ -3,7 +3,7 @@
 // @name:zh-TW   YouTube 截圖助手 & 播放Shorts時隱藏影片標題
 // @name:zh-CN   YouTube 截图助手 & 播放Shorts时隐藏视频标题
 // @namespace    https://www.tampermonkey.net/
-// @version      2.8
+// @version      3.0
 // @description  YouTube Screenshot Tool – supports hotkey capture, burst mode, customizable hotkeys, burst interval settings, and menu language switch between Chinese and English. Hide the video title when playing Shorts; show the video title when the video is paused.
 // @description:zh-TW YouTube截圖工具，支援快捷鍵截圖、連拍模式，自定義快捷鍵、連拍間隔設定、中英菜單切換、播放Shorts時隱藏影片標題，暫停影片時顯示影片標題
 // @description:zh-CN YouTube截图工具，支援快捷键截图、连拍模式，自定义快捷键、连拍间隔设定、中英菜单切换、播放Shorts时隐藏影片标题，暂停影片时显示影片标题

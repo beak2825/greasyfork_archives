@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Colourise Hacker News Hierarchy
 // @namespace    https://news.ycombinator.com/
-// @version      1.1
+// @version      1.2
 // @license      GPLv3
 // @description  Applies a pastel colour palette to the the comments hierarchy on Hacker News to make it easier to see which level of comments a comment belongs to
 // @author       xdpirate
@@ -53,6 +53,12 @@ for(let h = 0; h <= 360; h += 20) {
 // allowing colours to repeat is fine when they are 12 levels apart
 colours.push(...colours);
 colours.push(...colours);
+
+GM_addStyle(`
+    td.default {
+        background-color: ${colours[0]};
+    }
+`);
 
 for(let i = 0; i < colours.length; i++) {
     GM_addStyle(`

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QwenPersona
 // @namespace    https://www.kev1nweng.space
-// @version      1768097158
+// @version      1768116004
 // @description  一个便于用户自定义、保存并同步 Qwen Chat 自定义角色的 Tampermonkey 脚本。A Tampermonkey script for customizing user-defined personas in Qwen Chat.
 // @author       小翁同学 (kev1nweng)
 // @license      AGPL-3.0
@@ -106,6 +106,7 @@
       SELECTED: "qwen_selected_persona",
       MODELS_CACHE: "qwen_models_cache",
       CHAT_MAP: "qwen_chat_persona_map",
+      CHAT_INJECTED: "qwen_chat_injected",
     },
     SELECTORS: {
       // Custom UI IDs
@@ -175,6 +176,7 @@
     editingPersona: null,
     lastUrl: location.href,
     chatPersonaMap: {},
+    chatInjectedMap: {}, // { chatId: personaId }
     // When Qwen creates a new chat, the URL->chatId mapping may lag the first request.
     // We store a short-lived personaId here and bind it to the chatId once it appears.
     pendingNewChatPersona: null, // { personaId, ts, reason }
@@ -383,6 +385,26 @@
         );
       } catch (e) {
         console.error("[QwenPersona] Failed to save chat persona map:", e);
+      }
+    },
+
+    loadChatInjectedMap() {
+      try {
+        const stored = localStorage.getItem(CONSTANTS.STORAGE.CHAT_INJECTED);
+        State.chatInjectedMap = stored ? JSON.parse(stored) : {};
+      } catch (e) {
+        State.chatInjectedMap = {};
+      }
+    },
+
+    saveChatInjectedMap() {
+      try {
+        localStorage.setItem(
+          CONSTANTS.STORAGE.CHAT_INJECTED,
+          JSON.stringify(State.chatInjectedMap)
+        );
+      } catch (e) {
+        console.error("[QwenPersona] Failed to save chat injected map:", e);
       }
     },
   };
@@ -1682,6 +1704,45 @@
 
       checkNavbar();
     },
+
+    startMessageObserver() {
+      if (this.messageObserver) return;
+
+      console.log(
+        "[QwenPersona] Starting Message Observer to hide instructions"
+      );
+      this.messageObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const walk = document.createTreeWalker(
+                node,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+              );
+              let textNode;
+              while ((textNode = walk.nextNode())) {
+                if (
+                  textNode.textContent.includes("[System Instruction]") &&
+                  textNode.textContent.includes("[User Message]")
+                ) {
+                  textNode.textContent = textNode.textContent.replace(
+                    /\[System Instruction\]\n[\s\S]*?\n\n\[User Message\]\n/,
+                    ""
+                  );
+                }
+              }
+            }
+          });
+        });
+      });
+
+      this.messageObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    },
   };
 
   // ==================== Model Service ====================
@@ -2728,10 +2789,44 @@
       const originalFetch = window.fetch;
 
       window.fetch = async function (url, options = {}) {
-        if (
-          typeof url === "string" &&
-          url.includes("/api/v2/chat/completions")
-        ) {
+        const urlStr = typeof url === "string" ? url : (url.url || "");
+
+        // 1. Intercept History Fetch to hide system instructions (Invisible part)
+        if (urlStr.includes("/api/v2/chats/")) {
+          // Check if this is a GET request for a specific chat
+          const chatIdMatch = urlStr.match(/\/api\/v2\/chats\/([a-zA-Z0-9-]+)/);
+          if (chatIdMatch && (!options.method || options.method === "GET")) {
+            const response = await originalFetch.call(this, url, options);
+            const clone = response.clone();
+            try {
+              const result = await clone.json();
+              if (result.data && Array.isArray(result.data.messages)) {
+                let cleaned = false;
+                result.data.messages.forEach((msg) => {
+                  if (msg.role === "user" && typeof msg.content === "string") {
+                    const original = msg.content;
+                    msg.content = msg.content.replace(
+                        /\[System Instruction\]\n[\s\S]*?\n\n\[User Message\]\n/,
+                        ""
+                    );
+                    if (original !== msg.content) cleaned = true;
+                  }
+                });
+                if (cleaned) {
+                  return new Response(JSON.stringify(result), {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers,
+                  });
+                }
+              }
+            } catch (e) {}
+            return response;
+          }
+        }
+
+        // 2. Intercept Completions (Injection logic)
+        if (urlStr.includes("/api/v2/chat/completions")) {
           const persona = State.personas.find(
             (p) => p.id === State.selectedPersonaId
           );
@@ -2740,6 +2835,8 @@
             try {
               let body = JSON.parse(options.body);
               let modified = false;
+
+              const chatId = body.chat_id || ChatManager.getCurrentChatId();
 
               // Detect if this is an edit action (user editing a previous message)
               const isEditAction =
@@ -2762,47 +2859,31 @@
                 body.messages.some((m) => m.role === "system");
 
               // Check if chat_id exists in URL (indicates existing conversation)
-              const urlChatIdMatch = url.match(/chat_id=([a-zA-Z0-9-]+)/);
+              const urlChatIdMatch = urlStr.match(/chat_id=([a-zA-Z0-9-]+)/);
               const urlHasChatId = !!urlChatIdMatch;
 
               console.log("[QwenPersona] Debug - Request Check:", {
-                url,
+                url: urlStr,
                 isNewChat,
                 isEditAction,
                 hasSystemMessage,
                 urlHasChatId,
                 chat_id: body.chat_id,
                 parent_id: body.parent_id || body.parentId,
-                messageCount: body.messages ? body.messages.length : 0,
-                personaPrompt: !!persona.prompt,
               });
 
-              // If we are sending the first message of a new chat, remember which persona was active.
-              // The URL might change slightly later; we'll bind this persona to the new chatId on navigation.
+              // Handle pending new chat persona mapping
               if (isNewChat && persona && persona.id) {
                 State.pendingNewChatPersona = {
                   personaId: persona.id,
                   ts: Date.now(),
                   reason: "first_message_new_chat_request",
                 };
-                Debug.event("pending_new_chat_persona_set", {
-                  personaId: persona.id,
-                  personaName: persona.name,
-                  url,
-                });
-
-                // If the chatId is already present in the URL, bind immediately.
-                // Some Qwen flows enter /c/<uuid> before the first completions request.
+                
                 const currChatId = ChatManager.getCurrentChatId();
                 if (currChatId && !State.chatPersonaMap[currChatId]) {
                   State.chatPersonaMap[currChatId] = persona.id;
                   Storage.saveChatPersonaMap();
-                  Debug.event("map_new_chat_from_pending_immediate", {
-                    currChatId,
-                    mappedTo: persona.id,
-                    personaName: persona.name,
-                  });
-                  // Clear pending to avoid affecting later navigations.
                   State.pendingNewChatPersona = null;
                 }
               }
@@ -2812,69 +2893,44 @@
                   (m) => m.role === "system"
                 );
 
-                // For edit actions: the server does NOT retain the system message
-                // We need to inject the system prompt into the user message instead
-                // because the API only allows one system message at the conversation root
                 if (isEditAction && urlHasChatId) {
-                  // Remove any existing system message first (to avoid duplicates)
                   if (systemMsgIndex !== -1) {
-                    console.log(
-                      "[QwenPersona] Debug - Removing existing System Message for edit action"
-                    );
                     body.messages.splice(systemMsgIndex, 1);
                   }
-                  // Prepend system prompt to user message content
                   const userMsgIndex = body.messages.findIndex(
                     (m) => m.role === "user"
                   );
                   if (userMsgIndex !== -1) {
                     const userMsg = body.messages[userMsgIndex];
-                    if (!userMsg.content.startsWith(persona.prompt)) {
-                      console.log(
-                        "[QwenPersona] Debug - Prepending System Prompt to User Message (Edit Action)"
-                      );
+                    if (!userMsg.content.includes("[System Instruction]")) {
                       userMsg.content = `[System Instruction]\n${persona.prompt}\n\n[User Message]\n${userMsg.content}`;
                       modified = true;
                     }
                   }
                 } else if (systemMsgIndex !== -1) {
-                  console.log(
-                    "[QwenPersona] Debug - Updating existing System Prompt"
-                  );
                   body.messages[systemMsgIndex].content = persona.prompt;
-
-                  // Ensure it is the first message
                   if (systemMsgIndex !== 0) {
                     const [msg] = body.messages.splice(systemMsgIndex, 1);
                     body.messages.unshift(msg);
                   }
                   modified = true;
                 } else {
-                  // No system message found
-                  // Check if this is the start of a conversation (no parent_id)
-                  // If parent_id exists, it's a continuation, and we CANNOT inject a system message (server restriction)
-                  const isStartOfConversation =
-                    !body.parent_id && !body.parentId && !isEditAction;
+                  const isStartOfConversation = !body.parent_id && !body.parentId && !isEditAction;
+                  const alreadyInjected = chatId && State.chatInjectedMap[chatId] === persona.id;
 
                   if (isStartOfConversation && !urlHasChatId) {
-                    console.log(
-                      "[QwenPersona] Debug - Injecting System Prompt (New Chat/Root)"
-                    );
                     body.messages.unshift({
                       role: "system",
                       content: persona.prompt,
                     });
                     modified = true;
-                  } else {
-                    console.log(
-                      "[QwenPersona] Debug - Prepending System Prompt to User Message (Continuation)"
-                    );
+                  } else if (!alreadyInjected) {
+                    // Prepend ONLY if not already injected for this persona in this chat
                     const lastMsg = body.messages[body.messages.length - 1];
                     if (
                       lastMsg &&
                       lastMsg.role === "user" &&
-                      !lastMsg.content.startsWith(persona.prompt) &&
-                      !lastMsg.content.startsWith("[System Instruction]")
+                      !lastMsg.content.includes("[System Instruction]")
                     ) {
                       lastMsg.content = `[System Instruction]\n${persona.prompt}\n\n[User Message]\n${lastMsg.content}`;
                       modified = true;
@@ -2890,10 +2946,13 @@
 
               if (modified) {
                 options.body = JSON.stringify(body);
-                console.log(
-                  "[QwenPersona] Request modified with persona:",
-                  persona.name
-                );
+                console.log("[QwenPersona] Request modified with persona:", persona.name);
+                
+                // Track injection
+                if (chatId && persona.id) {
+                    State.chatInjectedMap[chatId] = persona.id;
+                    Storage.saveChatInjectedMap();
+                }
               }
             } catch (e) {
               console.error("[QwenPersona] Failed to modify request:", e);
@@ -2916,6 +2975,7 @@
     Storage.loadPersonas();
     Storage.loadSelectedPersona();
     Storage.loadChatPersonaMap();
+    Storage.loadChatInjectedMap();
     ModelManager.fetchModels();
 
     UI.injectStyles();
@@ -2931,6 +2991,7 @@
     NetworkManager.interceptFetch();
 
     UI.waitForNavbar();
+    UI.startMessageObserver();
 
     ChatManager.startUrlMonitor();
 

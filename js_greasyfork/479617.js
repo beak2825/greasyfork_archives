@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           FicbookExtractor
 // @namespace      90h.yy.zz
-// @version        0.9.0
+// @version        0.10.0
 // @author         Ox90
 // @match          https://ficbook.net/readfic/*
 // @description    The script allows you to download books to an FB2 file without any limits
@@ -412,6 +412,8 @@ async function getBookContent(doc, log) {
     doc.chapters = [];
     let chIdx = 0;
     let chCnt = chapters.length;
+    let errCnt = 0;
+    const errMax = 15;
     while (chIdx < chCnt) {
       const chItem = chapters[chIdx];
       li = log.message(`Получение главы ${chIdx + 1}/${chCnt}...`);
@@ -427,10 +429,20 @@ async function getBookContent(doc, log) {
         li.ok();
         li = null;
         ++chIdx;
+        errCnt = 0;
       } catch (err) {
-        if (err instanceof HttpError && err.code === 429) {
-          li.fail();
-          log.warning("Ответ сервера: слишком много запросов");
+        if (err instanceof HttpError) {
+          if (err.code === 429) {
+            errCnt = 0;
+            li.fail();
+            log.warning("Ответ сервера: слишком много запросов");
+          } else if (errCnt < errMax && err.code >= 500 && err.code < 600) {
+            ++errCnt;
+            li.fail();
+            log.warning(`Сервер перегружен запросами (${err.code}) ${errCnt}/${errMax}`);
+          } else {
+            throw err;
+          }
           log.message("Ждем 30 секунд");
           await sleep(30000);
         } else {
@@ -952,7 +964,8 @@ class Loader extends FB2Loader {
   static async addJob(url, params) {
     if (url.origin === document.location.origin) {
       return super.addJob(url, params).catch(err => {
-        if (err.message.endsWith("(429)")) err = new HttpError(err.message, 429);
+        const match = /\((\d+)\)$/.exec(err.message);
+        if (match) err = new HttpError(err.message, Number(match[1]));
         throw err;
       });
     }

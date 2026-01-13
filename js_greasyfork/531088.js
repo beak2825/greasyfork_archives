@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Grok - Filter'S For Code 1.22.26
-// @version      1.22.26
+// @name         Grok - Filter'S For Code 1.24.26
+// @version      1.24.26
 // @description  Adds a filter menu to the code blocks in the Grok chat while maintaining the settings
 // @author       tapeavion
 // @license      MIT
@@ -11,12 +11,10 @@
 // @grant        GM_getValue
 // @run-at       document-end
 // @namespace http://tampermonkey.net/
-// @downloadURL https://update.greasyfork.org/scripts/531088/Grok%20-%20Filter%27S%20For%20Code%2012226.user.js
-// @updateURL https://update.greasyfork.org/scripts/531088/Grok%20-%20Filter%27S%20For%20Code%2012226.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/531088/Grok%20-%20Filter%27S%20For%20Code%2012426.user.js
+// @updateURL https://update.greasyfork.org/scripts/531088/Grok%20-%20Filter%27S%20For%20Code%2012426.meta.js
 // ==/UserScript==
- 
- 
- 
+  
   
 (function() {
     'use strict';
@@ -451,8 +449,201 @@
  
 })();
   
- 
- 
+  
+// ==== custom slider Volume grok imagin === //  
+
+(function () {
+    'use strict';
+    const VOLUME_KEY = 'customGrokVideoVolume';
+
+    // Стили (без изменений)
+    let style = document.getElementById('custom-he5jfyj5jfyt-volume-style');
+    if (!style) {
+        style = document.createElement('style');
+        style.id = 'custom-he5jfyj5jfyt-volume-style';
+        style.textContent = `
+            .slider-volume::-webkit-slider-thumb {
+                appearance: none;
+                width: 14px;
+                height: 14px;
+                background: white;
+                border-radius: 50%;
+                cursor: pointer !important;
+            }
+            .slider-volume::-moz-range-thumb {
+                width: 14px;
+                height: 14px;
+                background: white;
+                border-radius: 50%;
+                cursor: pointer !important;
+                border: none;
+            }
+            .custom-play-pause-btn {
+                width: 37px !important;
+                height: 39px !important;
+                background: #3c2c50;
+                border-radius: 34px !important;
+                border: solid 1px #cdb4e2;
+            }
+            .custom-volume-controls {
+                position: relative !important;
+                top: 9px !important;
+                width: 252px !important;
+                background: #13052782 !important;
+                cursor: pointer !important;
+                z-index: 1000000 !important;
+            }
+            .custom-volume-slider {
+                appearance: none !important;
+                height: 14px !important;
+                background: #153031 !important;
+                cursor: pointer !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>`;
+    const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+
+    function getSavedVolume() {
+        const saved = parseFloat(localStorage.getItem(VOLUME_KEY));
+        return isNaN(saved) ? 0.75 : saved;
+    }
+
+    function setGlobalVolume(vol) {
+        localStorage.setItem(VOLUME_KEY, vol);
+        document.querySelectorAll('video').forEach(video => {
+            video.volume = vol;
+        });
+        document.querySelectorAll('.custom-volume-slider').forEach(slider => {
+            slider.value = vol;
+        });
+    }
+
+    // === Новый наблюдатель за громкостью (чтобы не было сброса на 100%) ===
+    const volumeObserver = new MutationObserver(mutations => {
+        const vol = getSavedVolume();
+        mutations.forEach(mutation => {
+            // Новые узлы
+            if (mutation.addedNodes) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeName === 'VIDEO') {
+                        node.volume = vol;
+                    }
+                });
+            }
+            // Изменение атрибута src
+            if (mutation.type === 'attributes' && mutation.attributeName === 'src' && mutation.target.nodeName === 'VIDEO') {
+                mutation.target.volume = vol;
+            }
+        });
+    });
+    volumeObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['src']
+    });
+
+    // === Перехват play() — только одно видео играет на всей странице ===
+    const originalPlay = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+        document.querySelectorAll('video').forEach(v => {
+            if (v !== this) v.pause();
+        });
+        return originalPlay.apply(this, arguments);
+    };
+
+    function initializeForPlayer(controlsContainer) {
+        if (controlsContainer.querySelector('.custom-volume-controls')) return;
+
+        const playerGroup = controlsContainer.closest('.group.relative.mx-auto.rounded-2xl.overflow-hidden');
+        if (!playerGroup) return;
+
+        const videos = playerGroup.querySelectorAll('video');
+        if (videos.length === 0) return;
+
+        const customContainer = document.createElement('div');
+        customContainer.className = 'custom-volume-controls flex flex-row items-center gap-6 bg-black/60 backdrop-blur-sm rounded-full px-5 py-3';
+
+        const playPauseBtn = document.createElement('button');
+        playPauseBtn.className = 'custom-play-pause-btn text-white focus:outline-none';
+
+        const volumeSlider = document.createElement('input');
+        volumeSlider.type = 'range';
+        volumeSlider.className = 'custom-volume-slider w-32 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider-volume';
+        volumeSlider.min = '0';
+        volumeSlider.max = '1';
+        volumeSlider.step = '0.01';
+
+        customContainer.appendChild(playPauseBtn);
+        customContainer.appendChild(volumeSlider);
+        controlsContainer.appendChild(customContainer);
+
+        [customContainer, volumeSlider, playPauseBtn].forEach(el => {
+            el.addEventListener('click', e => e.stopPropagation());
+            el.addEventListener('mousedown', e => e.stopPropagation());
+            el.addEventListener('touchstart', e => e.stopPropagation());
+        });
+
+        // === Обновление иконки: проверяем, играет ли хоть одно видео в плеере ===
+        function updateIcon() {
+            const anyPlaying = Array.from(videos).some(v => !v.paused);
+            playPauseBtn.innerHTML = anyPlaying ? pauseIcon : playIcon;
+        }
+
+        // Изначальное состояние
+        updateIcon();
+
+        // Кнопка play/pause
+        playPauseBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            const anyPlaying = Array.from(videos).some(v => !v.paused);
+            if (anyPlaying) {
+                videos.forEach(v => v.pause());
+            } else {
+                videos.forEach(v => v.play().catch(() => {}));
+            }
+            updateIcon();
+        });
+
+        // Отслеживаем внешние изменения состояния (автовоспроизведение и т.д.)
+        videos.forEach(v => {
+            v.addEventListener('play', updateIcon);
+            v.addEventListener('pause', updateIcon);
+            v.addEventListener('loadeddata', updateIcon);
+        });
+
+        // Громкость
+        const currentVolume = getSavedVolume();
+        videos.forEach(v => v.volume = currentVolume);
+        volumeSlider.value = currentVolume;
+
+        volumeSlider.addEventListener('input', e => {
+            e.stopPropagation();
+            const vol = parseFloat(volumeSlider.value);
+            setGlobalVolume(vol);
+        });
+    }
+
+    function initializeAll() {
+        const containers = document.querySelectorAll('.absolute.bottom-12.left-0.flex.flex-col.items-center.w-full.p-3.gap-3');
+        containers.forEach(initializeForPlayer);
+    }
+
+    const observer = new MutationObserver(initializeAll);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Инициализация существующих
+    initializeAll();
+
+    // Применяем сохранённую громкость ко всем видео сразу (на всякий случай)
+    setGlobalVolume(getSavedVolume());
+})();
+
+
+  //  ======== inject css custom ======= //
 (function() {
     // Проверяем, не добавлен ли уже этот стиль (по уникальному селектору, чтобы избежать дубликатов)
     if (document.querySelector('#grok-styles-inject')) {
@@ -696,165 +887,18 @@ label.color-picker-label {
         background-color: #719e8b !important;
         color: #051b16 !important;
     }
+    
+button.inline-flex.items-center.justify-center svg.lucide-play {
+       display: block !important;
+}
+
+button.inline-flex.items-center.justify-center:has(svg.lucide-play) {
+        display: block !important;
+}
     `;
  
     document.head.appendChild(style);
     console.log('Стили успешно инжектированы.');
 })(); 
-
-
-// ==== custom slider Volume grok imagin === //  
-
-(function () {
-    'use strict';
-
-    function initializeVolumeControls() {
-        const sdVideo = document.getElementById('sd-video');
-        const hdVideo = document.getElementById('hd-video');
-        if (!sdVideo || !hdVideo) return false;
-
-        const controlsContainer = document.querySelector('.absolute.bottom-12.left-0.flex.flex-col.items-center.w-full.p-3.gap-3');
-        if (!controlsContainer) return false;
-
-        // Защита от повторного создания контейнера
-        if (document.getElementById('custom-he5jfyj5jfyt-volume-controls')) {
-            return true;
-        }
-
-    // Добавляем стили только один раз
-    let style = document.getElementById('custom-he5jfyj5jfyt-volume-style');
-    if (!style) {
-    style = document.createElement('style');
-    style.id = 'custom-he5jfyj5jfyt-volume-style';
-    style.textContent = `
-.slider-volume::-webkit-slider-thumb {
-    appearance: none;
-    width: 14px;
-    height: 14px;
-    background: white;
-    border-radius: 50%;
-    cursor: pointer  !important;
-    }
-.slider-volume::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    background: white;
-    border-radius: 50%;
-    cursor: pointer  !important;
-    border: none;
-    }
-button#custom-he5jfyj5jfyt-play-pause-btn {
-    width: 37px !important;
-    height: 39px !important;
-    background: #3c2c50;
-    border-radius: 34px !important;
-    border: solid 1px #cdb4e2;
-}
- 
-div#custom-he5jfyj5jfyt-volume-controls {
-    position: relative  !important;
-    top: 9px  !important;
-    width: 252px  !important;
-    background: #13052782  !important;
-    cursor: pointer  !important;
-    z-index: 1000000 !important;
-}
-
- 
-input#custom-he5jfyj5jfyt-volume-slider {
-     appearance: none  !important;
-    height: 14px  !important;
-    background: #153031  !important;
-    cursor: pointer  !important;
-}
-            `;
-            document.head.appendChild(style);
-        }
-
-        // Создаём кастомный контейнер
-        const customContainer = document.createElement('div');
-        customContainer.id = 'custom-he5jfyj5jfyt-volume-controls';
-        customContainer.className = 'flex flex-row items-center gap-6 bg-black/60 backdrop-blur-sm rounded-full px-5 py-3';
-
-        // Кнопка play/pause
-        const playPauseBtn = document.createElement('button');
-        playPauseBtn.id = 'custom-he5jfyj5jfyt-play-pause-btn';
-        playPauseBtn.className = 'text-white focus:outline-none';
-
-        const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>`;
-        const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
-
-        // Слайдер громкости
-        const volumeSlider = document.createElement('input');
-        volumeSlider.type = 'range';
-        volumeSlider.id = 'custom-he5jfyj5jfyt-volume-slider';
-        volumeSlider.min = '0';
-        volumeSlider.max = '1';
-        volumeSlider.step = '0.01';
-        volumeSlider.className = 'w-32 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer slider-volume';
-
-        // Добавляем элементы
-        customContainer.appendChild(playPauseBtn);
-        customContainer.appendChild(volumeSlider);
-        controlsContainer.appendChild(customContainer);
-
-        // Предотвращаем всплытие событий
-        customContainer.addEventListener('click', (e) => e.stopPropagation());
-        volumeSlider.addEventListener('mousedown', (e) => e.stopPropagation());
-        volumeSlider.addEventListener('touchstart', (e) => e.stopPropagation());
-        volumeSlider.addEventListener('click', (e) => e.stopPropagation());
-
-        // Логика play/pause
-        let isPlaying = !sdVideo.paused;
-        function updateIcon() {
-            playPauseBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
-        }
-
-        playPauseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (isPlaying) {
-                sdVideo.pause();
-                hdVideo.pause();
-            } else {
-                sdVideo.play();
-                hdVideo.play();
-            }
-            isPlaying = !isPlaying;
-            updateIcon();
-        });
-
-        // Логика громкости с сохранением
-        const savedVolume = parseFloat(localStorage.getItem('videoVolume')) || 1.0;
-        sdVideo.volume = savedVolume;
-        hdVideo.volume = savedVolume;
-        volumeSlider.value = savedVolume;
-
-        volumeSlider.addEventListener('input', (e) => {
-            const vol = parseFloat(e.target.value);
-            sdVideo.volume = vol;
-            hdVideo.volume = vol;
-            localStorage.setItem('videoVolume', vol);
-        });
-
-        // Изначальное состояние иконки
-        updateIcon();
-
-        return true;
-    }
-
-    // Постоянный наблюдатель за изменениями в DOM
-    const observer = new MutationObserver(() => {
-        initializeVolumeControls();
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
-    // Немедленная попытка на случай, если элементы уже загружены
-    initializeVolumeControls();
-})();
-
 
 

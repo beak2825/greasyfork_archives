@@ -1,7 +1,7 @@
 "use strict";
 // ==UserScript==
 // @name                WME Geometries
-// @version             2025.11.09.001
+// @version             2026.01.11.001
 // @description         Import geometry files into Waze Map Editor. Supports GeoJSON, GML, WKT, KML and GPX.
 // @match               https://www.waze.com/*/editor*
 // @match               https://www.waze.com/editor*
@@ -10,7 +10,7 @@
 // @require             https://cdn.jsdelivr.net/npm/@tmcw/togeojson@7.1.1/dist/togeojson.umd.min.js
 // @require             https://unpkg.com/@terraformer/wkt
 // @require             https://cdn.jsdelivr.net/npm/gml2geojson@0.0.7/dist/gml2geojson.min.js
-// @require             https://cdn.jsdelivr.net/npm/@turf/turf@7.2.0/turf.min.js
+// @require             https://cdn.jsdelivr.net/npm/@turf/turf@7.3.1/turf.min.js
 // @require             https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require             https://cdn.jsdelivr.net/npm/@placemarkio/geojson-rewind@1.0.2/dist/rewind.umd.min.js
 // @grant               none
@@ -24,7 +24,7 @@
 // @updateURL https://update.greasyfork.org/scripts/8129/WME%20Geometries.meta.js
 // ==/UserScript==
 /* global WazeWrap */
-// import type { State, WmeSDK } from "wme-sdk-typings";
+// import type { SidebarTabName, State, WmeSDK } from "wme-sdk-typings";
 // import * as toGeoJSON from "@tmcw/togeojson";
 // import * as Terraformer from "@terraformer/wkt";
 // import * as turf from "@turf/turf";
@@ -163,6 +163,12 @@ function geometries() {
             });
         });
     }
+    function addGeometriesControls(domId, tabName) {
+        if (tabName === "areas") {
+            const sidepanel = document.getElementById(domId);
+            appendGeoBox(sidepanel);
+        }
+    }
     // add interface to Settings tab
     function init() {
         if (!WazeWrap.Ready) {
@@ -173,9 +179,9 @@ function geometries() {
         }
         geobox.style.paddingTop = "6px";
         console.group();
-        triggerOnElementUpdate("#sidepanel-areas", true).then((sidepanel) => {
-            appendGeoBox(sidepanel);
-        });
+        sdk.Events.on({ eventName: "wme-sidebar-tab-opened", eventHandler: (payload) => {
+                addGeometriesControls(payload.domId, payload.tabName);
+            } });
         const geotitle = document.createElement("h4");
         geotitle.innerHTML = "Import Geometry File";
         geobox.appendChild(geotitle);
@@ -208,6 +214,7 @@ function geometries() {
         loadLayers();
         WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, GEOMETRIES_UPDATE_NOTES, GF_LINK, FORUM_LINK);
         console.log("WME Geometries is now available....");
+        addGeometriesControls("sidepanel-areas", "areas");
         console.groupEnd();
     }
     const layerConfig = {

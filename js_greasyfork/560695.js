@@ -4,7 +4,7 @@
 // @namespace    https://spotubedl.com/
 // @supportURL   https://spotubedl.com/
 // @homepageURL  https://spotubedl.com/
-// @version      1.2
+// @version      1.3
 // @author       afkarxyz
 // @match        *://open.spotify.com/*
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGJjN2QiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMyAxN2EzIDMgMCAxIDAgNiAwYTMgMyAwIDAgMCAtNiAwIiAvPjxwYXRoIGQ9Ik05IDE3di0xM2gxMHY4IiAvPjxwYXRoIGQ9Ik05IDhoMTAiIC8+PHBhdGggZD0iTTE5IDE2djYiIC8+PHBhdGggZD0iTTIyIDE5bC0zIDNsLTMgLTMiIC8+PC9zdmc+
@@ -165,19 +165,54 @@ function addButtonsToTracks() {
 		const track = tracks[i];
 
 		if (!track.hasButton) {
-			addButton(track, 'Download Track').onclick = async function () {
+			const button = addButton(track, 'Download Track');
+			button.onclick = async function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				let trackUrl = null;
+				
+				const trackLink = track.querySelector('a[href*="/track/"]');
+				if (trackLink && trackLink.href) {
+					trackUrl = trackLink.href;
+				}
+				
+				if (!trackUrl) {
+					const uri = track.getAttribute('data-uri') || track.getAttribute('data-spotify-uri');
+					if (uri) {
+						trackUrl = 'https://open.' + uri.replace(':', '.com/').replace(':', '/');
+					}
+				}
+				
+				if (!trackUrl) {
+					const allLinks = track.querySelectorAll('a[href]');
+					for (const link of allLinks) {
+						if (link.href.includes('/track/')) {
+							trackUrl = link.href;
+							break;
+						}
+					}
+				}
+				
+				if (trackUrl) {
+					download(trackUrl);
+					return;
+				}
+				
 				const btn = track.querySelector('[data-testid="more-button"]');
-				btn.click();
+				if (btn) {
+					btn.click();
 
-				await sleep(100);
+					await sleep(100);
 
-				const highlight = document.querySelector('#context-menu a[href*="highlight"]')?.href.match(/highlight=(.+)/)?.[1];
+					const highlight = document.querySelector('#context-menu a[href*="highlight"]')?.href.match(/highlight=(.+)/)?.[1];
 
-				document.dispatchEvent(new MouseEvent('mousedown'));
+					document.dispatchEvent(new MouseEvent('mousedown'));
 
-				if (highlight) {
-					const url = 'https://open.' + highlight.replace(':', '.com/').replace(':', '/');
-					download(url);
+					if (highlight) {
+						const url = 'https://open.' + highlight.replace(':', '.com/').replace(':', '/');
+						download(url);
+					}
 				}
 			}
 		}

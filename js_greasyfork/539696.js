@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Force Aptos Font on Specific Sites
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  Forces specified websites (from a customizable list) to use the Aptos font family.
-// @author       Your Name/AI (Update with your actual name/handle)
+// @author       hiyun1137 gemini
 // @match        *://*/*
 // @grant        GM_addStyle
 // @grant        GM_getValue

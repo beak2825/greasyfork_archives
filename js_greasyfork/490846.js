@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InoReader restore lost images and videos
 // @namespace    http://tampermonkey.net/
-// @version      0.1.0
+// @version      0.1.1
 // @description  Loads new images and videos from VK and Telegram in InoReader articles
 // @author       Kenya-West
 // @grant        GM_registerMenuCommand
@@ -158,6 +158,67 @@
             // @ts-ignore
             GM_unregisterMenuCommand(disableImageRestoreInArticleViewCommand);
         }
+    }
+
+
+    /**
+     * 
+     * @param {Element | Document} elem
+     * @param {string} [attr]
+     * @returns {HTMLVideoElement[] | null}
+     */
+    function searchForAllVideosInDoc(elem, attr = "poster") {
+        /**
+         * @type {NodeListOf<HTMLVideoElement> | null}
+         */
+        const videos1 = elem.querySelectorAll(`video[${attr}*='cdn-telegram.org' i]`);
+        const videos2 = elem.querySelectorAll(`video[${attr}*='cdn.telegram.org' i]`);
+        const videos3 = elem.querySelectorAll(`video[${attr}*='cdn.telesco.pe' i]`);
+
+        const cdnTelegramPatterns = [/cdn-\d{1}\.telegram\.org/i, /cdn-\d{2}\.telegram\.org/i, /cdn\d{1}\.telesco\.pe/i, /cdn\d{1}\.telesco\.pe/i, /cdn\d{2}\.telesco\.pe/i];
+
+        const allVideos = elem.querySelectorAll(`video[${attr}]`);
+        /**
+         * @type {boolean[]}
+         */
+        const matchesPoster = [];
+
+        const matchingVideos = Array.from(allVideos).filter((video) => {
+            const attrValue = video.getAttribute(attr) || "";
+            return cdnTelegramPatterns.some(pattern => pattern.test(attrValue));
+        });
+
+        /**
+         * @type {HTMLVideoElement[]}
+         */
+        const videos = Array.from(new Set([...videos1, ...videos2, ...videos3, ...matchingVideos]));
+
+        return videos;
+    }
+
+    /**
+     * 
+     * @param {Element | Document} [elem]
+     * @param {string} [attr]
+     * @returns {HTMLVideoElement | null}
+     */
+    function searchForSingleVideoInDoc(elem, attr = "poster") {
+        /**
+         * @type {HTMLVideoElement | null}
+         */
+        const video = elem.querySelector(`video[${attr}*='cdn-telegram.org' i], video[${attr}*='cdn.telegram.org' i], video[${attr}*='cdn.telesco.pe' i]`);
+        const cdnTelegramPatterns = [/cdn-\d{1}\.telegram\.org/i, /cdn-\d{2}\.telegram\.org/i, /cdn\d{1}\.telesco\.pe/i, /cdn\d{1}\.telesco\.pe/i, /cdn\d{2}\.telesco\.pe/i];
+        const matchPoster = cdnTelegramPatterns.some(pattern => pattern.test(video?.getAttribute(attr) || ""));
+        const allVideos = elem.querySelectorAll(`video[${attr}]`);
+        /**
+         * @type {HTMLVideoElement[]}
+         */
+        const matchingVideos = Array.from(allVideos).filter((video) => {
+            const attrValue = video.getAttribute(attr) || "";
+            return cdnTelegramPatterns.some(pattern => pattern.test(attrValue));
+        });
+
+        return video ?? matchingVideos[0] ?? null;
     }
 
     //
@@ -409,9 +470,9 @@
          */
         function getVideoLink(articleRoot) {
             /**
-             * @type {NodeListOf<HTMLVideoElement> | null}
+             * @type {HTMLVideoElement[] | null}
              */
-            const videos = articleRoot.querySelectorAll("video[poster*='cdn-telegram.org']");
+            const videos = searchForAllVideosInDoc(articleRoot);
             videos?.forEach((video) => {
                 /**
                  * @type {HTMLSourceElement | null}
@@ -636,7 +697,7 @@
         /**
          * @type {HTMLVideoElement | null}
          */
-        const video = doc.querySelector("video[src*='cdn-telegram.org']");
+        const video = searchForSingleVideoInDoc(doc, "src");
         const videoUrl = video?.src;
         return videoUrl;
     }

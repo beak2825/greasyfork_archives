@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FB Mobile - Clean my feeds
 // @namespace    Violentmonkey Scripts
-// @version      1.03
+// @version      1.04
 // @description  Removes Sponsored and Suggested posts from Facebook mobile chromium/react version
 // @license      GNU General Public License v3.0
 // @author       https://github.com/webdevsk
@@ -383,6 +383,7 @@ var filtersDatabase = {
 var filterTitlePerKeywordIndex = new Map(Object.entries(filtersDatabase).flatMap(([_category, { title, keywordsDB }]) => Object.values(keywordsDB).flatMap((keyword) => Array.isArray(keyword) ? keyword.map((k) => [k, title]) : [[keyword, title]])));
 
 // src/lib/get-own-language-filters.ts
+var getGlobalFilters = (obj) => Array.isArray(obj.en) ? obj.en : [obj.en];
 var getOwnLangFilters = (obj) => navigator.languages.flatMap((lang) => obj[lang]);
 
 // src/lib/purge-element.ts
@@ -522,12 +523,15 @@ var runFeedsCleaner = () => {
   const activeFilters = [];
   const setActiveFilters = (whitelistedFilters2) => {
     activeFilters.length = 0;
-    activeFilters.push(...new Set(allFilters.flatMap((filter) => whitelistedFilters2.includes(filter) ? [] : getOwnLangFilters(filtersDatabase[filter].keywordsDB)).filter((d) => d)));
+    activeFilters.push(...new Set(allFilters.flatMap((filter) => whitelistedFilters2.includes(filter) ? [] : [
+      ...getGlobalFilters(filtersDatabase[filter].keywordsDB),
+      ...getOwnLangFilters(filtersDatabase[filter].keywordsDB)
+    ]).filter((d) => d)));
   };
   setActiveFilters(whitelistedFilters);
   const unsubscribeFeedsChangeEvent = whitelistedStorageInstance.onChange(setActiveFilters);
   const sponsoredFilters = getOwnLangFilters(filtersDatabase.sponsored.keywordsDB);
-  const placeHolderMessage = getOwnLangFilters(keywordsPerLanguage.placeholderMessage)[0];
+  const [placeHolderMessage] = getGlobalFilters(keywordsPerLanguage.placeholderMessage);
   const checkElement = (element) => {
     if (element.dataset.purged === "true")
       return;
@@ -753,7 +757,7 @@ var updateThemeConfigWhenPossible = () => watchForSelectors([
 });
 
 // src/style.css
-var style_default = 'textarea[style*=height]{height:100%!important}.dialog-screen{background-color:#0000007f;flex-direction:column;justify-content:flex-end;display:flex;position:fixed;inset:0;overflow-y:auto}.settings-container{padding-block:2rem;padding-inline:.5rem;position:relative;& .settings-header{flex-direction:column;gap:.5rem;margin-bottom:1rem;padding:.5rem 1rem;display:flex;& .settings-title{font-size:1.5rem;font-weight:600}}& .settingsItem{grid-template-columns:max-content minmax(0,1fr) max-content;align-items:center;gap:.75rem;min-height:2.5rem;padding:.5rem;display:grid;& *{pointer-events:none}& .settingsIcon{font-size:1.5rem}& .settingsLabel{font-size:1rem;font-weight:600;display:block}& .settingsDescription{white-space:nowrap;text-overflow:ellipsis;width:100%;display:block;overflow:hidden}}}.bg-fallback:before{content:"";z-index:-1;background-color:#242526;width:100%;height:100%;position:absolute;top:0;left:0}.icon-bg-fallback:before{content:"";left:calc((100% - var(--diameter))/2);top:calc((100% - var(--diameter))/2);width:var(--diameter);height:var(--diameter);z-index:-1;background-color:#ffffff1a;border-radius:50%;position:absolute}.fb-check{cursor:pointer;user-select:none;vertical-align:middle;align-items:center;font-family:sans-serif;display:inline-flex;& input{display:none}& .checkmark{border:2px solid;border-radius:3px;width:18px;height:18px;transition:background-color .2s;position:relative}& input:checked+.checkmark{background-color:#1877f2}& input:checked+.checkmark:after{content:"";border:2px solid #fff;border-width:0 2px 2px 0;width:5px;height:10px;position:absolute;top:0;left:4px;transform:rotate(45deg)}}.customBtns{z-index:2;width:45px;height:43px;position:absolute;pointer-events:all!important;&#settingsBtn{left:calc(100dvw - 138px)}&#feedsBtn{left:calc(100dvw - 180px)}&>div{z-index:0;--diameter:35px;box-sizing:border-box;flex-direction:column;flex-shrink:0;width:35px;height:35px;margin-top:4px;margin-left:5px;display:flex;position:relative}& img{filter:grayscale();object-fit:contain;width:100%;height:100%;position:absolute}}div[data-purged=true]{pointer-events:none;height:32px;position:relative;overflow-y:hidden;&[data-force-hide=true]{pointer-events:none;height:0;overflow-y:hidden}&>div{display:none!important}& .placeholder{pointer-events:auto;place-items:center;padding-inline:.5rem;display:grid;position:absolute;inset:0;& p{text-overflow:ellipsis;white-space:nowrap;text-align:center;width:100%;overflow:hidden}}}#block-counter{z-index:99;color:#ddd;pointer-events:none;background:#323436;border-radius:.2rem;flex-wrap:wrap;gap:.5rem;padding:.5rem 1rem;font-size:.8rem;display:flex;position:fixed;top:0;left:0}#spinner{pointer-events:none;z-index:100;position:fixed;top:20px;left:16px}';
+var style_default = '.dialog-screen{background-color:#0000007f;flex-direction:column;justify-content:flex-end;display:flex;position:fixed;inset:0;overflow-y:auto}.settings-container{padding-block:2rem;padding-inline:.5rem;position:relative;& .settings-header{flex-direction:column;gap:.5rem;margin-bottom:1rem;padding:.5rem 1rem;display:flex;& .settings-title{font-size:1.5rem;font-weight:600}}& .settingsItem{grid-template-columns:max-content minmax(0,1fr) max-content;align-items:center;gap:.75rem;min-height:2.5rem;padding:.5rem;display:grid;& *{pointer-events:none}& .settingsIcon{font-size:1.5rem}& .settingsLabel{font-size:1rem;font-weight:600;display:block}& .settingsDescription{white-space:nowrap;text-overflow:ellipsis;width:100%;display:block;overflow:hidden}}}.bg-fallback:before{content:"";z-index:-1;background-color:#242526;width:100%;height:100%;position:absolute;top:0;left:0}.icon-bg-fallback:before{content:"";left:calc((100% - var(--diameter))/2);top:calc((100% - var(--diameter))/2);width:var(--diameter);height:var(--diameter);z-index:-1;background-color:#ffffff1a;border-radius:50%;position:absolute}.fb-check{cursor:pointer;user-select:none;vertical-align:middle;align-items:center;font-family:sans-serif;display:inline-flex;& input{display:none}& .checkmark{border:2px solid;border-radius:3px;width:18px;height:18px;transition:background-color .2s;position:relative}& input:checked+.checkmark{background-color:#1877f2}& input:checked+.checkmark:after{content:"";border:2px solid #fff;border-width:0 2px 2px 0;width:5px;height:10px;position:absolute;top:0;left:4px;transform:rotate(45deg)}}.customBtns{z-index:2;width:45px;height:43px;position:absolute;pointer-events:all!important;&#settingsBtn{left:calc(100dvw - 138px)}&#feedsBtn{left:calc(100dvw - 180px)}&>div{z-index:0;--diameter:35px;box-sizing:border-box;flex-direction:column;flex-shrink:0;width:35px;height:35px;margin-top:4px;margin-left:5px;display:flex;position:relative}& img{filter:grayscale();object-fit:contain;width:100%;height:100%;position:absolute}}div[data-purged=true]{pointer-events:none;height:32px;position:relative;overflow-y:hidden;&[data-force-hide=true]{pointer-events:none;height:0;overflow-y:hidden}&>div{display:none!important}& .placeholder{pointer-events:auto;place-items:center;padding-inline:.5rem;display:grid;position:absolute;inset:0;& p{text-overflow:ellipsis;white-space:nowrap;text-align:center;width:100%;overflow:hidden}}}#block-counter{z-index:99;color:#ddd;pointer-events:none;background:#323436;border-radius:.2rem;flex-wrap:wrap;gap:.5rem;padding:.5rem 1rem;font-size:.8rem;display:flex;position:fixed;top:0;left:0}#spinner{pointer-events:none;z-index:100;position:fixed;top:20px;left:16px}';
 
 // src/utils/inject-console.ts
 var consoleMethodsThatDontBreakWhenArgumentIsString = ["log", "error", "warn", "info", "debug", "trace"];

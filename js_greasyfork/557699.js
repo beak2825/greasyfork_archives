@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Krunker DECEMBER 2025 FULLY WORKING CHEAT
-// @version      1.0
+// @name         Krunker NEW BEST 2026 FULLY WORKING CHEAT
+// @version      1.2
 // @description  Stealth, updated, includes a menu...
 // @author       UKNOWN
 // @license      All Rights Reserved
@@ -11,8 +11,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @namespace https://greasyfork.org/users/69420
-// @downloadURL https://update.greasyfork.org/scripts/557699/Krunker%20DECEMBER%202025%20FULLY%20WORKING%20CHEAT.user.js
-// @updateURL https://update.greasyfork.org/scripts/557699/Krunker%20DECEMBER%202025%20FULLY%20WORKING%20CHEAT.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557699/Krunker%20NEW%20BEST%202026%20FULLY%20WORKING%20CHEAT.user.js
+// @updateURL https://update.greasyfork.org/scripts/557699/Krunker%20NEW%20BEST%202026%20FULLY%20WORKING%20CHEAT.meta.js
 // ==/UserScript==
  
 (function() {
@@ -1017,7 +1017,7 @@
                 const savedLag = sessionStorage.getItem("savedLag");
                 const playerLag = savedLag ? parseInt(savedLag, 10) : 0;
  
-                if (((!patchApplied || playerLag >= 10) && playerFPS >= 30)) {
+                if (((!patchApplied || playerLag >= 10) && playerFPS >= 10)) {
                     setTimeout(() => {
                         displayLoadingOverlay = true;
                         const SETTINGS_SYNC_PROFILE = "LosValettos2";
@@ -1048,7 +1048,7 @@
  
                     const currentLag = parseInt(savedLag, 10);
                     const currentFPS = savedFPS ? parseInt(savedFPS, 10) : 0;
-                    if (currentFPS >= 30) {
+                    if (currentFPS >= 10) {
                         await _waitFor(() => document.getElementById("giftBtn"), 4800);
                         document.getElementById("giftBtn").click();
                         await _pause(480);

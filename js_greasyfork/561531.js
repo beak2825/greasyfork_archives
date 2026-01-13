@@ -81,9 +81,12 @@
 // @description:vi  Kết hợp tăng cường âm trầm, thanh trượt âm lượng/boost, tăng tốc chặn quảng cáo thông minh cho YouTube Music.
 // @description:zh-CN  结合低音增强、音量/增强滑块、YouTube Music智能广告拦截加速。
 // @description:zh-TW  結合低音增強、音量/增強滑塊、YouTube Music智慧廣告攔截加速。
+
+// @name         YouTubeMusicAdSolutions
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      2.0
 // @author       Pascal
+// @description  Audio-Booster, Bass-Control & Ad-Speedup für YouTube Music.
 // @match        https://music.youtube.com/*
 // @grant        none
 // @run-at       document-start
@@ -96,38 +99,57 @@
 (function() {
     'use strict';
 
-    const SETTINGS = {
-        fastSpeed: 16,
-        checkInterval: 250,
-    };
-
     let audioCtx, source, gainNode, bassFilter;
     let isAudioInited = false;
-    let userPaused = false;
-    const wrapperId = 'custom-ytm-controls';
+    let isAdActive = false;
+    const wrapperId = 'custom-ytm-controls-pro';
 
+    // --- 1. TRUSTED TYPES BYPASS ---
     if (window.trustedTypes && trustedTypes.createPolicy) {
         if (!trustedTypes.defaultPolicy) {
-            const passThroughFn = (x) => x;
-            trustedTypes.createPolicy('default', {
-                createHTML: passThroughFn,
-                createScriptURL: passThroughFn,
-                createScript: passThroughFn,
-            });
+            try {
+                const passThroughFn = (x) => x;
+                trustedTypes.createPolicy('default', {
+                    createHTML: passThroughFn, createScriptURL: passThroughFn, createScript: passThroughFn,
+                });
+            } catch (e) {}
         }
     }
 
+    // --- 2. ANTI-BLOCK & UI FIXES ---
+    function removeEnforcement() {
+        const enforcement = document.querySelector('ytmusic-enforcement-message-view-model');
+        if (enforcement) {
+            enforcement.remove();
+            const video = document.querySelector('video');
+            if (video && video.paused) video.play();
+        }
+    }
+
+    // --- 3. PREMIUM LOGO ---
+    function applyPremiumLogo() {
+        const logo = document.querySelector('ytmusic-logo img.logo, a.ytmusic-logo');
+        if (logo && !logo.getAttribute('data-is-premium')) {
+            const container = logo.parentElement;
+            if(container) {
+                logo.style.display = 'none';
+                const premiumSpan = document.createElement('span');
+                premiumSpan.innerHTML = `<svg width="101" height="20" viewBox="0 0 101 20" style="margin-left:10px;"><g><path d="M14.48 20C14.48 20 23.56 20 25.82 19.4C27.09 19.06 28.04 18.08 28.38 16.87C29 14.65 29 9.98 29 9.98C29 9.98 29 5.34 28.38 3.14C28.04 1.9 27.09 0.94 25.82 0.61C23.56 0 14.48 0 14.48 0C14.48 0 5.42 0 3.17 0.61C1.92 0.94 0.95 1.9 0.59 3.14C0 5.34 0 9.98 0 9.98C0 9.98 0 14.65 0.59 16.87C0.95 18.08 1.92 19.06 3.17 19.4C5.42 20 14.48 20 14.48 20Z" fill="#FF0033"/><path d="M19 10L11.5 5.75V14.25L19 10Z" fill="white"/></g><text x="32" y="15" fill="white" style="font-family:Roboto, Arial, sans-serif; font-weight:bold; font-size:14px;">Music</text></svg>`;
+                container.appendChild(premiumSpan);
+                logo.setAttribute('data-is-premium', 'true');
+            }
+        }
+    }
+
+    // --- 4. AUDIO ENGINE ---
     function initAudio() {
         const video = document.querySelector('video');
         if (!video || isAudioInited) return;
-
         try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             source = audioCtx.createMediaElementSource(video);
             gainNode = audioCtx.createGain();
             bassFilter = audioCtx.createBiquadFilter();
-
             bassFilter.type = "lowshelf";
             bassFilter.frequency.value = 150;
 
@@ -135,24 +157,16 @@
             bassFilter.connect(gainNode);
             gainNode.connect(audioCtx.destination);
 
+            gainNode.gain.value = localStorage.getItem('ytm-boost') || 1;
+            bassFilter.gain.value = localStorage.getItem('ytm-bass') || 0;
             isAudioInited = true;
-
-            const savedBoost = localStorage.getItem('ytm-boost');
-            const savedBass = localStorage.getItem('ytm-bass');
-            if (savedBoost) gainNode.gain.value = parseFloat(savedBoost);
-            if (savedBass) bassFilter.gain.value = parseFloat(savedBass);
-
-            console.log('[YTM AdSolutions] Audio Engine Ready');
-        } catch (e) {
-            console.warn("[YTM AdSolutions] Audio Init Warning:", e);
-        }
+        } catch (e) { console.warn("Audio Init Error", e); }
     }
 
     function createControl(color, labelText, min, max, step, storageKey, unit, onChangeFn) {
         const savedVal = localStorage.getItem(storageKey) || (labelText === 'BOOST' ? 1 : 0);
-
         const container = document.createElement('div');
-        container.style.cssText = 'display: flex; align-items: center; margin-right: 15px; color: white; font-family: Roboto, Arial; font-size: 11px;';
+        container.style.cssText = 'display: flex; align-items: center; margin-right: 15px; color: white; font-family: Roboto; font-size: 11px;';
 
         const label = document.createElement('span');
         label.textContent = labelText;
@@ -161,91 +175,82 @@
         const slider = document.createElement('input');
         slider.type = 'range';
         slider.min = min; slider.max = max; slider.step = step;
-        slider.value = (labelText === 'VOL' && !localStorage.getItem(storageKey)) ? 50 : savedVal;
-        slider.style.cssText = `width: 65px; height: 4px; accent-color: ${color}; cursor: pointer;`;
+        slider.value = savedVal;
+        slider.style.cssText = `width: 70px; height: 4px; accent-color: ${color}; cursor: pointer; position: relative; z-index: 10001;`;
 
         const valDisp = document.createElement('span');
-        valDisp.style.cssText = 'padding-left: 5px; min-width: 30px; font-weight: bold;';
-        valDisp.textContent = Math.round(slider.value) + unit;
+        valDisp.style.cssText = 'padding-left: 5px; min-width: 35px; font-weight: bold;';
+        valDisp.textContent = (step < 1 ? slider.value : Math.round(slider.value)) + unit;
+
+        const stopAll = (e) => e.stopPropagation();
+        container.addEventListener('mousedown', stopAll);
+        container.addEventListener('click', stopAll);
+        container.addEventListener('mouseup', stopAll);
 
         slider.oninput = (e) => {
-            if (!isAudioInited) initAudio();
+            e.stopPropagation();
+            initAudio();
             const val = parseFloat(e.target.value);
             onChangeFn(val);
-            valDisp.textContent = Math.round(val) + unit;
+            valDisp.textContent = (step < 1 ? val : Math.round(val)) + unit;
             localStorage.setItem(storageKey, val);
         };
 
-        slider.addEventListener('click', (e) => e.stopPropagation());
-        slider.addEventListener('mousedown', (e) => e.stopPropagation());
-
-        container.appendChild(label);
-        container.appendChild(slider);
-        container.appendChild(valDisp);
+        container.append(label, slider, valDisp);
         return container;
     }
 
-    function applyLogic() {
+    // --- 5. AD HANDLING ---
+    function handleAds() {
         const video = document.querySelector('video');
         const ad = document.querySelector('.ad-showing, .ad-interrupting');
+        if (video && ad) {
+            isAdActive = true;
+            video.muted = true;
+            video.playbackRate = 16.0;
+            const skip = document.querySelector('.ytp-ad-skip-button, .ytp-skip-ad-button');
+            if (skip) skip.click();
+        } else if (video && isAdActive) {
+            isAdActive = false;
+            video.muted = false;
+            video.playbackRate = 1.0;
+            video.volume = (localStorage.getItem('ytm-vol') || 100) / 100;
+        }
+    }
 
-        // 1. Logo (Grün-Cyan Filter)
-        const logoImg = document.querySelector('ytmusic-logo img.logo');
-        if (logoImg) logoImg.style.filter = "hue-rotate(145deg) brightness(1.2) saturate(1.5)";
-
-        // 2. Controls einfügen
+    // --- 6. INTERFACE SETUP ---
+    function setupInterface() {
         const header = document.querySelector('.top-row-buttons.style-scope.ytmusic-player');
+        const video = document.querySelector('video');
 
         if (header && video && !document.getElementById(wrapperId)) {
             const wrap = document.createElement('div');
             wrap.id = wrapperId;
-            wrap.style.cssText = 'display: flex; align-items: center; background: rgba(0,0,0,0.8); padding: 5px 15px; border-radius: 20px; margin-right: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); z-index: 10000; position: relative; pointer-events: auto;';
+            wrap.style.cssText = 'display: flex; align-items: center; background: rgba(20,20,20,0.9); padding: 5px 15px; border-radius: 20px; border: 1px solid #333; margin-right: 20px; z-index: 10000;';
 
-            wrap.addEventListener('click', (e) => e.stopPropagation());
             wrap.addEventListener('mousedown', (e) => e.stopPropagation());
-            wrap.addEventListener('dblclick', (e) => e.stopPropagation());
+            wrap.addEventListener('click', (e) => e.stopPropagation());
 
             wrap.appendChild(createControl('#ff4444', 'VOL', 0, 100, 1, 'ytm-vol', '%', (v) => video.volume = v/100));
             wrap.appendChild(createControl('cyan', 'BOOST', 1, 10, 0.1, 'ytm-boost', 'x', (v) => { if(gainNode) gainNode.gain.value = v; }));
             wrap.appendChild(createControl('orange', 'BASS', 0, 30, 1, 'ytm-bass', 'dB', (v) => { if(bassFilter) bassFilter.gain.value = v; }));
 
             header.prepend(wrap);
-
-            if(localStorage.getItem('ytm-vol')) video.volume = localStorage.getItem('ytm-vol') / 100;
-        }
-
-        if (ad && video) {
-            video.playbackRate = SETTINGS.fastSpeed;
-            video.muted = true;
-            const skipButtons = document.querySelectorAll('.ytp-ad-skip-button, .ytp-skip-ad-button, .ytp-ad-overlay-close-button');
-            skipButtons.forEach(btn => btn.click());
-        } else if (video && video.playbackRate > 2) {
-            video.playbackRate = 1.0;
-            video.muted = false;
-        }
-
-        if (video && video.paused && !video.ended && !ad && !userPaused) {
-            video.play().catch(() => {});
-            const confirmDialog = document.querySelector('ytmusic-confirm-dialog-renderer, yt-confirm-dialog-renderer');
-            if (confirmDialog) confirmDialog.remove();
         }
     }
 
-    window.addEventListener('pause', () => { if (!document.hidden) userPaused = true; }, true);
-    window.addEventListener('play', () => { userPaused = false; }, true);
-    window.addEventListener('beforeunload', () => { if(audioCtx) audioCtx.close(); });
-
-    setInterval(applyLogic, SETTINGS.checkInterval);
-
-    document.addEventListener('mousedown', function initOnAction() {
-        if (!isAudioInited) initAudio();
-    }, { once: false });
-
     const style = document.createElement('style');
-    style.textContent = `
-        .top-row-buttons.ytmusic-player { min-width: 600px !important; overflow: visible !important; }
-        #custom-ytm-controls input[type=range] { -webkit-appearance: none; background: #333; border-radius: 5px; }
-        #custom-ytm-controls input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: white; border-radius: 50%; cursor: pointer; }
+    style.innerHTML = `
+        .top-row-buttons.ytmusic-player { min-width: 450px !important; overflow: visible !important; }
+        #${wrapperId} input[type=range] { -webkit-appearance: none; background: #444; border-radius: 5px; }
+        #${wrapperId} input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: white; border-radius: 50%; }
     `;
     document.head.appendChild(style);
+
+    setInterval(handleAds, 250);
+    setInterval(setupInterface, 1000);
+    setInterval(applyPremiumLogo, 2000);
+    setInterval(removeEnforcement, 1000);
+
+    document.addEventListener('mousedown', () => initAudio(), { once: false });
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pano Detective
 // @namespace    https://greasyfork.org/users/1179204
-// @version      2.5.9
+// @version      2.6.1
 // @description  Find the exact time a Google Street View image was taken (default coverage)
 // @author       KaKa
 // @include      *://maps.google.com/*
@@ -884,27 +884,27 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
         }]);
     }
 
-    function addSettingsButtonsToPage() {
+    function addSettingsButtonToPage() {
         const container = document.querySelector('.UL7Qtf');
-        if(!container || document.getElementById('mwstmm-main')) return;
+        if(!container || document.getElementById('settings-btn')) return;
+
         const element = document.createElement('div');
 
-        element.id = 'mwstmm-main';
+        element.id = 'settings-btn';
 
-        element.style.backgroundImage=`url(${saveUrl})`
-        element.setAttribute('data-text',"Save to MapMaking")
-
-        element.innerHTML = `
-        <div class="mwstmm-settings-option" id="mwstmm-opt-save-loc"/>`;
+        element.style.backgroundImage=`url(${settingUrl})`
+        element.setAttribute('data-text',"Settings")
 
         container.appendChild(element);
+
+        element.addEventListener('click', async () => {
+            await showSettingsPopup()
+        });
         setTimeout(() => {
-            if(document.querySelector('[aria-label="Share"]')){
-                element.style.right='0.85rem'
+            if(document.querySelector('.S9kvJb ')){
+                element.style.right='7.2rem'
                 element.style.top='4rem'
             }}, 100)
-
-        createSettingsButtonSummaryEvents();
     }
 
     function parseMeta(data) {
@@ -2060,7 +2060,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
 
         container.appendChild(element);
         setTimeout(() => {
-            if(document.querySelector('[aria-label="Share"]')){
+            if(document.querySelector('.S9kvJb ')){
                 element.style.right='0.85rem'
                 element.style.top='4rem'
             }}, 100)
@@ -2086,31 +2086,8 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
             await generateUpdateReportText()
         });
         setTimeout(() => {
-            if(document.querySelector('[aria-label="Share"]')){
+            if(document.querySelector('.S9kvJb ')){
                 element.style.right='4rem'
-                element.style.top='4rem'
-            }}, 100)
-    }
-
-    function adSettingsButtonToPage() {
-        const container = document.querySelector('.UL7Qtf');
-        if(!container || document.getElementById('settings-btn')) return;
-
-        const element = document.createElement('div');
-
-        element.id = 'settings-btn';
-
-        element.style.backgroundImage=`url(${settingUrl})`
-        element.setAttribute('data-text',"Settings")
-
-        container.appendChild(element);
-
-        element.addEventListener('click', async () => {
-            await showSettingsPopup()
-        });
-        setTimeout(() => {
-            if(document.querySelector('.TrU0dc.NUqjXc')){
-                element.style.right='7.2rem'
                 element.style.top='4rem'
             }}, 100)
     }
@@ -2121,10 +2098,12 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
 #omnibox-container,
 #settings-btn,
 #note-btn,
-#image-header,
 #watermark,
+#image-header,
 #mwstmm-main,
 .Hk4XGb,
+.AbwhFc,
+.tGgADf,
 .widget-image-header-close,
 .widget-image-header-scrim,
 .app-viewcard-strip,
@@ -2141,6 +2120,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
             isHidden = false;
         }
     }
+
 
     let pageLoaded = false;
 
@@ -2269,7 +2249,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
                     addCustomButton();
                     addUploadButtonToPage();
                     addNoteButtonToPage();
-                    adSettingsButtonToPage();
+                    addSettingsButtonToPage();
                 } else {
                     document.getElementById('mwstmm-main')?.remove();
                     document.getElementById('note-btn')?.remove();

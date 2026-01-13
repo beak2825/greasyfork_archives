@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         OC Timing: Travel Blocker (Modular)
+// @name         Travel Blocker (OC Timing/Bazaar & Drug Cooldown Notifier)
 // @namespace    zonure.scripts
-// @version      1.3.6
+// @version      1.4.5
 // @description  Modular travel blocker for Torn. Core engine with pluggable rule modules.
 // @author       Zonure [3787510]
 // @match        https://www.torn.com/page.php?sid=travel
 // @grant        none
 // @license      MIT
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/543904/OC%20Timing%3A%20Travel%20Blocker%20%28Modular%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/543904/OC%20Timing%3A%20Travel%20Blocker%20%28Modular%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/543904/Travel%20Blocker%20%28OC%20TimingBazaar%20%20Drug%20Cooldown%20Notifier%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/543904/Travel%20Blocker%20%28OC%20TimingBazaar%20%20Drug%20Cooldown%20Notifier%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -36,7 +36,7 @@
   log('VIEW MODE', isMobileView ? 'MOBILE' : 'DESKTOP');
 
   /* =========================
-     STYLE (UI ONLY)
+     STYLE
      ========================= */
 
   const style = document.createElement('style');
@@ -203,7 +203,16 @@
       if (!root) return null;
       const raw = root.getAttribute('data-model');
       if (!raw) return null;
-      try { return JSON.parse(raw); } catch { return null; }
+      try {
+        return JSON.parse(raw);
+      } catch { return null; }
+    };
+
+    const isInTorn = () => {
+      const data = getDataModel();
+      const status = data ? data.travelStatus : null;
+      if (DEBUG) log('Travel Status:', status);
+      return data && data.travelStatus === 'inTorn';
     };
 
     const collectDecisions = ctx => {
@@ -218,17 +227,23 @@
       return decisions;
     };
 
-    const showPopup = decision => {
-      if (shownPopups.has(decision._moduleId)) return;
-      shownPopups.add(decision._moduleId);
+    const showPopup = decisions => {
+      const popupDecisions = decisions.filter(d => d.action === 'popup' || d.action === 'both');
+      if (!popupDecisions.length) return;
+
+      const key = popupDecisions.map(d => d._moduleId).sort().join('-');
+      if (shownPopups.has(key)) return;
+      shownPopups.add(key);
 
       const panel = document.createElement('div');
       panel.className = 'oc-settings-panel';
       panel.style.top = '50%';
       panel.style.left = '50%';
       panel.style.transform = 'translate(-50%, -50%)';
-      panel.innerHTML = '<h4>' + decision.module + '</h4>' +
-        '<div style="font-size:14px;line-height:1.4;padding:6px 0 14px;">' + decision.reason + '</div>' +
+
+      const reasonsHtml = popupDecisions.map(d => `<li><strong>${d.module}:</strong> ${d.reason}</li>`).join('');
+      panel.innerHTML = '<h4>Travel Blocker Notifications</h4>' +
+        '<ul style="font-size:14px;line-height:1.4;padding:6px 0 14px;text-align:left;">' + reasonsHtml + '</ul>' +
         '<button class="oc-settings-btn" style="width:100%;justify-content:center;">OK</button>';
 
       const btn = panel.querySelector('button');
@@ -266,7 +281,6 @@
       const target = buttons.find(b => b.textContent.trim() === label);
       if (!target) return;
 
-      // Revert all applied changes for this button
       for (const [moduleId, arr] of appliedChanges) {
         const entry = arr.find(x => x.el === target);
         if (entry) {
@@ -275,7 +289,6 @@
           target.textContent = orig.text;
           target.title = orig.title || '';
           if (!orig.hadClass) target.classList.remove('script-disabled-button');
-          // Remove the entry
           appliedChanges.set(moduleId, arr.filter(x => x.el !== target));
         }
       }
@@ -303,6 +316,7 @@
       setModuleEnabled,
       getTravelRoot,
       getDataModel,
+      isInTorn,
       collectDecisions,
       disableActionButton,
       reEnableActionButton,
@@ -318,10 +332,18 @@
     id: 'oc-timing',
     label: 'OC Timing',
     evaluate(ctx) {
-      if (!ctx.match || !ctx.method) return null;
+      if (!ctx.match || !ctx.method) {
+        if (DEBUG) log('[OC-Timing] No match or method in context, skipping');
+        return null;
+      }
       const ocReady = ctx.match[ctx.method] && ctx.match[ctx.method].ocReadyBeforeBack;
       const shouldBlock = FORCE_OCREADY_TEST ? ocReady !== undefined : ocReady === true;
-      if (shouldBlock) return { module: 'OC Timing', action: 'block', reason: 'Return time overlaps with an upcoming OC.' };
+      if (DEBUG) log('[OC-Timing] Country:', ctx.country, 'Method:', ctx.method, 'ocReadyBeforeBack:', ocReady, 'Should Block:', shouldBlock);
+      if (shouldBlock) {
+        if (DEBUG) log('[OC-Timing] Decision: Block - Return time overlaps with OC');
+        return { module: 'OC Timing', action: 'block', reason: 'Return time overlaps with an upcoming OC.' };
+      }
+      if (DEBUG) log('[OC-Timing] Decision: Allow');
       return null;
     }
   });
@@ -331,13 +353,45 @@
     label: 'Drug Cooldown',
     evaluate() {
       const sidebarRoot = document.getElementById('sidebarroot');
-      if (!sidebarRoot) return { module: 'Drug Cooldown', action: 'popup', reason: 'Drug cooldown finished' };
+      if (!sidebarRoot) {
+        if (DEBUG) log('[Drug-Cooldown] No sidebar, skipping');
+        return { module: 'Drug Cooldown', action: 'popup', reason: 'Drug cooldown finished' };
+      }
 
       const iconClasses = ['icon49','icon50','icon51','icon52','icon53'];
       const found = iconClasses.filter(c => sidebarRoot.querySelector('li.' + c));
+      if (DEBUG) log('[Drug-Cooldown] Found cooldown icons:', found);
 
-      if (!found.length) return { module: 'Drug Cooldown', action: 'popup', reason: 'Drug cooldown finished' };
-      if (found.indexOf('icon49') !== -1) return { module: 'Drug Cooldown', action: 'popup', reason: 'Cooldown almost done' };
+      if (!found.length) {
+        if (DEBUG) log('[Drug-Cooldown] Decision: Popup - No cooldown icons found');
+        return { module: 'Drug Cooldown', action: 'popup', reason: 'Drug cooldown finished' };
+      }
+      if (found.indexOf('icon49') !== -1) {
+        if (DEBUG) log('[Drug-Cooldown] Decision: Popup - Cooldown almost done (icon49 found)');
+        return { module: 'Drug Cooldown', action: 'popup', reason: 'Cooldown almost done' };
+      }
+      if (DEBUG) log('[Drug-Cooldown] Decision: Allow - Cooldown active');
+      return null;
+    }
+  });
+
+  Core.registerModule({
+    id: 'bazaar-status',
+    label: 'Bazaar Status',
+    evaluate() {
+      const sidebarRoot = document.getElementById('sidebarroot');
+      if (!sidebarRoot) {
+        if (DEBUG) log('[Bazaar-Status] No sidebar, skipping');
+        return null;
+      }
+
+      const bazaarIcon = sidebarRoot.querySelector('li[class^="icon35"]');
+      if (DEBUG) log('[Bazaar-Status] Bazaar icon (icon35) found:', !!bazaarIcon);
+      if (!bazaarIcon) {
+        if (DEBUG) log('[Bazaar-Status] Decision: Popup - Bazaar closed or no items');
+        return { module: 'Bazaar Status', action: 'popup', reason: 'Bazaar is closed or has no items listed.' };
+      }
+      if (DEBUG) log('[Bazaar-Status] Decision: Allow - Bazaar active');
       return null;
     }
   });
@@ -407,6 +461,7 @@
      ========================= */
 
   const injectToggle = () => {
+    if (!Core.isInTorn()) return;  // Only inject if in Torn
     try {
       const root = Core.getTravelRoot();
       if (!root) return;
@@ -447,10 +502,9 @@
      ========================= */
 
   const getSelectedTravelMethod = () => {
-    // Try exact selector from old script first, then fallback
     let methodInput = document.querySelector('fieldset.travelTypeSelector___zK5N4 input[name="travelType"]:checked');
     if (!methodInput) methodInput = document.querySelector('fieldset[class^="travelTypeSelector"] input[name="travelType"]:checked');
-    return methodInput ? methodInput.value : 'standard'; // Default to 'standard' if none selected
+    return methodInput ? methodInput.value : 'standard';
   };
 
   /* =========================
@@ -458,17 +512,18 @@
      ========================= */
 
   const start = () => {
-    const initialDecisions = Core.collectDecisions({});
-    for (const d of initialDecisions) {
-      if (d.action === 'popup' || d.action === 'both') Core.showPopup(d);
+    if (!Core.isInTorn()) {
+      log('Not in Torn, script inactive');
+      return;  // Exit early if not in Torn
     }
-    document.body.addEventListener('click', e => isMobileView ? handleMobileClick(e) : handleDesktopClick(e));  // Pass event to desktop handler
+    const initialDecisions = Core.collectDecisions({});
+    Core.showPopup(initialDecisions);
     
-    // Add listeners for method changes to re-evaluate
+    document.body.addEventListener('click', e => isMobileView ? handleMobileClick(e) : handleDesktopClick(e));
+    
     const methodInputs = document.querySelectorAll('input[name="travelType"]');
     methodInputs.forEach(input => input.addEventListener('change', () => {
       log('Method changed, re-evaluating...');
-      // Simplified: No need for full re-run, as blocking is per-click
     }));
     
     new MutationObserver(() => setTimeout(injectToggle, 0)).observe(document.body, { childList: true, subtree: true });
@@ -476,12 +531,12 @@
     log('BOOT COMPLETE', (performance.now() - BOOT_TS).toFixed(1) + 'ms');
   };
 
-  const handleDesktopClick = (e) => {  // Now takes event 'e'
+  const handleDesktopClick = (e) => {
+    if (!Core.isInTorn()) return;  // Only process if in Torn
     log('Handling desktop click...');
     const button = e.target.closest("button.torn-btn.btn-dark-bg, a.torn-btn.btn-dark-bg");
     if (!button) { log('No relevant button clicked'); return; }
 
-    // Extract country from the grid (present during click)
     const flightGrid = button.closest('div[class^="flightDetailsGrid"]');
     const countrySpan = flightGrid?.querySelector('span[class^="country"]');
     const country = countrySpan?.textContent.trim();
@@ -497,14 +552,15 @@
 
     const decisions = Core.collectDecisions({ country, method, match });
     log('Decisions:', decisions);
-    if (decisions.length) Core.disableActionButton('Continue', decisions);  // Disable globally, like old script
+    if (decisions.length) Core.disableActionButton('Continue', decisions);
   };
 
   const handleMobileClick = e => {
+    if (!Core.isInTorn()) return;  // Only process if in Torn
     log('Handling mobile click...');
     const button = e.target.closest('button');
     if (!button) return;
-    Core.reEnableActionButton('Continue'); // Re-enable before checking
+    Core.reEnableActionButton('Continue');
     const spans = Array.from(button.querySelectorAll('span'));
     const country = spans.map(s => s.textContent.trim()).find(Boolean);
     if (!country) { warn('No country detected'); return; }

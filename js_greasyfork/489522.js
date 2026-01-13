@@ -5,7 +5,7 @@
 // @match       https://chunithm-net-eng.com/*
 // @match       https://new.chunithm-net.com/*
 // @match       https://chunithm.wahlap.com/*
-// @version     1.0.8
+// @version     1.0.9
 // @author      esterTion
 // @description Display character level exp on chunithm-net
 // @run-at      document-end
@@ -46,6 +46,29 @@ const expData = [
 	8500,8500,8500,8500,8900,  8900,8900,8900,8900,9300, // 190
 	9300,9300,9300,9300,9700,  9700,9700,9700,9700,Infinity, // 200
 ]
+const trophyData = [
+	1,
+	1,1,1,1,1, 1,1,1,1,1, // 10
+	1,1,1,1,1, 1,1,1,1,1, // 20
+	1,1,1,1,2, 2,2,2,2,2, // 30
+	2,2,2,2,2, 2,2,2,2,2, // 40
+	2,2,2,2,2, 2,2,2,2,101, // 50
+	3,3,3,3,3, 3,3,3,3,3, // 60
+	3,3,3,3,3, 3,3,3,3,3, // 70
+	3,3,3,3,4, 4,4,4,4,4, // 80
+	4,4,4,4,4, 4,4,4,4,4, // 90
+	4,4,4,4,4, 4,4,4,4,101, // 100
+	5,5,5,5,5, 5,5,5,5,5, // 110
+	5,5,5,5,5, 5,5,5,5,5, // 120
+	5,5,5,5,6, 6,6,6,6,6, // 130
+	6,6,6,6,6, 6,6,6,6,6, // 140
+	6,6,6,6,6, 6,6,6,6,102, // 150
+	7,7,7,7,7, 7,7,7,7,7, // 160
+	7,7,7,7,7, 7,7,7,7,7, // 170
+	7,7,7,7,8, 8,8,8,8,8, // 180
+	8,8,8,8,8, 8,8,8,8,8, // 190
+	8,8,8,8,8, 0,0,0,0,0, // 200
+]
 
 // createElement
 function _(e,t,i){var a=null;if("text"===e)return document.createTextNode(t);a=document.createElement(e);for(var n in t)if("style"===n)for(var o in t.style)a.style[o]=t.style[o];else if("className"===n)a.className=t[n];else if("event"===n)for(var o in t.event)a.addEventListener(o,t.event[o]);else a.setAttribute(n,t[n]);if(i)if("string"==typeof i)a.innerHTML=i;else if(Array.isArray(i))for(var l=0;l<i.length;l++)null!=i[l]&&a.appendChild(i[l]);return a}
@@ -66,11 +89,28 @@ function addLevelToCurrentCharacter(img) {
 	barContainer.appendChild(_('div', { className: 'CNDCL_exp large' }, [
 		_('text', getLevelInfoText(img.width, 374, levelExp))
 	]))
+
+	// 突破企鹅数
+	if (location.pathname.endsWith('/collection/') && trophyData[level]) {
+		const trophyImgs = [...document.querySelectorAll('.genkai_block_img img')].map(i=>i.src)
+		const trophyCount = trophyData[level]
+		barContainer.parentNode.querySelector('.character_lv_block').appendChild(_('table', { style: {
+			position: 'absolute', left: '2px'
+		} }, [
+			_('tr', {}, [
+				_('td', {}, [_('text', 'Next:')]),
+				_('td', { rowspan: 2 }, [_('img', { src: trophyImgs[trophyCount > 100 ? 3 : 2], style: { width: '50px' } })])
+			]),
+			_('tr', {}, [
+				_('td', { align: 'right' }, [_('text', `${trophyCount % 100} ×`)])
+			])
+		]))
+	}
 }
 const characterListOnPage = []
 function addLevelToCharacterList(img) {
 	const barContainer = img.parentNode.parentNode
-	const levelImgs = barContainer.parentNode.querySelectorAll('.character_list_rank_num img')
+	const levelImgs = barContainer.parentNode.parentNode.querySelectorAll('.character_list_rank_num img')
 	const isAtBarrier = barContainer.parentNode.querySelector('.character_list_rank_max') !== null
 	const level = levelNumImageToNum(levelImgs) - (isAtBarrier ? 1 : 0)
 	const levelExp = expData[level] / (isOldExp ? 10 : 1)
@@ -82,7 +122,7 @@ function addLevelToCharacterList(img) {
 			levelReal: level + (1 - img.width / 270)
 		})
 	}
-	barContainer.appendChild(_('div', { className: 'CNDCL_exp' }, [
+	barContainer.appendChild(_('div', { className: 'CNDCL_exp list' }, [
 		_('text', getLevelInfoText(img.width, 270, levelExp))
 	]))
 }
@@ -97,7 +137,7 @@ function getLevelInfoText(filledWidth, totalWidth, levelExp) {
 }
 
 function levelNumImageToNum(imgs) {
-	return parseInt([...imgs].map(i => i.src.match(/(\d)\.png/)[1]).join(''))
+	return parseInt([...imgs].map(i => i.src.match(/(\d)\.png/)?.[1] ?? 0).join(''))
 }
 
 function addAvatarPointGrid(img) {
@@ -109,7 +149,8 @@ function addAvatarPointGrid(img) {
 
 function cloneCharacterToLevelList(n) {
 	if (!n) return;
-	if (document.querySelector('.favorite_setting_block,.btn_change_favorite')) return;
+	// if (document.querySelector('.favorite_setting_block,.btn_change_favorite')) return;
+	if (!/collection\/characterList/.test(location.href)) return;
 	characterListOnPage.sort((a,b) => a.levelReal - b.levelReal)
 	const p = characterListOnPage[0].node.parentNode
 	const count = {}
@@ -163,10 +204,15 @@ function addStyle() {
 	margin-left: 0.5em;
 	font-weight: bold;
 	text-shadow: 1px 1px 2px white, 0 0 1em white, 0 0 0.2em white;
+	color: black;
 }
 .CNDCL_exp.large {
 	line-height: 38px;
 	font-size: inherit;
+}
+.CNDCL_exp.list {
+	transform: scaleX(0.9);
+  transform-origin: left center;
 }
 `)]))
 	document.head.appendChild(_('style', {}, [_('text', LVL_CATEGORIES.map((c) => `body:not([data-cndcl-category="${c}"]) [data-level-category="${c}"] { display: none; }`).join('\n'))]))

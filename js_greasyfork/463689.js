@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name         MOOMOO.IO Utility Mod! (Scrollable Inventory, Wearables Hotbar, Typing Indicator, & More!)
+// @name         MOOMOO.IO Utility Mod! *2026* (Scrollable Inventory, Wearables Hotbar, Typing Indicator, & More!)
 // @namespace    https://greasyfork.org/users/137913
 // @description  Enhances MooMoo.io with mini-mods to level the playing field against cheaters whilst being fair to non-script users.
 // @license      GNU GPLv3 with the condition: no auto-heal or instant kill features may be added to the licensed material.
 // @author       TigerYT
-// @version      1.0.2
+// @version      1.0.3
 // @grant        GM_info
 // @match        *://moomoo.io/*
 // @match        *://dev.moomoo.io/*
 // @match        *://sandbox.moomoo.io/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=moomoo.io
+// @icon         https://raw.githubusercontent.com/TimChinye/UserScripts/refs/heads/main/MooMoo.io%20Utility%20Mod/MooMoo%20Utility%20Mod%20Logomark.png
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/463689/MOOMOOIO%20Utility%20Mod%21%20%28Scrollable%20Inventory%2C%20Wearables%20Hotbar%2C%20Typing%20Indicator%2C%20%20More%21%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/463689/MOOMOOIO%20Utility%20Mod%21%20%28Scrollable%20Inventory%2C%20Wearables%20Hotbar%2C%20Typing%20Indicator%2C%20%20More%21%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/463689/MOOMOOIO%20Utility%20Mod%21%20%2A2026%2A%20%28Scrollable%20Inventory%2C%20Wearables%20Hotbar%2C%20Typing%20Indicator%2C%20%20More%21%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/463689/MOOMOOIO%20Utility%20Mod%21%20%2A2026%2A%20%28Scrollable%20Inventory%2C%20Wearables%20Hotbar%2C%20Typing%20Indicator%2C%20%20More%21%29.meta.js
 // ==/UserScript==
 
 /*
@@ -22,7 +22,7 @@ B = Added or made a major change to a feature (a whole mini-mod, or major parts 
 C = Added patches
 */
 
-(function() {
+(function () {
     'use strict';
 
     /**
@@ -111,6 +111,9 @@ C = Added patches
             /** @property {boolean} socketReady - Tracks if the game's WebSocket instance has been successfully captured. */
             socketReady: false,
 
+            /** @property {boolean} listenersAttached - Tracks if event listeners have already been attached to the socket to avoid duplicates. */
+            listenersAttached: false,
+
             /** @property {boolean} isSandbox - Tracks if the player is in sandbox mode, which affects item placement limits. */
             isSandbox: window.location.host.startsWith('sandbox'),
 
@@ -127,8 +130,12 @@ C = Added patches
             playerId: -1,
 
             /** @property {{food: number, wood: number, stone: number, gold: number}} playerResources - The player's current resource counts. */
-            playerResources: { food: 0, wood: 0, stone: 0, gold: 0 },
-
+            playerResources: {
+                food: 0,
+                wood: 0,
+                stone: 0,
+                gold: 0
+            },
             /** @property {Map<number, number>} playerPlacedItemCounts - Maps an item's limit group ID to the number of items placed from that group. */
             playerPlacedItemCounts: new Map(),
 
@@ -166,15 +173,15 @@ C = Added patches
                 PACKET_DATA: {
                     WEARABLE_TYPES: {
                         HAT: 'hat',
-                        ACCESSORY: 'accessory',
+                        ACCESSORY: 'accessory'
                     },
                     STORE_ACTIONS: {
                         ADD_ITEM: 'buy',
-                        UPDATE_EQUIPPED: 'equip',
+                        UPDATE_EQUIPPED: 'equip'
                     },
                     USE_ACTIONS: {
                         START_USING: 1,
-                        STOP_USING: 0,
+                        STOP_USING: 0
                     }
                 },
                 ITEM_TYPES: {
@@ -192,6 +199,7 @@ C = Added patches
                 DOM: {
                     // IDs
                     UTILITY_MOD_STYLES: 'utilityModStyles',
+                    UTILITY_MOD_GAME_STYLES: 'utilityModGameStyles',
                     UTILITY_MOD_SCRIPTS: 'utilityModScripts',
                     MENU_CONTAINER: 'menuContainer',
                     MAIN_MENU: 'mainMenu',
@@ -205,7 +213,6 @@ C = Added patches
                     GAME_CANVAS: 'gameCanvas',
                     GAME_UI: 'gameUI',
                     DIED_TEXT: 'diedText',
-                    ENTER_GAME_BUTTON: 'enterGame',
                     UPGRADE_HOLDER: 'upgradeHolder',
                     UPGRADE_COUNTER: 'upgradeCounter',
                     ITEM_INFO_HOLDER: 'itemInfoHolder',
@@ -233,17 +240,14 @@ C = Added patches
                     DISPLAY_NONE: 'none',
                     DISPLAY_FLEX: 'flex',
                     DISPLAY_BLOCK: 'block',
-                    OPAQUE: 1,
+                    OPAQUE: 1
                 },
                 GAME_STATE: {
                     INITIAL_SELECTED_ITEM_INDEX: 0,
-                    WEBSOCKET_STATE_OPEN: 1, // WebSocket.OPEN
+                    WEBSOCKET_STATE_OPEN: 1,
                     NO_SCROLL: 0,
                     SCROLL_DOWN: 1,
-                    SCROLL_UP: -1,
-                },
-                TIMEOUTS: {
-                    MANUAL_CODEC_SCAN: 2500,
+                    SCROLL_UP: -1
                 },
             },
 
@@ -358,7 +362,7 @@ C = Added patches
                 '6': 'Receive Chat',
                 '7': 'Update Minimap',
                 '8': 'Show Text',
-                '9': 'Ping Map',
+                '9': 'Ping Map'
             },
 
             /** @property {object} _packetFormatters - Maps packet IDs to functions that format raw packet data into structured objects for easier use and logging. */
@@ -368,23 +372,60 @@ C = Added patches
                 'B': ([reason]) => ({ reason }),
                 'C': ([yourSID]) => ({ yourSID }),
                 'D': ([playerData, isYou]) => ({
-                    id: playerData[0], sid: playerData[1], name: playerData[2], x: playerData[3], y: playerData[4], dir: playerData[5], health: playerData[6], maxHealth: playerData[7], scale: playerData[8], skinColor: playerData[9], isYou
+                    id: playerData[0],
+                    sid: playerData[1],
+                    name: playerData[2],
+                    x: playerData[3],
+                    y: playerData[4],
+                    dir: playerData[5],
+                    health: playerData[6],
+                    maxHealth: playerData[7],
+                    scale: playerData[8],
+                    skinColor: playerData[9],
+                    isYou
                 }),
                 'E': ([id]) => ({ id }),
                 'G': (data) => {
                     const leaderboard = [];
-                    for (let i = 0; i < data.length; i += 3) leaderboard.push({ sid: data[i], name: data[i + 1], score: data[i + 2] });
-                    return { leaderboard };
+                    for (let i = 0; i < data.length; i += 3) leaderboard.push({
+                        sid: data[i],
+                        name: data[i + 1],
+                        score: data[i + 2]
+                    });
+                    return {
+                        leaderboard
+                    };
                 },
                 'H': (data) => {
                     const objects = [];
-                    for (let i = 0; i < data.length; i += 8) objects.push({ sid: data[i], x: data[i+1], y: data[i+2], dir: data[i+3], scale: data[i+4], type: data[i+5], itemID: data[i+6], ownerSID: data[i+7] });
-                    return { objects };
+                    for (let i = 0; i < data.length; i += 8) objects.push({
+                        sid: data[i],
+                        x: data[i + 1],
+                        y: data[i + 2],
+                        dir: data[i + 3],
+                        scale: data[i + 4],
+                        type: data[i + 5],
+                        itemID: data[i + 6],
+                        ownerSID: data[i + 7]
+                    });
+                    return {
+                        objects
+                    };
                 },
                 'I': (data) => {
                     const ais = [];
-                    for (let i = 0; i < data.length; i += 7) ais.push({ sid: data[i], index: data[i+1], x: data[i+2], y: data[i+3], dir: data[i+4], health: data[i+5], nameIndex: data[i+6] });
-                    return { ais };
+                    for (let i = 0; i < data.length; i += 7) ais.push({
+                        sid: data[i],
+                        index: data[i + 1],
+                        x: data[i + 2],
+                        y: data[i + 3],
+                        dir: data[i + 4],
+                        health: data[i + 5],
+                        nameIndex: data[i + 6]
+                    });
+                    return {
+                        ais
+                    };
                 },
                 'J': ([sid]) => ({ sid }),
                 'K': ([sid, didHit, index]) => ({ sid, didHit, weaponIndex: index }),
@@ -399,13 +440,38 @@ C = Added patches
                 'T': ([xp, maxXP, age]) => ({ xp, maxXP, age }),
                 'U': ([points, age]) => ({ points, age }),
                 'V': ([items, isWeaponList]) => ({ items, isWeaponList }),
-                'X': ([x, y, dir, range, speed, index, layer, sid]) => ({ x, y, dir, range, speed, index, layer, sid }),
+                'X': ([x, y, dir, range, speed, index, layer, sid]) => ({
+                    x,
+                    y,
+                    dir,
+                    range,
+                    speed,
+                    index,
+                    layer,
+                    sid
+                }),
                 'Y': ([sid, newRange]) => ({ sid, newRange }),
                 'Z': ([countdown]) => ({ countdown }),
                 'a': (data) => {
                     const players = [];
-                    for (let i = 0; i < data.length; i += 13) players.push({ sid: data[i], x: data[i+1], y: data[i+2], dir: data[i+3], buildIndex: data[i+4], weaponIndex: data[i+5], weaponVariant: data[i+6], team: data[i+7], isLeader: data[i+8], skinIndex: data[i+9], tailIndex: data[i+10], iconIndex: data[i+11], zIndex: data[i+12] });
-                    return { players };
+                    for (let i = 0; i < data.length; i += 13) players.push({
+                        sid: data[i],
+                        x: data[i + 1],
+                        y: data[i + 2],
+                        dir: data[i + 3],
+                        buildIndex: data[i + 4],
+                        weaponIndex: data[i + 5],
+                        weaponVariant: data[i + 6],
+                        team: data[i + 7],
+                        isLeader: data[i + 8],
+                        skinIndex: data[i + 9],
+                        tailIndex: data[i + 10],
+                        iconIndex: data[i + 11],
+                        zIndex: data[i + 12]
+                    });
+                    return {
+                        players
+                    };
                 },
                 'g': ([clanData]) => ({ newClan: clanData }),
                 '0': () => ({}),
@@ -414,8 +480,13 @@ C = Added patches
                 '3': ([team, isOwner]) => ({ team, isOwner }),
                 '4': (data) => {
                     const members = [];
-                    for (let i = 0; i < data.length; i += 2) members.push({ sid: data[i], name: data[i+1] });
-                    return { members };
+                    for (let i = 0; i < data.length; i += 2) members.push({
+                        sid: data[i],
+                        name: data[i + 1]
+                    });
+                    return {
+                        members
+                    };
                 },
                 '5': ([action, itemID, itemType]) => {
                     const CoreC = window.MooMooUtilityMod.data.constants;
@@ -440,15 +511,15 @@ C = Added patches
             initialize() {
                 const CoreC = this.constants;
                 const itemTypes = {
-                    FOOD:              { slot: 0, itemType: CoreC.ITEM_TYPES.FOOD },
-                    WALLS:             { slot: 1, itemType: CoreC.ITEM_TYPES.WALL },
-                    SPIKES:            { slot: 2, itemType: CoreC.ITEM_TYPES.SPIKE },
-                    WINDMILLS:         { slot: 3, itemType: CoreC.ITEM_TYPES.WINDMILL },
-                    FARMS:             { slot: 6, itemType: CoreC.ITEM_TYPES.FARM },
-                    TRAPS:             { slot: 4, itemType: CoreC.ITEM_TYPES.TRAP },
-                    EXTRAS:            { slot: 5, itemType: CoreC.ITEM_TYPES.EXTRA },
-                    SPAWN_PADS:        { slot: 7, itemType: CoreC.ITEM_TYPES.SPAWN_PAD },
-                    PRIMARY_WEAPONS:   { slot: 8, itemType: CoreC.ITEM_TYPES.PRIMARY_WEAPON },
+                    FOOD: { slot: 0, itemType: CoreC.ITEM_TYPES.FOOD },
+                    WALLS: { slot: 1, itemType: CoreC.ITEM_TYPES.WALL },
+                    SPIKES: { slot: 2, itemType: CoreC.ITEM_TYPES.SPIKE },
+                    WINDMILLS: { slot: 3, itemType: CoreC.ITEM_TYPES.WINDMILL },
+                    FARMS: { slot: 6, itemType: CoreC.ITEM_TYPES.FARM },
+                    TRAPS: { slot: 4, itemType: CoreC.ITEM_TYPES.TRAP },
+                    EXTRAS: { slot: 5, itemType: CoreC.ITEM_TYPES.EXTRA },
+                    SPAWN_PADS: { slot: 7, itemType: CoreC.ITEM_TYPES.SPAWN_PAD },
+                    PRIMARY_WEAPONS: { slot: 8, itemType: CoreC.ITEM_TYPES.PRIMARY_WEAPON },
                     SECONDARY_WEAPONS: { slot: 9, itemType: CoreC.ITEM_TYPES.SECONDARY_WEAPON },
                 };
 
@@ -497,6 +568,7 @@ C = Added patches
             this.miniMods.forEach(mod => {
                 if (typeof mod.cleanup === 'function') {
                     Logger.log(`Cleaning up minimod: ${mod.name}`);
+
                     try {
                         mod.cleanup();
                     } catch (e) {
@@ -507,8 +579,12 @@ C = Added patches
 
             // 2. Cleanup core UI, styles, and observers
             const CoreC = this.data.constants;
+            
             const style = document.getElementById(CoreC.DOM.UTILITY_MOD_STYLES);
             if (style) style.remove();
+            
+            const gameStyle = document.getElementById(CoreC.DOM.UTILITY_MOD_GAME_STYLES);
+            if (gameStyle) gameStyle.remove();
 
             const titleElem = document.getElementById(CoreC.DOM.GAME_TITLE);
             if (titleElem) titleElem.innerHTML = 'MOOMOO.io';
@@ -525,7 +601,7 @@ C = Added patches
                 menuCardHolder: CoreC.DOM.MENU_CARD_HOLDER,
                 loadingText: CoreC.DOM.LOADING_TEXT,
                 gameUI: CoreC.DOM.GAME_UI,
-                diedText: CoreC.DOM.DIED_TEXT,
+                diedText: CoreC.DOM.DIED_TEXT
             }).then(elements => {
                 this.unlockStyleUpdates("display", Object.values(elements));
             });
@@ -540,8 +616,6 @@ C = Added patches
         goToMainMenu() {
             this.setUIState('showMenu');
         },
-
-
 
         /**
          * Switches the UI to show the in-game interface.
@@ -582,8 +656,8 @@ C = Added patches
             if (!itemData || !itemData.cost) return true; // Free items are always affordable
 
             return this.state.playerResources.food >= itemData.cost.food &&
-                   this.state.playerResources.wood >= itemData.cost.wood &&
-                   this.state.playerResources.stone >= itemData.cost.stone;
+                this.state.playerResources.wood >= itemData.cost.wood &&
+                this.state.playerResources.stone >= itemData.cost.stone;
         },
 
         /**
@@ -959,7 +1033,7 @@ C = Added patches
                 switch (packetName) {
                     case 'Client Player Death': {
                         if (this.state.playerHasRespawned); // Do nothing
-                        else this.state.playerHasRespawned = true
+                        else this.state.playerHasRespawned = true;
 
                         break;
                     }
@@ -1046,7 +1120,7 @@ C = Added patches
          * Collects and injects CSS from the core mod and all registered mini-mods.
          * @returns {void}
          */
-        injectCSS() {
+        injectGlobalCSS() {
             const CoreC = this.data.constants;
             const allCSS = [];
 
@@ -1062,7 +1136,7 @@ C = Added patches
                     const modCSS = mod.applyCSS().trim();
                     if (modCSS) {
                         allCSS.push('/* --- Injecting "' + (mod.name || 'Unnamed Mod') + '" MiniMod CSS --- */\n' + modCSS);
-                }
+                    }
                 }
             });
 
@@ -1074,6 +1148,33 @@ C = Added patches
                 Logger.log(`Injected CSS from core and ${this.miniMods.filter(m => typeof m.applyCSS === 'function' && m.applyCSS().trim()).length} mini-mod(s).`, "color: #4CAF50;");
             } else {
                 Logger.log("No CSS to inject.");
+            }
+        },
+
+        /**
+         * Injects Gameplay CSS (Wearables Toolbar, Chatbox, Store Menu shifts).
+         * Runs only after game spawn to prevent UI glitches on main menu.
+         */
+        injectGameplayCSS() {
+            const CoreC = this.data.constants;
+            if (document.getElementById(CoreC.DOM.UTILITY_MOD_GAME_STYLES)) return; // Already injected
+
+            const allCSS = [];
+            this.miniMods.forEach(mod => {
+                if (mod && typeof mod.applyGameCSS === 'function') {
+                    const modCSS = mod.applyGameCSS().trim();
+                    if (modCSS) {
+                        allCSS.push('/* --- Injecting "' + (mod.name || 'Unnamed Mod') + '" Game CSS --- */\n' + modCSS);
+                    }
+                }
+            });
+
+            if (allCSS.length > 0) {
+                const style = document.createElement('style');
+                style.id = CoreC.DOM.UTILITY_MOD_GAME_STYLES;
+                style.textContent = allCSS.join('\n\n/* --- CSS Separator --- */\n\n');
+                document.head.append(style);
+                Logger.log(`Injected Gameplay CSS.`, "color: #4CAF50;");
             }
         },
 
@@ -1320,11 +1421,7 @@ C = Added patches
             Logger.warn("User cancelled reload. Disabling mod.");
             this.disableMod();
 
-            if (afterGameEnter) {
-                this.setUIState('showGameplay');
-            } else {
-                this.setUIState('showMenu');
-            }
+            this.setUIState(afterGameEnter ? 'showGameplay' : 'showMenu');
         },
 
         /**
@@ -1334,6 +1431,10 @@ C = Added patches
          */
         attemptFinalSetup() {
             if (!this.state.enabled || !this.state.codecsReady || !this.state.socketReady) return; // Already disabled or already set up, no need to proceed.
+            
+            // Prevent double-attaching listeners
+            if (this.state.listenersAttached) return; 
+            this.state.listenersAttached = true;
 
             Logger.log("Codecs and WebSocket are ready. Attaching all listeners.", "color: #ffb700;");
             this.state.gameSocket.addEventListener('message', this.handleSocketMessage.bind(this));
@@ -1416,7 +1517,7 @@ C = Added patches
 
             const CoreC = this.data.constants;
 
-            const SCRIPT_SELECTOR = "/assets/index-eb87bff7.js";
+            const SCRIPT_SELECTOR = "/assets/index-";
             const ENCODER_REGEX = /(this\.initialBufferSize=\w,)/;
             const ENCODER_EXPOSURE = `$1 (typeof Logger !== 'undefined' && Logger.log("✅ CAPTURED ENCODER!")), window.gameEncoder = this,`;
             const DECODER_REGEX = /(this\.maxStrLength=\w,)/;
@@ -1439,64 +1540,64 @@ C = Added patches
                     targetScript.type = 'text/plain'; // Neutralize the original script
 
                     fetch(targetScript.src)
-                    .then(res => res.text())
-                    .then(scriptText => {
-                        if (!this.state.enabled) return; // Already disabled, no need to proceed.
-                        if (this.state?.codecsReady) return Logger.log("Both codecs found already, cancelling prototype hooks method.", "color: #4CAF50;");
-
-                        let modifiedScript = scriptText
-                            .replace(/(customElements\.define\("altcha-widget".*"verify"\],!1\)\);)/, '')
-                            .replace(ENCODER_REGEX, ENCODER_EXPOSURE)
-                            .replace(DECODER_REGEX, DECODER_EXPOSURE);
-
-                        if (!modifiedScript.includes("window.gameEncoder") || !modifiedScript.includes("window.gameDecoder")) return Logger.error("Script injection failed! Regex patterns did not match.");
-
-                        const newScript = document.createElement('script');
-                        newScript.id = CoreC.DOM.UTILITY_MOD_SCRIPTS;
-                        newScript.textContent = modifiedScript;
-
-                        // This is the function we want to run once the DOM is ready.
-                        const injectAndFinalize = () => {
+                        .then(res => res.text())
+                        .then(scriptText => {
                             if (!this.state.enabled) return; // Already disabled, no need to proceed.
                             if (this.state?.codecsReady) return Logger.log("Both codecs found already, cancelling prototype hooks method.", "color: #4CAF50;");
 
-                            // Make sure this only runs once, in case of any edge cases.
-                            if (document.body.contains(newScript)) return;
+                            let modifiedScript = scriptText
+                                .replace(/(customElements\.define\("altcha-widget".*"verify"\],!1\)\);)/, '')
+                                .replace(ENCODER_REGEX, ENCODER_EXPOSURE)
+                                .replace(DECODER_REGEX, DECODER_EXPOSURE);
 
-                            document.head.append(newScript);
-                            targetScript.remove();
+                            if (!modifiedScript.includes("window.gameEncoder") || !modifiedScript.includes("window.gameDecoder")) return Logger.error("Script injection failed! Regex patterns did not match.");
 
-                            Logger.log("Modified game script injected.", "color: #4CAF50;");
+                            const newScript = document.createElement('script');
+                            newScript.id = CoreC.DOM.UTILITY_MOD_SCRIPTS;
+                            newScript.textContent = modifiedScript;
 
-                            // Verify capture and finalize setup
-                            // Use setTimeout to allow the newly injected script to execute and populate the window object.
-                            setTimeout(() => {
-                                if (window.gameEncoder && window.gameDecoder) {
-                                    Logger.log(`Codec interception successful! ${Date.now() - this.state.initTimestamp}ms`, "color: #4CAF50; font-weight: bold;");
+                            // This is the function we want to run once the DOM is ready.
+                            const injectAndFinalize = () => {
+                                if (!this.state.enabled) return; // Already disabled, no need to proceed.
+                                if (this.state?.codecsReady) return Logger.log("Both codecs found already, cancelling prototype hooks method.", "color: #4CAF50;");
 
-                                    this.state.gameEncoder = window.gameEncoder;
-                                    this.state.gameDecoder = window.gameDecoder;
-                                    this.state.codecsReady = true;
+                                // Make sure this only runs once, in case of any edge cases.
+                                if (document.body.contains(newScript)) return;
 
-                                    this.attemptFinalSetup();
-                                } else {
-                                    Logger.error("Codecs were not found on window after injection.");
-                                }
-                            }, 0);
-                        };
+                                document.head.append(newScript);
+                                targetScript.remove();
 
-                        // Check if the DOM is already loaded
-                        if (document.readyState === 'loading') {
-                            // DOM is not ready yet, so wait for the event
-                            document.addEventListener('DOMContentLoaded', injectAndFinalize);
-                        } else {
-                            // DOM is already ready, so execute the function immediately
-                            injectAndFinalize();
-                        }
-                    })
-                    .catch(err => {
-                        Logger.error("Failed to fetch or process game script:", err);
-                    });
+                                Logger.log("Modified game script injected.", "color: #4CAF50;");
+
+                                // Verify capture and finalize setup
+                                // Use setTimeout to allow the newly injected script to execute and populate the window object.
+                                setTimeout(() => {
+                                    if (window.gameEncoder && window.gameDecoder) {
+                                        Logger.log(`Codec interception successful! ${Date.now() - this.state.initTimestamp}ms`, "color: #4CAF50; font-weight: bold;");
+
+                                        this.state.gameEncoder = window.gameEncoder;
+                                        this.state.gameDecoder = window.gameDecoder;
+                                        this.state.codecsReady = true;
+
+                                        this.attemptFinalSetup();
+                                    } else {
+                                        Logger.error("Codecs were not found on window after injection.");
+                                    }
+                                }, 0);
+                            };
+
+                            // Check if the DOM is already loaded
+                            if (document.readyState === 'loading') {
+                                // DOM is not ready yet, so wait for the event
+                                document.addEventListener('DOMContentLoaded', injectAndFinalize);
+                            } else {
+                                // DOM is already ready, so execute the function immediately
+                                injectAndFinalize();
+                            }
+                        })
+                        .catch(err => {
+                            Logger.error("Failed to fetch or process game script:", err);
+                        });
                 } else { /* Fail silently */ };
             }
 
@@ -1516,20 +1617,14 @@ C = Added patches
                 construct: (target, args) => {
                     const wsInstance = new target(...args);
 
-                    if (this.state.enabled) {
-                        if (this.state.gameEncoder && this.state.gameDecoder) {
-                            this.state.gameSocket = wsInstance;
-                            this.state.socketReady = true;
-
-                            Logger.log("Game WebSocket instance captured.");
-                            window.WebSocket = originalWebSocket; // Restore immediately
-                            this.attemptFinalSetup();
-                        }
-                        else {
-                            // A final check. If by the time the WS is created NO method has worked, fail.
-                            console.error("WebSocket created but codecs were not found. All hooking methods have failed.");
-                            this.handleHookFailureAndReload(true);
-                        }
+                    if (MooMooUtilityMod.state.enabled) {
+                        this.state.gameSocket = wsInstance;
+                        this.state.socketReady = true;
+                        
+                        Logger.log("Game WebSocket instance captured.");
+                        window.WebSocket = originalWebSocket; // Restore immediately
+                        
+                        this.attemptFinalSetup();
                     }
 
                     return wsInstance;
@@ -1546,6 +1641,8 @@ C = Added patches
             if (!this.state.enabled) return; // Already disabled, no need to proceed.
 
             try {
+                this.injectGameplayCSS();
+
                 // Notify minimods that the game is ready
                 this.miniMods.forEach(mod => {
                     if (typeof mod.onGameReady === 'function') mod.onGameReady();
@@ -1553,7 +1650,7 @@ C = Added patches
 
                 const shutdownDisplay = document.getElementById(this.data.constants.DOM.SHUTDOWN_DISPLAY);
                 if (shutdownDisplay) shutdownDisplay.hidden = false;
-            } catch(e) {
+            } catch (e) {
                 Logger.error("Failed during onGameReady setup.", e);
             }
         },
@@ -1573,13 +1670,13 @@ C = Added patches
 
             // Attempts to find codecs by modifying the game script directly to open a backdoor.
             this.interceptGameScript(); // Typically succeeds 0.025x slower than mainMenu.
-            
+
             // Set up hooks to intercept codecs as they enter the global scope.
             this.initializeHooks(); // Typically succeeds 0.5x slower than mainMenu.
-            
+
             // Set up WebSocket proxy to capture the game's WebSocket instance.
             this.setupWebSocketProxy();
-            
+
             const CoreC = this.data.constants;
 
             // If codecs aren't found within a reasonable amount of time, assume failure and prompt for reload.
@@ -1587,7 +1684,7 @@ C = Added patches
                 // We use time until main menu is loaded & visible, to get a good baseline for CPU/Network speeds.
                 this.waitForVisible(mainMenu).then(() => {
                     setTimeout(() => {
-                        if (!this.state.enabled || this.state.codecsReady) return; // Already disabled
+                        if (!this.state.enabled || (this.state.codecsReady)) return; // Already disabled
 
                         Logger.error("Hooks failed to find codecs within the time limit.");
                         this.handleHookFailureAndReload();
@@ -1599,13 +1696,13 @@ C = Added patches
             this.data.initialize();
 
             // Inject styles immediately, as document.head is available early.
-            this.injectCSS();
+            this.injectGlobalCSS();
 
             // Wait for the body to load, and get issue templates before trying to update main menu.
             this.getIssueTemplates().then(() => {
                 this.updateMainMenu();
             });
-            
+
             this.state.focusableElementIds = [CoreC.DOM.CHAT_HOLDER, CoreC.DOM.STORE_MENU, CoreC.DOM.ALLIANCE_MENU];
 
             // Initialize all registered minimods
@@ -1852,20 +1949,21 @@ C = Added patches
                 }
             `;
         },
-        
+
         /**
          * Cleans up all UI created by this minimod.
          * @returns {void}
          */
         cleanup() {
+            const CoreC = this.core.data.constants;
             const LocalC = this.constants;
 
             // Restore the original structure
             this.config.isPanelVisible = false;
             this.removeSettingsCard();
 
-            const rightCardHolder = document.getElementById(LocalC.DOM.RIGHT_CARD_HOLDER);
-            if (leftCardHolder) rightCardHolder.querySelector('.menuHeader:has(+ .settingRadio)').textContent = 'Settings';
+            const rightCardHolder = document.getElementById(CoreC.DOM.RIGHT_CARD_HOLDER);
+            if (rightCardHolder) rightCardHolder.querySelector('.menuHeader:has(+ .settingRadio)').textContent = 'Settings';
 
             // Remove the settings panel card
             const leftCardHolder = document.getElementById(LocalC.DOM.LEFT_CARD_HOLDER);
@@ -2188,7 +2286,7 @@ C = Added patches
             /** @property {boolean} INVERT_SCROLL - If true, reverses the scroll direction for item selection. */
             INVERT_SCROLL: false,
             /** @property {boolean} SCROLL_WHEEL_ENABLED - If false, disables the wheel but keeps the UI highlights. */
-            SCROLL_WHEEL_ENABLED: true 
+            SCROLL_WHEEL_ENABLED: true
         },
 
         /** @property {object} constants - Constants specific to this minimod. */
@@ -2676,7 +2774,7 @@ C = Added patches
          * Returns the CSS rules required for this minimod.
          * @returns {string} The complete CSS string.
          */
-        applyCSS() {
+        applyGameCSS() {
             const CoreC = this.core.data.constants;
             const LocalC = this.constants;
             return `
@@ -2773,7 +2871,7 @@ C = Added patches
                         opacity: ${LocalC.CSS.DRAGGING_OPACITY};
                     }
                 }
-            `
+            `;
         },
 
         /**
@@ -2831,7 +2929,7 @@ C = Added patches
 
                     this.setupDynamicPositioning();
                     this.setupStoreMenuObservers();
-                        
+
                     if (this.config.INSTA_PIN_FREE_HATS) {
                         this.instaPinFreeHats();
                     }
@@ -3622,12 +3720,12 @@ C = Added patches
                 document.addEventListener('keydown', this.state.boundHandlers.handleKeyDown);
             });
         },
-        
+
         /**
          * Returns the CSS rules required for styling the chatbox.
          * @returns {string} The complete CSS string.
          */
-        applyCSS() {
+        applyGameCSS() {
             const LocalC = this.constants;
             return `
                 #${LocalC.DOM.CHATBOX_CONTAINER_ID} {
@@ -3708,7 +3806,7 @@ C = Added patches
                 }
             `;
         },
-        
+
         /**
          * Cleans up all UI created by this minimod.
          * @returns {void}
@@ -3719,7 +3817,7 @@ C = Added patches
             this.state.messagesContainer = null;
             this.state.players.clear();
             this.state.leaderboard.clear();
-            
+
             document.removeEventListener('keydown', this.state.boundHandlers.handleKeyDown);
         },
 
@@ -3780,7 +3878,7 @@ C = Added patches
                     break;
             }
         },
-        
+
         /**
          * Creates and adds a new chat message to the UI.
          * @param {number} sid - The sender's session ID.
@@ -3806,7 +3904,7 @@ C = Added patches
             const timeSpan = document.createElement('span');
             timeSpan.className = 'timestamp';
             timeSpan.textContent = `[${timestamp}] `;
-            
+
             const nameSpan = document.createElement('span');
             nameSpan.className = 'player-name';
             nameSpan.textContent = `${playerName}`;
@@ -3820,7 +3918,7 @@ C = Added patches
             contentSpan.textContent = `: ${message}`;
 
             msgElement.append(timeSpan, nameSpan, contentSpan);
-            
+
             // Add to UI and manage message limit
             this.state.messagesContainer.appendChild(msgElement);
 

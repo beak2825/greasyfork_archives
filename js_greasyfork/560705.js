@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         KremCheats - KrunkBrutal (Aimbot Mega Update)
-// @version      1.2
+// @name         KremCheats - KRUNKER
+// @version      1.4
 // @icon         https://i.imgur.com/zv8kMZS.png
-// @description  Krunker Play safe - ESP, Aimbot, Rage, Triggerbot and more
+// @description   Krunker  beta - ESP, Aimbot, Rage, Triggerbot and more
 // @author       KremCheats
 // @license      All Rights Reserved
 // @match        *://krunker.io/*
@@ -12,47 +12,40 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @namespace    https://greasyfork.org/users/1546742
-// @downloadURL https://update.greasyfork.org/scripts/560705/KremCheats%20-%20KrunkBrutal%20%28Aimbot%20Mega%20Update%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/560705/KremCheats%20-%20KrunkBrutal%20%28Aimbot%20Mega%20Update%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560705/KremCheats%20-%20KRUNKER.user.js
+// @updateURL https://update.greasyfork.org/scripts/560705/KremCheats%20-%20KRUNKER.meta.js
 // ==/UserScript==
-
+ 
 /*
- * KremCheats - KrunkBrutal v1.0
- * Copyright (c) 2024 KremCheats
+ * KremCheats v1.0 - Premium Edition
+ * Copyright (c) 2024 KremityssYT
  * All Rights Reserved - Private Code
  * Discord: https://discord.gg/MHCcGgsX56
  */
-
+ 
 (function(_0x4f8a2b) {
     'use strict';
-
-    // --- ADVANCED BYPASS LOGIC ---
+ 
     var _0xa = window.alert, _0xb = window.confirm, _0xc = window.prompt;
     window.alert = function(_0xm) { if (_0xm && typeof _0xm === 'string') { var _0xl = _0xm.toLowerCase(); if (_0xl.includes('extension') || _0xl.includes('disable') || _0xl.includes('plugin') || _0xl.includes('blocker') || _0xl.includes('detected')) return; } return _0xa.apply(this, arguments); };
     window.confirm = function(_0xm) { if (_0xm && typeof _0xm === 'string') { var _0xl = _0xm.toLowerCase(); if (_0xl.includes('extension') || _0xl.includes('disable') || _0xl.includes('plugin') || _0xl.includes('blocker') || _0xl.includes('detected')) return false; } return _0xb.apply(this, arguments); };
     window.prompt = function(_0xm) { if (_0xm && typeof _0xm === 'string') { var _0xl = _0xm.toLowerCase(); if (_0xl.includes('extension') || _0xl.includes('disable') || _0xl.includes('plugin')) return null; } return _0xc.apply(this, arguments); };
-
+ 
     try { Object.defineProperty(navigator, 'plugins', { get: function() { return []; }, configurable: true }); } catch(_0xe) {}
     try { Object.defineProperty(navigator, 'webdriver', { get: function() { return false; }, configurable: true }); } catch(_0xe) {}
-    try { Object.defineProperty(navigator, 'languages', { get: function() { return ['en-US', 'en']; }, configurable: true }); } catch(_0xe) {}
-
+ 
     var _0xgt = Date.prototype.getTime;
     Date.prototype.getTime = function() { return _0xgt.call(this) + Math.random() * 2 - 1; };
-
+ 
     window.chrome = window.chrome || {};
     window.chrome.runtime = undefined;
-
+ 
     var _0xof = window.fetch;
-    window.fetch = function() { 
-        var _0xu = arguments[0]; 
-        if (typeof _0xu === 'string' && (_0xu.includes('chrome-extension://') || _0xu.includes('anticheat') || _0xu.includes('detection'))) return Promise.reject(new Error('blocked')); 
-        return _0xof.apply(this, arguments); 
-    };
-
-    // --- CONFIGURATION ---
+    window.fetch = function() { var _0xu = arguments[0]; if (typeof _0xu === 'string' && _0xu.includes('chrome-extension://')) return Promise.reject(new Error('blocked')); return _0xof.apply(this, arguments); };
+ 
     var DISCORD_URL = 'https://discord.gg/MHCcGgsX56';
     var LOGO_URL = 'https://i.imgur.com/zv8kMZS.png';
-
+ 
     var colorList = [
         { name: "Red", value: "1.0, 0.0, 0.0", hex: "#ff0000" },
         { name: "Orange", value: "1.0, 0.5, 0.0", hex: "#ff8000" },
@@ -64,7 +57,7 @@
         { name: "Pink", value: "1.0, 0.0, 0.5", hex: "#ff0080" },
         { name: "White", value: "1.0, 1.0, 1.0", hex: "#ffffff" }
     ];
-
+ 
     var defaultCfg = {
         aimbotOn: true,
         aimbone: 'head',
@@ -75,7 +68,7 @@
         predInt: 1.0,
         aimSmooth: 0.1,
         visCheck: false,
-
+ 
         rageOn: false,
         rageSmooth: 0.6,
         rageOff: 0.6,
@@ -84,17 +77,17 @@
         rageBone: 'head',
         rageKey: 'None',
         rageAlways: true,
-
+ 
         triggerOn: false,
         triggerFov: 30,
         triggerDelay: 50,
-
+ 
         fovOn: true,
         fovShow: true,
         fovSize: 200,
         fovCol: '#ff0000',
         fovRgb: false,
-
+ 
         espOn: true,
         espIdx: 0,
         espCol: "1.0, 0.0, 0.0",
@@ -105,28 +98,27 @@
         espLine: false,
         espLinePos: 'bottom',
         espRgb: false,
-
+ 
         wireOn: false,
         wireRgb: false,
         worldWire: false,
         chamsOn: true,
         chamsCol: '#ff0000',
-
+ 
         tpOn: false,
         camX: 0,
         camY: 2,
         camZ: -5,
-
+ 
         noRecoil: 0,
         silentOn: false,
         speedOn: false,
         speedVal: 1.5,
         jumpOn: false,
         bhopOn: false,
-
+ 
         uiHidden: false,
-        panic: false,
-
+ 
         keys: {
             togAim: 'KeyT',
             togEsp: 'KeyE',
@@ -134,20 +126,20 @@
             togRgb: 'KeyR'
         }
     };
-
+ 
     var cfg = Object.assign({}, defaultCfg, GM_getValue('kremCfg', {}));
-
+ 
     var sceneRef = null, initTimer = null;
     var rightDown = false, keyDown = false, rageKeyDown = false;
     var lockOn = false, locked = null, posHist = {};
     var rgbLoop = null, hue = 0, localRef = null;
     var lastTrigger = 0;
-
+ 
     var stablePitch = null, stableYaw = null, stableRotY = null, stableChildX = null;
     var firing = false, lastFire = 0;
-
+ 
     var gameState = null, playerObj = null, inputObj = null;
-
+ 
     function waitGame() {
         if (typeof window.gameState !== "undefined" && typeof window.player !== "undefined" && typeof window.input !== "undefined") {
             gameState = window.gameState;
@@ -158,7 +150,7 @@
         }
     }
     waitGame();
-
+ 
     setInterval(function() {
         if (!playerObj || !gameState) {
             if (typeof window.player !== "undefined") playerObj = window.player;
@@ -166,12 +158,12 @@
             if (typeof window.input !== "undefined") inputObj = window.input;
         }
     }, 2000);
-
+ 
     var Engine = window.THREE;
     delete window.THREE;
-
+ 
     var utils = { win: window, doc: document, arrPush: Array.prototype.push, raf: window.requestAnimationFrame };
-
+ 
     var detectScene = function(obj) {
         try {
             if (typeof obj === 'object' && typeof obj.parent === 'object' && obj.parent.type === 'Scene' && obj.parent.name === 'Main') {
@@ -181,44 +173,50 @@
         } catch (e) {}
         return utils.arrPush.apply(this, arguments);
     };
-
+ 
     var tempVec = new Engine.Vector3();
     var tempObj = new Engine.Object3D();
     tempObj.rotation.order = 'YXZ';
-
+ 
     var boxGeo = new Engine.EdgesGeometry(new Engine.BoxGeometry(4.8, 14.8, 4.8).translate(0, 7.4, 0));
-
+ 
     var espMat = new Engine.RawShaderMaterial({
         vertexShader: 'attribute vec3 position;uniform mat4 projectionMatrix;uniform mat4 modelViewMatrix;void main(){vec4 p=projectionMatrix*modelViewMatrix*vec4(position,1.0);p.z=0.1;gl_Position=p;}',
         fragmentShader: 'precision mediump float;uniform vec3 espColor;void main(){gl_FragColor=vec4(espColor,1.0);}',
         uniforms: { espColor: { value: new Engine.Vector3(1.0, 0.0, 0.0) } },
         depthTest: false, depthWrite: false, transparent: true
     });
-
+ 
+    var tgtMat = new Engine.RawShaderMaterial({
+        vertexShader: 'attribute vec3 position;uniform mat4 projectionMatrix;uniform mat4 modelViewMatrix;void main(){vec4 p=projectionMatrix*modelViewMatrix*vec4(position,1.0);p.z=0.1;gl_Position=p;}',
+        fragmentShader: 'void main(){gl_FragColor=vec4(0.0,1.0,0.0,1.0);}',
+        depthTest: false, depthWrite: false, transparent: true
+    });
+ 
     var lineGeo = new Engine.BufferGeometry();
     var linePos = new Engine.BufferAttribute(new Float32Array(300), 3);
     lineGeo.setAttribute('position', linePos);
-
+ 
     var lineMat = new Engine.LineBasicMaterial({ color: 0xff0000, linewidth: 2, depthTest: false, depthWrite: false, transparent: true });
     var lineVis = new Engine.LineSegments(lineGeo, lineMat);
     lineVis.frustumCulled = false;
     lineVis.renderOrder = 9998;
-
+ 
     var hpCanvas = document.createElement('canvas');
     hpCanvas.width = window.innerWidth;
     hpCanvas.height = window.innerHeight;
     hpCanvas.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:9998;';
-
+ 
     var raycaster = new Engine.Raycaster();
-
+ 
     function updateEspColor() {
         var parts = cfg.espCol.split(',').map(function(v) { return parseFloat(v.trim()); });
         espMat.uniforms.espColor.value.set(parts[0], parts[1], parts[2]);
         lineMat.color.setRGB(parts[0], parts[1], parts[2]);
     }
-
+ 
     function saveCfg() { GM_setValue('kremCfg', cfg); }
-
+ 
     function startRgb() {
         if (rgbLoop) return;
         rgbLoop = setInterval(function() {
@@ -237,11 +235,11 @@
             }
         }, 30);
     }
-
+ 
     function stopRgb() {
         if (rgbLoop) { clearInterval(rgbLoop); rgbLoop = null; }
     }
-
+ 
     function hslRgb(h, s, l) {
         var r, g, b;
         if (s === 0) { r = g = b = l; }
@@ -261,11 +259,10 @@
         }
         return { r: r.toFixed(2), g: g.toFixed(2), b: b.toFixed(2) };
     }
-
+ 
     function blockMouse(e) { e.stopImmediatePropagation(); e.preventDefault(); }
-
+ 
     function onDown(e) {
-        if (cfg.panic) return;
         if (cfg.aimKey === 'MouseRight' && e.button === 2) { keyDown = true; rightDown = true; }
         else if (cfg.aimKey === 'MouseLeft' && e.button === 0) { keyDown = true; }
         else if (cfg.aimKey === 'MouseMiddle' && e.button === 1) { keyDown = true; }
@@ -273,14 +270,14 @@
         else if (cfg.rageKey === 'MouseLeft' && e.button === 0) rageKeyDown = true;
         else if (cfg.rageKey === 'MouseMiddle' && e.button === 1) rageKeyDown = true;
     }
-
+ 
     function onUp(e) {
         if (e.button === 2 || e.button === 0 || e.button === 1) {
             rightDown = false; keyDown = false; rageKeyDown = false; lockOn = false; locked = null;
             document.removeEventListener('mousemove', blockMouse, true);
         }
     }
-
+ 
     function getHp(ent) {
         try {
             if (!gameState || !gameState.players) return 100;
@@ -296,30 +293,30 @@
             return ent.health !== undefined ? ent.health : 100;
         } catch (e) { return 100; }
     }
-
+ 
     function applySpeed() {
         try {
-            if (!playerObj || cfg.panic) return;
+            if (!playerObj) return;
             if (playerObj.velocity) {
                 playerObj.velocity.x *= cfg.speedVal;
                 playerObj.velocity.z *= cfg.speedVal;
             }
         } catch (e) {}
     }
-
+ 
     function applyBhop() {
         try {
-            if (!playerObj || !cfg.bhopOn || cfg.panic) return;
+            if (!playerObj || !cfg.bhopOn) return;
             if (playerObj.onGround || playerObj.grounded || (playerObj.velocity && playerObj.velocity.y === 0)) {
                 if (playerObj.velocity) playerObj.velocity.y = 0.11;
                 if (playerObj.canJump !== undefined) playerObj.canJump = true;
             }
         } catch (e) {}
     }
-
+ 
     function applyJump() {
         try {
-            if (!playerObj || cfg.panic) return;
+            if (!playerObj) return;
             if (playerObj.jumpHeight !== undefined) {
                 if (!playerObj._ojh) playerObj._ojh = playerObj.jumpHeight;
                 playerObj.jumpHeight = playerObj._ojh * 1.8;
@@ -330,10 +327,10 @@
             }
         } catch (e) {}
     }
-
+ 
     function applyNoRecoil() {
         try {
-            if (cfg.noRecoil === 0 || !playerObj || cfg.panic) return;
+            if (cfg.noRecoil === 0 || !playerObj) return;
             var red = cfg.noRecoil / 100;
             if (playerObj.weapon) {
                 if (playerObj.weapon.recoil !== undefined) playerObj.weapon.recoil *= (1 - red);
@@ -342,19 +339,19 @@
             if (playerObj.recoil !== undefined) playerObj.recoil *= (1 - red);
             if (playerObj.recoilAnimY !== undefined) playerObj.recoilAnimY *= (1 - red);
             if (playerObj.recoilAnimX !== undefined) playerObj.recoilAnimX *= (1 - red);
-
+ 
             if (cfg.noRecoil === 100) {
                 var now = Date.now();
                 var isFiring = playerObj.didShoot || (playerObj.weapon && playerObj.weapon.shooting) || (inputObj && inputObj.mouseDown) || (now - lastFire < 100);
                 if (playerObj.didShoot) lastFire = now;
-
+ 
                 if (isFiring && !firing) {
                     if (playerObj.camera) { stablePitch = playerObj.camera.pitch; stableYaw = playerObj.camera.yaw; }
                     stableRotY = playerObj.rotation ? playerObj.rotation.y : null;
                     if (playerObj.children && playerObj.children[0]) stableChildX = playerObj.children[0].rotation.x;
                     firing = true;
                 }
-
+ 
                 if (firing) {
                     if (playerObj.camera && stablePitch !== null) {
                         playerObj.camera.pitch = stablePitch;
@@ -369,7 +366,7 @@
                         if (playerObj.weapon.spread !== undefined) playerObj.weapon.spread = 0;
                     }
                 }
-
+ 
                 if (!isFiring && firing) {
                     firing = false;
                     stablePitch = null; stableYaw = null; stableRotY = null; stableChildX = null;
@@ -377,10 +374,10 @@
             }
         } catch (e) {}
     }
-
+ 
     function applyWireframe(ent) {
         try {
-            if (!ent.children || !ent.children[0] || !ent.children[0].children || cfg.panic) return;
+            if (!ent.children || !ent.children[0] || !ent.children[0].children) return;
             var mesh = ent.children[0].children[0];
             if (mesh && mesh.material) {
                 mesh.material.wireframe = cfg.wireOn;
@@ -398,7 +395,7 @@
             }
         } catch (e) {}
     }
-
+ 
     function isVisible(from, to, scene) {
         if (!cfg.rageVis) return true;
         try {
@@ -410,7 +407,7 @@
             return hits.length === 0;
         } catch (e) { return true; }
     }
-
+ 
     function isTeammate(ent, local) {
         try {
             if (!gameState || !gameState.players) return false;
@@ -426,7 +423,7 @@
             return localTeam !== null && entTeam !== null && localTeam === entTeam;
         } catch (e) { return false; }
     }
-
+ 
     function hasHead(ent) {
         try {
             return ent.children && ent.children[0] && ent.children[0].children && ent.children[0].children.length > 4 &&
@@ -434,7 +431,7 @@
                    ent.children[0].children[4].children[0] && ent.children[0].children[4].children[0].name === 'head';
         } catch (e) { return false; }
     }
-
+ 
     function getHeadPos(ent) {
         var pos = new Engine.Vector3();
         try {
@@ -450,24 +447,24 @@
         }
         return pos;
     }
-
+ 
     function getTargetPos(ent, bone) {
         var pos = getHeadPos(ent);
         if (bone === 'chest') pos.y -= 4;
         else if (bone === 'body') pos.y -= 7;
         return pos;
     }
-
+ 
     function getKeyName(code) {
         if (!code || code === 'None') return 'None';
         if (code.startsWith('Key')) return code.replace('Key', '');
         if (code.startsWith('Mouse')) return code.replace('Mouse', 'M');
         return code.replace('Left', '').replace('Right', '');
     }
-
+ 
     function initUI() {
         if (document.getElementById('krem-root')) return;
-
+ 
         var root = document.createElement('div');
         root.id = 'krem-root';
         root.innerHTML = [
@@ -540,7 +537,7 @@
             '<div class="km-tab" data-t="cfg">CONFIG</div>',
             '</div>',
             '<div class="km-main">',
-
+ 
             '<div class="km-pnl on" data-p="aim">',
             '<div class="km-sec">',
             '<div class="km-sec-t">Aimbot Settings</div>',
@@ -570,7 +567,7 @@
             '<div class="km-sld-w"><div class="km-sld-h"><span>FOV Size</span><span class="km-sld-v" id="fovSize-v">' + cfg.fovSize + '</span></div><input type="range" class="km-sld" id="fovSize" min="50" max="600" value="' + cfg.fovSize + '"></div>',
             '</div>',
             '</div>',
-
+ 
             '<div class="km-pnl" data-p="rage">',
             '<div class="km-sec">',
             '<div class="km-sec-t">Rage Aimbot</div>',
@@ -608,7 +605,7 @@
             '<div class="km-sld-w"><div class="km-sld-h"><span>Trigger Delay</span><span class="km-sld-v" id="triggerDelay-v">' + cfg.triggerDelay + 'ms</span></div><input type="range" class="km-sld" id="triggerDelay" min="0" max="200" value="' + cfg.triggerDelay + '"></div>',
             '</div>',
             '</div>',
-
+ 
             '<div class="km-pnl" data-p="esp">',
             '<div class="km-sec">',
             '<div class="km-sec-t">ESP Settings</div>',
@@ -632,7 +629,7 @@
             '<div class="km-row"><span class="km-lbl">Chams Color</span><input type="color" class="km-col" id="chamsCol" value="' + cfg.chamsCol + '"></div>',
             '</div>',
             '</div>',
-
+ 
             '<div class="km-pnl" data-p="vis">',
             '<div class="km-sec">',
             '<div class="km-sec-t">3rd Person Camera</div>',
@@ -642,7 +639,7 @@
             '<div class="km-sld-w"><div class="km-sld-h"><span>Camera Z</span><span class="km-sld-v" id="camZ-v">' + cfg.camZ + '</span></div><input type="range" class="km-sld" id="camZ" min="-20" max="5" step="0.5" value="' + cfg.camZ + '"></div>',
             '</div>',
             '</div>',
-
+ 
             '<div class="km-pnl" data-p="misc">',
             '<div class="km-sec">',
             '<div class="km-sec-t">Weapon Mods</div>',
@@ -657,7 +654,7 @@
             '<div class="km-row"><span class="km-lbl">Jump Hack</span><div class="km-tog' + (cfg.jumpOn ? ' on' : '') + '" data-k="jumpOn"></div></div>',
             '</div>',
             '</div>',
-
+ 
             '<div class="km-pnl" data-p="cfg">',
             '<div class="km-sec">',
             '<div class="km-sec-t">Aim Key</div>',
@@ -679,31 +676,30 @@
             '<div class="km-sec">',
             '<div class="km-sec-t">Info</div>',
             '<div class="km-row"><span class="km-lbl">UI Toggle</span><span style="color:#ff0000;font-size:11px">Ctrl + Alt + L</span></div>',
-            '<div class="km-row"><span class="km-lbl">Panic Key</span><span style="color:#ff0000;font-size:11px">Delete</span></div>',
             '<div class="km-row"><span class="km-lbl">Discord</span><span style="color:#5865F2;font-size:11px">discord.gg/MHCcGgsX56</span></div>',
             '</div>',
             '</div>',
-
+ 
             '</div>',
             '</div>',
             '</div>',
             '<div id="krem-fov" style="display:' + (cfg.fovShow ? 'block' : 'none') + ';border-color:' + cfg.fovCol + '"></div>'
         ].join('');
-
+ 
         if (!document.body) { setTimeout(initUI, 100); return; }
         document.body.appendChild(root);
-        
+ 
         if (cfg.uiHidden) {
             var menu = document.getElementById('km');
             if (menu) menu.style.display = 'none';
         }
-        
+ 
         bindUI();
         makeDrag();
         updateFov();
         setInterval(updateFov, 16);
     }
-
+ 
     function bindUI() {
         document.querySelectorAll('.km-tab').forEach(function(tab) {
             tab.onclick = function() {
@@ -713,11 +709,11 @@
                 document.querySelector('[data-p="' + tab.dataset.t + '"]').classList.add('on');
             };
         });
-
+ 
         document.getElementById('km-min').onclick = function() {
             document.getElementById('km').classList.toggle('min');
         };
-
+ 
         document.querySelectorAll('.km-tog').forEach(function(tog) {
             tog.onclick = function() {
                 var k = tog.dataset.k;
@@ -730,7 +726,7 @@
                 saveCfg();
             };
         });
-
+ 
         var sliders = [
             { id: 'aimStr', k: 'aimStr', s: '', d: 0 },
             { id: 'predInt', k: 'predInt', s: '', d: 1 },
@@ -748,7 +744,7 @@
             { id: 'triggerFov', k: 'triggerFov', s: 'px', d: 0 },
             { id: 'triggerDelay', k: 'triggerDelay', s: 'ms', d: 0 }
         ];
-
+ 
         sliders.forEach(function(sl) {
             var el = document.getElementById(sl.id);
             var vEl = document.getElementById(sl.id + '-v');
@@ -761,19 +757,19 @@
                 };
             }
         });
-
+ 
         var aimbone = document.getElementById('aimbone');
         if (aimbone) aimbone.onchange = function(e) { cfg.aimbone = e.target.value; saveCfg(); };
-
+ 
         var rageBone = document.getElementById('rageBone');
         if (rageBone) rageBone.onchange = function(e) { cfg.rageBone = e.target.value; saveCfg(); };
-
+ 
         var rageKey = document.getElementById('rageKey');
         if (rageKey) rageKey.onchange = function(e) { cfg.rageKey = e.target.value; saveCfg(); };
-
+ 
         var aimKey = document.getElementById('aimKey');
         if (aimKey) aimKey.onchange = function(e) { cfg.aimKey = e.target.value; saveCfg(); };
-
+ 
         var espColSel = document.getElementById('espColSel');
         if (espColSel) espColSel.onchange = function(e) {
             var i = parseInt(e.target.value);
@@ -782,10 +778,10 @@
             updateEspColor();
             saveCfg();
         };
-
+ 
         var chamsCol = document.getElementById('chamsCol');
         if (chamsCol) chamsCol.oninput = function(e) { cfg.chamsCol = e.target.value; saveCfg(); };
-
+ 
         document.querySelectorAll('.km-key').forEach(function(btn) {
             btn.onclick = function() {
                 var bk = btn.dataset.b;
@@ -803,12 +799,12 @@
             };
         });
     }
-
+ 
     function makeDrag() {
         var menu = document.getElementById('km');
         var hdr = document.getElementById('km-hdr');
         var drag = false, ox = 0, oy = 0;
-
+ 
         hdr.onmousedown = function(e) {
             if (e.target.tagName === 'BUTTON') return;
             drag = true;
@@ -816,16 +812,16 @@
             oy = e.clientY - menu.offsetTop;
             menu.style.transition = 'none';
         };
-
+ 
         document.onmousemove = function(e) {
             if (!drag) return;
             menu.style.left = (e.clientX - ox) + 'px';
             menu.style.top = (e.clientY - oy) + 'px';
         };
-
+ 
         document.onmouseup = function() { drag = false; menu.style.transition = ''; };
     }
-
+ 
     function updateFov() {
         var fov = document.getElementById('krem-fov');
         if (!fov) return;
@@ -834,40 +830,40 @@
         fov.style.left = (window.innerWidth / 2) + 'px';
         fov.style.top = (window.innerHeight / 2) + 'px';
         if (!cfg.fovRgb) fov.style.borderColor = cfg.fovCol;
-        fov.style.display = cfg.fovShow && cfg.fovOn && !cfg.panic ? 'block' : 'none';
+        fov.style.display = cfg.fovShow && cfg.fovOn ? 'block' : 'none';
     }
-
+ 
     function toggleUI() {
         cfg.uiHidden = !cfg.uiHidden;
         var menu = document.getElementById('km');
         if (menu) menu.style.display = cfg.uiHidden ? 'none' : 'block';
         saveCfg();
     }
-
+ 
     function applyTriggerbot(entities, local, camera) {
-        if (!cfg.triggerOn || !camera || cfg.panic) return;
-
+        if (!cfg.triggerOn || !camera) return;
+ 
         var now = Date.now();
         if (now - lastTrigger < cfg.triggerDelay) return;
-
+ 
         var centerX = window.innerWidth / 2;
         var centerY = window.innerHeight / 2;
-
+ 
         for (var i = 0; i < entities.length; i++) {
             var ent = entities[i];
             if (ent === local || ent === localRef) continue;
             if (isTeammate(ent, local)) continue;
-
+ 
             var headPos = getHeadPos(ent);
             var screenPos = headPos.clone().project(camera);
-
+ 
             if (screenPos.z > 1) continue;
-
+ 
             var screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth;
             var screenY = (-screenPos.y * 0.5 + 0.5) * window.innerHeight;
-
+ 
             var dist = Math.sqrt(Math.pow(screenX - centerX, 2) + Math.pow(screenY - centerY, 2));
-
+ 
             if (dist < cfg.triggerFov) {
                 lastTrigger = now;
                 try {
@@ -884,10 +880,10 @@
             }
         }
     }
-
+ 
     function mainLoop() {
         utils.raf.call(utils.win, mainLoop);
-
+ 
         if (!sceneRef && !initTimer) {
             var loadEl = document.querySelector('#loadingBg');
             if (loadEl && loadEl.style.display === 'none') {
@@ -898,27 +894,23 @@
             }
             return;
         }
-
-        if (!sceneRef || cfg.panic) {
-            if (lineVis.parent) sceneRef.remove(lineVis);
-            if (hpCanvas.parentNode) hpCanvas.parentNode.removeChild(hpCanvas);
-            return;
-        }
-
+ 
+        if (!sceneRef) return;
+ 
         if (cfg.speedOn) applySpeed();
         if (cfg.bhopOn) applyBhop();
         if (cfg.jumpOn) applyJump();
         applyNoRecoil();
-
+ 
         if (cfg.worldWire) {
             sceneRef.children.forEach(function(c) {
                 if (c.material && c.material.wireframe !== undefined) c.material.wireframe = true;
             });
         }
-
+ 
         var entities = [];
         var local = null;
-
+ 
         sceneRef.children.forEach(function(child) {
             if (child.type === 'Object3D') {
                 try {
@@ -936,54 +928,54 @@
                 } catch (e) {}
             }
         });
-
+ 
         if (!local) return;
-
+ 
         if (cfg.tpOn && local.children[0]) {
             local.children[0].position.set(cfg.camX, cfg.camY, cfg.camZ);
         } else if (local.children[0]) {
             local.children[0].position.set(0, 0, 0);
         }
-
+ 
         if (!lineVis.parent) sceneRef.add(lineVis);
         if (!hpCanvas.parentNode) document.body.appendChild(hpCanvas);
-
+ 
         var posCount = 0;
         var curTgt = null;
         var minDist = Infinity;
         var rageTgt = null;
         var rageDist = Infinity;
-
+ 
         tempObj.matrix.copy(local.matrix).invert();
-
+ 
         var curPos = {};
         for (var i = 0; i < entities.length; i++) {
             curPos[entities[i].id] = entities[i].position.clone();
         }
-
+ 
         var hCtx = hpCanvas.getContext('2d');
         hCtx.clearRect(0, 0, hpCanvas.width, hpCanvas.height);
-
+ 
         var camera = local.children && local.children[0] && local.children[0].children && local.children[0].children[0];
-
+ 
         for (var i = 0; i < entities.length; i++) {
             var ent = entities[i];
-
+ 
             if (ent === local || ent === localRef) continue;
             if (isTeammate(ent, local)) {
                 if (ent.espBox) ent.espBox.visible = false;
                 continue;
             }
-
+ 
             var dist = ent.position.distanceTo(local.position);
             if (dist < 1) continue;
             if (dist > cfg.espMax) {
                 if (ent.espBox) ent.espBox.visible = false;
                 continue;
             }
-
+ 
             if (cfg.wireOn || cfg.chamsOn) applyWireframe(ent);
-
+ 
             if (!ent.espBox) {
                 var box = new Engine.LineSegments(boxGeo, espMat.clone());
                 box.frustumCulled = false;
@@ -991,7 +983,7 @@
                 ent.add(box);
                 ent.espBox = box;
             }
-
+ 
             if (cfg.espLine) {
                 var pPos = local.position;
                 var startY = pPos.y;
@@ -1000,17 +992,17 @@
                 linePos.setXYZ(posCount++, pPos.x, startY, pPos.z);
                 linePos.setXYZ(posCount++, ent.position.x, ent.position.y + 7, ent.position.z);
             }
-
+ 
             var predPos = ent.position.clone();
             if (posHist[ent.id]) {
                 var vel = new Engine.Vector3().subVectors(curPos[ent.id], posHist[ent.id]);
                 predPos.add(vel.multiplyScalar(cfg.predInt));
             }
-
+ 
             ent.visible = true;
-
+ 
             var inFov = false;
-
+ 
             if (camera && camera.type === 'PerspectiveCamera') {
                 var screenPos = predPos.clone().project(camera);
                 var screenX = (screenPos.x * 0.5 + 0.5) * window.innerWidth;
@@ -1020,14 +1012,14 @@
                 var distFromCenter = Math.sqrt(Math.pow(screenX - centerX, 2) + Math.pow(screenY - centerY, 2));
                 var fovRad = cfg.fovSize / 2;
                 inFov = (screenPos.z < 1) && (distFromCenter <= fovRad);
-
+ 
                 if (cfg.espHp && cfg.espOn && screenPos.z > 0 && screenPos.z < 1) {
                     var hp = getHp(ent);
                     var hpPct = Math.max(0, Math.min(1, hp / 100));
                     var barW = 50, barH = 5;
                     var barX = screenX - barW / 2;
                     var barY = screenY - 80;
-
+ 
                     if (barX > -barW && barX < window.innerWidth && barY > -20 && barY < window.innerHeight) {
                         hCtx.fillStyle = 'rgba(0,0,0,0.6)';
                         hCtx.fillRect(barX, barY, barW, barH);
@@ -1043,13 +1035,13 @@
                     }
                 }
             }
-
+ 
             var fovOk = cfg.fovOn ? inFov : true;
             if (!lockOn && fovOk && dist < minDist) {
                 curTgt = ent;
                 minDist = dist;
             }
-
+ 
             if (cfg.rageOn && dist < cfg.rageDist && dist > 1) {
                 var canTarget = true;
                 if (cfg.rageVis) {
@@ -1061,7 +1053,7 @@
                 }
             }
         }
-
+ 
         if (cfg.espOn) {
             for (var i = 0; i < entities.length; i++) {
                 var ent = entities[i];
@@ -1070,7 +1062,7 @@
                 var dist = ent.position.distanceTo(local.position);
                 if (dist < 1) continue;
                 if (dist > cfg.espMax) continue;
-
+ 
                 if (ent.espBox) {
                     var parts = cfg.espCol.split(',').map(function(v) { return parseFloat(v.trim()); });
                     ent.espBox.material.uniforms.espColor.value.set(parts[0], parts[1], parts[2]);
@@ -1083,25 +1075,25 @@
                 if (entities[i].espBox) entities[i].espBox.visible = false;
             }
         }
-
+ 
         posHist = curPos;
         linePos.needsUpdate = true;
         lineGeo.setDrawRange(0, posCount);
         lineVis.visible = cfg.espLine && cfg.espOn;
-
+ 
         if (cfg.triggerOn && camera) {
             applyTriggerbot(entities, local, camera);
         }
-
+ 
         var rageActive = cfg.rageAlways || (cfg.rageKey !== 'None' && rageKeyDown);
         if (cfg.rageOn && rageTgt && local && rageActive) {
             doRageAim(rageTgt, local);
         }
-
+ 
         var aimActive = (cfg.aimKey === 'MouseRight' && rightDown) ||
             (cfg.aimKey === 'MouseLeft' && keyDown) ||
             (cfg.aimKey === 'MouseMiddle' && keyDown) || keyDown;
-
+ 
         if (!cfg.aimbotOn || !aimActive) {
             if (lockOn) {
                 lockOn = false; locked = null;
@@ -1109,100 +1101,84 @@
             }
             return;
         }
-
+ 
         if (!lockOn && curTgt) {
             locked = curTgt;
             lockOn = true;
             document.addEventListener('mousemove', blockMouse, true);
         }
-
+ 
         if (!curTgt) {
             lockOn = false; locked = null;
             document.removeEventListener('mousemove', blockMouse, true);
             return;
         }
-
+ 
         if (locked && !sceneRef.children.includes(locked)) {
             lockOn = false; locked = null;
             document.removeEventListener('mousemove', blockMouse, true);
             return;
         }
-
+ 
         if (!locked) return;
-
+ 
         var targetPos = getTargetPos(locked, cfg.aimbone);
-
+ 
         if (posHist[locked.id] && curPos[locked.id]) {
             var vel = new Engine.Vector3().subVectors(curPos[locked.id], posHist[locked.id]);
             targetPos.add(vel.multiplyScalar(cfg.predInt));
         }
-
+ 
         if (cfg.vertOn) targetPos.y += cfg.vertAdj;
-
+ 
         tempVec.copy(targetPos);
         tempObj.position.copy(local.position);
         tempObj.lookAt(tempVec);
-
+ 
         var aimFactor = Math.min(1.0, cfg.aimStr / 100);
-
+ 
         if (local.children && local.children.length > 0) {
             var curX = local.children[0].rotation.x;
             var tgtX = -tempObj.rotation.x;
             local.children[0].rotation.x = curX + (tgtX - curX) * aimFactor;
         }
-
+ 
         var curY = local.rotation.y;
         var tgtY = tempObj.rotation.y + Math.PI;
         local.rotation.y = curY + (tgtY - curY) * aimFactor;
     }
-
+ 
     function doRageAim(target, local) {
         if (!target || !local) return;
         if (target === local || target === localRef) return;
-
+ 
         try {
             var targetPos = getTargetPos(target, cfg.rageBone);
             var dist = target.position.distanceTo(local.position);
-
+ 
             tempObj.position.copy(local.position);
             tempObj.lookAt(targetPos.x, targetPos.y, targetPos.z);
-
+ 
             var tgtRotX = -tempObj.rotation.x + (cfg.rageOff / dist) * 5;
             var tgtRotY = tempObj.rotation.y + Math.PI;
-
+ 
             local.children[0].rotation.x += (tgtRotX - local.children[0].rotation.x) * cfg.rageSmooth;
             local.rotation.y += (tgtRotY - local.rotation.y) * cfg.rageSmooth;
         } catch (e) {}
     }
-
+ 
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('pointerup', onUp);
-
+ 
     document.addEventListener('keydown', function(e) {
         if (e.code === cfg.aimKey) keyDown = true;
         if (e.code === cfg.rageKey) rageKeyDown = true;
-
+ 
         if (e.ctrlKey && e.altKey && e.code === 'KeyL') {
             e.preventDefault();
             toggleUI();
         }
-
-        if (e.code === 'Delete') {
-            cfg.panic = !cfg.panic;
-            if (cfg.panic) {
-                var menu = document.getElementById('km');
-                if (menu) menu.style.display = 'none';
-                var fov = document.getElementById('krem-fov');
-                if (fov) fov.style.display = 'none';
-            } else {
-                if (!cfg.uiHidden) {
-                    var menu = document.getElementById('km');
-                    if (menu) menu.style.display = 'block';
-                }
-                updateFov();
-            }
-        }
-
+ 
         if (e.code === cfg.keys.togAim) {
             cfg.aimbotOn = !cfg.aimbotOn;
             var tog = document.querySelector('[data-k="aimbotOn"]');
@@ -1231,18 +1207,18 @@
             saveCfg();
         }
     });
-
+ 
     document.addEventListener('keyup', function(e) {
         if (e.code === cfg.aimKey) keyDown = false;
         if (e.code === cfg.rageKey) rageKeyDown = false;
     });
-
+ 
     window.addEventListener('resize', function() {
         hpCanvas.width = window.innerWidth;
         hpCanvas.height = window.innerHeight;
     });
-
+ 
     setTimeout(initUI, 1000);
     mainLoop();
-
+ 
 })();

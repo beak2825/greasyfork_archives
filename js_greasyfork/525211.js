@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bobby's Pixiv Utils
 // @namespace    https://github.com/BobbyWibowo
-// @version      1.6.56
+// @version      1.6.57
 // @description  Compatible with mobile. "Edit bookmark" and "Toggle bookmarked" buttons, publish dates conversion, block AI-generated works, block by Pixiv tags, UTags integration, and more!
 // @author       Bobby Wibowo
 // @license      MIT
@@ -2403,11 +2403,13 @@
     });
 
     // Images
-    sentinel.on([
-      CONFIG.SELECTORS_IMAGE,
-      CONFIG.SELECTORS_EXPANDED_VIEW_ARTIST_BOTTOM_IMAGE
-    ], element => {
+    sentinel.on(CONFIG.SELECTORS_IMAGE, element => {
       processNewElement(doImage, element, { isHome, isOwnProfile });
+    });
+
+    // Expanded view's artist bottom images (always process immediately)
+    sentinel.on(CONFIG.SELECTORS_EXPANDED_VIEW_ARTIST_BOTTOM_IMAGE, element => {
+      doImage(element, { isHome, isOwnProfile });
     });
 
     // Multi View Entries

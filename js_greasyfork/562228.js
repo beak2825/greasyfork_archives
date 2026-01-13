@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         X/Twitter Open Profile to Media Tab
+// @name         X/Twitter Open Profile to Media Tab by Default
 // @namespace    https://github.com/BD9Max/userscripts/tree/main
-// @version      1.1
-// @description  Auto redirect X.com (Twitter) user profiles to Media -tab on first visit of the profile - instead of Posts -tab.
+// @version      1.2
+// @description  Auto redirect X.com (Twitter) user profiles to Media -tab by default on first visit of the profile - instead of Posts -tab.
 // @author       krbd99
 // @match        https://x.com/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562228/XTwitter%20Open%20Profile%20to%20Media%20Tab.user.js
-// @updateURL https://update.greasyfork.org/scripts/562228/XTwitter%20Open%20Profile%20to%20Media%20Tab.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562228/XTwitter%20Open%20Profile%20to%20Media%20Tab%20by%20Default.user.js
+// @updateURL https://update.greasyfork.org/scripts/562228/XTwitter%20Open%20Profile%20to%20Media%20Tab%20by%20Default.meta.js
 // ==/UserScript==
 
 (function() {

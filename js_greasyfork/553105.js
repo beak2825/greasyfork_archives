@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch AWA Auto Channel Switcher
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Automatically switches between AWA live channels with X2 priority system, dynamic timing and Alienware plugin auto-load
 // @author       MarvashMagalli
 // @match        https://www.twitch.tv/*
@@ -27,21 +27,23 @@
     // TWO-TIER SYSTEM CONFIGURATION
     const TIER_X2 = [  // Tier 1 - X2, Higher Priority
         'alienware', 'sypherpk', 'layria', 'MoonlitCharlie', 'dikymo',
-        'damienhaas', 'EllyEN', 'liddles', 'fooya', 'Mactics',
-        'matthewsantoro', 'maudegarrett', 'omgchad', 'pirategray', 'redinfamy',
-        'rogersbase', 'runjdrun', 'sigils', 'theblackhokage', 'thegeekentry',
-        'TrishaHershberger', 'kelsi', 'lovinurstyle', 'Rogue', 'Ohmwrecker',
+        'bifflewiffletv', 'brittnaynay33', 'damienhaas', 'EllyEN', 'erikaishii',
+        'liddles', 'fooya', 'henwy', 'jess', 'Mactics', 'matthewsantoro',
+        'maudegarrett', 'nicovald', 'omgchad', 'pirategray', 'redinfamy',
+        'rogersbase', 'runjdrun', 'notsaige', 'sailorsnubs', 'sigils', 'ascender',
+        'thegeekentry', 'TrishaHershberger', 'kelsi', 'lovinurstyle', 'theblackhokage',
         'itsizziman', '3llebelle', 'Symfuhny', 'kesslive', 'DJUnreal',
         'demshenaniganss', 'AmethystLady', 'limitlessmeta', 'cuttingcharm', 'wickerrman',
         'yun0gaming', 'blainethepaintv', 'takkundr', 'NinjaPullsGaming', 'avrondoodles',
         'blbeel', 'hazeleyedchic', 'a1phachino', 'brydraa', 'californiagurl',
-        'whateverbri', 'everlynix', 'pokey_star', 'witchmob', 'narianazone',
-        'no_lollygaggin', 'kateebear', 'liz_xp', 'icecoldbrad',
-        'ludwig', 'Alixxa'
+        'whateverbri', 'everlynix', 'pokey_star', 'witchmob', 'narianazone', 'liz_xp',
+        'NothingButSkillz', 'no_lollygaggin'
     ];
 
     const TIER_PARTNERS = [  // Tier 2 - Partners, Lower Priority
-    'DatModz', 'Lourlo', 'RedBeard', 'SirhcEz', 'Pobelter'
+        'DatModz', 'Lourlo', 'RedBeard', 'SirhcEz', 'Pobelter',
+        'Alixxa', 'ludwig', 'Ohmwrecker', 'Rogue', 'icecoldbrad',
+        'kateebear', 'Squeex', 'Eiya', 'Kalamazi'
     ];
 
     // Combine for full whitelist (X2 first, then Partners)
@@ -1499,35 +1501,15 @@
         `;
     }
 
-    // Update channel status display with alienware first, then randomized X2, then randomized Partners
+    // Update channel status display with tier information
     function updateChannelStatusDisplay() {
         const channelList = document.getElementById('channelStatusList');
         if (!channelList) return;
 
         const currentChannel = getCurrentChannel();
 
-        // Separate alienware from other X2 streamers
-        const alienwareChannel = 'alienware';
-        const otherX2 = TIER_X2.filter(channel => !equalsIgnoreCase(channel, alienwareChannel));
-        const partners = [...TIER_PARTNERS];
-
-        // Shuffle other X2 streamers
-        for (let i = otherX2.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [otherX2[i], otherX2[j]] = [otherX2[j], otherX2[i]];
-        }
-
-        // Shuffle Partners
-        for (let i = partners.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [partners[i], partners[j]] = [partners[j], partners[i]];
-        }
-
-        // Combine in hierarchy: alienware -> randomized X2 -> randomized Partners
-        const displayList = [alienwareChannel, ...otherX2, ...partners];
-
         let html = '';
-        displayList.forEach(channel => {
+        CHANNEL_WHITELIST.forEach(channel => {
             const isCurrent = equalsIgnoreCase(channel, currentChannel);
             const itemClass = isCurrent ? 'channel-item current-stream' : 'channel-item';
             const tier = getChannelTier(channel);
@@ -1535,6 +1517,7 @@
             // Only show X2 tag, no tag for Partners
             const tierBadge = tier === 'X2' ? `<span class="tier-indicator tier-X2">X2</span>` : '';
 
+            // FIX: Default to empty status, not "CHECKING..."
             html += `
                 <div class="${itemClass}">
                     <span>${tierBadge} ${channel}</span>

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Github recommendation blocker
 // @namespace    http://tampermonkey.net/
-// @version      1
+// @version      2
 // @description  Remove github's recommendation/trending cards in the dashboard thread. It's triggered by HTML change, usually takes 5ms in PC Chrome browser.
 // @author       dont-be-evil
 // @match        https://github.com/
@@ -15,30 +15,22 @@
 (function() {
     'use strict';
     document.querySelectorAll('h2').forEach(h2 => {
-        console.log(h2.textContent.trim());
         if (h2.textContent.trim() === "Explore repositories") {
             h2.parentElement.remove();
         }
     });
 
-    const keywords = ["Recommended for you", "Based on", "Popular among", "Popular projects among", ...
-                      "Trending repositories"];
+    const keywords = ["Recommended for you", "Based on", "Popular among", "Popular projects among", "Trending repositories"];
 
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
             mutation.addedNodes.forEach(node => {
                 if (node.nodeType === 1) { // Ensure it's an element
-                    node.querySelectorAll('h5').forEach(h5 => {
-                        if (keywords.some(keyword => h5.textContent.includes(keyword))) {
-                            let parent = h5;
-                            for (let i = 0; i < 5; i++) {
-                                if (parent.parentElement) {
-                                    parent = parent.parentElement;
-                                } else {
-                                    return; // Exit if there are fewer than 5 ancestors
-                                }
-                            }
-                            parent.remove();
+                    node.querySelectorAll('article').forEach(card => {
+                        let card_title = card.querySelector('h3');
+                        if (keywords.some(keyword => card_title.textContent.includes(keyword))) {
+                            console.log(card_title.textContent)
+                            card.remove();
                         }
                     });
                 }

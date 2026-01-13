@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MWITools
 // @namespace    http://tampermonkey.net/
-// @version      25.2
+// @version      25.3
 // @description  Tools for MilkyWayIdle. Shows total action time. Shows market prices. Shows action number quick inputs. Shows how many actions are needed to reach certain skill level. Shows skill exp percentages. Shows total networth. Shows combat summary. Shows combat maps index. Shows item level on item icons. Shows how many ability books are needed to reach certain level. Shows market equipment filters.
 // @author       bot7420, shykai
 // @license      CC-BY-NC-SA-4.0
@@ -3177,22 +3177,22 @@
         2: 4.2,
         3: 6.6,
         4: 9.2,
-        5: 12.0,
-        6: 15.0,
+        5: 12,
+        6: 15,
         7: 18.2,
         8: 21.6,
         9: 25.2,
-        10: 29.0,
-        11: 33.0,
-        12: 37.2,
-        13: 41.6,
-        14: 46.2,
-        15: 51.0,
-        16: 56.0,
-        17: 61.2,
-        18: 66.6,
-        19: 72.2,
-        20: 78.0,
+        10: 29,
+        11: 33.4,
+        12: 38.4,
+        13: 44,
+        14: 50.2,
+        15: 57,
+        16: 64.4,
+        17: 72.4,
+        18: 81,
+        19: 90.2,
+        20: 100,
     };
 
     function getToolsSpeedBuffByActionHrid(actionHrid) {

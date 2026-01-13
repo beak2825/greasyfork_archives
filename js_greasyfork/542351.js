@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.8.5
+// @version         4.2.8.7
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -3860,14 +3860,19 @@ else if (matchDomain('mnimarkets.com')) {
         let script_start = 'self.__next_f.push([1,"';
         for (let script of scripts) {
           if (script.text.startsWith(script_start)) {
-            if (intro_start && script.text.replace(/\\n/g, ' ').startsWith(script_start + intro_start)) {
+            if (intro_start && script.text.startsWith(script_start) && (script.text.replace(/\\n/g, ' ').startsWith(script_start + intro_start) || (script.text.replace(/\\n/g, ' ').includes('\\"body_text\\":\\"' + intro_start)))) {
               json_script = script;
               break;
             }
           }
         }
         if (json_script) {
-          let json_text = json_script.text.split('self.__next_f.push([1,"')[1].split('"])')[0].replace(/\\n\\n/g, '\r\n\r\n').replace(/\\n/g, ' ').replace(/\\"/g, '"').replace(/\\u0026/g, '&');
+          let json_text;
+          if (json_script.text.includes('\\"body_text\\":\\"'))
+            json_text = json_script.text.split('\\"body_text\\":\\"')[1].split('\\",\\"body_xhtml\\":')[0];
+          else
+            json_text = json_script.text.split('self.__next_f.push([1,"')[1].split('"])')[0];
+          json_text = json_text.replace(/\\n\\n/g, '\r\n\r\n').replace(/(\\)?\\n/g, ' ').replace(/\\"/g, '"').replace(/\\u0026/g, '&');
           let article_new = document.createElement('p');
           article_new.innerText = parseHtmlEntities(json_text);
           article.innerHTML = '';
@@ -4156,6 +4161,17 @@ else if (matchDomain('nytimes.com')) {
     let ads = 'div[data-testid="inline-message"], div[id^="ad-"], div.pz-ad-box, div[class^="css-"]:has( > div#top-wrapper)';
     hideDOMStyle(ads);
   }
+}
+
+else if (matchDomain('on3.com')) {
+  let url = window.location.href;
+  getArchive(url, 'div[data-template-type="barrier"]', '', 'article');
+  let noscroll = document.querySelectorAll('html.scroll-lock, body.scroll-lock');
+  for (let elem of noscroll) {
+    elem.removeAttribute('class');
+    elem.removeAttribute('style');
+  }
+  hideDOMStyle('div#blocker');
 }
 
 else if (matchDomain('outlookbusiness.com')) {
@@ -6107,18 +6123,11 @@ function fix_dowjones_fetch(url_src, data, article) {
               console.log(par);
           } else if (par.type === 'video') {
             if (par.url) {
-              let video_thumbnail;
-              if (par.thumbnail && par.thumbnail.url) {
-                let caption;
-                if (par.description && par.description.text)
-                  caption = par.description.text;
-                video_thumbnail = makeFigure(par.thumbnail.url, caption, {style: 'width: 80%; margin: auto;'});
-                elem.appendChild(video_thumbnail);
-              }
-              let video_link = document.createElement('a');
-              video_link.href = par.url;
-              video_link.innerText = 'Video-link: ' + par.url;
-              elem.appendChild(video_link);
+              let video = document.createElement('video');
+              video.src = par.url;
+              video.setAttribute('controls', '');
+              video.style = 'width: 100%;';
+              elem.appendChild(video);
             }
           } else if (par.type === 'youtube') {
              if (par.videoId) {

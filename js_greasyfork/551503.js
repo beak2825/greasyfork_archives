@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ReCover: Magically Rehost Album Covers to ptpimg
 // @namespace    waiter7
-// @version      1.10.1
+// @version      1.10.2
 // @description  Magically Rehost album covers and artist images to ptpimg on RED and PTP torrent and artist pages
 // @author       waiter7 @ RED
 // @license      MIT
@@ -86,11 +86,16 @@
             this._saveData();
         },
         
+        _clearCache() {
+            this._cache = null;
+        },
+        
         // Convenience getters with defaults
         getApiKey: () => Settings.get('ptp_api_key', null),
         getFallbackSetting: () => Settings.get('enable_fallbacks', true),
         getRecoverCounter: () => Settings.get('w7recover_counter', 0),
         incrementRecoverCounter: () => {
+            Settings._clearCache(); // Force fresh read from storage
             const current = Settings.get('w7recover_counter', 0);
             const newCount = current + 1;
             Settings.set('w7recover_counter', newCount);

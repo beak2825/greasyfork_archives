@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Custom Global Navigation
 // @namespace    https://github.com/blakegearin/github-custom-global-navigation
-// @version      1.6.16
+// @version      1.7.0
 // @description  Customize GitHub's new global navigation
 // @author       Blake Gearin <hello@blakeg.me> (https://blakegearin.com)
 // @match        https://github.com/*
@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '1.6.16';
+  const VERSION = '1.7.0';
   const USERSCRIPT_NAME = 'GitHub Custom Global Navigation';
 
   const SILENT = 0;
@@ -117,6 +117,7 @@
 
     updateLink('issues');
     updateLink('pullRequests');
+    updateLink('repos');
 
     if (CONFIG.marketplace.add) updateLink('marketplace');
     if (CONFIG.explore.add) updateLink('explore');
@@ -653,7 +654,7 @@
   }
 
   function updateLink(configKey) {
-    log(DEBUG, 'updateLink()');
+    log(DEBUG, `updateLink() with ${configKey}`);
 
     const elementConfig = CONFIG[configKey];
     const elementSelector = SELECTORS[configKey];
@@ -663,16 +664,25 @@
 
     if (tooltipElement) {
       link = tooltipElement.previousElementSibling;
+      log(DEBUG, `Found link for ${configKey} using tooltipElement.previousElementSibling`);
     } else {
       log(DEBUG, `Tooltip for '${configKey}' not found`);
 
       const linkId = createId(SELECTORS[configKey].id);
+      log(DEBUG, `Trying HEADER.querySelector(${linkId}) for ${configKey}`);
       link = HEADER.querySelector(linkId);
 
       if (!link) {
-        logError(`Selector '${linkId}' not found`);
-
-        return;
+        log(DEBUG, `HEADER.querySelector(${linkId}) not found, trying SELECTORS[configKey].link: ${elementSelector.link}`);
+        link = HEADER.querySelector(elementSelector.link);
+        if (!link) {
+          logError(`Selector '${linkId}' and '${elementSelector.link}' not found for ${configKey}`);
+          return;
+        } else {
+          log(DEBUG, `Found link for ${configKey} using selector: ${elementSelector.link}`);
+        }
+      } else {
+        log(DEBUG, `Found link for ${configKey} using id selector: ${linkId}`);
       }
     }
 
@@ -681,7 +691,6 @@
 
     if (elementConfig.remove) {
       HEADER_STYLE.textContent += cssHideElement(createId(configKey));
-
       return;
     }
 
@@ -691,37 +700,29 @@
 
     if (elementConfig.alignLeft) {
       const response = cloneAndLeftAlignElement(createId(elementSelector.id), elementSelector.id);
-
       if (response.length === 0) return;
-
       const [cloneId, cloneElement] = response;
-
-      elementSelector[CONFIG_NAME] = {
-        leftAlignedId: cloneId,
-      };
+      elementSelector[CONFIG_NAME] = { leftAlignedId: cloneId };
       link = cloneElement;
-
       linkSelector = createId(cloneId);
     }
 
     const padding = '0.5rem';
     link.style.setProperty('padding-left', padding, 'important');
     link.style.setProperty('padding-right', padding, 'important');
+    link.style.setProperty('display', 'flex');
 
     let textContent = elementConfig.text.content;
 
     if (elementConfig.icon.remove) {
       const svgId = `${configKey}-svg`;
       const svg = link.querySelector('svg');
-
       if (!svg) {
         logError(`Selector '${configKey} svg' not found`);
-
+        log(INFO, `Could not find svg for ${configKey} in link element`);
         return;
       }
-
       svg.setAttribute('id', svgId);
-
       HEADER_STYLE.textContent += cssHideElement(createId(svgId));
     } else {
       link.querySelector('svg').style.setProperty('fill', elementConfig.icon.color);
@@ -1520,25 +1521,64 @@
     }
   }
 
-  function preloadLeftSidebar(elementSelector) {
+  function preloadLeftSidebar(elementSelector, retryCount = 0) {
     log(DEBUG, 'preloadLeftSidebar()');
+    log(DEBUG, 'retryCount', retryCount);
 
-    if (!LEFT_SIDEBAR_PRELOADED) return;
-
-    const leftModalDialog = HEADER.querySelector(elementSelector.left.modalDialog).remove();
-
-    if (!leftModalDialog) {
-      logError(`Selector '${elementSelector.left.modalDialog}' not found`);
-      preloadLeftSidebar(elementSelector);
+    if (LEFT_SIDEBAR_PRELOADED) {
+      log(DEBUG, 'Left sidebar already preloaded');
       return;
     }
 
-    window.addEventListener('load', () => {
-      HEADER.querySelector(`${SELECTORS.hamburgerButton} button`).click();
-      log(INFO, 'Left sidebar preloaded');
-    });
+    const topDiv = document.querySelector(SELECTORS.sidebars.left.topDiv);
+    if (!topDiv) {
+      if (retryCount < 50) {
+        log(DEBUG, `Selector '${SELECTORS.sidebars.left.topDiv}' not found`);
+        setTimeout(() => preloadLeftSidebar(elementSelector, retryCount + 1), 100);
+      } else {
+        log(DEBUG, `Selector '${SELECTORS.sidebars.left.topDiv}' not found after 2 seconds, giving up`);
+      }
 
-    LEFT_SIDEBAR_PRELOADED = true;
+      return;
+    }
+    topDiv.style.setProperty('display', 'none');
+
+    const button = HEADER.querySelector(SELECTORS.hamburgerButton);
+    if (!button) {
+      if (retryCount < 50) {
+        log(DEBUG, `Selector '${SELECTORS.hamburgerButton}' not found`);
+        setTimeout(() => preloadLeftSidebar(elementSelector, retryCount + 1), 100);
+      } else {
+        log(DEBUG, `Selector '${SELECTORS.hamburgerButton}' not found after 2 seconds, giving up`);
+      }
+
+      return;
+    } else {
+      log(DEBUG, `Clicking selector '${SELECTORS.hamburgerButton}' to preload left sidebar`);
+      button.click();
+      // This click isn't reliably triggering the dialog, likely due to race conditions on page load
+    }
+
+    function waitForLeftModalDialog(waitCount = 0) {
+      const leftModalDialog = topDiv.querySelector(elementSelector.left.modalDialog);
+      if (!leftModalDialog) {
+        if (waitCount < 10) {
+          setTimeout(() => waitForLeftModalDialog(waitCount + 1), 100);
+        } else {
+          log(DEBUG, `Selector '${elementSelector.left.modalDialog}' not found after 2 seconds, giving up`);
+          setTimeout(() => preloadLeftSidebar(elementSelector, retryCount + 1), 100);
+        }
+        return;
+      }
+      leftModalDialog.remove();
+      log(INFO, 'Left sidebar preloaded');
+      LEFT_SIDEBAR_PRELOADED = true;
+
+      button.click();
+      topDiv.style.removeProperty('display');
+    }
+
+    waitForLeftModalDialog();
   }
 
   function updateSidebars() {
@@ -1559,7 +1599,12 @@
       `;
     }
 
-    if (elementConfig.left.preload) preloadLeftSidebar(elementSelector);
+    if (elementConfig.left.preload) {
+      window.addEventListener('load', () => {
+        log(DEBUG, 'Attempting to preload left sidebar');
+        preloadLeftSidebar(elementSelector);
+      });
+    }
 
     if (elementConfig.right.floatUnderneath) {
       HEADER_STYLE.textContent += `
@@ -1581,8 +1626,6 @@
         ${elementSelector.right.modalDialog}
         {
           pointer-events: all;
-          margin-top: 55px;
-          margin-right: 20px;
           animation: .2s cubic-bezier(.33,1,.68,1) !important;
           border-top-right-radius: 0.75rem !important;
           border-bottom-right-radius: 0.75rem !important;
@@ -1713,6 +1756,7 @@
         display: none !important;
       }
 
+      #repo-title-component:has(> img[alt$="avatar"]) .AppHeader-context-item-label .avatar,
       #repo-title-component:has(> img[alt$="avatar"]) .AppHeader-context-item-label .avatar-user
       {
         display: none !important;
@@ -2182,23 +2226,37 @@
     };
   }
 
-  function addMenuItemToActionList() {
+  function addMenuItemToActionList(_event, retryCount = 0) {
     log(VERBOSE, 'addMenuItemToActionList()');
+    log(VERBOSE, 'retryCount', retryCount);
 
     const liElementId = 'custom-global-navigation-menu-item';
 
-    if (document.querySelector(createId(liElementId))) return;
+    if (document.querySelector(createId(liElementId))) {
+      log(DEBUG, 'Menu item already exists, skipping addition');
+      return;
+    }
 
     const actionList = document.querySelector(SELECTORS.sidebars.right.actionList);
     if (!actionList) {
-      log(DEBUG, 'Action list not found');
-      return setTimeout(addMenuItemToActionList, 100);
+      if (retryCount < 20) {
+        log(DEBUG, 'Action list not found, retrying...');
+        return setTimeout(() => addMenuItemToActionList(retryCount + 1), 100);
+      } else {
+        logError('Action list not found after 2 seconds, giving up');
+        return;
+      }
     }
 
     const signOutLink = actionList.querySelector(SELECTORS.sidebars.right.signOutLink);
     if (!signOutLink) {
-      log(DEBUG, 'Logout link not found');
-      return;
+      if (retryCount < 20) {
+        log(DEBUG, 'Logout link not found, retrying...');
+        return setTimeout(() => addMenuItemToActionList(retryCount + 1), 100);
+      } else {
+        logError('Logout link not found after 2 seconds, giving up');
+        return;
+      }
     }
 
     const signOutLi = signOutLink.parentNode;
@@ -3579,7 +3637,7 @@
       topDiv: '.AppHeader-globalBar-start .AppHeader-logo',
       svg: '.AppHeader-logo svg',
     },
-    hamburgerButton: '.AppHeader-globalBar-start deferred-side-panel',
+    hamburgerButton: '.AppHeader-globalBar-start div:first-child react-partial-anchor button',
     pageTitle: {
       id: 'custom-page-title',
       topDiv: '.AppHeader-context',
@@ -3614,12 +3672,18 @@
     },
     issues: {
       id: 'issues',
+      link: '.AppHeader-globalBar-end .AppHeader-actions a[href="/issues"]',
       textContent: 'issues-text-content-span',
     },
     pullRequests: {
       id: 'pullRequests',
       link: '.AppHeader-globalBar-end .AppHeader-actions a[href="/pulls"]',
       textContent: 'pullRequests-text-content-span',
+    },
+    repos: {
+      id: 'repos',
+      link: '.AppHeader-globalBar-end .AppHeader-actions a[href="/repos"]',
+      textContent: 'repos-text-content-span',
     },
     marketplace: {
       id: 'marketplace',
@@ -3654,14 +3718,15 @@
     },
     sidebars: {
       left: {
+        topDiv: '#__primerPortalRoot__',
         backdrop: 'dialog[data-target="deferred-side-panel.panel"]::backdrop',
-        modalDialog: '.Overlay--placement-left',
+        modalDialog: 'div[data-position-regular="left"]',
       },
       right: {
         topDiv: '#__primerPortalRoot__',
         wrapper: '#__primerPortalRoot__ > div',
         backdrop: '#__primerPortalRoot__ > div > [data-position-regular="right"]',
-        modalDialog: '#__primerPortalRoot__ > div > [data-position-regular="right"] > div',
+        modalDialog: '#__primerPortalRoot__ div[role="dialog"]',
         closeButton: '#__primerPortalRoot__ button[aria-label="Close"]',
         divider: 'li[data-component="ActionList.Divider"]',
         actionList: '[class^="prc-ActionList-"]',
@@ -3801,6 +3866,25 @@
           },
           text: {
             content: 'Pull requests',
+            color: '',
+          },
+          hover: {
+            backgroundColor: '',
+            color: '',
+          },
+        },
+        repos: {
+          remove: false,
+          border: true,
+          tooltip: false,
+          alignLeft: false,
+          boxShadow: '',
+          icon: {
+            remove: false,
+            color: '',
+          },
+          text: {
+            content: 'Repos',
             color: '',
           },
           hover: {
@@ -4047,6 +4131,25 @@
           },
           text: {
             content: 'Pull requests',
+            color: '',
+          },
+          hover: {
+            backgroundColor: '',
+            color: '',
+          },
+        },
+        repos: {
+          remove: false,
+          border: true,
+          tooltip: false,
+          alignLeft: false,
+          boxShadow: '',
+          icon: {
+            remove: false,
+            color: '',
+          },
+          text: {
+            content: 'Repos',
             color: '',
           },
           hover: {
@@ -4302,6 +4405,25 @@
             color: oldSchoolHoverColor,
           },
         },
+        repos: {
+          remove: true,
+          border: true,
+          tooltip: false,
+          alignLeft: false,
+          boxShadow: '',
+          icon: {
+            remove: false,
+            color: '',
+          },
+          text: {
+            content: 'Repos',
+            color: '',
+          },
+          hover: {
+            backgroundColor: '',
+            color: '',
+          },
+        },
         marketplace: {
           add: true,
           border: false,
@@ -4550,6 +4672,25 @@
             color: oldSchoolHoverColor,
           },
         },
+        repos: {
+          remove: true,
+          border: true,
+          tooltip: false,
+          alignLeft: false,
+          boxShadow: '',
+          icon: {
+            remove: false,
+            color: '',
+          },
+          text: {
+            content: 'Repos',
+            color: '',
+          },
+          hover: {
+            backgroundColor: '',
+            color: '',
+          },
+        },
         marketplace: {
           add: true,
           border: false,
@@ -4680,11 +4821,14 @@
     title: `
       Custom Global Navigation
       <small>
+        v${VERSION}
+      </small>
+      <small>
         <a
           href="https://github.com/blakegearin/github-custom-global-navigation"
           target="_blank"
         >
-          source
+          (source)
         </a>
       </small>
     `,

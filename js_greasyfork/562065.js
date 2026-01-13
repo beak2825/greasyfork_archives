@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ClaimCoin Multi Faucet Rotator PRO
 // @namespace    https://claimcoin.in/
-// @version      1.1
-// @description  Auto Login + Smart UI + 100 Claims Per Faucet + Auto Faucet Rotator + Smart Result Detection + Auto Click After Recaptcha V3 (Functional)
+// @version      1.2
+// @description  Auto Login + Smart UI + 100 Claims Per Faucet + Auto Faucet Rotator + Smart Result Detection + Auto Click After Recaptcha V3 + Auto Go Claim
 // @author       Rubystance
 // @license      MIT
 // @match        https://claimcoin.in/*
@@ -112,6 +112,7 @@
         }
 
         safeCaptchaClick();
+        autoGoClaim();
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
@@ -128,20 +129,38 @@
         const captchaToken = document.querySelector("input[name='g-recaptcha-response']");
 
         if (!captchaToken || !claimBtn || claimBtn.disabled) return;
-
         if (claimBtn.dataset.clicked) return;
 
         if (captchaToken.value && captchaToken.value.length > 0) {
-
             const delay = 1500 + Math.floor(Math.random() * 2000);
             setTimeout(() => {
-                const eventOptions = { bubbles: true, cancelable: true };
-                claimBtn.dispatchEvent(new MouseEvent("mousedown", eventOptions));
-                claimBtn.dispatchEvent(new MouseEvent("mouseup", eventOptions));
-                claimBtn.dispatchEvent(new MouseEvent("click", eventOptions));
-
+                const ev = { bubbles: true, cancelable: true };
+                claimBtn.dispatchEvent(new MouseEvent("mousedown", ev));
+                claimBtn.dispatchEvent(new MouseEvent("mouseup", ev));
+                claimBtn.dispatchEvent(new MouseEvent("click", ev));
                 claimBtn.dataset.clicked = "true";
             }, delay);
+        }
+    }
+
+    function autoGoClaim() {
+        const buttons = document.querySelectorAll("a.btn.btn-primary");
+
+        for (let btn of buttons) {
+            if (btn.innerText.toLowerCase().includes("go claim")) {
+                if (!btn.dataset.clicked) {
+                    btn.dataset.clicked = "true";
+
+                    const delay = 1000 + Math.random() * 2000;
+
+                    setTimeout(() => {
+                        btn.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+                        btn.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+                        btn.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
+                        btn.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+                    }, delay);
+                }
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CryptoFuture Auto-Loop Pro + Auto Login
 // @namespace    https://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  UI with redirection, IconCaptcha detection, automatic loop & auto-login
 // @author       Rubystance
 // @license      MIT
@@ -64,7 +64,7 @@
     }
 
     if (window.location.href === "https://cryptofuture.co.in/") {
-        const email = "YOUR_FAUCETPAY_EMAIL_HERE"; // << YOUR_FAUCETPAY_EMAIL_HERE
+        const email = "YOUR_FAUCETPAY_EMAIL_HERE"; // << YOUR_FAUCETPAY_EMAIL
 
         const walletInput = document.querySelector('input[name="wallet"]');
         if (walletInput) walletInput.value = email;
@@ -80,8 +80,29 @@
         }, 500);
     }
 
+    const autoSkipDailyLimit = (currentCoin) => {
+        const observer = new MutationObserver(() => {
+            const alert = document.querySelector(".alert.alert-danger.text-center");
+
+            if (alert && alert.innerText.includes("Daily claim limit for this coin reached")) {
+                console.log("Daily limit reached for", currentCoin);
+
+                observer.disconnect();
+
+                let next = getNextCoin(currentCoin);
+                setTimeout(() => {
+                    window.location.href = baseUrl + next;
+                }, 1000);
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    };
+
     if (window.location.href.includes("/faucet/currency/")) {
         const currentCoin = window.location.pathname.split('/').pop().toUpperCase();
+
+        autoSkipDailyLimit(currentCoin);
 
         const captchaTimer = setInterval(() => {
             const captchaTitle = document.querySelector(".iconcaptcha-modal__body-title");

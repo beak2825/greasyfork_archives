@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         💙💛Ukrainian Flag & Sunflower (Ctrl+Shift+U)
 // @namespace    tampermonkey.net
-// @version      12.8
-// @description  写实花头，不规则分布向日葵与物理对齐修复 + 自适应窗口宽度≥800px。
+// @version      12.9
+// @description  写实花头，不规则分布向日葵与物理对齐修复 + 自适应窗口宽度≥800px + 禁止在iframe中显示。
 // @author       邢智轩 (from China)
 // @match        *://*/*
 // @grant        none
@@ -18,18 +18,18 @@
 
     // 封装一个统一的“是否允许运行”判断
     function canRun() {
-        return window.innerWidth >= 800;
+        return window.innerWidth >= 800 && window.self === window.top;
     }
 
     // 初始化时的宽度判断
     if (!canRun()) {
-        console.log('当前宽度小于 800px，脚本已停止执行。');
+        console.log('当前宽度小于 800px 或处于 iframe 内，脚本已停止执行。');
     } else {
-        console.log('当前宽度大于等于 800px，脚本开始工作...');
+        console.log('当前宽度大于等于 800px 且为顶级窗口，脚本开始工作...');
     }
 
     function injectBadge() {
-        if (!canRun()) return;                 // 宽度不够时直接不注入
+        if (!canRun()) return;                 // 宽度不够或在iframe内时直接不注入
         if (document.getElementById('ua-waving-badge-root')) return;
 
         const host = document.createElement('div');
@@ -235,7 +235,7 @@
                 root.style.transform = 'translateX(-20px) scale(0.9)';
                 setTimeout(() => { root.remove(); isTerminated = true; }, 800);
             } else {
-                if (!canRun()) return; // 小屏按键时不显示
+                if (!canRun()) return; // 小屏或iframe按键时不显示
                 isTerminated = false;
                 injectBadge();
             }
@@ -252,19 +252,19 @@
     // 关键：监听窗口尺寸变化
     window.addEventListener('resize', () => {
         if (!canRun()) {
-            // 变成小于 800 时移除徽章并终止
+            // 变成小于 800 或在iframe时移除徽章并终止
             const root = document.getElementById('ua-waving-badge-root');
             if (root) {
                 root.remove();
             }
             isTerminated = true;
         } else {
-            // 从小于 800 拉回 >=800 时重新允许显示
+            // 从小于 800 或iframe拉回顶级窗口且>=800时重新允许显示
             isTerminated = false;
             injectBadge();
         }
     });
 
-    // 初始尝试注入（仅当宽度够）
+    // 初始尝试注入（仅当宽度够且为顶级窗口）
     injectBadge();
 })();

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - es/pt/south america
-// @version         4.2.7.0
+// @version         4.2.8.0
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1574,7 +1574,7 @@ else if (matchDomain('uol.com.br')) {
         audio_new.setAttribute('controls', '');
         audio.parentNode.replaceChild(audio_new, audio);
       }
-      header_nofix('div.paywall__content', 'div.revista--interna__assineonly', 'BPC > no fix (audio-only)');
+      header_nofix('div.paywall__content', 'div.revista--interna__assineonly', 'BPC > no fix' + (audio ? ' (audio-only)' : ''));
     } else if (window.location.pathname.startsWith('/amp/')) {
       amp_unhide_subscr_section('amp-sticky-ad');
     } else {

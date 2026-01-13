@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolific Enhancer
 // @namespace   Violentmonkey Scripts
-// @version      1.1
+// @version      1.2
 // @description  Provides enhanced functionalities to Prolific.
 // @author       Chantu
 // @license      MIT
@@ -92,7 +92,7 @@
 
         const logMin = Math.log(min);
         const logMax = Math.log(max);
-        const logRate = Math.log(Math.max(clamped, min));
+        const logRate = Math.log(clamped);
 
         const ratio = (logRate - logMin) / (logMax - logMin);
         const bias = Math.pow(ratio, 0.6); // Adjust bias for better color distribution
@@ -103,9 +103,9 @@
         return `rgba(${r}, ${g}, 0, 0.63)`;
     }
 
-    // Function to apply the appropriate background color to the element
     function highlightElement(element) {
         const rate = extractHourlyRate(element.textContent);
+        if (isNaN(rate)) return;
 
         element.style.backgroundColor = rateToColor(rate);
         // Set default styles
@@ -114,7 +114,6 @@
         element.style.color = "black";
     }
 
-    // Function to process all elements with class="amount"
     function highlightHourlyRates() {
         const elements = document.querySelectorAll(
             "[data-testid='study-tag-reward-per-hour']"
@@ -156,19 +155,39 @@
         }
     }
 
+    function extractSymbol(text) {
+        const m = text.match(/[£$€]/);
+        return m ? m[0] : null;
+    }
+
+    function convertToUsd() {
+        const elements = document.querySelectorAll("span.reward span");
+        for (const element of elements) {
+            const symbol = extractSymbol(element.textContent);
+            if (symbol !== "£") continue;
+
+            const gbpToUsdRate = 1.35;
+            const rate = extractHourlyRate(element.textContent);
+            let modified = `$${(rate * gbpToUsdRate).toFixed(2)}`;
+            if (element.textContent.includes("/hr")) modified += "/hr";
+            element.textContent = modified;
+        }
+    }
+
     async function applyEnhancements() {
-        addDirectSurveyLinks();
+        convertToUsd();
         highlightHourlyRates();
+        addDirectSurveyLinks();
         await extractSurveys();
     }
 
-    // Extract the surveys and run the highlighting on page load
+    // apply the enhnancements initially
     await applyEnhancements();
     const debounced = debounce(async () => {
         await applyEnhancements();
     }, 300);
 
-    // Observe the DOM for changes and re-run the highlighting if necessary
+    // Observe the DOM for changes and re-run the enhancements if necessary
     const observer = new MutationObserver(async (mutations) => {
         const hasChanges = mutations.some(
             (m) => m.addedNodes.length > 0 || m.removedNodes.length > 0

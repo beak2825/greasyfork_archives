@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi Wiki 终极增强套件
 // @namespace    https://tampermonkey.net/
-// @version      3.1.2.3
+// @version      3.1.2.4
 // @description  集成Wiki按钮、关联按钮、封面上传、批量关联、批量分集编辑、内容快捷填充、单行本快捷创建、编辑预览功能
 // @author       Bios (improved Claude & Gemini)
 // @include      /^https?:\/\/(bgm|bangumi|chii)\.tv\/(subject|character|person|new_subject)\/.*/
@@ -538,9 +538,6 @@
         display: inline;
     }
 
-    /* ==========================================================================
-       更新：Bangumi表单提交预览（增强版）样式 [来自文档 1]
-       ========================================================================== */
     .preview-overlay {
         position: fixed;
         top: 0;
@@ -1289,7 +1286,7 @@
             });
         }
 
-        // 图片下载和转换函数
+        // 图片下载和转换函数 - 优化版本，支持多种下载策略
         async function downloadAndConvertImage(imageUrl) {
             try {
                 let actualImageUrl = imageUrl;
@@ -1298,17 +1295,89 @@
                     actualImageUrl = urlParams.get('imgurl');
                 }
                 if (!actualImageUrl) actualImageUrl = imageUrl;
+
                 showStatus('正在下载图片...');
-                const response = await fetch(actualImageUrl);
-                const blob = await response.blob();
-                const tempFileName = actualImageUrl.split('/').pop() || 'image';
-                const tempFile = new File([blob], tempFileName, { type: blob.type });
+
+                // 策略1: 尝试使用 Image 对象加载（适用于大多数图片）
+                const downloadViaImageObject = (url) => {
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+
+                        img.onload = () => {
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0);
+
+                                canvas.toBlob((blob) => {
+                                    if (blob) {
+                                        const fileName = url.split('/').pop()?.split('?')[0] || 'image.jpg';
+                                        const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+                                        resolve(file);
+                                    } else {
+                                        reject(new Error('转换为Blob失败'));
+                                    }
+                                }, 'image/jpeg', 0.92);
+                            } catch (error) {
+                                reject(error);
+                            }
+                        };
+
+                        img.onerror = () => reject(new Error('Image对象加载失败'));
+                        img.src = url;
+                    });
+                };
+
+                // 策略2: 使用 fetch (适用于同源或支持CORS的图片)
+                const downloadViaFetch = async (url) => {
+                    const response = await fetch(url, { mode: 'cors' });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const blob = await response.blob();
+                    const fileName = url.split('/').pop()?.split('?')[0] || 'image.jpg';
+                    return new File([blob], fileName, { type: blob.type });
+                };
+
+                // 策略3: 使用代理服务 (最后手段，适用于严格CORS限制的图片)
+                const downloadViaProxy = async (url) => {
+                    const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+                    return downloadViaImageObject(proxyUrl);
+                };
+
+                let tempFile = null;
+                let downloadMethod = '';
+
+                // 依次尝试各种下载策略
+                try {
+                    tempFile = await downloadViaImageObject(actualImageUrl);
+                    downloadMethod = 'Image对象';
+                } catch (error1) {
+                    console.log('Image对象下载失败，尝试fetch...', error1);
+                    try {
+                        tempFile = await downloadViaFetch(actualImageUrl);
+                        downloadMethod = 'Fetch API';
+                    } catch (error2) {
+                        console.log('Fetch下载失败，尝试代理服务...', error2);
+                        try {
+                            tempFile = await downloadViaProxy(actualImageUrl);
+                            downloadMethod = '代理服务';
+                        } catch (error3) {
+                            throw new Error('所有下载方式均失败，请检查图片URL或网络连接');
+                        }
+                    }
+                }
+
+                console.log(`图片下载成功，使用方法: ${downloadMethod}`);
                 showStatus('正在优化图片格式...');
+
                 const convertedData = await convertImageFormat(tempFile);
                 const previewContainer = document.querySelector("#imagePreviewContainer");
                 const previewImage = document.querySelector("#imagePreview");
                 previewImage.src = convertedData.dataURL;
                 previewContainer.style.display = "block";
+
                 const fileInput = document.querySelector("#coverUploadForm input[type='file']");
                 if (fileInput) {
                     const dataTransfer = new DataTransfer();
@@ -2529,11 +2598,16 @@
                         },
                         "游戏引擎": {
                             "options": [
-                                "Unity Engine", "Unreal Engine", "Godot Engine", "CryEngine", "Frostbite Engine", "Cocos2d-x Engine", "GameMaker Studio",
-                                "RPG Maker Engine", "Ren'Py Engine", "Source Engine", "Source 2 Engine", "Red Engine", "RAGE", "Anvil Engine",
-                                "Snowdrop Engine", "IW Engine", "Creation Engine", "DECIMA Engine", "Avalanche Engine", "Id Tech Engine",
-                                "ForzaTech Engine", "Naughty Dog Engine", "EpicOnlineServices SDK", "Divinity Engine", "KiriKiri Engine",
-                                "Live Maker Engine", "Microsoft XNA", "Adobe AIR", "Cocos Engine", "PyGame"
+                                "Unity Engine", "Unreal Engine", "Godot Engine", "Source Engine", "Source 2 Engine",
+                                "RPG Maker Engine", "GameMaker Studio", "CryEngine", "Frostbite Engine", "Cocos2d-x Engine",
+                                "Ren'Py Engine", "Cocos Engine", "PyGame", "GDevelop Engine", "Electron Container",
+                                "Red Engine", "RAGE", "Anvil Engine", "Snowdrop Engine", "IW Engine",
+                                "Creation Engine", "DECIMA Engine", "Avalanche Engine", "Id Tech Engine",
+                                "ForzaTech Engine", "Naughty Dog Engine", "EpicOnlineServices SDK", "Divinity Engine",
+                                "KiriKiri Engine", "Live Maker Engine", "Microsoft XNA", "Adobe AIR",
+                                "Amazon Lumberyard", "Open 3D Engine (O3DE)", "MT Framework", "Fox Engine", "Glacier Engine",
+                                "EGO Engine", "Clausewitz Engine", "Infinity Engine", "LithTech Engine", "RenderWare",
+                                "PhyreEngine", "4A Engine", "Build Engine", "Carbon Engine", "Vision Engine", "Wintermute Engine", "Sith Engine"
                             ],
                             mode: "replace",
                             display: "horizontal"

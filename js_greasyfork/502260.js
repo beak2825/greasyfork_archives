@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Hide Promotion Advertisement at Zhihu Site
-// @description  Hide specific advertisement elements on Zhihu
+// @description  - Hide "发布想法" 以及上方的活动banner, Promotion Advertisement, "搜索发现" section, "大家都在搜" section, 右侧的活动banner
 // @name:ar      إخفاء إعلانات الترويج في موقع Zhihu
 // @description:ar إخفاء عناصر إعلانية محددة على Zhihu
 // @name:bg      Скриване на промоционални реклами в сайта Zhihu
@@ -69,18 +69,18 @@
 // @description:uk Приховати певні рекламні елементи на Zhihu
 // @name:vi      Ẩn quảng cáo khuyến mãi trên trang Zhihu
 // @description:vi Ẩn các yếu tố quảng cáo cụ thể trên Zhihu
-// @name:zh      隐藏Zhihu网站上的促销广告
+// @name:zh      
 // @description:zh 隐藏Zhihu上的特定广告元素
 // @name:zh-CN   隐藏Zhihu网站上的促销广告
-// @description:zh-CN 隐藏Zhihu上的特定广告元素
+// @description:zh-CN 隐藏“发布想法”以及上方的活动横幅、推广广告、“搜索发现”栏目、“大家都在搜”栏目、右侧的活动横幅
 // @name:zh-HK   隱藏Zhihu網站嘅促銷廣告
-// @description:zh-HK 隱藏Zhihu上嘅特定廣告元素
+// @description:zh-HK 隱藏「發布想法」以及上方的活動橫幅、促銷廣告、「搜尋發現」區塊、「大家都在搜」區塊、右側的活動橫幅
 // @name:zh-SG   隐藏Zhihu网站上的促销广告
 // @description:zh-SG 隐藏Zhihu上的特定广告元素
 // @name:zh-TW   隱藏Zhihu網站上的促銷廣告
 // @description:zh-TW 隱藏Zhihu上的特定廣告元素
 // @namespace    http://tampermonkey.net/
-// @version      0.1.6.4
+// @version      0.1.7.2
 // @icon         data:image/png;base64,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
 // @author       aspen138
 // @match        *://*.zhihu.com/*
@@ -213,4 +213,108 @@ function hideAds() {
     // based on the structure of this second IIFE in the original request. It relies on 'load' and conditional observing.
 
 
+})();
+
+
+// hide the "搜索发现" section
+// ==UserScript==
+// @name         Hide Zhihu Search Discovery
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Hide "搜索发现" section in Zhihu search dropdown
+// @author       You
+// @match        *://*.zhihu.com/*
+// @grant        GM_addStyle
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Hide the "搜索发现" section and its items
+    GM_addStyle(`
+        /* Hide the "搜索发现" label */
+        .SearchBar-label:not(.SearchBar-label--history) {
+            display: none !important;
+        }
+
+        /* Hide the AutoComplete group containing "搜索发现" items */
+        .AutoComplete-group:has(.SearchBar-label:not(.SearchBar-label--history)) {
+            display: none !important;
+        }
+
+        /* Alternative: Hide specific search discovery items */
+        .SearchBar-topSearchItem {
+            display: none !important;
+        }
+
+        /* Hide menu items with topSearch in their ID */
+        [id*="topSearch"] {
+            display: none !important;
+        }
+
+        /* Hide placeholder text in search input */
+        .SearchBar-input input::placeholder {
+            color: transparent !important;
+        }
+
+        .SearchBar-input input::-webkit-input-placeholder {
+            color: transparent !important;
+        }
+
+        .SearchBar-input input::-moz-placeholder {
+            color: transparent !important;
+        }
+
+        .SearchBar-input input:-ms-input-placeholder {
+            color: transparent !important;
+        }
+    `);
+
+    console.log('Zhihu Search Discovery and placeholder hidden');
+
+    // Prevent search button from working when input is empty
+    function disableEmptySearch() {
+        // Find all search buttons
+        const searchButtons = document.querySelectorAll('.SearchBar-searchButton, button[aria-label="搜索"]');
+
+        searchButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Find the associated input field
+                const searchInput = this.closest('.SearchBar-tool, .SearchBar')?.querySelector('input[type="text"]');
+
+                if (searchInput && searchInput.value.trim() === '') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
+            }, true); // Use capture phase to intercept early
+        });
+
+        // Also prevent form submission when input is empty
+        const searchForms = document.querySelectorAll('.SearchBar-tool');
+        searchForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const searchInput = this.querySelector('input[type="text"]');
+                if (searchInput && searchInput.value.trim() === '') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, true);
+        });
+    }
+
+    // Run on page load
+    disableEmptySearch();
+
+    // Re-run when DOM changes (for dynamically loaded content)
+    const observer = new MutationObserver(() => {
+        disableEmptySearch();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 })();

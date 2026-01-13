@@ -3,9 +3,9 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.5.0
+// @version      0.6.0
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
-// @description:en [Desktop Site | Guest Mode Only] Removes login popups and banners, prevents page jumps, and automatically opens media in a new tab to prevent page deadlocks. Now features an integrated, intelligent permalink copier for any post. Automatically disables itself when a logged-in state is detected.
+// @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
 // @description:ja このスクリプトは、Facebookデスクトップサイトでのゲスト（未ログイン）ブラウジング体験を向上させることを目的としています。一般的な中断要素を削除し、ログインしていないユーザー向けの便利な機能を追加します。
 // @author       StonedKhajiit
@@ -46,6 +46,12 @@
                 WATCHER_FREQUENCY: 150,
                 MODAL_GRACE_PERIOD: 300,
             },
+            AUTO_LOADER: {
+                POLL_INTERVAL: 300,
+                MAX_WAIT_TIME: 3500,
+                MIN_COOLDOWN: 1000,
+                MAX_RETRIES: 3,
+            },
             ERROR_RECOVERY: {
                 // Verified reliable strings from testing
                 RELOAD_BUTTON_LABELS: [
@@ -75,7 +81,8 @@
                 TARGETS: [
                     "See more",
                     "查看更多",
-                    "さらに表示"
+                    "さらに表示",
+                    "See More", "閱讀更多", "もっと見る"
                 ],
                 SCOPE_SELECTOR: 'div[role="article"]',
                 BUTTON_SELECTOR: 'div[role="button"]',
@@ -104,7 +111,6 @@
                     DIALOG: '[role="dialog"]',
                     LOGIN_FORM: 'form#login_form, form[id="login_popup_cta_form"]',
                     MEDIA_LINK: `a[href*="/photo"], a[href*="fbid="], a[href*="/videos/"], a[href*="/watch/"], a[href*="/reel/"]`,
-                    // Not verified (generated from generic translations)
                     CLOSE_BUTTON: [
                         "Close", "關閉", "閉じる", "Cerrar", "Fermer", "Schließen", "Fechar", "Chiudi", "Sluiten", "Закрыть", "Kapat", "Zamknij",
                         "Tutup", "Đóng", "ปิด", "Zatvori", "Zavrieť", "Zavřít", "Bezárás", "Stäng", "Luk", "Lukk", "Sulje", "Κλείσιμο",
@@ -114,11 +120,14 @@
                 NAVIGATOR: {
                     HIGHLIGHT_CLASS: 'gm-post-highlight',
                 },
-                PERMALINK_COPIER: {
-                    BUTTON_CLASS: 'fpc-button',
-                    PROCESSED_MARKER: 'fpc-processed',
+                POST_TOOLS: {
+                    BUTTON_CLASS: 'gm-tool-button',
+                    PROCESSED_MARKER: 'gmToolsProcessed',
                     FEED_POST_HEADER: 'div[data-ad-rendering-role="profile_name"] h2, div[data-ad-rendering-role="profile_name"] h3',
                     DIALOG_POST_HEADER: 'h2, h3',
+                    CONTENT_BODY: 'div[data-ad-rendering-role="story_message"]',
+                    EXPAND_BTN: 'div[role="button"]',
+                    TEXT_BLOCKS: 'div[dir="auto"]'
                 }
             },
             STRINGS: {
@@ -210,10 +219,14 @@
                     modifierNone: 'None (replaces page scroll)',
                     settingsColumnGeneral: 'General',
                     settingsColumnNavigation: 'Navigation',
-                    settingsColumnPermalink: 'Permalink Copier',
-                    copier_enableModule: 'Enable Permalink Copier',
+                    settingsColumnTools: 'Post Tools',
+                    copier_enablePermalink: 'Enable Permalink Button',
+                    copier_enableCopyContent: 'Enable Copy Content Button',
                     copier_fetchPermalinkSmart: 'Permalink (Smart)',
                     copier_fetchPermalinkDirect: 'Permalink (Direct)',
+                    copier_copyContent: 'Copy Post Content',
+                    copier_copyContentSuccess: '✅ Content Copied',
+                    copier_copyContentFailed: '❌ Copy Failed',
                     copier_processing: 'Processing...',
                     copier_successPermalink: '✅ Copied',
                     copier_failure: '❌ Failed',
@@ -221,6 +234,7 @@
                     copier_notificationErrorGeneric: 'Failed to fetch permalink.',
                     copier_notificationErrorNoSourceUrl: 'Failed: Could not find a source URL.',
                     copier_notificationErrorTimeout: 'Failed: Background fetch timed out.',
+                    copier_notificationContentNotFound: '❌ Content block not found.',
                     copier_menu_useSmartLink: 'Auto-Fetch Permalinks (Smart Mode)',
                     copier_menu_showButtonText: 'Show Button Text',
                     copier_menu_permalinkFormat: 'Permalink Format',
@@ -231,6 +245,20 @@
                     tooltipAds: 'Go to Ad Library (About)',
                     tooltipTransparency: 'Go to Page transparency',
                     notificationReelSearchError: 'Cannot get current page name for Reel search.',
+                    copier_includeEmojis: 'Include emojis in copied text',
+                    // Auto Loader & Batch Copier
+                    autoLoader_batchSize: 'Batch Auto-Load Count',
+                    tooltipAutoLoadStart: 'Auto-Load Posts',
+                    tooltipAutoLoadStop: 'Stop Loading',
+                    tooltipBatchCopy: 'Batch Copy All Posts',
+                    autoLoad_status_loading: 'Loading... ({current}/{target})',
+                    autoLoad_status_retrying: 'Retrying... ({count}/{max})',
+                    autoLoad_status_success: 'Auto-load complete.',
+                    autoLoad_status_stopped: 'Stopped by user.',
+                    autoLoad_status_deadlock: 'Deadlock detected. Stopping.',
+                    batchCopy_start: 'Processing {count} posts...',
+                    batchCopy_success: '✅ Copied {count} posts to clipboard.',
+                    batchCopy_empty: 'No posts to copy.',
                 },
                 'zh-TW': {
                     notificationDeadlock: '登入提示已隱藏，動態消息將無法載入新內容。\n【提示】為避免動態消息卡住，請養成用滑鼠中鍵在新分頁開啟連結的習慣。請重新整理頁面以繼續瀏覽。',
@@ -320,10 +348,14 @@
                     modifierNone: '無 (取代頁面捲動)',
                     settingsColumnGeneral: '一般設定',
                     settingsColumnNavigation: '導覽設定',
-                    settingsColumnPermalink: '永久連結複製器',
-                    copier_enableModule: '啟用永久連結複製器',
+                    settingsColumnTools: '貼文工具',
+                    copier_enablePermalink: '啟用 永久連結按鈕',
+                    copier_enableCopyContent: '啟用 複製內容按鈕',
                     copier_fetchPermalinkSmart: '永久連結 (智慧)',
                     copier_fetchPermalinkDirect: '永久連結 (直接)',
+                    copier_copyContent: '複製貼文內容',
+                    copier_copyContentSuccess: '✅ 內容已複製',
+                    copier_copyContentFailed: '❌ 複製失敗',
                     copier_processing: '處理中...',
                     copier_successPermalink: '✅ 已複製',
                     copier_failure: '❌ 失敗',
@@ -331,6 +363,7 @@
                     copier_notificationErrorGeneric: '獲取永久連結失敗。',
                     copier_notificationErrorNoSourceUrl: '失敗：找不到來源網址。',
                     copier_notificationErrorTimeout: '失敗：背景處理逾時。',
+                    copier_notificationContentNotFound: '❌ 找不到內容區塊。',
                     copier_menu_useSmartLink: '自動取得永久連結 (智慧模式)',
                     copier_menu_showButtonText: '顯示按鈕文字',
                     copier_menu_permalinkFormat: '永久連結格式',
@@ -341,6 +374,20 @@
                     tooltipAds: '前往 廣告檔案庫 (關於)',
                     tooltipTransparency: '查看 粉絲專頁資訊透明度',
                     notificationReelSearchError: '無法取得目前頁面名稱以進行連續短片搜尋。',
+                    copier_includeEmojis: '複製內容包含表情符號',
+                    // Auto Loader & Batch Copier
+                    autoLoader_batchSize: '自動載入批次數量',
+                    tooltipAutoLoadStart: '自動載入貼文',
+                    tooltipAutoLoadStop: '停止載入',
+                    tooltipBatchCopy: '批次複製所有貼文',
+                    autoLoad_status_loading: '載入中... ({current}/{target})',
+                    autoLoad_status_retrying: '重試中... ({count}/{max})',
+                    autoLoad_status_success: '自動載入完成。',
+                    autoLoad_status_stopped: '使用者手動停止。',
+                    autoLoad_status_deadlock: '偵測到阻擋，載入已停止。',
+                    batchCopy_start: '正在處理 {count} 篇貼文...',
+                    batchCopy_success: '✅ 已複製 {count} 篇貼文。',
+                    batchCopy_empty: '沒有貼文可複製。',
                 },
                 ja: {
                     notificationDeadlock: 'ログインプロンプトが非表示になりましたが、フィードは新しいコンテンツを読み込めなくなりました。\n【ヒント】フィードがロックされないように、新しいタブでリンクを開く（中央クリック）習慣を付けてください。閲覧を続けるには、このページをリロードしてください。',
@@ -430,10 +477,14 @@
                     modifierNone: 'なし (ページのスクロールを置き換える)',
                     settingsColumnGeneral: '一般設定',
                     settingsColumnNavigation: 'ナビゲーション設定',
-                    settingsColumnPermalink: '固定リンクコピー機',
-                    copier_enableModule: '固定リンクコピー機を有効にする',
+                    settingsColumnTools: '投稿ツール',
+                    copier_enablePermalink: '固定リンクボタンを有効にする',
+                    copier_enableCopyContent: '内容コピーボタンを有効にする',
                     copier_fetchPermalinkSmart: '固定リンク (スマート)',
                     copier_fetchPermalinkDirect: '固定リンク (直接)',
+                    copier_copyContent: '投稿内容をコピー',
+                    copier_copyContentSuccess: '✅ コピーしました',
+                    copier_copyContentFailed: '❌ 失敗しました',
                     copier_processing: '処理中...',
                     copier_successPermalink: '✅ コピーしました',
                     copier_failure: '❌ 失敗',
@@ -441,6 +492,7 @@
                     copier_notificationErrorGeneric: '固定リンクの取得に失敗しました。',
                     copier_notificationErrorNoSourceUrl: '失敗：ソースURLが見つかりませんでした。',
                     copier_notificationErrorTimeout: '失敗：バックグラウンドでの取得がタイムアウトしました。',
+                    copier_notificationContentNotFound: '❌ コンテンツが見つかりませんでした。',
                     copier_menu_useSmartLink: '固定リンクを自動取得 (スマートモード)',
                     copier_menu_showButtonText: 'ボタンテキストを表示',
                     copier_menu_permalinkFormat: '固定リンク形式',
@@ -451,6 +503,20 @@
                     tooltipAds: '広告ライブラリへ (情報)',
                     tooltipTransparency: 'ページの透明性を表示',
                     notificationReelSearchError: 'リール検索のための現在のページ名を取得できません。',
+                    copier_includeEmojis: 'コピーしたテキストに絵文字を含める',
+                    // Auto Loader & Batch Copier
+                    autoLoader_batchSize: '自動読み込みバッチ数',
+                    tooltipAutoLoadStart: '投稿を自動読み込み',
+                    tooltipAutoLoadStop: '読み込み停止',
+                    tooltipBatchCopy: '全投稿を一括コピー',
+                    autoLoad_status_loading: '読み込み中... ({current}/{target})',
+                    autoLoad_status_retrying: '再試行中... ({count}/{max})',
+                    autoLoad_status_success: '自動読み込み完了。',
+                    autoLoad_status_stopped: 'ユーザーにより停止。',
+                    autoLoad_status_deadlock: 'ブロックを検出。停止します。',
+                    batchCopy_start: '{count} 件の投稿を処理中...',
+                    batchCopy_success: '✅ {count} 件の投稿をコピーしました。',
+                    batchCopy_empty: 'コピーする投稿がありません。',
                 },
             },
         },
@@ -538,6 +604,11 @@
                 } else {
                     window.open(url, '_blank');
                 }
+            },
+            // Check if element is visible (for deadlock detection)
+            isVisible(el) {
+                if (!el) return false;
+                return el.offsetParent !== null && window.getComputedStyle(el).display !== 'none';
             }
         },
 
@@ -574,26 +645,29 @@
                         { key: 'keyNavNextSecondary', type: 'text', defaultValue: 'ArrowRight', labelKey: 'keyNavNextSecondary', group: 'navigation' },
                         { key: 'keyNavPrevSecondary', type: 'text', defaultValue: 'ArrowLeft', labelKey: 'keyNavPrevSecondary', group: 'navigation' },
                         { key: 'floatingNavEnabled', type: 'boolean', defaultValue: true, labelKey: 'floatingNavEnabled', group: 'navigation', instant: true },
+                        { key: 'autoLoadBatchSize', type: 'range', defaultValue: 20, labelKey: 'autoLoader_batchSize', options: { min: 10, max: 100, step: 5, unit: '' }, group: 'navigation' },
                         { key: 'wheelNavEnabled', type: 'boolean', defaultValue: true, labelKey: 'wheelNavEnabled', group: 'navigation' },
                         { key: 'wheelNavModifier', type: 'select', defaultValue: 'shiftKey', labelKey: 'wheelNavModifier', options: [ { value: 'altKey', labelKey: 'modifierAlt' }, { value: 'ctrlKey', labelKey: 'modifierCtrl' }, { value: 'shiftKey', labelKey: 'modifierShift' }, { value: 'none', labelKey: 'modifierNone' } ], group: 'navigation' },
                         { key: 'navigationScrollAlignment', type: 'select', defaultValue: 'top', labelKey: 'navigationScrollAlignment', options: [ { value: 'center', labelKey: 'scrollAlignmentCenter' }, { value: 'top', labelKey: 'scrollAlignmentTop' } ], group: 'navigation' },
                         { key: 'enableSmoothScrolling', type: 'boolean', defaultValue: true, labelKey: 'enableSmoothScrolling', group: 'navigation' },
                         { key: 'continuousNavInterval', type: 'range', defaultValue: 500, labelKey: 'continuousNavInterval', options: { min: 0, max: 1000, step: 50, unit: 'ms' }, group: 'navigation' },
                     ];
-                    const permalinkSettings = [
-                        { key: 'permalinkCopierEnabled', type: 'boolean', defaultValue: true, labelKey: 'copier_enableModule', group: 'permalink', instant: true },
-                        { key: 'copier_useSmartLink', type: 'boolean', defaultValue: true, labelKey: 'copier_menu_useSmartLink', group: 'permalink', instant: true },
-                        { key: 'copier_showButtonText', type: 'boolean', defaultValue: false, labelKey: 'copier_menu_showButtonText', group: 'permalink', instant: true },
+                    const toolsSettings = [
+                        { key: 'permalinkCopierEnabled', type: 'boolean', defaultValue: true, labelKey: 'copier_enablePermalink', group: 'tools', instant: true },
+                        { key: 'enableCopyContentButton', type: 'boolean', defaultValue: true, labelKey: 'copier_enableCopyContent', group: 'tools', instant: true },
+                        { key: 'copier_includeEmojis', type: 'boolean', defaultValue: true, labelKey: 'copier_includeEmojis', group: 'tools', instant: true },
+                        { key: 'copier_useSmartLink', type: 'boolean', defaultValue: true, labelKey: 'copier_menu_useSmartLink', group: 'tools', instant: true },
+                        { key: 'copier_showButtonText', type: 'boolean', defaultValue: false, labelKey: 'copier_menu_showButtonText', group: 'tools', instant: true },
                         {
                             key: 'copier_permalinkFormat', type: 'select', defaultValue: 'author_id', labelKey: 'copier_menu_permalinkFormat',
                             options: [
                                 { value: 'author_id', labelKey: 'copier_format_author_id' }, { value: 'username', labelKey: 'copier_format_username' },
                                 { value: 'full', labelKey: 'copier_format_full' }, { value: 'shortest', labelKey: 'copier_format_shortest' },
                             ],
-                            group: 'permalink'
+                            group: 'tools'
                         },
                     ];
-                    return [...generalSettings, ...navigationSettings, ...permalinkSettings];
+                    return [...generalSettings, ...navigationSettings, ...toolsSettings];
                 })(),
                 init(app) {
                     this.app = app;
@@ -623,7 +697,7 @@
                     this.app.state.settings[key] = value;
                 },
                 handleSettingChange(key, newValue, oldValue) {
-                    const PC = this.app.modules.permalinkCopier;
+                    const PHT = this.app.modules.postHeaderTools;
                     const FN = this.app.modules.floatingNavigator;
                     const SI = this.app.modules.styleInjector;
                     const ER = this.app.modules.errorRecovery;
@@ -632,11 +706,11 @@
                     const IR = this.app.modules.idRevealer;
                     switch (key) {
                         case 'permalinkCopierEnabled':
-                            if (newValue) PC.init(this.app); else PC.deinit();
-                            break;
+                        case 'enableCopyContentButton':
                         case 'copier_useSmartLink':
                         case 'copier_showButtonText':
-                            if (this.app.state.settings.permalinkCopierEnabled) PC.reEvaluateAllButtons();
+                            // Always re-evaluate buttons if any tool setting changes
+                            if (PHT) PHT.reEvaluateAllButtons();
                             break;
                         case 'floatingNavEnabled':
                             if (newValue) FN.init(this.app); else FN.deinit();
@@ -682,7 +756,7 @@
                         children: [
                             this._createSettingsColumn(T.settingsColumnGeneral, 'general'),
                             this._createSettingsColumn(T.settingsColumnNavigation, 'navigation'),
-                            this._createSettingsColumn(T.settingsColumnPermalink, 'permalink')
+                            this._createSettingsColumn(T.settingsColumnTools, 'tools')
                         ]
                     });
                     this.modalContainer.body.append(layout);
@@ -746,8 +820,9 @@
 
                     if (def.key === 'autoUnmuteVolume') wrapper.dataset.controls = 'autoUnmuteEnabled';
                     if (def.key.startsWith('keyNav')) wrapper.dataset.controls = 'keyboardNavEnabled';
-                    if (def.group === 'permalink' && def.key !== 'permalinkCopierEnabled') wrapper.dataset.controls = 'permalinkCopierEnabled';
+                    if (def.key === 'copier_permalinkFormat') wrapper.dataset.controls = 'permalinkCopierEnabled';
                     if (def.key === 'idRevealerLinkFormat') wrapper.dataset.controls = 'idRevealerEnabled';
+                    if (def.key === 'autoLoadBatchSize') wrapper.dataset.controls = 'floatingNavEnabled';
 
                     return wrapper;
                 },
@@ -757,6 +832,7 @@
                         keyboardNavEnabled: container.querySelector('#setting-keyboardNavEnabled'),
                         permalinkCopierEnabled: container.querySelector('#setting-permalinkCopierEnabled'),
                         idRevealerEnabled: container.querySelector('#setting-idRevealerEnabled'),
+                        floatingNavEnabled: container.querySelector('#setting-floatingNavEnabled'),
                     };
                     const toggleGroup = (controller, isEnabled) => {
                         container.querySelectorAll(`[data-controls="${controller.id.substring(8)}"]`).forEach(control => {
@@ -878,7 +954,7 @@
                         `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS} { outline: 3px solid #1877F2 !important; box-shadow: 0 0 15px rgba(24, 119, 242, 0.5) !important; border-radius: 8px; z-index: 10 !important; }`,
                         // --- Floating Nav ---
                         `.gm-floating-nav { position: fixed; bottom: 20px; right: 20px; z-index: 9990; display: flex; flex-direction: column; gap: 8px; }`,
-                        `.gm-floating-nav button { background-color: rgba(255, 255, 255, 0.9); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: background-color 0.2s, transform 0.1s; }`,
+                        `.gm-floating-nav button { background-color: rgba(255, 255, 255, 0.95); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: background-color 0.2s, transform 0.1s; position: relative; }`,
                         `.gm-floating-nav button:hover { background-color: #f0f2f5; }`,
                         `.gm-floating-nav button:active { transform: scale(0.95); }`,
                         `.gm-floating-nav svg { width: 20px; height: 20px; fill: #65676b; }`,
@@ -912,9 +988,9 @@
                         `.gm-toast-failure { background-color: rgba(220, 53, 69, 0.85); }`,
                         `.gm-toast a { color: white; text-decoration: underline; font-weight: 600; transition: opacity 0.2s; }`,
                         `.gm-toast a:hover { opacity: 0.8; }`,
-                        // --- Permalink Copier ---
-                        `.${C.SELECTORS.PERMALINK_COPIER.BUTTON_CLASS} { --positive-background: #E7F3FF; --negative-background: #FDEDEE; --hover-overlay: rgba(0, 0, 0, 0.05); --secondary-text: #65676B; --media-inner-border: #CED0D4; }`,
-                        // --- Permalink Copier Icons & Animation ---
+                        // --- Post Tools (Permalink & Copy) ---
+                        `.${C.SELECTORS.POST_TOOLS.BUTTON_CLASS} { --positive-background: #E7F3FF; --negative-background: #FDEDEE; --hover-overlay: rgba(0, 0, 0, 0.05); --secondary-text: #65676B; --media-inner-border: #CED0D4; }`,
+                        // --- Tools Icons & Animation ---
                         `@keyframes gm-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`,
                         `.gm-spin { animation: gm-spin 0.8s linear infinite; transform-origin: center; }`,
                         `.gm-icon-wrapper { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }`,
@@ -1060,6 +1136,205 @@
                     const observer = new MutationObserver(throttledRun);
                     observer.observe(document.body, { childList: true, subtree: true });
                     runExpander();
+                }
+            },
+
+            contentAutoLoader: {
+                app: null,
+                state: {
+                    isRunning: false,
+                    targetCount: 0,
+                    retryCount: 0,
+                    lastScrollTime: 0
+                },
+                init(app) { this.app = app; },
+                
+                async start() {
+                    if (this.state.isRunning) return;
+                    
+                    const T = this.app.state.T;
+                    const batchSize = this.app.state.settings.autoLoadBatchSize || 20;
+                    const currentPosts = this.app.modules.postNavigatorCore.getSortedPosts().length;
+                    
+                    this.state.isRunning = true;
+                    this.state.retryCount = 0;
+                    this.state.targetCount = currentPosts + batchSize;
+                    
+                    this.app.modules.floatingNavigator.updateButtonState('start');
+                    this.app.modules.toastNotifier.show(
+                        T.autoLoad_status_loading.replace('{current}', currentPosts).replace('{target}', this.state.targetCount), 
+                        'success'
+                    );
+
+                    await this.loop();
+                },
+
+                stop(reasonKey = '') {
+                    this.state.isRunning = false;
+                    this.app.modules.floatingNavigator.updateButtonState('stop');
+                    
+                    if (reasonKey) {
+                        const T = this.app.state.T;
+                        const type = reasonKey.includes('success') ? 'success' : 'failure';
+                        this.app.modules.toastNotifier.show(T[reasonKey], type);
+                    }
+                },
+
+                async loop() {
+                    const C = this.app.config.AUTO_LOADER;
+                    const T = this.app.state.T;
+
+                    while (this.state.isRunning) {
+                        if (this.isDeadlocked()) {
+                            this.stop('autoLoad_status_deadlock');
+                            return;
+                        }
+
+                        const currentCount = this.app.modules.postNavigatorCore.getSortedPosts().length;
+                        if (currentCount >= this.state.targetCount) {
+                            this.stop('autoLoad_status_success');
+                            return;
+                        }
+
+                        const timeSinceLastScroll = Date.now() - this.state.lastScrollTime;
+                        if (timeSinceLastScroll < C.MIN_COOLDOWN) {
+                            await this.app.utils.delay(C.MIN_COOLDOWN - timeSinceLastScroll);
+                        }
+
+                        this.app.modules.toastNotifier.show(
+                            T.autoLoad_status_loading.replace('{current}', currentCount).replace('{target}', this.state.targetCount),
+                            'success', 1000
+                        );
+                        
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                        this.state.lastScrollTime = Date.now();
+
+                        const result = await this.waitForNewContent(currentCount);
+
+                        if (result === 'loaded') {
+                            this.state.retryCount = 0;
+                        } else if (result === 'timeout') {
+                            this.state.retryCount++;
+                            this.app.modules.toastNotifier.show(
+                                T.autoLoad_status_retrying.replace('{count}', this.state.retryCount).replace('{max}', C.MAX_RETRIES),
+                                'failure', 1000
+                            );
+                            
+                            if (this.state.retryCount >= C.MAX_RETRIES) {
+                                this.stop('autoLoad_status_success'); // Treat as success/partial success if we hit wall
+                                return;
+                            }
+                        }
+                    }
+                },
+
+                waitForNewContent(baselineCount) {
+                    const C = this.app.config.AUTO_LOADER;
+                    return new Promise((resolve) => {
+                        const startTime = Date.now();
+                        const poller = setInterval(() => {
+                            if (!this.state.isRunning) { clearInterval(poller); resolve('stopped'); return; }
+                            if (this.isDeadlocked()) { clearInterval(poller); return; } // Main loop will handle stop
+
+                            const newCount = this.app.modules.postNavigatorCore.getSortedPosts().length;
+                            if (newCount > baselineCount) { clearInterval(poller); resolve('loaded'); }
+                            
+                            if (Date.now() - startTime > C.MAX_WAIT_TIME) { clearInterval(poller); resolve('timeout'); }
+                        }, C.POLL_INTERVAL);
+                    });
+                },
+
+                isDeadlocked() {
+                    // Reuse the robust logic we built in the test script
+                    // 1. Check Dialog with Login Form
+                    const C = this.app.config.SELECTORS;
+                    const U = this.app.utils;
+                    const dialog = document.querySelector(C.GLOBAL.DIALOG);
+                    if (dialog && U.isVisible(dialog)) {
+                        if (dialog.querySelector(C.GLOBAL.LOGIN_FORM)) return true;
+                    }
+                    // 2. Check NoSnippet banner
+                    const noSnippet = document.querySelector('div[data-nosnippet]');
+                    if (noSnippet && U.isVisible(noSnippet)) return true;
+                    
+                    // 3. Check any visible login form not in banner
+                    const forms = document.querySelectorAll(C.GLOBAL.LOGIN_FORM);
+                    for (const form of forms) {
+                        if (U.isVisible(form) && !form.closest('[role="banner"]')) return true;
+                    }
+                    return false;
+                },
+
+                async copyAllPosts() {
+                    const T = this.app.state.T;
+                    const posts = this.app.modules.postNavigatorCore.getSortedPosts();
+                    if (posts.length === 0) {
+                        this.app.modules.toastNotifier.show(T.batchCopy_empty, 'failure');
+                        return;
+                    }
+
+                    this.app.modules.toastNotifier.show(T.batchCopy_start.replace('{count}', posts.length), 'success');
+                    
+                    // Small delay to let UI update
+                    await this.app.utils.delay(50);
+
+                    let resultText = '';
+                    let successCount = 0;
+
+                    posts.forEach((post, index) => {
+                        const text = this.getPostText(post);
+                        const postNum = index + 1;
+                        const header = `=== Post #${postNum} ===`;
+                        const content = text || '[No Text Content]';
+                        const separator = '\n\n-----------------------------------\n\n';
+
+                        resultText += `${header}\n${content}${separator}`;
+                        if (text) successCount++;
+                    });
+
+                    try {
+                        await GM_setClipboard(resultText);
+                        this.app.modules.toastNotifier.show(T.batchCopy_success.replace('{count}', successCount), 'success');
+                    } catch (err) {
+                        console.error(err);
+                        this.app.modules.toastNotifier.show('Copy Failed', 'failure');
+                    }
+                },
+
+                getPostText(postEl) {
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+                    const contentContainer = postEl.querySelector(C_TOOLS.CONTENT_BODY);
+                    if (!contentContainer) return null;
+
+                    const clone = contentContainer.cloneNode(true);
+                    
+                    // Replace emoji images with alt text
+                    const images = clone.querySelectorAll('img[src*="emoji"][alt], img[alt]');
+                    images.forEach(img => {
+                        const alt = img.getAttribute('alt');
+                        if (alt) img.replaceWith(document.createTextNode(alt));
+                    });
+
+                    // Topology extraction
+                    const rawBlocks = clone.querySelectorAll(C_TOOLS.TEXT_BLOCKS);
+                    const leafBlocks = Array.from(rawBlocks).filter(el => {
+                        return el.querySelectorAll(C_TOOLS.TEXT_BLOCKS).length === 0 && el.innerText.trim().length > 0;
+                    });
+
+                    if (leafBlocks.length === 0) return clone.innerText.trim();
+
+                    let finalString = leafBlocks[0].innerText.trim();
+                    for (let i = 1; i < leafBlocks.length; i++) {
+                        const prevBlock = leafBlocks[i-1];
+                        const currBlock = leafBlocks[i];
+                        const currText = currBlock.innerText.trim();
+                        
+                        const isSibling = currBlock.parentElement === prevBlock.parentElement;
+                        const separator = isSibling ? '\n' : '\n\n';
+                        
+                        finalString += separator + currText; 
+                    }
+                    return finalString;
                 }
             },
 
@@ -1860,22 +2135,11 @@
                 },
                 icons: {
                     pinned: `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#1877F2" d="M16 11V5h1.5a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5H8v6l-2 3v2h5v6l1 1 1-1v-6h5v-2l-2-3z"></path></svg>`,
-                    
-                    // Inverted and hollow pin
                     unpinned: `<svg viewBox="0 0 24 24" width="20" height="20"><g transform="rotate(180 12 12)"><path d="M16 11V5h1.5a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5H8v6l-2 3v2h5v6l1 1 1-1v-6h5v-2l-2-3z" style="fill:none; stroke:#65676B; stroke-width:1.5px;"></path></g></svg>`,
-                    
-                    // Hollow Watch icon
                     watch: `<svg viewBox="0 0 24 24" width="20" height="20" style="fill:none; stroke:#65676B; stroke-width:1.8px; stroke-linecap:round; stroke-linejoin:round;"><rect x="2.5" y="5.5" width="19" height="13" rx="3" ry="3"></rect><path d="M10 9l5 3-5 3V9z"></path></svg>`,
-                    
-                    // Solid Calendar design
                     events: `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"></path></svg>`,
-                    
-                    // User provided Marketplace icon (scaled)
                     marketplace: `<svg viewBox="2 2 28 28" width="20" height="20"><path fill="#65676B" d="M28.908,12.571a.952.952,0,0,0-.1-.166,3.146,3.146,0,0,0-.118-.423c-.006-.016-.012-.032-.02-.048L25.917,5.6A1,1,0,0,0,25,5H7a1,1,0,0,0-.917.6l-2.77,6.381a2.841,2.841,0,0,0,0,2.083A4.75,4.75,0,0,0,6,16.609V27a1,1,0,0,0,1,1H25a1,1,0,0,0,1-1V16.609a4.749,4.749,0,0,0,2.687-2.543,2.614,2.614,0,0,0,.163-.655A1.057,1.057,0,0,0,28.908,12.571ZM13,26V20h2v6Zm4,0V20h2v6Zm7,0H21V19a1,1,0,0,0-1-1H12a1,1,0,0,0-1,1v7H8V17a5.2,5.2,0,0,0,4-1.8,5.339,5.339,0,0,0,8,0A5.2,5.2,0,0,0,24,17Zm2.837-12.7A3.015,3.015,0,0,1,24,15a2.788,2.788,0,0,1-3-2.5,1,1,0,0,0-2,0A2.788,2.788,0,0,1,16,15a2.788,2.788,0,0,1-3-2.5,1,1,0,0,0-2,0A2.788,2.788,0,0,1,8,15a3.016,3.016,0,0,1-2.838-1.7.836.836,0,0,1,0-.571L7.656,7H24.344l2.477,5.7A.858.858,0,0,1,26.837,13.3Z"/></svg>`,
-                    
                     search: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8 7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1.002 1.002 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6 6 6 0 0 1-6-6z"></path></svg>`,
-                    
-                    // Scaled gear icon
                     settings: `<svg viewBox="0 0 24 24" width="20" height="20"><g transform="scale(0.85) translate(2.1, 2.1)"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84a.484.484 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 0 0-.59.22L2.74 8.87c-.12.19-.06.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path></g></svg>`
                 },
                 getOccupiedHeight() {
@@ -2208,6 +2472,7 @@
             floatingNavigator: { 
                 app: null, 
                 container: null, 
+                btnAutoLoad: null,
                 isInitialized: false, 
                 init(app) { 
                     if (this.isInitialized) return; 
@@ -2215,11 +2480,13 @@
                     if (!this.app.state.settings.floatingNavEnabled) return; 
                     const T = this.app.state.T; 
                     const U = this.app.utils; 
-                    // Dynamic reference to avoid init order issues
+                    // Dynamic reference
                     const getCore = () => this.app.modules.postNavigatorCore; 
+                    const getLoader = () => this.app.modules.contentAutoLoader;
                     
                     this.container = U.createStyledElement('div', {}, { className: 'gm-floating-nav' }); 
                     
+                    // --- Navigation Buttons ---
                     const prevButton = U.createStyledElement('button', {}, { title: T.floatingNavPrevTooltip }); 
                     prevButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>`; 
                     prevButton.addEventListener('mousedown', () => { const c = getCore(); if(c) c.startContinuousNavigation('prev'); }); 
@@ -2231,8 +2498,32 @@
                     nextButton.addEventListener('mouseleave', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
                     
                     document.body.addEventListener('mouseup', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
+
+                    // --- Tools Separator ---
+                    const separator = U.createStyledElement('div', { height: '4px' });
+
+                    // --- Auto-Load Button ---
+                    this.btnAutoLoad = U.createStyledElement('button', {}, { title: T.tooltipAutoLoadStart });
+                    // Default Icon: Arrow Down
+                    this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
+                    this.btnAutoLoad.addEventListener('click', () => {
+                        const loader = getLoader();
+                        if (loader) {
+                            if (loader.state.isRunning) loader.stop('autoLoad_status_stopped');
+                            else loader.start();
+                        }
+                    });
+
+                    // --- Batch Copy Button ---
+                    const btnBatchCopy = U.createStyledElement('button', {}, { title: T.tooltipBatchCopy });
+                    // Icon: Clipboard
+                    btnBatchCopy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`;
+                    btnBatchCopy.addEventListener('click', () => {
+                         const loader = getLoader();
+                         if (loader) loader.copyAllPosts();
+                    });
                     
-                    this.container.append(prevButton, nextButton); 
+                    this.container.append(prevButton, nextButton, separator, this.btnAutoLoad, btnBatchCopy); 
                     document.body.appendChild(this.container); 
                     this.updateVisibility(); 
                     window.addEventListener('historyChange', this.updateVisibility.bind(this)); 
@@ -2243,9 +2534,25 @@
                     if (this.container) { 
                         this.container.remove(); 
                         this.container = null; 
+                        this.btnAutoLoad = null;
                     } 
                     this.isInitialized = false; 
-                }, 
+                },
+                updateButtonState(state) {
+                    if (!this.btnAutoLoad) return;
+                    const T = this.app.state.T;
+                    if (state === 'start') {
+                        // Change to Stop Icon (Square)
+                        this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24" fill="#e02424"><path d="M6 6h12v12H6z"></path></svg>`;
+                        this.btnAutoLoad.title = T.tooltipAutoLoadStop;
+                        this.btnAutoLoad.style.borderColor = '#e02424';
+                    } else {
+                        // Revert to Start Icon (Arrow Down)
+                        this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
+                        this.btnAutoLoad.title = T.tooltipAutoLoadStart;
+                        this.btnAutoLoad.style.borderColor = '#ddd';
+                    }
+                },
                 updateVisibility() { 
                     if (!this.container) return; 
                     const isVisible = this.app.utils.isFeedPage() && !document.querySelector(this.app.config.SELECTORS.GLOBAL.DIALOG); 
@@ -2307,96 +2614,69 @@
                 } 
             },
 
-            permalinkCopier: {
+            postHeaderTools: {
                 app: null,
                 isProcessingClick: false,
                 isModalOpening: false,
                 observer: null,
-                boundHandleClick: null,
                 
-                // Updated: Colored SVG Icon definitions
+                // SVG Icons definitions
                 icons: {
-                    // Smart Link: Magic stars in Golden Yellow
                     smart: `<svg viewBox="0 0 32 32" width="16" height="16"><path fill="#F5C33B" d="M18,11a1,1,0,0,1-1,1,5,5,0,0,0-5,5,1,1,0,0,1-2,0,5,5,0,0,0-5-5,1,1,0,0,1,0-2,5,5,0,0,0,5-5,1,1,0,0,1,2,0,5,5,0,0,0,5,5A1,1,0,0,1,18,11Z"/><path fill="#F5C33B" d="M19,24a1,1,0,0,1-1,1,2,2,0,0,0-2,2,1,1,0,0,1-2,0,2,2,0,0,0-2-2,1,1,0,0,1,0-2,2,2,0,0,0,2-2,1,1,0,0,1,2,0,2,2,0,0,0,2,2A1,1,0,0,1,19,24Z"/><path fill="#F5C33B" d="M28,17a1,1,0,0,1-1,1,4,4,0,0,0-4,4,1,1,0,0,1-2,0,4,4,0,0,0-4-4,1,1,0,0,1,0-2,4,4,0,0,0,4-4,1,1,0,0,1,2,0,4,4,0,0,0,4,4A1,1,0,0,1,28,17Z"/></svg>`,
-                    
-                    // Direct Link: Chain link in Facebook Blue
                     direct: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#1877F2" d="M13.29 9.29l-4 4a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4-4a1 1 0 0 0-1.42-1.42z"/><path fill="#1877F2" d="M12.28 17.4L11 18.67a4.2 4.2 0 0 1-5.58.4 4 4 0 0 1-.27-5.93l1.42-1.43a1 1 0 0 0 0-1.42 1 1 0 0 0-1.42 0l-1.27 1.28a6.15 6.15 0 0 0-.67 8.07 6.06 6.06 0 0 0 9.07.6l1.42-1.42a1 1 0 0 0-1.42-1.42z"/><path fill="#1877F2" d="M19.66 3.22a6.18 6.18 0 0 0-8.13.68L10.45 5a1.09 1.09 0 0 0-.17 1.61 1 1 0 0 0 1.42 0L13 5.3a4.17 4.17 0 0 1 5.57-.4 4 4 0 0 1 .27 5.95l-1.42 1.43a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l1.42-1.42a6.06 6.06 0 0 0-.6-9.06z"/></svg>`,
-                    
-                    // Processing: Spinner in Blue
                     processing: `<svg viewBox="0 0 24 24" width="16" height="16" class="gm-spin"><path fill="#1877F2" d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"></path></svg>`,
-                    
-                    // Success: Checkmark in Green
                     success: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#42B72A" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>`,
-                    
-                    // Failure: X mark in Red
-                    failure: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#FA383E" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>`
+                    failure: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#FA383E" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>`,
+                    copy: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#65676B" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
                 },
 
                 init(app) {
                     if (!this.app) this.app = app;
-                    if (this.observer) return; 
-                    console.log(`${this.app.config.LOG_PREFIX} [Copier] Module enabled and initializing.`);
+                    if (this.observer) return;
+                    console.log(`${this.app.config.LOG_PREFIX} [Tools] Module initialized.`);
                     this.startObserver();
-                    this.boundHandleClick = this.handleCopyClick.bind(this);
-                    document.body.addEventListener('click', this.boundHandleClick);
                 },
 
                 deinit() {
                     if (this.observer) {
                         this.observer.disconnect();
                         this.observer = null;
-                        console.log(`${this.app.config.LOG_PREFIX} [Copier] Module observer stopped.`);
-                    }
-                    if (this.boundHandleClick) {
-                        document.body.removeEventListener('click', this.boundHandleClick);
-                        this.boundHandleClick = null;
                     }
                     this.cleanupButtons();
-                    console.log(`${this.app.config.LOG_PREFIX} [Copier] Module disabled and cleaned up.`);
                 },
 
-                async handleCopyClick(event) {
-                    const C = this.app.config.SELECTORS.PERMALINK_COPIER;
-                    const button = event.target.closest(`.${C.BUTTON_CLASS}`);
-                    if (!button || this.isProcessingClick) return;
-
-                    event.preventDefault();
+                // --- Feature 1: Permalink Copier Logic ---
+                async handlePermalinkClick(event, button) {
+                    if (this.isProcessingClick) return;
+                    // Stop event propagation immediately to prevent FB from intercepting
+                    event.preventDefault(); 
                     event.stopPropagation();
-                    const postEl = button.closest(`[data-${C.PROCESSED_MARKER}]`);
+                    
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+                    const postEl = button.closest(`[data-${C_TOOLS.PROCESSED_MARKER}]`);
                     if (!postEl) return;
 
-                    console.log(`${this.app.config.LOG_PREFIX} [Copier] Initiating permalink fetch...`);
                     this.isProcessingClick = true;
                     button.style.pointerEvents = 'none';
-                    
-                    // Store original HTML (includes icon and potential text)
                     const originalContent = button.innerHTML;
                     const T = this.app.state.T;
                     const settings = this.app.state.settings;
 
-                    // Switch to processing state (SVG Spinner)
                     const iconWrapper = button.querySelector('.gm-icon-wrapper');
                     if (iconWrapper) iconWrapper.innerHTML = this.icons.processing;
-                    
-                    if (settings.copier_showButtonText) {
-                        button.querySelector('span:last-child').textContent = T.copier_processing;
-                    }
+                    if (settings.copier_showButtonText) button.querySelector('span:last-child').textContent = T.copier_processing;
 
                     try {
                         const contentType = this.determinePostContentType(postEl);
                         const useSmartFetch = settings.copier_useSmartLink && contentType === 'standard';
                         const fetcher = useSmartFetch ? this.fetchPermalinkInBackground(postEl) : Promise.resolve(this.getPermalinkDirectlyFromElement(postEl));
-
                         const result = await fetcher || { url: null, method: 'unknown_failure' };
                         const { url: dataToCopy, method } = result;
 
                         if (dataToCopy) {
                             GM_setClipboard(dataToCopy);
                             const linkHTML = `<a href="${dataToCopy}" target="_blank" rel="noopener noreferrer">${dataToCopy}</a>`;
-                            const successMessage = T.copier_notificationPermalinkCopied
-                                .replace('{url}', linkHTML)
-                                .replace(/\n/g, '<br>'); 
-
+                            const successMessage = T.copier_notificationPermalinkCopied.replace('{url}', linkHTML).replace(/\n/g, '<br>');
                             this.app.modules.toastNotifier.show(successMessage, 'success', 5000);
                             await this.animateButtonFeedback(button, 'success', originalContent);
                         } else {
@@ -2407,7 +2687,7 @@
                             await this.animateButtonFeedback(button, 'failure', originalContent);
                         }
                     } catch (error) {
-                        console.error(`${this.app.config.LOG_PREFIX} [Copier] Error during copy action:`, error);
+                        console.error(`${this.app.config.LOG_PREFIX} [Tools] Error:`, error);
                         this.app.modules.toastNotifier.show(T.copier_notificationErrorGeneric, 'failure');
                         await this.animateButtonFeedback(button, 'failure', originalContent);
                     } finally {
@@ -2415,164 +2695,177 @@
                     }
                 },
 
-                fetchPermalinkInBackground(postEl) {
-                    return new Promise((resolve) => {
-                        const sourceUrl = this.getSourceUrlForWorker(postEl);
-                        if (!sourceUrl) {
-                            return resolve({ url: null, method: 'worker_no_source_url' });
+                // --- Feature 2: Smart Content Copier Logic (v0.1.5 Topology Fix + v0.1.6 Emoji) ---
+                async handleCopyContentClick(event, button) {
+                    if (this.isProcessingClick) return;
+                    event.preventDefault(); 
+                    event.stopPropagation();
+                    
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+                    const postEl = button.closest(this.app.config.SELECTORS.GLOBAL.POST_CONTAINER);
+                    const contentContainer = postEl ? postEl.querySelector(C_TOOLS.CONTENT_BODY) : null;
+                    const T = this.app.state.T;
+                    const settings = this.app.state.settings;
+
+                    this.isProcessingClick = true;
+                    button.style.pointerEvents = 'none';
+                    const originalContent = button.innerHTML;
+                    
+                    const iconWrapper = button.querySelector('.gm-icon-wrapper');
+                    if (iconWrapper) iconWrapper.innerHTML = this.icons.processing;
+
+                    if (!contentContainer) {
+                        this.app.modules.toastNotifier.show(T.copier_notificationContentNotFound, 'failure');
+                        await this.animateButtonFeedback(button, 'failure', originalContent);
+                        this.isProcessingClick = false;
+                        return;
+                    }
+
+                    try {
+                        // Check for expand button ("See more")
+                        const expandKeywords = this.app.config.TEXT_EXPANDER.TARGETS;
+                        const expandBtn = Array.from(contentContainer.querySelectorAll(C_TOOLS.EXPAND_BTN))
+                            .find(btn => expandKeywords.some(kw => btn.textContent.trim().includes(kw)) && btn.offsetParent !== null);
+
+                        if (expandBtn) {
+                            await new Promise((resolve) => {
+                                let resolved = false;
+                                const timeoutId = setTimeout(() => { if (!resolved) { resolved = true; resolve(); } }, 2500);
+                                const observer = new MutationObserver(() => {
+                                    if (!resolved) {
+                                        clearTimeout(timeoutId); resolved = true; observer.disconnect();
+                                        setTimeout(resolve, 150);
+                                    }
+                                });
+                                observer.observe(contentContainer, { childList: true, subtree: true });
+                                expandBtn.click();
+                            });
                         }
 
-                        const taskId = `fpc_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-                        const workerUrl = new URL(sourceUrl);
-                        workerUrl.searchParams.set(this.app.config.WORKER_PARAM, taskId);
-                        console.log(`${this.app.config.LOG_PREFIX} [Copier] Opening background worker: ${workerUrl.href}`);
+                        // Prepare target container (Clone if emojis enabled)
+                        let targetContainer = contentContainer;
+                        if (settings.copier_includeEmojis) {
+                            targetContainer = contentContainer.cloneNode(true);
+                            // Replace emoji images with their alt text
+                            const images = targetContainer.querySelectorAll('img[src*="emoji"][alt], img[alt]');
+                            images.forEach(img => {
+                                const src = img.getAttribute('src') || '';
+                                const alt = img.getAttribute('alt');
+                                // Prioritize images that look like emojis (src contains emoji.php or similar)
+                                // or generally any inline image with alt text in the text body
+                                if (alt && (src.includes('emoji') || img.className.includes('emoji') || src.includes('fbcdn.net'))) {
+                                    img.replaceWith(document.createTextNode(alt));
+                                }
+                            });
+                        }
 
-                        let listenerId;
-                        const timeoutId = setTimeout(() => {
-                            if (listenerId) GM_removeValueChangeListener(listenerId);
-                            resolve({ url: null, method: 'worker_timeout' });
-                        }, 8000);
-
-                        listenerId = GM_addValueChangeListener(taskId, (name, oldVal, newVal, remote) => {
-                            if (remote && typeof newVal.permalink !== 'undefined') {
-                                clearTimeout(timeoutId);
-                                GM_removeValueChangeListener(listenerId);
-                                GM_setValue(taskId, { resolved: true }); 
-                                resolve({ url: newVal.permalink, method: "worker_" + newVal.method });
-                            }
-                        });
-                        GM_openInTab(workerUrl.href, { active: false, insert: true, setParent: true });
-                    });
-                },
-
-                getPermalinkDirectlyFromElement(postEl) {
-                    const dirtyUrl = this.getSourceUrlForWorker(postEl);
-                    if (!dirtyUrl) return { url: null, method: 'direct_no_url' };
-                    try {
-                        const urlObj = new URL(dirtyUrl);
-                        urlObj.search = ''; 
-                        const cleanUrl = urlObj.href.replace(/\/$/, '');
-                        return { url: cleanUrl, method: 'direct_cleaned' };
-                    } catch (e) {
-                        return { url: null, method: 'direct_parse_error' };
+                        // Extract text using Sibling Node Topology
+                        const text = this.extractTextByTopology(targetContainer);
+                        GM_setClipboard(text);
+                        
+                        this.app.modules.toastNotifier.show(T.copier_copyContentSuccess, 'success');
+                        await this.animateButtonFeedback(button, 'success', originalContent);
+                    } catch (error) {
+                        console.error(`${this.app.config.LOG_PREFIX} [Tools] Copy Content Error:`, error);
+                        this.app.modules.toastNotifier.show(T.copier_copyContentFailed, 'failure');
+                        await this.animateButtonFeedback(button, 'failure', originalContent);
+                    } finally {
+                        this.isProcessingClick = false;
                     }
                 },
 
+                // Extracts text based on DOM structure (Parent grouping)
+                extractTextByTopology(container) {
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+                    const rawBlocks = container.querySelectorAll(C_TOOLS.TEXT_BLOCKS);
+                    
+                    // Filter: Only leaf nodes (most nested div[dir="auto"])
+                    const leafBlocks = Array.from(rawBlocks).filter(el => {
+                        return el.querySelectorAll(C_TOOLS.TEXT_BLOCKS).length === 0 && el.innerText.trim().length > 0;
+                    });
+
+                    if (leafBlocks.length === 0) return container.innerText.trim();
+
+                    let finalString = leafBlocks[0].innerText.trim();
+                    for (let i = 1; i < leafBlocks.length; i++) {
+                        const prevBlock = leafBlocks[i-1];
+                        const currBlock = leafBlocks[i];
+                        const currText = currBlock.innerText.trim();
+                        
+                        // Core Logic: 
+                        // Same parent = compact list = \n
+                        // Different parent = paragraph separation = \n\n
+                        const isSibling = currBlock.parentElement === prevBlock.parentElement;
+                        const separator = isSibling ? '\n' : '\n\n';
+                        
+                        finalString += separator + currText;
+                    }
+                    return finalString;
+                },
+
+                // --- Shared Helpers ---
                 async animateButtonFeedback(button, status, originalContent) {
                     const T = this.app.state.T;
                     const settings = this.app.state.settings;
-
-                    // Switch to success/failure SVG
                     const iconWrapper = button.querySelector('.gm-icon-wrapper');
                     if (iconWrapper) iconWrapper.innerHTML = status === 'success' ? this.icons.success : this.icons.failure;
 
-                    if (settings.copier_showButtonText) {
-                        const labelText = status === 'success' ? T.copier_successPermalink : T.copier_failure;
-                        button.querySelector('span:last-child').textContent = labelText;
+                    if (settings.copier_showButtonText && button.dataset.action === 'permalink') {
+                        button.querySelector('span:last-child').textContent = status === 'success' ? T.copier_successPermalink : T.copier_failure;
                     }
                     
-                    // Background color feedback
                     button.style.backgroundColor = status === 'success' ? 'var(--positive-background)' : 'var(--negative-background)';
-
                     await this.app.utils.delay(1200);
                     button.style.pointerEvents = 'auto';
                     button.style.backgroundColor = 'transparent';
-                    // Restore original state
                     button.innerHTML = originalContent;
                 },
 
-                addButtonsToPost(postEl, headerEl, isDialog = false) {
-                    const C = this.app.config.SELECTORS.PERMALINK_COPIER;
-                    if (!headerEl?.parentElement || headerEl.parentElement.querySelector(`.${C.BUTTON_CLASS}`)) return;
-
-                    postEl.setAttribute(`data-${C.PROCESSED_MARKER}`, 'true');
-                    
-                    const contentType = this.determinePostContentType(postEl);
-                    const isSmart = this.app.state.settings.copier_useSmartLink && contentType === 'standard';
-                    const newButton = this.createPermalinkButton(isSmart, isDialog);
-
-                    const insertionPoint = headerEl.parentElement;
-                    Object.assign(insertionPoint.style, { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' });
-                    insertionPoint.append(newButton);
+                // --- Injection Logic ---
+                reEvaluateAllButtons() {
+                    this.cleanupButtons();
+                    this.scanNodeForPosts(document.body);
                 },
-
-                createPermalinkButton(isSmart, isDialog) {
-                    const T = this.app.state.T;
-                    const settings = this.app.state.settings;
-                    const C = this.app.config.SELECTORS.PERMALINK_COPIER;
-
-                    // Use new SVG icons
-                    const iconSvg = isSmart ? this.icons.smart : this.icons.direct;
-                    const title = isSmart ? T.copier_fetchPermalinkSmart : T.copier_fetchPermalinkDirect;
-
-                    return this.app.utils.createStyledElement('div', {
-                        cursor: 'pointer', backgroundColor: 'transparent', color: 'var(--secondary-text)',
-                        lineHeight: '1', marginLeft: '8px', border: '1px solid var(--media-inner-border)',
-                        transition: 'all 0.15s ease-out', userSelect: 'none',
-                        ...(isDialog && { marginRight: '16px' }),
-                        ...(settings.copier_showButtonText
-                            ? { padding: '4px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center' } // Flex layout for Text mode
-                            : { width: '28px', height: '28px', borderRadius: '50%', display: 'flex',
-                              alignItems: 'center', justifyContent: 'center' }
-                        )
-                    }, {
-                        className: C.BUTTON_CLASS,
-                        role: 'button',
-                        tabIndex: 0,
-                        title,
-                        // Wrap SVG with gm-icon-wrapper
-                        innerHTML: settings.copier_showButtonText
-                            ? `<span class="gm-icon-wrapper">${iconSvg}</span><span style="margin-left: 5px; font-weight: 500; font-size: 13px;">${title}</span>`
-                            : `<span class="gm-icon-wrapper">${iconSvg}</span>`,
-                        on: {
-                            mouseover: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'var(--hover-overlay)'; },
-                            mouseout: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'transparent'; }
-                        }
+                cleanupButtons() {
+                    const C = this.app.config.SELECTORS.POST_TOOLS;
+                    document.querySelectorAll(`[data-${C.PROCESSED_MARKER}]`).forEach(el => {
+                        el.removeAttribute(`data-${C.PROCESSED_MARKER}`);
+                        el.querySelectorAll(`.gm-tools-wrapper`).forEach(wrapper => wrapper.remove());
                     });
                 },
-
                 scanNodeForPosts(node) {
                     if (node.nodeType !== Node.ELEMENT_NODE) return;
-
                     const C_GLOBAL = this.app.config.SELECTORS.GLOBAL;
-                    const C_COPIER = this.app.config.SELECTORS.PERMALINK_COPIER;
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
                     const SCAN_TARGETS = `${C_GLOBAL.POST_CONTAINER}, ${C_GLOBAL.DIALOG}`;
-
                     const targets = node.matches(SCAN_TARGETS) ? [node] : [];
                     targets.push(...node.querySelectorAll(SCAN_TARGETS));
 
                     new Set(targets).forEach(target => {
-                        if (target.hasAttribute(`data-${C_COPIER.PROCESSED_MARKER}`)) return;
-
+                        if (target.hasAttribute(`data-${C_TOOLS.PROCESSED_MARKER}`)) return;
                         if (target.matches(C_GLOBAL.POST_CONTAINER) && !target.parentElement.closest(C_GLOBAL.POST_CONTAINER)) {
-                            const headerEl = target.querySelector(C_COPIER.FEED_POST_HEADER);
+                            const headerEl = target.querySelector(C_TOOLS.FEED_POST_HEADER);
                             if (headerEl) this.addButtonsToPost(target, headerEl, false);
                         } else if (target.matches(C_GLOBAL.DIALOG)) {
                             this.processDialogPost(target);
                         }
                     });
                 },
-
                 processDialogPost(dialogEl) {
                     this.isModalOpening = true;
                     let observer;
                     const C_GLOBAL = this.app.config.SELECTORS.GLOBAL;
-                    const C_COPIER = this.app.config.SELECTORS.PERMALINK_COPIER;
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
                     const cleanup = () => {
                         if (observer) observer.disconnect();
                         clearTimeout(timeoutId);
-                        setTimeout(() => {
-                            this.isModalOpening = false;
-                        }, 200);
+                        setTimeout(() => { this.isModalOpening = false; }, 200);
                     };
-                    const timeoutId = setTimeout(() => {
-                        console.warn(`${this.app.config.LOG_PREFIX} [Copier] Dialog observer timed out waiting for post header.`);
-                        cleanup();
-                    }, 3000);
+                    const timeoutId = setTimeout(cleanup, 3000);
                     const findAndProcessHeader = () => {
                         const postEl = dialogEl.querySelector(C_GLOBAL.POST_CONTAINER);
                         if (postEl) {
-                            const headerEl = postEl.querySelector(C_COPIER.DIALOG_POST_HEADER);
+                            const headerEl = postEl.querySelector(C_TOOLS.DIALOG_POST_HEADER);
                             if (headerEl) {
                                 this.addButtonsToPost(postEl, headerEl, true);
                                 cleanup();
@@ -2582,24 +2875,80 @@
                         return false;
                     };
                     if (findAndProcessHeader()) return;
-                    observer = new MutationObserver(() => findAndProcessHeader());
-                    observer.observe(dialogEl, {
-                        childList: true,
-                        subtree: true
+                    observer = new MutationObserver(findAndProcessHeader);
+                    observer.observe(dialogEl, { childList: true, subtree: true });
+                },
+                addButtonsToPost(postEl, headerEl, isDialog = false) {
+                    const settings = this.app.state.settings;
+                    const C = this.app.config.SELECTORS.POST_TOOLS;
+                    
+                    if (!settings.permalinkCopierEnabled && !settings.enableCopyContentButton) return;
+                    if (!headerEl?.parentElement || headerEl.parentElement.querySelector(`.gm-tools-wrapper`)) return;
+
+                    postEl.setAttribute(`data-${C.PROCESSED_MARKER}`, 'true');
+                    const insertionPoint = headerEl.parentElement;
+                    // Ensure flexible layout to accommodate new buttons
+                    Object.assign(insertionPoint.style, { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' });
+
+                    const wrapper = this.app.utils.createStyledElement('div', { display: 'flex', alignItems: 'center' }, { className: 'gm-tools-wrapper' });
+                    if (isDialog) wrapper.style.marginRight = '16px';
+
+                    // 1. Copy Content Button (Left)
+                    if (settings.enableCopyContentButton) {
+                        const copyBtn = this.createButton('copy-content', this.icons.copy, this.app.state.T.copier_copyContent);
+                        wrapper.appendChild(copyBtn);
+                    }
+
+                    // 2. Permalink Button (Right)
+                    if (settings.permalinkCopierEnabled) {
+                        const contentType = this.determinePostContentType(postEl);
+                        const isSmart = settings.copier_useSmartLink && contentType === 'standard';
+                        const icon = isSmart ? this.icons.smart : this.icons.direct;
+                        const title = isSmart ? this.app.state.T.copier_fetchPermalinkSmart : this.app.state.T.copier_fetchPermalinkDirect;
+                        const permalinkBtn = this.createButton('permalink', icon, title, settings.copier_showButtonText);
+                        wrapper.appendChild(permalinkBtn);
+                    }
+
+                    insertionPoint.appendChild(wrapper);
+                },
+                createButton(action, svgIcon, title, showText = false) {
+                    const C = this.app.config.SELECTORS.POST_TOOLS;
+                    
+                    // Direct binding to avoid propagation issues
+                    const clickHandler = (e) => {
+                        if (action === 'permalink') {
+                            this.handlePermalinkClick(e, e.currentTarget);
+                        } else if (action === 'copy-content') {
+                            this.handleCopyContentClick(e, e.currentTarget);
+                        }
+                    };
+
+                    return this.app.utils.createStyledElement('div', {
+                        cursor: 'pointer', backgroundColor: 'transparent', color: 'var(--secondary-text)',
+                        lineHeight: '1', marginLeft: '8px', border: '1px solid var(--media-inner-border)',
+                        transition: 'all 0.15s ease-out', userSelect: 'none',
+                        ...(showText 
+                            ? { padding: '4px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center' } 
+                            : { width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+                        )
+                    }, {
+                        className: C.BUTTON_CLASS,
+                        role: 'button',
+                        tabIndex: 0,
+                        title: title,
+                        'data-action': action,
+                        innerHTML: showText
+                            ? `<span class="gm-icon-wrapper">${svgIcon}</span><span style="margin-left: 5px; font-weight: 500; font-size: 13px;">${title}</span>`
+                            : `<span class="gm-icon-wrapper">${svgIcon}</span>`,
+                        on: {
+                            click: clickHandler,
+                            mouseover: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'var(--hover-overlay)'; },
+                            mouseout: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'transparent'; }
+                        }
                     });
                 },
-                reEvaluateAllButtons() {
-                    if (!this.app.state.settings.permalinkCopierEnabled) return;
-                    this.cleanupButtons();
-                    this.scanNodeForPosts(document.body);
-                },
-                cleanupButtons() {
-                    const C = this.app.config.SELECTORS.PERMALINK_COPIER;
-                    document.querySelectorAll(`[data-${C.PROCESSED_MARKER}]`).forEach(el => {
-                        el.removeAttribute(`data-${C.PROCESSED_MARKER}`);
-                        el.querySelectorAll(`.${C.BUTTON_CLASS}`).forEach(btn => btn.remove());
-                    });
-                },
+
+                // --- Legacy Logic: Determine URL Type ---
                 determinePostContentType(postEl) {
                     if (!postEl) return 'unknown';
                     const timestampUrl = this.getPermalinkFromTimestamp(postEl);
@@ -2616,9 +2965,7 @@
                         if (pathname.includes('/videos/') || pathname.includes('/watch/')) return 'video';
                         if (pathname.includes('/events/')) return 'event';
                         return 'standard';
-                    } catch (e) {
-                        return 'standard';
-                    }
+                    } catch (e) { return 'standard'; }
                 },
                 findTimestampLink(postEl) {
                     if (!postEl) return null;
@@ -2657,9 +3004,7 @@
                             return basePath.replace(/\/$/, '') + `/posts/${permalinkId}/`;
                         }
                         return basePath;
-                    } catch (e) {
-                        return null;
-                    }
+                    } catch (e) { return null; }
                 },
                 getAnyPostUrl(postEl) {
                     if (!postEl) return null;
@@ -2673,38 +3018,51 @@
                     return null;
                 },
                 getSourceUrlForWorker(postEl) { return this.getPermalinkFromTimestamp(postEl) || this.getAnyPostUrl(postEl); },
-                startObserver() { this.observer = new MutationObserver(mutations => mutations.forEach(m => m.addedNodes.forEach(n => this.scanNodeForPosts(n))) ); this.scanNodeForPosts(document.body); this.observer.observe(document.body, { childList: true, subtree: true }); }
-            }
+                startObserver() { this.observer = new MutationObserver(mutations => mutations.forEach(m => m.addedNodes.forEach(n => this.scanNodeForPosts(n))) ); this.scanNodeForPosts(document.body); this.observer.observe(document.body, { childList: true, subtree: true }); },
+                fetchPermalinkInBackground(postEl) {
+                    return new Promise((resolve) => {
+                        const sourceUrl = this.getSourceUrlForWorker(postEl);
+                        if (!sourceUrl) { return resolve({ url: null, method: 'worker_no_source_url' }); }
+                        const taskId = `fpc_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+                        const workerUrl = new URL(sourceUrl);
+                        workerUrl.searchParams.set(this.app.config.WORKER_PARAM, taskId);
+                        let listenerId;
+                        const timeoutId = setTimeout(() => {
+                            if (listenerId) GM_removeValueChangeListener(listenerId);
+                            resolve({ url: null, method: 'worker_timeout' });
+                        }, 8000);
+                        listenerId = GM_addValueChangeListener(taskId, (name, oldVal, newVal, remote) => {
+                            if (remote && typeof newVal.permalink !== 'undefined') {
+                                clearTimeout(timeoutId);
+                                GM_removeValueChangeListener(listenerId);
+                                GM_setValue(taskId, { resolved: true }); 
+                                resolve({ url: newVal.permalink, method: "worker_" + newVal.method });
+                            }
+                        });
+                        GM_openInTab(workerUrl.href, { active: false, insert: true, setParent: true });
+                    });
+                },
+                getPermalinkDirectlyFromElement(postEl) {
+                    const dirtyUrl = this.getSourceUrlForWorker(postEl);
+                    if (!dirtyUrl) return { url: null, method: 'direct_no_url' };
+                    try {
+                        const urlObj = new URL(dirtyUrl);
+                        urlObj.search = ''; 
+                        const cleanUrl = urlObj.href.replace(/\/$/, '');
+                        return { url: cleanUrl, method: 'direct_cleaned' };
+                    } catch (e) { return { url: null, method: 'direct_parse_error' }; }
+                },
+            },
         },
 
         async handleWorkerTask() {
-            /* 
-               [Dev Note] Additional ID extraction paths for future reference:
-               - Post/Video Owner: "content_owner_id_new":"..."
-               - Target Page: "subscription_target_id":"..."
-               - Actor ID (Props): "props":{"actorID":"..."}
-               - Container ID: "container_id":"..."
-               - Selected ID: "selectedID":"..."
-               - User Object A: "user":{"profile_type_name_for_content":"PROFILE","id":"..."}
-               - User Object B: "result":{"data":{"user":{"id":"..."}
-               - Profile Owner: "profile_owner":{"id":"..."}
-               - Profile ID Var: "PROFILE","id":"..."
-               - Owning Profile: "owning_profile_id":"..."
-               - Page Insights: "page_insights"
-               - Actors (abbr): "actrs"
-               - Message Box: "message_box_id"
-               - Media Specific: "video_id", "photo_id"
-            */
             const urlParams = new URLSearchParams(window.location.search);
             const taskId = urlParams.get(this.config.WORKER_PARAM);
             if (!taskId) return;
-
-            console.log(`${this.config.LOG_PREFIX} [Worker] Task ${taskId} started.`);
             document.body.style.display = 'none';
-
             const settings = {};
             this.modules.settingsManager.definitions
-                .filter(def => def.group === 'permalink')
+                .filter(def => def.group === 'tools')
                 .forEach(def => settings[def.key] = GM_getValue(def.key, def.defaultValue));
             const extractId = url => url ? (url.match(/(?:posts|videos|reel|v|story_fbid|multi_permalinks)(?:[=/].*?)(\d{15,})/)?.[1] || null) : null;
             const extractUser = url => url ? (url.match(/facebook\.com\/([a-zA-Z0-9.]+)\/(?:posts|videos|reels)\//)?.[1] || null) : null;
@@ -2723,7 +3081,6 @@
             const getFromBody = () => { for (const script of document.querySelectorAll('script[type="application/json"]')) try { if (!script.textContent.includes('debug_info') && !script.textContent.includes('share_fbid')) continue; const d = JSON.parse(script.textContent); const dbg = findNestedValue(d, 'debug_info'); if (dbg) { const ids = atob(dbg).match(/(\d+)/g); if (ids?.length >= 2) return { profileId: ids[0], postId: ids[1], method: 'body_debug' }; } const fbid = findNestedValue(d, 'share_fbid'); if (fbid) return { postId: fbid, method: 'body_fbid' }; } catch (e) {} return null; };
             const collectInfo = () => [getFromRelay(), getFromHead(), getFromBody()].reduce((acc, info) => ({ ...info, ...acc }), {});
             const determinePermalink = () => { const info = collectInfo(); return info.postId ? { url: formatPermalink(info), method: info.method || 'unknown' } : { url: null }; };
-
             const findWithRetry = async (timeout = 5000) => {
                 const start = Date.now();
                 while (Date.now() - start < timeout) {
@@ -2733,7 +3090,6 @@
                 }
                 return { url: null, method: 'worker_timeout' };
             };
-
             let listenerId;
             const fallbackUrl = window.location.href.split('?')[0];
             try {
@@ -2743,7 +3099,6 @@
                 console.log(`${this.config.LOG_PREFIX} [Worker] Task ${taskId} completed. Method: ${method}, URL: ${permalink}`);
                 GM_setValue(taskId, { permalink, method });
             } catch (error) {
-                console.error(`${this.config.LOG_PREFIX} [Worker] Task ${taskId} failed:`, error);
                 GM_setValue(taskId, { permalink: fallbackUrl, method: 'error_fallback' });
             } finally {
                 const closeTimeout = setTimeout(() => { if (listenerId) GM_removeValueChangeListener(listenerId); window.close(); }, 5000);
@@ -2770,25 +3125,12 @@
 
                     if (typeof module.init === 'function' && !isPreloaded) {
                         try {
-                            if (moduleName === 'permalinkCopier' && !this.state.settings.permalinkCopierEnabled) {
-                                console.log(`${this.config.LOG_PREFIX} [Copier] Module is disabled, skipping initialization.`);
-                                continue;
-                            }
-                             if (moduleName === 'floatingNavigator' && !this.state.settings.floatingNavEnabled) {
-                                continue;
-                            }
-                            if (moduleName === 'errorRecovery' && !this.state.settings.errorRecoveryEnabled) {
-                                continue;
-                            }
-                             if (moduleName === 'transparencyActions' && !this.state.settings.transparencyButtonsEnabled) {
-                                continue;
-                            }
-                             if (moduleName === 'idRevealer' && !this.state.settings.idRevealerEnabled) {
-                                continue;
-                            }
-                             if (moduleName === 'contentExpander' && !this.state.settings.expandContentEnabled) {
-                                continue;
-                            }
+                            if (moduleName === 'floatingNavigator' && !this.state.settings.floatingNavEnabled) continue;
+                            if (moduleName === 'errorRecovery' && !this.state.settings.errorRecoveryEnabled) continue;
+                            if (moduleName === 'transparencyActions' && !this.state.settings.transparencyButtonsEnabled) continue;
+                            if (moduleName === 'idRevealer' && !this.state.settings.idRevealerEnabled) continue;
+                            if (moduleName === 'contentExpander' && !this.state.settings.expandContentEnabled) continue;
+                            // postHeaderTools handles its own checks inside
                             module.init(this);
                         } catch (error) {
                             console.error(`${this.config.LOG_PREFIX} Failed to initialize module '${moduleName}':`, error);

@@ -3,7 +3,7 @@
 // @name:zh-CN   Fab Helper
 // @name:en      Fab Helper
 // @namespace    https://www.fab.com/
-// @version      3.5.1-20260106032624
+// @version      3.5.1-20260112115354
 // @description  Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新
 // @description:zh-CN  Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新
 // @description:en  Fab Helper Optimized - Reduced API requests, improved performance, enhanced stability, fixed rate limit refresh
@@ -197,6 +197,7 @@
     setting_auto_add_scroll: "Auto add tasks on infinite scroll",
     setting_remember_position: "Remember waterfall browsing position",
     setting_auto_resume_429: "Auto resume after 429 errors",
+    setting_hide_discounted: "Hide discounted paid items",
     setting_debug_tooltip: "Enable detailed logging for troubleshooting",
     // 状态文本
     status_enabled: "enabled",
@@ -244,6 +245,9 @@
     log_sort_changed_position_cleared: "Cleared saved position due to sort method change",
     log_sort_check_error: "Error checking URL sort parameter: {0}",
     log_position_cleared: "Cleared saved browsing position.",
+    clear_position_tooltip: "Reset position and refresh",
+    confirm_reset_position: "Are you sure you want to clear the saved browsing position and refresh the page?",
+    no_position_to_reset: "No saved browsing position.",
     log_sort_ascending: "Ascending",
     log_sort_descending: "Descending",
     // XHR/Fetch 限速检测
@@ -500,6 +504,7 @@
     setting_auto_add_scroll: "\u65E0\u9650\u6EDA\u52A8\u65F6\u81EA\u52A8\u6DFB\u52A0\u4EFB\u52A1",
     setting_remember_position: "\u8BB0\u4F4F\u7011\u5E03\u6D41\u6D4F\u89C8\u4F4D\u7F6E",
     setting_auto_resume_429: "429\u540E\u81EA\u52A8\u6062\u590D\u5E76\u7EE7\u7EED",
+    setting_hide_discounted: "\u9690\u85CF\u6253\u6298\u7684\u4ED8\u8D39\u5546\u54C1",
     setting_debug_tooltip: "\u542F\u7528\u8BE6\u7EC6\u65E5\u5FD7\u8BB0\u5F55\uFF0C\u7528\u4E8E\u6392\u67E5\u95EE\u9898",
     // 状态文本
     status_enabled: "\u5F00\u542F",
@@ -547,6 +552,9 @@
     log_sort_changed_position_cleared: "\u7531\u4E8E\u6392\u5E8F\u65B9\u5F0F\u53D8\u66F4\uFF0C\u5DF2\u6E05\u9664\u4FDD\u5B58\u7684\u6D4F\u89C8\u4F4D\u7F6E",
     log_sort_check_error: "\u68C0\u67E5URL\u6392\u5E8F\u53C2\u6570\u65F6\u51FA\u9519: {0}",
     log_position_cleared: "\u5DF2\u6E05\u9664\u5DF2\u4FDD\u5B58\u7684\u6D4F\u89C8\u4F4D\u7F6E\u3002",
+    clear_position_tooltip: "\u91CD\u7F6E\u6D4F\u89C8\u4F4D\u7F6E\u5E76\u5237\u65B0",
+    confirm_reset_position: "\u786E\u5B9A\u8981\u6E05\u9664\u5DF2\u4FDD\u5B58\u7684\u6D4F\u89C8\u4F4D\u7F6E\u5E76\u5237\u65B0\u9875\u9762\u5417\uFF1F",
+    no_position_to_reset: "\u5F53\u524D\u6CA1\u6709\u4FDD\u5B58\u7684\u6D4F\u89C8\u4F4D\u7F6E\u3002",
     log_sort_ascending: "\u5347\u5E8F",
     log_sort_descending: "\u964D\u5E8F",
     // XHR/Fetch 限速检测
@@ -666,8 +674,10 @@
       // 自动恢复功能设置
       IS_EXECUTING: "fab_is_executing_v1",
       // 执行状态保存
-      AUTO_REFRESH_EMPTY: "fab_auto_refresh_empty_v1"
+      AUTO_REFRESH_EMPTY: "fab_auto_refresh_empty_v1",
       // 无商品可见时自动刷新
+      HIDE_DISCOUNTED: "fab_hideDiscounted_v8"
+      // 隐藏打折的付费商品
       // 其他键值用于会话或主标签页持久化
     },
     SELECTORS: {
@@ -695,9 +705,11 @@
     ACQUISITION_TEXT_SET: /* @__PURE__ */ new Set(["\u6DFB\u52A0\u5230\u6211\u7684\u5E93", "Add to my library"]),
     // Kept for backward compatibility with recon logic.
     SAVED_TEXT_SET: /* @__PURE__ */ new Set(["\u5DF2\u4FDD\u5B58\u5728\u6211\u7684\u5E93\u4E2D", "Saved in My Library", "\u5728\u6211\u7684\u5E93\u4E2D", "In My Library"]),
-    FREE_TEXT_SET: /* @__PURE__ */ new Set(["\u514D\u8D39", "Free", "\u8D77\u59CB\u4EF7\u683C \u514D\u8D39"]),
+    FREE_TEXT_SET: /* @__PURE__ */ new Set(["\u514D\u8D39", "Free", "\u8D77\u59CB\u4EF7\u683C \u514D\u8D39", "Starting at Free"]),
     // 添加一个实例ID，用于防止多实例运行
-    INSTANCE_ID: "fab_instance_id_" + Math.random().toString(36).substring(2, 15)
+    INSTANCE_ID: "fab_instance_id_" + Math.random().toString(36).substring(2, 15),
+    STATUS_CHECK_INTERVAL: 3e3
+    // Status check interval in ms (throttled to reduce log spam)
   };
 
   // src/state.js
@@ -720,6 +732,8 @@
     // 是否在429后自动恢复
     autoRefreshEmptyPage: true,
     // 新增：无商品可见时自动刷新（默认开启）
+    hideDiscountedPaid: false,
+    // 是否隐藏打折的付费商品
     debugMode: false,
     // 是否启用调试模式
     lang: "zh",
@@ -977,7 +991,16 @@
           match = decoded.match(/p=([^&]+)/);
         }
         if (match && match[1]) {
-          const itemName = decodeURIComponent(match[1].replace(/\+/g, " "));
+          let itemName = decodeURIComponent(match[1].replace(/\+/g, " "));
+          if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(itemName)) {
+            try {
+              const date = new Date(itemName);
+              const dateStr = date.toLocaleDateString();
+              const timeStr = date.toLocaleTimeString([], { hour12: false });
+              itemName = `${dateStr} ${timeStr}`;
+            } catch (e) {
+            }
+          }
           return `${Utils.getText("position_label")}: "${itemName}"`;
         }
         return `${Utils.getText("position_label")}: (Unknown)`;
@@ -1099,34 +1122,34 @@
     }, "diagnoseDetailPage"),
     // 输出诊断报告到日志
     logDiagnosticReport: /* @__PURE__ */ __name((report) => {
-      console.log("=== \u9875\u9762\u72B6\u6001\u8BCA\u65AD\u62A5\u544A ===");
+      console.group("=== Fab Helper \u9875\u9762\u72B6\u6001\u8BCA\u65AD\u62A5\u544A ===");
       console.log(`\u9875\u9762: ${report.url}`);
       console.log(`\u6807\u9898: ${report.pageTitle}`);
-      console.log(`--- \u6309\u94AE\u4FE1\u606F (${report.buttons.length}\u4E2A) ---`);
-      report.buttons.forEach((btn) => {
-        if (btn.isVisible) {
-          console.log(`\u6309\u94AE: "${btn.text}" (\u53EF\u89C1: ${btn.isVisible}, \u7981\u7528: ${btn.isDisabled})`);
-        }
-      });
-      console.log(`--- \u8BB8\u53EF\u9009\u9879 (${report.licenseOptions.length}\u4E2A) ---`);
-      report.licenseOptions.forEach((opt) => {
-        if (opt.isVisible) {
-          console.log(`\u8BB8\u53EF: "${opt.text}" (\u53EF\u89C1: ${opt.isVisible}, \u89D2\u8272: ${opt.role})`);
-        }
-      });
-      console.log(`--- \u4EF7\u683C\u4FE1\u606F ---`);
-      Object.entries(report.priceInfo).forEach(([, price]) => {
-        if (price.isVisible) {
-          console.log(`\u4EF7\u683C: "${price.text}"`);
-        }
-      });
-      console.log(`--- \u62E5\u6709\u72B6\u6001 ---`);
-      Object.entries(report.ownedStatus).forEach(([, status]) => {
-        if (status.isVisible) {
-          console.log(`\u72B6\u6001: "${status.text}"`);
-        }
-      });
-      console.log("=== \u8BCA\u65AD\u62A5\u544A\u7ED3\u675F ===");
+      const visibleButtons = report.buttons.filter((b) => b.isVisible);
+      if (visibleButtons.length > 0) {
+        console.log(`--- \u53EF\u89C1\u6309\u94AE (${visibleButtons.length}) ---`);
+        visibleButtons.forEach((btn) => {
+          console.log(`  [${btn.index}] "${btn.text}" (\u7981\u7528: ${btn.isDisabled}, \u7C7B: ${btn.classes.split(" ").slice(0, 2).join(" ")}...)`);
+        });
+      }
+      const visibleLicenses = report.licenseOptions.filter((l) => l.isVisible);
+      if (visibleLicenses.length > 0) {
+        console.log(`--- \u53EF\u89C1\u8BB8\u53EF\u9009\u9879 (${visibleLicenses.length}) ---`);
+        visibleLicenses.forEach((opt) => {
+          console.log(`  [${opt.index}] "${opt.text}" (\u6807\u7B7E: ${opt.tagName}, \u89D2\u8272: ${opt.role || "\u65E0"})`);
+        });
+      }
+      const visiblePrices = Object.values(report.priceInfo).filter((p) => p.isVisible);
+      if (visiblePrices.length > 0) {
+        console.log(`--- \u4EF7\u683C\u4FE1\u606F (${visiblePrices.length}) ---`);
+        visiblePrices.forEach((p) => console.log(`  \u4EF7\u683C: "${p.text}"`));
+      }
+      const visibleOwned = Object.values(report.ownedStatus).filter((s) => s.isVisible);
+      if (visibleOwned.length > 0) {
+        console.log(`--- \u62E5\u6709\u72B6\u6001 (${visibleOwned.length}) ---`);
+        visibleOwned.forEach((s) => console.log(`  \u72B6\u6001: "${s.text}"`));
+      }
+      console.groupEnd();
     }, "logDiagnosticReport")
   };
 
@@ -1413,6 +1436,7 @@
       State.rememberScrollPosition = await GM_getValue(Config.DB_KEYS.REMEMBER_POS, false);
       State.autoResumeAfter429 = await GM_getValue(Config.DB_KEYS.AUTO_RESUME, false);
       State.autoRefreshEmptyPage = await GM_getValue(Config.DB_KEYS.AUTO_REFRESH_EMPTY, true);
+      State.hideDiscountedPaid = await GM_getValue(Config.DB_KEYS.HIDE_DISCOUNTED, false);
       State.debugMode = await GM_getValue("fab_helper_debug_mode", false);
       State.currentSortOption = await GM_getValue("fab_helper_sort_option", "title_desc");
       State.isExecuting = await GM_getValue(Config.DB_KEYS.IS_EXECUTING, false);
@@ -1437,6 +1461,8 @@
     saveAutoResumePref: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.AUTO_RESUME, State.autoResumeAfter429), "saveAutoResumePref"),
     saveAutoRefreshEmptyPref: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.AUTO_REFRESH_EMPTY, State.autoRefreshEmptyPage), "saveAutoRefreshEmptyPref"),
     // 保存无商品自动刷新设置
+    saveHideDiscountedPref: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.HIDE_DISCOUNTED, State.hideDiscountedPaid), "saveHideDiscountedPref"),
+    // 保存隐藏打折付费设置
     saveExecutingState: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.IS_EXECUTING, State.isExecuting), "saveExecutingState"),
     // Save the execution state
     resetAllData: /* @__PURE__ */ __name(async () => {
@@ -1445,6 +1471,7 @@
         await GM_deleteValue(Config.DB_KEYS.DONE);
         await GM_deleteValue(Config.DB_KEYS.FAILED);
         await GM_deleteValue(Config.DB_KEYS.LAST_CURSOR);
+        await GM_deleteValue(Config.DB_KEYS.HIDE_DISCOUNTED);
         State.db.todo = [];
         State.db.done = [];
         State.db.failed = [];
@@ -1631,7 +1658,7 @@
         }
         Utils.logger("warn", "\u26A0\uFE0F \u5904\u4E8E\u9650\u901F\u72B6\u6001\uFF0C\u4F46\u4E0D\u6EE1\u8DB3\u81EA\u52A8\u5237\u65B0\u6761\u4EF6\uFF0C\u8BF7\u5728\u9700\u8981\u65F6\u624B\u52A8\u5237\u65B0\u9875\u9762\u3002");
       } else if (State.autoRefreshEmptyPage) {
-        const randomDelay = 5e3 + Math.random() * 2e3;
+        const randomDelay = 45e3 + Math.random() * 15e3;
         if (State.autoResumeAfter429) {
           Utils.logger("info", Utils.getText("log_auto_resume_start", randomDelay ? (randomDelay / 1e3).toFixed(1) : "\u672A\u77E5"));
         } else {
@@ -1654,13 +1681,22 @@
       if (State.appStatus !== "RATE_LIMITED") {
         return;
       }
+      if (State.rateLimitStartTime) {
+        const timeSinceRateLimit = Date.now() - State.rateLimitStartTime;
+        if (timeSinceRateLimit < 4e4) {
+          Utils.logger("debug", `\u5904\u4E8E\u9650\u901F\u5F3A\u5236\u51B7\u9759\u671F (${(timeSinceRateLimit / 1e3).toFixed(1)}s < 40s)\uFF0C\u5FFD\u7565\u6B64\u6B21\u6210\u529F\u8BF7\u6C42\u3002`);
+          return;
+        }
+      }
       if (!hasResults) {
-        Utils.logger("info", `\u8BF7\u6C42\u6210\u529F\u4F46\u6CA1\u6709\u8FD4\u56DE\u6709\u6548\u7ED3\u679C\uFF0C\u4E0D\u8BA1\u5165\u8FDE\u7EED\u6210\u529F\u8BA1\u6570\u3002\u6765\u6E90: ${source}`);
+        Utils.logger("debug", `\u8BF7\u6C42\u6210\u529F\u4F46\u6CA1\u6709\u8FD4\u56DE\u6709\u6548\u7ED3\u679C\uFF0C\u4E0D\u8BA1\u5165\u8FDE\u7EED\u6210\u529F\u8BA1\u6570\u3002\u6765\u6E90: ${source}`);
         State.consecutiveSuccessCount = 0;
         return;
       }
       State.consecutiveSuccessCount++;
-      Utils.logger("info", Utils.getText("rate_limit_success_request", State.consecutiveSuccessCount, State.requiredSuccessCount, source));
+      const isMilestone = State.consecutiveSuccessCount % 3 === 0 || State.consecutiveSuccessCount >= State.requiredSuccessCount;
+      const logMsg = Utils.getText("rate_limit_success_request", State.consecutiveSuccessCount, State.requiredSuccessCount, source);
+      Utils.logger(isMilestone ? "info" : "debug", logMsg);
       if (State.consecutiveSuccessCount >= State.requiredSuccessCount) {
         await this.exitRateLimitedState(Utils.getText("consecutive_success_exit", State.consecutiveSuccessCount, source));
       }
@@ -1771,14 +1807,14 @@
       Utils.logger("debug", "[Cursor] Network interceptors applied.");
       this.setupSortMonitor();
     },
-    // 添加监听URL变化的方法，检测排序方式变更
+    // 添加监听URL变化的方法，检测排序方式和筛选条件变更
     setupSortMonitor() {
-      this.checkCurrentSortFromUrl();
+      this.checkUrlChanges();
       if (typeof MutationObserver !== "undefined") {
         const bodyObserver = new MutationObserver(() => {
           if (window.location.href !== this._lastCheckedUrl) {
             this._lastCheckedUrl = window.location.href;
-            this.checkCurrentSortFromUrl();
+            this.checkUrlChanges();
             Utils.detectLanguage();
           }
         });
@@ -1789,48 +1825,67 @@
         this._bodyObserver = bodyObserver;
       }
       window.addEventListener("popstate", () => {
-        this.checkCurrentSortFromUrl();
+        this.checkUrlChanges();
         Utils.detectLanguage();
       });
       window.addEventListener("hashchange", () => {
-        this.checkCurrentSortFromUrl();
+        this.checkUrlChanges();
         Utils.detectLanguage();
       });
       this._lastCheckedUrl = window.location.href;
     },
-    // 从URL中检查当前排序方式并更新设置
-    checkCurrentSortFromUrl() {
+    // 检查URL变化（排序、搜索词、分类等）并重置状态
+    checkUrlChanges() {
       try {
         const url = new URL(window.location.href);
-        const sortParam = url.searchParams.get("sort_by");
-        if (!sortParam) return;
-        let matchedOption = null;
-        if (State.sortOptions) {
-          for (const [key, option] of Object.entries(State.sortOptions)) {
-            if (option.value === sortParam) {
-              matchedOption = key;
-              break;
+        const currentSort = url.searchParams.get("sort_by");
+        const currentQuery = url.searchParams.get("query") || url.searchParams.get("q");
+        const currentCategory = url.searchParams.get("category");
+        if (currentSort) {
+          let matchedOption = null;
+          if (State.sortOptions) {
+            for (const [key, option] of Object.entries(State.sortOptions)) {
+              if (option.value === currentSort) {
+                matchedOption = key;
+                break;
+              }
             }
           }
-        }
-        if (matchedOption && matchedOption !== State.currentSortOption) {
-          const previousSort = State.currentSortOption;
-          State.currentSortOption = matchedOption;
-          GM_setValue("fab_helper_sort_option", State.currentSortOption);
-          Utils.logger("debug", Utils.getText(
-            "log_url_sort_changed",
-            State.sortOptions?.[previousSort]?.name || previousSort,
-            State.sortOptions?.[State.currentSortOption]?.name || State.currentSortOption
-          ));
-          State.savedCursor = null;
-          GM_deleteValue(Config.DB_KEYS.LAST_CURSOR);
-          if (State.UI && State.UI.savedPositionDisplay) {
-            State.UI.savedPositionDisplay.textContent = Utils.getText("no_saved_position");
+          if (matchedOption && matchedOption !== State.currentSortOption) {
+            const previousSort = State.currentSortOption;
+            State.currentSortOption = matchedOption;
+            GM_setValue("fab_helper_sort_option", State.currentSortOption);
+            Utils.logger("debug", Utils.getText(
+              "log_url_sort_changed",
+              State.sortOptions?.[previousSort]?.name || previousSort,
+              State.sortOptions?.[State.currentSortOption]?.name || State.currentSortOption
+            ));
+            this.clearSavedPosition("Sort change");
           }
-          Utils.logger("info", Utils.getText("log_sort_changed_position_cleared"));
         }
+        if (this._lastParams) {
+          if (this._lastParams.query !== currentQuery || this._lastParams.category !== currentCategory) {
+            this.clearSavedPosition("Search/Filter change");
+          }
+        }
+        this._lastParams = {
+          query: currentQuery,
+          category: currentCategory,
+          sort: currentSort
+        };
       } catch (e) {
         Utils.logger("warn", Utils.getText("log_sort_check_error", e.message));
+      }
+    },
+    // 辅助方法：清除位置
+    async clearSavedPosition(reason) {
+      if (State.savedCursor) {
+        State.savedCursor = null;
+        await GM_deleteValue(Config.DB_KEYS.LAST_CURSOR);
+        if (State.UI && State.UI.savedPositionDisplay) {
+          State.UI.savedPositionDisplay.textContent = Utils.getText("no_saved_position");
+        }
+        Utils.logger("info", `${Utils.getText("log_sort_changed_position_cleared")} (${reason})`);
       }
     },
     async handleSearchResponse(request) {
@@ -1869,6 +1924,17 @@
         Utils.logger("debug", `[Cursor] ${Utils.getText("cursor_injecting")}: ${originalUrl}`);
         Utils.logger("debug", `[Cursor] ${Utils.getText("cursor_patched_url")}: ${modifiedUrl}`);
         this._patchHasBeenApplied = true;
+        if (State.UI && State.UI.savedPositionDisplay) {
+          const container = State.UI.savedPositionDisplay.parentElement;
+          if (container) {
+            const originalBg = container.style.backgroundColor;
+            container.style.transition = "background-color 0.5s";
+            container.style.backgroundColor = "#d4edda";
+            setTimeout(() => {
+              container.style.backgroundColor = originalBg;
+            }, 5e3);
+          }
+        }
         return modifiedUrl;
       }
       return originalUrl;
@@ -1879,67 +1945,14 @@
         const urlObj = new URL(url, window.location.origin);
         const newCursor = urlObj.searchParams.get("cursor");
         if (newCursor && newCursor !== this._lastSeenCursor) {
-          let isValidPosition = true;
-          let decodedCursor = "";
-          try {
-            decodedCursor = atob(newCursor);
-            const filterKeywords = [
-              "Nude+Tennis+Racket",
-              "Nordic+Beach+Boulder",
-              "Nordic+Beach+Rock"
-            ];
-            if (filterKeywords.some((keyword) => decodedCursor.includes(keyword))) {
-              Utils.logger("info", Utils.getText("log_cursor_skip_known_position", decodedCursor));
-              isValidPosition = false;
-            }
-            if (isValidPosition && this._lastSeenCursor) {
-              try {
-                let newItemName = "";
-                let lastItemName = "";
-                if (decodedCursor.includes("p=")) {
-                  const match = decodedCursor.match(/p=([^&]+)/);
-                  if (match && match[1]) {
-                    newItemName = decodeURIComponent(match[1].replace(/\+/g, " "));
-                  }
-                }
-                const lastDecoded = atob(this._lastSeenCursor);
-                if (lastDecoded.includes("p=")) {
-                  const match = lastDecoded.match(/p=([^&]+)/);
-                  if (match && match[1]) {
-                    lastItemName = decodeURIComponent(match[1].replace(/\+/g, " "));
-                  }
-                }
-                if (newItemName && lastItemName) {
-                  const getFirstWord = /* @__PURE__ */ __name((text) => text.trim().substring(0, 3), "getFirstWord");
-                  const newFirstWord = getFirstWord(newItemName);
-                  const lastFirstWord = getFirstWord(lastItemName);
-                  const sortParam = urlObj.searchParams.get("sort_by") || "";
-                  const isReverseSort = sortParam.startsWith("-");
-                  if (isReverseSort && sortParam.includes("title") && newFirstWord > lastFirstWord || !isReverseSort && sortParam.includes("title") && newFirstWord < lastFirstWord) {
-                    Utils.logger("info", Utils.getText(
-                      "log_cursor_skip_backtrack",
-                      newItemName,
-                      lastItemName,
-                      isReverseSort ? Utils.getText("log_sort_descending") : Utils.getText("log_sort_ascending")
-                    ));
-                    isValidPosition = false;
-                  }
-                }
-              } catch (compareError) {
-              }
-            }
-          } catch (decodeError) {
+          this._lastSeenCursor = newCursor;
+          State.savedCursor = newCursor;
+          GM_setValue(Config.DB_KEYS.LAST_CURSOR, newCursor);
+          if (State.debugMode) {
+            Utils.logger("debug", Utils.getText("debug_save_cursor", newCursor.substring(0, 30) + "..."));
           }
-          if (isValidPosition) {
-            this._lastSeenCursor = newCursor;
-            State.savedCursor = newCursor;
-            GM_setValue(Config.DB_KEYS.LAST_CURSOR, newCursor);
-            if (State.debugMode) {
-              Utils.logger("debug", Utils.getText("debug_save_cursor", newCursor.substring(0, 30) + "..."));
-            }
-            if (State.UI && State.UI.savedPositionDisplay) {
-              State.UI.savedPositionDisplay.textContent = Utils.decodeCursor(newCursor);
-            }
+          if (State.UI && State.UI.savedPositionDisplay) {
+            State.UI.savedPositionDisplay.textContent = Utils.decodeCursor(newCursor);
           }
         }
       } catch (e) {
@@ -2275,20 +2288,33 @@
       const cardText = card.textContent || "";
       const hasFreeKeyword = [...Config.FREE_TEXT_SET].some((freeWord) => cardText.includes(freeWord));
       const has100PercentDiscount = cardText.includes("-100%");
-      const priceMatch = cardText.match(/\$(\d+(?:\.\d{2})?)/g);
-      if (priceMatch) {
-        const hasNonZeroPrice = priceMatch.some((price) => {
-          const numValue = parseFloat(price.replace("$", ""));
+      const priceMatches = cardText.match(/\$\s*(\d+(?:\.\d{2})?)/g);
+      if (priceMatches) {
+        const hasPositivePrice = priceMatches.some((priceStr) => {
+          const numValue = parseFloat(priceStr.replace(/[^0-9.]/g, ""));
           return numValue > 0;
         });
-        if (hasNonZeroPrice && !hasFreeKeyword) return false;
-        if (hasNonZeroPrice && hasFreeKeyword) {
-          if (cardText.includes("\u8D77\u59CB\u4EF7\u683C \u514D\u8D39") || cardText.includes("Starting at Free")) return true;
-          if (cardText.match(/起始价格\s*\$[1-9]/) || cardText.match(/Starting at\s*\$[1-9]/i)) return false;
+        if (hasPositivePrice && !has100PercentDiscount) {
+          return false;
         }
       }
       return hasFreeKeyword || has100PercentDiscount;
     }, "isFreeCard"),
+    // Check if a card is a discounted paid item
+    isDiscountedPaidCard: /* @__PURE__ */ __name((card) => {
+      if (TaskRunner2.isFreeCard(card)) return false;
+      const cardText = card.textContent || "";
+      const hasDiscountTag = /-\d+%/.test(cardText) || cardText.includes("% off") || cardText.includes("% Off");
+      if (!hasDiscountTag) return false;
+      const priceMatches = cardText.match(/\$\s*(\d+(?:\.\d{2})?)/g);
+      if (priceMatches) {
+        return priceMatches.some((priceStr) => {
+          const numValue = parseFloat(priceStr.replace(/[^0-9.]/g, ""));
+          return numValue > 0;
+        });
+      }
+      return false;
+    }, "isDiscountedPaidCard"),
     // Toggle execution state
     toggleExecution: /* @__PURE__ */ __name(() => {
       if (!Utils.checkAuthentication()) return;
@@ -2452,6 +2478,17 @@
         State.isTogglingSetting = false;
       }, 200);
     }, "toggleAutoRefreshEmpty"),
+    toggleHideDiscountedPaid: /* @__PURE__ */ __name(async () => {
+      State.hideDiscountedPaid = !State.hideDiscountedPaid;
+      await Database.saveHideDiscountedPref();
+      TaskRunner2.runHideOrShow();
+      if (State.hideDiscountedPaid) {
+        Utils.logger("info", "\u5DF2\u5F00\u542F\u9690\u85CF\u6253\u6298\u4ED8\u8D39\u5546\u54C1");
+      } else {
+        Utils.logger("info", "\u5DF2\u5173\u95ED\u9690\u85CF\u6253\u6298\u4ED8\u8D39\u5546\u54C1");
+      }
+      if (UI4) UI4.update();
+    }, "toggleHideDiscountedPaid"),
     stop: /* @__PURE__ */ __name(() => {
       if (!State.isExecuting) return;
       State.isExecuting = false;
@@ -2515,7 +2552,7 @@
           const link = card.querySelector(Config.SELECTORS.cardLink);
           if (!link) return false;
           const url = link.href.split("?")[0];
-          return !Database.isDone(url);
+          return !Database.isDone(url) && !Database.isInTodo(url) && TaskRunner2.isFreeCard(card);
         }).map((card) => card.querySelector(Config.SELECTORS.cardLink)?.href.match(/listings\/([a-f0-9-]+)/)?.[1]).filter(Boolean));
         const uidsFromFailedList = new Set(State.db.failed.map((task) => task.uid));
         const allUidsToCheck = Array.from(/* @__PURE__ */ new Set([...uidsFromVisibleCards, ...uidsFromFailedList]));
@@ -2893,13 +2930,24 @@
             } else {
               const allVisibleButtons = [...document.querySelectorAll("button")].filter((btn) => {
                 const rect = btn.getBoundingClientRect();
-                return rect.width > 0 && rect.height > 0;
+                const text = btn.textContent.trim();
+                return rect.width > 0 && rect.height > 0 && text.length > 0;
               });
-              logBuffer.push(`=== \u6309\u94AE\u68C0\u6D4B\u5F00\u59CB (\u5171 ${allVisibleButtons.length} \u4E2A\u53EF\u89C1\u6309\u94AE) ===`);
-              allVisibleButtons.slice(0, 15).forEach((btn, i) => {
-                const text = btn.textContent.trim().substring(0, 60);
-                logBuffer.push(`  \u6309\u94AE${i + 1}: "${text}"`);
+              const criticalKeywords = [...Config.ACQUISITION_TEXT_SET, ...Config.FREE_TEXT_SET, "\u8BB8\u53EF", "License", "Select", "\u9009\u62E9", "Add", "\u6DFB\u52A0", "Library", "\u5E93"];
+              const criticalButtons = allVisibleButtons.filter((btn) => {
+                const text = btn.textContent;
+                return criticalKeywords.some((key) => text.includes(key));
               });
+              logBuffer.push(`=== \u6309\u94AE\u68C0\u6D4B: \u53EF\u89C1=${allVisibleButtons.length}, \u5173\u952E=${criticalButtons.length} ===`);
+              if (criticalButtons.length > 0) {
+                criticalButtons.slice(0, 5).forEach((btn, i) => {
+                  logBuffer.push(`  \u5173\u952E\u6309\u94AE${i + 1}: "${btn.textContent.trim().substring(0, 40)}"`);
+                });
+              } else if (allVisibleButtons.length > 0) {
+                allVisibleButtons.slice(0, 3).forEach((btn, i) => {
+                  logBuffer.push(`  \u6309\u94AE${i + 1}: "${btn.textContent.trim().substring(0, 40)}"`);
+                });
+              }
               const licenseButton = allVisibleButtons.find(
                 (btn) => btn.textContent.includes("\u9009\u62E9\u8BB8\u53EF") || btn.textContent.includes("Select license")
               );
@@ -2958,13 +3006,19 @@
               if (!success) {
                 const freshButtons = [...document.querySelectorAll("button")].filter((btn) => {
                   const rect = btn.getBoundingClientRect();
-                  return rect.width > 0 && rect.height > 0;
+                  const text = btn.textContent.trim();
+                  return rect.width > 0 && rect.height > 0 && text.length > 0;
                 });
-                logBuffer.push(`=== \u91CD\u65B0\u68C0\u6D4B\u6309\u94AE (\u5171 ${freshButtons.length} \u4E2A\u53EF\u89C1\u6309\u94AE) ===`);
-                freshButtons.slice(0, 10).forEach((btn, i) => {
-                  const text = btn.textContent.trim().substring(0, 60);
-                  logBuffer.push(`  \u6309\u94AE${i + 1}: "${text}"`);
+                const freshCritical = freshButtons.filter((btn) => {
+                  const text = btn.textContent;
+                  return criticalKeywords.some((key) => text.includes(key));
                 });
+                logBuffer.push(`=== \u91CD\u65B0\u68C0\u6D4B: \u53EF\u89C1=${freshButtons.length}, \u5173\u952E=${freshCritical.length} ===`);
+                if (freshCritical.length > 0) {
+                  freshCritical.slice(0, 3).forEach((btn, i) => {
+                    logBuffer.push(`  \u5173\u952E\u6309\u94AE${i + 1}: "${btn.textContent.trim().substring(0, 40)}"`);
+                  });
+                }
                 let actionButton = freshButtons.find((btn) => {
                   const text = btn.textContent.toLowerCase();
                   return [...Config.ACQUISITION_TEXT_SET].some(
@@ -3078,7 +3132,8 @@
           return;
         }
         const isFinished = TaskRunner2.isCardFinished(card);
-        if (State.hideSaved && isFinished) {
+        const isDiscountedPaid = State.hideDiscountedPaid && TaskRunner2.isDiscountedPaidCard(card);
+        if (State.hideSaved && isFinished || isDiscountedPaid) {
           cardsToHide.push(card);
           State.hiddenThisPageCount++;
           card.setAttribute("data-fab-processed", "true");
@@ -3119,8 +3174,12 @@
           }, batchDelay);
         }
       }
-      if (State.hideSaved) {
-        const visibleCards = Array.from(cards).filter((card) => !TaskRunner2.isCardFinished(card));
+      if (State.hideSaved || State.hideDiscountedPaid) {
+        const visibleCards = Array.from(cards).filter((card) => {
+          if (State.hideSaved && TaskRunner2.isCardFinished(card)) return false;
+          if (State.hideDiscountedPaid && TaskRunner2.isDiscountedPaidCard(card)) return false;
+          return true;
+        });
         visibleCards.forEach((card) => {
           card.style.display = "";
         });
@@ -3202,10 +3261,13 @@
       TaskRunner2.startExecution();
     }, "ensureTasksAreExecuted"),
     checkVisibleCardsStatus: /* @__PURE__ */ __name(async () => {
+      if (State.isCheckingStatus) {
+        return;
+      }
+      State.isCheckingStatus = true;
       try {
         const visibleCards = [...document.querySelectorAll(Config.SELECTORS.card)];
         if (visibleCards.length === 0) {
-          Utils.logger("info", Utils.getText("log_no_visible_cards"));
           return;
         }
         let hasUnsettledCards = false;
@@ -3220,9 +3282,6 @@
           }
         });
         if (hasUnsettledCards && unsettledCards.length > 0) {
-          Utils.logger("info", Utils.getText("log_waiting_for_cards", unsettledCards.length));
-          await new Promise((resolve) => setTimeout(resolve, 3e3));
-          return TaskRunner2.checkVisibleCardsStatus();
         }
         const allItems = [];
         let confirmedOwned = 0;
@@ -3237,7 +3296,6 @@
           }
         });
         if (allItems.length === 0) {
-          Utils.logger("debug", Utils.getText("debug_no_cards_to_check"));
           return;
         }
         Utils.logger("info", Utils.getText("fab_dom_checking_status", allItems.length));
@@ -3269,6 +3327,8 @@
         if (error.message && error.message.includes("429")) {
           RateLimitManager.enterRateLimitedState("[Fab DOM Refresh] 429\u9519\u8BEF");
         }
+      } finally {
+        State.isCheckingStatus = false;
       }
     }, "checkVisibleCardsStatus"),
     scanAndAddTasks: /* @__PURE__ */ __name(async (cards) => {
@@ -3830,15 +3890,39 @@
       logContainer.append(logHeader, State.UI.logPanel);
       const positionContainer = document.createElement("div");
       positionContainer.className = "fab-helper-position-container";
-      positionContainer.style.cssText = "margin: 8px 0; padding: 6px 8px; background-color: rgba(0,0,0,0.05); border-radius: 4px; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+      positionContainer.style.cssText = "margin: 8px 0; padding: 6px 8px; background-color: rgba(0,0,0,0.05); border-radius: 4px; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center;";
       const positionIcon = document.createElement("span");
       positionIcon.textContent = Utils.getText("position_indicator");
       positionIcon.style.marginRight = "4px";
       const positionInfo = document.createElement("span");
       positionInfo.textContent = Utils.decodeCursor(State.savedCursor);
+      positionInfo.style.cssText = "flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
       State.UI.savedPositionDisplay = positionInfo;
       positionContainer.appendChild(positionIcon);
       positionContainer.appendChild(positionInfo);
+      const clearPositionBtn = document.createElement("button");
+      clearPositionBtn.textContent = "\u{1F504}";
+      clearPositionBtn.title = Utils.getText("clear_position_tooltip");
+      clearPositionBtn.style.cssText = "background: none; border: none; cursor: pointer; margin-left: auto; font-size: 14px; padding: 0 4px; opacity: 0.7; transition: opacity 0.2s;";
+      clearPositionBtn.onmouseover = () => {
+        clearPositionBtn.style.opacity = "1";
+      };
+      clearPositionBtn.onmouseout = () => {
+        clearPositionBtn.style.opacity = "0.7";
+      };
+      clearPositionBtn.onclick = async () => {
+        if (State.savedCursor) {
+          if (confirm(Utils.getText("confirm_reset_position"))) {
+            State.savedCursor = null;
+            await GM_deleteValue(Config.DB_KEYS.LAST_CURSOR);
+            State.UI.savedPositionDisplay.textContent = Utils.getText("no_saved_position");
+            window.location.reload();
+          }
+        } else {
+          Utils.logger("info", Utils.getText("no_position_to_reset"));
+        }
+      };
+      positionContainer.appendChild(clearPositionBtn);
       dashboardContent.append(logContainer, positionContainer, statusBar, State.UI.execBtn, actionButtons);
       container.appendChild(dashboardContent);
       const settingsContent = document.createElement("div");
@@ -3867,6 +3951,8 @@
             TaskRunner3.toggleAutoResume();
           } else if (stateKey === "autoRefreshEmptyPage") {
             TaskRunner3.toggleAutoRefreshEmpty();
+          } else if (stateKey === "hideDiscountedPaid") {
+            TaskRunner3.toggleHideDiscountedPaid();
           }
           e.target.checked = State[stateKey];
         };
@@ -3884,6 +3970,8 @@
       settingsContent.appendChild(autoResumeSetting);
       const autoRefreshEmptySetting = createSettingRow(Utils.getText("setting_auto_refresh"), "autoRefreshEmptyPage");
       settingsContent.appendChild(autoRefreshEmptySetting);
+      const hideDiscountedPaidSetting = createSettingRow(Utils.getText("setting_hide_discounted"), "hideDiscountedPaid");
+      settingsContent.appendChild(hideDiscountedPaidSetting);
       const resetButton = document.createElement("button");
       resetButton.textContent = Utils.getText("clear_all_data");
       resetButton.style.cssText = "width: 100%; margin-top: 15px; background-color: var(--pink); color: white; padding: 10px; border-radius: var(--radius-m); border: none; cursor: pointer;";
@@ -4528,7 +4616,7 @@
         }
         TaskRunner2.runHideOrShow();
       }
-    }, 3e3);
+    }, Config.STATUS_CHECK_INTERVAL);
     setInterval(() => {
       if (State.db.todo.length === 0) return;
       const initialTodoCount = State.db.todo.length;

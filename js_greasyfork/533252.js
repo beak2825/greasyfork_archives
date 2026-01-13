@@ -1,16 +1,18 @@
 // ==UserScript==
-// @name          JustWatch - Search Improvements & Watchlist Hider
-// @description   Improved search efficiency and hides watchlist items
+// @name          JustWatch - Search improvements and watchlist item hider
+// @description   Improved search efficiency and hiding of watchlist items
 // @author        TheRealHawk
 // @license       MIT
 // @namespace     https://greasyfork.org/en/users/18936-therealhawk
 // @match         https://www.justwatch.com/*
-// @version       1.12
+// @version       1.14
 // @require       https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js
 // @grant         GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20Improvements%20%20Watchlist%20Hider.user.js
-// @updateURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20Improvements%20%20Watchlist%20Hider.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20improvements%20and%20watchlist%20item%20hider.user.js
+// @updateURL https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20improvements%20and%20watchlist%20item%20hider.meta.js
 // ==/UserScript==
+
+/* globals $ */
 
 (function() {
     'use strict';

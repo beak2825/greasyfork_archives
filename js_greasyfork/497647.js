@@ -3,7 +3,7 @@
 // @name:ja      X/Twitter きれいなメニューとサイドバー（多言語対応）
 // @name:zh-TW   X/Twitter 乾淨的選單和側邊欄（支持多種語言）
 // @name:zh-CN   X/Twitter 干净的选单和侧边栏（支持多种语言）
-// @version      3.4
+// @version      3.5
 // @description  Hidden Menu,Grok,Premium subscription,Verified Orgs,other,Explore,Notifications,Messages,Communities,Bookmarks,Right Column, Muted Account Notices and Customizable Settings
 // @description:ja    清潔なメニュー、Grok、高度なサブスクリプション、認証済み組織、他の、探索、通知、メッセージ、コミュニティ、ブックマーク、右側カラム、ミュート通知、およびカスタム設定
 // @description:zh-TW 乾淨的 選單、Grok、高級訂閱、已認證組織、其他、探索、通知、訊息、社群、書籤、右側邊欄、靜音通知和可自訂設定
@@ -12,6 +12,7 @@
 // @author       movwei
 // @match        https://x.com/*
 // @match        https://twitter.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=twitter.com
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -37,6 +38,8 @@
         hideCommunities: false,
         hideMutedNotices: false,
         hideRightColumn: false,
+        hideChatButton: false,
+        hideCreatorsStudio: false,
         useLargerCSS: false,
         cssWidth: 680,
         useCustomPadding: false,
@@ -56,6 +59,8 @@
         hideCommunities: GM_getValue('hideCommunities', defaultSettings.hideCommunities),
         hideRightColumn: GM_getValue('hideRightColumn', defaultSettings.hideRightColumn),
         hideMutedNotices: GM_getValue('hideMutedNotices', defaultSettings.hideMutedNotices),
+        hideChatButton: GM_getValue('hideChatButton', defaultSettings.hideChatButton),
+        hideCreatorsStudio: GM_getValue('hideCreatorsStudio', defaultSettings.hideCreatorsStudio),
         useLargerCSS: GM_getValue('useLargerCSS', defaultSettings.useLargerCSS),
         cssWidth: GM_getValue('cssWidth', defaultSettings.cssWidth),
         useCustomPadding: GM_getValue('useCustomPadding', defaultSettings.useCustomPadding),
@@ -77,6 +82,10 @@
             'hideother': 'Hide other',
             'hideMutedNotices': 'Hide Muted Account Notices',
             'hideRightColumn': 'Hide Right Column',
+            'hideChatButton': 'Hide Floating Chat',
+            'supportDeveloper': '❤ Support Developer',
+            'buyMeCoffee': 'Buy me a coffee',
+            'hideCreatorsStudio': 'Hide Creators Studio',
             'useLargerCSS': 'Larger Post Area',
             'cssWidth': 'Custom width',
             'useCustomPadding': 'Right Sidebar Spacing',
@@ -98,6 +107,10 @@
             'hideother': '隱藏 其他',
             'hideMutedNotices': '隱藏 靜音帳戶通知',
             'hideRightColumn': '隱藏 右側邊欄',
+            'hideChatButton': '隱藏懸浮聊天',
+            'supportDeveloper': '❤ 支持開發者',
+            'buyMeCoffee': '點我請杯咖啡',
+            'hideCreatorsStudio': '隱藏 創作者工作室',
             'useLargerCSS': '更大貼文區域',
             'cssWidth': '自訂寬度',
             'useCustomPadding': '右側邊欄間距',
@@ -119,6 +132,10 @@
             'hideother': '隐藏 其他',
             'hideMutedNotices': '隐藏 静音账户通知',
             'hideRightColumn': '隐藏 右侧边栏',
+            'hideChatButton': '隐藏悬浮聊天',
+            'supportDeveloper': '❤ 支持开发者',
+            'buyMeCoffee': '点我请杯咖啡',
+            'hideCreatorsStudio': '隐藏 创作者工作室',
             'useLargerCSS': '更大帖子区域',
             'cssWidth': '自定义宽度',
             'useCustomPadding': '右侧边栏间距',
@@ -140,6 +157,10 @@
             'hideother': '他のを非表示',
             'hideMutedNotices': 'ミュートアカウント通知を非表示',
             'hideRightColumn': '右側カラムを非表示',
+            'hideChatButton': 'フローティングチャットを非表示',
+            'supportDeveloper': '❤ 開発者をサポート',
+            'buyMeCoffee': 'コーヒーをおごってください',
+            'hideCreatorsStudio': 'クリエイタースタジオを非表示',
             'useLargerCSS': 'より大きな投稿エリア',
             'cssWidth': 'カスタム幅',
             'useCustomPadding': '右側サイドバーの間隔',
@@ -207,22 +228,32 @@
                             <span class="toggle-label">${currentLanguage['hideMessages']}</span>
                         </label>
                         <label class="toggle-switch">
+                            <input type="checkbox" id="hideChatButtonCheckbox" ${settings.hideChatButton ? 'checked' : ''}>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">${currentLanguage['hideChatButton']}</span>
+                        </label>
+                        <label class="toggle-switch">
                             <input type="checkbox" id="hideCommunitiesCheckbox" ${settings.hideCommunities ? 'checked' : ''}>
                             <span class="toggle-slider"></span>
                             <span class="toggle-label">${currentLanguage['hideCommunities']}</span>
-                        </label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="hideBookmarksCheckbox" ${settings.hideBookmarks ? 'checked' : ''}>
-                            <span class="toggle-slider"></span>
-                            <span class="toggle-label">${currentLanguage['hideBookmarks']}</span>
                         </label>
                     </div>
 
                     <div class="settings-section">
                         <label class="toggle-switch">
+                            <input type="checkbox" id="hideBookmarksCheckbox" ${settings.hideBookmarks ? 'checked' : ''}>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">${currentLanguage['hideBookmarks']}</span>
+                        </label>
+                        <label class="toggle-switch">
                             <input type="checkbox" id="hideMutedNoticesCheckbox" ${settings.hideMutedNotices ? 'checked' : ''}>
                             <span class="toggle-slider"></span>
                             <span class="toggle-label">${currentLanguage['hideMutedNotices']}</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="hideCreatorsStudioCheckbox" ${settings.hideCreatorsStudio ? 'checked' : ''}>
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-label">${currentLanguage['hideCreatorsStudio']}</span>
                         </label>
                         <label class="toggle-switch">
                             <input type="checkbox" id="hideRightColumnCheckbox" ${settings.hideRightColumn ? 'checked' : ''}>
@@ -264,8 +295,18 @@
                 </div>
 
                 <div class="buttons-container">
-                    <button id="saveSettingsButton" class="panel-button primary-button">${currentLanguage['saveRefresh']}</button>
-                    <button id="closeSettingsButton" class="panel-button secondary-button">${currentLanguage['close']}</button>
+                    <div class="support-banner">
+                        <span class="support-text-inline">${currentLanguage['supportDeveloper']}</span>
+                        <a href="https://ko-fi.com/pocket377" target="_blank" class="support-link-inline">
+                            <span class="support-emoji">☕</span>
+                            <span>${currentLanguage['buyMeCoffee']}</span>
+                            <span class="support-heart">❤</span>
+                        </a>
+                    </div>
+                    <div class="buttons-row">
+                        <button id="saveSettingsButton" class="panel-button primary-button">${currentLanguage['saveRefresh']}</button>
+                        <button id="closeSettingsButton" class="panel-button secondary-button">${currentLanguage['close']}</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -297,6 +338,8 @@
         settings.hideother = document.getElementById('hideotherCheckbox').checked;
         settings.hideRightColumn = document.getElementById('hideRightColumnCheckbox').checked;
         settings.hideMutedNotices = document.getElementById('hideMutedNoticesCheckbox').checked;
+        settings.hideChatButton = document.getElementById('hideChatButtonCheckbox').checked;
+        settings.hideCreatorsStudio = document.getElementById('hideCreatorsStudioCheckbox').checked;
         settings.useLargerCSS = document.getElementById('useLargerCSSCheckbox').checked;
         settings.cssWidth = parseInt(document.getElementById('cssWidthInput').value) || 680;
         settings.useCustomPadding = document.getElementById('useCustomPaddingCheckbox').checked;
@@ -314,6 +357,8 @@
         GM_setValue('hideother', settings.hideother);
         GM_setValue('hideRightColumn', settings.hideRightColumn);
         GM_setValue('hideMutedNotices', settings.hideMutedNotices);
+        GM_setValue('hideChatButton', settings.hideChatButton);
+        GM_setValue('hideCreatorsStudio', settings.hideCreatorsStudio);
         GM_setValue('useLargerCSS', settings.useLargerCSS);
         GM_setValue('cssWidth', settings.cssWidth);
         GM_setValue('useCustomPadding', settings.useCustomPadding);
@@ -448,10 +493,53 @@
 
         .buttons-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             padding: 16px 20px;
-            gap: 10px;
+            gap: 12px;
             border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .support-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .support-text-inline {
+            color: #536471;
+        }
+
+        .support-link-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #1d9bf0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .support-link-inline:hover {
+            color: #1a8cd8;
+            text-decoration: underline;
+        }
+
+        .support-link-inline .support-emoji {
+            font-size: 16px;
+        }
+
+        .support-link-inline .support-heart {
+            font-size: 14px;
+            color: #e91e63;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 10px;
         }
 
         .panel-button {
@@ -536,6 +624,11 @@
 
         .width-input[type=number] {
             -moz-appearance: textfield;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
     `);
 
@@ -651,33 +744,6 @@
         });
         observer.observe(document.body, { childList: true, subtree: true });
 
-        const targetEditImagePathD1 = "M17.084 7.5c0-1.163 0-1.744-.144-2.218-.323-1.065-1.157-1.899-2.222-2.222-.473-.143-1.055-.143-2.218-.143H8.25c-1.867 0-2.8 0-3.513.363-.627.32-1.137.83-1.457 1.457-.363.713-.363 1.646-.363 3.513v4.25c0 1.163 0 1.745.144 2.218.323 1.065 1.156 1.899 2.222 2.222.473.143 1.054.143 2.217.143";
-        const targetEditImagePathD2 = "M2.917 12.5l3.75-3.333 2.917 2.916";
-        const targetEditImagePathD3 = "M17.56 10.894c-.644-.645-1.684-.659-2.346-.032l-3.656 3.463c-.6.568-.968 1.34-1.031 2.164l-.11 1.428 1.479-.114c.793-.061 1.539-.404 2.101-.967l3.564-3.563c.657-.657.657-1.722 0-2.38z";
-
-        const observerEditImage = new MutationObserver(mutations => {
-            mutations.forEach(() => {
-               const svgs = document.querySelectorAll('svg[viewBox="0 0 20 20"].r-4qtqp9.r-yyyyoo.r-1xvli5t.r-dnmrzs.r-bnwqim.r-lrvibr.r-m6rgpd');
-                svgs.forEach(svg => {
-                    const paths = svg.querySelectorAll('path');
-                    let matchCount = 0;
-                    paths.forEach(path => {
-                        const d = path.getAttribute('d');
-                        if (d === targetEditImagePathD1 || d === targetEditImagePathD2 || d === targetEditImagePathD3) {
-                             matchCount++;
-                    }
-                });
-                        if (matchCount >= 3) {
-                        const container = svg.closest('a[href^="/i/imagine"]');
-                        if (container) {
-                             container.remove();
-                        }
-                      }
-                  });
-              });
-          });
-        observerEditImage.observe(document.body, { childList: true, subtree: true });
-
         GM_addStyle(`
             a[href="/i/grok"] { display: none !important; }
             .css-175oi2r.r-1867qdf.r-xnswec.r-13awgt0.r-1ce3o0f.r-1udh08x.r-u8s1d.r-13qz1uu.r-173mn98.r-1e5uvyk.r-ii8lfi.r-40lpo0.r-rs99b7.r-12jitg0 { display: none; }
@@ -730,11 +796,17 @@
         cssRules += 'a[href="/i/bookmarks"] { display: none !important; }';
     }
     if (settings.hideMessages) {
-        cssRules += 'a[href="/messages"] { display: none !important; }';
+        cssRules += 'a[href="/i/chat"] { display: none !important; }';
     }
     if (settings.hideRightColumn) {
         cssRules += '.css-175oi2r.r-yfoy6g.r-18bvks7.r-1867qdf.r-1phboty.r-rs99b7.r-1ifxtd0.r-1udh08x { display: none !important; }';
         cssRules += '.css-175oi2r.r-18bvks7.r-1867qdf.r-1phboty.r-1ifxtd0.r-1udh08x.r-1niwhzg.r-1yadl64 { display: none !important; }';
+    }
+    if (settings.hideChatButton) {
+        cssRules += '.css-175oi2r.r-105ug2t.r-1867qdf.r-xnswec.r-u8s1d { display: none !important; }';
+    }
+    if (settings.hideCreatorsStudio) {
+        cssRules += 'a[href="/i/jf/creators/studio"] { display: none !important; }';
     }
     if (settings.useLargerCSS) {
         cssRules += `div[data-testid="sidebarColumn"] { padding-left:20px; }`;

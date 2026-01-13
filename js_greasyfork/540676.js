@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LD 丑化脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.30
+// @version      1.31
 // @description  替换文字、图片、链接，并隐藏指定元素
 // @author       chengdu
 // @match        https://linux.do/*
@@ -31,7 +31,8 @@
     { oldText: /深海幽域/g,             newText: '深海' },
     { oldText: /直接消息/g,             newText: '聊天' },
     { oldText: /举报/g,                 newText: '检举' },
-    { oldText: /翻墙/g,                 newText: '上网' }
+    { oldText: /翻墙/g,                 newText: '上网' },
+    { oldText: /虫洞广场/g,             newText: '虫洞' },
   ];
 
   /* ---------- 图片替换规则 ---------- */

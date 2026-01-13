@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bonk Jukebox
 // @namespace    https://greasyfork.org/
-// @version      1.1.1
+// @version      1.3
 // @license      MIT
 // @description  Adds /jukebox [link], /pausejukebox, /playjukebox, /volume [0-100] to share music with players on the room.
 // @author       Sires
@@ -18,6 +18,7 @@
 
 function BonkJukeboxInjector(f) {
     if (window.location == window.parent.location) {
+        console.log("Bonk Jukebox: Injector loaded");
         if (document.readyState == "complete") { f(); }
         else { document.addEventListener('readystatechange', function () { setTimeout(f, 1500); }); }
     }
@@ -30,6 +31,7 @@ BonkJukeboxInjector(function () {
     }
     window.bonkJukeboxRunning = true;
 
+    const JUKEBOX_VERSION = "1.3";
     var scope = window;
     var Gwindow = document.getElementById("maingameframe").contentWindow;
     var Gdocument = document.getElementById("maingameframe").contentDocument;
@@ -44,6 +46,8 @@ BonkJukeboxInjector(function () {
     var username = "Player";
     var playerids = {};
     var bonkwss = null;
+    var jukeboxQueryActive = false;
+    var jukeboxQueryResults = [];
 
     console.log("Bonk Jukebox: Initializing...");
 
@@ -93,26 +97,42 @@ BonkJukeboxInjector(function () {
                     var span = Gdocument.createElement("span");
                     span.innerText = "[Jukebox] " + from + " suggests: ";
 
-                    var link = Gdocument.createElement("span");
+                    const link = Gdocument.createElement("span");
                     link.innerText = url;
                     link.style.textDecoration = "underline";
                     link.style.cursor = "pointer";
-                    link.style.color = "#FFFFFF";
+                    link.style.color = "#9933ff";
+
+                    fetch("https://noembed.com/embed?url=" + encodeURIComponent(url))
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.title) link.innerText = data.title;
+                        })
+                        .catch(e => console.error("Bonk Jukebox: Failed to fetch title", e));
 
                     link.onclick = function() {
                         var packet = '42' + JSON.stringify([4, { "type": "video player", "from": username, "url": url, "timestamp": Date.now() + 2000, "to": [-1] }]);
                         if(bonkwss) originalSend.call(bonkwss, packet);
                         changeJukeboxURL(url, Date.now() + 2000);
 
-                        this.style.color = "#00FF00";
                         this.innerText += " (Playing)";
                         this.onclick = null;
                         this.style.cursor = "default";
                         this.style.textDecoration = "none";
                     };
 
+                    var extLink = Gdocument.createElement("span");
+                    extLink.innerText = " (Link)";
+                    extLink.style.fontSize = "0.8em";
+                    extLink.style.cursor = "pointer";
+                    extLink.style.color = "#DA0808";
+                    extLink.onclick = function() {
+                        window.open(url, '_blank');
+                    };
+
                     div.appendChild(span);
                     div.appendChild(link);
+                    div.appendChild(extLink);
                     chat_content.appendChild(div);
                     chat_content.scrollTop = chat_content.scrollHeight;
                 }
@@ -233,11 +253,47 @@ BonkJukeboxInjector(function () {
         jukeboxplayer = embedYouTubeVideo(id);
         jukeboxplayer.setVolume(jukeboxplayervolume);
         jukeboxplayerURL = url;
-        displayInChat("Playing: " + url);
+
+        var ids = ["newbonklobby_chat_content", "ingamechatcontent"];
+        for (var i = 0; i < ids.length; i++) {
+            try {
+                var chat_content = Gdocument.getElementById(ids[i]);
+                if (chat_content) {
+                    var div = Gdocument.createElement("div");
+                    div.style.color = "#DA0808";
+                    div.style.fontWeight = "bold";
+                    div.style.fontFamily = "futurept_b1";
+
+                    var span = Gdocument.createElement("span");
+                    span.innerText = "Now playing: ";
+
+                    const link = Gdocument.createElement("span");
+                    link.innerText = url;
+                    link.style.textDecoration = "underline";
+                    link.style.color = "#9933ff";
+                    link.style.cursor = "pointer";
+                    link.onclick = function() {
+                        window.open(url, '_blank');
+                    };
+
+                    fetch("https://noembed.com/embed?url=" + encodeURIComponent(url))
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.title) link.innerText = data.title;
+                        })
+                        .catch(e => console.error("Bonk Jukebox: Failed to fetch title", e));
+
+                    div.appendChild(span);
+                    div.appendChild(link);
+                    chat_content.appendChild(div);
+                    chat_content.scrollTop = chat_content.scrollHeight;
+                }
+            } catch(e) { console.error("Bonk Jukebox Error (Playing Msg):", e); }
+        }
 
         var effectiveTimestamp = timestamp;
         if (timestamp > Date.now() - 10000 && startTime > 0) {
-             effectiveTimestamp = timestamp - (startTime * 1000);
+            effectiveTimestamp = timestamp - (startTime * 1000);
         }
 
         var seekTime = (Date.now() - effectiveTimestamp) / 1000;
@@ -367,6 +423,15 @@ BonkJukeboxInjector(function () {
                             if (hostid == myid) {
                                 displaySuggestionInChat(payload.from, payload.url);
                             }
+                        } else if (payload.type == "jukebox query") {
+                            var response = '42' + JSON.stringify([4, { "type": "jukebox version", "from": username, "version": JUKEBOX_VERSION }]);
+                            originalSend.call(bonkwss, response);
+                        } else if (payload.type == "jukebox version") {
+                            if (jukeboxQueryActive) {
+                                var ver = payload.version || "Unknown";
+                                var name = payload.from || playerids[senderId] || "Unknown";
+                                jukeboxQueryResults.push(name + " (v" + ver + ")");
+                            }
                         }
                     }
                 }
@@ -413,7 +478,7 @@ BonkJukeboxInjector(function () {
             var input = Gdocument.getElementById(inputId);
             var val = input.value;
 
-            if (val.startsWith("/jukebox ") || val.startsWith("/playjukebox") || val.startsWith("/pausejukebox") || val.startsWith("/resetjukebox") || val.startsWith("/volume ")) {
+            if (val.startsWith("/jukebox ") || val.startsWith("/playjukebox") || val.startsWith("/pausejukebox") || val.startsWith("/resetjukebox") || val.startsWith("/volume ") || val.startsWith("/jukeboxhost") || val.startsWith("/jukeboxwho")) {
 
                 input.value = "";
                 e.preventDefault();
@@ -431,21 +496,36 @@ BonkJukeboxInjector(function () {
                     var hostName = playerids[hostid] || "Unknown";
                     displayInChat("Current Host: " + hostName + " (ID: " + hostid + ")");
                 }
+                else if (val.startsWith("/jukeboxwho")) {
+                    jukeboxQueryActive = true;
+                    jukeboxQueryResults = [];
+                    displayInChat("Querying players for Jukebox...");
 
-                if (bonkwss) {
-                    if (val.startsWith("/jukebox ")) {
-                        var url = val.substring(9).trim();
-                        if (hostid == myid) {
-                            var packet = '42' + JSON.stringify([4, { "type": "video player", "from": username, "url": url, "timestamp": Date.now() + 2000, "to": [-1] }]);
-                            console.log("Jukebox: Sending packet: ", packet);
-                            originalSend.call(bonkwss, packet);
-                            changeJukeboxURL(url, Date.now() + 2000);
-                        } else {
-                            var packet = '42' + JSON.stringify([4, { "type": "jukebox suggestion", "from": username, "url": url }]);
-                            originalSend.call(bonkwss, packet);
-                            displayInChat("Suggestion sent to host.");
-                        }
+                    if (bonkwss) {
+                        var packet = '42' + JSON.stringify([4, { "type": "jukebox query", "from": username }]);
+                        originalSend.call(bonkwss, packet);
                     }
+
+                    setTimeout(function() {
+                        jukeboxQueryActive = false;
+                        var list = ["You (v" + JUKEBOX_VERSION + ")"].concat(jukeboxQueryResults);
+                        displayInChat("Jukebox Users: " + list.join(", "));
+                    }, 3000);
+                }
+
+                if (bonkwss) {                    if (val.startsWith("/jukebox ")) {
+                    var url = val.substring(9).trim();
+                    if (hostid == myid) {
+                        var packet = '42' + JSON.stringify([4, { "type": "video player", "from": username, "url": url, "timestamp": Date.now() + 2000, "to": [-1] }]);
+                        console.log("Jukebox: Sending packet: ", packet);
+                        originalSend.call(bonkwss, packet);
+                        changeJukeboxURL(url, Date.now() + 2000);
+                    } else {
+                        var packet = '42' + JSON.stringify([4, { "type": "jukebox suggestion", "from": username, "url": url }]);
+                        originalSend.call(bonkwss, packet);
+                        displayInChat("Suggestion sent to host.");
+                    }
+                }
                     else if (val.startsWith("/pausejukebox")) {
                         if (jukeboxplayer) jukeboxplayer.pause();
                         originalSend.call(bonkwss, '42' + JSON.stringify([4, { "type": "video player", "from": username, "url": "", "timestamp": Date.now(), "to": [-1] }]));

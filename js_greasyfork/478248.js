@@ -3,7 +3,7 @@
 // @name:ja			Twitterを少し便利に。
 // @name:en			Make Twitter a Little more Useful.
 // @namespace		https://greasyfork.org/ja/users/1023652
-// @version			2.4.0.6
+// @version			2.4.0.7
 // @description			で？みたいな機能の集まりだけど、きっとTwitterを少し便利にしてくれるはず。
 // @description:ja			で？みたいな機能の集まりだけど、きっとTwitterを少し便利にしてくれるはず。
 // @description:en			It's a collection of features like "So what?", but it will surely make Twitter a little more useful.
@@ -78,7 +78,9 @@
 	await loadSettings();
 	let scriptDataStore = {};
 	await loadScriptDataStore();
-	const sessionData = {};
+	const sessionData = {
+		isFirstRun: true,
+	};
 	const commonSelectors = {
 		'tweetField': 'article[data-testid="tweet"]',
 		'retweeted': '[data-testid="socialContext"]',
@@ -636,7 +638,7 @@
 				const match = link.href.match(/[\w]{1,}\.com\/[^/]+\/status\/(\d+)/);
 				if(match){
 					const screenName = link.href.split("/")[3];
-					return { id: match[1], link: link.href, node: tweet, screenName: screenName };
+					return { id: match[1], link: link.href, node: tweet, screenName: screenName, isFirstRun: sessionData.isFirstRun};
 				}
 			}
 		}).filter(Boolean);
@@ -1318,7 +1320,7 @@
 		tweetNodes.forEach(async (tweet)=>{
 			const footer = tweet.node.querySelector('div[id][role="group"]');
 			if(!footer || footer.querySelector('[data-testid="quickShare"]'))return;
-			const caret = tweet.node.querySelector('[data-testid="caret"]').parentNode.parentNode;
+			const caret = tweet.isFirstRun ? await waitElementAndGet({query: '[data-testid="caret"]'}) : tweet.node.querySelector('[data-testid="caret"]')?.parentNode.parentNode;
 			let clonedNode;
 			if(caret){
 				clonedNode = caret.cloneNode(true);
@@ -9821,7 +9823,7 @@ Thank you for your understanding.`,
 		await twitterTextI18n.loadTextData(sessionData.userData.language, scriptSettings.makeTwitterLittleUseful.uiTextType || 'old');
 		window.addEventListener("scroll", update);
 		locationChange(document.getElementById('react-root'));
-		main();
+		main().then(()=>{sessionData.isFirstRun = false;});
 		getPixivLinkCollection();
 		addEventToHomeButton();
 		addEventToScrollSnapSwipeableList();

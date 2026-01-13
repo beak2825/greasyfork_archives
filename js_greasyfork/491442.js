@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stats Xente Script
 // @namespace    http://tampermonkey.net/
-// @version      0.182
+// @version      0.183
 // @description  Stats Xente Script for inject own data on Managerzone site
 // @author       xente
 // @match        https://www.managerzone.com/*
@@ -270,16 +270,12 @@
             });
         }
     }, 1000);
-
-
+    
     function tactisResumeData(){
         tacticsMap.clear();
         let elements0 = document.querySelectorAll('.odd');
-
         let flagCount=true;
-
         let fechaFormateada=filter_initial_date
-
         elements0.forEach(element0 => {
 
             let ddDate=element0.previousElementSibling
@@ -7224,10 +7220,16 @@ self.onmessage = function (e) {
         if(GM_getValue("available_new_version")==="yes"){
             newContent += '<button class="btn-update" id="updateButton"><i class="bi bi-arrow-down-circle-fill" style="font-style:normal;"> Update</i></button>'
         }
-        newContent+="<div style='text-align: center;'><h4>Changes History:</h4>";
-        newContent += '<a href="https://www.managerzone.com/?p=forum&sub=topic&topic_id=13032964&forum_id=10&sport=soccer" target="_blank"><button class="btn-update"><i class="bi bi-eye-fill" style="font-style:normal;"> Details</i></button></a></div>'
+        newContent+="<div style='text-align: center;'><h4>Support the Project:</h4>";
+        //newContent += '<a href="https://www.managerzone.com/?p=forum&sub=topic&topic_id=13032964&forum_id=10&sport=soccer" target="_blank"><button class="btn-update"><i class="bi bi-eye-fill" style="font-style:normal;"> Details</i></button></a></div>'
+        newContent += '<a href="https://www.paypal.com/donate?hosted_button_id=C6JN5W2LHP3Z8" target="_blank">'
+        newContent += '<img src="https://statsxente.com/MZ1/View/Images/paypal_script.png" width="75em" height="75em"/></a>'
+
+
         newContent +="</br>";
-        newContent +='<button class="btn-save" id="saveButton"><i class="bi bi-house-door-fill" style="font-style:normal;">Save</i></button>'
+        newContent += '<a href="https://www.managerzone.com/?p=forum&sub=topic&topic_id=13032964&forum_id=10&sport=soccer" target="_blank"><button class="btn-update"><i class="bi bi-eye-fill" style="font-style:normal;"> Details</i></button></a>'
+
+        newContent +='<button class="btn-save" style="margin-left:10px;" id="saveButton"><i class="bi bi-house-door-fill" style="font-style:normal;">Save</i></button>'
         newContent+='<button id="reloadSelects" class="btn-delete" style="margin-left:10px; width:10em; background-color:#ff9800;"><i class="bi bi-arrow-clockwise" style="font-style:normal;">Reload Selects</i></button>'
 
         newContent+='<button id="deleteButton" class="btn-delete" style="margin-left:10px;"><i class="bi bi-trash-fill" style="font-style:normal;">Reset</i></button>'
@@ -7718,7 +7720,12 @@ self.onmessage = function (e) {
             let x = document.getElementById("snackbar_stx");
             let txt = "<img alt='' src='https://statsxente.com/MZ1/View/Images/main_icon.png' width='25px' height='25px'> <span style='color:#2da8ef; font-size: 17px;'>Stats Xente Script: </span>New version available</br></br>"
             txt+="<button type='button' id='button-snackbar-update'><i class='bi bi-arrow-down-circle-fill' style='font-style:normal;'>&nbsp;UPDATE&nbsp;</i></button>"
-            txt+="&nbsp;<a href='https://www.managerzone.com/?p=forum&sub=topic&topic_id=13032964&forum_id=10&sport=soccer' target='_blank'><button type='button' id='button-snackbar-update'><i class='bi bi-eye-fill' style='font-style:normal;'>&nbsp;DETAILS&nbsp;</i></button></a>"
+            txt+="&nbsp;<a href='https://www.managerzone.com/?p=forum&sub=topic&topic_id=13032964&forum_id=10&sport=soccer' target='_blank'>"
+            txt+="<button type='button' id='button-snackbar-update'><i class='bi bi-eye-fill' style='font-style:normal;'>&nbsp;DETAILS&nbsp;</i></button></a>"
+            txt+="</br></br>"
+            txt += '<a href="https://www.paypal.com/donate?hosted_button_id=C6JN5W2LHP3Z8" target="_blank">'
+            txt += '<img src=" https://statsxente.com/MZ1/View/Images/paypal_script.png" width="45em" height="45em"/></a>'
+
             x.innerHTML = txt;
             x.className = "showSnackBar_stx";
             document.getElementById("button-snackbar-update").addEventListener('click', function () {

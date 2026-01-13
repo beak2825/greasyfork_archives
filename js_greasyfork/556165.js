@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.005
+// @version      1.00.006
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -533,7 +533,7 @@ async function getPricesFromAPI() {
 ]
 ],
 "Boxing Clever": [
-    "Payout: 335K",
+    "Payout: 325K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 2 Gasoline",
@@ -1594,7 +1594,7 @@ async function getPricesFromAPI() {
            ]
 ],
 "Hostile Takeover": [
-    "Payout: 290K",
+    "Payout: 300K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 3 Gasoline",
@@ -2025,7 +2025,8 @@ async function getPricesFromAPI() {
             ]
 ],
 "Medium Rare": [
-    "Payout: 395K",
+    "Might reach 42%",
+    "Payout: 355K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 3 Diesel",
@@ -2160,7 +2161,7 @@ async function getPricesFromAPI() {
         "Payout: 10K",
     "Profit/Nerve: ",
     "Flamethrower: No",
-    "Place: Hydrogen Tank",
+    "Place: 1 Hydrogen Tank",
     "Stoke: ",
     "Dampen: "
 ],
@@ -2168,7 +2169,7 @@ async function getPricesFromAPI() {
          "Payout: 14K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
-    "Place: Hydrogen Tank",
+    "Place: 1 Hydrogen Tank",
     "Stoke: ",
     "Dampen: "
          ]
@@ -2459,7 +2460,7 @@ async function getPricesFromAPI() {
         "Set 'Em Straight": [
     "Payout: 310K",
     "Profit/Nerve: ",
-    "Flametrhower: Yes",
+    "Flamethrower: Yes",
     "Place: 1 Hydrogen Tank",
     "Stoke: 1 Hydrogen Tank",
     "Dampen: "

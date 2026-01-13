@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Old Redirect 🔙
 // @namespace    https://www.reddit.com
-// @version      1.6
+// @version      1.7
 // @description  redirect to old reddit
 // @author       Agreasyforkuser
 // @match        https://*.reddit.com/*
@@ -12,6 +12,7 @@
 // @exclude      https://www.reddit.com/appeal*
 // @exclude      https://www.reddit.com/notifications*
 // @exclude      https://embed.reddit.com/*
+// @exclude      https://www.reddit.com/mail/*
 // @icon         https://www.redditstatic.com/desktop2x/img/favicon/android-icon-192x192.png
 // @license      MIT
 // @run-at       document-start

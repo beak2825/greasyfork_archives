@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube - Force rounded corners + tweaks included
-// @version      2026.01.07
+// @version      2026.01.11
 // @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied, but also includes remaining UI codes from the original RD changes, late-'23 changes and pre-delhi UI changes).
 // @author       Joey_JTS (original author: xX_LegendCraftd_Xx)
 // @license MIT
@@ -678,7 +678,7 @@ font-weight: 700 !important
 #end.style-scope.ytd-masthead .yt-spec-button-shape-next--size-m[aria-label="Creëren"] {
 height: 40px !important;
 border-radius: 50px !important;
-color: var(--yt-spec-icon-active-other) !important;
+color: var(--yt-spec-text-primary) !important;
 background-color: transparent !important
 }
 
@@ -940,37 +940,134 @@ text-align: center !important
 }
 
 /* Left sidebar tweaks (swaps 'Subscriptions' and 'You' sections, along with early 2024 modifications including the reinstated 'Your channel' tab but it only links to liked videos) */
-#sections { display: flex !important; flex-direction: column !important }
-#sections > ytd-guide-section-renderer { order: 0 !important }
-#sections > ytd-guide-section-renderer:nth-of-type(2) { order: 3 !important }
-#sections > ytd-guide-section-renderer:nth-of-type(3) { order: 2 !important }
-#sections > ytd-guide-section-renderer:nth-of-type(4) { order: 4 !important }
-#sections > ytd-guide-section-renderer:nth-of-type(5) { order: 5 !important }
-#sections > ytd-guide-section-renderer:nth-of-type(6) { order: 6 !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="feed/playlists"] { margin-top: 80px !important; margin-bottom: -80px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="playlist?list=WL"] { margin-bottom: 40px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-collapsible-section-entry-renderer > #section-items > ytd-guide-collapsible-entry-renderer { margin-top: -40px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="studio.youtube.com/channel"] { margin-top: -120px !important; margin-bottom: 80px !important }
-ytd-guide-downloads-entry-renderer, ytd-mini-guide-downloads-entry-renderer { display: none !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Playlists"] path, ytd-guide-collapsible-entry-renderer ytd-guide-entry-renderer a[title="Show more"] path { d: path("m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z") !important }
-ytd-guide-entry-renderer[aria-expanded="true"] path { d: path("M18.4 14.6 12 8.3l-6.4 6.3.8.8L12 9.7l5.6 5.7z") !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Playlists"] .title.ytd-guide-entry-renderer { visibility: hidden }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Playlists"] .title.ytd-guide-entry-renderer:after { content: 'Show more'; visibility: visible !important; margin-left: -52px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="feed/history"] { margin-top: 40px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="playlist?list=LL"] { margin-top: -200px !important;  margin-bottom: 160px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Liked videos"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Polubione filmy"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="いいねした動画"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Nagustuhan ang mga video"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vidéos aimées"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos que me gustaron"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos curtidos"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Понравившиеся видео"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Kedvelt videók"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vond video's leuk"] .title.ytd-guide-entry-renderer { visibility: hidden }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Liked videos"] .title.ytd-guide-entry-renderer:after { content: 'Your channel'; visibility: visible !important; margin-left: -78px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Polubione filmy"] .title.ytd-guide-entry-renderer:after { content: 'Twój kanał'; visibility: visible !important; margin-left: -99px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="いいねした動画"] .title.ytd-guide-entry-renderer:after { content: 'あなたのチャンネル'; visibility: visible !important; margin-left: -102px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Nagustuhan ang mga video"] .title.ytd-guide-entry-renderer:after { content: 'Ang iyong channel'; visibility: visible !important; margin-left: -174px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vidéos aimées"] .title.ytd-guide-entry-renderer:after { content: 'Votre chaîne'; visibility: visible !important; margin-left: -95px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos que me gustaron"] .title.ytd-guide-entry-renderer:after { content: 'Tu canal'; visibility: visible !important; margin-left: -156px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos curtidos"] .title.ytd-guide-entry-renderer:after { content: 'Seu canal'; visibility: visible !important; margin-left: -102px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Понравившиеся видео"] .title.ytd-guide-entry-renderer:after { content: 'Ваш канал'; visibility: visible !important; margin-left: -155px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Kedvelt videók"] .title.ytd-guide-entry-renderer:after { content: 'A csatornád'; visibility: visible !important; margin-left: -155px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vond video's leuk"] .title.ytd-guide-entry-renderer:after { content: 'Jouw kanaal'; visibility: visible !important; margin-left: -111px !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="playlist?list=LL"] path { d: path("M3,3v18h18V3H3z M4.99,20c0.39-2.62,2.38-5.1,7.01-5.1s6.62,2.48,7.01,5.1H4.99z M9,10c0-1.65,1.35-3,3-3s3,1.35,3,3 c0,1.65-1.35,3-3,3S9,11.65,9,10z M12.72,13.93C14.58,13.59,16,11.96,16,10c0-2.21-1.79-4-4-4c-2.21,0-4,1.79-4,4 c0,1.96,1.42,3.59,3.28,3.93c-4.42,0.25-6.84,2.8-7.28,6V4h16v15.93C19.56,16.73,17.14,14.18,12.72,13.93z") !important }
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer[active] > a[href*="playlist?list=LL"] path { d: path("M3,3v18h18V3H3z M20,20H4v-0.08c0.44-3.2,2.87-5.74,7.28-5.99C9.42,13.59,8,11.96,8,10c0-2.21,1.79-4,4-4 c2.21,0,4,1.79,4,4c0,1.96-1.42,3.59-3.28,3.93c4.41,0.25,6.84,2.8,7.28,5.99V20z") !important }
+#sections {
+display: flex !important;
+flex-direction: column !important
+}
+#sections > ytd-guide-section-renderer {
+order: 0 !important
+}
+#sections > ytd-guide-section-renderer:nth-of-type(2) {
+order: 3 !important
+}
+#sections > ytd-guide-section-renderer:nth-of-type(3) {
+order: 2 !important
+}
+#sections > ytd-guide-section-renderer:nth-of-type(4) {
+order: 4 !important
+}
+#sections > ytd-guide-section-renderer:nth-of-type(5) {
+order: 5 !important
+}
+#sections > ytd-guide-section-renderer:nth-of-type(6) {
+order: 6 !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="feed/playlists"] {
+margin-top: 80px !important;
+margin-bottom: -80px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="playlist?list=WL"] {
+margin-bottom: 40px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-collapsible-section-entry-renderer > #section-items > ytd-guide-collapsible-entry-renderer {
+margin-top: -40px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="studio.youtube.com/channel"] {
+margin-top: -120px !important;
+margin-bottom: 80px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Playlists"] path, ytd-guide-collapsible-entry-renderer ytd-guide-entry-renderer a[title="Show more"] path {
+d: path("m18 9.28-6.35 6.35-6.37-6.35.72-.71 5.64 5.65 5.65-5.65z") !important
+}
+ytd-guide-entry-renderer[aria-expanded="true"] path {
+d: path("M18.4 14.6 12 8.3l-6.4 6.3.8.8L12 9.7l5.6 5.7z") !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Playlists"] .title.ytd-guide-entry-renderer {
+visibility: hidden
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Playlists"] .title.ytd-guide-entry-renderer:after {
+content: 'Show more';
+visibility: visible !important;
+margin-left: -52px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="feed/history"] {
+margin-top: 40px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="playlist?list=LL"] {
+margin-top: -200px !important;
+margin-bottom: 160px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Liked videos"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Polubione filmy"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="いいねした動画"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Nagustuhan ang mga video"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vidéos aimées"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos que me gustaron"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos curtidos"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Понравившиеся видео"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Kedvelt videók"] .title.ytd-guide-entry-renderer, ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vond video's leuk"] .title.ytd-guide-entry-renderer {
+visibility: hidden
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Liked videos"] .title.ytd-guide-entry-renderer:after {
+content: 'Your channel';
+visibility: visible !important;
+margin-left: -78px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Polubione filmy"] .title.ytd-guide-entry-renderer:after {
+content: 'Twój kanał';
+visibility: visible !important;
+margin-left: -99px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="いいねした動画"] .title.ytd-guide-entry-renderer:after {
+content: 'あなたのチャンネル';
+visibility: visible !important;
+margin-left: -102px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Nagustuhan ang mga video"] .title.ytd-guide-entry-renderer:after {
+content: 'Ang iyong channel';
+visibility: visible !important;
+margin-left: -174px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vidéos aimées"] .title.ytd-guide-entry-renderer:after {
+content: 'Votre chaîne';
+visibility: visible !important;
+margin-left: -95px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos que me gustaron"] .title.ytd-guide-entry-renderer:after {
+content: 'Tu canal';
+visibility: visible !important;
+margin-left: -156px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vídeos curtidos"] .title.ytd-guide-entry-renderer:after {
+content: 'Seu canal';
+visibility: visible !important;
+margin-left: -102px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Понравившиеся видео"] .title.ytd-guide-entry-renderer:after {
+content: 'Ваш канал';
+visibility: visible !important;
+margin-left: -155px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Kedvelt videók"] .title.ytd-guide-entry-renderer:after {
+content: 'A csatornád';
+visibility: visible !important;
+margin-left: -155px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer.style-scope[title="Vond video's leuk"] .title.ytd-guide-entry-renderer:after {
+content: 'Jouw kanaal';
+visibility: visible !important;
+margin-left: -111px !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer > a[href*="playlist?list=LL"] path {
+d: path("M3,3v18h18V3H3z M4.99,20c0.39-2.62,2.38-5.1,7.01-5.1s6.62,2.48,7.01,5.1H4.99z M9,10c0-1.65,1.35-3,3-3s3,1.35,3,3 c0,1.65-1.35,3-3,3S9,11.65,9,10z M12.72,13.93C14.58,13.59,16,11.96,16,10c0-2.21-1.79-4-4-4c-2.21,0-4,1.79-4,4 c0,1.96,1.42,3.59,3.28,3.93c-4.42,0.25-6.84,2.8-7.28,6V4h16v15.93C19.56,16.73,17.14,14.18,12.72,13.93z") !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-entry-renderer[active] > a[href*="playlist?list=LL"] path {
+d: path("M3,3v18h18V3H3z M20,20H4v-0.08c0.44-3.2,2.87-5.74,7.28-5.99C9.42,13.59,8,11.96,8,10c0-2.21,1.79-4,4-4 c2.21,0,4,1.79,4,4c0,1.96-1.42,3.59-3.28,3.93c4.41,0.25,6.84,2.8,7.28,5.99V20z") !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(4) {
+display: none
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-last-of-type(2) {
+display: block !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-last-of-type(1) {
+display: block !important
+}
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(3) ytd-guide-downloads-entry-renderer {
+display: none !important
+}
 
 /* Other fixes (including the 'third' guide item removed to make in place for the Subscriptions tab) */
 #background.ytd-masthead {
@@ -1022,7 +1119,7 @@ margin-top: 8px !important
 }
 
 .ytSearchboxComponentDesktop .ytSearchboxComponentClearButtonIcon {
-color: var(--yt-spec-icon-active-other) !important;
+color: var(--yt-spec-text-primary) !important
 }
 
 .ytSearchboxComponentClearButtonIcon svg path {

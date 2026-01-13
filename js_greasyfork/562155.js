@@ -4,12 +4,12 @@
 // @version      1.0
 // @description  Auto-complete Discord quests with one click
 // @author       manolo_kat
-// @license      GNU GPLv3
+// @license      MIT
 // @match        https://discord.com/*
 // @match        https://*.discord.com/*
 // @grant        none
 // @run-at       document-end
-// @supportURL   https://github.com/Manolo-Kat/discord_quests_script_tampermonkey/issues
+// @supportURL   https://github.com/Manolo-Kat/Discord_Quest_Auto-Complete/issues
 // @downloadURL https://update.greasyfork.org/scripts/562155/Discord%20Quest%20Auto-Complete.user.js
 // @updateURL https://update.greasyfork.org/scripts/562155/Discord%20Quest%20Auto-Complete.meta.js
 // ==/UserScript==

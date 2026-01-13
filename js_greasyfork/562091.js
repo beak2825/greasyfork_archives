@@ -2,11 +2,11 @@
 // @name         Discuz! 论坛助手 (Discuz! Forum Assistant)
 // @name:en      Discuz! Forum Assistant
 // @namespace    http://tampermonkey.net/
-// @version      10.1
+// @version      10.7
 // @description  Discuz! 论坛全能助手：智能抓取模式（Alt+键只抓作者前3页）、全量抓取模式（Ctrl+Alt+键抓所有）；一键提取图片（自动修复文件名/格式/并发下载）；沉浸式阅读。
 // @description:en Discuz! Forum Assistant: Smart scraping (Alt+keys for author's first 3 pages), full scraping (Ctrl+Alt+keys); One-click image download (auto-fix filenames/extensions/concurrent); Immersive reading.
+// @license      GPL-3.0
 // @author       transwarp
-// @license      GNU GPLv3
 // @match        *://*/*thread-*-*-*.html
 // @match        *://*/*forum.php?*mod=viewthread*
 // @icon         https://www.discuz.net/favicon.ico
@@ -26,7 +26,7 @@
         key: 'gm_discuz_assistant_config',
         posKey: 'gm_discuz_assistant_pos',
         isRunning: false,
-        isQuickMode: true, // true=智能精简(前3页), false=全量
+        isQuickMode: true,
         textData: [],
         imgData: [],
         meta: { tid: null, authorid: null, title: null },
@@ -64,7 +64,6 @@
             }
             return null;
         },
-        // 【关键修复】构建URL时，只要有 authorid 且不为0，就强制带上，实现只看该作者
         buildUrl: function(tid, page, authorid) {
             var baseUrl = window.location.origin + '/forum.php?mod=viewthread&tid=' + tid + '&page=' + page;
             if (authorid && authorid !== '0' && authorid !== 0) {
@@ -143,7 +142,7 @@
         }
     };
 
-    // 4. Reader 对象 (前置定义，解决 ReferenceError)
+    // 4. Reader 对象
     var Reader = {
         open: function() {
             var html = this.buildHTML();
@@ -250,7 +249,7 @@
         }
     };
 
-    // 5. 抓取逻辑 (依赖 Reader)
+    // 5. 抓取逻辑
     var Scraper = {
         init: function(mode, isQuick) {
             if (App.isRunning) return;
@@ -335,7 +334,6 @@
                     if (posts.length > 0) App.textData = App.textData.concat(posts);
                 }
 
-                // 智能模式：如果有作者ID，且非0，且已抓3页，停止
                 if (App.isQuickMode && App.meta.authorid && App.meta.authorid !== '0' && page >= 3) {
                      Scraper.finish();
                      return;
@@ -385,9 +383,6 @@
             var images = [];
             var postDivs = doc.querySelectorAll('div[id^="post_"]');
             postDivs.forEach(function(div) {
-                var contentDiv = div.querySelector('.t_f') || div.querySelector('.pcb') || div.querySelector('.message');
-                if (!contentDiv) return;
-
                 var floor = "?";
                 var floorEm = div.querySelector('.pi strong a') || div.querySelector('.pi a em');
                 if (floorEm) {
@@ -400,12 +395,31 @@
                 var authi = div.querySelector('.authi em');
                 if (authi) { date = Utils.extractDate(authi.innerText); }
 
-                var imgs = contentDiv.querySelectorAll('img');
+                var imgs = div.querySelectorAll('.t_f img, .savephotop img, .mbn img, img[zoomfile], img[file]');
+                
                 imgs.forEach(function(img) {
                     var src = img.getAttribute('zoomfile') || img.getAttribute('file') || img.src;
                     if (!src) return;
                     if (src.indexOf('http') !== 0) { src = window.location.origin + '/' + src; }
-                    if (src.indexOf('smilies/') !== -1 || src.indexOf('common/back.gif') !== -1 || src.indexOf('common/none.gif') !== -1 || src.indexOf('static/image') !== -1) return;
+                    
+                    // 【关键修复】终极过滤规则：从源头过滤 uid/avatar 等特征
+                    var lowSrc = src.toLowerCase();
+                    if (lowSrc.includes('smilies/') || 
+                        lowSrc.includes('common/back.gif') || 
+                        lowSrc.includes('common/none.gif') || 
+                        lowSrc.includes('static/image') ||
+                        lowSrc.includes('avatar.php') ||  
+                        lowSrc.includes('uc_server') ||
+                        lowSrc.includes('uid=') ||     // 过滤带 uid 参数的链接 (通常是头像)
+                        lowSrc.includes('/avatar/') || 
+                        lowSrc.includes('sign') ||     
+                        lowSrc.includes('icon') ||     
+                        lowSrc.includes('btn') ||
+                        lowSrc.includes('nophoto'))    
+                    {
+                        return;
+                    }
+
                     if (img.className && img.className.indexOf('vm') !== -1) return;
                     
                     images.push({ url: src, floor: floor, date: date });
@@ -441,6 +455,7 @@
             var queue = uniqueItems.map((item, index) => ({ item, index }));
             var total = queue.length;
             var finished = 0;
+            var successCount = 0; // 统计实际成功数
 
             var checkFinish = function() {
                 activeDownloads--;
@@ -448,11 +463,13 @@
                 UI.updateProgress(finished, total);
                 
                 if (finished === total) {
-                    UI.updateStatus('完成!', '#27ae60');
+                    var skipped = total - successCount;
+                    var msg = '完成! (存' + successCount + (skipped > 0 ? '/跳' + skipped : '') + ')';
+                    UI.updateStatus(msg, '#27ae60');
                     setTimeout(function() {
                         UI.hideProgress();
                         UI.updateStatus('就绪', '#27ae60');
-                    }, 2000);
+                    }, 3000);
                 } else {
                     processQueue();
                 }
@@ -465,33 +482,65 @@
                 var nameParts = [String(index + 1).padStart(3, '0')];
                 if (item.floor && item.floor !== '?') nameParts.push(item.floor + '楼');
                 if (item.date) nameParts.push(item.date);
-                nameParts.push(Math.random().toString(36).substr(2, 4));
                 var baseName = nameParts.join('_');
 
                 var attemptDownload = function(retryCount) {
                     var hasGMXHR = (typeof GM_xmlhttpRequest !== 'undefined');
-                    if (hasGMXHR && (item.url.indexOf('forum.php') !== -1 || item.url.indexOf('mod=attachment') !== -1)) {
+                    
+                    if (hasGMXHR) {
                         GM_xmlhttpRequest({
                             method: "GET",
                             url: item.url,
                             responseType: 'blob',
-                            onload: function(response) {
-                                if (response.status !== 200) { handleError(); return; }
-                                var blob = response.response;
-                                var newBlob = new Blob([blob], { type: "image/jpeg" });
-                                var blobUrl = URL.createObjectURL(newBlob);
-                                var filename = folderName + '/' + baseName + '.jpg';
-                                GM_download({
-                                    url: blobUrl,
-                                    name: filename,
-                                    saveAs: false,
-                                    onerror: handleError,
-                                    onload: function() { setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 1000); checkFinish(); }
-                                });
+                            headers: {
+                                'Referer': window.location.href, // 伪装来源，防盗链
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' // 明确请求图片
                             },
-                            onerror: handleError
+                            onload: function(response) {
+                                // 1. 状态码检查
+                                if (response.status !== 200) { 
+                                    console.warn('⚠️ 状态码非200 (' + response.status + '):', item.url);
+                                    checkFinish(); // 标记完成但跳过
+                                    return; 
+                                }
+
+                                // 2. Content-Type 检查 (过滤 HTML/JSON 响应)
+                                var responseHeaders = response.responseHeaders || '';
+                                var typeMatch = responseHeaders.match(/content-type:\s*(.*?)(;|\r|\n|$)/i);
+                                var mimeType = typeMatch ? typeMatch[1].toLowerCase() : '';
+                                if (mimeType.includes('text/html') || mimeType.includes('application/json')) {
+                                    console.warn('🚫 忽略非图片响应 (' + mimeType + '):', item.url);
+                                    checkFinish();
+                                    return;
+                                }
+
+                                var blob = response.response;
+                                
+                                // 3. 内容嗅探 (防止 Content-Type 欺骗或缺失)
+                                if (blob.size < 10240) { // < 10KB 可能是错误页
+                                    var reader = new FileReader();
+                                    reader.onload = function() {
+                                        var text = reader.result;
+                                        // 检查是否包含 HTML 标签或错误关键词
+                                        if (text && (text.includes('<!DOCTYPE html>') || text.includes('<html>') || text.includes('Authorization') || text.includes('401') || text.includes('403') || text.includes('404'))) {
+                                            console.warn('🚫 忽略 HTML/401 错误页内容:', item.url);
+                                            checkFinish(); 
+                                        } else {
+                                            saveBlob(blob);
+                                        }
+                                    };
+                                    reader.onerror = function() { saveBlob(blob); };
+                                    reader.readAsText(blob);
+                                    return;
+                                }
+
+                                saveBlob(blob);
+                            },
+                            onerror: function(e) { handleError('Network Error'); }
                         });
                     } else {
+                        // 无 GM_xhr 权限时的回退
                         var ext = Utils.detectImageExtension(item.url);
                         if (!['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'].includes(ext.toLowerCase())) { ext = '.jpg'; }
                         var filename = folderName + '/' + baseName + ext;
@@ -499,8 +548,25 @@
                             url: item.url,
                             name: filename,
                             saveAs: false,
-                            onerror: handleError,
-                            onload: checkFinish
+                            onerror: function(e) { handleError('Direct DL Failed'); },
+                            onload: function() { successCount++; checkFinish(); }
+                        });
+                    }
+
+                    function saveBlob(blob) {
+                        var newBlob = new Blob([blob], { type: "image/jpeg" });
+                        var blobUrl = URL.createObjectURL(newBlob);
+                        var filename = folderName + '/' + baseName + '.jpg';
+                        GM_download({
+                            url: blobUrl,
+                            name: filename,
+                            saveAs: false,
+                            onerror: function(e) { handleError('Blob Save Failed'); },
+                            onload: function() { 
+                                setTimeout(function() { URL.revokeObjectURL(blobUrl); }, 1000); 
+                                successCount++; // 只有真正保存了才计数
+                                checkFinish(); 
+                            }
                         });
                     }
 
@@ -508,10 +574,10 @@
                         if (retryCount > 0) {
                             var delays = [0, 1000, 3000, 5000];
                             var delay = delays[retryCount] || 1000;
-                            console.warn('下载失败，' + delay + 'ms 后重试: ' + item.url);
+                            console.warn('⚠️ 下载重试 (' + err + ') ' + delay + 'ms: ' + item.url);
                             setTimeout(function() { attemptDownload(retryCount - 1); }, delay);
                         } else {
-                            console.error('下载彻底失败: ' + item.url);
+                            console.error('❌ 下载失败: ' + item.url);
                             checkFinish();
                         }
                     }

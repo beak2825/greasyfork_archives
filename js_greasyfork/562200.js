@@ -9,7 +9,7 @@
 // @author       SedapnyaTidur
 // @version      1.0.0
 // @license      MIT
-// @revision     1/11/2026, 6:36:34 PM
+// @revision     1/12/2026, 6:16:10 PM
 // @description  Hides virtual keyboard after pressing Enter key or clicking search button in search input field.
 // @downloadURL https://update.greasyfork.org/scripts/562200/%5BLemmy%5D%20Hides%20Virtual%20Keyboard%20On%20Search.user.js
 // @updateURL https://update.greasyfork.org/scripts/562200/%5BLemmy%5D%20Hides%20Virtual%20Keyboard%20On%20Search.meta.js
@@ -20,37 +20,24 @@
 
   if (!document.head.querySelector(':scope > meta[name="Description"][content="Lemmy"]')) return;
 
-  let searchInterval = 0, searchTimeout = 0;
+  let abortController, observer, searchInterval = 0, searchTimeout = 0;
 
   const configs = [{
-    path: '/search',
+    path: /^\/search/,
     input: ':scope > div#root > div > main > div > div > form > div:nth-child(1) > input[type="text"]',
     button: ':scope > div#root > div > main > div > div > form > div:nth-child(2) > button'
   }, {
-    path: '/communities',
+    path: /^\/communities/,
     input: ':scope > div#root > div > main > div > div > div > div:nth-of-type(1) > div:last-child > form > div:nth-child(1) > input[type="text"]',
     button: ':scope > div#root > div > main > div > div > div > div:nth-of-type(1) > div:last-child > form > div:nth-child(2) > button'
   }, {
-    path: '/c/',
+    path: /^\/(?:c|comment|post)\//,
     input: ':scope > div#root > div > main > div > div > div > aside > div > aside > div > section:nth-child(1) > div > form > input',
     button: ':scope > div#root > div > main > div > div > div > aside > div > aside > div > section:nth-child(1) > div > form > button',
   }];
 
-  const unfocus = function() {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'text');
-    input.style.height = '0px';
-    input.style.opacity = 0;
-    input.style.outline = 'none';
-    document.body.appendChild(input);
-
-    window.setTimeout(() => {
-      input.focus();
-      window.setTimeout(() => {
-        input.style.display = 'none';
-        input.remove();
-      }, 0);
-    }, 0);
+  const hideKeyboard = function() {
+    window.setTimeout(() => document.activeElement?.blur(), 0);
   };
 
   const start = function(config) {
@@ -67,10 +54,31 @@
       window.clearTimeout(searchTimeout);
       searchInterval = searchTimeout = 0;
 
+      abortController = new AbortController();
+
       input.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') unfocus();
-      }, false);
-      button.addEventListener('click', function(event) { unfocus(); }, false);
+        if (event.key === 'Enter') hideKeyboard();
+      }, { capture: false, signal: abortController.signal });
+
+      button.addEventListener('click', function(event) {
+        hideKeyboard();
+      }, { capture: false, signal: abortController.signal });
+
+      observer = new MutationObserver(mutations => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            if (node.tagName.toLowerCase() === 'svg' && node.classList.contains('spin')) {
+              hideKeyboard();
+              return;
+            }
+          }
+        }
+      });
+      observer.observe(button, { childList: true });
+
+      if (button.firstChild?.tagName.toLowerCase() === 'svg' && button.firstChild.classList.contains('spin')) {
+        hideKeyboard();
+      }
     }, 1000);
   };
 
@@ -81,13 +89,20 @@
           window.clearInterval(searchInterval);
           window.clearTimeout(searchTimeout);
           searchInterval = searchTimeout = 0;
-          start(configs.find(({path}) => window.location.pathname.startsWith(path)));
+          // The URL and canonical link changed when applying different filters.
+          // Thus, the previous listeners and observer must be stopped.
+          if (observer) {
+            abortController.abort();
+            observer.disconnect();
+            observer = null;
+          }
+          start(configs.find(({path}) => path.test(window.location.pathname)));
           return;
         }
       }
     }
   }).observe(document.head, { childList: true });
 
-  start(configs.find(({path}) => window.location.pathname.startsWith(path)));
+  start(configs.find(({path}) => path.test(window.location.pathname)));
 
 })();

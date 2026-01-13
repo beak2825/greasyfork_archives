@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         GeoGuessr High Level Ranks
-// @version      1.7.2
+// @namespace    https://example.com/
+// @version      2.0.1
 // @description  Replace 1500+ levels with special ranks
-// @match        https://www.geoguessr.com/*
 // @icon         https://i.imgur.com/wHQjX4m.png
 // @license      MIT
+// @match        https://www.geoguessr.com/
+// @grant        none
 // @run-at       document-idle
-// @grant        GM_addStyle
-// @namespace https://example.com/
 // @downloadURL https://update.greasyfork.org/scripts/547364/GeoGuessr%20High%20Level%20Ranks.user.js
 // @updateURL https://update.greasyfork.org/scripts/547364/GeoGuessr%20High%20Level%20Ranks.meta.js
 // ==/UserScript==
@@ -15,978 +15,1126 @@
 (function () {
   'use strict';
 
+  // --- config ---
+  const RECOLOR_TOGGLE = 'on'; // "on" or "off"
+  const PROG_ELEMENT_ID = 'gg-ranks-overlay'; // progress overlay id
 
-//--------CHANGE ONLY THESE---------//
-  const RECOLOR_TOGGLE = "on";       // <-- Home Page Rank Background Colours (Top Right)
-  const SVG_GRADIENT_TOGGLE = "on"; // <-- Waiting For Game Page Background
-//----------"on" or "off"-----------//
-
-
-  const STYLE_ID = 'gg-ranks-style';
-  const PROG_STYLE_ID = 'gg-ranks-progress-style';
-  const PROG_ELEMENT_ID = 'gg-ranks-overlay';
-  const OVERLAY_X_OFFSET = 18;
-
-  const BADGES_DIVISION = [
-    { min: 1500, max: 1649, url: 'https://i.imgur.com/aR6fova.png' },
-    { min: 1650, max: 1799, url: 'https://i.imgur.com/No26QT6.png' },
-    { min: 1800, max: 1999, url: 'https://i.imgur.com/DH3XBSr.png' },
-    { min: 2000, max: 2199, url: 'https://i.imgur.com/mTCZKHg.png' },
-    { min: 2200, max: Infinity, url: 'https://i.imgur.com/wHQjX4m.png' },
-  ];
-  const BADGES_MULTIPLAYER = [...BADGES_DIVISION];
-
-  const BADGES_TEAMDUEL = [
-    { min: 1350, max: 1399, url: 'https://i.imgur.com/GYUETku.png' },
-    { min: 1400, max: 1499, url: 'https://i.imgur.com/QPo1lET.png' },
-    { min: 1500, max: 1599, url: 'https://i.imgur.com/QLW7KyP.png' },
-    { min: 1600, max: 1699, url: 'https://i.imgur.com/1K4mAXB.png' },
-    { min: 1700, max: Infinity, url: 'https://i.imgur.com/rZsaPIw.png' },
+  const SOLO_RANGES = [
+    { min:1500, max:1649, title:'Grand Champion 3', badge:'https://i.imgur.com/aR6fova.png' },
+    { min:1650, max:1799, title:'Grand Champion 2', badge:'https://i.imgur.com/No26QT6.png' },
+    { min:1800, max:1999, title:'Grand Champion 1', badge:'https://i.imgur.com/DH3XBSr.png' },
+    { min:2000, max:2199, title:'Legend',            badge:'https://i.imgur.com/mTCZKHg.png' },
+    { min:2200, max:Infinity, title:'Eternal',        badge:'https://i.imgur.com/wHQjX4m.png' },
   ];
 
-  const TITLES = [
-    { min: 1500, max: 1649, label: 'Grand Champion 3' },
-    { min: 1650, max: 1799, label: 'Grand Champion 2' },
-    { min: 1800, max: 1999, label: 'Grand Champion 1' },
-    { min: 2000, max: 2199, label: 'Legend' },
-    { min: 2200, max: Infinity, label: 'Eternal' },
-  ];
-  const TITLES_TEAMDUEL = [
-    { min: 1350, max: 1399, label: 'Grand Champion 3' },
-    { min: 1400, max: 1499, label: 'Grand Champion 2' },
-    { min: 1500, max: 1599, label: 'Grand Champion 1' },
-    { min: 1600, max: 1699, label: 'Legend' },
-    { min: 1700, max: Infinity, label: 'Eternal' },
+  const TEAM_RANGES = [
+    { min:1350, max:1399, title:'Grand Champion 3', badge:'https://i.imgur.com/GYUETku.png' },
+    { min:1400, max:1499, title:'Grand Champion 2', badge:'https://i.imgur.com/QPo1lET.png' },
+    { min:1500, max:1599, title:'Grand Champion 1', badge:'https://i.imgur.com/QLW7KyP.png' },
+    { min:1600, max:1699, title:'Legend',            badge:'https://i.imgur.com/1K4mAXB.png' },
+    { min:1700, max:Infinity, title:'Eternal',        badge:'https://i.imgur.com/rZsaPIw.png' },
   ];
 
-  // ---------------- utils ----------------
-  function extractFirstInteger(text) {
-    if (!text) return null;
-    const cleaned = String(text).replace(/,/g, '').trim();
-    const m = cleaned.match(/(\d{2,5})/);
-    if (!m) return null;
-    const n = parseInt(m[1], 10);
-    return Number.isFinite(n) ? n : null;
-  }
-  function pickForRating(arr, rating) {
-    if (rating == null) return null;
-    for (const e of arr) if (rating >= e.min && rating <= e.max) return e.url || e.label || null;
-    return null;
-  }
-  function pickTitleForRatingFromArray(arr, rating) {
-    if (rating == null) return null;
-    for (const t of arr) if (rating >= t.min && rating <= t.max) return t.label;
-    return null;
+  // --- constants used by champion detection ---
+  const EXACT_CHAMPION_URL = 'https://www.geoguessr.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fchampion.84e780e9.webp&w=1200&q=75';
+  const CHAMPION_FILENAME = 'champion.84e780e9.webp';
+  const CHAMPION_ENCODED_FRAGMENT = '%2F_next%2Fstatic%2Fmedia%2Fchampion';
+
+  // --- state ---
+  let cachedMyId = null;
+  let scheduled = null;
+  let busy = false;
+
+  // --- network helpers ---
+  async function fetchJson(path) {
+    const url = path.startsWith('http') ? path : `${location.origin}${path}`;
+    const res = await fetch(url, { credentials: 'include' });
+    if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+    return res.json();
   }
 
-  // ---------------- style helpers ----------------
-  let styleEl = null;
-  function ensureStyleEl() {
-    if (!styleEl) {
-      styleEl = document.getElementById(STYLE_ID);
-      if (!styleEl) {
-        styleEl = document.createElement('style');
-        styleEl.id = STYLE_ID;
-        document.head && document.head.appendChild(styleEl);
+  async function getMyUserId() {
+    if (cachedMyId) return cachedMyId;
+    try {
+      const me = await fetchJson('/api/v3/profiles/me');
+      cachedMyId = me?.id || me?.userId || null;
+      return cachedMyId;
+    } catch (e) {
+      console.warn('[gg] getMyUserId failed', e);
+      return null;
+    }
+  }
+
+  async function getRatingsMe() { try { return await fetchJson('/api/v4/ranked-system/ratings/me'); } catch (e) { return null; } }
+  async function getProfileProgress(id) { if (!id) return null; try { return await fetchJson(`/api/v4/ranked-system/progress/${id}`); } catch (e) { return null; } }
+  async function getTeamBest(id) { if (!id) return null; try { return await fetchJson(`/api/v4/ranked-team-duels/best/${id}`); } catch (e) { return null; } }
+  async function getTeamByTeammateId(teammateId) { if (!teammateId) return null; try { return await fetchJson(`/api/v4/ranked-team-duels/me/teams/${teammateId}`); } catch (e) { console.warn('[gg] getTeamByTeammateId failed', e); return null; } }
+
+  // --- rating extraction helpers ---
+  function ratingFromRatingsMe(payload, myId) {
+    if (!payload || !myId) return null;
+    const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.players) ? payload.players : (Array.isArray(payload.data) ? payload.data : null));
+    if (!arr) return null;
+    const ent = arr.find(x => String(x.userId) === String(myId) || String(x.id) === String(myId));
+    return ent ? (ent.rating ?? ent.value ?? ent.elo ?? null) : null;
+  }
+  function ratingFromProgress(p) { return p ? (p.rating ?? p.value ?? p.currentRating ?? p.elo ?? null) : null; }
+
+  function ratingFromTeamBest(payload) {
+    if (!payload) return null;
+    if (typeof payload.rating === 'number' || typeof payload.rating === 'string') return Number(payload.rating);
+    if (payload.best && (typeof payload.best.rating === 'number' || typeof payload.best.rating === 'string')) return Number(payload.best.rating);
+    if (payload.data && typeof payload.data === 'object') {
+      if (typeof payload.data.rating === 'number' || typeof payload.data.rating === 'string') return Number(payload.data.rating);
+      if (Array.isArray(payload.data) && payload.data.length && (typeof payload.data[0].rating === 'number' || typeof payload.data[0].rating === 'string')) return Number(payload.data[0].rating);
+    }
+    if (Array.isArray(payload) && payload.length) {
+      const c = payload[0];
+      if (c && (typeof c.rating === 'number' || typeof c.rating === 'string')) return Number(c.rating);
+    }
+    if (typeof payload.value === 'number' || typeof payload.value === 'string') return Number(payload.value);
+    if (payload.best && (typeof payload.best.value === 'number' || typeof payload.best.value === 'string')) return Number(payload.best.value);
+    const stack = [payload];
+    const seen = new Set();
+    while (stack.length) {
+      const o = stack.pop();
+      if (!o || typeof o !== 'object' || seen.has(o)) continue;
+      seen.add(o);
+      if ('rating' in o && (typeof o.rating === 'number' || typeof o.rating === 'string')) return Number(o.rating);
+      for (const k of Object.keys(o)) {
+        const v = o[k];
+        if (v && typeof v === 'object') stack.push(v);
       }
     }
-    return styleEl;
+    return null;
   }
-  function setHeaderCss(cssText) {
-    const s = ensureStyleEl();
-    s.textContent = cssText || '';
+
+  // find the *first* rating property in API response (breadth-first-ish)
+  function findFirstRating(payload) {
+    if (!payload) return null;
+    const queue = [payload];
+    const seen = new Set();
+    while (queue.length) {
+      const node = queue.shift();
+      if (!node || typeof node !== 'object' || seen.has(node)) continue;
+      seen.add(node);
+      if ('rating' in node && (typeof node.rating === 'number' || typeof node.rating === 'string')) return Number(node.rating);
+      const keys = Object.keys(node);
+      for (let i = 0; i < keys.length; i++) {
+        const v = node[keys[i]];
+        if (v && typeof v === 'object') queue.push(v);
+      }
+    }
+    return null;
+  }
+
+  function mapRange(rating, ranges) {
+    if (rating == null) return null;
+    const n = Number(rating);
+    if (!Number.isFinite(n)) return null;
+    return ranges.find(rr => n >= rr.min && n <= rr.max) || null;
+  }
+
+  // --- DOM helpers (widgets, champion detection) ---
+  function findWidgetByHeadingText(headingText) {
+    const nodes = Array.from(document.querySelectorAll('[class*="profile-v2_widgetRow"]'));
+    for (const n of nodes) {
+      const h2 = n.querySelector('h2.headline_heading__2lf9L, h2');
+      if (!h2) continue;
+      if ((h2.textContent || '').trim().toLowerCase() === headingText.toLowerCase()) return n;
+    }
+    return null;
+  }
+  function findRankedWidget() { return findWidgetByHeadingText('Ranked duels'); }
+  function findTeamWidget() { return findWidgetByHeadingText('Team Duels'); }
+
+  function imgIsChampion(img) {
+    if (!img) return false;
+    const s = img.getAttribute('src') || '';
+    const srcset = img.getAttribute('srcset') || '';
+    if (!s && !srcset) return false;
+    if (s === EXACT_CHAMPION_URL) return true;
+    if (s.includes(CHAMPION_FILENAME) || s.includes(CHAMPION_ENCODED_FRAGMENT)) return true;
+    if (srcset) {
+      const parts = srcset.split(',').map(p => p.trim().split(/\s+/)[0]);
+      if (parts.includes(EXACT_CHAMPION_URL)) return true;
+      if (parts.some(p => p.includes(CHAMPION_FILENAME) || p.includes(CHAMPION_ENCODED_FRAGMENT))) return true;
+    }
+    return false;
+  }
+
+  function findWidgetChampionImg(widget) {
+    if (!widget) return null;
+    const imgs = Array.from(widget.querySelectorAll('img'));
+    for (const img of imgs) if (imgIsChampion(img)) return img;
+    return null;
+  }
+
+  function findWidgetDivisionTitle(widget) {
+    if (!widget) return null;
+    const div = widget.querySelector('[class*="widget_divisionText"], .widget_divisionText__s8kZK');
+    if (div) {
+      const candidate = Array.from(div.querySelectorAll('label,div,span')).find(el => ((el.textContent||'').trim().toLowerCase() === 'champion'));
+      if (candidate) return candidate;
+    }
+    return Array.from(widget.querySelectorAll('label,div,span')).find(el => ((el.textContent||'').trim().toLowerCase() === 'champion')) || null;
+  }
+
+  function storeOriginal(el) {
+    if (!el) return;
+    if (el.tagName === 'IMG') {
+      if (!el.dataset.gg_orig_src) el.dataset.gg_orig_src = el.getAttribute('src') || '';
+      if (!el.dataset.gg_orig_srcset) el.dataset.gg_orig_srcset = el.getAttribute('srcset') || '';
+    } else {
+      if (!el.dataset.gg_orig_html) el.dataset.gg_orig_html = el.innerHTML;
+    }
+  }
+  function restoreOriginal(el) {
+    if (!el) return;
+    if (el.tagName === 'IMG') {
+      if (el.dataset.gg_orig_src) {
+        const cur = el.getAttribute('src') || '';
+        if (cur !== el.dataset.gg_orig_src) {
+          el.setAttribute('src', el.dataset.gg_orig_src);
+          if (el.dataset.gg_orig_srcset) el.setAttribute('srcset', el.dataset.gg_orig_srcset);
+        }
+      }
+      delete el.dataset.gg_replaced;
+    } else {
+      if (el.dataset.gg_orig_html) {
+        if (el.innerHTML !== el.dataset.gg_orig_html) el.innerHTML = el.dataset.gg_orig_html;
+      }
+    }
+  }
+
+  function applySoloInWidget(range, widget) {
+    if (!widget) return;
+    const titleEl = findWidgetDivisionTitle(widget);
+    const imgEl = findWidgetChampionImg(widget);
+    if (titleEl) storeOriginal(titleEl);
+    if (imgEl) storeOriginal(imgEl);
+    if (!range) { if (titleEl) restoreOriginal(titleEl); if (imgEl) restoreOriginal(imgEl); return; }
+    if (titleEl && /champion/i.test((titleEl.textContent||'').trim())) titleEl.innerHTML = `<span class="gg-title-text">${escapeHtml(range.title)}</span>`;
+    if (imgEl && range.badge) { imgEl.setAttribute('src', range.badge); imgEl.setAttribute('srcset', `${range.badge} 1x, ${range.badge} 2x`); imgEl.dataset.gg_replaced='1'; }
+  }
+
+  function applyTeamInWidget(range, widget) {
+    if (!widget) return;
+    const titleEl = findWidgetDivisionTitle(widget);
+    const imgEl = findWidgetChampionImg(widget);
+    if (titleEl) storeOriginal(titleEl);
+    if (imgEl) storeOriginal(imgEl);
+    if (!range) { if (titleEl) restoreOriginal(titleEl); if (imgEl) restoreOriginal(imgEl); return; }
+    if (titleEl && /champion/i.test((titleEl.textContent||'').trim())) titleEl.innerHTML = `<span class="gg-title-text">${escapeHtml(range.title)}</span>`;
+    if (imgEl && range.badge) { imgEl.setAttribute('src', range.badge); imgEl.setAttribute('srcset', `${range.badge} 1x, ${range.badge} 2x`); imgEl.dataset.gg_replaced='1'; }
+  }
+
+  function scanChampionImgs(range, root=document) {
+    const imgs = Array.from(root.querySelectorAll('img'));
+    for (const img of imgs) {
+      if (!imgIsChampion(img)) continue;
+      storeOriginal(img);
+      if (range && range.badge) { img.setAttribute('src', range.badge); img.setAttribute('srcset', `${range.badge} 1x, ${range.badge} 2x`); img.dataset.gg_replaced='1'; }
+      else restoreOriginal(img);
+    }
+  }
+
+  function escapeHtml(s) { if (s==null) return ''; return String(s).replace(/[&<>\"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[m]); }
+
+  function applyGlobal(range) {
+    const t = document.querySelector('.division-header_title__9hvNH') || document.querySelector('[class^="division-header_title__"], [class*="division-header_title"]');
+    const img = (document.querySelector('img[class^="division-header_badge__"], img[class*="division-header_badge"]') || Array.from(document.querySelectorAll('img')).find(imgIsChampion));
+    if (t) storeOriginal(t); if (img) storeOriginal(img);
+    if (!range) { if (t) restoreOriginal(t); if (img) restoreOriginal(img); return; }
+    if (t) t.innerHTML = `<span class="gg-title-text">${escapeHtml(range.title)}</span>`;
+    if (img && range.badge) { img.setAttribute('src', range.badge); img.setAttribute('srcset', `${range.badge} 1x, ${range.badge} 2x`); img.dataset.gg_replaced='1'; }
+  }
+
+  // --- header recolor helpers ---
+  function setHeaderCss(css) {
+    let s = document.getElementById('gg-header-css');
+    if (!s) {
+      s = document.createElement('style');
+      s.id = 'gg-header-css';
+      document.head.appendChild(s);
+    }
+    s.textContent = css;
   }
   function clearHeaderCss() {
-    if (styleEl || document.getElementById(STYLE_ID)) {
-      const s = styleEl || document.getElementById(STYLE_ID);
-      s.textContent = '';
-    }
+    const s = document.getElementById('gg-header-css');
+    if (s) s.remove();
   }
 
-  let progStyleEl = null;
-  function ensureProgStyleEl() {
-    if (!progStyleEl) {
-      progStyleEl = document.getElementById(PROG_STYLE_ID);
-      if (!progStyleEl) {
-        progStyleEl = document.createElement('style');
-        progStyleEl.id = PROG_STYLE_ID;
-        document.head && document.head.appendChild(progStyleEl);
-      }
-    }
-    return progStyleEl;
-  }
-  function setProgressCss(cssText) {
-    const s = ensureProgStyleEl();
-    s.textContent = cssText || '';
-  }
-
-  // ---------------- progress CSS ----------------
-  setProgressCss(`
-    /* overlay anchored inside header root; will be positioned & sized in JS to align with left column */
-    #${PROG_ELEMENT_ID} {
-      position: absolute;
-      left: 2px;
-      bottom: -8px;            /* tweak overlap depth if you want */
-      pointer-events: none;
-      z-index: 9999;
-      display: block;
-    }
-
-    /* the visible card — keep transparent background but give a semi-transparent track (the empty bar) */
-    #${PROG_ELEMENT_ID} .gg-prog-card {
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 18px 0;
-      border-radius: 6px;
-      background: transparent;
-      box-shadow: none;
-      width: 200%;
-      box-sizing: border-box;
-    }
-    /* track: semi-transparent so user requested */
-    #${PROG_ELEMENT_ID} .gg-prog-bar {
-      height: 10px;
-      width: 100%;
-      background: rgba(255,255,255,0.08); /* semi-transparent track */
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-    /* fill: gradient */
-    #${PROG_ELEMENT_ID} .gg-prog-fill {
-      height: 100%;
-      width: 0%;
-      transition: width 450ms ease;
-      border-radius: 999px;
-      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
-      background: linear-gradient(90deg, rgba(255,80,80,0.95), rgba(200,40,40,0.95));
-    }
-    #${PROG_ELEMENT_ID} .gg-next-icon {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:4px;
-      min-width:44px;
-    }
-    #${PROG_ELEMENT_ID} .gg-next-icon img {
-      width:36px;
-      height:36px;
-      object-fit:contain;
-      border-radius:6px;
-      background: none;
-      padding: 0;
-    }
-    #${PROG_ELEMENT_ID} .gg-next-min {
-      font-size:12px;
-      color: rgba(255,255,255,0.95);
-      margin-top:-2px;
-      /* use GeoGuessr page font variable if present; otherwise fall back to ggFont or sans-serif */
-      font-family: var(--default-font, 'ggFont', sans-serif);
-      white-space: nowrap;
-      /* user requested: bold + italic slope */
-      font-weight: 700;
-      font-style: oblique 12deg;
-    }
-
-    /* Nudge children inside the left container up a little only when we add the helper class */
-    .gg-prog-nudge > * {
-      transform: translateY(-17px);
-      will-change: transform;
-    }
-
-    @media (max-width: 720px) {
-      #${PROG_ELEMENT_ID} .gg-next-icon img { width:32px; height:32px; }
-      .gg-prog-nudge > * { transform: translateY(-3px); }
-    }
-  `);
-
-  // ---------------- recolor header ----------------
-  function recolorHeader(rating, isTeamDuel = false) {
+  function recolorHeader(range, isTeamDuel = false) {
     if (RECOLOR_TOGGLE.toLowerCase() !== "on") { clearHeaderCss(); return; }
+    if (!range || !range.title) { clearHeaderCss(); return; }
 
+    const title = String(range.title || '').toLowerCase();
     let background = null;
     let overlay = null;
     let overlayOpacity = 1.0;
 
-    if (isTeamDuel) {
-      if (rating >= 1350 && rating <= 1599) {
-        background = "linear-gradient(179deg, #8b0000 -3.95%, #ff0000 95.2%)";
-        overlay    = "linear-gradient(41deg, #330613, #bf1755)";
-        overlayOpacity = 0.7;
-      } else if (rating >= 1600 && rating <= 1699) {
-        background = "linear-gradient(179deg, #b8860b -3.95%, #ffd700 95.2%)";
-        overlay    = "linear-gradient(41deg, #2b1900, #d68940)";
-        overlayOpacity = 0.75;
-      } else if (rating >= 1700) {
-        background = "linear-gradient(179deg, #ffdee3 -3.95%, #ffdbe2 95.2%)";
-        overlay    = "linear-gradient(41deg, #5e4d5b, #c2089a)";
-        overlayOpacity = 0.6;
-      } else { clearHeaderCss(); return; }
+    if (title.includes('grand champion')) {
+      background = "linear-gradient(179deg, #8b0000 -3.95%, #ff0000 95.2%)";
+      overlay    = "linear-gradient(41deg, #330613, #bf1755)";
+      overlayOpacity = 0.7;
+    } else if (title.includes('legend')) {
+      background = "linear-gradient(179deg, #b8860b -3.95%, #ffd700 95.2%)";
+      overlay    = "linear-gradient(41deg, #2b1900, #d68940)";
+      overlayOpacity = 0.75;
+    } else if (title.includes('eternal')) {
+      background = "linear-gradient(179deg, #ffdee3 -3.95%, #ffdbe2 95.2%)";
+      overlay    = "linear-gradient(41deg, #5e4d5b, #c2089a)";
+      overlayOpacity = 0.6;
     } else {
-      if (rating >= 1500 && rating <= 1999) {
-        background = "linear-gradient(179deg, #8b0000 -3.95%, #ff0000 95.2%)";
-        overlay    = "linear-gradient(41deg, #330613, #bf1755)";
-        overlayOpacity = 0.7;
-      } else if (rating >= 2000 && rating <= 2199) {
-        background = "linear-gradient(179deg, #b8860b -3.95%, #ffd700 95.2%)";
-        overlay    = "linear-gradient(41deg, #2b1900, #d68940)";
-        overlayOpacity = 0.75;
-      } else if (rating >= 2200) {
-        background = "linear-gradient(179deg, #ffdee3 -3.95%, #ffdbe2 95.2%)";
-        overlay    = "linear-gradient(41deg, #5e4d5b, #c2089a)";
-        overlayOpacity = 0.6;
-      } else { clearHeaderCss(); return; }
+      clearHeaderCss();
+      return;
     }
 
     const css = `
-      [class^="division-header_background__"] { background: ${background} !important; }
-      [class^="division-header_pattern__"]::before { opacity: 0 !important; }
-      [class^="division-header_overlay__"] { background: ${overlay} !important; opacity: ${overlayOpacity} !important; }
+      /* division header background */
+      [class^="division-header_background__"], [class*="division-header_background__"] { background: ${background} !important; }
+      /* hide underlying pattern to avoid clashing */
+      [class^="division-header_pattern__"]::before, [class*="division-header_pattern__"]::before { opacity: 0 !important; }
+      /* overlay (top gradient) */
+      [class^="division-header_overlay__"], [class*="division-header_overlay__"] { background: ${overlay} !important; opacity: ${overlayOpacity} !important; }
     `;
     setHeaderCss(css);
   }
 
-  // ---------------- detection & progress helpers ----------------
-  function labelWithDigits(root) {
-    if (!root) return null;
-    const specific = root.querySelector('label.shared_yellowVariant__XONv8');
-    if (specific) return specific;
-    const labels = Array.from(root.querySelectorAll('label'));
-    return labels.find(l => /\d{2,5}/.test((l.textContent || '').trim())) || null;
-  }
+  // ---------------- PROGRESS (injected as gg-ranks-overlay inside division-header_root__) ----------------
 
-  // improved team-duel detection: rating element class containing SHoXJ denotes team duels
-  function getDivisionInfo() {
-    const ratingEl = document.querySelector('[class^="division-header_rating__"]');
-    if (!ratingEl) return { rating: null, isTeamDuel: false };
-    const rating = extractFirstInteger(ratingEl.textContent || ratingEl.innerText || '');
-    const ratingClass = String(ratingEl.className || '');
-    const isTeamDuel = ratingClass.indexOf('N3H6F') !== -1; // reliable marker you provided
-    return { rating, isTeamDuel };
-  }
-
-  function badgesFor(isTeamDuel) { return isTeamDuel ? BADGES_TEAMDUEL : BADGES_DIVISION; }
-
-  // computeProgressInfo supports custom below-first-tier ranges:
-  // non-team: 1300 -> 1500 (shows 1300..1499)
-  // team:     1250 -> 1350 (shows 1250..1349)
-  function computeProgressInfo(rating, isTeamDuel, allowBelowMin = false) {
-    const arr = badgesFor(isTeamDuel);
+  // compute progress fraction and next range given rating & ranges list
+  function computeProgress(rating, ranges) {
     if (rating == null) return null;
-    const firstMin = arr[0].min;
-    if (rating < firstMin) {
-      if (!allowBelowMin) return null;
-      const start = isTeamDuel ? 1250 : 1300;
-      const end   = isTeamDuel ? 1350 : 1500;
-      const nextBadge = arr[0].url || '';
-      return { curIndex: -1, cur: { min: start, url: '' }, next: { min: end, url: nextBadge } };
+    const n = Number(rating);
+    if (!Number.isFinite(n)) return null;
+    // find index of current range
+    let idx = ranges.findIndex(rr => n >= rr.min && n <= rr.max);
+    if (idx === -1) {
+      // below first threshold -> no progress shown (as before)
+      if (n < ranges[0].min) return null;
+      // if above last range -> no next
+      idx = ranges.length - 1;
     }
-    let curIndex = arr.findIndex(e => rating >= e.min && rating <= e.max);
-    if (curIndex === -1) curIndex = arr.length - 1;
-    const cur = arr[curIndex];
-    const next = (curIndex < arr.length - 1) ? arr[curIndex + 1] : null;
-    return { curIndex, cur, next };
+    const cur = ranges[idx];
+    const next = (idx + 1) < ranges.length ? ranges[idx + 1] : null;
+    if (!next || !isFinite(next.min)) return null; // no next rank
+    const span = next.min - cur.min;
+    if (!span || span <= 0) return null;
+    const fraction = (n - cur.min) / span;
+    return { fraction: Math.max(0, Math.min(1, fraction)), nextRange: next };
   }
 
-  // ---------------- fill gradient logic (updated) ----------------
-  // Color the progress bar according to your mapping (the "next rank" colour per your ranges)
-  function fillGradientFor(rating, isTeamDuel) {
-    // red gradient
-    const red = 'linear-gradient(90deg, rgba(200,20,20,0.95), rgba(220,60,60,0.95))';
-    // yellow/gold gradient
-    const yellow = 'linear-gradient(90deg, rgba(200,150,30,0.95), rgba(220,170,60,0.95))';
-    // pink/purple-ish gradient (used for the "pink" tiers)
-    const pink = 'linear-gradient(90deg, rgba(200,50,140,0.95), rgba(220,100,180,0.95))';
-    // fallback/eternal gradient for very-high tiers if needed
-    const top = 'linear-gradient(90deg, rgba(240,180,240,0.95), rgba(200,100,200,0.95))';
+  // progress CSS tailored to gg-ranks-overlay
+  function installProgressCss() {
+    let s = document.getElementById('gg-prog-css');
+    if (!s) {
+      s = document.createElement('style');
+      s.id = 'gg-prog-css';
+      document.head.appendChild(s);
+    }
+    s.textContent = `
+      /* ensure the division header root doesn't clip our absolute element */
+      [class^="division-header_root__"], [class*="division-header_root__"] {
+        overflow: visible !important;
+      }
 
-    if (isTeamDuel) {
-      if (rating == null) return red;
-      if (rating >= 1350 && rating <= 1599) return red;     // 1350-1599 -> red
-      if (rating >= 1600 && rating <= 1699) return yellow;  // 1600-1699 -> yellow
-      if (rating >= 1700) return pink;                      // 1700+ -> pink (no upper bound for progress fill)
-      return null; // outside mapping: don't recolor
+      /* overlay element (absolute inside division-header_root__) */
+      #${PROG_ELEMENT_ID} {
+        position: absolute;
+        pointer-events: none;
+        z-index: 999999 !important;
+        display: block;
+        bottom: -8px;
+        transition: opacity 240ms ease;
+      }
+
+      /* card */
+      #${PROG_ELEMENT_ID} .gg-prog-card {
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 10px;
+        border-radius: 6px;
+        background: transparent;
+        box-shadow: none;
+        width: 70%;
+        box-sizing: border-box;
+      }
+
+      #${PROG_ELEMENT_ID} .gg-prog-bar {
+        height: 10px;
+        width: 100%;
+        background: rgba(255,255,255,0.08);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #${PROG_ELEMENT_ID} .gg-prog-fill {
+        height: 100%;
+        width: 0%;
+        transition: width 450ms ease;
+        border-radius: 3px;
+        box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+        background: linear-gradient(90deg, rgba(255,80,80,0.95), rgba(200,40,40,0.95));
+      }
+
+      #${PROG_ELEMENT_ID} .gg-next-icon {
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:4px;
+        min-width:44px;
+      }
+      #${PROG_ELEMENT_ID} .gg-next-icon img {
+        width:36px;
+        height:36px;
+        object-fit:contain;
+        border-radius:6px;
+        background: none;
+        padding: 0;
+      }
+      #${PROG_ELEMENT_ID} .gg-next-min {
+        font-size:12px;
+        color: rgba(255,255,255,0.95);
+        margin-top:-2px;
+        font-family: var(--default-font, 'ggFont', sans-serif);
+        white-space: nowrap;
+        font-weight: 700;
+        font-style: oblique 12deg;
+      }
+
+      /* nudge */
+      .gg-prog-nudge > * { transform: translateY(-17px); will-change: transform; }
+
+      @media (max-width: 720px) {
+        #${PROG_ELEMENT_ID} .gg-next-icon img { width:32px; height:32px; }
+        .gg-prog-nudge > * { transform: translateY(-3px); }
+      }
+    `;
+  }
+
+  // insert the overlay inside the division-header root, anchored by left-col measurements (old behaviour)
+  function ensureProgressElement_inRoot(nextRange, leftPx, widthPx) {
+    // find division-header root
+    const root = document.querySelector('[class^="division-header_root__"], [class*="division-header_root__"]');
+    if (!root) return null;
+
+    // make sure root allows visible overflow and is positioned for absolute children
+    try {
+      const computed = window.getComputedStyle(root);
+      if (!root.dataset.gg_orig_overflow) root.dataset.gg_orig_overflow = root.style.overflow || '';
+      root.style.overflow = 'visible';
+
+      if (!root.dataset.gg_orig_pos && computed.position === 'static') {
+        root.dataset.gg_orig_pos = '';
+        root.style.position = 'relative';
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    let el = document.getElementById(PROG_ELEMENT_ID);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = PROG_ELEMENT_ID;
+      el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = `
+        <div class="gg-prog-card" aria-hidden="true">
+          <div style="flex:1 1 auto; min-width:0;">
+            <div class="gg-prog-bar">
+              <div class="gg-prog-fill" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="gg-next-icon" title="">
+            <img src="${escapeHtml(nextRange?.badge || '')}" alt="${escapeHtml(nextRange?.title || '')}" />
+            <div class="gg-next-min">${escapeHtml(nextRange?.min || '')}</div>
+          </div>
+        </div>
+      `;
+      // set left/width/bottom as inline styles (like your old element)
+      el.style.left = `${leftPx}px`;
+      el.style.width = `${widthPx}px`;
+      el.style.bottom = '-8px';
+
+      // store data attributes used previously
+      el.dataset.lastLeft = String(leftPx);
+      el.dataset.lastWidth = String(widthPx);
+      el.dataset.lastFill = '0.00';
+      el.dataset.lastBadge = nextRange?.badge || '';
+      el.dataset.lastNextMin = nextRange?.min ? String(nextRange.min) : '';
+
+      root.appendChild(el);
     } else {
-      if (rating == null) return red;
-      if (rating >= 1500 && rating <= 1999) return red;     // 1500-1999 -> red
-      if (rating >= 2000 && rating <= 2199) return yellow;  // 2000-2199 -> yellow
-      if (rating >= 2200) return pink;                      // 2200+ -> pink (no upper bound for progress fill)
-      return null; // outside mapping: don't recolor
+      // update next badge/title and inline sizing
+      const img = el.querySelector('.gg-next-icon img');
+      const t = el.querySelector('.gg-next-min');
+      if (img) img.src = nextRange?.badge || '';
+      if (t) t.textContent = nextRange?.min ?? '';
+      el.style.left = `${leftPx}px`;
+      el.style.width = `${widthPx}px`;
+      el.dataset.lastLeft = String(leftPx);
+      el.dataset.lastWidth = String(widthPx);
+      el.dataset.lastBadge = nextRange?.badge || '';
+      el.dataset.lastNextMin = nextRange?.min ? String(nextRange.min) : '';
     }
+
+    // nudge left column up (same class you used before)
+    const leftCol = root.querySelector('[class^="division-header_left__"], [class*="division-header_left__"], [class^="division-header_left"], [class*="division-header_left"]');
+    if (leftCol) leftCol.classList.add('gg-prog-nudge');
+
+    return el;
   }
 
-  // ---------------- team-matchmaking SVG gradient update ----------------
-  // Picks explicit hex stop colours (two stop colors) for the leftGradient element based on rating and isTeamDuel.
+  // remove overlay & nudge class, and try to restore root inline styles if we changed them
+  function removeProgressElement_inRoot() {
+    const el = document.getElementById(PROG_ELEMENT_ID);
+    if (el) el.remove();
+
+    const root = document.querySelector('[class^="division-header_root__"], [class*="division-header_root__"]');
+    if (root) {
+      const leftCol = root.querySelector('[class^="division-header_left__"], [class*="division-header_left__"], [class^="division-header_left"], [class*="division-header_left"]');
+      if (leftCol) leftCol.classList.remove('gg-prog-nudge');
+      // attempt to restore overflow/position we changed earlier (best-effort)
+      try {
+        if (root.dataset.gg_orig_overflow !== undefined) {
+          root.style.overflow = root.dataset.gg_orig_overflow || '';
+          delete root.dataset.gg_orig_overflow;
+        }
+        if (root.dataset.gg_orig_pos !== undefined) {
+          // if we had previously set dataset.gg_orig_pos to '' we restored to static
+          root.style.position = root.dataset.gg_orig_pos || '';
+          delete root.dataset.gg_orig_pos;
+        }
+      } catch (e) {}
+    }
+    // remove css
+    const s = document.getElementById('gg-prog-css');
+    if (s) s.remove();
+  }
+
+  // top-level renderProgress that computes left/width using left column and calls ensureProgressElement_inRoot
+  function renderProgress_inRoot(range, rating, rangesArray) {
+    if (!range || rating == null) { removeProgressElement_inRoot(); return; }
+    const info = computeProgress(rating, rangesArray);
+    if (!info || !info.nextRange) { removeProgressElement_inRoot(); return; }
+
+    // ensure CSS installed
+    installProgressCss();
+
+    // measure left column relative to root
+    const root = document.querySelector('[class^="division-header_root__"], [class*="division-header_root__"]');
+    if (!root) { removeProgressElement_inRoot(); return; }
+
+    const leftCol = root.querySelector('[class^="division-header_left__"], [class*="division-header_left__"], [class^="division-header_left"], [class*="division-header_left"]');
+    // fallback measurements if leftCol not found
+    let leftPx = 8;
+    const PROG_OFFSET_X = 10; // ← increase this to move right
+    let widthPx = 176;
+    try {
+      const rootRect = root.getBoundingClientRect();
+      if (leftCol) {
+        const leftRect = leftCol.getBoundingClientRect();
+        // compute left relative to root
+        leftPx = Math.max(2, Math.round(leftRect.left - rootRect.left) + PROG_OFFSET_X);
+        // compute width similar to your old logic: a bit wider than left column; cap to reasonable values
+        widthPx = Math.max(140, Math.min(520, Math.round(leftRect.width * 1.6)));
+      } else {
+        // fallback: base width on root width
+        const r = root.getBoundingClientRect();
+        leftPx = 8;
+        widthPx = Math.max(140, Math.min(520, Math.round(r.width * 0.35)));
+      }
+    } catch (e) {
+      // ignore measurement errors and use defaults
+    }
+
+    // ensure DOM present
+    const el = ensureProgressElement_inRoot(info.nextRange, leftPx, widthPx);
+    if (!el) return;
+
+    // set fill
+    const fill = el.querySelector('.gg-prog-fill');
+    if (fill) {
+      const pct = Math.round(info.fraction * 10000) / 100; // 2 decimals
+      fill.style.width = `${pct}%`;
+      el.dataset.lastFill = String(pct.toFixed(2));
+    }
+
+    // update title attribute on next-icon
+    const nextIcon = el.querySelector('.gg-next-icon');
+    if (nextIcon) {
+      if (info.nextRange && info.nextRange.min) {
+        nextIcon.title = `Next tier requires ${info.nextRange.min}`;
+        el.dataset.lastNextMin = String(info.nextRange.min);
+      } else {
+        nextIcon.title = '';
+        el.dataset.lastNextMin = '';
+      }
+    }
+
+    // ensure visible
+    el.style.display = 'block';
+  }
+
+  // wrapper names used by the rest of the script
+  function renderProgress(range, rating, rangesArray) { renderProgress_inRoot(range, rating, rangesArray); }
+  function clearProgress() { removeProgressElement_inRoot(); }
+  function installProgressCssWrapper() { installProgressCss(); }
+
+  // ---------------- SVG Gradient helper functions ----------------
+
+  // pick two hex stops for the left gradient based on rating + duel type
   function pickSvgGradientStops(rating, isTeamDuel) {
-    // explicit per-element colours (won't inherit from other CSS)
-    // red: deep red -> lighter red
+    if (rating == null) return null;
+
+    // color choices (you can tweak)
     const redA = '#6940cf', redB = '#DC3C4C';
-    // yellow: gold tones
     const yellowA = '#6940cf', yellowB = '#DCAA3C';
-    // pink: purple/pink tones
     const pinkA = '#6940cf', pinkB = '#ff8ad8';
 
-    if (rating == null) return null;
-
-    // NOTE: using the exact ranges you requested (with <=2600 cap if you provided it earlier).
-    // Here I implement the ranges you asked to try (team: 1350-1599 red, 1600-1699 yellow, 1700-2600 pink)
-    // and non-team: 1500-1999 red, 2000-2199 yellow, 2200-2600 pink.
-    // If you later want pink to be unbounded remove the upper checks below.
-    const maxCap = 2600;
+    const maxCap = 2600; // optional cap for pink group - you can remove if you want unbounded
 
     if (isTeamDuel) {
       if (rating >= 1350 && rating <= 1599) return [redA, redB];
       if (rating >= 1600 && rating <= 1699) return [yellowA, yellowB];
       if (rating >= 1700 && rating <= maxCap) return [pinkA, pinkB];
-      // outside mapping -> don't change
       return null;
     } else {
       if (rating >= 1500 && rating <= 1999) return [redA, redB];
       if (rating >= 2000 && rating <= 2199) return [yellowA, yellowB];
       if (rating >= 2200 && rating <= maxCap) return [pinkA, pinkB];
-      // outside mapping -> don't change
       return null;
     }
   }
 
-  function getTeamMatchmakingSvgRoot() {
-    // more flexible search for the SVG containing leftGradient
-    // 1) try common container you gave
+  // search for the sliding background SVG used in matchmaking screens
+  function getSlidingSvg() {
+    // try team-matchmaking container first
     let container = document.querySelector('.team-matchmaking-layout_root__xFn5v');
     if (container) {
       const svg = container.querySelector('svg.sliding-background_root__oJrQp') || container.querySelector('svg');
       if (svg) return svg;
     }
-
-    // 2) try any element with class containing "team-matchmaking-layout"
-    const anyContainer = Array.from(document.querySelectorAll('[class*="team-matchmaking-layout"]')).find(el => el.querySelector && el.querySelector('svg'));
-    if (anyContainer) {
-      const svg = anyContainer.querySelector('svg.sliding-background_root__oJrQp') || anyContainer.querySelector('svg');
+    // try unranked-matchmaking container
+    container = document.querySelector('.unranked-matchmaking-layout_root__L8lN8');
+    if (container) {
+      const svg = container.querySelector('svg.sliding-background_root__oJrQp') || container.querySelector('svg');
       if (svg) return svg;
     }
-
-    // 3) fallback: find the gradient element directly anywhere in the document (#leftGradient)
-    const gradient = document.querySelector('#leftGradient');
-    if (gradient) {
-      // find nearest svg ancestor
-      let ancestor = gradient;
-      while (ancestor && ancestor.nodeName !== 'svg') ancestor = ancestor.parentElement;
-      if (ancestor && ancestor.nodeName === 'svg') return ancestor;
-    }
-
-    // 4) last resort: any svg with a linearGradient child id leftGradient
-    const svgs = Array.from(document.querySelectorAll('svg'));
-    for (const s of svgs) {
-      if (s.querySelector && s.querySelector('linearGradient#leftGradient, #leftGradient')) return s;
-    }
-
-    return null;
+    // fallback: search globally for the expected svg class
+    const svgGlobal = document.querySelector('svg.sliding-background_root__oJrQp') || document.querySelector('svg');
+    return svgGlobal || null;
   }
 
-  function updateTeamSvgGradientIfNeeded(rating, isTeamDuel) {
-    // Respect the SVG_GRADIENT_TOGGLE — do nothing if set to "off".
-    if (String(SVG_GRADIENT_TOGGLE || '').toLowerCase() !== 'on') return false;
-
+  // update the leftGradient stops; restore originals when rating == null
+  function updateSvgGradient(rating, isTeamDuel) {
     try {
-      const svg = getTeamMatchmakingSvgRoot();
-      if (!svg) return false;
-      // find gradient inside svg defs
-      const grad = svg.querySelector('#leftGradient') || svg.querySelector('linearGradient[id="leftGradient"]');
-      if (!grad) return false;
+      const svg = getSlidingSvg();
+      if (!svg) return;
 
-      // Get stops (may be empty); ensure at least two stops exist
-      let stops = Array.from(grad.querySelectorAll('stop'));
-      if (!stops || stops.length < 2) {
-        // create two stops if missing
-        // Must create in the SVG namespace
-        if (!stops.length) {
-          const s1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-          s1.setAttribute('offset', '20%');
-          grad.appendChild(s1);
-          const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-          s2.setAttribute('offset', '100%');
-          grad.appendChild(s2);
-        } else if (stops.length === 1) {
-          const s2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-          s2.setAttribute('offset', '100%');
-          grad.appendChild(s2);
+      // find the linearGradient with id leftGradient (or nearest linearGradient)
+      let grad = svg.querySelector('linearGradient#leftGradient, linearGradient[id*="leftGradient"]');
+      if (!grad) {
+        // fallback: first linearGradient in defs
+        const defs = svg.querySelector('defs');
+        if (defs) grad = defs.querySelector('linearGradient');
+      }
+      if (!grad) return;
+
+      const stops = Array.from(grad.querySelectorAll('stop'));
+      if (!stops.length) return;
+
+      // store original stop colors once so we can restore later
+      if (!grad.dataset.gg_origStops) {
+        try {
+          const orig = stops.map(s => s.getAttribute('stop-color') || '');
+          grad.dataset.gg_origStops = JSON.stringify(orig);
+        } catch (e) { grad.dataset.gg_origStops = JSON.stringify(['#6840CF','#393273']); }
+      }
+
+      if (rating == null) {
+        // restore original colors
+        try {
+          const orig = JSON.parse(grad.dataset.gg_origStops || '[]');
+          for (let i = 0; i < stops.length && i < orig.length; i++) {
+            stops[i].setAttribute('stop-color', orig[i]);
+          }
+        } catch (e) {
+          // nothing
         }
-        stops = Array.from(grad.querySelectorAll('stop'));
+        return;
       }
 
-      const picked = pickSvgGradientStops(rating, isTeamDuel);
-      if (!picked) return false; // outside mapping - do nothing
-
-      const [c1, c2] = picked;
-      const prev = grad.dataset.lastStops || '';
-      const next = `${c1}|${c2}`;
-      if (prev === next) return true; // nothing to do
-
-      // Update first two stops explicitly with element-local colours.
-      stops = Array.from(grad.querySelectorAll('stop')); // re-read after possible append
-      if (stops.length >= 1) {
-        stops[0].setAttribute('stop-color', c1);
-        if (!stops[0].getAttribute('offset')) stops[0].setAttribute('offset', '20%');
-      }
-      if (stops.length >= 2) {
-        stops[1].setAttribute('stop-color', c2);
-        if (!stops[1].getAttribute('offset')) stops[1].setAttribute('offset', '100%');
+      const chosen = pickSvgGradientStops(rating, isTeamDuel);
+      if (!chosen) {
+        // if no mapping, restore original
+        try {
+          const orig = JSON.parse(grad.dataset.gg_origStops || '[]');
+          for (let i = 0; i < stops.length && i < orig.length; i++) {
+            stops[i].setAttribute('stop-color', orig[i]);
+          }
+        } catch (e) {}
+        return;
       }
 
-      // store last applied so we avoid repeated writes
-      grad.dataset.lastStops = next;
-      return true;
+      // apply chosen stops: prefer mapping to first two stops; if stops length >2, set first and last
+      if (stops.length === 1) {
+        stops[0].setAttribute('stop-color', chosen[0]);
+      } else if (stops.length >= 2) {
+        stops[0].setAttribute('stop-color', chosen[0]);
+        stops[stops.length - 1].setAttribute('stop-color', chosen[1]);
+      }
     } catch (e) {
-      console.error('updateTeamSvgGradientIfNeeded error', e);
-      return false;
+      console.warn('[gg] updateSvgGradient error', e);
     }
   }
 
-  // ---------------- find header root / left etc ----------------
-  function findHeaderRoot() {
-    const explicit = document.querySelector('[class^="division-header_root__"], [class^="division-header__"]');
-    if (explicit) return explicit;
-    const left = document.querySelector('[class^="division-header_left__"]');
-    if (!left) return null;
-    let ancestor = left;
-    while (ancestor && ancestor !== document.body) {
-      if (ancestor.className && /division-header(?:_|-)/.test(String(ancestor.className))) return ancestor;
-      ancestor = ancestor.parentElement;
-    }
-    return left.parentElement || document.body;
-  }
-  function findLeft() {
-    return document.querySelector('[class^="division-header_left__"]');
+  // --------------------------------------------------------------------
+  // The rest of the script integrates with the existing handlers and calls
+  // updateSvgGradient(...) where appropriate.
+  // --------------------------------------------------------------------
+
+  // --- multiplayer teams canvas extraction (existing) ---
+  function findTeammateIdFromCanvas() {
+    const c = document.querySelector('canvas.team-avatars_friend__5QyKU[id$="_local"]');
+    if (!c) return null;
+    const id = c.getAttribute('id') || '';
+    if (!id) return null;
+    return id.endsWith('_local') ? id.slice(0, -'_local'.length) : id;
   }
 
-  // ensure header root positioning without changing layout size
-  function ensureHeaderPositioning(root) {
-    if (!root) return;
-    const cs = window.getComputedStyle(root);
-    if (cs.position === 'static') root.style.position = 'relative';
-    if (cs.overflow === 'hidden') root.style.overflow = 'visible';
-  }
-
-  // helper to detect whether the title's original value is "Champion"
-  function titleOriginallyChampion(titleEl) {
-    if (!titleEl) return false;
-    // check data-orig-title attribute, dataset.origTitle, or the visible text (fallback)
-    const a = titleEl.getAttribute && titleEl.getAttribute('data-orig-title');
-    const b = titleEl.dataset && titleEl.dataset.origTitle;
-    const text = (titleEl.textContent || '').trim();
-    if (String(a) === 'Champion') return true;
-    if (String(b) === 'Champion') return true;
-    if (text === 'Champion') return true;
+  // ---------- NEW: unranked-overlay detection & revert ----------
+  // when the unranked info overlay is present and visible (display:flex), we want
+  // to immediately revert all of our visual changes and stop.
+  function isUnrankedOverlayVisible() {
+    try {
+      const els = Array.from(document.querySelectorAll('div'));
+      for (const d of els) {
+        const cls = (d.className || '');
+        if (typeof cls !== 'string') continue;
+        if (cls.indexOf('unranked-info-overlay_root__MbgSp') !== -1 && cls.indexOf('unranked-info-overlay_reveal__L2ob_') !== -1) {
+          const cs = window.getComputedStyle(d);
+          if (cs && cs.display === 'flex') return true;
+        }
+      }
+    } catch (e) { /* ignore */ }
     return false;
   }
 
-  // ---------------- create / update overlay (with OVERLAY_X_OFFSET applied) ----------------
-  function createOrUpdateOverlay(rating, isTeamDuel) {
-    const headerRoot = findHeaderRoot();
-    const leftEl = findLeft();
-    const titleEl = document.querySelector('[class^="division-header_title__"]');
+// helper: fetch the user's position (1..250) from the leaderboard (pages of the API), or null if not found
+async function fetchTop250Position(userId) {
+  if (!userId) return null;
 
-    if (!headerRoot || !leftEl) {
-      const old = document.getElementById(PROG_ELEMENT_ID);
-      if (old) old.remove();
-      return false;
-    }
+  // endpoints to cover 0..99, 100..199, 200..249
+  const pages = [
+    { url: '/api/v4/ranked-system/ratings?limit=100', base: 0 },
+    { url: '/api/v4/ranked-system/ratings?offset=100&limit=100', base: 100 },
+    { url: '/api/v4/ranked-system/ratings?offset=200&limit=50',  base: 200 }
+  ];
 
-    // Determine if title originally "Champion" (used for below-first-tier special-case)
-    const titleIsChampion = titleOriginallyChampion(titleEl);
-
-    // allow below-first-tier progress only when titleIsChampion and rating < first threshold
-    const firstMin = badgesFor(isTeamDuel)[0].min;
-    const allowBelowFirst = (rating != null && rating < firstMin && titleIsChampion);
-
-    const info = computeProgressInfo(rating, isTeamDuel, allowBelowFirst);
-
-    // remove overlay if not applicable
-    if (!info || !info.next) {
-      const old = document.getElementById(PROG_ELEMENT_ID);
-      if (old) old.remove();
-      // also remove nudge class if present
-      if (leftEl && leftEl.classList) leftEl.classList.remove('gg-prog-nudge');
-      return false;
-    }
-
-    try { ensureHeaderPositioning(headerRoot); } catch (e) {}
-
-    // compute whether we should nudge this left column:
-    // - Primary: use non-team thresholds (1350..2199) for nudge (per your working version).
-    // - Secondary: also nudge if below-first-tier AND title originally "Champion".
-    const nonTeamNudgeMin = 1350;
-    const nonTeamNudgeMax = 2200; // exclusive upper bound like before
-    const belowFirstAndChampion = (rating != null && rating < firstMin && titleIsChampion);
-    const primaryNudge = (rating != null && rating >= nonTeamNudgeMin && rating < nonTeamNudgeMax);
-    const shouldNudge = primaryNudge || belowFirstAndChampion;
-
+  for (const p of pages) {
     try {
-      if (shouldNudge) leftEl.classList.add('gg-prog-nudge'); else leftEl.classList.remove('gg-prog-nudge');
-    } catch (e) {}
+      const payload = await fetchJson(p.url);
+      if (!payload) continue;
+      const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (Array.isArray(payload.players) ? payload.players : null));
+      if (!arr || !arr.length) continue;
 
-    // compute pixel position/width so overlay scales with the left element (including zoom/transform)
-    const leftRect = leftEl.getBoundingClientRect();
-    const rootRect = headerRoot.getBoundingClientRect();
-    // left offset relative to headerRoot
-    let leftPx = Math.round(leftRect.left - rootRect.left);
-    if (isNaN(leftPx)) leftPx = 0;
-    // add horizontal offset (user requested +10px)
-    leftPx += OVERLAY_X_OFFSET;
+      // find user in this page
+      const idx = arr.findIndex(i => String(i.userId || i.id || i.playerId || i.user_id) === String(userId));
+      if (idx === -1) continue;
 
-    // take half of the left element's rendered width
-    let widthPx = Math.round(leftRect.width * 0.5);
-    if (widthPx <= 8) widthPx = Math.max(120, Math.round(rootRect.width * 0.25));
+      const item = arr[idx];
+      // prefer explicit position/rank if available, otherwise compute from page base + index
+      const pos = (typeof item.position === 'number') ? item.position
+                : (typeof item.rank === 'number') ? item.rank
+                : (p.base + idx + 1);
 
-    const { cur, next } = info;
-    // cur.min may be 0 in the below-first-tier special-case (but in our custom ranges it will be 1250/1300)
-    const start = Number(cur.min || 0);
-    const end = Number(next.min || start + 1);
-    const clampedRating = Math.min(Math.max((rating != null ? rating : start), start), end);
-    const pct = end === start ? 100 : ((clampedRating - start) / (end - start)) * 100;
-    const fillPctStr = Math.max(0, Math.min(100, pct)).toFixed(2);
-    const fillStyle = `width:${fillPctStr}%; background: ${fillGradientFor(rating, isTeamDuel)};`;
-
-    let overlay = document.getElementById(PROG_ELEMENT_ID);
-    const nextBadgeUrl = next.url || '';
-    const nextMinLabel = String(next.min);
-
-    // Create if missing
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = PROG_ELEMENT_ID;
-      headerRoot.appendChild(overlay);
-      // store baseline dataset
-      overlay.dataset.lastLeft = '';
-      overlay.dataset.lastWidth = '';
-      overlay.dataset.lastFill = '';
-      overlay.dataset.lastBadge = '';
-      overlay.dataset.lastNextMin = '';
-    } else if (overlay.parentNode !== headerRoot) {
-      overlay.parentNode.removeChild(overlay);
-      headerRoot.appendChild(overlay);
+      return Number.isFinite(pos) ? Number(pos) : null;
+    } catch (e) {
+      // ignore and try next page
     }
+  }
 
-    // apply computed absolute placement to overlay (px values) - update if changed
-    if (overlay.style.left !== `${leftPx}px`) overlay.style.left = `${leftPx}px`;
-    if (overlay.style.width !== `${widthPx}px`) overlay.style.width = `${widthPx}px`;
-    overlay.style.bottom = `-8px`;
+  return null;
+}
 
-    // If nothing meaningful changed, avoid rewriting DOM
-    const nothingChanged =
-      overlay.dataset.lastLeft === String(leftPx) &&
-      overlay.dataset.lastWidth === String(widthPx) &&
-      overlay.dataset.lastFill === fillPctStr &&
-      overlay.dataset.lastBadge === nextBadgeUrl &&
-      overlay.dataset.lastNextMin === nextMinLabel;
 
-    if (nothingChanged) {
-      // still ensure fill element is updated in case CSS or transition needs refresh (but skip heavy innerHTML rewrite)
-      const fillEl = overlay.querySelector('.gg-prog-fill');
-      if (fillEl) {
-        if (fillEl.style.width !== `${fillPctStr}%`) fillEl.style.width = `${fillPctStr}%`;
-        const bg = fillGradientFor(rating, isTeamDuel);
-        if (fillEl.style.background !== bg) fillEl.style.background = bg;
+
+  function revertAllChanges() {
+    try {
+      // restore any image/text we replaced
+      const replaced = Array.from(document.querySelectorAll('[data-gg_replaced="1"], [data-gg_replaced]'));
+      for (const el of replaced) restoreOriginal(el);
+
+      // also restore any element that stored original html/src via our dataset keys
+      const withOrig = Array.from(document.querySelectorAll('[data-gg_orig_html], [data-gg_orig_src], [data-gg_orig_srcset]'));
+      for (const el of withOrig) restoreOriginal(el);
+
+      // clear header css
+      clearHeaderCss();
+
+      // clear any division header glow
+      try { clearDivisionHeaderGlow(); } catch (e) {}
+
+      // restore svg gradients (both team/solo) if they were modified
+      updateSvgGradient(null, false);
+      updateSvgGradient(null, true);
+
+      // remove progress overlay and css
+      removeProgressElement_inRoot();
+
+      // remove top100 css if present
+      const topCss = document.getElementById('gg-top100-css');
+      if (topCss) topCss.remove();
+
+      // remove any tm-top100 classes and restore originals if we stored them
+      const topEls = Array.from(document.querySelectorAll('.tm-top100'));
+      for (const e of topEls) {
+        if (e && e.dataset && e.dataset.gg_orig_html) restoreOriginal(e);
+        e.classList.remove('tm-top100');
+        if (e && e.dataset && e.dataset.gg_top100) delete e.dataset.gg_top100;
       }
-      // keep aria attributes up to date
-      const bar = overlay.querySelector('.gg-prog-bar');
-      if (bar) {
-        bar.setAttribute('aria-valuemin', String(start));
-        bar.setAttribute('aria-valuemax', String(end));
-        bar.setAttribute('aria-valuenow', String(rating != null ? rating : start));
-      }
-      // also update the team SVG gradient (cheap no-op if same)
-      updateTeamSvgGradientIfNeeded(rating, isTeamDuel);
-      return true;
+
+    } catch (e) {
+      console.error('[gg] revertAllChanges error', e);
     }
+  }
 
-    // Otherwise, (re)build content minimally
-    overlay.innerHTML = `
-      <div class="gg-prog-card" aria-hidden="true">
-        <div style="flex:1 1 auto; min-width:0;">
-          <div class="gg-prog-bar" role="progressbar" aria-valuemin="${start}" aria-valuemax="${end}" aria-valuenow="${rating != null ? rating : start}">
-            <div class="gg-prog-fill" style="${fillStyle}"></div>
-          </div>
-        </div>
-        <div class="gg-next-icon" title="Next tier requires ${nextMinLabel}">
-          <img src="${nextBadgeUrl}" alt="Next tier badge">
-          <div class="gg-next-min">${nextMinLabel}</div>
-        </div>
-      </div>
+  // helper: check whether a given userId appears in the top-100 ratings API
+  async function checkTop100(userId) {
+    if (!userId) return false;
+    try {
+      const payload = await fetchJson('/api/v4/ranked-system/ratings?limit=100');
+      if (!payload) return false;
+      const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (Array.isArray(payload.players) ? payload.players : null));
+      if (!arr) return false;
+      return arr.some(item => String(item.userId || item.id || item.playerId || item.user_id) === String(userId));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function installTop100Css() {
+    if (document.getElementById('gg-top100-css')) return;
+    const s = document.createElement('style');
+    s.id = 'gg-top100-css';
+    s.textContent = `
+      .tm-top100 {
+        background: linear-gradient(90deg, rgba(255,200,210,1), rgba(255,230,200,1), rgba(210,255,220,1), rgba(220,220,255,1));
+        background-size: 300% 100%;
+        text-shadow: 0 0 7px rgba(255,255,255,0.25);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: tm-paleRainbow 20s linear infinite;
+        font-weight: 700;
+      }
+      @keyframes tm-paleRainbow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
     `;
-
-    // update dataset markers to allow cheap change detection next run
-    overlay.dataset.lastLeft = String(leftPx);
-    overlay.dataset.lastWidth = String(widthPx);
-    overlay.dataset.lastFill = fillPctStr;
-    overlay.dataset.lastBadge = nextBadgeUrl;
-    overlay.dataset.lastNextMin = nextMinLabel;
-
-    // update the team SVG gradient to match current rating (only writes if changed)
-    updateTeamSvgGradientIfNeeded(rating, isTeamDuel);
-
-    return true;
+    document.head.appendChild(s);
   }
 
-  // ---------------- Division update ----------------
-  function updateDivisionArea() {
-    const ratingEl = document.querySelector('[class^="division-header_rating__"]');
-    if (!ratingEl) {
-      const old = document.getElementById(PROG_ELEMENT_ID);
-      if (old) old.remove();
-      return false;
-    }
-    const info = getDivisionInfo();
-    const rating = info.rating;
-    const isTeamDuel = info.isTeamDuel;
-
-    const badgeEl = document.querySelector('[class^="division-header_badge__"], img[class^="division-header_badge__"]');
-    const titleEl = document.querySelector('[class^="division-header_title__"]');
-
-    const badgeArray = isTeamDuel ? BADGES_TEAMDUEL : BADGES_DIVISION;
-    const titleArray = isTeamDuel ? TITLES_TEAMDUEL : TITLES;
-
-    const badgeUrl = pickForRating(badgeArray, rating);
-    const titleStr = pickTitleForRatingFromArray(titleArray, rating);
-
-    if (!isNaN(rating)) recolorHeader(rating, isTeamDuel);
-
-    if (badgeEl && badgeEl.tagName === 'IMG' && badgeUrl) {
-      badgeEl.dataset.origSrc = badgeEl.dataset.origSrc || badgeEl.getAttribute('data-orig-src') || badgeEl.getAttribute('src') || '';
-      badgeEl.dataset.origSrcset = badgeEl.dataset.origSrcset || badgeEl.getAttribute('data-orig-srcset') || badgeEl.getAttribute('srcset') || '';
-      const cur = badgeEl.getAttribute('src') || '';
-      if (!cur.includes(badgeUrl)) {
-        badgeEl.setAttribute('src', badgeUrl);
-        badgeEl.setAttribute('srcset', `${badgeUrl} 1x, ${badgeUrl} 2x`);
-        badgeEl.dataset.replaced = 'true';
+// apply or remove Top/Rank label based on numeric position (pos)
+// pos = number (1..250) or null
+function applyOrRemoveTop100(pos) {
+  try {
+    // target only the label inside the user-card-title container
+    const containers = Array.from(document.querySelectorAll('div[data-qa="user-card-title"]'));
+    if (!containers.length) {
+      // cleanup any stray labels we may have previously modified
+      const other = Array.from(document.querySelectorAll('label.tm-top100'));
+      for (const l of other) {
+        if (l && l.dataset && l.dataset.gg_top100) { restoreOriginal(l); l.classList.remove('tm-top100'); delete l.dataset.gg_top100; }
       }
+      return;
     }
 
-    if (titleEl && titleStr) {
-      if (!('origTitle' in titleEl.dataset)) {
-        titleEl.dataset.origTitle = (titleEl.textContent || '').trim();
-        titleEl.dataset.origDataOriginalTitle = titleEl.getAttribute('data-original-title') || '';
-      }
-      const cur = (titleEl.textContent || '').trim();
-      if (cur !== titleStr) {
-        titleEl.textContent = titleStr;
-        titleEl.dataset.replacedTitle = 'true';
-      }
-    }
+    // show ranks up to 250
+    const shouldApply = typeof pos === 'number' && pos >= 1 && pos <= 250;
+    // only install rainbow css for top 100
+    if (shouldApply && pos <= 100) installTop100Css();
 
-    try { createOrUpdateOverlay(rating, isTeamDuel); } catch (e) { console.error('overlay error', e); }
+    for (const c of containers) {
+      const l = c.querySelector('label.label_label__9xkbh.shared_blackWeight__DLnqe.label_uppercase__DTBcv');
+      if (!l) continue;
 
-    // Ensure SVG gradient is updated even if overlay didn't change
-    try { updateTeamSvgGradientIfNeeded(rating, isTeamDuel); } catch (e) { console.error('team svg gradient update error', e); }
+      if (shouldApply) {
+        // keep original stored so we can fully restore later
+        if (!l.dataset || !l.dataset.gg_orig_html) storeOriginal(l);
 
-    // NEW: update matchmaking header badge that uses Next.js image URLs
-    try { updateMatchmakingHeaderBadge(info); } catch (e) { console.error('matchmaking header badge update error', e); }
+        l.textContent = `Rank #${pos}`;
 
-    return true;
-  }
-
-  // ---------------- Multiplayer & Team-list logic (unchanged) ----------------
-  function findMultiplayerBoxes() {
-    let boxes = Array.from(document.querySelectorAll('.multiplayer_ratingBox__05Gko'));
-    if (boxes.length) return boxes;
-    const root = document.querySelector('.multiplayer_root__jmpXA');
-    if (!root) return [];
-    const candidates = Array.from(root.querySelectorAll('div,section,article'));
-    const filtered = candidates.filter(el => {
-      const lbl = Array.from(el.querySelectorAll('label')).some(l => /\d{2,5}/.test((l.textContent || '').trim()));
-      return lbl;
-    });
-    const topLevel = filtered.filter((el, i, arr) => !arr.some(other => other !== el && other.contains(el)));
-    return topLevel;
-  }
-  function findAllDigitLabels() {
-    return Array.from(document.querySelectorAll('label')).filter(l => /\d{2,5}/.test((l.textContent || '').trim()));
-  }
-  function pairBoxesToLabels(boxes) {
-    const labels = findAllDigitLabels();
-    if (!boxes.length || !labels.length) return new Map();
-    const assigned = new Set();
-    const mapping = new Map();
-    for (const box of boxes) {
-      const br = box.getBoundingClientRect();
-      let best = null;
-      let bestScore = Infinity;
-      for (const lbl of labels) {
-        if (assigned.has(lbl)) continue;
-        const lr = lbl.getBoundingClientRect();
-        let dy = Math.abs((lr.top || 0) - (br.top || 0));
-        let dx = Math.abs((lr.left || 0) - (br.left || 0));
-        let score = dy * 2 + dx;
-        if ((!lr.width && !lr.height) || (!br.width && !br.height)) {
-          const li = Array.prototype.indexOf.call(labels, lbl);
-          const bi = Array.prototype.indexOf.call(boxes, box);
-          score = Math.abs(li - bi) * 1000;
+        // rainbow only for top 100
+        if (pos <= 100) {
+          l.classList.add('tm-top100');
+          l.dataset.gg_top100 = String(pos);
+        } else {
+          // ensure rainbow class removed for 101..250
+          l.classList.remove('tm-top100');
+          // store numeric pos so we can detect modification later
+          l.dataset.gg_top100 = String(pos);
         }
-        if (score < bestScore) { bestScore = score; best = lbl; }
+      } else {
+        // not in top-250: restore original if we previously modified
+        if (l.dataset && l.dataset.gg_top100) {
+          restoreOriginal(l);
+          l.classList.remove('tm-top100');
+          delete l.dataset.gg_top100;
+        }
       }
-      if (best) { mapping.set(box, best); assigned.add(best); }
     }
-    return mapping;
+  } catch (e) { console.warn('[gg] applyOrRemoveTop100 error', e); }
+}
+
+
+
+  // pick a glow color (rgba) based on the range title
+  function pickGlowColor(range) {
+    if (!range || !range.title) return null;
+    const t = String(range.title).toLowerCase();
+    if (t.includes('grand champion')) return 'rgba(220,60,60,0.1)';
+    if (t.includes('legend')) return 'rgba(255,200,0,0.1)';
+    if (t.includes('eternal')) return 'rgba(194,58,155,0.1)';
+    return 'rgba(100,100,100,0.6)';
   }
-  function updateMultiplayerBox(box, idx, ratingLabelOverride, isTeamDuelFlag) {
-    const ratingLabel = ratingLabelOverride || labelWithDigits(box);
-    let titleLabel = box.querySelector('label[data-original-title]') || box.querySelector('label.label_label__9xkbh') || Array.from(box.querySelectorAll('label')).find(l => /[A-Za-z]/.test((l.textContent || '').trim()));
-    const imgEl = box.querySelector('img.multiplayer_icon__hRbEa') || box.querySelector('img');
-    const rating = ratingLabel ? extractFirstInteger(ratingLabel.textContent || '') : null;
-    const badgeArray = isTeamDuelFlag ? BADGES_TEAMDUEL : BADGES_MULTIPLAYER;
-    const titleArray = isTeamDuelFlag ? TITLES_TEAMDUEL : TITLES;
-    const badgeUrl = pickForRating(badgeArray, rating);
-    const titleStr = pickTitleForRatingFromArray(titleArray, rating);
-    if (imgEl && imgEl.tagName === 'IMG' && badgeUrl) {
-      imgEl.dataset.origSrc = imgEl.dataset.origSrc || imgEl.getAttribute('data-orig-src') || imgEl.getAttribute('src') || '';
-      imgEl.dataset.origSrcset = imgEl.dataset.origSrcset || imgEl.getAttribute('data-orig-srcset') || imgEl.getAttribute('srcset') || '';
-      const cur = (imgEl.getAttribute('src') || '');
-      if (!cur.includes(badgeUrl)) {
-        imgEl.setAttribute('src', badgeUrl);
-        imgEl.setAttribute('srcset', `${badgeUrl} 1x, ${badgeUrl} 2x`);
-        imgEl.dataset.replaced = 'true';
-      }
-    }
-    if (titleLabel && titleStr) {
-      if (!('origTitle' in titleLabel.dataset)) {
-        titleLabel.dataset.origTitle = (titleLabel.textContent || '').trim();
-        titleLabel.dataset.origDataOriginalTitle = titleLabel.getAttribute('data-original-title') || '';
-      }
-      const cur = (titleLabel.textContent || '').trim();
-      if (cur !== titleStr) {
-        titleLabel.textContent = titleStr;
-        try { titleLabel.setAttribute('data-original-title', titleStr); } catch (e) {}
-        titleLabel.dataset.replacedTitle = 'true';
-      }
-    }
+
+  // apply a soft glow to the division header root element matching the user's rank
+  function applyDivisionHeaderGlow(range) {
+    try {
+      const root = document.querySelector('[class^="division-header_root__"], [class*="division-header_root__"]');
+      if (!root) return;
+      const color = pickGlowColor(range) || 'rgba(0,0,0,0)';
+      // store original boxShadow if not already stored
+      if (!root.dataset.gg_orig_boxshadow) root.dataset.gg_orig_boxshadow = root.style.boxShadow || '';
+      root.style.transition = 'box-shadow 350ms ease, filter 350ms ease';
+      // subtle multi-layer glow
+      root.style.boxShadow = `0 8px 30px 6px ${color}, 0 0 60px 18px ${color}`;
+      root.dataset.gg_header_glow = '1';
+    } catch (e) { /* ignore */ }
   }
-  function updateMultiplayerAll() {
-    const boxes = findMultiplayerBoxes();
-    if (!boxes || !boxes.length) return false;
-    const mapping = pairBoxesToLabels(boxes);
-    boxes.forEach((b, i) => {
+
+  function clearDivisionHeaderGlow() {
+    try {
+      const root = document.querySelector('[class^="division-header_root__"], [class*="division-header_root__"]');
+      if (!root) return;
+      if (root.dataset && root.dataset.gg_orig_boxshadow !== undefined) {
+        root.style.boxShadow = root.dataset.gg_orig_boxshadow || '';
+        delete root.dataset.gg_orig_boxshadow;
+      } else {
+        root.style.boxShadow = '';
+      }
+      if (root.dataset) delete root.dataset.gg_header_glow;
+    } catch (e) { /* ignore */ }
+  }
+
+  // ---------- end new section ----------
+
+// replace the existing function with this code
+async function handleMultiplayerTeamsPage() {
+  try {
+    // if the unranked overlay is visible, always revert and do nothing
+    if (isUnrankedOverlayVisible()) { revertAllChanges(); return; }
+
+    // get my id early (used as a fallback)
+    const myId = await getMyUserId();
+
+    // 1) try teammate canvas lookup (most reliable when present)
+    let teammateId = findTeammateIdFromCanvas();
+    let payload = null;
+    let rating = null;
+
+    if (teammateId) {
+      payload = await getTeamByTeammateId(teammateId);
+      // try the team-specific parser first, fallback to findFirstRating
+      rating = ratingFromTeamBest(payload) ?? findFirstRating(payload);
+    }
+
+    // 2) fallback: try fetching the current user's team-best (if teammate canvas not present or didn't return a rating)
+    if ((rating == null || !Number.isFinite(Number(rating))) && myId) {
       try {
-        const ratingLabel = mapping.get(b) || null;
-        const isTeamDuelForThisBox = (i === 1);
-        updateMultiplayerBox(b, i, ratingLabel, isTeamDuelForThisBox);
-      } catch (e) { console.error('updateMultiplayerBox error', e); }
-    });
-    return true;
-  }
-  function findNearestTeamIconFrom(el) {
-    if (!el) return null;
-    let ancestor = el;
-    for (let depth = 0; depth < 5 && ancestor; depth++) {
-      const img = ancestor.querySelector('img[class^="team-selector_divisionImage__"], [class^="team-selector_divisionImageWrapper__"] img, img.team-selector_divisionImage__U12_e, img');
-      if (img) return img;
-      ancestor = ancestor.parentElement;
-    }
-    let sib = el.previousElementSibling;
-    for (let i = 0; i < 6 && sib; i++, sib = sib.previousElementSibling) {
-      const img = sib.querySelector && sib.querySelector('img');
-      if (img) return img;
-    }
-    sib = el.nextElementSibling;
-    for (let i = 0; i < 6 && sib; i++, sib = sib.nextElementSibling) {
-      const img = sib.querySelector && sib.querySelector('img');
-      if (img) return img;
-    }
-    return null;
-  }
-  function updateTeamListEntries() {
-    const cols = Array.from(document.querySelectorAll('[class^="teams-detailed-leaderboard_columnContent__"]'));
-    if (!cols.length) return false;
-    let changed = false;
-    cols.forEach((col) => {
-      try {
-        const label = Array.from(col.querySelectorAll('label')).find(l => /\d{2,5}/.test((l.textContent || '').trim()));
-        if (!label) return;
-        const rating = extractFirstInteger(label.textContent || '');
-        if (rating == null) return;
-        const img = findNearestTeamIconFrom(col);
-        if (!img || img.tagName !== 'IMG') return;
-        const badgeUrl = pickForRating(BADGES_TEAMDUEL, rating);
-        if (!badgeUrl) return;
-        img.dataset.origSrc = img.dataset.origSrc || img.getAttribute('data-orig-src') || img.getAttribute('src') || '';
-        img.dataset.origSrcset = img.dataset.origSrcset || img.getAttribute('data-orig-srcset') || img.getAttribute('srcset') || '';
-        const cur = img.getAttribute('src') || '';
-        if (!cur.includes(badgeUrl)) {
-          img.setAttribute('src', badgeUrl);
-          img.setAttribute('srcset', `${badgeUrl} 1x, ${badgeUrl} 2x`);
-          img.dataset.replaced = 'true';
-          changed = true;
-        }
-      } catch (e) { console.error('updateTeamListEntries item error', e); }
-    });
-    return changed;
-  }
-
-  function updateTeamBadges(info) {
-    if (!info) info = getDivisionInfo();
-    const rating = info.rating;
-    const isTeamDuel = info.isTeamDuel;
-    if (!isTeamDuel || rating == null) return false;
-    const badgeUrl = pickForRating(BADGES_TEAMDUEL, rating);
-    if (!badgeUrl) return false;
-    const teamHeaderImgs = Array.from(document.querySelectorAll('img[class^="team-matchmaking-layout_badge__"], [class^="team-matchmaking-layout_badge__"]'));
-    teamHeaderImgs.forEach(img => {
-      if (img && img.tagName === 'IMG') {
-        img.dataset.origSrc = img.dataset.origSrc || img.getAttribute('data-orig-src') || img.getAttribute('src') || '';
-        img.dataset.origSrcset = img.dataset.origSrcset || img.getAttribute('data-orig-srcset') || img.getAttribute('srcset') || '';
-        const cur = img.getAttribute('src') || '';
-        if (!cur.includes(badgeUrl)) {
-          img.setAttribute('src', badgeUrl);
-          img.setAttribute('srcset', `${badgeUrl} 1x, ${badgeUrl} 2x`);
-          img.dataset.replaced = 'true';
-        }
+        payload = await getTeamBest(myId);
+        rating = ratingFromTeamBest(payload) ?? findFirstRating(payload);
+      } catch (e) {
+        // ignore, we'll clear below if nothing found
+        rating = rating ?? null;
       }
-    });
-    const ratingWrapperImgs = Array.from(document.querySelectorAll('.rating_wrapper__22uFu img, [class^="rating_wrapper__22uFu"] img'));
-    ratingWrapperImgs.forEach(img => {
-      if (img && img.tagName === 'IMG') {
-        img.dataset.origSrc = img.dataset.origSrc || img.getAttribute('data-orig-src') || img.getAttribute('src') || '';
-        img.dataset.origSrcset = img.dataset.origSrcset || img.getAttribute('data-orig-srcset') || img.getAttribute('srcset') || '';
-        const cur = img.getAttribute('src') || '';
-        if (!cur.includes(badgeUrl)) {
-          img.setAttribute('src', badgeUrl);
-          img.setAttribute('srcset', `${badgeUrl} 1x, ${badgeUrl} 2x`);
-          img.dataset.replaced = 'true';
-        }
-      }
-    });
-    return true;
+    }
+
+    // if still no rating, restore/clear everything and exit
+    if (rating == null || !Number.isFinite(Number(rating))) {
+      applyGlobal(null);
+      scanChampionImgs(null, document);
+      recolorHeader(null, true);
+      clearDivisionHeaderGlow();
+      updateSvgGradient(null, true); // restore svg for teams
+      clearProgress();
+      return;
+    }
+
+    // we have a team rating -> map to TEAM_RANGES and apply effects
+    const range = mapRange(rating, TEAM_RANGES);
+    applyGlobal(range);
+    scanChampionImgs(range, document);
+    recolorHeader(range, true); // recolor for teams page (if you want)
+    if (range) applyDivisionHeaderGlow(range); else clearDivisionHeaderGlow();
+    updateSvgGradient(rating, true); // update svg for teams page
+    renderProgress(range, rating, TEAM_RANGES); // progress for team inside root
+
+  } catch (e) {
+    console.error('[gg] handleMultiplayerTeamsPage error', e);
   }
+}
 
-  // ---------------- NEW: matchmaking header badge updater ----------------
-  // Targets header elements like:
-  // <header class="matchmaking-layout_header___c3p5"> ... <img class="matchmaking-layout_badge__umzOu" src="/_next/image?..." /> ...</header>
-  // This function will replace the Next.js image src/srcset with the badge URL when rating falls into BADGES_DIVISION ranges.
-  function updateMatchmakingHeaderBadge(info) {
-    if (!info) info = getDivisionInfo();
-    const rating = info.rating;
-    const isTeamDuel = info.isTeamDuel;
-    // Only apply for non-team division headers
-    if (isTeamDuel) return false;
 
-    // Prefer a flexible selector that matches hashed class prefixes
-    const header = document.querySelector('[class^="matchmaking-layout_header"], header[class*="matchmaking-layout_header"]');
-    if (!header) return false;
+  // --- /user/[id] handler ---
+  async function handleUserPage(playerId) {
+    if (!playerId) {
+      applyGlobal(null);
+      scanChampionImgs(null, document);
+      recolorHeader(null, false);
+      updateSvgGradient(null, false);
+      clearProgress();
+      applyOrRemoveTop100(false);
+      return;
+    }
+    try {
+      // solo (progress API)
+      const progress = await getProfileProgress(playerId);
+      const soloRating = ratingFromProgress(progress);
+      console.debug('[gg-user] progress payload for', playerId, progress);
+      console.debug('[gg-user] parsed soloRating:', soloRating);
+      const soloRange = mapRange(soloRating, SOLO_RANGES);
+      const rankedWidget = findRankedWidget();
+      if (rankedWidget) { applySoloInWidget(soloRange, rankedWidget); scanChampionImgs(soloRange, rankedWidget); }
 
-    const img = header.querySelector('img[class^="matchmaking-layout_badge__"], img.matchmaking-layout_badge__umzOu');
-    if (!img || img.tagName !== 'IMG') return false;
+      // team (first rating in best API)
+      const teamPayload = await getTeamBest(playerId);
+      console.debug('[gg-user] teamPayload for', playerId, teamPayload);
+      const teamRating = findFirstRating(teamPayload);
+      console.debug('[gg-user] first team rating found:', teamRating);
+      const teamRange = mapRange(teamRating, TEAM_RANGES);
+      const teamWidget = findTeamWidget();
+      if (teamWidget) { applyTeamInWidget(teamRange, teamWidget); scanChampionImgs(teamRange, teamWidget); }
 
-    const badgeUrl = pickForRating(BADGES_DIVISION, rating);
+// fetch numeric position (1..100) and apply Rank label
+const pos = await fetchTop250Position(playerId);
+applyOrRemoveTop100(pos);
 
-    // Save original src/srcset for restoration
-    img.dataset.origSrc = img.dataset.origSrc || img.getAttribute('data-orig-src') || img.getAttribute('src') || '';
-    img.dataset.origSrcset = img.dataset.origSrcset || img.getAttribute('data-orig-srcset') || img.getAttribute('srcset') || '';
 
-    const cur = img.getAttribute('src') || '';
-
-    if (badgeUrl) {
-      if (!cur.includes(badgeUrl)) {
-        try {
-          img.setAttribute('src', badgeUrl);
-          img.setAttribute('srcset', `${badgeUrl} 1x, ${badgeUrl} 2x`);
-          img.dataset.replaced = 'true';
-        } catch (e) { console.error('set matchmaking badge error', e); }
-      }
-      return true;
-    } else {
-      // If no badge applicable, restore original Next.js image URL if we saved one
-      const orig = img.dataset.origSrc || '';
-      const origset = img.dataset.origSrcset || '';
-      if (orig && !cur.includes(orig)) {
-        try {
-          img.setAttribute('src', orig);
-          if (origset) img.setAttribute('srcset', origset);
-          img.dataset.replaced = '';
-        } catch (e) { console.error('restore matchmaking badge error', e); }
-      }
-      return false;
+      // clear/restore global header recolor and clear progress for user pages
+      recolorHeader(null, false);
+      updateSvgGradient(null, false);
+      clearProgress();
+    } catch (e) {
+      console.error('[gg] handleUserPage error', e);
     }
   }
 
-  // ---------------- combined update ----------------
-  function updateAllOnce() {
-    let changed = false;
-    changed = updateDivisionArea() || changed;
-    const divisionInfo = getDivisionInfo();
-    changed = updateTeamBadges(divisionInfo) || changed;
-    changed = updateMultiplayerAll() || changed;
-    changed = updateTeamListEntries() || changed;
-    return changed;
-  }
+  // --- main update loop (integrated recolor, progress, svg calls) ---
+  async function updateOnce() {
+    if (busy) return;
+    busy = true;
+    try {
+      // if the unranked overlay is visible, revert all and skip updates
+      if (isUnrankedOverlayVisible()) { revertAllChanges(); busy = false; return; }
 
-  // ---------------- debounce / observe / resize ----------------
-  let scheduled = null;
-  function scheduleUpdate() {
-    if (scheduled) return;
-    scheduled = setTimeout(() => {
-      scheduled = null;
-      try { updateAllOnce(); } catch (e) { console.error(e); }
-    }, 150);
-  }
+      const path = location.pathname || '/';
+      const isMultiplayer = (path === '/multiplayer' || path === '/multiplayer/');
+      const isTeamsPage = (path === '/multiplayer/teams' || path.startsWith('/multiplayer/teams/'));
+      const isUserPage = path.startsWith('/user/');
+      const isProfile = (path === '/me/profile' || path.startsWith('/me/profile/') || path.startsWith('/user/'));
 
-  const observer = new MutationObserver((mutations) => {
-    for (const m of mutations) {
-      if (m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length)) { scheduleUpdate(); break; }
-      if (m.type === 'characterData') { scheduleUpdate(); break; }
-      if (m.type === 'attributes') { scheduleUpdate(); break; }
+      // /multiplayer/teams specific handler
+      if (isTeamsPage) {
+        await handleMultiplayerTeamsPage();
+        busy = false;
+        return;
+      }
+
+      // /user/[id] handler (explicit)
+      if (isUserPage) {
+        const parts = path.split('/').filter(Boolean);
+        const playerId = parts[1] || null;
+        await handleUserPage(playerId);
+        busy = false;
+        return;
+      }
+
+      if (!isMultiplayer && !isProfile) {
+        const rW = findRankedWidget(); if (rW) applySoloInWidget(null, rW);
+        const tW = findTeamWidget(); if (tW) applyTeamInWidget(null, tW);
+        applyGlobal(null); scanChampionImgs(null, document);
+        recolorHeader(null, false);
+        updateSvgGradient(null, false);
+        clearProgress();
+        busy = false; return;
+      }
+
+      if (isMultiplayer) {
+        const myId = await getMyUserId(); if (!myId) { recolorHeader(null,false); clearDivisionHeaderGlow(); updateSvgGradient(null,false); clearProgress(); busy=false; return; }
+        const payload = await getRatingsMe(); const rating = ratingFromRatingsMe(payload, myId);
+        const range = mapRange(rating, SOLO_RANGES);
+        applyGlobal(range); scanChampionImgs(range, document);
+        recolorHeader(range, false); // recolor for multiplayer page (solo rank)
+        if (range) applyDivisionHeaderGlow(range); else clearDivisionHeaderGlow();
+        updateSvgGradient(rating, false); // update svg gradient for solo on multiplayer page
+        renderProgress(range, rating, SOLO_RANGES); // progress for solo on multiplayer page (inside root)
+        busy = false; return;
+      }
+
+      // profile pages (/me/profile)
+      let profileId = null;
+      if (path === '/me/profile' || path.startsWith('/me/profile/')) profileId = await getMyUserId();
+      else { const parts = path.split('/').filter(Boolean); profileId = parts[1] || null; }
+      if (!profileId) { recolorHeader(null,false); updateSvgGradient(null,false); clearProgress(); busy=false; return; }
+
+      // solo
+      const progress = await getProfileProgress(profileId);
+      const soloRating = ratingFromProgress(progress);
+      const soloRange = mapRange(soloRating, SOLO_RANGES);
+      const rankedWidget = findRankedWidget();
+      if (rankedWidget) { applySoloInWidget(soloRange, rankedWidget); scanChampionImgs(soloRange, rankedWidget); }
+
+      // team (improved extraction). Only run for /me/profile for now.
+      if (path === '/me/profile' || path === '/me/profile/') {
+        const teamPayload = await getTeamBest(profileId);
+        console.debug('[gg-team] teamPayload:', teamPayload);
+        const teamRating = ratingFromTeamBest(teamPayload);
+        console.debug('[gg-team] parsed teamRating:', teamRating);
+        const teamRange = mapRange(teamRating, TEAM_RANGES);
+        console.debug('[gg-team] parsed teamRange:', teamRange);
+        const teamWidget = findTeamWidget();
+        if (teamWidget) { applyTeamInWidget(teamRange, teamWidget); scanChampionImgs(teamRange, teamWidget); }
+      }
+
+      // profile pages don't recolour the global division header (keep as original)
+      recolorHeader(null,false);
+      updateSvgGradient(null,false);
+      clearProgress();
+
+      busy = false;
+    } catch (e) {
+      console.error('[gg] update error', e);
+      recolorHeader(null,false);
+      updateSvgGradient(null,false);
+      clearProgress();
+      busy = false;
     }
-  });
-
-  function startObserving() {
-    if (!document.body) return;
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true });
-    scheduleUpdate();
   }
 
-  // listen for resize/scroll (so overlay repositions when zoom changes or user scrolls)
-  window.addEventListener('resize', scheduleUpdate, { passive: true });
-  window.addEventListener('scroll', scheduleUpdate, { passive: true });
-
-  // SPA route watcher
-  (function installRouteWatcher() {
-    const wrap = (method) => {
-      const orig = history[method];
-      return function () {
-        const rv = orig.apply(this, arguments);
-        window.dispatchEvent(new Event('gg-route-change'));
-        return rv;
-      };
-    };
-    history.pushState = wrap('pushState');
-    history.replaceState = wrap('replaceState');
-    window.addEventListener('popstate', () => window.dispatchEvent(new Event('gg-route-change')));
-    window.addEventListener('gg-route-change', () => {
-      try { resetAll(); } catch (e) {}
-      setTimeout(updateAllOnce, 250);
-    });
-  })();
-
-  function resetAll() {
-    clearHeaderCss();
-    const old = document.getElementById(PROG_ELEMENT_ID);
-    if (old) old.remove();
-    if (scheduled) { clearTimeout(scheduled); scheduled = null; }
-  }
-
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', startObserving, { once: true });
-  } else startObserving();
-
-  const fallbackInterval = setInterval(() => scheduleUpdate(), 5000);
-
-  window.addEventListener('beforeunload', () => {
-    observer.disconnect();
-    clearInterval(fallbackInterval);
-    if (scheduled) clearTimeout(scheduled);
-  });
-
-  // initial run
-  setTimeout(updateAllOnce, 300);
+  // scheduling/observers (compact)
+  function schedule(delay=200){ if (scheduled) clearTimeout(scheduled); scheduled = setTimeout(()=>{ scheduled=null; updateOnce(); }, delay); }
+  (function(){ const wrap=(m)=>{ const orig=history[m]; history[m]=function(){ const rv=orig.apply(this,arguments); window.dispatchEvent(new Event('gg-route-change')); return rv; }; }; wrap('pushState'); wrap('replaceState'); window.addEventListener('popstate', ()=>window.dispatchEvent(new Event('gg-route-change'))); window.addEventListener('gg-route-change', ()=>{ schedule(150); }); })();
+  const mo = new MutationObserver((mutations)=>{ for (const m of mutations) { if (m.type==='childList' && (m.addedNodes.length||m.removedNodes.length)) { schedule(120); break; } if (m.type==='attributes' && (m.attributeName==='src'||m.attributeName==='srcset'||m.attributeName==='class')) { schedule(160); break; } } });
+  function start(){ if(document.body) mo.observe(document.body,{ childList:true, subtree:true, attributes:true }); window.addEventListener('resize', ()=>schedule(350)); window.addEventListener('scroll', ()=>schedule(450), { passive:true }); schedule(700); }
+  if (document.readyState==='loading') window.addEventListener('DOMContentLoaded', start, { once:true }); else start();
+  window.addEventListener('beforeunload', ()=>{ try{ mo.disconnect(); } catch(e){} });
 
 })();

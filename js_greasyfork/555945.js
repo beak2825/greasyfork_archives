@@ -2,19 +2,20 @@
 // @name         X(Twitter) Downloader
 // @name:zh-CN   X（Twitter）下载器
 // @author       mengshouer
-// @version      1.0.6
-// @description  For X(Twitter) add download buttons for images and videos.
-// @description:zh-CN  为 X(Twitter) 的图片和视频添加下载按钮。
+// @version      1.0.7
+// @description  For X(Twitter) add download buttons for images and videos. Settings available by hovering mouse to the bottom left corner or via Tampermonkey menu.
+// @description:zh-CN  为 X(Twitter) 的图片和视频添加下载按钮。鼠标移入浏览器左下角或油猴菜单可打开设置。
 // @include      *://twitter.com/*
 // @include      *://*.twitter.com/*
 // @include      *://x.com/*
 // @include      *://*.x.com/*
 // @license      GPL-3.0 License
 // @namespace    https://github.com/mengshouer/UserScripts
-// @require     https://cdn.jsdelivr.net/npm/preact@10.28.1/dist/preact.umd.js
+// @grant        GM_registerMenuCommand
+// @require     https://cdn.jsdelivr.net/npm/preact@10.28.2/dist/preact.umd.js
 // @require     https://cdn.jsdelivr.net/npm/goober@2.1.18/dist/goober.umd.js
-// @require     https://cdn.jsdelivr.net/npm/preact@10.28.1/jsx-runtime/dist/jsxRuntime.umd.js
-// @require     https://cdn.jsdelivr.net/npm/preact@10.28.1/hooks/dist/hooks.umd.js
+// @require     https://cdn.jsdelivr.net/npm/preact@10.28.2/jsx-runtime/dist/jsxRuntime.umd.js
+// @require     https://cdn.jsdelivr.net/npm/preact@10.28.2/hooks/dist/hooks.umd.js
 // @require     https://cdn.jsdelivr.net/npm/@preact/signals-core@1.12.1/dist/signals-core.min.js
 // @downloadURL https://update.greasyfork.org/scripts/555945/X%28Twitter%29%20Downloader.user.js
 // @updateURL https://update.greasyfork.org/scripts/555945/X%28Twitter%29%20Downloader.meta.js
@@ -22,53 +23,8 @@
 
 (function(jsxRuntime2, preact2, hooks, goober2, signalsCore) {
   "use strict";
-  goober2.setup(preact2.h);
-  const StyledButton$2 = goober2.styled("button")`
-  position: fixed;
-  left: var(--left-position);
-  bottom: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: #1da1f2;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10000;
-  color: white;
-  transition:
-    left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    opacity 0.2s ease,
-    transform 0.2s ease;
-  opacity: 0.9;
-  border: none;
-
-  &:hover {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-`;
-  const SettingsIcon = goober2.styled("svg")`
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-`;
-  function SettingsButton({ onClick, isSettingsPanelOpen }) {
-    const [isMouseNearLeft, setIsMouseNearLeft] = hooks.useState(false);
-    hooks.useEffect(() => {
-      const handleMouseMove = (e) => {
-        const isNear = e.clientX < 100 && e.clientY > window.innerHeight * (2 / 3);
-        setIsMouseNearLeft(isNear);
-      };
-      document.addEventListener("mousemove", handleMouseMove);
-      return () => document.removeEventListener("mousemove", handleMouseMove);
-    }, []);
-    const buttonStyle = {
-      "--left-position": isMouseNearLeft || isSettingsPanelOpen ? "10px" : "-40px"
-    };
-    return /* @__PURE__ */ jsxRuntime2.jsx(StyledButton$2, { style: buttonStyle, onClick, children: /* @__PURE__ */ jsxRuntime2.jsx(SettingsIcon, { viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntime2.jsx("path", { d: "M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" }) }) });
-  }
+  const STORAGE_KEY$1 = "m-userscript-settings";
+  const OPEN_SETTINGS_EVENT = "m-open-settings-panel";
   class StorageManager {
     constructor(storageKey, defaultSettings) {
       this.storageKey = storageKey;
@@ -114,28 +70,39 @@
       return { ...this.defaultSettings };
     }
   }
+  function formatPositionValue$1(value) {
+    const trimmed = value.trim();
+    if (/^\d+$/.test(trimmed)) {
+      return `${trimmed}px`;
+    }
+    return trimmed;
+  }
   function preventEventPropagation(e) {
     e.stopPropagation();
     e.preventDefault();
   }
-  function waitForElement(selector, callback, options = {}) {
-    const { interval = 300, maxAttempts = 100 } = options;
-    let attempts = 0;
-    const checkElements = () => {
-      const elements = document.querySelectorAll(selector);
-      if (elements.length > 0) {
-        callback(elements);
+  let downloadCount = 0;
+  const beforeUnloadHandler = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
+  const downloadGuard = {
+    add: () => {
+      if (downloadCount === 0) {
+        window.addEventListener("beforeunload", beforeUnloadHandler);
       }
-      attempts++;
-      if (attempts >= maxAttempts) {
-        clearInterval(timer);
+      downloadCount++;
+    },
+    remove: () => {
+      downloadCount--;
+      if (downloadCount <= 0) {
+        downloadCount = 0;
+        window.removeEventListener("beforeunload", beforeUnloadHandler);
       }
-    };
-    checkElements();
-    const timer = setInterval(checkElements, interval);
-    return () => clearInterval(timer);
-  }
+    }
+  };
   async function downloadFile(url, fileName) {
+    downloadGuard.add();
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -153,7 +120,45 @@
     } catch (error2) {
       console.error(`Download failed: ${fileName}`, error2);
       throw error2;
+    } finally {
+      downloadGuard.remove();
     }
+  }
+  async function gmDownloadFile(url, fileName, options) {
+    downloadGuard.add();
+    return new Promise((resolve, reject) => {
+      GM_xmlhttpRequest({
+        method: "GET",
+        url,
+        responseType: "blob",
+        ...options?.headers && { headers: options.headers },
+        onload: (response) => {
+          try {
+            const blob = response.response;
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = fileName;
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+              document.body.removeChild(a);
+              URL.revokeObjectURL(blobUrl);
+            }, 100);
+            resolve();
+          } catch (error2) {
+            reject(error2);
+          } finally {
+            downloadGuard.remove();
+          }
+        },
+        onerror: (error2) => {
+          downloadGuard.remove();
+          reject(error2);
+        }
+      });
+    });
   }
   function extractFileInfo(src) {
     const picname = src.split("?")[0]?.split("/").pop() || "";
@@ -176,6 +181,7 @@
       picno: array[4] || "1"
     };
   }
+  goober2.setup(preact2.h);
   const MessageContainer = goober2.styled("div")`
   position: relative;
   min-width: 250px;
@@ -226,8 +232,9 @@
     content,
     duration = 3e3,
     onClose,
+    onClick,
     className,
-    style: style2
+    style
   }) {
     const timerRef = hooks.useRef(null);
     const startTimeRef = hooks.useRef(0);
@@ -270,8 +277,11 @@
       MessageContainer,
       {
         className: `message-${type} ${className || ""}`,
-        style: style2,
-        onClick: onClose,
+        style,
+        onClick: () => {
+          onClick?.();
+          onClose?.();
+        },
         onMouseEnter: pauseTimer,
         onMouseLeave: resumeTimer,
         children: [
@@ -283,7 +293,7 @@
   }
   const getUserMessagePlacement = () => {
     try {
-      const settings = JSON.parse(localStorage.getItem("x-downloader-settings") || "{}");
+      const settings = JSON.parse(localStorage.getItem(STORAGE_KEY$1) || "{}");
       return settings.messagePlacement || "top";
     } catch {
       return "top";
@@ -346,10 +356,11 @@
     preact2.render(preact2.h(Message, { ...config, onClose }), messageElement);
     return onClose;
   };
-  const createMessageMethod = (type) => (content, duration, placement) => show({
+  const createMessageMethod = (type) => (content, duration, placement, onClick) => show({
     type,
     content,
     placement: placement || getUserMessagePlacement(),
+    ...onClick && { onClick },
     ...duration !== void 0 && { duration }
   });
   const success = createMessageMethod("success");
@@ -365,8 +376,11 @@
     containers.clear();
   };
   const message = { success, error, warning, info, destroy };
-  const style = document.createElement("style");
-  style.textContent = `
+  const MESSAGE_STYLE_ID = "userscript-message-styles";
+  if (!document.getElementById(MESSAGE_STYLE_ID)) {
+    const style = document.createElement("style");
+    style.id = MESSAGE_STYLE_ID;
+    style.textContent = `
   @keyframes messageSlideIn {
     from {
       transform: translateY(-100%);
@@ -411,18 +425,30 @@
     }
   }
 `;
-  document.head.appendChild(style);
+    document.head.appendChild(style);
+  }
   const DEFAULT_LOCALE = "en";
-  const STORAGE_KEY$1 = "userscript-locale";
+  const STORAGE_KEY = "userscript-locale";
   let currentLocale = DEFAULT_LOCALE;
   const translations = {};
   const listeners = [];
   const detectBrowserLocale = () => navigator?.language?.toLowerCase().startsWith("zh") ? "zh" : "en";
   try {
-    currentLocale = localStorage.getItem(STORAGE_KEY$1) || detectBrowserLocale();
+    currentLocale = localStorage.getItem(STORAGE_KEY) || detectBrowserLocale();
   } catch {
     currentLocale = detectBrowserLocale();
   }
+  const deepMerge = (target, source) => {
+    const result = { ...target };
+    for (const key of Object.keys(source)) {
+      if (source[key] !== null && typeof source[key] === "object" && !Array.isArray(source[key]) && target[key] !== null && typeof target[key] === "object" && !Array.isArray(target[key])) {
+        result[key] = deepMerge(target[key], source[key]);
+      } else {
+        result[key] = source[key];
+      }
+    }
+    return result;
+  };
   const getNestedValue = (obj, path) => {
     let result = obj;
     for (const key of path.split(".")) {
@@ -443,13 +469,13 @@
   }
   const i18n = {
     addTranslations(locale, data) {
-      translations[locale] = Object.assign(translations[locale] || {}, data);
+      translations[locale] = deepMerge(translations[locale] || {}, data);
     },
     setLocale(locale) {
       if (currentLocale !== locale) {
         currentLocale = locale;
         try {
-          localStorage.setItem(STORAGE_KEY$1, locale);
+          localStorage.setItem(STORAGE_KEY, locale);
         } catch {
         }
         listeners.forEach((callback) => callback());
@@ -591,7 +617,7 @@
     }, [key, keySignal]);
     return keyState ?? false;
   }
-  const StyledButton$1 = goober2.styled("button")`
+  const StyledButton$2 = goober2.styled("button")`
   /* Base styles */
   border-radius: 6px;
   font-weight: 500;
@@ -647,7 +673,7 @@
     variant = "primary",
     size = "medium",
     className = "",
-    style: style2 = {},
+    style = {},
     type = "button"
   }) {
     const { theme } = useTheme();
@@ -660,10 +686,10 @@
       ...buttonSizes[size],
       "--cursor": disabled ? "not-allowed" : "pointer",
       "--opacity": disabled ? "0.6" : "1",
-      ...style2
+      ...style
     };
     return /* @__PURE__ */ jsxRuntime2.jsx(
-      StyledButton$1,
+      StyledButton$2,
       {
         className,
         style: buttonStyle,
@@ -693,14 +719,14 @@
     onChange,
     children,
     className = "",
-    style: style2 = {}
+    style = {}
   }) {
     const { theme } = useTheme();
     const checkboxStyle = {
       "--cursor": disabled ? "not-allowed" : "pointer",
       "--text-color": theme.textColor,
       "--opacity": disabled ? "0.6" : "1",
-      ...style2
+      ...style
     };
     return /* @__PURE__ */ jsxRuntime2.jsxs(Label, { className, style: checkboxStyle, children: [
       /* @__PURE__ */ jsxRuntime2.jsx(
@@ -743,14 +769,14 @@
     onBlur,
     onFocus,
     className = "",
-    style: style2 = {}
+    style = {}
   }) {
     const { theme } = useTheme();
     const inputStyle = {
       "--input-border": theme.inputBorder,
       "--input-bg": theme.inputBackground,
       "--input-text": theme.textColor,
-      ...style2
+      ...style
     };
     return /* @__PURE__ */ jsxRuntime2.jsx(
       StyledInput,
@@ -768,7 +794,7 @@
       }
     );
   }
-  function Select({ value, options, onChange, placeholder, className, style: style2 }) {
+  function Select({ value, options, onChange, placeholder, className, style }) {
     const { theme } = useTheme();
     const selectStyle = {
       padding: "6px 8px",
@@ -779,7 +805,7 @@
       fontSize: "14px",
       cursor: "pointer",
       outline: "none",
-      ...style2
+      ...style
     };
     const handleChange = (event) => {
       const target = event.target;
@@ -790,7 +816,7 @@
       options.map((option) => /* @__PURE__ */ jsxRuntime2.jsx("option", { value: option.value, children: option.label }, option.value))
     ] });
   }
-  function LanguageSelector({ className, style: style2 }) {
+  function LanguageSelector({ className, style }) {
     const { theme } = useTheme();
     const { t: t2, locale, setLocale } = useI18n();
     const languages = [
@@ -801,7 +827,7 @@
       "div",
       {
         className,
-        style: { display: "flex", alignItems: "center", gap: "8px", ...style2 },
+        style: { display: "flex", alignItems: "center", gap: "8px", ...style },
         children: [
           /* @__PURE__ */ jsxRuntime2.jsxs(
             "label",
@@ -827,7 +853,7 @@
     value,
     onChange,
     className,
-    style: style2
+    style
   }) {
     const { theme } = useTheme();
     const { t: t2 } = useI18n();
@@ -846,7 +872,7 @@
       "div",
       {
         className,
-        style: { display: "flex", alignItems: "center", gap: "8px", ...style2 },
+        style: { display: "flex", alignItems: "center", gap: "8px", ...style },
         children: [
           /* @__PURE__ */ jsxRuntime2.jsxs(
             "label",
@@ -904,7 +930,7 @@
     title,
     children,
     className = "",
-    style: style2 = {}
+    style = {}
   }) {
     const { theme } = useTheme();
     hooks.useEffect(() => {
@@ -921,7 +947,7 @@
     const cssVariables = {
       "--modal-bg": theme.panelBackground,
       "--modal-text": theme.textColor,
-      ...style2
+      ...style
     };
     const headerStyle = {
       display: "flex",
@@ -1011,19 +1037,146 @@
   const CardContent = goober2.styled("div")`
   padding: 20px;
 `;
-  function SettingsCard({ title, children, className = "", style: style2 = {} }) {
+  function SettingsCard({ title, children, className = "", style = {} }) {
     const { theme, isDark } = useTheme();
     const cardStyle = {
       "--card-bg": theme.panelBackground,
       "--card-border": theme.borderColor,
       "--card-header-bg": isDark ? "rgba(255, 255, 255, 0.02)" : "rgba(0, 0, 0, 0.01)",
       "--card-title-color": theme.textColor,
-      ...style2
+      ...style
     };
     return /* @__PURE__ */ jsxRuntime2.jsxs(Card, { className, style: cardStyle, children: [
       title && /* @__PURE__ */ jsxRuntime2.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntime2.jsx(CardTitle, { children: title }) }),
       /* @__PURE__ */ jsxRuntime2.jsx(CardContent, { children })
     ] });
+  }
+  const StyledButton$1 = goober2.styled("button")`
+  position: fixed;
+  left: var(--left-position);
+  bottom: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: ${(props) => props.$bgColor};
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10000;
+  color: white;
+  transition:
+    left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  opacity: 0.9;
+  border: none;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+`;
+  const SettingsIcon = goober2.styled("svg")`
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+`;
+  function SettingsButton({
+    onClick,
+    isVisible,
+    backgroundColor = "#1da1f2"
+  }) {
+    const buttonStyle = {
+      "--left-position": isVisible ? "10px" : "-40px"
+    };
+    return /* @__PURE__ */ jsxRuntime2.jsx(StyledButton$1, { style: buttonStyle, onClick, $bgColor: backgroundColor, children: /* @__PURE__ */ jsxRuntime2.jsx(SettingsIcon, { viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntime2.jsx("path", { d: "M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.82,11.69,4.82,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" }) }) });
+  }
+  function ButtonPositionSettings({ values, onChange }) {
+    const { theme } = useTheme();
+    const { t: t2 } = useI18n();
+    const labelStyle = {
+      display: "block",
+      marginBottom: "8px",
+      fontWeight: 500,
+      fontSize: "14px",
+      color: theme.textColor
+    };
+    return /* @__PURE__ */ jsxRuntime2.jsx(SettingsCard, { title: t2("settings.position.title"), children: /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "16px" }, children: [
+      /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "24px", flexWrap: "wrap" }, children: [
+        /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
+          /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.vertical") }),
+          /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "8px" }, children: [
+            /* @__PURE__ */ jsxRuntime2.jsx(
+              Button,
+              {
+                variant: values.buttonPositionVertical === "top" ? "primary" : "secondary",
+                size: "small",
+                onClick: () => onChange("buttonPositionVertical", "top"),
+                children: t2("settings.position.top")
+              }
+            ),
+            /* @__PURE__ */ jsxRuntime2.jsx(
+              Button,
+              {
+                variant: values.buttonPositionVertical === "bottom" ? "primary" : "secondary",
+                size: "small",
+                onClick: () => onChange("buttonPositionVertical", "bottom"),
+                children: t2("settings.position.bottom")
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
+          /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.verticalValue") }),
+          /* @__PURE__ */ jsxRuntime2.jsx(
+            Input,
+            {
+              value: values.buttonPositionVerticalValue,
+              onChange: (value) => onChange("buttonPositionVerticalValue", value),
+              placeholder: "8"
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "24px", flexWrap: "wrap" }, children: [
+        /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
+          /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.horizontal") }),
+          /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "8px" }, children: [
+            /* @__PURE__ */ jsxRuntime2.jsx(
+              Button,
+              {
+                variant: values.buttonPositionHorizontal === "left" ? "primary" : "secondary",
+                size: "small",
+                onClick: () => onChange("buttonPositionHorizontal", "left"),
+                children: t2("settings.position.left")
+              }
+            ),
+            /* @__PURE__ */ jsxRuntime2.jsx(
+              Button,
+              {
+                variant: values.buttonPositionHorizontal === "right" ? "primary" : "secondary",
+                size: "small",
+                onClick: () => onChange("buttonPositionHorizontal", "right"),
+                children: t2("settings.position.right")
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
+          /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.horizontalValue") }),
+          /* @__PURE__ */ jsxRuntime2.jsx(
+            Input,
+            {
+              value: values.buttonPositionHorizontalValue,
+              onChange: (value) => onChange("buttonPositionHorizontalValue", value),
+              placeholder: "8"
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime2.jsx("div", { style: { fontSize: "12px", color: theme.secondaryTextColor }, children: t2("settings.position.valueHelp") })
+    ] }) });
   }
   function createSettingsHook(storageKey, defaultSettings) {
     const storageManager = new StorageManager(storageKey, defaultSettings);
@@ -1032,12 +1185,12 @@
     const updateSettings = (newSettings) => {
       const updated = storageManager.saveSettings(newSettings);
       settingsSignal.value = updated;
-      window.dispatchEvent(new CustomEvent("x-downloader-settings-changed"));
+      window.dispatchEvent(new CustomEvent(`${storageKey}-changed`));
     };
     const resetSettings = () => {
       const reset = storageManager.resetSettings();
       settingsSignal.value = reset;
-      window.dispatchEvent(new CustomEvent("x-downloader-settings-changed"));
+      window.dispatchEvent(new CustomEvent(`${storageKey}-changed`));
       return reset;
     };
     const getSetting = (key) => {
@@ -1076,8 +1229,7 @@
     buttonPositionVerticalValue: "64",
     buttonPositionHorizontalValue: "8"
   };
-  const STORAGE_KEY = "x-downloader-settings";
-  const settingsHook = createSettingsHook(STORAGE_KEY, DEFAULT_SETTINGS);
+  const settingsHook = createSettingsHook(STORAGE_KEY$1, DEFAULT_SETTINGS);
   function useDownloaderSettings() {
     const [settings, setSettings] = hooks.useState(settingsHook.signal.value);
     hooks.useEffect(() => {
@@ -1120,6 +1272,20 @@
     button: {
       download: "下载",
       settings: "设置"
+    },
+    settings: {
+      position: {
+        title: "按钮位置设置",
+        vertical: "垂直方向",
+        horizontal: "水平方向",
+        top: "上",
+        bottom: "下",
+        left: "左",
+        right: "右",
+        verticalValue: "垂直距离",
+        horizontalValue: "水平距离",
+        valueHelp: "纯数字默认 px，也可输入带单位的值如 1rem、10%"
+      }
     }
   };
   const enTranslations$1 = {
@@ -1148,6 +1314,20 @@
     button: {
       download: "Download",
       settings: "Settings"
+    },
+    settings: {
+      position: {
+        title: "Button Position",
+        vertical: "Vertical",
+        horizontal: "Horizontal",
+        top: "Top",
+        bottom: "Bottom",
+        left: "Left",
+        right: "Right",
+        verticalValue: "Vertical Offset",
+        horizontalValue: "Horizontal Offset",
+        valueHelp: "Pure numbers default to px, also supports values like 1rem, 10%"
+      }
     }
   };
   const zhTranslations = {
@@ -1173,18 +1353,6 @@
         showButtonHelp: "在推文操作栏中显示统一的下载按钮，自动检测媒体类型",
         autoLike: "下载时自动点赞",
         autoLikeHelp: "下载图片或视频时自动为推文点赞"
-      },
-      position: {
-        title: "按钮位置设置",
-        vertical: "垂直方向",
-        horizontal: "水平方向",
-        top: "上",
-        bottom: "下",
-        left: "左",
-        right: "右",
-        verticalValue: "垂直距离",
-        horizontalValue: "水平距离",
-        valueHelp: "纯数字默认 px，也可输入带单位的值如 1rem、10%"
       },
       reset: "重置为默认设置"
     },
@@ -1243,18 +1411,6 @@
         autoLike: "Auto-like on download",
         autoLikeHelp: "Automatically like the tweet when downloading images or videos"
       },
-      position: {
-        title: "Button Position Settings",
-        vertical: "Vertical",
-        horizontal: "Horizontal",
-        top: "Top",
-        bottom: "Bottom",
-        left: "Left",
-        right: "Right",
-        verticalValue: "Vertical distance",
-        horizontalValue: "Horizontal distance",
-        valueHelp: "Numbers default to px, or enter values with units like 1rem, 10%"
-      },
       reset: "Reset to default settings"
     },
     messages: {
@@ -1288,8 +1444,10 @@
       copyFailed: "Copy failed"
     }
   };
-  i18n.addTranslations("zh", { ...zhTranslations$1, ...zhTranslations });
-  i18n.addTranslations("en", { ...enTranslations$1, ...enTranslations });
+  i18n.addTranslations("zh", zhTranslations$1);
+  i18n.addTranslations("zh", zhTranslations);
+  i18n.addTranslations("en", enTranslations$1);
+  i18n.addTranslations("en", enTranslations);
   function SettingsPanel({ isOpen, onClose }) {
     const { settings, setSetting, resetSettings } = useDownloaderSettings();
     const { t: t2 } = useI18n();
@@ -1429,91 +1587,44 @@
           /* @__PURE__ */ jsxRuntime2.jsx("div", { style: helpTextStyle, children: t2("settings.universal.autoLikeHelp") })
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntime2.jsx(SettingsCard, { title: t2("settings.position.title"), children: /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: "16px" }, children: [
-        /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "24px", flexWrap: "wrap" }, children: [
-          /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
-            /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.vertical") }),
-            /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "8px" }, children: [
-              /* @__PURE__ */ jsxRuntime2.jsx(
-                Button,
-                {
-                  variant: settings.buttonPositionVertical === "top" ? "primary" : "secondary",
-                  size: "small",
-                  onClick: () => setSetting("buttonPositionVertical", "top"),
-                  children: t2("settings.position.top")
-                }
-              ),
-              /* @__PURE__ */ jsxRuntime2.jsx(
-                Button,
-                {
-                  variant: settings.buttonPositionVertical === "bottom" ? "primary" : "secondary",
-                  size: "small",
-                  onClick: () => setSetting("buttonPositionVertical", "bottom"),
-                  children: t2("settings.position.bottom")
-                }
-              )
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
-            /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.verticalValue") }),
-            /* @__PURE__ */ jsxRuntime2.jsx(
-              Input,
-              {
-                value: settings.buttonPositionVerticalValue,
-                onChange: (value) => setSetting("buttonPositionVerticalValue", value),
-                placeholder: "8"
-              }
-            )
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "24px", flexWrap: "wrap" }, children: [
-          /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
-            /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.horizontal") }),
-            /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { display: "flex", gap: "8px" }, children: [
-              /* @__PURE__ */ jsxRuntime2.jsx(
-                Button,
-                {
-                  variant: settings.buttonPositionHorizontal === "left" ? "primary" : "secondary",
-                  size: "small",
-                  onClick: () => setSetting("buttonPositionHorizontal", "left"),
-                  children: t2("settings.position.left")
-                }
-              ),
-              /* @__PURE__ */ jsxRuntime2.jsx(
-                Button,
-                {
-                  variant: settings.buttonPositionHorizontal === "right" ? "primary" : "secondary",
-                  size: "small",
-                  onClick: () => setSetting("buttonPositionHorizontal", "right"),
-                  children: t2("settings.position.right")
-                }
-              )
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntime2.jsxs("div", { style: { flex: "1", minWidth: "120px" }, children: [
-            /* @__PURE__ */ jsxRuntime2.jsx("label", { style: labelStyle, children: t2("settings.position.horizontalValue") }),
-            /* @__PURE__ */ jsxRuntime2.jsx(
-              Input,
-              {
-                value: settings.buttonPositionHorizontalValue,
-                onChange: (value) => setSetting("buttonPositionHorizontalValue", value),
-                placeholder: "8"
-              }
-            )
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntime2.jsx("div", { style: { fontSize: "12px", color: theme.secondaryTextColor }, children: t2("settings.position.valueHelp") })
-      ] }) })
+      /* @__PURE__ */ jsxRuntime2.jsx(
+        ButtonPositionSettings,
+        {
+          values: {
+            buttonPositionVertical: settings.buttonPositionVertical,
+            buttonPositionHorizontal: settings.buttonPositionHorizontal,
+            buttonPositionVerticalValue: settings.buttonPositionVerticalValue,
+            buttonPositionHorizontalValue: settings.buttonPositionHorizontalValue
+          },
+          onChange: (key, value) => setSetting(key, value)
+        }
+      )
     ] }, resetKey) });
   }
   function App() {
     const [isSettingsPanelOpen, setIsSettingsPanelOpen] = hooks.useState(false);
+    const [isMouseNearLeft, setIsMouseNearLeft] = hooks.useState(false);
+    hooks.useEffect(() => {
+      const handleMouseMove = (e) => {
+        const isNear = e.clientX < 100 && e.clientY > window.innerHeight * (2 / 3);
+        setIsMouseNearLeft(isNear);
+      };
+      const handleOpenSettings = () => setIsSettingsPanelOpen(true);
+      document.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener(OPEN_SETTINGS_EVENT, handleOpenSettings);
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener(OPEN_SETTINGS_EVENT, handleOpenSettings);
+      };
+    }, []);
+    const isVisible = isMouseNearLeft || isSettingsPanelOpen;
     return /* @__PURE__ */ jsxRuntime2.jsxs(jsxRuntime2.Fragment, { children: [
       /* @__PURE__ */ jsxRuntime2.jsx(
         SettingsButton,
         {
           onClick: () => setIsSettingsPanelOpen(!isSettingsPanelOpen),
-          isSettingsPanelOpen
+          isVisible,
+          backgroundColor: "#1da1f2"
         }
       ),
       /* @__PURE__ */ jsxRuntime2.jsx(SettingsPanel, { isOpen: isSettingsPanelOpen, onClose: () => setIsSettingsPanelOpen(false) })
@@ -1588,7 +1699,7 @@
     icon = defaultDownloadIcon,
     shiftIcon = defaultCopyIcon,
     loadingIcon = defaultLoadingIcon,
-    style: style2 = {},
+    style = {},
     className = "",
     onClick
   }) {
@@ -1613,9 +1724,9 @@
       "--opacity": isDownloading ? "0.5" : "0.8",
       "--transform": isDownloading ? "scale(0.95)" : "scale(1)",
       "--hover-transform": isDownloading ? "scale(0.95)" : "scale(1.05)",
-      ...!style2.top && !style2.bottom && { "--bottom": "8px" },
-      ...!style2.right && !style2.left && { "--right": "8px" },
-      ...convertStyleToCSSVars(style2)
+      ...!style.top && !style.bottom && { "--bottom": "8px" },
+      ...!style.right && !style.left && { "--right": "8px" },
+      ...convertStyleToCSSVars(style)
     };
     return /* @__PURE__ */ jsxRuntime2.jsx(
       StyledButton,
@@ -2354,12 +2465,15 @@
     };
     return /* @__PURE__ */ jsxRuntime2.jsx(InlineButton, { onClick: handleDownload, disabled: isDownloading, title: getTitle(), children: /* @__PURE__ */ jsxRuntime2.jsx(DownloadIcon, { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsxRuntime2.jsx("path", { d: "M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" }) }) });
   }
+  GM_registerMenuCommand("⚙️ Settings / 设置", () => {
+    window.dispatchEvent(new CustomEvent(OPEN_SETTINGS_EVENT));
+  });
   const IMAGE_SELECTOR = 'img[src^="https://pbs.twimg.com/media/"]';
   const VIDEO_SELECTOR = "video";
   const processedImages = /* @__PURE__ */ new WeakSet();
   const processedVideos = /* @__PURE__ */ new WeakSet();
   const processedTweets = /* @__PURE__ */ new WeakSet();
-  const getSettings = () => JSON.parse(localStorage.getItem("x-downloader-settings") || "{}");
+  const getSettings = () => JSON.parse(localStorage.getItem(STORAGE_KEY$1) || "{}");
   const mountHoverButton = (hostElement, settingKey, renderCallback) => {
     const container = document.createElement("div");
     container.style.display = "none";
@@ -2374,8 +2488,8 @@
     hostElement.addEventListener("mouseleave", () => container.style.display = "none");
   };
   const ensureRelativePosition = (element) => {
-    const style2 = getComputedStyle(element);
-    if (style2.position === "static") {
+    const style = getComputedStyle(element);
+    if (style.position === "static") {
       element.style.position = "relative";
     }
   };

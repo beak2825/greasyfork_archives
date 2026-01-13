@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Filter X.com Location
 // @namespace    mailto:arabalika@noreplay.codeberg.org
-// @version      0.2.7
+// @version      0.2.8
 // @description  Script to filter X content by user location.
 // @match        https://x.com/*
 // @grant        GM_xmlhttpRequest
@@ -717,70 +717,141 @@
     wrapper.dataset.cutoffConfig = "true";
     wrapper.style.margin = "8px 0";
     wrapper.style.fontFamily = 'TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+
     wrapper.innerHTML = `
       <button type="button" aria-haspopup="menu" aria-expanded="false" style="width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: inherit; font-size: 20px; font-weight: 400; line-height: 24px;">
         <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 1.75rem; height: 1.75rem; flex-shrink: 0;"><path d="M4 5h16v2l-6 6v4l-4 2v-6L4 7z" fill="currentColor"></path></svg>
         <span style="white-space: nowrap;">Filters</span>
       </button>
-      <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 12px; min-width: 220px; border-radius: 12px; background: #000; display: none; z-index: 1000; border: 1px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
-        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: white;">
-          <input type="checkbox" ${filterEnabled ? "checked" : ""}>
+      <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 16px; min-width: 320px; border-radius: 12px; background: #000; display: none; z-index: 9999; border: 1px solid #333; box-shadow: 0 0 15px rgba(0,0,0,0.7);">
+        <h2 style="color: white; font-size: 18px; margin: 0 0 12px 0; font-weight: bold;">Location Filter</h2>
+
+        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: white; cursor: pointer;">
+          <input type="checkbox" id="filter-enabled-check">
           Enable filter
         </label>
-        <label style="display: block; color: white;">
-          Filter entries (one per line)
-          <textarea style="width: 100%; margin-top: 4px; min-height: 80px; background: #222; color: white; border: 1px solid #444;">${filterValues.join("\n")}</textarea>
-        </label>
-        <label style="display: block; margin-top: 8px; color: white;">
+
+        <div style="margin: 8px 0; color: #888; font-size: 12px; text-transform: uppercase; font-weight: bold;">Blocked Locations</div>
+        <div id="filter-entries" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; max-height: 300px; overflow-y: auto; padding-right: 4px;"></div>
+
+        <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+             <button id="add-filter-btn" title="Add Country" style="width: 64px; height: 32px; background: #333; color: white; border: 1px solid #444; border-radius: 15px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px;">+</button>
+        </div>
+
+        <label style="display: block; margin-bottom: 16px; color: white;">
           Mode
-          <select style="width: 100%; margin-top: 4px; background: #222; color: white; border: 1px solid #444;">
-            <option value="blacklist"${filterMode === "blacklist" ? " selected" : ""}>Blacklist</option>
-            <option value="whitelist"${filterMode === "whitelist" ? " selected" : ""}>Whitelist</option>
+          <select id="mode-select" style="width: 100%; margin-top: 4px; background: #222; color: white; border: 1px solid #444; padding: 6px; border-radius: 4px;">
+            <option value="blacklist">Blacklist (Block these)</option>
+            <option value="whitelist">Whitelist (Only allow these)</option>
           </select>
         </label>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #333; padding-top: 12px;">
+           <button id="cancel-btn" style="padding: 8px 16px; background: transparent; color: white; border: 1px solid #444; border-radius: 20px; cursor: pointer;">Cancel</button>
+           <button id="save-btn" style="padding: 8px 16px; background: #fff; color: #000; border: none; border-radius: 20px; cursor: pointer; font-weight: bold;">Save</button>
+        </div>
       </div>
     `;
+
     const button = wrapper.querySelector("button");
     const menu = wrapper.querySelector("div");
-    const checkbox = menu?.querySelector('input[type="checkbox"]');
-    const textarea = menu?.querySelector("textarea");
-    const select = menu?.querySelector("select");
-    if (!button || !menu || !checkbox || !textarea || !select) return;
+    const checkbox = menu?.querySelector('#filter-enabled-check');
+    const entriesContainer = menu?.querySelector("#filter-entries");
+    const addBtn = menu?.querySelector("#add-filter-btn");
+    const selectMode = menu?.querySelector("#mode-select");
+    const saveBtn = menu?.querySelector("#save-btn");
+    const cancelBtn = menu?.querySelector("#cancel-btn");
 
-    button.addEventListener("click", () => {
-      menu.style.display = "block";
-      button.setAttribute("aria-expanded", "true");
-    });
-    document.addEventListener("click", (event) => {
-      if (!wrapper.contains(event.target)) {
+    if (!button || !menu) return;
+
+    // Helper: Sort countries alphabetically for dropdowns
+    const sortedKeys = Array.from(countryFlags.keys()).sort();
+
+    // --- RENDER LOGIC ---
+    const renderEntries = (values) => {
+        entriesContainer.innerHTML = "";
+        values.forEach(val => addRow(val));
+    };
+
+    const addRow = (selectedValue = "") => {
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.gap = "8px";
+        row.style.alignItems = "center";
+
+        const dropdown = document.createElement("select");
+        dropdown.style.cssText = "flex: 1; background: #222; color: white; border: 1px solid #444; padding: 6px; border-radius: 4px;";
+        dropdown.innerHTML = `<option value="">Select country...</option>`;
+
+        sortedKeys.forEach(countryName => {
+            const opt = document.createElement("option");
+            opt.value = countryName;
+            opt.textContent = `${countryFlags.get(countryName)} ${countryName}`;
+            if (countryName === selectedValue) opt.selected = true;
+            dropdown.appendChild(opt);
+        });
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "✕";
+        removeBtn.style.cssText = "background: transparent; color: #666; border: 1px solid #444; border-radius: 4px; padding: 0 10px; height: 100%; cursor: pointer; font-size: 14px;";
+        removeBtn.title = "Remove country";
+
+        removeBtn.addEventListener("click", () => row.remove());
+
+        row.appendChild(dropdown);
+        row.appendChild(removeBtn);
+        entriesContainer.appendChild(row);
+    };
+
+    // --- ACTIONS ---
+    const openModal = () => {
+        const currentVals = localStorage.getItem("tweetFilterValues")
+            ? localStorage.getItem("tweetFilterValues").split("\n").filter(Boolean)
+            : [];
+
+        renderEntries(currentVals);
+        checkbox.checked = localStorage.getItem("tweetFilterEnabled") === "true";
+        selectMode.value = localStorage.getItem("tweetFilterMode") || "blacklist";
+
+        menu.style.display = "block";
+        button.setAttribute("aria-expanded", "true");
+    };
+
+    const closeModal = () => {
         menu.style.display = "none";
         button.setAttribute("aria-expanded", "false");
-      }
-    });
-    checkbox.addEventListener("change", () => {
-      filterEnabled = checkbox.checked;
-      localStorage.setItem("tweetFilterEnabled", filterEnabled.toString());
-      document.querySelectorAll('[data-testid="tweet"]').forEach(t => handleTweet(t));
-      const profileH = document.querySelector('[data-testid="UserProfileHeader_Items"]');
-      if(profileH) handleProfile(profileH);
-    });
-    textarea.addEventListener("change", () => {
-      filterValues = textarea.value
-        .split("\n")
-        .map((value) => value.trim())
-        .filter(Boolean);
-      localStorage.setItem("tweetFilterValues", filterValues.join("\n"));
-      document.querySelectorAll('[data-testid="tweet"]').forEach(t => handleTweet(t));
-      const profileH = document.querySelector('[data-testid="UserProfileHeader_Items"]');
-      if(profileH) handleProfile(profileH);
-    });
-    select.addEventListener("change", () => {
-      filterMode = select.value;
-      localStorage.setItem("tweetFilterMode", filterMode);
-      document.querySelectorAll('[data-testid="tweet"]').forEach(t => handleTweet(t));
-      const profileH = document.querySelector('[data-testid="UserProfileHeader_Items"]');
-      if(profileH) handleProfile(profileH);
-    });
+    };
+
+    const saveSettings = () => {
+        // 1. Gather Data
+        const selects = entriesContainer.querySelectorAll("select");
+        const newValues = Array.from(selects).map(s => s.value).filter(Boolean);
+        const newEnabled = checkbox.checked;
+        const newMode = selectMode.value;
+
+        // 2. Write to Storage
+        filterValues = newValues;
+        filterEnabled = newEnabled;
+        filterMode = newMode;
+
+        localStorage.setItem("tweetFilterValues", filterValues.join("\n"));
+        localStorage.setItem("tweetFilterEnabled", filterEnabled.toString());
+        localStorage.setItem("tweetFilterMode", filterMode);
+
+        // 3. Apply changes to DOM
+        document.querySelectorAll('[data-testid="tweet"]').forEach(t => handleTweet(t));
+        const profileH = document.querySelector('[data-testid="UserProfileHeader_Items"]');
+        if(profileH) handleProfile(profileH);
+
+        closeModal();
+    };
+
+    // --- EVENT LISTENERS ---
+    button.addEventListener("click", openModal);
+    addBtn.addEventListener("click", () => addRow());
+    saveBtn.addEventListener("click", saveSettings);
+    cancelBtn.addEventListener("click", closeModal);
+
     nav.appendChild(wrapper);
   };
 

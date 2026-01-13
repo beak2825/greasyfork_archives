@@ -35,7 +35,7 @@
 /**
  * @license AGPL-3.0
  * Blooket Cheats
- * Copyright (C) 2023-present 05Konz/Xullys/redhorse26/landsedge
+ * Copyright (C) 2023-present 05Konz/Xullys/redhorse26/landsedge/Tony-the-best
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
@@ -387,7 +387,7 @@ button,
 
         const version = document.createElement("span");
         version.className = classes.version;
-        version.innerText = "SHx xullys - X-GUI " + versionName;
+        version.innerText = "Tony-the-best - X-GUI " + versionName;
         guiTopBar.append(version);
 
         const style = document.createElement("style");
@@ -13155,12 +13155,12 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         const copyrightTag = document.createElement("span");
         copyrightTag.className = classes.copyrightTag;
 
-        copyrightTag.innerText = `Copyright © ${new Date().getFullYear()} Xully`;
+        copyrightTag.innerText = `Copyright © ${new Date().getFullYear()} Tony-the-best`;
 
         const codingCredits = document.createElement("ul");
         codingCredits.className = classes.codingCredits;
 
-        codingCredits.append(createCredit("Owner", "Xully"));
+        codingCredits.append(createCredit("Owner", "Tony-the-best"));
         codingCredits.append(createCredit("Full GUI Dev", "Cathead+landsedge"));
         codingCredits.append(createCredit("Module Dev", "redhorse26"));
         codingCredits.append(createCredit("Design+Module Dev", "Lil Skittle"));
@@ -13170,7 +13170,7 @@ modulePage.append(modTitle, buttonGrid, clearAllContainer);
         const creditLinks = document.createElement("ul");
         creditLinks.className = classes.creditLinks;
 
-        creditLinks.append(createCredit("Our Github", '<a target="_blank" href="https://github.com/XULL-XXX/X-GUI-BLOOKET-CLIENT">X-GUI CHEATS/GITHUB</a>'));
+        creditLinks.append(createCredit("Our Github", '<a target="_blank" href="https://github.com/Tony-the-the-best/blooket-gui">X-GUI CHEATS/GITHUB</a>'));
         creditLinks.append(createCredit("Our Website", '<a target="_blank" href="https://xgui-client.github.io">More Info/Website</a>'));
         creditLinks.append(createCredit("Discord", '<a target="_blank" href="https://discord.gg/A7CRUz8vFR">JOIN THE SERVER</a>'));
 

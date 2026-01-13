@@ -1,15 +1,15 @@
 // ==UserScript==
+// @name         Claude Monitor
 // @license      MIT
-// @name         Claude DOM Trimmer & Excessive Chat Warning
 // @namespace    https://claude.ai/
-// @version      5.10
-// @description  Improve Claude.ai performance by removing older messages from DOM (with restore capability) and chat counts
+// @version      6.5
+// @description  Improve Claude.ai workflow/performance by removing older messages from DOM (with restore capability), and monitor session/weekly usage
 // @author       Claude Assistant
 // @match        https://claude.ai/*
 // @grant        GM_addStyle
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/562271/Claude%20DOM%20Trimmer%20%20Excessive%20Chat%20Warning.user.js
-// @updateURL https://update.greasyfork.org/scripts/562271/Claude%20DOM%20Trimmer%20%20Excessive%20Chat%20Warning.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562271/Claude%20Monitor.user.js
+// @updateURL https://update.greasyfork.org/scripts/562271/Claude%20Monitor.meta.js
 // ==/UserScript==
 
 (function() {
@@ -41,25 +41,25 @@
     function checkUrlChange() {
         if (window.location.pathname !== currentPath) {
             currentPath = window.location.pathname;
-
+            
             // Clear cache - old messages are for different conversation
             removedCache.clear();
             cacheIdCounter = 0;
             thresholdAlertShown = false;
-
+            
             // Remove any orphaned placeholders from previous conversation
             document.querySelectorAll('.claude-trimmer-placeholder').forEach(p => p.remove());
-
+            
             // Remove any existing toast
             const existingToast = document.querySelector('.claude-trimmer-toast');
             if (existingToast) existingToast.remove();
-
+            
             // Stop existing observer
             stopObserver();
-
+            
             // Load settings for new URL
             const hadSavedSettings = loadSettings();
-
+            
             // Update UI elements with new settings
             const panel = document.getElementById('claude-trimmer-panel');
             const slider = document.getElementById('trimmer-keep-slider');
@@ -69,7 +69,7 @@
             const iconToggle = document.getElementById('trimmer-icon-toggle');
             const toggleBtn = document.getElementById('trimmer-toggle');
             const collapseBtn = document.querySelector('.trimmer-collapse-btn');
-
+            
             // Collapse if enabled from saved settings, expand otherwise
             if (panel && collapseBtn) {
                 if (hadSavedSettings && isEnabled) {
@@ -78,7 +78,7 @@
                     panel.classList.remove('collapsed');
                 }
             }
-
+            
             if (slider) {
                 slider.value = keepVisible;
                 if (keepVisible > parseInt(slider.max, 10)) {
@@ -100,17 +100,21 @@
                 toggleBtn.textContent = isEnabled ? 'Disable' : 'Enable';
                 toggleBtn.classList.toggle('active', isEnabled);
             }
-
+            
             // Update bar toggle and collapsed stats
             const barToggle = document.getElementById('trimmer-bar-toggle');
             const collapsedStats = document.getElementById('trimmer-collapsed-stats');
+            const usageStats = document.getElementById('trimmer-usage-stats');
             if (barToggle) {
                 barToggle.classList.toggle('active', showThresholdBar);
             }
             if (collapsedStats) {
                 collapsedStats.classList.toggle('show-bar', showThresholdBar);
             }
-
+            if (usageStats) {
+                usageStats.classList.toggle('show-bar', showThresholdBar);
+            }
+            
             // Update placement
             const placementSelect = document.getElementById('trimmer-placement');
             if (placementSelect) {
@@ -120,7 +124,7 @@
                 panel.classList.remove('placement-top-left', 'placement-top-right', 'placement-bottom-left', 'placement-bottom-right');
                 panel.classList.add('placement-' + panelPlacement);
             }
-
+            
             // If enabled for this conversation, start pruning after delay
             if (isEnabled) {
                 setTimeout(() => {
@@ -128,7 +132,7 @@
                     startObserver();
                 }, 1000);
             }
-
+            
             updateUI();
         }
     }
@@ -317,6 +321,81 @@
         .trimmer-collapsed-stats.show-bar .trimmer-collapsed-bar {
             display: block;
             margin-top: 6px;
+        }
+
+        .trimmer-usage-stats {
+            font-size: 9px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        #claude-trimmer-panel:not(.collapsed) .trimmer-usage-stats {
+            display: none;
+        }
+
+        .trimmer-usage-bars {
+            display: none;
+        }
+
+        .trimmer-usage-values {
+            display: block;
+        }
+
+        .trimmer-usage-stats.show-bar .trimmer-usage-bars {
+            display: block;
+        }
+
+        .trimmer-usage-stats.show-bar .trimmer-usage-values {
+            display: none;
+        }
+
+        .trimmer-usage-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #3b3b3b;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .trimmer-usage-bar {
+            height: 100%;
+            width: 0%;
+            background: #22c55e;
+            border-radius: 3px;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .trimmer-usage-bar.warning {
+            background: #f59e0b;
+        }
+
+        .trimmer-usage-bar.danger {
+            background: #ef4444;
+        }
+
+        .trimmer-usage-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-top: 2px;
+        }
+
+        .trimmer-usage-label {
+            color: #666;
+        }
+
+        .trimmer-usage-reset {
+            color: #888;
+        }
+
+        .trimmer-usage-sep {
+            color: #555;
+        }
+
+        .trimmer-usage-pct {
+            color: #da7756;
+            font-weight: 600;
         }
 
         .trimmer-toggle-row {
@@ -775,6 +854,26 @@
                 color: #666;
             }
 
+            .trimmer-usage-stats {
+                color: #666;
+            }
+
+            .trimmer-usage-bar-container {
+                background: #ccc;
+            }
+
+            .trimmer-usage-label {
+                color: #888;
+            }
+
+            .trimmer-usage-reset {
+                color: #666;
+            }
+
+            .trimmer-usage-sep {
+                color: #999;
+            }
+
             .trimmer-title {
                 color: #333;
             }
@@ -789,6 +888,117 @@
     const styleEl = document.createElement('style');
     styleEl.textContent = styles;
     document.head.appendChild(styleEl);
+
+    // Fetch usage data using hidden iframe
+    function fetchUsage() {
+        // Remove any existing iframe
+        const existingIframe = document.getElementById('trimmer-usage-iframe');
+        if (existingIframe) existingIframe.remove();
+        
+        const iframe = document.createElement('iframe');
+        iframe.id = 'trimmer-usage-iframe';
+        iframe.style.cssText = 'position:absolute;width:1px;height:1px;left:-9999px;visibility:hidden;';
+        iframe.src = 'https://claude.ai/settings/usage';
+        
+        iframe.onload = () => {
+            // Wait a moment for React to render
+            setTimeout(() => {
+                try {
+                    const doc = iframe.contentDocument;
+                    if (!doc) {
+                        console.warn('Claude DOM Trimmer: Cannot access iframe document');
+                        iframe.remove();
+                        return;
+                    }
+                    
+                    // Find all usage sections
+                    const sections = doc.querySelectorAll('.w-full.flex.flex-row.gap-x-8');
+                    
+                    let sessionData = { reset: '—', pct: '—' };
+                    let weeklyData = { reset: '—', pct: '—' };
+                    
+                    sections.forEach(section => {
+                        const label = section.querySelector('p.text-text-100');
+                        if (!label) return;
+                        
+                        const labelText = label.textContent.trim();
+                        const resetEl = section.querySelector('p.text-text-400:not(.text-right)');
+                        const pctEl = section.querySelector('p.text-text-400.text-right');
+                        
+                        const reset = resetEl ? resetEl.textContent.trim() : '—';
+                        const pct = pctEl ? pctEl.textContent.trim().replace(' used', '') : '—';
+                        
+                        if (labelText === 'Current session') {
+                            sessionData = { reset, pct };
+                        } else if (labelText === 'All models') {
+                            weeklyData = { reset, pct };
+                        }
+                    });
+                    
+                    // Update UI - Values mode
+                    const sessionResetEl = document.getElementById('trimmer-session-reset');
+                    const sessionPctEl = document.getElementById('trimmer-session-pct');
+                    const weeklyResetEl = document.getElementById('trimmer-weekly-reset');
+                    const weeklyPctEl = document.getElementById('trimmer-weekly-pct');
+                    
+                    if (sessionResetEl) sessionResetEl.textContent = sessionData.reset;
+                    if (sessionPctEl) sessionPctEl.textContent = sessionData.pct;
+                    if (weeklyResetEl) weeklyResetEl.textContent = weeklyData.reset;
+                    if (weeklyPctEl) weeklyPctEl.textContent = weeklyData.pct;
+                    
+                    // Update UI - Bars mode
+                    const sessionBarContainer = document.getElementById('trimmer-session-bar-container');
+                    const sessionBar = document.getElementById('trimmer-session-bar');
+                    const weeklyBarContainer = document.getElementById('trimmer-weekly-bar-container');
+                    const weeklyBar = document.getElementById('trimmer-weekly-bar');
+                    
+                    // Helper to get color class based on percentage
+                    const getColorClass = (pctStr) => {
+                        const pctNum = parseInt(pctStr, 10);
+                        if (isNaN(pctNum)) return '';
+                        if (pctNum >= 65) return 'danger';
+                        if (pctNum >= 50) return 'warning';
+                        return '';
+                    };
+                    
+                    // Update session bar
+                    if (sessionBar && sessionBarContainer) {
+                        const pctNum = parseInt(sessionData.pct, 10);
+                        sessionBar.style.width = (isNaN(pctNum) ? 0 : pctNum) + '%';
+                        sessionBar.classList.remove('warning', 'danger');
+                        const colorClass = getColorClass(sessionData.pct);
+                        if (colorClass) sessionBar.classList.add(colorClass);
+                        const resetText = sessionData.reset.replace('Resets ', '');
+                        sessionBarContainer.title = sessionData.pct + ' - Session limit resets ' + resetText;
+                    }
+                    
+                    // Update weekly bar
+                    if (weeklyBar && weeklyBarContainer) {
+                        const pctNum = parseInt(weeklyData.pct, 10);
+                        weeklyBar.style.width = (isNaN(pctNum) ? 0 : pctNum) + '%';
+                        weeklyBar.classList.remove('warning', 'danger');
+                        const colorClass = getColorClass(weeklyData.pct);
+                        if (colorClass) weeklyBar.classList.add(colorClass);
+                        const resetText = weeklyData.reset.replace('Resets ', '');
+                        weeklyBarContainer.title = weeklyData.pct + ' - Weekly limit resets ' + resetText;
+                    }
+                    
+                } catch (e) {
+                    console.warn('Claude DOM Trimmer: Failed to parse usage iframe', e);
+                }
+                
+                // Clean up iframe
+                iframe.remove();
+            }, 2000); // Wait 2 seconds for React to render
+        };
+        
+        iframe.onerror = () => {
+            console.warn('Claude DOM Trimmer: Failed to load usage iframe');
+            iframe.remove();
+        };
+        
+        document.body.appendChild(iframe);
+    }
 
     // Show toast notification
     function showToast(message, duration = 30000) {
@@ -849,14 +1059,14 @@
         // Messages are direct DIV children of the container
         // Filter out spacers (h-12 class) and empty/small elements
         const children = Array.from(container.children);
-
+        
         return children.filter(child => {
             // Skip our placeholder
             if (child.classList.contains('claude-trimmer-placeholder')) return false;
 
             // Skip spacer elements (h-12 class or very small)
             if (child.classList.contains('h-12')) return false;
-
+            
             // Skip elements with no height (hidden/empty)
             if (child.offsetHeight < 50) return false;
 
@@ -1002,7 +1212,7 @@
                 keepVisible = messages.length;
                 const slider = document.getElementById('trimmer-keep-slider');
                 const keepValueEl = document.getElementById('trimmer-keep-value');
-
+                
                 if (slider) {
                     // Expand slider max if needed
                     if (keepVisible > parseInt(slider.max, 10)) {
@@ -1031,7 +1241,7 @@
 
         removedCache.clear();
         thresholdAlertShown = false; // Reset alert since removed count is now 0
-
+        
         // Adjust slider if restored count exceeds keepVisible (only when requested)
         if (adjustSlider) {
             const messages = getMessageElements();
@@ -1039,7 +1249,7 @@
                 keepVisible = messages.length;
                 const slider = document.getElementById('trimmer-keep-slider');
                 const keepValueEl = document.getElementById('trimmer-keep-value');
-
+                
                 if (slider) {
                     // Expand slider max if needed
                     if (keepVisible > parseInt(slider.max, 10)) {
@@ -1052,7 +1262,7 @@
                 }
             }
         }
-
+        
         updateUI();
     }
 
@@ -1157,7 +1367,7 @@
                 collapsedRemovedEl.classList.add('normal');
             }
         }
-
+        
         // Update threshold progress bar
         if (thresholdBar) {
             const percentage = Math.min((removedCount / newChatThreshold) * 100, 100);
@@ -1169,12 +1379,12 @@
                 thresholdBar.classList.add('warning');
             }
         }
-
+        
         // Update bar container tooltip
         const barContainer = document.getElementById('trimmer-bar-container');
         if (barContainer) {
             const percentage = Math.round((removedCount / newChatThreshold) * 100);
-            barContainer.title = `${removedCount} of ${newChatThreshold} used (${percentage}%)`;
+            barContainer.title = `${percentage}% - ${removedCount} of ${newChatThreshold} used`;
         }
 
         if (iconToggle) {
@@ -1197,7 +1407,7 @@
             console.log('Claude DOM Trimmer: Panel already exists, skipping creation');
             return;
         }
-
+        
         // Load saved settings first
         const hadSavedSettings = loadSettings();
         const startCollapsed = hadSavedSettings && isEnabled;
@@ -1234,10 +1444,32 @@
                     <span id="trimmer-collapsed-in-dom">0</span> ← <span id="trimmer-collapsed-removed">0</span>
                 </span>
                 <span class="trimmer-collapsed-bar">
-                    <span class="trimmer-threshold-bar-container-full" id="trimmer-bar-container" title="0 of 0 used (0%)">
+                    <span class="trimmer-threshold-bar-container-full" id="trimmer-bar-container" title="0% - 0 of 0 used">
                         <span class="trimmer-threshold-bar" id="trimmer-threshold-bar"></span>
                     </span>
                 </span>
+            </div>
+            <div class="trimmer-usage-stats ${showThresholdBar ? 'show-bar' : ''}" id="trimmer-usage-stats">
+                <div class="trimmer-usage-bars">
+                    <div class="trimmer-usage-bar-container" id="trimmer-session-bar-container" title="—">
+                        <div class="trimmer-usage-bar" id="trimmer-session-bar"></div>
+                    </div>
+                    <div class="trimmer-usage-bar-container" id="trimmer-weekly-bar-container" title="—">
+                        <div class="trimmer-usage-bar" id="trimmer-weekly-bar"></div>
+                    </div>
+                </div>
+                <div class="trimmer-usage-values">
+                    <div class="trimmer-usage-row" id="trimmer-session-row">
+                        <span class="trimmer-usage-reset" id="trimmer-session-reset">—</span>
+                        <span class="trimmer-usage-sep">|</span>
+                        <span class="trimmer-usage-pct" id="trimmer-session-pct">—</span>
+                    </div>
+                    <div class="trimmer-usage-row" id="trimmer-weekly-row">
+                        <span class="trimmer-usage-reset" id="trimmer-weekly-reset">—</span>
+                        <span class="trimmer-usage-sep">|</span>
+                        <span class="trimmer-usage-pct" id="trimmer-weekly-pct">—</span>
+                    </div>
+                </div>
             </div>
             <div class="trimmer-content">
                 <div class="trimmer-stats">
@@ -1263,7 +1495,7 @@
                     <input type="range" id="trimmer-threshold-slider" min="50" max="1000" value="${newChatThreshold}" step="25">
                 </div>
                 <div class="trimmer-toggle-row">
-                    <span>Threshold bar/values</span>
+                    <span>Bars or values?</span>
                     <div class="trimmer-toggle-switch ${showThresholdBar ? 'active' : ''}" id="trimmer-bar-toggle" title="Toggle progress bar display"></div>
                 </div>
                 <div class="trimmer-toggle-row">
@@ -1329,8 +1561,12 @@
             showThresholdBar = !showThresholdBar;
             barToggle.classList.toggle('active', showThresholdBar);
             const collapsedStats = document.getElementById('trimmer-collapsed-stats');
+            const usageStats = document.getElementById('trimmer-usage-stats');
             if (collapsedStats) {
                 collapsedStats.classList.toggle('show-bar', showThresholdBar);
+            }
+            if (usageStats) {
+                usageStats.classList.toggle('show-bar', showThresholdBar);
             }
             saveSettings();
             updateUI();
@@ -1347,7 +1583,7 @@
         });
 
         let sliderDebounce = null;
-
+        
         slider.addEventListener('input', (e) => {
             keepVisible = parseInt(e.target.value, 10);
             document.getElementById('trimmer-keep-value').textContent = keepVisible;
@@ -1368,7 +1604,7 @@
         });
 
         const thresholdSlider = panel.querySelector('#trimmer-threshold-slider');
-
+        
         thresholdSlider.addEventListener('input', (e) => {
             newChatThreshold = parseInt(e.target.value, 10);
             document.getElementById('trimmer-threshold-value').textContent = newChatThreshold;
@@ -1384,13 +1620,19 @@
             thresholdSlider.max = newChatThreshold + 25;
         }
 
-        toggleBtn.addEventListener('click', toggleEnabled);
-        restoreBtn.addEventListener('click', restoreAll);
+        toggleBtn.addEventListener('click', () => {
+            toggleEnabled();
+            panel.classList.add('collapsed');
+        });
+        restoreBtn.addEventListener('click', () => {
+            restoreAll();
+            panel.classList.add('collapsed');
+        });
 
         // Initial count update with delay to let page settle
         setTimeout(() => {
             updateUI();
-
+            
             // If was enabled from saved settings, start pruning
             if (isEnabled) {
                 pruneMessages();
@@ -1402,7 +1644,7 @@
         setInterval(() => {
             // Check if URL changed (switched conversations)
             checkUrlChange();
-
+            
             // Remove duplicate panels (keep only the first one)
             const panels = document.querySelectorAll('#claude-trimmer-panel');
             if (panels.length > 1) {
@@ -1410,9 +1652,9 @@
                     panels[i].remove();
                 }
             }
-
+            
             updateUI();
-
+            
             // If enabled and messages exist but none pruned yet, try pruning
             if (isEnabled && removedCache.size === 0) {
                 const msgs = getMessageElements();
@@ -1421,6 +1663,10 @@
                 }
             }
         }, 3000);
+
+        // Fetch usage data initially and every 300 seconds (5 minutes)
+        fetchUsage();
+        setInterval(fetchUsage, 300000);
     }
 
     // Wait for conversation to be present before initializing
@@ -1449,7 +1695,7 @@
             console.log('Claude DOM Trimmer: Panel already exists at init, aborting');
             return;
         }
-
+        
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => waitForConversation(createPanel));
         } else {

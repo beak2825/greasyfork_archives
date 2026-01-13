@@ -2,7 +2,7 @@
 // @name            在 Zread 中打开
 // @name:en         Read Repo in Zread
 // @namespace       https://greasyfork.org/zh-CN/scripts/552658
-// @version         1.0
+// @version         1.1
 // @description     在GitHub仓库页面添加按钮，快速跳转到Zread AI阅读器
 // @description:en  Add a button on GitHub repository pages to quickly navigate to the Zread AI reader page
 // @author          Corlius
@@ -42,34 +42,17 @@
         const repoInfo = getRepoInfo();
         if (!repoInfo) return null;
 
-        // 创建按钮元素，使用与"Go to file"相同的结构
+        // 创建按钮元素
         const button = document.createElement('a');
         button.href = `https://zread.ai/${repoInfo.owner}/${repoInfo.repo}`;
         button.target = '_blank';
         button.rel = 'noopener noreferrer';
         
-        // 使用GitHub原生的按钮样式类和属性
-        button.className = 'prc-Button-ButtonBase-c50BI';
-        button.setAttribute('data-loading', 'false');
-        button.setAttribute('data-no-visuals', 'true');
-        button.setAttribute('data-size', 'medium');
-        button.setAttribute('data-variant', 'default');
-        
-        // 创建按钮内容容器
-        const buttonContent = document.createElement('span');
-        buttonContent.setAttribute('data-component', 'buttonContent');
-        buttonContent.setAttribute('data-align', 'center');
-        buttonContent.className = 'prc-Button-ButtonContent-HKbr-';
-        
-        // 创建文本标签
-        const textLabel = document.createElement('span');
-        textLabel.setAttribute('data-component', 'text');
-        textLabel.className = 'prc-Button-Label-pTQ3x';
-        textLabel.textContent = 'Zread';
-        
-        // 组装按钮结构
-        buttonContent.appendChild(textLabel);
-        button.appendChild(buttonContent);
+        // 使用 GitHub 原生 btn 类名以适配各种主题（包括 Catppuccin）
+        // 之前的 prc-* 类名是动态生成的，不稳定且容易导致样式失效
+        button.className = 'btn btn-sm';
+        button.style.marginLeft = '8px'; // 添加一点间距，防止紧贴着其他按钮
+        button.textContent = 'Zread';
 
         return button;
     }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add/Edit: add Last Service button to some dates
 // @namespace    https://github.com/nate-kean/
-// @version      2026.1.8
+// @version      2026.1.11.1
 // @description  Add a button that sets its to the closest past Sunday or Wednesday, in the fields that are usually set to last service.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/edit/*
@@ -63,7 +63,7 @@
         );
     }
 
-    function getLastServiceDate(today, lastSunday, lastWednesday) {
+    function getClosestServiceDate(today, lastSunday, lastWednesday) {
         for (const date of specialDates) {
             if (
                 today.getFullYear() === date.getFullYear()
@@ -73,7 +73,9 @@
                 return date;
             }
         }
-        return new Date(Math.max(lastSunday, lastWednesday));
+        const distSunday = today - lastSunday;
+        const distWednesday = today - lastWednesday;
+        return (distSunday < distWednesday || distWednesday < 0) ? lastSunday : lastWednesday;
     }
 
     function delay(ms) {
@@ -84,7 +86,7 @@
     const today = new Date();
     const lastSunday =    getRelativeWeekday(today, DateDir.LAST, Day.SUNDAY,    true);
     const lastWednesday = getRelativeWeekday(today, DateDir.LAST, Day.WEDNESDAY, true);
-    const lastServiceDate = getLastServiceDate(today, lastSunday, lastWednesday);
+    const lastServiceDate = getClosestServiceDate(today, lastSunday, lastWednesday);
     const buttonName = (isSameDate(today, lastServiceDate)) ? "Today" : "Last Service";
     const dateString = new Intl.DateTimeFormat("en-US", {
         month: "2-digit",

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch staggerrilla command buttons
 // @namespace    https://github.com/Mishasama/UserScript/tree/master/Misha's%20US
-// @version      2.1.2
+// @version      2.1.3
 // @description  Adds buttons to send commands in the Twitch chat
 // @author       Kurotaku & Misha
 // @license      CC-BY-NC-SA-4.0
@@ -19,7 +19,7 @@
 // @grant        GM_notification
 // @grant        GM_registerMenuCommand
 // @supportURL   https://github.com/Mishasama/UserScript/issues
-// @homepageURL  https://github.com/Mishasama/UserScript/tree/master/Misha's%20US
+// @homepageURL  https://github.com/Mishasama/UserScript/tree/master/Misha's%20US/Twitch%20Command%20Buttons
 // @contributionURL			https://ko-fi.com/mishasama
 // @contributionAmount			1￥
 // @compatible				chrome
@@ -76,14 +76,14 @@ function generate_button_groups() {
                 </div>
                 <div style="height: 5px;"></div>
                 <div class="k-buttongroup">
-                ${btngrp_button("!join", "Join")}
-                ${btngrp_button("!autoup", "Autoup")}
-                ${btngrp_button("!claim", "Claim")}
+                ${btngrp_button("!fish", "Fish")}
+                ${btngrp_button("!ticket", "Ticket")}
+                ${btngrp_button("!steam", "Steam")}
                 </div>
                 <div style="height: 5px;"></div>
                 <div class="k-buttongroup">
-                ${btngrp_button("gimmie", "Gimmie")}
-                ${btngrp_button("!enter1", "Enter1")}
+                ${btngrp_button("!giveaway 1", "Giveaway")}
+                ${btngrp_button("!enter", "Enter")}
                 ${btngrp_button("!pokecatch", "Pokecatch")}
                 </div>`;
 
@@ -92,7 +92,7 @@ function generate_button_groups() {
 
 async function generate_voucher_buttons() {
     insert_voucher_buttons(
-        generate_voucher_button("100k Bubbers", "+100k") +
-        generate_voucher_button("Dubbers", "+1/Daily")
+        generate_voucher_button("100k Bubbers!", "+100k") +
+        generate_voucher_button("Totes a Bot", "Bot")
     );
 }

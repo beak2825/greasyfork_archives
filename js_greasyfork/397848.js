@@ -8,7 +8,7 @@
 // @name:es            Comic Looms
 // @name:ka            Comic Looms
 // @namespace          https://github.com/MapoMagpie/comic-looms
-// @version            4.14.5
+// @version            4.14.6
 // @author             MapoMagpie
 // @description        Manga Viewer + Downloader, Focus on experience and low load on the site. Support you in finding the site you are searching for.
 // @description:en     Manga Viewer + Downloader, Focus on experience and low load on the site. Support you in finding the site you are searching for.
@@ -5658,6 +5658,68 @@ async *fetchPagesSource() {
     KonachanMatcher
   }, Symbol.toStringTag, { value: 'Module' }));
 
+  class KuaiKanMatcher extends BaseMatcher {
+    async *fetchChapters() {
+      let ele = document.querySelector(".Headers");
+      if (ele) ele.style.zIndex = "1000";
+      let comics = window.__NUXT__?.data?.[0].comics;
+      if (!comics || (comics.length ?? 0) === 0) {
+        let sc = Array.from(document.querySelectorAll("script")).find((sc2) => sc2.textContent.startsWith("window.__NUXT__"))?.textContent.replace("window.__NUXT__=", "");
+        if (sc) {
+          try {
+            const data = new Function("return " + sc)();
+            comics = data?.data?.[0].comics;
+          } catch (err) {
+            throw new Error("无法解析此漫画的章节信息");
+          }
+        }
+      }
+      if (!comics) throw new Error("无法找到此漫画的章节信息");
+      const chapters = comics.map((c, i) => {
+        return new Chapter(i, c.title, `${window.location.origin}/webs/comic-next/${c.id}`, c.cover_image_url);
+      });
+      yield chapters;
+    }
+    async *fetchPagesSource(ch) {
+      yield Result.ok(ch.source);
+    }
+    async parseImgNodes(source) {
+      const doc = await window.fetch(source).then((resp) => resp.text()).then((text) => new DOMParser().parseFromString(text, "text/html")).catch(Error);
+      if (doc instanceof Error) throw doc;
+      let sc = Array.from(doc.querySelectorAll("script")).find((sc2) => sc2.textContent.startsWith("window.__NUXT__"))?.textContent.replace("window.__NUXT__=", "");
+      if (!sc) throw new Error("无法找到此章节的信息");
+      let images;
+      try {
+        const data = new Function("return " + sc)();
+        images = data.data?.[0].comicInfo?.comicImages;
+      } catch (err) {
+        throw new Error("无法解析此章节的信息" + err.message);
+      }
+      if (!images || (images.length ?? 0) === 0) throw new Error("没有找到此章节的图片列表，可能是你没有购买，请点此确认: " + source);
+      const digits = images.length.toString().length;
+      return images.map((img, i) => {
+        return new ImageNode("", img.url, (i + 1).toString().padStart(digits, "0"), void 0, img.url, { w: img.baseWidth, h: img.baseHeight });
+      });
+    }
+    async fetchOriginMeta(node) {
+      return { url: node.originSrc };
+    }
+  }
+  ADAPTER.addSetup({
+    name: "快看漫画",
+    match: [
+      "kuaikanmanhua.com/*"
+    ],
+    workURLs: [
+      /kuaikanmanhua.com\/web\/topic\/\d+\//
+    ],
+    constructor: () => new KuaiKanMatcher()
+  });
+
+  const __vite_glob_0_22 = Object.freeze( Object.defineProperty({
+    __proto__: null
+  }, Symbol.toStringTag, { value: 'Module' }));
+
   class MangaCopyMatcher extends BaseMatcher {
     update_date;
     chapterCount = 0;
@@ -5772,7 +5834,7 @@ async *fetchPagesSource() {
     constructor: () => new MangaCopyMatcher()
   });
 
-  const __vite_glob_0_22 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_23 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -5863,7 +5925,7 @@ async *fetchPagesSource() {
     constructor: () => new MangaParkMatcher()
   });
 
-  const __vite_glob_0_23 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_24 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -5992,7 +6054,7 @@ async *fetchPagesSource() {
     constructor: () => new BatotoMatcher()
   });
 
-  const __vite_glob_0_24 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_25 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -6162,7 +6224,7 @@ async *fetchPagesSource() {
     constructor: () => new MHGMatcher()
   });
 
-  const __vite_glob_0_25 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_26 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -6231,7 +6293,7 @@ async *fetchPagesSource() {
     constructor: () => new MH160Matcher()
   });
 
-  const __vite_glob_0_26 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_27 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -6313,7 +6375,7 @@ async *fetchPagesSource() {
 constructor: () => new MiniServeMatcher()
   });
 
-  const __vite_glob_0_27 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_28 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -6398,7 +6460,7 @@ constructor: () => new MiniServeMatcher()
     constructor: () => new MyComicMatcher()
   });
 
-  const __vite_glob_0_28 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_29 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -6577,7 +6639,7 @@ constructor: () => new MiniServeMatcher()
     constructor: () => new NHxxxMatcher()
   });
 
-  const __vite_glob_0_29 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_30 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -6670,7 +6732,7 @@ constructor: () => new MiniServeMatcher()
     constructor: () => new NiyaniyaMatcher()
   });
 
-  const __vite_glob_0_30 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_31 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -7594,7 +7656,7 @@ duration ${m.delay / 1e3}`).join("\n");
     }
   });
 
-  const __vite_glob_0_31 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_32 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -7696,7 +7758,7 @@ duration ${m.delay / 1e3}`).join("\n");
     constructor: () => new RokuHentaiMatcher()
   });
 
-  const __vite_glob_0_32 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_33 = Object.freeze( Object.defineProperty({
     __proto__: null,
     RokuHentaiMatcher
   }, Symbol.toStringTag, { value: 'Module' }));
@@ -7781,7 +7843,7 @@ duration ${m.delay / 1e3}`).join("\n");
     constructor: () => new SteamMatcher()
   });
 
-  const __vite_glob_0_33 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_34 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -8147,7 +8209,7 @@ duration ${m.delay / 1e3}`).join("\n");
     constructor: () => new TwitterMatcher()
   });
 
-  const __vite_glob_0_34 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_35 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -8237,7 +8299,7 @@ extractUrlsAndCaptions(inputStr) {
     constructor: () => new WnacgMatcher()
   });
 
-  const __vite_glob_0_35 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_36 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -8328,7 +8390,7 @@ buildList(data) {
     constructor: () => new YabaiMatcher()
   });
 
-  const __vite_glob_0_36 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_37 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -8406,7 +8468,7 @@ buildList(data) {
     constructor: () => new YandereMatcher()
   });
 
-  const __vite_glob_0_37 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_38 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -8457,7 +8519,7 @@ buildList(data) {
     constructor: () => new YKMHMatcher()
   });
 
-  const __vite_glob_0_38 = Object.freeze( Object.defineProperty({
+  const __vite_glob_0_39 = Object.freeze( Object.defineProperty({
     __proto__: null
   }, Symbol.toStringTag, { value: 'Module' }));
 
@@ -14297,7 +14359,7 @@ intersectingIndexLock = false;
       const intersecting = sorting.map((e) => e.elem);
       if (intersecting.length === 0) return;
       let sibling = intersecting[0];
-      let [count, limit] = [0, ADAPTER.conf.paginationIMGCount];
+      let [count, limit] = [0, ADAPTER.conf.paginationIMGCount + 1];
       while ((sibling = sibling.previousElementSibling) && count < limit) {
         intersecting.unshift(sibling);
         count++;
@@ -15258,7 +15320,7 @@ setElements() {
     }
   }
 
-  const modules = Object.assign({"./platform/matchers/18comic.ts": __vite_glob_0_0,"./platform/matchers/3hentai.ts": __vite_glob_0_1,"./platform/matchers/akuma.ts": __vite_glob_0_2,"./platform/matchers/arca.ts": __vite_glob_0_3,"./platform/matchers/artstation.ts": __vite_glob_0_4,"./platform/matchers/asmhentai.ts": __vite_glob_0_5,"./platform/matchers/bilibili.ts": __vite_glob_0_6,"./platform/matchers/colamanga.ts": __vite_glob_0_7,"./platform/matchers/danbooru.ts": __vite_glob_0_8,"./platform/matchers/douban.ts": __vite_glob_0_9,"./platform/matchers/eahentai.ts": __vite_glob_0_10,"./platform/matchers/ehentai.ts": __vite_glob_0_11,"./platform/matchers/github.ts": __vite_glob_0_12,"./platform/matchers/hanime1.ts": __vite_glob_0_13,"./platform/matchers/hentainexus.ts": __vite_glob_0_14,"./platform/matchers/hentaizap.ts": __vite_glob_0_15,"./platform/matchers/hitomi.ts": __vite_glob_0_16,"./platform/matchers/im-hentai.ts": __vite_glob_0_17,"./platform/matchers/instagram.ts": __vite_glob_0_18,"./platform/matchers/kemono.ts": __vite_glob_0_19,"./platform/matchers/komiic.ts": __vite_glob_0_20,"./platform/matchers/konachan.ts": __vite_glob_0_21,"./platform/matchers/mangacopy.ts": __vite_glob_0_22,"./platform/matchers/mangapark.ts": __vite_glob_0_23,"./platform/matchers/mangatoto.ts": __vite_glob_0_24,"./platform/matchers/manhuagui.ts": __vite_glob_0_25,"./platform/matchers/mh160.ts": __vite_glob_0_26,"./platform/matchers/miniserve.ts": __vite_glob_0_27,"./platform/matchers/mycomic.ts": __vite_glob_0_28,"./platform/matchers/nhentai.ts": __vite_glob_0_29,"./platform/matchers/niyaniya.ts": __vite_glob_0_30,"./platform/matchers/pixiv.ts": __vite_glob_0_31,"./platform/matchers/rokuhentai.ts": __vite_glob_0_32,"./platform/matchers/steam.ts": __vite_glob_0_33,"./platform/matchers/twitter.ts": __vite_glob_0_34,"./platform/matchers/wnacg.ts": __vite_glob_0_35,"./platform/matchers/yabai.ts": __vite_glob_0_36,"./platform/matchers/yandere.ts": __vite_glob_0_37,"./platform/matchers/ykmh.ts": __vite_glob_0_38});
+  const modules = Object.assign({"./platform/matchers/18comic.ts": __vite_glob_0_0,"./platform/matchers/3hentai.ts": __vite_glob_0_1,"./platform/matchers/akuma.ts": __vite_glob_0_2,"./platform/matchers/arca.ts": __vite_glob_0_3,"./platform/matchers/artstation.ts": __vite_glob_0_4,"./platform/matchers/asmhentai.ts": __vite_glob_0_5,"./platform/matchers/bilibili.ts": __vite_glob_0_6,"./platform/matchers/colamanga.ts": __vite_glob_0_7,"./platform/matchers/danbooru.ts": __vite_glob_0_8,"./platform/matchers/douban.ts": __vite_glob_0_9,"./platform/matchers/eahentai.ts": __vite_glob_0_10,"./platform/matchers/ehentai.ts": __vite_glob_0_11,"./platform/matchers/github.ts": __vite_glob_0_12,"./platform/matchers/hanime1.ts": __vite_glob_0_13,"./platform/matchers/hentainexus.ts": __vite_glob_0_14,"./platform/matchers/hentaizap.ts": __vite_glob_0_15,"./platform/matchers/hitomi.ts": __vite_glob_0_16,"./platform/matchers/im-hentai.ts": __vite_glob_0_17,"./platform/matchers/instagram.ts": __vite_glob_0_18,"./platform/matchers/kemono.ts": __vite_glob_0_19,"./platform/matchers/komiic.ts": __vite_glob_0_20,"./platform/matchers/konachan.ts": __vite_glob_0_21,"./platform/matchers/kuaikanmanhua.ts": __vite_glob_0_22,"./platform/matchers/mangacopy.ts": __vite_glob_0_23,"./platform/matchers/mangapark.ts": __vite_glob_0_24,"./platform/matchers/mangatoto.ts": __vite_glob_0_25,"./platform/matchers/manhuagui.ts": __vite_glob_0_26,"./platform/matchers/mh160.ts": __vite_glob_0_27,"./platform/matchers/miniserve.ts": __vite_glob_0_28,"./platform/matchers/mycomic.ts": __vite_glob_0_29,"./platform/matchers/nhentai.ts": __vite_glob_0_30,"./platform/matchers/niyaniya.ts": __vite_glob_0_31,"./platform/matchers/pixiv.ts": __vite_glob_0_32,"./platform/matchers/rokuhentai.ts": __vite_glob_0_33,"./platform/matchers/steam.ts": __vite_glob_0_34,"./platform/matchers/twitter.ts": __vite_glob_0_35,"./platform/matchers/wnacg.ts": __vite_glob_0_36,"./platform/matchers/yabai.ts": __vite_glob_0_37,"./platform/matchers/yandere.ts": __vite_glob_0_38,"./platform/matchers/ykmh.ts": __vite_glob_0_39});
   for (const path in modules) modules[path];
   function setup() {
     const MATCHER = ADAPTER.matcher.constructor();

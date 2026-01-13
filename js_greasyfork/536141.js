@@ -1,8 +1,7 @@
 // ==UserScript==
-// @name         WME Quick Zoom Button
-// @name:en      WME Quick Zoom Button
-// @name:es      Botón de Zoom Rápido WME
-// @version      2025.08.07
+// @name         WME Chat Plus
+// @name:en      WME Chat Plus
+// @version      2026.01.11
 // @description  Fügt einen Button für temporären Zoom hinzu für bessere Chat sichtbarkeit und Auto-Sichtbarkeit
 // @description:en  Adds a button for temporary zoom for better chat visibility and auto-visibility
 // @description:es  Agrega un botón para zoom temporal para una mejor visibilidad del chat y auto-visibilidad
@@ -14,8 +13,8 @@
 // @grant        none
 // @license      MIT
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @downloadURL https://update.greasyfork.org/scripts/536141/WME%20Quick%20Zoom%20Button.user.js
-// @updateURL https://update.greasyfork.org/scripts/536141/WME%20Quick%20Zoom%20Button.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/536141/WME%20Chat%20Plus.user.js
+// @updateURL https://update.greasyfork.org/scripts/536141/WME%20Chat%20Plus.meta.js
 // ==/UserScript==
 
 (function() {

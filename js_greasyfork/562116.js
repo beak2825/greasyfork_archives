@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name             Money Alert
-// @namespace        http://tampermonkey.net/
-// @version          1.1
-// @description      Alert when money increase.
-// @author           NLMK [4026658]
-// @icon             https://cdn.discordapp.com/attachments/1455568011539906561/1455568085493743778/image.png?ex=695d1bea&is=695bca6a&hm=72a44a5665df24972ee5a45978ffbf8e3ae3046f2c9683f8f77c8638eb797ba9&
-// @match            https://www.torn.com/*
-// @license          MIT
-// @grant            none
+// @name            Money Alert
+// @namespace       http://tampermonkey.net/
+// @version         1.2
+// @description     Alert when money increase.
+// @author          NLMK [4026658]
+// @icon            https://cdn.discordapp.com/attachments/1455568011539906561/1459910494591778957/logo.png?ex=69665099&is=6964ff19&hm=244b685a131a57298b0c0c8072d2b95b5113a1dfa39f38384481f6d51b9b7003&
+// @match           https://www.torn.com/*
+// @license         MIT
+// @grant           none
 // @downloadURL https://update.greasyfork.org/scripts/562116/Money%20Alert.user.js
 // @updateURL https://update.greasyfork.org/scripts/562116/Money%20Alert.meta.js
 // ==/UserScript==
@@ -17,6 +17,7 @@
 
     const audio = document.createElement('audio');
     audio.src = 'https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3';
+    audio.preload = 'auto';
 
     let previousMoney = null;
     let soundEnabled = localStorage.getItem('ma_sound_enabled') !== 'false';
@@ -67,6 +68,8 @@
         if (!el) return;
         const currentMoney = parseInt(el.getAttribute('data-money'), 10);
         if (soundEnabled && previousMoney !== null && currentMoney > previousMoney) {
+            audio.pause();
+            audio.currentTime = 0;
             audio.play().catch(() => {});
         }
         previousMoney = currentMoney;

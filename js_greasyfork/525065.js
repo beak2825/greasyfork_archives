@@ -2,7 +2,7 @@
 // @name         视频倍速播放增强版
 // @name:en      Enhanced Video Speed Controller
 // @namespace    http://tampermonkey.net/
-// @version      1.6.0
+// @version      1.6.1
 // @description  长按右方向键倍速播放，松开恢复原速。按+/-键调整倍速，按]/[键快速调整倍速，按P键恢复默认速度。上/下方向键调节音量，回车键切换全屏。左/右方向键快退/快进5秒。支持YouTube、Bilibili等大多数视频网站。脚本会自动检测页面中的iframe视频并启用相应控制。
 // @description:en  Hold right arrow key for speed playback, release to restore. Press +/- to adjust speed, press ]/[ for quick speed adjustment, press P to restore default speed. Up/Down arrows control volume, Enter toggles fullscreen. Left/Right arrows for 5s rewind/forward. Supports most sites. The script automatically detects iframe videos on the page and enables control.
 // @author       ternece
@@ -27,7 +27,8 @@
         defaultRate: 1.0,    // 默认播放速度
         targetRate: 2.5,     // 长按右键时的倍速
         quickRateStep: 0.5,  // 按[]键调整速度的步长
-        targetRateStep: 0.5  // 按 +/- 键调整目标倍速的步长
+        targetRateStep: 0.5, // 按 +/- 键调整目标倍速的步长
+        logLevel: 2          // 默认日志级别 (WARN)
     };
 
     // 通用配置
@@ -60,6 +61,43 @@
             fullscreenButtonSelector: '.bpx-player-ctrl-full, .bilibili-player-video-btn-fullscreen'
         }
     };
+
+    // 日志级别定义
+    const LOG_LEVELS = Object.freeze({
+        DEBUG: 0,
+        INFO: 1,
+        WARN: 2,
+        ERROR: 3,
+        NONE: 4
+    });
+
+    const LOG_LEVEL_NAMES = Object.freeze({
+        0: 'DEBUG (全部)',
+        1: 'INFO (信息)',
+        2: 'WARN (警告)',
+        3: 'ERROR (错误)',
+        4: 'NONE (关闭)'
+    });
+
+    // 日志模块
+    const Logger = (function() {
+        let currentLevel = GM_getValue('logLevel', DEFAULT_SETTINGS.logLevel);
+        const PREFIX = '[视频倍速控制器]';
+
+        return {
+            setLevel(level) {
+                if (level >= 0 && level <= 4) {
+                    currentLevel = level;
+                    GM_setValue('logLevel', level);
+                }
+            },
+            getLevel() { return currentLevel; },
+            debug(...args) { if (currentLevel <= LOG_LEVELS.DEBUG) console.log(PREFIX, ...args); },
+            info(...args) { if (currentLevel <= LOG_LEVELS.INFO) console.log(PREFIX, ...args); },
+            warn(...args) { if (currentLevel <= LOG_LEVELS.WARN) console.warn(PREFIX, ...args); },
+            error(...args) { if (currentLevel <= LOG_LEVELS.ERROR) console.error(PREFIX, ...args); }
+        };
+    })();
 
     // 显示通知 (保留在外部，因为它依赖 GM_notification)
     function showNotification(message) {
@@ -489,7 +527,7 @@
                 GM_setValue('tempEnabledDomainGroups', this.tempEnabledDomainGroups);
                 // 清空旧数据
                 GM_setValue('tempEnabledDomains', []);
-                console.log('✅ 已将旧版域名数据迁移到新的分组结构');
+                Logger.info('已将旧版域名数据迁移到新的分组结构');
             }
         }
 
@@ -670,11 +708,11 @@
                     );
 
                     // 打印详细信息到控制台
-                    console.log('=== 视频倍速控制器 ===');
-                    console.log('主域名:', this.currentDomain);
-                    console.log('检测到的跨域 iframe 域名:', crossOriginDomains);
-                    console.log('已保存的分组:', this.tempEnabledDomainGroups);
-                    console.log('========================');
+                    Logger.debug('域名启用详情:', {
+                        主域名: this.currentDomain,
+                        跨域iframe域名: crossOriginDomains,
+                        已保存的分组: this.tempEnabledDomainGroups
+                    });
 
                 } else {
                     showNotification(
@@ -699,6 +737,28 @@
                 } else {
                     // 使用弹窗显示分组列表
                     showDomainManager(this.tempEnabledDomainGroups, this);
+                }
+            });
+
+            GM_registerMenuCommand('设置日志级别', () => {
+                const currentLevel = Logger.getLevel();
+                const options = Object.entries(LOG_LEVEL_NAMES)
+                    .map(([level, name]) => `${level}: ${name}`)
+                    .join('\n');
+
+                const input = prompt(
+                    `请选择日志级别 (输入数字 0-4):\n\n${options}\n\n默认: WARN (警告)\n当前: ${LOG_LEVEL_NAMES[currentLevel]}`,
+                    currentLevel
+                );
+
+                if (input !== null) {
+                    const newLevel = parseInt(input, 10);
+                    if (!isNaN(newLevel) && newLevel >= 0 && newLevel <= 4) {
+                        Logger.setLevel(newLevel);
+                        showFloatingMessage(`日志级别已设置为: ${LOG_LEVEL_NAMES[newLevel]}`);
+                    } else {
+                        showFloatingMessage('无效的日志级别，请输入 0-4 之间的数字');
+                    }
                 }
             });
         }
@@ -746,7 +806,7 @@
 
             try {
                 this.activeVideo = await this._findInitialVideo();
-                console.log("初始化成功, 找到视频:", this.activeVideo);
+                Logger.info("初始化成功, 找到视频:", this.activeVideo);
 
                 // 🔧 修复: 成功初始化后才清除后备监听器
                 this._cleanupFallbackObserver();
@@ -756,20 +816,20 @@
                 this.watchUrlChange();
 
             } catch (error) {
-                console.warn("初始化尝试失败:", error.message);
+                Logger.warn("初始化尝试失败:", error.message);
 
                 // 仅在首次尝试时启动重试逻辑
                 if (!isRetry) {
                     if (error.type === "no_video" || error.type === "timeout") {
-                        setTimeout(() => this.initialize(true).catch(console.error), this.config.INIT_RETRY_DELAY);
+                        setTimeout(() => this.initialize(true).catch(e => Logger.error("重试初始化失败:", e)), this.config.INIT_RETRY_DELAY);
                     }
                 } else {
                     // 重试也失败了，设置持续监听器以捕获延迟加载的视频
-                    console.log("重试失败，准备设置后备监听器...");
+                    Logger.info("重试失败，准备设置后备监听器...");
                     try {
                         this._setupFallbackVideoObserver();
                     } catch (e) {
-                        console.error("设置后备监听器时出错:", e);
+                        Logger.error("设置后备监听器时出错:", e);
                     }
                 }
             }
@@ -822,7 +882,7 @@
                 }
             } catch (error) {
                  // 如果快速方法超时或找不到，则尝试深度查找
-                console.log("快速查找失败，尝试深度查找...");
+                Logger.debug("快速查找失败，尝试深度查找...");
                 const deepVideos = this.deepFindVideoElements();
                 if (deepVideos.length > 0) {
                     this.setupVideos(deepVideos);
@@ -845,7 +905,7 @@
                 return;
             }
 
-            console.log("设置后备视频监听器，等待延迟加载的视频...");
+            Logger.info("设置后备视频监听器，等待延迟加载的视频...");
 
             // 🔧 修复：检测有效视频的函数（不是任意视频）
             const isValidVideo = (video) => {
@@ -862,10 +922,10 @@
                 const validVideo = Array.from(videos).find(isValidVideo);
 
                 if (validVideo) {
-                    console.log("后备监听器检测到有效视频:", validVideo.className || validVideo.id,
+                    Logger.info("后备监听器检测到有效视频:", validVideo.className || validVideo.id,
                         `(src:${!!(validVideo.src || validVideo.currentSrc)}, size:${validVideo.offsetWidth}x${validVideo.offsetHeight}, readyState:${validVideo.readyState})`);
                     this._cleanupFallbackObserver();
-                    this.initialize().catch(console.error);
+                    this.initialize().catch(e => Logger.error("后备初始化失败:", e));
                     return true;
                 }
                 return false;
@@ -956,7 +1016,7 @@
                         }
 
                         videosToRemove.forEach(video => {
-                             console.log("垃圾回收：清理被移除的视频", video);
+                             Logger.debug("垃圾回收：清理被移除的视频", video);
                              const button = this.videoControlButtons.get(video);
                              if (button) button.remove();
                              this.videoControlButtons.delete(video);
@@ -969,7 +1029,7 @@
                     // 检查是否有新视频被添加
                     const hasNewVideos = Array.from(mutation.addedNodes).some(n => n.tagName === 'VIDEO' || (n.querySelector && n.querySelector('video')));
                     if (hasNewVideos) {
-                         console.log("侦测到新视频相关的DOM变动，调用防抖版检测...");
+                         Logger.debug("侦测到新视频相关的DOM变动，调用防抖版检测...");
                          this.debouncedDetectAndSetupVideos();
                     }
                 });
@@ -982,8 +1042,8 @@
                 this.videoChangeObserver = new MutationObserver((mutations) => {
                     const videoWasRemoved = mutations.some(m => Array.from(m.removedNodes).some(n => n === this.activeVideo));
                     if (videoWasRemoved) {
-                        console.log("侦测到当前活动视频节点被移除，将重新初始化...");
-                        this.initialize().catch(console.error);
+                        Logger.debug("侦测到当前活动视频节点被移除，将重新初始化...");
+                        this.initialize().catch(e => Logger.error("视频移除后重新初始化失败:", e));
                     }
                 });
                 this.videoChangeObserver.observe(this.activeVideo.parentElement, { childList: true });
@@ -1037,12 +1097,18 @@
 
         handleUrlChange() {
             this.currentUrl = location.href;
-            console.log("URL发生变化，重新初始化...");
+            Logger.info("URL发生变化，重新初始化...");
             // 使用 setTimeout 延迟执行，确保新页面的 DOM 元素已加载
-            setTimeout(() => this.initialize().catch(console.error), this.config.URL_CHANGE_INIT_DELAY);
+            setTimeout(() => this.initialize().catch(e => Logger.error("URL变化后初始化失败:", e)), this.config.URL_CHANGE_INIT_DELAY);
         }
 
         watchUrlChange() {
+            // 防止重复注册
+            if (this._urlWatcherRegistered) {
+                return;
+            }
+            this._urlWatcherRegistered = true;
+
             // MutationObserver 的部分已合并到 mainObserver 中
             // 这里只处理 History API 的监听
 
@@ -1061,7 +1127,7 @@
                 originalReplaceState.apply(this, arguments);
                 handleStateChange();
             };
-            
+
             window.addEventListener('popstate', handleStateChange);
         }
 
@@ -1134,7 +1200,7 @@
                 return hasSrc || isLoaded || hasSize;
             });
 
-            console.log(`深度查找完成，共找到 ${validVideos.length} 个有效视频元素（原始 ${foundVideos.size} 个）`);
+            Logger.debug(`深度查找完成，共找到 ${validVideos.length} 个有效视频元素（原始 ${foundVideos.size} 个）`);
             return validVideos.length > 0 ? validVideos : Array.from(foundVideos);
         }
         

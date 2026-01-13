@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani Reviews Plus
 // @namespace    http://tampermonkey.net/
-// @version      1.42
+// @version      1.44
 // @license      MIT
 // @description  try to take over the world!
 // @author       You
@@ -16381,7 +16381,7 @@ var ePosition = /* @__PURE__ */ ((ePosition2) => {
 const useChangelogStore = /* @__PURE__ */ defineStore(
   "changelog",
   () => {
-    const currentVersion = ref(1.42), lastLoadedVersion = ref(0), log2 = ref([
+    const currentVersion = ref(1.44), lastLoadedVersion = ref(0), log2 = ref([
       {
         changes: [
           "Breakdown only shows on meaning",
@@ -19342,7 +19342,7 @@ const _hoisted_10$1 = { key: 1 };
 const _hoisted_11$1 = { class: "meaningMnemonic" };
 const _hoisted_12$1 = ["innerHTML"];
 const _hoisted_13$1 = { class: "meaningHint" };
-const _hoisted_14 = { class: "reading" };
+const _hoisted_14$1 = { class: "reading" };
 const _hoisted_15 = { class: "primary" };
 const _hoisted_16 = {
   key: 0,
@@ -19427,7 +19427,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
           ], 64)) : createCommentVNode("", true)
         ]),
         createVNode(unref(script$B)),
-        createBaseVNode("div", _hoisted_14, [
+        createBaseVNode("div", _hoisted_14$1, [
           itemType.value == "kanji" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
             _cache[5] || (_cache[5] = createBaseVNode("span", { class: "header" }, "Reading: ", -1)),
             createBaseVNode("span", _hoisted_15, toDisplayString(((_l = __props.item) == null ? void 0 : _l.data.readings.filter((r2) => r2.primary).map((o2) => o2.reading).join(", ")) ?? ""), 1),
@@ -33975,11 +33975,16 @@ const _hoisted_13 = {
   key: 1,
   class: "allowed"
 };
+const _hoisted_14 = { key: 3 };
 const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "TallyItem",
   props: ["item"],
   setup(__props) {
-    const indexStore = useIndexStore(), op = ref(), toggle2 = (event) => {
+    const indexStore = useIndexStore(), linkUrl = (item) => {
+      var _a, _b;
+      debugger;
+      return item.subject.type.toLowerCase() == "radical" ? `https://www.wanikani.com/radicals/${(_b = (_a = item.subject.meanings.find((o2) => o2.kind == "primary")) == null ? void 0 : _a.text) == null ? void 0 : _b.toLowerCase()}` : `https://www.wanikani.com/${item.subject.type.toLowerCase()}/${item.subject.characters}`;
+    }, op = ref(), toggle2 = (event) => {
       op.value.toggle(event);
     };
     onMounted(() => {
@@ -34017,7 +34022,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
                   as: "a",
                   class: "characters",
                   variant: "link",
-                  href: `https://www.wanikani.com/${__props.item.subject.type.toLowerCase()}/${__props.item.subject.characters}`,
+                  href: linkUrl(__props.item),
                   target: "_blank",
                   rel: "noopener",
                   label: __props.item.subject.characters
@@ -34035,22 +34040,20 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
                 createBaseVNode("span", _hoisted_7$1, toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "primary").map((o2) => o2.text).join(", ")), 1),
                 __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_8$1, ",  " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "alternative").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
                 __props.item.subject.readings.filter((r2) => r2.kind == "allowed").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_9$1, ",  " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "allowed").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
-              ])) : (openBlock(), createElementBlock("div", _hoisted_10, [
+              ])) : __props.item.subject.type == "Vocabulary" ? (openBlock(), createElementBlock("div", _hoisted_10, [
                 _cache[2] || (_cache[2] = createBaseVNode("span", null, "Readings: ", -1)),
                 createBaseVNode("span", _hoisted_11, toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "primary").map((o2) => o2.text).join(", ")), 1),
                 __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_12, " " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "alternative").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true),
                 __props.item.subject.readings.filter((r2) => r2.kind == "alternative").length > 0 ? (openBlock(), createElementBlock("span", _hoisted_13, " " + toDisplayString(__props.item.subject.readings.filter((r2) => r2.kind == "allowed").map((o2) => o2.text).join(", ")), 1)) : createCommentVNode("", true)
-              ])),
-              __props.item.subject.type == "Kanji" || __props.item.subject.type == "Vocabulary" ? (openBlock(), createElementBlock(Fragment, { key: 3 }, [
-                createBaseVNode("div", null, [
-                  _cache[3] || (_cache[3] = createBaseVNode("span", null, "Incorrect Meaning Attempts: ", -1)),
-                  createBaseVNode("span", null, toDisplayString(__props.item.stats.meaning.incorrect), 1)
-                ]),
-                createBaseVNode("div", null, [
-                  _cache[4] || (_cache[4] = createBaseVNode("span", null, "Incorrect Reading Attempts: ", -1)),
-                  createBaseVNode("span", null, toDisplayString(__props.item.stats.reading.incorrect), 1)
-                ])
-              ], 64)) : createCommentVNode("", true)
+              ])) : createCommentVNode("", true),
+              createBaseVNode("div", null, [
+                _cache[3] || (_cache[3] = createBaseVNode("span", null, "Incorrect Meaning Attempts: ", -1)),
+                createBaseVNode("span", null, toDisplayString(__props.item.stats.meaning.incorrect), 1)
+              ]),
+              __props.item.subject.type == "Kanji" || __props.item.subject.type == "Vocabulary" ? (openBlock(), createElementBlock("div", _hoisted_14, [
+                _cache[4] || (_cache[4] = createBaseVNode("span", null, "Incorrect Reading Attempts: ", -1)),
+                createBaseVNode("span", null, toDisplayString(__props.item.stats.reading.incorrect), 1)
+              ])) : createCommentVNode("", true)
             ])
           ]),
           _: 1
@@ -34059,7 +34062,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const TallyItem = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-442a5c39"]]);
+const TallyItem = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-63e94df1"]]);
 const _hoisted_1$1 = { id: "divTally" };
 const _hoisted_2 = { id: "divTallyCorrect" };
 const _hoisted_3 = { class: "percent" };
@@ -36173,7 +36176,6 @@ function addTallyDiv() {
 }
 
 
-
 // Create our shared stylesheet:
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(`
@@ -36474,22 +36476,21 @@ sheet.replaceSync(`
 [data-v-3d956e48] .p-progressbar-value .incorrect {
   width: var(--0b9bd822);
   text-align: center;
-}.characters[data-v-442a5c39] {
+}.characters[data-v-63e94df1] {
   font-size: 4rem;
   color: black;
   text-decoration: none;
 }
-.characters[data-v-442a5c39]:hover .p-button-label {
+.characters[data-v-63e94df1]:hover .p-button-label {
   text-decoration: none;
   color: black;
 }
-.p-button-link:not(:disabled):hover .p-button-label .primary .title[data-v-442a5c39] {
+.p-button-link:not(:disabled):hover .p-button-label .primary .title[data-v-63e94df1] {
   font-weight: bold;
 }
-.secondary[data-v-442a5c39] {
+.secondary[data-v-63e94df1] {
   font-size: 0.8rem;
-}
-`);
+}`);
 
 // Apply the stylesheet to a document:
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];

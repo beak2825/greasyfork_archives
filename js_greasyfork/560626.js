@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LMArena | Collapsible Code Blocks
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      4.2
+// @version      4.8
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Adds collapsible code blocks with clickable headers, footer controls, and a global toolbar toggle
@@ -175,6 +175,37 @@
     // - Changed: replaced localStorage with GM_setValue/GM_getValue for settings persistence
     // - Settings now stored via userscript manager (more reliable, syncs across browsers if supported)
 
+    // v4.3
+    // - Changed: single-block expand no longer uses scroll anchoring
+    // - Expanding a block now keeps the header in place; code appears below (no viewport shift)
+    // - Lets user read expanded code from the beginning instead of being scrolled to the bottom
+
+    // v4.4
+    // - Fixed: single-block expand now actively scrolls header to top of viewport
+    // - Ensures user always sees expanded code from the beginning (overrides browser scroll anchoring)
+
+    // v4.5
+    // - Refined: single-block expand only scrolls if header is in bottom 1/3 of viewport or off-screen
+    // - If header is already visible in upper 2/3, no scroll adjustment occurs
+    //
+    // v4.6
+    // - Fixed: single-block collapse no longer "snaps" the header down to the old footer position in some scroll states
+    // - Changed: when collapsing a block while its header is visible, the header is used as the scroll anchor (keeps it stable)
+    // - Fixed: auto-collapse on newly added blocks no longer triggers single-block scroll behavior
+    //
+    // v4.6
+    // - Fixed: single-block expand now first stabilizes the header position (cancels browser/scroll-area anchoring)
+    // - Refined: only scrolls header to top if it ends up off-screen or in the bottom ~15% of the viewport
+    //
+    // v4.7
+    // - Cleanup: removed unused `data` parameter from internal log function
+    // - Cleanup: removed unused boolean return values from createToolbarButton()
+    // - Cleanup: consolidated duplicate CSS rules and keyframe definitions
+    //
+    // v4.8
+    // - Removed: width preservation on collapse (caused horizontal scrolling on narrow viewports)
+    // - Collapsed blocks now use natural width instead of forced minWidth
+
     // ═══════════════════════════════════════════════════════════════════════
     // DEBUG
     // ═══════════════════════════════════════════════════════════════════════
@@ -182,7 +213,7 @@
     const DEBUG = true;
 
     // Simple structured logger (colored prefix + levels). When DEBUG=false, it’s a no-op.
-    const log = (msg, type = 'info', data = null) => {
+    const log = (msg, type = 'info') => {
         if (!DEBUG) return;
 
         const prefix = '[CBC]';
@@ -192,11 +223,7 @@
             error: 'color: #ea4335'
         };
 
-        if (data) {
-            console.log(`%c${prefix} ${msg}`, styles[type], data);
-        } else {
-            console.log(`%c${prefix} ${msg}`, styles[type]);
-        }
+        console.log(`%c${prefix} ${msg}`, styles[type]);
     };
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -294,6 +321,7 @@
             /* Collapsed state styling */
             .cbc-header-interactive.cbc-header-collapsed {
                 border-bottom-color: transparent !important;
+                border-radius: 6px !important;
             }
             .cbc-header-interactive.cbc-header-collapsed:hover {
                 background-color: ${header.collapsedHoverBg};
@@ -352,9 +380,6 @@
                 user-select: none;
                 font-size: 13px;
                 font-weight: 500;
-            }
-            /* Use site's text-secondary color */
-            .cbc-footer {
                 color: var(--text-secondary, rgba(255,255,255,0.5));
             }
             .cbc-footer:hover {
@@ -389,11 +414,6 @@
                 background-color: var(--surface-primary, #1a1a1a);
                 backdrop-filter: blur(8px);
                 -webkit-backdrop-filter: blur(8px);
-            }
-
-            /* When header is collapsed, give it bottom border radius */
-            .cbc-header-interactive.cbc-header-collapsed {
-                border-radius: 6px !important;
             }
 
             /* Dual toolbar button container */
@@ -447,22 +467,18 @@
             .cbc-collapse-btn.filling-up::before {
                 bottom: 0;
                 background: rgba(249, 115, 22, 0.35);
-                animation: cbcFillUp 500ms linear forwards;
+                animation: cbcFill 500ms linear forwards;
             }
             .cbc-collapse-btn.filling-down::before {
                 top: 0;
                 background: rgba(120, 120, 120, 0.35);
-                animation: cbcFillDown 500ms linear forwards;
+                animation: cbcFill 500ms linear forwards;
             }
             .cbc-collapse-btn svg {
                 position: relative;
                 z-index: 1;
             }
-            @keyframes cbcFillUp {
-                from { height: 0%; }
-                to { height: 100%; }
-            }
-            @keyframes cbcFillDown {
+            @keyframes cbcFill {
                 from { height: 0%; }
                 to { height: 100%; }
             }
@@ -710,29 +726,41 @@
         const { block, container, header, footer } = state;
 
         // For single-block collapse, determine scroll strategy BEFORE modifying DOM
+        // Goals:
+        // - If the header is visible: keep THAT header visually stable (use it as the anchor).
+        //   This prevents rare "snap down to footer position" behavior caused by browser/scroll-area anchoring.
+        // - If the header is NOT visible (often when collapsing from the footer): scroll to show the header.
         let scrollStrategy = null; // 'anchor' | 'scrollToHeader' | null
         let anchor = null;
 
         if (externalAnchor === undefined) {
-            // Check if we're viewing inside this block (header above viewport, content visible)
-            if (isViewingBlockContent(state)) {
+            const scrollContainer = getScrollContainer();
+            const inside = isViewingBlockContent(state);
+
+            // If we can't detect the scroll container, default to "header is visible"
+            // so we don't try to scroll-to-header using a container we can't control.
+            let headerVisible = true;
+
+            if (scrollContainer) {
+                const scrollRect = scrollContainer.getBoundingClientRect();
+                const headerRect = header.getBoundingClientRect();
+                headerVisible = headerRect.bottom > scrollRect.top && headerRect.top < scrollRect.bottom;
+            }
+
+            // If user is inside the block OR the header isn't visible, collapsing should bring them to the header.
+            if (inside || !headerVisible) {
                 scrollStrategy = 'scrollToHeader';
-                log('Collapse: inside block, will scroll to header', 'info');
-            } else {
-                anchor = findScrollAnchor();
-                if (anchor) {
-                    scrollStrategy = 'anchor';
+                if (inside) {
+                    log('Collapse: inside block, will scroll to header', 'info');
                 }
+            } else {
+                // Anchor to THIS header (not an unrelated element near viewport center)
+                anchor = { element: header, offsetTop: header.getBoundingClientRect().top };
+                scrollStrategy = 'anchor';
             }
         } else {
             anchor = externalAnchor;
         }
-
-        // Preserve original width to prevent layout shift when content is hidden
-        if (!state.originalWidth) {
-            state.originalWidth = block.offsetWidth;
-        }
-        block.style.minWidth = state.originalWidth + 'px';
 
         container.classList.add('cbc-collapsed');
         header.classList.add('cbc-header-collapsed');
@@ -757,16 +785,18 @@
     }
 
     // Expand a single code block (instant, no animation).
-    // Same anchor semantics as collapseBlock.
+    // For single-block expand:
+    // 1) Stabilize the header position (cancels browser/scroll-area scroll anchoring)
+    // 2) Only if the header ends up too low/off-screen, scroll it to the top for readability
+    //
+    // For bulk expand (externalAnchor !== undefined): caller handles scroll anchoring.
     function expandBlock(state, externalAnchor = undefined) {
         log(`Expanding block`, 'info');
         const { block, container, header, footer } = state;
 
-        // For single-block expand, handle scroll anchoring ourselves
-        const anchor = externalAnchor === undefined ? findScrollAnchor() : externalAnchor;
-
-        // Remove forced width; content will determine natural width
-        block.style.minWidth = '';
+        // For single-block expand: record header position BEFORE DOM changes
+        const scrollContainer = externalAnchor === undefined ? getScrollContainer() : null;
+        const preHeaderTop = scrollContainer ? header.getBoundingClientRect().top : null;
 
         container.classList.remove('cbc-collapsed');
         header.classList.remove('cbc-header-collapsed');
@@ -774,12 +804,40 @@
 
         state.collapsed = false;
 
-        // Restore scroll position for single-block operations
-        if (externalAnchor === undefined && anchor) {
-            restoreScrollAnchor(anchor);
+        // Single-block: stabilize header position, then (optionally) move it to top only if it's too low
+        if (externalAnchor === undefined && scrollContainer && preHeaderTop !== null) {
+            requestAnimationFrame(() => {
+                // Step 1: cancel scroll anchoring effects by restoring header's pre-expand viewport position
+                const postHeaderTop = header.getBoundingClientRect().top;
+                const delta = postHeaderTop - preHeaderTop;
+
+                // Only adjust if there's meaningful shift (avoid sub-pixel noise)
+                if (Math.abs(delta) > 1) {
+                    scrollContainer.scrollTop += delta;
+                }
+
+                // Step 2: if header is still off-screen or very low, bring it to top
+                const scrollRect = scrollContainer.getBoundingClientRect();
+                const headerRect = header.getBoundingClientRect();
+
+                // "Off-screen" here means fully outside the scroll viewport (not merely clipped by 1px)
+                const headerFullyOffScreen =
+                    headerRect.bottom <= scrollRect.top ||
+                    headerRect.top >= scrollRect.bottom;
+
+                // Only treat the bottom ~15% as "too low" (prevents unnecessary snapping from the middle)
+                const bottomZoneStart = scrollRect.top + (scrollRect.height * 0.85);
+
+                if (headerFullyOffScreen || headerRect.top > bottomZoneStart) {
+                    scrollHeaderToTop(state);
+                }
+
+                updateFixedFooter();
+            });
+            return;
         }
 
-        // Update global fixed footer after expand
+        // Bulk expand: just update footer
         requestAnimationFrame(() => {
             updateFixedFooter();
         });
@@ -904,7 +962,8 @@
         // Apply auto-mode to a single newly added block at setup time.
         applyAutoModeToBlock(state) {
             if (settings.autoMode === 'collapse' && !state.collapsed) {
-                collapseBlock(state);
+                // Avoid any single-block scroll behavior during auto-collapse of newly added blocks
+                collapseBlock(state, null);
             }
         }
     };
@@ -1175,16 +1234,16 @@
     // Creates the dual toolbar button (collapse | expand).
     // Hold collapse button for 1s to toggle auto-collapse mode.
     function createToolbarButton() {
-        if (document.getElementById('cbc-toolbar-toggle')) return false;
+        if (document.getElementById('cbc-toolbar-toggle')) return;
 
         const form = document.querySelector('form');
-        if (!form) return false;
+        if (!form) return;
 
         const submitBtn = form.querySelector('button[type="submit"]');
-        if (!submitBtn) return false;
+        if (!submitBtn) return;
 
         const targetContainer = submitBtn.closest('.flex.items-center.gap-2');
-        if (!targetContainer) return false;
+        if (!targetContainer) return;
 
         log('Creating dual toolbar button', 'info');
 
@@ -1346,7 +1405,6 @@
         updateToolbarButton();
 
         log('Dual toolbar button created', 'success');
-        return true;
     }
 
     // ═══════════════════════════════════════════════════════════════════════

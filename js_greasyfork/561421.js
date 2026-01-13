@@ -6,7 +6,7 @@
 // @include             https://www.waze.com/editor*
 // @include             https://beta.waze.com/*
 // @exclude             https://www.waze.com/user/editor*
-// @version             2026.01.10.38
+// @version             2026.01.12.40
 // @grant               GM_xmlhttpRequest
 // @grant               unsafeWindow
 // @connect             waze.com
@@ -20,8 +20,10 @@
 // ==/UserScript==
 
 /*
- * Abdullah Abbas WME Tools (V2026.01.10.38)
+ * Abdullah Abbas WME Tools (V2026.01.12.40)
  * Updates:
+ * - Fix (Map Validator): Excluded (Railroad, Walking Trail, Boardwalk, Stairway) from "Disconnected" check.
+ * - Fix (Map Validator): Excluded (Railroad, Walking Trail, Boardwalk, Stairway) from "No Node" cross check.
  * - Fix: Optimized ResizeObserver to prevent UI freezing (Added Debounce).
  * - Code: Un-minified Roundabout Editor for better stability and performance.
  * - General: Smoother window dragging and resizing.
@@ -45,7 +47,7 @@
     }
 
     const SCRIPT_NAME = "Abdullah Abbas WME Tools";
-    const SCRIPT_VERSION = "2026.01.10.38";
+    const SCRIPT_VERSION = "2026.01.12.40";
     const DEFAULT_W = "340px";
     const DEFAULT_H = "480px";
 
@@ -694,8 +696,11 @@
             }
 
             if (s.checkDiscon) {
+                const ignoredTypes = [5, 10, 16, 18]; // FIX: Excluded types from Disconnected check
                 segments.forEach(seg => {
                     if(!seg.geometry) return; if (s.excludeRAB && isRAB(seg)) return;
+                    if (ignoredTypes.includes(seg.attributes.roadType)) return;
+
                     const nodeA = W.model.nodes.objects[seg.attributes.fromNodeID]; const nodeB = W.model.nodes.objects[seg.attributes.toNodeID];
                     if(!nodeA || !nodeB || !nodeA.geometry || !nodeB.geometry) return;
                     const conA = nodeA.attributes.segIDs.length; const conB = nodeB.attributes.segIDs.length;
@@ -720,12 +725,18 @@
 
             if (s.checkCross) {
                 const items = segments.map(seg => ({ s: seg, b: seg.geometry.getBounds() }));
+                const ignoredTypes = [5, 10, 16, 18]; // 5=Walking Trail, 10=Boardwalk, 16=Stairway, 18=Railroad
+
                 for (let i = 0; i < items.length; i++) {
                     let item1 = items[i];
                     for (let j = i + 1; j < items.length; j++) {
                         let item2 = items[j];
                         if (!item1.b.intersectsBounds(item2.b)) continue;
                         let s1 = item1.s; let s2 = item2.s;
+
+                        // FIX: Exclude specified types from Cross check
+                        if (ignoredTypes.includes(s1.attributes.roadType) || ignoredTypes.includes(s2.attributes.roadType)) continue;
+
                         if (s1.attributes.level === s2.attributes.level &&
                             s1.attributes.fromNodeID !== s2.attributes.fromNodeID &&
                             s1.attributes.fromNodeID !== s2.attributes.toNodeID &&

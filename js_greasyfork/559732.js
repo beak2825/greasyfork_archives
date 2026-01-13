@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Juxtaposition Pretendo Enhancer
 // @namespace    https://github.com/ItsFuntum/Juxtaposition-Enhancer
-// @version      2025-12-21
+// @version      2026-01-12
 // @description  Userscript that improves Pretendo's Juxtaposition on the web.
 // @author       Funtum
 // @match        *://juxt.pretendo.network/*
@@ -18,7 +18,9 @@
   const communityPage = window.location.pathname.match(/^\/titles\/(\d+)/);
   const postsPage = window.location.pathname.match(/posts/);
   const myMii = document.querySelector(".mii-icon")?.src;
-  const myMiiSubstring = myMii.substring(0, myMii.lastIndexOf("/"));
+  const myMiiSubstring = myMii
+    ? myMii.substring(0, myMii.lastIndexOf("/"))
+    : null;
 
   // --- Wait until .community-info exists ---
   function waitForCommunityInfo(callback) {
@@ -114,95 +116,87 @@
 
   // --- Instead of starting with just the observer ---
   async function addReplyBox(wrapper) {
-    const container = document.createElement("div");
-    Object.assign(container.style, {
-      width: "40%",
-      margin: "15px 0",
-      display: "flex",
-      flexDirection: "column",
-      gap: "6px",
-      background: "#2a2f50",
-      padding: "10px",
-      borderRadius: "8px",
-      border: "1px solid #444",
-    });
+    const communityLink = document.querySelector(
+      '.post-meta-wrapper h4 a[href^="/titles/"]'
+    );
+    if (!communityLink) return alert("Cannot find community link");
+    const communityId = communityLink
+      ? communityLink.href.split("/titles/")[1]
+      : null;
+    const popupBackdrop = document.createElement("div");
+    popupBackdrop.className = "modal-backdrop";
+    popupBackdrop.style.display = "flex";
+    document.body.appendChild(popupBackdrop);
 
-    const label = document.createElement("label");
-    label.textContent = "Write a reply:";
-    label.style.color = "white";
-    label.style.fontWeight = "600";
+    const postsWrapper = document.querySelector(".posts-wrapper");
+    if (!postsWrapper) return alert("Cannot find parent post ID");
+    const postId = postsWrapper.id;
 
-    const textarea = document.createElement("textarea");
-    textarea.placeholder = "Type your message here...";
-    textarea.rows = 5;
-    Object.assign(textarea.style, {
-      width: "100%",
-      padding: "8px",
-      borderRadius: "6px",
-      border: "1px solid #666",
-      background: "#1b1f3b",
-      color: "white",
-      fontSize: "14px",
-      resize: "vertical",
-    });
+    const popup = document.createElement("div");
+    popup.id = "add-post-page";
+    popup.className = "add-post-page official-user-post";
+    popup.style.display = "flex";
 
-    const sendBtn = document.createElement("button");
-    sendBtn.textContent = "Send";
+    popup.innerHTML = `
+<form id="posts-form" data-is-own-title="1" data-is-identified="1" action="/posts/${postId}/new" method="post">
+  <input type="hidden" name="community_id" value="${communityId}">
 
-    container.appendChild(label);
-    container.appendChild(textarea);
-    container.appendChild(sendBtn);
+  <div class="add-post-page-content">
 
-    wrapper.appendChild(container);
+    <div class="feeling-selector expression">
+      <img src="${myMiiSubstring}/normal_face.png" id="mii-face" class="icon">
+      <ul class="buttons">
+        <li><input type="radio" class="feeling-button-normal" data-mii-face-url="${myMiiSubstring}/normal_face.png" name="feeling_id" value="0" checked></li>
+        <li><input type="radio" class="feeling-button-happy" data-mii-face-url="${myMiiSubstring}/smile_open_mouth.png" name="feeling_id" value="1"></li>
+        <li><input type="radio" class="feeling-button-like" data-mii-face-url="${myMiiSubstring}/wink_left.png" name="feeling_id" value="2"></li>
+        <li><input type="radio" class="feeling-button-surprised" data-mii-face-url="${myMiiSubstring}/surprise_open_mouth.png" name="feeling_id" value="3"></li>
+        <li><input type="radio" class="feeling-button-frustrated" data-mii-face-url="${myMiiSubstring}/frustrated.png" name="feeling_id" value="4"></li>
+        <li><input type="radio" class="feeling-button-puzzled" data-mii-face-url="${myMiiSubstring}/sorrow.png" name="feeling_id" value="5"></li>
+      </ul>
+    </div>
 
-    sendBtn.addEventListener("click", async () => {
-      const text = textarea.value.trim();
-      if (!text) {
-        alert("Please type something first.");
-        return;
-      }
+    <div class="textarea-container textarea-with-menu active-text">
+      <menu class="textarea-menu">
+        <li class="textarea-menu-text">
+          <input type="radio" name="_post_type" checked value="body">
+        </li>
+        <li class="textarea-menu-memo">
+          <input type="radio" name="_post_type" value="painting">
+        </li>
+      </menu>
 
-      const communityLink = document.querySelector(
-        '.post-meta-wrapper h4 a[href^="/titles/"]'
-      );
-      if (!communityLink) return alert("Cannot find community link");
-      const communityId = communityLink
-        ? communityLink.href.split("/titles/")[1]
-        : null;
+      <textarea id="new-post-text" name="body" class="textarea-text" maxlength="280" placeholder="Enter text here..."></textarea>
 
-      const postsWrapper = document.querySelector(".posts-wrapper");
-      if (!postsWrapper) return alert("Cannot find parent post ID");
-      const postId = postsWrapper.id; // Use the id attribute as postId
+      <div id="new-post-memo" class="textarea-memo" style="display:none">
+        <img id="memo" class="textarea-memo-preview">
+        <input id="memo-value" type="hidden" name="painting">
+      </div>
+    </div>
 
-      const formData = new FormData();
-      formData.append("community_id", communityId);
-      formData.append("body", text);
-      formData.append("feeling_id", "0");
-      formData.append("is_autopost", "0");
-      formData.append("language_id", "1"); // English
-      formData.append("is_spoiler", "0");
-      formData.append("is_app_jumpable", "0");
+    <label class="checkbox-container spoiler-button">
+      Spoilers
+      <input type="checkbox" id="spoiler" name="spoiler" value="true">
+      <span class="checkmark"></span>
+    </label>
+  </div>
 
-      try {
-        const response = await fetch(`/posts/${postId}/new`, {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        });
+  <div id="button-wrapper">
+    <input type="submit" class="post-button fixed-bottom-button" value="Reply">
+  </div>
+</form>
+`;
 
-        const data = await response.text();
-        console.log("Server response:", data);
+    postsWrapper.appendChild(popup);
 
-        if (response.ok) {
-          alert("Post sent successfully!");
-          textarea.value = "";
-        } else {
-          alert("Failed to post. Check console for details.");
-        }
-      } catch (err) {
-        console.error("Error sending post:", err);
-        alert("Error sending post.");
-      }
+    // --- Feeling selector: change Mii expression when clicking buttons ---
+    const miiFace = popup.querySelector("#mii-face");
+    const feelingButtons = popup.querySelectorAll("input[name='feeling_id']");
+
+    feelingButtons.forEach((btn) => {
+      btn.addEventListener("change", () => {
+        const url = btn.dataset.miiFaceUrl;
+        if (url) miiFace.src = url;
+      });
     });
   }
 

@@ -3,7 +3,7 @@
 // @description  Cleans The Guardian of any distractions, ads, and nags
 // @license      MIT
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-30
+// @version      2025-01-12
 // @match        https://www.theguardian.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=theguardian.com
 // @grant        none
@@ -43,7 +43,7 @@ aside:has(div#comments),
 section:has([data-link-name="keywords"]),
 [name=SubNav],
 [href="/email-newsletters"],
-[data-gu-name="body"] [data-print-layout="hide"],
+[data-gu-name="body"] [data-print-layout="hide"]:not([data-component="rich-link"]),
 [data-gu-name="body"] svg[stroke="var(--straight-lines)"],
 [name=SlotBodyEnd],
 [name=FooterReaderRevenueLinks],

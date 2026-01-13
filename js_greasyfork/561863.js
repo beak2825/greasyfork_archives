@@ -2,7 +2,7 @@
 // @name		Mist Legacy Interactive Map Search
 // @namespace	mist-legacy-interactive-map-search
 // @description This adds a search field to more easily find things on the interactive map website for the game Mist Legacy
-// @version		1.1
+// @version		1.1.1
 // @license     MIT
 // @match		http://199.180.155.43/map
 // @run-at		document-start
@@ -12,13 +12,14 @@
 // ==/UserScript==
 
 (function() {
-	'use strict';
+  'use strict';
 	let hooked = false;
 
 	// Hooking L.Map.djangoMap
 	function hookLeaflet() {
 		if (!window.L || !L.Map || !L.Map.djangoMap || hooked) return;
 
+		console.log("Hooked Leaflet")
 		hooked = true;
 		const original = L.Map.djangoMap;
 
@@ -40,6 +41,7 @@
 	function addSearchControl(map) {
 		if (!map) return;
 
+		console.log("Creating Search Control")
 		const L = window.L;
 		const SearchControl = L.Control.extend({
 			options: {
@@ -74,6 +76,7 @@
 		});
 
 		map.addControl(new SearchControl());
+		console.log("Search box added")
 
 		// Add CSS
 		document.head.insertAdjacentHTML('beforeend', `
@@ -171,5 +174,6 @@
 
 		input.addEventListener('input', runSearch);
 		checkbox.addEventListener('change', runSearch);
+		
 	}
 })();

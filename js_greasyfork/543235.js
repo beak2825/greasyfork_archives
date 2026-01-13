@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         豆瓣读书添加Z-Library搜索链接
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  在豆瓣读书页面添加Z-Library搜索链接
 // @author       Leonecho
 // @match        https://book.douban.com/subject/*
@@ -65,7 +65,7 @@
             searchSpan.textContent = '搜书:';
 
             const zlibLink = document.createElement('a');
-            zlibLink.href = `https://z-library.sk/s/${encodeURIComponent(bookTitle)}`;
+            zlibLink.href = `https://zh.z-lib.sk/s/${encodeURIComponent(bookTitle)}`;
             zlibLink.textContent = 'Z-Library';
             zlibLink.target = '_blank'; // 在新标签页打开
             zlibLink.style.marginLeft = '5px';

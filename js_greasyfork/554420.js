@@ -3,7 +3,7 @@
 // @name:en            Starter Monkey
 // @name:zh-CN         Starter Monkey
 // @namespace          yuns
-// @version            0.1.0
+// @version            0.1.1
 // @description        Starter template for userscript engine like Tampermonkey and Violentmonkey, Greasemonkey, ScriptCat, powered by vite-plugin-monkey.
 // @description:en     Starter template for userscript engine like Tampermonkey and Violentmonkey, Greasemonkey, ScriptCat, powered by vite-plugin-monkey.
 // @description:zh-CN  适用于 Tampermonkey、Violentmonkey、Greasemonkey、ScriptCat 等 userscript 引擎的起始模板，由 vite-plugin-monkey 强力驱动。
@@ -11,8 +11,9 @@
 // @icon               https://vitejs.dev/logo.svg
 // @match              https://www.google.com/
 // @match              https://www.v2ex.com/
-// @require            https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js
-// @require            https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js
+// @require            https://cdn.jsdelivr.net/npm/react-umd@19.2.3/dist/react.umd.min.js
+// @require            https://cdn.jsdelivr.net/npm/react-umd@19.2.3/dist/react-dom.umd.min.js
+// @require            https://cdn.jsdelivr.net/npm/react-umd@19.2.3/dist/react-dom-client.umd.min.js
 // @require            https://cdn.jsdelivr.net/npm/systemjs@6.15.1/dist/system.min.js
 // @require            https://cdn.jsdelivr.net/npm/systemjs@6.15.1/dist/extras/named-register.min.js
 // @require            data:application/javascript,%3B(typeof%20System!%3D'undefined')%26%26(System%3Dnew%20System.constructor())%3B
@@ -23,11 +24,12 @@
 // @updateURL https://update.greasyfork.org/scripts/554420/Starter%20Monkey.meta.js
 // ==/UserScript==
 
-System.addImportMap({ imports: {"react":"user:react","react-dom":"user:react-dom"} });
+System.addImportMap({ imports: {"react":"user:react","react-dom":"user:react-dom","react-dom/client":"user:react-dom/client"} });
 System.set("user:react", (()=>{const _=React;('default' in _)||(_.default=_);return _})());
 System.set("user:react-dom", (()=>{const _=ReactDOM;('default' in _)||(_.default=_);return _})());
+System.set("user:react-dom/client", (()=>{const _=ReactDOMClient;('default' in _)||(_.default=_);return _})());
 
-System.register("./__entry.js", ['./__monkey.entry-CICLkIwt.js'], (function (exports, module) {
+System.register("./__entry.js", ['./__monkey.entry-NcFvLiA-.js'], (function (exports, module) {
 	'use strict';
 	return {
 		setters: [null],
@@ -39,7 +41,7 @@ System.register("./__entry.js", ['./__monkey.entry-CICLkIwt.js'], (function (exp
 	};
 }));
 
-System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) {
+System.register("./__monkey.entry-NcFvLiA-.js", [], (function (exports, module) {
   'use strict';
   return {
     execute: (function () {
@@ -55,7 +57,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
         warn: (...args) => print(console.warn, ...args),
         error: (...args) => print(console.error, ...args)
       });
-      const scriptRel = /* @__PURE__ */ (function detectScriptRel() {
+      const scriptRel = (function detectScriptRel() {
         const relList = typeof document !== "undefined" && document.createElement("link").relList;
         return relList && relList.supports && relList.supports("modulepreload") ? "modulepreload" : "preload";
       })();
@@ -94,7 +96,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
             document.head.appendChild(link);
             if (isCss) return new Promise((res, rej) => {
               link.addEventListener("load", res);
-              link.addEventListener("error", () => rej(/* @__PURE__ */ new Error(`Unable to preload CSS for ${dep}`)));
+              link.addEventListener("error", () => rej( new Error(`Unable to preload CSS for ${dep}`)));
             });
           }));
         }
@@ -130,8 +132,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
               "https",
               "file",
               "ftp"
-              // 'urn',
-            ],
+],
             schemeStarMatchesWs: false
           },
           firefox: {
@@ -142,9 +143,8 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
               "wss",
               "ftp",
               "file"
-              // 'ftps',
-              // 'data',
-            ],
+
+],
             schemeStarMatchesWs: true
           }
         };
@@ -234,7 +234,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
             };
           }).filter((x) => x.inClass !== x.ch || x.outsideClass !== x.ch);
         };
-        const cache = /* @__PURE__ */ new Map();
+        const cache = new Map();
         const getContextAgnosticMap = (flags) => {
           const cached = cache.get(flags);
           if (cached) {
@@ -248,7 +248,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
         function regexEscape(input, flags = "u") {
           const contextAgnosticMap = getContextAgnosticMap(flags);
           const chars = Object.values(contextAgnosticMap);
-          const replacer = (str) => str.replace(new RegExp(`[${chars.join("")}]`, [.../* @__PURE__ */ new Set([...flags, ..."g"])].join("")), (m) => contextAgnosticMap[m]);
+          const replacer = (str) => str.replace(new RegExp(`[${chars.join("")}]`, [... new Set([...flags, ..."g"])].join("")), (m) => contextAgnosticMap[m]);
           return new _regex.RegexFragment(replacer(input));
         }
         function exact(input, flags) {
@@ -256,9 +256,8 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
         }
         function regexLength(input) {
           return (
-            // TODO?
-            // .replace(/\[[^\]]+\]/g, '.')
-            input.replace(/\\(?:\w\{[^}]+\}|u[0-9a-f]{4}|x[0-9a-f]{2}|[0-8]{3}|c[A-Z]|.)/gi, ".").length
+
+input.replace(/\\(?:\w\{[^}]+\}|u[0-9a-f]{4}|x[0-9a-f]{2}|[0-8]{3}|c[A-Z]|.)/gi, ".").length
           );
         }
         return escaping;
@@ -351,7 +350,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
             const sub = substitutions[idx];
             if (Array.isArray(sub)) {
               const mult = sub instanceof LazyAlternation ? -1 : 1;
-              source += `(?:${[.../* @__PURE__ */ new Set([...sub.filter(isContentful).map((x) => String(processSub(flags)(x)))])].sort((a, b) => mult * ((0, _escaping.regexLength)(b) - (0, _escaping.regexLength)(a))).join("|")})`;
+              source += `(?:${[... new Set([...sub.filter(isContentful).map((x) => String(processSub(flags)(x)))])].sort((a, b) => mult * ((0, _escaping.regexLength)(b) - (0, _escaping.regexLength)(a))).join("|")})`;
             } else {
               source += processSub(flags)(sub);
             }
@@ -551,8 +550,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
           if (!m) return null;
           const [
             ,
-            /* fullMatch */
-            scheme,
+scheme,
             rawHost,
             rawPathAndQuery
           ] = m;
@@ -760,8 +758,8 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
           const pathAndQueryRegex = (0, _fancyRegex.regex)()`^${new _fancyRegex.RegexFragment(pathAndQuery.split("*").map((x) => (0, _fancyRegex.regexEscape)(x)).join(".*"))}$`;
           return (0, _utils.createMatchFn)((url) => {
             const pathAndQuery2 = url.pathname + (url.href.endsWith("?") ? "?" : url.search);
-            return schemeRegex.test(url.protocol) && // test against `url.hostname`, not `url.host`, as port is ignored
-            hostRegex.test(url.hostname) && pathAndQueryRegex.test(pathAndQuery2);
+            return schemeRegex.test(url.protocol) &&
+hostRegex.test(url.hostname) && pathAndQueryRegex.test(pathAndQuery2);
           });
         }
         return toMatcherOrError;
@@ -865,20 +863,34 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
         }
         return internalModule;
       }
+      function detectIsUserscriptWithIncludes(userscript) {
+        return "includes" in userscript;
+      }
       async function getUserscripts() {
-        const modules = /* @__PURE__ */ Object.assign({ "../scripts/google/demo/index.tsx": () => __vitePreload(() => module.import('./index-Dk0RNgm0-DIfxDK-M.js'), void 0 ), "../scripts/v2ex/demo/index.tsx": () => __vitePreload(() => module.import('./index-CDgRVA6H-DNPsWUMh.js'), void 0 ) });
+        const modules = Object.assign({ "../scripts/google/demo/index.tsx": () => __vitePreload(() => module.import('./index-D2jqx8jt-IMPsROa_.js'), void 0 ), "../scripts/v2ex/demo/index.tsx": () => __vitePreload(() => module.import('./index-Cgz2Mo1n-DEdunCaH.js'), void 0 ) });
         const userscripts = await Promise.all(Object.values(modules).map((item) => item()));
         return userscripts.map((UserscriptItem, index) => {
           const userscript = interopDefault(UserscriptItem);
-          return {
-            key: Object.keys(modules)[index],
-            script: userscript,
-            matched: userscript.matches.map((item) => {
-              return distExports.matchPattern(item).assertValid();
-            }).some((item) => {
-              return item.match(window.location.href);
-            })
-          };
+          const isUserscriptWithIncludes = detectIsUserscriptWithIncludes(userscript);
+          if (isUserscriptWithIncludes) {
+            return {
+              key: Object.keys(modules)[index],
+              script: userscript,
+              matched: userscript.includes.map((item) => {
+                return new RegExp(item).test(`/${window.location.href}/`);
+              })
+            };
+          } else {
+            return {
+              key: Object.keys(modules)[index],
+              script: userscript,
+              matched: userscript.matches.map((item) => {
+                return distExports.matchPattern(item).assertValid();
+              }).some((item) => {
+                return item.match(window.location.href);
+              })
+            };
+          }
         });
       }
       getUserscripts().then((userscripts) => {
@@ -902,7 +914,7 @@ System.register("./__monkey.entry-CICLkIwt.js", [], (function (exports, module) 
   };
 }));
 
-System.register("./index-Dk0RNgm0-DIfxDK-M.js", ['./__monkey.entry-CICLkIwt.js', './shadow-root-ntA_Bf4v-uyLa-4OP.js', 'react', 'react-dom'], (function (exports, module) {
+System.register("./index-D2jqx8jt-IMPsROa_.js", ['./__monkey.entry-NcFvLiA-.js', './shadow-root-D---y3Pt-DBzC00ke.js', 'react', 'react-dom', 'react-dom/client'], (function (exports, module) {
   'use strict';
   var __vitePreload, createShadowRootUi, reactRenderInShadowRoot;
   return {
@@ -911,7 +923,7 @@ System.register("./index-Dk0RNgm0-DIfxDK-M.js", ['./__monkey.entry-CICLkIwt.js',
     }, module => {
       createShadowRootUi = module.c;
       reactRenderInShadowRoot = module.r;
-    }, null, null],
+    }, null, null, null],
     execute: (function () {
 
       const Script = exports("default", async () => {
@@ -923,7 +935,7 @@ System.register("./index-Dk0RNgm0-DIfxDK-M.js", ['./__monkey.entry-CICLkIwt.js',
             onMount: (container, shadowRoot, shadowHost) => {
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                () => __vitePreload(() => module.import('./app-CTkZu6Dc-SKZY4rEH.js'), void 0 )
+                () => __vitePreload(() => module.import('./app-DLLYTmdF-DWX-mUbh.js'), void 0 )
               );
             }
           }
@@ -937,7 +949,7 @@ System.register("./index-Dk0RNgm0-DIfxDK-M.js", ['./__monkey.entry-CICLkIwt.js',
   };
 }));
 
-System.register("./index-CDgRVA6H-DNPsWUMh.js", ['./__monkey.entry-CICLkIwt.js', './shadow-root-ntA_Bf4v-uyLa-4OP.js', 'react', 'react-dom'], (function (exports, module) {
+System.register("./index-Cgz2Mo1n-DEdunCaH.js", ['./__monkey.entry-NcFvLiA-.js', './shadow-root-D---y3Pt-DBzC00ke.js', 'react', 'react-dom', 'react-dom/client'], (function (exports, module) {
   'use strict';
   var __vitePreload, createShadowRootUi, reactRenderInShadowRoot;
   return {
@@ -946,7 +958,7 @@ System.register("./index-CDgRVA6H-DNPsWUMh.js", ['./__monkey.entry-CICLkIwt.js',
     }, module => {
       createShadowRootUi = module.c;
       reactRenderInShadowRoot = module.r;
-    }, null, null],
+    }, null, null, null],
     execute: (function () {
 
       const Script = exports("default", async () => {
@@ -957,7 +969,7 @@ System.register("./index-CDgRVA6H-DNPsWUMh.js", ['./__monkey.entry-CICLkIwt.js',
             onMount: (container, shadowRoot, shadowHost) => {
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                () => __vitePreload(() => module.import('./app-DTbN8Da9-oZpMwbeO.js'), void 0 )
+                () => __vitePreload(() => module.import('./app-_ILS-UCb-C78l_8Bi.js'), void 0 )
               );
             }
           }
@@ -971,17 +983,18 @@ System.register("./index-CDgRVA6H-DNPsWUMh.js", ['./__monkey.entry-CICLkIwt.js',
   };
 }));
 
-System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './__monkey.entry-CICLkIwt.js'], (function (exports, module) {
+System.register("./shadow-root-D---y3Pt-DBzC00ke.js", ['react', 'react-dom', 'react-dom/client', './__monkey.entry-NcFvLiA-.js'], (function (exports, module) {
   'use strict';
-  var React__default, React__default__default, useEffect, require$$0, createPortal, logger;
+  var React__default, React__default__default, useEffect, createPortal, ReactDOM, logger;
   return {
     setters: [module => {
       React__default = module;
       React__default__default = module.default;
       useEffect = module.useEffect;
     }, module => {
-      require$$0 = module.default;
       createPortal = module.createPortal;
+    }, module => {
+      ReactDOM = module.default;
     }, module => {
       logger = module.l;
     }],
@@ -996,60 +1009,46 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
         return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
       }
       var jsxRuntime = { exports: {} };
-      var reactJsxRuntime_production_min = {};
-      /**
-       * @license React
-       * react-jsx-runtime.production.min.js
-       *
-       * Copyright (c) Facebook, Inc. and its affiliates.
-       *
-       * This source code is licensed under the MIT license found in the
-       * LICENSE file in the root directory of this source tree.
-       */
-      var hasRequiredReactJsxRuntime_production_min;
-      function requireReactJsxRuntime_production_min() {
-        if (hasRequiredReactJsxRuntime_production_min) return reactJsxRuntime_production_min;
-        hasRequiredReactJsxRuntime_production_min = 1;
-        var f = React__default__default, k = Symbol.for("react.element"), l = Symbol.for("react.fragment"), m = Object.prototype.hasOwnProperty, n = f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, p = { key: true, ref: true, __self: true, __source: true };
-        function q(c, a, g) {
-          var b, d = {}, e = null, h = null;
-          void 0 !== g && (e = "" + g);
-          void 0 !== a.key && (e = "" + a.key);
-          void 0 !== a.ref && (h = a.ref);
-          for (b in a) m.call(a, b) && !p.hasOwnProperty(b) && (d[b] = a[b]);
-          if (c && c.defaultProps) for (b in a = c.defaultProps, a) void 0 === d[b] && (d[b] = a[b]);
-          return { $$typeof: k, type: c, key: e, ref: h, props: d, _owner: n.current };
+      var reactJsxRuntime_production = {};
+      var hasRequiredReactJsxRuntime_production;
+      function requireReactJsxRuntime_production() {
+        if (hasRequiredReactJsxRuntime_production) return reactJsxRuntime_production;
+        hasRequiredReactJsxRuntime_production = 1;
+        var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
+        function jsxProd(type, config, maybeKey) {
+          var key = null;
+          void 0 !== maybeKey && (key = "" + maybeKey);
+          void 0 !== config.key && (key = "" + config.key);
+          if ("key" in config) {
+            maybeKey = {};
+            for (var propName in config)
+              "key" !== propName && (maybeKey[propName] = config[propName]);
+          } else maybeKey = config;
+          config = maybeKey.ref;
+          return {
+            $$typeof: REACT_ELEMENT_TYPE,
+            type,
+            key,
+            ref: void 0 !== config ? config : null,
+            props: maybeKey
+          };
         }
-        reactJsxRuntime_production_min.Fragment = l;
-        reactJsxRuntime_production_min.jsx = q;
-        reactJsxRuntime_production_min.jsxs = q;
-        return reactJsxRuntime_production_min;
+        reactJsxRuntime_production.Fragment = REACT_FRAGMENT_TYPE;
+        reactJsxRuntime_production.jsx = jsxProd;
+        reactJsxRuntime_production.jsxs = jsxProd;
+        return reactJsxRuntime_production;
       }
       var hasRequiredJsxRuntime;
       function requireJsxRuntime() {
         if (hasRequiredJsxRuntime) return jsxRuntime.exports;
         hasRequiredJsxRuntime = 1;
         {
-          jsxRuntime.exports = requireReactJsxRuntime_production_min();
+          jsxRuntime.exports = requireReactJsxRuntime_production();
         }
         return jsxRuntime.exports;
       }
       var jsxRuntimeExports = exports("j", requireJsxRuntime());
-      var client = {};
-      var hasRequiredClient;
-      function requireClient() {
-        if (hasRequiredClient) return client;
-        hasRequiredClient = 1;
-        var m = require$$0;
-        {
-          client.createRoot = m.createRoot;
-          client.hydrateRoot = m.hydrateRoot;
-        }
-        return client;
-      }
-      var clientExports = requireClient();
-      const ReactDOM = /* @__PURE__ */ getDefaultExportFromCjs(clientExports);
-      const inlineTailwindCSS = `/*! tailwindcss v4.1.12 | MIT License | https://tailwindcss.com */@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-border-style:solid;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-backdrop-blur:initial;--tw-backdrop-brightness:initial;--tw-backdrop-contrast:initial;--tw-backdrop-grayscale:initial;--tw-backdrop-hue-rotate:initial;--tw-backdrop-invert:initial;--tw-backdrop-opacity:initial;--tw-backdrop-saturate:initial;--tw-backdrop-sepia:initial;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial}}}@layer theme{:root,:host{--font-sans:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--color-red-400:oklch(70.4% .191 22.216);--color-blue-300:oklch(80.9% .105 251.813);--color-indigo-400:oklch(67.3% .182 276.935);--color-gray-800:oklch(27.8% .033 256.848);--color-white:#fff;--spacing:.25rem;--text-lg:1.125rem;--text-lg--line-height:calc(1.75/1.125);--font-weight-bold:700;--drop-shadow-xl:0 9px 7px #0000001a;--blur-lg:16px;--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring{outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab,red,red)){::placeholder{color:color-mix(in oklab,currentcolor 50%,transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer components;@layer utilities{.visible{visibility:visible}.absolute{position:absolute}.fixed{position:fixed}.relative{position:relative}.inset-0{inset:calc(var(--spacing)*0)}.isolate{isolation:isolate}.container{width:100%}@media (min-width:40rem){.container{max-width:40rem}}@media (min-width:48rem){.container{max-width:48rem}}@media (min-width:64rem){.container{max-width:64rem}}@media (min-width:80rem){.container{max-width:80rem}}@media (min-width:96rem){.container{max-width:96rem}}.i-bx--bx-edit{width:1em;height:1em;-webkit-mask-image:var(--svg);mask-image:var(--svg);--svg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='m7 17.013l4.413-.015l9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583zM18.045 4.458l1.589 1.583l-1.597 1.582l-1.586-1.585zM9 13.417l6.03-5.973l1.586 1.586l-6.029 5.971L9 15.006z'/%3E%3Cpath fill='black' d='M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2'/%3E%3C/svg%3E");background-color:currentColor;display:inline-block;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}.block{display:block}.contents{display:contents}.flex{display:flex}.inline{display:inline}.inline-block{display:inline-block}.inline-flex{display:inline-flex}.h-10{height:calc(var(--spacing)*10)}.max-h-\\[80vh\\]{max-height:80vh}.min-h-20{min-height:calc(var(--spacing)*20)}.w-130{width:calc(var(--spacing)*130)}.max-w-\\[80vw\\]{max-width:80vw}.cursor-pointer{cursor:pointer}.items-center{align-items:center}.justify-center{justify-content:center}.gap-1{gap:calc(var(--spacing)*1)}.border{border-style:var(--tw-border-style);border-width:1px}.bg-white{background-color:var(--color-white)}.p-1{padding:calc(var(--spacing)*1)}.p-2{padding:calc(var(--spacing)*2)}.px-1{padding-inline:calc(var(--spacing)*1)}.text-lg{font-size:var(--text-lg);line-height:var(--tw-leading,var(--text-lg--line-height))}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.text-gray-800{color:var(--color-gray-800)}.text-red-400{color:var(--color-red-400)}.italic{font-style:italic}.shadow{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a),0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.backdrop-blur-lg{--tw-backdrop-blur:blur(var(--blur-lg));-webkit-backdrop-filter:var(--tw-backdrop-blur,)var(--tw-backdrop-brightness,)var(--tw-backdrop-contrast,)var(--tw-backdrop-grayscale,)var(--tw-backdrop-hue-rotate,)var(--tw-backdrop-invert,)var(--tw-backdrop-opacity,)var(--tw-backdrop-saturate,)var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,)var(--tw-backdrop-brightness,)var(--tw-backdrop-contrast,)var(--tw-backdrop-grayscale,)var(--tw-backdrop-hue-rotate,)var(--tw-backdrop-invert,)var(--tw-backdrop-opacity,)var(--tw-backdrop-saturate,)var(--tw-backdrop-sepia,)}.will-change-\\[filter\\]{will-change:filter}@media (hover:hover){.hover\\:drop-shadow-xl:hover{--tw-drop-shadow-size:drop-shadow(0 9px 7px var(--tw-drop-shadow-color,#0000001a));--tw-drop-shadow:drop-shadow(var(--drop-shadow-xl));filter:var(--tw-blur,)var(--tw-brightness,)var(--tw-contrast,)var(--tw-grayscale,)var(--tw-hue-rotate,)var(--tw-invert,)var(--tw-saturate,)var(--tw-sepia,)var(--tw-drop-shadow,)}.hover\\:drop-shadow-blue-300:hover{--tw-drop-shadow-color:oklch(80.9% .105 251.813)}@supports (color:color-mix(in lab,red,red)){.hover\\:drop-shadow-blue-300:hover{--tw-drop-shadow-color:color-mix(in oklab,var(--color-blue-300)var(--tw-drop-shadow-alpha),transparent)}}.hover\\:drop-shadow-blue-300:hover{--tw-drop-shadow:var(--tw-drop-shadow-size)}.hover\\:drop-shadow-indigo-400:hover{--tw-drop-shadow-color:oklch(67.3% .182 276.935)}@supports (color:color-mix(in lab,red,red)){.hover\\:drop-shadow-indigo-400:hover{--tw-drop-shadow-color:color-mix(in oklab,var(--color-indigo-400)var(--tw-drop-shadow-alpha),transparent)}}.hover\\:drop-shadow-indigo-400:hover{--tw-drop-shadow:var(--tw-drop-shadow-size)}}}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-backdrop-blur{syntax:"*";inherits:false}@property --tw-backdrop-brightness{syntax:"*";inherits:false}@property --tw-backdrop-contrast{syntax:"*";inherits:false}@property --tw-backdrop-grayscale{syntax:"*";inherits:false}@property --tw-backdrop-hue-rotate{syntax:"*";inherits:false}@property --tw-backdrop-invert{syntax:"*";inherits:false}@property --tw-backdrop-opacity{syntax:"*";inherits:false}@property --tw-backdrop-saturate{syntax:"*";inherits:false}@property --tw-backdrop-sepia{syntax:"*";inherits:false}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}`;
+      const inlineTailwindCSS = `@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-border-style:solid;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-backdrop-blur:initial;--tw-backdrop-brightness:initial;--tw-backdrop-contrast:initial;--tw-backdrop-grayscale:initial;--tw-backdrop-hue-rotate:initial;--tw-backdrop-invert:initial;--tw-backdrop-opacity:initial;--tw-backdrop-saturate:initial;--tw-backdrop-sepia:initial;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial}}}@layer theme{:root,:host{--font-sans:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--color-red-400:oklch(70.4% .191 22.216);--color-blue-300:oklch(80.9% .105 251.813);--color-indigo-400:oklch(67.3% .182 276.935);--color-gray-800:oklch(27.8% .033 256.848);--color-white:#fff;--spacing:.25rem;--text-lg:1.125rem;--text-lg--line-height:calc(1.75/1.125);--font-weight-bold:700;--drop-shadow-xl:0 9px 7px #0000001a;--blur-lg:16px;--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring{outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab,red,red)){::placeholder{color:color-mix(in oklab,currentcolor 50%,transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer components;@layer utilities{.visible{visibility:visible}.absolute{position:absolute}.fixed{position:fixed}.relative{position:relative}.inset-0{inset:calc(var(--spacing)*0)}.isolate{isolation:isolate}.container{width:100%}@media(min-width:40rem){.container{max-width:40rem}}@media(min-width:48rem){.container{max-width:48rem}}@media(min-width:64rem){.container{max-width:64rem}}@media(min-width:80rem){.container{max-width:80rem}}@media(min-width:96rem){.container{max-width:96rem}}.i-bx--bx-edit{width:1em;height:1em;-webkit-mask-image:var(--svg);mask-image:var(--svg);--svg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='m7 17.013l4.413-.015l9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583zM18.045 4.458l1.589 1.583l-1.597 1.582l-1.586-1.585zM9 13.417l6.03-5.973l1.586 1.586l-6.029 5.971L9 15.006z'/%3E%3Cpath fill='black' d='M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2'/%3E%3C/svg%3E");background-color:currentColor;display:inline-block;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}.block{display:block}.contents{display:contents}.flex{display:flex}.inline{display:inline}.inline-block{display:inline-block}.inline-flex{display:inline-flex}.h-10{height:calc(var(--spacing)*10)}.max-h-\\[80vh\\]{max-height:80vh}.min-h-20{min-height:calc(var(--spacing)*20)}.w-130{width:calc(var(--spacing)*130)}.max-w-\\[80vw\\]{max-width:80vw}.cursor-pointer{cursor:pointer}.items-center{align-items:center}.justify-center{justify-content:center}.gap-1{gap:calc(var(--spacing)*1)}.border{border-style:var(--tw-border-style);border-width:1px}.bg-white{background-color:var(--color-white)}.p-1{padding:calc(var(--spacing)*1)}.p-2{padding:calc(var(--spacing)*2)}.px-1{padding-inline:calc(var(--spacing)*1)}.text-lg{font-size:var(--text-lg);line-height:var(--tw-leading,var(--text-lg--line-height))}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.text-gray-800{color:var(--color-gray-800)}.text-red-400{color:var(--color-red-400)}.italic{font-style:italic}.shadow{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a),0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.backdrop-blur-lg{--tw-backdrop-blur:blur(var(--blur-lg));-webkit-backdrop-filter:var(--tw-backdrop-blur,)var(--tw-backdrop-brightness,)var(--tw-backdrop-contrast,)var(--tw-backdrop-grayscale,)var(--tw-backdrop-hue-rotate,)var(--tw-backdrop-invert,)var(--tw-backdrop-opacity,)var(--tw-backdrop-saturate,)var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,)var(--tw-backdrop-brightness,)var(--tw-backdrop-contrast,)var(--tw-backdrop-grayscale,)var(--tw-backdrop-hue-rotate,)var(--tw-backdrop-invert,)var(--tw-backdrop-opacity,)var(--tw-backdrop-saturate,)var(--tw-backdrop-sepia,)}.will-change-\\[filter\\]{will-change:filter}@media(hover:hover){.hover\\:drop-shadow-xl:hover{--tw-drop-shadow-size:drop-shadow(0 9px 7px var(--tw-drop-shadow-color,#0000001a));--tw-drop-shadow:drop-shadow(var(--drop-shadow-xl));filter:var(--tw-blur,)var(--tw-brightness,)var(--tw-contrast,)var(--tw-grayscale,)var(--tw-hue-rotate,)var(--tw-invert,)var(--tw-saturate,)var(--tw-sepia,)var(--tw-drop-shadow,)}.hover\\:drop-shadow-blue-300:hover{--tw-drop-shadow-color:oklch(80.9% .105 251.813)}@supports (color:color-mix(in lab,red,red)){.hover\\:drop-shadow-blue-300:hover{--tw-drop-shadow-color:color-mix(in oklab,var(--color-blue-300)var(--tw-drop-shadow-alpha),transparent)}}.hover\\:drop-shadow-blue-300:hover{--tw-drop-shadow:var(--tw-drop-shadow-size)}.hover\\:drop-shadow-indigo-400:hover{--tw-drop-shadow-color:oklch(67.3% .182 276.935)}@supports (color:color-mix(in lab,red,red)){.hover\\:drop-shadow-indigo-400:hover{--tw-drop-shadow-color:color-mix(in oklab,var(--color-indigo-400)var(--tw-drop-shadow-alpha),transparent)}}.hover\\:drop-shadow-indigo-400:hover{--tw-drop-shadow:var(--tw-drop-shadow-size)}}}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-backdrop-blur{syntax:"*";inherits:false}@property --tw-backdrop-brightness{syntax:"*";inherits:false}@property --tw-backdrop-contrast{syntax:"*";inherits:false}@property --tw-backdrop-grayscale{syntax:"*";inherits:false}@property --tw-backdrop-hue-rotate{syntax:"*";inherits:false}@property --tw-backdrop-invert{syntax:"*";inherits:false}@property --tw-backdrop-opacity{syntax:"*";inherits:false}@property --tw-backdrop-saturate{syntax:"*";inherits:false}@property --tw-backdrop-sepia{syntax:"*";inherits:false}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}`;
       function InlineTailwindCSS() {
         useEffect(() => {
           if (document.querySelector("style[data-tailwind-at-properties]")) {
@@ -1064,7 +1063,7 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
             document.head.removeChild(style);
           };
         }, []);
-        return /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: inlineTailwindCSS });
+        return jsxRuntimeExports.jsx("style", { children: inlineTailwindCSS });
       }
       function createContext(rootComponentName, defaultContext) {
         const Context = React__default.createContext(
@@ -1074,10 +1073,9 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
           const { children, ...context } = props;
           const value = React__default.useMemo(
             () => context,
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            Object.values(context)
+Object.values(context)
           );
-          return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
+          return jsxRuntimeExports.jsx(Context.Provider, { value, children });
         };
         function useContext() {
           const context = React__default.useContext(Context);
@@ -1105,11 +1103,11 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
           console.error("No head element found in shadow root");
           return;
         }
-        const portal = createPortal(/* @__PURE__ */ jsxRuntimeExports.jsx(InlineTailwindCSS, {}), targetHead);
+        const portal = createPortal( jsxRuntimeExports.jsx(InlineTailwindCSS, {}), targetHead);
         root.render(
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(React__default__default.StrictMode, { children: [
+jsxRuntimeExports.jsxs(React__default__default.StrictMode, { children: [
             portal,
-            /* @__PURE__ */ jsxRuntimeExports.jsx(MountContextProvider, { ...mountContext, children: _app })
+jsxRuntimeExports.jsx(MountContextProvider, { ...mountContext, children: _app })
           ] })
         );
         return root;
@@ -1127,7 +1125,7 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
         return isPotentialCustomElementName_1;
       }
       var isPotentialCustomElementNameExports = requireIsPotentialCustomElementName();
-      const isPotentialCustomElementName = /* @__PURE__ */ getDefaultExportFromCjs(isPotentialCustomElementNameExports);
+      const isPotentialCustomElementName = getDefaultExportFromCjs(isPotentialCustomElementNameExports);
       var __async = (__this, __arguments, generator) => {
         return new Promise((resolve, reject) => {
           var fulfilled = (value) => {
@@ -1148,12 +1146,32 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
           step((generator = generator.apply(__this, __arguments)).next());
         });
       };
+      var ALLOWED_SHADOW_ELEMENTS = [
+        "article",
+        "aside",
+        "blockquote",
+        "body",
+        "div",
+        "footer",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "header",
+        "main",
+        "nav",
+        "p",
+        "section",
+        "span"
+      ];
       function createIsolatedElement(options) {
         return __async(this, null, function* () {
           const { name, mode = "closed", css, isolateEvents = false } = options;
-          if (!isPotentialCustomElementName(name)) {
+          if (!ALLOWED_SHADOW_ELEMENTS.includes(name) && !isPotentialCustomElementName(name)) {
             throw Error(
-              `"${name}" is not a valid custom element name. It must be two words and kebab-case, with a few exceptions. See spec for more details: https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name`
+              `"${name}" cannot have a shadow root attached to it. It must be two words and kebab-case, with a few exceptions. See https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow#elements_you_can_attach_a_shadow_to`
             );
           }
           const parentElement = document.createElement(name);
@@ -1191,9 +1209,9 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
       class ManyKeysMap extends Map {
         constructor() {
           super();
-          this._objectHashes = /* @__PURE__ */ new WeakMap();
-          this._symbolHashes = /* @__PURE__ */ new Map();
-          this._publicKeys = /* @__PURE__ */ new Map();
+          this._objectHashes = new WeakMap();
+          this._symbolHashes = new Map();
+          this._publicKeys = new Map();
           const [pairs] = arguments;
           if (pairs === null || pairs === void 0) {
             return;
@@ -1312,8 +1330,7 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
       }
       function createDefu(merger) {
         return (...arguments_) => (
-          // eslint-disable-next-line unicorn/no-array-reduce
-          arguments_.reduce((p, c) => _defu(p, c, ""), {})
+arguments_.reduce((p, c) => _defu(p, c, ""), {})
         );
       }
       const defu = createDefu();
@@ -1364,8 +1381,7 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
             return cachedPromise;
           }
           const detectPromise = new Promise(
-            // biome-ignore lint/suspicious/noAsyncPromiseExecutor: avoid nesting promise
-            async (resolve, reject) => {
+async (resolve, reject) => {
               if (signal?.aborted) {
                 return reject(signal.reason);
               }
@@ -1672,7 +1688,7 @@ System.register("./shadow-root-ntA_Bf4v-uyLa-4OP.js", ['react', 'react-dom', './
   };
 }));
 
-System.register("./app-CTkZu6Dc-SKZY4rEH.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.js', 'react', 'react-dom', './__monkey.entry-CICLkIwt.js'], (function (exports, module) {
+System.register("./app-DLLYTmdF-DWX-mUbh.js", ['./shadow-root-D---y3Pt-DBzC00ke.js', 'react', 'react-dom', 'react-dom/client', './__monkey.entry-NcFvLiA-.js'], (function (exports, module) {
   'use strict';
   var jsxRuntimeExports, useState;
   return {
@@ -1680,16 +1696,16 @@ System.register("./app-CTkZu6Dc-SKZY4rEH.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
       jsxRuntimeExports = module.j;
     }, module => {
       useState = module.useState;
-    }, null, null],
+    }, null, null, null],
     execute: (function () {
 
       exports("default", App);
 
-      const d=new Set;const importCSS = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):document.head.appendChild(document.createElement("style")).append(t);})(e));};
+      const d=new Set;const importCSS = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):(document.head||document.documentElement).appendChild(document.createElement("style")).append(t);})(e));};
 
       const reactLogo = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20aria-hidden='true'%20role='img'%20class='iconify%20iconify--logos'%20width='35.93'%20height='32'%20preserveAspectRatio='xMidYMid%20meet'%20viewBox='0%200%20256%20228'%20%3e%3cpath%20fill='%2300D8FF'%20d='M210.483%2073.824a171.49%20171.49%200%200%200-8.24-2.597c.465-1.9.893-3.777%201.273-5.621c6.238-30.281%202.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254%2019.526a171.23%20171.23%200%200%200-6.375%205.848a155.866%20155.866%200%200%200-4.241-3.917C100.759%203.829%2077.587-4.822%2063.673%203.233C50.33%2010.957%2046.379%2033.89%2051.995%2062.588a170.974%20170.974%200%200%200%201.892%208.48c-3.28.932-6.445%201.924-9.474%202.98C17.309%2083.498%200%2098.307%200%20113.668c0%2015.865%2018.582%2031.778%2046.812%2041.427a145.52%20145.52%200%200%200%206.921%202.165a167.467%20167.467%200%200%200-2.01%209.138c-5.354%2028.2-1.173%2050.591%2012.134%2058.266c13.744%207.926%2036.812-.22%2059.273-19.855a145.567%20145.567%200%200%200%205.342-4.923a168.064%20168.064%200%200%200%206.92%206.314c21.758%2018.722%2043.246%2026.282%2056.54%2018.586c13.731-7.949%2018.194-32.003%2012.4-61.268a145.016%20145.016%200%200%200-1.535-6.842c1.62-.48%203.21-.974%204.76-1.488c29.348-9.723%2048.443-25.443%2048.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365%2070.984c-1.4.463-2.836.91-4.3%201.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11%209.31-21.767%2012.459-31.957c2.619.758%205.16%201.557%207.61%202.4c23.69%208.156%2038.14%2020.213%2038.14%2029.504c0%209.896-15.606%2022.743-40.946%2031.14Zm-10.514%2020.834c2.562%2012.94%202.927%2024.64%201.23%2033.787c-1.524%208.219-4.59%2013.698-8.382%2015.893c-8.067%204.67-25.32-1.4-43.927-17.412a156.726%20156.726%200%200%201-6.437-5.87c7.214-7.889%2014.423-17.06%2021.459-27.246c12.376-1.098%2024.068-2.894%2034.671-5.345a134.17%20134.17%200%200%201%201.386%206.193ZM87.276%20214.515c-7.882%202.783-14.16%202.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923%20156.923%200%200%201%201.869-8.499c10.486%202.32%2022.093%203.988%2034.498%204.994c7.084%209.967%2014.501%2019.128%2021.976%2027.15a134.668%20134.668%200%200%201-4.877%204.492c-9.933%208.682-19.886%2014.842-28.658%2017.94ZM50.35%20144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322%2013.897-21.212%2037.076-29.293c2.813-.98%205.757-1.905%208.812-2.773c3.204%2010.42%207.406%2021.315%2012.477%2032.332c-5.137%2011.18-9.399%2022.249-12.634%2032.792a134.718%20134.718%200%200%201-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134%206.425-47.789c8.564-4.958%2027.502%202.111%2047.463%2019.835a144.318%20144.318%200%200%201%203.841%203.545c-7.438%207.987-14.787%2017.08-21.808%2026.988c-12.04%201.116-23.565%202.908-34.161%205.309a160.342%20160.342%200%200%201-1.76-7.887Zm110.427%2027.268a347.8%20347.8%200%200%200-7.785-12.803c8.168%201.033%2015.994%202.404%2023.343%204.08c-2.206%207.072-4.956%2014.465-8.193%2022.045a381.151%20381.151%200%200%200-7.365-13.322Zm-45.032-43.861c5.044%205.465%2010.096%2011.566%2015.065%2018.186a322.04%20322.04%200%200%200-30.257-.006c4.974-6.559%2010.069-12.652%2015.192-18.18ZM82.802%2087.83a323.167%20323.167%200%200%200-7.227%2013.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634%2015.093-2.97%2023.209-3.984a321.524%20321.524%200%200%200-7.848%2012.897Zm8.081%2065.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3%205.045-14.885%208.298-22.6a321.187%20321.187%200%200%200%207.257%2013.246c2.594%204.48%205.28%208.868%208.038%2013.147Zm37.542%2031.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192%209.899.29%2014.978.29c5.218%200%2010.376-.117%2015.453-.343c-4.985%206.774-10.018%2012.97-15.028%2018.486Zm52.198-57.817c3.422%207.8%206.306%2015.345%208.596%2022.52c-7.422%201.694-15.436%203.058-23.88%204.071a382.417%20382.417%200%200%200%207.859-13.026a347.403%20347.403%200%200%200%207.425-13.565Zm-16.898%208.101a358.557%20358.557%200%200%201-12.281%2019.815a329.4%20329.4%200%200%201-23.444.823c-7.967%200-15.716-.248-23.178-.732a310.202%20310.202%200%200%201-12.513-19.846h.001a307.41%20307.41%200%200%201-10.923-20.627a310.278%20310.278%200%200%201%2010.89-20.637l-.001.001a307.318%20307.318%200%200%201%2012.413-19.761c7.613-.576%2015.42-.876%2023.31-.876H128c7.926%200%2015.743.303%2023.354.883a329.357%20329.357%200%200%201%2012.335%2019.695a358.489%20358.489%200%200%201%2011.036%2020.54a329.472%20329.472%200%200%201-11%2020.722Zm22.56-122.124c8.572%204.944%2011.906%2024.881%206.52%2051.026c-.344%201.668-.73%203.367-1.15%205.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789%20160.789%200%200%201%205.888-5.4c18.9-16.447%2036.564-22.941%2044.612-18.3ZM128%2090.808c12.625%200%2022.86%2010.235%2022.86%2022.86s-10.235%2022.86-22.86%2022.86s-22.86-10.235-22.86-22.86s10.235-22.86%2022.86-22.86Z'%20/%3e%3c/svg%3e";
       const viteLogo = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20aria-hidden='true'%20role='img'%20class='iconify%20iconify--logos'%20width='31.88'%20height='32'%20preserveAspectRatio='xMidYMid%20meet'%20viewBox='0%200%20256%20257'%20%3e%3cdefs%3e%3clinearGradient%20id='IconifyId1813088fe1fbc01fb466'%20x1='-.828%25'%20x2='57.636%25'%20y1='7.652%25'%20y2='78.411%25'%3e%3cstop%20offset='0%25'%20stop-color='%2341D1FF'%20/%3e%3cstop%20offset='100%25'%20stop-color='%23BD34FE'%20/%3e%3c/linearGradient%3e%3clinearGradient%20id='IconifyId1813088fe1fbc01fb467'%20x1='43.376%25'%20x2='50.316%25'%20y1='2.242%25'%20y2='89.03%25'%3e%3cstop%20offset='0%25'%20stop-color='%23FFEA83'%20/%3e%3cstop%20offset='8.333%25'%20stop-color='%23FFDD35'%20/%3e%3cstop%20offset='100%25'%20stop-color='%23FFA800'%20/%3e%3c/linearGradient%3e%3c/defs%3e%3cpath%20fill='url(%23IconifyId1813088fe1fbc01fb466)'%20d='M255.153%2037.938L134.897%20252.976c-2.483%204.44-8.862%204.466-11.382.048L.875%2037.958c-2.746-4.814%201.371-10.646%206.827-9.67l120.385%2021.517a6.537%206.537%200%200%200%202.322-.004l117.867-21.483c5.438-.991%209.574%204.796%206.877%209.62Z'%20/%3e%3cpath%20fill='url(%23IconifyId1813088fe1fbc01fb467)'%20d='M185.432.063L96.44%2017.501a3.268%203.268%200%200%200-2.634%203.014l-5.474%2092.456a3.268%203.268%200%200%200%203.997%203.378l24.777-5.718c2.318-.535%204.413%201.507%203.936%203.838l-7.361%2036.047c-.495%202.426%201.782%204.5%204.151%203.78l15.304-4.649c2.372-.72%204.652%201.36%204.15%203.788l-11.698%2056.621c-.732%203.542%203.979%205.473%205.943%202.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505%204.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z'%20/%3e%3c/svg%3e";
-      const appCss = "/*! tailwindcss v4.1.12 | MIT License | https://tailwindcss.com */#starter-monkey-root{margin-inline:auto;margin-block:calc(var(--spacing,.25rem)*0);max-width:calc(var(--spacing,.25rem)*320);padding:calc(var(--spacing,.25rem)*8);text-align:center}body{align-items:center;display:flex}";
+      const appCss = "#starter-monkey-root{margin-inline:auto;margin-block:calc(var(--spacing,.25rem)*0);max-width:calc(var(--spacing,.25rem)*320);padding:calc(var(--spacing,.25rem)*8);text-align:center}body{align-items:center;display:flex}";
       importCSS(appCss);
       function r(e) {
         var t, f, n = "";
@@ -1726,9 +1742,9 @@ System.register("./app-CTkZu6Dc-SKZY4rEH.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
       function App() {
         const [count, setCount] = useState(0);
         const baseLogoCls = cls`h-10 p-1 will-change-[filter]`;
-        return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "https://vitejs.dev", target: "_blank", rel: "noreferrer", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        return jsxRuntimeExports.jsxs("div", { children: [
+jsxRuntimeExports.jsxs("div", { className: "flex", children: [
+jsxRuntimeExports.jsx("a", { href: "https://vitejs.dev", target: "_blank", rel: "noreferrer", children: jsxRuntimeExports.jsx(
               "img",
               {
                 src: viteLogo,
@@ -1739,7 +1755,7 @@ System.register("./app-CTkZu6Dc-SKZY4rEH.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
                 alt: "Vite logo"
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "https://reactjs.org", target: "_blank", rel: "noreferrer", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+jsxRuntimeExports.jsx("a", { href: "https://reactjs.org", target: "_blank", rel: "noreferrer", children: jsxRuntimeExports.jsx(
               "img",
               {
                 src: reactLogo,
@@ -1751,22 +1767,22 @@ System.register("./app-CTkZu6Dc-SKZY4rEH.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
               }
             ) })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "italic", children: "Vite + React" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "cursor-pointer border px-1", type: "button", onClick: () => setCount((count2) => count2 + 1), children: [
+jsxRuntimeExports.jsx("h1", { className: "italic", children: "Vite + React" }),
+jsxRuntimeExports.jsxs("div", { className: "p-1", children: [
+jsxRuntimeExports.jsxs("button", { className: "cursor-pointer border px-1", type: "button", onClick: () => setCount((count2) => count2 + 1), children: [
               "count is",
               " ",
               count
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+jsxRuntimeExports.jsxs("p", { children: [
               "Edit",
               " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "src/App.tsx" }),
+jsxRuntimeExports.jsx("code", { children: "src/App.tsx" }),
               " ",
               "and save to test HMR"
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-gray-800", children: "Click on the Vite and React logos to learn more" })
+jsxRuntimeExports.jsx("p", { className: "text-gray-800", children: "Click on the Vite and React logos to learn more" })
         ] });
       }
 
@@ -1774,7 +1790,7 @@ System.register("./app-CTkZu6Dc-SKZY4rEH.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
   };
 }));
 
-System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.js', 'react', 'react-dom', './__monkey.entry-CICLkIwt.js'], (function (exports, module) {
+System.register("./app-_ILS-UCb-C78l_8Bi.js", ['./shadow-root-D---y3Pt-DBzC00ke.js', 'react', 'react-dom', 'react-dom/client', './__monkey.entry-NcFvLiA-.js'], (function (exports, module) {
   'use strict';
   var createShadowRootUi, reactRenderInShadowRoot, jsxRuntimeExports, useMountContext, useRef, useEffect, useMemo, memo, React__default__default, useState, useCallback;
   return {
@@ -1791,12 +1807,12 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
       React__default__default = module.default;
       useState = module.useState;
       useCallback = module.useCallback;
-    }, null, null],
+    }, null, null, null],
     execute: (function () {
 
       exports("default", App);
 
-      var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
+      var _unsafeWindow = (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
       function _defineProperty$1(obj, key, value) {
         if (key in obj) {
           Object.defineProperty(obj, key, {
@@ -2355,7 +2371,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
         }, [e]), r.current;
       }
       var se = He;
-      var _ = /* @__PURE__ */ new Map();
+      var _ = new Map();
       function Ve({ defaultValue: e, defaultLanguage: r, defaultPath: n, value: t, language: a, path: m, theme: E = "light", line: g, loading: N = "Loading...", options: x = {}, overrideServices: P = {}, saveViewState: y = true, keepCurrentModel: V = false, width: z = "100%", height: F = "100%", className: j, wrapperProps: A = {}, beforeMount: q = D, onMount: M = D, onChange: O, onValidate: T = D }) {
         let [s, u] = useState(false), [c, w] = useState(true), d = useRef(null), o = useRef(null), b = useRef(null), L = useRef(M), U = useRef(q), I = useRef(), i = useRef(t), f = se(m), Q = useRef(false), B = useRef(false);
         k(() => {
@@ -2438,15 +2454,15 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
           };
         }
       }
-      React__default__default.createContext(/* @__PURE__ */ new Map());
+      React__default__default.createContext( new Map());
       function useElementsMutationObserver(selectors, options, observeOptions) {
         const optionsRef = useRef(options);
         useEffect(() => {
           optionsRef.current = options;
         }, [options]);
         const stateManager = useMemo(() => {
-          const unmountCallbackElements = /* @__PURE__ */ new WeakSet();
-          const mountDisposers = /* @__PURE__ */ new Map();
+          const unmountCallbackElements = new WeakSet();
+          const mountDisposers = new Map();
           return {
             markElementForUnmount(element) {
               unmountCallbackElements.add(element);
@@ -2469,8 +2485,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
             removeMountDisposer(element) {
               mountDisposers.delete(element);
             },
-            // Return all disposers currently stored. Used during hook cleanup.
-            getAllMountDisposers() {
+getAllMountDisposers() {
               return Array.from(mountDisposers.values());
             }
           };
@@ -2639,11 +2654,11 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
         useSyncDocumentHeadElements({
           selectors: 'link[data-name="vs/editor/editor.main"], script[src*="/vs/editor/editor.main.js"], style[data-name="vs/editor/editor.main"]'
         });
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(de, { ...props });
+        return jsxRuntimeExports.jsx(de, { ...props });
       }
       function useCreateUis(selectors, createFn) {
-        const uiMap = useRef(/* @__PURE__ */ new WeakMap());
-        const versionMap = useRef(/* @__PURE__ */ new WeakMap());
+        const uiMap = useRef( new WeakMap());
+        const versionMap = useRef( new WeakMap());
         useElementsMutationObserver(selectors, {
           onMount: (element) => {
             const removeUiSafe = (ui) => {
@@ -2683,8 +2698,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
           }
         });
         return {
-          // convenient helper to get the current mounted ui for an element
-          getUiForElement: (el) => uiMap.current.get(el)
+getUiForElement: (el) => uiMap.current.get(el)
         };
       }
       function useShadowModal(options) {
@@ -2708,7 +2722,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
               shadowHost.style.display = "block";
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
+jsxRuntimeExports.jsx(
                   "div",
                   {
                     className: `
@@ -2717,7 +2731,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
                     onClick: () => {
                       toggleModal();
                     },
-                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    children: jsxRuntimeExports.jsx(
                       "div",
                       {
                         className: "max-h-[80vh] min-h-20 w-130 max-w-[80vw]",
@@ -2748,9 +2762,9 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
       function App() {
         const { toggleModal: toggleEditorModal } = useShadowModal({
           name: "v2ex-demo-editor",
-          content: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 text-lg", children: "Monaco Editor" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(MonacoEditor, { height: "50vh", defaultValue: "Hello, world!" })
+          content: jsxRuntimeExports.jsxs("div", { className: "bg-white", children: [
+jsxRuntimeExports.jsx("div", { className: "p-2 text-lg", children: "Monaco Editor" }),
+jsxRuntimeExports.jsx(MonacoEditor, { height: "50vh", defaultValue: "Hello, world!" })
           ] })
         });
         useCreateUis("a.topic-link", async (element) => {
@@ -2763,7 +2777,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
               shadowHost.style.display = "inline-block";
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+jsxRuntimeExports.jsxs(
                   "button",
                   {
                     type: "button",
@@ -2773,7 +2787,7 @@ System.register("./app-DTbN8Da9-oZpMwbeO.js", ['./shadow-root-ntA_Bf4v-uyLa-4OP.
                     },
                     children: [
                       "Editor",
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "i-bx--bx-edit" })
+jsxRuntimeExports.jsx("span", { className: "i-bx--bx-edit" })
                     ]
                   }
                 )
