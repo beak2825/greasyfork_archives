@@ -1,14 +1,19 @@
 // ==UserScript==
 // @name         Angular Route Switcher
 // @namespace    https://github.com/junyou1998/angular-route-switcher
-// @version      1.1
+// @version      1.4.1
 // @description      Automatically detects Angular routes and provides a floating UI to switch between them. Works only in Dev Mode (requires window.ng).
 // @description:zh-TW 自動偵測 Angular 路由並提供浮動介面進行切換。僅適用於開發模式 (需要 window.ng)。
 // @author       junyou
 // @match        http://localhost:*/*
 // @match        http://127.0.0.1:*/*
 // @grant        none
+// @icon         https://cdn.jsdelivr.net/gh/junyou1998/angular-route-switcher@main/icon.webp
 // @license      MIT
+// @homepageURL  https://github.com/junyou1998/angular-route-switcher
+// @supportURL   https://github.com/junyou1998/angular-route-switcher/issues
+// @run-at       document-idle
+// @noframes
 // @downloadURL https://update.greasyfork.org/scripts/562323/Angular%20Route%20Switcher.user.js
 // @updateURL https://update.greasyfork.org/scripts/562323/Angular%20Route%20Switcher.meta.js
 // ==/UserScript==
@@ -22,7 +27,7 @@
         maxPollAttempts: 60,
         uiZIndex: 99999,
         colors: {
-            primary: "#006D50", // Green #006D50
+            primary: "#006D50",
             primaryHover: "#004D38",
             primaryLight: "rgba(0, 109, 80, 0.08)",
             background: "#ffffff",
@@ -249,7 +254,7 @@
                 align-items: center;
                 justify-content: center;
                 z-index: ${CONFIG.uiZIndex};
-                transition: background-color 0.2s, transform 0.1s;
+                transition: background-color 0.2s, transform 0.1s, width 0.3s, height 0.3s, border-radius 0.3s;
                 color: white;
                 user-select: none;
                 touch-action: none;
@@ -264,6 +269,58 @@
             .fab:hover {
                 background-color: ${CONFIG.colors.primaryHover};
             }
+            .fab:hover .minimize-btn {
+                opacity: 1;
+            }
+
+            /* Minimized (Pill) State */
+            .fab.minimized {
+                width: 12px;
+                height: 48px;
+                border-radius: 6px;
+                cursor: pointer;
+                background-color: ${
+                    CONFIG.colors.primary
+                }CC; /* Slight transparency */
+                overflow: hidden; /* Hide internal elements when small */
+            }
+            .fab.minimized:hover {
+                width: 16px;
+                background-color: ${CONFIG.colors.primary};
+            }
+            .fab.minimized .material-symbols-outlined, 
+            .fab.minimized .minimize-btn {
+                display: none;
+            }
+
+            .minimize-btn {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                width: 24px;
+                height: 24px;
+                background: rgba(0, 0, 0, 0.4);
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.2s, transform 0.2s, background-color 0.2s;
+                z-index: 1;
+                font-size: 14px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .minimize-btn:hover {
+                transform: scale(1.1);
+                background: rgba(0, 0, 0, 0.7);
+            }
+            .minimize-btn .material-symbols-outlined {
+                font-size: 16px;
+                font-weight: bold;
+            }
+
             .material-symbols-outlined {
                 font-family: 'Material Symbols Outlined';
                 font-weight: normal;
@@ -277,20 +334,22 @@
                 word-wrap: normal;
                 direction: ltr;
             }
+            
+            /* ... (Rest of existing styles) ... */
             .menu {
                 position: fixed;
                 background: ${CONFIG.colors.background};
                 border-radius: 8px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.2);
                 width: 300px;
-                max-height: 400px; /* Limits height, inner scrolling handled by list */
+                max-height: 400px; 
                 z-index: ${CONFIG.uiZIndex - 1};
                 display: none;
                 flex-direction: column;
                 font-family: sans-serif;
                 font-size: 14px;
                 border: 1px solid ${CONFIG.colors.border};
-                overflow: hidden; /* Prevent container scroll, use flex child */
+                overflow: hidden; 
             }
             .menu.open {
                 display: flex;
@@ -327,10 +386,9 @@
                 list-style: none;
                 padding: 0;
                 margin: 0;
-                overflow-y: auto; /* Scrollable area */
-                flex: 1; /* Take remaining height */
+                overflow-y: auto; 
+                flex: 1; 
             }
-            /* Scrollbar Style */
             .route-list::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
@@ -390,10 +448,53 @@
             '<span class="material-symbols-outlined">explore</span>';
         fab.title = TEXT.tooltip;
 
+        // Minimize Button
+        const minimizeBtn = document.createElement("div");
+        minimizeBtn.className = "minimize-btn";
+        minimizeBtn.innerHTML =
+            '<span class="material-symbols-outlined">close</span>';
+        minimizeBtn.title = "Minimize";
+        fab.appendChild(minimizeBtn);
+
+        let storedState = null;
+        try {
+            storedState = JSON.parse(localStorage.getItem("ARS_STATE"));
+        } catch (e) {}
+
         let initialTop = window.innerHeight - 80;
         let initialLeft = window.innerWidth - 80;
+        let isMinimized = false;
+        let dockedSide = "right";
+
+        if (storedState) {
+            initialTop =
+                storedState.top !== undefined ? storedState.top : initialTop;
+            initialLeft =
+                storedState.left !== undefined ? storedState.left : initialLeft;
+            isMinimized = !!storedState.isMinimized;
+            dockedSide = storedState.dockedSide || "right";
+        }
+
+        // Validate bounds
+        if (initialTop < 20) initialTop = 20;
+        if (initialTop > window.innerHeight - 70)
+            initialTop = window.innerHeight - 70;
+        if (initialLeft < 0) initialLeft = 0;
+        if (initialLeft > window.innerWidth - 12)
+            initialLeft = window.innerWidth - 50;
+
         fab.style.top = `${initialTop}px`;
         fab.style.left = `${initialLeft}px`;
+
+        if (isMinimized) {
+            fab.classList.add("minimized");
+            // small offset check for minimized
+            if (dockedSide === "right") {
+                fab.style.left = `${window.innerWidth - 12}px`;
+            } else {
+                fab.style.left = "0px";
+            }
+        }
 
         const menu = document.createElement("div");
         menu.className = "menu";
@@ -435,6 +536,18 @@
         document.body.appendChild(container);
 
         let isOpen = false;
+        // isMinimized is already defined above
+
+        // --- Persistence Helper ---
+        function saveState() {
+            const state = {
+                top: parseFloat(fab.style.top),
+                left: parseFloat(fab.style.left),
+                isMinimized: isMinimized,
+                dockedSide: dockedSide,
+            };
+            localStorage.setItem("ARS_STATE", JSON.stringify(state));
+        }
 
         // --- Drag & Drop Logic ---
         let isDragging = false;
@@ -443,8 +556,6 @@
         let hasMoved = false;
 
         // Track which side the FAB is docked to ('left' or 'right')
-        let dockedSide = "right";
-
         fab.addEventListener("mousedown", dragStart);
         document.addEventListener("mousemove", drag);
         document.addEventListener("mouseup", dragEnd);
@@ -453,36 +564,71 @@
         document.addEventListener("touchmove", drag, { passive: false });
         document.addEventListener("touchend", dragEnd);
 
+        // --- Minimize Logic ---
+        minimizeBtn.addEventListener("mousedown", (e) => {
+            e.stopPropagation(); // Prevent drag start
+            toggleMinimize();
+        });
+
+        // Prevent click propogation on minimize btn for touch
+        minimizeBtn.addEventListener("touchstart", (e) => {
+            e.stopPropagation();
+        });
+
+        minimizeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+
+        // Remove mousedown/touchstart listeners above and use simple click
+        minimizeBtn.onclick = (e) => {
+            e.stopPropagation();
+            toggleMinimize();
+        };
+
+        function toggleMinimize() {
+            if (isOpen) toggleMenu(); // Close menu if open
+
+            isMinimized = !isMinimized;
+            saveState(); // Save state
+
+            if (isMinimized) {
+                fab.classList.add("minimized");
+                // Snap to very edge
+                snapToEdge(true);
+            } else {
+                fab.classList.remove("minimized");
+                snapToEdge();
+            }
+        }
+
         // --- Resize Logic ---
         window.addEventListener("resize", () => {
             repositionOnResize();
         });
 
         function repositionOnResize() {
-            if (isDragging) return; // Don't interfere if user is dragging
+            if (isDragging) return;
 
             const winWidth = window.innerWidth;
             const winHeight = window.innerHeight;
-            const rect = fab.getBoundingClientRect(); // Current pos
+            const rect = fab.getBoundingClientRect();
 
             let newLeft;
-            // Sticky logic: maintain dock side
+            // Sticky logic
             if (dockedSide === "left") {
-                newLeft = 20;
+                newLeft = isMinimized ? 0 : 20;
             } else {
-                newLeft = winWidth - 50 - 20;
+                newLeft =
+                    winWidth - (isMinimized ? 12 : 50) - (isMinimized ? 0 : 20);
             }
 
             let newTop = rect.top;
-            // Clamp Vertical to valid viewport range
             if (newTop < 20) newTop = 20;
             if (newTop > winHeight - 50 - 20) newTop = winHeight - 50 - 20;
 
-            // Apply new position
             fab.style.left = `${newLeft}px`;
             fab.style.top = `${newTop}px`;
 
-            // Update menu position live if open
             if (isOpen) {
                 adjustMenuPosition(newLeft, newTop);
             }
@@ -491,7 +637,6 @@
         function dragStart(e) {
             if (e.type === "touchstart") e.preventDefault();
 
-            // Remove snapping class to remove transition delay during drag
             fab.classList.remove("snapping");
 
             isDragging = true;
@@ -540,17 +685,21 @@
             if (!isDragging) return;
             isDragging = false;
 
-            // Add snapping class for smooth transition
             fab.classList.add("snapping");
 
             if (hasMoved) {
-                snapToEdge();
+                snapToEdge(isMinimized);
             } else {
-                toggleMenu();
+                if (isMinimized) {
+                    toggleMinimize(); // Restore on click
+                } else {
+                    toggleMenu();
+                }
             }
+            saveState(); // Save position after drag/snap
         }
 
-        function snapToEdge() {
+        function snapToEdge(isMin = false) {
             const rect = fab.getBoundingClientRect();
             const winWidth = window.innerWidth;
             const winHeight = window.innerHeight;
@@ -559,12 +708,11 @@
             const distToRight = winWidth - rect.right;
 
             let finalLeft;
-            // Snap to nearest side AND update dockedSide state
             if (distToLeft < distToRight) {
-                finalLeft = 20;
+                finalLeft = isMin ? 0 : 20;
                 dockedSide = "left";
             } else {
-                finalLeft = winWidth - 50 - 20;
+                finalLeft = winWidth - (isMin ? 12 : 50) - (isMin ? 0 : 20);
                 dockedSide = "right";
             }
 
@@ -575,7 +723,6 @@
             fab.style.left = `${finalLeft}px`;
             fab.style.top = `${finalTop}px`;
 
-            // Adjust menu if it's open (e.g. slight layout shift on snap)
             if (isOpen) {
                 adjustMenuPosition(finalLeft, finalTop);
             }
@@ -584,6 +731,8 @@
         // --- Menu Logic ---
 
         function toggleMenu() {
+            if (isMinimized) return; // Should not happen but safety check
+
             isOpen = !isOpen;
             menu.className = isOpen ? "menu open" : "menu";
             backdrop.style.display = isOpen ? "block" : "none";
@@ -598,23 +747,17 @@
 
         function adjustMenuPosition(fabLeft, fabTop) {
             const menuWidth = 300;
-            // Limit height
             const winHeight = window.innerHeight;
             const menuHeight = Math.min(400, winHeight - 40);
             const winWidth = window.innerWidth;
 
             let menuLeft = fabLeft - menuWidth - 10;
-
-            // Try to vertically center-ish or align bottom
-            // Let's favor aligning bottom of menu with bottom of button
             let menuTop = fabTop - menuHeight + 50;
 
-            // If button is on the left side (or close to it), show menu to the right
             if (fabLeft < winWidth / 2) {
                 menuLeft = fabLeft + 60;
             }
 
-            // Check vertical bounds
             if (menuTop + menuHeight > winHeight - 20) {
                 menuTop = winHeight - menuHeight - 20;
             }

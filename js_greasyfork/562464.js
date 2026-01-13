@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         ECTScript
 // @namespace    https://github.com/OnlyMaxi/ECTScript
-// @version      1
+// @version      9
 // @description  for free ECTS click here!
 // @match        https://tuwel.tuwien.ac.at/course/view.php?id=*
 // @match        https://tuwel.tuwien.ac.at/mod/scorm/view.php?id=*
 // @match        https://tuwel.tuwien.ac.at/mod/scorm/player.php
 // @run-at       document-idle
-// @license      https://raw.githubusercontent.com/ErikMcClure/bad-licenses/refs/heads/master/fuck-your-license
+// @source       https://github.com/OnlyMaxi/ECTScript
+// @license      https://raw.githubusercontent.com/OnlyMaxi/ECTScript/refs/heads/main/LICENSE
 // @downloadURL https://update.greasyfork.org/scripts/562464/ECTScript.user.js
 // @updateURL https://update.greasyfork.org/scripts/562464/ECTScript.meta.js
 // ==/UserScript==

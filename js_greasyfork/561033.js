@@ -4,7 +4,8 @@
 // @version      1.0
 // @description  Prevents automatic scrolling to the results area on Alpertron's ECM factorization page.
 // @author       M-K-Al
-// @match        https://www.alpertron.com.ar/ECM.HTM
+// @match        www.alpertron.com.ar
+// @include      .*alpertron.*/*
 // @license MIT
 // @grant        none
 // @run-at       document-idle
