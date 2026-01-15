@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hide Accuracy Bar
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Hide the Accuracy bar element
 // @author       Matskye
 // @match        https://marumori.io/*
@@ -16,7 +16,7 @@
 
     // Function to hide the progress bar
     function hideBlueProgressBar() {
-        const progressBar = document.querySelector('.progress-bar.undefined.bar-big.svelte-xr2amd .inner-bar[style*="background-color: var(--blue);"]');
+        const progressBar = document.querySelector('.progress-bar.undefined.bar-big .inner-bar[style*="background-color: var(--blue);"]');
         if (progressBar) {
             progressBar.parentElement.style.display = 'none'; // Hide the outer bar container
         }

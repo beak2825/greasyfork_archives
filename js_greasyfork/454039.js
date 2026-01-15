@@ -2,7 +2,7 @@
 // @name         京东审核助手
 // @namespace    https://www.cdzero.cn
 // @author       Zero
-// @version      4.8.0
+// @version      4.8.5
 // @description  一键查询京东剩余量、送审量、审核量、不一致、人员审核量；工作区美化，去除无关元素；各板块添加审核组件，协助审核！
 // @icon         data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzZweCIgaGVpZ2h0PSIzNnB4IiB2aWV3Qm94PSIwIDAgMzYgMzYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogU2tldGNoIDUyLjIgKDY3MTQ1KSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5SZWN0YW5nbGUgMzwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxnIGlkPSLpobXpnaItMSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IueUu+advyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4NC4wMDAwMDAsIC0xOC4wMDAwMDApIiBmaWxsPSIjMzg2NUVBIj4KICAgICAgICAgICAgPGcgaWQ9IuWIhue7hC00IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxODQuMDAwMDAwLCAxOC4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik04Ljc0ODY5NzcyLDEuOTg0Njk3NjEgTDE5LjgwMTYxNzEsMC4wMTkyMTE5MjY5IEMyMC40NzQzMDEyLC0wLjEwMDQwODEzOCAyMS4xMTYwNTE3LDAuMzUwOTg2MDczIDIxLjIzNTAwNzEsMS4wMjc0MjkxMiBDMjEuMzE4MjgzNywxLjUwMDk4Mzk0IDIxLjEyMjYyODMsMS45ODAzODM5NyAyMC43MzI1NDIyLDIuMjU4NTgyMjggTDEyLjIxMjI5NjcsOC4zMzQ5NzgxNyBDMTEuNjU1MDgzNCw4LjczMjM2NjgyIDEwLjg4MzAxNTcsOC42MDAyNzkxNSAxMC40ODc4MzUzLDguMDM5OTUyMSBDMTAuNDcyOTkyOSw4LjAxODkwNjk1IDEwLjQ1ODgwNTIsNy45OTc0MDI1IDEwLjQ0NTI5MjksNy45NzU0Njk5NyBMNy45MTI2MTg5NSwzLjg2NDU1OTc3IEM3LjU1Mjg1MzE2LDMuMjgwNjA1ODYgNy43MzE5NjI5NSwyLjUxMzk0MDE3IDguMzEyNjcxODUsMi4xNTIxNjQwMSBDOC40NDYxMjgwNywyLjA2OTAyMjA0IDguNTk0MTA0MTIsMi4wMTIxODgyMiA4Ljc0ODY5NzcyLDEuOTg0Njk3NjEgWiBNMjQuNDgwMDE4OSwwLjM2NTYzOTM0OCBMMzIuOTU0ODI3Niw3Ljc2NjQ1MDI0IEMzMy40NzA2MDcxLDguMjE2ODY1ODcgMzMuNTI1NjI0LDkuMDAyNDU4MjMgMzMuMDc3NzExMyw5LjUyMTExOTg4IEMzMi43NjQxNDI4LDkuODg0MjE3MyAzMi4yNzA1MTk0LDEwLjAzMzAxMTEgMzEuODEwMDMxLDkuOTAzMjM5MDYgTDIxLjc1MjA2MTYsNy4wNjg3NjM3MyBDMjEuMDk0MjgzLDYuODgzMzkyNiAyMC43MTA0ODYxLDYuMTk2OTA1MDIgMjAuODk0ODI3MSw1LjUzNTQ1MDc5IEMyMC45MDE3NTA3LDUuNTEwNjA3NDQgMjAuOTA5NDQxMyw1LjQ4NTk4Njc0IDIwLjkxNzg4NzgsNS40NjE2MjQ0MSBMMjIuNTAxMDQ4NSwwLjg5NTI4ODg1MyBDMjIuNzI1OTM2MSwwLjI0NjY0MTg3NCAyMy40MzExNTM4LC0wLjA5NTg2NDIxNDggMjQuMDc2MTk2MywwLjEzMDI4MDA5MiBDMjQuMjI0NDM3NCwwLjE4MjI1MTY4NCAyNC4zNjE0ODQ1LDAuMjYyMTI2NjA1IDI0LjQ4MDAxODksMC4zNjU2MzkzNDggWiBNMzUuNjU1MjI4MiwxMS43NDA2NzMxIEwzNS4wNzMzMzA1LDIzLjAxMjYyNTcgQzM1LjAzNzkxNjEsMjMuNjk4NjQwMiAzNC40NTYxNzI3LDI0LjIyNTg5NTMgMzMuNzczOTcwMywyNC4xOTAyODMgQzMzLjI5NjM4MzYsMjQuMTY1MzUyIDMyLjg3NTg3OTIsMjMuODY1ODA0NCAzMi42OTQwNjc3LDIzLjQyMTAxMTIgTDI4LjcyMjk0ODQsMTMuNzA1ODU2NSBDMjguNDYzMjQyMiwxMy4wNzA0OTc2IDI4Ljc2NDkwNjcsMTIuMzQzNzI3NSAyOS4zOTY3MzUsMTIuMDgyNTcwMSBDMjkuNDIwNDY1NiwxMi4wNzI3NjE0IDI5LjQ0NDQ5NCwxMi4wNjM2OTc1IDI5LjQ2ODc4NTMsMTIuMDU1MzkxNyBMMzQuMDIxODAyMSwxMC40OTg1OTM3IEMzNC42Njg1NTcyLDEwLjI3NzQ1MDkgMzUuMzcxMTMxMiwxMC42MjU0MDc2IDM1LjU5MTA0NTIsMTEuMjc1Nzc2NyBDMzUuNjQxNTg0OSwxMS40MjUyNDIgMzUuNjYzMzY3LDExLjU4MzAxNiAzNS42NTUyMjgyLDExLjc0MDY3MzEgWiBNMzMuNzExOTk5NCwyNy41MzE4OTQgTDI0LjYzNDUyNTYsMzQuMTcwODE3MiBDMjQuMDgyMDY3NywzNC41NzQ4NjQxIDIzLjMwODQ4NzYsMzQuNDUyMDUwNyAyMi45MDY2ODU5LDMzLjg5NjUwNTcgQzIyLjYyNTM5ODIsMzMuNTA3NTg3NSAyMi41OTIyNjQ3LDMyLjk5MDQ1NjYgMjIuODIxNTk1NCwzMi41Njg0NTU2IEwyNy44MzA2MjY4LDIzLjM1MTEyNiBDMjguMTU4MjExMiwyMi43NDgzMjQyIDI4LjkwOTcyMjcsMjIuNTI2NzAwNCAyOS41MDkxNzQ3LDIyLjg1NjExNTMgQzI5LjUzMTY4OTMsMjIuODY4NDg3NyAyOS41NTM4MTU3LDIyLjg4MTU2MTUgMjkuNTc1NTIxNiwyMi44OTUzMTc4IEwzMy42NDM5NjQxLDI1LjQ3MzcyNDIgQzM0LjIyMTg4NTUsMjUuODM5OTg2MiAzNC4zOTUxMTkyLDI2LjYwODAxNjEgMzQuMDMwODkyNCwyNy4xODkxNjY5IEMzMy45NDcxODcyLDI3LjMyMjcyNDcgMzMuODM4OTYzMSwyNy40MzkwMzc1IDMzLjcxMTk5OTQsMjcuNTMxODk0IFogTTIwLjE4MjYxNjUsMzUuOTUxOTg2MiBMOS4zOTE0OTQxNiwzMi44NDYxOTY2IEM4LjczNDc0MzEyLDMyLjY1NzE3NzMgOC4zNTQ3MjAxNSwzMS45Njg1Njk5IDguNTQyNjg5MDksMzEuMzA4MTQ4OSBDOC42NzQyNzk3NiwzMC44NDU4MTA2IDkuMDU5MTIwOTMsMzAuNTAxMTc3NyA5LjUzMTAwNDQ3LDMwLjQyMzA5MjcgTDE5LjgzNzg2NDgsMjguNzE3NTY1NCBDMjAuNTExOTIwNSwyOC42MDYwMjYxIDIxLjE0ODI2ODcsMjkuMDY1MDg5MiAyMS4yNTkxODgyLDI5Ljc0MjkxMTUgQzIxLjI2MzM1NDIsMjkuNzY4MzY5NiAyMS4yNjY3MzE1LDI5Ljc5Mzk1MTkgMjEuMjY5MzE1MSwyOS44MTk2MjEzIEwyMS43NTM1NzcxLDM0LjYzMDkzODEgQzIxLjgyMjM2NjUsMzUuMzE0Mzg0NyAyMS4zMjcxNjcxLDM1LjkyNDUwMzkgMjAuNjQ3NTE4NSwzNS45OTM2Nzc2IEMyMC40OTEzMjQzLDM2LjAwOTU3NDggMjAuMzMzNTQ4NSwzNS45OTU0MjU4IDIwLjE4MjYxNjUsMzUuOTUxOTg2MiBaIE01LjI5OTk3NzM0LDMwLjUxOTAxNDEgTDAuOTA5MTQzMjQ0LDIwLjEzMTMzNzcgQzAuNjQxOTE1NzI3LDE5LjQ5OTE0MDUgMC45MzQ5MzQxODQsMTguNzY4ODAyMSAxLjU2MzYxODI5LDE4LjUwMDA4MTQgQzIuMDAzNzM4NywxOC4zMTE5NTkxIDIuNTEyMjY4ODgsMTguMzk1ODIzNSAyLjg2OTU4MDk3LDE4LjcxNTQ1NDcgTDEwLjY3Mzk3NjYsMjUuNjk2ODI2MSBDMTEuMTg0Mzc0MywyNi4xNTMzOTkgMTEuMjMwMDY0NiwyNi45Mzk1OTU2IDEwLjc3NjAyODksMjcuNDUyODQ1NCBDMTAuNzU4OTc1OSwyNy40NzIxMjIzIDEwLjc0MTMzMDYsMjcuNDkwODYxMSAxMC43MjMxMTg1LDI3LjUwOTAzNDQgTDcuMzA5NTU2OTksMzAuOTE1MzM5NSBDNi44MjQ2NjEzMSwzMS4zOTkyMDQ0IDYuMDQxNTA1NDEsMzEuMzk2MTcyMyA1LjU2MDMyOTMyLDMwLjkwODU2NyBDNS40NDk3NDczMywzMC43OTY1MDc1IDUuMzYxMzkwNTIsMzAuNjY0MzAzMiA1LjI5OTk3NzM0LDMwLjUxOTAxNDEgWiBNMC4xNTQ5MTkzMiwxNS4zNjgzNjgxIEw1LjU5MTc2NTY3LDUuNDkzNzE2NzQgQzUuOTIyNjUzODEsNC44OTI3NDI0MSA2LjY3NTM3MDMzLDQuNjc1MjkzMjIgNy4yNzMwMDUwNyw1LjAwODAzMDM3IEM3LjY5MTM4ODg4LDUuMjQwOTY4MzYgNy45Mzg3NTI0Niw1LjY5NTU2Njk5IDcuOTA4MjYyNTcsNi4xNzU0OTA3NyBMNy4yNDIzMDM2LDE2LjY1Nzk2NTggQzcuMTk4NzUwNzIsMTcuMzQzNTA2NSA2LjYxMDc5MTgyLDE3Ljg2Mzc0MzEgNS45MjkwNjA2NSwxNy44MTk5NDY5IEM1LjkwMzQ1NTczLDE3LjgxODMwMTkgNS44Nzc5MDc5LDE3LjgxNTg1NjMgNS44NTI0NTQyNSwxNy44MTI2MTM0IEwxLjA4MTU2Njg3LDE3LjIwNDc4OTcgQzAuNDAzODYzMzU0LDE3LjExODQ0ODUgLTAuMDc1OTE5NDU5NCwxNi40OTU5OTc5IDAuMDA5OTQxOTY3MjEsMTUuODE0NTA3NCBDMC4wMjk2NzQzMDE0LDE1LjY1Nzg4OTkgMC4wNzg4NzU5MTI3LDE1LjUwNjQ4MTYgMC4xNTQ5MTkzMiwxNS4zNjgzNjgxIFoiIGlkPSJSZWN0YW5nbGUtMyI+PC9wYXRoPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K
 // @match        *://*.jd.com/*
@@ -85,7 +85,6 @@
         return false;
     }
 
-
     // 频权验证页面
     Plug_FrequentAuth(host, href);
 
@@ -136,49 +135,83 @@
         if (!!search && search.length > 90) {
             Plug_workPage();
         }
-        let isRun = false;
+        // Token获取
+        const runConfig = {
+            user: "",
+            token: "",
+        }
         WaylayHTTP([{
-            url: /api\/user\/getWebSocketUrl/i,
+            url: /api\/user\/getWebSocketUrl|liveapi\/live\/opt\/buildWebSocketUrl/i,
             callback: (params) => {
-                // 获取Token
                 const content = JSON.parse(params.data.responseText).content;
                 if (content.webSocketUrl) {
-                    parseToken(content.webSocketUrl);
+                    const regex = /\/([^/]+)\/([^/]+)\/[^/]+$/;
+                    const match = content.webSocketUrl.match(regex);
+                    if (match) {
+                        const user = match[1];
+                        const token = match[2];
+                        if (user && token) {
+                            runConfig.user = user;
+                            runConfig.token = token;
+                        }
+                    }
                 }
-                isRun = true;
+                params.stop();
+            }
+        }, {
+            url: /api\/user\/getUserInfo/i,
+            callback(params) {
+                const content = JSON.parse(params.data.responseText).content;
+                if (content.pin) {
+                    runConfig.user = content.pin;
+                }
                 params.stop();
             }
         }]);
-        setTimeout(() => {
-            if (!isRun) {
-                console.log("getWebSocketUrl未触发，尝试获取");
-                HTTP_XHR({ url: "/api/user/getWebSocketUrl" });
+        AwaitSelectorShow(() => {
+            const nick = document.querySelector(".avatar span")?.innerText;
+            if (nick && nick !== "登录") {
+                return nick;
             }
-        }, 2000);
-        function parseToken(params) {
-            const regex = /\/([^/]+)\/([^/]+)\/[^/]+$/;
-            const match = params.match(regex);
-            if (match) {
-                const user = match[1];
-                const token = match[2];
-                if (user && token) {
-                    const pluginKey = SwitchRead("Plugin-Key");
-                    if (pluginKey.user !== user || pluginKey.token !== token) {
-                        SwitchWrite("Plugin-Key", { ...pluginKey, user: user, token: token });
-                        // 存储一份到localStorage
-                        SET_DATA("GM_CONFIG", {
-                            userInfo: {
-                                pin: user
-                            }
-                        })
-                    }
+        }).then((nick) => {
+            if (!nick) {
+                return false;
+            }
+            console.log("当前用户昵称：" + nick);
+            setTimeout(async () => {
+                if (!runConfig.user) {
+                    console.log("Token未拦截，尝试获取pin");
+                    await HTTP_XHR({ url: "/api/user/getUserInfo" });
                 }
+                setTimeout(() => setInfo({ user: runConfig.user, token: runConfig.token, nick: nick }), 0);
+            }, 1000);
+        });
+        function setInfo(params) {
+            if (!params.user && !params.token) {
+                console.log("Token未获取成功");
+                return false;
+            }
+            const { user, token, nick } = params;
+            const pluginKey = SwitchRead("Plugin-Key");
+            if (pluginKey.user !== user || pluginKey.token !== token) {
+                const data = { ...pluginKey, user: user, token: token, nick: nick };
+                if (token && token !== data.oldToken) {
+                    data.oldToken = token;
+                }
+                SwitchWrite("Plugin-Key", data);
+                // 存储一份到localStorage
+                SET_DATA("GM_CONFIG", {
+                    userInfo: {
+                        pin: user,
+                        nick: nick
+                    }
+                })
             }
         }
         GM_addValueChangeListener("switchConfig", (name, oldValue, newValue, remote) => {
             const oldKey = oldValue["Plugin-Key"] || {};
             const newKey = newValue["Plugin-Key"] || {};
-            if ((oldKey.token !== newKey.token || oldKey.user !== newKey.user)) {
+            if (oldKey.oldToken !== newKey.oldToken || oldKey.user !== newKey.user) {
                 location.reload();
             }
         })
@@ -200,6 +233,12 @@
     // 商卡页面
     if (/^\/(\d+)\.html$/.test(pathName)) {
         Plug_skuItem();
+        return false;
+    }
+
+    // 移动商卡页面
+    if (/^\/product\/(\d+)\.html$/.test(pathName)) {
+        Plug_skuMJD();
         return false;
     }
 
@@ -4346,8 +4385,8 @@ async function Plug_homePage() {
         async function queryCallback(params) {
             // 判断是否为平台发起的请求
             if (params.data.timeout === 30000) {
-                await AwaitSelectorShow(".homeContent button[type=button].antcap-btn-primary");
-                const buttonAll = document.querySelectorAll(".homeContent button[type=button].antcap-btn-primary");
+                await AwaitSelectorShow(".homeContent button[type=button].ant5-btn-primary");
+                const buttonAll = document.querySelectorAll(".homeContent button[type=button].ant5-btn-primary");
                 buttonAll.forEach((button) => {
                     if (button.innerText.replace(/\s+/g, "") === "下载") {
                         AddMenu(button, params.data.responseURL);
@@ -4428,24 +4467,25 @@ async function Plug_homePage() {
         }
         async function getTableUserName(params) {
             if (params.data.timeout === 30000) {
-                await AwaitSelectorShow(".antcap-table-wrapper table tr td");
+                await AwaitSelectorShow(".ant5-table-wrapper table tr td");
                 const { getPinUser } = await JDPinUserClass();
-                const table = document.querySelector(".antcap-table-wrapper table");
-                const thead = table.querySelectorAll(".antcap-table-wrapper thead th");
+                const table = document.querySelector(".ant5-table-wrapper table");
+                const thead = table.querySelectorAll(".ant5-table-wrapper thead th");
                 const index = [...thead].findIndex((item) => item.innerText.includes("质检初判操作人员"));
                 const index1 = [...thead].findIndex((item) => item.innerText.includes("质检管理复审操作人员"));
-                const userTdArr = table.querySelectorAll(`.antcap-table-wrapper tbody tr td:nth-child(${index + 1})`);
-                const userTdArr1 = table.querySelectorAll(`.antcap-table-wrapper tbody tr td:nth-child(${index1 + 1})`);
+                const userTdArr = table.querySelectorAll(`.ant5-table-wrapper tbody tr td:nth-child(${index + 1})`);
+                const userTdArr1 = table.querySelectorAll(`.ant5-table-wrapper tbody tr td:nth-child(${index1 + 1})`);
                 for (const userDom of [...userTdArr, ...userTdArr1]) {
                     const userName = getPinUser(userDom.innerText);
                     if (userName !== userDom.innerText) {
                         userDom.style.position = "relative";
                         userDom.style.userSelect = "none";
+                        userDom.innerHTML = `<div style="opacity: 0;">${userDom.innerText}</div>`;
                         AddDOM({
                             addNode: userDom,
                             addData: [{
                                 name: "div",
-                                style: "position: absolute;top: 0;height: 100%;background: #ffffff;display: flex;flex-direction: column;justify-content: center;",
+                                style: "position: absolute;top: 0;height: 100%;display: flex;flex-direction: column;justify-content: center;",
                                 add: [{
                                     name: "span",
                                     style: "user-select: all;",
@@ -5832,19 +5872,28 @@ async function Plug_homePage() {
             // 选择选择框
             function setSelect(params) {
                 const { element, values } = params;
-                const selectId = element.lastElementChild.getAttribute("aria-controls");
-                getReact(element).onClick();
-                const controlsDom = document.getElementById(selectId);
-                const menuItme = controlsDom.querySelectorAll("li");
-                const { children } = getReact(controlsDom).children.props;
+                const selectId = element.getAttribute("aria-controls");
                 const valueList = values.split(",");
+                let selectDom = null;
                 for (const value of valueList) {
-                    const index = children.findIndex((item) => item.key == value);
+                    setInput({ element, values: value });
+                    const controlsDom = document.getElementById(selectId);
+                    selectDom = controlsDom.parentElement.parentElement.parentElement;
+                    selectDom.style.opacity = "0";
+                    const holderList = controlsDom.parentElement.querySelector(".rc-virtual-list-holder-inner");
+                    const index = getReact(holderList).children[0].findIndex((item) => item && item.key.replace(/\D/g, "") == value);
+                    const menuItme = holderList.querySelectorAll(".ant5-select-item");
                     if (index !== -1) {
                         menuItme[index].click();
                     }
                 }
-                getReact(element).onBlur();
+                element.dispatchEvent(new MouseEvent("blur", {
+                    bubbles: true, // 允许事件冒泡
+                    cancelable: true, // 允许事件被取消
+                }));
+                setTimeout(() => {
+                    selectDom.style.opacity = "";
+                }, 1000);
             }
             // 选择时间
             function setDataTime(params) {
@@ -5854,6 +5903,7 @@ async function Plug_homePage() {
                 }
                 getReact(element.lastElementChild).onClick();
                 const timeDom = document.querySelector(".antcap-calendar-time");
+                timeDom.style.opacity = "0";
                 const input = timeDom.querySelectorAll("input");
                 const select = timeDom.querySelector("table td");
                 select.click();
@@ -5865,6 +5915,9 @@ async function Plug_homePage() {
                 start.onChange({ target: { value: values["start"] } });
                 const okBut = timeDom.querySelector(".antcap-calendar-ok-btn");
                 okBut.click();
+                setTimeout(() => {
+                    timeDom.style.opacity = "";
+                }, 1000);
             }
             // 选择启动器
             async function setSearchPage(params) {
@@ -5875,10 +5928,10 @@ async function Plug_homePage() {
                         return resolve();
                     }
                     const oldText = element.innerText;
-                    if (element.tagName.toLowerCase() === "input") {
+                    if (element.classList.contains("ant5-input")) {
                         setInput({ element, values });
                     }
-                    if (element.classList.contains("antcap-select")) {
+                    if (element.classList.contains("ant5-select-selection-search-input")) {
                         setSelect({ element, values });
                     }
                     if (element.classList.contains("antcap-calendar-picker")) {
@@ -5899,16 +5952,20 @@ async function Plug_homePage() {
             // 清除选项
             function reMoveSearch(isSubmit = false) {
                 function remove() {
-                    const reSelect = document.querySelectorAll(".antcap-select-selection__clear");
+                    const reSelect = document.querySelectorAll(".ant5-select-clear");
                     for (const list of reSelect) {
-                        list.click();
+                        list.dispatchEvent(new MouseEvent("mousedown", {
+                            bubbles: true, // 允许事件冒泡
+                            cancelable: true, // 允许事件被取消
+                        }));
                     }
-                    const reChoice = document.querySelectorAll(".antcap-select-selection__choice__remove");
+                    const reChoice = document.querySelectorAll(".ant5-select-selection-item-remove");
                     for (const list of reChoice) {
                         list.click();
                     }
-                    const reInput = document.querySelectorAll("input[type=text].antcap-input");
+                    const reInput = document.querySelectorAll("input[type=text].ant5-input");
                     for (const list of reInput) {
+                        list.value = "";
                         getReact(list).onChange({ target: { value: "" } });
                     }
                     const reCalendar = document.querySelectorAll(".antcap-calendar-picker-clear");
@@ -5925,7 +5982,7 @@ async function Plug_homePage() {
                             start: FormatTime("YYYY-MM-DD hh:mm:ss")
                         }
                     });
-                    const submit = document.querySelector("button[type=submit].antcap-btn-primary");
+                    const submit = document.querySelector("button[type=submit].ant5-btn-primary");
                     submit && submit.click();
                     remove();
                 }
@@ -5987,7 +6044,7 @@ async function Plug_homePage() {
                             callback: async (params) => {
                                 params.stop();
                                 params.data.abort();
-                                const awayBtn = document.querySelector(".antcap-btn-link .anticon-down");
+                                const awayBtn = document.querySelector(".ant5-btn-link .anticon-down");
                                 awayBtn && awayBtn.click();
                                 const timeArr = { values: {} };
                                 for (const key of listKeys) {
@@ -6036,7 +6093,7 @@ async function Plug_homePage() {
                                 }, 5000)
                                 const runStep = searchList.biz_line == "24" ? 15 : 2;
                                 RunFrame(() => {
-                                    const submit = document.querySelector("button[type=submit].antcap-btn-primary");
+                                    const submit = document.querySelector("button[type=submit].ant5-btn-primary");
                                     submit && submit.click();
                                 }, runStep)
                             }
@@ -6166,7 +6223,18 @@ async function Plug_homePage() {
             element.style.height = "20px";
             const queryApi = {
                 qc: {
-                    getApi: "/api/biz/review/qc/list?",
+                    getApi(key, qc_name) {
+                        let api = "/api/biz/review/";
+                        if (qc_name === "直播监看") {
+                            api = "/liveapi/live/review/";
+                        }
+                        if (["已复审"].includes(key)) {
+                            api += "reviewQcManage/list?";
+                        } else {
+                            api += "qc/list?";
+                        }
+                        return api;
+                    },
                     download: "/api/download/qcRecord?",
                     fastQueryApi: ["/api/biz/review/qc/list?", "/api/biz/review/reviewQcManage/list?"],
                     fastQueryClass: [".Rechecklist0", ".Rechecklist3"],
@@ -6208,7 +6276,6 @@ async function Plug_homePage() {
             }, {
                 key: "已复审",
                 ...queryApi.qc,
-                getApi: "/api/biz/review/reviewQcManage/list?",
             }];
             queryConfig.queryList = { index: 0, ...labelTH[0] };
             const maxScrollNum = (num) => {
@@ -6330,16 +6397,16 @@ async function Plug_homePage() {
                     MessageTip("❌", "时间不能为空", 3);
                     return reject();
                 }
-                const { index, getApi } = queryConfig.queryList;
+                const { key, index, getApi } = queryConfig.queryList;
                 const frontValue = board.querySelectorAll("table input");
                 const userName = board.querySelector("#user input").value || "";
                 const getUrl = [];
                 for (let i = 0; i < jdData.length; i++) {
-                    const { params, element } = jdData[i];
+                    const { qc_name, params, element } = jdData[i];
                     const startTime = DiffDay(endTime, (frontValue[i].value || 0));
                     const markUrl = params[index].replace("startTime", startTime).replace("endTime", endTime).replace("userName", userName);
                     element._searchList = markUrl;
-                    getUrl.push(getApi + markUrl);
+                    getUrl.push(getApi(key, qc_name) + markUrl);
                 }
                 if (type || JSON.stringify(queryConfig.queryGetUrl) !== JSON.stringify(getUrl)) {
                     xhrAbort.forEach((xhr) => xhr.abort());
@@ -7608,6 +7675,7 @@ async function Plug_homePage() {
         }
         function getData(params) {
             const { biz, category, optType, urlArr } = params;
+            let isNull = true;
             const overData = [];
             const overOldData = [];
             let overIsOldData = false;
@@ -7644,6 +7712,7 @@ async function Plug_homePage() {
                             overData.push(objData);
                             overOldData.push(oldData);
                         }
+                        isNull = false;
                         !overIsOldData && oldData["业务线"] && (overIsOldData = true);
                     }).catch((error) => {
                         console.error(error);
@@ -7666,7 +7735,7 @@ async function Plug_homePage() {
             getTaskBack.endBack(() => {
                 isRun = false;
                 fastConfig.xlsxData = [];
-                if (overData.length > 0) {
+                if (overData.length > 0 && !isNull) {
                     outInfo("导出数据");
                     const time = FormatTime("YYYYMMDDHHmmss");
                     const xlsxExport = [{
@@ -8510,9 +8579,9 @@ function CSS_homePage() {
 function CSS_homeBeautify() {
     // 美化页面样式
     GM_addStyle(`
-        * {
+        /* * {
             scroll-behavior: smooth !important;
-        }
+        } */
         /*滚动条样式*/
         ::-webkit-scrollbar {
             width: 5px;
@@ -8537,6 +8606,9 @@ function CSS_homeBeautify() {
             align-items: center !important;
             justify-content: flex-end !important;
         }
+        .ant5-table-content {
+            scrollbar-color: initial;
+        }
     `)
 }
 // 内部质检主页
@@ -8545,7 +8617,8 @@ async function Plug_homeInnerQcPage() {
     const homeLayoutMenu = await AwaitSelectorShow(".antcap-layout-sider-children", true);
     // 获取Token
     const { token, user } = SwitchRead("Plugin-Key") || {};
-    if (!token) {
+    const getToken = () => token || user;
+    if (!getToken()) {
         return false;
     }
 
@@ -9545,7 +9618,7 @@ async function Plug_homeInnerQcPage() {
         return GM_XHR({
             method: "POST",
             url: `${unsafeWindow.ymfApiOrigin}/api/jd/get/list`,
-            data: { ...data, token: token }
+            data: { ...data, token: getToken() }
         }).then((xhr) => {
             const data = JSON.parse(xhr.response);
             if (data.code === 200) {
@@ -9562,7 +9635,7 @@ async function Plug_homeInnerQcPage() {
         return GM_XHR({
             method: "GET",
             timeout: 3000,
-            url: `${unsafeWindow.ymfApiOrigin}/api/jd/get/warn-info?token=${token}`
+            url: `${unsafeWindow.ymfApiOrigin}/api/jd/get/warn-info?token=${getToken()}`
         }).then((xhr) => {
             const data = JSON.parse(xhr.response);
             if (data.code === 200) {
@@ -9581,7 +9654,7 @@ async function Plug_homeInnerQcPage() {
             method: "POST",
             timeout: 3000,
             url: `${unsafeWindow.ymfApiOrigin}/api/jd/get/board`,
-            data: { ...data, token: token }
+            data: { ...data, token: getToken() }
         }).then((xhr) => {
             const data = JSON.parse(xhr.response);
             if (data.code === 200) {
@@ -9855,6 +9928,15 @@ async function Plug_workPage() {
                 target: "_blank",
                 innerText: "前往处理"
             }], 6, 2);
+        }
+    }, {
+        stop: true,
+        url: /api\.m\.jd\.com\/client\.action/,
+        callback: (params) => {
+            AwaitSelectorShow("div", true).then(() => {
+                params.send();
+                params.stop();
+            });
         }
     }]);
 
@@ -12805,7 +12887,7 @@ async function Plug_workPage() {
                 qc_state: 2,
                 live_id: GetQueryString("liveId"),
             }
-            const getUrl = UpdateUrlParam(location.origin + "/api/biz/review/qc/list?", queryUrl);
+            const getUrl = UpdateUrlParam(location.origin + "/liveapi/live/review/qc/list?", queryUrl);
             return HTTP_XHR({
                 method: "GET",
                 url: getUrl,
@@ -13006,7 +13088,7 @@ async function Plug_workPage() {
                 send_time_start: startTime,
                 send_time_end: FormatTime("YYYY-MM-DD hh:mm:ss", endDate),
             }
-            const getUrl = UpdateUrlParam(location.origin + "/api/live/getPageSubtitles?", queryUrl);
+            const getUrl = UpdateUrlParam(location.origin + "/liveapi/live/subtitle/getPageSubtitles?", queryUrl);
             HTTP_XHR({
                 method: "GET",
                 url: getUrl,
@@ -13330,7 +13412,7 @@ async function Plug_workPage() {
         async function getImage(pageNum = 1) {
             const liveId = GetQueryString("liveId");
             const taskId = GetQueryString("taskId");
-            const url = UpdateUrlParam(location.origin + "/api/live/getFrames?", {
+            const url = UpdateUrlParam(location.origin + "/liveapi/live/query/getFrames?", {
                 live_id: liveId,
                 task_id: taskId,
                 sort_by: 1,
@@ -14969,7 +15051,8 @@ async function Plug_innerQcPage(paramsConfig) {
     const { antcapCard, collapseCard, SwitchBox } = Plug_Components();
     // 获取Token
     const { token, user } = SwitchRead("Plugin-Key") || {};
-    if (!token) {
+    const getToken = () => token || user;
+    if (!getToken()) {
         return false;
     }
 
@@ -16163,7 +16246,7 @@ async function Plug_innerQcPage(paramsConfig) {
             method: "POST",
             url: `${unsafeWindow.ymfApiOrigin}/api/jd/set/lockdata`,
             data: {
-                token: token,
+                token: getToken(),
                 taskId: urlParams.taskId || "",
                 liveId: urlParams.liveId || "",
                 qcTaskId: urlParams.qcTaskId || "",
@@ -16186,7 +16269,7 @@ async function Plug_innerQcPage(paramsConfig) {
                 liveId: urlParams.liveId || "",
                 qcTaskId: urlParams.qcTaskId || "",
                 contentId: urlParams.contentId || "",
-                token: token,
+                token: getToken(),
             }),
         }).then((xhr) => {
             const data = JSON.parse(xhr.response);
@@ -16208,7 +16291,7 @@ async function Plug_innerQcPage(paramsConfig) {
             method: "POST",
             url: `${unsafeWindow.ymfApiOrigin}/api/jd/get/data`,
             data: {
-                token: token,
+                token: getToken(),
                 query: {
                     taskId: urlParams.taskId || "",
                     liveId: urlParams.liveId || "",
@@ -17336,6 +17419,83 @@ async function JD_OIDC_CODE(code) {
     }).catch((error) => {
         console.error(error);
     })
+}
+
+async function Plug_skuMJD() {
+    const { AddDOM, RemoveDom, AwaitSelectorShow, ObserverDOM, ThrottleOver } = Plug_fnClass();
+    Object.defineProperty(document.documentElement, "clientWidth", {
+        get: function () {
+            return 640;
+        }
+    });
+    window.dispatchEvent(new Event("resize"));
+    GM_addStyle(`
+        body {
+            margin: 0 auto !important;
+        }
+        .bottom_fix_btn.bg_blue,
+        .de_btn_wrap.fixed,
+        .detail_bottom_blackBar,
+        .detail_realName,
+        .mod_fix_wrap
+        .mod_tab,
+        body {
+            max-width: 640px !important;
+        }
+        .m_header .header_content {
+            width: 640px;
+            margin: 0 auto;
+        }
+        #loopImgDiv .inner {
+            display: none;
+        }
+        .gm-loop-img-list {
+            display: flex;
+            overflow-y: auto;
+            flex-direction: column;
+            height: 100%;
+        }
+        .gm-loop-img-list img {
+            width: 100%;
+        }
+        /*滚动条样式*/
+        .gm-loop-img-list::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            display: block !important;
+        }
+        .gm-loop-img-list::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: #8B8B8B;
+        }
+        .gm-loop-img-list::-webkit-scrollbar-thumb:hover {
+            background-color: #636363;
+        }
+    `)
+    const loopImg = await AwaitSelectorShow("#loopImgDiv");
+    const loopImgUl = loopImg.querySelector("#loopImgUl");
+    const gmLoopList = await AddDOM({
+        addNode: loopImg,
+        addData: [{
+            name: "div",
+            className: "gm-loop-img-list",
+        }]
+    });
+    const retryBack = ThrottleOver(() => {
+        const imgAll = loopImgUl.querySelectorAll("img");
+        const srcList = [...imgAll].map((img) => img.getAttribute("back_src") || img.src);
+        const bar = loopImg.querySelector("#loopImgBarJx");
+        bar ? bar.innerHTML = `<span>${srcList.length}</span>` : null;
+        RemoveDom(gmLoopList);
+        AddDOM({
+            addNode: gmLoopList,
+            addData: srcList.map((src) => ({
+                name: "img",
+                src: src,
+            }))
+        });
+    }, 100)
+    ObserverDOM(retryBack).observe(loopImgUl, { childList: true, subtree: true, attributes: true });
 }
 
 // 商卡页面

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           JAVLibrary Improvements
-// @description    Many improvements mainly in details view of a video: video thumbnails below cover (deactivatable through Configuration in Tampermonkeys extension menu), easier collect of Google Drive and Rapidgator links for JDownloader (hotkey < or \), save/show favorite actresses (since script installation), recherche links for actresses, auto reload on Cloudflare rate limit, save cover with actress names just by clicking, advertising photos in full size, remove redirects, layout improvements
-// @version        20251207
+// @description    Many improvements mainly in details view of a video: video thumbnails below cover (deactivatable through Configuration in the browser extension menu), easier collect of Google Drive and Rapidgator links for JDownloader (hotkey < or \), save/show favorite actresses (since script installation), recherche links for actresses, auto reload on Cloudflare rate limit, save cover with actress names just by clicking, advertising photos in full size, remove redirects, layout improvements
+// @version        20260112
 // @author         resykano
 // @icon           https://www.javlibrary.com/favicon.ico
 // @match          *://*.javlibrary.com/*
@@ -53,11 +53,86 @@ let avidCopiedToClipboard = false;
 const url = window.location.href;
 const originalDocumentTitle = document.title;
 let avid = null;
-// allowed execution time of Collect Rapidgator Link & Thumbnails Search
-const externalSearchModeTimeout = 8000;
-// fetching of data from other websites
-const externalSearchTimeout = 5000;
-const configurationOptions = ["Improvements", "Video-Thumbnails"];
+const configurationOptions = {
+    improvements: {
+        label: "Layout and functional improvements",
+        default: true,
+    },
+    searchByIDFilter: {
+        label: "Filter Blu-ray editions and mismatched AVIDs from search results (only if improvements are enabled)",
+        default: false,
+    },
+    // Master toggle to disable all cast image search buttons
+    castButtonsEnabled: {
+        label: "Enable cast image search buttons",
+        default: true,
+    },
+    // Cast image search buttons (individual toggles)
+    castButtons: {
+        minnano: {
+            text: "Minnano",
+            link: "https://www.minnano-av.com/search_result.php?search_scope=actress&search_word=",
+            enabled: true,
+        },
+        avdbs: { text: "AVDBS", link: "https://www.avdbs.com/menu/search.php?seq=42978591&tab=1&kwd=", enabled: true },
+        v2ph: { text: "V2PH", link: "https://www.v2ph.com/search/?q=", enabled: true },
+        kawaiithong: { text: "KawaiiThong", link: "https://kawaiithong.com/search_kawaii_pics/", enabled: true },
+        jjgirls: { text: "JJGirls", link: "https://jjgirls.com/match.php?model=", enabled: true },
+        yandex: { text: "Yandex", link: "https://yandex.com/images/search?text=", enabled: true },
+        xslist: { text: "XsList", link: "https://duckduckgo.com/?iar=images&iax=images&ia=images&q=site:xslist.org ", enabled: true },
+        beautimetas: { text: "BeautiMetas", link: "https://beautifulmetas.com/search_result/", enabled: true },
+    },
+    castSearchButtonEnabled: {
+        label: "Enable cast search button (facial recognition and cast by scene)",
+        default: true,
+    },
+    searchGroups: {
+        searchGroupTorrent: {
+            label: "Torrent sources",
+            default: true,
+        },
+        searchGroupThumbnails1: {
+            label: "Thumbnail search 1",
+            default: true,
+        },
+        searchGroupThumbnails2: {
+            label: "Thumbnail search 2",
+            default: true,
+        },
+        searchGroupRapidgator: {
+            label: "Rapidgator sources",
+            default: true,
+        },
+        searchGroupGDrive: {
+            label: "Google Drive sources",
+            default: true,
+        },
+        searchGroupStream: {
+            label: "Stream sources",
+            default: true,
+        },
+        searchGroupResearchPlatforms: {
+            label: "Alternative research platforms",
+            default: true,
+        },
+        searchGroupDuckDuckGo: {
+            label: "DuckDuckGo searches",
+            default: true,
+        },
+    },
+    externalSearchModeTimeout: {
+        label: "Allowed execution time of Collect Rapidgator Link & Thumbnails Search (Milliseconds)",
+        default: 8000,
+    },
+    videoThumbnails: {
+        label: "Display video preview images",
+        default: true,
+    },
+    externalDataFetchTimeout: {
+        label: "Timeout when retrieving data from other websites, mainly for video thumbnails (Milliseconds)",
+        default: 5000,
+    },
+};
 
 function getTitleElement() {
     return document.querySelector("#video_id > table > tbody > tr > td.text");
@@ -167,6 +242,38 @@ function addImprovementsCss() {
                 margin-left: 10px;
             }
         }
+
+        /* search area layout (as also needed for no search results) */
+        #video_search td.text {
+            padding-left: 5px;
+        }
+        #video_search td.text div:first-child {
+            margin-top: 0px;
+        }
+        .added-links {
+            width: 370px;
+            height: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .added-links-separator {
+            margin-top: 10px;
+        }
+        .searches-label {
+            margin-left: 40px;
+            margin-top: 10px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .added-links.Torrent {
+            display: inline-block;
+            width: auto;
+            margin-right: 4px;
+        }
+        .added-links.Torrent:not(.added-links-separator)::before {
+            content: " • ";
+        }
     `);
 
     switch (true) {
@@ -201,33 +308,6 @@ function addImprovementsCss() {
                 /* remove unsed space */
                 #video_info table > tbody > tr > td.icon {
                     display: none;
-                }
-
-                .added-links {
-                    margin-left: 112px;
-                    width: 370px;
-                    height: 17px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-                .added-links-separator {
-                    margin-top: 10px;
-                }
-                .added-links.Torrent {
-                    display: inline-block;
-                    width: auto;
-                    margin-left: 5px;
-                }
-                .added-links.added-links-separator.Torrent {
-                    margin-left: 40px;
-                }
-                .added-links.added-links-separator.Torrent::before {
-                    content: "Searches: ";
-                    font-weight: bold;
-                }
-                .added-links.Torrent:not(.added-links-separator)::before {
-                    content: " • ";
                 }
 
                 /* addSearchLinkAndOpenAllButton & addFaceRecognitionSearchToCasts */
@@ -286,31 +366,6 @@ function addImprovementsCss() {
                     }
                 }
 
-                /* addImageSearchToCasts */
-                .cast-container {
-                    display: flex;
-                    flex-wrap: wrap;
-                    margin: 0px 2px 2px;
-                    border-radius: 5px;
-                    /* 
-                    background: rgb(243, 243, 243);
-                    padding: 2px 3px;
-                    */
-                }
-                span.cast {
-                    display: flex;
-                    flex-wrap: nowrap;
-                    align-items: center;
-                    margin-bottom: 0;
-                    margin-right: 0;
-                    gap: 4px;
-                }
-                .image-search {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-end;
-                    padding: 0 3px;
-                }
                 .customButton {
                     font-size: 12px;
                     background-color: #f9f9f9;
@@ -337,18 +392,17 @@ function addImprovementsCss() {
         // no video found
         case /\/vl_searchbyid.php/.test(url): {
             GM_addStyle(`
-                .added-links {
-                    margin-left: 107px;
-                    height: 17px;
-                    display: flex;
-                    align-items: flex-end;
-                    justify-content: space-between;
-                    max-width: 400px;
+                #video_search {
+                    font: 14px Arial;
+                    margin-top: 15px;
                     margin-left: auto;
                     margin-right: auto;
+                    width: fit-content;
                 }
-                .added-links-separator {
-                    margin-top: 10px;
+                #video_search td.header {
+                    width: 100px;
+                    font-weight: bold;
+                    text-align: right;
                 }
             `);
             break;
@@ -575,7 +629,7 @@ function externalSearch() {
 
 async function addImprovements() {
     (async function () {
-        const configured = await GM_getValue("Improvements", true);
+        const configured = await GM_getValue("improvements", configurationOptions.improvements.default);
         if (!configured) return;
 
         getAvid();
@@ -615,7 +669,7 @@ async function addImprovements() {
                 addCastImagesSearchButtons();
 
                 // button for facial recognition
-                addFaceRecognitionSearchButton();
+                addCastSearchButton();
 
                 // executes collecting all links from comments and opens rapidgator group
                 collectingLinksFromCommentsAndRgGroupButton();
@@ -633,12 +687,13 @@ async function addImprovements() {
 
                 // TODO: needs a more solid solution than just a blind timeout
                 // maybe possible with GM_openInTab
-                let externalSearchMode = await GM_getValue("externalSearchMode", false);
+                const externalSearchMode = await GM_getValue("externalSearchMode", false);
+                const timeout = await GM_getValue("externalSearchModeTimeout", configurationOptions.externalSearchModeTimeout.default);
                 if (externalSearchMode) {
                     setTimeout(async () => {
                         GM_setValue("externalSearchMode", false);
                         console.log("externalSearchMode off");
-                    }, externalSearchModeTimeout);
+                    }, timeout);
                 }
 
                 // autorun local search
@@ -710,7 +765,7 @@ async function addImprovements() {
                 break;
             }
             case /\/vl_searchbyid.php/.test(url): {
-                // if video is not in JAVLibrary
+                // if video is not in JAVLibrary add search links else filter results
                 if (
                     (document.querySelector("#rightcolumn > p > em") || document.querySelector("#badalert")) &&
                     document.querySelector("#rightcolumn > div.titlebox")
@@ -722,40 +777,47 @@ async function addImprovements() {
                         setSearchLinks();
                     }
                 } else {
-                    /**
-                     * Filters video elements based on keyword in URL
-                     * Hides videos that don't match the keyword and have "Blu-ray" in the title
-                     */
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const keyword = urlParams.get("keyword")?.toLowerCase();
+                    const searchByIDFilterEnabled = await GM_getValue(
+                        "searchByIDFilter",
+                        configurationOptions.searchByIDFilter.default
+                    );
 
-                    if (window.location.href.includes("vl_searchbyid.php?keyword=") && keyword) {
-                        const videoElements = document.querySelectorAll("div.video");
+                    if (searchByIDFilterEnabled) {
+                        /**
+                         * Filters video elements based on keyword in URL
+                         * Hides videos that don't match the keyword and have "Blu-ray" in the title
+                         */
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const keyword = urlParams.get("keyword")?.toLowerCase();
 
-                        videoElements.forEach((video) => {
-                            const idElement = video.querySelector("a > div.id");
-                            const titleElement = video.querySelector("a");
+                        if (window.location.href.includes("vl_searchbyid.php?keyword=") && keyword) {
+                            const videoElements = document.querySelectorAll("div.video");
 
-                            if (idElement) {
-                                const idText = idElement.textContent.trim().toLowerCase();
-                                const titleText = titleElement.title.trim().toLowerCase();
+                            videoElements.forEach((video) => {
+                                const idElement = video.querySelector("a > div.id");
+                                const titleElement = video.querySelector("a");
 
-                                if (idText !== keyword || titleText.includes("blu-ray")) {
-                                    video.remove();
+                                if (idElement) {
+                                    const idText = idElement.textContent.trim().toLowerCase();
+                                    const titleText = titleElement.title.trim().toLowerCase();
+
+                                    if (idText !== keyword || titleText.includes("blu-ray")) {
+                                        video.remove();
+                                    }
                                 }
-                            }
+                            });
+                        }
+
+                        // if only one element remains, open it
+                        if (document.querySelectorAll("div.video").length === 1) {
+                            document.querySelector("div.video > a").click();
+                        }
+
+                        // open found links in same tab
+                        document.querySelectorAll(".video > a")?.forEach(function (element) {
+                            element.removeAttribute("target");
                         });
                     }
-
-                    // if only one element remains, open it
-                    if (document.querySelectorAll("div.video").length === 1) {
-                        document.querySelector("div.video > a").click();
-                    }
-
-                    // open found links in same tab
-                    document.querySelectorAll(".video > a")?.forEach(function (element) {
-                        element.removeAttribute("target");
-                    });
                 }
 
                 break;
@@ -1006,10 +1068,12 @@ async function addImprovements() {
                     // put once to clipboard
                     // console.log(`${source}: ${avid}`);
 
-                    copyTitleToClipboard(avid)
+                    copyTitleToClipboard()
                         .then(() => {
                             avidCopiedToClipboard = true;
-                            runLocalSearch();
+                            setTimeout(() => {
+                                runLocalSearch();
+                            }, 50);
                         })
                         .catch(function (err) {
                             console.error("Failed to copy text: ", err);
@@ -1148,91 +1212,8 @@ async function addImprovements() {
         }
     }
 
-    function setSearchLinks() {
-        // add search links and buttons
-        addSearchLinkAndOpenAllButton(
-            "DuckDuckGo | Video Image Search",
-            "https://duckduckgo.com/?kp=-2&iax=images&ia=images&q=" + '"' + avid + '"' + " JAV",
-            ""
-        );
-        addSearchLinkAndOpenAllButton(
-            "DuckDuckGo | Video Web Search",
-            "https://duckduckgo.com/?kah=jp-jp&kl=jp-jp&kp=-2&q=" + '"' + avid + '"' + " JAV",
-            "",
-            true
-        );
-
-        addSearchLinkAndOpenAllButton("JavPlace | alternative research platform", "https://jav.place/en?q=" + avid, "");
-        addSearchLinkAndOpenAllButton("JAV-Menu | alternative research platform", "https://jjavbooks.com/en/" + avid, "", true);
-
-        addSearchLinkAndOpenAllButton(
-            "HighPorn | Stream",
-            "https://highporn.net/search/videos?search_query=" + avid,
-            "Open-Stream-Group"
-        );
-        addSearchLinkAndOpenAllButton("BIGO JAV | Stream", "https://bigojav.com/?s=" + avid, "Open-Stream-Group");
-        addSearchLinkAndOpenAllButton("Jable | Stream", "https://jable.tv/search/" + avid + "/", "Open-Stream-Group");
-        // addSearchLinkAndOpenAllButton("MDTAIWAN | Stream", "https://mdtaiwan.com/?s=" + avid, "Open-Stream-Group");
-        addSearchLinkAndOpenAllButton("SEXTB | Stream", "https://sextb.net/search/" + avid, "Open-Stream-Group");
-        addSearchLinkAndOpenAllButton("JAV Most | Stream", "https://www5.javmost.com/search/" + avid, "Open-Stream-Group");
-        addSearchLinkAndOpenAllButton("TwoJAV | Stream", "https://www.twojav.com/en/search?q=" + avid, "Open-Stream-Group");
-        addSearchLinkAndOpenAllButton("HORNYJAV | Stream", "https://hornyjav.com/?s=" + avid, "Open-Stream-Group", true);
-
-        addSearchLinkAndOpenAllButton("JAV GDRIVE | Google Drive", "https://javx357.com/?s=" + avid, "Open-GDrive-Group");
-        // seems offline
-        // addSearchLinkAndOpenAllButton("Arc JAV | Google Drive", "https://arcjav.com/?s=" + avid, "Open-GDrive-Group");
-        addSearchLinkAndOpenAllButton("JAVGG | Google Drive", "https://javgg.me/?s=" + avid, "Open-GDrive-Group", true);
-
-        addSearchLinkAndOpenAllButton(
-            "JAVDAILY | RG  (optional)",
-            `https://duckduckgo.com/?q=site:javdaily.eklablog.com+"${avid}"`,
-            ""
-        );
-        // addSearchLinkAndOpenAllButton(
-        //     "JAVDAILY | RG  (optional)",
-        //     `https://duckduckgo.com/?q=site:javdaily31.eklablog.com+${avid}`,
-        //     ""
-        // );
-        // addSearchLinkAndOpenAllButton("JAVDAILY | RG  (optional)", "https://javdaily31.blogspot.com/search?q=" + avid, "");
-        addSearchLinkAndOpenAllButton("BLOGJAV.NET | RG (optional)", "https://blogjav.net/?s=" + avid, "", true);
-
-        // to add/remove Rapidgator sources, check in general Userscript match, in handleSearchResults(), runSearch() and under comment "batch external download link and preview searches"
-        addSearchLinkAndOpenAllButton("Maddawg JAV | RG", "https://maddawgjav.net/?s=" + avid, "Collect-Rapidgator-Links");
-        addSearchLinkAndOpenAllButton("MissAV | RG | Stream", "https://missav.ai/en/search/" + avid, "Collect-Rapidgator-Links");
-        addSearchLinkAndOpenAllButton("Supjav | RG", "https://supjav.com/?s=" + avid, "Collect-Rapidgator-Links");
-        addSearchLinkAndOpenAllButton("JAV Guru | RG | Stream", "https://jav.guru/?s=" + avid, "Collect-Rapidgator-Links", true);
-
-        addSearchLinkAndOpenAllButton("3xPlanet | Thumbnails", "https://3xplanet.com/?s=" + avid, "Search-Thumbnails-2");
-        addSearchLinkAndOpenAllButton("JAVAkiba | Thumbnails", "https://javakiba.org/?s=" + avid, "Search-Thumbnails-2");
-        addSearchLinkAndOpenAllButton("Video-JAV | Thumbnails", "http://video-jav.net/?s=" + avid, "Search-Thumbnails-2", true);
-
-        addSearchLinkAndOpenAllButton("Max JAV | Thumbnails", "https://maxjav.com/?s=" + avid, "Search-Thumbnails-1");
-        addSearchLinkAndOpenAllButton(
-            "Akiba-Online | Thumbnails",
-            "https://www.akiba-online.com/search/?q=" + avid + "&c%5Btitle_only%5D=1&o=date&search=" + avid,
-            "Search-Thumbnails-1",
-            true
-        );
-
-        addSearchLinkAndOpenAllButton("BT1207", "https://bt1207so.top/?find=" + avid, "Torrent");
-        addSearchLinkAndOpenAllButton("Sukebei", "https://sukebei.nyaa.si/?f=0&c=0_0&s=size&o=desc&q=" + avid, "Torrent");
-        addSearchLinkAndOpenAllButton("BTDig", "https://btdig.com/search?order=3&q=" + avid, "Torrent");
-        addSearchLinkAndOpenAllButton("BT4G", "https://bt4gprx.com/search?q=" + avid + "&orderby=size", "Torrent", true);
-    }
-
-    /**
-     * Adds a search links and open all links buttons
-     *
-     * @param {*} name Name
-     * @param {*} href URL
-     * @param {*} separator Adds a space on top
-     * @param {*} className Adds a class
-     */
-    function addSearchLinkAndOpenAllButton(name, href, className, separator) {
-        // styles in addCSS
-
-        // after the casting container or "search tips" if the search does not return any results
-        let existingContainer = castContainer() || document.querySelector("#rightcolumn > div.titlebox");
+    // Shared function to add search links with optional buttons
+    function addSearchLinkAndOpenAllButton(name, href, className, separator, containerElement) {
         let newElementContainer = document.createElement("div");
         newElementContainer.classList.add("added-links");
         if (separator) newElementContainer.classList.add("added-links-separator");
@@ -1251,20 +1232,21 @@ async function addImprovements() {
             openAllButton.textContent = buttonTitle;
             openAllButton.className = "smallbutton smallbutton-mod";
 
-            openAllButton.addEventListener("click", function () {
+            openAllButton.addEventListener("click", async function () {
                 let linksToOpen = document.querySelectorAll(`.${className}.added-links a`);
                 let reversedLinks = Array.from(linksToOpen).reverse();
 
-                // allow batch search on external sites
                 GM_setValue("externalSearchMode", true);
 
-                // TODO: needs a more solid solution without brute force
+                const timeoutValue = await GM_getValue(
+                    "externalSearchModeTimeout",
+                    configurationOptions.externalSearchModeTimeout.default
+                );
                 setTimeout(async () => {
                     GM_setValue("externalSearchMode", false);
                     console.log("externalSearchMode off");
-                }, externalSearchModeTimeout + 2000);
+                }, timeoutValue + 2000);
 
-                // open in background tabs
                 if (className === "Collect-Rapidgator-Links") {
                     reversedLinks.forEach(function (link) {
                         GM_openInTab(link.href);
@@ -1279,16 +1261,225 @@ async function addImprovements() {
             newElementContainer.appendChild(openAllButton);
         }
 
-        existingContainer.insertAdjacentElement("afterend", newElementContainer);
+        containerElement.appendChild(newElementContainer);
+    }
+
+    function setSearchLinks() {
+        // Create main container structure like video_cast
+        const searchContainer = document.createElement("div");
+        searchContainer.id = "video_search";
+        searchContainer.className = "item";
+
+        const table = document.createElement("table");
+        const tbody = document.createElement("tbody");
+        const tr = document.createElement("tr");
+
+        // Header cell (left side - "Searches:")
+        const headerTd = document.createElement("td");
+        headerTd.className = "header";
+        headerTd.textContent = "Searches:";
+
+        // Content cell (right side - all search links)
+        const contentTd = document.createElement("td");
+        contentTd.className = "text";
+
+        tr.appendChild(headerTd);
+        tr.appendChild(contentTd);
+        tbody.appendChild(tr);
+        table.appendChild(tbody);
+        searchContainer.appendChild(table);
+
+        // Insert after cast container
+        const searchInsertTarget = castContainer() || document.querySelector("#rightcolumn > div.titlebox");
+        if (searchInsertTarget) {
+            searchInsertTarget.insertAdjacentElement("afterend", searchContainer);
+        }
+
+        // Torrent
+        if (GM_getValue("searchGroupTorrent", configurationOptions.searchGroups.searchGroupTorrent.default)) {
+            addSearchLinkAndOpenAllButton("BT4G", "https://bt4gprx.com/search?q=" + avid + "&orderby=size", "Torrent", true, contentTd);
+            addSearchLinkAndOpenAllButton("BTDig", "https://btdig.com/search?order=3&q=" + avid, "Torrent", false, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "Sukebei",
+                "https://sukebei.nyaa.si/?f=0&c=0_0&s=size&o=desc&q=" + avid,
+                "Torrent",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton("BT1207", "https://bt1207so.top/?find=" + avid, "Torrent", false, contentTd);
+        }
+
+        // Thumbnails 1
+        if (GM_getValue("searchGroupThumbnails1", configurationOptions.searchGroups.searchGroupThumbnails1.default)) {
+            addSearchLinkAndOpenAllButton(
+                "Akiba-Online | Thumbnails",
+                "https://www.akiba-online.com/search/?q=" + avid + "&c%5Btitle_only%5D=1&o=date&search=" + avid,
+                "Search-Thumbnails-1",
+                true,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "Max JAV | Thumbnails",
+                "https://maxjav.com/?s=" + avid,
+                "Search-Thumbnails-1",
+                false,
+                contentTd
+            );
+        }
+
+        // Thumbnails 2
+        if (GM_getValue("searchGroupThumbnails2", configurationOptions.searchGroups.searchGroupThumbnails2.default)) {
+            addSearchLinkAndOpenAllButton(
+                "Video-JAV | Thumbnails",
+                "http://video-jav.net/?s=" + avid,
+                "Search-Thumbnails-2",
+                true,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "JAVAkiba | Thumbnails",
+                "https://javakiba.org/?s=" + avid,
+                "Search-Thumbnails-2",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "3xPlanet | Thumbnails",
+                "https://3xplanet.com/?s=" + avid,
+                "Search-Thumbnails-2",
+                false,
+                contentTd
+            );
+        }
+
+        // Rapidgator
+        if (GM_getValue("searchGroupRapidgator", configurationOptions.searchGroups.searchGroupRapidgator.default)) {
+            addSearchLinkAndOpenAllButton(
+                "JAV Guru | RG | Stream",
+                "https://jav.guru/?s=" + avid,
+                "Collect-Rapidgator-Links",
+                true,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton("Supjav | RG", "https://supjav.com/?s=" + avid, "Collect-Rapidgator-Links", false, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "MissAV | RG | Stream",
+                "https://missav.ai/en/search/" + avid,
+                "Collect-Rapidgator-Links",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "Maddawg JAV | RG",
+                "https://maddawgjav.net/?s=" + avid,
+                "Collect-Rapidgator-Links",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton("BLOGJAV.NET | RG (optional)", "https://blogjav.net/?s=" + avid, "", true, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "JAVDAILY | RG  (optional)",
+                `https://duckduckgo.com/?q=site:javdaily.eklablog.com+"${avid}"`,
+                "",
+                false,
+                contentTd
+            );
+        }
+
+        // Google Drive
+        if (GM_getValue("searchGroupGDrive", configurationOptions.searchGroups.searchGroupGDrive.default)) {
+            addSearchLinkAndOpenAllButton("JAVGG | Google Drive", "https://javgg.me/?s=" + avid, "Open-GDrive-Group", true, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "JAV GDRIVE | Google Drive",
+                "https://javx357.com/?s=" + avid,
+                "Open-GDrive-Group",
+                false,
+                contentTd
+            );
+        }
+
+        // Stream
+        if (GM_getValue("searchGroupStream", configurationOptions.searchGroups.searchGroupStream.default)) {
+            addSearchLinkAndOpenAllButton("HORNYJAV | Stream", "https://hornyjav.com/?s=" + avid, "Open-Stream-Group", true, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "TwoJAV | Stream",
+                "https://www.twojav.com/en/search?q=" + avid,
+                "Open-Stream-Group",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "JAV Most | Stream",
+                "https://www5.javmost.com/search/" + avid,
+                "Open-Stream-Group",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton("SEXTB | Stream", "https://sextb.net/search/" + avid, "Open-Stream-Group", false, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "Jable | Stream",
+                "https://jable.tv/search/" + avid + "/",
+                "Open-Stream-Group",
+                false,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton("BIGO JAV | Stream", "https://bigojav.com/?s=" + avid, "Open-Stream-Group", false, contentTd);
+            addSearchLinkAndOpenAllButton(
+                "HighPorn | Stream",
+                "https://highporn.net/search/videos?search_query=" + avid,
+                "Open-Stream-Group",
+                false,
+                contentTd
+            );
+        }
+
+        // Alternative research platforms
+        if (GM_getValue("searchGroupResearchPlatforms", configurationOptions.searchGroups.searchGroupResearchPlatforms.default)) {
+            addSearchLinkAndOpenAllButton(
+                "JAV-Menu | alternative research platform",
+                "https://jjavbooks.com/en/" + avid,
+                "",
+                true,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "JavPlace | alternative research platform",
+                "https://jav.place/en?q=" + avid,
+                "",
+                false,
+                contentTd
+            );
+        }
+
+        // DuckDuckGo
+        if (GM_getValue("searchGroupDuckDuckGo", configurationOptions.searchGroups.searchGroupDuckDuckGo.default)) {
+            addSearchLinkAndOpenAllButton(
+                "DuckDuckGo | Video Rapidgator Search",
+                "https://duckduckgo.com/?kah=jp-jp&kl=jp-jp&kp=-2&q=" + encodeURIComponent(`"${avid}" "Rapidgator"`),
+                "",
+                true,
+                contentTd
+            );
+            addSearchLinkAndOpenAllButton(
+                "DuckDuckGo | Video Image Search",
+                "https://duckduckgo.com/?kp=-2&iax=images&ia=images&q=" + '"' + avid + '"' + " JAV",
+                "",
+                false,
+                contentTd
+            );
+        }
     }
 
     function collectingLinksFromCommentsAndRgGroupButton() {
-        const target = document.querySelector("#video_info > div.added-links.added-links-separator.Collect-Rapidgator-Links ~ div");
+        const searchContainer = document.querySelector("#video_search");
+        if (!searchContainer) return;
+
+        const target = document.querySelector("#video_search td.text div.added-links.Collect-Rapidgator-Links ~ div");
 
         function addButton(text, action) {
             let button = document.createElement("button");
             button.textContent = text;
-            button.title = "Hotkey: <";
+            button.title = "Hotkey: < or \\";
             button.className = "smallbutton smallbutton-mod";
             button.style = "position: relative; top: 7px;";
             button.onclick = function () {
@@ -1304,7 +1495,7 @@ async function addImprovements() {
     // Execute when button pressed with collecting comments for importing into Jdownloader
     function collectingLinksFromCommentsAndRgGroup() {
         // press Open Rapidgator Group button
-        document.querySelector("#video_info > div.added-links.added-links-separator.Collect-Rapidgator-Links > button")?.click();
+        document.querySelector("#video_search .Collect-Rapidgator-Links.added-links-separator > button")?.click();
 
         // go to comments page, if not already there
         const allCommentsLink = document.querySelector("#video_comments_all > a");
@@ -1344,12 +1535,41 @@ async function addImprovements() {
         }
     }
 
-    function addCastImagesSearchButtons() {
-        let castElements = document.querySelectorAll("[id^=cast]");
-        castElements.forEach(function (castElement) {
+    async function addCastImagesSearchButtons() {
+        const masterEnabled = await GM_getValue("castButtonsEnabled", true);
+        if (!masterEnabled) return;
+
+        GM_addStyle(`
+            .cast-container {
+                display: flex;
+                flex-wrap: wrap;
+                margin: 0px 2px 2px 0;
+                border-radius: 5px;
+                /* 
+                background: rgb(243, 243, 243);
+                padding: 2px 3px;
+                */
+            }
+            span.cast {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                margin-bottom: 0;
+                margin-right: 0;
+                gap: 4px;
+            }
+            .image-search {
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-end;
+                padding: 0 3px;
+            }
+        `);
+
+        const castElements = document.querySelectorAll("[id^=cast]");
+        for (let castElement of castElements) {
             // create a new div to wrap the cast element
             let containerDiv = document.createElement("div");
-            // containerDiv.className = castElement.id;
             containerDiv.className = "cast-container";
             castElement.parentNode.insertBefore(containerDiv, castElement);
             containerDiv.appendChild(castElement);
@@ -1380,23 +1600,26 @@ async function addImprovements() {
                 imageSearchDiv.appendChild(a);
             }
 
-            addButton("Minnano", "https://www.minnano-av.com/search_result.php?search_scope=actress&search_word=");
-            addButton("AVDBS", "https://www.avdbs.com/menu/search.php?seq=42978591&tab=1&kwd=");
-            addButton("V2PH", "https://www.v2ph.com/search/?q=");
-            addButton("KawaiiThong", "https://kawaiithong.com/search_kawaii_pics/");
-            addButton("JJGirls", "https://jjgirls.com/match.php?model=");
-            addButton("Yandex", "https://yandex.com/images/search?text=");
-            addButton("XsList", "https://duckduckgo.com/?iar=images&iax=images&ia=images&q=site:xslist.org ");
-            // addButton("BeautiMetas", "https://en.beautifulmetas.com/search_result/");
-            // https://en.girlgirlgo.net
-        });
+            // Read button definitions from configurationOptions.castButtons
+            for (let [key, buttonDef] of Object.entries(configurationOptions.castButtons)) {
+                const enabled = await GM_getValue(`castButton_${key}`, buttonDef.enabled);
+                if (enabled) addButton(buttonDef.text, buttonDef.link);
+            }
+        }
     }
 
-    function addFaceRecognitionSearchButton() {
+    async function addCastSearchButton() {
+        const configured = await GM_getValue("castSearchButtonEnabled", configurationOptions.castSearchButtonEnabled.default);
+        if (!configured) return;
+
         const castContainer = document.querySelector("#video_cast > table > tbody > tr > td.text");
+        const span = document.createElement("span");
+        span.style = "display: block; margin-top: 5px; margin-left: -2px";
+        span.className = "find-cast";
+        castContainer.appendChild(span);
 
         function addButton(text, link) {
-            let button = document.createElement("button");
+            const button = document.createElement("button");
             button.textContent = text;
             button.className = "smallbutton smallbutton-mod";
             button.style = "width: unset";
@@ -1404,14 +1627,16 @@ async function addImprovements() {
                 window.open(link, "_blank");
             };
 
-            let span = document.createElement("span");
-            span.style = "display: block; margin-top: 5px";
             span.appendChild(button);
+        }
 
-            castContainer.appendChild(span);
+        if (!avid) {
+            console.log("getVideoThumbnailUrl: no AVID");
+            return;
         }
 
         addButton("Find cast with facial recognition", "https://xslist.org/en/searchByImage");
+        addButton("Cast by scene", "https://avwikidb.com/en/work/" + avid);
     }
 
     async function makeFavoriteCastVisible() {
@@ -1597,6 +1822,10 @@ async function addImprovements() {
                                 infoBox.style.display = "none";
                                 clearInterval(countdownInterval);
                                 countdownInterval = null;
+                                const submitButton = document.querySelector("#ui-accordion-accordion-panel-1 > div.center > input");
+                                if (submitButton) {
+                                    submitButton.click();
+                                }
                             }
                         }, 1000);
                     }
@@ -1626,7 +1855,7 @@ async function addImprovements() {
 // =======================================================================================
 
 async function addVideoThumbnails() {
-    const configured = await GM_getValue("Video-Thumbnails", true);
+    const configured = await GM_getValue("videoThumbnails", configurationOptions.videoThumbnails.default);
     if (!configured) return;
 
     function addThumbnailCss() {
@@ -1661,7 +1890,6 @@ async function addVideoThumbnails() {
         // only in details view
         if (!/[a-z]{2}\/\?v=jav.*/.test(url)) return;
 
-        getAvid();
         if (!avid) {
             console.log("getVideoThumbnailUrl: no AVID");
             return;
@@ -1935,7 +2163,11 @@ async function addVideoThumbnails() {
         }
     }
 
-    function xmlhttpRequest(url, referer = "", timeout = externalSearchTimeout) {
+    async function xmlhttpRequest(url, referer = "", timeout = null) {
+        if (timeout === null) {
+            timeout = await GM_getValue("externalDataFetchTimeout", configurationOptions.externalDataFetchTimeout.default);
+        }
+
         return new Promise((resolve, reject) => {
             console.log(`request: ${url}`);
             let details = {
@@ -2014,52 +2246,247 @@ async function addVideoThumbnails() {
 
 function configurationMenu() {
     GM_addStyle(`
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.6);
-        z-index: 9998;
-        transition: background-color 0.5s ease;
-    }
-    
-    .modal {
-        font-family: var(--ipt-font-family);
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 300px;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-    }
-    
-    .modal-title {
-        margin-bottom: 20px;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    
-    .checkbox-label {
-        display: block;
-        margin-bottom: 10px;
-    }
-    
-    .close-button {
-        display: block;
-        margin: 30px auto 0;
-        font-size: unset;
-    }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 9998;
+            transition: background-color 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 480px;
+            max-height: 85vh;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: #2d3748;
+            padding: 16px 20px;
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-content {
+            padding: 5px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Custom scrollbar */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+            padding: 5px 12px;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+        }
+
+        .checkbox-label:hover {
+            background: #f8f9fa;
+            border-color: #4a5568;
+            box-shadow: 0 2px 8px rgba(74, 85, 104, 0.1);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin: 0;
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #4a5568;
+        }
+
+        .checkbox-label span {
+            font-size: 14px;
+            color: #333;
+            user-select: none;
+        }
+
+        /* buttons section */
+        .buttons-section {
+            margin-top: 3px;
+            margin-bottom: 3px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .buttons-section.hidden {
+            display: none;
+        }
+        .buttons-section h4 {
+            margin: 0 0 6px 0;
+            font-weight: 600;
+            font-size: 15px;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .buttons-section .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 4px;
+        }
+        .buttons-section .checkbox-label {
+            margin-bottom: 0;
+            padding: 5px 8px;
+            font-size: 13px;
+        }
+
+        /* Input fields */
+        .input-label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 4px;
+            padding: 10px 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .input-label:hover {
+            border-color: #4a5568;
+            box-shadow: 0 2px 8px rgba(74, 85, 104, 0.1);
+        }
+
+        .input-label label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .input-label input[type="number"] {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .input-label input[type="number"]:focus {
+            outline: none;
+            border-color: #4a5568;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 85, 104, 0.1);
+        }
+
+        /* Buttons */
+        .buttons-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-radius: 0 0 16px 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .buttons-container button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+        .buttons-container button:first-child {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #4a5568;
+        }
+
+        .buttons-container button:first-child:hover {
+            background: #4a5568;
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
+        }
+
+        .buttons-container button:last-child {
+            background: #2d3748;
+            color: white;
+            border: none;
+        }
+
+        .buttons-container button:last-child:hover {
+            box-shadow: 0 4px 12px rgba(74, 85, 104, 0.4);
+        }
+
+        .buttons-container button:active {
+            transform: translateY(0);
+        }
+
+        /* Animation for modal entrance */
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -48%) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .modal.show {
+            animation: modalSlideIn 0.3s ease forwards;
+        }
     `);
 
-    // Darken background
+    // Create overlay with fade-in effect
     const overlay = document.createElement("div");
     overlay.className = "modal-overlay";
     overlay.style.backgroundColor = "rgba(0, 0, 0, 0)";
@@ -2071,37 +2498,211 @@ function configurationMenu() {
     const modal = document.createElement("div");
     modal.className = "modal";
     setTimeout(() => {
-        modal.style.opacity = "1";
+        modal.classList.add("show");
     }, 50);
 
-    // Title of the modal
+    // Create header
+    const header = document.createElement("div");
+    header.className = "modal-header";
+
     const title = document.createElement("h3");
-    title.innerText = "Which features should be used?";
+    title.innerText = "Configuration Settings";
     title.className = "modal-title";
-    modal.appendChild(title);
+    header.appendChild(title);
+    modal.appendChild(header);
 
-    // Add checkboxes
-    configurationOptions.forEach((option) => {
-        const label = document.createElement("label");
-        label.className = "checkbox-label";
+    // Create content area
+    const content = document.createElement("div");
+    content.className = "modal-content";
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = GM_getValue(option, true);
+    // Add regular checkboxes and input fields
+    let castButtonsEnabledCheckbox = null;
 
-        checkbox.addEventListener("change", () => {
-            GM_setValue(option, checkbox.checked);
-        });
+    Object.entries(configurationOptions).forEach(([key, option]) => {
+        if (typeof option.default === "boolean") {
+            const label = document.createElement("label");
+            label.className = "checkbox-label";
 
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(` ${option}`));
-        modal.appendChild(label);
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = GM_getValue(key, option.default);
+
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked === option.default) {
+                    GM_deleteValue(key);
+                } else {
+                    GM_setValue(key, checkbox.checked);
+                }
+            });
+
+            const textSpan = document.createElement("span");
+            textSpan.textContent = option.label;
+
+            label.appendChild(checkbox);
+            label.appendChild(textSpan);
+            content.appendChild(label);
+
+            // Store reference to castButtonsEnabled checkbox
+            if (key === "castButtonsEnabled") {
+                castButtonsEnabledCheckbox = checkbox;
+            }
+        } else if (typeof option.default === "number") {
+            const container = document.createElement("div");
+            container.className = "input-label";
+
+            const label = document.createElement("label");
+            label.textContent = option.label;
+
+            const input = document.createElement("input");
+            input.type = "number";
+            input.value = GM_getValue(key, option.default);
+
+            input.addEventListener("change", () => {
+                const value = input.value.trim();
+                if (value === "") {
+                    GM_deleteValue(key);
+                    input.value = option.default;
+                } else {
+                    const parsedValue = parseInt(value, 10);
+                    if (!isNaN(parsedValue)) {
+                        GM_setValue(key, parsedValue);
+                    }
+                }
+            });
+
+            container.appendChild(label);
+            container.appendChild(input);
+            content.appendChild(container);
+        } else if (key === "searchGroups") {
+            // Search Groups section - similar to castButtons
+            const searchGroupsSection = document.createElement("div");
+            searchGroupsSection.className = "buttons-section";
+
+            const searchGroupsTitle = document.createElement("h4");
+            searchGroupsTitle.textContent = "Searches";
+            searchGroupsSection.appendChild(searchGroupsTitle);
+
+            const searchGroupsGrid = document.createElement("div");
+            searchGroupsGrid.className = "checkbox-grid";
+
+            // Add each searchGroup option
+            Object.entries(option).forEach(([groupKey, groupOption]) => {
+                const label = document.createElement("label");
+                label.className = "checkbox-label";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = GM_getValue(groupKey, groupOption.default);
+
+                checkbox.addEventListener("change", () => {
+                    if (checkbox.checked === groupOption.default) {
+                        GM_deleteValue(groupKey);
+                    } else {
+                        GM_setValue(groupKey, checkbox.checked);
+                    }
+                });
+
+                const textSpan = document.createElement("span");
+                textSpan.textContent = groupOption.label;
+
+                label.appendChild(checkbox);
+                label.appendChild(textSpan);
+                searchGroupsGrid.appendChild(label);
+            });
+
+            searchGroupsSection.appendChild(searchGroupsGrid);
+            content.appendChild(searchGroupsSection);
+        } else if (key === "castButtons") {
+            // Cast buttons section
+            const castButtonsSection = document.createElement("div");
+            castButtonsSection.className = "buttons-section";
+
+            const castButtonsTitle = document.createElement("h4");
+            castButtonsTitle.textContent = "Cast Image Search Buttons";
+            castButtonsSection.appendChild(castButtonsTitle);
+
+            const castButtonsGrid = document.createElement("div");
+            castButtonsGrid.className = "checkbox-grid";
+
+            Object.entries(option).forEach(([btnKey, buttonDef]) => {
+                const label = document.createElement("label");
+                label.className = "checkbox-label";
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = GM_getValue(`castButton_${btnKey}`, buttonDef.enabled);
+
+                checkbox.addEventListener("change", () => {
+                    if (checkbox.checked === buttonDef.enabled) {
+                        GM_deleteValue(`castButton_${btnKey}`);
+                    } else {
+                        GM_setValue(`castButton_${btnKey}`, checkbox.checked);
+                    }
+                });
+
+                const textSpan = document.createElement("span");
+                textSpan.textContent = buttonDef.text;
+
+                label.appendChild(checkbox);
+                label.appendChild(textSpan);
+                castButtonsGrid.appendChild(label);
+            });
+
+            castButtonsSection.appendChild(castButtonsGrid);
+            content.appendChild(castButtonsSection);
+
+            // Function to update cast buttons visibility based on castButtonsEnabled checkbox
+            const updateCastButtonsVisibility = () => {
+                if (castButtonsEnabledCheckbox && !castButtonsEnabledCheckbox.checked) {
+                    castButtonsSection.classList.add("hidden");
+                } else {
+                    castButtonsSection.classList.remove("hidden");
+                }
+            };
+
+            // Initial visibility check
+            updateCastButtonsVisibility();
+
+            // Listen for changes on castButtonsEnabled checkbox
+            if (castButtonsEnabledCheckbox) {
+                castButtonsEnabledCheckbox.addEventListener("change", updateCastButtonsVisibility);
+            }
+        }
     });
 
-    // Add button to close
+    modal.appendChild(content);
+
+    // Create buttons container
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.className = "buttons-container";
+
+    // Reset button
+    const defaultButton = document.createElement("button");
+    defaultButton.innerText = "Reset to Defaults";
+    defaultButton.className = "smallbutton";
+
+    defaultButton.addEventListener("click", () => {
+        Object.keys(configurationOptions).forEach((key) => {
+            if (key !== "castButtons") {
+                GM_deleteValue(key);
+            }
+        });
+
+        if (configurationOptions.castButtons) {
+            Object.keys(configurationOptions.castButtons).forEach((btnKey) => {
+                GM_deleteValue(`castButton_${btnKey}`);
+            });
+        }
+
+        document.body.removeChild(overlay);
+        document.body.removeChild(modal);
+        location.reload();
+    });
+
+    // Apply button
     const closeButton = document.createElement("button");
-    closeButton.innerText = "Apply Settings";
-    closeButton.className = "close-button smallbutton";
+    closeButton.innerText = "Apply & Reload";
+    closeButton.className = "smallbutton";
 
     closeButton.addEventListener("click", () => {
         document.body.removeChild(overlay);
@@ -2109,13 +2710,15 @@ function configurationMenu() {
         location.reload();
     });
 
-    modal.appendChild(closeButton);
+    buttonsContainer.appendChild(defaultButton);
+    buttonsContainer.appendChild(closeButton);
+    modal.appendChild(buttonsContainer);
 
-    // Add modal and overlay to the DOM
+    // Add to DOM
     document.body.appendChild(overlay);
     document.body.appendChild(modal);
 
-    // Close modal on click outside
+    // Close on overlay click
     overlay.addEventListener("click", () => {
         document.body.removeChild(overlay);
         document.body.removeChild(modal);
@@ -2127,7 +2730,7 @@ function configurationMenu() {
 // =======================================================================================
 
 async function initializeBeforeRender() {
-    const configured = await GM_getValue("Improvements", true);
+    const configured = await GM_getValue("improvements", configurationOptions.improvements.default);
     if (!configured) return;
 
     addImprovementsCss();

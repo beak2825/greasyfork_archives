@@ -26,6 +26,7 @@
     fontSize: 12,
     bold: false,
     color: '#ffffff',
+    outlineColor: '#000000',
     align: 'left',
     panel: { x: 24, y: 80, visible: true }
   };
@@ -96,8 +97,13 @@
   ];
   const GOOGLE_FONTS = [
     'Inter','Roboto','Open Sans','Lato','Montserrat','Poppins','Nunito','Raleway','Oswald','Merriweather',
-    'Playfair Display','Source Sans 3','Noto Sans','Noto Serif','Rubik','Quicksand','Work Sans','IBM Plex Sans'
+    'Playfair Display','Source Sans 3','Noto Sans','Noto Serif','Rubik','Quicksand','Work Sans','IBM Plex Sans',
+    'Orbitron' // <-- add
   ];
+
+  const GOOGLE_FONT_WEIGHTS = {
+    Orbitron: 'wght@400;700'
+  };
 
   const clamp = (n,a,b) => Math.max(a, Math.min(b, n));
   const isMobile = () => /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
@@ -153,7 +159,11 @@
       link.rel='stylesheet';
       document.head.appendChild(link);
     }
-    const params = loadedGoogleFonts.map(f => 'family=' + encodeURIComponent(f).replace(/%20/g,'+')).join('&');
+    const params = loadedGoogleFonts.map(f => {
+      const weights = GOOGLE_FONT_WEIGHTS[f];
+      const fam = weights ? `${f}:${weights}` : f;
+      return 'family=' + encodeURIComponent(fam).replace(/%20/g,'+');
+    }).join('&');
     link.href=`https://fonts.googleapis.com/css2?${params}&display=swap`;
   }
 
@@ -523,8 +533,21 @@
     el.style.color      = normHex(profileSettings.color);
     el.style.textAlign  = profileSettings.align;
     el.style.borderRadius = '5px';
-    if (isMobile()) el.style.textShadow='2px 2px 3px #000';
-    else el.style.textShadow='4px 4px 5px #000';
+    const oc = normHex(profileSettings.outlineColor || '#000000');
+    const t = 1; // thickness in px (poți schimba ulterior dacă vrei)
+    el.style.webkitTextStroke = '0'; // sigur că nu interferează
+    el.style.textShadow = [
+      `0 0 1px ${oc}`,
+      `-${t}px -${t}px 0 ${oc}`,
+      `${t}px -${t}px 0 ${oc}`,
+      `-${t}px ${t}px 0 ${oc}`,
+      `${t}px ${t}px 0 ${oc}`,
+      `0 -${t}px 0 ${oc}`,
+      `0 ${t}px 0 ${oc}`,
+      `-${t}px 0 0 ${oc}`,
+      `${t}px 0 0 ${oc}`
+    ].join(', ');
+
   }
 
   function processHonor(){
@@ -1222,6 +1245,12 @@
             <label>Color</label>
             <input id="pnc-color" class="pnc-color" type="color">
           </div>
+
+          <div class="pnc-field">
+            <label>Outline</label>
+            <input id="pnc-outline-color" class="pnc-color" type="color">
+          </div>
+
           <div class="pnc-field">
             <label>Align</label>
             <div class="pnc-seg" id="pnc-align">
@@ -1351,6 +1380,7 @@
     const sizeInput=panel.querySelector('#pnc-size');
     const boldInput=panel.querySelector('#pnc-bold');
     const colorInput=panel.querySelector('#pnc-color');
+    const outlineColorInput = panel.querySelector('#pnc-outline-color');
     const alignSeg=panel.querySelector('#pnc-align');
 
     const tabButtons = panel.querySelectorAll('.pnc-tab-btn');
@@ -1432,6 +1462,7 @@
     sizeInput.value=parseInt(profileSettings.fontSize,10);
     boldInput.checked=!!profileSettings.bold;
     colorInput.value=normHex(profileSettings.color);
+    outlineColorInput.value = normHex(profileSettings.outlineColor || '#000000');
 
     function setInitialFontSelection(){
       if (profileSettings.fontSource==='google' && profileSettings.googleFamily){
@@ -1507,6 +1538,13 @@
       saveProfileSettings();
       applyProfileNow();
     });
+
+    outlineColorInput.addEventListener('input', ()=>{
+      profileSettings.outlineColor = normHex(outlineColorInput.value);
+      saveProfileSettings();
+      applyProfileNow();
+    });
+
 
     alignSeg.querySelectorAll('button').forEach(btn=>
       btn.addEventListener('click', ()=>{

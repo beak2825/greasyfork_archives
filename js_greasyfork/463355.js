@@ -8,7 +8,7 @@
 // @grant		GM_addStyle
 // @namespace		https://greasyfork.org/en/scripts/463355-1_yahoo-fantasy-dark-night
 // @author		sports_wook
-// @version		2026.01.03.2
+// @version		2026.01.08
 // @downloadURL https://update.greasyfork.org/scripts/463355/1_Yahoo-Fantasy-Dark-Night.user.js
 // @updateURL https://update.greasyfork.org/scripts/463355/1_Yahoo-Fantasy-Dark-Night.meta.js
 // ==/UserScript==
@@ -97,11 +97,28 @@ a[id="edit-teams"] {
    color: #EEE !important;
 }
 
+section[id*="player"] ul.Nav-chips > li.Navitem:has(a.Navtarget) {
+   background-color: #161719 !important;
+   border: 1px solid #444 !important;
+   border-style: none;
+   color: #EEE !important;
+   border-radius: 24px !important;
+}
+
 .Btn:hover, .Btn-secondary:hover, .Btn-primary:hover, .Btn-short:hover, .Btn-short.Btn:hover, a#comparePlayers:hover, #open-modal-button > button:hover, #fantasyflyout > #navtray-fantasy > #flyout > div:nth-of-type(2) > ul > li > div > a > div > div:nth-of-type(2) > button:hover, #login-container > a:hover, #Stencil button[class^="start-optimal-players"]:hover, #Stencil label[class*="Select-chips"]:hover, .Btn-tertiary.Mstart-med:hover, #assistant-gm-next > button:hover {
    --ys-special-grey-hover: #494c5c !important;
    background-color: #494c5c !important;
    border: 1px solid #AAA !important;
    color: #8EC0FF !important;
+}
+
+section[id*="player"] ul.Nav-chips > li.Navitem:has(a.Navtarget):hover, section[id*="player"] ul.Nav-chips > li.Navitem.Selected a.Navtarget {
+   --ys-special-grey-hover: #494c5c !important;
+   background-color: #494c5c !important;
+   border: 1px solid #AAA !important;
+   border-style: none;
+   color: #8EC0FF !important;
+   border-radius: 24px !important;
 }
 
 #yspmaincontent > div > dialog div > a {
@@ -1185,7 +1202,7 @@ div[class*="wz-bg-white"][class$="80"] {
   background-color: #161719 !important;
 }
 
-.wz-text-white {
+.wz-text-white, div[id^="wzrd-tooltip"][class$="react-tooltip__show"][role="tooltip"] .wz-from-blue-600.wz-text-white div[class^="wz-text"], div[id^="wzrd-tooltip"][class$="react-tooltip__show"][role="tooltip"] .wz-group > .wz-flex {
   color: #000 !important;
   --tw-text-opacity: 0 !important;
 }

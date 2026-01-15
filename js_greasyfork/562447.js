@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Recruit Helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Recruit Helper for torn
+// @version      1.1
+// @description  Display player attack wins next to player names
 // @author       You
 // @match        https://www.torn.com/*
 // @grant        GM.xmlHttpRequest
- // @license MIT
+// @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/562447/Recruit%20Helper.user.js
 // @updateURL https://update.greasyfork.org/scripts/562447/Recruit%20Helper.meta.js
 // ==/UserScript==
@@ -34,16 +34,16 @@
     function getCache(key) {
         const cached = localStorage.getItem(`player_info_${key}`);
         if (!cached) return null;
-
+        
         const cacheData = JSON.parse(cached);
         const age = Date.now() - cacheData.timestamp;
         const maxAge = CONFIG.cacheMinutes * 60 * 1000;
-
+        
         if (age > maxAge) {
             localStorage.removeItem(`player_info_${key}`);
             return null;
         }
-
+        
         return cacheData.data;
     }
 
@@ -51,7 +51,7 @@
     function checkCacheForMultiplePlayers(playerIds) {
         const cachedResults = {};
         const uncachedPlayers = [];
-
+        
         playerIds.forEach(playerId => {
             const cached = getCache(playerId);
             if (cached) {
@@ -60,7 +60,7 @@
                 uncachedPlayers.push(playerId);
             }
         });
-
+        
         return { cachedResults, uncachedPlayers };
     }
 
@@ -80,7 +80,7 @@
         }
 
         const url = `https://api.torn.com/v2/user/${playerId}/personalstats?stat=attackswon&key=${apiKey}`;
-
+        
         GM.xmlHttpRequest({
             method: 'GET',
             url: url,
@@ -90,22 +90,28 @@
             onload: (response) => {
                 try {
                     const result = JSON.parse(response.responseText);
-
+                    
                     if (result.error) {
+                        // Silently fail for temporary API issues (rate limiting, etc.)
+                        if (result.error.error.includes('rate') || result.error.error.includes('limit') || result.error.error.includes('too many')) {
+                            return; // Don't callback, just skip
+                        }
                         callback(playerId, { error: result.error.error });
                         return;
                     }
-
+                    
                     // Cache the result
                     setCache(playerId, result);
                     callback(playerId, result);
-
+                    
                 } catch (err) {
-                    callback(playerId, { error: 'Parse error' });
+                    // Silently fail for parse errors (likely incomplete responses)
+                    return;
                 }
             },
             onerror: (err) => {
-                callback(playerId, { error: 'Request failed' });
+                // Silently fail for network errors
+                return;
             }
         });
     }
@@ -113,11 +119,11 @@
     // API Key Management
     function ensureApiKey() {
         const apiKey = CONFIG.apiKey || localStorage.getItem('torn_api_key');
-
+        
         if (apiKey) {
             return true;
         }
-
+        
         // Show API key input dialog
         showApiKeyDialog();
         return false;
@@ -139,7 +145,7 @@
             justify-content: center;
             font-family: Arial, sans-serif;
         `;
-
+        
         // Create dialog box
         const dialog = document.createElement('div');
         dialog.style.cssText = `
@@ -151,7 +157,7 @@
             width: 90%;
             text-align: center;
         `;
-
+        
         dialog.innerHTML = `
             <h2 style="margin: 0 0 15px 0; color: #333;">Player Info Display - API Key Required</h2>
             <p style="margin: 0 0 20px 0; color: #666; line-height: 1.5;">
@@ -192,19 +198,19 @@
                 ">Cancel</button>
             </div>
         `;
-
+        
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
-
+        
         // Handle save button
         document.getElementById('save-api-key').addEventListener('click', () => {
             const apiKeyInput = document.getElementById('api-key-input');
             const apiKey = apiKeyInput.value.trim();
-
+            
             if (apiKey) {
                 localStorage.setItem('torn_api_key', apiKey);
                 document.body.removeChild(overlay);
-
+                
                 // Restart the script with the new API key
                 init();
             } else {
@@ -212,19 +218,19 @@
                 apiKeyInput.placeholder = 'Please enter an API key';
             }
         });
-
+        
         // Handle cancel button
         document.getElementById('cancel-api-key').addEventListener('click', () => {
             document.body.removeChild(overlay);
         });
-
+        
         // Handle Enter key in input
         document.getElementById('api-key-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 document.getElementById('save-api-key').click();
             }
         });
-
+        
         // Focus on input
         setTimeout(() => {
             document.getElementById('api-key-input').focus();
@@ -234,17 +240,17 @@
     // Display functions
     function formatDisplayText(data) {
         if (data.error) return 'Error';
-
+        
         // Extract attacks won from personalstats array
         let attacksWon = 0;
-
+        
         if (data.personalstats && Array.isArray(data.personalstats)) {
             const attackStat = data.personalstats.find(stat => stat.name === 'attackswon');
             if (attackStat) {
                 attacksWon = attackStat.value;
             }
         }
-
+        
         return formatNumber(attacksWon);
     }
 
@@ -266,15 +272,15 @@
 
     function injectPlayerInfo(targetId, playerData) {
         const elements = dictDivPerPlayer[targetId] || [];
-
+        
         elements.forEach(element => {
             // Skip if already injected
             if (element.querySelector('.player-info-injection')) return;
-
+            
             const displayText = formatDisplayText(playerData);
             let color = CONFIG.displayColor;
             let attacksWon = 0;
-
+            
             // Set color based on attacks won if not an error
             if (!playerData.error) {
                 // Extract attacks won from personalstats array
@@ -284,10 +290,10 @@
                         attacksWon = attackStat.value;
                     }
                 }
-
+                
                 color = getColorForValue(attacksWon);
             }
-
+            
             // Create injection using exact BSP method but positioned to the right
             const injectionDiv = document.createElement('div');
             injectionDiv.className = 'player-info-injection TDup_ColoredStatsInjectionDiv';
@@ -297,18 +303,18 @@
                 right: 0;
                 top: 0;
             `;
-
+            
             // Create the clickable link to messages compose with preset message
             // Extract clean player name - handle BSP widget interference
             let playerName = `Player ${targetId}`;
-
+            
             // Check for BSP widget and extract its value
             let bspValue = '';
             const bspWidget = element.querySelector('.iconStats[title*="BSP"]');
             if (bspWidget) {
                 bspValue = bspWidget.textContent.trim();
             }
-
+            
             // Method 1: Try alt attributes (mobile honor badges)
             const allImages = element.querySelectorAll('img[alt]');
             for (const img of allImages) {
@@ -322,7 +328,7 @@
                     }
                 }
             }
-
+            
             // Method 2: Try specific selectors if alt didn't work
             if (playerName === `Player ${targetId}`) {
                 const nameSelectors = [
@@ -335,7 +341,7 @@
                     'div[class*="name"]',
                     '[class*="user"]'
                 ];
-
+                
                 for (const selector of nameSelectors) {
                     const nameElement = element.querySelector(selector);
                     if (nameElement && nameElement !== element) {
@@ -349,15 +355,15 @@
                                 break;
                             }
                         }
-
+                        
                         // Fallback to text content
                         let nameText = nameElement.textContent?.trim() || '';
-
+                        
                         // Remove BSP value if it's at the start
                         if (bspValue && nameText.startsWith(bspValue)) {
                             nameText = nameText.substring(bspValue.length).trim();
                         }
-
+                        
                         if (nameText.length > 2 && !/^\d+(\.\d+)?[kmb]?\s*$/.test(nameText)) {
                             if (!(/^\d/ && nameText.length < 8)) {
                                 playerName = nameText
@@ -371,7 +377,7 @@
                     }
                 }
             }
-
+            
             // Method 3: Brute force - search entire element for alt patterns
             if (playerName === `Player ${targetId}`) {
                 const allAltImages = element.querySelectorAll('img[alt]');
@@ -387,16 +393,16 @@
                     }
                 }
             }
-
+            
             // Final fallback: try element text with BSP removal
             if (playerName === `Player ${targetId}`) {
                 let elementText = element.textContent?.trim() || '';
-
+                
                 // Remove BSP value if it's at the start
                 if (bspValue && elementText.startsWith(bspValue)) {
                     elementText = elementText.substring(bspValue.length).trim();
                 }
-
+                
                 // More comprehensive BSP pattern exclusion for mobile
                 if (!/^\d+(\.\d+)?[kmb]?\s*$/.test(elementText) && elementText.length > 2) {
                     // Skip if starts with number and is short (likely mobile BSP)
@@ -409,7 +415,7 @@
                     }
                 }
             }
-
+            
             // If still not found, try element itself but exclude BSP patterns
             if (playerName === `Player ${targetId}`) {
                 const elementText = element.textContent?.trim() || '';
@@ -425,7 +431,7 @@
                     }
                 }
             }
-
+            
             // Final fallback: try to extract from any text that contains letters
             if (playerName === `Player ${targetId}`) {
                 const allText = element.textContent || '';
@@ -438,13 +444,13 @@
                     }
                 }
             }
-
+            
             const presetMessage = CONFIG.messageTemplate
                 .replace('{playerName}', playerName)
                 .replace('{attacksWon}', attacksWon.toLocaleString())
                 .replace('{playerId}', targetId);
             const encodedMessage = encodeURIComponent(presetMessage);
-
+            
             // Try different URL formats that Torn might support
             const messageUrl = `https://www.torn.com/messages.php#/p=compose&XID=${targetId}&message=${encodedMessage}`;
             const linkElement = document.createElement('a');
@@ -454,7 +460,7 @@
                 text-decoration: none;
                 display: inline-block;
             `;
-
+            
             // Store message data in localStorage for backup auto-fill
             linkElement.addEventListener('click', () => {
                 localStorage.setItem('pendingMessage', JSON.stringify({
@@ -464,7 +470,7 @@
                     message: presetMessage
                 }));
             });
-
+            
             const infoDiv = document.createElement('div');
             infoDiv.className = 'iconStats';
             infoDiv.style.cssText = `
@@ -484,17 +490,17 @@
                 margin-left: 5px;
             `;
             infoDiv.textContent = displayText;
-
+            
             // Set tooltip based on data
             if (!playerData.error) {
                 infoDiv.title = `Attacks Won: ${attacksWon}`;
             } else {
                 infoDiv.title = `Error: ${playerData.error}`;
             }
-
+            
             linkElement.appendChild(infoDiv);
             injectionDiv.appendChild(linkElement);
-
+            
             // Insert at the end of the element to position on the right
             element.appendChild(injectionDiv);
         });
@@ -508,13 +514,13 @@
 
     function processApiQueue() {
         if (isProcessingQueue || apiQueue.length === 0) return;
-
+        
         isProcessingQueue = true;
         const { playerId, callback } = apiQueue.shift();
-
+        
         fetchPlayerInfo(playerId, (id, data) => {
             callback(id, data);
-
+            
             // Process next item after very short delay
             setTimeout(() => {
                 isProcessingQueue = false;
@@ -532,7 +538,7 @@
         // Try different methods to extract player ID
         const link = element.querySelector('a[href*="/profiles.php?"]') || element;
         if (!link || !link.href) return null;
-
+        
         const match = link.href.match(/XID=(\d+)/);
         return match ? parseInt(match[1]) : null;
     }
@@ -540,28 +546,28 @@
     function findAndInjectPlayers(container) {
         // Use more specific selectors like BSP to avoid sidebar and chat
         const playerElements = container.querySelectorAll('.user.name, a[href*="/profiles.php?"]');
-
+        
         playerElements.forEach(element => {
             const playerId = extractPlayerId(element);
             if (!playerId || playerId <= 0) return;
-
+            
             // Skip if element is in sidebar or chat (like BSP does)
             const parent = element.closest('#sidebar, #chatRoot, .chat-box, .sidebar');
             if (parent) {
                 return;
             }
-
+            
             // Skip if element is already processed
             if (element.querySelector('.player-info-injection')) {
                 return;
             }
-
+            
             // Store element reference
             if (!dictDivPerPlayer[playerId]) {
                 dictDivPerPlayer[playerId] = [];
             }
             dictDivPerPlayer[playerId].push(element);
-
+            
             // Queue API call with faster delay
             queueApiCall(playerId, injectPlayerInfo);
         });
@@ -573,12 +579,12 @@
         if (!ensureApiKey()) {
             return; // Stop initialization if no API key
         }
-
+        
         // Check for pending message auto-fill on messages page
         if (window.location.href.includes('messages.php')) {
             checkAndFillPendingMessage();
         }
-
+        
         // Add CSS styles - same as BSP
         const style = document.createElement('style');
         style.textContent = `
@@ -606,10 +612,10 @@
             }
         `;
         document.head.appendChild(style);
-
+        
         // Initial scan
         findAndInjectPlayers(document.body);
-
+        
         // Watch for changes
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -620,7 +626,7 @@
                 });
             });
         });
-
+        
         observer.observe(document.body, {
             childList: true,
             subtree: true
@@ -631,43 +637,43 @@
     function checkAndFillPendingMessage() {
         const pendingMessage = localStorage.getItem('pendingMessage');
         if (!pendingMessage) return;
-
+        
         try {
             const messageData = JSON.parse(pendingMessage);
-
+            
             // Wait for message form to load
             const checkInterval = setInterval(() => {
                 const messageTextarea = document.querySelector('#mce_0 > p, #mce_0, textarea[placeholder*="message"], textarea[name="message"], .message-textarea, #message-compose textarea');
                 const subjectInput = document.querySelector('#editor-form > div:nth-child(2) > input');
-
+                
                 if (messageTextarea || subjectInput) {
                     clearInterval(checkInterval);
-
+                    
                     // Fill the subject
                     if (subjectInput) {
                         subjectInput.value = 'Faction recruitment';
                         subjectInput.dispatchEvent(new Event('input', { bubbles: true }));
                         subjectInput.dispatchEvent(new Event('change', { bubbles: true }));
                     }
-
+                    
                     // Fill the message
                     if (messageTextarea) {
                         messageTextarea.textContent = messageData.message;
                         messageTextarea.dispatchEvent(new Event('input', { bubbles: true }));
                         messageTextarea.dispatchEvent(new Event('change', { bubbles: true }));
-
+                        
                         // Focus on message
                         messageTextarea.focus();
                     }
-
+                    
                     // Clear the pending message
                     localStorage.removeItem('pendingMessage');
                 }
             }, 500);
-
+            
             // Stop checking after 5 seconds
             setTimeout(() => clearInterval(checkInterval), 5000);
-
+            
         } catch (error) {
             localStorage.removeItem('pendingMessage');
         }

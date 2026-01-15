@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Whanau Contracts Monitor
 // @namespace    http://tampermonkey.net/
-// @version      3.1
-// @description  Monitor active contracts using robust CSV parsing and Live Torn API
+// @version      4.0
+// @description  Monitor active contracts - Whanau
 // @author       Leofierus
 // @match        https://www.torn.com/*
 // @connect      api.torn.com
@@ -33,18 +33,24 @@
     // --- STYLES ---
     GM_addStyle(`
         #merc-widget {
-            position: fixed; top: 50px; right: 20px;
+            position: fixed;
+            /* Default: Top Right */
+            top: 50px; right: 20px;
             background: #1e1e1e; color: #ddd;
             border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif;
             z-index: 999999; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             font-size: 12px; border: 1px solid #333;
             width: auto; max-width: 95vw;
+            /* Critical for smooth expansion */
+            transition: width 0.2s ease, min-width 0.2s ease;
+            box-sizing: border-box;
         }
         #merc-header {
             padding: 8px 12px; background: #2a2a2a; color: #fff;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid #444; border-radius: 6px 6px 0 0;
             font-weight: bold; user-select: none;
+            cursor: move;
         }
         #merc-content { max-height: 500px; overflow-y: auto; background: #121212; }
         #merc-table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -62,26 +68,22 @@
         .merc-input-interval { width: 30px; background: #333; border: 1px solid #444; color: #fff; text-align: center; border-radius: 3px; padding: 2px; }
         .merc-checkbox { cursor: pointer; }
 
-        /* Status & Dots */
-        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; background-color: #555; margin-right: 5px; border: 1px solid #000; }
-        .status-online { background-color: #2ecc71; box-shadow: 0 0 4px #2ecc71; }
-        .status-idle { background-color: #f39c12; }
-        .status-offline { background-color: #2c3e50; }
+        /* DOTS */
+        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; border: 1px solid #000; margin-right: 2px; }
+        .dot-green { background-color: #2ecc71; box-shadow: 0 0 2px #2ecc71; }
+        .dot-red { background-color: #e74c3c; }
+        .dot-orange { background-color: #f39c12; }
+        .dot-grey { background-color: #555; }
+        .dot-empty { border: 1px solid #444; background: transparent; }
 
-        .bool-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; border: 1px solid #000; }
-        .bool-true { background-color: #2ecc71; }
-        .bool-false { background-color: #e74c3c; }
-
-        /* Buttons */
         .merc-btn-key { background: #333; border: 1px solid #555; color: #aaa; cursor: pointer; padding: 0 6px; font-size: 10px; margin-right: 5px; border-radius: 3px; }
         .merc-btn-key:hover { background: #444; color: #fff; }
         .merc-row-refresh { background: none; border: none; color: #666; cursor: pointer; font-size: 14px; padding: 0; }
         .merc-row-refresh:hover { color: #fff; transform: rotate(180deg); transition: transform 0.3s; }
 
-        /* Columns Colors */
         .col-name { color: #67c8ff; font-weight: bold; text-decoration: none; }
         .col-stats { color: #aaaaaa; }
-        .col-whentohit { color: #f1c40f; } /* Replaced Status Color */
+        .col-whentohit { color: #f1c40f; }
         .col-pay { color: #2ecc71; font-weight: bold; }
         .col-comments { color: #999; font-style: italic; white-space: normal !important; max-width: 200px; min-width: 100px; font-size: 0.9em; }
 
@@ -89,18 +91,15 @@
         #merc-widget.collapsed #merc-content, #merc-widget.collapsed #merc-footer { display: none; }
     `);
 
-    // --- CSV PARSING ENGINE ---
+    // --- CSV PARSER ---
     function parseCSV(text) {
         const lines = text.split(/\r\n|\r|\n/);
         const data = [];
         let headers = [];
-
         lines.forEach((line, index) => {
             if (!line.trim()) return;
-
             const row = [];
-            let inQuote = false;
-            let currentCell = '';
+            let inQuote = false, currentCell = '';
             for (let i = 0; i < line.length; i++) {
                 const char = line[i];
                 if (char === '"') {
@@ -111,21 +110,17 @@
                 } else { currentCell += char; }
             }
             row.push(currentCell);
-
-            if (index === 0) {
-                headers = row.map(h => h.trim());
-            } else {
-                if(row.length > 0) {
-                    let obj = {};
-                    headers.forEach((h, i) => { obj[h] = row[i] || ''; });
-                    data.push(obj);
-                }
+            if (index === 0) headers = row.map(h => h.trim());
+            else if(row.length > 0) {
+                let obj = {};
+                headers.forEach((h, i) => { obj[h] = row[i] || ''; });
+                data.push(obj);
             }
         });
         return data;
     }
 
-    // --- API & UI HELPERS ---
+    // --- API & UI ---
     function checkApiKey() {
         if (apiKey === '') {
             const input = prompt("Enter Torn API Key:\n(Enter '-' to disable API features)");
@@ -137,7 +132,6 @@
         if (input !== null) { apiKey = input.trim(); GM_setValue('tornApiKey', apiKey); location.reload(); }
     }
 
-    // --- UI BUILDER ---
     function createUI() {
         if (document.getElementById('merc-widget')) return;
         checkApiKey();
@@ -145,6 +139,19 @@
         const container = document.createElement('div');
         container.id = 'merc-widget';
         if (GM_getValue('isCollapsed', false)) container.classList.add('collapsed');
+
+        // --- RESTORE SMART POSITION ---
+        const savedPos = GM_getValue('widgetPos', null);
+        if (savedPos) {
+            container.style.top = savedPos.top;
+            if (savedPos.anchor === 'right') {
+                container.style.right = savedPos.right;
+                container.style.left = 'auto'; // Force growth to left
+            } else {
+                container.style.left = savedPos.left;
+                container.style.right = 'auto'; // Force growth to right
+            }
+        }
 
         container.innerHTML = `
             <div id="merc-header">
@@ -162,18 +169,82 @@
         `;
         document.body.appendChild(container);
 
+        // --- SMART DRAG LOGIC ---
+        const header = container.querySelector('#merc-header');
+        let isDragging = false, startX, startY, startLeft, startTop;
+
+        header.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            isDragging = false;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            // Switch to absolute LEFT for dragging stability
+            const rect = container.getBoundingClientRect();
+            startLeft = rect.left;
+            startTop = rect.top;
+
+            container.style.right = 'auto';
+            container.style.left = `${startLeft}px`;
+
+            const onMouseMove = (ev) => {
+                isDragging = true;
+                container.style.left = `${startLeft + (ev.clientX - startX)}px`;
+                container.style.top = `${startTop + (ev.clientY - startY)}px`;
+            };
+
+            const onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+
+                if (isDragging) {
+                    // CALCULATE ANCHOR ON DROP
+                    const finalRect = container.getBoundingClientRect();
+                    const centerX = finalRect.left + (finalRect.width / 2);
+                    const screenMid = window.innerWidth / 2;
+
+                    if (centerX > screenMid) {
+                        // Right Side -> Anchor Right
+                        const rightDist = window.innerWidth - finalRect.right;
+                        container.style.left = 'auto';
+                        container.style.right = `${rightDist}px`;
+                        GM_setValue('widgetPos', { top: container.style.top, right: `${rightDist}px`, anchor: 'right' });
+                    } else {
+                        // Left Side -> Anchor Left
+                        // container.style.left is already set correctly from drag
+                        container.style.right = 'auto';
+                        GM_setValue('widgetPos', { top: container.style.top, left: container.style.left, anchor: 'left' });
+                    }
+                }
+            };
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
         document.getElementById('merc-key-btn').addEventListener('click', updateApiKey);
         document.getElementById('merc-refresh-all').addEventListener('click', () => fetchSheetData(true));
-        document.getElementById('merc-header').addEventListener('click', (e) => {
-            if(e.target.tagName === 'BUTTON') return;
-            container.classList.toggle('collapsed');
-            const collapsed = container.classList.contains('collapsed');
-            GM_setValue('isCollapsed', collapsed);
-            document.getElementById('merc-toggle-icon').textContent = collapsed ? '▼' : '▲';
-        });
+       header.addEventListener('click', (e) => {
+           if (e.target.tagName === 'BUTTON' || isDragging) return;
+
+           container.classList.toggle('collapsed');
+           GM_setValue('isCollapsed', container.classList.contains('collapsed'));
+
+           document.getElementById('merc-toggle-icon').textContent =
+               container.classList.contains('collapsed') ? '▼' : '▲';
+
+           // 🔑 FORCE EXPANSION DIRECTION
+           const pos = GM_getValue('widgetPos', null);
+           if (pos?.anchor === 'right') {
+               container.style.left = 'auto';
+               container.style.right = pos.right;
+           } else {
+               container.style.right = 'auto';
+               container.style.left = pos.left;
+           }
+       });
     }
 
-    // --- DATA FETCHING ---
+    // --- DATA HANDLING ---
     function fetchSheetData(force = false) {
         const lastFetch = GM_getValue('lastSheetFetch', 0);
         const now = Date.now();
@@ -234,20 +305,22 @@
         const p = data.profile;
         const dot = document.getElementById(`status-dot-${tornId}`);
         if (dot) {
-            dot.className = 'status-dot';
-            if (p.last_action.status === 'Online') dot.classList.add('status-online');
-            else if (p.last_action.status === 'Idle') dot.classList.add('status-idle');
-            else dot.classList.add('status-offline');
+            dot.className = 'dot';
+            if (p.last_action.status === 'Online') dot.classList.add('dot-green');
+            else if (p.last_action.status === 'Idle') dot.classList.add('dot-orange');
+            else dot.classList.add('dot-grey');
             dot.title = `Last Action: ${p.last_action.relative}`;
         }
-        const hospBox = document.getElementById(`hosp-check-${tornId}`);
-        if (hospBox) {
-            hospBox.checked = (p.status.state !== 'Okay');
-            hospBox.title = `${p.status.state} (${p.status.description})`;
+        const hospDot = document.getElementById(`hosp-dot-${tornId}`);
+        if (hospDot) {
+            hospDot.className = 'dot';
+            const isOkay = p.status.state === 'Okay';
+            if(isOkay) hospDot.classList.add('dot-green');
+            else hospDot.classList.add('dot-red');
+            hospDot.title = `${p.status.state} (${p.status.description})`;
         }
     }
 
-    // --- RENDERER ---
     function renderTable(data) {
         const contentDiv = document.getElementById('merc-content');
         if (!data || data.length === 0) { contentDiv.innerHTML = `<div style="padding:15px;">No active contracts.</div>`; return; }
@@ -276,21 +349,14 @@
         `;
 
         let activeCount = 0;
-
         data.forEach(row => {
             if (!row.ID) return;
-
-            // --- FILTER LOGIC ---
-            // Check "Contract Active" column. Default to 'Active' if column missing? No, user requested filtering.
-            // We treat missing column or blank value as NOT active for safety.
             const isActive = row['Contract Active'] && row['Contract Active'].trim().toLowerCase() === 'active';
             if (!isActive) return;
-            // --------------------
 
             activeCount++;
             const id = row.ID;
             const name = row.Name || row.ID;
-
             const isTrue = (val) => {
                 if (val === true) return true;
                 if (!val) return false;
@@ -298,25 +364,41 @@
                 return s === 'true' || s === 'yes' || s === 'on';
             };
 
-            const meritsDot = isTrue(row.Merits) ? '<span class="bool-dot bool-true" title="Yes"></span>' : '<span class="bool-dot bool-false" title="No"></span>';
-            const strickenDot = isTrue(row.Stricken) ? '<span class="bool-dot bool-true" title="Yes"></span>' : '<span class="bool-dot bool-false" title="No"></span>';
+            const isFaction = isTrue(row['Faction Contract']);
+            const meritsDot = isTrue(row.Merits) ? '<span class="dot dot-green" title="Yes"></span>' : '<span class="dot dot-red" title="No"></span>';
+            const strickenDot = isTrue(row.Stricken) ? '<span class="dot dot-green" title="Yes"></span>' : '<span class="dot dot-red" title="No"></span>';
 
-            const monitorCheck = apiDisabled ? `<span style="color:#555">-</span>` : `<input type="checkbox" class="merc-checkbox monitor-toggle" data-id="${id}">`;
-            const intervalInput = apiDisabled ? `<span style="color:#555">-</span>` : `<input type="number" class="merc-input-interval" value="${DEFAULT_MONITOR_INTERVAL}" min="5" data-id="${id}">`;
-            const statusDot = `<span id="status-dot-${id}" class="status-dot" title="Unknown"></span>`;
-            const hospCheck = `<input type="checkbox" id="hosp-check-${id}" disabled>`;
-            const refreshBtn = apiDisabled ? '' : `<button class="merc-row-refresh manual-refresh" data-id="${id}" title="Check Now">↻</button>`;
+            let linkUrl = `/profiles.php?XID=${id}`;
+            let linkClass = "col-name user-name";
+            let linkAttr = `data-placeholder="0" target="_blank"`;
+            let monitorCheck, intervalInput, statusDot, hospDot, refreshBtn;
 
-            // Updated Column Mapping for "When to hit?"
+            if (isFaction) {
+                linkUrl = `https://www.torn.com/factions.php?step=profile&ID=${id}`;
+                linkClass = "col-name";
+                linkAttr = `target="_blank"`;
+                monitorCheck = `<span style="color:#666">🏰</span>`;
+                intervalInput = `<span style="color:#444">-</span>`;
+                statusDot = `<span style="color:#444">-</span>`;
+                hospDot = `<span style="color:#444">-</span>`;
+                refreshBtn = ``;
+            } else {
+                monitorCheck = apiDisabled ? `<span style="color:#555">-</span>` : `<input type="checkbox" class="merc-checkbox monitor-toggle" data-id="${id}">`;
+                intervalInput = apiDisabled ? `<span style="color:#555">-</span>` : `<input type="number" class="merc-input-interval" value="${DEFAULT_MONITOR_INTERVAL}" min="5" data-id="${id}">`;
+                statusDot = `<span id="status-dot-${id}" class="dot dot-empty" title="Unknown"></span>`;
+                hospDot = `<span id="hosp-dot-${id}" class="dot dot-empty" title="Unknown"></span>`;
+                refreshBtn = apiDisabled ? '' : `<button class="merc-row-refresh manual-refresh" data-id="${id}" title="Check Now">↻</button>`;
+            }
+
             const whenToHit = row['When to hit?'] || row['When to hit'] || row.Status || '-';
 
             html += `
                 <tr id="row-${id}">
                     <td style="text-align:center">${monitorCheck}</td>
                     <td>${intervalInput}</td>
-                    <td><a href="/profiles.php?XID=${id}" class="col-name user-name" data-placeholder="0" target="_blank">${name}</a></td>
+                    <td><a href="${linkUrl}" class="${linkClass}" ${linkAttr}>${name}</a></td>
                     <td style="text-align:center">${statusDot}</td>
-                    <td style="text-align:center">${hospCheck}</td>
+                    <td style="text-align:center">${hospDot}</td>
                     <td class="col-stats">${row.Stats || '-'}</td>
                     <td style="text-align:center">${meritsDot}</td>
                     <td style="text-align:center">${strickenDot}</td>
@@ -329,10 +411,7 @@
             `;
         });
 
-        if (activeCount === 0) {
-            html += `<tr><td colspan="13" style="text-align:center; padding:10px;">No contracts found with status "Active"</td></tr>`;
-        }
-
+        if (activeCount === 0) html += `<tr><td colspan="13" style="text-align:center; padding:10px;">No contracts found with status "Active"</td></tr>`;
         html += `</tbody></table>`;
         contentDiv.innerHTML = html;
 
@@ -354,7 +433,6 @@
         }
     }
 
-    // --- INIT ---
     createUI();
     fetchSheetData();
     const randomJitter = (Math.random() * JITTER_SECONDS * 2000) - (JITTER_SECONDS * 1000);

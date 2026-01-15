@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         アイヌ語版ウィキペディアの文字変換
 // @namespace    http://lit.link/toracatman
-// @version      2024-12-15
+// @version      2026-01-15
 // @description  アイヌ語版ウィキペディアの文字変換をします。
 // @author       トラネコマン
 // @match        https://incubator.wikimedia.org/*Wp/ain*
@@ -12,22 +12,22 @@
 // @updateURL https://update.greasyfork.org/scripts/513558/%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E7%89%88%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%9A%E3%83%87%E3%82%A3%E3%82%A2%E3%81%AE%E6%96%87%E5%AD%97%E5%A4%89%E6%8F%9B.meta.js
 // ==/UserScript==
 
-var letter = "kana"; //kana=カタカナ katakana=拡張カタカナ hiragana=拡張ひらがな cyrillic=キリル文字
+let letter = "kana"; //kana=カタカナ katakana=拡張カタカナ hiragana=拡張ひらがな cyrillic=キリル文字
 
 //カタカナ（拡張カタカナでない）の設定
-var tu = 0; //tu 0=トゥ 1=ト゚ 2=ツ゚
-var ce = 0; //ce 0=チェ 1=セ゚
-var yw = 0; //-y, -w 0=イ、ウ 1=ィ、ゥ
-var renzoku = 0; //子音の連続 0=ッにする 1=ッにしない
-var nm = 0; //b、m、pの前のn 0=ン 1=ㇺ
+let tu = 0; //tu 0=トゥ 1=ト゚ 2=ツ゚
+let ce = 0; //ce 0=チェ 1=セ゚
+let yw = 0; //-y, -w 0=イ、ウ 1=ィ、ゥ
+let renzoku = 0; //子音の連続 0=ッにする 1=ッにしない
+let nm = 0; //b、m、pの前のn 0=ン 1=ㇺ
 
-var convert_sign_attr = "data-convert";
-var convert_sign_value = "true";
-var separate = " | ";
-var replacement = "\x1a";
+let convert_sign_attr = "data-convert";
+let convert_sign_value = "true";
+let separate = " | ";
+let replacement = "\x1a";
 
-var flag;
-var c;
+let flag;
+let c;
 if (letter == "kana") {
     flag = "ig";
     c = [
@@ -64,7 +64,7 @@ if (letter == "kana") {
         ["a", "ア"],	["i", "イ"],	["u", "ウ"],	["e", "エ"],	["o", "オ"]
     ];
     if (tu + ce + yw + renzoku + nm != 0) {
-        var b = JSON.stringify(c);
+        let b = JSON.stringify(c);
         switch (tu) {
             case 1:
                 b = b.replace("トゥ", "ト゚");
@@ -185,18 +185,18 @@ else if (letter == "cyrillic") {
     ];
 }
 
-(function() {
+(() => {
     if (letter == "katakana" || letter == "hiragana") {
-        var style = document.createElement("style");
+        let style = document.createElement("style");
         style.textContent = '@font-face{font-family:"Mkana+";src:local("Mkana+"),url("https://toracatman.github.io/fonts/mkanaplus.woff2")format("woff2"),url("https://toracatman.github.io/fonts/mkanaplus.woff")format("woff");font-display:swap;}*{font-family:"Mkana+"!important;}';
-        document.head.appendChild(style);
+        document.body.appendChild(style);
     }
 
     setInterval(() => {
-        var a;
+        let a;
         a = document.querySelectorAll('style,.mw-parser-output [lang]:not([lang^="ain"]),.mw-parser-output [lang]:not([lang^="ain"]) *,.mw-editsection *,.external,pre');
         if (a != null) {
-            for (var i = 0; i < a.length; i++) {
+            for (let i = 0; i < a.length; i++) {
                 if (a[i].getAttribute(convert_sign_attr) == convert_sign_value) continue;
                 a[i].setAttribute(convert_sign_attr, convert_sign_value);
             }
@@ -204,14 +204,14 @@ else if (letter == "cyrillic") {
 
         a = document.querySelectorAll('.mw-parser-output *,#mw-panel-toc-list :nth-child(n+2) *,#firstHeading *,#catlinks ul *,.mw-prefixindex-list *,.mw-allpages-chunk *,.mw-category *');
         if (a == null) return;
-        for (var i = 0; i < a.length; i++) {
+        for (let i = 0; i < a.length; i++) {
             if (a[i].getAttribute(convert_sign_attr) == convert_sign_value) continue;
             a[i].setAttribute(convert_sign_attr, convert_sign_value);
 
             if (!(a[i].hasChildNodes())) continue;
-            var h = (b) => {
-                var s = b.split(separate);
-                for (var j = 0; j < c.length; j++) {
+            let h = (b) => {
+                let s = b.split(separate);
+                for (let j = 0; j < c.length; j++) {
                     s[0] = s[0].replace(new RegExp(c[j][0], flag), c[j][1]);
                 }
                 return s.join(separate);
@@ -220,20 +220,20 @@ else if (letter == "cyrillic") {
                 a[i].textContent = h(a[i].textContent);
             }
             else {
-                var t = a[i];
-                var p = document.createTextNode("");
+                let t = a[i];
+                let p = document.createTextNode("");
                 t.replaceWith(p);
-                var r = document.createDocumentFragment();
-                var e = t.firstElementChild;
+                let r = document.createDocumentFragment();
+                let e = t.firstElementChild;
                 while (e != null) {
                     e.replaceWith(document.createTextNode(replacement));
                     r.appendChild(e);
                     e = t.firstElementChild;
                 }
-                var ss = h(t.textContent).split(replacement);
+                let ss = h(t.textContent).split(replacement);
                 t.textContent = "";
                 t.appendChild(document.createTextNode(ss[0]));
-                for (var j = 1; j < ss.length; j++) {
+                for (let j = 1; j < ss.length; j++) {
                     t.appendChild(r.firstElementChild);
                     t.appendChild(document.createTextNode(ss[j]));
                 }

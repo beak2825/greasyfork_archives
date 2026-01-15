@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         98手机网页浏览助手
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  只适用于手机网页版的98手机网页浏览助手
 // @author       bbbyqq
 // @license      MIT
@@ -333,7 +333,7 @@
       btn?.addEventListener('click', () => {
         const id = btn.getAttribute('data-clipboard-target')
         const code = []
-        document.querySelector(id).parentNode.querySelectorAll('li').forEach(item => {
+        document.querySelector(id).parentNode.querySelectorAll('li a').forEach(item => {
           code.push(item.innerText)
         })
         const codeText = code.join('\n')

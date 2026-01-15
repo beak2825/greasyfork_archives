@@ -5,9 +5,10 @@
 // @match       https://*.lightning.force.com/lightning/page/home
 // @match       https://*.lightning.force.com/lightning/o/Case/*
 // @match       https://*.lightning.force.com/visualforce/recsession
-// @match       https://nutanix.lightning.force.com/lightning/r/Dashboard/*
+// @match       https://*.lightning.force.com/lightning/r/Dashboard/*
+// @match       https://*.lightning.force.com/lightning/r/Report/*
 // @exclude     https://*.lightning.force.com/lightning/r/LiveAgentSession/*
-// @version     1.8.1
+// @version     2.1
 // @grant       none
 // @run-at      document-idle
 // @license MIT
@@ -31,22 +32,36 @@
 
     const autorefresh = async () => {
         try {
-            console.debug('[USERSCRIPT] Waiting for DOM');
-            if (document.readyState === 'interactive') {
+            if (document.readyState === 'loading' || document.readyState === 'interactive') {
+                console.debug('[USERSCRIPT] Waiting for DOM/Components to load...');
                 await new Promise(resolve => {
                     document.addEventListener('DOMContentLoaded', resolve, { once: true });
                     setTimeout(resolve, 5000);
                 });
+                // Give Salesforce a moment to render components after DOM load
+                await wait(2000);
+            } else {
+                // Script run on already loaded page (interval or manual trigger)
+                // Short wait to ensure UI stability, but much faster than 3s
+                await wait(250);
             }
-            await wait(3000);
-            console.debug('[USERSCRIPT] DOM loaded, proceeding');
+
+            console.debug('[USERSCRIPT] Proceeding with refresh actions');
+            console.debug('[USERSCRIPT] Attempting to close modal/popups...');
             await clickButtons(".slds-button.slds-button_icon.slds-button_icon-x-small.slds-button_icon-container");
+            console.debug('[USERSCRIPT] Attempting to click .refresh buttons');
             await clickButtons(".refresh");
+            console.debug('[USERSCRIPT] Attempting to click .report-action-refreshReport')
+            await clickButtons(".report-action-refreshReport");
+
             const refreshViewEvent = $A?.get('e.force:refreshView');
             if (refreshViewEvent) {
-                console.debug('[USERSCRIPT] Refreshing view')
+                console.debug('[USERSCRIPT] Refreshing view via Aura event');
                 refreshViewEvent.fire();
+            } else {
+                console.debug('[USERSCRIPT] $A (Aura) not found or refreshView event failed to retrieve.');
             }
+            console.debug('[USERSCRIPT] Done! Waiting for next cycle.');
         } catch (error) {
             console.error('[USERSCRIPT] Error during autorefresh:', error);
         }
@@ -55,24 +70,26 @@
     const clickButtons = async (selector) => {
         const mainButtons = document.querySelectorAll(selector);
         if (mainButtons.length > 0) {
-            mainButtons.forEach(async button => {
+            for (const button of mainButtons) {
                 button.click();
-                await wait(100);
-            });
+                await wait(50);
+            }
             return;
         }
 
         const iframes = document.querySelectorAll('iframe');
         for (const iframe of iframes) {
             try {
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                // Accessing contentWindow.document on cross-origin frames throws SecurityError.
+                // contentDocument is null for cross-origin frames, which is safer.
+                const iframeDoc = iframe.contentDocument;
                 if (iframeDoc) {
                     const iframeButtons = iframeDoc.querySelectorAll(selector);
                     if (iframeButtons.length > 0) {
-                        iframeButtons.forEach(async button => {
+                        for (const button of iframeButtons) {
                             button.click();
-                            await wait(100);
-                        });
+                            await wait(50);
+                        }
                         return;
                     }
                 }

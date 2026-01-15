@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name  MyMHUI
 // @namespace  https://greasyfork.org/en/users/39779
-// @version  2.1.27.13.12
+// @version  2.2.30.14.14
 // @description  my mh ui modify
 // @author  Elie
 // @match  http://mousehuntgame.com/*
@@ -303,7 +303,613 @@ const locationAnchor = {
   rift_bristle_woods: ['ByClassName', 'camp', ''],
   rift_valour: null
 };
-
+const functions = {
+  greatWinterHunt() {
+    const html = `
+  <table>
+    <tr>
+      <td>&nbsp;</td>
+      <td>Hill</td>
+      <td>Workshop</td>
+      <td>Fortress</td>
+    </tr>
+    <tr>
+      <td>Bait</td>
+      <td>
+        <button title="toggle Cinnamon Hill Bait." type="button" id="gwhHillBaitButton" style="background-color:rgb(255, 140, 140);"></button>
+      </td>
+      <td>
+        <button title="toggle Golem Workshop Bait." type="button" id="gwhWorkshopBaitButton" style="background-color:rgb(150, 115, 230);"></button>
+      </td>
+      <td>
+        <button title="toggle Ice Fortress Bait." type="button" id="gwhFortressBaitButton" style="background-color:rgb(255, 140, 140);"></button>
+      </td>
+    </tr>
+    <tr>
+      <td>FS</td>
+      <td>
+        <button title="toggle Cinnamon Hill Festive Spirit." type="button" id="gwhHillFSButton" style="background-color:rgb(255, 140, 140);"></button>
+      </td>
+      <td>
+        <button title="toggle Golem Workshop Festive Spirit." type="button" id="gwhHillFSButton" style="background-color:rgb(150, 115, 230);"></button>
+      </td>
+      <td>
+        <button title="toggle Ice Fortress Festive Spirit." type="button" id="gwhHillFSButton" style="background-color:rgb(255, 140, 140);"></button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Quantity Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <input title="Start using PP quantity." type="number" id="gwhStartPpQtyInput" value="25">
+      </td>
+      <td>
+        <input title="Stop using PP quantity." type="number" id="gwhPpKeptQtyInput" value="2">
+      </td>
+      <td>
+        <input title="Stop using GPP quantity." type="number" id="gwhGppEndQtyInput" value="2">
+      </td>
+      <td>
+        <select title="Area to hunt with GPP." id="gwhGppAreaSelect">
+          <option value="winter_hunt_grove">Hill</option>
+          <option value="winter_hunt_workshop">Workshop</option>
+          <option value="winter_hunt_fortress">Fortress</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Workshop Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <input title="Start using cinnamon quantity." type="number" id="gwhStartCinnamonQtyInput" value="37">
+      </td>
+      <td>
+        <input title="Stop using cinnamon quantity." type="number" id="gwhCinnamonKeptQtyInput" value="3">
+      </td>
+      <td>
+        <input title="Too many cinnamon quantity." type="number" id="gwhTooManyCinnamonInput" value="73">
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>停用 forge</td>
+      <td>
+        <select title="第 1個 forge" class="stopForgeAt">
+          <option value="0">Keep forging</option>
+          <option value="12">stop as finished</option>
+        </select>
+      </td>
+      <td>
+        <select title="第 2個 forge" class="stopForgeAt">
+          <option value="0">Keep forging</option>
+          <option value="12">stop as finished</option>
+        </select>
+      </td>
+      <td>
+        <select title="第 3個 forge" class="stopForgeAt">
+          <option value="0">Keep forging</option>
+          <option value="6">stop as finished</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Fortress Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <input title="Start using hailstone quantity." type="number" id="gwhGoHailstoneQtyInput" value="35">
+      </td>
+      <td>
+        <input title="Stop using hailstone quantity." type="number" id="gwhHailstoneKeptQtyInput" value="2">
+      </td>
+      <td>
+        <input title="Too many hailstone quantity." type="number" id="gwhTooManyHailstoneInput" value="35">
+      </td>
+      <td>
+        <input title="Festive Spirit數量少於此離開 Fortress." type="number" id="gwhFsKeptQtyInput" value="3">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Golem Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <select title="是否自動處理 golem" id="gwhIsAutoGolemSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否自動升級 golem?" id="gwhIsAutoUpgradeSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="有 scarf時,是否用閒置的 golem送掉" id="gwhIsScarfUnusedGolemSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input title="自動 build幾個 golem(等級高到低)." type="number" id="gwhGolemsAutoBuildInput" value="2">
+      </td>
+      <td>
+        <input title="自動 upgrade幾個 golem(由左至右)." type="number" id="gwhGolemsAutoUpgradeInput" value="2">
+      </td>
+      <td>
+        <input title="自動 claim幾個 golem(由左至右)." type="number" id="gwhGolemsAutoClaimInput" value="3">
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>預設目標</td>
+      <td>
+        <select title="第 1個 golem的預設目的地" class="defaultGolemTarget">
+          <option value="floating_islands">Floating Islands</option>
+          <option value="kings_arms">King's Arm</option>
+          <option value="queso_river">Queso River</option>
+          <option value="queso_plains">Prickly Plains</option>
+          <option value="queso_quarry">Cantera Quarry</option>
+          <option value="queso_geyser">Queso Geyser</option>
+        </select>
+      </td>
+      <td>
+        <select title="第 2個 golem的預設目的地" class="defaultGolemTarget">
+          <option value="floating_islands">Floating Islands</option>
+          <option value="kings_arms">King's Arm</option>
+          <option value="queso_river">Queso River</option>
+          <option value="queso_plains">Prickly Plains</option>
+          <option value="queso_quarry">Cantera Quarry</option>
+          <option value="queso_geyser">Queso Geyser</option>
+        </select>
+      </td>
+      <td>
+        <select title="第 3個 golem的預設目的地" class="defaultGolemTarget">
+          <option value="floating_islands">Floating Islands</option>
+          <option value="kings_arms">King's Arm</option>
+          <option value="queso_river">Queso River</option>
+          <option value="queso_plains">Prickly Plains</option>
+          <option value="queso_quarry">Cantera Quarry</option>
+          <option value="queso_geyser">Queso Geyser</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>GoTd</td>
+      <td>
+        <select title="是否使用 GoTd設定?" id="gwhIsGoodGoTdSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <input title="不使用 GoTd設定的 UTC日期,逗點分隔." type="text" id="gwhBadGotdDatesInput">
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Mapping Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <select title="是否自動 mapping?" id="gwhIsAutoMappingSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否優先 mapping?" id="gwhIsMappingSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="只剩 PP mice時是否強制使用 PP?" id="gwhIsCheckPpMiceBaitSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否強制 map area的清除順序?" id="gwhIsForcedMapClearOrderSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>map area的清除順序</td>
+      <td>
+        <select title="第 1個清除的 map area" class="mapAreaClearOrder">
+          <option value="winter_hunt_grove" selected>Hill</option>
+          <option value="winter_hunt_workshop">Workshop</option>
+          <option value="winter_hunt_fortress">Fortress</option>
+        </select>
+      </td>
+      <td>
+        <select title="第 2個清除的 map area" class="mapAreaClearOrder">
+          <option value="winter_hunt_grove">Hill</option>
+          <option value="winter_hunt_workshop" selected>Workshop</option>
+          <option value="winter_hunt_fortress">Fortress</option>
+        </select>
+      </td>
+      <td>
+        <select title="第 3個清除的 map area" class="mapAreaClearOrder">
+          <option value="winter_hunt_grove">Hill</option>
+          <option value="winter_hunt_workshop">Workshop</option>
+          <option value="winter_hunt_fortress" selected>Fortress</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input title="GPP數量少於此, drop需要 GPP的 map." type="number" id="gwhDropMapGppAsGppLessThanInput" value="40">
+      </td>
+      <td>
+        <input title="GPP數量少於此, drop有 Glazy的 map(做 Joy的 map有機會多抓 Glazy)." type="number" id="gwhDropMapGlazyAsGppLessThanInput" value="100">
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Shutdown Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <input title="Animated Snow數量大於等於此,停用 Animated Snow Cannon." type="number" id="gwhStopAnimatedSnowCannonAtInput" value="-1">
+      </td>
+      <td>
+        <input title="Cinnamon數量大於等於此,停用 Cinnamon Cannon." type="number" id="gwhStopCinnamonCannonAtInput" value="-1">
+      </td>
+      <td>
+        <select title="Shutdown時,用完 cinnamon後是否自動前往 Fortress" id="gwhIsAutoFortressSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">Trap Setup</td>
+    </tr>
+    <tr>
+      <td>
+        <select title="Trap area" id="gwhTrapAreaSelect">
+          <option value="winter_hunt_grove">Hill</option>
+          <option value="winter_hunt_workshop">Workshop</option>
+          <option value="winter_hunt_fortress">Fortress</option>
+        </select>
+      </td>
+      <td>
+        <select title="Trap type" id="gwhTrapTypeSelect">
+          <option value="normalTrap">Normal</option>
+          <option value="ppTrap">Mapping</option>
+          <option value="fsTrap">Breaking Shield</option>
+          <option value="shutdown">Shutdown</option>
+        </select>
+      </td>
+      <td>
+        <select title="Is trap GoTd" id="gwhTrapGoTdSelect">
+          <option value="gotd">GoTd</option>
+          <option value="normal">not</option>
+        </select>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>Bait</td>
+      <td colspan="3">
+        <input title="逗點分隔 Bait name." type="text" id="gwhBaitInput" style="width: 95%;">
+      </td>
+    </tr>
+    <tr>
+      <td>Weapon</td>
+      <td colspan="3">
+        <input title="逗點分隔 Weapon name." type="text" id="gwhWeaponInput" style="width: 95%;">
+      </td>
+    </tr>
+    <tr>
+      <td>Base</td>
+      <td colspan="3">
+        <input title="逗點分隔 Base name." type="text" id="gwhBaseInput" style="width: 95%;">
+      </td>
+    </tr>
+    <tr>
+      <td>Charm</td>
+      <td colspan="3">
+        <input title="逗點分隔 Charm name." type="text" id="gwhCharmInput" style="width: 95%;">
+      </td>
+    </tr>
+    <tr>
+      <td>Festive Spirit</td>
+      <td colspan="3">
+        <select title="是否使用 Festive Spirit." type="text" id="gwhFestiveSpiritSelect">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Cannons</td>
+      <td>
+        <select title="Enable first cannon" class="toggleCannons">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="Enable second cannon" class="toggleCannons">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="Enable third cannon" class="toggleCannons">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+  `;
+    // eslint-disable-next-line no-undef
+    $('#eventLocationsSettingsDiv').html(html);
+  },
+  // prettier-ignore
+  greatWinterHuntLoad() {
+    const storageKey = 'greatWinterHunt';
+    const a = JSON.parse(localStorage[storageKey]);
+    let isPp = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+    let isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
+    let isGouda = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
+    document.querySelector('#gwhHillBaitButton').textContent =
+      (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP');
+    isPp = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+    isSb = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
+    isGouda = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
+    document.querySelector('#gwhWorkshopBaitButton').textContent =
+      (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP');
+    isPp = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+    isSb = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
+    isGouda = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
+    document.querySelector('#gwhFortressBaitButton').textContent =
+      (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP');
+    document.querySelector('#gwhStartPpQtyInput').value = a.startPpQty;
+    document.querySelector('#gwhPpKeptQtyInput').value = a.ppKeptQty;
+    document.querySelector('#gwhGppEndQtyInput').value = a.gppEndQty;
+    document.querySelector('#gwhGppAreaSelect').value = a.gppArea;
+    document.querySelector('#gwhStartCinnamonQtyInput').value = a.startCinnamonQty;
+    document.querySelector('#gwhCinnamonKeptQtyInput').value = a.cinnamonKeptQty;
+    document.querySelector('#gwhTooManyCinnamonInput').value = a.tooManyCinnamon;
+    document.querySelectorAll('.stopForgeAt')[0].value = a.stopForgeAt[0];
+    document.querySelectorAll('.stopForgeAt')[1].value = a.stopForgeAt[1];
+    document.querySelectorAll('.stopForgeAt')[2].value = a.stopForgeAt[2];
+    document.querySelector('#gwhGoHailstoneQtyInput').value = a.goHailstoneQty;
+    document.querySelector('#gwhHailstoneKeptQtyInput').value = a.hailstoneKeptQty;
+    document.querySelector('#gwhTooManyHailstoneInput').value = a.tooManyHailstone;
+    document.querySelector('#gwhFsKeptQtyInput').value = a.fsKeptQty;
+    document.querySelector('#gwhIsAutoGolemSelect').value = a.isAutoGolem;
+    document.querySelector('#gwhIsAutoUpgradeSelect').value = a.isAutoUpgrade;
+    document.querySelector('#gwhIsScarfUnusedGolemSelect').value = a.isScarfUnusedGolem;
+    document.querySelector('#gwhGolemsAutoBuildInput').value = a.golemsAutoBuild;
+    document.querySelector('#gwhGolemsAutoUpgradeInput').value = a.golemsAutoUpgrade;
+    document.querySelector('#gwhGolemsAutoClaimInput').value = a.golemsAutoClaim;
+    document.querySelectorAll('.defaultGolemTarget')[0].value = a.golemSetup.defaultTarget[0];
+    document.querySelectorAll('.defaultGolemTarget')[1].value = a.golemSetup.defaultTarget[1];
+    document.querySelectorAll('.defaultGolemTarget')[2].value = a.golemSetup.defaultTarget[2];
+    document.querySelector('#gwhIsGoodGoTdSelect').value = a.isGoodGoTd;
+    document.querySelector('#gwhBadGotdDatesInput').value = a.badGotdDates.join(',');
+    document.querySelector('#gwhIsAutoMappingSelect').value = a.isAutoMapping;
+    document.querySelector('#gwhIsMappingSelect').value = a.isMapping;
+    document.querySelector('#gwhIsCheckPpMiceBaitSelect').value = a.isCheckPpMiceBait;
+    document.querySelector('#gwhIsForcedMapClearOrderSelect').value = a.isForcedMapClearOrder;
+    document.querySelectorAll('.mapAreaClearOrder')[0].value = a.mapAreaClearOrder[0];
+    document.querySelectorAll('.mapAreaClearOrder')[1].value = a.mapAreaClearOrder[1];
+    document.querySelectorAll('.mapAreaClearOrder')[2].value = a.mapAreaClearOrder[2];
+    document.querySelector('#gwhDropMapGppAsGppLessThanInput').value = a.dropMapGppAsGppLessThan;
+    document.querySelector('#gwhDropMapGlazyAsGppLessThanInput').value = a.dropMapGlazyAsGppLessThan;
+    document.querySelector('#gwhStopAnimatedSnowCannonAtInput').value = a.shutdown.stopAnimatedSnowCannonAt;
+    document.querySelector('#gwhStopCinnamonCannonAtInput').value = a.shutdown.stopCinnamonCannonAt;
+    document.querySelector('#gwhIsAutoFortressSelect').value = a.shutdown.isAutoFortress;
+    const trapArea = document.querySelector('#gwhTrapAreaSelect').value;
+    const trapType = document.querySelector('#gwhTrapTypeSelect').value;
+    const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value;
+    document.querySelector('#gwhBaitInput').value = a[trapArea][trapType][trapGoTd][0];
+    document.querySelector('#gwhWeaponInput').value = a[trapArea][trapType][trapGoTd][1];
+    document.querySelector('#gwhBaseInput').value = a[trapArea][trapType][trapGoTd][2];
+    document.querySelector('#gwhCharmInput').value = a[trapArea][trapType][trapGoTd][3];
+    document.querySelector('#gwhFestiveSpiritSelect').value = a[trapArea][trapType][trapGoTd][4];
+    document.querySelectorAll('.toggleCannons')[0].value = a[trapArea][trapType][trapGoTd][5][0];
+    document.querySelectorAll('.toggleCannons')[1].value = a[trapArea][trapType][trapGoTd][5][1];
+    document.querySelectorAll('.toggleCannons')[2].value = a[trapArea][trapType][trapGoTd][5][2];
+    // document.querySelector('#').value = a.;
+    // document.querySelector('#').value = a.;
+    // document.querySelector('#').value = a.;
+    // document.querySelector('#').value = a.;
+    // prettier-ignore
+    // toggle Hill Bait
+    document
+      .querySelector('#gwhHillBaitButton')
+      .addEventListener('click', function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const isPp = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+        const isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
+        const isGouda = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
+        a.winter_hunt_grove.ppTrap.normal[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        a.winter_hunt_grove.ppTrap.gotd[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        localStorage[storageKey] = JSON.stringify(a);
+        e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
+        console.log(JSON.parse(localStorage[storageKey]));
+      });
+    // prettier-ignore
+    // toggle Workshop Bait
+    document
+      .querySelector('#gwhWorkshopBaitButton')
+      .addEventListener('click', function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const isPp = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+        const isSb = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
+        const isGouda = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
+        a.winter_hunt_workshop.ppTrap.normal[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        a.winter_hunt_workshop.ppTrap.gotd[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        localStorage[storageKey] = JSON.stringify(a);
+        e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
+        console.log(JSON.parse(localStorage[storageKey]));
+      });
+    // prettier-ignore
+    // toggle Fortress Bait
+    document
+      .querySelector('#gwhFortressBaitButton')
+      .addEventListener('click', function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const isPp = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+        const isSb = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
+        const isGouda = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
+        a.winter_hunt_fortress.fsTrap.normal[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        a.winter_hunt_fortress.fsTrap.gotd[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        a.winter_hunt_fortress.ppTrap.normal[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        a.winter_hunt_fortress.ppTrap.gotd[0] =
+            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
+        localStorage[storageKey] = JSON.stringify(a);
+        e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
+        console.log(JSON.parse(localStorage[storageKey]));
+      });
+    // Change trap
+    document
+      .getElementById('gwhTrapAreaSelect')
+      .addEventListener('change', function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const trapArea = document.querySelector('#gwhTrapAreaSelect').value
+        const trapType = document.querySelector('#gwhTrapTypeSelect').value
+        const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
+        functions.loadGwhTrap(a, trapArea, trapType, trapGoTd)
+        console.log(a);
+      });
+    document
+      .getElementById('gwhTrapTypeSelect')
+      .addEventListener('change', function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const trapArea = document.querySelector('#gwhTrapAreaSelect').value
+        const trapType = document.querySelector('#gwhTrapTypeSelect').value
+        const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
+        functions.loadGwhTrap(a, trapArea, trapType, trapGoTd)
+        console.log(a);
+      });
+    document
+      .getElementById('gwhTrapGoTdSelect')
+      .addEventListener('change', function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const trapArea = document.querySelector('#gwhTrapAreaSelect').value
+        const trapType = document.querySelector('#gwhTrapTypeSelect').value
+        const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
+        functions.loadGwhTrap(a, trapArea, trapType, trapGoTd)
+        console.log(a);
+      });
+  },
+  loadGwhTrap(a, trapArea, trapType, trapGoTd) {
+    document.querySelector('#gwhBaitInput').value =
+      a[trapArea][trapType][trapGoTd][0];
+    document.querySelector('#gwhWeaponInput').value =
+      a[trapArea][trapType][trapGoTd][1];
+    document.querySelector('#gwhBaseInput').value =
+      a[trapArea][trapType][trapGoTd][2];
+    document.querySelector('#gwhCharmInput').value =
+      a[trapArea][trapType][trapGoTd][3];
+    document.querySelector('#gwhFestiveSpiritSelect').value =
+      a[trapArea][trapType][trapGoTd][4];
+    document.querySelectorAll('.toggleCannons')[0].value =
+      a[trapArea][trapType][trapGoTd][5][0];
+    document.querySelectorAll('.toggleCannons')[1].value =
+      a[trapArea][trapType][trapGoTd][5][1];
+    document.querySelectorAll('.toggleCannons')[2].value =
+      a[trapArea][trapType][trapGoTd][5][2];
+  },
+  // prettier-ignore
+  greatWinterHuntSave() {
+    const storageKey = 'greatWinterHunt';
+    const a = localStorage[storageKey] ? JSON.parse(localStorage[storageKey]) : {};
+    a.startPpQty = parseInt(document.querySelector('#gwhStartPpQtyInput').value);
+    a.ppKeptQty = parseInt(document.querySelector('#gwhPpKeptQtyInput').value);
+    a.gppEndQty =parseInt( document.querySelector('#gwhGppEndQtyInput').value);
+    a.gppArea = document.querySelector('#gwhGppAreaSelect').value;
+    a.startCinnamonQty = parseInt(document.querySelector('#gwhStartCinnamonQtyInput').value);
+    a.cinnamonKeptQty = parseInt(document.querySelector('#gwhCinnamonKeptQtyInput').value);
+    a.tooManyCinnamon = parseInt(document.querySelector('#gwhTooManyCinnamonInput').value);
+    a.stopForgeAt[0] = parseInt(document.querySelectorAll('.stopForgeAt')[0].value);
+    a.stopForgeAt[1] = parseInt(document.querySelectorAll('.stopForgeAt')[1].value);
+    a.stopForgeAt[2] = parseInt(document.querySelectorAll('.stopForgeAt')[2].value);
+    a.goHailstoneQty = parseInt(document.querySelector('#gwhGoHailstoneQtyInput').value);
+    a.hailstoneKeptQty = parseInt(document.querySelector('#gwhHailstoneKeptQtyInput').value);
+    a.tooManyHailstone = parseInt(document.querySelector('#gwhTooManyHailstoneInput').value);
+    a.fsKeptQty = parseInt(document.querySelector('#gwhFsKeptQtyInput').value);
+    a.isAutoGolem = document.querySelector('#gwhIsAutoGolemSelect').value === 'true';
+    a.isAutoUpgrade = document.querySelector('#gwhIsAutoUpgradeSelect').value === 'true';
+    a.isScarfUnusedGolem = document.querySelector('#gwhIsScarfUnusedGolemSelect').value === 'true';
+    a.golemsAutoBuild = parseInt(document.querySelector('#gwhGolemsAutoBuildInput').value);
+    a.golemsAutoUpgrade = parseInt(document.querySelector('#gwhGolemsAutoUpgradeInput').value);
+    a.golemsAutoClaim = parseInt(document.querySelector('#gwhGolemsAutoClaimInput').value);
+    a.golemSetup.defaultTarget[0] = document.querySelectorAll('.defaultGolemTarget')[0].value;
+    a.golemSetup.defaultTarget[1] = document.querySelectorAll('.defaultGolemTarget')[1].value;
+    a.golemSetup.defaultTarget[2] = document.querySelectorAll('.defaultGolemTarget')[2].value;
+    a.isGoodGoTd = document.querySelector('#gwhIsGoodGoTdSelect').value === 'true';
+    a.badGotdDates = document.querySelector('#gwhBadGotdDatesInput').value.split(',');
+    a.isAutoMapping = document.querySelector('#gwhIsAutoMappingSelect').value === 'true';
+    a.isMapping = document.querySelector('#gwhIsMappingSelect').value === 'true';
+    a.isCheckPpMiceBait = document.querySelector('#gwhIsCheckPpMiceBaitSelect').value === 'true';
+    a.isForcedMapClearOrder = document.querySelector('#gwhIsForcedMapClearOrderSelect').value === 'true';
+    a.mapAreaClearOrder[0] = document.querySelectorAll('.mapAreaClearOrder')[0].value;
+    a.mapAreaClearOrder[1] = document.querySelectorAll('.mapAreaClearOrder')[1].value;
+    a.mapAreaClearOrder[2] = document.querySelectorAll('.mapAreaClearOrder')[2].value;
+    a.dropMapGppAsGppLessThan = parseInt(document.querySelector('#gwhDropMapGppAsGppLessThanInput').value);
+    a.dropMapGlazyAsGppLessThan = parseInt(document.querySelector('#gwhDropMapGlazyAsGppLessThanInput').value);
+    a.shutdown.stopAnimatedSnowCannonAt = parseInt(document.querySelector('#gwhStopAnimatedSnowCannonAtInput').value);
+    a.shutdown.stopCinnamonCannonAt = parseInt(document.querySelector('#gwhStopCinnamonCannonAtInput').value);
+    a.shutdown.isAutoFortress = document.querySelector('#gwhIsAutoFortressSelect').value === 'true';
+    const trapArea = document.querySelector('#gwhTrapAreaSelect').value
+    const trapType = document.querySelector('#gwhTrapTypeSelect').value
+    const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
+    a[trapArea][trapType][trapGoTd][0] = document.querySelector('#gwhBaitInput').value;
+    a[trapArea][trapType][trapGoTd][1] = document.querySelector('#gwhWeaponInput').value;
+    a[trapArea][trapType][trapGoTd][2] = document.querySelector('#gwhBaseInput').value;
+    a[trapArea][trapType][trapGoTd][3] = document.querySelector('#gwhCharmInput').value;
+    a[trapArea][trapType][trapGoTd][4] = document.querySelector('#gwhFestiveSpiritSelect').value === 'true';
+    a[trapArea][trapType][trapGoTd][5][0] = document.querySelectorAll('.toggleCannons')[0].value === 'true';
+    a[trapArea][trapType][trapGoTd][5][1] = document.querySelectorAll('.toggleCannons')[1].value === 'true';
+    a[trapArea][trapType][trapGoTd][5][2] = document.querySelectorAll('.toggleCannons')[2].value === 'true';
+    localStorage[storageKey] = JSON.stringify(a);
+    console.log(JSON.parse(localStorage[storageKey]));
+  }
+};
 (function () {
   'use strict';
 
@@ -487,10 +1093,11 @@ const locationAnchor = {
     if (elem && elem.length > 0) elem[0].scrollIntoView();
     // quick toggle
     let storageKey = null;
+    // prettier-ignore
     // quick navigation buttons
     let mypanel = `<div id='mypanel' draggble='true' style='z-index: 1000; position: fixed; top: 2px; left: 10px;'>
-      <details name="mypaneldetails"${localStorage.isLocalPanel ? '' : ' open'}>
-        <summary style="width: 6em;height: 1.5em;background-color: #22ff22cc;cursor: pointer;place-content: center;font-size: 16px;">General</summary>`;
+    <details class="generalDetails" name="mypaneldetails"${localStorage.isLocalPanel ? '' : ' open'}>
+      <summary class="generalSummary" style="width: 6em;height: 1.4em;background-color: #22ff22cc;cursor: pointer;place-content: center;font-size: 16px;">General</summary>`;
     const anchorPoints = JSON.parse(localStorage.getItem('anchorPoints'));
     // Use status button as onloadAnchor
     anchorPoints[1][1] = onloadAnchor[0];
@@ -576,82 +1183,18 @@ const locationAnchor = {
     mypanel +=
       '<button type="button" style="background-color: #DEA32C;" id="changeHudDisplayButton">HUD</button>';
     // <a class="loot" title="" href="https://www.mousehuntgame.com/item.php?item_type=rune_craft_item" onclick="hg.views.ItemView.show('rune_craft_item'); return false;">Rune</a>
-    // Fort Rox
-    const isFrox = environmentType == 'fort_rox';
     // prettier-ignore
-    if (isFrox) {
-      storageKey = 'fort_rox';
-      const a = JSON.parse(localStorage[storageKey]);
-      mypanel += `
-        <input title="Must be after this time to auto enter night" type="text" id="enterAfterTimeInput" value="${a.enterAfterTime}" style="width: 10em;">
-        <input title="Must have effective meteorite(meteorite+3*Crescent, 0 if use Moon) more than this number to auto enter night" type="number" id="meteoriteMoreThanInput" value="${a.meteoriteMoreThan}" style="width: 4em;">
-        <input title="Must have howlite less than this number to auto enter night" type="number" id="howliteLessThanInput" value="${a.howliteLessThan}" style="width: 3em;">
-        <input title="Must have bloodstone less than this number to auto enter night" type="number" id="bloodStoneLessThanInput" value="${a.bloodStoneLessThan}" style="width: 3em;">
-      `;
-    }
-    mypanel += `</details>
-    <details name="mypaneldetails"${localStorage.isLocalPanel ? ' open' : ''}>
-      <summary style="width: 6em;height: 1.5em;background-color: #22ff22cc;cursor: pointer;place-content: center;font-size: 16px;">Local</summary>`;
-    // GWH quick setup buttons
-    if (isGwh) {
-      storageKey = 'greatWinterHunt';
-      const a = JSON.parse(localStorage[storageKey]);
-      // prettier-ignore
-      let isPp = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-      // prettier-ignore
-      let isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
-      // prettier-ignore
-      let isGouda = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
-      mypanel +=
-        '<button title="toggle Cinnamon Hill PP/GPP." type="button" id="chGppButton" style="background-color:rgb(255, 140, 140);">' +
-        (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP') +
-        '</button>';
-      // prettier-ignore
-      isPp = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-      // prettier-ignore
-      isSb = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
-      // prettier-ignore
-      isGouda = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
-      mypanel +=
-        '<button title="toggle Golem Workshop PP/GPP." type="button" id="gwGppButton" style="background-color:rgb(150, 115, 230);">' +
-        (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP') +
-        '</button>';
-      // prettier-ignore
-      isPp = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-      // prettier-ignore
-      isSb = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
-      // prettier-ignore
-      isGouda = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
-      mypanel +=
-        '<button title="toggle Ice Fortress PP/GPP." type="button" id="ifGppButton" style="background-color:rgb(255, 140, 140);">' +
-        (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP') +
-        '</button>';
-      mypanel +=
-        '<button title="toggle isAutoMapping" type="button" id="gwhAutoMappingButton" style="background-color:rgb(150, 115, 230);">' +
-        (a.isAutoMapping ? 'Ya' : 'No') +
-        '</button>';
-      mypanel +=
-        '<button title="toggle isMapping." type="button" id="gwhMappingButton" style="background-color:rgb(255, 140, 140);">' +
-        (a.isMapping ? 'map' : 'brk') +
-        '</button>';
-      mypanel +=
-        '<button title="toggle isGoodGoTd" type="button" id="gwhGoTdButton" style="background-color:rgb(150, 115, 230);">' +
-        (a.isGoodGoTd ? 'Ya' : 'No') +
-        '</button>';
-      mypanel +=
-        '<button title="toggle autoGolems" type="button" id="gwhAutoGolemsButton" style="background-color:rgb(255, 140, 140);">' +
-        (a.autoGolems === 1 ? 'one' : a.autoGolems === 2 ? 'two' : 'all') +
-        '</button>';
-      mypanel +=
-        '<button title="toggle isAutoGolem" type="button" id="gwhAutoGolemButton" style="background-color:rgb(150, 115, 230);">' +
-        (a.isAutoGolem ? 'Ya' : 'No') +
-        '</button>';
-      mypanel +=
-        '<button title="toggle isAutoUpgrade" type="button" id="gwhAutoUpgradeButton" style="background-color:rgb(255, 140, 140);">' +
-        (a.isAutoUpgrade ? 'Ya' : 'No') +
-        '</button>';
-      mypanel += '<br/>';
-    }
+    mypanel += `
+    </details>
+    <details class="eventLocationDetails" name="mypaneldetails"${localStorage.isLocalPanel ? ' open' : ''}>
+      <summary class="eventLocationSummary" style="width: 6em;height: 1.4em;background-color: #22ff22cc;cursor: pointer;place-content: center;font-size: 16px;">Local</summary>
+        <select id="eventLocationsSelect">
+          <option value="greatWinterHunt">GWH</option>
+        </select>
+        <button type="button" style="background-color: #fc0000ff;"" id="saveReloadEventLocationButton">Save(Left Click)/Reload(Right Click) settings</button>
+        <button type="button" style="background-color: #00fc00ff;"" id="reRunEventLocationButton">re-run eventLocation</button>
+        <div id="eventLocationsSettingsDiv"></div>
+    `;
     // LNY
     if (isLny) {
       storageKey = 'lunarNewYear';
@@ -696,6 +1239,19 @@ const locationAnchor = {
       mypanel += `<input title="Reserved Cheese Quantity" type="text" id="minBaitQuantity" value="${JSON.stringify(settings.minBaitQuantity)}" style="width: 8em;">`
       mypanel += `<input title="map剩餘 goal高於此,不使用 index低於 mapEndingPriorityBegin的 bait.因為 map一定是 3-6-6組合" type="number" id="mapEndingQuantity" value="${settings.mapEndingQuantity}" style="width: 2em;">`;
       mypanel += `<input title="map剩餘 goal高於 mapEndingQuantity,不使用 index低於此的 bait.因為 map一定是 3-6-6組合" type="number" id="mapEndingPriorityBegin" value="${settings.mapEndingPriorityBegin}" style="width: 2em;">`;
+    }
+    // Fort Rox
+    const isFrox = environmentType == 'fort_rox';
+    // prettier-ignore
+    if (isFrox) {
+      storageKey = 'fort_rox';
+      const a = JSON.parse(localStorage[storageKey]);
+      mypanel += `
+        <input title="Must be after this time to auto enter night" type="text" id="enterAfterTimeInput" value="${a.enterAfterTime}" style="width: 10em;">
+        <input title="Must have effective meteorite(meteorite+3*Crescent, 0 if use Moon) more than this number to auto enter night" type="number" id="meteoriteMoreThanInput" value="${a.meteoriteMoreThan}" style="width: 4em;">
+        <input title="Must have howlite less than this number to auto enter night" type="number" id="howliteLessThanInput" value="${a.howliteLessThan}" style="width: 3em;">
+        <input title="Must have bloodstone less than this number to auto enter night" type="number" id="bloodStoneLessThanInput" value="${a.bloodStoneLessThan}" style="width: 3em;">
+      `;
     }
     // FRift
     const isFRift = environmentType == 'rift_furoma';
@@ -884,36 +1440,22 @@ const locationAnchor = {
     mypanel += `</details></div>`;
     // eslint-disable-next-line no-undef
     $(mypanel).appendTo('body');
+    // prettier-ignore
     const setValuesGeneralDetails = () => {
       const mypanel = document.querySelector('#mypanel');
       let tmp = localStorage.maptainType;
-      let txt =
-        tmp === 'always'
-          ? 'Mptn'
-          : tmp === 'once'
-          ? 'Once'
-          : tmp === 'never'
-          ? 'Never'
-          : 'No';
+      let txt = tmp === 'always' ? 'Mptn' : tmp === 'once' ? 'Once' : tmp === 'never' ? 'Never' : 'No';
       mypanel.querySelector('#maptainTypeButton').textContent = txt;
       tmp = localStorage.dusterCycle;
-      txt =
-        tmp === 'always'
-          ? 'Dstr'
-          : tmp === 'once'
-          ? 'Once'
-          : tmp === 'never'
-          ? 'Never'
-          : 'No';
+      txt = tmp === 'always' ? 'Dstr' : tmp === 'once' ? 'Once' : tmp === 'never' ? 'Never' : 'No';
       mypanel.querySelector('#dusterCycleButton').textContent = txt;
-      mypanel.querySelector('#travelToLocation').value =
-        // eslint-disable-next-line no-undef
-        user.environment_type.trim();
+      // eslint-disable-next-line no-undef
+      mypanel.querySelector('#travelToLocation').value = user.environment_type.trim();
     };
     setValuesGeneralDetails();
     document
       .querySelector('#mypanel')
-      .querySelectorAll('summary')[0]
+      .querySelector('.generalSummary')
       .addEventListener('contextmenu', function (e) {
         setValuesGeneralDetails();
         e.preventDefault();
@@ -949,13 +1491,12 @@ const locationAnchor = {
     /* document
       .getElementById('myHornButton')
       .addEventListener('click', function () {
-
         // 這個 class只有 horn可以點的時候才會出現,無需判斷
         document
-        .getElementsByClassName(
-          'huntersHornView__horn huntersHornView__horn--ready'
-        )[0]
-        .click();
+          .getElementsByClassName(
+            'huntersHornView__horn huntersHornView__horn--ready'
+          )[0]
+          .click();
         try {
           const horn = document.getElementsByClassName(
             'huntersHornView__horn huntersHornView__horn--ready'
@@ -1090,146 +1631,35 @@ const locationAnchor = {
             : (hudLocationContent.style.display = 'none');
         }
       });
-    // GWH quick toggle
+    // eslint-disable-next-line no-undef
+    $('#saveReloadEventLocationButton').off('click');
+    // eslint-disable-next-line no-undef
+    $('#saveReloadEventLocationButton').on('click', function (e) {
+      const eventLocation = document.querySelector(
+        '#eventLocationsSelect'
+      ).value;
+      const functionName = eventLocation + 'Save';
+      functions[functionName]();
+      e.preventDefault();
+    });
+    // eslint-disable-next-line no-undef
+    $('#saveReloadEventLocationButton').off('contextmenu');
+    // eslint-disable-next-line no-undef
+    $('#saveReloadEventLocationButton').on('contextmenu', function (e) {
+      const eventLocation = document.querySelector(
+        '#eventLocationsSelect'
+      ).value;
+      let functionName = eventLocation;
+      functions[functionName]();
+      functionName = eventLocation + 'Load';
+      functions[functionName]();
+      e.preventDefault();
+    });
+    // GWH settings
     if (isGwh) {
-      storageKey = 'greatWinterHunt';
-      // toggle PP/GPP
-      document
-        .getElementById('chGppButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          // prettier-ignore
-          const isPp = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-          // prettier-ignore
-          const isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
-          // prettier-ignore
-          const isGouda = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
-          // prettier-ignore
-          a.winter_hunt_grove.ppTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          // prettier-ignore
-          a.winter_hunt_grove.ppTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          localStorage[storageKey] = JSON.stringify(a);
-          // prettier-ignore
-          e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      document
-        .getElementById('gwGppButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          // prettier-ignore
-          const isPp = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-          // prettier-ignore
-          const isSb = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
-          // prettier-ignore
-          const isGouda = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
-          // prettier-ignore
-          a.winter_hunt_workshop.ppTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          // prettier-ignore
-          a.winter_hunt_workshop.ppTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          localStorage[storageKey] = JSON.stringify(a);
-          // prettier-ignore
-          e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      document
-        .getElementById('ifGppButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          // prettier-ignore
-          const isPp = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-          // prettier-ignore
-          const isSb = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
-          // prettier-ignore
-          const isGouda = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
-          // prettier-ignore
-          a.winter_hunt_fortress.fsTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          // prettier-ignore
-          a.winter_hunt_fortress.fsTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          // prettier-ignore
-          a.winter_hunt_fortress.ppTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          // prettier-ignore
-          a.winter_hunt_fortress.ppTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-          localStorage[storageKey] = JSON.stringify(a);
-          // prettier-ignore
-          e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle mapping
-      document
-        .getElementById('gwhMappingButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          const prop = 'isMapping';
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'map' : 'brk';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isGoodGoTd
-      document
-        .getElementById('gwhGoTdButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          const prop = 'isGoodGoTd';
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'Ya' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle autoGolems
-      document
-        .getElementById('gwhAutoGolemsButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          const prop = 'autoGolems';
-          a[prop] = a[prop] === 3 ? 2 : a[prop] === 2 ? 1 : 3;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML =
-            a[prop] === 1 ? 'one' : a[prop] === 2 ? 'two' : 'all';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isAutoGolem
-      document
-        .getElementById('gwhAutoGolemButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          const prop = 'isAutoGolem';
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'Ya' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isAutoUpgrade
-      document
-        .getElementById('gwhAutoUpgradeButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          const prop = 'isAutoUpgrade';
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'Ya' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isAutoMapping
-      document
-        .getElementById('gwhAutoMappingButton')
-        .addEventListener('click', function (e) {
-          const a = JSON.parse(localStorage[storageKey]);
-          const prop = 'isAutoMapping';
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'Ya' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
+      document.querySelector('#eventLocationsSelect').value = 'greatWinterHunt';
+      functions.greatWinterHunt();
+      functions.greatWinterHuntLoad();
     }
     // LNY quick toggle
     if (isLny) {
@@ -1712,7 +2142,6 @@ const locationAnchor = {
     claimRewards(document.getElementById('myClaimRewardsLi'));
   }, 3000);
 })();
-
 // Utilities
 /**
  * logging function.

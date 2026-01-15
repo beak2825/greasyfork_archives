@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN: BasicK Suite
 // @namespace    dekleinekobini.private.basick-suite
-// @version      1.5.0
+// @version      1.6.0
 // @author       DeKleineKobini [2114440]
 // @description  Multiple features for BasicK.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
@@ -82,111 +82,10 @@
       document.head.appendChild(styleElement);
     });
   }
-  function isTornPDA() {
-    return "flutter_inappwebview" in window;
-  }
-  function getPDAPlatform() {
-    return window.flutter_inappwebview.callHandler("getPlatform");
-  }
-  function getPDATabState() {
-    return window.flutter_inappwebview.callHandler("PDA_getTabState");
-  }
-  let notificationChannel;
-  let isLeader = false;
-  const identifier = crypto.randomUUID();
-  const HEARTBEAT_INTERVAL = 800;
-  const LEADER_TIMEOUT = 1500;
-  let lastLeaderSeen = 0;
-  let currentLeader = null;
-  async function initializeTabLock() {
-    if (isTornPDA()) {
-      const { platform } = await getPDAPlatform();
-      if (platform === "iOS") {
-        const initialState = await getPDATabState();
-        if (initialState) {
-          isLeader = initialState.isActiveTab;
-          initializePDAListener();
-          return;
-        }
-      }
-    }
-    try {
-      initializeChannel();
-    } catch {
-      console.warn("BroadcastChannel not supported, assuming leadership");
-      isLeader = true;
-    }
-  }
-  function initializePDAListener() {
-    window.addEventListener("tornpda:tabState", (event) => {
-      if (!("detail" in event)) return;
-      const { isActiveTab } = event.detail;
-      isLeader = isActiveTab;
-    });
-  }
-  function initializeChannel() {
-    try {
-      notificationChannel = new BroadcastChannel("basick-money-notification");
-    } catch (e) {
-      return;
-    }
-    notificationChannel.addEventListener("message", handleMessage);
-    electLeader();
-    setInterval(() => {
-      if (isLeader) {
-        notificationChannel.postMessage({
-          type: "heartbeat",
-          tabId: identifier,
-          timestamp: Date.now()
-        });
-      }
-    }, HEARTBEAT_INTERVAL);
-    setInterval(checkLeaderTimeout, 500);
-  }
-  function handleMessage(event) {
-    const { type, tabId } = event.data;
-    if (type === "heartbeat" && tabId < identifier) {
-      isLeader = false;
-      currentLeader = tabId;
-      lastLeaderSeen = Date.now();
-    } else if (type === "leadership-claim" && tabId !== identifier) {
-      isLeader = false;
-      currentLeader = tabId;
-      lastLeaderSeen = Date.now();
-    }
-  }
-  function electLeader() {
-    isLeader = false;
-    currentLeader = null;
-    notificationChannel.postMessage({
-      type: "election-request",
-      tabId: identifier,
-      timestamp: Date.now()
-    });
-    setTimeout(() => {
-      if (currentLeader === null) {
-        isLeader = true;
-        currentLeader = identifier;
-        lastLeaderSeen = Date.now();
-        notificationChannel.postMessage({
-          type: "leadership-claim",
-          tabId: identifier,
-          timestamp: Date.now()
-        });
-      }
-    }, 100);
-  }
-  function checkLeaderTimeout() {
-    if (!(currentLeader && currentLeader !== identifier)) return;
-    if (Date.now() - lastLeaderSeen > LEADER_TIMEOUT) {
-      electLeader();
-    }
-  }
   const _ALERT_THRESHOLD = ALERT_THRESHOLD;
-  const stylesString$1 = ".moneyAlertWrapper {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    z-index: 1000000;\r\n    background-color: #00000059;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n}\r\n\r\n.moneyAlert {\r\n    background-color: #ccc;\r\n    padding: 10px;\r\n    border-radius: 5px;\r\n}";
+  const stylesString$1 = ".moneyAlertWrapper {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 1000000;\n    background-color: #00000059;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.moneyAlert {\n    background-color: #ccc;\n    padding: 10px;\n    border-radius: 5px;\n}";
   let onHand;
   async function enableMoneyNotification() {
-    await initializeTabLock();
     includeStyle(stylesString$1);
     const moneyElement = await findBySelectorDelayed(document, "#user-money");
     if (!moneyElement) return;
@@ -204,32 +103,38 @@
         if (Math.abs(difference) >= _ALERT_THRESHOLD) {
           triggerAlert();
         }
-      }, 250);
+      }, 400);
     }).observe(moneyElement, { attributes: true });
   }
   function triggerAlert() {
     if (isHospitalized()) {
       return;
     }
+    if (!document.hasFocus()) {
+      return;
+    }
     if (isMobileView()) {
       triggerMobileAlert();
       return;
     }
-    if (isLeader) {
-      GM_notification({
-        text: "Your money on hand increased.",
-        title: "Money Monitor",
-        url: "https://www.torn.com/properties.php#/p=options&tab=vault",
-        timeout: 5e3
-      });
-    }
+    GM_notification({
+      text: "Your money on hand increased.",
+      title: "Money Monitor",
+      url: "https://www.torn.com/properties.php#/p=options&tab=vault",
+      timeout: 5e3
+    });
   }
   const MOBILE_ALERT = new Audio("https://audio.jukehost.co.uk/gxd2HB9RibSHhr13OiW6ROCaaRbD8103");
+  let isPlaying = false;
   function triggerMobileAlert() {
-    if (document.visibilityState === "hidden") return;
-    void MOBILE_ALERT.play();
+    if (isPlaying) return;
+    isPlaying = true;
+    MOBILE_ALERT.currentTime = 0;
+    MOBILE_ALERT.play().finally(() => {
+      setTimeout(() => isPlaying = false, MOBILE_ALERT.duration * 1.5);
+    });
   }
-  const stylesString = '[class*="price___"][data-basick-initialised] {\r\n    flex-direction: column;\r\n    align-items: end;\r\n    justify-content: center;\r\n}\r\n\r\n.basick-market-price {\r\n    color: #2fe44a;\r\n}';
+  const stylesString = '[class*="price___"][data-basick-initialised] {\n    flex-direction: column;\n    align-items: end;\n    justify-content: center;\n}\n\n.basick-market-price {\n    color: #2fe44a;\n}';
   function enableMarketPrice() {
     includeStyle(stylesString);
     handleViewChange();

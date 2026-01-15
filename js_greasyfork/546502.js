@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         中文Wikipedia移动版智能折叠章节
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  在zh.m.wikipedia.org自动折叠参见、参考链接、外部链接等章节，需在设置中启用启用"自动展开所有章节"
-// @author       Claude
+// @author       Claude Opus
 // @match        https://zh.m.wikipedia.org/*
 // @match        https://zh.wikipedia.org/*
 // @grant        GM_setValue
@@ -17,10 +17,8 @@
     'use strict';
 
     // 要折叠的章节标题（绝对匹配）
-    const TARGET_SECTIONS = ['备注', '参见', '参考', '参考链接', '参考来源', '参考来源与注释', '参考文献', '参考书目', '参考资料', '参考注释', '参看', '参阅', '关联项目', '脚注', '扩展阅读', '来源', '另见', '书籍', '拓展阅读', '外部连结', '外部连接', '外部链接', '外部阅读', '文献', '相关连结', '相关条目', '相关作品', '信息来源', '研究书目', '延伸阅读', '引用', '引用文献', '注解', '注脚', '注释', '著名人物', '资料来源']
+    const TARGET_SECTIONS = ['备注', '参见', '参考', '参考链接', '参考来源', '参考来源与注释', '参考文献', '参考书目', '参考信息', '参考资料', '参考注释', '参看', '参阅', '关联项目', '脚注', '扩展阅读', '来源', '另见', '书籍', '拓展阅读', '外部连结', '外部连接', '外部链接', '外部阅读', '文献', '相关连结', '相关书目', '相关条目', '相关作品', '信息来源', '研究书目', '延伸阅读', '引用', '引用文献', '注解', '注脚', '注释', '注释或参考', '著名人物', '资料来源', '参考资料与备注', '注解及参考资料'];
 
-;
-    
     // 存储键名
     const STORAGE_KEY = 'wiki_sections_collapsed';
     
@@ -29,6 +27,9 @@
     
     // 存储已处理的章节
     let processedSections = new Set();
+    
+    // ★ 新增：标记是否已完成初始折叠
+    let hasCompletedInitialCollapse = false;
 
     // 日志函数
     function log(message) {
@@ -264,6 +265,12 @@
     let isProcessing = false;
     
     function debouncedProcessSections() {
+        // ★ 修改：如果已完成初始折叠，不再自动处理
+        if (hasCompletedInitialCollapse) {
+            log('已完成初始折叠，跳过自动处理');
+            return;
+        }
+        
         if (isProcessing) {
             log('正在处理中，跳过本次触发');
             return;
@@ -271,7 +278,7 @@
         
         clearTimeout(processTimeout);
         processTimeout = setTimeout(() => {
-            if (isCollapsed && !isProcessing) {
+            if (isCollapsed && !isProcessing && !hasCompletedInitialCollapse) {
                 isProcessing = true;
                 log('开始防抖处理章节');
                 processSections();
@@ -283,9 +290,14 @@
         }, 1500);
     }
 
-    // 监听DOM变化
+    // ★ 修改：监听DOM变化 - 仅在初始折叠完成前工作
     function setupMutationObserver() {
         const observer = new MutationObserver((mutations) => {
+            // ★ 如果已完成初始折叠，不再响应DOM变化
+            if (hasCompletedInitialCollapse) {
+                return;
+            }
+            
             let shouldProcess = false;
             let hasStyleChanges = false;
             
@@ -344,35 +356,46 @@
         log('DOM变化监听器已启动');
     }
 
-    // 设置URL变化监听
+    // ★ 修改：设置URL变化监听 - 只在页面路径真正变化时才重新处理
     function setupUrlChangeListener() {
-        let lastUrl = location.href;
+        let lastPathname = location.pathname;  // ★ 只记录pathname，忽略hash和search
         
         const urlObserver = new MutationObserver(() => {
-            const currentUrl = location.href;
-            if (currentUrl !== lastUrl) {
-                lastUrl = currentUrl;
-                log('检测到URL变化: ' + currentUrl);
+            const currentPathname = location.pathname;
+            // ★ 只有当pathname变化时才认为是真正的页面导航
+            if (currentPathname !== lastPathname) {
+                lastPathname = currentPathname;
+                log('检测到页面导航: ' + currentPathname);
                 
-                // URL变化后清空记录并重新处理
+                // 页面导航后重置状态并重新处理
                 processedSections.clear();
+                hasCompletedInitialCollapse = false;  // ★ 重置初始折叠标志
+                
                 setTimeout(() => {
                     if (isCollapsed && !isProcessing) {
                         debouncedProcessSections();
                     }
                 }, 1500);
             }
+            // ★ 如果只是hash或search变化（如打开搜索框），不做任何处理
         });
         
         urlObserver.observe(document, { subtree: true, childList: true });
         
         window.addEventListener('popstate', () => {
-            processedSections.clear();
-            setTimeout(() => {
-                if (isCollapsed && !isProcessing) {
-                    debouncedProcessSections();
-                }
-            }, 1000);
+            const currentPathname = location.pathname;
+            // ★ 同样只在pathname变化时处理
+            if (currentPathname !== lastPathname) {
+                lastPathname = currentPathname;
+                processedSections.clear();
+                hasCompletedInitialCollapse = false;
+                
+                setTimeout(() => {
+                    if (isCollapsed && !isProcessing) {
+                        debouncedProcessSections();
+                    }
+                }, 1000);
+            }
         });
     }
 
@@ -385,14 +408,25 @@
         setupMutationObserver();
         setupUrlChangeListener();
         
-        // 页面加载完成后处理
+        // ★ 修改：页面加载完成后只处理一次
         const processWhenReady = () => {
+            // ★ 如果已完成初始折叠，不再处理
+            if (hasCompletedInitialCollapse) {
+                log('已完成初始折叠，跳过');
+                return;
+            }
+            
             if (isCollapsed && !isProcessing) {
                 isProcessing = true;
                 setTimeout(() => {
-                    processSections();
+                    const count = processSections();
                     setTimeout(() => {
                         isProcessing = false;
+                        // ★ 标记初始折叠已完成
+                        if (count > 0 || document.readyState === 'complete') {
+                            hasCompletedInitialCollapse = true;
+                            log('初始折叠已完成，后续URL变化将不再自动折叠');
+                        }
                     }, 2000);
                 }, 500);
             }
@@ -406,9 +440,17 @@
             setTimeout(processWhenReady, 500);
         }
         
-        // 多次延迟执行，确保处理动态加载的内容
-        setTimeout(processWhenReady, 2000);
-        setTimeout(processWhenReady, 4000);
+        // ★ 修改：只保留一次延迟执行，并在完成后标记
+        setTimeout(() => {
+            if (!hasCompletedInitialCollapse) {
+                processWhenReady();
+                // 最终标记完成
+                setTimeout(() => {
+                    hasCompletedInitialCollapse = true;
+                    log('初始折叠流程结束');
+                }, 3000);
+            }
+        }, 2000);
         
         log('脚本初始化完成');
     }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         query与debug信息校验
 // @namespace    federation-debug-info-parser
-// @version      5.17.2
+// @version      5.17.3
 // @author       修越
 // @license      修越
 // @description  1.提取抓取query与debug信息query并校验异常；2.展示召回原因与评估结果；3.联动评估模板与搜索结果；4.支持看后搜视频/直播；5.提供功能说明tab。
@@ -80,7 +80,7 @@
   const pendingV2Responses = [];
   let videoUrl = null;
 
-  let activeTab = 'query'; 
+  let activeTab = 'query';
   let contentDisplayState = 'block';
 
   const instantRecallList = [
@@ -157,7 +157,7 @@
   }
 
   /***********************
-   * 修复后的召回判断函数
+   * 召回判断函数
    ***********************/
   const SPECIAL_AD = 'ad_user_ecom_product_extend_query_recall';
   const SPECIAL_LIFE = 'darwin_life_search_after_read_recall';
@@ -244,13 +244,16 @@
         continue;
       }
 
-      collectedDataV2 = (task.crawl_result || []).map(c => {
-        const arr = Array.isArray(c.data) ? c.data : [c.data].filter(Boolean);
-        return arr.map(d => ({
-          html: d?.display?.title || '',
-          text: extractText(d?.display?.title)
-        }));
-      });
+        collectedDataV2 = (task.crawl_result || [])
+            .filter(c => c && c.data)   // ★ 关键：过滤 null 环境
+            .map(c => {
+            const arr = Array.isArray(c.data) ? c.data : [];
+            return arr.map(d => ({
+                html: d?.display?.title || '',
+                text: extractText(d?.display?.title)
+            }));
+        });
+
     }
 
     pendingV2Responses.length = 0;
@@ -270,7 +273,7 @@
   }
 
   /***********************
-   * UI 面板等原样保持
+   * UI 面板
    ***********************/
   function ensurePanel() {
     if (panelExists) return;

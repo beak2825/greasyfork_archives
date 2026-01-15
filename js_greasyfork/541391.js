@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          TreeDibsMapper (Refactored)
 // @namespace     http://tampermonkey.net/
-// @version       3.11.11
+// @version       3.12.1
 // @description   Dibs, Faction-wide notes, and war management systems for Torn (PC AND TornPDA Support)
 // @author        TreeMapper [3573576]
 // @match         https://www.torn.com/loader.php?sid=attack&user2ID=*
@@ -154,7 +154,7 @@
 
     // Central configuration
     const config = {
-        VERSION: '3.11.11',
+        VERSION: '3.12.1',
         API_GET_URL: 'https://apiget-codod64xdq-uc.a.run.app',
         API_POST_URL: 'https://apipost-codod64xdq-uc.a.run.app',
         API_HTTP_GET_URL: 'https://us-central1-tornuserstracker.cloudfunctions.net/apiHttpGet',
@@ -235,28 +235,28 @@
                 error: '#f44336',
                 warning: '#ff9800',
                 info: '#2196F3',
-                dibsSuccess: '#ac241bff',
-                dibsSuccessHover: '#7a1e1a',
-                dibsOther: '#0f882bff',
-                dibsOtherHover: '#0a7028ff',
-                dibsInactive: '#4b4232ff',
-                dibsInactiveHover: '#362f22ff',
-                noteInactive: '#4a4f58',
-                noteInactiveHover: '#56606b',
-                noteActive: '#ffa200ff',
-                noteActiveHover: '#d17a00ff',
-                medDealInactive: '#1a2b1eff',
-                medDealInactiveHover: '#36543e',
-                medDealSet: '#b600ad',
-                medDealSetHover: '#9C27B0',
-                medDealMine: '#9001b7ff',
-                medDealMineHover: '#370053ff',
+                dibsSuccess: '#22c55e',
+                dibsSuccessHover: '#16a34a',
+                dibsOther: '#ef4444',
+                dibsOtherHover: '#dc2626',
+                dibsInactive: '#2196F3',
+                dibsInactiveHover: '#1976D2',
+                noteInactive: 'rgba(33, 150, 243, 0.7)',
+                noteInactiveHover: 'rgba(33, 150, 243, 0.85)',
+                noteActive: '#2196F3',
+                noteActiveHover: '#1976D2',
+                medDealInactive: '#f97316',
+                medDealInactiveHover: '#ea580c',
+                medDealSet: '#22c55e',
+                medDealSetHover: '#16a34a',
+                medDealMine: '#a855f7',
+                medDealMineHover: '#9333ea',
                 assistButton: '#40004bff',
                 assistButtonHover: '#35003aff',
                 modalBg: '#1a1a1a',
                 modalBorder: '#333',
                 buttonBg: '#2c2c2c',
-                mainColor: '#344556'
+                mainColor: '#2196F3'
             }
         }
     };
@@ -1053,13 +1053,20 @@
                     btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = cls;
-                    btn.style.minWidth = 'auto';
-                    btn.style.padding = '0';
+                    // visual sizing handled by CSS (applyGeneralStyles)
+                    // Compact option: tightly constrain dimensions so button doesn't grow row height
+                    const compact = !!options.compact;
                     // If withLabel, show small text; else show icon-only (SVG) to match existing CSS expectations
                     if (options.withLabel) {
                         btn.textContent = 'Note';
                     } else {
-                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a3 3 0 0 1 3 3v13"/><path d="M14 2v4"/><path d="M6 2v4"/><path d="M4 10h16"/><path d="M8 14h2"/><path d="M8 18h4"/></svg>';
+                        if (compact) {
+                            // compact variant: add class and minimal markup; sizing is in CSS
+                            btn.className += ' tdm-note-compact';
+                            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a3 3 0 0 1 3 3v13"/><path d="M14 2v4"/><path d="M6 2v4"/><path d="M4 10h16"/><path d="M8 14h2"/><path d="M8 18h4"/></svg>';
+                        } else {
+                            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a3 3 0 0 1 3 3v13"/><path d="M14 2v4"/><path d="M6 2v4"/><path d="M4 10h16"/><path d="M8 14h2"/><path d="M8 18h4"/></svg>';
+                        }
                     }
                     btn.title = '';
                     btn.setAttribute('aria-label','');
@@ -1077,40 +1084,39 @@
                     const want = 'btn note-button ' + (has ? 'active-note-button' : 'inactive-note-button');
                     if (btn.className !== want) btn.className = want;
 
+                    // Compact-mode preview: show a single-line truncated text preview
+                    if (btn.classList && btn.classList.contains('tdm-note-compact')) {
+                        try {
+                            if (has) {
+                                const maxLen = 120; // allow longer preview inside doubled width
+                                const preview = txt.length > maxLen ? (txt.slice(0, maxLen - 1) + '\u2026') : txt;
+                                if (btn.textContent !== preview || btn.querySelector('svg')) btn.textContent = preview;
+                                // Visual truncation handled by CSS via .tdm-note-preview
+                                btn.classList.add('tdm-note-preview');
+                                const sv = btn.querySelector('svg'); if (sv) sv.remove();
+                            } else {
+                                try { const sv = btn.querySelector('svg'); if (sv) sv.remove(); } catch(_) {}
+                                if (btn.textContent !== 'Notes') btn.textContent = 'Notes';
+                                btn.classList.remove('tdm-note-preview');
+                                btn.classList.add('tdm-note-empty');
+                            }
+                        } catch(_) {}
+                        if (btn.title !== txt) btn.title = txt;
+                        if (btn.getAttribute('aria-label') !== txt) btn.setAttribute('aria-label', txt);
+                        return;
+                    }
+
                     // If this is a text-label button (no SVG icon), update text content to show the note
                     if (!btn.querySelector('svg')) {
                         if (has) {
                             if (btn.textContent !== txt) btn.textContent = txt;
-                            // Style for multiline + truncation
-                            btn.style.whiteSpace = 'pre'; 
-                            btn.style.overflow = 'hidden';
-                            btn.style.textOverflow = 'ellipsis';
-                            btn.style.textAlign = 'left';
-                            // Flexbox for top-left alignment
-                            btn.style.display = 'flex';
-                            btn.style.alignItems = 'flex-start';
-                            btn.style.justifyContent = 'flex-start';
-                            btn.style.padding = '2px'; // Slight padding for readability
-                            
-                            btn.style.width = '100%';
-                            btn.style.maxWidth = '100%';
+                            // Let CSS handle multiline/truncation and layout
+                            btn.classList.add('tdm-note-expanded');
                         } else {
                             if (btn.textContent !== 'Note') btn.textContent = 'Note';
-                            // Reset styles
-                            btn.style.whiteSpace = '';
-                            btn.style.overflow = '';
-                            btn.style.textOverflow = '';
-                            btn.style.textAlign = '';
-                            btn.style.display = '';
-                            btn.style.alignItems = '';
-                            btn.style.justifyContent = '';
-                            btn.style.padding = '0';
-                            btn.style.width = '';
-                            btn.style.maxWidth = '';
+                            btn.classList.remove('tdm-note-expanded');
                         }
-                    } else if (!btn.textContent) {
-                        // ensure some visible affordance exists (fallback icon)
-                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a3 3 0 0 1 3 3v13"/><path d="M14 2v4"/><path d="M6 2v4"/><path d="M4 10h16"/><path d="M8 14h2"/><path d="M8 18h4"/></svg>';
+                    
                     }
                     if (btn.title !== txt) btn.title = txt;
                     if (btn.getAttribute('aria-label') !== txt) btn.setAttribute('aria-label', txt);
@@ -1619,6 +1625,14 @@
                     // Landed subtype convenience flags (separate from canonical; consumer can inspect)
                     let landedTornRecent = false;
                     let landedAbroadRecent = false;
+                    // If an inbound flight reached its ETA but Torn still reports the player as Abroad,
+                    // treat this as a landed-in-Torn state to avoid showing stale "Abroad <dest>" after arrival.
+                    if (prevRec && prevRec.isreturn && prevRec.arrivalMs && (now - prevRec.arrivalMs) >= 0 && (now - prevRec.arrivalMs) <= graceMs && canonical === 'Abroad') {
+                        canonical = 'Okay';
+                        landedTornRecent = true;
+                        landedGrace = true;
+                        dest = 'Torn';
+                    }
                     if (prevRec && (prevRec.canonical === 'Travel' || prevRec.canonical === 'Returning') && (canonical !== 'Travel' && canonical !== 'Returning')) {
                         const withinGrace = !prevRec.arrivalMs || (now - prevRec.arrivalMs) <= graceMs;
                         if (withinGrace) {
@@ -9304,12 +9318,26 @@
             if (!modal) {
                 modal = utils.createElement('div', {
                     id,
+                    className: 'tdm-report-modal',
                     style: {
-                        position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                        backgroundColor: config.CSS.colors.modalBg, border: `2px solid ${config.CSS.colors.modalBorder}`,
-                        borderRadius: '4px', padding: '8px', zIndex: 10000, color: 'white',
-                        width, maxWidth, minWidth: '320px', maxHeight: '80vh', overflowY: 'auto', overflowX: 'auto',
-                        boxShadow: '0 4px 8px rgba(0,0,0,0.5)'
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: 'var(--tdm-modal-bg)',
+                        border: '1px solid var(--tdm-modal-border)',
+                        borderRadius: 'var(--tdm-radius-lg)',
+                        padding: 'var(--tdm-space-lg)',
+                        zIndex: 'var(--tdm-z-modal)',
+                        color: 'var(--tdm-text-primary)',
+                        width,
+                        maxWidth,
+                        minWidth: '320px',
+                        maxHeight: '80vh',
+                        overflowY: 'auto',
+                        overflowX: 'auto',
+                        boxShadow: 'var(--tdm-shadow-modal)',
+                        animation: 'tdmFadeIn var(--tdm-transition-normal) forwards'
                     }
                 });
                 document.body.appendChild(modal);
@@ -9318,18 +9346,29 @@
             modal.style.display = 'block';
 
             const closeBtn = utils.createElement('button', {
-                className: `${id}-close`,
+                className: `${id}-close tdm-btn tdm-btn--danger tdm-btn--sm`,
                 style: {
-                    position: 'absolute', top: '8px', right: '12px', background: config.CSS.colors.error,
-                    color: 'white', border: 'none', borderRadius: '4px', padding: '4px 10px', cursor: 'pointer',
-                    fontWeight: 'bold', zIndex: 10001
+                    position: 'absolute',
+                    top: 'var(--tdm-space-md)',
+                    right: 'var(--tdm-space-lg)',
+                    minWidth: '32px',
+                    fontWeight: 'bold'
                 },
                 textContent: 'X'
             });
-            const header = utils.createElement('h2', { style: { marginTop: '0', marginRight: '28px' }, textContent: title || 'Report' });
-            const controls = utils.createElement('div', { id: `${id}-controls`, style: { marginBottom: '8px' } });
+            const header = utils.createElement('h2', {
+                style: {
+                    marginTop: '0',
+                    marginRight: '40px',
+                    marginBottom: 'var(--tdm-space-md)',
+                    fontSize: 'var(--tdm-font-size-lg)',
+                    color: 'var(--tdm-text-accent)'
+                },
+                textContent: title || 'Report'
+            });
+            const controls = utils.createElement('div', { id: `${id}-controls`, style: { marginBottom: 'var(--tdm-space-md)' } });
             const tableWrap = utils.createElement('div', { id: `${id}-table`, style: { width: '100%' } });
-            const footer = utils.createElement('div', { id: `${id}-footer`, style: { marginTop: '12px', fontSize: '0.95em', color: '#aaa' } });
+            const footer = utils.createElement('div', { id: `${id}-footer`, style: { marginTop: 'var(--tdm-space-lg)', fontSize: 'var(--tdm-font-size-sm)', color: 'var(--tdm-text-secondary)' } });
 
             modal.appendChild(closeBtn);
             modal.appendChild(header);
@@ -9356,7 +9395,7 @@
             const clearLoading = () => { const el = document.getElementById(`${id}-loading`); if (el) el.remove(); };
             const setError = (msg) => {
                 clearLoading();
-                controls.appendChild(utils.createElement('div', { style: { color: config.CSS.colors.error }, textContent: msg || 'Unexpected error' }));
+                controls.appendChild(utils.createElement('div', { style: { color: 'var(--tdm-color-error)' }, textContent: msg || 'Unexpected error' }));
             };
 
             return { modal, header, controls, tableWrap, footer, setLoading, clearLoading, setError };
@@ -9366,7 +9405,16 @@
         renderReportTable: function(container, { columns, rows, defaultSort = { key: columns?.[0]?.key, asc: true }, tableId, manualSort = false, onSortChange } = {}) {
             const table = utils.createElement('table', {
                 id: tableId || undefined,
-                style: { width: '100%', minWidth: '900px', borderCollapse: 'collapse', background: '#222', color: 'white' }
+                className: 'tdm-report-table',
+                style: {
+                    width: '100%',
+                    minWidth: '900px',
+                    borderCollapse: 'collapse',
+                    background: 'var(--tdm-bg-secondary)',
+                    color: 'var(--tdm-text-primary)',
+                    borderRadius: 'var(--tdm-radius-sm)',
+                    overflow: 'hidden'
+                }
             });
             const thead = utils.createElement('thead');
             const tbody = utils.createElement('tbody');
@@ -9383,10 +9431,10 @@
                 return isFinite(n) && s.trim() !== '' ? n : s.toLowerCase();
             };
 
-            const headerRow = utils.createElement('tr', { style: { background: '#333' } });
+            const headerRow = utils.createElement('tr', { style: { background: 'var(--tdm-bg-card)' } });
             columns.forEach(col => {
                 const th = utils.createElement('th', {
-                    style: { padding: '6px', cursor: 'pointer', textAlign: col.align || 'left', width: col.width || undefined }
+                    style: { padding: 'var(--tdm-space-md)', cursor: 'pointer', textAlign: col.align || 'left', width: col.width || undefined, fontWeight: '600', color: 'var(--tdm-text-accent)' }
                 }, [document.createTextNode(col.label)]);
                 th.dataset.sort = col.key;
                 th.onclick = () => {
@@ -9418,9 +9466,9 @@
                 });
                 tbody.innerHTML = '';
                 for (const r of data) {
-                    const tr = utils.createElement('tr', { style: { background: '#2c2c2c', color: 'white' } });
+                    const tr = utils.createElement('tr', { style: { background: 'var(--tdm-bg-card)', color: 'var(--tdm-text-primary)', borderBottom: '1px solid var(--tdm-bg-secondary)' } });
                     for (const c of columns) {
-                        const td = utils.createElement('td', { style: { padding: '6px', color: 'white', textAlign: (c.align || 'left') } });
+                        const td = utils.createElement('td', { style: { padding: 'var(--tdm-space-md)', color: 'var(--tdm-text-primary)', textAlign: (c.align || 'left') } });
                         const val = renderCell(c, r);
                         if (val instanceof Node) td.appendChild(val); else td.textContent = val == null ? '' : String(val);
                         tr.appendChild(td);
@@ -11114,12 +11162,12 @@
             if (!subrow) subrow = utils.createElement('div', { className: 'dibs-notes-subrow' });
             if (!isCurrentTableOurFaction) {
                 if (!subrow.querySelector('.dibs-btn')) {
-                    subrow.appendChild(utils.createElement('button', { className: 'btn dibs-btn btn-dibs-inactive tdm-soften', textContent: 'Dibs' }));
+                    subrow.appendChild(utils.createElement('button', { className: 'btn tdm-btn dibs-btn btn-dibs-inactive tdm-soften', textContent: 'Dibs' }));
                 }
                 if (!subrow.querySelector('.btn-med-deal-default')) {
-                    subrow.appendChild(utils.createElement('button', { className: 'btn btn-med-deal-default tdm-soften', textContent: 'Med Deal', style: { display: 'none' } }));
+                    subrow.appendChild(utils.createElement('button', { className: 'btn tdm-btn btn-med-deal-default tdm-soften', textContent: 'Med Deal', style: { display: 'none' } }));
                 }
-                utils.ensureNoteButton(subrow);
+                utils.ensureNoteButton(subrow, { compact: true, withLabel: true });
                 let retalContainer = subrow.querySelector('.tdm-retal-container');
                 if (!retalContainer) {
                     // Use a non-growing flex container constrained to the subrow so it
@@ -11129,10 +11177,10 @@
                     subrow.appendChild(retalContainer);
                 }
                 if (!retalContainer.querySelector('.retal-btn')) {
-                    retalContainer.appendChild(utils.createElement('button', { className: 'btn retal-btn tdm-soften', textContent: 'Retal', style: { display: 'none' } }));
+                    retalContainer.appendChild(utils.createElement('button', { className: 'btn tdm-btn retal-btn tdm-soften', textContent: 'Retal', style: { display: 'none' } }));
                 }
             } else {
-                utils.ensureNoteButton(subrow, { disabled: true });
+                utils.ensureNoteButton(subrow, { disabled: true, compact: true, withLabel: true });
             }
             if (!existed) row.appendChild(subrow);
             ui._ensureRankedWarRowInlineOrder(row, subrow);
@@ -11169,7 +11217,7 @@
             let medDealBtn = subrow.querySelector('.btn-med-deal-default');
             if (!medDealBtn) {
                 try {
-                    medDealBtn = utils.createElement('button', { className: 'btn btn-med-deal-default tdm-soften', textContent: 'Med Deal', style: { display: 'none' } });
+                    medDealBtn = utils.createElement('button', { className: 'btn tdm-btn btn-med-deal-default tdm-soften', textContent: 'Med Deal', style: { display: 'none' } });
                     const dibsBtnForInsert = subrow.querySelector('.dibs-btn');
                     const notesBtnForInsert = subrow.querySelector('.note-button');
                     if (dibsBtnForInsert && dibsBtnForInsert.nextSibling) {
@@ -11437,8 +11485,8 @@
                 if (!dibsDealsContainer) {
                     dibsDealsContainer = utils.createElement('div', { className: 'table-cell tdm-dibs-deals-container torn-divider divider-vertical' });
                     const dibsCell = utils.createElement('div', { className: 'dibs-cell' });
-                    dibsCell.appendChild(utils.createElement('button', { className: 'btn dibs-button tdm-soften', textContent: 'Dibs' }));
-                    dibsCell.appendChild(utils.createElement('button', { className: 'btn med-deal-button tdm-soften', style: { display: 'none' }, textContent: 'Med Deal' }));
+                    dibsCell.appendChild(utils.createElement('button', { className: 'btn tdm-btn dibs-button tdm-soften', textContent: 'Dibs' }));
+                    dibsCell.appendChild(utils.createElement('button', { className: 'btn tdm-btn med-deal-button tdm-soften', style: { display: 'none' }, textContent: 'Med Deal' }));
                     dibsDealsContainer.appendChild(dibsCell);
                     row.appendChild(dibsDealsContainer);
                 }
@@ -13697,7 +13745,7 @@
                             if (!existingWarning) {
                                 const scoreCapWarning = utils.createElement('div', {
                                     className: 'score-cap-warning',
-                                    style: { padding: '10px', marginBottom: '10px', backgroundColor: config.CSS.colors.error, color: 'white', borderRadius: '5px', fontWeight: 'bold' },
+                                    style: { padding: '10px', marginBottom: '10px', backgroundColor: 'var(--tdm-color-error)', color: 'white', borderRadius: '5px', fontWeight: 'bold' },
                                     textContent: 'Your individual score cap is reached. Do not attack.'
                                 });
                                 attackContainer.insertBefore(scoreCapWarning, attackContainer.firstChild);
@@ -13719,22 +13767,22 @@
 
                 const buttonRow = utils.createElement('div', { style: { display: 'flex', gap: '4px', justifyContent: 'center', flexWrap: 'nowrap', marginBottom: '8px' } });
                 // ... (Button creation logic is the same)
-                const dibsBtn = utils.createElement('button', { className: 'btn dibs-btn', style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderColor: '#004d4f !important', borderRadius: '3px' } });
+                const dibsBtn = utils.createElement('button', { className: 'btn tdm-btn dibs-btn', style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderRadius: '3px' } });
                 if (utils.updateDibsButton || opponentDibs) utils.updateDibsButton(dibsBtn, opponentId, opponentName, { opponentPolicyCheck: true });
                 buttonRow.appendChild(dibsBtn);
 
                 if (state.warData.warType === 'Termed War') {
-                    const medDealBtn = utils.createElement('button', { className: 'btn med-deal-btn', style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderColor: '#004d4f !important', borderRadius: '3px' } });
+                    const medDealBtn = utils.createElement('button', { className: 'btn tdm-btn med-deal-btn', style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderRadius: '3px' } });
                     if (utils.updateMedDealButton || opponentMedDeal) utils.updateMedDealButton(medDealBtn, opponentId, opponentName);
                     buttonRow.appendChild(medDealBtn);
                 }
 
                 const noteContent = opponentNote?.noteContent || '';
-                const notesBtn = utils.createElement('button', { textContent: noteContent || 'Note', title: noteContent, className: 'btn ' + (noteContent.trim() !== '' ? 'active-note-button' : 'inactive-note-button'), style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderColor: '#004d4f !important', borderRadius: '3px' }, onclick: (e) => ui.openNoteModal(opponentId, opponentName, noteContent, e.currentTarget) });
+                const notesBtn = utils.createElement('button', { textContent: noteContent || 'Note', title: noteContent, className: 'btn tdm-btn ' + (noteContent.trim() !== '' ? 'active-note-button' : 'inactive-note-button'), style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderRadius: '3px' }, onclick: (e) => ui.openNoteModal(opponentId, opponentName, noteContent, e.currentTarget) });
                 buttonRow.appendChild(notesBtn);
 
                 // Always create a Retal button placeholder; updater will control visibility
-                const retalBtn = utils.createElement('button', { className: 'btn retal-btn btn-retal-inactive', style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderColor: '#004d4f !important', borderRadius: '3px', marginLeft: 'auto', display: 'none' }, disabled: true, onclick: () => ui.sendRetaliationAlert(opponentId, opponentName) });
+                const retalBtn = utils.createElement('button', { className: 'btn tdm-btn retal-btn btn-retal-inactive', style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderRadius: '3px', marginLeft: 'auto', display: 'none' }, disabled: true, onclick: () => ui.sendRetaliationAlert(opponentId, opponentName) });
                 buttonRow.appendChild(retalBtn);
                 ui.updateRetaliationButton(retalBtn, opponentId, opponentName);
                 contentFragment.appendChild(buttonRow);
@@ -13743,7 +13791,7 @@
                 assistRow.appendChild(utils.createElement('span', { textContent: 'Need Assistance:', style: { alignSelf: 'center', fontSize: '0.9em', color: '#ffffffff', marginRight: '2px' } }));
                 const assistanceButtons = [{ text: 'Smoke/Flash (Speed)', message: 'Need Smoke/Flash on' }, { text: 'Tear/Pepper (Dex)', message: 'Need Tear/Pepper on' }, { text: 'Help Kill', message: 'Help Kill' }, { text: 'Target Down', message: 'Target Down' }];
                 assistanceButtons.forEach(btnInfo => {
-                    assistRow.appendChild(utils.createElement('button', { className: 'btn req-assist-button', textContent: btnInfo.text, onclick: () => ui.sendAssistanceRequest(btnInfo.message, opponentId, opponentName), style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderColor: '#004d4f !important', borderRadius: '3px' } }));
+                    assistRow.appendChild(utils.createElement('button', { className: 'btn tdm-btn req-assist-button', textContent: btnInfo.text, onclick: () => ui.sendAssistanceRequest(btnInfo.message, opponentId, opponentName), style: { minWidth: '70px', maxWidth: '70px', minHeight: '24px', boxSizing: 'border-box', fontSize: '0.75em', padding: '4px 6px', borderRadius: '3px' } }));
                 });
                 contentFragment.appendChild(assistRow);
 
@@ -14293,7 +14341,7 @@
                         <div class="tdm-note-tags-row">
                             <div class="tdm-note-quick-tags"></div>
                             <input type="text" class="tdm-note-tag-input" placeholder="" maxlength="24" style="display:none;margin-left:6px;" />
-                            <button type="button" class="tdm-note-add-tag-btn" style="margin-left:6px;padding:4px 8px;border-radius:4px;border:1px solid #334155;background:#0f172a;color:#cbd5e1;">Add New Tag</button>
+                            <button type="button" class="tdm-note-add-tag-btn" style="margin-left:6px;padding:4px 8px;border-radius:4px;border:1px solid var(--tdm-bg-secondary);background:var(--tdm-bg-card);color:var(--tdm-text-primary);">Add New Tag</button>
                         </div>
                         <div class="tdm-note-tags-empty" style="display:none"></div>
                     <textarea class="tdm-note-text" rows="1" placeholder="Enter note..." maxlength="5000" style="resize:vertical;min-height:1.4em;max-height:18em;"></textarea>
@@ -14302,7 +14350,7 @@
                         <span class="tdm-note-char">0/5000</span>
                         <span class="tdm-note-meta"></span>
                     </div>
-                    <div class="tdm-note-snapshot" style="display:none;margin:4px 0 8px;padding:6px 8px;border:1px solid #1e293b;background:#0f172a;border-radius:6px;font:11px/1.4 monospace;color:#cbd5e1"></div>
+                    <div class="tdm-note-snapshot" style="display:none;margin:4px 0 8px;padding:6px 8px;border:1px solid var(--tdm-bg-secondary);background:var(--tdm-bg-card);border-radius:6px;font:11px/1.4 monospace;color:var(--tdm-text-primary)"></div>
                     <div class="tdm-note-history-wrap" style="margin-top:6px;max-height:130px;overflow:auto;display:none;">
                         <div class="tdm-note-history-header" style="font-size:10px;color:#64748b;display:flex;align-items:center;gap:8px;">
                             <span>Recent Status Transitions</span>
@@ -14319,39 +14367,119 @@
                 // Styles
                 if (!document.getElementById('tdm-note-style')) {
                         const style = utils.createElement('style', { id:'tdm-note-style', textContent:`
-                        .tdm-note-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(145deg, rgba(15,23,42,0.96), rgba(8,15,26,0.92));color:#f8fafc;border:1px solid rgba(148,163,184,0.25);border-radius:14px;z-index:10020;box-shadow:0 22px 46px -12px rgba(15,23,42,0.75);width:520px;max-width:80vw;padding:18px 20px;font:13px/1.45 'Inter','Segoe UI',sans-serif;backdrop-filter:blur(12px);max-height:85vh;overflow-y:auto;}
-                        .tdm-note-modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:14px;border-bottom:1px solid rgba(148,163,184,0.18);padding-bottom:12px;}
-                        .tdm-note-title-wrap{display:flex;flex-direction:column;gap:4px;min-width:0;}
-                        .tdm-note-title{font-weight:600;font-size:18px;letter-spacing:.02em;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#e2e8f0;}
-                        .tdm-note-actions{display:flex;gap:6px;}
-                        .tdm-note-btn{background:rgba(30,41,59,0.75);border:1px solid rgba(148,163,184,0.35);color:#cbd5f5;cursor:pointer;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0;transition:all .18s ease;}
-                        .tdm-note-btn:hover{background:rgba(59,130,246,0.25);border-color:rgba(59,130,246,0.65);color:#e8f2ff;}
+                        .tdm-note-modal{
+                            position:fixed;
+                            top:50%;
+                            left:50%;
+                            transform:translate(-50%,-50%);
+                            background:var(--tdm-modal-bg);
+                            color:var(--tdm-text-primary);
+                            border:1px solid var(--tdm-modal-border);
+                            border-radius:var(--tdm-radius-xl);
+                            z-index:var(--tdm-z-modal);
+                            box-shadow:var(--tdm-shadow-modal);
+                            width:520px;
+                            max-width:80vw;
+                            padding:var(--tdm-space-xl) var(--tdm-space-xl);
+                            font:var(--tdm-font-size-base)/1.45 'Inter','Segoe UI',sans-serif;
+                            backdrop-filter:blur(12px);
+                            max-height:85vh;
+                            overflow-y:auto;
+                            display:none;
+                        }
+                        .tdm-note-modal[style*="display: block"]{
+                            display:block !important;
+                            opacity:1;
+                        }
+                        .tdm-note-modal-header{
+                            display:flex;
+                            align-items:flex-start;
+                            justify-content:space-between;
+                            margin-bottom:var(--tdm-space-lg);
+                            gap:var(--tdm-space-lg);
+                            border-bottom:1px solid var(--tdm-modal-border);
+                            padding-bottom:var(--tdm-space-lg);
+                        }
+                        .tdm-note-title-wrap{display:flex;flex-direction:column;gap:var(--tdm-space-sm);min-width:0;}
+                        .tdm-note-title{font-weight:600;font-size:var(--tdm-font-size-xl);letter-spacing:.02em;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tdm-text-primary);}
+                        .tdm-note-actions{display:flex;gap:var(--tdm-space-md);}
+                        .tdm-note-btn{
+                            background:var(--tdm-bg-card);
+                            border:1px solid var(--tdm-bg-secondary);
+                            color:var(--tdm-text-secondary);
+                            cursor:pointer;
+                            border-radius:var(--tdm-radius-md);
+                            width:32px;
+                            height:32px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:14px;
+                            padding:0;
+                            transition:all var(--tdm-transition-fast);
+                        }
+                        .tdm-note-btn:hover{background:var(--tdm-color-info);border-color:var(--tdm-color-info);color:var(--tdm-text-primary);}
                         .tdm-note-btn:active{transform:scale(0.96);}
-                        .tdm-note-text{width:85%;background:rgba(9,15,30,0.92);border:1px solid rgba(59,130,246,0.25);color:#f1f5f9;padding:10px 12px;border-radius:10px;resize:vertical;font:13px/1.55 'JetBrains Mono',monospace;min-height:40px;box-shadow:inset 0 0 0 1px rgba(30,64,175,0.18);}
-                        .tdm-note-text:focus{outline:none;border-color:rgba(96,165,250,0.9);box-shadow:0 0 0 1px rgba(96,165,250,0.8);}
-                        .tdm-note-footer{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:14px;margin-top:10px;font-size:11px;color:#cbd5f5;}
-                        .tdm-note-status.saving{color:#fde68a;} .tdm-note-status.saved{color:#86efac;} .tdm-note-status.error{color:#fca5a5;}
+                        .tdm-note-text{
+                            width:85%;
+                            background:var(--tdm-bg-secondary);
+                            border:1px solid var(--tdm-bg-secondary);
+                            color:var(--tdm-text-primary);
+                            padding:var(--tdm-space-md) var(--tdm-space-lg);
+                            border-radius:var(--tdm-radius-md);
+                            resize:vertical;
+                            font:var(--tdm-font-size-base)/1.55 'JetBrains Mono',monospace;
+                            min-height:40px;
+                            transition:border-color var(--tdm-transition-fast);
+                        }
+                        .tdm-note-text:focus{outline:none;border-color:var(--tdm-color-info);box-shadow:0 0 0 1px var(--tdm-color-info);}
+                        .tdm-note-footer{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:var(--tdm-space-lg);margin-top:var(--tdm-space-md);font-size:var(--tdm-font-size-sm);color:var(--tdm-text-secondary);}
+                        .tdm-note-status.saving{color:var(--tdm-color-warning);} .tdm-note-status.saved{color:var(--tdm-color-success);} .tdm-note-status.error{color:var(--tdm-color-error);}
                         .tdm-note-meta{font-family:'JetBrains Mono',monospace;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
                         .tdm-note-char{font-family:'JetBrains Mono',monospace;}
-                        .tdm-note-tags-row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 6px;align-items:center;}
-                        .tdm-note-tag{background:rgba(30,64,175,0.35);color:#e0f2fe;border:1px solid rgba(125,211,252,0.45);padding:3px 8px;font-size:11px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 4px 10px rgba(15,23,42,0.3);transition:background .16s ease,transform .16s ease;}
-                        .tdm-note-tag:hover{background:rgba(59,130,246,0.45);transform:translateY(-1px);}
-                        .tdm-note-tag-remove{font-size:12px;line-height:1;cursor:pointer;color:#94a3b8;}
-                        .tdm-note-tag-remove:hover{color:#fda4af;}
-                        .tdm-note-tag-input{flex:1;min-width:140px;background:rgba(9,15,30,0.92);border:1px solid rgba(59,130,246,0.25);color:#f1f5f9;padding:6px 8px;border-radius:8px;font:12px/1.35 'JetBrains Mono',monospace;}
-                        .tdm-note-tag-input:focus{outline:none;border-color:rgba(96,165,250,0.9);box-shadow:0 0 0 1px rgba(96,165,250,0.6);}
-                        .tdm-note-tags-empty{font-size:11px;color:#94a3b8;margin-bottom:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
-                        .tdm-note-tags-empty span{background:rgba(59,130,246,0.18);color:#bfdbfe;padding:1px 6px;border-radius:999px;font-family:'JetBrains Mono',monospace;}
-                        .tdm-note-help{margin-top:10px;font-size:10px;color:#7f8ea3;display:flex;flex-wrap:wrap;gap:10px;}
-                        .tdm-conf-badge{display:inline-block;font:10px/1.1 monospace;padding:2px 4px;border-radius:4px;margin:0 2px 0 4px;vertical-align:baseline;letter-spacing:.5px}
-                        .tdm-conf-LOW{background:#374151;color:#f9fafb;border:1px solid #475569;text-decoration:underline dotted;}
-                        .tdm-conf-MED{background:#92400e;color:#fff;border:1px solid #b45309;}
-                        .tdm-conf-HIGH{background:#065f46;color:#d1fae5;border:1px solid #059669;}
+                        .tdm-note-tags-row{display:flex;flex-wrap:wrap;gap:var(--tdm-space-md);margin:var(--tdm-space-md) 0;align-items:center;}
+                        .tdm-note-tag{
+                            background:var(--tdm-color-info);
+                            color:var(--tdm-text-primary);
+                            border:none;
+                            padding:var(--tdm-space-xs) var(--tdm-space-md);
+                            font-size:var(--tdm-font-size-sm);
+                            border-radius:var(--tdm-radius-full);
+                            display:inline-flex;
+                            align-items:center;
+                            gap:var(--tdm-space-md);
+                            cursor:pointer;
+                            box-shadow:var(--tdm-shadow-sm);
+                            transition:background var(--tdm-transition-fast),transform var(--tdm-transition-fast);
+                        }
+                        .tdm-note-tag:hover{background:#1976D2;transform:translateY(-1px);}
+                        .tdm-note-tag-remove{font-size:12px;line-height:1;cursor:pointer;color:var(--tdm-text-secondary);}
+                        .tdm-note-tag-remove:hover{color:var(--tdm-color-error);}
+                        .tdm-note-tag-input{
+                            flex:1;
+                            min-width:140px;
+                            background:var(--tdm-bg-secondary);
+                            border:1px solid var(--tdm-bg-secondary);
+                            color:var(--tdm-text-primary);
+                            padding:var(--tdm-space-sm) var(--tdm-space-md);
+                            border-radius:var(--tdm-radius-md);
+                            font:var(--tdm-font-size-sm)/1.35 'JetBrains Mono',monospace;
+                            transition:border-color var(--tdm-transition-fast);
+                        }
+                        .tdm-note-tag-input:focus{outline:none;border-color:var(--tdm-color-info);}
+                        .tdm-note-tags-empty{font-size:var(--tdm-font-size-sm);color:var(--tdm-text-muted);margin-bottom:var(--tdm-space-md);display:flex;flex-wrap:wrap;gap:var(--tdm-space-md);align-items:center;}
+                        .tdm-note-tags-empty span{background:var(--tdm-bg-card);color:var(--tdm-text-accent);padding:1px 6px;border-radius:var(--tdm-radius-full);font-family:'JetBrains Mono',monospace;}
+                        .tdm-note-help{margin-top:var(--tdm-space-md);font-size:var(--tdm-font-size-xs);color:var(--tdm-text-muted);display:flex;flex-wrap:wrap;gap:var(--tdm-space-md);}
+                        .tdm-conf-badge{display:inline-block;font:var(--tdm-font-size-xs)/1.1 monospace;padding:2px 4px;border-radius:var(--tdm-radius-sm);margin:0 2px 0 4px;vertical-align:baseline;letter-spacing:.5px}
+                        .tdm-conf-LOW{background:var(--tdm-bg-card);color:var(--tdm-text-primary);border:1px solid var(--tdm-bg-secondary);text-decoration:underline dotted;}
+                        .tdm-conf-MED{background:var(--tdm-color-warning);color:#000;border:1px solid var(--tdm-color-warning);}
+                        .tdm-conf-HIGH{background:var(--tdm-color-success);color:var(--tdm-text-primary);border:1px solid var(--tdm-color-success);}
                         .tdm-note-snapshot-line{white-space:normal;word-break:break-word;margin:0 0 2px;}
-                        .tdm-note-snapshot-line span.label{color:#64748b;font-weight:600;margin-right:4px;}
-                        .tdm-note-modal.shake{animation:tdmNoteShake .4s linear;}@keyframes tdmNoteShake{10%,90%{transform:translate(-50%,-50%) translateX(-1px);}20%,80%{transform:translate(-50%,-50%) translateX(2px);}30%,50%,70%{transform:translate(-50%,-50%) translateX(-4px);}40%,60%{transform:translate(-50%,-50%) translateX(4px);}}
+                        .tdm-note-snapshot-line span.label{color:var(--tdm-text-muted);font-weight:600;margin-right:var(--tdm-space-sm);}
+                        .tdm-note-modal.shake{animation:tdmNoteShake .4s linear;}
+                        @keyframes tdmNoteShake{10%,90%{transform:translate(-50%,-50%) translateX(-1px);}20%,80%{transform:translate(-50%,-50%) translateX(2px);}30%,50%,70%{transform:translate(-50%,-50%) translateX(-4px);}40%,60%{transform:translate(-50%,-50%) translateX(4px);}}
                         @media (max-width: 600px){
-                            .tdm-note-modal{width:80vw;max-width:80vw;height:40vh;max-height:40vh;padding:16px;overflow-y:auto;}
+                            .tdm-note-modal{width:80vw;max-width:80vw;height:40vh;max-height:40vh;padding:var(--tdm-space-lg);overflow-y:auto;}
                             .tdm-note-text{max-height:96px;}
                             .tdm-note-history-wrap{max-height:72px;}
                         }
@@ -14977,9 +15105,9 @@
                     return reused;
                 }
                 return utils.createElement('div', { className: 'tdm-toast', style: {
-                    borderRadius: '6px', padding: '8px 10px', fontSize: '12px', lineHeight: '1.3',
-                    color: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,.4)', opacity: '0', transform: 'translateY(-4px)',
-                    transition: 'opacity .18s ease, transform .18s ease', cursor: 'pointer', userSelect: 'none'
+                    borderRadius: 'var(--tdm-radius-md)', padding: 'var(--tdm-space-md) var(--tdm-space-lg)', fontSize: 'var(--tdm-font-size-sm)', lineHeight: '1.3',
+                    color: 'var(--tdm-text-primary)', boxShadow: 'var(--tdm-shadow-md)', opacity: '0', transform: 'translateY(-4px)',
+                    transition: 'opacity var(--tdm-transition-fast), transform var(--tdm-transition-fast)', cursor: 'pointer', userSelect: 'none'
                 }});
             };
             const releaseNode = (node) => {
@@ -15043,17 +15171,80 @@
         showConfirmationBox: (message, showCancel = true, extra = null) => {
             // extra: { thirdLabel: string, onThird: ()=>void }
             return new Promise(resolve => {
-                const confirmBox = utils.createElement('div', { style: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', padding: '20px', zIndex: 10001, boxShadow: '0 4px 8px rgba(0,0,0,0.5)', maxWidth: '380px', width: '90%', color: 'white', textAlign: 'center' } });
-                const messagePara = utils.createElement('p', { style: { marginBottom: '16px', fontSize: '13px', lineHeight: '1.3' }, textContent: message });
-                const buttonsContainer = utils.createElement('div', { style: { display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' } });
-                const yesBtn = utils.createElement('button', { id: 'confirm-ok', style: { backgroundColor: config.CSS.colors.success, color: 'white', border: 'none', borderRadius: '4px', padding: '8px 14px', cursor: 'pointer' }, textContent: showCancel ? 'Yes' : 'OK', onclick: () => { confirmBox.remove(); resolve(true); } });
+                const confirmBox = utils.createElement('div', {
+                    className: 'tdm-confirm-modal',
+                    style: {
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        backgroundColor: '#1a1a2e',
+                        border: '1px solid #333',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        zIndex: '10001',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                        maxWidth: '380px',
+                        width: '90%',
+                        color: '#e2e8f0',
+                        textAlign: 'center',
+                        display: 'block'
+                    }
+                });
+                const messagePara = utils.createElement('p', {
+                    style: {
+                        marginBottom: '16px',
+                        fontSize: '14px',
+                        lineHeight: '1.4'
+                    },
+                    textContent: message
+                });
+                const buttonsContainer = utils.createElement('div', {
+                    style: {
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        flexWrap: 'wrap'
+                    }
+                });
+                const yesBtn = utils.createElement('button', {
+                    id: 'confirm-ok',
+                    className: 'settings-btn settings-btn-green',
+                    style: {
+                        minWidth: '80px',
+                        padding: '8px 16px',
+                        cursor: 'pointer'
+                    },
+                    textContent: showCancel ? 'Yes' : 'OK',
+                    onclick: () => { confirmBox.remove(); resolve(true); }
+                });
                 buttonsContainer.appendChild(yesBtn);
                 if (extra && extra.thirdLabel) {
-                    const thirdBtn = utils.createElement('button', { id: 'confirm-third', style: { backgroundColor: '#1976d2', color: 'white', border: 'none', borderRadius: '4px', padding: '8px 14px', cursor: 'pointer' }, textContent: extra.thirdLabel, onclick: () => { confirmBox.remove(); try { extra.onThird && extra.onThird(); } catch(_) {} resolve('third'); } });
+                    const thirdBtn = utils.createElement('button', {
+                        id: 'confirm-third',
+                        className: 'settings-btn settings-btn-blue',
+                        style: {
+                            minWidth: '80px',
+                            padding: '8px 16px',
+                            cursor: 'pointer'
+                        },
+                        textContent: extra.thirdLabel,
+                        onclick: () => { confirmBox.remove(); try { extra.onThird && extra.onThird(); } catch(_) {} resolve('third'); }
+                    });
                     buttonsContainer.appendChild(thirdBtn);
                 }
                 if (showCancel) {
-                    const noBtn = utils.createElement('button', { id: 'confirm-cancel', style: { backgroundColor: config.CSS.colors.error, color: 'white', border: 'none', borderRadius: '4px', padding: '8px 14px', cursor: 'pointer' }, textContent: 'No', onclick: () => { confirmBox.remove(); resolve(false); } });
+                    const noBtn = utils.createElement('button', {
+                        id: 'confirm-cancel',
+                        className: 'settings-btn settings-btn-red',
+                        style: {
+                            minWidth: '80px',
+                            padding: '8px 16px',
+                            cursor: 'pointer'
+                        },
+                        textContent: 'No',
+                        onclick: () => { confirmBox.remove(); resolve(false); }
+                    });
                     buttonsContainer.appendChild(noBtn);
                 }
                 confirmBox.appendChild(messagePara);
@@ -15067,8 +15258,8 @@
             const topPageLinksList = document.querySelector('#top-page-links-list');
             if (!topPageLinksList) return;
 
-            const settingsButton = utils.createElement('span', { id: 'tdm-settings-button', style: { marginRight: '5px', marginLeft: '10px', cursor: 'pointer', display: 'inline-block', verticalAlign: 'middle' }, innerHTML: `<span class="tdm-settings-label" style="background: linear-gradient(to bottom, #00b300, #008000); border: 2px solid #ffcc00; border-radius: 4px; box-sizing: border-box; color: #ffffff; text-shadow: 1px 1px 1px #000000; cursor: pointer; display: inline-block; font-family: 'Farfetch Basis', 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px; height: 20px; margin: 0; padding: 0 8px; text-align: center; text-transform: none;">TreeDibs</span>`, onclick: ui.toggleSettingsPopup });
-            const retalsButton = utils.createElement('span', { id: 'tdm-retals-button', style: { marginRight: '5px', marginLeft: '5px', cursor: 'pointer', display: 'inline-block', verticalAlign: 'middle' }, innerHTML: `<span style="background: linear-gradient(to bottom, #ff5722, #e64a19); border: 2px solid #ffcc00; border-radius: 4px; box-sizing: border-box; color: #ffffff; text-shadow: 1px 1px 1px #000000; cursor: pointer; display: inline-block; font-family: 'Farfetch Basis', 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px; height: 20px; margin: 0; padding: 0 8px; text-align: center; text-transform: none;">... Retals</span>`, onclick: () => ui.showAllRetaliationsNotification() });
+            const settingsButton = utils.createElement('span', { id: 'tdm-settings-button', style: { marginRight: '5px', marginLeft: '10px', cursor: 'pointer', display: 'inline-block', verticalAlign: 'middle' }, innerHTML: `<span class="tdm-settings-label" style="background: linear-gradient(to bottom, #42a5f5, #1976d2); border: 2px solid #90caf9; border-radius: 4px; box-sizing: border-box; color: #ffffff; text-shadow: 1px 1px 1px #0d47a1; cursor: pointer; display: inline-block; font-family: 'Farfetch Basis', 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px; height: 20px; margin: 0; padding: 0 8px; text-align: center; text-transform: none;">TreeDibs</span>`, onclick: ui.toggleSettingsPopup });
+            const retalsButton = utils.createElement('span', { id: 'tdm-retals-button', style: { marginRight: '5px', marginLeft: '5px', cursor: 'pointer', display: 'inline-block', verticalAlign: 'middle' }, innerHTML: `<span style="background: linear-gradient(to bottom, #ab47bc, #7b1fa2); border: 2px solid #ce93d8; border-radius: 4px; box-sizing: border-box; color: #ffffff; text-shadow: 1px 1px 1px #4a148c; cursor: pointer; display: inline-block; font-family: 'Farfetch Basis', 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 20px; height: 20px; margin: 0; padding: 0 8px; text-align: center; text-transform: none;">... Retals</span>`, onclick: () => ui.showAllRetaliationsNotification() });
 
             if (topPageLinksList.firstChild) {
                 topPageLinksList.insertBefore(retalsButton, topPageLinksList.firstChild);
@@ -15109,13 +15300,13 @@
             const contentTitle = document.querySelector('div.content-title.m-bottom10');
             const contentWrapper = document.querySelector('.content-wrapper');
             if (!contentTitle && !contentWrapper) return;
-            settingsPopup = utils.createElement('div', { id: 'tdm-settings-popup', style: { width: '100%', marginBottom: '5px', backgroundColor: '#2c2c2c', border: '1px solid #333', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0,0,0,0.5)', padding: '0', fontFamily: "'Inter', sans-serif", color: '#e0e0e0' } });
+            settingsPopup = utils.createElement('div', { id: 'tdm-settings-popup', style: { width: '100%', maxWidth: '100%', marginBottom: '5px', backgroundColor: '#2c2c2c', border: '1px solid #333', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0,0,0,0.5)', padding: '0', fontFamily: "'Inter', sans-serif", color: '#e0e0e0', overflowX: 'hidden', boxSizing: 'border-box' } });
             const latestVersion = state.script.updateAvailableLatestVersion;
             const hasUpdate = latestVersion && utils.compareVersions(config.VERSION, latestVersion) < 0;
             const preferredUpdateUrl = state.script.updateAvailableLatestVersionUrl || config.GREASYFORK.pageUrl;
             const getLink = (hasUpdate && preferredUpdateUrl) ? ` <a href="${preferredUpdateUrl}" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline;">Get v${latestVersion}</a>` : '';
-            const header = utils.createElement('div', { style: { padding: '10px', backgroundColor: config.CSS.colors.mainColor, borderTopLeftRadius: '8px', borderTopRightRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }, innerHTML: `<h3 style="margin: 0; color: white; font-size: 16px;">TreeDibsMapper v${config.VERSION}${getLink ? ' ' + getLink : ''}</h3><span id="tdm-settings-close" style="cursor: pointer; font-size: 18px;">×</span>` });
-            const content = utils.createElement('div', { id: 'tdm-settings-content', style: { padding: '5px' } });
+            const header = utils.createElement('div', { style: { padding: '10px', backgroundColor: 'var(--tdm-modal-header)', borderTopLeftRadius: '8px', borderTopRightRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }, innerHTML: `<h3 style="margin: 0; color: white; font-size: 16px;">TreeDibsMapper v${config.VERSION}${getLink ? ' ' + getLink : ''}</h3><span id="tdm-settings-close" style="cursor: pointer; font-size: 18px;">×</span>` });
+            const content = utils.createElement('div', { id: 'tdm-settings-content', style: { padding: '5px', maxWidth: '100%', overflowX: 'hidden', boxSizing: 'border-box' } });
             settingsPopup.appendChild(header);
             settingsPopup.appendChild(content);
             header.querySelector('#tdm-settings-close').addEventListener('click', ui.toggleSettingsPopup);
@@ -15308,10 +15499,10 @@
                         const st = document.createElement('style');
                         st.id = 'tdm-mini-style';
                         st.textContent = `.tdm-grid-war{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;align-items:end}`+
-                            `.tdm-mini-lbl{display:block;font-size:11px;color:#ccc;margin-bottom:2px;font-weight:500}`+
-                            `.tdm-mini-checkbox{font-size:12px;color:#ccc;display:flex;align-items:center;gap:4px}`+
+                            `.tdm-mini-lbl{display:block;font-size:11px;color:#fff;margin-bottom:2px;font-weight:500}`+
+                            `.tdm-mini-checkbox{font-size:12px;color:#fff;display:flex;align-items:center;gap:4px}`+
                             `.tdm-check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:4px;margin-top:4px}`+
-                            `.tdm-check-grid label{font-size:11px;display:flex;align-items:center;gap:4px;color:#ccc}`+
+                            `.tdm-check-grid label{font-size:11px;display:flex;align-items:center;gap:4px;color:#fff}`+
                             /* Termed-war input hints */
                             `.tdm-term-required{border:1px solid #facc15 !important; box-shadow:0 0 0 3px rgba(250,204,21,0.12) !important; border-radius:4px !important;}`+
                             `.tdm-term-calculated{border:1px solid #4ade80 !important; box-shadow:0 0 0 3px rgba(34,197,94,0.12) !important; border-radius:4px !important;}`+
@@ -15333,11 +15524,127 @@
                     }
                 } catch(_) {}
 
-            // Build new compact war / dibs layout
+            // Build new compact war / dibs layout with tabs
+            const activeTab = storage.get('tdm_settings_active_tab', 'wardibs');
             content.innerHTML = `
-                <div class="settings-section collapsible ${collapsedState['latest-war'] === false ? '' : 'collapsed'}" data-section="latest-war">
-                    <div class="settings-header collapsible-header">RW Details: <span id="rw-warstring" style="color:#ffd600;">${warstring}</span> <span class="chevron">▾</span></div>
-                    <div class="collapsible-content">
+                <!-- Settings Tab Navigation -->
+                <div class="tdm-settings-tabs">
+                    <button class="tdm-settings-tab ${activeTab === 'display' ? 'tdm-settings-tab--active' : ''}" data-tab="display">Display</button>
+                    <button class="tdm-settings-tab ${activeTab === 'wardibs' ? 'tdm-settings-tab--active' : ''}" data-tab="wardibs">War/Dibs</button>
+                    <button class="tdm-settings-tab ${activeTab === 'advanced' ? 'tdm-settings-tab--active' : ''}" data-tab="advanced">Advanced</button>
+                </div>
+
+                <!-- DISPLAY TAB PANEL -->
+                <div class="tdm-settings-panel ${activeTab === 'display' ? 'tdm-settings-panel--active' : ''}" data-panel="display">
+                    <!-- Column Settings -->
+                    <div class="settings-section" data-section="column-settings">
+                        <div class="settings-header">Column Settings</div>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <div style="display:flex; justify-content:center; gap:8px; margin-bottom:6px;">
+                                <button id="reset-column-widths-btn" class="settings-btn settings-btn-red" title="Reset all column widths to defaults">Reset Column Widths</button>
+                            </div>
+                            <div class="cv-groups" style="display:flex; flex-direction:column; gap:8px;">
+                                <div class="cv-group">
+                                    <div class="mini-label" style="font-size:12px; color:#fff; margin-bottom:4px; font-weight:bold; text-align:center;">Ranked War Table</div>
+                                    <div id="column-visibility-rw" class="settings-button-group" style="gap:6px;"></div>
+                                </div>
+                                <div class="cv-group">
+                                    <div class="mini-label" style="font-size:12px; color:#fff; margin-bottom:4px; font-weight:bold; text-align:center;">Members List Table</div>
+                                    <div id="column-visibility-ml" class="settings-button-group" style="gap:6px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Badges Dock -->
+                    <div class="settings-section" data-section="badges-dock">
+                        <div class="settings-header">Badges Dock</div>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <div style="font-size:12px; color:#fff; font-weight:bold; text-align:center;">Core Timers</div>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('chainTimerEnabled', true) ? 'active' : ''}" id="chain-timer-toggle" data-key="chainTimerEnabled"></div>
+                                    Chain Timer
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('inactivityTimerEnabled', false) ? 'active' : ''}" id="inactivity-timer-toggle" data-key="inactivityTimerEnabled"></div>
+                                    Inactivity Timer
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('opponentStatusTimerEnabled', true) ? 'active' : ''}" id="opponent-status-toggle" data-key="opponentStatusTimerEnabled"></div>
+                                    Opponent Status
+                                </label>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <div style="font-size:12px; color:#fff; font-weight:bold; text-align:center;">Badges</div>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('apiUsageCounterEnabled', false) ? 'active' : ''}" id="api-usage-toggle" data-key="apiUsageCounterEnabled"></div>
+                                    API Counter
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('attackModeBadgeEnabled', true) ? 'active' : ''}" id="attack-mode-badge-toggle" data-key="attackModeBadgeEnabled"></div>
+                                    Attack Mode Badge
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('chainWatcherBadgeEnabled', true) ? 'active' : ''}" id="chainwatcher-badge-toggle" data-key="chainWatcherBadgeEnabled"></div>
+                                    Chain Watchers Badge
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('userScoreBadgeEnabled', true) ? 'active' : ''}" id="user-score-badge-toggle" data-key="userScoreBadgeEnabled"></div>
+                                    User Score Badge
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('factionScoreBadgeEnabled', true) ? 'active' : ''}" id="faction-score-badge-toggle" data-key="factionScoreBadgeEnabled"></div>
+                                    Faction Score Badge
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                    <div class="tdm-toggle-switch ${storage.get('dibsDealsBadgeEnabled', true) ? 'active' : ''}" id="dibs-deals-badge-toggle" data-key="dibsDealsBadgeEnabled"></div>
+                                    Dibs/Deals Badge
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Note Tag Presets -->
+                    <div class="settings-section" data-section="note-tags">
+                        <div class="settings-header">Note Tag Presets</div>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <div style="font-size:12px; color:#fff;">Configure up to 12 quick-add tags (comma or space separated).</div>
+                            <input type="text" id="note-tags-input" class="settings-input" style="width:100%;" maxlength="240" value="${utils.coerceStorageString(storage.get('tdmNoteQuickTags','dex+,def+,str+,spd+,hosp,retal'), noteTagsDefault).replace(/"/g,'&quot;')}" placeholder="dex+,def+,str+,spd+,hosp,retal" />
+                            <div id="note-tags-preview" style="display:flex; flex-wrap:wrap; gap:6px; min-height:26px;"></div>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button id="note-tags-save-btn" class="settings-btn settings-btn-green">Save Presets</button>
+                                <button id="note-tags-reset-btn" class="settings-btn">Reset Default</button>
+                                <div id="note-tags-status" style="font-size:12px; align-self:center; color:#fff;">Idle</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts & Messaging -->
+                    <div class="settings-section" data-section="alerts-messaging">
+                        <div class="settings-header">Alerts &amp; Messaging</div>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                <div class="tdm-toggle-switch ${storage.get('alertButtonsEnabled', true) ? 'active' : ''}" id="alert-buttons-toggle" data-key="alertButtonsEnabled"></div>
+                                Alert Buttons
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                <div class="tdm-toggle-switch ${storage.get('pasteMessagesToChatEnabled', true) ? 'active' : ''}" id="paste-messages-toggle" data-key="pasteMessagesToChatEnabled"></div>
+                                Paste Messages to Chat
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; color:#fff; font-size:12px;">
+                                <div class="tdm-toggle-switch ${storage.get('ocReminderEnabled', true) ? 'active' : ''}" id="oc-reminder-toggle" data-key="ocReminderEnabled"></div>
+                                OC Reminder
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- END DISPLAY TAB PANEL -->
+
+                <!-- WAR/DIBS TAB PANEL -->
+                <div class="tdm-settings-panel ${activeTab === 'wardibs' ? 'tdm-settings-panel--active' : ''}" data-panel="wardibs">
+                <div class="settings-section" data-section="latest-war">
+                    <div class="settings-header">RW Details: <span id="rw-warstring" style="color:#ffd600;">${warstring}</span></div>
+                    <div>
                         <div style="margin-top:4px;padding:6px;background:#222;border-radius:5px;">
                             <div class="tdm-grid-war">
                                 <div id="war-type-container">
@@ -15379,19 +15686,19 @@
                                 </div>
                                 <div id="initial-score-clip-end" style="display:none"></div>
                                 <div id="initial-score-clip-end2" style="display:none"></div>
-                                <div id="initial-target-display" style="grid-column:span 2; margin-top:6px; color:#9ca3af; font-size:12px;" ></div>
+                                <div id="initial-target-display" style="grid-column:span 2; margin-top:6px; color:#fff; font-size:12px;" ></div>
                                 <div id="initial-target-debug" style="display:none"></div>
                                 <div id="initial-target-break" style="display:none"></div>
                                 <div id="initial-target-extra" style="display:none"></div>
                                 <div id="initial-target-traits" style="display:none"></div>
                                 <div id="initial-target-final" style="display:none"></div>
-                                <div id="target-end-display" style="grid-column:span 2; margin-top:4px; color:#9ca3af; font-size:12px;" ></div>
-                                <div id="rw-term-info" style="margin-top:8px;font-size:12px;color:#9ca3af;display:block;width:100%;box-sizing:border-box;grid-column:1 / -1"></div>
+                                <div id="target-end-display" style="grid-column:span 2; margin-top:4px; color:#fff; font-size:12px;" ></div>
+                                <div id="rw-term-info" style="margin-top:8px;font-size:12px;color:#fff;display:block;width:100%;box-sizing:border-box;grid-column:1 / -1;line-height:1.6"></div>
                                 <div style="grid-column:span 2;min-width:200px;">
                                     <label class="tdm-mini-lbl">Opponent</label>
                                     <div class="settings-input-display" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${opponentFactionName} ${opponentFactionId?`(ID:${opponentFactionId})`:''}</div>
                                 </div>
-                                ${isAdmin ? `<label style="display:flex;align-items:center;gap:8px;color:#ccc;font-size:12px;margin-left:8px;"><input type="checkbox" id="war-disable-meddeals" ${state.warData?.disableMedDeals ? 'checked' : ''} /> Disable Med Deals (Only show dibs button) in Termed Wars</label>` : ''}
+                                ${isAdmin ? `<label style="display:flex;align-items:center;gap:8px;color:#fff;font-size:12px;margin-left:8px;"><input type="checkbox" id="war-disable-meddeals" ${state.warData?.disableMedDeals ? 'checked' : ''} /> Disable Med Deals (Only show dibs button) in Termed Wars</label>` : ''}
                                 <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;align-self:center;">
                                     <button id="save-war-data-btn" class="settings-btn settings-btn-green" style="display:${storage.get('adminFunctionality', true)?'inline-block':'none'};" title="Persist current war configuration (term caps, opponent, score types)." aria-label="Save war data">Save War Data</button>
                                     <button id="copy-war-details-btn" class="settings-btn settings-btn-blue" title="Copy a shareable war summary to the clipboard." aria-label="Copy war details">Copy War Details</button>
@@ -15431,20 +15738,20 @@
                     </div>
                 </div>
 
-                <div class="settings-section settings-section-divided collapsible ${collapsedState['ranked-war-tools'] === false ? '' : 'collapsed'}" data-section="ranked-war-tools">
-                    <div class="settings-header collapsible-header">Ranked War Reports<span class="chevron">▾</span></div>
-                    <div class="collapsible-content" style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+                <div class="settings-section" data-section="ranked-war-tools">
+                    <div class="settings-header">Ranked War Reports</div>
+                    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
                         <select id="ranked-war-id-select" class="settings-input" style="flex-grow: 1;" title="Select a ranked war to analyze."><option value="">Loading wars...</option></select>
                         <button id="show-ranked-war-summary-btn" class="settings-btn settings-btn-green" title="Generate summary for selected ranked war." aria-label="Show ranked war summary">War Summary</button>
                         <button id="view-war-attacks-btn" class="settings-btn settings-btn-blue" title="Open detailed attacks list for selected ranked war." aria-label="View war attacks">War Attacks</button>
                     </div>
-                </div>                
+                </div>
                 <!-- ChainWatcher Section -->
-                <div class="settings-section settings-section-divided collapsible ${collapsedState['chain-watcher'] === false ? '' : 'collapsed'}" data-section="chain-watcher">
-                    <div class="settings-header collapsible-header">ChainWatcher: <span id="tdm-chainwatcher-header-names" style="color:#ffd600;">—</span> <span class="chevron">▾</span></div>
-            <div class="collapsible-content">
-                <div style="font-size:12px;color:#ccc;margin-bottom:6px;">Select current chain watchers (authoritative list stored for the faction). Selected names will appear as a badge in the UI.</div>
-                <div id="tdm-chainwatcher-meta" style="font-size:11px;color:#9ca3af;margin-bottom:6px;">Last updated: —</div>
+                <div class="settings-section" data-section="chain-watcher">
+                    <div class="settings-header">ChainWatcher: <span id="tdm-chainwatcher-header-names" style="color:#ffd600;">—</span></div>
+                    <div>
+                <div style="font-size:12px;color:#fff;margin-bottom:6px;">Select current chain watchers (authoritative list stored for the faction). Selected names will appear as a badge in the UI.</div>
+                <div id="tdm-chainwatcher-meta" style="font-size:11px;color:#fff;margin-bottom:6px;">Last updated: —</div>
                         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                             <select id="tdm-chainwatcher-select" class="settings-input" multiple style="min-width:220px;max-width:420px;min-height:120px;">
                                 <!-- options populated dynamically -->
@@ -15454,14 +15761,21 @@
                                 <button id="tdm-chainwatcher-clear" class="settings-btn">Clear</button>
                             </div>
                         </div>
-                        <div style="margin-top:8px;font-size:11px;color:#888;">Selections are authoritative from the server; local UI reflects server state. Local storage key <code>chainWatchers</code> is used for quick reads.</div>
+                        <div style="margin-top:8px;font-size:11px;color:#888;">Selections are authoritative from the server; local UI reflects server state.</div>
                     </div>
                 </div>
-                <div class="settings-section settings-section-divided collapsible ${collapsedState['api-keys'] === false ? '' : 'collapsed'}" data-section="api-keys">
-                    <div class="settings-header collapsible-header">API Keys <span class="chevron">▾</span></div>
-                    <div class="collapsible-content">
+
+
+
+                </div><!-- END WAR/DIBS TAB PANEL -->
+
+                <!-- ADVANCED TAB PANEL -->
+                <div class="tdm-settings-panel ${activeTab === 'advanced' ? 'tdm-settings-panel--active' : ''}" data-panel="advanced">
+                <div class="settings-section" data-section="api-keys">
+                    <div class="settings-header">API Keys</div>
+                    <div>
                         <!-- Torn API Key Card -->
-                        <div id="tdm-api-key-card" class="settings-card" data-tone="${apiKeyTone}" style="margin-bottom:12px;border:1px solid #3b82f6;background:#0f172a;padding:10px;border-radius:8px;">
+                        <div id="tdm-api-key-card" class="settings-card" data-tone="${apiKeyTone}" style="margin-bottom:12px;border:1px solid var(--tdm-bg-secondary);background:var(--tdm-bg-secondary);padding:10px;border-radius:8px;">
                             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
                                 <div>
                                     <div style="font-size:12px;color:#93c5fd;font-weight:600;">Torn API Key for TDM Access</div>
@@ -15476,7 +15790,7 @@
                                 <input type="password" id="tdm-api-key-input" class="settings-input" placeholder="Enter custom Torn API key" value="${apiKeyInputValue}" style="min-width:200px;flex:1;letter-spacing:2px;" autocomplete="off" />
                                 <button id="tdm-api-key-save-btn" class="settings-btn settings-btn-green">Save Key</button>
                                 <button id="tdm-generate-key-btn" class="settings-btn settings-btn-blue" title="Open Torn API key creation page" aria-label="Generate custom key">Generate Custom Key</button>
-                                <label style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:4px;">
+                                <label style="font-size:11px;color:#fff;display:flex;align-items:center;gap:4px;">
                                     <input type="checkbox" id="tdm-api-key-show" /> Show
                                 </label>
                             </div>
@@ -15485,7 +15799,7 @@
                         </div>
 
                         <!-- FFScouter API Key Card -->
-                        <div id="tdm-ffscouter-key-card" class="settings-card" data-tone="${ffUi.tone}" style="margin-bottom:12px;border:1px solid #3b82f6;background:#0f172a;padding:10px;border-radius:8px;">
+                        <div id="tdm-ffscouter-key-card" class="settings-card" data-tone="${ffUi.tone}" style="margin-bottom:12px;border:1px solid var(--tdm-bg-secondary);background:var(--tdm-bg-secondary);padding:10px;border-radius:8px;">
                             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
                                 <div>
                                     <div style="font-size:12px;color:#93c5fd;font-weight:600;">FFScouter API Key (PC Only, PDA uses other scripts key)</div>
@@ -15499,14 +15813,14 @@
                                 <input type="password" id="tdm-ffscouter-key-input" class="settings-input" placeholder="Enter FFScouter API key" value="${ffKeyInputValue}" style="min-width:200px;flex:1;letter-spacing:2px;" autocomplete="off" />
                                 <button id="tdm-ffscouter-key-save-btn" class="settings-btn settings-btn-green">Save Key</button>
                                 <a href="https://ffscouter.com/" target="_blank" rel="noopener" class="settings-btn settings-btn-blue" style="text-decoration:none;line-height:24px;padding:0 12px;display:inline-block;" title="Get key at ffscouter.com">Get Key</a>
-                                <label style="font-size:11px;color:#9ca3af;display:flex;align-items:center;gap:4px;">
+                                <label style="font-size:11px;color:#fff;display:flex;align-items:center;gap:4px;">
                                     <input type="checkbox" id="tdm-ffscouter-key-show" /> Show
                                 </label>
                             </div>
                             <div id="tdm-ffscouter-key-message" style="font-size:11px;margin-top:6px;color:${ffKeyMessageColor};">${ffUi.message}</div>
                         </div>
                         <!-- BSP API Key Card -->
-                        <div id="tdm-bsp-key-card" class="settings-card" data-tone="${ffUi.tone}" style="margin-bottom:12px;border:1px solid #3b82f6;background:#0f172a;padding:10px;border-radius:8px;">
+                        <div id="tdm-bsp-key-card" class="settings-card" data-tone="${ffUi.tone}" style="margin-bottom:12px;border:1px solid var(--tdm-bg-secondary);background:var(--tdm-bg-secondary);padding:10px;border-radius:8px;">
                             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
                                 <div>
                                     <div style="font-size:12px;color:#93c5fd;font-weight:600;">Battle Stats Predictor</div>
@@ -15518,201 +15832,159 @@
                     </div>
                 </div>
 
-                <div class="settings-section settings-section-divided collapsible ${collapsedState['general-settings'] === false ? '' : 'collapsed'}" data-section="general-settings">
-                    <div class="settings-header collapsible-header">General Settings <span class="chevron">▾</span></div>
-                    <div class="collapsible-content">
-                        <div class="settings-button-group" style="gap:4px; flex-wrap:wrap;">
-                            <!-- Badges Dock (moved Core Timers & Badges into a collapsible section) -->
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['badges-dock'] === false ? '' : 'collapsed'}" data-section="badges-dock" style="margin-top:6px;">
-                                <div class="settings-header settings-subsection collapsible-header">Badges Dock <span class="chevron">▾</span></div>
-                                <div class="collapsible-content" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start;">
-                                    <div style="display:flex; flex-direction:column; gap:6px; min-width:240px;">
-                                        <div style="font-size:11px; color:#93c5fd; font-weight:600; text-align:center;">Core Timers</div>
-                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                            <button id="chain-timer-btn" class="settings-btn ${storage.get('chainTimerEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle chain timer display." aria-label="Toggle chain timer">Chain Timer: ${storage.get('chainTimerEnabled', true) ? 'Enabled' : 'Disabled'}</button>
-                                            <button id="inactivity-timer-btn" class="settings-btn ${storage.get('inactivityTimerEnabled', false) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle inactivity tracking timer." aria-label="Toggle inactivity timer">Inactivity Timer: ${storage.get('inactivityTimerEnabled', false) ? 'Enabled' : 'Disabled'}</button>
-                                            <button id="opponent-status-btn" class="settings-btn ${storage.get('opponentStatusTimerEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle periodic opponent status checks." aria-label="Toggle opponent status timer">Opponent Status: ${storage.get('opponentStatusTimerEnabled', true) ? 'Enabled' : 'Disabled'}</button>
-                                        </div>
-                                    </div>
-                                    <div style="display:flex; flex-direction:column; gap:6px; min-width:260px;">
-                                        <div style="font-size:11px; color:#93c5fd; font-weight:600; text-align:center;">Badges</div>
-                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                            <button id="api-usage-btn" class="settings-btn ${storage.get('apiUsageCounterEnabled', false) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle API usage counter badge." aria-label="Toggle API usage badge">API Counter: ${storage.get('apiUsageCounterEnabled', false) ? 'Shown' : 'Hidden'}</button>
-                                            <button id="attack-mode-badge-btn" class="settings-btn ${storage.get('attackModeBadgeEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle attack mode badge in chat header (Ranked War & active)." aria-label="Toggle attack mode badge">Attack Mode Badge: ${storage.get('attackModeBadgeEnabled', true) ? 'Shown' : 'Hidden'}</button>
-                                            <button id="chainwatcher-badge-btn" class="settings-btn ${storage.get('chainWatcherBadgeEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle Chain Watchers badge in the badges dock." aria-label="Toggle chain watchers badge">Chain Watchers Badge: ${storage.get('chainWatcherBadgeEnabled', true) ? 'Shown' : 'Hidden'}</button>
-                                            <button id="user-score-badge-btn" class="settings-btn ${storage.get('userScoreBadgeEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle personal score badge." aria-label="Toggle user score badge">User Score Badge: ${storage.get('userScoreBadgeEnabled', true) ? 'Shown' : 'Hidden'}</button>
-                                            <button id="faction-score-badge-btn" class="settings-btn ${storage.get('factionScoreBadgeEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle faction score badge." aria-label="Toggle faction score badge">Faction Score Badge: ${storage.get('factionScoreBadgeEnabled', true) ? 'Shown' : 'Hidden'}</button>
-                                            <button id="dibs-deals-badge-btn" class="settings-btn ${storage.get('dibsDealsBadgeEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle dibs/deals badge." aria-label="Toggle dibs deals badge">Dibs/Deals Badge: ${storage.get('dibsDealsBadgeEnabled', true) ? 'Shown' : 'Hidden'}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['column-settings'] === false ? '' : 'collapsed'}" data-section="column-settings" style="margin-top:8px; margin-bottom:4px;">
-                                <div class="settings-header settings-subsection collapsible-header">Column Settings <span class="chevron">▾</span></div>
-                                <div class="collapsible-content" style="display:flex; flex-direction:column; gap:6px; text-align:center;">
-                                    <div style="display:flex; justify-content:center; gap:8px; margin-bottom:6px;">
-                                        <button id="reset-column-widths-btn" class="settings-btn settings-btn-red" title="Reset all column widths to defaults">Reset Column Widths</button>
-                                    </div>
-                                    <div class="cv-groups" style="display:flex; flex-direction:column; gap:6px; text-align:center;">
-                                <div class="cv-group">
-                                    <div class="mini-label" style="font-size:11px; color:#bbb; margin-bottom:2px;">Ranked War Table</div>
-                                    <div id="column-visibility-rw" class="settings-button-group" style="gap:6px;"></div>
-                                </div>
-                                <div class="cv-group">
-                                    <div class="mini-label" style="font-size:11px; color:#bbb; margin-bottom:2px;">Members List Table</div>
-                                    <div id="column-visibility-ml" class="settings-button-group" style="gap:6px;"></div>
-                                </div>
-                                </div>
-                            </div>
+                <!-- API Cadence & Polling -->
+                <div class="settings-section" data-section="api-cadence">
+                    <div class="settings-header">API Cadence &amp; Polling</div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="font-size:12px; color:#fff; line-height:1.4;">
+                            Controls how often TreeDibsMapper pulls faction bundles to keep scores, dibs, and status data fresh.
                         </div>
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['api-cadence'] === false ? '' : 'collapsed'}" data-section="api-cadence">
-                                <div class="settings-header settings-subsection collapsible-header">API Cadence &amp; Polling <span class="chevron">▾</span></div>
-                                <div class="collapsible-content">
-                                    <div style="font-size:12px; color:#bcd; line-height:1.4; margin-bottom:2px;">
-                                        Torn API cadence controls how often TreeDibsMapper pulls faction bundles. This keeps scores, dibs, and status data fresh for the whole UI. Activity Tracking (below) runs on top of these pulls and only adds extra diff processing when enabled. When the tab is inactive the cadence backs off unless the activity keep-alive option is in use.
-                                    </div>
-                                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; background:#1a1a1a; padding:8px; border-radius:6px;">
-                                        <label style="display:flex; align-items:center; gap:6px; color:#ccc;">
-                                            Team refresh interval (seconds):
-                                            <input type="number" id="faction-bundle-refresh-seconds" class="settings-input" min="5" step="5" style="width:100px;" value="${Math.round((Number(storage.get('factionBundleRefreshMs', null)) || state.script.factionBundleRefreshMs || config.DEFAULT_FACTION_BUNDLE_REFRESH_MS)/1000)}" />
-                                        </label>
-                                        <button id="save-faction-bundle-refresh-btn" class="settings-btn settings-btn-green">Apply</button>
-                                        <div style="flex-basis:100%; font-size:11px; color:#aaa; max-width:480px;">Your faction is always polled. The current opponent is polled while the ranked war is active; add IDs below to keep other factions in rotation.</div>
-                                        <div id="tdm-last-faction-refresh" style="font-size:11px; color:#9ca3af; flex-basis:100%;">Last faction refresh: —</div>
-                                        <div id="tdm-polling-status" style="font-size:11px; color:#9ca3af; flex-basis:100%;">Polling status: —</div>
-                                        <div id="tdm-opponent-poll-line" style="font-size:11px; color:#9ca3af; flex-basis:100%;">Opponent polling: —</div>
-                                    </div>
-                                    <div style="margin-top:10px; background:#1a1a1a; padding:8px; border-radius:6px; display:flex; flex-wrap:wrap; gap:8px; align-items:flex-start;">
-                                        <label style="display:flex; flex-direction:column; gap:4px; color:#ccc; font-size:12px; flex:1; min-width:240px;">
-                                            Extra factions to poll (comma separated IDs):
-                                            <input type="text" id="tdm-additional-factions-input" class="settings-input" value="${utils.coerceStorageString(storage.get('tdmExtraFactionPolls',''), '').replace(/"/g,'&quot;')}" placeholder="12345,67890" aria-label="Additional faction IDs" />
-                                        </label>
-                                        <button id="tdm-save-additional-factions-btn" class="settings-btn settings-btn-blue" title="Persist the additional faction list.">Save</button>
-                                        <div id="tdm-additional-factions-status" style="font-size:11px; color:#9ca3af; align-self:center;">No extra factions configured.</div>
-                                        <div id="tdm-additional-factions-summary" style="flex-basis:100%; font-size:10px; color:#777; line-height:1.3;">—</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['activity-tracking'] === false ? '' : 'collapsed'}" data-section="activity-tracking">
-                                <div class="settings-header settings-subsection collapsible-header">Activity Tracking ${storage.get('tdmActivityTrackingEnabled', false) ? 'Enabled' : 'Disabled'} <span class="chevron">▾</span></div>
-                                <div class="collapsible-content">
-                                    <div class="activity-tracking-content" style="display:flex; flex-wrap:wrap; gap:12px; width:100%; background:#1f1f1f; padding:8px; border-radius:6px;">
-                                        <label style="flex:1; min-width:200px; color:#ccc; font-size:12px;" title="Enable continuous polling of ranked war faction members to infer live status & travel phases. Disable to stop polling.">
-                                            <input type="checkbox" id="tdm-activity-tracking-toggle" ${storage.get('tdmActivityTrackingEnabled', false)?'checked':''} aria-label="Toggle Activity Tracking" title="Toggle live Activity Tracking." /> Ranked War Faction Members Activity Tracking
-                                        </label>
-                                        <label style="flex:1; min-width:200px; color:#ccc; font-size:12px;" title="Keep activity tracking running even when this tab is unfocused or idle. Uses more CPU/network.">
-                                            <input type="checkbox" id="tdm-activity-track-idle" ${storage.get('tdmActivityTrackWhileIdle', false)?'checked':''} aria-label="Track while idle" title="Keep activity tracking polling while idle." /> Track while idle (higher resource usage)
-                                        </label>
-                                        <label style="display:flex; align-items:center; gap:6px; color:#ccc; font-size:12px;">Activity cadence (seconds):
-                                            <input type="number" id="tdm-activity-cadence-seconds" min="5" max="60" step="1" value="${Math.min(60,Math.max(5, Number(storage.get('tdmActivityCadenceMs',10000))/1000 || 10))}" class="settings-input" style="width:70px;" title="Polling interval while Activity Tracking is enabled (seconds)." />s
-                                        </label>
-                                        <button id="tdm-apply-activity-cadence-btn" class="settings-btn settings-btn-green" title="Apply new cadence immediately.">Apply</button>
-                                        <div style="flex-basis:100%; font-size:11px; color:#888;">Runs on top of the Torn API cadence above, diffing each pull to expose live status & travel transitions. Only active while enabled. Landed phase inserted after arrival. Visible in player Notes. Disable to minimize memory & churn.</div>
-                                        <div style="flex-basis:100%; margin-top:4px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#151515; padding:8px; border-radius:6px;">
-                                            <label style="display:flex; align-items:center; gap:6px; color:#ccc; font-size:12px;" title="Upper bound for IndexedDB cache size. 0 = allow browser quota mgmt.">IDB Max Size
-                                                <select id="tdm-idb-maxsize-select" class="settings-input" style="width:140px;" aria-label="IndexedDB max size (MB)" title="Limit on cached member snapshots (MB). 0 uses browser-managed quota.">
-                                                    ${(()=>{const cur=Number(storage.get('tdmIdbMaxSizeMB',''))||0;const opts=[0,5,10,20,64,96];return opts.map(v=>`<option value='${v}' ${cur===v?'selected':''}>${v? v+' MB':'Auto (Browser)'}</option>`).join('');})()}
-                                                </select>
-                                            </label>
-                                            <div id="tdm-idb-usage-line" style="font-size:11px; color:#9ca3af;">IDB Usage: —</div>
-                                            <button id="tdm-flush-activity-cache-btn" class="settings-btn settings-btn-blue" title="Clear cached player states. Useful between wars to save space." aria-label="Flush activity cache">Flush Activity Cache</button>
-                                            <button id="tdm-clear-idb-btn" class="settings-btn settings-btn-red" title="Delete the entire IndexedDB database (tdm-store). Frees up all space." aria-label="Clear IDB Storage">Clear IDB Storage</button>
-                                            <div style="flex-basis:100%; font-size:10px; color:#666; line-height:1.3;">Cache stores states per player. Flush to reclaim memory & restart confidence ladder. Clear IDB Storage to wipe all cached data.</div>
-                                        </div>
-                                        <label style="flex:1; min-width:160px; color:#ccc; font-size:12px;" title="Show live metrics: transitions/min, confidence distribution, top destinations, poll timings.">
-                                            <input type="checkbox" id="tdm-debug-overlay-toggle" ${storage.get('liveTrackDebugOverlayEnabled', false)?'checked':''} aria-label="Toggle debug overlay" title="Toggle tracking debug overlay." /> Debug Overlay
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['other'] === false ? '' : 'collapsed'}" data-section="other">
-                                <div class="settings-header settings-subsection collapsible-header">Other<span class="chevron">▾</span></div>
-                                <div class="collapsible-content">
-                                    <div style="display:flex; flex-direction:column; gap:6px; min-width:260px;">
-                                        <div style="font-size:11px; color:#93c5fd; font-weight:600; text-align:center;">Alerts & Messaging</div>
-                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                            <button id="alert-buttons-toggle-btn" class="settings-btn ${storage.get('alertButtonsEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle quick alert buttons UI." aria-label="Toggle alert buttons">Alert Buttons: ${storage.get('alertButtonsEnabled', true) ? 'Shown' : 'Hidden'}</button>
-                                            <!-- Message Dibs to Chat setting removed; use unified "Paste Messages to Chat" setting above -->
-                                            <button id="paste-messages-chat-btn" class="settings-btn ${storage.get('pasteMessagesToChatEnabled', true) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle whether messages are automatically pasted into faction chat (when enabled) or only copied to clipboard (when disabled)." aria-label="Toggle paste messages to chat">Paste Messages to Chat: ${storage.get('pasteMessagesToChatEnabled', true) ? 'On' : 'Off'}</button>
-                                            <button id="oc-reminder-btn" class="settings-btn ${ocReminderEnabled ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle organized crime (OC) reminder notifications." aria-label="Toggle OC reminder">OC Reminder: ${ocReminderEnabled ? 'Enabled' : 'Disabled'}</button>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div style="display:flex; flex-direction:column; gap:6px; min-width:200px; align-self:flex-start;">
-                                        <div style="font-size:11px; color:#93c5fd; font-weight:600; text-align:center;">Maintenance</div>
-                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                            <button id="reset-settings-btn" class="settings-btn settings-btn-red" title="Reset all stored settings, caches, and tracking data (confirmation required)." aria-label="Reset all settings">Reset All Settings</button>
-                                        </div>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
-                            ${state.script.canAdministerMedDeals ? `
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['Admin-Settings'] === false ? '' : 'collapsed'}" data-section="Admin-Settings">
-                                <div class="settings-header settings-subsection collapsible-header">Admin Settings <span class="chevron">▾</span></div>
-                                <div class="collapsible-content">
-                                    <button id="admin-functionality-btn" class="column-toggle-btn ${storage.get('adminFunctionality', true) ? 'active' : 'inactive'}" title="Toggle admin functions to manage other members' dibs & deals." aria-label="Toggle admin functionality">Manage Others Dibs/Deals</button>
-                                    ${state.script.canAdministerMedDeals && storage.get('adminFunctionality', true) === true ?  `
-                                    <button id="view-unauthorized-attacks-btn" class="settings-btn" title="Show attacks not authorized under current dibs/attack mode rules." aria-label="View unauthorized attacks">View Unauthorized Attacks</button>
-                                    <button id="tdm-adoption-btn" class="settings-btn ${storage.get('debugAdoptionInfo', false) ? 'settings-btn-green' : 'settings-btn-blue'}" title="Toggle display of adoption/use metrics overlay." aria-label="Toggle adoption info">TDM Adoption Info</button>
-                                    <div style="margin-top:2px; padding:8px; border:1px solid #444; border-radius:6px;">
-                                        <div style="margin-bottom:6px; color:#fca5a5; font-weight:600;">Bulk Cleanup (current enemy faction)</div>
-                                        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-                                            <label><input type="checkbox" id="cleanup-notes" checked /> Notes</label>
-                                            <label><input type="checkbox" id="cleanup-dibs" checked /> Dibs</label>
-                                            <label><input type="checkbox" id="cleanup-meddeals" checked /> Med Deals</label>
-                                            <input type="text" id="cleanup-faction-id" placeholder="Enemy faction ID (optional)" class="settings-input" style="width:160px;" />
-                                            <input type="text" id="cleanup-reason" placeholder="Reason (required)" class="settings-input" style="min-width:240px;" />
-                                            <button id="run-admin-cleanup-btn" class="settings-btn settings-btn-red" title="Bulk delete selected data types for enemy faction members in current war table." aria-label="Run bulk cleanup">Run Cleanup</button>
-                                        </div>
-                                        <div style="font-size:11px; color:#aaa; margin-top:4px;">Cleans data for opponents visible in the current Ranked War table that belong to the enemy faction. Optional override lets you specify a faction id manually.</div>
-                                        <div id="cleanup-results-line" style="font-size:11px; color:#9ca3af; margin-top:4px; display:none;"></div>
-                                    </div>
-                                </div>
-                                    ` : ''}
-                            </div>
-                            ` : ''}
-                            <!-- Note Tag Presets Editor -->
-                            <div class="settings-section settings-subsection collapsible ${collapsedState['note-tags'] === false ? '' : 'collapsed'}" data-section="note-tags" style="margin-top:12px;">
-                                <div class="settings-header settings-subsection collapsible-header">Note Tag Presets <span class="chevron">▾</span></div>
-                                <div class="collapsible-content">
-                                    <div style="font-size:11px; color:#9ca3af;">Configure up to 12 quick-add tags (comma or space separated). Applied in note modal if not already present. Invalid or duplicate tags are skipped.</div>
-                                    <input type="text" id="note-tags-input" class="settings-input" style="width:100%;" maxlength="240" value="${utils.coerceStorageString(storage.get('tdmNoteQuickTags','dex+,def+,str+,spd+,hosp,retal'), noteTagsDefault).replace(/"/g,'&quot;')}" placeholder="dex+,def+,str+,spd+,hosp,retal" title="Comma or space separated tags" aria-label="Note tag presets input" />
-                                    <div id="note-tags-preview" style="display:flex; flex-wrap:wrap; gap:6px; min-height:26px;"></div>
-                                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                                        <button id="note-tags-save-btn" class="settings-btn settings-btn-green" aria-label="Save note tag presets" title="Save tag presets for quick-add in note modal">Save Presets</button>
-                                        <button id="note-tags-reset-btn" class="settings-btn settings-btn-blue" aria-label="Reset note tag presets" title="Reset to default tag presets">Reset Default</button>
-                                        <div id="note-tags-status" style="font-size:11px; align-self:center; color:#9ca3af;">Idle</div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:var(--tdm-bg-secondary); padding:8px; border-radius:6px;">
+                            <label style="display:flex; align-items:center; gap:6px; color:#fff;">
+                                Team refresh interval (seconds):
+                                <input type="number" id="faction-bundle-refresh-seconds" class="settings-input" min="5" step="5" style="width:100px;" value="${Math.round((Number(storage.get('factionBundleRefreshMs', null)) || state.script.factionBundleRefreshMs || config.DEFAULT_FACTION_BUNDLE_REFRESH_MS)/1000)}" />
+                            </label>
+                            <button id="save-faction-bundle-refresh-btn" class="settings-btn settings-btn-green">Apply</button>
+                            <div id="tdm-last-faction-refresh" style="font-size:12px; color:#fff; flex-basis:100%;">Last faction refresh: —</div>
+                            <div id="tdm-polling-status" style="font-size:12px; color:#fff; flex-basis:100%;">Polling status: —</div>
+                            <div id="tdm-opponent-poll-line" style="font-size:12px; color:#fff; flex-basis:100%;">Opponent polling: —</div>
                         </div>
-                        <!-- Dev Section (collapsed by default) -->
-                        <div class="settings-section settings-section-divided settings-subsection collapsible ${collapsedState['dev-settings'] === false ? '' : 'collapsed'}" data-section="dev-settings" style="margin-top:12px;">
-                            <div class="settings-header settings-subsection collapsible-header">Dev <span class="chevron">▾</span></div>
-                            <div class="collapsible-content">
-                                <div class="settings-subheader" style="color:#93c5fd; text-align:center;">Developer Toggles</div>
-                                <div class="settings-button-group" style="display:flex; gap:6px; flex-wrap:wrap;">
-                                    <button id="verbose-row-logs-btn" class="settings-btn ${storage.get('debugRowLogs', false) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle verbose per-row console logs." aria-label="Toggle verbose row logs">Verbose Row Logs: ${storage.get('debugRowLogs', false) ? 'On' : 'Off'}</button>
-                                    <button id="status-watch-btn" class="settings-btn ${storage.get('debugStatusWatch', false) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle detailed status change watch logs." aria-label="Toggle status watch logs">Status Watch Logs: ${storage.get('debugStatusWatch', false) ? 'On' : 'Off'}</button>
-                                    <button id="points-parse-logs-btn" class="settings-btn ${storage.get('debugPointsParseLogs', false) ? 'settings-btn-green' : 'settings-btn-red'}" title="Toggle points parsing debug output." aria-label="Toggle points parse logs">Points Parse Logs: ${storage.get('debugPointsParseLogs', false) ? 'On' : 'Off'}</button>
-                                </div>
-                                <div style="margin-top:8px; display:flex; gap:8px; align-items:center; justify-content:center;">
-                                    <label class="tdm-mini-lbl" style="margin:0 6px 0 0;">Log Level</label>
-                                    <select id="tdm-log-level-select" class="settings-input" style="width:140px;">
-                                        ${logLevels.map(l=>`<option value="${l}" ${storage.get('logLevel','warn')===l?'selected':''}>${l}</option>`).join('')}
-                                    </select>
-                                </div>
-                            </div>
+                        <div style="background:var(--tdm-bg-secondary); padding:8px; border-radius:6px; display:flex; flex-wrap:wrap; gap:8px; align-items:flex-start;">
+                            <label style="display:flex; flex-direction:column; gap:4px; color:#fff; font-size:12px; flex:1; min-width:240px;">
+                                Extra factions to poll (comma separated IDs):
+                                <input type="text" id="tdm-additional-factions-input" class="settings-input" value="${utils.coerceStorageString(storage.get('tdmExtraFactionPolls',''), '').replace(/"/g,'&quot;')}" placeholder="12345,67890" />
+                            </label>
+                            <button id="tdm-save-additional-factions-btn" class="settings-btn">Save</button>
+                            <div id="tdm-additional-factions-status" style="font-size:12px; color:#fff; align-self:center;">No extra factions configured.</div>
+                            <div id="tdm-additional-factions-summary" style="flex-basis:100%; font-size:12px; color:#777;">—</div>
                         </div>
                     </div>
-                </div>`;
+                    </div>
+
+                    <!-- Activity Tracking -->
+                    <div class="settings-section" data-section="activity-tracking">
+                        <div class="settings-header">Activity Tracking ${storage.get('tdmActivityTrackingEnabled', false) ? '(Enabled)' : '(Disabled)'}</div>
+                        <div class="activity-tracking-content" style="display:flex; flex-wrap:wrap; gap:12px; width:100%; padding:8px; border-radius:6px;">
+                            <label style="flex:1; min-width:200px; color:#fff; font-size:12px;">
+                                <input type="checkbox" id="tdm-activity-tracking-toggle" ${storage.get('tdmActivityTrackingEnabled', false)?'checked':''} /> Ranked War Faction Members Activity Tracking
+                            </label>
+                            <label style="flex:1; min-width:200px; color:#fff; font-size:12px;">
+                                <input type="checkbox" id="tdm-activity-track-idle" ${storage.get('tdmActivityTrackWhileIdle', false)?'checked':''} /> Track while idle (higher resource usage)
+                            </label>
+                            <label style="display:flex; align-items:center; gap:6px; color:#fff; font-size:12px;">Activity cadence (seconds):
+                                <input type="number" id="tdm-activity-cadence-seconds" min="5" max="60" step="1" value="${Math.min(60,Math.max(5, Number(storage.get('tdmActivityCadenceMs',10000))/1000 || 10))}" class="settings-input" style="width:70px;" />s
+                            </label>
+                            <button id="tdm-apply-activity-cadence-btn" class="settings-btn settings-btn-green">Apply</button>
+                            <div style="flex-basis:100%; font-size:12px; color:#888;">Runs on top of the Torn API cadence, diffing each pull to expose live status & travel transitions.</div>
+                            <div style="flex-basis:100%; margin-top:4px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:var(--tdm-bg-secondary); padding:8px; border-radius:6px;">
+                                <label style="display:flex; align-items:center; gap:6px; color:#fff; font-size:12px;">IDB Max Size
+                                    <select id="tdm-idb-maxsize-select" class="settings-input" style="width:140px;">
+                                        ${(()=>{const cur=Number(storage.get('tdmIdbMaxSizeMB',''))||0;const opts=[0,5,10,20,64,96];return opts.map(v=>`<option value='${v}' ${cur===v?'selected':''}>${v? v+' MB':'Auto (Browser)'}</option>`).join('');})()}
+                                    </select>
+                                </label>
+                                <div id="tdm-idb-usage-line" style="font-size:12px; color:#fff;">IDB Usage: —</div>
+                                <button id="tdm-flush-activity-cache-btn" class="settings-btn">Flush Activity Cache</button>
+                                <button id="tdm-clear-idb-btn" class="settings-btn settings-btn-red">Clear IDB Storage</button>
+                            </div>
+                            <label style="flex:1; min-width:160px; color:#fff; font-size:12px;">
+                                <input type="checkbox" id="tdm-debug-overlay-toggle" ${storage.get('liveTrackDebugOverlayEnabled', false)?'checked':''} /> Debug Overlay
+                            </label>
+                        </div>
+                    </div>
+
+                <!-- Admin Settings -->
+                ${state.script.canAdministerMedDeals ? `
+                <div class="settings-section" data-section="Admin-Settings">
+                    <div class="settings-header">Admin Settings</div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button id="admin-functionality-btn" class="settings-btn ${storage.get('adminFunctionality', true) ? 'settings-btn-green' : 'settings-btn-red'}">Manage Others Dibs/Deals: ${storage.get('adminFunctionality', true) ? 'On' : 'Off'}</button>
+                        ${state.script.canAdministerMedDeals && storage.get('adminFunctionality', true) === true ?  `
+                        <button id="view-unauthorized-attacks-btn" class="settings-btn">View Unauthorized Attacks</button>
+                        <button id="tdm-adoption-btn" class="settings-btn ${storage.get('debugAdoptionInfo', false) ? 'settings-btn-green' : ''}">TDM Adoption Info</button>
+                        <div style="padding:8px; border:1px solid #444; border-radius:6px;">
+                            <div style="margin-bottom:6px; color:#fca5a5; font-weight:bold;">Bulk Cleanup (current enemy faction)</div>
+                            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                                <label style="color:#fff; font-size:12px;"><input type="checkbox" id="cleanup-notes" checked /> Notes</label>
+                                <label style="color:#fff; font-size:12px;"><input type="checkbox" id="cleanup-dibs" checked /> Dibs</label>
+                                <label style="color:#fff; font-size:12px;"><input type="checkbox" id="cleanup-meddeals" checked /> Med Deals</label>
+                                <input type="text" id="cleanup-faction-id" placeholder="Enemy faction ID (optional)" class="settings-input" style="width:160px;" />
+                                <input type="text" id="cleanup-reason" placeholder="Reason (required)" class="settings-input" style="min-width:240px;" />
+                                <button id="run-admin-cleanup-btn" class="settings-btn settings-btn-red">Run Cleanup</button>
+                            </div>
+                            <div style="font-size:12px; color:#aaa; margin-top:4px;">Cleans data for opponents visible in the current Ranked War table.</div>
+                            <div id="cleanup-results-line" style="font-size:12px; color:#fff; margin-top:4px; display:none;"></div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- Dev Toggles -->
+                <div class="settings-section" data-section="dev-settings">
+                    <div class="settings-header">Dev Toggles</div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                            <label style="display:flex; align-items:center; gap:6px; color:#fff; font-size:12px;">
+                                <div class="tdm-toggle-switch ${storage.get('debugRowLogs', false) ? 'active' : ''}" id="verbose-row-logs-toggle" data-key="debugRowLogs"></div>
+                                Verbose Row Logs
+                            </label>
+                            <label style="display:flex; align-items:center; gap:6px; color:#fff; font-size:12px;">
+                                <div class="tdm-toggle-switch ${storage.get('debugStatusWatch', false) ? 'active' : ''}" id="status-watch-toggle" data-key="debugStatusWatch"></div>
+                                Status Watch Logs
+                            </label>
+                            <label style="display:flex; align-items:center; gap:6px; color:#fff; font-size:12px;">
+                                <div class="tdm-toggle-switch ${storage.get('debugPointsParseLogs', false) ? 'active' : ''}" id="points-parse-logs-toggle" data-key="debugPointsParseLogs"></div>
+                                Points Parse Logs
+                            </label>
+                        </div>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <label style="color:#fff; font-size:12px;">Log Level</label>
+                            <select id="tdm-log-level-select" class="settings-input" style="width:140px;">
+                                ${logLevels.map(l=>`<option value="${l}" ${storage.get('logLevel','warn')===l?'selected':''}>${l}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance -->
+                <div class="settings-section" data-section="maintenance">
+                    <div class="settings-header">Maintenance</div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button id="reset-settings-btn" class="settings-btn settings-btn-red">Reset All Settings</button>
+                    </div>
+                </div>
+                </div><!-- END ADVANCED TAB PANEL -->
+            `;
             renderPhaseComplete = true;
             perf?.stop?.('ui.updateSettingsContent.render');
             tdmlogger('debug', 'UI: Settings content rendered');
             perf?.start?.('ui.updateSettingsContent.bind');
             bindPhaseStarted = true;
-            
+
+            // Tab switching handler
+            try {
+                const tabs = content.querySelectorAll('.tdm-settings-tab');
+                const panels = content.querySelectorAll('.tdm-settings-panel');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const targetTab = tab.dataset.tab;
+                        // Update active tab
+                        tabs.forEach(t => t.classList.remove('tdm-settings-tab--active'));
+                        tab.classList.add('tdm-settings-tab--active');
+                        // Update active panel
+                        panels.forEach(p => {
+                            if (p.dataset.panel === targetTab) {
+                                p.classList.add('tdm-settings-panel--active');
+                            } else {
+                                p.classList.remove('tdm-settings-panel--active');
+                            }
+                        });
+                        // Persist active tab
+                        storage.set('tdm_settings_active_tab', targetTab);
+                    });
+                });
+            } catch(_) {}
+
             // API Key card handlers
             try {
                 const apiKeyCard = document.getElementById('tdm-api-key-card');
@@ -17110,15 +17382,14 @@
                             const active = vis.rankedWar?.[col.key] !== false ? 'active' : 'inactive';
                             const widths = storage.get('columnWidths', config.DEFAULT_COLUMN_WIDTHS);
                             const curW = (widths && widths.rankedWar && typeof widths.rankedWar[col.key] === 'number') ? widths.rankedWar[col.key] : (config.DEFAULT_COLUMN_WIDTHS.rankedWar[col.key] || 6);
-                            const wrapper = utils.createElement('div', { className: 'column-control', style: { display: 'flex', gap: '6px', alignItems: 'center' } });
-                            const button = utils.createElement('button', {
-                                className: `column-toggle-btn ${active}`,
+                            const wrapper = utils.createElement('div', { className: 'column-control tdm-toggle-container', style: { display: 'flex', gap: '8px', alignItems: 'center' } });
+                            // Create toggle switch
+                            const toggleSwitch = utils.createElement('div', {
+                                className: `tdm-toggle-switch ${active}`,
                                 dataset: { column: col.key, table: 'rankedWar' },
-                                textContent: col.label,
                                 onclick: () => {
                                     const vis = storage.get('columnVisibility', config.DEFAULT_COLUMN_VISIBILITY) || {};
                                     if (!vis.rankedWar) vis.rankedWar = {};
-                                    // Toggle against the effective current value (stored value if present, otherwise default)
                                     const cur = (typeof vis.rankedWar[col.key] !== 'undefined')
                                         ? vis.rankedWar[col.key]
                                         : (config.DEFAULT_COLUMN_VISIBILITY?.rankedWar?.[col.key] ?? true);
@@ -17128,6 +17399,13 @@
                                     ui.updateSettingsContent();
                                 }
                             });
+                            const label = utils.createElement('span', {
+                                className: 'tdm-toggle-label',
+                                textContent: col.label,
+                                style: { minWidth: '70px', fontSize: '12px', color: '#fff' }
+                            });
+                            // Keep button reference for backward compatibility
+                            const button = toggleSwitch;
                             // don't offer width adjustment for small icon columns (factionIcon)
                             let widthInput;
                             if (col.key !== 'factionIcon') {
@@ -17145,10 +17423,11 @@
                                 } catch(_) {}
                                 });
                             }
-                            wrapper.appendChild(button);
+                            wrapper.appendChild(toggleSwitch);
+                            wrapper.appendChild(label);
                             if (widthInput) {
                                 wrapper.appendChild(widthInput);
-                                wrapper.appendChild(utils.createElement('div', { textContent: '%', style: { color: '#ccc', fontSize: '0.85em' } }));
+                                wrapper.appendChild(utils.createElement('div', { textContent: '%', style: { color: '#fff', fontSize: '0.85em' } }));
                             }
                             if (col.key === 'factionIcon') {
                                 // Defer appending factionIcon toggle - it should appear below the other controls
@@ -17169,15 +17448,14 @@
                             const active = vis.membersList?.[col.key] !== false ? 'active' : 'inactive';
                             const widths = storage.get('columnWidths', config.DEFAULT_COLUMN_WIDTHS);
                             const curW = (widths && widths.membersList && typeof widths.membersList[col.key] === 'number') ? widths.membersList[col.key] : (config.DEFAULT_COLUMN_WIDTHS.membersList[col.key] || 8);
-                            const wrapper = utils.createElement('div', { className: 'column-control', style: { display: 'flex', gap: '6px', alignItems: 'center' } });
-                            const button = utils.createElement('button', {
-                                className: `column-toggle-btn ${active}`,
+                            const wrapper = utils.createElement('div', { className: 'column-control tdm-toggle-container', style: { display: 'flex', gap: '8px', alignItems: 'center' } });
+                            // Create toggle switch
+                            const toggleSwitch = utils.createElement('div', {
+                                className: `tdm-toggle-switch ${active}`,
                                 dataset: { column: col.key, table: 'membersList' },
-                                textContent: col.label,
                                 onclick: () => {
                                     const vis = storage.get('columnVisibility', config.DEFAULT_COLUMN_VISIBILITY) || {};
                                     if (!vis.membersList) vis.membersList = {};
-                                    // Toggle relative to stored value or the default if not present
                                     const cur = (typeof vis.membersList[col.key] !== 'undefined')
                                         ? vis.membersList[col.key]
                                         : (config.DEFAULT_COLUMN_VISIBILITY?.membersList?.[col.key] ?? true);
@@ -17187,6 +17465,13 @@
                                     ui.updateSettingsContent();
                                 }
                             });
+                            const label = utils.createElement('span', {
+                                className: 'tdm-toggle-label',
+                                textContent: col.label,
+                                style: { minWidth: '70px', fontSize: '12px', color: '#fff' }
+                            });
+                            // Keep button reference for backward compatibility
+                            const button = toggleSwitch;
                             // don't offer width adjustment for small icon columns (factionIcon)
                             let widthInput;
                             if (col.key !== 'factionIcon') {
@@ -17204,10 +17489,11 @@
                                 } catch(_) {}
                                 });
                             }
-                            wrapper.appendChild(button);
+                            wrapper.appendChild(toggleSwitch);
+                            wrapper.appendChild(label);
                             if (widthInput) {
                                 wrapper.appendChild(widthInput);
-                                wrapper.appendChild(utils.createElement('div', { textContent: '%', style: { color: '#ccc', fontSize: '0.85em' } }));
+                                wrapper.appendChild(utils.createElement('div', { textContent: '%', style: { color: '#fff', fontSize: '0.85em' } }));
                             }
                             if (col.key === 'factionIcon') {
                                 // Defer appending factionIcon toggle - place below other members controls
@@ -17485,99 +17771,106 @@
                     });
                 }
             } catch(_) {}
-            // Attach event listeners
-            document.getElementById('chain-timer-btn')?.addEventListener('click', () => {
+            // Attach event listeners for Badges Dock toggle switches
+            document.getElementById('chain-timer-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('chainTimerEnabled', true);
                 storage.set('chainTimerEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureChainTimer(); else ui.removeChainTimer();
-                ui.updateSettingsContent();
             });
-            document.getElementById('inactivity-timer-btn')?.addEventListener('click', () => {
+            document.getElementById('inactivity-timer-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('inactivityTimerEnabled', false);
                 storage.set('inactivityTimerEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureInactivityTimer(); else ui.removeInactivityTimer();
-                ui.updateSettingsContent();
             });
-            document.getElementById('opponent-status-btn')?.addEventListener('click', () => {
+            document.getElementById('opponent-status-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('opponentStatusTimerEnabled', true);
                 storage.set('opponentStatusTimerEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureOpponentStatus(); else ui.removeOpponentStatus();
-                ui.updateSettingsContent();
             });
-            document.getElementById('api-usage-btn')?.addEventListener('click', () => {
+            document.getElementById('api-usage-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('apiUsageCounterEnabled', false);
                 storage.set('apiUsageCounterEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureApiUsageBadge();
                 if (handlers?.debouncedUpdateApiUsageBadge) { handlers.debouncedUpdateApiUsageBadge(); } else { ui.updateApiUsageBadge(); }
-                ui.updateSettingsContent();
             });
-            document.getElementById('attack-mode-badge-btn')?.addEventListener('click', () => {
+            document.getElementById('attack-mode-badge-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('attackModeBadgeEnabled', true);
                 storage.set('attackModeBadgeEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureAttackModeBadge(); else ui.removeAttackModeBadge?.();
-                ui.updateSettingsContent();
             });
-            document.getElementById('chainwatcher-badge-btn')?.addEventListener('click', () => {
+            document.getElementById('chainwatcher-badge-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('chainWatcherBadgeEnabled', true);
                 storage.set('chainWatcherBadgeEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureChainWatcherBadge(); else ui.removeChainWatcherBadge?.();
-                ui.updateSettingsContent();
             });
-            document.getElementById('alert-buttons-toggle-btn')?.addEventListener('click', () => {
+            document.getElementById('alert-buttons-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('alertButtonsEnabled', true);
                 storage.set('alertButtonsEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 // Observer will respect this; force a UI refresh
                 ui.updateAllPages?.();
-                ui.updateSettingsContent();
             });
-            document.getElementById('user-score-badge-btn')?.addEventListener('click', () => {
+            document.getElementById('user-score-badge-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('userScoreBadgeEnabled', true);
                 storage.set('userScoreBadgeEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureUserScoreBadge(); else ui.removeUserScoreBadge?.();
                 ui.updateUserScoreBadge?.();
-                ui.updateSettingsContent();
             });
             // Removed: refreshing shimmer toggle and related CSS injection
-            document.getElementById('faction-score-badge-btn')?.addEventListener('click', () => {
+            document.getElementById('faction-score-badge-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('factionScoreBadgeEnabled', true);
                 storage.set('factionScoreBadgeEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureFactionScoreBadge(); else ui.removeFactionScoreBadge?.();
                 ui.updateFactionScoreBadge?.();
-                ui.updateSettingsContent();
             });
-            document.getElementById('dibs-deals-badge-btn')?.addEventListener('click', () => {
+            document.getElementById('dibs-deals-badge-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('dibsDealsBadgeEnabled', true);
                 storage.set('dibsDealsBadgeEnabled', !cur);
+                this.classList.toggle('active', !cur);
                 if (!cur) ui.ensureDibsDealsBadge(); else ui.removeDibsDealsBadge?.();
                 ui.updateDibsDealsBadge?.();
-                ui.updateSettingsContent();
             });
-            document.getElementById('paste-messages-chat-btn')?.addEventListener('click', () => {
+            document.getElementById('paste-messages-toggle')?.addEventListener('click', function() {
                 const cur = storage.get('pasteMessagesToChatEnabled', true);
                 storage.set('pasteMessagesToChatEnabled', !cur);
-                ui.updateSettingsContent();
+                this.classList.toggle('active', !cur);
             });
-            document.getElementById('oc-reminder-btn')?.addEventListener('click', () => {
+            document.getElementById('oc-reminder-toggle')?.addEventListener('click', function() {
                 const currentState = storage.get('ocReminderEnabled', true);
                 storage.set('ocReminderEnabled', !currentState);
-                ui.updateSettingsContent(); // Re-render settings
+                this.classList.toggle('active', !currentState);
             });
-            document.getElementById('verbose-row-logs-btn')?.addEventListener('click', () => {
+            document.getElementById('verbose-row-logs-toggle')?.addEventListener('click', function() {
                 const current = storage.get('debugRowLogs', false);
                 storage.set('debugRowLogs', !current);
+                this.classList.toggle('active', !current);
                 if (!state.debug) state.debug = {};
                 state.debug.rowLogs = !current;
-                // Small toast to indicate effect without flooding console
                 ui.showMessageBox(`Verbose Row Logs ${!current ? 'Enabled' : 'Disabled'}`, !current ? 'success' : 'info', 2000);
-                ui.updateSettingsContent();
             });
-            document.getElementById('status-watch-btn')?.addEventListener('click', () => {
+            document.getElementById('status-watch-toggle')?.addEventListener('click', function() {
                 const current = storage.get('debugStatusWatch', false);
                 storage.set('debugStatusWatch', !current);
+                this.classList.toggle('active', !current);
                 if (!state.debug) state.debug = {};
                 state.debug.statusWatch = !current;
                 ui.showMessageBox(`Status Watch Logs ${!current ? 'Enabled' : 'Disabled'}`,'success',1500);
-                ui.updateSettingsContent();
+            });
+            document.getElementById('points-parse-logs-toggle')?.addEventListener('click', function() {
+                const current = storage.get('debugPointsParseLogs', false);
+                storage.set('debugPointsParseLogs', !current);
+                this.classList.toggle('active', !current);
+                if (!state.debug) state.debug = {};
+                state.debug.pointsParseLogs = !current;
+                ui.showMessageBox(`Points Parse Logs ${!current ? 'Enabled' : 'Disabled'}`,'success',1500);
             });
             document.getElementById('reset-api-counters-btn')?.addEventListener('click', async () => {
                 if (!(await ui.showConfirmationBox('Reset API counters for this tab/session?'))) return;
@@ -18056,11 +18349,1171 @@
         },
 
         applyGeneralStyles: () => {
-            if (document.getElementById('dibs-general-styles')) return;
+            // Ensure scope attribute is present and idempotent
+            try { document.body.setAttribute('data-tdm-root','true'); } catch(_) {}
+            const ensureDibsClickListener = () => {
+                try {
+                    if (window.__tdm_dibs_click_listener_added) return;
+                    document.addEventListener('click', (evt) => {
+                        try {
+                            const btn = evt.target && evt.target.closest && evt.target.closest('.dibs-btn');
+                            if (!btn) return;
+                            btn.classList.add('tdm-dibs-clicked');
+                            setTimeout(() => { try { btn.classList.remove('tdm-dibs-clicked'); } catch(_) {} }, 220);
+                        } catch(_) { /* noop */ }
+                    });
+                    window.__tdm_dibs_click_listener_added = true;
+                } catch(_) { /* noop */ }
+            };
+            const existingStyle = document.getElementById('dibs-general-styles');
+            if (existingStyle) { ensureDibsClickListener(); return; }
             const styleTag = utils.createElement('style', {
                 type: 'text/css',
                 id: 'dibs-general-styles',
                 textContent: `
+                    /* ============================================
+                       CSS VARIABLES - Design System Foundation
+                       ============================================ */
+                    #tdm-root, [data-tdm-root] {
+                        /* Background Colors */
+                        --tdm-bg-main: #666;
+                        --tdm-bg-secondary: #333;
+                        --tdm-bg-tertiary: #1a1a1a;
+                        --tdm-bg-card: #2c2c2c;
+
+                        /* Semantic Colors (mirrors config.CSS.colors) */
+                        --tdm-color-success: ${config.CSS.colors.success};
+                        --tdm-color-error: ${config.CSS.colors.error};
+                        --tdm-color-warning: ${config.CSS.colors.warning};
+                        --tdm-color-info: ${config.CSS.colors.info};
+
+                        /* Dibs System Colors (from config.CSS.colors) */
+                        --tdm-dibs-success: ${config.CSS.colors.dibsSuccess};
+                        --tdm-dibs-success-hover: ${config.CSS.colors.dibsSuccessHover};
+                        --tdm-dibs-other: ${config.CSS.colors.dibsOther};
+                        --tdm-dibs-other-hover: ${config.CSS.colors.dibsOtherHover};
+                        --tdm-dibs-inactive: ${config.CSS.colors.dibsInactive};
+                        --tdm-dibs-inactive-hover: ${config.CSS.colors.dibsInactiveHover};
+
+                        /* Note Button Colors */
+                        --tdm-note-inactive: ${config.CSS.colors.noteInactive};
+                        --tdm-note-inactive-hover: ${config.CSS.colors.noteInactiveHover};
+                        --tdm-note-active: ${config.CSS.colors.noteActive};
+                        --tdm-note-active-hover: ${config.CSS.colors.noteActiveHover};
+                        /* Text colors for note buttons (use for strong contrast when active) */
+                        --tdm-note-inactive-text: ${config.CSS.colors.noteInactiveText || '#ffffff'};
+                        --tdm-note-active-text: ${config.CSS.colors.noteActiveText || '#ffffff'};
+
+                        /* Med Deal Colors */
+                        --tdm-med-inactive: ${config.CSS.colors.medDealInactive};
+                        --tdm-med-inactive-hover: ${config.CSS.colors.medDealInactiveHover};
+                        --tdm-med-set: ${config.CSS.colors.medDealSet};
+                        --tdm-med-set-hover: ${config.CSS.colors.medDealSetHover};
+                        --tdm-med-mine: ${config.CSS.colors.medDealMine};
+                        --tdm-med-mine-hover: ${config.CSS.colors.medDealMineHover};
+
+                        /* Assist Button Colors */
+                        --tdm-assist: ${config.CSS.colors.assistButton};
+                        --tdm-assist-hover: ${config.CSS.colors.assistButtonHover};
+
+                        /* Modal Colors */
+                        --tdm-modal-bg: ${config.CSS.colors.modalBg};
+                        --tdm-modal-border: ${config.CSS.colors.modalBorder};
+                        --tdm-modal-header: ${config.CSS.colors.mainColor};
+
+                        /* Text Colors */
+                        --tdm-text-primary: #ffffff;
+                        --tdm-text-secondary: #9ca3af;
+                        --tdm-text-muted: #6b7280;
+                        --tdm-text-accent: #93c5fd;
+
+                        /* Spacing System (4px base grid) */
+                        --tdm-space-xs: 2px;
+                        --tdm-space-sm: 4px;
+                        --tdm-space-md: 8px;
+                        --tdm-space-lg: 12px;
+                        --tdm-space-xl: 16px;
+                        --tdm-space-2xl: 24px;
+
+                        /* Typography */
+                        --tdm-font-size-xs: 10px;
+                        --tdm-font-size-sm: 11px;
+                        --tdm-font-size-base: 13px;
+                        --tdm-font-size-lg: 16px;
+                        --tdm-font-size-xl: 18px;
+
+                        /* Border Radius */
+                        --tdm-radius-sm: 3px;
+                        --tdm-radius-md: 4px;
+                        --tdm-radius-lg: 8px;
+                        --tdm-radius-xl: 14px;
+                        --tdm-radius-full: 9999px;
+
+                        /* Z-Index Scale */
+                        --tdm-z-dropdown: 1000;
+                        --tdm-z-modal: 10000;
+                        --tdm-z-modal-backdrop: 9999;
+                        --tdm-z-tooltip: 10010;
+                        --tdm-z-toast: 10020;
+
+                        /* Transitions */
+                        --tdm-transition-fast: 0.15s ease;
+                        --tdm-transition-normal: 0.25s ease;
+                        --tdm-transition-slow: 0.35s ease;
+
+                        /* Shadows */
+                        --tdm-shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+                        --tdm-shadow-md: 0 4px 8px rgba(0,0,0,0.4);
+                        --tdm-shadow-lg: 0 8px 16px rgba(0,0,0,0.5);
+                        --tdm-shadow-modal: 0 22px 46px -12px rgba(15,23,42,0.75);
+
+                        /* Button Heights */
+                        --tdm-btn-height-sm: 20px;
+                        --tdm-btn-height-md: 24px;
+                        --tdm-btn-height-lg: 32px;
+                    }
+
+                    /* ============================================
+                       BEM BUTTON SYSTEM - Base & Modifiers
+                       ============================================ */
+
+                    /* Base Button */
+                    .tdm-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        font-size: var(--tdm-font-size-sm);
+                        font-weight: 500;
+                        line-height: 1.2;
+                        color: var(--tdm-text-primary);
+                        background-color: var(--tdm-bg-card);
+                        border: 1px solid var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-sm);
+                        cursor: pointer;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        transition: background-color var(--tdm-transition-fast),
+                                    border-color var(--tdm-transition-fast),
+                                    transform var(--tdm-transition-fast);
+                        box-sizing: border-box;
+                        user-select: none;
+                    }
+                    .tdm-btn:hover {
+                        background-color: var(--tdm-bg-secondary);
+                        border-color: var(--tdm-bg-main);
+                    }
+                    .tdm-btn:active {
+                        transform: scale(0.98);
+                    }
+                    .tdm-btn:disabled, .tdm-btn.disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                        pointer-events: none;
+                    }
+
+                    /* Size Modifiers */
+                    .tdm-btn--sm {
+                        height: var(--tdm-btn-height-sm);
+                        padding: var(--tdm-space-xs) var(--tdm-space-sm);
+                        font-size: var(--tdm-font-size-xs);
+                    }
+                    .tdm-btn--md {
+                        height: var(--tdm-btn-height-md);
+                        padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        font-size: var(--tdm-font-size-sm);
+                    }
+                    .tdm-btn--lg {
+                        height: var(--tdm-btn-height-lg);
+                        padding: var(--tdm-space-md) var(--tdm-space-lg);
+                        font-size: var(--tdm-font-size-base);
+                    }
+
+                    /* Color Modifiers */
+                    .tdm-btn--primary {
+                        background-color: var(--tdm-color-info);
+                        border-color: var(--tdm-color-info);
+                    }
+                    .tdm-btn--primary:hover {
+                        background-color: #1976D2;
+                        border-color: #1976D2;
+                    }
+
+                    .tdm-btn--success {
+                        background-color: var(--tdm-color-success);
+                        border-color: var(--tdm-color-success);
+                    }
+                    .tdm-btn--success:hover {
+                        background-color: #45a049;
+                        border-color: #45a049;
+                    }
+
+                    .tdm-btn--danger {
+                        background-color: var(--tdm-color-error);
+                        border-color: var(--tdm-color-error);
+                    }
+                    .tdm-btn--danger:hover {
+                        background-color: #e53935;
+                        border-color: #e53935;
+                    }
+
+                    .tdm-btn--warning {
+                        background-color: var(--tdm-color-warning);
+                        border-color: var(--tdm-color-warning);
+                        color: #000;
+                    }
+                    .tdm-btn--warning:hover {
+                        background-color: #f57c00;
+                        border-color: #f57c00;
+                    }
+
+                    /* State Modifiers for Dibs System */
+                    .tdm-btn--dibs-inactive {
+                        background-color: var(--tdm-dibs-inactive);
+                        border-color: var(--tdm-dibs-inactive);
+                    }
+                    .tdm-btn--dibs-inactive:hover {
+                        background-color: var(--tdm-dibs-inactive-hover);
+                        border-color: var(--tdm-dibs-inactive-hover);
+                    }
+
+                    .tdm-btn--dibs-yours {
+                        background-color: var(--tdm-dibs-success);
+                        border-color: var(--tdm-dibs-success);
+                    }
+                    .tdm-btn--dibs-yours:hover {
+                        background-color: var(--tdm-dibs-success-hover);
+                        border-color: var(--tdm-dibs-success-hover);
+                    }
+
+                    .tdm-btn--dibs-other {
+                        background-color: var(--tdm-dibs-other);
+                        border-color: var(--tdm-dibs-other);
+                    }
+                    .tdm-btn--dibs-other:hover {
+                        background-color: var(--tdm-dibs-other-hover);
+                        border-color: var(--tdm-dibs-other-hover);
+                    }
+
+                    /* State Modifiers for Notes */
+                    .tdm-btn--note-inactive {
+                        background-color: var(--tdm-note-inactive);
+                        border-color: var(--tdm-note-inactive);
+                    }
+                    .tdm-btn--note-inactive:hover {
+                        background-color: var(--tdm-note-inactive-hover);
+                        border-color: var(--tdm-note-inactive-hover);
+                    }
+
+                    .tdm-btn--note-active {
+                        background-color: var(--tdm-note-active);
+                        border-color: var(--tdm-note-active);
+                    }
+                    .tdm-btn--note-active:hover {
+                        background-color: var(--tdm-note-active-hover);
+                        border-color: var(--tdm-note-active-hover);
+                    }
+
+                    /* State Modifiers for Med Deals */
+                    .tdm-btn--med-inactive {
+                        background-color: var(--tdm-med-inactive);
+                        border-color: var(--tdm-med-inactive);
+                    }
+                    .tdm-btn--med-inactive:hover {
+                        background-color: var(--tdm-med-inactive-hover);
+                        border-color: var(--tdm-med-inactive-hover);
+                    }
+
+                    .tdm-btn--med-set {
+                        background-color: var(--tdm-med-set);
+                        border-color: var(--tdm-med-set);
+                    }
+                    .tdm-btn--med-set:hover {
+                        background-color: var(--tdm-med-set-hover);
+                        border-color: var(--tdm-med-set-hover);
+                    }
+
+                    .tdm-btn--med-mine {
+                        background-color: var(--tdm-med-mine);
+                        border-color: var(--tdm-med-mine);
+                    }
+                    .tdm-btn--med-mine:hover {
+                        background-color: var(--tdm-med-mine-hover);
+                        border-color: var(--tdm-med-mine-hover);
+                    }
+
+                    /* Assist Button */
+                    .tdm-btn--assist {
+                        background-color: var(--tdm-assist);
+                        border-color: var(--tdm-assist);
+                    }
+                    .tdm-btn--assist:hover {
+                        background-color: var(--tdm-assist-hover);
+                        border-color: var(--tdm-assist-hover);
+                    }
+
+                    /* Ghost/Outline Variant */
+                    .tdm-btn--ghost {
+                        background-color: transparent;
+                        border-color: var(--tdm-bg-secondary);
+                        color: var(--tdm-text-secondary);
+                    }
+                    .tdm-btn--ghost:hover {
+                        background-color: var(--tdm-bg-secondary);
+                        color: var(--tdm-text-primary);
+                    }
+
+                    /* Full Width Modifier */
+                    .tdm-btn--full {
+                        width: 100%;
+                    }
+
+                    /* Icon Button (square) */
+                    .tdm-btn--icon {
+                        padding: var(--tdm-space-sm);
+                        min-width: var(--tdm-btn-height-md);
+                    }
+
+                    /* ============================================
+                       LEGACY .btn CLASS COMPATIBILITY
+                       Maps old class names to new CSS variable system
+                       ============================================ */
+
+                    /* Base .btn inherits modern button styles */
+                    .dibs-notes-subrow .btn,
+                    .tdm-dibs-deals-container .btn,
+                    .tdm-notes-container .btn,
+                    .dibs-cell .btn,
+                    .notes-cell .btn,
+                    button.dibs-btn,
+                    button.med-deal-btn,
+                    button.retal-btn,
+                    button.req-assist-button {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 500;
+                        line-height: 1.2;
+                        color: var(--tdm-text-primary);
+                        border-radius: var(--tdm-radius-sm);
+                        cursor: pointer;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        transition: background-color var(--tdm-transition-fast),
+                                    border-color var(--tdm-transition-fast),
+                                    transform var(--tdm-transition-fast);
+                        box-sizing: border-box;
+                        user-select: none;
+                    }
+                    .dibs-notes-subrow .btn:active,
+                    button.dibs-btn:active,
+                    button.med-deal-btn:active,
+                    button.retal-btn:active {
+                        transform: scale(0.98);
+                    }
+
+                    /* Dibs Button States - Map old classes to new variables */
+                    .btn-dibs-inactive,
+                    .btn.btn-dibs-inactive {
+                        background-color: var(--tdm-dibs-inactive) !important;
+                        border-color: var(--tdm-dibs-inactive) !important;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .btn-dibs-inactive:hover,
+                    .btn.btn-dibs-inactive:hover {
+                        background-color: var(--tdm-dibs-inactive-hover) !important;
+                        border-color: var(--tdm-dibs-inactive-hover) !important;
+                    }
+
+                    .btn-dibs-success-you,
+                    .btn.btn-dibs-success-you {
+                        background-color: var(--tdm-dibs-success) !important;
+                        border-color: var(--tdm-dibs-success) !important;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .btn-dibs-success-you:hover,
+                    .btn.btn-dibs-success-you:hover {
+                        background-color: var(--tdm-dibs-success-hover) !important;
+                        border-color: var(--tdm-dibs-success-hover) !important;
+                    }
+
+                    .btn-dibs-success-other,
+                    .btn.btn-dibs-success-other {
+                        background-color: var(--tdm-dibs-other) !important;
+                        border-color: var(--tdm-dibs-other) !important;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .btn-dibs-success-other:hover,
+                    .btn.btn-dibs-success-other:hover {
+                        background-color: var(--tdm-dibs-other-hover) !important;
+                        border-color: var(--tdm-dibs-other-hover) !important;
+                    }
+
+                    .btn-dibs-disabled,
+                    .btn.btn-dibs-disabled {
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                        pointer-events: none;
+                    }
+
+                    /* Med Deal Button States */
+                    .btn-med-deal-default,
+                    .btn.btn-med-deal-default,
+                    .med-deal-btn.btn-med-deal-default {
+                        background-color: var(--tdm-med-inactive) !important;
+                        border-color: var(--tdm-med-inactive) !important;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .btn-med-deal-default:hover,
+                    .btn.btn-med-deal-default:hover {
+                        background-color: var(--tdm-med-inactive-hover) !important;
+                        border-color: var(--tdm-med-inactive-hover) !important;
+                    }
+
+                    .btn-med-deal-set,
+                    .btn.btn-med-deal-set,
+                    .med-deal-btn.btn-med-deal-set {
+                        background-color: var(--tdm-med-set) !important;
+                        border-color: var(--tdm-med-set) !important;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .btn-med-deal-set:hover,
+                    .btn.btn-med-deal-set:hover {
+                        background-color: var(--tdm-med-set-hover) !important;
+                        border-color: var(--tdm-med-set-hover) !important;
+                    }
+
+                    .btn-med-deal-mine,
+                    .btn.btn-med-deal-mine,
+                    .med-deal-btn.btn-med-deal-mine {
+                        background-color: var(--tdm-med-mine) !important;
+                        border-color: var(--tdm-med-mine) !important;
+                        color: #000 !important;
+                    }
+                    .btn-med-deal-mine:hover,
+                    .btn.btn-med-deal-mine:hover {
+                        background-color: var(--tdm-med-mine-hover) !important;
+                        border-color: var(--tdm-med-mine-hover) !important;
+                    }
+
+                    /* Retal Button States */
+                    .btn-retal-inactive,
+                    .btn.btn-retal-inactive,
+                    .retal-btn.btn-retal-inactive {
+                        background-color: var(--tdm-bg-card) !important;
+                        border-color: var(--tdm-bg-secondary) !important;
+                        color: var(--tdm-text-secondary) !important;
+                    }
+                    .btn-retal-active,
+                    .btn.btn-retal-active,
+                    .retal-btn.btn-retal-active {
+                        background-color: var(--tdm-color-warning) !important;
+                        border-color: var(--tdm-color-warning) !important;
+                        color: #000 !important;
+                    }
+                    .btn-retal-active:hover,
+                    .btn.btn-retal-active:hover {
+                        background-color: #f57c00 !important;
+                        border-color: #f57c00 !important;
+                    }
+
+                    /* Assist Request Button */
+                    .req-assist-button,
+                    .btn.req-assist-button {
+                        background-color: var(--tdm-assist) !important;
+                        border-color: var(--tdm-assist) !important;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .req-assist-button:hover,
+                    .btn.req-assist-button:hover {
+                        background-color: var(--tdm-assist-hover) !important;
+                        border-color: var(--tdm-assist-hover) !important;
+                    }
+
+                    /* Note Button States */
+                    .inactive-note-button,
+                    .btn.inactive-note-button {
+                        background-color: transparent !important;
+                        border-color: var(--tdm-note-inactive) !important;
+                    }
+                    .inactive-note-button:hover,
+                    .btn.inactive-note-button:hover {
+                        border-color: var(--tdm-note-inactive-hover) !important;
+                    }
+                    .active-note-button:hover,
+                    .btn.active-note-button:hover {
+                        border-color: var(--tdm-note-active-hover) !important;
+                    }
+
+                    /* Settings Panel Buttons */
+                    .tdm-note-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        font-size: var(--tdm-font-size-sm);
+                        font-weight: 500;
+                        color: var(--tdm-text-primary);
+                        background-color: var(--tdm-bg-card);
+                        border: 1px solid var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-sm);
+                        cursor: pointer;
+                        transition: background-color var(--tdm-transition-fast);
+                    }
+                    .tdm-note-btn:hover {
+                        background-color: var(--tdm-bg-secondary);
+                    }
+                    .tdm-note-save {
+                        background-color: var(--tdm-color-success) !important;
+                        border-color: var(--tdm-color-success) !important;
+                    }
+                    .tdm-note-save:hover {
+                        background-color: #45a049 !important;
+                    }
+                    .tdm-note-cancel {
+                        background-color: var(--tdm-bg-secondary) !important;
+                        border-color: var(--tdm-bg-secondary) !important;
+                    }
+                    .tdm-note-cancel:hover {
+                        background-color: var(--tdm-bg-main) !important;
+                    }
+
+                    /* ============================================
+                       TABLE LAYOUT - Column alignment fixes
+                       ============================================ */
+
+                    /* Ensure header and body columns align */
+                    .f-war-list .table-header,
+                    .f-war-list .table-body > li {
+                        display: flex;
+                        align-items: stretch;
+                        width: 100%;
+                        box-sizing: border-box;
+                    }
+
+                    /* Table cell base styling */
+                    .f-war-list .table-cell,
+                    .f-war-list .table-header > li {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: var(--tdm-space-xs) var(--tdm-space-sm);
+                        box-sizing: border-box;
+                        min-height: 28px;
+                    }
+
+                    /* Consistent borders for visual column separation */
+                    .f-war-list .table-cell:not(:last-child),
+                    .f-war-list .table-header > li:not(:last-child) {
+                        border-right: 1px solid rgba(255, 255, 255, 0.05);
+                    }
+
+                    /* Header styling */
+                    .f-war-list .table-header {
+                        background: var(--tdm-bg-secondary);
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    }
+
+                    /* Body row alternate styling */
+                    .f-war-list .table-body > li:nth-child(even) {
+                        background: rgba(255, 255, 255, 0.02);
+                    }
+
+                    /* Flex grow for variable width columns */
+                    .f-war-list .table-cell.flex-grow,
+                    .f-war-list .table-header > li.flex-grow {
+                        flex: 1 1 auto;
+                    }
+
+                    /* Fixed width columns */
+                    .f-war-list .table-cell.flex-fixed,
+                    .f-war-list .table-header > li.flex-fixed {
+                        flex: 0 0 auto;
+                    }
+
+                    /* TDM column containers alignment */
+                    .tdm-dibs-deals-container,
+                    .tdm-notes-container {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: stretch;
+                        gap: var(--tdm-space-xs);
+                    }
+
+                    /* ============================================
+                       MODAL SYSTEM - Unified modals with sizes
+                       ============================================ */
+
+                    /* Modal Backdrop */
+                    .tdm-modal-backdrop {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(0, 0, 0, 0.6);
+                        backdrop-filter: blur(4px);
+                        z-index: var(--tdm-z-modal-backdrop);
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity var(--tdm-transition-normal);
+                    }
+                    .tdm-modal-backdrop.visible {
+                        opacity: 1;
+                        pointer-events: auto;
+                    }
+
+                    /* Base Modal */
+                    .tdm-modal {
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        background: var(--tdm-modal-bg);
+                        border: 1px solid var(--tdm-modal-border);
+                        border-radius: var(--tdm-radius-lg);
+                        z-index: var(--tdm-z-modal);
+                        color: var(--tdm-text-primary);
+                        box-shadow: var(--tdm-shadow-modal);
+                        max-height: 85vh;
+                        overflow: hidden;
+                        display: none;
+                        flex-direction: column;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity var(--tdm-transition-normal), transform var(--tdm-transition-normal);
+                    }
+                    .tdm-modal.visible {
+                        display: flex;
+                        opacity: 1;
+                        pointer-events: auto;
+                        transform: translate(-50%, -50%) scale(1);
+                    }
+
+                    /* Size Variants */
+                    .tdm-modal--sm {
+                        width: 400px;
+                        max-width: 90vw;
+                    }
+                    .tdm-modal--md {
+                        width: 600px;
+                        max-width: 90vw;
+                    }
+                    .tdm-modal--lg {
+                        width: 800px;
+                        max-width: 95vw;
+                    }
+                    .tdm-modal--xl {
+                        width: 1000px;
+                        max-width: 95vw;
+                    }
+                    .tdm-modal--full {
+                        width: 95vw;
+                        height: 90vh;
+                    }
+
+                    /* Modal Header */
+                    .tdm-modal-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: var(--tdm-space-md) var(--tdm-space-lg);
+                        background: var(--tdm-modal-header);
+                        border-bottom: 1px solid var(--tdm-modal-border);
+                        flex-shrink: 0;
+                    }
+                    .tdm-modal-title {
+                        font-size: var(--tdm-font-size-lg);
+                        font-weight: 600;
+                        margin: 0;
+                        color: var(--tdm-text-primary);
+                    }
+                    .tdm-modal-close {
+                        background: transparent;
+                        border: none;
+                        color: var(--tdm-text-secondary);
+                        font-size: var(--tdm-font-size-xl);
+                        cursor: pointer;
+                        padding: var(--tdm-space-xs);
+                        line-height: 1;
+                        transition: color var(--tdm-transition-fast);
+                    }
+                    .tdm-modal-close:hover {
+                        color: var(--tdm-color-error);
+                    }
+
+                    /* Modal Body */
+                    .tdm-modal-body {
+                        padding: var(--tdm-space-lg);
+                        overflow-y: auto;
+                        flex: 1;
+                    }
+
+                    /* Modal Footer */
+                    .tdm-modal-footer {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        gap: var(--tdm-space-md);
+                        padding: var(--tdm-space-md) var(--tdm-space-lg);
+                        background: var(--tdm-bg-tertiary);
+                        border-top: 1px solid var(--tdm-modal-border);
+                        flex-shrink: 0;
+                    }
+
+                    /* ============================================
+                       TIMER COMPONENT - Countdown displays
+                       ============================================ */
+
+                    .tdm-timer {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: var(--tdm-space-xs);
+                        font-family: 'Monaco', 'Consolas', monospace;
+                        font-size: var(--tdm-font-size-sm);
+                        color: var(--tdm-text-primary);
+                        padding: var(--tdm-space-xs) var(--tdm-space-sm);
+                        background: var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-sm);
+                        white-space: nowrap;
+                    }
+                    .tdm-timer--urgent {
+                        color: var(--tdm-color-error);
+                        animation: tdm-pulse 1s ease-in-out infinite;
+                    }
+                    .tdm-timer--warning {
+                        color: var(--tdm-color-warning);
+                    }
+                    .tdm-timer--success {
+                        color: var(--tdm-color-success);
+                    }
+                    .tdm-timer-icon {
+                        font-size: var(--tdm-font-size-xs);
+                        opacity: 0.8;
+                    }
+
+                    /* ============================================
+                       BADGE COMPONENT - Status indicators
+                       ============================================ */
+
+                    .tdm-badge {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: var(--tdm-space-xs) var(--tdm-space-sm);
+                        font-size: var(--tdm-font-size-xs);
+                        font-weight: 600;
+                        line-height: 1;
+                        color: var(--tdm-text-primary);
+                        background: var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-full);
+                        white-space: nowrap;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+
+                    /* Badge Color Variants */
+                    .tdm-badge--success {
+                        background: var(--tdm-color-success);
+                        color: #fff;
+                    }
+                    .tdm-badge--error, .tdm-badge--danger {
+                        background: var(--tdm-color-error);
+                        color: #fff;
+                    }
+                    .tdm-badge--warning {
+                        background: var(--tdm-color-warning);
+                        color: #000;
+                    }
+                    .tdm-badge--info {
+                        background: var(--tdm-color-info);
+                        color: #fff;
+                    }
+                    .tdm-badge--neutral {
+                        background: var(--tdm-text-muted);
+                        color: #fff;
+                    }
+
+                    /* Badge Size Variants */
+                    .tdm-badge--sm {
+                        padding: 2px var(--tdm-space-xs);
+                        font-size: 9px;
+                    }
+                    .tdm-badge--lg {
+                        padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        font-size: var(--tdm-font-size-sm);
+                    }
+
+                    /* Badge with dot indicator */
+                    .tdm-badge--dot {
+                        width: 8px;
+                        height: 8px;
+                        padding: 0;
+                        border-radius: 50%;
+                    }
+                    .tdm-badge--dot.tdm-badge--lg {
+                        width: 12px;
+                        height: 12px;
+                    }
+
+                    /* Online/Status Badge Dock */
+                    .tdm-badge-dock {
+                        display: flex;
+                        align-items: center;
+                        gap: var(--tdm-space-sm);
+                        flex-wrap: wrap;
+                    }
+
+                    /* ============================================
+                       ANIMATIONS & TRANSITIONS
+                       ============================================ */
+
+                    /* Keyframe Animations */
+                    @keyframes tdm-pulse {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.6; }
+                    }
+                    @keyframes tdm-fade-in {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes tdm-fade-out {
+                        from { opacity: 1; }
+                        to { opacity: 0; }
+                    }
+                    @keyframes tdm-slide-up {
+                        from { transform: translateY(10px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+                    @keyframes tdm-slide-down {
+                        from { transform: translateY(-10px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+                    @keyframes tdm-scale-in {
+                        from { transform: scale(0.95); opacity: 0; }
+                        to { transform: scale(1); opacity: 1; }
+                    }
+                    @keyframes tdm-shimmer {
+                        0% { background-position: -200% 0; }
+                        100% { background-position: 200% 0; }
+                    }
+
+                    /* Animation Utility Classes */
+                    .tdm-fade-in {
+                        animation: tdm-fade-in var(--tdm-transition-normal) forwards;
+                    }
+                    .tdm-fade-out {
+                        animation: tdm-fade-out var(--tdm-transition-normal) forwards;
+                    }
+                    .tdm-slide-up {
+                        animation: tdm-slide-up var(--tdm-transition-normal) forwards;
+                    }
+                    .tdm-slide-down {
+                        animation: tdm-slide-down var(--tdm-transition-normal) forwards;
+                    }
+                    .tdm-scale-in {
+                        animation: tdm-scale-in var(--tdm-transition-normal) forwards;
+                    }
+
+                    /* Loading Skeleton */
+                    .tdm-skeleton {
+                        background: linear-gradient(
+                            90deg,
+                            var(--tdm-bg-secondary) 25%,
+                            var(--tdm-bg-main) 50%,
+                            var(--tdm-bg-secondary) 75%
+                        );
+                        background-size: 200% 100%;
+                        animation: tdm-shimmer 1.5s ease-in-out infinite;
+                        border-radius: var(--tdm-radius-sm);
+                    }
+                    .tdm-skeleton--text {
+                        height: 14px;
+                        width: 100%;
+                        margin-bottom: var(--tdm-space-xs);
+                    }
+                    .tdm-skeleton--circle {
+                        border-radius: 50%;
+                    }
+                    .tdm-skeleton--button {
+                        height: var(--tdm-btn-height-md);
+                        width: 80px;
+                    }
+
+                    /* Loading Spinner */
+                    .tdm-spinner {
+                        display: inline-block;
+                        width: 16px;
+                        height: 16px;
+                        border: 2px solid var(--tdm-bg-main);
+                        border-top-color: var(--tdm-color-info);
+                        border-radius: 50%;
+                        animation: spin 0.8s linear infinite;
+                    }
+                    .tdm-spinner--sm {
+                        width: 12px;
+                        height: 12px;
+                        border-width: 1.5px;
+                    }
+                    .tdm-spinner--lg {
+                        width: 24px;
+                        height: 24px;
+                        border-width: 3px;
+                    }
+
+                    /* Transition Utilities */
+                    .tdm-transition-all {
+                        transition: all var(--tdm-transition-normal);
+                    }
+                    .tdm-transition-colors {
+                        transition: color var(--tdm-transition-fast),
+                                    background-color var(--tdm-transition-fast),
+                                    border-color var(--tdm-transition-fast);
+                    }
+                    .tdm-transition-transform {
+                        transition: transform var(--tdm-transition-fast);
+                    }
+                    .tdm-transition-opacity {
+                        transition: opacity var(--tdm-transition-fast);
+                    }
+
+                    /* ============================================
+                       RESPONSIVE DESIGN - Mobile/PDA support
+                       ============================================ */
+
+                    /* Responsive Visibility Utilities */
+                    .tdm-hide-mobile { display: block; }
+                    .tdm-show-mobile { display: none; }
+                    .tdm-hide-tablet { display: block; }
+                    .tdm-show-tablet { display: none; }
+
+                    /* Tablet Breakpoint (768px) */
+                    @media (max-width: 768px) {
+                        .tdm-hide-tablet { display: none !important; }
+                        .tdm-show-tablet { display: block !important; }
+
+                        /* Larger touch targets */
+                        .tdm-btn {
+                            min-height: 36px;
+                            padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        }
+
+                        /* Settings tabs stack */
+                        .tdm-settings-tabs {
+                            flex-wrap: wrap;
+                        }
+                        .tdm-settings-tab {
+                            flex: 1 1 auto;
+                            min-width: 80px;
+                        }
+
+                        /* Modal adjustments */
+                        .tdm-modal--lg,
+                        .tdm-modal--xl {
+                            width: 95vw;
+                        }
+
+                        /* Toggle switch larger for touch */
+                        .tdm-toggle-switch {
+                            width: 50px;
+                            height: 26px;
+                        }
+                        .tdm-toggle-switch::after {
+                            width: 20px;
+                            height: 20px;
+                        }
+                        .tdm-toggle-switch.active::after {
+                            transform: translateX(24px);
+                        }
+                    }
+
+                    /* Mobile Breakpoint (480px) */
+                    @media (max-width: 480px) {
+                        .tdm-hide-mobile { display: none !important; }
+                        .tdm-show-mobile { display: block !important; }
+
+                        /* Minimum touch target 44px (Apple HIG) */
+                        .tdm-btn {
+                            min-height: 44px;
+                            font-size: var(--tdm-font-size-base);
+                        }
+
+                        /* Full width buttons on mobile */
+                        .tdm-btn--mobile-full {
+                            width: 100%;
+                        }
+
+                        /* Stack settings content */
+                        .tdm-settings-panel {
+                            padding: 4px;
+                        }
+                        .settings-section {
+                            padding: 6px !important;
+                        }
+                        .settings-header {
+                            font-size: 12px !important;
+                            padding: 4px 6px !important;
+                        }
+
+                        /* Modal full screen on mobile */
+                        .tdm-modal {
+                            width: 100vw !important;
+                            max-width: 100vw !important;
+                            height: 100vh !important;
+                            max-height: 100vh !important;
+                            border-radius: 0;
+                        }
+                        .tdm-modal-body {
+                            padding: var(--tdm-space-md);
+                        }
+
+                        /* Column grid single column */
+                        .tdm-column-grid {
+                            grid-template-columns: 1fr;
+                            gap: var(--tdm-space-md);
+                        }
+
+                        /* Column visibility - 2 columns on mobile, compact */
+                        #column-visibility-rw,
+                        #column-visibility-ml {
+                            grid-template-columns: repeat(2, 1fr) !important;
+                            gap: 6px 8px !important;
+                        }
+
+                        /* Compact column control on mobile - aligned inputs */
+                        .column-control.tdm-toggle-container {
+                            display: flex !important;
+                            flex-wrap: wrap !important;
+                            align-items: center !important;
+                            gap: 4px !important;
+                            width: 100% !important;
+                            height: auto !important;
+                        }
+                        .column-control .tdm-toggle-label {
+                            flex: 1 !important;
+                            min-width: unset !important;
+                            font-size: 11px !important;
+                            line-height: 24px !important;
+                        }
+                        .column-control .column-width-input {
+                            width: 36px !important;
+                            min-width: 36px !important;
+                            height: 20px !important;
+                            padding: 0 2px !important;
+                            font-size: 11px !important;
+                            line-height: 20px !important;
+                            text-align: center !important;
+                        }
+                        .column-control > div:last-child {
+                            font-size: 11px !important;
+                            line-height: 24px !important;
+                        }
+
+                        /* Badge adjustments */
+                        .tdm-badge {
+                            padding: var(--tdm-space-sm) var(--tdm-space-md);
+                            font-size: var(--tdm-font-size-sm);
+                        }
+                    }
+
+                    /* TornPDA specific adjustments */
+                    @media (max-width: 400px) {
+                        .tdm-settings-tabs {
+                            font-size: var(--tdm-font-size-xs);
+                        }
+                        .tdm-settings-tab {
+                            padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        }
+                        /* Single column for very narrow screens */
+                        #column-visibility-rw,
+                        #column-visibility-ml {
+                            grid-template-columns: 1fr !important;
+                        }
+                    }
+
+                    /* ============================================
+                       CONSOLIDATED STYLES - From scattered blocks
+                       ============================================ */
+
+                    /* Mini Settings Grid (from tdm-mini-style) */
+                    .tdm-grid-war {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                        gap: var(--tdm-space-md);
+                        align-items: end;
+                    }
+                    .tdm-mini-lbl {
+                        display: block;
+                        font-size: var(--tdm-font-size-sm);
+                        color: var(--tdm-text-secondary);
+                        margin-bottom: var(--tdm-space-xs);
+                        font-weight: 500;
+                    }
+                    .tdm-mini-checkbox {
+                        font-size: var(--tdm-font-size-base);
+                        color: var(--tdm-text-secondary);
+                        display: flex;
+                        align-items: center;
+                        gap: var(--tdm-space-sm);
+                    }
+                    .tdm-check-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                        gap: var(--tdm-space-sm);
+                        align-items: center;
+                    }
+                    .tdm-term-required {
+                        border-color: var(--tdm-color-info) !important;
+                        outline: 1px solid var(--tdm-color-info);
+                    }
+                    .tdm-term-calculated {
+                        border-color: var(--tdm-color-success) !important;
+                    }
+                    .tdm-term-error {
+                        border-color: var(--tdm-color-error) !important;
+                        outline: 1px solid var(--tdm-color-error);
+                    }
+                    .tdm-initial-readonly {
+                        background: var(--tdm-bg-secondary) !important;
+                        color: var(--tdm-text-muted) !important;
+                    }
+
+                    /* API Key Card States (from tdm-api-key-style) */
+                    #tdm-api-key-card {
+                        transition: border-color var(--tdm-transition-fast), box-shadow var(--tdm-transition-fast);
+                    }
+                    #tdm-api-key-card[data-tone="success"] {
+                        border-color: var(--tdm-color-success);
+                    }
+                    #tdm-api-key-card[data-tone="warning"] {
+                        border-color: var(--tdm-color-warning);
+                    }
+                    #tdm-api-key-card[data-tone="info"] {
+                        border-color: var(--tdm-color-info);
+                    }
+                    #tdm-api-key-card[data-tone="error"] {
+                        border-color: var(--tdm-color-error);
+                    }
+                    .tdm-api-key-highlight {
+                        box-shadow: 0 0 12px 2px rgba(59, 130, 246, 0.5);
+                    }
+
+                    /* War Attack Faction Colors (from tdm-war-attack-color-css) */
+                    .tdm-war-our {
+                        color: var(--tdm-color-success) !important;
+                        font-weight: 600;
+                    }
+                    .tdm-war-opp {
+                        color: var(--tdm-color-error) !important;
+                        font-weight: 600;
+                    }
+                    .tdm-war-our.t-blue,
+                    .tdm-war-opp.t-blue {
+                        color: inherit;
+                    }
+
                     /* userInfoWrap honorWrap*/
                     .honorWrap___BHau4, .members-cont a a > div  { margin-left: 1px !important; margin-right: 1px !important; }
                     /* status cells */
@@ -18081,9 +19534,9 @@
                     /* Inline last-action placed within our subrow */
                     .tdm-last-action-inline{font-size:10px;line-height:1.1;opacity:.8;margin-top:0;margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
                     .tdm-fav-heart{color:#94a3b8;font-size:18px;line-height:1;margin-right:6px;cursor:pointer;background:transparent;border:none;padding:0;transition:color .12s ease,transform .12s ease;}
-                    .tdm-fav-heart:hover{color:#fcd34d;transform:scale(1.05);}
-                    .tdm-fav-heart--active{color:rgba(240, 4, 4, 0.98);}
-                    .tdm-favorite-row{background:rgba(250,204,21,0.08)!important;}
+                    .tdm-fav-heart:hover{color:#bc7100fa;transform:scale(1.05);}
+                    .tdm-fav-heart--active{color:#f00404fa;}
+                    .tdm-favorite-row{background:rgba(250, 204, 21, 0.05)!important;}
                     .tdm-travel-eta{font-size:10px;line-height:1.1;opacity:.85;margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
                     .tdm-travel-eta.tdm-travel-conf{font-weight:600;opacity:.95;}
                     .tdm-travel-eta.tdm-travel-lowconf{opacity:.6;}
@@ -18094,12 +19547,46 @@
 
                     /* Layout and icon styles for our dibs/notes subrow */
                     .dibs-notes-subrow{display:flex;align-items:center;gap:6px;margin-top:2px;max-width:100%;flex-wrap:wrap;overflow:visible;}
-                    .dibs-notes-subrow .note-button.btn{background:transparent !important;border:none !important;padding:0 2px !important;min-width:auto !important;width:24px;height:20px;display:inline-flex;align-items:center;justify-content:center;}
-                    .dibs-notes-subrow .note-button.btn svg{width:18px;height:18px;stroke:${config.CSS.colors.noteInactive}; background-color: #7ae7f3a4;}
-                    .dibs-notes-subrow .note-button.btn.inactive-note-button svg{stroke:${config.CSS.colors.noteInactive}; background-color: #7ae7f3a4;}
-                    .dibs-notes-subrow .note-button.btn.inactive-note-button:hover svg{stroke:${config.CSS.colors.noteInactiveHover}; background-color: #7ae7f3a4;}
-                    .dibs-notes-subrow .note-button.btn.active-note-button svg{stroke:${config.CSS.colors.noteActive};background-color: #019cf6af;}
-                    .dibs-notes-subrow .note-button.btn.active-note-button:hover svg{stroke:${config.CSS.colors.noteActiveHover};background-color: #0078bdaf;}
+                    /* Note button visuals for ranked-war subrow: match dibs/med-deal sizing and colors via CSS vars.
+                       Note button width intentionally doubled relative to other subrow buttons. */
+                    .dibs-notes-subrow .note-button.btn{
+                        background: transparent;
+                        border: 1px solid var(--tdm-note-inactive) !important;
+                        padding: 1px 1px !important;
+                        min-width: 40px !important;
+                        max-width: 40px !important;
+                        max-height: 30px !important;
+                        font-size: 0.75em !important;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 3px;
+                        box-sizing: border-box;
+                        color: var(--tdm-text-primary) !important;
+                    }
+                    .dibs-notes-subrow .note-button.btn.inactive-note-button:hover{ border-color: var(--tdm-note-inactive-hover) !important; background-color: var(--tdm-note-inactive-hover); color: var(--tdm-note-inactive-text) !important; }
+                    .dibs-notes-subrow .note-button.btn.active-note-button{ border-color: var(--tdm-note-active) !important; background-color: var(--tdm-note-active); color: var(--tdm-note-active-text) !important; font-weight:600; }
+                    .dibs-notes-subrow .note-button.btn.active-note-button:hover{ border-color: var(--tdm-note-active-hover) !important; background-color: var(--tdm-note-active-hover); color: var(--tdm-note-active-text) !important; }
+                    /* Icon sizing uses currentColor so it follows border/text coloring */
+                    .dibs-notes-subrow .note-button.btn svg{ width: 18px; height: 18px; stroke: currentColor; background: none; padding: 0; border-radius: 0; }
+                    /* Keep compact class for logic but let CSS control sizing */
+                    .dibs-notes-subrow .note-button.btn.tdm-note-compact{ min-width: 40px !important; max-width: 40px !important; height: auto !important; }
+                    /* Preview state applied by JS when compact and note exists; CSS handles truncation */
+                    .dibs-notes-subrow .note-button.btn.tdm-note-preview{ white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; max-width: 140px !important; display: inline-block !important; text-align: left !important; padding: 2px 6px !important; }
+                    /* Expanded text-label state (non-compact) - keep single-line visual in subrow
+                       JS may add this class for a populated note; keep the button a single-line
+                       pill and truncate with ellipsis so it doesn't grow taller. */
+                    .dibs-notes-subrow .note-button.btn.tdm-note-expanded{
+                        white-space: nowrap !important;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis !important;
+                        text-align: left !important;
+                        display: inline-block !important;
+                        padding: 2px 6px !important;
+                        max-height: 30px !important;
+                    }
+                    /* Empty-compact placeholder */
+                    .dibs-notes-subrow .note-button.btn.tdm-note-empty{ opacity: 0.95; }
 
                     /* --- Main Controls Container --- */
                     .tdm-dibs-deals-container, .tdm-notes-container {
@@ -18181,27 +19668,44 @@
 
 
                     /* Button Colors */
-                    .btn-dibs-inactive { background-color: ${config.CSS.colors.dibsInactive} !important; color: #fff !important; }
-                    .btn-dibs-inactive:hover { background-color: ${config.CSS.colors.dibsInactiveHover} !important; }
+                    .btn-dibs-inactive { background-color: var(--tdm-dibs-inactive) !important; color: #fff !important; }
+                    .btn-dibs-inactive:hover { background-color: var(--tdm-dibs-inactive-hover) !important; }
                     /* Dibs Disabled (policy) */
                     .btn-dibs-disabled { background-color: #5a5a5a !important; color: #cfcfcf !important; cursor: not-allowed !important; border: 1px solid #777 !important; }
                     .btn-dibs-disabled:hover { background-color: #505050 !important; color: #e0e0e0 !important; }
-                    .btn-dibs-success-you { background-color: ${config.CSS.colors.dibsSuccess} !important; color: #fff !important; }
-                    .btn-dibs-success-you:hover { background-color: ${config.CSS.colors.dibsSuccessHover} !important; }
-                    .btn-dibs-success-other { background-color: ${config.CSS.colors.dibsOther} !important; color: #fff !important; }
-                    .btn-dibs-success-other:hover { background-color: ${config.CSS.colors.dibsOtherHover} !important; }
-                    .inactive-note-button, .note-button { background-color: ${config.CSS.colors.noteInactive} !important; color: #fff !important; }
-                    .inactive-note-button:hover, .note-button:hover { background-color: ${config.CSS.colors.noteInactiveHover} !important; }
-                    .active-note-button { background-color: ${config.CSS.colors.noteActive} !important; color: #fff !important; }
-                    .active-note-button:hover { background-color: ${config.CSS.colors.noteActiveHover} !important; }
-                    .btn-med-deal-inactive, .btn-med-deal-default { background-color: ${config.CSS.colors.medDealInactive} !important; color: #fff !important; }
-                    .btn-med-deal-inactive:hover, .btn-med-deal-default:hover { background-color: ${config.CSS.colors.medDealInactiveHover} !important; }
-                    .btn-med-deal-set { background-color: ${config.CSS.colors.medDealSet} !important; color: #fff !important; }
-                    .btn-med-deal-set:hover { background-color: ${config.CSS.colors.medDealSetHover} !important; }
-                    .btn-med-deal-mine { background-color: ${config.CSS.colors.medDealMine} !important; color: #fff !important; }
-                    .btn-med-deal-mine:hover { background-color: ${config.CSS.colors.medDealMineHover} !important; }
-                    .req-assist-button { background-color: ${config.CSS.colors.assistButton} !important; color: #fff !important; }
-                    .req-assist-button:hover { background-color: ${config.CSS.colors.assistButtonHover} !important; }
+                    .btn-dibs-success-you { background-color: var(--tdm-dibs-success) !important; color: #fff !important; }
+                    .btn-dibs-success-you:hover { background-color: var(--tdm-dibs-success-hover) !important; }
+                    .btn-dibs-success-other { background-color: var(--tdm-dibs-other) !important; color: #fff !important; }
+                    .btn-dibs-success-other:hover { background-color: var(--tdm-dibs-other-hover) !important; }
+                    .inactive-note-button, .note-button {
+                        background-color: var(--tdm-note-inactive) !important;
+                        border: 1px solid var(--tdm-note-inactive) !important;
+                        color: var(--tdm-note-inactive-text) !important;
+                    }
+                    .inactive-note-button:hover, .note-button:hover {
+                        background-color: var(--tdm-note-inactive-hover) !important;
+                        border-color: var(--tdm-note-inactive-hover) !important;
+                        color: var(--tdm-note-inactive-text) !important;
+                    }
+                    .active-note-button {
+                        background-color: var(--tdm-note-active) !important;
+                        border: 1px solid var(--tdm-note-active) !important;
+                        color: var(--tdm-note-active-text) !important;
+                        font-weight: 600 !important;
+                    }
+                    .active-note-button:hover {
+                        background-color: var(--tdm-note-active-hover) !important;
+                        border-color: var(--tdm-note-active-hover) !important;
+                        color: var(--tdm-note-active-text) !important;
+                    }
+                    .btn-med-deal-inactive, .btn-med-deal-default { background-color: var(--tdm-med-inactive) !important; color: #fff !important; }
+                    .btn-med-deal-inactive:hover, .btn-med-deal-default:hover { background-color: var(--tdm-med-inactive-hover) !important; }
+                    .btn-med-deal-set { background-color: var(--tdm-med-set) !important; color: #fff !important; }
+                    .btn-med-deal-set:hover { background-color: var(--tdm-med-set-hover) !important; }
+                    .btn-med-deal-mine { background-color: var(--tdm-med-mine) !important; color: #fff !important; }
+                    .btn-med-deal-mine:hover { background-color: var(--tdm-med-mine-hover) !important; }
+                    .req-assist-button { background-color: var(--tdm-assist) !important; color: #fff !important; }
+                    .req-assist-button:hover { background-color: var(--tdm-assist-hover) !important; }
                     .btn-retal-inactive { background-color: #555555 !important; color: #ccc !important; }
                     .btn-retal-inactive:hover { background-color: #444444 !important; color: #ddd !important; }
                     /* Standardized alert button base */
@@ -18224,35 +19728,343 @@
                     .dibs-notes-subrow .retal-btn{min-width:28px !important;max-width:90px !important;padding:0 6px !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 auto;}
 
                     /* Settings Panel Styles (Compacted) */
-                    .settings-section { margin-bottom: 4px; width: 100%; }
-                    .settings-section-divided { padding-top: 6px; border-top: 1px solid #374151; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; width: 100%; }
-                    .settings-header { font-size: 12px; font-weight: 600; margin: 0 0 6px 0; text-align: center; color: #93c5fd; background-color: #1a1a1a; padding: 4px; border-radius: 4px; width: 100%; user-select: none; }
-                    /* Make subsection headers slightly lighter for visual separation */
-                    .settings-subsection > .settings-header { color: #5089daff !important; }
-                    .settings-subheader { font-size: 10px; font-weight: 600; }
-                    .settings-button-group { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; width: 100%; }
-                    .settings-input, .settings-input-display { width: 100%; padding: 4px; background-color: #333; color: white; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
-                    .settings-input-display { padding: 6px 4px; }
-                    .settings-btn { background-color: #4b5563; color: #eee; border: 1px solid #6b7280; padding: 5px 10px; font-size: 0.85em; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
-                    .settings-btn:hover { background-color: #606d7a; }
-                    .settings-btn-green { background-color: #4CAF50; border-color: #4CAF50; }
-                    .settings-btn-green:hover { background-color: #45a049; }
-                    .settings-btn-red { background-color: #f44336; border-color: #f44336; }
-                    .settings-btn-red:hover { background-color: #e53935; }
-                    .war-type-controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; }
+                    #tdm-settings-popup,
+                    #tdm-settings-popup *,
+                    #tdm-settings-content,
+                    #tdm-settings-content * {
+                        max-width: 100%;
+                        box-sizing: border-box;
+                    }
+                    #tdm-settings-popup {
+                        overflow-x: hidden !important;
+                    }
+                    .settings-section {
+                        margin-bottom: var(--tdm-space-md);
+                        width: 100%;
+                        max-width: 100%;
+                        background-color: var(--tdm-bg-card);
+                        border: 2px solid var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-md);
+                        padding: var(--tdm-space-md);
+                        box-sizing: border-box;
+                        overflow-x: hidden;
+                    }
+                    .settings-section-divided {
+                        padding-top: var(--tdm-space-md);
+                        border-top: 1px solid var(--tdm-bg-secondary);
+                        display: flex;
+                        gap: var(--tdm-space-md);
+                        justify-content: center;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        width: 100%;
+                    }
+                    .settings-header {
+                        font-size: var(--tdm-font-size-base);
+                        font-weight: 700;
+                        margin: 0 0 var(--tdm-space-md) 0;
+                        text-align: center;
+                        color: var(--tdm-text-accent);
+                        background-color: var(--tdm-bg-secondary);
+                        padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        border-radius: var(--tdm-radius-sm);
+                        width: 100%;
+                        user-select: none;
+                        box-sizing: border-box;
+                    }
+                    /* Make subsection headers same style but slightly different color */
+                    .settings-subsection > .settings-header {
+                        font-size: var(--tdm-font-size-base);
+                        font-weight: 700;
+                        color: #7ab3ec !important;
+                        background-color: var(--tdm-bg-tertiary);
+                    }
+                    .settings-subheader {
+                        font-size: var(--tdm-font-size-base);
+                        font-weight: 700;
+                        color: var(--tdm-text-secondary);
+                    }
+                    /* Mini labels as subheadings */
+                    .mini-label, .tdm-mini-lbl {
+                        font-size: var(--tdm-font-size-sm);
+                        font-weight: 700;
+                    }
+                    .settings-button-group { display: flex; flex-wrap: wrap; gap: var(--tdm-space-sm); justify-content: center; width: 100%; }
+                    .settings-input, .settings-input-display {
+                        width: 100%;
+                        padding: var(--tdm-space-sm);
+                        background-color: var(--tdm-bg-secondary);
+                        color: var(--tdm-text-primary);
+                        border: 1px solid #888;
+                        border-radius: var(--tdm-radius-sm);
+                        box-sizing: border-box;
+                        font-size: var(--tdm-font-size-sm);
+                        transition: border-color var(--tdm-transition-fast);
+                    }
+                    .settings-input:focus, .settings-input-display:focus {
+                        outline: none;
+                        border-color: var(--tdm-color-info);
+                    }
+                    /* Apply light grey border to all text inputs globally */
+                    input[type="text"], input[type="number"], input[type="password"], textarea, select {
+                        border: 1px solid #888 !important;
+                    }
+                    input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
+                        border-color: var(--tdm-color-info) !important;
+                    }
+                    .settings-input-display { padding: var(--tdm-space-md) var(--tdm-space-sm); }
+                    .settings-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: var(--tdm-color-info);
+                        color: var(--tdm-text-primary);
+                        border: 1px solid var(--tdm-color-info);
+                        padding: var(--tdm-space-sm) var(--tdm-space-md);
+                        font-size: var(--tdm-font-size-sm);
+                        font-weight: 500;
+                        border-radius: var(--tdm-radius-sm);
+                        cursor: pointer;
+                        transition: background-color var(--tdm-transition-fast),
+                                    border-color var(--tdm-transition-fast),
+                                    transform var(--tdm-transition-fast);
+                        white-space: nowrap;
+                    }
+                    .settings-btn:hover { background-color: #1976D2; border-color: #1976D2; }
+                    .settings-btn:active { transform: scale(0.98); }
+                    .settings-btn-green { background-color: var(--tdm-color-success); border-color: var(--tdm-color-success); }
+                    .settings-btn-green:hover { background-color: #45a049; border-color: #45a049; }
+                    .settings-btn-red { background-color: var(--tdm-color-error); border-color: var(--tdm-color-error); }
+                    .settings-btn-red:hover { background-color: #e53935; border-color: #e53935; }
+                    .settings-btn-blue { background-color: var(--tdm-color-info); border-color: var(--tdm-color-info); }
+                    .settings-btn-blue:hover { background-color: #1976D2; border-color: #1976D2; }
+                    .settings-btn-yellow { background-color: var(--tdm-color-warning); border-color: var(--tdm-color-warning); color: #000; }
+                    .settings-btn-yellow:hover { background-color: #f57c00; border-color: #f57c00; }
+                    .settings-btn-grey, .settings-btn-gray { background-color: var(--tdm-bg-secondary); border-color: var(--tdm-bg-main); }
+                    .settings-btn-grey:hover, .settings-btn-gray:hover { background-color: var(--tdm-bg-main); border-color: #888; }
+                    .war-type-controls { display: flex; gap: var(--tdm-space-md); justify-content: center; margin-bottom: var(--tdm-space-lg); }
                     .war-type-controls .settings-btn { flex: 1; }
-                    .column-control { display:flex; gap:6px; align-items:center; }
-                    .column-width-input { padding: 4px; border-radius: 4px; border: 1px solid #555; background: #222; color: #fff; font-size: 0.85em; text-align: right; box-sizing: border-box; }
-                    .column-toggle-btn { padding: 4px 12px; border: 2px solid #555; border-radius: 6px; background: #2c2c2c; color: #ccc; cursor: pointer; transition: all 0.3s ease; font-size: 0.85em; font-weight: 500; min-width: 92px; text-align: center; line-height:1.2; }
-                    .column-toggle-btn.active { background: #4CAF50; border-color: #4CAF50; color: white; }
-                    .column-toggle-btn.active:hover { background: #45a049; border-color: #45a049; color: white; }
-                    .column-toggle-btn.inactive { background: #f44336; border-color: #f44336; color: white; }
+                    .column-control {
+                        display: grid;
+                        grid-template-columns: 28px 80px 50px 20px;
+                        gap: var(--tdm-space-sm);
+                        align-items: center;
+                        padding: var(--tdm-space-xs) 0;
+                    }
+                    /* Column settings grid container */
+                    #column-visibility-rw,
+                    #column-visibility-ml {
+                        display: grid !important;
+                        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
+                        gap: var(--tdm-space-sm) var(--tdm-space-md) !important;
+                        justify-items: start;
+                    }
+                    /* Force ALL settings panel toggles to stay small */
+                    .tdm-settings-panel .tdm-toggle-switch,
+                    .settings-section .tdm-toggle-switch {
+                        width: 24px !important;
+                        height: 12px !important;
+                    }
+                    .tdm-settings-panel .tdm-toggle-switch::after,
+                    .settings-section .tdm-toggle-switch::after {
+                        width: 8px !important;
+                        height: 8px !important;
+                        top: 1px !important;
+                        left: 1px !important;
+                    }
+                    .tdm-settings-panel .tdm-toggle-switch.active::after,
+                    .settings-section .tdm-toggle-switch.active::after {
+                        transform: translateX(12px) !important;
+                    }
+                    .column-width-input {
+                        padding: var(--tdm-space-sm);
+                        border-radius: var(--tdm-radius-sm);
+                        border: 1px solid #888;
+                        background: var(--tdm-bg-secondary);
+                        color: var(--tdm-text-primary);
+                        font-size: var(--tdm-font-size-sm);
+                        text-align: center;
+                        box-sizing: border-box;
+                        transition: border-color var(--tdm-transition-fast);
+                    }
+                    .column-width-input:focus {
+                        outline: none;
+                        border-color: var(--tdm-color-info);
+                    }
+                    .column-toggle-btn {
+                        padding: var(--tdm-space-sm) var(--tdm-space-lg);
+                        border: 2px solid var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-md);
+                        background: var(--tdm-bg-card);
+                        color: var(--tdm-text-secondary);
+                        cursor: pointer;
+                        transition: all var(--tdm-transition-normal);
+                        font-size: var(--tdm-font-size-sm);
+                        font-weight: 500;
+                        min-width: 92px;
+                        text-align: center;
+                        line-height: 1.2;
+                    }
+                    .column-toggle-btn.active {
+                        background: var(--tdm-color-success);
+                        border-color: var(--tdm-color-success);
+                        color: var(--tdm-text-primary);
+                    }
+                    .column-toggle-btn.active:hover {
+                        background: #45a049;
+                        border-color: #45a049;
+                    }
+                    .column-toggle-btn.inactive {
+                        background: var(--tdm-color-error);
+                        border-color: var(--tdm-color-error);
+                        color: var(--tdm-text-primary);
+                    }
 
-                    /* Collapsible sections */
-                    .collapsible .collapsible-header { cursor: pointer; position: relative; }
-                    .collapsible .chevron { float: right; font-size: 12px; opacity: 0.8; }
-                    .collapsible.collapsed .collapsible-content { display: none !important; }
-                    .collapsible.collapsed .chevron { transform: rotate(-90deg); }
+                    /* ============================================
+                       SETTINGS TABS - Display / Dibs / Advanced
+                       ============================================ */
+                    .tdm-settings-tabs {
+                        display: flex;
+                        border-bottom: 2px solid var(--tdm-bg-secondary);
+                        margin-bottom: var(--tdm-space-md);
+                        gap: var(--tdm-space-xs);
+                        width: 100%;
+                    }
+                    .tdm-settings-tab {
+                        flex: 1;
+                        padding: var(--tdm-space-md) var(--tdm-space-lg);
+                        background: var(--tdm-bg-tertiary);
+                        border: none;
+                        border-bottom: 3px solid transparent;
+                        color: var(--tdm-text-secondary);
+                        font-size: var(--tdm-font-size-sm);
+                        font-weight: 600;
+                        cursor: pointer;
+                        text-align: center;
+                        transition: all var(--tdm-transition-fast);
+                        border-radius: var(--tdm-radius-sm) var(--tdm-radius-sm) 0 0;
+                    }
+                    .tdm-settings-tab:hover {
+                        background: var(--tdm-bg-secondary);
+                        color: var(--tdm-text-primary);
+                    }
+                    .tdm-settings-tab--active {
+                        background: var(--tdm-bg-secondary);
+                        color: var(--tdm-text-accent);
+                        border-bottom-color: var(--tdm-color-info);
+                    }
+                    .tdm-settings-panel {
+                        display: none;
+                        padding: var(--tdm-space-md);
+                        width: 100%;
+                        max-width: 100%;
+                        box-sizing: border-box;
+                        overflow-x: hidden;
+                    }
+                    .tdm-settings-panel--active {
+                        display: block;
+                        max-height: 70vh;
+                        overflow-y: auto;
+                    }
+
+                    /* ============================================
+                       TOGGLE SWITCH - Modern on/off switches
+                       ============================================ */
+                    .tdm-toggle-switch {
+                        position: relative;
+                        width: 28px;
+                        height: 14px;
+                        background: var(--tdm-bg-secondary);
+                        border: 1px solid #555;
+                        border-radius: var(--tdm-radius-full);
+                        cursor: pointer;
+                        transition: background var(--tdm-transition-fast), border-color var(--tdm-transition-fast);
+                        flex-shrink: 0;
+                    }
+                    .tdm-toggle-switch::after {
+                        content: '';
+                        position: absolute;
+                        width: 10px;
+                        height: 10px;
+                        background: var(--tdm-text-secondary);
+                        border-radius: 50%;
+                        top: 1px;
+                        left: 1px;
+                        transition: transform var(--tdm-transition-fast), background var(--tdm-transition-fast);
+                    }
+                    .tdm-toggle-switch:hover::after {
+                        background: var(--tdm-text-primary);
+                    }
+                    .tdm-toggle-switch.active {
+                        background: var(--tdm-color-success);
+                        border-color: var(--tdm-color-success);
+                    }
+                    .tdm-toggle-switch.active::after {
+                        transform: translateX(14px);
+                        background: var(--tdm-text-primary);
+                    }
+                    .tdm-toggle-switch.inactive {
+                        background: var(--tdm-color-error);
+                        border-color: var(--tdm-color-error);
+                    }
+                    .tdm-toggle-switch.inactive::after {
+                        background: var(--tdm-text-primary);
+                    }
+
+                    /* Toggle with label container */
+                    .tdm-toggle-container {
+                        display: flex;
+                        align-items: center;
+                        gap: var(--tdm-space-md);
+                        padding: var(--tdm-space-sm) 0;
+                    }
+                    .tdm-toggle-label {
+                        font-size: var(--tdm-font-size-sm);
+                        color: var(--tdm-text-primary);
+                        flex: 1;
+                        min-width: 80px;
+                    }
+
+                    /* Column control grid layout for alignment */
+                    .tdm-column-grid {
+                        display: grid;
+                        grid-template-columns: 1fr auto auto;
+                        gap: var(--tdm-space-sm) var(--tdm-space-md);
+                        align-items: center;
+                        width: 100%;
+                    }
+                    .tdm-column-grid .tdm-toggle-label {
+                        text-align: left;
+                    }
+                    .tdm-column-grid .column-width-input {
+                        width: 60px;
+                        text-align: center;
+                    }
+
+                    /* Number input fix - remove up/down arrows from ALL number inputs */
+                    input[type="number"] {
+                        text-align: center;
+                        -moz-appearance: textfield;
+                    }
+                    input[type="number"]::-webkit-outer-spin-button,
+                    input[type="number"]::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+
+                    /* Collapsible sections - now always expanded with 2px borders */
+                    .collapsible {
+                        background-color: var(--tdm-bg-card);
+                        border: 2px solid var(--tdm-bg-secondary);
+                        border-radius: var(--tdm-radius-md);
+                        padding: var(--tdm-space-md);
+                        margin-bottom: var(--tdm-space-md);
+                        box-sizing: border-box;
+                    }
+                    .collapsible .collapsible-header { cursor: default; position: relative; }
+                    .collapsible .chevron { display: none; } /* Hide chevrons since we're not collapsing */
+                    .collapsible .collapsible-content { display: block !important; } /* Always show content */
+                    .collapsible.collapsed .collapsible-content { display: block !important; } /* Override collapsed state */
                     .collapsible.settings-section-divided { flex-direction: column; align-items: stretch; }
                     .collapsible.settings-section-divided > .collapsible-header,
                     .collapsible.settings-section-divided > .collapsible-content { width: 100%; }
@@ -18278,17 +20090,8 @@
                 `
             });
             document.head.appendChild(styleTag);
-            // Global delegated click visual feedback for dibs buttons (short glow)
-            try {
-                document.addEventListener('click', (evt) => {
-                    try {
-                        const btn = evt.target && evt.target.closest && evt.target.closest('.dibs-btn');
-                        if (!btn) return;
-                        btn.classList.add('tdm-dibs-clicked');
-                        setTimeout(() => { try { btn.classList.remove('tdm-dibs-clicked'); } catch(_) {} }, 220);
-                    } catch(_) { /* noop */ }
-                });
-            } catch(_) { /* noop */ }
+            // Ensure delegated click visual feedback for dibs buttons (short glow)
+            ensureDibsClickListener();
         },
 
         updateColumnVisibilityStyles: () => {
@@ -18547,7 +20350,7 @@
                 allAttacks = allAttacks.map(normalizeAttack).filter(a => a && a.attacker?.id && a.defender?.id);
                 if (!allAttacks.length) {
                     clearLoading();
-                    controls.appendChild(utils.createElement('div', { style: { color: '#ccc' }, textContent: 'No attacks found (final file maybe not published or normalization empty).' }));
+                    controls.appendChild(utils.createElement('div', { style: { color: '#fff' }, textContent: 'No attacks found (final file maybe not published or normalization empty).' }));
                     tdmlogger('warn', `[WarAttacks] No normalized attacks. Raw cache entry: ${state.rankedWarAttacksCache?.[warId]}`);
                     return;
                 }
@@ -19075,7 +20878,7 @@
 
             const attacks = Array.isArray(state.unauthorizedAttacks) ? state.unauthorizedAttacks.slice() : [];
             if (!attacks.length) {
-                controls.appendChild(utils.createElement('div', { style: { textAlign: 'center', color: '#ccc', margin: '12px 0' }, textContent: 'No unauthorized attacks recorded.' }));
+                controls.appendChild(utils.createElement('div', { style: { textAlign: 'center', color: '#fff', margin: '12px 0' }, textContent: 'No unauthorized attacks recorded.' }));
             } else {
                 const rows = attacks.map((attack) => {
                     const attackTime = Number(attack.attackTime || attack.timestamp || attack.ended || 0);
@@ -19114,7 +20917,7 @@
                             return utils.createElement('a', {
                                 href: `/profiles.php?XID=${row.attackerId}`,
                                 textContent: row.attackerName,
-                                style: { color: config.CSS.colors.error, textDecoration: 'underline', fontWeight: 'bold' }
+                                style: { color: 'var(--tdm-color-error)', textDecoration: 'underline', fontWeight: 'bold' }
                             });
                         },
                         sortValue: (row) => (row.attackerName || '').toLowerCase()
@@ -19196,7 +20999,7 @@
             const renderEmpty = (reason = 'No summary data available for this war.') => {
                 controls.innerHTML = '';
                 tableWrap.innerHTML = '';
-                controls.appendChild(utils.createElement('div', { style: { color: config.CSS.colors.error, marginBottom: '10px', textAlign:'center' }, textContent: reason }));
+                controls.appendChild(utils.createElement('div', { style: { color: 'var(--tdm-color-error)', marginBottom: '10px', textAlign:'center' }, textContent: reason }));
                 const closeBtn = utils.createElement('button', { className: 'settings-btn settings-btn-red', textContent: 'Close', onclick: () => { modal.style.display = 'none'; }, style: { width: '100%' } });
                 if (!footer.querySelector('#war-summary-close-btn')) footer.appendChild(closeBtn);
             };
@@ -19246,13 +21049,13 @@
             try {
                 const sb = state.rankedWarLastSummaryMeta?.scoreBleed || null;
                 if (sb) {
-                    const el = utils.createElement('div', { style: { marginBottom: '6px', color: config.CSS.colors.warning, textAlign: 'center', fontSize: '12px' }, textContent: `Score Bleed: ${sb.count || 0} offline-hits, ${sb.respect || 0} total respect` });
+                    const el = utils.createElement('div', { style: { marginBottom: '6px', color: 'var(--tdm-color-warning)', textAlign: 'center', fontSize: '12px' }, textContent: `Score Bleed: ${sb.count || 0} offline-hits, ${sb.respect || 0} total respect` });
                     controls.appendChild(el);
                 }
             } catch(_) {}
 
             const allColumns = [
-                { key: 'attackerName', label: 'Name', render: (r) => { const a=document.createElement('a'); a.href=`/profiles.php?XID=${r.attackerId}`; a.textContent=r.attackerName||`ID ${r.attackerId}`; a.style.color=config.CSS.colors.success; a.style.textDecoration='underline'; return a; }, sortValue: (r) => (r.attackerName||'').toLowerCase() },
+                { key: 'attackerName', label: 'Name', render: (r) => { const a=document.createElement('a'); a.href=`/profiles.php?XID=${r.attackerId}`; a.textContent=r.attackerName||`ID ${r.attackerId}`; a.style.color='var(--tdm-color-success)'; a.style.textDecoration='underline'; return a; }, sortValue: (r) => (r.attackerName||'').toLowerCase() },
                 { key: 'totalAttacks', label: 'Attacks', align: 'center', sortValue: (r) => Number(r.totalAttacks)||0 },
                 { key: 'totalAttacksScoring', label: 'Scoring', align: 'center', sortValue: (r) => Number(r.totalAttacksScoring)||0 },
                 { key: 'failedAttackCount', label: 'Failed', align: 'center', sortValue: (r) => Number(r.failedAttackCount)||0 },
@@ -19360,8 +21163,8 @@
                         'data-faction-id': fid,
                         className: `faction-tab ${isActive ? 'active-tab':''}`,
                         textContent: `${factionGroups[fid].name} (${factionGroups[fid].attackers.length})`,
-                        style: { padding:'6px 8px', backgroundColor: isActive?config.CSS.colors.success:'#555', color:'white', border:'none', borderTopLeftRadius:'4px', borderTopRightRadius:'4px', cursor:'pointer' },
-                        onclick: (e)=>{ activeFactionId = fid; tabsContainer.querySelectorAll('.faction-tab').forEach(b=>{ b.style.backgroundColor='#555'; b.classList.remove('active-tab'); }); e.currentTarget.style.backgroundColor = config.CSS.colors.success; e.currentTarget.classList.add('active-tab'); renderFactionTable(factionGroups); }
+                        style: { padding:'6px 8px', backgroundColor: isActive?'var(--tdm-color-success)':'#555', color:'white', border:'none', borderTopLeftRadius:'4px', borderTopRightRadius:'4px', cursor:'pointer' },
+                        onclick: (e)=>{ activeFactionId = fid; tabsContainer.querySelectorAll('.faction-tab').forEach(b=>{ b.style.backgroundColor='#555'; b.classList.remove('active-tab'); }); e.currentTarget.style.backgroundColor = 'var(--tdm-color-success)'; e.currentTarget.classList.add('active-tab'); renderFactionTable(factionGroups); }
                     });
                     tabsContainer.appendChild(btn);
                 });
@@ -19407,7 +21210,7 @@
                     if (Array.isArray(fresh)) summaryData = fresh.slice();
                     renderAll();
                 } catch(e) {
-                    controls.appendChild(utils.createElement('div', { style:{ color:config.CSS.colors.error, fontSize:'11px' }, textContent:`Refresh failed: ${e.message}` }));
+                    controls.appendChild(utils.createElement('div', { style:{ color:'var(--tdm-color-error)', fontSize:'11px' }, textContent:`Refresh failed: ${e.message}` }));
                 } finally {
                     btn.disabled = false; btn.textContent = original; refreshing = false;
                 }
@@ -19665,7 +21468,7 @@
             const progressWrap = utils.createElement('div', { style: { marginBottom: '16px' } });
             progressWrap.appendChild(utils.createElement('div', { style: { fontSize: '1.1em' }, textContent: `${adoptedCount} of ${totalCount} members have installed TDM (${percent}%)` }));
             const bar = utils.createElement('div', { style: { background: '#333', borderRadius: '6px', height: '22px', width: '100%', marginTop: '8px', position: 'relative' } });
-            bar.appendChild(utils.createElement('div', { style: { background: config.CSS.colors.success, height: '100%', borderRadius: '6px', width: `${percent}%`, transition: 'width 0.5s' } }));
+            bar.appendChild(utils.createElement('div', { style: { background: 'var(--tdm-color-success)', height: '100%', borderRadius: '6px', width: `${percent}%`, transition: 'width 0.5s' } }));
             bar.appendChild(utils.createElement('div', { style: { position: 'absolute', left: '50%', top: '0', transform: 'translateX(-50%)', color: 'white', fontWeight: 'bold', lineHeight: '22px' }, textContent: `${percent}%` }));
             progressWrap.appendChild(bar);
             controls.appendChild(progressWrap);
@@ -19674,7 +21477,7 @@
             const columns = [
                 { key: 'name', label: 'Name', render: (m) => {
                     const a = utils.buildProfileLink(m.id, m.name || `ID ${m.id}`);
-                    a.style.color = config.CSS.colors.success; a.style.textDecoration = 'underline';
+                    a.style.color = 'var(--tdm-color-success)'; a.style.textDecoration = 'underline';
                     return a;
                 }, sortValue: (m) => (m.name || '').toLowerCase() },
                 { key: 'level', label: 'Lvl', align: 'center', sortValue: (m) => Number(m.level) || 0 },
@@ -21430,14 +23233,20 @@
             const storageKeyFaction = `scoreCapFactionAcknowledged_${warId}`;
             const factionBannerKey = `factionCapNotified_${warId}`;
 
+            // If a prior war left the session flag set, clear it so we can re-evaluate for this war
+            if (state.user.hasReachedScoreCap && state.user._scoreCapWarId && state.user._scoreCapWarId !== warId) {
+                state.user.hasReachedScoreCap = false;
+            }
+
             // Check if the user has already acknowledged the cap for this specific war
             if (storage.get(storageKey, false)) {
                 
                 state.user.hasReachedScoreCap = true; // Set session state for attack page warnings
+                state.user._scoreCapWarId = warId;
                 return; // Exit to prevent showing the popup again
             }
             // Stop if the user has already been notified in this session (fallback check)
-            if (state.user.hasReachedScoreCap) {
+            if (state.user.hasReachedScoreCap && state.user._scoreCapWarId === warId) {
                 return;
             }
             try {
@@ -21468,6 +23277,7 @@
                 const indivCap = Number((state.warData.individualScoreCap ?? state.warData.scoreCap) || 0) || 0;
                 if (indivCap > 0 && userScore >= indivCap) {
                         state.user.hasReachedScoreCap = true;
+                        state.user._scoreCapWarId = warId;
                         const confirmed = await ui.showConfirmationBox('You have reached your target score. Do not make any more attacks. Your dibs and med deals will be deactivated.', false);
                         if (confirmed) {
                             storage.set(storageKey, true);
@@ -21476,6 +23286,7 @@
                         }
                 } else {
                     state.user.hasReachedScoreCap = false;
+                    state.user._scoreCapWarId = warId;
                 }
 
                 utils.perf.stop('computeUserScoreCapCheck');
@@ -22713,6 +24524,7 @@
             if (!storage.get('tdmActivityTrackingEnabled', false)) return;
             const unified = state.unifiedStatus || {};
             const now = Date.now();
+            const hydrating = !state._travelEtaHydrated;
             const rows = document.querySelectorAll('#faction-war .table-body .table-row');
             let anyActive = false;
             rows.forEach(row => {
@@ -22741,7 +24553,8 @@
                         const statusCell = row.querySelector('.status') || row.lastElementChild;
                         if (statusCell) statusCell.appendChild(etaEl); else row.appendChild(etaEl);
                     }
-                    const txt = mm > 99 ? `${mm}m` : `${mm}:${ss}`;
+                    let txt = mm > 99 ? `${mm}m` : `${mm}:${ss}`;
+                    if (hydrating) txt += ' ...';
                     if (etaEl.textContent !== txt) etaEl.textContent = txt;
                     const dest = rec.dest ? utils.travel?.abbrevDest?.(rec.dest) || rec.dest : '';
                     // Use unified textual confidence (omit if HIGH)
@@ -22754,6 +24567,7 @@
                 } catch(_) { /* ignore row */ }
             });
             if (anyActive) {
+                state._travelEtaHydrated = true;
                 utils.unregisterTimeout(state._travelEtaTimer);
                 state._travelEtaTimer = utils.registerTimeout(setTimeout(handlers._renderTravelEtas, 1000));
             }
@@ -22807,6 +24621,7 @@
         init: async () => {
             utils.perf.start('main.init');
             try { utils.loadUnifiedStatusSnapshot(); } catch(_) {}
+            try { handlers._renderTravelEtas?.(); } catch(_) {}
             // Restore API usage counter for this tab/session to avoid drops after SPA hash changes
             // Reset API usage on full page reload (not SPA navigation)
             try {

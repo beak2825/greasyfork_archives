@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            妖火网增强脚本Plus
 // @namespace       https://www.yaohuo.me/
-// @version         1.8.3
+// @version         1.8.4
 // @description     让妖火再次变得伟大(手动狗头.jpg)
 // @author          柠檬没有汁@27894
 // @match           *://yaohuo.me/*
@@ -21,7 +21,7 @@
 
 // 脚本默认设置
 const defaultSetting = {
-  version: "1.8.3", // 脚本版本
+  version: "1.8.4", // 脚本版本
   checkVersion: false, // 检查更新
 
   firstLoadScript: true, // 第一次加载脚本
@@ -1185,13 +1185,20 @@ function useRightNextBtn() {
   waitForElement(".btBox .bt2", () => {
     const btBox = $(".btBox .bt2");
     const links = btBox.children("a");
-    // 检查是否为上一页和下一页按钮，避免其他按钮被误操作
+    
+    // 检查是否有足够的按钮（至少2个）
+    if (links.length < 2)  return;
+    
+    // 检查是否为正确的按钮组合
     const firstBtnText = links.eq(0).text().trim();
-    const secondBtnText = links.eq(1).text().trim();
-    if (firstBtnText !== "下一页" || secondBtnText !== "上一页") {
-      setTimeout(() => _executeWithRetry(retryCount + 1), 500);
-      return;
-    }
+    const secondBtnText = links.eq(1).text().trim();    
+    const isNextPrevCombo = firstBtnText === "下一页" && secondBtnText === "上一页";
+    const isPrevNextCombo = firstBtnText === "上一页" && secondBtnText === "下一页";
+    // 如果已经是正确的顺序（上一页在左，下一页在右），则不需要处理
+    if (isPrevNextCombo) return;
+    // 如果不是下一页和上一页的组合，则不处理
+    if (!isNextPrevCombo) return;
+    
     // 克隆元素以保留事件绑定
     const clonedLinks = links.map(function () {
       return $(this).clone(true)[0];
@@ -1300,7 +1307,7 @@ function bookViewBetter() {
     `);
 
     if (isBookViewMod) {// 修改帖子
-      $(".upload-container .form-group .textarea-actions").append(toggleEle);
+      $(".upload-container .form-group .textarea-actions").eq(1).append(toggleEle);
     } else {// 发布帖子
       $(".content .textarea-actions #saveDraftButton").before(toggleEle);
     }
@@ -1329,8 +1336,8 @@ function bookViewBetter() {
       }
     });
 
-    let contentHeader = $(".upload-container .form-group .content-header"); // 发布帖子
-    if (isBookViewMod) contentHeader = $(".upload-container .form-group .content-header");
+    let contentHeader = $(".upload-container .form-group .content-header").eq(1); // 发布帖子
+    if (isBookViewMod) contentHeader = $(".upload-container .form-group .content-header").eq(1);
     // 向页面内注入区域
     contentHeader.after('<div class="v2jun-emojilist-div bookview-emoji"></div>');
     createEmojiHtml(".upload-container .form-group [name='book_content']");
@@ -2677,11 +2684,11 @@ function checkLocation() {
  * 元素检测函数 - 检测指定元素是否存在，存在时执行回调函数
  * @param {string} selector - 元素选择器
  * @param {function} callback - 元素存在时要执行的回调函数
- * @param {number} maxRetries - 最大重试次数，默认10次
+ * @param {number} maxRetries - 最大重试次数，默认20次
  * @param {number} interval - 重试间隔时间(毫秒)，默认300ms
  * @param {number} currentRetry - 当前重试次数(内部使用)
  */
-function waitForElement(selector, callback, maxRetries = 10, interval = 300, currentRetry = 0) {
+function waitForElement(selector, callback, maxRetries = 20, interval = 300, currentRetry = 0) {
   if (currentRetry >= maxRetries) {
     // console.log(`元素检测失败: ${selector} 在 ${maxRetries} 次重试后仍未找到`);
     return;

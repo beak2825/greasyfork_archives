@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Swagger - Toolkit - Theo
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.2.1
 // @description  Type `Ctrl`+`Space` to Submit request
 // @author       Theo·Chan
 // @license      AGPL
-// @match        http://*/swagger/index.html
+// @match        *://*/*swagger/index*
 // @grant        none
 // @esversion    8
 // @compatible   firefox >= 52

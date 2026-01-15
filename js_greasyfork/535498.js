@@ -1,17 +1,13 @@
 // ==UserScript==
 // @name         Pixel Games SpammerBot
 // @namespace    http://tampermonkey.net/
-// @version      1.31.0
+// @version      1.31.1
 // @license      Spaimic
 // @description  Spam Every Pixel Game with this.
 // @match        https://pixelplanet.fun/
 // @match        https://pixmap.fun/
 // @match        https://pixelya.fun/
-// @match        https://canvaspix.fun/
-// @match        https://yourpixel.fun/
 // @match        https://pixunivers.fun/
-// @match        http://94.154.34.121:5000/
-// @match        https://94.154.34.121/
 
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tampermonkey.net
 // @grant        none
@@ -26,13 +22,13 @@
     panel.innerHTML = `
     <div class='header'>
         <button id='dragHandle' title='Drag Panel'>&#9776;</button>
-        <span class='title'>SpamBot Control Panel</span>
+        <span class='title'>Spam-Bot Control Panel</span>
     </div>
     <div class='content'>
         <label for='spamInput'><strong>Message to Send:</strong></label>
         <input type='text' placeholder='Type your message...' id='spamInput'/>
         <label for='speedInput'><strong>Messages Per Second (ms):</strong></label>
-        <input type='number' id='speedInput' value='25' min='10'/>
+        <input type='number' id='speedInput' value='40' min='10'/>
         <label for='antiSpamCheckbox'>
             <input type='checkbox' id='antiSpamCheckbox'/> Enable Anti-Mute
         </label>
@@ -160,7 +156,7 @@
         if (!active) {
             const speed = parseInt(speedInput.value, 10) || 1000;
             active = true;
-            toggleButton.textContent = 'Stop Spam';
+            toggleButton.textContent = 'Stop Spamming';
             intervalId = setInterval(() => {
                 const chatInput = document.querySelector('.chatinput input');
                 const sendButton = document.getElementById('sendbtn');

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RED Torrent Filter
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      1.2
 // @description  Hide torrent rows based on checkbox state
 // @author       darisk
 // @match        https://redacted.sh/torrents.php?id=*
@@ -15,10 +15,8 @@
 // Configuration
 const FILTER_BOX_POSITION = 2; // Use 2 for second child, 3 for third child
 
-// Initialize global variables
 let isToggled = false;
-let previousCheckboxStates = [];
-let showOnlyCheckbox;
+let savedFilterState = null;
 
 (function() {
     'use strict';
@@ -28,53 +26,109 @@ let showOnlyCheckbox;
     applyFilter();
 })();
 
+function getFilterSettings() {
+    return {
+        hideSources: {
+            Vinyl: localStorage.hideVinyl === "true",
+            Web: localStorage.hideWeb === "true",
+            CD: localStorage.hideCD === "true",
+            SACD: localStorage.hideSACD === "true"
+        },
+        hideFormats: {
+            MP3: localStorage.hideMP3 === "true",
+            FLAC: localStorage.hideFLAC === "true",
+            DSD: localStorage.hideDSD === "true"
+        },
+        showOnly24Bit: localStorage.showOnly24Bit === "true"
+    };
+}
+
+function is24BitAudio(text) {
+    return /24bit lossless|dsd|dts/i.test(text);
+}
+
+function shouldHideByFormat(text, hideFormats) {
+    return (
+        (hideFormats.MP3 && /\b(mp3|aac)\b/i.test(text)) ||
+        (hideFormats.FLAC && /\bflac\b/i.test(text)) ||
+        (hideFormats.DSD && /\b(dsd|dxd)\b/i.test(text))
+    );
+}
+
+function shouldHideBySource(text, hideSources) {
+    const trimmedText = text.trim();
+    return (
+        (hideSources.Vinyl && /\bvinyl$/i.test(trimmedText)) ||
+        (hideSources.Web && /\bweb$/i.test(trimmedText)) ||
+        (hideSources.CD && /\bcd$/i.test(trimmedText)) ||
+        (hideSources.SACD && /\b(sacd|blu-ray|dvd)$/i.test(trimmedText))
+    );
+}
+
 function applyFilter() {
+    const torrents = Array.from(document.getElementsByClassName('group_torrent'));
+
     if (isToggled) {
-        const torrents = Array.from(document.getElementsByClassName('group_torrent'));
-        torrents.forEach(row => {
-            row.style.display = '';
-        });
+        torrents.forEach(row => row.style.display = '');
         updateToggleLink(0);
         return;
     }
 
-    const hideSources = {
-        Vinyl: window.localStorage.hideVinyl === "true",
-        Web: window.localStorage.hideWeb === "true",
-        CD: window.localStorage.hideCD === "true",
-        SACD: window.localStorage.hideSACD === "true"
-    };
-    const hideFormats = {
-        MP3: window.localStorage.hideMP3 === "true",
-        FLAC: window.localStorage.hideFLAC === "true",
-        DSD: window.localStorage.hideDSD === "true"
-    };
-    const showOnly24Bit = document.getElementById('showOnly24Bit').checked;
-
-    const torrents = Array.from(document.getElementsByClassName('group_torrent'));
+    const settings = getFilterSettings();
     let hiddenCount = 0;
-
     let currentEditionGroup = [];
-    for (let i = 0; i < torrents.length; i++) {
+    let i = 0;
+
+    while (i < torrents.length) {
         const row = torrents[i];
         const isEditionRow = row.classList.contains('edition');
 
-        if (isEditionRow && currentEditionGroup.length > 0) {
-            hiddenCount += filterEditionGroup(currentEditionGroup, hideSources, hideFormats, showOnly24Bit);
-            currentEditionGroup = [];
+        if (isEditionRow) {
+            currentEditionGroup = [row];
+            i++;
+
+            while (i < torrents.length && !torrents[i].classList.contains('edition')) {
+                currentEditionGroup.push(torrents[i]);
+                i++;
+            }
+
+            hiddenCount += filterEditionGroup(currentEditionGroup, settings);
+        } else {
+            hiddenCount += filterStandaloneTorrent(row, settings);
+            i++;
         }
+    }
 
-        currentEditionGroup.push(row);
+    updateToggleLink(hiddenCount);
+}
 
-        // Filter individual torrent rows if not in an edition group
-        if (!isEditionRow) {
+function filterStandaloneTorrent(row, settings) {
+    const rowText = row.textContent.toLowerCase();
+
+    if (settings.showOnly24Bit) {
+        const hideRow = !is24BitAudio(rowText);
+        row.style.display = hideRow ? 'none' : '';
+        return hideRow ? 1 : 0;
+    }
+
+    const hideRow = shouldHideByFormat(rowText, settings.hideFormats);
+    row.style.display = hideRow ? 'none' : '';
+    return hideRow ? 1 : 0;
+}
+
+function filterEditionGroup(editionGroup, settings) {
+    const editionRow = editionGroup[0];
+    const childRows = editionGroup.slice(1);
+    let hiddenCount = 0;
+
+    const editionText = editionRow.textContent.toLowerCase();
+
+    if (settings.showOnly24Bit) {
+        editionRow.style.display = '';
+
+        childRows.forEach(row => {
             const rowText = row.textContent.toLowerCase();
-            const is24Bit = rowText.includes('24bit lossless') || rowText.includes('dsd') || rowText.includes('dts');
-            let hideRow =
-                (hideFormats.MP3 && (rowText.includes('mp3') || rowText.includes('aac'))) ||
-                (hideFormats.FLAC && rowText.includes('flac')) ||
-                (hideFormats.DSD && (rowText.includes('dsd') || rowText.includes('dxd'))) ||
-                (showOnly24Bit && !is24Bit);
+            const hideRow = !is24BitAudio(rowText);
 
             if (hideRow) {
                 row.style.display = 'none';
@@ -82,77 +136,50 @@ function applyFilter() {
             } else {
                 row.style.display = '';
             }
+        });
+
+        if (childRows.length > 0 && childRows.every(row => row.style.display === 'none')) {
+            editionRow.style.display = 'none';
         }
+
+        return hiddenCount;
     }
 
-    // Handle the last edition group if any
-    if (currentEditionGroup.length > 0) {
-        hiddenCount += filterEditionGroup(currentEditionGroup, hideSources, hideFormats, showOnly24Bit);
-    }
+    const hideEdition = shouldHideBySource(editionText, settings.hideSources);
 
-    updateToggleLink(hiddenCount);
-}
-
-
-function filterEditionGroup(editionGroup, hideSources, hideFormats, showOnly24Bit) {
-    const editionRow = editionGroup[0];
-    const childRows = editionGroup.slice(1);
-    let shouldHideEdition = false;
-    let hiddenCount = 0;
-
-    editionRow.style.display = '';
-
-    const editionText = editionRow.textContent.toLowerCase();
-
-    if (
-        (hideSources.Vinyl && /\bvinyl\b$/i.test(editionText.trim())) ||
-        (hideSources.Web && /\bweb\b$/i.test(editionText.trim())) ||
-        (hideSources.CD && /\bcd\b$/i.test(editionText.trim())) ||
-        (hideSources.SACD && (/\bsacd\b$/i.test(editionText.trim()) || /\bblu-ray\b$/i.test(editionText.trim()) || /\bdvd\b$/i.test(editionText.trim())))
-
-    ) {
-        shouldHideEdition = true;
-    }
-
-    if (shouldHideEdition) {
+    if (hideEdition) {
         editionRow.style.display = 'none';
         childRows.forEach(row => {
             row.style.display = 'none';
             hiddenCount++;
         });
     } else {
+        editionRow.style.display = '';
+
         childRows.forEach(row => {
             const rowText = row.textContent.toLowerCase();
-            const is24Bit = rowText.includes('24bit lossless') || rowText.includes('dsd') || rowText.includes('dts');
+            const hideRow = shouldHideByFormat(rowText, settings.hideFormats);
 
-            if (showOnly24Bit && !is24Bit) {
+            if (hideRow) {
                 row.style.display = 'none';
-            } else if (
-                (hideFormats.MP3 && (/\bmp3\b/.test(rowText) || /\baac\b/.test(rowText))) ||
-                (hideFormats.FLAC && /\bflac\b/.test(rowText)) ||
-                (hideFormats.DSD && (/\bdsd\b/.test(rowText) || /\bdxd\b/.test(rowText)))
-            ) {
-                row.style.display = 'none';
+                hiddenCount++;
             } else {
                 row.style.display = '';
             }
         });
-    }
 
-    // If all child rows are hidden, hide the edition row as well
-    if (childRows.every(row => row.style.display === 'none')) {
-        editionRow.style.display = 'none';
+        if (childRows.length > 0 && childRows.every(row => row.style.display === 'none')) {
+            editionRow.style.display = 'none';
+        }
     }
 
     return hiddenCount;
 }
 
-
-// Helper function to add checkboxes
-function addCheckboxes(parent, items, headerText, padding = '3px') {
+function addCheckboxes(parent, items, headerText) {
     const header = document.createElement('p');
     header.innerHTML = `<strong>${headerText}</strong>`;
-    header.style.marginBottom = padding;
+    header.style.marginBottom = '3px';
     parent.appendChild(header);
 
     items.forEach(item => {
@@ -160,11 +187,13 @@ function addCheckboxes(parent, items, headerText, padding = '3px') {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `hide${item}`;
-        checkbox.checked = window.localStorage[`hide${item}`] === "true";
+        checkbox.checked = localStorage[`hide${item}`] === "true";
         checkbox.addEventListener('change', () => {
-            window.localStorage[`hide${item}`] = checkbox.checked;
+            localStorage[`hide${item}`] = checkbox.checked;
+            isToggled = false;
             applyFilter();
         });
+
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(` ${item}`));
         label.style.marginRight = '8px';
@@ -176,41 +205,57 @@ function addCheckboxes(parent, items, headerText, padding = '3px') {
 }
 
 function addFilterBox() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
     const box = document.createElement('div');
-    const sidebar = document.getElementsByClassName('sidebar')[0];
-    const targetChild = FILTER_BOX_POSITION === 1
-    ? sidebar.firstChild
-    : sidebar.children[FILTER_BOX_POSITION - 1];
     box.className = 'box';
 
     const header = document.createElement('div');
     header.className = 'head';
-    header.innerHTML = '<strong>Torrent Filter</strong>';
+
+    const headerContent = document.createElement('strong');
+    headerContent.textContent = 'Torrent Filter';
+
+    const toggleLink = document.createElement('a');
+    toggleLink.href = '#';
+    toggleLink.textContent = '[-]';
+    toggleLink.style.cssText = 'float: right; font-weight: normal;';
+
+    header.appendChild(headerContent);
+    header.appendChild(toggleLink);
     box.appendChild(header);
 
     const body = document.createElement('div');
     body.className = 'body';
+    body.id = 'torrent-filter-body';
+
+    const isCollapsed = localStorage.getItem('filterBoxCollapsed') === 'true';
+    if (isCollapsed) {
+        body.style.display = 'none';
+        toggleLink.textContent = '[+]';
+    }
+
     box.appendChild(body);
 
-    // Sources and formats checkboxes
     const sources = ['Vinyl', 'Web', 'CD', 'SACD'];
     const formats = ['MP3', 'FLAC', 'DSD'];
     addCheckboxes(body, sources, 'Hide Sources');
     addCheckboxes(body, formats, 'Hide Formats');
 
-    // Show Only 24 Bit checkbox
     const showOnlyHeader = document.createElement('p');
     showOnlyHeader.innerHTML = '<strong>Show Only</strong>';
     showOnlyHeader.style.marginBottom = '3px';
     body.appendChild(showOnlyHeader);
 
     const showOnlyLabel = document.createElement('label');
-    showOnlyCheckbox = document.createElement('input');
+    const showOnlyCheckbox = document.createElement('input');
     showOnlyCheckbox.type = 'checkbox';
     showOnlyCheckbox.id = 'showOnly24Bit';
-    showOnlyCheckbox.checked = window.localStorage.showOnly24Bit === "true";
+    showOnlyCheckbox.checked = localStorage.showOnly24Bit === "true";
     showOnlyCheckbox.addEventListener('change', () => {
-        window.localStorage.showOnly24Bit = showOnlyCheckbox.checked;
+        localStorage.showOnly24Bit = showOnlyCheckbox.checked;
+        isToggled = false;
         applyFilter();
     });
 
@@ -218,54 +263,58 @@ function addFilterBox() {
     showOnlyLabel.appendChild(document.createTextNode(' 24 bit'));
     body.appendChild(showOnlyLabel);
 
+    toggleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isCurrentlyCollapsed = body.style.display === 'none';
+        body.style.display = isCurrentlyCollapsed ? '' : 'none';
+        toggleLink.textContent = isCurrentlyCollapsed ? '[-]' : '[+]';
+        localStorage.setItem('filterBoxCollapsed', !isCurrentlyCollapsed);
+    });
+
+    const targetChild = FILTER_BOX_POSITION === 1
+    ? sidebar.firstChild
+    : sidebar.children[FILTER_BOX_POSITION - 1];
     sidebar.insertBefore(box, targetChild);
 }
 
-// Function to add a toggle link that also shows hidden row count
 function addToggleLink() {
     const linkbox = document.querySelector('.linkbox');
+    if (!linkbox) return;
 
-    let toggleLink = linkbox.querySelector('.toggle-link');
-    if (!toggleLink) {
-        toggleLink = document.createElement('a');
-        toggleLink.className = 'toggle-link';
-        toggleLink.href = '#';
-        toggleLink.innerText = '[Toggle Hidden: 0]';
+    const toggleLink = document.createElement('a');
+    toggleLink.className = 'toggle-link';
+    toggleLink.href = '#';
+    toggleLink.innerText = '[Toggle Hidden: 0]';
 
-        toggleLink.addEventListener('click', (e) => {
-            e.preventDefault();
+    toggleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (isToggled) {
+            if (savedFilterState) {
+                Object.entries(savedFilterState).forEach(([key, value]) => {
+                    localStorage[key] = value;
+                    const checkbox = document.getElementById(key);
+                    if (checkbox) checkbox.checked = value === "true";
+                });
+            }
+            isToggled = false;
+        } else {
+            savedFilterState = {};
             const allCheckboxes = document.querySelectorAll('.box input[type="checkbox"]');
 
-            if (isToggled) {
-                // Restore previous checkbox states
-                allCheckboxes.forEach((checkbox, index) => {
-                    checkbox.checked = previousCheckboxStates[index];
-                    window.localStorage[checkbox.id] = checkbox.checked;
-                });
-                showOnlyCheckbox.checked = previousCheckboxStates[allCheckboxes.length];
-                window.localStorage.showOnly24Bit = showOnlyCheckbox.checked;
-                isToggled = false;
-            } else {
-                // Save current checkbox states and uncheck all
-                previousCheckboxStates = [...allCheckboxes].map(checkbox => checkbox.checked);
-                previousCheckboxStates.push(showOnlyCheckbox.checked);
-                allCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                    window.localStorage[checkbox.id] = checkbox.checked;
-                });
-                showOnlyCheckbox.checked = false;
-                window.localStorage.showOnly24Bit = false;
-                isToggled = true;
-            }
+            allCheckboxes.forEach(checkbox => {
+                savedFilterState[checkbox.id] = localStorage[checkbox.id] || "false";
+            });
 
-            applyFilter();
-        });
+            isToggled = true;
+        }
 
-        linkbox.appendChild(toggleLink);
-    }
+        applyFilter();
+    });
+
+    linkbox.appendChild(toggleLink);
 }
 
-// Function to update the hidden count in the toggle link text
 function updateToggleLink(hiddenCount) {
     const toggleLink = document.querySelector('.linkbox .toggle-link');
     if (toggleLink) {

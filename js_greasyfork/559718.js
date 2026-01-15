@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         汤头条破解VIP视频免费看🥣
 // @namespace    tangtoutiao_vip_video_free_see
-// @version      2.0.0
+// @version      2.0.1
 // @description  来不及解释了，快上车！！！
 // @author       w2f
 // @match        https://p1.xpyortno.cc/*
@@ -30,6 +30,12 @@
 
 (async function () {
     'use strict';
+    // 调试开关
+    const DEBUG = true;
+
+    // 存储拦截的请求
+    let interceptedRequests = [];
+
     // 初始化UI
     const chatRoom = await ChatRoomLibrary.initUI();
     chatRoom.setTitle('汤头条破解VIP视频免费看');
@@ -46,12 +52,6 @@
             chatRoom.addMsgCard(msg);
         });
     }
-
-    // 调试开关
-    const DEBUG = true;
-
-    // 存储拦截的请求
-    let interceptedRequests = [];
 
     // 拦截媒体资源请求（media类型）
     function interceptMediaRequests() {

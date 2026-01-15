@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MoviePilot自动登录
-// @version      1.2.1
+// @version      1.2.2
 // @namespace    https://www.muooy.com/
 // @description  因为MoviePilot每次重启都要重新登陆，而且浏览器又不能自动填充账号密码，我比较懒不想输账号密码所有我写了这个脚本。
 // @author       Daliyuer
@@ -17,6 +17,9 @@
     'use strict';
     /* 
     * 更新记录
+    * v1.2.2（2026-01-10）
+    * 修复2.9.3以后的版本无法登录的问题
+    * 
     * v1.2（2025-04-01）
     * 修复2.3.1以后的版本无法登录的问题
     * 修复了MoviePilot的账号密码错误无法自动登录的问题（账号密码错误重新弹出配置窗口）
@@ -82,7 +85,7 @@
             formData.append('password', upassword);
             // 查找用户名和密码输入框
             let usernameInput = document.querySelector('input[name="username"]');
-            let passwordInput = document.querySelector('input[name="current-password"]');
+            let passwordInput = document.querySelector('input[name="password"]');
             let loginButton = document.querySelector('button[type="submit"], button.login-button'); // 适配不同按钮
 
             function setInputValue(element, value) {

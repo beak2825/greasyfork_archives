@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Empornium
 // @namespace    empornium.is
-// @version      0.1.13
+// @version      0.1.14
 // @description  Tags for empornium
 // @author       b1100101
-// @match        http*://empornium.is/*
-// @match        http*://www.empornium.is/*
+// @match        http*://empornium.sx/*
+// @match        http*://www.empornium.sx/*
 // @match        http*://femdomcult.org/*
 // @match        http*://www.femdomcult.org/*
 // @grant        none

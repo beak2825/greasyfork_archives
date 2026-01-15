@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         0_test_battle_damage_tooltip
 // @namespace    http://tampermonkey.net/
-// @version      2.9
+// @version      2.9.1
 // @description  Скрины с функционалом ниже. 1.) Показывает урон всех стеков одной стороны по одному выбранному стеку второй стороны. 2.) Если навести курсор на 1 существо, нажать 'e' (русская 'у'), сделать то же самое со вторым, то в чате появится урон первого по второму. Доп. выборы и настройка скорости анимации в настройках боя.
 // @author       Something begins
 // @license      University of Sugma
@@ -28,7 +28,7 @@ const damageMultipliers = {
 // Выбор биндов горячих кнопок, редактировать можно снизу, спец символы копировать из списка keyboardKeycodes на 23 строке
 
 // посмотреть урон
-const seeDamage = "E";
+const seeDamage = "period";
 // посмотреть рельсу
 const seeMagShot = "U"
 // кнопка, зажав которую, становятся активны кнопки ниже
@@ -686,7 +686,8 @@ const new_settings = `
     <input type="checkbox" checked="true" id="animation_speed_on">
     <span class="checkbox_checkmark"></span>
   </label>
-  <input type="number" style="width: 5%; margin: 2px 2px 2px 80px" id="anim_speed" onkeydown="return false;" >
+  <input type="range" id="anim_speed" min="1" max="20" step="1" value="4" style="width:150px;">
+
 </div>
 <div class="info_row">
 <label class="checkbox_container">Расчет маг. урона <span class="tooltip"> * <span class="tooltiptext" style = "width: 5000%; transform: translateX(-30%);"> Расчет магического урона не работает во время расстановки
@@ -767,6 +768,7 @@ const anim_speed_counter = document.querySelector("#anim_speed")
 
 
 // =========  Event Listeners ============
+let speedCount;
 document.body.addEventListener('input', function(event) {
     switch (event.target.id) {
         case "cre_distance":
@@ -781,13 +783,14 @@ document.body.addEventListener('input', function(event) {
             cre_distance_div.innerHTML = `<span>Выбранное расстояние: ${svSt.cre_distance}</span><br>`
             break;
         case "anim_speed":
-            if (anim_speed_counter.value > 20) {
-                anim_speed_counter.value = 20
+            speedCount = Number(event.target.value);
+            if (speedCount > 20) {
+                speedCount = 20
                 return
             }
-            updateSettings('anim_speed', anim_speed_counter.value)
+            updateSettings('anim_speed', speedCount)
             if (!svSt.animation_speed_on) return
-            setBattleSpeed(anim_speed_counter.value)
+            setBattleSpeed(speedCount)
             break;
     }
 });

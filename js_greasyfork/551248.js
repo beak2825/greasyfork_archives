@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira - Custom script specific for work usecase
 // @namespace    http://tampermonkey.net/
-// @version      8.2.1
+// @version      8.3.0
 // @description  Changes jira display for custom label styling and caches labels in local storage for swimlane view. Includes a settings panel.
 // @author       Roy
 // @match        https://jira.onderwijstransparant.nl/*
@@ -13,8 +13,17 @@
 (function() {
     'use strict';
 
-    const SCRIPT_VERSION = '8.2.1';
+    const SCRIPT_VERSION = '8.3.0';
     const PATCH_NOTES = [
+        {
+            version: '8.3.0',
+            title: 'Labels verversen nu vanzelf',
+            date: '2026-01-14',
+            changes: [
+                'Labels in swimlanes updaten zichzelf elk uur – je hoeft niet langer eerst de backlog te openen.',
+                'Het script onthoudt wanneer je een ticket voor het laatst zag en ruimt oude cache-items automatisch op.'
+            ]
+        },
         {
             version: '8.2.1',
             title: 'Visuele uitleg en nieuwe labels',
@@ -28,6 +37,10 @@
             ]
         }
     ];
+
+    const ONE_HOUR = 60 * 60 * 1000;
+    const ONE_MONTH = 30 * 24 * 60 * 60 * 1000;
+    const pendingRequests = new Set();
 
     // Voorkom dat het script in iframes draait (zoals de comment editor)
     if (window.top !== window.self) {
@@ -152,7 +165,20 @@
     function getLabelCache() {
         try {
             const cachedData = localStorage.getItem('jiraLabelCache');
-            return cachedData ? JSON.parse(cachedData) : {};
+            const cache = cachedData ? JSON.parse(cachedData) : {};
+            const now = Date.now();
+            let changed = false;
+            for (const key in cache) {
+                const entry = cache[key];
+                const malformed = !entry || !Array.isArray(entry.labels) || typeof entry.lastFetched !== 'number' || typeof entry.lastSeen !== 'number';
+                const expired = !malformed && (now - entry.lastSeen > ONE_MONTH);
+                if (malformed || expired) {
+                    delete cache[key];
+                    changed = true;
+                }
+            }
+            if (changed) saveLabelCache(cache);
+            return cache;
         } catch (e) { console.error('Fout bij het lezen van de Jira label-cache:', e); return {}; }
     }
 
@@ -160,6 +186,33 @@
         try {
             localStorage.setItem('jiraLabelCache', JSON.stringify(cache));
         } catch (e) { console.error('Fout bij het opslaan van de Jira label-cache:', e); }
+    }
+
+    async function fetchLabelsViaAPI(issueKey) {
+        if (!issueKey || pendingRequests.has(issueKey)) return;
+        pendingRequests.add(issueKey);
+
+        try {
+            const response = await fetch(`/rest/api/2/issue/${issueKey}?fields=labels`);
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
+            const data = await response.json();
+            const labels = data?.fields?.labels || [];
+            const cache = getLabelCache();
+            cache[issueKey] = {
+                labels,
+                lastFetched: Date.now(),
+                lastSeen: Date.now()
+            };
+            saveLabelCache(cache);
+            const card = document.querySelector(`.ghx-issue[data-issue-key="${issueKey}"]`);
+            if (card) {
+                card.classList.remove('ghx-swimlane-processed');
+            }
+        } catch (e) {
+            console.warn(`Fetch faalde voor ${issueKey}:`, e);
+        } finally {
+            setTimeout(() => pendingRequests.delete(issueKey), 2000);
+        }
     }
 
     function getStoryPointBadge(card) {
@@ -291,7 +344,7 @@
                 <h4>Label gids</h4>
                 <p style="margin: 0 0 12px 0; color: #54617a; font-size: 13px;">Voer onderstaande labelnamen exact in op tickets. Het script past de vormgeving automatisch aan.</p>
                  <p style="margin: 0 0 12px 0; color: #54617a; font-size: 13px;"><b>Let op: </b> Het is helaas niet mogelijk om vanuit de swimlanes de labels in te laden. Je moet de backlog openen voordat labels in de swimlane aangepast worden.</p>
-
+               
                 <div class="jira-label-guide">
                     <div class="jira-label-row">
                         <div class="jira-label-preview">
@@ -817,7 +870,7 @@
         card.querySelectorAll('.ghx-plan-extra-fields, .ghx-issue-content > .ghx-end.ghx-row').forEach(container => { elementsToProcess.push(...container.children); containersToRemove.push(container); });
         const statusField = elementsToProcess.find(field => field.matches('span[data-tooltip^="Status:"]'));
         if (statusField) { const statusText = (statusField.dataset.tooltip || '').replace('Status:', '').trim().toLowerCase(); const statusClasses = ['status-open', 'status-reopened', 'status-inprogress', 'status-test', 'status-closed', 'status-done']; card.classList.remove(...statusClasses); const statusMap = { 'open': { class: 'status-open', name: 'Open' }, 'reopened': { class: 'status-reopened', name: 'Reopened' }, 'in progress': { class: 'status-inprogress', name: 'In Progress' }, 'test': { class: 'status-test', name: 'Test' }, 'closed': { class: 'status-closed', name: 'Closed' }, 'done': { class: 'status-done', name: 'Done' } }; if (statusMap[statusText]) { card.classList.add(statusMap[statusText].class); const progressIndicator = document.createElement('div'); progressIndicator.className = 'ghx-status-indicator'; progressIndicator.title = `Status: ${statusMap[statusText].name}`; for (let i = 0; i < 3; i++) { const bar = document.createElement('div'); bar.className = 'ghx-status-indicator-bar'; progressIndicator.appendChild(bar); } if(typeSpan) typeSpan.insertAdjacentElement('afterend', progressIndicator); } }
-        elementsToProcess.forEach(field => { if (field.matches('span[data-tooltip^="Status:"]') || field.classList.contains('ghx-extra-field-seperator')) return; if (field.matches('span[data-tooltip^="Labels:"]')) { const labelContentEl = field.querySelector('.ghx-extra-field-content'); const labels = (labelContentEl && labelContentEl.textContent.trim() !== 'None') ? labelContentEl.textContent.trim().split(/,\s*/).filter(Boolean) : []; const ticketKeyElement = card.querySelector('.ghx-key a'); if (ticketKeyElement) { const ticketKey = ticketKeyElement.textContent.trim(); const cache = getLabelCache(); if (JSON.stringify(cache[ticketKey]) !== JSON.stringify(labels)) { cache[ticketKey] = labels; saveLabelCache(cache); } }
+        elementsToProcess.forEach(field => { if (field.matches('span[data-tooltip^="Status:"]') || field.classList.contains('ghx-extra-field-seperator')) return; if (field.matches('span[data-tooltip^="Labels:"]')) { const labelContentEl = field.querySelector('.ghx-extra-field-content'); const labels = (labelContentEl && labelContentEl.textContent.trim() !== 'None') ? labelContentEl.textContent.trim().split(/,\s*/).filter(Boolean) : []; const ticketKeyElement = card.querySelector('.ghx-key a'); if (ticketKeyElement) { const ticketKey = ticketKeyElement.textContent.trim(); const cache = getLabelCache(); const now = Date.now(); const existingEntry = cache[ticketKey]; const existingLabels = Array.isArray(existingEntry?.labels) ? existingEntry.labels : null; const labelsChanged = !existingLabels || JSON.stringify(existingLabels) !== JSON.stringify(labels); if (labelsChanged) { cache[ticketKey] = { labels, lastFetched: now, lastSeen: now }; saveLabelCache(cache); } else if (existingEntry) { existingEntry.lastSeen = now; saveLabelCache(cache); } }
             labels.forEach(label => {
                 const labelLower = label.toLowerCase();
 
@@ -882,12 +935,17 @@
     }
 
     function processSwimlaneCards(settings) {
-        const labelCache = getLabelCache();
+        const cache = getLabelCache();
+        const now = Date.now();
         const swimlaneCards = document.querySelectorAll('.ghx-swimlane .ghx-issue:not(.ghx-swimlane-processed)');
+        let cacheTouched = false;
 
         swimlaneCards.forEach(card => {
             const issueKey = card.dataset.issueKey;
-            if (!issueKey) return;
+            if (!issueKey) {
+                card.classList.add('ghx-swimlane-processed');
+                return;
+            }
 
             const typeSpan = card.querySelector('.ghx-type');
             const typeName = typeSpan ? (typeSpan.title || '').toLowerCase() : '';
@@ -903,10 +961,26 @@
                 card.classList.remove('ghx-bug-card');
             }
 
-            const cachedLabels = labelCache[issueKey];
-            let storyPointMarker = null;
+            let entry = cache[issueKey];
+            if (entry && typeof entry === 'object') {
+                entry.lastSeen = now;
+                cacheTouched = true;
+            }
 
-            if (cachedLabels && Array.isArray(cachedLabels) && cachedLabels.length > 0) {
+            const needsRefresh = !entry || typeof entry.lastFetched !== 'number' || (now - entry.lastFetched > ONE_HOUR);
+            if (needsRefresh) {
+                fetchLabelsViaAPI(issueKey);
+                if (!entry) {
+                    card.classList.add('ghx-swimlane-processed');
+                    return;
+                }
+            }
+
+            const cachedLabels = Array.isArray(entry.labels) ? entry.labels : [];
+            let storyPointMarker = null;
+            card.style.opacity = '1';
+
+            if (cachedLabels.length > 0) {
                 let labelContainer = card.querySelector('.ghx-cached-labels');
                 if (!labelContainer) {
                     labelContainer = document.createElement('div');
@@ -914,7 +988,7 @@
                     card.querySelector('.ghx-issue-fields')?.appendChild(labelContainer);
                 }
                 labelContainer.innerHTML = '';
-                card.style.opacity = '1';
+
                 cachedLabels.forEach(label => {
                     const labelLower = label.toLowerCase();
                     if (labelLower === 'divider') return;
@@ -938,6 +1012,7 @@
                         storyPointMarker = action.marker;
                         return;
                     }
+
                     const lozenge = document.createElement('span');
                     lozenge.className = 'aui-label';
                     lozenge.textContent = label;
@@ -957,6 +1032,10 @@
             applyStoryPointMarker(card, storyPointMarker);
             card.classList.add('ghx-swimlane-processed');
         });
+
+        if (cacheTouched) {
+            saveLabelCache(cache);
+        }
     }
 
     /**
@@ -965,8 +1044,9 @@
      * Leest labels uit de cache die door processSingleCard() is gevuld.
      */
     function processSwimlaneHeaders(settings) {
-        const labelCache = getLabelCache();
-        // Zoek naar headers die we nog niet verwerkt hebben
+        const cache = getLabelCache();
+        const now = Date.now();
+        let cacheTouched = false;
         const headers = document.querySelectorAll('.ghx-swimlane-header:not(.ghx-labels-processed)');
 
         headers.forEach(header => {
@@ -976,10 +1056,17 @@
                 return;
             }
 
-            const cachedLabels = labelCache[issueKey];
-            if (!cachedLabels || !Array.isArray(cachedLabels) || cachedLabels.length === 0) {
+            const entry = cache[issueKey];
+            const cachedLabels = Array.isArray(entry?.labels) ? entry.labels : [];
+
+            if (!cachedLabels.length) {
                 header.classList.add('ghx-labels-processed'); // Markeer als verwerkt, ook als er geen labels zijn
                 return;
+            }
+
+            if (entry) {
+                entry.lastSeen = now;
+                cacheTouched = true;
             }
 
             // Zoek het .ghx-summary element, daar injecteren we de labels na
@@ -1041,6 +1128,10 @@
             // Markeer de header als verwerkt
             header.classList.add('ghx-labels-processed');
         });
+
+        if (cacheTouched) {
+            saveLabelCache(cache);
+        }
     }
 
 

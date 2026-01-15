@@ -2,7 +2,7 @@
 // @name         MZone Advanced: Table, Stats & Play-off / MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @name:tr      MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @namespace    http://tampermonkey.net/
-// @version      2.86
+// @version      2.90
 // @description  A powerful suite combining the Advanced League Table (live scores, FD), Player Stat Averages, and the new Play-off/Play-out Predictor. Now with Excel export, Shortlist Filtering and Transfer Tracker with charts.
 // @description:tr Gelişmiş Lig Tablosu (canlı skorlar, FZ), Oyuncu İstatistik Ortalamaları ve yeni Play-Off/Play-Out Tahmincisi betiklerini tek bir güçlü araçta birleştirir. Şimdi Excel'e aktarma, Takip Listesi Filtreleme ve Grafikli Transfer Takipçisi özelliğiyle.
 // @author       alex66
@@ -23,6 +23,8 @@
 // @match        https://www.managerzone.com/?p=federations&sub=clash
 // @match        https://www.managerzone.com/?p=messenger
 // @match        https://www.managerzone.com/?p=tactics*
+// @match        https://www.managerzone.com/?p=league&type=*
+// @match        https://www.managerzone.com/?p=match&sub=result&mid=*
 // @match        *://www.managerzone.com/*
 // @match        *://managerzone.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=managerzone.com
@@ -185,7 +187,8 @@
             matchFinder: { nameKey: "matchFinderName" },
             messengerTools: { nameKey: "messengerToolsTitle" },
             ghostRobot: { nameKey: "ghostRobotTitle" }, // <--- YENİ EKLENEN SATIR
-            friendlyMatchAuto: { nameKey: "friendlyMatchAutoTitle" }
+            friendlyMatchAuto: { nameKey: "friendlyMatchAutoTitle" },
+            linkEnhancements: { nameKey: "linkEnhancementsTitle" }
         };
 
         // Ayarları tarayıcı hafızasından yükleyen fonksiyon
@@ -5505,7 +5508,7 @@
 
         /****************************************************************************************
  *                                                                                      *
- *  BÖLÜM 8: GENEL BİLGİ MENÜSÜ ve AYARLAR MODALI (GÖRÜNÜM DÜZELTİLDİ - FINAL)            *
+ *  BÖLÜM 8: GENEL BİLGİ MENÜSÜ ve AYARLAR MODALI (GÖRÜNÜM DÜZELTİLDİ - FINAL + MOBİL)    *
  *                                                                                      *
  ****************************************************************************************/
         function initializeGlobalInfoMenu() {
@@ -5549,6 +5552,8 @@
                     saveSettings: "Ayarları Kaydet",
                     reloadToApply: "Değişikliklerin geçerli olması için sayfanın yeniden yüklenmesi gerekebilir.",
                     selectAll: "Tümünü Seç",
+                    linkEnhancementsTitle: "Link İyileştirmeleri",
+                    linkEnhancementsDesc: "Lig sayfalarındaki takım linklerini düzeltir ve genç maçlarına eksik lig linkini ekler.",
                     deselectAll: "Tümünü Kaldır"
                 },
                 en: {
@@ -5586,6 +5591,8 @@
                     saveSettings: "Save Settings",
                     reloadToApply: "A page reload may be required for changes to take effect.",
                     selectAll: "Select All",
+                    linkEnhancementsTitle: "Link Enhancements",
+                    linkEnhancementsDesc: "Fixes team links on league pages and adds missing league links to youth matches.",
                     deselectAll: "Deselect All"
                 }
             };
@@ -5604,12 +5611,13 @@
                 { url: "/?p=match&sub=scheduled", titleKey: "fixtureToolsTitle", descKey: "fixtureToolsDesc" },
                 { url: "/?p=match&sub=played", titleKey: "resultsToolsTitle", descKey: "resultsToolsDesc" },
                 { url: "/?p=rank&sub=userrank", titleKey: "rankingTweaksTitle", descKey: "rankingTweaksDesc" },
-                { url: "/?p=tactics", titleKey: "ghostRobotTitle", descKey: "ghostRobotDesc" }
+                { url: "/?p=tactics", titleKey: "ghostRobotTitle", descKey: "ghostRobotDesc" },
+                { url: "/?p=league", titleKey: "linkEnhancementsTitle", descKey: "linkEnhancementsDesc" }
             ];
 
             const POSITION_KEY = 'mz_global_info_btn_position';
 
-            // --- Gerekli Stiller (CSS) - DÜZELTİLDİ ---
+            // --- Gerekli Stiller (CSS) - DÜZELTİLDİ + MOBİL KÜÇÜLTME ---
             GM_addStyle(`
         /* Ana Buton */
         #mz-global-info-btn {
@@ -5619,13 +5627,69 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 24px; font-weight: bold; font-family: 'Georgia', serif;
             cursor: grab; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 99998;
-            transition: transform 0.2s ease-in-out, background-color 0.2s;
+            transition: transform 0.2s ease-in-out, background-color 0.2s, width 0.3s, right 0.3s, opacity 0.3s;
             border: 2px solid white; user-select: none;
         }
         #mz-global-info-btn:hover { transform: scale(1.1); background-color: #0066c2; }
         #mz-global-info-btn.is-dragging { cursor: grabbing !important; transform: scale(1.15); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
 
-        /* Bilgi Paneli (Eski Haline Döndürüldü) */
+        /* MOBİL İÇİN KÜÇÜLTME BUTONU VE STİLLERİ */
+        #mz-mobile-toggle-btn {
+            display: none; /* Masaüstünde gizli */
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 20px;
+            height: 20px;
+            background: #ffc107;
+            color: #000;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 18px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 99999;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            #mz-mobile-toggle-btn {
+                display: block; /* Mobilde göster */
+            }
+
+            /* Küçültülmüş Hal - Sağ kenara yapışık */
+            #mz-global-info-btn.mz-minimized {
+                width: 20px !important;
+                height: 40px !important;
+                right: 0 !important; /* Sağa yapış */
+                left: auto !important; /* Sol konumu sıfırla */
+                border-radius: 10px 0 0 10px !important;
+                opacity: 0.4;
+                font-size: 0 !important; /* İ harfini gizle */
+                background-color: #00529B !important;
+                transform: none !important; /* Drag efektini sıfırla */
+                cursor: pointer;
+            }
+
+            /* Küçültülmüş haldeyken toggle butonu */
+            #mz-global-info-btn.mz-minimized #mz-mobile-toggle-btn {
+                display: none; /* Küçüldüğünde toggle butonunu gizle, ana butona tıklamak açacak */
+            }
+
+            /* Küçültülmüş haldeyken içine ok işareti koy */
+            #mz-global-info-btn.mz-minimized::after {
+                content: '«';
+                font-size: 20px;
+                color: white;
+                line-height: 40px;
+                margin-left: 2px;
+                font-weight: bold;
+            }
+        }
+
+        /* Bilgi Paneli */
         #mz-global-info-panel {
             position: fixed; width: 340px;
             background-color: #f8f9fa; border: 1px solid #ccc; border-radius: 8px;
@@ -5634,7 +5698,7 @@
             transition: opacity 0.2s ease, transform 0.2s ease;
             pointer-events: none; font-family: Dosis, sans-serif;
             display: flex; flex-direction: column;
-            max-height: 85vh; /* Ekranın %85'ini geçmesin */
+            max-height: 85vh;
         }
         #mz-global-info-panel.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
@@ -5658,7 +5722,7 @@
         }
         .mz-gip-list a:hover { background-color: #e9ecef; color: #0056b3; border-color: #dee2e6; }
 
-        /* Yazı Tipleri (Okunaklı Hale Getirildi) */
+        /* Yazı Tipleri */
         .mz-gip-list strong { font-size: 14px; color: #00529B; display: block; margin-bottom: 3px; }
         .mz-gip-list p { font-size: 12px; margin: 0; color: #6c757d; line-height: 1.35; }
 
@@ -5725,8 +5789,8 @@
     async function createMenu() {
         if ($('#mz-global-info-btn').length > 0) return;
 
-        // 1. Önce Butonu Oluştur
-        const infoButton = $(`<div id="mz-global-info-btn" title="${getText('menuTitle')}\n${getText('dragToMove')}">i</div>`);
+        // 1. Önce Butonu Oluştur - MOBİL TOGGLE DAHİL
+        const infoButton = $(`<div id="mz-global-info-btn" title="${getText('menuTitle')}\n${getText('dragToMove')}">i<div id="mz-mobile-toggle-btn">-</div></div>`);
         const infoPanel = $('<div id="mz-global-info-panel"></div>');
 
         // 2. Panel İçeriğini Hazırla
@@ -5738,27 +5802,18 @@
         const fullHeaderHtml = `${baseTitle}<br><small style="font-weight: normal; font-size: 0.75em; opacity: 0.85; line-height: 1.4;">${scriptNameToDisplay}<br>${authorLineHtml}</small>`;
         const settingsButtonHtml = `<span id="mz-open-feature-settings" title="${getText('settings')}" style="position: absolute; top: 10px; right: 12px; font-size: 20px; cursor: pointer; transition: transform 0.2s;">⚙️</span>`;
         let listItems = featurePages.map(page => {
-            // URL'deki "p=" parametresini al
             const urlParams = new URLSearchParams(page.url.split('?')[1]);
             let moduleKey = '';
-
-            // Kolay tespit için özel eşleşme mantığı
             if (page.url.includes('p=league')) moduleKey = 'leagueTable';
             else if (page.url.includes('p=statistics')) moduleKey = 'statisticsSummary';
             else if (page.url.includes('p=shortlist')) moduleKey = 'shortlistFilter';
             else if (page.url.includes('p=players')) moduleKey = 'playerStats';
-            else if (page.url.includes('p=challenges')) moduleKey = 'friendlyMatchAuto'; // YENİ MODÜL
+            else if (page.url.includes('p=challenges')) moduleKey = 'friendlyMatchAuto';
             else if (page.url.includes('p=tactics')) moduleKey = 'ghostRobot';
-            // Diğer modüller (fixtureElo, matchFinder, rankingTweaks)
-            // genellikle ana modüllere bağlıdır veya özel URL'lere sahiptir.
-            // Bu linkler genel bilgi amaçlıdır ve genellikle açılır.
-            // Ancak sadece ayarlarda var olan ana anahtarları kontrol edelim.
 
-            // Eğer moduleKey geçerliyse VE ayarlar menüsünde AÇIK ise göster
             if (moduleKey && scriptSettings[moduleKey] === false) {
                 return '';
             }
-
             return `<li><a href="${page.url}"><strong>${getText(page.titleKey)}</strong><p>${getText(page.descKey)}</p></a></li>`;
         }).join('');
 
@@ -5767,20 +5822,14 @@
         // 3. Konumlandırma
         try {
             const savedPosition = JSON.parse(await GM_getValue(POSITION_KEY, 'null'));
-
             if (savedPosition && savedPosition.top !== undefined && savedPosition.left !== undefined) {
                 let topVal = parseInt(savedPosition.top);
                 let leftVal = parseInt(savedPosition.left);
                 const winHeight = $(window).height();
                 const winWidth = $(window).width();
 
-                if (!isNaN(topVal) && !isNaN(leftVal) &&
-                    topVal >= 0 && topVal < winHeight &&
-                    leftVal >= 0 && leftVal < winWidth) {
+                if (!isNaN(topVal) && !isNaN(leftVal) && topVal >= 0 && topVal < winHeight && leftVal >= 0 && leftVal < winWidth) {
                     infoButton.css({ top: savedPosition.top, left: savedPosition.left, bottom: 'auto', right: 'auto' });
-                } else {
-                    console.warn("[MZone] Buton konumu ekran dışındaydı, varsayılana dönüldü.");
-                    await GM_deleteValue(POSITION_KEY);
                 }
             }
         } catch (e) {
@@ -5788,14 +5837,87 @@
         }
 
         $('body').append(infoButton).append(infoPanel);
+
+        // MOBİL TOGGLE İÇİN EVENT
+        infoButton.find('#mz-mobile-toggle-btn').on('click', function(e) {
+            e.stopPropagation(); // Butonun sürüklenmesini veya menü açmasını engelle
+            $('#mz-global-info-btn').addClass('mz-minimized');
+            $('#mz-global-info-panel').removeClass('visible'); // Menü açıksa kapat
+        });
+
+        // Küçültülmüş butona tıklayınca geri açma
+        infoButton.on('click', function(e) {
+            if ($(this).hasClass('mz-minimized')) {
+                e.stopPropagation(); // Menünün hemen açılmasını engelle, önce boyutu düzelt
+                $(this).removeClass('mz-minimized');
+            }
+        });
     }
 
     function makeButtonInteractive() {
         const button = $('#mz-global-info-btn'); let isDragging = false; let hasMoved = false; let startX, startY, offsetX, offsetY;
-        button.on('mousedown', function(e) { if (e.which !== 1) return; e.preventDefault(); startX = e.clientX; startY = e.clientY; const buttonPos = button.offset(); offsetX = e.clientX - buttonPos.left; offsetY = e.clientY - buttonPos.top; $(document).on('mousemove.interactive', onMouseMove); $(document).on('mouseup.interactive', onMouseUp); });
-        function onMouseMove(e) { if (!isDragging) { const moveThreshold = 5; if (Math.abs(e.clientX - startX) > moveThreshold || Math.abs(e.clientY - startY) > moveThreshold) { isDragging = true; hasMoved = true; button.addClass('is-dragging'); } } if (isDragging) { updatePosition(e); } }
-        function updatePosition(e) { let newLeft = e.clientX - offsetX; let newTop = e.clientY - offsetY; const buttonWidth = button.outerWidth(); const buttonHeight = button.outerHeight(); const windowWidth = $(window).width(); const windowHeight = $(window).height(); newLeft = Math.max(0, Math.min(newLeft, windowWidth - buttonWidth)); newTop = Math.max(0, Math.min(newTop, windowHeight - buttonHeight)); button.css({ top: newTop, left: newLeft, bottom: 'auto', right: 'auto' }); }
-        async function onMouseUp(e) { $(document).off('mousemove.interactive mouseup.interactive'); if (isDragging) { const finalPosition = { top: button.css('top'), left: button.css('left') }; await GM_setValue(POSITION_KEY, JSON.stringify(finalPosition)); } if (!hasMoved) { positionPanelRelativeToButton(); $('#mz-global-info-panel').toggleClass('visible'); } isDragging = false; hasMoved = false; button.removeClass('is-dragging'); }
+        button.on('mousedown touchstart', function(e) {
+            // Eğer küçültülmüşse sürüklemeyi engelle
+            if(button.hasClass('mz-minimized')) return;
+
+            const evt = e.type === 'touchstart' ? e.originalEvent.touches[0] : e;
+            if (e.type === 'mousedown' && e.which !== 1) return;
+            // e.preventDefault(); // Touch scrollu engellememesi için mobilde dikkatli kullanılmalı
+            if(e.type === 'mousedown') e.preventDefault();
+
+            startX = evt.clientX; startY = evt.clientY;
+            const buttonPos = button.offset();
+            offsetX = evt.clientX - buttonPos.left;
+            offsetY = evt.clientY - buttonPos.top;
+
+            if(e.type === 'touchstart') {
+                $(document).on('touchmove.interactive', onMouseMove);
+                $(document).on('touchend.interactive', onMouseUp);
+            } else {
+                $(document).on('mousemove.interactive', onMouseMove);
+                $(document).on('mouseup.interactive', onMouseUp);
+            }
+        });
+
+        function onMouseMove(e) {
+            const evt = e.type === 'touchmove' ? e.originalEvent.touches[0] : e;
+            if (!isDragging) {
+                const moveThreshold = 5;
+                if (Math.abs(evt.clientX - startX) > moveThreshold || Math.abs(evt.clientY - startY) > moveThreshold) {
+                    isDragging = true; hasMoved = true; button.addClass('is-dragging');
+                }
+            }
+            if (isDragging) {
+                if(e.type === 'touchmove') e.preventDefault(); // Sürüklerken sayfa kaymasını engelle
+                updatePosition(evt);
+            }
+        }
+
+        function updatePosition(e) {
+            let newLeft = e.clientX - offsetX; let newTop = e.clientY - offsetY;
+            const buttonWidth = button.outerWidth(); const buttonHeight = button.outerHeight();
+            const windowWidth = $(window).width(); const windowHeight = $(window).height();
+            newLeft = Math.max(0, Math.min(newLeft, windowWidth - buttonWidth));
+            newTop = Math.max(0, Math.min(newTop, windowHeight - buttonHeight));
+            button.css({ top: newTop, left: newLeft, bottom: 'auto', right: 'auto' });
+        }
+
+        async function onMouseUp(e) {
+            $(document).off('mousemove.interactive mouseup.interactive touchmove.interactive touchend.interactive');
+            if (isDragging) {
+                const finalPosition = { top: button.css('top'), left: button.css('left') };
+                await GM_setValue(POSITION_KEY, JSON.stringify(finalPosition));
+            }
+            if (!hasMoved && !button.hasClass('mz-minimized')) {
+                // Eğer buton minimize değilse ve sürüklenmediyse menüyü aç/kapat
+                // Tıklanan yer toggle butonu değilse (zaten yukarıda stopPropagation var ama garanti olsun)
+                if(!$(e.target).is('#mz-mobile-toggle-btn')) {
+                    positionPanelRelativeToButton();
+                    $('#mz-global-info-panel').toggleClass('visible');
+                }
+            }
+            isDragging = false; hasMoved = false; button.removeClass('is-dragging');
+        }
     }
 
     function positionPanelRelativeToButton() {
@@ -5834,7 +5956,14 @@
             $(document).on('click', '#mz-open-feature-settings', openFeatureSettingsModal);
         });
         $(document).on('click', '#author-message-link', function(e) { e.preventDefault(); const tempMessengerLink = $(`<a href="/?p=messenger&uid=3111770" class="messenger-link"></a>`); tempMessengerLink.css('display', 'none').appendTo('body'); tempMessengerLink[0].click(); tempMessengerLink.remove(); });
-        $(document).on('click', function(e) { const panel = $('#mz-global-info-panel'); const button = $('#mz-global-info-btn'); if (!panel.is(e.target) && panel.has(e.target).length === 0 && !button.is(e.target)) { panel.removeClass('visible'); } });
+        $(document).on('click', function(e) {
+            const panel = $('#mz-global-info-panel');
+            const button = $('#mz-global-info-btn');
+            // Panel açıkken, panele veya butona tıklanmadıysa paneli kapat
+            if (!panel.is(e.target) && panel.has(e.target).length === 0 && !button.is(e.target) && button.has(e.target).length === 0) {
+                panel.removeClass('visible');
+            }
+        });
     });
 }
 
@@ -5928,6 +6057,12 @@
 
             if (scriptSettings.friendlyMatchAuto) {
                 runModule("Friendly Match Automation", initializeFriendlyMatchAutomationScript);
+            }
+
+            if (scriptSettings.linkEnhancements) {
+                if ((p_param === 'league') || (p_param === 'match' && sub_param === 'result')) {
+                    runModule("Link Enhancements", initializeLinkEnhancements);
+                }
             }
         }
 
@@ -8154,5 +8289,143 @@ function initializeFriendlyMatchAutomationScript() {
         });
     }
 }
+
+    /****************************************************************************************
+         *                                                                                      *
+         *  BÖLÜM 15: LINK ENHANCEMENTS (Link İyileştirmeleri) - v4.0 (Tüm Ligler Aktif)        *
+         *                                                                                      *
+         ****************************************************************************************/
+        function initializeLinkEnhancements() {
+            'use strict';
+            const currentUrl = window.location.href;
+            const $ = unsafeWindow.jQuery;
+
+            // --- Alt Modül: Lig Tablosu Link Düzeltici ---
+            if (currentUrl.includes('?p=league')) {
+                const fixLeagueLinks = () => {
+                    const rows = document.querySelectorAll('.nice_table tbody tr');
+                    if (rows.length === 0) return;
+
+                    rows.forEach(row => {
+                        const weirdLink = row.querySelector('a[href*="?p=league"][href*="tid="]');
+                        if (weirdLink) {
+                            try {
+                                const hrefParts = weirdLink.getAttribute('href').split('?')[1];
+                                const urlParams = new URLSearchParams(hrefParts);
+                                const tid = urlParams.get('tid');
+
+                                if (tid) {
+                                    weirdLink.href = `/?p=team&tid=${tid}`;
+                                }
+                            } catch (e) {
+                                // Sessizce geç
+                            }
+                        }
+                    });
+                };
+
+                fixLeagueLinks();
+
+                const observer = new MutationObserver((mutations) => {
+                    const hasAddedNodes = mutations.some(m => m.addedNodes.length > 0);
+                    if (hasAddedNodes) fixLeagueLinks();
+                });
+
+                const contentDiv = document.getElementById('contentDiv');
+                if (contentDiv) {
+                    observer.observe(contentDiv, { childList: true, subtree: true });
+                }
+            }
+
+            // --- Alt Modül: Maç Sayfası Lig Linki Ekleme ---
+            else if (currentUrl.includes('?p=match&sub=result&mid=')) {
+
+                const scrapeAllLeagues = (htmlContent) => {
+                    const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+                    const infoBlock = doc.querySelector('#infoAboutTeam');
+                    if (!infoBlock) return [];
+
+                    const links = infoBlock.querySelectorAll('a[href*="p=league"]');
+
+                    return Array.from(links).map(link => {
+                        const href = link.getAttribute('href');
+                        const sidMatch = href.match(/[?&]sid=(\d+)/);
+
+                        return sidMatch ? {
+                            name: link.textContent.trim(),
+                            url: href,
+                            sid: sidMatch[1]
+                        } : null;
+                    }).filter(item => item !== null);
+                };
+
+                const findCommonLeague = (listA, listB) => {
+                    return listA.find(leagueA => listB.some(leagueB => leagueA.sid === leagueB.sid));
+                };
+
+                const enrichMatchHeader = async () => {
+                    const wrapper = document.querySelector('#match-info-wrapper');
+                    if (!wrapper) return;
+
+                    const headerH1 = wrapper.querySelector('h1');
+                    if (!headerH1) return;
+
+                    // --- DÜZELTME BURADA ---
+                    // Eskiden burada yaş kontrolü vardı, şimdi kaldırdık.
+                    // Artık sadece H2'nin (alt başlık) boş olup olmadığını kontrol ediyoruz.
+                    // -----------------------
+
+                    const subHeader = wrapper.querySelector('h2');
+
+                    // Eğer H2 var ve içinde zaten bir link varsa (MZ bazen koyar) dokunma.
+                    if (subHeader && subHeader.querySelector('a')) return;
+
+                    const teamLinks = wrapper.querySelectorAll('a[href*="/?p=team&tid="]');
+                    const uniqueLinks = [];
+                    const seenTids = new Set();
+
+                    teamLinks.forEach(link => {
+                        const tid = new URLSearchParams(link.search).get('tid');
+                        if (tid && !seenTids.has(tid)) {
+                            seenTids.add(tid);
+                            uniqueLinks.push(link.href);
+                        }
+                    });
+
+                    if (uniqueLinks.length !== 2) return;
+
+                    try {
+                        const [html1, html2] = await Promise.all([
+                            fetch(uniqueLinks[0]).then(r => r.text()),
+                            fetch(uniqueLinks[1]).then(r => r.text())
+                        ]);
+
+                        const leagues1 = scrapeAllLeagues(html1);
+                        const leagues2 = scrapeAllLeagues(html2);
+
+                        // İki takımın ortak olduğu ligi bul
+                        const commonLeague = findCommonLeague(leagues1, leagues2);
+
+                        if (commonLeague) {
+                            const cleanUrl = commonLeague.url.replace(/&tid=\d+/, '');
+
+                            // H2 etiketi varsa içini doldur, yoksa oluştur.
+                            if (subHeader) {
+                                // Stil vermeden saf link ekliyoruz (MZ stiliyle aynı görünür)
+                                subHeader.innerHTML = `<a href="${cleanUrl}">${commonLeague.name}</a>`;
+                            } else {
+                                const newH2 = document.createElement('h2');
+                                newH2.innerHTML = `<a href="${cleanUrl}">${commonLeague.name}</a>`;
+                                headerH1.after(newH2);
+                            }
+                        }
+                    } catch (err) {
+                        console.error("[LinkEnhancer] Veri çekme hatası:", err);
+                    }
+                };
+
+                enrichMatchHeader();
+            }
+        }
 
 })();

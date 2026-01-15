@@ -1,14 +1,15 @@
 // ==UserScript==
-// @name        Pokechill Integrated（宝可梦助手）
+// @name         pokechill助手
 // @namespace    http://tampermonkey.net/
-// @version      3.4
-// @description  游戏变速器 + Pokechill 自动重开：支持500x、跳过90m/12h、自动点击重新战斗
+// @version      3.5
+// @description  游戏变速器 + 自动重开：按钮优化(1/5/200/500)、跳过时间、拖拽修复
 // @author       黄黄
 // @match        https://play-pokechill.github.io/*
+// @match        https://g1tyx.github.io/play-pokechill/*
 // @grant        none
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/562470/Pokechill%20Integrated%EF%BC%88%E5%AE%9D%E5%8F%AF%E6%A2%A6%E5%8A%A9%E6%89%8B%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/562470/Pokechill%20Integrated%EF%BC%88%E5%AE%9D%E5%8F%AF%E6%A2%A6%E5%8A%A9%E6%89%8B%EF%BC%89.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562470/pokechill%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/562470/pokechill%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
 (function() {
@@ -17,13 +18,12 @@
     // ================= 1. 配置区域 =================
     const CONFIG = {
         MIN_SPEED: 0.1,
-        MAX_SPEED: 500.0,    // 最大速度
+        MAX_SPEED: 500.0,
         DEFAULT_SPEED: 1.0,
         STEP_SIZE: 0.5,
         UI_ZINDEX: 2147483647
     };
 
-    // Pokechill 专用存储键名
     const STORAGE = {
         enabled: 'msg_autoRejoinEnabled',
         count: 'msg_autoRejoinCount'
@@ -34,19 +34,16 @@
         speed: CONFIG.DEFAULT_SPEED,
         isActive: false,
         isMuted: false,
-        // 自动重开状态
         autoRejoin: {
             enabled: localStorage.getItem(STORAGE.enabled) === '1',
             count: parseInt(localStorage.getItem(STORAGE.count) || '0', 10),
             clickedThisCycle: false,
             lastVisible: false
         },
-        // 时间锚点
         startTime: {
             real: 0,
             virtual: 0
         },
-        // 原始函数备份
         originals: {
             raf: null,
             date: null,
@@ -59,7 +56,7 @@
     };
 
     // ================= 3. 核心时间算法 =================
-    
+
     function getVirtualTime(realTimeNow) {
         if (!state.isActive) return realTimeNow;
         const realDelta = realTimeNow - state.startTime.real;
@@ -81,16 +78,14 @@
         state.isActive = true;
     }
 
-    // ⚡ 核心功能：跳过时间
     function skipTime(hours) {
         updateTimeAnchor();
         const msToAdd = hours * 60 * 60 * 1000;
         state.startTime.virtual += msToAdd;
-        
+
         const label = hours < 1 ? `${hours * 60}分钟` : `${hours}小时`;
-        console.log(`[MSG] ⏳ 已跳过 ${label}`);
-        
-        // 简单的视觉反馈
+        console.log(`[Pokechill助手] ⏳ 已跳过 ${label}`);
+
         const btnId = hours === 1.5 ? 'msg-skip-90m' : 'msg-skip-12h';
         const btn = document.getElementById(btnId);
         if(btn) {
@@ -100,8 +95,8 @@
         }
     }
 
-    // ================= 4. Pokechill 自动重开逻辑 =================
-    
+    // ================= 4. 自动重开逻辑 =================
+
     function isActuallyVisible(el) {
         return !!(el && el.offsetParent !== null && el.getClientRects().length > 0);
     }
@@ -110,37 +105,29 @@
         if (!state.autoRejoin.enabled) return;
 
         const btn = document.getElementById('area-rejoin');
-        // 如果找不到按钮，直接退出
         if (!btn) return;
 
         const visible = isActuallyVisible(btn);
 
-        // 可见 → 不可见：重置周期
         if (!visible && state.autoRejoin.lastVisible) {
             state.autoRejoin.clickedThisCycle = false;
         }
 
-        // 不可见 → 可见：执行一次点击
         if (visible && !state.autoRejoin.lastVisible && !state.autoRejoin.clickedThisCycle) {
             state.autoRejoin.clickedThisCycle = true;
             btn.click();
-            
-            // 更新计数
             state.autoRejoin.count++;
             localStorage.setItem(STORAGE.count, state.autoRejoin.count);
-            updateUI(); // 刷新UI上的计数
-            console.log(`[MSG] 自动重开触发 (总次数: ${state.autoRejoin.count})`);
+            updateUI();
+            console.log(`[Pokechill助手] 自动重开触发 (总次数: ${state.autoRejoin.count})`);
         }
-
         state.autoRejoin.lastVisible = visible;
     }
 
     function toggleAutoRejoin() {
         state.autoRejoin.enabled = !state.autoRejoin.enabled;
         localStorage.setItem(STORAGE.enabled, state.autoRejoin.enabled ? '1' : '0');
-        
         if (!state.autoRejoin.enabled) {
-            // 关闭时是否重置计数？原脚本是关闭即重置，这里保留该逻辑
             state.autoRejoin.count = 0;
             localStorage.setItem(STORAGE.count, '0');
             state.autoRejoin.clickedThisCycle = false;
@@ -153,7 +140,7 @@
 
     function saveOriginals() {
         if (state.originals.date) return;
-        const rafName = window.requestAnimationFrame ? 'requestAnimationFrame' : 
+        const rafName = window.requestAnimationFrame ? 'requestAnimationFrame' :
                         window.webkitRequestAnimationFrame ? 'webkitRequestAnimationFrame' : null;
         if (rafName) state.originals.raf = window[rafName];
         state.originals.date = window.Date;
@@ -190,7 +177,7 @@
         const MockDate = function(...args) {
             if (args.length === 0 && state.isActive) {
                 const realNow = state.originals.dateNow.call(OriginalDate);
-                const offset = getVirtualTime(getRealNow()) - getRealNow(); 
+                const offset = getVirtualTime(getRealNow()) - getRealNow();
                 return new OriginalDate(realNow + offset);
             }
             return new OriginalDate(...args);
@@ -222,14 +209,10 @@
 
     function setSpeed(targetSpeed) {
         targetSpeed = Math.max(CONFIG.MIN_SPEED, Math.min(CONFIG.MAX_SPEED, targetSpeed));
-        
         if (state.speed === targetSpeed && state.isActive) return;
-
         updateTimeAnchor();
         state.speed = targetSpeed;
-        
         updateUI();
-        console.log(`[MSG] 速度: ${state.speed.toFixed(2)}x`);
     }
 
     function toggleMute() {
@@ -242,32 +225,33 @@
 
     function createUI() {
         if (state.ui) return;
-        
+
         const ui = document.createElement('div');
-        ui.id = 'modern-speed-gear-ui';
+        ui.id = 'pokechill-helper-ui';
         ui.style.cssText = `
             position: fixed; top: 50px; right: 50px; width: 230px;
             background: rgba(16, 20, 25, 0.95); color: #fff;
-            padding: 12px; border-radius: 8px; 
+            padding: 12px; border-radius: 8px;
             font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
             z-index: ${CONFIG.UI_ZINDEX}; backdrop-filter: blur(5px);
             user-select: none; border: 1px solid rgba(255,255,255,0.1);
         `;
 
+        // 标题这里改成了 "Pokechill助手"
         ui.innerHTML = `
             <div style="display:flex; justify-content:space-between; margin-bottom:10px; align-items:center;">
-                <span style="font-weight:bold; color:#00ff9d; font-size:13px;">MSG v3.3</span>
+                <span style="font-weight:bold; color:#f1c40f; font-size:14px;">⚡ Pokechill助手</span>
                 <span id="msg-display" style="font-family:monospace; font-size:14px; color:#fff;">1.00x</span>
             </div>
-            
-            <input type="range" id="msg-slider" min="${CONFIG.MIN_SPEED * 10}" max="${CONFIG.MAX_SPEED * 10}" value="10" 
+
+            <input type="range" id="msg-slider" min="${CONFIG.MIN_SPEED * 10}" max="${CONFIG.MAX_SPEED * 10}" value="10"
                 style="width:100%; margin-bottom:12px; cursor:pointer; height:6px;">
-                
+
             <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px;">
                 <button data-speed="1.0">1x</button>
                 <button data-speed="5.0">5x</button>
-                <button data-speed="50.0">50x</button>
+                <button data-speed="200.0">200x</button>
                 <button data-speed="500.0">500x</button>
             </div>
 
@@ -277,104 +261,104 @@
             </button>
 
             <div style="display:flex; gap: 5px; margin-bottom: 8px;">
-                 <button id="msg-skip-90m" style="flex:1; background:#8e44ad;">⏱️ 90分钟</button>
-                 <button id="msg-skip-12h" style="flex:1; background:#9b59b6;">🌙 12小时</button>
+                 <button id="msg-skip-90m" style="flex:1; background:#8e44ad;">⏱️ 90m</button>
+                 <button id="msg-skip-12h" style="flex:1; background:#9b59b6;">🌙 12h</button>
             </div>
 
             <div style="display:flex; gap: 5px;">
                 <button id="msg-reset" style="flex:1; background:#d35400;">重置</button>
                 <button id="msg-mute" style="flex:1; background:#2980b9;">静音</button>
             </div>
-            
+
             <div style="margin-top:8px; color:#666; font-size:10px; text-align:center;">
-                MAX: ${CONFIG.MAX_SPEED}x | Ctrl+Shift+箭头
+                By 黄黄 | Ctrl+Shift+箭头
             </div>
         `;
 
-        // 样式注入
         const style = document.createElement('style');
         style.textContent = `
-            #modern-speed-gear-ui button {
+            #pokechill-helper-ui button {
                 background: #34495e; color: white; border: none; padding: 6px;
                 border-radius: 4px; cursor: pointer; transition: 0.1s; font-size:11px;
             }
-            #modern-speed-gear-ui button:hover { opacity: 0.9; filter: brightness(1.1); }
-            #modern-speed-gear-ui button:active { transform: translateY(1px); }
-            #modern-speed-gear-ui input[type=range] { accent-color: #00ff9d; }
+            #pokechill-helper-ui button:hover { opacity: 0.9; filter: brightness(1.1); }
+            #pokechill-helper-ui button:active { transform: translateY(1px); }
+            #pokechill-helper-ui input[type=range] { accent-color: #f1c40f; }
         `;
         document.head.appendChild(style);
         document.body.appendChild(ui);
         state.ui = ui;
 
-        // --- 事件绑定 ---
-
-        // 1. 滑块
+        // 事件绑定
         const slider = ui.querySelector('#msg-slider');
         slider.oninput = (e) => setSpeed(parseFloat(e.target.value) / 10);
 
-        // 2. 速度按钮
         ui.querySelectorAll('button[data-speed]').forEach(btn => {
             btn.onclick = () => setSpeed(parseFloat(btn.getAttribute('data-speed')));
         });
 
-        // 3. 基础功能
         ui.querySelector('#msg-reset').onclick = () => { setSpeed(1.0); slider.value = 10; };
         ui.querySelector('#msg-mute').onclick = toggleMute;
-
-        // 4. 跳过时间
         ui.querySelector('#msg-skip-90m').onclick = () => skipTime(1.5);
         ui.querySelector('#msg-skip-12h').onclick = () => skipTime(12);
-
-        // 5. 自动重开
         ui.querySelector('#msg-auto-btn').onclick = toggleAutoRejoin;
 
-        // 6. 拖拽逻辑
-        let isDragging = false, startX, startY, initLeft, initTop;
-        ui.onmousedown = (e) => {
+        // ================= 修复拖拽逻辑 =================
+        let isDragging = false;
+        let startX, startY, initLeft, initTop;
+
+        const onMouseMove = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            ui.style.left = (initLeft + (e.clientX - startX)) + 'px';
+            ui.style.top = (initTop + (e.clientY - startY)) + 'px';
+        };
+
+        const onMouseUp = () => {
+            if (isDragging) {
+                isDragging = false;
+                ui.style.cursor = 'default';
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        };
+
+        ui.addEventListener('mousedown', (e) => {
             if (['BUTTON', 'INPUT', 'SPAN'].includes(e.target.tagName)) return;
+
             isDragging = true;
             startX = e.clientX;
             startY = e.clientY;
             initLeft = ui.offsetLeft;
             initTop = ui.offsetTop;
             ui.style.cursor = 'grabbing';
-        };
-        document.onmousemove = (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            ui.style.left = (initLeft + (e.clientX - startX)) + 'px';
-            ui.style.top = (initTop + (e.clientY - startY)) + 'px';
-        };
-        document.onmouseup = () => { isDragging = false; ui.style.cursor = 'default'; };
-        
-        // 初始化UI显示状态
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
         updateUI();
     }
 
     function updateUI() {
         if (!state.ui) return;
-        
-        // 速度显示
         state.ui.querySelector('#msg-display').textContent = state.speed.toFixed(2) + 'x';
         const slider = state.ui.querySelector('#msg-slider');
-        // 防止拖动时滑块跳动，只有非焦点或点击按钮时更新
         if (document.activeElement !== slider) {
             slider.value = state.speed * 10;
         }
 
-        // 静音按钮
         const muteBtn = state.ui.querySelector('#msg-mute');
         muteBtn.textContent = state.isMuted ? '已静音' : '静音';
         muteBtn.style.background = state.isMuted ? '#c0392b' : '#2980b9';
 
-        // 自动重开按钮状态
         const autoBtn = state.ui.querySelector('#msg-auto-btn');
         const autoStatus = state.ui.querySelector('#msg-auto-status');
         if (state.autoRejoin.enabled) {
-            autoBtn.style.background = '#2ecc71'; // Green
+            autoBtn.style.background = '#2ecc71';
             autoStatus.textContent = `ON (${state.autoRejoin.count})`;
         } else {
-            autoBtn.style.background = '#34495e'; // Default
+            autoBtn.style.background = '#34495e';
             autoStatus.textContent = 'OFF';
         }
     }
@@ -392,8 +376,6 @@
         });
     }
 
-    // ================= 8. 初始化入口 =================
-    
     function init() {
         saveOriginals();
         hijackRAF();
@@ -403,12 +385,11 @@
         createUI();
         setupHotkeys();
         setSpeed(1.0);
-        
-        // 启动 Pokechill 监听器
+
         const observer = new MutationObserver(checkAutoRejoin);
         observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-        
-        console.log('MSG v3.3 Integrated Loaded');
+
+        console.log('Pokechill助手 已加载');
     }
 
     if (document.readyState === 'loading') {

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         HDHive 添加豆瓣和 IMDb 评分
+// @name         HDHive 添加IMDb和豆瓣评分以及SubHD链接
 // @namespace    http://hdhive.demojameson.com/
-// @version      2.7
-// @description  HDHive 添加豆瓣、IMDb 评分和 SubHD 链接，总是使用 TMDB ID 获取 IMDb ID
+// @version      2.8
+// @description  HDHive 添加IMDb和豆瓣评分以及SubHD链接。
 // @author       DemoJameson
 // @match        https://hdhive.online/tv/*
 // @match        https://hdhive.online/movie/*
@@ -15,8 +15,8 @@
 // @connect      api.themoviedb.org
 // @connect      subhd.tv
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/538540/HDHive%20%E6%B7%BB%E5%8A%A0%E8%B1%86%E7%93%A3%E5%92%8C%20IMDb%20%E8%AF%84%E5%88%86.user.js
-// @updateURL https://update.greasyfork.org/scripts/538540/HDHive%20%E6%B7%BB%E5%8A%A0%E8%B1%86%E7%93%A3%E5%92%8C%20IMDb%20%E8%AF%84%E5%88%86.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/538540/HDHive%20%E6%B7%BB%E5%8A%A0IMDb%E5%92%8C%E8%B1%86%E7%93%A3%E8%AF%84%E5%88%86%E4%BB%A5%E5%8F%8ASubHD%E9%93%BE%E6%8E%A5.user.js
+// @updateURL https://update.greasyfork.org/scripts/538540/HDHive%20%E6%B7%BB%E5%8A%A0IMDb%E5%92%8C%E8%B1%86%E7%93%A3%E8%AF%84%E5%88%86%E4%BB%A5%E5%8F%8ASubHD%E9%93%BE%E6%8E%A5.meta.js
 // ==/UserScript==
 
 (function() {
@@ -80,14 +80,6 @@
         const titleEl = await waitForElement('h1');
         titleEl.querySelectorAll('.hdhive-rating').forEach(el => el.remove());
 
-        const dlink = document.createElement('a');
-        dlink.className = 'hdhive-rating';
-        dlink.href = doubanLink || '#';
-        dlink.textContent = `豆瓣: ${doubanRating}`;
-        dlink.style.marginLeft = '10px';
-        dlink.style.color = '#60CC88';
-        dlink.target = '_blank';
-
         const ilink = document.createElement('a');
         ilink.className = 'hdhive-rating';
         ilink.href = `https://www.imdb.com/title/${imdbId}/`;
@@ -95,6 +87,14 @@
         ilink.style.marginLeft = '10px';
         ilink.style.color = '#CCAA11';
         ilink.target = '_blank';
+
+        const dlink = document.createElement('a');
+        dlink.className = 'hdhive-rating';
+        dlink.href = doubanLink || '#';
+        dlink.textContent = `豆瓣: ${doubanRating}`;
+        dlink.style.marginLeft = '10px';
+        dlink.style.color = '#60CC88';
+        dlink.target = '_blank';
 
         const doubanId = getDoubanId(doubanLink);
         if (doubanId) {
@@ -105,9 +105,9 @@
             slink.style.marginLeft = '10px';
             slink.style.color = '#1E90FF';
             slink.target = '_blank';
-            titleEl.append(dlink, ilink, slink);
+            titleEl.append(ilink, dlink, slink);
         } else {
-            titleEl.append(dlink, ilink);
+            titleEl.append(ilink, dlink);
         }
     }
 

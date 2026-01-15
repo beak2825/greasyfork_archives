@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         Kvido Multiscript
 // @namespace    http://tampermonkey.net/
-// @version      6.30
+// @version      6.40
 // @description  Skript všech skriptů
 // @author       KvidoTeam
 // @icon         https://i.pinimg.com/originals/0c/1e/07/0c1e07d8c596e69d24cd414c2ec6b1d9.png
 // @license      MIT
 // @include      *
+// @grant        GM_setClipboard
+// @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @downloadURL https://update.greasyfork.org/scripts/467980/Kvido%20Multiscript.user.js
 // @updateURL https://update.greasyfork.org/scripts/467980/Kvido%20Multiscript.meta.js
@@ -237,7 +239,7 @@
         },
         {
             urlPattern: /nbf\.kz\/en\/match\/\?id\=/, // Kazachstán Basketbal
-            scriptUrl: 'https://greasyfork.org/scripts/479237-kazachst%C3%A1n-basketbal/code/Kazachst%C3%A1n%20Basketbal.user.js',
+            scriptUrl: 'https://update.greasyfork.org/scripts/562113/Kazachst%C3%A1n%20Basketbal.user.js',
             requirements: []
         },
         {
@@ -737,6 +739,11 @@
         {
             urlPattern: /premiershiprugby.com/, // Přesměruje hlavní stránku rugby do API
             scriptUrl: 'https://update.greasyfork.org/scripts/560634/Premiership%20Rugby%20redirect.user.js',
+            requirements: []
+        },
+        {
+            urlPattern: /bbc\.com\/sport\/cricket\/scores-fixtures/, // Přesměruje hlavní stránku rugby do API
+            scriptUrl: 'https://update.greasyfork.org/scripts/562529/BBC%20Cricket%20API%20btn.user.js',
             requirements: []
         }
     ];

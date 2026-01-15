@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         国立アイヌ民族博物館アイヌ語アーカイブの辞書の強化
 // @namespace    https://lit.link/toracatman
-// @version      2025-12-04
+// @version      2026-01-15
 // @description  国立アイヌ民族博物館アイヌ語アーカイブの 辞書の 機能を 強化します。
 // @author       トラネコマン
 // @match        https://ainugo.nam.go.jp/dic*
@@ -418,7 +418,7 @@ function updateAuthor() {
 
 //表記変換
 function changeNotation(notation) {
-    let ain = Array.from(document.querySelectorAll('[lang="ain"]'));
+    let ain = Array.from(document.querySelectorAll(":lang(ain)"));
     if (ain.length == 0) return;
     let dl = document.querySelector("dl");
     if (dl == null) return;
@@ -453,7 +453,7 @@ function changeNotation(notation) {
             ain[i].textContent = s[i];
         }
         let add_display_css = "";
-        if (c[notation].m) add_display_css = '[lang="ain"]{font-family:"Mkana+";}';
+        if (c[notation].m) add_display_css = ':lang(ain){font-family:"Mkana+";}';
         add_display.textContent = add_display_css;
     }
 
@@ -514,7 +514,7 @@ function updateResults(format, unify) {
     //表記変換
     if (unify) {
         for (let a in source) {
-            let ain = Array.from(document.querySelectorAll(`dd.${a} [lang="ain"]`));
+            let ain = Array.from(document.querySelectorAll(`dd.${a} :lang(ain)`));
             if (ain.length > 0) {
                 let dl = document.querySelector("dl");
                 dl.replaceWith(r);
@@ -553,7 +553,7 @@ function reupdateResults() {
     let sounds = document.getElementsByClassName("sound");
     for (let i = 0; i < sounds.length; i++) {
         sounds[i].addEventListener("click", function(e) {
-            var audio = new Audio(`/${this.getAttribute("data-sound-url")}`);
+            let audio = new Audio(`/${this.getAttribute("data-sound-url")}`);
             audio.play();
             e.preventDefault();
         });
@@ -579,7 +579,7 @@ function reupdateResults() {
     if (!pcsite) css += css_phone;
     let style = document.createElement("style");
     style.textContent = css;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     //モーダルウィンドウの作成
     let html = `
@@ -769,11 +769,11 @@ function reupdateResults() {
     //出典による表示、非表示の切り替え
     display = document.createElement("style");
     updateAuthor();
-    document.head.appendChild(display);
+    document.body.appendChild(display);
 
     //任意の表記のCSS
     add_display = document.createElement("style");
-    document.head.appendChild(add_display);
+    document.body.appendChild(add_display);
 
     //検索結果の順番の設定
     for (let i = 0; i < dd.length; i++) {

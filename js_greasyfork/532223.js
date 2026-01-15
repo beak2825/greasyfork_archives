@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Transifex Translator add-on
 // @namespace    http://tampermonkey.net/
-// @version      3.1.2
+// @version      3.3
 // @description  Advanced Automatic Transifex translator
 // @icon        data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+CiAgPHRleHQgeD0iNTAlIiB5PSIyOCUiIHRleHQtYW5jaG9yPSJtaWRkbGUiCiAgICAgIGZvbnQtZmFtaWx5PSJJbnRlciwgQXJpYWwsIHNhbnMtc2VyaWYiCiAgICAgIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiMxNTY1YzAiIGZvbnQtd2VpZ2h0PSI3MDAiPkE8L3RleHQ+Cgk8dGV4dCB4PSI1MCUiIHk9IjcyJSIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICAgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgSlAsIE5vdG8gU2FucyBTQywgIHNhbnMtc2VyaWYiCiAgICAgIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiMxNTY1YzAiIGZvbnQtd2VpZ2h0PSI3MDAiPuW3qTwvdGV4dD4KPC9zdmc+
 // @author       okrauss
@@ -17,6 +17,41 @@
 (function() {
 
 GM_addStyle(`
+
+/* --- TXTR Eraser icon (clear draft) --- */
+.txtr-draft-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.txtr-trash-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* --- TXTR Copy baseline button --- */
+.txtr-btn-copy-baseline {
+    margin-top: 6px;
+}
+
+/* --- TXTR Draft clear icon (inside draft area) --- */
+.txtr-draft-section {
+    position: relative;
+}
+.txtr-draft-clear {
+    position: absolute;
+    bottom: 8px;
+  top: auto;
+  inset-inline-end: 8px;
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 14px;
+}
+.txtr-draft-clear:hover {
+    opacity: 1;
+}
+
 /* Scroll dropdown */
 .txtr-dropdown-menu{max-height:220px;overflow-y:auto;scrollbar-width:thin;}
 .txtr-dropdown-menu {
@@ -320,7 +355,10 @@ TXTR.DiffModern = {
                 CLOSE: 'Close',
                 DRAG: 'Drag to move',
                 FULL_MODE: 'Full',
-                COMPACT_MODE: 'Compact'
+                COMPACT_MODE: 'Compact',
+                COPY_BASELINE: 'Copy baseline',
+                COPY_BASELINE_TIP: 'Copy the baseline text into the draft for editing',
+                CLEAR_DRAFT_TIP: 'Clear the draft text',
             },
             he: {
                 TARGET_LANG: 'שפת יעד',
@@ -351,7 +389,10 @@ TXTR.DiffModern = {
                 CLOSE: 'סגור',
                 DRAG: 'גרור להזזה',
                 FULL_MODE: 'מלא',
-                COMPACT_MODE: 'קומפקטי'
+                COMPACT_MODE: 'קומפקטי',
+                COPY_BASELINE: 'העתק בסיס',
+                COPY_BASELINE_TIP: 'העתק את הבסיס לטיוטה',
+                CLEAR_DRAFT_TIP: 'נקה טיוטה',
             },
             es: {
                 TARGET_LANG: 'Idioma destino',
@@ -382,7 +423,10 @@ TXTR.DiffModern = {
                 CLOSE: 'Cerrar',
                 DRAG: 'Arrastrar para mover',
                 FULL_MODE: 'Completo',
-                COMPACT_MODE: 'Compacto'
+                COMPACT_MODE: 'Compacto',
+                COPY_BASELINE: 'Copiar línea base',
+                COPY_BASELINE_TIP: 'Copiar la línea base al borrador',
+                CLEAR_DRAFT_TIP: 'Borrar borrador',
             },
             ru: {
                 TARGET_LANG: 'Целевой язык',
@@ -413,7 +457,10 @@ TXTR.DiffModern = {
                 CLOSE: 'Закрыть',
                 DRAG: 'Перетащите для перемещения',
                 FULL_MODE: 'Полный',
-                COMPACT_MODE: 'Компактный'
+                COMPACT_MODE: 'Компактный',
+                COPY_BASELINE: 'Копировать базовый текст',
+                COPY_BASELINE_TIP: 'Скопировать базовый текст в черновик',
+                CLEAR_DRAFT_TIP: 'Очистить черновик',
             },
             ar: {
                 TARGET_LANG: 'اللغة المستهدفة',
@@ -444,7 +491,10 @@ TXTR.DiffModern = {
                 CLOSE: 'إغلاق',
                 DRAG: 'اسحب للتحريك',
                 FULL_MODE: 'كامل',
-                COMPACT_MODE: 'مضغوط'
+                COMPACT_MODE: 'مضغوط',
+                COPY_BASELINE: 'نسخ خط الأساس',
+                COPY_BASELINE_TIP: 'نسخ خط الأساس إلى المسودة',
+                CLEAR_DRAFT_TIP: 'مسح المسودة',
             }
             ,
                         uk: {
@@ -477,6 +527,9 @@ TXTR.DiffModern = {
                 DRAG: 'Перетягніть для переміщення',
                 FULL_MODE: 'Повний',
                 COMPACT_MODE: 'Компактний',
+                COPY_BASELINE: 'Копіювати базовий текст',
+                COPY_BASELINE_TIP: 'Копіювати базовий текст у чернетку',
+                CLEAR_DRAFT_TIP: 'Очистити чернетку',
             },
                         de: {
                 TARGET_LANG: 'Zielsprache',
@@ -508,6 +561,9 @@ TXTR.DiffModern = {
                 DRAG: 'Zum Bewegen ziehen',
                 FULL_MODE: 'Voll',
                 COMPACT_MODE: 'Kompakt',
+                COPY_BASELINE: 'Baseline kopieren',
+                COPY_BASELINE_TIP: 'Baseline in den Entwurf kopieren',
+                CLEAR_DRAFT_TIP: 'Entwurf löschen',
             },
                         fr: {
                 TARGET_LANG: 'Langue cible',
@@ -539,6 +595,9 @@ TXTR.DiffModern = {
                 DRAG: 'Glisser pour déplacer',
                 FULL_MODE: 'Complet',
                 COMPACT_MODE: 'Compact',
+                COPY_BASELINE: 'Copier la base',
+                COPY_BASELINE_TIP: 'Copier le texte de base dans le brouillon',
+                CLEAR_DRAFT_TIP: 'Effacer le brouillon',
             },
                         pt: {
                 TARGET_LANG: 'Idioma de destino',
@@ -570,6 +629,9 @@ TXTR.DiffModern = {
                 DRAG: 'Arrastar para mover',
                 FULL_MODE: 'Completo',
                 COMPACT_MODE: 'Compacto',
+                COPY_BASELINE: 'Copiar baseline',
+                COPY_BASELINE_TIP: 'Copiar baseline para o rascunho',
+                CLEAR_DRAFT_TIP: 'Limpar rascunho',
             },
                         it: {
                 TARGET_LANG: 'Lingua di destinazione',
@@ -601,6 +663,9 @@ TXTR.DiffModern = {
                 DRAG: 'Trascina per spostare',
                 FULL_MODE: 'Completo',
                 COMPACT_MODE: 'Compatto',
+                COPY_BASELINE: 'Copia baseline',
+                COPY_BASELINE_TIP: 'Copia la baseline nella bozza',
+                CLEAR_DRAFT_TIP: 'Cancella bozza',
             }
 ,             tr: {
                 TARGET_LANG: 'Hedef Dil',
@@ -632,6 +697,9 @@ TXTR.DiffModern = {
                 DRAG: 'Taşımak için sürükleyin',
                 FULL_MODE: 'Tam',
                 COMPACT_MODE: 'Kompakt',
+                COPY_BASELINE: 'Temeli Kopyala',
+                COPY_BASELINE_TIP: 'Temel metni düzenlemek için taslağa kopyala',
+                CLEAR_DRAFT_TIP: 'Taslağı temizle',
             },
              ms: {
                 TARGET_LANG: 'Bahasa Sasaran',
@@ -663,6 +731,9 @@ TXTR.DiffModern = {
                 DRAG: 'Seret untuk mengalih',
                 FULL_MODE: 'Penuh',
                 COMPACT_MODE: 'Padat',
+                COPY_BASELINE: 'Salin baseline',
+                COPY_BASELINE_TIP: 'Salin baseline ke draf',
+                CLEAR_DRAFT_TIP: 'Kosongkan draf',
             },
              tl: {
                 TARGET_LANG: 'Target na Wika',
@@ -694,6 +765,10 @@ TXTR.DiffModern = {
                 DRAG: 'I-drag para ilipat',
                 FULL_MODE: 'Buong mode',
                 COMPACT_MODE: 'Compact',
+                COPY_BASELINE: 'Kopyahin ang Batayan',
+
+                COPY_BASELINE_TIP: 'Kopyahin ang teksto ng batayan sa draft para ma-edit',
+                CLEAR_DRAFT_TIP: 'I-clear ang teksto ng draft',
             },
              id: {
                 TARGET_LANG: 'Bahasa Target',
@@ -725,6 +800,9 @@ TXTR.DiffModern = {
                 DRAG: 'Seret untuk memindahkan',
                 FULL_MODE: 'Penuh',
                 COMPACT_MODE: 'Ringkas',
+                COPY_BASELINE: 'Salin baseline',
+                COPY_BASELINE_TIP: 'Salin baseline ke draf',
+                CLEAR_DRAFT_TIP: 'Hapus draf',
             },
              nl: {
                 TARGET_LANG: 'Doeltaal',
@@ -756,6 +834,10 @@ TXTR.DiffModern = {
                 DRAG: 'Verslepen om te verplaatsen',
                 FULL_MODE: 'Volledig',
                 COMPACT_MODE: 'Compact',
+                COPY_BASELINE: 'Baseline kopiëren',
+
+                COPY_BASELINE_TIP: 'Kopieer de baseline-tekst naar het concept om te bewerken',
+                CLEAR_DRAFT_TIP: 'Wis de concepttekst',
             },
 
             el: {
@@ -787,7 +869,10 @@ TXTR.DiffModern = {
                 CLOSE: 'Κλείσιμο',
                 DRAG: 'Σύρετε για μετακίνηση',
                 FULL_MODE: 'Πλήρες',
-                COMPACT_MODE: 'Συμπαγές'
+                COMPACT_MODE: 'Συμπαγές',
+                COPY_BASELINE: 'Αντιγραφή baseline',
+                COPY_BASELINE_TIP: 'Αντιγραφή baseline στο πρόχειρο',
+                CLEAR_DRAFT_TIP: 'Εκκαθάριση πρόχειρου',
             },
             fa: {
                 TARGET_LANG: 'زبان مقصد',
@@ -818,7 +903,10 @@ TXTR.DiffModern = {
                 CLOSE: 'بستن',
                 DRAG: 'برای جابجایی بکشید',
                 FULL_MODE: 'کامل',
-                COMPACT_MODE: 'فشرده'
+                COMPACT_MODE: 'فشرده',
+                COPY_BASELINE: 'کپی خط مبنا',
+                COPY_BASELINE_TIP: 'کپی خط مبنا به پیش‌نویس',
+                CLEAR_DRAFT_TIP: 'پاک کردن پیش‌نویس',
             },
             hi: {
                 TARGET_LANG: 'लक्षित भाषा',
@@ -849,7 +937,10 @@ TXTR.DiffModern = {
                 CLOSE: 'बंद करें',
                 DRAG: 'खिसकाने के लिए खींचें',
                 FULL_MODE: 'पूर्ण',
-                COMPACT_MODE: 'कॉम्पैक्ट'
+                COMPACT_MODE: 'कॉम्पैक्ट',
+                COPY_BASELINE: 'बेसलाइन कॉपी करें',
+                COPY_BASELINE_TIP: 'बेसलाइन को ड्राफ्ट में कॉपी करें',
+                CLEAR_DRAFT_TIP: 'ड्राफ्ट साफ़ करें',
             },
             ja: {
                 TARGET_LANG: '対象言語',
@@ -880,7 +971,10 @@ TXTR.DiffModern = {
                 CLOSE: '閉じる',
                 DRAG: 'ドラッグして移動',
                 FULL_MODE: 'フル',
-                COMPACT_MODE: 'コンパクト'
+                COMPACT_MODE: 'コンパクト',
+                COPY_BASELINE: 'ベースラインをコピー',
+                COPY_BASELINE_TIP: 'ベースラインを下書きにコピー',
+                CLEAR_DRAFT_TIP: '下書きをクリア',
             },
             ko: {
                 TARGET_LANG: '대상 언어',
@@ -911,7 +1005,10 @@ TXTR.DiffModern = {
                 CLOSE: '닫기',
                 DRAG: '드래그하여 이동',
                 FULL_MODE: '전체',
-                COMPACT_MODE: '컴팩트'
+                COMPACT_MODE: '컴팩트',
+                COPY_BASELINE: '베이스라인 복사',
+                COPY_BASELINE_TIP: '베이스라인을 초안에 복사',
+                CLEAR_DRAFT_TIP: '초안 지우기',
             },
             pl: {
                 TARGET_LANG: 'Język docelowy',
@@ -942,7 +1039,10 @@ TXTR.DiffModern = {
                 CLOSE: 'Zamknij',
                 DRAG: 'Przeciągnij, aby przesunąć',
                 FULL_MODE: 'Pełny',
-                COMPACT_MODE: 'Kompaktowy'
+                COMPACT_MODE: 'Kompaktowy',
+                COPY_BASELINE: 'Kopiuj baseline',
+                COPY_BASELINE_TIP: 'Kopiuj baseline do szkicu',
+                CLEAR_DRAFT_TIP: 'Wyczyść szkic',
             },
             th: {
                 TARGET_LANG: 'ภาษาปลายทาง',
@@ -973,7 +1073,10 @@ TXTR.DiffModern = {
                 CLOSE: 'ปิด',
                 DRAG: 'ลากเพื่อย้าย',
                 FULL_MODE: 'เต็ม',
-                COMPACT_MODE: 'กระชับ'
+                COMPACT_MODE: 'กระชับ',
+                COPY_BASELINE: 'คัดลอกเบสไลน์',
+                COPY_BASELINE_TIP: 'คัดลอกเบสไลน์ไปยังฉบับร่าง',
+                CLEAR_DRAFT_TIP: 'ล้างฉบับร่าง',
             },
             vi: {
                 TARGET_LANG: 'Ngôn ngữ đích',
@@ -1004,7 +1107,10 @@ TXTR.DiffModern = {
                 CLOSE: 'Đóng',
                 DRAG: 'Kéo để di chuyển',
                 FULL_MODE: 'Đầy đủ',
-                COMPACT_MODE: 'Thu gọn'
+                COMPACT_MODE: 'Thu gọn',
+                COPY_BASELINE: 'Sao chép baseline',
+                COPY_BASELINE_TIP: 'Sao chép baseline vào bản nháp',
+                CLEAR_DRAFT_TIP: 'Xóa bản nháp',
             },
             zh: {
                 TARGET_LANG: '目标语言',
@@ -1035,7 +1141,10 @@ TXTR.DiffModern = {
                 CLOSE: '关闭',
                 DRAG: '拖动以移动',
                 FULL_MODE: '完整',
-                COMPACT_MODE: '紧凑'
+                COMPACT_MODE: '紧凑',
+                COPY_BASELINE: '复制基线',
+                COPY_BASELINE_TIP: '将基线复制到草稿',
+                CLEAR_DRAFT_TIP: '清空草稿',
             },
             "zh-TW": {
                 TARGET_LANG: '目標語言',
@@ -1073,10 +1182,28 @@ TXTR.DiffModern = {
         get(key) {
             return this.labels[this.current]?.[key] || this.labels.en[key] || key;
         },
+        apply(root) {
+            try {
+                const scope = root || document;
+                // text nodes
+                scope.querySelectorAll?.('[data-txtr-i18n]')?.forEach(el => {
+                    const k = el.getAttribute('data-txtr-i18n');
+                    if (!k) return;
+                    el.textContent = this.get(k);
+                });
+                // title tooltips
+                scope.querySelectorAll?.('[data-txtr-i18n-title]')?.forEach(el => {
+                    const k = el.getAttribute('data-txtr-i18n-title');
+                    if (!k) return;
+                    el.title = this.get(k);
+                });
+            } catch (e) { /* no-op */ }
+        },
         setLang(lang) {
             if (this.labels[lang]) {
                 this.current = lang;
                 TXTR.Storage.set('uiLang', lang);
+            this.apply();
             }
         },
         init() {
@@ -1084,6 +1211,7 @@ TXTR.DiffModern = {
             if (saved && this.labels[saved]) {
                 this.current = saved;
             }
+        this.apply();
         }
     };
 
@@ -1404,7 +1532,7 @@ TXTR.DiffModern = {
             if (tgtEl) {
                 text = tgtEl.value || tgtEl.innerText || '';
             }
-            
+
             this.element.innerHTML = this.renderHTML(text);
 
             // --- Preview word counter (X / Y words) ---
@@ -1511,7 +1639,22 @@ TXTR.DiffModern = {
             baselineSection.appendChild(baselineLabel);
             baselineSection.appendChild(this.baselineBox);
 
-            // Draft
+            // Copy baseline button (localized, under baseline)
+            const copyBaselineBtn = TXTR.DOM.createElement('button', {
+                className: 'txtr-btn txtr-btn-copy-baseline',
+                textContent: TXTR.UILang.get('COPY_BASELINE'),
+                title: TXTR.UILang.get('COPY_BASELINE_TIP'),
+                onClick: () => TXTR.Draft.copyBaselineToDraft()
+            });
+            copyBaselineBtn.setAttribute('data-txtr-i18n', 'COPY_BASELINE');
+    copyBaselineBtn.setAttribute('data-txtr-i18n-title', 'COPY_BASELINE_TIP');
+baselineSection.appendChild(copyBaselineBtn);
+
+
+
+            // Ensure i18n is applied for current UI language
+            TXTR.UILang.apply(copyBaselineBtn);
+// Draft
             const draftSection = TXTR.DOM.createElement('div', { className: 'txtr-draft-section' });
             const draftLabel = TXTR.DOM.createElement('div', {
                 className: 'txtr-label',
@@ -1526,18 +1669,37 @@ TXTR.DiffModern = {
             });
             draftSection.appendChild(draftLabel);
             draftSection.appendChild(this.draftBox);
-        // Use button moved from actions row
+
+            // Clear draft icon (inside draft box)
+            const clearIcon = TXTR.DOM.createElement('span', {
+                className: 'txtr-draft-clear',
+                title: 'Clear draft',
+                onClick: () => TXTR.Draft.clearDraft()
+            });
+            clearIcon.setAttribute('data-txtr-i18n-title', 'CLEAR_DRAFT_TIP');
+clearIcon.innerHTML = "<svg class='txtr-trash-icon' viewBox='0 0 24 24' width='16' height='16' aria-hidden='true'><path fill='currentColor' d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12z M19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'/></svg>";
+            clearIcon.title = TXTR.UILang.get('CLEAR_DRAFT_TIP');
+            draftSection.appendChild(clearIcon);
+
+
+            // Ensure i18n is applied for current UI language
+            TXTR.UILang.apply(clearIcon);
+// Use button moved from actions row
         const useBtn = TXTR.DOM.createElement('button', {
             className: 'txtr-btn txtr-btn-use',
             textContent: TXTR.UILang.get('USE_TRANSLATION'),
             onClick: () => TXTR.Actions.useTranslation()
         });
-        draftSection.appendChild(useBtn);
+        useBtn.setAttribute('data-txtr-i18n', 'USE_TRANSLATION');
+draftSection.appendChild(useBtn);
 
 
             wrapper.appendChild(baselineSection);
             wrapper.appendChild(draftSection);
             container.appendChild(wrapper);
+
+            // Keep draft box height aligned with baseline box height
+            this.setupDraftHeightSync();
         },
 
         setBaseline(text) {
@@ -1545,6 +1707,7 @@ TXTR.DiffModern = {
             if (this.baselineBox) {
                 this.baselineBox.textContent = text;
             }
+            this.syncDraftHeightNow();
         },
 
         setDraft(text) {
@@ -1557,6 +1720,76 @@ TXTR.DiffModern = {
         getDraft() {
             return this.draftBox?.value || this.draftText;
         },
+
+        copyBaselineToDraft() {
+            this.setDraft(this.baselineText || '');
+            TXTR.Diff.update();
+            if (TXTR.DiffModern) TXTR.DiffModern.update();
+        },
+
+        clearDraft() {
+            this.setDraft('');
+            TXTR.Diff.update();
+            if (TXTR.DiffModern) TXTR.DiffModern.update();
+        },
+
+
+syncDraftHeightNow() {
+    if (typeof this._applyDraftHeightSync === 'function') {
+        try { this._applyDraftHeightSync(); } catch (e) {}
+    }
+},
+
+setupDraftHeightSync() {
+    if (!this.baselineBox || !this.draftBox) return;
+    const self = this;
+
+    // Disable manual resize so we can keep the draft aligned with the baseline height.
+    try { self.draftBox.style.resize = 'none'; } catch (e) {}
+    try { self.draftBox.style.boxSizing = 'border-box'; } catch (e) {}
+
+    const apply = () => {
+        if (!self.baselineBox || !self.draftBox) return;
+        const rect = self.baselineBox.getBoundingClientRect();
+        const h = Math.max(40, Math.ceil(rect.height || 0));
+        self.draftBox.style.height = h + 'px';
+        self.draftBox.style.minHeight = h + 'px';
+    };
+
+    self._applyDraftHeightSync = apply;
+
+    // Initial + next-frame (after fonts/layout settle).
+    apply();
+    try { requestAnimationFrame(apply); } catch (e) { setTimeout(apply, 0); }
+
+    // Keep synced on baseline size changes.
+    if (typeof ResizeObserver !== 'undefined') {
+        try {
+            if (self._draftHeightRO) self._draftHeightRO.disconnect();
+            self._draftHeightRO = new ResizeObserver(() => apply());
+            self._draftHeightRO.observe(self.baselineBox);
+        } catch (e) {}
+    }
+
+    // Fallback for dynamic DOM updates.
+    if (typeof MutationObserver !== 'undefined') {
+        try {
+            if (self._draftHeightMO) self._draftHeightMO.disconnect();
+            self._draftHeightMO = new MutationObserver(() => apply());
+            self._draftHeightMO.observe(self.baselineBox, { childList: true, subtree: true, characterData: true });
+        } catch (e) {}
+    }
+
+    // Also react to viewport changes.
+    if (!self._draftHeightWinResizeBound) {
+        self._draftHeightWinResizeBound = () => apply();
+        window.addEventListener('resize', self._draftHeightWinResizeBound);
+    }
+
+    // A couple of delayed passes for cases where baseline content arrives slightly later.
+    setTimeout(apply, 50);
+    setTimeout(apply, 250);
+},
 
         applyDraftToTarget() {
             const tgtEl = TXTR.DOM.findTranslationTextArea();
@@ -1996,12 +2229,12 @@ enableDrag(ui, header) {
 // Modern diff container (UI only, placeholder)
 const diffModernContainer = TXTR.DOM.createElement('div', {
     className: 'txtr-diff-box',
-    textContent: 'תיבת השוואה'
+    textContent: 'Comparison Diff Area'
 });
 scrollArea.appendChild(diffModernContainer);
 
 // Diff toggle
-            
+
 
             // Diff box
             TXTR.Diff.init(scrollArea);
@@ -2026,7 +2259,7 @@ scrollArea.appendChild(diffModernContainer);
             // Enable resizing
             this.enableResize(ui, resizer);
 
-            
+
 // === What's New Popup ===
 (function(){
     const key='txtr_whatsnew_shown_3_0_1';
@@ -2100,7 +2333,7 @@ Great!
 
 })();
 
-            
+
 // === Version Label ===
 (function(){
     const v = document.createElement('div');
@@ -2318,7 +2551,8 @@ header.appendChild(right);
                 textContent: TXTR.UILang.get('USE_TRANSLATION'),
                 onClick: () => TXTR.Actions.useTranslation()
             });
-            this.elements.useBtn = useBtn;
+            useBtn.setAttribute('data-txtr-i18n', 'USE_TRANSLATION');
+this.elements.useBtn = useBtn;
 
             // Status
             const status = TXTR.DOM.createElement('span', { className: 'txtr-status' });
@@ -2586,7 +2820,7 @@ header.appendChild(right);
             TXTR.Draft.updateLabels();
             this.updateActionButtons();
 
-            
+
             // Update header tooltips (titles) according to current UI language (EN fallback is handled by UILang.get)
             if (this.elements.dragHandle) this.elements.dragHandle.title = L.get('DRAG');
             if (this.elements.uiLangBtn) this.elements.uiLangBtn.title = L.get('UI_LANG');
@@ -2602,7 +2836,7 @@ header.appendChild(right);
             if (ui) {
                 ui.dir = isRTL ? 'rtl' : 'ltr';
             }
-        
+
         try { TXTR.updatePreviewCounterTooltip(); } catch(e) {}
     },
 
@@ -2690,7 +2924,7 @@ header.appendChild(right);
         },
 
         // Drag
-        
+
 
 
         // Resize
@@ -2835,7 +3069,7 @@ this.injectUI(ui);
                 .txtr-select { min-width: 150px; padding: 7px; border-radius: 9px; border: 1px solid rgba(144,202,249,0.9); background: #fafdff; color: #113355; }
                 #txtr-ui.txtr-theme-dark .txtr-select { background: #2a2f35; color: #e6eef7; border-color: rgba(255,255,255,0.18); }
                 .txtr-disclaimer { text-align: center; color: #bf5900; font-size: 1.03em; font-weight: 700; margin: 6px 0; }
-                .txtr-actions-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 10px 0; 
+                .txtr-actions-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 10px 0;
     width: 100%;
     text-align: center;}
                 /* Status on its own centered row */
@@ -2898,9 +3132,9 @@ this.injectUI(ui);
                 .txtr-menu-item:hover { background: rgba(21,101,192,0.12); }
                 .txtr-radio { width: 14px; height: 14px; border: 2px solid #1565c0; border-radius: 50%; position: relative; }
                 .txtr-radio.checked::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #1565c0; }
-            
+
                 /* iOS Toggle */
-                .txtr-ios-switch { position: relative; display: inline-block; width: 46px; height: 24px; 
+                .txtr-ios-switch { position: relative; display: inline-block; width: 46px; height: 24px;
                     margin-inline: 20px;}
                 .txtr-ios-switch input { opacity: 0; width: 0; height: 0; }
                 .txtr-ios-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .25s; border-radius: 24px; }
@@ -2946,10 +3180,45 @@ this.injectUI(ui);
                     color: #dce7f3;
                 }
 `;
-                    
+
 GM_addStyle(css);
 
 GM_addStyle(`
+
+/* --- TXTR Eraser icon (clear draft) --- */
+.txtr-draft-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.txtr-trash-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* --- TXTR Copy baseline button --- */
+.txtr-btn-copy-baseline {
+    margin-top: 6px;
+}
+
+/* --- TXTR Draft clear icon (inside draft area) --- */
+.txtr-draft-section {
+    position: relative;
+}
+.txtr-draft-clear {
+    position: absolute;
+    bottom: 8px;
+  top: auto;
+  inset-inline-end: 8px;
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 14px;
+}
+.txtr-draft-clear:hover {
+    opacity: 1;
+}
+
 /* Scroll dropdown */
 .txtr-dropdown-menu{max-height:220px;overflow-y:auto;scrollbar-width:thin;}
 .txtr-dropdown-menu {
@@ -2994,6 +3263,41 @@ GM_addStyle(`
 `);
 
 GM_addStyle(`
+
+/* --- TXTR Eraser icon (clear draft) --- */
+.txtr-draft-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.txtr-trash-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* --- TXTR Copy baseline button --- */
+.txtr-btn-copy-baseline {
+    margin-top: 6px;
+}
+
+/* --- TXTR Draft clear icon (inside draft area) --- */
+.txtr-draft-section {
+    position: relative;
+}
+.txtr-draft-clear {
+    position: absolute;
+    bottom: 8px;
+  top: auto;
+  inset-inline-end: 8px;
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 14px;
+}
+.txtr-draft-clear:hover {
+    opacity: 1;
+}
+
 /* Scroll dropdown */
 .txtr-dropdown-menu{max-height:220px;overflow-y:auto;scrollbar-width:thin;}
 .txtr-dropdown-menu {
@@ -3004,6 +3308,41 @@ GM_addStyle(`
 .txtr-dropdown-menu::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.25);border-radius:4px;}
 .txtr-root, .txtr-container, .txtr-main { height: auto !important; }`);
 GM_addStyle(`
+
+/* --- TXTR Eraser icon (clear draft) --- */
+.txtr-draft-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.txtr-trash-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* --- TXTR Copy baseline button --- */
+.txtr-btn-copy-baseline {
+    margin-top: 6px;
+}
+
+/* --- TXTR Draft clear icon (inside draft area) --- */
+.txtr-draft-section {
+    position: relative;
+}
+.txtr-draft-clear {
+    position: absolute;
+    bottom: 8px;
+  top: auto;
+  inset-inline-end: 8px;
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 14px;
+}
+.txtr-draft-clear:hover {
+    opacity: 1;
+}
+
 /* Scroll dropdown */
 .txtr-dropdown-menu{max-height:220px;overflow-y:auto;scrollbar-width:thin;}
 .txtr-dropdown-menu {
@@ -3081,8 +3420,8 @@ TXTR.Core.autoTranslate = function (force = false) {
     // ----------------------------------------------------------------------
     // HARD GUARD on tgtEl — prevent overwrite if target already has text
     // ----------------------------------------------------------------------
-    const targetText = (tgtEl.value !== undefined 
-                        ? tgtEl.value 
+    const targetText = (tgtEl.value !== undefined
+                        ? tgtEl.value
                         : (tgtEl.innerText || "")).trim();
 
     if (targetText.length > 0 && !force) {
@@ -3354,5 +3693,12 @@ TXTR.Core.autoTranslate = function (force = false) {
     const iv = setInterval(() => {
         if (apply()) clearInterval(iv);
     }, 50);
+
+// --- Enforce English-only label for comparison box ---
+(function(){
+    const box = document.querySelector('.txtr-diff-box');
+    if (box) box.textContent = 'Comparison';
 })();
 
+
+})();

@@ -1,16 +1,17 @@
 // ==UserScript==
-// @name              Kusonime Limit Remover (Optimized)
+// @name              Kusonime & OtakuDesu Limit Remover (Optimized)
 // @namespace         https://www.youtube.com/channel/UC26YHf9ASpeu68az2xRKn1w
-// @version           1.1
-// @description       Menghapus batasan seperti larangan copy, paste, klik kanan, atau seleksi teks di kusonime.com dengan performa lebih baik.
+// @version           2.0
+// @description       Menghapus batasan seperti larangan copy, paste, klik kanan, atau seleksi teks di kusonime.com dan otakudesu.best dengan performa lebih baik.
 // @author            Kinnena
 // @match             https://kusonime.com/*
+// @match             https://otakudesu.best/*
 // @icon              https://cdn-icons-png.flaticon.com/256/8537/8537202.png
 // @grant             none
 // @license MIT
 // @run-at            document-start
-// @downloadURL https://update.greasyfork.org/scripts/522159/Kusonime%20Limit%20Remover%20%28Optimized%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/522159/Kusonime%20Limit%20Remover%20%28Optimized%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/522159/Kusonime%20%20OtakuDesu%20Limit%20Remover%20%28Optimized%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/522159/Kusonime%20%20OtakuDesu%20Limit%20Remover%20%28Optimized%29.meta.js
 // ==/UserScript==
 
 (function() {

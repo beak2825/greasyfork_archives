@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Notion clipper
 // @namespace    http://tampermonkey.net/
-// @version      22.2.6
+// @version      22.2.9
 // @description  从漫画/小说网站提取信息并导入Notion数据库，支持可视化CSS选择器获取和自定义配置，支持数据自动更新和API配置
 // @author       pipi
 // @match        *://*/*
@@ -1129,7 +1129,6 @@
     #notion-import-btn-container {
         position: fixed;
         bottom: 30px;
-        right: 30px;
         z-index: 2147483647;
         display: flex !important;
         flex-direction: row !important;
@@ -2225,6 +2224,690 @@
             }
         } catch(_) {}
     }
+
+    function showOtherSettingsDialog() {
+        // [Redesigned UI]
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 10002; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(8px); opacity: 0; animation: fadeIn 0.3s forwards;';
+
+        const dialog = document.createElement('div');
+        dialog.className = 'notion-othersetting-dialog';
+        dialog.style.cssText = 'background: #FFFFFF; border-radius: 24px; width: 700px; max-width: 92vw; max-height: 85vh; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.03); position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;';
+
+        // Add Global Styles for Dialog
+        const styleId = 'dialog-enhanced-styles';
+        if (!document.getElementById(styleId)) {
+            const s = document.createElement('style');
+            s.id = styleId;
+            s.textContent = `
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                .notion-othersetting-dialog-content::-webkit-scrollbar { width: 6px; }
+                .notion-othersetting-dialog-content::-webkit-scrollbar-track { background: transparent; }
+                .notion-othersetting-dialog-content::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 3px; }
+                .notion-othersetting-dialog-content::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+                .setting-card { background: #FFFFFF; border-radius: 16px; border: 1px solid #F3F4F6; padding: 20px; margin-bottom: 16px; transition: all 0.2s ease; }
+                .setting-card:hover { border-color: #E5E7EB; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+                .setting-card-header { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #F9FAFB; display: flex; align-items: center; gap: 8px; }
+                .setting-card-title { font-size: 15px; font-weight: 600; color: #1F2937; }
+                .setting-card-icon { font-size: 16px; color: var(--primarycolor, #FF6B9D); }
+                .setting-desc { font-size: 13px; color: #9CA3AF; margin-bottom: 12px; line-height: 1.5; }
+                .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+                .custom-checkbox-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 6px 0; }
+            `;
+            document.head.appendChild(s);
+        }
+
+        // Header
+        const header = document.createElement('div');
+        header.style.cssText = 'padding: 20px 24px; border-bottom: 1px solid #F3F4F6; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 10; display: flex; align-items: center; justify-content: space-between;';
+
+        const titleGroup = document.createElement('div');
+        titleGroup.style.cssText = 'display: flex; align-items: center; gap: 12px;';
+        const titleIcon = document.createElement('div');
+        titleIcon.textContent = '✦';
+        titleIcon.style.cssText = 'width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, var(--primarycolor-lighter, #FFF0F5), #FFF); color: var(--primarycolor, #FF6B9D); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);';
+        const titleText = document.createElement('h3');
+        titleText.textContent = '其他设置';
+        titleText.style.cssText = 'margin: 0; font-size: 18px; font-weight: 700; color: #111827;';
+        titleGroup.appendChild(titleIcon);
+        titleGroup.appendChild(titleText);
+        header.appendChild(titleGroup);
+        dialog.appendChild(header);
+
+        // Content
+        const contentArea = document.createElement('div');
+        contentArea.className = 'notion-othersetting-dialog-content';
+        contentArea.style.cssText = 'flex: 1; overflow-y: auto; overflow-x: hidden; padding: 24px; scroll-behavior: smooth; background: #FAFAFA;';
+
+        const list = document.createElement('div');
+        list.style.cssText = 'display: flex; flex-direction: column; gap: 4px;';
+        contentArea.appendChild(list);
+        dialog.appendChild(contentArea);
+
+        // --- Anchor Nav (White Style) ---
+        const topNav = document.createElement('div');
+        topNav.id = 'other-settings-anchor-nav';
+        (function ensureAnchorStyles(){
+            let st = document.getElementById('other-settings-anchor-styles');
+            if (!st) { st = document.createElement('style'); st.id = 'other-settings-anchor-styles'; document.head.appendChild(st); }
+            st.textContent = `
+                #other-settings-anchor-nav {
+                    position: fixed;
+                    left: 24px;
+                    top: 24px;
+                    z-index: 10003;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                    padding: 12px;
+                    margin: 0;
+                    border-radius: 20px;
+                    border: 1px solid rgba(255,255,255,0.8);
+                    background: rgba(255, 255, 255, 0.9);
+                    backdrop-filter: saturate(180%) blur(20px);
+                    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
+                    max-height: 85vh;
+                    overflow-y: auto;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                #other-settings-anchor-nav::-webkit-scrollbar {
+                    display: none;
+                }
+                #other-settings-anchor-nav .anchor-btn {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 9px 14px;
+                    border: none;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: #6B7280;
+                    background: transparent;
+                    transition: all 0.2s ease;
+                    text-align: left;
+                    width: 130px;
+                }
+                #other-settings-anchor-nav .anchor-btn .em {
+                    font-size: 15px;
+                    color: #9CA3AF;
+                    width: 20px;
+                    display: flex;
+                    justify-content: center;
+                }
+                #other-settings-anchor-nav .anchor-btn:hover {
+                    background: rgba(0,0,0,0.04);
+                    color: #111827;
+                    transform: translateX(2px);
+                }
+                #other-settings-anchor-nav .anchor-btn.active {
+                    background: var(--primarycolor-lighter, #FFF0F5);
+                    color: var(--primarycolor, #FF6B9D);
+                }
+                #other-settings-anchor-nav .anchor-btn.active .em {
+                    color: var(--primarycolor, #FF6B9D);
+                }
+                @media (max-width: 1100px) {
+                    #other-settings-anchor-nav { display: none; }
+                }
+            `;
+        })();
+
+        const navItems = [
+            { label: '全局功能', targetId: 'other-anchor-global-toggles', icon: '✓' },
+            { label: '按钮显示', targetId: 'other-anchor-buttons', icon: '🔘' },
+            { label: '选择器样式', targetId: 'other-anchor-visual-style', icon: '✨' },
+            { label: '链接加速', targetId: 'other-anchor-accel', icon: '⚡' },
+            { label: '处理标题', targetId: 'other-anchor-title-cleanup', icon: '📝' },
+            { label: '合并符号', targetId: 'other-anchor-merge-sep', icon: '∑' },
+            { label: '简介展开', targetId: 'other-anchor-expand', icon: '▾' },
+            { label: '定位面板', targetId: 'other-anchor-quick-panel', icon: '📍' },
+            { label: '默认标签', targetId: 'other-anchor-tag-defaults', icon: '🏷️' },
+            { label: '图标设置', targetId: 'other-anchor-icon-settings', icon: '⍟' },
+            { label: '智能提取', targetId: 'other-anchor-smart-extract', icon: '🧠' },
+            { label: '代理链接', targetId: 'cover-proxy-prefix', icon: '🔗' }
+        ];
+
+        const btnMap = {};
+        let suppressAutoActiveUntil = 0;
+        navItems.forEach(it => {
+            const btn = document.createElement('button');
+            btn.className = 'anchor-btn';
+            const icon = document.createElement('span');
+            icon.className = 'em';
+            icon.textContent = it.icon || '✦';
+            const text = document.createElement('span');
+            text.textContent = it.label;
+            btn.appendChild(icon);
+            btn.appendChild(text);
+            btn.addEventListener('click', () => {
+                suppressAutoActiveUntil = Date.now() + 500;
+                const target = dialog.querySelector('#' + it.targetId);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                Object.values(btnMap).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+            btnMap[it.targetId] = btn;
+            topNav.appendChild(btn);
+        });
+        const setActiveById = (id) => {
+            const btn = btnMap[id];
+            if (!btn) return;
+            Object.values(btnMap).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const nav = topNav;
+            if (nav) {
+                const btnRect = btn.getBoundingClientRect();
+                const navRect = nav.getBoundingClientRect();
+                if (btnRect.top < navRect.top || btnRect.bottom > navRect.bottom) {
+                    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        };
+
+        // --- Helper to Create Sections (Cards) ---
+        const createSection = (id, title, icon) => {
+            const card = document.createElement('div');
+            card.className = 'setting-card';
+            if (id) card.id = id;
+
+            const header = document.createElement('div');
+            header.className = 'setting-card-header';
+
+            const iconEl = document.createElement('span');
+            iconEl.className = 'setting-card-icon';
+            iconEl.textContent = icon || '✦';
+
+            const titleEl = document.createElement('span');
+            titleEl.className = 'setting-card-title';
+            titleEl.textContent = title;
+
+            header.appendChild(iconEl);
+            header.appendChild(titleEl);
+            card.appendChild(header);
+
+            const content = document.createElement('div');
+            content.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
+            card.appendChild(content);
+
+            list.appendChild(card);
+            return content;
+        };
+
+        // 1. Global Toggles
+        const globalSection = createSection('other-anchor-global-toggles', '全局功能开关', '✓');
+        globalSection.appendChild(createCustomCheckbox('global-remark-on-add', GM_getValue('global_enable_remark_on_add', false), '添加时弹出备注输入（漫画/小说）'));
+        globalSection.appendChild(createCustomCheckbox('global-enable-rating', GM_getValue('rating_enabled', true), '启用评分弹窗（漫画/小说）'));
+        globalSection.appendChild(createCustomCheckbox('global-show-append', GM_getValue('show_append_button', false), '显示左下角“追加内容”按钮'));
+
+        // 2. Button Visibility
+        const btnSection = createSection('other-anchor-buttons', '按钮显示设置', '🔘');
+        const btnGrid = document.createElement('div');
+        btnGrid.style.cssText = 'display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin-top: 8px;';
+        [
+            createCustomCheckbox('show-filter-btn', GM_getValue('show-filter-btn', true), '显示过滤按钮'),
+            createCustomCheckbox('show-test-btn', GM_getValue('show-test-btn', true), '显示测试按钮'),
+            createCustomCheckbox('show-highlight-btn', GM_getValue('show-highlight-btn', true), '显示高亮按钮'),
+            createCustomCheckbox('show-locate-btn', GM_getValue('show-locate-btn', true), '显示定位按钮'),
+            createCustomCheckbox('show-select-btn', GM_getValue('show-select-btn', true), '显示选择按钮')
+        ].forEach(el => btnGrid.appendChild(el));
+        btnSection.appendChild(btnGrid);
+
+        // Immediate preview hooks
+        try {
+            ['show-filter-btn','show-test-btn','show-highlight-btn','show-locate-btn','show-select-btn'].forEach(id => {
+                const box = document.getElementById(id);
+                if (box) box.addEventListener('change', () => {
+                    GM_setValue(id, !!box.checked);
+                    applyButtonVisibilitySettings();
+                });
+            });
+        } catch(_) {}
+
+        // 3. Selector Style
+        const visualSection = createSection('other-anchor-visual-style', '选择器样式', '✨');
+        const visualRow = document.createElement('div');
+        visualRow.className = 'setting-row';
+        const visualLabel = document.createElement('label');
+        visualLabel.className = 'setting-label';
+        visualLabel.textContent = '可视化样式:';
+        const visualSelect = document.createElement('select');
+        visualSelect.id = 'selector-visual-style-select';
+        const currVisual = GM_getValue('selector_visual_style', 'minimal');
+        visualSelect.innerHTML = '<option value="minimal">极简稳定</option><option value="fancy">精美动画</option>';
+        visualSelect.value = currVisual;
+        visualSelect.style.cssText = 'padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 8px; background: #FFF; font-size: 14px; outline: none; min-width: 120px;';
+        visualSelect.addEventListener('change', () => {
+            GM_setValue('selector_visual_style', visualSelect.value);
+            applySelectorVisualStyle();
+        });
+        visualRow.appendChild(visualLabel);
+        visualRow.appendChild(visualSelect);
+        visualSection.appendChild(visualRow);
+
+        // 4. Link Acceleration
+        const accelSection = createSection('other-anchor-accel', '链接加速', '⚡');
+        const accelDesc = document.createElement('div');
+        accelDesc.className = 'setting-desc';
+        accelDesc.textContent = '对封面/图片链接使用 jsDelivr 加速。';
+        accelSection.appendChild(accelDesc);
+        accelSection.appendChild(createCustomCheckbox('global-use-jsdelivr', GM_getValue('use_jsdelivr_acceleration', false), '使用 jsDelivr 加速'));
+
+        // 5. Title Cleanup
+        const titleSection = createSection('other-anchor-title-cleanup', '处理标题', '📝');
+        const titleDesc = document.createElement('div');
+        titleDesc.className = 'setting-desc';
+        titleDesc.textContent = '控制默认标题清洗规则（网页→Notion 与 剪藏 同样生效）';
+        titleSection.appendChild(titleDesc);
+        titleSection.appendChild(createCustomCheckbox('title-remove-brackets', GM_getValue('title_remove_brackets', true), '去除括号及内容 () [] {}'));
+        titleSection.appendChild(createCustomCheckbox('title-trim-underscore', GM_getValue('title_trim_underscore', true), '去掉下划线_及之后内容'));
+
+        // 6. Merge Separator
+        const mergeSection = createSection('other-anchor-merge-sep', '选择器合并符号', '∑');
+        const mergeDesc = document.createElement('div');
+        mergeDesc.className = 'setting-desc';
+        mergeDesc.textContent = '多选/范围提取时的连接符，支持 \\n 换行。';
+        mergeSection.appendChild(mergeDesc);
+        const mergeRow = document.createElement('div');
+        mergeRow.className = 'setting-row';
+        const mergeLabel = document.createElement('label');
+        mergeLabel.className = 'setting-label';
+        mergeLabel.textContent = '合并符号:';
+        const mergeInput = document.createElement('input');
+        mergeInput.type = 'text';
+        mergeInput.id = 'selector-merge-separator';
+        mergeInput.value = GM_getValue('selector_merge_separator', '');
+        mergeInput.placeholder = '例如：， 或 \\n';
+        mergeInput.style.cssText = 'flex: 1; margin-left: 12px; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; outline: none;';
+        mergeRow.appendChild(mergeLabel);
+        mergeRow.appendChild(mergeInput);
+        mergeSection.appendChild(mergeRow);
+
+        // 7. Expand Settings
+        const expandSection = createSection('other-anchor-expand', '简介展开设置', '▾');
+        const expandRow = document.createElement('div');
+        expandRow.className = 'setting-row';
+        const expandLabel = document.createElement('label');
+        expandLabel.className = 'setting-label';
+        expandLabel.textContent = '点击间隔(ms):';
+        const expandInput = document.createElement('input');
+        expandInput.type = 'number';
+        expandInput.min = '0';
+        expandInput.id = 'global-expand-click-interval';
+        try { expandInput.value = String(GM_getValue('expand_click_interval_ms', 150)); } catch(_) { expandInput.value = '150'; }
+        expandInput.style.cssText = 'flex: 1; margin-left: 12px; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; outline: none;';
+        expandRow.appendChild(expandLabel);
+        expandRow.appendChild(expandInput);
+        expandSection.appendChild(expandRow);
+
+        // 8. Quick Panel
+        const panelSection = createSection('other-anchor-quick-panel', '快捷定位面板', '📍');
+        panelSection.appendChild(createCustomCheckbox('global-show-config-anchor', GM_getValue('show_config_anchor_nav', true), '显示快捷定位面板'));
+
+        // 9. Default Tags
+        const tagSection = createSection('other-anchor-tag-defaults', '默认标签设置', '🏷️');
+        const tagDesc = document.createElement('div');
+        tagDesc.className = 'setting-desc';
+        tagDesc.textContent = '点击小圆点按钮时添加的标签属性和内容';
+        tagSection.appendChild(tagDesc);
+
+        const createInputRow = (label, id, val, ph) => {
+            const r = document.createElement('div');
+            r.className = 'setting-row';
+            const l = document.createElement('label');
+            l.className = 'setting-label';
+            l.style.width = '100px';
+            l.textContent = label;
+            const i = document.createElement('input');
+            i.id = id;
+            i.type = 'text';
+            i.value = val;
+            i.placeholder = ph;
+            i.style.cssText = 'flex: 1; padding: 8px 12px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s;';
+            i.addEventListener('focus', () => i.style.borderColor = 'var(--primarycolor)');
+            i.addEventListener('blur', () => i.style.borderColor = '#D1D5DB');
+            r.appendChild(l);
+            r.appendChild(i);
+            return r;
+        };
+        tagSection.appendChild(createInputRow('属性名称:', 'tag-property-name', GM_getValue('tag_dot_property_name', GM_getValue('tagPropertyName', '标签')), 'Notion属性名'));
+        tagSection.appendChild(createInputRow('标签内容:', 'tag-content', GM_getValue('tag_dot_tag_text', GM_getValue('tagContent', '收藏')), '标签内容'));
+
+        // 10. Icon Settings
+        const iconSection = createSection('other-anchor-icon-settings', '按钮图标设置', '⍟');
+        const iconDesc = document.createElement('div');
+        iconDesc.className = 'setting-desc';
+        iconDesc.textContent = '设置小圆点按钮的显示模式、图标样式和大小';
+        iconSection.appendChild(iconDesc);
+
+        // -- Icon Mode --
+        const modeLabel = document.createElement('div');
+        modeLabel.textContent = '显示模式';
+        modeLabel.style.cssText = 'font-size: 14px; font-weight: 600; color: #4B5563; margin-top:8px;';
+        iconSection.appendChild(modeLabel);
+
+        const modeRow = document.createElement('div');
+        modeRow.style.cssText = 'display: flex; gap: 12px; margin-top: 8px;';
+        const currIconMode = GM_getValue('icon_mode', '1');
+
+        const createModeOpt = (val, label, desc, previewHtml) => {
+            const d = document.createElement('div');
+            d.style.cssText = 'flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; border: 2px solid transparent; border-radius: 12px; cursor: pointer; background: #F9FAFB; transition: all 0.2s;';
+            if (currIconMode === val) {
+                d.style.borderColor = 'var(--primarycolor)';
+                d.style.background = 'var(--primarycolor-lighter)';
+            }
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'icon-mode';
+            radio.value = val;
+            radio.checked = (currIconMode === val);
+            radio.style.display = 'none';
+            d.appendChild(radio);
+
+            const prev = document.createElement('div');
+            prev.innerHTML = previewHtml;
+            d.appendChild(prev);
+
+            const l = document.createElement('div');
+            l.textContent = label;
+            l.style.cssText = 'font-size: 12px; font-weight: 600; color: #4B5563;';
+            d.appendChild(l);
+
+            const de = document.createElement('div');
+            de.textContent = desc;
+            de.style.cssText = 'font-size: 10px; color: #9CA3AF;';
+            d.appendChild(de);
+
+            d.addEventListener('click', () => {
+                document.querySelectorAll('input[name="icon-mode"]').forEach(r => {
+                    r.checked = false;
+                    r.parentNode.style.borderColor = 'transparent';
+                    r.parentNode.style.background = '#F9FAFB';
+                });
+                radio.checked = true;
+                d.style.borderColor = 'var(--primarycolor)';
+                d.style.background = 'var(--primarycolor-lighter)';
+            });
+            return d;
+        };
+
+        modeRow.appendChild(createModeOpt('1', '模式1', '空心→实心→实心⁺',
+                                          '<span style="color:var(--primarycolor)">♡</span> <span style="color:var(--primarycolor)">♥</span> <span style="color:var(--primarycolor)">♥⁺</span>'));
+        modeRow.appendChild(createModeOpt('2', '模式2', '无内容→空心→实心',
+                                          '<span style="display:inline-block;width:14px;height:14px;border:1px dashed #ccc;border-radius:50%"></span> <span style="color:var(--primarycolor)">♡</span> <span style="color:var(--primarycolor)">♥</span>'));
+        iconSection.appendChild(modeRow);
+
+        // -- Icon Style --
+        const iconStyleLabel = document.createElement('div');
+        iconStyleLabel.textContent = '图标样式';
+        iconStyleLabel.style.cssText = 'font-size: 14px; font-weight: 600; color: #4B5563; margin-top:16px; margin-bottom:8px;';
+        iconSection.appendChild(iconStyleLabel);
+
+        const iconGrid = document.createElement('div');
+        iconGrid.style.cssText = 'display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));';
+        const iconOpts = [
+            {v:'♥',l:'♥'},{v:'▲',l:'▲'},{v:'▼',l:'▼'},{v:'●',l:'●'},{v:'◆',l:'◆'},{v:'⏹︎',l:'⏹︎'},{v:'★',l:'★'},
+            {v:'✤',l:'✤'},{v:'☀',l:'☀'},{v:'♠',l:'♠'},{v:'♦',l:'♦'},{v:'♣',l:'♣'},{v:'✿',l:'✿'},{v:'✪',l:'✪'},
+            {v:'○',l:'○'},{v:'✦',l:'✦'},{v:'✱',l:'✱'},{v:'∼',l:'∼'},{v:'✻',l:'✻'},{v:'❆',l:'❆'},{v:'⍟',l:'⍟'},
+            {v:'•',l:'•'},{v:'𝟭',l:'𝟭'},{v:'FILL',l:'', bg:true}
+        ];
+        const currIcon = GM_getValue('button_icon', '♥');
+
+        iconOpts.forEach(opt => {
+            const d = document.createElement('div');
+            d.style.cssText = 'display: flex; align-items: center; justify-content: center; height: 40px; border-radius: 8px; cursor: pointer; border: 1px solid #F3F4F6; background: #FFF; transition: all 0.2s;';
+            if (currIcon === opt.v) {
+                d.style.borderColor = 'var(--primarycolor)';
+                d.style.background = 'var(--primarycolor-lighter)';
+            }
+
+            if (opt.bg) {
+                const sp = document.createElement('span');
+                sp.style.cssText = 'width: 16px; height: 16px; border-radius: 50%; background: var(--primarycolor);';
+                d.appendChild(sp);
+            } else {
+                const sp = document.createElement('span');
+                sp.textContent = opt.l;
+                sp.style.cssText = 'color: var(--primarycolor); font-size: 18px; line-height: 1;';
+                d.appendChild(sp);
+            }
+
+            const r = document.createElement('input');
+            r.type = 'radio';
+            r.name = 'button-icon';
+            r.value = opt.v;
+            r.checked = (currIcon === opt.v);
+            r.style.display = 'none';
+            d.appendChild(r);
+
+            d.addEventListener('click', () => {
+                document.querySelectorAll('input[name="button-icon"]').forEach(i => {
+                    i.checked = false;
+                    i.parentNode.style.borderColor = '#F3F4F6';
+                    i.parentNode.style.background = '#FFF';
+                });
+                r.checked = true;
+                d.style.borderColor = 'var(--primarycolor)';
+                d.style.background = 'var(--primarycolor-lighter)';
+            });
+            iconGrid.appendChild(d);
+        });
+        iconSection.appendChild(iconGrid);
+
+        // 11. Smart Extraction
+        const smartSection = createSection('other-anchor-smart-extract', '智能提取', '🧠');
+        const smartDesc = document.createElement('div');
+        smartDesc.className = 'setting-desc';
+        smartDesc.textContent = '当未配置选择器或提取失败时，尝试自动分析网页内容提取信息。';
+        smartSection.appendChild(smartDesc);
+        smartSection.appendChild(createCustomCheckbox('smart-extraction-enabled', GM_getValue('smart_extraction_enabled', true), '启用智能提取优化'));
+
+        // 12. Proxy
+        const proxySection = createSection('cover-proxy-prefix', '封面代理前缀', '🔗');
+        const proxyDesc = document.createElement('div');
+        proxyDesc.className = 'setting-desc';
+        proxyDesc.textContent = '设置封面图片的代理链接前缀。格式：https://example.com/?url=';
+        proxySection.appendChild(proxyDesc);
+        proxySection.appendChild(createInputRow('代理前缀:', 'cover-proxy-prefix', COVER_BED_CONFIG.proxyPrefix || '', '请输入代理链接...'));
+
+        // Footer Actions
+        const footer = document.createElement('div');
+        footer.style.cssText = 'padding: 20px 24px; border-top: 1px solid #F3F4F6; background: #FFFFFF; display: flex; justify-content: flex-end; gap: 12px;';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = '取消';
+        cancelBtn.style.cssText = 'padding: 10px 18px; border: 1px solid #E5E7EB; border-radius: 12px; background: #FFF; cursor: pointer; color: #374151; font-weight: 500; transition: all 0.2s;';
+        cancelBtn.addEventListener('mouseenter', () => cancelBtn.style.background = '#F9FAFB');
+        cancelBtn.addEventListener('mouseleave', () => cancelBtn.style.background = '#FFF');
+
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = '保存设置';
+        saveBtn.style.cssText = 'padding: 10px 24px; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D)); color: #fff; cursor: pointer; font-weight: 500; box-shadow: 0 4px 12px rgba(255, 107, 157, 0.25); transition: all 0.2s;';
+
+        cancelBtn.onclick = () => {
+            overlay.style.opacity = '0';
+            setTimeout(() => { if(overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 300);
+        };
+
+        saveBtn.onclick = () => {
+            // Save logic
+            const remarkChecked = document.getElementById('global-remark-on-add')?.checked;
+            const ratingChecked = document.getElementById('global-enable-rating')?.checked;
+            const appendChecked = document.getElementById('global-show-append')?.checked;
+            const jsdelivrChecked = document.getElementById('global-use-jsdelivr')?.checked;
+            const tagPropertyName = document.getElementById('tag-property-name')?.value;
+            const tagContent = document.getElementById('tag-content')?.value;
+            const removeBracketsChecked = document.getElementById('title-remove-brackets')?.checked;
+            const trimUnderscoreChecked = document.getElementById('title-trim-underscore')?.checked;
+            const smartExtractionChecked = document.getElementById('smart-extraction-enabled')?.checked;
+
+            if (typeof remarkChecked === 'boolean') GM_setValue('global_enable_remark_on_add', remarkChecked);
+            if (typeof ratingChecked === 'boolean') {
+                GM_setValue('rating_enabled', ratingChecked);
+                if (typeof RATING_CONFIG !== 'undefined') RATING_CONFIG.enabled = ratingChecked;
+            }
+            if (typeof appendChecked === 'boolean') {
+                GM_setValue('show_append_button', appendChecked);
+                const appendButton = document.getElementById('append-content-btn');
+                if (appendButton) appendButton.style.display = appendChecked ? 'flex' : 'none';
+            }
+            if (typeof jsdelivrChecked === 'boolean') GM_setValue('use_jsdelivr_acceleration', jsdelivrChecked);
+            if (typeof removeBracketsChecked === 'boolean') GM_setValue('title_remove_brackets', removeBracketsChecked);
+            if (typeof trimUnderscoreChecked === 'boolean') GM_setValue('title_trim_underscore', trimUnderscoreChecked);
+
+            ['show-filter-btn','show-test-btn','show-highlight-btn','show-locate-btn','show-select-btn'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) GM_setValue(id, !!el.checked);
+            });
+
+            if (typeof smartExtractionChecked === 'boolean') {
+                GM_setValue('smart_extraction_enabled', smartExtractionChecked);
+                if (typeof SMART_EXTRACTION_CONFIG !== 'undefined') SMART_EXTRACTION_CONFIG.enabled = smartExtractionChecked;
+            }
+
+            const mergeSep = document.getElementById('selector-merge-separator')?.value;
+            if (mergeSep !== undefined) GM_setValue('selector_merge_separator', mergeSep);
+
+            const expandInterval = parseInt(document.getElementById('global-expand-click-interval')?.value, 10);
+            if (!isNaN(expandInterval)) GM_setValue('expand_click_interval_ms', expandInterval);
+
+            const showAnchor = document.getElementById('global-show-config-anchor')?.checked;
+            if (typeof showAnchor === 'boolean') {
+                GM_setValue('show_config_anchor_nav', showAnchor);
+                // Update anchor visibility immediately if possible
+            }
+
+            if (tagPropertyName) {
+                GM_setValue('tagPropertyName', tagPropertyName);
+                GM_setValue('tag_dot_property_name', tagPropertyName);
+            }
+            if (tagContent) {
+                GM_setValue('tagContent', tagContent);
+                GM_setValue('tag_dot_tag_text', tagContent);
+            }
+
+            const iconMode = document.querySelector('input[name="icon-mode"]:checked')?.value || '1';
+            GM_setValue('icon_mode', iconMode);
+            const iconVal = document.querySelector('input[name="button-icon"]:checked')?.value || '♥';
+            GM_setValue('button_icon', iconVal);
+
+            const proxyPrefix = document.getElementById('cover-proxy-prefix')?.value?.trim() || '';
+            GM_setValue('cover_proxy_prefix', proxyPrefix);
+            if (typeof COVER_BED_CONFIG !== 'undefined') COVER_BED_CONFIG.proxyPrefix = proxyPrefix;
+
+            // Trigger updates
+            const tagBtn = document.querySelector('.notion-tag-btn');
+            if (tagBtn) {
+                tagBtn.classList.remove('icon-mode-1', 'icon-mode-2');
+                tagBtn.classList.add('icon-mode-' + iconMode);
+                if (typeof updateTagButtonIcon === 'function') updateTagButtonIcon();
+            }
+            if (typeof customTagSettings !== 'undefined') {
+                customTagSettings.propertyName = tagPropertyName || '标签';
+                customTagSettings.tagText = tagContent || '收藏';
+            }
+
+            showNotification('已保存其他设置', 'success');
+            overlay.style.opacity = '0';
+            setTimeout(() => { if(overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 300);
+            applyButtonVisibilitySettings();
+        };
+
+        footer.appendChild(cancelBtn);
+        footer.appendChild(saveBtn);
+        dialog.appendChild(footer);
+
+        overlay.appendChild(dialog);
+        overlay.appendChild(topNav); // Append nav last
+        document.body.appendChild(overlay);
+
+        // Draggable Nav Logic
+        try {
+            const savedLeft = GM_getValue('other_settings_anchor_left');
+            const savedTop = GM_getValue('other_settings_anchor_top');
+            if (typeof savedLeft === 'number' && typeof savedTop === 'number') {
+                topNav.style.left = Math.max(0, savedLeft) + 'px';
+                topNav.style.top = Math.max(0, savedTop) + 'px';
+            }
+
+            let isDragging = false;
+            let startX, startY, initLeft, initTop;
+            let didDrag = false;
+            let originalTransition = '';
+
+            topNav.addEventListener('mousedown', e => {
+                if (e.button !== 0) return;
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+                isDragging = true;
+                didDrag = false;
+                startX = e.clientX;
+                startY = e.clientY;
+                const rect = topNav.getBoundingClientRect();
+                initLeft = rect.left;
+                initTop = rect.top;
+                document.documentElement.style.userSelect = 'none';
+                originalTransition = topNav.style.transition;
+                topNav.style.transition = 'none';
+                e.preventDefault();
+            });
+
+            window.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (!didDrag) {
+                    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
+                    didDrag = true;
+                }
+                topNav.style.left = (initLeft + dx) + 'px';
+                topNav.style.top = (initTop + dy) + 'px';
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                const rect = topNav.getBoundingClientRect();
+                GM_setValue('other_settings_anchor_left', rect.left);
+                GM_setValue('other_settings_anchor_top', rect.top);
+                document.documentElement.style.userSelect = '';
+                topNav.style.transition = originalTransition;
+            });
+        } catch(_) {}
+
+        const handleScroll = () => {
+            if (Date.now() < suppressAutoActiveUntil) return;
+            const container = contentArea;
+            if (!container) return;
+            const containerRect = container.getBoundingClientRect();
+            const triggerLine = containerRect.top + 100;
+            let activeId = null;
+            for (let i = navItems.length - 1; i >= 0; i--) {
+                const it = navItems[i];
+                const el = document.getElementById(it.targetId);
+                if (!el) continue;
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= triggerLine + 50) {
+                    activeId = it.targetId;
+                    break;
+                }
+            }
+            if (!activeId && container.scrollTop < 50 && navItems.length > 0) {
+                activeId = navItems[0].targetId;
+            }
+            if (activeId) setActiveById(activeId);
+        };
+        contentArea.addEventListener('scroll', () => {
+            if (window.requestAnimationFrame) requestAnimationFrame(handleScroll);
+            else setTimeout(handleScroll, 16);
+        });
+        handleScroll();
+    }
+
     if (GM_getValue(GLOBAL_REMARK_ON_ADD_KEY) === undefined) {
         GM_setValue(GLOBAL_REMARK_ON_ADD_KEY, false);
     }
@@ -3722,6 +4405,905 @@
             console.error('导入配置失败:', error);
             showNotification('导入配置失败: ' + error.message, 'error');
         }
+    }
+
+    // 显示导入/导出配置对话框
+    function showImportExportDialog() {
+        return new Promise((resolve) => {
+            const isMobile = window.innerWidth <= 768;
+
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: -webkit-fill-available;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                ${isMobile ? 'padding: 16px;' : ''}
+            `;
+
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `
+                background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+                border-radius: ${isMobile ? '16px' : '20px'};
+                padding: ${isMobile ? '16px' : '24px'} !important;
+                max-width: ${isMobile ? '100%' : '600px'};
+                width: ${isMobile ? '100%' : '90%'};
+                max-height: ${isMobile ? '90vh' : '85vh'};
+                overflow-y: auto;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                position: relative;
+            `;
+            dialog.className = 'notion-ImportExport-dialog';
+
+            const decorationBar = document.createElement('div');
+            decorationBar.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                border-radius: var(--notion-border-radius,20px);
+            `;
+            dialog.appendChild(decorationBar);
+
+            const title = document.createElement('h3');
+            title.textContent = '✦ 导入/导出配置';
+            title.style.cssText = `
+                font-size: ${isMobile ? '20px' : '24px'};
+                font-weight: 800;
+                color: #1f2937;
+                text-align: center;
+                margin: 0 0 ${isMobile ? '16px' : '20px'} 0;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                letter-spacing: 0.5px;
+            `;
+
+            const sitesWrap = document.createElement('div');
+            sitesWrap.style.cssText = `
+                border: 1px solid #e5e7eb;
+                border-radius: ${isMobile ? '12px' : '16px'};
+                padding: ${isMobile ? '12px' : '16px'};
+                max-height: ${isMobile ? '200px' : '320px'};
+                overflow: auto;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                `;
+            const sitesHeader = document.createElement('div');
+            sitesHeader.style.cssText = `display:flex; align-items:center; justify-content: space-between; margin-bottom: ${isMobile ? '8px' : '12px'}; ${isMobile ? 'flex-wrap: wrap; gap: 8px;' : ''}`;
+            const sitesTitle = document.createElement('div');
+            sitesTitle.textContent = '选择要导出的域名（自动整合子域名）';
+            sitesTitle.style.cssText = `font-weight:600; color:#374151; font-size:${isMobile ? '13px' : '14px'}; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
+            const selectAll = document.createElement('button');
+            selectAll.textContent = '全选/全不选';
+            selectAll.style.cssText = `padding:${isMobile ? '6px 10px' : '8px 12px'}; border:1px solid #d1d5db; border-radius: 20px; background:#fff; font-size:${isMobile ? '12px' : '13px'}; cursor:pointer; transition: all 0.2s ease; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
+            selectAll.addEventListener('mouseenter', () => {
+                selectAll.style.background = 'linear-gradient(135deg, var(--primarycolor-lighter, #fdf2f8), var(--primarycolor-light, #FFE4EA))';
+                selectAll.style.borderColor = 'var(--primarycolor, #FF8FAB)';
+            });
+            selectAll.addEventListener('mouseleave', () => {
+                selectAll.style.background = '#fff';
+                selectAll.style.borderColor = '#d1d5db';
+            });
+            sitesHeader.appendChild(sitesTitle);
+            sitesHeader.appendChild(selectAll);
+
+            const sitesList = document.createElement('div');
+            sitesList.style.cssText = `display:grid; grid-template-columns: ${isMobile ? '1fr' : 'repeat(auto-fill, minmax(210px,1fr))'}; gap:${isMobile ? '6px' : '8px'}; align-items:start;`;
+
+            function getBaseDomain(host) {
+                try {
+                    const parts = String(host || '').split('.').filter(Boolean);
+                    if (parts.length <= 2) return host;
+                    const tld = parts[parts.length - 1];
+                    const sld = parts[parts.length - 2];
+                    const sldList = ['co','com','org','net','gov','edu'];
+                    if (tld.length === 2 && sldList.includes(sld)) {
+                        return parts.slice(-3).join('.');
+                    }
+                    return parts.slice(-2).join('.');
+                } catch (_) { return host; }
+            }
+
+            const allKeys = GM_listValues();
+            const hosts = allKeys.filter(k => k.startsWith('site_config_')).map(k => k.replace('site_config_', ''));
+            const domainToHosts = {};
+            hosts.forEach(h => {
+                const hostname = String(h).split('/')[0];
+                const d = getBaseDomain(hostname);
+                if (!domainToHosts[d]) domainToHosts[d] = [];
+                domainToHosts[d].push(h);
+            });
+
+            const domainEntries = Object.entries(domainToHosts).sort((a,b)=> a[0].localeCompare(b[0]));
+            const domainCheckboxes = [];
+            if (domainEntries.length === 0) {
+                const empty = document.createElement('div');
+                empty.textContent = '暂无站点配置';
+                empty.style.cssText = 'color:#6b7280; font-size:13px;';
+                sitesList.appendChild(empty);
+            } else {
+                domainEntries.forEach(([domain, hs]) => {
+                    const id = 'export-domain-' + domain;
+                    const item = createCustomCheckbox(id, true, domain);
+                    item.style.margin = '0';
+                    item.style.padding = '8px 10px';
+                    item.style.border = '1px solid #e5e7eb';
+                    item.style.borderRadius = '20px';
+                    const input = item.querySelector('input');
+                    domainCheckboxes.push({ domain, input, hosts: hs });
+                    sitesList.appendChild(item);
+                });
+            }
+            selectAll.onclick = () => {
+                const allChecked = domainCheckboxes.every(x => x.input && x.input.checked);
+                domainCheckboxes.forEach(x => {
+                    if (x.input) {
+                        x.input.checked = !allChecked;
+                        try { x.input.dispatchEvent(new Event('change')); } catch (_) {}
+                    }
+                });
+            };
+            sitesWrap.appendChild(sitesHeader);
+            sitesWrap.appendChild(sitesList);
+
+            const modulesWrap = document.createElement('div');
+            modulesWrap.style.cssText = `
+                border: 1px solid #e5e7eb;
+                border-radius: ${isMobile ? '12px' : '16px'};
+                padding: ${isMobile ? '12px' : '16px'};
+                margin-top: ${isMobile ? '10px' : '12px'};
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                `;
+            const modulesHeader = document.createElement('div');
+            modulesHeader.style.cssText = `display:flex; align-items:center; justify-content: space-between; margin-bottom: ${isMobile ? '8px' : '12px'}; ${isMobile ? 'flex-wrap: wrap; gap: 8px;' : ''}`;
+            const modulesTitle = document.createElement('div');
+            modulesTitle.textContent = '选择要导出的模块';
+            modulesTitle.style.cssText = `font-weight:600; color:#374151; font-size:${isMobile ? '13px' : '14px'}; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
+            const selectAllModules = document.createElement('button');
+            selectAllModules.textContent = '全选/全不选';
+            selectAllModules.style.cssText = `padding:${isMobile ? '6px 10px' : '8px 12px'}; border:1px solid #d1d5db; border-radius: 20px; background:#fff; font-size:${isMobile ? '12px' : '13px'}; cursor:pointer; transition: all 0.2s ease; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
+            selectAllModules.addEventListener('mouseenter', () => {
+                selectAllModules.style.background = 'linear-gradient(135deg, var(--primarycolor-lighter, #fdf2f8), var(--primarycolor-light, #FFE4EA))';
+                selectAllModules.style.borderColor = 'var(--primarycolor, #FF8FAB)';
+            });
+            selectAllModules.addEventListener('mouseleave', () => {
+                selectAllModules.style.background = '#fff';
+                selectAllModules.style.borderColor = '#d1d5db';
+            });
+            const toggleModulesBtn = document.createElement('button');
+            toggleModulesBtn.textContent = '展开模块列表';
+            toggleModulesBtn.style.cssText = `padding:${isMobile ? '6px 10px' : '8px 12px'}; border:1px solid #d1d5db; border-radius: 20px; background:#fff; font-size:${isMobile ? '12px' : '13px'}; cursor:pointer; transition: all 0.2s ease; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
+            toggleModulesBtn.addEventListener('mouseenter', () => {
+                toggleModulesBtn.style.background = 'linear-gradient(135deg, var(--primarycolor-lighter, #fdf2f8), var(--primarycolor-light, #FFE4EA))';
+                toggleModulesBtn.style.borderColor = 'var(--primarycolor, #FF8FAB)';
+            });
+            toggleModulesBtn.addEventListener('mouseleave', () => {
+                toggleModulesBtn.style.background = '#fff';
+                toggleModulesBtn.style.borderColor = '#d1d5db';
+            });
+            const headerActions = document.createElement('div');
+            headerActions.style.cssText = `display:flex; gap:${isMobile ? '6px' : '8px'}; ${isMobile ? 'width: -webkit-fill-available;' : ''}; ${isMobile ? 'justify-content: space-between;' : ''}`;
+            headerActions.appendChild(toggleModulesBtn);
+            headerActions.appendChild(selectAllModules);
+            modulesHeader.appendChild(modulesTitle);
+            modulesHeader.appendChild(headerActions);
+            const modulesList = document.createElement('div');
+            modulesList.style.cssText = `display:grid; grid-template-columns: ${isMobile ? '1fr' : 'repeat(auto-fill, minmax(210px,1fr))'}; gap:${isMobile ? '6px' : '8px'}; align-items:start; max-height:${isMobile ? '280px' : '360px'}; overflow:auto;`;
+            const moduleDefs = [
+                ['notion','Notion 配置'],['github','GitHub 配置'],['domainGithub','域名图床'],['coverBed','封面图床'],
+                ['rating','评分设置'],['autoUpdate','自动更新'],['customStyle','自定义样式'],['smartExtraction','智能提取'],
+                ['expandIntervalMs','展开间隔'],['stepConfig','逐步配置'],['visibleSelectors','字段可见性'],['websiteGithub','网站GitHub配置'],
+                ['customConfigs','站点选择器'],['enabledPatterns','启用路径模式'],['typeMappings','类型映射'],['showAppendButton','显示追加按钮'],
+                ['customTags','自定义标签'],['customTagGroups','标签分组'],['customMainGroups','主分组'],['autoTagRoutingRules','自动分流规则'],
+                ['notionDatabaseCustomMap','数据库映射'],['clipTypesWithColors','类型颜色'],['clipTypes','类型列表'],
+                ['markdownTransformEnabled','Markdown启用'],['markdownTransformRules','Markdown规则'],['markdownTransformUseDomain','Markdown按域名'],
+                ['markdownTransformDomainConfigs','Markdown域名规则'],['tagDotTitle','小圆点标题'],['tagDotTags','小圆点标签'],
+                ['tagDotPropertyName','小圆点属性名'],['tagDotTagText','小圆点文本'],['tagPropertyName','标签属性名'],['tagContent','标签内容'],
+                ['currentMainGroupNovel','当前主分组(小说)'],['currentMainGroupComic','当前主分组(漫画)'],['currentMainGroupClip','当前主分组(剪藏)'],
+                ['tagUsageStatsNovel','标签统计(小说)'],['tagUsageStatsComic','标签统计(漫画)'],['tagUsageStatsClip','标签统计(剪藏)'],
+                ['githubFolderMode','GitHub文件夹模式'],['githubFolderIncludeCover','GitHub包含封面'],
+                ['globalShowButtons','全局显示按钮'],['globalRemarkOnAdd','添加时备注'],['selectorMergeSeparator','选择器合并分隔符'],
+                ['buttonStyle','按钮样式'],['configUiToggles','配置界面开关'],['request','网络请求设置'],
+                ['notionVerifyDatabaseId','Notion验证数据库ID'],['titleClean','标题清理偏好'],
+                ['githubDomainConfig','域名CDN配置'],['enhancedAutoUpdateEnabled','增强自动更新开关'],
+                ['siteConfigs','网站配置']
+            ];
+            const moduleCheckboxes = [];
+            moduleDefs.forEach(([id,label]) => {
+                const item = createCustomCheckbox('export-module-' + id, false, label);
+                item.style.margin = '0';
+                item.style.padding = '8px 10px';
+                item.style.border = '1px solid #e5e7eb';
+                item.style.borderRadius = '20px';
+                const input = item.querySelector('input');
+                moduleCheckboxes.push({ id, input });
+                modulesList.appendChild(item);
+            });
+            let modulesExpanded = false;
+            modulesList.style.display = 'none';
+            toggleModulesBtn.onclick = () => {
+                modulesExpanded = !modulesExpanded;
+                if (modulesExpanded) {
+                    modulesList.style.display = 'grid';
+                    toggleModulesBtn.textContent = '收起模块列表';
+                } else {
+                    modulesList.style.display = 'none';
+                    toggleModulesBtn.textContent = '展开模块列表';
+                }
+            };
+            selectAllModules.onclick = () => {
+                const allChecked = moduleCheckboxes.every(x => x.input && x.input.checked);
+                moduleCheckboxes.forEach(x => {
+                    if (x.input) {
+                        x.input.checked = !allChecked;
+                        try { x.input.dispatchEvent(new Event('change')); } catch (_) {}
+                    }
+                });
+            };
+            const excludeSensitiveContainer = createCustomCheckbox('export-exclude-sensitive', true, '移除敏感字段');
+            excludeSensitiveContainer.style.cssText = `margin-top:${isMobile ? '8px' : '10px'};`;
+            modulesWrap.appendChild(modulesHeader);
+            modulesWrap.appendChild(modulesList);
+            modulesWrap.appendChild(excludeSensitiveContainer);
+
+            const copyAllBtn = document.createElement('button');
+            copyAllBtn.textContent = '📋 复制全部配置';
+            copyAllBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const exportBtn = document.createElement('button');
+            exportBtn.textContent = '📤 导出全部配置';
+            exportBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const exportSelectedBtn = document.createElement('button');
+            exportSelectedBtn.textContent = '🌐 导出所选站点';
+            exportSelectedBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const copySelectedSitesBtn = document.createElement('button');
+            copySelectedSitesBtn.textContent = '📋 复制选定站点';
+            copySelectedSitesBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const importAllBtn = document.createElement('button');
+            importAllBtn.textContent = '📥 导入全部配置';
+            importAllBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const importAppendBtn = document.createElement('button');
+            importAppendBtn.textContent = '📥 追加导入配置';
+            importAppendBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: 2px solid var(--primarycolor, #FF8FAB);
+                border-radius: 20px;
+                background: white;
+                color: var(--primarycolor-dark, #FF6B9D);
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 8px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const pasteFullConfigBtn = document.createElement('button');
+            pasteFullConfigBtn.textContent = '📝 粘贴全部配置';
+            pasteFullConfigBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: 1px dashed var(--primarycolor, #FF8FAB);
+                border-radius: 20px;
+                background: rgba(255,255,255,0.9);
+                color: var(--primarycolor-dark, #FF6B9D);
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 6px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const pasteAppendConfigBtn = document.createElement('button');
+            pasteAppendConfigBtn.textContent = '📝 粘贴追加配置';
+            pasteAppendConfigBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: 1px dashed var(--primarycolor, #FF8FAB);
+                border-radius: 20px;
+                background: rgba(255,255,255,0.9);
+                color: var(--primarycolor-dark, #FF6B9D);
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 6px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = '取消';
+            cancelBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: 1px solid var(--input-border, #d1d5db);
+                border-radius: 20px;
+                background: white;
+                color: var(--text-muted, #6b7280);
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 4px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+
+            const addHoverEffect = (btn, isPrimary = true) => {
+                if (isPrimary) {
+                    btn.addEventListener('mouseenter', () => {
+                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor-dark, #FF6B9D), var(--primarycolor, #FF5184))';
+                        btn.style.transform = 'translateY(-2px)';
+                        btn.style.boxShadow = '0 8px 20px var(--primarycolor-lighter)';
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D))';
+                        btn.style.transform = 'translateY(0)';
+                        btn.style.boxShadow = '0 6px 14px var(--primarycolor-lighter)';
+                    });
+                } else {
+                    btn.addEventListener('mouseenter', () => {
+                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor, #FF9BB3), var(--primarycolor-dark, #FF8FA3))';
+                        btn.style.transform = 'translateY(-2px)';
+                        btn.style.boxShadow = '0 8px 20px var(--primarycolor-lighter)';
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor-light, #FFB6C1), var(--primarycolor, #FFA0B4))';
+                        btn.style.transform = 'translateY(0)';
+                        btn.style.boxShadow = '0 6px 14px var(--primarycolor-lighter)';
+                    });
+                }
+            };
+
+            addHoverEffect(exportBtn, true);
+            addHoverEffect(copyAllBtn, false);
+            addHoverEffect(exportSelectedBtn, false);
+            addHoverEffect(copySelectedSitesBtn, false);
+            addHoverEffect(importAllBtn, true);
+            addHoverEffect(pasteFullConfigBtn, false);
+            addHoverEffect(pasteAppendConfigBtn, false);
+
+            const exportModulesBtn = document.createElement('button');
+            exportModulesBtn.textContent = '📤 导出选定模块';
+            exportModulesBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+            const copySelectedModulesBtn = document.createElement('button');
+            copySelectedModulesBtn.textContent = '📋 复制选定模块';
+            copySelectedModulesBtn.style.cssText = `
+                padding: ${isMobile ? '10px 16px' : '12px 20px'};
+                border: none;
+                border-radius: 20px;
+                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
+                color: white;
+                cursor: pointer;
+                font-size: ${isMobile ? '13px' : '14px'};
+                font-weight: 500;
+                transition: all 0.2s ease;
+                box-shadow: 0 6px 14px var(--primarycolor-lighter);
+                ${isMobile ? 'width: -webkit-fill-available;' : ''}
+            `;
+            addHoverEffect(exportModulesBtn, true);
+            addHoverEffect(copySelectedModulesBtn, false);
+
+            importAppendBtn.addEventListener('mouseenter', () => {
+                importAppendBtn.style.background = 'var(--primarycolor-lighter, #fdf2f8)';
+                importAppendBtn.style.transform = 'translateY(-2px)';
+                importAppendBtn.style.boxShadow = '0 6px 12px var(--primarycolor-lighter)';
+            });
+            importAppendBtn.addEventListener('mouseleave', () => {
+                importAppendBtn.style.background = 'white';
+                importAppendBtn.style.transform = 'translateY(0)';
+                importAppendBtn.style.boxShadow = '0 4px 8px var(--primarycolor-lighter)';
+            });
+
+            pasteFullConfigBtn.addEventListener('mouseenter', () => {
+                pasteFullConfigBtn.style.background = 'var(--primarycolor-lighter, #fdf2f8)';
+                pasteFullConfigBtn.style.transform = 'translateY(-2px)';
+            });
+            pasteFullConfigBtn.addEventListener('mouseleave', () => {
+                pasteFullConfigBtn.style.background = 'rgba(255,255,255,0.9)';
+                pasteFullConfigBtn.style.transform = 'translateY(0)';
+            });
+
+            pasteAppendConfigBtn.addEventListener('mouseenter', () => {
+                pasteAppendConfigBtn.style.background = 'var(--primarycolor-lighter, #fdf2f8)';
+                pasteAppendConfigBtn.style.transform = 'translateY(-2px)';
+            });
+            pasteAppendConfigBtn.addEventListener('mouseleave', () => {
+                pasteAppendConfigBtn.style.background = 'rgba(255,255,255,0.9)';
+                pasteAppendConfigBtn.style.transform = 'translateY(0)';
+            });
+
+            cancelBtn.addEventListener('mouseenter', () => {
+                cancelBtn.style.background = '#f9fafb';
+                cancelBtn.style.borderColor = '#9ca3af';
+                cancelBtn.style.transform = 'translateY(-1px)';
+            });
+            cancelBtn.addEventListener('mouseleave', () => {
+                cancelBtn.style.background = 'white';
+                cancelBtn.style.borderColor = '#d1d5db';
+                cancelBtn.style.transform = 'translateY(0)';
+            });
+
+            const handleConfigImportFromString = (configJson) => {
+                const content = (configJson || '').trim();
+                if (!content) {
+                    showNotification('配置内容为空，无法导入', 'warning');
+                    return false;
+                }
+                try {
+                    const parsed = JSON.parse(content);
+                    if (parsed && parsed.siteDomains && typeof parsed.siteDomains === 'object') {
+                        let count = 0;
+                        Object.values(parsed.siteDomains).forEach(group => {
+                            const hostsObj = (group && group.hosts) || {};
+                            Object.entries(hostsObj).forEach(([host, cfg]) => {
+                                GM_setValue('site_config_' + host, cfg);
+                                count++;
+                            });
+                        });
+                        showNotification(`已导入 ${count} 个站点配置（同域名/同host已覆盖）`, 'success');
+                        return true;
+                    }
+                    if (parsed && parsed.siteConfigs && typeof parsed.siteConfigs === 'object') {
+                        const entries = Object.entries(parsed.siteConfigs);
+                        entries.forEach(([host, cfg]) => {
+                            GM_setValue('site_config_' + host, cfg);
+                        });
+                        showNotification(`已导入 ${entries.length} 个站点配置（同域名已覆盖）`, 'success');
+                        return true;
+                    }
+                    importGlobalConfig(content);
+                    showNotification('配置已导入', 'success');
+                    return true;
+                } catch (_) {
+                    try {
+                        importGlobalConfig(content);
+                        showNotification('配置已导入', 'success');
+                        return true;
+                    } catch (error) {
+                        console.error('导入配置失败:', error);
+                        showNotification('导入失败: ' + error.message, 'error');
+                        return false;
+                    }
+                }
+            };
+
+            copyAllBtn.addEventListener('click', () => {
+                try {
+                    const allKeys = GM_listValues();
+                    const configsToExport = {};
+                    const blacklist = ['notion_databases_cache', 'last_auto_update_check', 'last_version'];
+                    allKeys.forEach(key => {
+                        if (!blacklist.includes(key)) {
+                            try {
+                                const value = GM_getValue(key);
+                                if (value !== undefined) {
+                                    configsToExport[key] = value;
+                                }
+                            } catch (e) {
+                                console.warn(`跳过无法读取的配置项: ${key}`, e);
+                            }
+                        }
+                    });
+                    const exportData = {
+                        meta: {
+                            version: '5.0',
+                            exportDate: new Date().toISOString(),
+                            description: 'Notion Clipper 全量配置备份（包含所有用户设置）',
+                            configCount: Object.keys(configsToExport).length
+                        },
+                        configs: configsToExport
+                    };
+                    const configJson = JSON.stringify(exportData, null, 2);
+                    GM_setClipboard(configJson);
+                    showNotification(`已复制全部配置到剪贴板（共 ${exportData.meta.configCount} 项）`, 'success');
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                } catch (error) {
+                    console.error('复制配置失败:', error);
+                    showNotification('复制配置失败: ' + error.message, 'error');
+                }
+            });
+
+            exportBtn.addEventListener('click', () => {
+                exportGlobalConfig();
+                document.body.removeChild(overlay);
+                resolve(true);
+            });
+
+            exportSelectedBtn.addEventListener('click', () => {
+                const selectedDomains = domainCheckboxes.filter(x => x.input && x.input.checked);
+                try {
+                    const siteDomains = {};
+                    selectedDomains.forEach(({ domain, hosts }) => {
+                        const hostMap = {};
+                        hosts.forEach(h => {
+                            const v = GM_getValue('site_config_' + h);
+                            if (v) hostMap[h] = v;
+                        });
+                        if (Object.keys(hostMap).length > 0) siteDomains[domain] = { hosts: hostMap };
+                    });
+                    const exportJson = JSON.stringify({ version: 'sites-domains-1.0', siteDomains }, null, 2);
+                    const blob = new Blob([exportJson], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `notion-clipper-sites-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showNotification('已按域名导出所选配置', 'success');
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                } catch (e) {
+                    console.error('导出所选站点失败:', e);
+                    showNotification('导出失败: ' + (e.message || '未知错误'), 'error');
+                }
+            });
+
+            copySelectedSitesBtn.addEventListener('click', () => {
+                const selectedDomains = domainCheckboxes.filter(x => x.input && x.input.checked);
+                try {
+                    const siteDomains = {};
+                    selectedDomains.forEach(({ domain, hosts }) => {
+                        const hostMap = {};
+                        hosts.forEach(h => {
+                            const v = GM_getValue('site_config_' + h);
+                            if (v) hostMap[h] = v;
+                        });
+                        if (Object.keys(hostMap).length > 0) siteDomains[domain] = { hosts: hostMap };
+                    });
+                    const exportJson = JSON.stringify({ version: 'sites-domains-1.0', siteDomains }, null, 2);
+                    GM_setClipboard(exportJson);
+                    showNotification('已复制所选站点配置到剪贴板', 'success');
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                } catch (e) {
+                    console.error('复制所选站点失败:', e);
+                    showNotification('复制失败: ' + (e.message || '未知错误'), 'error');
+                }
+            });
+
+            exportModulesBtn.addEventListener('click', () => {
+                const selected = moduleCheckboxes.filter(x => x.input && x.input.checked).map(x => x.id);
+                if (!selected.length) {
+                    showNotification('请先选择要导出的模块', 'warning');
+                    return;
+                }
+                try {
+                    const excludeSensitive = document.getElementById('export-exclude-sensitive')?.checked;
+                    const exportObj = buildPartialExportConfig(selected, !!excludeSensitive);
+                    const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `notion-clipper-config-selected-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showNotification('已导出选定模块', 'success');
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                } catch (e) {
+                    showNotification('导出失败: ' + (e.message || '未知错误'), 'error');
+                }
+            });
+
+            copySelectedModulesBtn.addEventListener('click', () => {
+                const selected = moduleCheckboxes.filter(x => x.input && x.input.checked).map(x => x.id);
+                if (!selected.length) {
+                    showNotification('请先选择要复制的模块', 'warning');
+                    return;
+                }
+                try {
+                    const excludeSensitive = document.getElementById('export-exclude-sensitive')?.checked;
+                    const exportObj = buildPartialExportConfig(selected, !!excludeSensitive);
+                    GM_setClipboard(JSON.stringify(exportObj, null, 2));
+                    showNotification('选定模块已复制到剪贴板', 'success');
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                } catch (e) {
+                    showNotification('复制失败: ' + (e.message || '未知错误'), 'error');
+                }
+            });
+
+            importAllBtn.addEventListener('click', () => {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '.json';
+                fileInput.style.display = 'none';
+
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            try {
+                                const configJson = e.target.result;
+                                importGlobalConfig(configJson);
+                            } catch (error) {
+                                showNotification('文件读取失败: ' + error.message, 'error');
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+
+                document.body.appendChild(fileInput);
+                fileInput.click();
+                document.body.removeChild(fileInput);
+                document.body.removeChild(overlay);
+                resolve(true);
+            });
+
+            importAppendBtn.addEventListener('click', () => {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '.json';
+                fileInput.style.display = 'none';
+
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            try {
+                                const configJson = e.target.result;
+                                const success = handleConfigImportFromString(configJson);
+                                if (success) {
+                                    document.body.removeChild(overlay);
+                                    resolve(true);
+                                }
+                            } catch (error) {
+                                showNotification('文件读取失败: ' + error.message, 'error');
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+
+                document.body.appendChild(fileInput);
+                fileInput.click();
+                document.body.removeChild(fileInput);
+            });
+
+            let pasteMode = 'append';
+
+            const pastePanel = document.createElement('div');
+            pastePanel.style.cssText = `
+                display:none;
+                flex-direction:column;
+                gap:10px;
+                margin-top:12px;
+                padding:12px;
+                border:1px solid var(--input-border);
+                border-radius: 20px;
+                background:rgba(255,255,255,0.95);
+                `;
+
+            const pastePanelTitle = document.createElement('div');
+            pastePanelTitle.textContent = '粘贴配置内容';
+            pastePanelTitle.style.fontSize = '14px';
+            pastePanelTitle.style.fontWeight = '600';
+
+            const pasteTextarea = document.createElement('textarea');
+            pasteTextarea.style.cssText = `
+                width:100%;
+                min-height:140px;
+                border:1px solid var(--input-border);
+                border-radius: 20px;
+                padding:10px;
+                font-size:13px;
+                resize:vertical;
+                `;
+            pasteTextarea.placeholder = '将复制的配置JSON粘贴到此处…';
+
+            const pasteActionRow = document.createElement('div');
+            pasteActionRow.style.cssText = 'display:flex; justify-content:flex-end; gap:8px;';
+
+            const pasteCancelInner = document.createElement('button');
+            pasteCancelInner.textContent = '取消';
+            pasteCancelInner.className = 'selector-test-btn';
+            pasteCancelInner.addEventListener('click', (e) => {
+                e.preventDefault();
+                pasteTextarea.value = '';
+                pastePanel.style.display = 'none';
+            });
+
+            const pasteConfirmInner = document.createElement('button');
+            pasteConfirmInner.textContent = '导入';
+            pasteConfirmInner.className = 'selector-picker-btn';
+            pasteConfirmInner.addEventListener('click', (e) => {
+                e.preventDefault();
+                let success;
+                if (pasteMode === 'full') {
+                    importGlobalConfig(pasteTextarea.value);
+                    success = true;
+                } else {
+                    success = handleConfigImportFromString(pasteTextarea.value);
+                }
+                if (success) {
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                }
+            });
+
+            pasteActionRow.appendChild(pasteCancelInner);
+            pasteActionRow.appendChild(pasteConfirmInner);
+
+            pastePanel.appendChild(pastePanelTitle);
+            pastePanel.appendChild(pasteTextarea);
+            pastePanel.appendChild(pasteActionRow);
+
+            pasteFullConfigBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                pasteMode = 'full';
+                pastePanelTitle.textContent = '粘贴全部配置内容';
+                pastePanel.style.display = 'flex';
+                pasteTextarea.focus();
+            });
+
+            pasteAppendConfigBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                pasteMode = 'append';
+                pastePanelTitle.textContent = '粘贴追加配置内容';
+                pastePanel.style.display = 'flex';
+                pasteTextarea.focus();
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                document.body.removeChild(overlay);
+                resolve(false);
+            });
+
+            dialog.appendChild(title);
+            dialog.appendChild(sitesWrap);
+            dialog.appendChild(modulesWrap);
+            dialog.appendChild(pastePanel);
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.cssText = `display:grid; grid-template-columns: 1fr; gap:${isMobile ? '10px' : '12px'}; margin-top:${isMobile ? '16px' : '20px'};`;
+
+            if (isMobile) {
+                buttonContainer.appendChild(copyAllBtn);
+                buttonContainer.appendChild(exportBtn);
+                buttonContainer.appendChild(exportModulesBtn);
+                buttonContainer.appendChild(copySelectedModulesBtn);
+                buttonContainer.appendChild(exportSelectedBtn);
+                buttonContainer.appendChild(copySelectedSitesBtn);
+                buttonContainer.appendChild(importAllBtn);
+                buttonContainer.appendChild(importAppendBtn);
+                buttonContainer.appendChild(pasteFullConfigBtn);
+                buttonContainer.appendChild(pasteAppendConfigBtn);
+            } else {
+                const row1 = document.createElement('div');
+                row1.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
+                row1.appendChild(copyAllBtn);
+                row1.appendChild(exportBtn);
+
+                const row2 = document.createElement('div');
+                row2.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
+                row2.appendChild(exportModulesBtn);
+                row2.appendChild(copySelectedModulesBtn);
+
+                const row3 = document.createElement('div');
+                row3.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
+                row3.appendChild(exportSelectedBtn);
+                row3.appendChild(copySelectedSitesBtn);
+
+                const row4 = document.createElement('div');
+                row4.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
+                row4.appendChild(importAllBtn);
+                row4.appendChild(importAppendBtn);
+
+                const row5 = document.createElement('div');
+                row5.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
+                row5.appendChild(pasteFullConfigBtn);
+                row5.appendChild(pasteAppendConfigBtn);
+
+                buttonContainer.appendChild(row1);
+                buttonContainer.appendChild(row2);
+                buttonContainer.appendChild(row3);
+                buttonContainer.appendChild(row4);
+                buttonContainer.appendChild(row5);
+            }
+
+            const rowCancel = document.createElement('div');
+            rowCancel.style.cssText = `display:flex; justify-content:center; margin-top:${isMobile ? '12px' : '16px'};`;
+            rowCancel.appendChild(cancelBtn);
+
+            dialog.appendChild(buttonContainer);
+            dialog.appendChild(rowCancel);
+            overlay.appendChild(dialog);
+            document.body.appendChild(overlay);
+
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    document.body.removeChild(overlay);
+                    resolve(false);
+                }
+            });
+        });
     }
 
     // 验证GitHub配置
@@ -6904,6 +8486,11 @@
         otherFuncButton.style.justifyContent = 'center';
         otherFuncButton.addEventListener('click', (e) => {
             e.stopPropagation();
+            try {
+                const anchor = document.getElementById('config-anchor-nav');
+                if (anchor) anchor.remove();
+                GM_setValue('show_config_anchor_nav', false);
+            } catch(_) {}
             try {
                 // 先关闭配置对话框
                 const configDialog = document.getElementById('config-dialog');
@@ -16117,6 +17704,77 @@
             colorsResetRow.appendChild(colorsResetBtn);
             colorContainer.appendChild(colorsResetRow);
 
+            const gradientRow = document.createElement('div');
+            gradientRow.style.cssText = 'display:flex; align-items:center; gap:8px; margin-top:8px;';
+            const gradientLabel = document.createElement('span');
+            gradientLabel.textContent = '当前渐变';
+            gradientLabel.style.cssText = 'font-size:12px; color:#6B7280;';
+            const gradientValue = document.createElement('span');
+            gradientValue.style.cssText = 'flex:1; min-width:0; font-size:11px; color:#9CA3AF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;';
+            const copyGradientBtn = document.createElement('button');
+            copyGradientBtn.textContent = '复制当前渐变值';
+            copyGradientBtn.style.cssText = 'padding:6px 10px; border-radius:9999px; border:none; background:linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D)); color:#fff; cursor:pointer; font-size:11px; box-shadow:0 2px 8px rgba(0,0,0,0.12); flex-shrink:0;';
+            const buildGradient = () => {
+                function hexToRgbaLocal(hex, alpha) {
+                    if (!hex || typeof hex !== 'string') return hex;
+                    const m = hex.trim().match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/);
+                    if (!m) return hex;
+                    let r, g, b;
+                    if (m[1].length === 3) {
+                        r = parseInt(m[1][0] + m[1][0], 16);
+                        g = parseInt(m[1][1] + m[1][1], 16);
+                        b = parseInt(m[1][2] + m[1][2], 16);
+                    } else {
+                        r = parseInt(m[1].slice(0,2), 16);
+                        g = parseInt(m[1].slice(2,4), 16);
+                        b = parseInt(m[1].slice(4,6), 16);
+                    }
+                    const a = Math.max(0, Math.min(1, typeof alpha === 'number' ? alpha : 1));
+                    return `rgba(${r}, ${g}, ${b}, ${a})`;
+                }
+                const pInput = document.getElementById('custom-primarycolor');
+                const dInput = document.getElementById('custom-primarycolor-dark');
+                const paInput = document.getElementById('custom-primarycolor-alpha');
+                const daInput = document.getElementById('custom-primarycolor-dark-alpha');
+                const p = pInput ? pInput.value : '#FF6B9D';
+                const d = dInput ? dInput.value : p;
+                const pa = paInput ? (parseInt(paInput.value || '100', 10) || 100) / 100 : 1;
+                const da = daInput ? (parseInt(daInput.value || '100', 10) || 100) / 100 : 1;
+                const c1 = hexToRgbaLocal(p, pa);
+                const c2 = hexToRgbaLocal(d, da);
+                return `linear-gradient(135deg, ${c1}, ${c2})`;
+            };
+            const updateGradientPreview = () => {
+                const g = buildGradient();
+                gradientValue.textContent = g;
+            };
+            copyGradientBtn.onclick = async () => {
+                const g = buildGradient();
+                try {
+                    if (typeof GM_setClipboard === 'function') {
+                        GM_setClipboard(g);
+                    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                        await navigator.clipboard.writeText(g);
+                    }
+                    showNotification('已复制渐变值', 'success');
+                } catch (e) {
+                    try { showNotification('复制失败: ' + (e && e.message ? e.message : '未知错误'), 'error'); } catch (_) {}
+                }
+            };
+            ['primarycolor','primarycolor-dark'].forEach(k => {
+                const cid = 'custom-' + k;
+                const aid = 'custom-' + k + '-alpha';
+                const ci = document.getElementById(cid);
+                const ai = document.getElementById(aid);
+                if (ci) ci.addEventListener('input', updateGradientPreview);
+                if (ai) ai.addEventListener('input', updateGradientPreview);
+            });
+            updateGradientPreview();
+            gradientRow.appendChild(gradientLabel);
+            gradientRow.appendChild(gradientValue);
+            gradientRow.appendChild(copyGradientBtn);
+            colorContainer.appendChild(gradientRow);
+
             // 注入范围滑块的统一粉色样式，避免浏览器默认黑色条
             (function ensureAlphaRangeStyles(){
                 const id = 'alpha-range-pink-styles';
@@ -18480,13 +20138,14 @@
                     document.head.appendChild(st);
                 }
                 st.textContent = `
-                    #config-anchor-nav{ position:fixed; left:12px; top:12px; z-index:10001; display:flex; flex-direction:column; gap:8px; padding:12px; margin:0; border-radius:16px; border:1px solid rgba(229,231,235,0.96); background:linear-gradient(135deg, rgba(248,250,252,0.98), rgba(241,245,249,0.98)); backdrop-filter:saturate(180%) blur(10px); box-shadow:0 18px 40px rgba(15,23,42,0.18); }
-                    #config-anchor-nav .anchor-btn{ display:flex; align-items:center; gap:6px; padding:7px 11px; border:none; border-radius:999px; cursor:pointer; font-size:12px; color:#111827; background:rgba(255,255,255,0.96); box-shadow:0 1px 3px rgba(148,163,184,0.4); transition:transform .16s ease, box-shadow .16s ease, background .16s ease, color .16s ease; }
-                    #config-anchor-nav .anchor-btn .em{ font-size:14px; color:var(--primarycolor, #FF8FAB); }
-                    #config-anchor-nav .anchor-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(148,163,184,0.55); background:linear-gradient(135deg,var(--primarycolor, #FF6B9D),var(--primarycolor-dark, #FF8FAB)); color:#fff; }
-                    #config-anchor-nav .anchor-btn:hover .em{ color:#fff; }
-                    #config-anchor-nav .anchor-btn.active{ background:linear-gradient(135deg,var(--primarycolor, #FF6B9D),var(--primarycolor-dark, #FF8FAB)); color:#fff; box-shadow:0 8px 18px rgba(248,113,113,0.45); }
-                    #config-anchor-nav .anchor-btn.active .em{ color:#fff; }
+                    #config-anchor-nav{ position:fixed; left:24px; top:24px; z-index:10001; display:flex; flex-direction:column; gap:6px; padding:12px; margin:0; border-radius:20px; border:1px solid rgba(255,255,255,0.8); background:rgba(255,255,255,0.9); backdrop-filter:saturate(180%) blur(20px); box-shadow:0 20px 40px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02); max-height:85vh; overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); }
+                    #config-anchor-nav::-webkit-scrollbar { display: none; }
+                    #config-anchor-nav .anchor-btn{ display:flex; align-items:center; gap:10px; padding:9px 14px; border:none; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; color:#6B7280; background:transparent; transition:all 0.2s ease; text-align:left; width:130px; position: relative; flex-shrink:0; }
+                    #config-anchor-nav .anchor-btn .em{ font-size:15px; color:#9CA3AF; width:20px; display:flex; justify-content:center; }
+                    #config-anchor-nav .anchor-btn:hover{ background:rgba(0,0,0,0.04); color:#111827; transform:translateX(2px); }
+                    #config-anchor-nav .anchor-btn.active{ background:var(--primarycolor-lighter, #FFF0F5); color:var(--primarycolor, #FF6B9D); }
+                    #config-anchor-nav .anchor-btn.active .em{ color:var(--primarycolor, #FF6B9D); }
+                    #config-anchor-nav .anchor-btn.active::before { content: ''; position: absolute; left: 6px; top: 50%; transform: translateY(-50%); width: 3px; height: 3px; background: var(--primarycolor, #FF6B9D); border-radius: 50%; }
                     @media (max-width:768px){ #config-anchor-nav{ display:none; } }
                     `;
             })();
@@ -18495,6 +20154,10 @@
 
             const list = document.createElement('div');
             list.style.cssText = 'display:flex; flex-direction:column; gap:8px;';
+
+            // Scroll Spy State
+            let isManualScroll = false;
+            let manualScrollTimeout = null;
 
             const openAndScroll = (selector) => {
                 let dialog = document.getElementById('config-dialog');
@@ -18507,13 +20170,29 @@
                     const content = document.getElementById('config-dialog-content') || dialog;
                     const target = document.querySelector(selector);
                     if (!target) { try { showNotification('未找到配置项', 'warning'); } catch(_) {} return; }
+
+                    // Set manual scroll flag to prevent observer from flickering active state during scroll
+                    isManualScroll = true;
+                    if (manualScrollTimeout) clearTimeout(manualScrollTimeout);
+
                     const crect = content.getBoundingClientRect();
                     const rect = target.getBoundingClientRect();
-                    content.scrollTo({ top: content.scrollTop + (rect.top - crect.top) - 40, behavior: 'smooth' });
+                    const offset = rect.top - crect.top - 40; // 40px buffer
+
+                    content.scrollTo({ top: content.scrollTop + offset, behavior: 'smooth' });
+
+                    // Update active state immediately
+                    document.querySelectorAll('#config-anchor-nav .anchor-btn').forEach(b => b.classList.remove('active'));
+                    const activeBtn = Array.from(list.children).find(b => b._targetSelector === selector);
+                    if (activeBtn) activeBtn.classList.add('active');
+
                     try {
                         target.classList.add('config-anchor-highlight');
                         setTimeout(() => { target.classList.remove('config-anchor-highlight'); }, 1600);
                     } catch(_) {}
+
+                    // Reset manual scroll flag after animation
+                    manualScrollTimeout = setTimeout(() => { isManualScroll = false; }, 800);
                 }, 60);
             };
 
@@ -18563,6 +20242,7 @@
                     btn.type = 'button';
                     btn.title = a.label;
                     btn.className = 'anchor-btn';
+                    btn._targetSelector = a.selector; // Store for spy
                     const icon = document.createElement('span');
                     icon.className = 'em';
                     icon.textContent = a.icon;
@@ -18573,6 +20253,67 @@
                     btn.onclick = (e) => { e.stopPropagation(); openAndScroll(a.selector); };
                     list.appendChild(btn);
                 }
+
+                // Initialize Spy
+                initScrollSpy(content);
+            };
+
+            // Scroll Spy Implementation
+            const initScrollSpy = (container) => {
+                if (!container) return;
+
+                const onScroll = () => {
+                    if (isManualScroll) return;
+
+                    const buttons = Array.from(list.children);
+                    if (buttons.length === 0) return;
+
+                    const containerRect = container.getBoundingClientRect();
+                    const triggerLine = containerRect.top + 100; // 100px from top
+
+                    let activeBtn = null;
+
+                    // Iterate backwards to find the last element that passed the trigger line
+                    for (let i = buttons.length - 1; i >= 0; i--) {
+                        const btn = buttons[i];
+                        const selector = btn._targetSelector;
+                        const el = document.querySelector(selector);
+                        if (!el) continue;
+
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top <= triggerLine + 50) { // +50 buffer
+                            activeBtn = btn;
+                            break;
+                        }
+                    }
+
+                    // If none found (at top), use first
+                    if (!activeBtn && buttons.length > 0 && container.scrollTop < 50) {
+                        activeBtn = buttons[0];
+                    }
+
+                    buttons.forEach(b => b.classList.remove('active'));
+                    if (activeBtn) {
+                        activeBtn.classList.add('active');
+                        // Ensure the active button is visible in the anchor nav itself
+                        const nav = document.getElementById('config-anchor-nav');
+                        if (nav) {
+                            const btnRect = activeBtn.getBoundingClientRect();
+                            const navRect = nav.getBoundingClientRect();
+                            if (btnRect.top < navRect.top || btnRect.bottom > navRect.bottom) {
+                                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    }
+                };
+
+                container.onscroll = () => {
+                    if(window.requestAnimationFrame) requestAnimationFrame(onScroll);
+                    else setTimeout(onScroll, 16);
+                };
+
+                // Initial check
+                onScroll();
             };
             buildAnchors();
 
@@ -18599,6 +20340,9 @@
                 let isDragging = false;
                 let didDrag = false;
                 let offsetX = 0, offsetY = 0, startX = 0, startY = 0;
+                let rafId = null;
+                let originalTransition = '';
+
                 const onPointerDown = (clientX, clientY, originalEvent) => {
                     isDragging = true;
                     didDrag = false;
@@ -18607,35 +20351,68 @@
                     const rect = container.getBoundingClientRect();
                     offsetX = clientX - rect.left;
                     offsetY = clientY - rect.top;
-                    originalEvent && originalEvent.preventDefault();
+                    if (originalEvent && originalEvent.type === 'touchstart') originalEvent.preventDefault();
+                    document.documentElement.style.userSelect = 'none';
+                    originalTransition = container.style.transition;
+                    container.style.transition = 'none';
                 };
+
+                const updatePosition = (clientX, clientY) => {
+                    if (!isDragging) return;
+                    container.style.left = (clientX - offsetX) + 'px';
+                    container.style.top = (clientY - offsetY) + 'px';
+                    container.style.right = 'auto';
+                    container.style.bottom = 'auto';
+                    rafId = null;
+                };
+
                 const onPointerMove = (clientX, clientY) => {
                     if (!isDragging) return;
                     if (!didDrag) {
                         const dx = Math.abs(clientX - startX);
                         const dy = Math.abs(clientY - startY);
-                        if (dx < 3 && dy < 3) return;
+                        if (dx < 2 && dy < 2) return;
                         didDrag = true;
                     }
-                    container.style.left = (clientX - offsetX) + 'px';
-                    container.style.top = (clientY - offsetY) + 'px';
-                    container.style.right = 'auto';
-                    container.style.bottom = 'auto';
+                    if (!rafId) {
+                        rafId = requestAnimationFrame(() => updatePosition(clientX, clientY));
+                    }
                 };
+
                 const onPointerUp = () => {
                     if (!isDragging) return;
                     isDragging = false;
+                    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
                     try {
                         const rect = container.getBoundingClientRect();
                         GM_setValue('config_anchor_left', Math.max(0, Math.round(rect.left)));
                         GM_setValue('config_anchor_top', Math.max(0, Math.round(rect.top)));
                     } catch(_) {}
+                    document.documentElement.style.userSelect = '';
+                    container.style.transition = originalTransition;
                 };
-                container.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY, e));
+
+                container.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+                    onPointerDown(e.clientX, e.clientY, e);
+                });
                 document.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
                 document.addEventListener('mouseup', onPointerUp);
-                container.addEventListener('touchstart', (e) => { const t = e.touches && e.touches[0]; if (t) onPointerDown(t.clientX, t.clientY, e); }, { passive: false });
-                document.addEventListener('touchmove', (e) => { const t = e.touches && e.touches[0]; if (t) onPointerMove(t.clientX, t.clientY); }, { passive: false });
+
+                container.addEventListener('touchstart', (e) => {
+                    const t = e.touches && e.touches[0];
+                    if (!t) return;
+                    const target = document.elementFromPoint(t.clientX, t.clientY);
+                    if (target && (target.tagName === 'BUTTON' || target.closest('button'))) return;
+                    onPointerDown(t.clientX, t.clientY, e);
+                }, { passive: false });
+
+                document.addEventListener('touchmove', (e) => {
+                    const t = e.touches && e.touches[0];
+                    if (t) onPointerMove(t.clientX, t.clientY);
+                }, { passive: false });
+
                 document.addEventListener('touchend', onPointerUp);
             })(nav);
 
@@ -19424,6 +21201,11 @@
             }
             if (match(hk.open_other_settings?.combo)) {
                 e.preventDefault();
+                try {
+                    const anchor = document.getElementById('config-anchor-nav');
+                    if (anchor) anchor.remove();
+                    GM_setValue('show_config_anchor_nav', false);
+                } catch(_) {}
                 showOtherSettingsDialog();
                 return;
             }
@@ -19707,7 +21489,14 @@
         tools.grid.appendChild(makeTile('📊', '数据库统计', '查看数据库的条目数量/API访问次数', () => {
             try { showDatabaseStatsDialog(); } catch (e) { console.error('打开数据库统计失败:', e); }
         }));
-        tools.grid.appendChild(makeTile('⚙️', '其他设置', '开关一些高级行为和交互偏好', () => showOtherSettingsDialog()));
+        tools.grid.appendChild(makeTile('⚙️', '其他设置', '开关一些高级行为和交互偏好', () => {
+            try {
+                const anchor = document.getElementById('config-anchor-nav');
+                if (anchor) anchor.remove();
+                GM_setValue('show_config_anchor_nav', false);
+            } catch(_) {}
+            showOtherSettingsDialog();
+        }));
 
         danger.grid.appendChild(makeTile('🧺', '批量导入到 Notion', '批量写入多个数据/修改封面', () => showBatchImportDialog()));
         danger.grid.appendChild(makeTile('🧨', '重置所有设置', '清空本脚本的所有本地配置并刷新页面', () => showResetAllSettingsConfirm()));
@@ -19982,989 +21771,6 @@
         } catch(_) {}
     }
 
-    function showOtherSettingsDialog() {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 10002; display:flex; align-items:center; justify-content:center; backdrop-filter: blur(6px)';
-        const dialog = document.createElement('div');
-        dialog.style.cssText = 'background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%); border-radius: 20px; padding: 18px; width: 520px; max-width: 92vw; max-height: 80vh; box-shadow: 0 25px 50px -12px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.2); position: relative; overflow-y: auto;';
-        const deco = document.createElement('div');
-        deco.style.cssText = 'position:absolute;left:0;right:0;top:0;height:4px;border-radius:16px 16px 0 0;background: linear-gradient(90deg, var(--primarycolor-light, #FF8FAB) 0%, var(--primarycolor, #FF6B9D) 50%, var(--primarycolor-light, #FF8FAB) 100%)';
-        dialog.appendChild(deco);
-        dialog.className = 'notion-othersetting-dialog';
-
-        const title = document.createElement('h3');
-        title.textContent = '✦ 其他设置';
-        title.style.cssText = 'margin: 6px 0 12px 0; font-size: 20px; font-weight: 700; text-align:center; color:#1F2937;';
-
-        const topNav = document.createElement('div');
-        topNav.id = 'other-settings-anchor-nav';
-        const anchorStylesId = 'other-settings-anchor-styles';
-        (function ensureAnchorStyles(){
-            let st = document.getElementById(anchorStylesId);
-            if (!st) { st = document.createElement('style'); st.id = anchorStylesId; document.head.appendChild(st); }
-            st.textContent = `
-                #other-settings-anchor-nav{ position:fixed; left:12px; top:12px; z-index:10003; display:flex; flex-direction:column; gap:6px; padding:10px; margin:0; border-radius:18px; border:1px solid rgba(226,232,240,0.96); background:rgba(15,23,42,0.9); backdrop-filter:saturate(180%) blur(14px); box-shadow:0 18px 38px rgba(15,23,42,0.48); }
-                #other-settings-anchor-nav .anchor-btn{ display:flex; align-items:center; gap:6px; padding:7px 11px; border:none; border-radius:999px; cursor:pointer; font-size:12px; color:#E5E7EB; background:rgba(15,23,42,0.65); box-shadow:0 1px 3px rgba(15,23,42,0.55); transition:all .18s ease; }
-                #other-settings-anchor-nav .anchor-btn .em{ font-size:14px; color:var(--primarycolor, #FF8FAB); }
-                #other-settings-anchor-nav .anchor-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 14px rgba(15,23,42,0.85); background:linear-gradient(135deg,var(--primarycolor, #FF6B9D),var(--primarycolor-dark, #FF8FAB)); color:#fff; }
-                #other-settings-anchor-nav .anchor-btn.active{ background:linear-gradient(135deg,var(--primarycolor, #FF6B9D),var(--primarycolor-dark, #FF8FAB)); color:#fff; }
-                @media (max-width:768px){ #other-settings-anchor-nav{ display:none; } }
-                `;
-        })();
-        const navItems = [
-            { label: '全局勾选', targetId: 'other-anchor-global-toggles', icon: '✓' },
-            { label: '按钮显示', targetId: 'other-anchor-title', icon: '🔘' },
-            { label: '选择器样式', targetId: 'other-anchor-visual-style', icon: '✨' },
-            { label: '链接加速', targetId: 'other-anchor-accel', icon: '⚡' },
-            { label: '处理标题', targetId: 'other-anchor-title-cleanup', icon: '📝' },
-            { label: '合并符号', targetId: 'other-anchor-merge-sep', icon: '∑' },
-            { label: '简介展开', targetId: 'other-anchor-expand', icon: '▾' },
-            { label: '定位面板', targetId: 'other-anchor-quick-panel', icon: '📍' },
-            { label: '默认标签', targetId: 'other-anchor-tag-defaults', icon: '🏷️' },
-            { label: '图标设置', targetId: 'other-anchor-icon-settings', icon: '⍟' },
-            { label: '代理链接', targetId: 'cover-proxy-prefix', icon: '🔗' }
-        ];
-        const btnMap = {};
-        let suppressAutoActiveUntil = 0;
-        navItems.forEach(it => {
-            const btn = document.createElement('button');
-            btn.className = 'anchor-btn';
-            const icon = document.createElement('span');
-            icon.className = 'em';
-            icon.textContent = it.icon || '✦';
-            const text = document.createElement('span');
-            text.textContent = it.label;
-            btn.appendChild(icon);
-            btn.appendChild(text);
-            btn.addEventListener('click', () => {
-                suppressAutoActiveUntil = Date.now() + 500;
-                const target = dialog.querySelector(`#${it.targetId}`);
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                Object.values(btnMap).forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-            btnMap[it.targetId] = btn;
-            topNav.appendChild(btn);
-        });
-        const setActiveById = (id) => {
-            if (btnMap[id]) {
-                Object.values(btnMap).forEach(b => b.classList.remove('active'));
-                btnMap[id].classList.add('active');
-            }
-        };
-
-        const list = document.createElement('div');
-        list.style.cssText = 'display:flex; flex-direction:column; gap:12px; margin-top:6px;';
-
-        // 1) 添加时弹出备注输入（全局）
-        const remarkItem = createCustomCheckbox('global-remark-on-add', GM_getValue('global_enable_remark_on_add', false), '添加时弹出备注输入（漫画/小说）');
-        // 2) 启用评分弹窗（全局）
-        const ratingItem = createCustomCheckbox('global-enable-rating', GM_getValue('rating_enabled', true), '启用评分弹窗（漫画/小说）');
-        // 3) 显示左下角“追加内容”按钮（全局）
-        const appendItem = createCustomCheckbox('global-show-append', GM_getValue('show_append_button', false), '显示左下角“追加内容”按钮');
-
-        const globalTogglesContainer = document.createElement('div');
-        globalTogglesContainer.id = 'other-anchor-global-toggles';
-        globalTogglesContainer.style.cssText = 'display:flex; flex-direction:column; gap:12px;';
-        globalTogglesContainer.appendChild(remarkItem);
-        globalTogglesContainer.appendChild(ratingItem);
-        globalTogglesContainer.appendChild(appendItem);
-        list.appendChild(globalTogglesContainer);
-
-        const buttonVisibilityTitle = document.createElement('div');
-        buttonVisibilityTitle.textContent = '✦ 按钮显示设置';
-        buttonVisibilityTitle.id = 'other-anchor-title';
-        buttonVisibilityTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(buttonVisibilityTitle);
-
-        const buttonVisibilityContainer = document.createElement('div');
-        buttonVisibilityContainer.id = 'other-anchor-buttons';
-        buttonVisibilityContainer.style.cssText = 'display: flex; flex-direction: column; gap: 12px; margin-top: 8px; padding: 16px; background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%); border-radius: 14px; border: 1px solid rgba(229,231,235,0.85); box-shadow: 0 4px 12px rgba(0,0,0,0.06);';
-
-        const filterBtnToggle = createCustomCheckbox('show-filter-btn', GM_getValue('show-filter-btn', true), '显示过滤按钮');
-        const testBtnToggle = createCustomCheckbox('show-test-btn', GM_getValue('show-test-btn', true), '显示测试按钮');
-        const highlightBtnToggle = createCustomCheckbox('show-highlight-btn', GM_getValue('show-highlight-btn', true), '显示高亮按钮');
-        const locateBtnToggle = createCustomCheckbox('show-locate-btn', GM_getValue('show-locate-btn', true), '显示定位按钮');
-        const selectBtnToggle = createCustomCheckbox('show-select-btn', GM_getValue('show-select-btn', true), '显示选择按钮');
-        const btnGrid = document.createElement('div');
-        btnGrid.style.cssText = `display: grid; gap: 10px; grid-template-columns: repeat(${window.innerWidth <= 768 ? 2 : 2}, minmax(0, 1fr));`;
-        [filterBtnToggle, testBtnToggle, highlightBtnToggle, locateBtnToggle, selectBtnToggle].forEach(el => btnGrid.appendChild(el));
-        buttonVisibilityContainer.appendChild(btnGrid);
-        list.appendChild(buttonVisibilityContainer);
-
-        // 即时预览：勾选时立即应用（不等保存）
-        try {
-            const hooks = ['show-filter-btn','show-test-btn','show-highlight-btn','show-locate-btn','show-select-btn'];
-            hooks.forEach(id => {
-                const box = document.getElementById(id);
-                if (box) box.addEventListener('change', () => {
-                    GM_setValue(id, !!box.checked);
-                    applyButtonVisibilitySettings();
-                });
-                const container = box ? box.parentElement : null;
-                if (container) container.addEventListener('click', () => setTimeout(applyButtonVisibilitySettings, 0));
-            });
-        } catch(_) {}
-
-        // 选择器样式设置
-        const selectorStyleTitle = document.createElement('div');
-        selectorStyleTitle.id = 'other-anchor-visual-style';
-        selectorStyleTitle.textContent = '✦ 选择器样式';
-        selectorStyleTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(selectorStyleTitle);
-
-        const selectorStyleRow = document.createElement('div');
-        selectorStyleRow.style.cssText = 'display:flex; align-items:center; gap:12px;';
-
-        const selectorStyleLabel = document.createElement('label');
-        selectorStyleLabel.textContent = '选择器可视化样式:';
-        selectorStyleLabel.style.cssText = 'flex:0 0 140px; color:#4B5563; font-weight:500;';
-
-        const selectorStyleSelect = document.createElement('select');
-        selectorStyleSelect.id = 'selector-visual-style-select';
-        const currentStyle = GM_getValue('selector_visual_style', 'minimal');
-        while (selectorStyleSelect.firstChild) selectorStyleSelect.removeChild(selectorStyleSelect.firstChild);
-        const optMinimal = document.createElement('option');
-        optMinimal.value = 'minimal';
-        optMinimal.textContent = '极简稳定';
-        if (currentStyle === 'minimal') optMinimal.selected = true;
-        const optFancy = document.createElement('option');
-        optFancy.value = 'fancy';
-        optFancy.textContent = '精美动画';
-        if (currentStyle === 'fancy') optFancy.selected = true;
-        selectorStyleSelect.appendChild(optMinimal);
-        selectorStyleSelect.appendChild(optFancy);
-        selectorStyleSelect.style.cssText = 'flex:1; padding:10px 16px; border:1px solid #D1D5DB; border-radius: 20px; font-size:14px; background:#F9FAFB;';
-        selectorStyleSelect.addEventListener('change', () => {
-            const val = selectorStyleSelect.value;
-            GM_setValue('selector_visual_style', val);
-            applySelectorVisualStyle();
-        });
-
-        selectorStyleRow.appendChild(selectorStyleLabel);
-        selectorStyleRow.appendChild(selectorStyleSelect);
-        list.appendChild(selectorStyleRow);
-
-        // 链接加速设置 - 独立分区
-        const accelTitle = document.createElement('div');
-        accelTitle.id = 'other-anchor-accel';
-        accelTitle.textContent = '✦ 链接加速';
-        accelTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(accelTitle);
-
-        const accelDesc = document.createElement('div');
-        accelDesc.textContent = '对封面/图片链接使用 jsDelivr 加速（与按钮显示无关）。';
-        accelDesc.style.cssText = 'margin: 8px 0 12px 0; font-size: 13px; color: #6B7280; line-height: 1.4;';
-        list.appendChild(accelDesc);
-
-        const jsdelivrItem = createCustomCheckbox('global-use-jsdelivr', GM_getValue('use_jsdelivr_acceleration', false), '使用 jsDelivr 加速封面/图片链接');
-        list.appendChild(jsdelivrItem);
-
-        // 标题处理设置区域
-        const titleSettingsTitle = document.createElement('div');
-        titleSettingsTitle.id = 'other-anchor-title-cleanup';
-        titleSettingsTitle.textContent = '✦ 处理标题';
-        titleSettingsTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(titleSettingsTitle);
-
-        const titleSettingsDesc = document.createElement('div');
-        titleSettingsDesc.textContent = '控制默认标题清洗规则（网页→Notion 与 剪藏 同样生效）';
-        titleSettingsDesc.style.cssText = 'margin: 8px 0 12px 0; font-size: 13px; color: #6B7280; line-height: 1.4;';
-        list.appendChild(titleSettingsDesc);
-
-        // 去除括号内容
-        const removeBracketsItem = createCustomCheckbox('title-remove-brackets', GM_getValue('title_remove_brackets', true), '去除括号及其中内容（() [] {} （） 【】）');
-        // 去掉下划线及其后的内容
-        const trimUnderscoreItem = createCustomCheckbox('title-trim-underscore', GM_getValue('title_trim_underscore', true), '去掉下划线_以及其后的内容');
-
-        list.appendChild(removeBracketsItem);
-        list.appendChild(trimUnderscoreItem);
-
-        // 选择器合并符号设置
-        const mergeTitle = document.createElement('div');
-        mergeTitle.id = 'other-anchor-merge-sep';
-        mergeTitle.textContent = '✦ 选择器合并符号';
-        mergeTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(mergeTitle);
-
-        const mergeDesc = document.createElement('div');
-        mergeDesc.textContent = '设置在索引为 all / 多选 / 范围时，多个元素文本之间的连接符，支持 \\n 表示换行、\\t 表示制表符。清空可恢复默认值。';
-        mergeDesc.style.cssText = 'margin: 8px 0 12px 0; font-size: 13px; color: #6B7280; line-height: 1.4;';
-        list.appendChild(mergeDesc);
-
-        const mergeRow = document.createElement('div');
-        mergeRow.style.cssText = 'display:flex; align-items:center; gap:12px;';
-
-        const mergeLabel = document.createElement('label');
-        mergeLabel.textContent = '合并符号:';
-        mergeLabel.style.cssText = 'flex:0 0 100px; color:#4B5563; font-weight:500;';
-
-        const mergeInput = document.createElement('input');
-        mergeInput.type = 'text';
-        mergeInput.id = 'selector-merge-separator';
-        mergeInput.value = GM_getValue('selector_merge_separator', '');
-        mergeInput.placeholder = '例如：， 或 \\n';
-        mergeInput.style.cssText = 'flex:1; padding:10px 16px; border:1px solid #D1D5DB; border-radius: 20px; font-size:14px; background:#F9FAFB;';
-
-        mergeRow.appendChild(mergeLabel);
-        mergeRow.appendChild(mergeInput);
-        list.appendChild(mergeRow);
-
-        // 简介展开设置（全局）
-        const expandSettingsTitle = document.createElement('div');
-        expandSettingsTitle.id = 'other-anchor-expand';
-        expandSettingsTitle.textContent = '✦ 简介展开设置';
-        expandSettingsTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(expandSettingsTitle);
-
-        const expandSettingsRow = document.createElement('div');
-        expandSettingsRow.style.cssText = 'display:flex; align-items:center; gap:12px;';
-
-        const expandLabel = document.createElement('label');
-        expandLabel.textContent = '点击间隔(毫秒):';
-        expandLabel.style.cssText = 'flex:0 0 140px; color:#4B5563; font-weight:500;';
-
-        const expandInput = document.createElement('input');
-        expandInput.type = 'number';
-        expandInput.min = '0';
-        expandInput.id = 'global-expand-click-interval';
-        try { expandInput.value = String(GM_getValue('expand_click_interval_ms', 150)); } catch(_) { expandInput.value = '150'; }
-        expandInput.placeholder = '默认150';
-        expandInput.style.cssText = 'flex:1; padding:10px 16px; border:1px solid #D1D5DB; border-radius: 20px; font-size:14px; background:#F9FAFB;';
-
-        expandSettingsRow.appendChild(expandLabel);
-        expandSettingsRow.appendChild(expandInput);
-        list.appendChild(expandSettingsRow);
-
-        const anchorSettingsTitle = document.createElement('div');
-        anchorSettingsTitle.id = 'other-anchor-quick-panel';
-        anchorSettingsTitle.textContent = '✦ 快捷定位面板';
-        anchorSettingsTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(anchorSettingsTitle);
-
-        const anchorToggle = createCustomCheckbox('global-show-config-anchor', GM_getValue('show_config_anchor_nav', true), '显示快捷定位面板');
-        list.appendChild(anchorToggle);
-
-        // 标签设置区域 - 美化版
-        const tagSettingsTitle = document.createElement('div');
-        tagSettingsTitle.id = 'other-anchor-tag-defaults';
-        tagSettingsTitle.textContent = '✦ 添加默认标签设置';
-        tagSettingsTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(tagSettingsTitle);
-
-        // 标签设置说明
-        const tagSettingsDesc = document.createElement('div');
-        tagSettingsDesc.textContent = '设置点击小圆点按钮时添加的标签属性和内容';
-        tagSettingsDesc.style.cssText = 'margin: 8px 0 12px 0; font-size: 13px; color: #6B7280; line-height: 1.4;';
-        list.appendChild(tagSettingsDesc);
-
-        // 标签属性名称
-        const tagPropertyRow = document.createElement('div');
-        tagPropertyRow.style.cssText = 'display: flex; align-items: center; margin-top: 12px; flex-wrap: wrap;';
-
-        const tagPropertyLabel = document.createElement('label');
-        tagPropertyLabel.textContent = '标签属性名称:';
-        tagPropertyLabel.style.cssText = 'flex: 0 0 120px; color: #4B5563; font-weight: 500; font-size: 14px;';
-
-        const tagPropertyInput = document.createElement('input');
-        tagPropertyInput.id = 'tag-property-name';
-        tagPropertyInput.type = 'text';
-        tagPropertyInput.value = GM_getValue('tag_dot_property_name', GM_getValue('tagPropertyName', '标签'));
-        tagPropertyInput.placeholder = '输入Notion中的多选属性名称';
-        tagPropertyInput.style.cssText = 'flex: 1; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 20px; font-size: 14px; background: #F9FAFB; transition: all 0.2s ease;';
-
-        // 添加输入框焦点效果
-        tagPropertyInput.addEventListener('focus', () => {
-            tagPropertyInput.style.borderColor = 'var(--primarycolor)';
-            tagPropertyInput.style.boxShadow = '0 0 0 3px var(--primarycolor-lighter)';
-            tagPropertyInput.style.background = '#FFFFFF';
-        });
-
-        tagPropertyInput.addEventListener('blur', () => {
-            tagPropertyInput.style.borderColor = '#D1D5DB';
-            tagPropertyInput.style.boxShadow = 'none';
-            tagPropertyInput.style.background = '#F9FAFB';
-        });
-
-        tagPropertyRow.appendChild(tagPropertyLabel);
-        tagPropertyRow.appendChild(tagPropertyInput);
-        list.appendChild(tagPropertyRow);
-
-        // 默认标签内容
-        const tagContentRow = document.createElement('div');
-        tagContentRow.style.cssText = 'display: flex; align-items: center; margin-top: 12px; flex-wrap: wrap;';
-
-        const tagContentLabel = document.createElement('label');
-        tagContentLabel.textContent = '标签内容:';
-        tagContentLabel.style.cssText = 'flex: 0 0 120px; color: #4B5563; font-weight: 500; font-size: 14px;';
-
-        const tagContentInput = document.createElement('input');
-        tagContentInput.id = 'tag-content';
-        tagContentInput.type = 'text';
-        tagContentInput.value = GM_getValue('tag_dot_tag_text', GM_getValue('tagContent', '收藏'));
-        tagContentInput.placeholder = '输入要添加的标签内容';
-        tagContentInput.style.cssText = 'flex: 1; padding: 10px 16px; border: 1px solid #D1D5DB; border-radius: 20px; font-size: 14px; background: #F9FAFB; transition: all 0.2s ease;';
-
-        // 添加输入框焦点效果
-        tagContentInput.addEventListener('focus', () => {
-            tagContentInput.style.borderColor = 'var(--primarycolor)';
-            tagContentInput.style.boxShadow = '0 0 0 3px var(--primarycolor-lighter)';
-            tagContentInput.style.background = '#FFFFFF';
-        });
-
-        tagContentInput.addEventListener('blur', () => {
-            tagContentInput.style.borderColor = '#D1D5DB';
-            tagContentInput.style.boxShadow = 'none';
-            tagContentInput.style.background = '#F9FAFB';
-        });
-
-        tagContentRow.appendChild(tagContentLabel);
-        tagContentRow.appendChild(tagContentInput);
-        list.appendChild(tagContentRow);
-
-        // 添加按钮图标设置区域 - 整合所有图标相关设置
-        const iconSettingsTitle = document.createElement('div');
-        iconSettingsTitle.id = 'other-anchor-icon-settings';
-        iconSettingsTitle.textContent = '✦ 按钮图标设置';
-        iconSettingsTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(iconSettingsTitle);
-
-        const iconSettingsDesc = document.createElement('div');
-        iconSettingsDesc.textContent = '设置小圆点按钮的显示模式、图标样式和大小';
-        iconSettingsDesc.style.cssText = 'margin: 8px 0 12px 0; font-size: 13px; color: #6B7280; line-height: 1.4;';
-        list.appendChild(iconSettingsDesc);
-
-        // 创建整合的图标设置容器
-        const iconSettingsContainer = document.createElement('div');
-        iconSettingsContainer.style.cssText = 'display: flex; flex-direction: column; gap: 16px; margin-top: 8px; padding: 16px; background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%); border-radius: 14px; border: 1px solid rgba(229,231,235,0.85); box-shadow: 0 4px 12px rgba(0,0,0,0.06);';
-
-        // 1. 显示模式选择
-        const modeSection = document.createElement('div');
-        modeSection.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
-
-        const modeLabel = document.createElement('div');
-        modeLabel.textContent = '显示模式';
-        modeLabel.style.cssText = 'font-size: 14px; font-weight: 600; color: #4B5563;';
-        modeSection.appendChild(modeLabel);
-
-        const iconStyleRow = document.createElement('div');
-        iconStyleRow.style.cssText = 'display: flex; gap: 8px;';
-
-        const currentIconMode = GM_getValue('icon_mode', '1');
-
-        // 模式1选项
-        const iconMode1Container = document.createElement('div');
-        iconMode1Container.style.cssText = 'flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; border: 2px solid transparent; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.06);';
-
-        const iconMode1Radio = document.createElement('input');
-        iconMode1Radio.type = 'radio';
-        iconMode1Radio.id = 'icon-mode-1';
-        iconMode1Radio.name = 'icon-mode';
-        iconMode1Radio.value = '1';
-        iconMode1Radio.checked = currentIconMode === '1';
-        iconMode1Radio.style.cssText = 'margin: 0;';
-
-        const iconMode1Preview = document.createElement('div');
-        iconMode1Preview.style.cssText = 'display: flex; gap: 6px; align-items: center;';
-
-        const mode1Empty = document.createElement('span');
-        mode1Empty.textContent = '♡';
-        mode1Empty.style.cssText = 'font-size: 16px; color: var(--primarycolor);';
-
-        const mode1Exists = document.createElement('span');
-        mode1Exists.textContent = '♥';
-        mode1Exists.style.cssText = 'font-size: 16px; color: var(--primarycolor);';
-
-        const mode1HasTag = document.createElement('span');
-        mode1HasTag.textContent = '♥⁺';
-        mode1HasTag.style.cssText = 'font-size: 16px; color: var(--primarycolor);';
-
-        iconMode1Preview.appendChild(mode1Empty);
-        iconMode1Preview.appendChild(mode1Exists);
-        iconMode1Preview.appendChild(mode1HasTag);
-
-        const iconMode1Label = document.createElement('div');
-        iconMode1Label.textContent = '模式1';
-        iconMode1Label.style.cssText = 'font-size: 12px; font-weight: 600; color: #4B5563; text-align: center;';
-
-        const iconMode1Desc = document.createElement('div');
-        iconMode1Desc.textContent = '空心→实心→实心⁺';
-        iconMode1Desc.style.cssText = 'font-size: 10px; color: #6B7280; text-align: center;';
-
-        iconMode1Container.appendChild(iconMode1Radio);
-        iconMode1Container.appendChild(iconMode1Preview);
-        iconMode1Container.appendChild(iconMode1Label);
-        iconMode1Container.appendChild(iconMode1Desc);
-
-        // 模式2选项
-        const iconMode2Container = document.createElement('div');
-        iconMode2Container.style.cssText = 'flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; border: 2px solid transparent; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.06);';
-
-        const iconMode2Radio = document.createElement('input');
-        iconMode2Radio.type = 'radio';
-        iconMode2Radio.id = 'icon-mode-2';
-        iconMode2Radio.name = 'icon-mode';
-        iconMode2Radio.value = '2';
-        iconMode2Radio.checked = currentIconMode === '2';
-        iconMode2Radio.style.cssText = 'margin: 0;';
-
-        const iconMode2Preview = document.createElement('div');
-        iconMode2Preview.style.cssText = 'display: flex; gap: 6px; align-items: center;';
-
-        const mode2Empty = document.createElement('span');
-        mode2Empty.textContent = '';
-        mode2Empty.style.cssText = 'font-size: 16px; color: var(--primarycolor); width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border: 1px dashed #D1D5DB; border-radius: 50%;';
-
-        const mode2Exists = document.createElement('span');
-        mode2Exists.textContent = '♡';
-        mode2Exists.style.cssText = 'font-size: 16px; color: var(--primarycolor);';
-
-        const mode2HasTag = document.createElement('span');
-        mode2HasTag.textContent = '♥';
-        mode2HasTag.style.cssText = 'font-size: 16px; color: var(--primarycolor);';
-
-        iconMode2Preview.appendChild(mode2Empty);
-        iconMode2Preview.appendChild(mode2Exists);
-        iconMode2Preview.appendChild(mode2HasTag);
-
-        const iconMode2Label = document.createElement('div');
-        iconMode2Label.textContent = '模式2';
-        iconMode2Label.style.cssText = 'font-size: 12px; font-weight: 600; color: #4B5563; text-align: center;';
-
-        const iconMode2Desc = document.createElement('div');
-        iconMode2Desc.textContent = '无内容→空心→实心';
-        iconMode2Desc.style.cssText = 'font-size: 10px; color: #6B7280; text-align: center;';
-
-        iconMode2Container.appendChild(iconMode2Radio);
-        iconMode2Container.appendChild(iconMode2Preview);
-        iconMode2Container.appendChild(iconMode2Label);
-        iconMode2Container.appendChild(iconMode2Desc);
-
-        // 设置选中状态
-        if (currentIconMode === '1') {
-            iconMode1Container.style.borderColor = 'var(--primarycolor)';
-            iconMode1Container.style.backgroundColor = 'var(--primarycolor-lighter)';
-        } else {
-            iconMode2Container.style.borderColor = 'var(--primarycolor)';
-            iconMode2Container.style.backgroundColor = 'var(--primarycolor-lighter)';
-        }
-
-        // 添加点击事件
-        iconMode1Container.addEventListener('click', () => {
-            iconMode1Radio.checked = true;
-            iconMode1Container.style.borderColor = 'var(--primarycolor)';
-            iconMode1Container.style.backgroundColor = 'var(--primarycolor-lighter)';
-            iconMode2Container.style.borderColor = 'transparent';
-            iconMode2Container.style.backgroundColor = '#FFFFFF';
-        });
-
-        iconMode2Container.addEventListener('click', () => {
-            iconMode2Radio.checked = true;
-            iconMode2Container.style.borderColor = 'var(--primarycolor)';
-            iconMode2Container.style.backgroundColor = 'var(--primarycolor-lighter)';
-            iconMode1Container.style.borderColor = 'transparent';
-            iconMode1Container.style.backgroundColor = '#FFFFFF';
-        });
-
-        iconStyleRow.appendChild(iconMode1Container);
-        iconStyleRow.appendChild(iconMode2Container);
-        modeSection.appendChild(iconStyleRow);
-        iconSettingsContainer.appendChild(modeSection);
-
-        const bgSection = document.createElement('div');
-        bgSection.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
-        const bgLabel = document.createElement('div');
-        bgLabel.textContent = '底色样式';
-        bgLabel.style.cssText = 'font-size: 14px; font-weight: 600; color: #4B5563;';
-        bgSection.appendChild(bgLabel);
-
-        const bgRow = document.createElement('div');
-        bgRow.style.cssText = 'display: flex; gap: 8px;';
-
-        const currentStyleMode = GM_getValue('tag_btn_style_mode', 'bordered');
-
-        const makeStyleOption = (value, title, previewCss) => {
-            const wrap = document.createElement('div');
-            wrap.style.cssText = 'flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px; border: 2px solid transparent; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; background: #FFFFFF;';
-
-            const radio = document.createElement('input');
-            radio.type = 'radio';
-            radio.name = 'tag-style-mode';
-            radio.value = value;
-            radio.checked = currentStyleMode === value;
-            radio.style.cssText = 'margin: 0;';
-
-            const preview = document.createElement('div');
-            preview.style.cssText = 'width: 20px; height: 20px; border-radius: 50%; box-shadow: var(--shadow-sm);';
-            Object.assign(preview.style, previewCss);
-
-            const label = document.createElement('div');
-            label.textContent = title;
-            label.style.cssText = 'font-size: 12px; font-weight: 600; color: #4B5563; text-align: center;';
-
-            wrap.appendChild(radio);
-            wrap.appendChild(preview);
-            wrap.appendChild(label);
-
-            if (radio.checked) {
-                wrap.style.borderColor = 'var(--primarycolor)';
-                wrap.style.backgroundColor = 'var(--primarycolor-lighter)';
-            }
-
-            wrap.addEventListener('click', () => {
-                document.querySelectorAll('input[name="tag-style-mode"]').forEach(r => {
-                    r.checked = false;
-                    const c = r.closest('div');
-                    if (c) { c.style.borderColor = 'transparent'; c.style.backgroundColor = '#FFFFFF'; }
-                });
-                radio.checked = true;
-                wrap.style.borderColor = 'var(--primarycolor)';
-                wrap.style.backgroundColor = 'var(--primarycolor-lighter)';
-            });
-
-            return wrap;
-        };
-
-        const optPlain = makeStyleOption('plain', '白色全覆盖', { background: '#FFFFFF', border: 'none' });
-        const optBordered = makeStyleOption('bordered', '白色全覆盖（带边框）', { background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.12)' });
-        const optGradient = makeStyleOption('gradient', '渐变色纯覆盖', { background: 'linear-gradient(135deg, var(--primarycolor), var(--primarycolor-dark))', border: 'none' });
-
-        bgRow.appendChild(optPlain);
-        bgRow.appendChild(optBordered);
-        bgRow.appendChild(optGradient);
-        bgSection.appendChild(bgRow);
-        iconSettingsContainer.appendChild(bgSection);
-
-        // 2. 图标选择器
-        const iconSection = document.createElement('div');
-        iconSection.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
-
-        const iconLabel = document.createElement('div');
-        iconLabel.textContent = '图标样式';
-        iconLabel.style.cssText = 'font-size: 14px; font-weight: 600; color: #4B5563;';
-        iconSection.appendChild(iconLabel);
-
-        const iconSelectorRow = document.createElement('div');
-        iconSelectorRow.style.cssText = `display: grid; gap: 6px; grid-template-columns: repeat(${window.innerWidth <= 768 ? 4 : 6}, 1fr);`;
-
-        // 可选的图标列表 - 只显示实心图标
-        const iconOptions = [
-            { value: '♥', label: '♥', name: '心形' },
-            { value: '▲', label: '▲', name: '上三角' },
-            { value: '▼', label: '▼', name: '下三角' },
-            { value: '●', label: '●', name: '圆' },
-            { value: '◆', label: '◆', name: '菱形' },
-            { value: '⏹︎', label: '⏹︎', name: '方块' },
-            { value: '★', label: '★', name: '星' },
-            { value: '✤', label: '✤', name: '四叶草' },
-            { value: '☀', label: '☀', name: '太阳/月亮' },
-            { value: '♠', label: '♠', name: '黑桃' },
-            { value: '♦', label: '♦', name: '方块' },
-            { value: '♣', label: '♣', name: '梅花' },
-            { value: '✿', label: '✿', name: '花' },
-            { value: '✪', label: '✪', name: '星型' },
-            { value: '○', label: '○', name: '虚线圆' },
-            { value: '✦', label: '✦', name: '闪亮' },
-            { value: '✱', label: '✱', name: '省略号' },
-            { value: '∼', label: '∼', name: '波浪' },
-            { value: '✻', label: '✻', name: '花朵' },
-            { value: '❆', label: '❆', name: '雪花' },
-            { value: '⍟', label: '⍟', name: '星星' },
-            { value: '•', label: '•', name: '点' },
-            { value: '𝟭', label: '𝟭', name: '数字' },
-            { value: 'FILL', label: '纯色全覆盖', name: '纯色全覆盖' }
-        ];
-
-        const currentIcon = GM_getValue('button_icon', '♥');
-
-        iconOptions.forEach((option, index) => {
-            const iconContainer = document.createElement('div');
-            iconContainer.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px; border: 2px solid transparent; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; min-width: 48px; background: #FFFFFF; box-shadow: 0 2px 8px rgba(0,0,0,0.06);';
-
-            const iconRadio = document.createElement('input');
-            iconRadio.type = 'radio';
-            iconRadio.name = 'button-icon';
-            iconRadio.value = option.value;
-            iconRadio.checked = currentIcon === option.value;
-            iconRadio.style.cssText = 'margin: 0;';
-
-            let iconDisplay;
-            if (option.value === 'FILL') {
-                iconDisplay = document.createElement('div');
-                iconDisplay.style.cssText = 'width: 20px; height: 20px; border-radius: 50%; background: var(--primarycolor); box-shadow: var(--shadow-sm);';
-            } else {
-                iconDisplay = document.createElement('div');
-                iconDisplay.textContent = option.label;
-                iconDisplay.style.cssText = 'font-size: 16px; color: var(--primarycolor); font-weight: bold;';
-            }
-
-            const iconLabel = document.createElement('div');
-            iconLabel.textContent = option.name;
-            iconLabel.style.cssText = 'font-size: 9px; color: #6B7280; text-align: center; line-height: 1.2;';
-
-            iconContainer.appendChild(iconRadio);
-            iconContainer.appendChild(iconDisplay);
-            iconContainer.appendChild(iconLabel);
-
-            // 添加选中状态样式
-            if (currentIcon === option.value) {
-                iconContainer.style.borderColor = 'var(--primarycolor)';
-                iconContainer.style.backgroundColor = 'var(--primarycolor-lighter)';
-            }
-
-            // 添加点击事件
-            iconContainer.addEventListener('click', () => {
-                // 清除所有选中状态
-                document.querySelectorAll('input[name="button-icon"]').forEach(radio => {
-                    radio.checked = false;
-                    radio.closest('div').style.borderColor = 'transparent';
-                    radio.closest('div').style.backgroundColor = '#FFFFFF';
-                });
-
-                // 设置当前选中
-                iconRadio.checked = true;
-                iconContainer.style.borderColor = 'var(--primarycolor)';
-                iconContainer.style.backgroundColor = 'var(--primarycolor-lighter)';
-            });
-
-            iconSelectorRow.appendChild(iconContainer);
-        });
-
-        iconSection.appendChild(iconSelectorRow);
-        iconSettingsContainer.appendChild(iconSection);
-
-        // 3. 图标大小设置
-        const sizeSection = document.createElement('div');
-        sizeSection.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
-
-        const sizeLabel = document.createElement('div');
-        sizeLabel.textContent = '图标大小';
-        sizeLabel.style.cssText = 'font-size: 14px; font-weight: 600; color: #4B5563;';
-        sizeSection.appendChild(sizeLabel);
-
-        const iconSizeRow = document.createElement('div');
-        iconSizeRow.style.cssText = 'display: flex; align-items: center; gap: 8px;';
-
-        const iconSizeSlider = document.createElement('input');
-        iconSizeSlider.type = 'range';
-        iconSizeSlider.id = 'icon-size-slider';
-        iconSizeSlider.min = '10';
-        iconSizeSlider.max = '20';
-        iconSizeSlider.value = GM_getValue('button_icon_size', '14');
-        iconSizeSlider.style.cssText = 'flex: 1; height: 6px; background: #E5E7EB; border-radius: 3px; outline: none; appearance: none;';
-
-        const iconSizeValue = document.createElement('span');
-        iconSizeValue.textContent = iconSizeSlider.value + 'px';
-        iconSizeValue.style.cssText = 'color: var(--primarycolor); font-weight: 600; font-size: 12px; min-width: 35px; text-align: right;';
-
-        // 更新滑块样式
-        iconSizeSlider.style.background = `linear-gradient(to right, var(--primarycolor) 0%, var(--primarycolor) ${(iconSizeSlider.value - iconSizeSlider.min) / (iconSizeSlider.max - iconSizeSlider.min) * 100}%, #E5E7EB ${(iconSizeSlider.value - iconSizeSlider.min) / (iconSizeSlider.max - iconSizeSlider.min) * 100}%, #E5E7EB 100%)`;
-
-        iconSizeSlider.addEventListener('input', () => {
-            iconSizeValue.textContent = iconSizeSlider.value + 'px';
-            iconSizeSlider.style.background = `linear-gradient(to right, var(--primarycolor) 0%, var(--primarycolor) ${(iconSizeSlider.value - iconSizeSlider.min) / (iconSizeSlider.max - iconSizeSlider.min) * 100}%, #E5E7EB ${(iconSizeSlider.value - iconSizeSlider.min) / (iconSizeSlider.max - iconSizeSlider.min) * 100}%, #E5E7EB 100%)`;
-        });
-
-        iconSizeRow.appendChild(iconSizeSlider);
-        iconSizeRow.appendChild(iconSizeValue);
-        sizeSection.appendChild(iconSizeRow);
-        iconSettingsContainer.appendChild(sizeSection);
-
-        list.appendChild(iconSettingsContainer);
-
-        // 封面代理前缀设置区域
-        const proxySettingsTitle = document.createElement('div');
-        proxySettingsTitle.textContent = '✦ 封面代理前缀';
-        proxySettingsTitle.style.cssText = 'margin-top: 20px; font-weight: 600; color: #4B5563; font-size: 16px; border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; display: flex; align-items: center; gap: 6px;';
-        list.appendChild(proxySettingsTitle);
-
-        const proxySettingsDesc = document.createElement('div');
-        proxySettingsDesc.textContent = '设置封面图片的代理链接前缀。当封面图床未启用时，会使用此代理链接。不填则不使用代理，直接使用原始URL。格式：https://example.com/?url=';
-        proxySettingsDesc.style.cssText = 'margin: 8px 0 12px 0; font-size: 13px; color: #6B7280; line-height: 1.4;';
-        list.appendChild(proxySettingsDesc);
-
-        const proxyRow = document.createElement('div');
-        proxyRow.style.cssText = 'display:flex; align-items:center; gap:12px;';
-
-        const proxyLabel = document.createElement('label');
-        proxyLabel.textContent = '✦ 代理前缀:';
-        proxyLabel.style.cssText = 'flex:0 0 100px; color:#4B5563; font-weight:500;';
-
-        const proxyInput = document.createElement('input');
-        proxyInput.type = 'text';
-        proxyInput.id = 'cover-proxy-prefix';
-        proxyInput.value = COVER_BED_CONFIG.proxyPrefix || '';
-        proxyInput.placeholder = '请输入代理链接...';
-        proxyInput.style.cssText = 'flex:1; padding:10px 16px; border:1px solid #D1D5DB; border-radius: 20px; font-size:14px; background:#F9FAFB; transition: all 0.2s ease;';
-
-        // 添加输入框焦点效果
-        proxyInput.addEventListener('focus', () => {
-            proxyInput.style.borderColor = 'var(--primarycolor)';
-            proxyInput.style.boxShadow = '0 0 0 3px var(--primarycolor-lighter)';
-            proxyInput.style.background = '#FFFFFF';
-        });
-
-        proxyInput.addEventListener('blur', () => {
-            proxyInput.style.borderColor = '#D1D5DB';
-            proxyInput.style.boxShadow = 'none';
-            proxyInput.style.background = '#F9FAFB';
-        });
-
-        proxyRow.appendChild(proxyLabel);
-        proxyRow.appendChild(proxyInput);
-        list.appendChild(proxyRow);
-
-        const row = document.createElement('div');
-        row.style.cssText = 'position: sticky; bottom: 0; background: linear-gradient(180deg, #FFFFFF 20%, rgba(255,255,255,0.92) 100%); padding: 12px 10px; border: 1px solid #E5E7EB;border-radius:20px; display:flex; gap:8px; justify-content:flex-end; margin-top:10px;';
-        const cancelBtn = document.createElement('button');
-        cancelBtn.textContent = '取消';
-        cancelBtn.style.cssText = 'padding: 10px 14px; border: 1px solid var(--input-border); border-radius: 20px; background: linear-gradient(135deg, #FFFFFF, #F3F4F6); cursor: pointer; color:#374151; box-shadow: none;';
-        const saveBtn = document.createElement('button');
-        saveBtn.textContent = '保存';
-        saveBtn.style.cssText = 'padding: 10px 16px; border: none; border-radius: 20px; background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D)); color:#fff; cursor:pointer; box-shadow: 0 8px 20px var(--primarycolor-lighter);';
-
-        cancelBtn.onclick = () => document.body.removeChild(overlay);
-        saveBtn.onclick = () => {
-            const remarkChecked = document.getElementById('global-remark-on-add')?.checked;
-            const ratingChecked = document.getElementById('global-enable-rating')?.checked;
-            const appendChecked = document.getElementById('global-show-append')?.checked;
-            const jsdelivrChecked = document.getElementById('global-use-jsdelivr')?.checked;
-            const tagPropertyName = document.getElementById('tag-property-name')?.value;
-            const tagContent = document.getElementById('tag-content')?.value;
-            const removeBracketsChecked = document.getElementById('title-remove-brackets')?.checked;
-            const trimUnderscoreChecked = document.getElementById('title-trim-underscore')?.checked;
-            const deleteMethodValue = document.getElementById('delete-method')?.value;
-
-            const showFilterChecked = document.getElementById('show-filter-btn')?.checked;
-            const showTestChecked = document.getElementById('show-test-btn')?.checked;
-            const showHighlightChecked = document.getElementById('show-highlight-btn')?.checked;
-            const showLocateChecked = document.getElementById('show-locate-btn')?.checked;
-            const showSelectChecked = document.getElementById('show-select-btn')?.checked;
-
-            if (typeof remarkChecked === 'boolean') GM_setValue('global_enable_remark_on_add', remarkChecked);
-            if (typeof ratingChecked === 'boolean') {
-                GM_setValue('rating_enabled', ratingChecked);
-                if (typeof RATING_CONFIG !== 'undefined') {
-                    RATING_CONFIG.enabled = ratingChecked;
-                }
-            }
-
-            if (typeof appendChecked === 'boolean') {
-                GM_setValue('show_append_button', appendChecked);
-                const appendButton = document.getElementById('append-content-btn');
-                if (appendButton) appendButton.style.display = appendChecked ? 'flex' : 'none';
-            }
-
-            if (typeof jsdelivrChecked === 'boolean') {
-                GM_setValue('use_jsdelivr_acceleration', jsdelivrChecked);
-            }
-
-            if (typeof removeBracketsChecked === 'boolean') GM_setValue('title_remove_brackets', removeBracketsChecked);
-            if (typeof trimUnderscoreChecked === 'boolean') GM_setValue('title_trim_underscore', trimUnderscoreChecked);
-
-            if (typeof showFilterChecked === 'boolean') GM_setValue('show-filter-btn', showFilterChecked);
-            if (typeof showTestChecked === 'boolean') GM_setValue('show-test-btn', showTestChecked);
-            if (typeof showHighlightChecked === 'boolean') GM_setValue('show-highlight-btn', showHighlightChecked);
-            if (typeof showLocateChecked === 'boolean') GM_setValue('show-locate-btn', showLocateChecked);
-            if (typeof showSelectChecked === 'boolean') GM_setValue('show-select-btn', showSelectChecked);
-
-            const mergeSeparatorInput = document.getElementById('selector-merge-separator');
-            if (mergeSeparatorInput) {
-                const rawValue = (mergeSeparatorInput.value || '').trim();
-                if (rawValue) {
-                    GM_setValue('selector_merge_separator', rawValue);
-                } else {
-                    try { GM_deleteValue('selector_merge_separator'); } catch (_) {}
-                }
-            }
-
-            // 保存简介展开点击间隔（全局）
-            const expandInputEl = document.getElementById('global-expand-click-interval');
-            if (expandInputEl) {
-                const v = parseInt(expandInputEl.value, 10);
-                GM_setValue('expand_click_interval_ms', (!isNaN(v) && v >= 0) ? v : 150);
-            }
-
-            const showAnchorChecked = document.getElementById('global-show-config-anchor')?.checked;
-            if (typeof showAnchorChecked === 'boolean') {
-                GM_setValue('show_config_anchor_nav', showAnchorChecked);
-                const dlg = document.getElementById('config-dialog');
-                const nav = document.getElementById('config-anchor-nav');
-                if (showAnchorChecked) {
-                    if (dlg && !nav) {
-                        try { createConfigAnchorNav(dlg); } catch(_) {}
-                    }
-                    if (nav) nav.style.display = 'flex';
-                } else {
-                    if (nav) nav.remove();
-                }
-            }
-
-            // 保存标签设置
-            if (tagPropertyName) {
-                GM_setValue('tagPropertyName', tagPropertyName);
-                GM_setValue('tag_dot_property_name', tagPropertyName); // 同时更新小圆点使用的设置
-            }
-            if (tagContent) {
-                GM_setValue('tagContent', tagContent);
-                GM_setValue('tag_dot_tag_text', tagContent); // 同时更新小圆点使用的设置
-            }
-
-            // 保存图标样式设置
-            const selectedIconMode = document.querySelector('input[name="icon-mode"]:checked')?.value || '1';
-            GM_setValue('icon_mode', selectedIconMode);
-
-            // 保存图标选择设置
-            const selectedIcon = document.querySelector('input[name="button-icon"]:checked')?.value || '♥';
-            GM_setValue('button_icon', selectedIcon);
-
-            // 保存图标大小设置
-            const iconSize = document.getElementById('icon-size-slider')?.value || '14';
-            GM_setValue('button_icon_size', iconSize);
-
-            const selectedStyleMode = document.querySelector('input[name="tag-style-mode"]:checked')?.value || GM_getValue('tag_btn_style_mode', 'bordered');
-            GM_setValue('tag_btn_style_mode', selectedStyleMode);
-
-            // 保存封面代理前缀设置
-            const proxyPrefix = document.getElementById('cover-proxy-prefix')?.value?.trim() || '';
-            GM_setValue('cover_proxy_prefix', proxyPrefix);
-            if (typeof COVER_BED_CONFIG !== 'undefined') {
-                COVER_BED_CONFIG.proxyPrefix = proxyPrefix;
-            }
-
-            // 更新当前页面上的按钮样式
-            const tagBtn = document.querySelector('.notion-tag-btn');
-            if (tagBtn) {
-                tagBtn.classList.remove('icon-mode-1', 'icon-mode-2');
-                tagBtn.classList.add(`icon-mode-${selectedIconMode}`);
-
-                // 更新图标和大小
-                if (typeof updateTagButtonIcon === 'function') {
-                    updateTagButtonIcon();
-                }
-
-                tagBtn.classList.remove('style-mode-plain', 'style-mode-bordered', 'style-mode-gradient', 'style-mode-solid');
-                tagBtn.classList.add(`style-mode-${selectedStyleMode}`);
-                if (selectedIcon === 'FILL') {
-                    tagBtn.classList.add('icon-fill');
-                } else {
-                    tagBtn.classList.remove('icon-fill');
-                }
-            }
-
-            // 更新自定义标签设置
-            if (typeof customTagSettings !== 'undefined') {
-                customTagSettings.propertyName = tagPropertyName || '标签';
-                customTagSettings.tagText = tagContent || '收藏'; // 确保使用正确的属性名
-            }
-
-            showNotification('已保存其他设置', 'success');
-            try { document.body.removeChild(overlay); } catch(_) {}
-
-            applyButtonVisibilitySettings();
-        };
-
-        row.appendChild(cancelBtn);
-        row.appendChild(saveBtn);
-
-        dialog.appendChild(title);
-        dialog.appendChild(list);
-        dialog.appendChild(row);
-        overlay.appendChild(dialog);
-        document.body.appendChild(overlay);
-        overlay.appendChild(topNav);
-
-        try {
-            try {
-                const savedLeft = GM_getValue('other_settings_anchor_left');
-                const savedTop = GM_getValue('other_settings_anchor_top');
-                if (typeof savedLeft === 'number' && typeof savedTop === 'number') {
-                    topNav.style.left = Math.max(0, savedLeft) + 'px';
-                    topNav.style.top = Math.max(0, savedTop) + 'px';
-                } else {
-                    const rect = dialog.getBoundingClientRect();
-                    const defaultLeft = Math.min(window.innerWidth - 220, Math.max(8, Math.round(rect.right + 12)));
-                    const defaultTop = Math.max(8, Math.round(rect.top));
-                    topNav.style.left = defaultLeft + 'px';
-                    topNav.style.top = defaultTop + 'px';
-                }
-            } catch(_) {}
-
-            (function makeOtherSettingsNavDraggable(container){
-                if (!container) return;
-                let isDragging = false;
-                let didDrag = false;
-                let offsetX = 0, offsetY = 0, startX = 0, startY = 0;
-                const onPointerDown = (clientX, clientY, originalEvent) => {
-                    isDragging = true;
-                    didDrag = false;
-                    startX = clientX;
-                    startY = clientY;
-                    const rect = container.getBoundingClientRect();
-                    offsetX = clientX - rect.left;
-                    offsetY = clientY - rect.top;
-                    if (originalEvent) originalEvent.preventDefault();
-                };
-                const onPointerMove = (clientX, clientY) => {
-                    if (!isDragging) return;
-                    if (!didDrag) {
-                        const dx = Math.abs(clientX - startX);
-                        const dy = Math.abs(clientY - startY);
-                        if (dx < 3 && dy < 3) return;
-                        didDrag = true;
-                    }
-                    container.style.left = (clientX - offsetX) + 'px';
-                    container.style.top = (clientY - offsetY) + 'px';
-                    container.style.right = 'auto';
-                    container.style.bottom = 'auto';
-                };
-                const onPointerUp = () => {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    try {
-                        const rect = container.getBoundingClientRect();
-                        GM_setValue('other_settings_anchor_left', Math.max(0, Math.round(rect.left)));
-                        GM_setValue('other_settings_anchor_top', Math.max(0, Math.round(rect.top)));
-                    } catch(_) {}
-                };
-                container.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY, e));
-                document.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
-                document.addEventListener('mouseup', onPointerUp);
-                container.addEventListener('touchstart', (e) => { const t = e.touches && e.touches[0]; if (t) onPointerDown(t.clientX, t.clientY, e); }, { passive: false });
-                document.addEventListener('touchmove', (e) => { const t = e.touches && e.touches[0]; if (t) onPointerMove(t.clientX, t.clientY); }, { passive: false });
-                document.addEventListener('touchend', onPointerUp);
-            })(topNav);
-        } catch(_) {}
-
-        try {
-            try {
-                const closeObs = new MutationObserver(() => {
-                    if (!document.body.contains(dialog)) {
-                        try { topNav.remove(); } catch(_) {}
-                        closeObs.disconnect();
-                    }
-                });
-                closeObs.observe(document.body, { childList: true, subtree: true });
-            } catch(_) {}
-            const obs = new IntersectionObserver((entries) => {
-                if (Date.now() < suppressAutoActiveUntil) return;
-                const vis = entries.filter(e => e.isIntersecting);
-                if (!vis.length) return;
-                vis.sort((a, b) => {
-                    if (b.intersectionRatio !== a.intersectionRatio) {
-                        return b.intersectionRatio - a.intersectionRatio;
-                    }
-                    return a.target.offsetTop - b.target.offsetTop;
-                });
-                setActiveById(vis[0].target.id);
-            }, { root: dialog, threshold: 0.25 });
-            ['other-anchor-global-toggles','other-anchor-buttons','other-anchor-visual-style','other-anchor-accel','other-anchor-title-cleanup','other-anchor-merge-sep','other-anchor-expand','other-anchor-quick-panel','other-anchor-tag-defaults','other-anchor-icon-settings'].forEach(id => {
-                const el = dialog.querySelector('#' + id);
-                if (el) obs.observe(el);
-            });
-            setActiveById('other-anchor-global-toggles');
-        } catch(_) {}
-    }
 
     // 主题与配色调色板（与自定义样式设置区分）
     function showThemePaletteDialog() {
@@ -21744,848 +22550,6 @@
         `;
         document.head.appendChild(s);
     })();
-
-    // 显示导入/导出配置对话框
-    function showImportExportDialog() {
-        return new Promise((resolve) => {
-            const isMobile = window.innerWidth <= 768;
-
-            // 创建遮罩层
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: -webkit-fill-available;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 10000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                ${isMobile ? 'padding: 16px;' : ''}
-            `;
-
-            // 创建对话框
-            const dialog = document.createElement('div');
-            dialog.style.cssText = `
-                background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
-                border-radius: ${isMobile ? '16px' : '20px'};
-                padding: ${isMobile ? '16px' : '24px'} !important;
-                max-width: ${isMobile ? '100%' : '600px'};
-                width: ${isMobile ? '100%' : '90%'};
-                max-height: ${isMobile ? '90vh' : '85vh'};
-                overflow-y: auto;
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                position: relative;
-            `;
-            dialog.className = 'notion-ImportExport-dialog';
-
-            // 装饰性顶部条
-            const decorationBar = document.createElement('div');
-            decorationBar.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                border-radius: var(--notion-border-radius,20px);
-            `;
-            dialog.appendChild(decorationBar);
-
-            // 标题 - 移到最上面
-            const title = document.createElement('h3');
-            title.textContent = '✦ 导入/导出配置';
-            title.style.cssText = `
-                font-size: ${isMobile ? '20px' : '24px'};
-                font-weight: 800;
-                color: #1f2937;
-                text-align: center;
-                margin: 0 0 ${isMobile ? '16px' : '20px'} 0;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                letter-spacing: 0.5px;
-            `;
-
-            // 容器：上半部分为域名多选列表，下半部分为操作按钮（已移除，后续会重新创建）
-
-            // 站点（域名）多选列表
-            const sitesWrap = document.createElement('div');
-            sitesWrap.style.cssText = `
-                border: 1px solid #e5e7eb;
-                border-radius: ${isMobile ? '12px' : '16px'};
-                padding: ${isMobile ? '12px' : '16px'};
-                max-height: ${isMobile ? '200px' : '320px'};
-                overflow: auto;
-
-                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-                `;
-            const sitesHeader = document.createElement('div');
-            sitesHeader.style.cssText = `display:flex; align-items:center; justify-content: space-between; margin-bottom: ${isMobile ? '8px' : '12px'}; ${isMobile ? 'flex-wrap: wrap; gap: 8px;' : ''}`;
-            const sitesTitle = document.createElement('div');
-            sitesTitle.textContent = '选择要导出的域名（自动整合子域名）';
-            sitesTitle.style.cssText = `font-weight:600; color:#374151; font-size:${isMobile ? '13px' : '14px'}; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
-            const selectAll = document.createElement('button');
-            selectAll.textContent = '全选/全不选';
-            selectAll.style.cssText = `padding:${isMobile ? '6px 10px' : '8px 12px'}; border:1px solid #d1d5db; border-radius: 20px; background:#fff; font-size:${isMobile ? '12px' : '13px'}; cursor:pointer; transition: all 0.2s ease; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
-            selectAll.addEventListener('mouseenter', () => {
-                selectAll.style.background = 'linear-gradient(135deg, var(--primarycolor-lighter, #fdf2f8), var(--primarycolor-light, #FFE4EA))';
-                selectAll.style.borderColor = 'var(--primarycolor, #FF8FAB)';
-            });
-            selectAll.addEventListener('mouseleave', () => {
-                selectAll.style.background = '#fff';
-                selectAll.style.borderColor = '#d1d5db';
-            });
-            sitesHeader.appendChild(sitesTitle);
-            sitesHeader.appendChild(selectAll);
-
-            const sitesList = document.createElement('div');
-            sitesList.style.cssText = `display:grid; grid-template-columns: ${isMobile ? '1fr' : 'repeat(auto-fill, minmax(210px,1fr))'}; gap:${isMobile ? '6px' : '8px'}; align-items:start;`;
-
-            // 域名归并函数（简化版）
-            function getBaseDomain(host) {
-                try {
-                    const parts = String(host || '').split('.').filter(Boolean);
-                    if (parts.length <= 2) return host;
-                    const tld = parts[parts.length - 1];
-                    const sld = parts[parts.length - 2];
-                    // 粗略处理常见二级后缀 .co.xx / .com.xx
-                    const sldList = ['co','com','org','net','gov','edu'];
-                    if (tld.length === 2 && sldList.includes(sld)) {
-                        return parts.slice(-3).join('.');
-                    }
-                    return parts.slice(-2).join('.');
-                } catch (_) { return host; }
-            }
-
-            const allKeys = GM_listValues();
-            const hosts = allKeys.filter(k => k.startsWith('site_config_')).map(k => k.replace('site_config_', ''));
-            const domainToHosts = {};
-            hosts.forEach(h => {
-                const hostname = String(h).split('/')[0]; // 仅提取主机名部分
-                const d = getBaseDomain(hostname);
-                if (!domainToHosts[d]) domainToHosts[d] = [];
-                domainToHosts[d].push(h);
-            });
-
-            const domainEntries = Object.entries(domainToHosts).sort((a,b)=> a[0].localeCompare(b[0]));
-            const domainCheckboxes = [];
-            if (domainEntries.length === 0) {
-                const empty = document.createElement('div');
-                empty.textContent = '暂无站点配置';
-                empty.style.cssText = 'color:#6b7280; font-size:13px;';
-                sitesList.appendChild(empty);
-            } else {
-                domainEntries.forEach(([domain, hs]) => {
-                    const id = 'export-domain-' + domain;
-                    const item = createCustomCheckbox(id, true, domain);
-                    // 统一外观：与其它勾选框一致
-                    item.style.margin = '0';
-                    item.style.padding = '8px 10px';
-                    item.style.border = '1px solid #e5e7eb';
-                    item.style.borderRadius = '20px';
-                    // 存储：容器与内部input
-                    const input = item.querySelector('input');
-                    domainCheckboxes.push({ domain, input, hosts: hs });
-                    sitesList.appendChild(item);
-                });
-            }
-            selectAll.onclick = () => {
-                const allChecked = domainCheckboxes.every(x => x.input && x.input.checked);
-                domainCheckboxes.forEach(x => {
-                    if (x.input) {
-                        x.input.checked = !allChecked;
-                        try { x.input.dispatchEvent(new Event('change')); } catch (_) {}
-                    }
-                });
-            };
-            sitesWrap.appendChild(sitesHeader);
-            sitesWrap.appendChild(sitesList);
-
-            const modulesWrap = document.createElement('div');
-            modulesWrap.style.cssText = `
-                border: 1px solid #e5e7eb;
-                border-radius: ${isMobile ? '12px' : '16px'};
-                padding: ${isMobile ? '12px' : '16px'};
-                margin-top: ${isMobile ? '10px' : '12px'};
-
-                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-                `;
-            const modulesHeader = document.createElement('div');
-            modulesHeader.style.cssText = `display:flex; align-items:center; justify-content: space-between; margin-bottom: ${isMobile ? '8px' : '12px'}; ${isMobile ? 'flex-wrap: wrap; gap: 8px;' : ''}`;
-            const modulesTitle = document.createElement('div');
-            modulesTitle.textContent = '选择要导出的模块';
-            modulesTitle.style.cssText = `font-weight:600; color:#374151; font-size:${isMobile ? '13px' : '14px'}; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
-            const selectAllModules = document.createElement('button');
-            selectAllModules.textContent = '全选/全不选';
-            selectAllModules.style.cssText = `padding:${isMobile ? '6px 10px' : '8px 12px'}; border:1px solid #d1d5db; border-radius: 20px; background:#fff; font-size:${isMobile ? '12px' : '13px'}; cursor:pointer; transition: all 0.2s ease; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
-            selectAllModules.addEventListener('mouseenter', () => {
-                selectAllModules.style.background = 'linear-gradient(135deg, var(--primarycolor-lighter, #fdf2f8), var(--primarycolor-light, #FFE4EA))';
-                selectAllModules.style.borderColor = 'var(--primarycolor, #FF8FAB)';
-            });
-            selectAllModules.addEventListener('mouseleave', () => {
-                selectAllModules.style.background = '#fff';
-                selectAllModules.style.borderColor = '#d1d5db';
-            });
-            const toggleModulesBtn = document.createElement('button');
-            toggleModulesBtn.textContent = '展开模块列表';
-            toggleModulesBtn.style.cssText = `padding:${isMobile ? '6px 10px' : '8px 12px'}; border:1px solid #d1d5db; border-radius: 20px; background:#fff; font-size:${isMobile ? '12px' : '13px'}; cursor:pointer; transition: all 0.2s ease; ${isMobile ? 'width: -webkit-fill-available;' : ''}`;
-            toggleModulesBtn.addEventListener('mouseenter', () => {
-                toggleModulesBtn.style.background = 'linear-gradient(135deg, var(--primarycolor-lighter, #fdf2f8), var(--primarycolor-light, #FFE4EA))';
-                toggleModulesBtn.style.borderColor = 'var(--primarycolor, #FF8FAB)';
-            });
-            toggleModulesBtn.addEventListener('mouseleave', () => {
-                toggleModulesBtn.style.background = '#fff';
-                toggleModulesBtn.style.borderColor = '#d1d5db';
-            });
-            const headerActions = document.createElement('div');
-            headerActions.style.cssText = `display:flex; gap:${isMobile ? '6px' : '8px'}; ${isMobile ? 'width: -webkit-fill-available;' : ''}; ${isMobile ? 'justify-content: space-between;' : ''}`;
-            headerActions.appendChild(toggleModulesBtn);
-            headerActions.appendChild(selectAllModules);
-            modulesHeader.appendChild(modulesTitle);
-            modulesHeader.appendChild(headerActions);
-            const modulesList = document.createElement('div');
-            modulesList.style.cssText = `display:grid; grid-template-columns: ${isMobile ? '1fr' : 'repeat(auto-fill, minmax(210px,1fr))'}; gap:${isMobile ? '6px' : '8px'}; align-items:start; max-height:${isMobile ? '280px' : '360px'}; overflow:auto;`;
-            const moduleDefs = [
-                ['notion','Notion 配置'],['github','GitHub 配置'],['domainGithub','域名图床'],['coverBed','封面图床'],
-                ['rating','评分设置'],['autoUpdate','自动更新'],['customStyle','自定义样式'],['smartExtraction','智能提取'],
-                ['expandIntervalMs','展开间隔'],['stepConfig','逐步配置'],['visibleSelectors','字段可见性'],['websiteGithub','网站GitHub配置'],
-                ['customConfigs','站点选择器'],['enabledPatterns','启用路径模式'],['typeMappings','类型映射'],['showAppendButton','显示追加按钮'],
-                ['customTags','自定义标签'],['customTagGroups','标签分组'],['customMainGroups','主分组'],['autoTagRoutingRules','自动分流规则'],
-                ['notionDatabaseCustomMap','数据库映射'],['clipTypesWithColors','类型颜色'],['clipTypes','类型列表'],
-                ['markdownTransformEnabled','Markdown启用'],['markdownTransformRules','Markdown规则'],['markdownTransformUseDomain','Markdown按域名'],
-                ['markdownTransformDomainConfigs','Markdown域名规则'],['tagDotTitle','小圆点标题'],['tagDotTags','小圆点标签'],
-                ['tagDotPropertyName','小圆点属性名'],['tagDotTagText','小圆点文本'],['tagPropertyName','标签属性名'],['tagContent','标签内容'],
-                ['currentMainGroupNovel','当前主分组(小说)'],['currentMainGroupComic','当前主分组(漫画)'],['currentMainGroupClip','当前主分组(剪藏)'],
-                ['tagUsageStatsNovel','标签统计(小说)'],['tagUsageStatsComic','标签统计(漫画)'],['tagUsageStatsClip','标签统计(剪藏)'],
-                ['githubFolderMode','GitHub文件夹模式'],['githubFolderIncludeCover','GitHub包含封面'],
-                ['globalShowButtons','全局显示按钮'],['globalRemarkOnAdd','添加时备注'],['selectorMergeSeparator','选择器合并分隔符'],
-                ['buttonStyle','按钮样式'],['configUiToggles','配置界面开关'],['request','网络请求设置'],
-                ['notionVerifyDatabaseId','Notion验证数据库ID'],['titleClean','标题清理偏好'],
-                ['githubDomainConfig','域名CDN配置'],['enhancedAutoUpdateEnabled','增强自动更新开关'],
-                ['siteConfigs','网站配置']
-            ];
-            const moduleCheckboxes = [];
-            moduleDefs.forEach(([id,label]) => {
-                const item = createCustomCheckbox('export-module-' + id, false, label);
-                item.style.margin = '0';
-                item.style.padding = '8px 10px';
-                item.style.border = '1px solid #e5e7eb';
-                item.style.borderRadius = '20px';
-                const input = item.querySelector('input');
-                moduleCheckboxes.push({ id, input });
-                modulesList.appendChild(item);
-            });
-            let modulesExpanded = false;
-            modulesList.style.display = 'none';
-            toggleModulesBtn.onclick = () => {
-                modulesExpanded = !modulesExpanded;
-                if (modulesExpanded) {
-                    modulesList.style.display = 'grid';
-                    toggleModulesBtn.textContent = '收起模块列表';
-                } else {
-                    modulesList.style.display = 'none';
-                    toggleModulesBtn.textContent = '展开模块列表';
-                }
-            };
-            selectAllModules.onclick = () => {
-                const allChecked = moduleCheckboxes.every(x => x.input && x.input.checked);
-                moduleCheckboxes.forEach(x => {
-                    if (x.input) {
-                        x.input.checked = !allChecked;
-                        try { x.input.dispatchEvent(new Event('change')); } catch (_) {}
-                    }
-                });
-            };
-            const excludeSensitiveContainer = createCustomCheckbox('export-exclude-sensitive', true, '移除敏感字段');
-            excludeSensitiveContainer.style.cssText = `margin-top:${isMobile ? '8px' : '10px'};`;
-            modulesWrap.appendChild(modulesHeader);
-            modulesWrap.appendChild(modulesList);
-            modulesWrap.appendChild(excludeSensitiveContainer);
-
-            // 复制全部配置按钮（新增）
-            const copyAllBtn = document.createElement('button');
-            copyAllBtn.textContent = '📋 复制全部配置';
-            copyAllBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: none;
-                border-radius: 20px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                color: white;
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 6px 14px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            // 导出全部配置按钮
-            const exportBtn = document.createElement('button');
-            exportBtn.textContent = '📤 导出全部配置';
-            exportBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: none;
-                border-radius: 20px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                color: white;
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 6px 14px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            // 导出所选站点按钮
-            const exportSelectedBtn = document.createElement('button');
-            exportSelectedBtn.textContent = '🌐 导出所选站点';
-            exportSelectedBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: none;
-                border-radius: 20px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                color: white;
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 6px 14px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            // 导入全部配置按钮
-            const importAllBtn = document.createElement('button');
-            importAllBtn.textContent = '📥 导入全部配置';
-            importAllBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: none;
-                border-radius: 20px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                color: white;
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 6px 14px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            // 导入（追加/同域覆盖）按钮
-            const importAppendBtn = document.createElement('button');
-            importAppendBtn.textContent = '📥 追加导入配置';
-            importAppendBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: 2px solid var(--primarycolor, #FF8FAB);
-                border-radius: 20px;
-                background: white;
-                color: var(--primarycolor-dark, #FF6B9D);
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 4px 8px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            const pasteConfigBtn = document.createElement('button');
-            pasteConfigBtn.textContent = '📝 粘贴配置';
-            pasteConfigBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: 1px dashed var(--primarycolor, #FF8FAB);
-                border-radius: 20px;
-                background: rgba(255,255,255,0.9);
-                color: var(--primarycolor-dark, #FF6B9D);
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 2px 6px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            // 取消按钮
-            const cancelBtn = document.createElement('button');
-            cancelBtn.textContent = '取消';
-            cancelBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: 1px solid var(--input-border, #d1d5db);
-                border-radius: 20px;
-                background: white;
-                color: var(--text-muted, #6b7280);
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                transition: all 0.2s ease;
-                box-shadow: 0 2px 4px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-
-            // 添加悬停效果
-            const addHoverEffect = (btn, isPrimary = true) => {
-                if (isPrimary) {
-                    btn.addEventListener('mouseenter', () => {
-                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor-dark, #FF6B9D), var(--primarycolor, #FF5184))';
-                        btn.style.transform = 'translateY(-2px)';
-                        btn.style.boxShadow = '0 8px 20px var(--primarycolor-lighter)';
-                    });
-                    btn.addEventListener('mouseleave', () => {
-                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D))';
-                        btn.style.transform = 'translateY(0)';
-                        btn.style.boxShadow = '0 6px 14px var(--primarycolor-lighter)';
-                    });
-                } else {
-                    btn.addEventListener('mouseenter', () => {
-                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor, #FF9BB3), var(--primarycolor-dark, #FF8FA3))';
-                        btn.style.transform = 'translateY(-2px)';
-                        btn.style.boxShadow = '0 8px 20px var(--primarycolor-lighter)';
-                    });
-                    btn.addEventListener('mouseleave', () => {
-                        btn.style.background = 'linear-gradient(135deg, var(--primarycolor-light, #FFB6C1), var(--primarycolor, #FFA0B4))';
-                        btn.style.transform = 'translateY(0)';
-                        btn.style.boxShadow = '0 6px 14px var(--primarycolor-lighter)';
-                    });
-                }
-            };
-
-            addHoverEffect(exportBtn, true);
-            addHoverEffect(copyAllBtn, false);
-
-            addHoverEffect(exportSelectedBtn, false);
-            addHoverEffect(importAllBtn, true);
-            addHoverEffect(pasteConfigBtn, false);
-            const exportModulesBtn = document.createElement('button');
-            exportModulesBtn.textContent = '📤 导出选定模块';
-            exportModulesBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: none;
-                border-radius: 20px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                color: white;
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 6px 14px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-            const copySelectedModulesBtn = document.createElement('button');
-            copySelectedModulesBtn.textContent = '📋 复制选定模块';
-            copySelectedModulesBtn.style.cssText = `
-                padding: ${isMobile ? '10px 16px' : '12px 20px'};
-                border: none;
-                border-radius: 20px;
-                background: linear-gradient(135deg, var(--primarycolor, #FF8FAB), var(--primarycolor-dark, #FF6B9D));
-                color: white;
-                cursor: pointer;
-                font-size: ${isMobile ? '13px' : '14px'};
-                font-weight: 500;
-                transition: all 0.2s ease;
-                box-shadow: 0 6px 14px var(--primarycolor-lighter);
-                ${isMobile ? 'width: -webkit-fill-available;' : ''}
-            `;
-            addHoverEffect(exportModulesBtn, true);
-            addHoverEffect(copySelectedModulesBtn, false);
-
-            importAppendBtn.addEventListener('mouseenter', () => {
-                importAppendBtn.style.background = 'var(--primarycolor-lighter, #fdf2f8)';
-                importAppendBtn.style.transform = 'translateY(-2px)';
-                importAppendBtn.style.boxShadow = '0 6px 12px var(--primarycolor-lighter)';
-            });
-            importAppendBtn.addEventListener('mouseleave', () => {
-                importAppendBtn.style.background = 'white';
-                importAppendBtn.style.transform = 'translateY(0)';
-                importAppendBtn.style.boxShadow = '0 4px 8px var(--primarycolor-lighter)';
-            });
-
-            pasteConfigBtn.addEventListener('mouseenter', () => {
-                pasteConfigBtn.style.background = 'var(--primarycolor-lighter, #fdf2f8)';
-                pasteConfigBtn.style.transform = 'translateY(-2px)';
-            });
-            pasteConfigBtn.addEventListener('mouseleave', () => {
-                pasteConfigBtn.style.background = 'rgba(255,255,255,0.9)';
-                pasteConfigBtn.style.transform = 'translateY(0)';
-            });
-
-            cancelBtn.addEventListener('mouseenter', () => {
-                cancelBtn.style.background = '#f9fafb';
-                cancelBtn.style.borderColor = '#9ca3af';
-                cancelBtn.style.transform = 'translateY(-1px)';
-            });
-            cancelBtn.addEventListener('mouseleave', () => {
-                cancelBtn.style.background = 'white';
-                cancelBtn.style.borderColor = '#d1d5db';
-                cancelBtn.style.transform = 'translateY(0)';
-            });
-
-            const handleConfigImportFromString = (configJson) => {
-                const content = (configJson || '').trim();
-                if (!content) {
-                    showNotification('配置内容为空，无法导入', 'warning');
-                    return false;
-                }
-                try {
-                    const parsed = JSON.parse(content);
-                    if (parsed && parsed.siteDomains && typeof parsed.siteDomains === 'object') {
-                        let count = 0;
-                        Object.values(parsed.siteDomains).forEach(group => {
-                            const hostsObj = (group && group.hosts) || {};
-                            Object.entries(hostsObj).forEach(([host, cfg]) => {
-                                GM_setValue('site_config_' + host, cfg);
-                                count++;
-                            });
-                        });
-                        showNotification(`已导入 ${count} 个站点配置（同域名/同host已覆盖）`, 'success');
-                        return true;
-                    }
-                    if (parsed && parsed.siteConfigs && typeof parsed.siteConfigs === 'object') {
-                        const entries = Object.entries(parsed.siteConfigs);
-                        entries.forEach(([host, cfg]) => {
-                            GM_setValue('site_config_' + host, cfg);
-                        });
-                        showNotification(`已导入 ${entries.length} 个站点配置（同域名已覆盖）`, 'success');
-                        return true;
-                    }
-                    importGlobalConfig(content);
-                    showNotification('配置已导入', 'success');
-                    return true;
-                } catch (_) {
-                    try {
-                        importGlobalConfig(content);
-                        showNotification('配置已导入', 'success');
-                        return true;
-                    } catch (error) {
-                        console.error('导入配置失败:', error);
-                        showNotification('导入失败: ' + error.message, 'error');
-                        return false;
-                    }
-                }
-            };
-
-            // 事件处理
-            // 复制全部配置
-            copyAllBtn.addEventListener('click', () => {
-                try {
-                    const allKeys = GM_listValues();
-                    const configsToExport = {};
-                    const blacklist = ['notion_databases_cache', 'last_auto_update_check', 'last_version'];
-                    allKeys.forEach(key => {
-                        if (!blacklist.includes(key)) {
-                            try {
-                                const value = GM_getValue(key);
-                                if (value !== undefined) {
-                                    configsToExport[key] = value;
-                                }
-                            } catch (e) {
-                                console.warn(`跳过无法读取的配置项: ${key}`, e);
-                            }
-                        }
-                    });
-                    const exportData = {
-                        meta: {
-                            version: '5.0',
-                            exportDate: new Date().toISOString(),
-                            description: 'Notion Clipper 全量配置备份（包含所有用户设置）',
-                            configCount: Object.keys(configsToExport).length
-                        },
-                        configs: configsToExport
-                    };
-                    const configJson = JSON.stringify(exportData, null, 2);
-                    GM_setClipboard(configJson);
-                    showNotification(`已复制全部配置到剪贴板（共 ${exportData.meta.configCount} 项）`, 'success');
-                    document.body.removeChild(overlay);
-                    resolve(true);
-                } catch (error) {
-                    console.error('复制配置失败:', error);
-                    showNotification('复制配置失败: ' + error.message, 'error');
-                }
-            });
-
-            exportBtn.addEventListener('click', () => {
-                exportGlobalConfig();
-                document.body.removeChild(overlay);
-                resolve(true);
-            });
-
-            exportSelectedBtn.addEventListener('click', () => {
-                // 收集选中的域名
-                const selectedDomains = domainCheckboxes.filter(x => x.input && x.input.checked);
-                try {
-                    const siteDomains = {};
-                    selectedDomains.forEach(({ domain, hosts }) => {
-                        const hostMap = {};
-                        hosts.forEach(h => {
-                            const v = GM_getValue('site_config_' + h);
-                            if (v) hostMap[h] = v;
-                        });
-                        if (Object.keys(hostMap).length > 0) siteDomains[domain] = { hosts: hostMap };
-                    });
-                    const exportJson = JSON.stringify({ version: 'sites-domains-1.0', siteDomains }, null, 2);
-                    const blob = new Blob([exportJson], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `notion-clipper-sites-${new Date().toISOString().split('T')[0]}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    showNotification('已按域名导出所选配置', 'success');
-                    document.body.removeChild(overlay);
-                    resolve(true);
-                } catch (e) {
-                    console.error('导出所选站点失败:', e);
-                    showNotification('导出失败: ' + (e.message || '未知错误'), 'error');
-                }
-            });
-
-            exportModulesBtn.addEventListener('click', () => {
-                const selected = moduleCheckboxes.filter(x => x.input && x.input.checked).map(x => x.id);
-                if (!selected.length) {
-                    showNotification('请先选择要导出的模块', 'warning');
-                    return;
-                }
-                try {
-                    const excludeSensitive = document.getElementById('export-exclude-sensitive')?.checked;
-                    const exportObj = buildPartialExportConfig(selected, !!excludeSensitive);
-                    const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `notion-clipper-config-selected-${new Date().toISOString().split('T')[0]}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    showNotification('已导出选定模块', 'success');
-                    document.body.removeChild(overlay);
-                    resolve(true);
-                } catch (e) {
-                    showNotification('导出失败: ' + (e.message || '未知错误'), 'error');
-                }
-            });
-
-            copySelectedModulesBtn.addEventListener('click', () => {
-                const selected = moduleCheckboxes.filter(x => x.input && x.input.checked).map(x => x.id);
-                if (!selected.length) {
-                    showNotification('请先选择要复制的模块', 'warning');
-                    return;
-                }
-                try {
-                    const excludeSensitive = document.getElementById('export-exclude-sensitive')?.checked;
-                    const exportObj = buildPartialExportConfig(selected, !!excludeSensitive);
-                    GM_setClipboard(JSON.stringify(exportObj, null, 2));
-                    showNotification('选定模块已复制到剪贴板', 'success');
-                    document.body.removeChild(overlay);
-                    resolve(true);
-                } catch (e) {
-                    showNotification('复制失败: ' + (e.message || '未知错误'), 'error');
-                }
-            });
-
-            importAllBtn.addEventListener('click', () => {
-                // 创建文件输入元素
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = '.json';
-                fileInput.style.display = 'none';
-
-                fileInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            try {
-                                const configJson = e.target.result;
-                                // 直接使用全量导入功能
-                                importGlobalConfig(configJson);
-                            } catch (error) {
-                                showNotification('文件读取失败: ' + error.message, 'error');
-                            }
-                        };
-                        reader.readAsText(file);
-                    }
-                };
-
-                document.body.appendChild(fileInput);
-                fileInput.click();
-                document.body.removeChild(fileInput);
-                document.body.removeChild(overlay);
-                resolve(true);
-            });
-
-            importAppendBtn.addEventListener('click', () => {
-                // 创建文件输入元素
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = '.json';
-                fileInput.style.display = 'none';
-
-                fileInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            try {
-                                const configJson = e.target.result;
-                                const success = handleConfigImportFromString(configJson);
-                                if (success) {
-                                    document.body.removeChild(overlay);
-                                    resolve(true);
-                                }
-                            } catch (error) {
-                                showNotification('文件读取失败: ' + error.message, 'error');
-                            }
-                        };
-                        reader.readAsText(file);
-                    }
-                };
-
-                document.body.appendChild(fileInput);
-                fileInput.click();
-                document.body.removeChild(fileInput);
-            });
-
-            const pastePanel = document.createElement('div');
-            pastePanel.style.cssText = `
-                display:none;
-                flex-direction:column;
-                gap:10px;
-                margin-top:12px;
-                padding:12px;
-                border:1px solid var(--input-border);
-                border-radius: 20px;
-                background:rgba(255,255,255,0.95);
-                `;
-
-            const pastePanelTitle = document.createElement('div');
-            pastePanelTitle.textContent = '粘贴配置内容';
-            pastePanelTitle.style.fontSize = '14px';
-            pastePanelTitle.style.fontWeight = '600';
-
-            const pasteTextarea = document.createElement('textarea');
-            pasteTextarea.style.cssText = `
-                width:100%;
-                min-height:140px;
-                border:1px solid var(--input-border);
-                border-radius: 20px;
-                padding:10px;
-                font-size:13px;
-                resize:vertical;
-                `;
-            pasteTextarea.placeholder = '将复制的配置JSON粘贴到此处…';
-
-            const pasteActionRow = document.createElement('div');
-            pasteActionRow.style.cssText = 'display:flex; justify-content:flex-end; gap:8px;';
-
-            const pasteCancelInner = document.createElement('button');
-            pasteCancelInner.textContent = '取消';
-            pasteCancelInner.className = 'selector-test-btn';
-            pasteCancelInner.addEventListener('click', (e) => {
-                e.preventDefault();
-                pasteTextarea.value = '';
-                pastePanel.style.display = 'none';
-            });
-
-            const pasteConfirmInner = document.createElement('button');
-            pasteConfirmInner.textContent = '导入';
-            pasteConfirmInner.className = 'selector-picker-btn';
-            pasteConfirmInner.addEventListener('click', (e) => {
-                e.preventDefault();
-                const success = handleConfigImportFromString(pasteTextarea.value);
-                if (success) {
-                    document.body.removeChild(overlay);
-                    resolve(true);
-                }
-            });
-
-            pasteActionRow.appendChild(pasteCancelInner);
-            pasteActionRow.appendChild(pasteConfirmInner);
-
-            pastePanel.appendChild(pastePanelTitle);
-            pastePanel.appendChild(pasteTextarea);
-            pastePanel.appendChild(pasteActionRow);
-
-            pasteConfigBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                pastePanel.style.display = 'flex';
-                pasteTextarea.focus();
-            });
-
-            cancelBtn.addEventListener('click', () => {
-                document.body.removeChild(overlay);
-                resolve(false);
-            });
-
-            // 组装对话框 - 标题在最上面
-            dialog.appendChild(title);
-
-            // 站点选择区域
-            dialog.appendChild(sitesWrap);
-            dialog.appendChild(modulesWrap);
-            dialog.appendChild(pastePanel);
-
-            // 操作按钮容器
-            const buttonContainer = document.createElement('div');
-            buttonContainer.style.cssText = `display:grid; grid-template-columns: 1fr; gap:${isMobile ? '10px' : '12px'}; margin-top:${isMobile ? '16px' : '20px'};`;
-
-            // 按钮行（移动端每行一个，桌面端每行两个）
-            if (isMobile) {
-                // 移动端：每个按钮单独一行
-                buttonContainer.appendChild(copyAllBtn);
-                buttonContainer.appendChild(exportBtn);
-                buttonContainer.appendChild(exportModulesBtn);
-                buttonContainer.appendChild(copySelectedModulesBtn);
-                buttonContainer.appendChild(exportSelectedBtn);
-                buttonContainer.appendChild(importAllBtn);
-                buttonContainer.appendChild(importAppendBtn);
-                buttonContainer.appendChild(pasteConfigBtn);
-            } else {
-                // 桌面端：两列布局
-                const row1 = document.createElement('div');
-                row1.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
-                row1.appendChild(copyAllBtn);
-                row1.appendChild(exportBtn);
-
-                const row2 = document.createElement('div');
-                row2.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
-                row2.appendChild(exportModulesBtn);
-                row2.appendChild(copySelectedModulesBtn);
-
-                const row3 = document.createElement('div');
-                row3.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
-                row3.appendChild(exportSelectedBtn);
-                row3.appendChild(importAllBtn);
-
-                const row4 = document.createElement('div');
-                row4.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr; gap:10px;';
-                row4.appendChild(importAppendBtn);
-                row4.appendChild(pasteConfigBtn);
-
-                buttonContainer.appendChild(row1);
-                buttonContainer.appendChild(row2);
-                buttonContainer.appendChild(row3);
-                buttonContainer.appendChild(row4);
-            }
-
-            // 取消按钮
-            const rowCancel = document.createElement('div');
-            rowCancel.style.cssText = `display:flex; justify-content:center; margin-top:${isMobile ? '12px' : '16px'};`;
-            rowCancel.appendChild(cancelBtn);
-
-            dialog.appendChild(buttonContainer);
-            dialog.appendChild(rowCancel);
-            overlay.appendChild(dialog);
-            document.body.appendChild(overlay);
-
-            // 点击背景关闭
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    document.body.removeChild(overlay);
-                    resolve(false);
-                }
-            });
-        });
-    }
 
     // 显示自动更新配置对话框
     function showAutoUpdateConfigDialog() {
@@ -23524,167 +23488,6 @@
         main();
     }
 
-
-    // 新的导出函数
-    function exportAllConfigs() {
-        try {
-            const allKeys = GM_listValues();
-            const configsToExport = {};
-
-            // 定义不应导出的临时或缓存键的黑名单（只排除真正的临时数据）
-            const blacklist = [
-                'notion_databases_cache',      // 数据库缓存
-                'last_auto_update_check',      // 自动更新检查时间戳
-                'last_version',                 // 版本号（由脚本管理）
-                // 注意：不排除其他配置，确保所有用户设置都能导出
-            ];
-
-            allKeys.forEach(key => {
-                if (!blacklist.includes(key)) {
-                    try {
-                        const value = GM_getValue(key);
-                        // 只导出非undefined的值
-                        if (value !== undefined) {
-                            configsToExport[key] = value;
-                        }
-                    } catch (e) {
-                        console.warn(`跳过无法读取的配置项: ${key}`, e);
-                    }
-                }
-            });
-
-            if (Object.keys(configsToExport).length === 0) {
-                showNotification('没有找到可导出的配置', 'error');
-                return;
-            }
-
-            const exportData = {
-                meta: {
-                    version: '5.0',
-                    exportDate: new Date().toISOString(),
-                    description: 'Notion Clipper 全量配置备份（包含所有用户设置）',
-                    configCount: Object.keys(configsToExport).length
-                },
-                configs: configsToExport
-            };
-
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `notion_clipper_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showNotification(`所有配置已成功导出（共 ${exportData.meta.configCount} 项）`, 'success');
-        } catch (error) {
-            console.error('导出配置失败:', error);
-            showNotification('导出配置失败: ' + error.message, 'error');
-        }
-    }
-
-    // 导出所有配置
-
-    // 导入配置
-    function importConfigs() {
-        try {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.json';
-            fileInput.style.display = 'none';
-            document.body.appendChild(fileInput);
-
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) {
-                    document.body.removeChild(fileInput);
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const importData = JSON.parse(event.target.result);
-
-                        if (importData.meta && (importData.meta.version === '4.0' || importData.meta.version === '5.0') && importData.configs) {
-                            // 询问用户是否在导入前清空现有配置
-                            if (confirm('是否在导入新配置前清空所有现有配置？\n警告：此操作不可逆，将删除您当前的所有设置。')) {
-                                const allKeys = GM_listValues();
-                                const preserveKeys = ['last_version']; // 保留的键
-                                allKeys.forEach(key => {
-                                    if (!preserveKeys.includes(key)) {
-                                        try {
-                                            GM_deleteValue(key);
-                                        } catch (e) {
-                                            console.warn(`删除配置项失败: ${key}`, e);
-                                        }
-                                    }
-                                });
-                                showNotification('所有现有配置已清空', 'success');
-                            }
-
-                            // 导入全量配置
-                            let importCount = 0;
-                            let errorCount = 0;
-                            for (const key in importData.configs) {
-                                try {
-                                    const value = importData.configs[key];
-                                    // 只导入非undefined的值
-                                    if (value !== undefined) {
-                                        GM_setValue(key, value);
-                                        importCount++;
-                                    }
-                                } catch (e) {
-                                    console.error(`导入配置项失败: ${key}`, e);
-                                    errorCount++;
-                                }
-                            }
-                            let message = `成功导入 ${importCount} 条配置`;
-                            if (errorCount > 0) {
-                                message += `，${errorCount} 条失败`;
-                            }
-                            message += '。建议刷新页面以应用所有更改。';
-                            showNotification(message, errorCount > 0 ? 'warning' : 'success');
-                        } else if (importData.version && importData.siteConfigs) {
-                            // 兼容旧版配置文件
-                            let importCount = 0;
-                            for (const host in importData.siteConfigs) {
-                                GM_setValue(`site_config_${host}`, importData.siteConfigs[host]);
-                                importCount++;
-                            }
-                            if (importData.pathPatterns && Array.isArray(importData.pathPatterns)) {
-                                GM_setValue(ENABLED_PATTERNS_KEY, importData.pathPatterns);
-                            }
-                            if (importData.typeMappings) {
-                                GM_setValue('typeMappings', importData.typeMappings);
-                            }
-                            showNotification(`成功导入 ${importCount} 个旧版网站配置`, 'success');
-                        } else {
-                            throw new Error('不是有效的配置文件格式');
-                        }
-                    } catch (error) {
-                        console.error('解析导入文件失败:', error);
-                        showNotification('解析导入文件失败: ' + error.message, 'error');
-                    } finally {
-                        document.body.removeChild(fileInput);
-                    }
-                };
-
-                reader.onerror = () => {
-                    showNotification('读取文件失败', 'error');
-                    document.body.removeChild(fileInput);
-                };
-
-                reader.readAsText(file);
-            });
-
-            fileInput.click();
-        } catch (error) {
-            console.error('导入配置失败:', error);
-            showNotification('导入配置失败: ' + error.message, 'error');
-        }
-    }
 
     // 注册菜单命令 - 配置Notion (已移动到其他功能菜单中)
     // GM_registerMenuCommand("批量导入到Notion", showBatchImportDialog); // 隐藏，因为配置界面有相同功能

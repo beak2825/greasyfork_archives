@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FBA状态标记
 // @namespace    http://www.wukui.fun
-// @version      202509171627
+// @version      202601091432
 // @description  在新版fba货件界面显示自定义的额外信息
 // @author       吴奎
 // @license      MIT license
@@ -77,6 +77,12 @@
 
 `);
 
+
+    // 检查URL是否符合要求，如果不符直接返回,和AWD隔离一下
+    if (!window.location.href.includes('shipping-queue.html') || !window.location.href.includes('fbashipment')) {
+        console.log('URL不符合要求，脚本退出');
+        return;
+    }
 
     //console.log('FBA界面改造');
     // 检查元素是否存在的函数，使用递归和setTimeout  

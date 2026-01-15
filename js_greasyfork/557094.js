@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         A2 Simulator
+// @name         Misreader
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Simulates misreading
+// @version      1.3
+// @description  Helps you to misread
 // @match        *://*/*
 // @grant        none
 // @run-at       document-end
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/557094/A2%20Simulator.user.js
-// @updateURL https://update.greasyfork.org/scripts/557094/A2%20Simulator.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557094/Misreader.user.js
+// @updateURL https://update.greasyfork.org/scripts/557094/Misreader.meta.js
 // ==/UserScript==
 
 (function () {
@@ -19,11 +19,16 @@
         "TEXTAREA", "INPUT", "SELECT", "OPTION", "CODE", "PRE", "SVG", "CANVAS", "MATH"
     ]);
 
-    // Simple substring replacement (case-insensitive)
-    const RE = /integer/ig;
-
     function replaceText(text) {
-        return text.replace(RE, "real number");
+        let t = text;
+        t = t.replace(/real/g, "real number");
+        t = t.replace(/integer/g, "real number");
+        t = t.replace(/real number number/g, "real number");
+        t = t.replace(/Real/g, "Real Number");
+        t = t.replace(/Integer/g, "Real Number");
+        t = t.replace(/Real Number Number/g, "Real Number");
+        t = t.replace(/Real Number number/g, "Real Number");
+        return t;
     }
 
     function shouldSkip(node) {

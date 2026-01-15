@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wypoko-Ulepszacz
 // @namespace    http://tampermonkey.net/
-// @version      0.10
+// @version      0.11
 // @description  Usprawnia nowy Wykop bo tak.
 // @author       yojc
 // @match        https://wykop.pl/*
@@ -14,7 +14,7 @@
 
 (function() {
 
-    const version = "0.10 (2023-04-13)";
+    const version = "0.11 (2026-01-08)";
     const debugFlag = false;
 
     function debugLog(arguments) {
@@ -58,7 +58,17 @@
         wypokMoveImagesInsideAnchor: {
             text: "Opakuj obrazki w tradycyjne linki",
             default: false,
-            style: "section.entry-photo figure > a.moved-image { position: relative; opacity: 100; background: none; border: none; box-shadow: none; top: 0; right: 0; z-index: 0; padding: 0; } section.entry-photo figure > a.moved-image::before { content: none; display: none; } "
+            style: "section.entry-photo figure > a.moved-image { position: relative; opacity: 100; background: none; border: none; box-shadow: none; top: 0; right: 0; z-index: 0; padding: 0; } section.entry-photo figure > a.moved-image::before { content: none; display: none; }"
+        },
+        wypokBlockViewingBlacklistedComments: {
+            text: "Zablokuj możliwość rozwijania komentarzy osób z czarnej listy",
+            default: false,
+            style: "aside.black-content { pointer-events: none; } aside.black-content::before { content: none !important; display: none !important; }"
+        },
+        wypokHideImageDownload: {
+            text: "Ukryj przycisk \"Pobierz\" przy obrazkach",
+            default: false,
+            style: "figure a[download] { display: none !important; }"
         },
 /*
 
@@ -250,25 +260,46 @@
     }
 
     function moveImageInsideAnchor(nodes) {
-        if (nodes.length > 0) {
+        const nodesToMove = Array.from(nodes).filter(node => !node.dataset.wypokChecked);
+        const nodesToCheck = Array.from(nodes).filter(node => node.dataset.wypokChecked);
+
+        if (nodesToMove.length > 0) {
             debugLog(`Moving ${nodes.length} images to <a> tag`);
+
+            for (const node of nodesToMove) {
+                node.dataset.wypokChecked = true;
+
+                const container = node.querySelector("figure");
+                const newLink = node.querySelector("figcaption a").cloneNode();
+                newLink.classList.add("moved-image");
+                const image = node.querySelector("figure > img");
+
+                newLink.onclick = function(e) {
+                    e.preventDefault();
+                }
+                newLink.href = newLink.href.split("?")[0];
+
+                newLink.append(image);
+                container.prepend(newLink);
+            }
         }
 
-        for (const node of nodes) {
-            node.dataset.wypokChecked = true;
+        if (nodesToCheck.length > 0) {
+            let fixedNodes = 0;
 
-            const container = node.querySelector("figure");
-            const newLink = node.querySelector("figcaption a").cloneNode();
-            newLink.classList.add("moved-image");
-            const image = node.querySelector("figure > img");
+            for (const node of nodesToCheck) {
+                const currentLink = node.querySelector("figure > a");
+                const newLinkHref = node.querySelector("figcaption a").href.split("?")[0];
 
-            newLink.onclick = function(e) {
-                e.preventDefault();
+                if (currentLink.href !== newLinkHref) {
+                    fixedNodes++;
+                    currentLink.href = newLinkHref;
+                }
             }
-            newLink.href = newLink.href.split("?")[0];
 
-            newLink.append(image);
-            container.prepend(newLink);
+            if (fixedNodes > 0) {
+                debugLog(`Fixed image link for ${fixedNodes} nodes`);
+            }
         }
     }
 
@@ -290,7 +321,7 @@
             }
             else {
                 if (getSettingValue("wypokMoveImagesInsideAnchor")) {
-                    moveImageInsideAnchor(document.querySelectorAll(".entry-photo:not([data-wypok-checked])") );
+                    moveImageInsideAnchor(document.querySelectorAll(".entry-photo"));
                 }
 
                 if (checkMirkoEntriesFlag) {

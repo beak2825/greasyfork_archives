@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         视频网页全屏
 // @namespace    npm/vite-plugin-monkey
-// @version      3.8.7
+// @version      3.8.9
 // @author       Feny
 // @description  快捷键：P-网页全屏，Enter-全屏；支持侧边点击切换网页全屏；支持自动网页全屏
 // @license      GPL-3.0-only
@@ -50,19 +50,19 @@
     }
     return;
   }
-  function querySelector(selector, subject = document) {
-    const immediate = subject.querySelector(selector);
-    if (immediate) return immediate;
-    const shadowRoots = [...getShadowRoots(subject, true)];
+  function querySelector(selector, ctx = document) {
+    const direct = ctx.querySelector(selector);
+    if (direct) return direct;
+    const shadowRoots = [...getShadowRoots(ctx, true)];
     for (const root of shadowRoots) {
       const match = root.querySelector(selector);
       if (match) return match;
     }
     return null;
   }
-  function querySelectorAll(selector, subject = document) {
-    const results = [...subject.querySelectorAll(selector)];
-    const shadowRoots = [...getShadowRoots(subject, true)];
+  function querySelectorAll(selector, ctx = document) {
+    const results = [...ctx.querySelectorAll(selector)];
+    const shadowRoots = [...getShadowRoots(ctx, true)];
     for (const root of shadowRoots) {
       results.push(...root.querySelectorAll(selector));
     }
@@ -79,10 +79,10 @@
   const Tools = {
     isTopWin: () => window.top === window,
     scrollTop: (top) => window.scrollTo({ top }),
-    getElementRect: (el) => el?.getBoundingClientRect(),
-    microTask: (callback) => Promise.resolve().then(callback),
-    query: (selector, context) => querySelector(selector, context),
-    querys: (selector, context) => querySelectorAll(selector, context),
+    getRect: (el) => el?.getBoundingClientRect(),
+    microTask: (fn) => Promise.resolve().then(fn),
+    query: (selector, ctx) => querySelector(selector, ctx),
+    querys: (selector, ctx) => querySelectorAll(selector, ctx),
     sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
     postMessage: (win, data) => win?.postMessage({ source: Consts.MSG_SOURCE, ...data }, "*"),
     getIFrames: () => querySelectorAll("iframe:not([src=''], [src='#'], [id='buffer'], [id='install'])"),
@@ -92,7 +92,7 @@
     emitEvent: (type, detail = {}) => document.dispatchEvent(new CustomEvent(type, { detail })),
     isInputable: (el) => ["INPUT", "TEXTAREA"].includes(el?.tagName) || el?.isContentEditable,
     sendToIFrames(data) {
-      this.getIFrames().forEach((iframe) => this.postMessage(iframe?.contentWindow, data));
+      this.getIFrames().forEach((el) => this.postMessage(el?.contentWindow, data));
     },
     freqTimes: /* @__PURE__ */ new Map(),
     isThrottle(key = "throttle", gap = 300) {
@@ -101,30 +101,30 @@
       const diff = now - last;
       return diff >= gap ? this.freqTimes.set(key, now) && false : true;
     },
-    limitCountMap: /* @__PURE__ */ new Map(),
-    isOverLimit(key = "default", maxCount = 5) {
-      const count = this.limitCountMap.get(key) ?? 0;
-      if (count < maxCount) return this.limitCountMap.set(key, count + 1) && false;
+    countMap: /* @__PURE__ */ new Map(),
+    isOverLimit(key = "default", max = 5) {
+      const count = this.countMap.get(key) ?? 0;
+      if (count < max) return this.countMap.set(key, count + 1) && false;
       return true;
     },
     resetLimit(...keys) {
       const keyList = keys.length > 0 ? keys : ["default"];
-      keyList.forEach((key) => this.limitCountMap.set(key, 0));
+      keyList.forEach((key) => this.countMap.set(key, 0));
     },
-    pointInElement(pointX, pointY, element) {
-      if (!element) return false;
-      const { top, left, right, bottom } = this.getElementRect(element);
-      return pointX >= left && pointX <= right && pointY >= top && pointY <= bottom;
+    pointInElement(x, y, el) {
+      if (!el) return false;
+      const { top, left, right, bottom } = this.getRect(el);
+      return x >= left && x <= right && y >= top && y <= bottom;
     },
-    getParent(element) {
-      if (!element) return null;
-      const parent = element.parentNode;
+    getParent(el) {
+      if (!el) return null;
+      const parent = el.parentNode;
       if (parent instanceof ShadowRoot) return parent.host;
       return parent === document ? null : parent;
     },
-    getParents(element, withSelf = false, maxLevel = Infinity) {
-      const parents = withSelf && element ? [element] : [];
-      for (let current = element, level = 0; current && level < maxLevel; level++) {
+    getParents(el, self = false, max = Infinity) {
+      const parents = self && el ? [el] : [];
+      for (let current = el, deep = 0; current && deep < max; deep++) {
         current = this.getParent(current);
         current && parents.unshift(current);
       }
@@ -136,10 +136,10 @@
         if (value) target.setAttribute(attr, value);
       });
     },
-    setStyle(eles, prop, val, priority) {
-      if (!eles || !prop) return;
+    setStyle(els, prop, val, priority) {
+      if (!els || !prop) return;
       const fn = val ? "setProperty" : "removeProperty";
-      [].concat(eles).forEach((el) => el?.style?.[fn]?.(prop, val, priority));
+      [].concat(els).forEach((el) => el?.style?.[fn]?.(prop, val, priority));
     },
     isAttached(el) {
       if (!el) return false;
@@ -154,12 +154,12 @@
       Element.prototype.attachShadow = function(options) {
         if (this._shadowRoot) return this._shadowRoot;
         const shadowRoot = this._shadowRoot = this.__attachShadow.call(this, options);
-        VideoEnhancer.detectShadowVideoElement();
+        VideoEnhancer.detectShadowVideo();
         return shadowRoot;
       };
       Element.prototype.attachShadow.toString = () => Element.prototype.__attachShadow.toString();
     }
-    static detectShadowVideoElement() {
+    static detectShadowVideo() {
       if (Tools.isThrottle("shadow", 100)) return;
       const videos = Tools.querys("video:not([received])");
       if (!videos.length) return;
@@ -173,8 +173,8 @@
   }
   VideoEnhancer.hackAttachShadow();
   const Listen = {
-    noVideo: () => !window.videoInfo && !window.topWin,
-    isBackgroundVideo: (video) => video?.muted && video?.loop,
+    isMutedLoop: (video) => video?.muted && video?.loop,
+    isNoVideo: () => !window.videoInfo && !window.topWin,
     init(isNonFirst = false) {
       this.docElement = document.documentElement;
       this.setupKeydownListener();
@@ -183,9 +183,8 @@
       this.setupVideoListeners();
       if (isNonFirst) return;
       this.setupDocumentObserver();
-      this.observeFullscreenChange();
       this.setupIgnoreUrlsChangeListener();
-      this.setupShadowVideoListeners();
+      this.setupShadowVideoListener();
     },
     setupDocumentObserver() {
       new MutationObserver(() => {
@@ -195,57 +194,53 @@
     },
     setupFullscreenListener() {
       document.addEventListener("fullscreenchange", () => {
-        Tools.postMessage(window.top, { isFullscreen: !!document.fullscreenElement });
-      });
-    },
-    observeFullscreenChange() {
-      Object.defineProperty(this, "isFullscreen", {
-        get: () => this._isFullscreen ?? false,
-        set: (value) => {
-          this._isFullscreen = value;
-          !value && this.fsWrapper && this.dispatchShortcutKey(Consts.P);
-        }
+        const isFullscreen = !!document.fullscreenElement;
+        !isFullscreen && this.fsWrapper && this.dispatchShortcut(Consts.P);
+        Tools.postMessage(window.top, { isFullscreen });
       });
     },
     setupMouseMoveListener() {
       const handle = ({ type, clientX, clientY }) => {
         if (Tools.isThrottle(type)) return;
         const video = this.getVideoForCoord(clientX, clientY);
-        video && this.createEdgeClickElement(video);
+        video && this.createEdgeElement(video);
       };
       document.addEventListener("mousemove", handle, { passive: true });
     },
-    getVideoForCoord(clientX, clientY) {
-      return Tools.querys("video").find((video) => Tools.pointInElement(clientX, clientY, video));
+    getVideoForCoord(x, y) {
+      if (Tools.pointInElement(x, y, this.player)) return this.player;
+      const getZIndex = (el) => Number(getComputedStyle(el).zIndex) || 0;
+      const videos = Tools.querys("video").filter((v) => !this.isMutedLoop(v) && Tools.pointInElement(x, y, v));
+      return videos.sort((a, b) => getZIndex(b) - getZIndex(a)).shift();
     },
-    createEdgeClickElement(video) {
-      const container = this.getEdgeClickContainer(video);
+    createEdgeElement(video) {
+      const container = this.getEdgeContainer(video);
       if (video.lArea?.parentNode === container) return;
       if (container instanceof Element && this.lacksRelativePosition(container)) {
         Tools.setStyle(container, "position", "relative");
       }
+      Tools.querys(".video-edge-click", container).forEach((el) => el.remove());
       if (video.lArea) return container.prepend(video.lArea, video.rArea);
-      const createEdge = (clas = "") => {
-        const element = Object.assign(document.createElement("div"), { video, className: `video-edge-click ${clas}` });
+      const createEdge = (cls = "") => {
+        const element = Object.assign(document.createElement("div"), { video, className: `video-edge-click ${cls}` });
         element.onclick = (e) => {
           Tools.preventDefault(e);
-          const vid = e.target.video;
-          if (this.player !== vid) this.player = vid, this.setVideoInfo(vid);
-          Tools.microTask(() => this.dispatchShortcutKey(Consts.P, true));
+          this.setPlayer(e.target.video);
+          Tools.microTask(() => this.dispatchShortcut(Consts.P, true));
         };
         return element;
       };
       [video.lArea, video.rArea] = [createEdge(), createEdge("right")];
       container.prepend(video.lArea, video.rArea);
     },
-    getEdgeClickContainer(video) {
+    getEdgeContainer(video) {
       if (this.fsWrapper) return video.closest(`[${Consts.webFull}]`) ?? this.fsWrapper;
-      const parentNode = video.parentNode;
+      const parent = video.parentNode;
       const sroot = video.getRootNode() instanceof ShadowRoot;
-      return sroot ? parentNode : this.findVideoParentContainer(parentNode, void 0, false);
+      return sroot ? parent : this.findVideoContainer(parent, void 0, false);
     },
-    lacksRelativePosition(element) {
-      return Tools.getParents(element, true, 2).every((el) => el && getComputedStyle(el).position === "static");
+    lacksRelativePosition(el) {
+      return Tools.getParents(el, true, 2).every((e) => e && getComputedStyle(e).position === "static");
     }
   };
   var _GM_addValueChangeListener = /* @__PURE__ */ (() => typeof GM_addValueChangeListener != "undefined" ? GM_addValueChangeListener : void 0)();
@@ -255,18 +250,18 @@
   var _GM_unregisterMenuCommand = /* @__PURE__ */ (() => typeof GM_unregisterMenuCommand != "undefined" ? GM_unregisterMenuCommand : void 0)();
   var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
   const Keydown = {
-    dispatchShortcutKey: (key, isTrusted = false) => Tools.postMessage(window.top, { key: key.toUpperCase(), isTrusted }),
+    dispatchShortcut: (key, isTrusted = false) => Tools.postMessage(window.top, { key: key.toUpperCase(), isTrusted }),
     setupKeydownListener() {
+      _unsafeWindow.addEventListener("keydown", (e) => this.handleKeydown(e), true);
       _unsafeWindow.addEventListener("message", ({ data }) => this.handleMessage(data));
-      _unsafeWindow.addEventListener("keydown", (event) => this.handleKeydown(event), true);
       _unsafeWindow.addEventListener("scroll", () => this.fsWrapper && Tools.scrollTop(this.fsWrapper.scrollY));
     },
-    handleKeydown(event) {
-      const { key, isTrusted } = event;
-      const target = event.composedPath()[0];
-      if (this.noVideo() || Tools.isInputable(target) || !["p", "Enter"].includes(key)) return;
-      Tools.preventDefault(event);
-      this.dispatchShortcutKey(key, isTrusted);
+    handleKeydown(e) {
+      const { key, isTrusted } = e;
+      const target = e.composedPath()[0];
+      if (this.isNoVideo() || Tools.isInputable(target) || !["p", "Enter"].includes(key)) return;
+      Tools.preventDefault(e);
+      this.dispatchShortcut(key, isTrusted);
     },
     handleMessage(data) {
       if (!data?.source?.includes(Consts.MSG_SOURCE)) return;
@@ -276,23 +271,35 @@
       this.processEvent(data);
     },
     processEvent(data) {
+      if (this.videoInfo?.iFrame && this.player) delete this.player;
       if (!this.player) Tools.sendToIFrames(data);
-      if (data?.key) this.execHotKeyActions(data);
+      if (data?.key) this.execKeyActions(data);
     },
-    execHotKeyActions: ({ key, isTrusted }) => key === Consts.P ? App.toggleWebFullscreen(isTrusted) : App.toggleFullscreen()
+    execKeyActions: ({ key, isTrusted }) => key === Consts.P ? App.toggleWebFullscreen(isTrusted) : App.toggleFullscreen()
   };
   const Events = {
-    videoEvents: ["loadedmetadata", "timeupdate", "playing"],
+    videoAborts: /* @__PURE__ */ new Map(),
+    videoEvts: ["loadedmetadata", "timeupdate", "playing"],
     setupVideoListeners(video) {
-      const handleEvent = (event) => this[event.type](video ?? event.target);
-      this.videoEvents.forEach((type) => (video ?? document).addEventListener(type, handleEvent, true));
+      const ctrl = new AbortController();
+      if (video) this.videoAborts.get(video)?.abort();
+      const handle = (e) => this[e.type](video ?? e.target);
+      this.videoEvts.forEach((t) => (video ?? document).addEventListener(t, handle, { capture: true, signal: ctrl.signal }));
+      if (video) this.videoAborts.set(video, ctrl), this.unbindVideoEvts();
     },
-    setupShadowVideoListeners() {
+    setupShadowVideoListener() {
       document.addEventListener("shadow-video", (e) => {
         const { video } = e.detail;
         if (!video || video.hasAttribute("received")) return;
-        this.setupVideoListeners(video), video.setAttribute("received", true);
-        Tools.microTask(() => this.createEdgeClickElement(video));
+        video.setAttribute("received", true);
+        this.setupVideoListeners(video);
+      });
+    },
+    unbindVideoEvts() {
+      if (this.videoAborts.size < 5 || Tools.isThrottle("cleanup")) return;
+      this.videoAborts.forEach((ctrl, video) => {
+        if (Tools.isAttached(video)) return;
+        ctrl.abort(), video.removeAttribute("received"), this.videoAborts.delete(video);
       });
     },
     loadedmetadata(video) {
@@ -312,25 +319,25 @@
       if (!Tools.isAttached(this.player)) delete this.player;
     },
     setCurrentVideo(video) {
-      if (!video || this.player === video || video.offsetWidth < 240 || this.isBackgroundVideo(video)) return;
+      if (!video || this.player === video || video.offsetWidth < 260 || this.isMutedLoop(video)) return;
       if (this.player && !this.player.paused && !isNaN(this.player.duration)) return;
-      this.player = video;
-      this.setVideoInfo(video);
+      this.setPlayer(video);
     },
-    setVideoInfo(video) {
-      const videoInfo = { isLive: video.duration === Infinity };
+    setPlayer(video) {
+      this.player = video;
+      const videoInfo = { isLive: video.duration === Infinity, timestamp: Date.now() };
       this.syncVideoToParentWin(videoInfo);
     },
     syncVideoToParentWin(videoInfo) {
       window.videoInfo = this.videoInfo = videoInfo;
       if (!Tools.isTopWin()) return Tools.postMessage(window.parent, { videoInfo: { ...videoInfo, iFrame: location.href } });
-      Tools.microTask(() => this.setupScriptMenuCommand());
+      Tools.microTask(() => this.initMenuCmds());
       this.sendTopWinInfo();
     },
     sendTopWinInfo() {
       const { host, href: url } = location;
-      const { innerWidth: viewWidth, innerHeight: viewHeight } = window;
-      const topWin = { url, host, viewWidth, viewHeight };
+      const { innerWidth: vw, innerHeight: vh } = window;
+      const topWin = { url, host, vw, vh };
       window.topWin = this.topWin = topWin;
       Tools.sendToIFrames({ topWin });
     }
@@ -362,10 +369,10 @@
     toggleFullscreen() {
       if (!Tools.isTopWin() || Tools.isThrottle("toggleFull")) return;
       this.isFullscreen ? document.exitFullscreen() : this.getVideoHostContainer()?.requestFullscreen();
-      if (this.isFullscreen || !this.fsWrapper) this.dispatchShortcutKey(Consts.P);
+      if (this.isFullscreen || !this.fsWrapper) this.dispatchShortcut(Consts.P);
     },
     toggleWebFullscreen(isTrusted) {
-      if (this.noVideo() || Tools.isThrottle("toggleWeb")) return;
+      if (this.isNoVideo() || Tools.isThrottle("toggleWeb")) return;
       if (this.isFullscreen && isTrusted) return document.fullscreenElement && document.exitFullscreen();
       this.fsWrapper ? this.exitWebFullscreen() : this.enterWebFullscreen();
     },
@@ -411,11 +418,11 @@
       return Tools.query(`iframe[src*="${pathname + partial}"]`);
     },
     getVideoContainer() {
-      const selector = Storage.CUSTOM_CONTAINER.get(this.topWin?.host)?.trim();
+      const selector = Storage.CUSTOM_CONTAINER.get(this.topWin?.host ?? location.host)?.trim();
       const container = selector ? this.player.closest(selector) ?? Tools.query(selector) : null;
-      return container ?? this.findVideoParentContainer(this.findControlBarContainer());
+      return container ?? this.findVideoContainer(this.findCtrlContainer());
     },
-    findControlBarContainer() {
+    findCtrlContainer() {
       const ignore = ":not(.Drag-Control, .vjs-controls-disabled, .vjs-control-text, .xgplayer-prompt)";
       const selector = `[class*="contr" i]${ignore}, [id*="control"], [class*="ctrl"], [class*="progress"], [class*="volume"]`;
       let parent = Tools.getParent(this.player);
@@ -426,20 +433,20 @@
       return null;
     },
     videoParents: /* @__PURE__ */ new Set(),
-    findVideoParentContainer(container, maxLevel = 4, track = true) {
+    findVideoContainer(container, max = 4, track = true) {
       container = container ?? Tools.getParent(this.player);
       if (!container.offsetHeight) container = Tools.getParent(container);
       const { offsetWidth: cw, offsetHeight: ch } = container;
       if (track) this.videoParents.clear();
-      for (let parent = container, level = 0; parent && level < maxLevel; parent = Tools.getParent(parent), level++) {
+      for (let parent = container, deep = 0; parent && deep < max; parent = Tools.getParent(parent), deep++) {
         if (parent.offsetWidth === cw && parent.offsetHeight === ch) container = parent;
         if (this.hasExplicitlySize(parent)) return container;
         if (track) this.videoParents.add(parent);
       }
       return container;
     },
-    hasExplicitlySize(element) {
-      const style = element.style;
+    hasExplicitlySize(el) {
+      const style = el.style;
       const sizeRegex = /^\d+(\.\d+)?(px|em|rem)$/;
       return ["width", "height"].some((prop) => {
         const value = style?.getPropertyValue(prop);
@@ -447,13 +454,13 @@
       });
     },
     ensureWebFullscreen() {
-      const { viewWidth, viewHeight } = this.topWin;
+      const { vw, vh } = this.topWin;
       const elements = [...this.videoParents].reverse();
-      for (const element of elements) {
-        if (!this.fsWrapper.contains(element)) continue;
+      for (const el of elements) {
+        if (!this.fsWrapper.contains(el)) continue;
         const { offsetWidth: width, offsetHeight: height } = this.player;
-        if (width === viewWidth && height === viewHeight && element.offsetHeight === viewHeight) continue;
-        Tools.attr(element, Consts.webFull, true);
+        if (width === vw && height === vh && el.offsetHeight === vh) continue;
+        Tools.attr(el, Consts.webFull, true);
       }
     }
   };
@@ -462,13 +469,13 @@
       if (!this.topWin || !video.offsetWidth || this.player !== video) return;
       if (video.__isWide || Tools.isThrottle("autoWide", Consts.ONE_SEC) || !this.isAuto()) return;
       if (this.isIgnoreUrl() || await this.isWebFull(video) || Tools.isOverLimit("autoWide")) return video.__isWide = true;
-      this.dispatchShortcutKey(Consts.P);
+      this.dispatchShortcut(Consts.P);
     },
     async isWebFull(video) {
-      const { viewWidth } = this.topWin;
-      if (video.offsetWidth < viewWidth) return false;
+      const { vw } = this.topWin;
+      if (video.offsetWidth < vw) return false;
       await Tools.sleep(Consts.HALF_SEC);
-      return video.offsetWidth >= viewWidth;
+      return video.offsetWidth >= vw;
     }
   };
   const Ignore = {
@@ -491,14 +498,13 @@
   };
   const Menu = {
     isAuto: () => Storage.IS_AUTO.get(Tools.isTopWin() ? location.host : window.topWin?.host),
-    setupScriptMenuCommand() {
+    initMenuCmds() {
       if (this.hasMenu || !Tools.isTopWin()) return;
-      const key = Storage.IS_AUTO.name + location.host;
-      _GM_addValueChangeListener(key, () => this.registMenuCommand());
-      this.registMenuCommand();
+      _GM_addValueChangeListener(Storage.IS_AUTO.name + location.host, () => this.setupMenuCmds());
+      this.setupMenuCmds();
       this.hasMenu = true;
     },
-    registMenuCommand() {
+    setupMenuCmds() {
       const host = location.host;
       const isAuto = `此站${this.isAuto() ? "禁" : "启"}用自动网页全屏`;
       const configs = [

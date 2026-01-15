@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         验证码识别(包含特殊页面特殊处理)
 // @namespace    https://bbs.tampermonkey.net.cn/
-// @version      2024.08.24.0625
+// @version      2026.01.06.0245
 // @description  自动填写识别验证码(包含特殊页面特殊处理)
 // @author       BN_Dou
 // @match        http://*/*
@@ -21,7 +21,9 @@
 
     var element, input, imgIndex, canvasIndex, inputIndex, captchaType;
     var localRules = [];
-    var queryUrl = "http://bndou.top:6688/api/ocr/"
+    var queryUrl = "http://bndou.top:6688/api/ocr"
+    // var queryUrl = "http://localhost:6688/api/ocr/"
+    var authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3MjgxOTkwOX0.wtK-SR9wmER-HlRyiNJzQLbUH2gPySqw-1fyZIh7OgE"
     var exist = false;
     var iscors = false;
     var inBlack = false;
@@ -494,10 +496,11 @@
             }
             GM_xmlhttpRequest({
                 method: "POST",
-                url: queryUrl + (window.location.host.indexOf('boc') == -1 ? window.location.host.indexOf('bankofchina') == -1 ? "image" : "boc" : "boc"),
+                url: queryUrl + (window.location.host.indexOf('boc') == -1 ? window.location.host.indexOf('bankofchina') == -1 ? "" : "/boc" : "/boc"),
                 data: JSON.stringify(datas),
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": "Bearer " + authorization
                 },
                 responseType: "json",
                 onload: function(response) {
@@ -532,10 +535,11 @@
                 }
                 GM_xmlhttpRequest({
                     method: "POST",
-                    url: queryUrl + (window.location.host.indexOf('boc') == -1 ? window.location.host.indexOf('bankofchina') == -1 ? "image" : "boc" : "boc"),
+                    url: queryUrl + (window.location.host.indexOf('boc') == -1 ? window.location.host.indexOf('bankofchina') == -1 ? "" : "/boc" : "/boc"),
                     data: JSON.stringify(datas),
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": "Bearer " + authorization
                     },
                     responseType: "json",
                     onload: function(response) {

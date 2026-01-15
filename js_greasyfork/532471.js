@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         supjav與其它網站優化
 // @namespace    http://tampermonkey.net/
-// @version      2.6.1
-// @description  Supjav, Jable, Tktube, Javtiful 優化 (日文導向+伺服器選擇+FC2修正+空搜尋跳轉) + 影片預設靜音 (智慧型偵測播放)
+// @version      2.6.3
+// @description  Supjav, Jable, Tktube, Javtiful 優化 (日文導向+伺服器選擇+FC2修正+空搜尋跳轉) + 影片預設靜音 (智慧型偵測播放) + 修正supjav播放器崩潰問題
 // @author       Your Name & AI Assistant
 // @match        https://supjav.com/*
 // @match        https://tktube.com/*
@@ -37,9 +37,37 @@
 
     const isTopWindow = (window.self === window.top);
     const currentHost = window.location.hostname;
+    const currentHref = window.location.href;
 
     // ==============================================
-    // 1. 智慧型靜音 2.0 (Smart Mute 2.0)
+    // 0. 緊急修正: Supjav 播放器崩潰補丁 (Fix Broken Website Code)
+    // ==============================================
+    // 說明: supjav.php 內部有一個 setInterval 每100ms讀取一次 id="loader"。
+    // 如果該元素被擋廣告插件刪除，會導致無限報錯 (Cannot read properties of null)。
+    // 此補丁會檢測並自動補回一個隱藏的 dummy loader 讓它閉嘴。
+    if (currentHref.includes('supjav.php') || currentHost.includes('supremejav.com')) {
+        function injectDummyLoader() {
+            try {
+                // 如果找不到 loader，就造一個假的
+                if (!document.getElementById('loader')) {
+                    const dummy = document.createElement('span'); // 原站是用 span
+                    dummy.id = 'loader';
+                    dummy.style.display = 'none'; // 隱藏起來
+                    dummy.innerHTML = 'script_fix'; // 隨便塞點字防止讀取空值
+                    document.body.appendChild(dummy);
+                    // console.log('[優化腳本] 已修復遺失的 #loader 元素，防止網頁崩潰');
+                }
+            } catch (e) { }
+        }
+
+        // 在 DOM 載入時執行
+        document.addEventListener('DOMContentLoaded', injectDummyLoader);
+        // 保險起見，定時檢查一下 (防止被其他腳本再次刪除)
+        setInterval(injectDummyLoader, 1000);
+    }
+
+    // ==============================================
+    // 1. 智慧型靜音 2.1 (Smart Mute - Fix Infinite Loop)
     // ==============================================
     const MUTE_CONFIG_KEY = 'enableAutoMute';
     const isMuteEnabled = GM_getValue(MUTE_CONFIG_KEY, true);
@@ -48,60 +76,38 @@
         if (!isMuteEnabled) return;
 
         function monitorVideo(video) {
-            // 避免重複綁定
             if (video.dataset.scriptMonitored) return;
             video.dataset.scriptMonitored = "true";
 
-            // 狀態標記
             let isEnforcing = false;
             let enforceTimer = null;
+            let isLocking = false;
 
-            // 執行靜音動作
             const forceMute = () => {
-                if (!video.muted || video.volume > 0) {
-                    video.muted = true;
-                    video.volume = 0;
-                }
+                if (video.muted && video.volume === 0) return;
+                isLocking = true;
+                try { video.muted = true; video.volume = 0; } catch (e) {}
+                setTimeout(() => { isLocking = false; }, 50);
             };
 
-            // 啟動鎖定機制
             const startEnforcement = () => {
-                // 1. 立即執行一次
                 forceMute();
                 isEnforcing = true;
-
-                // 2. 設定 4 秒倒數 (從真正播放開始算)
                 if (enforceTimer) clearTimeout(enforceTimer);
-                enforceTimer = setTimeout(() => {
-                    isEnforcing = false;
-                    console.log(`腳本: 靜音鎖定解除，控制權交還用戶 (${currentHost})`);
-                }, 4000); // 4秒緩衝
+                enforceTimer = setTimeout(() => { isEnforcing = false; }, 4000);
             };
 
-            // --- 事件監聽 ---
-
-            // 1. 剛發現影片時，先無條件關一次
             forceMute();
-
-            // 2. 當影片「元數據載入完成」時
             video.addEventListener('loadedmetadata', forceMute);
-
-            // 3. 當影片「真正開始播放」時 (解決 ST 載入慢的問題)
-            // 不管轉圈圈多久，只要畫面一動 (playing)，就啟動 4 秒鎖定
-            video.addEventListener('playing', () => {
-                startEnforcement();
-            });
-
-            // 4. 監聽音量變化
-            // 只有在鎖定期間 (isEnforcing = true) 才干涉
+            video.addEventListener('playing', startEnforcement);
             video.addEventListener('volumechange', () => {
-                if (isEnforcing) {
+                if (isLocking) return;
+                if (isEnforcing && (!video.muted || video.volume > 0)) {
                     forceMute();
                 }
             });
         }
 
-        // 監控 DOM 變化 (針對動態加載的影片)
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
@@ -112,24 +118,18 @@
                 });
             });
         });
-
         observer.observe(document.documentElement, { childList: true, subtree: true });
-
-        // 初始掃描
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('video').forEach(monitorVideo);
         });
     }
 
-    // 啟動靜音模組
     setupSmartMute();
-
 
     // ==============================================
     // 2. 主控邏輯 (僅主視窗)
     // ==============================================
     if (isTopWindow) {
-        // --- 選單 ---
         GM_registerMenuCommand(`🔇 影片預設靜音: ${isMuteEnabled ? '✅ 開啟' : '❌ 關閉'}`, () => {
             GM_setValue(MUTE_CONFIG_KEY, !isMuteEnabled);
             location.reload();
@@ -137,7 +137,6 @@
 
         let supjavServerClickExecuted = false;
 
-        // --- 網址檢查與重定向 ---
         function checkAndRedirect() {
             const currentUrl = window.location.href;
             let performRedirect = false;
@@ -174,14 +173,11 @@
             return false;
         }
 
-        // --- Supjav 輔助 ---
         function checkSupjavHelpers() {
-            // 空搜尋
             if (window.location.href.match(/^https:\/\/supjav\.com\/ja\/\?s=$/)) {
                 window.location.href = 'https://supjav.com/ja/';
                 return true;
             }
-            // FC2 參數
             const fc2Regex = /([?&])s=FC2-(\d{6,7})(&|$)/;
             if (window.location.href.includes('supjav.com') && fc2Regex.test(window.location.href)) {
                 window.location.href = window.location.href.replace(fc2Regex, '$1s=$2$3');
@@ -190,7 +186,6 @@
             return false;
         }
 
-        // --- 伺服器自動點擊 ---
         function waitForElement(selector, callback) {
             const el = document.querySelector(selector);
             if (el) return callback(el);
@@ -207,14 +202,14 @@
             if (currentHost.includes('supjav.com')) {
                 const CONFIG_KEY = 'preferredSupjavServer';
                 const DEFAULT_SERVER = 'FST';
-                
+
                 GM_registerMenuCommand(`⚙️ 設定 Supjav 預設伺服器`, () => {
                    const v = prompt("輸入 Supjav 伺服器 (TV, FST, ST, VOE):", GM_getValue(CONFIG_KEY, DEFAULT_SERVER));
                    if(v) { GM_setValue(CONFIG_KEY, v.trim().toUpperCase()); location.reload(); }
                 });
 
                 const pref = GM_getValue(CONFIG_KEY, DEFAULT_SERVER);
-                
+
                 const clickSupjav = () => {
                     if (supjavServerClickExecuted) return;
                     document.querySelectorAll('a.btn-server').forEach(btn => {
@@ -232,15 +227,14 @@
             if (currentHost.includes('javideo.net')) {
                 const CONFIG_KEY = 'preferredJavideoServer';
                 const DEFAULT_SERVER = 'SW';
-                
+
                 GM_registerMenuCommand(`⚙️ 設定 Javideo 預設伺服器`, () => {
                    const v = prompt("輸入 Javideo 伺服器 (SW, DSTR, STAPE...):", GM_getValue(CONFIG_KEY, DEFAULT_SERVER));
                    if(v) { GM_setValue(CONFIG_KEY, v.trim().toUpperCase()); location.reload(); }
                 });
 
                 const pref = GM_getValue(CONFIG_KEY, DEFAULT_SERVER);
-                console.log(`Javideo 偏好: ${pref}`);
-                
+
                 const interval = setInterval(() => {
                     const active = document.querySelector('button[data-id].active');
                     if (active) {
@@ -256,7 +250,6 @@
             }
         }
 
-        // 執行主流程
         try {
             if (!checkAndRedirect()) {
                 if (!checkSupjavHelpers()) {

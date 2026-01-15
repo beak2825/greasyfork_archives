@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         领星售后信息复制
 // @namespace    http://tampermonkey.net/
-// @version      3.1
-// @description  一键复制领星 ERP 页面中的售后信息（包括收件人和商品信息）。店铺名称按规则输出，地址格式调整为"城市，州"。适配新版DOM：单号、品名、SKU从指定class提取，并补充“复制失败”原因提示。
+// @version      3.7
+// @description  一键复制领星 ERP 页面中的售后信息。
 // @author       祀尘
 // @match        https://erp.lingxing.com/*
 // @icon         https://www.google.com/s2/favicons?domain=lingxing.com
@@ -13,302 +13,309 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
+  'use strict';
 
-    // ========= 配置区 =========
+  // ========= 配置区 =========
+  const brandNameMap = {
+    'BORNOON': 'BRN',
+    'ANYMAPLE': 'AMP',
+    'XIXINI': 'XXN',
+    'HUANLEGO': 'HLG',
+    'Wodeer': 'WD',
+    'MCMACROS': 'MC',
+    'Thacuok': 'TC',
+    'BOXACTION': 'BOX',
+    'BOONATU': 'BNT'
+  };
 
-    // 品牌映射：品牌名 -> 简称
-    const brandNameMap = {
-        'BORNOON': 'BRN',
-        'ANYMAPLE': 'AMP',
-        'XIXINI': 'XXN',
-        'HUANLEGO': 'HLG',
-        'Wodeer': 'WD',
-        'MCMACROS': 'MC',
-        'Thacuok': 'TC',
-        'BOXACTION': 'BOX',
-        'BOONATU': 'BNT'
-    };
+  const storeToBrandMap = {
+    'XIxini-US': 'XIXINI',
+    'BOXACTION-US': 'BOX',
+    'Jiangxin Tech-US': 'BOONATU'
+  };
 
-    // 店铺名 -> 品牌名（特例）
-    const storeToBrandMap = {
-        'XIxini-US': 'XIXINI',
-        'BOXACTION-US': 'BOX',
-        'Jiangxin Tech-US': 'BOONATU'
-    };
+  // ========= UI =========
+  const button = document.createElement('button');
+  button.textContent = '复制售后信息';
+  button.style.position = 'fixed';
+  button.style.bottom = '20px';
+  button.style.right = '20px';
+  button.style.backgroundColor = '#007BFF';
+  button.style.color = '#fff';
+  button.style.border = 'none';
+  button.style.padding = '10px 20px';
+  button.style.borderRadius = '5px';
+  button.style.cursor = 'pointer';
+  button.style.zIndex = '100000';
+  button.disabled = true;
+  document.body.appendChild(button);
 
-    // ========= UI：按钮 + 通知 =========
+  function showNotification(message, duration = 2400) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.bottom = '100px';
+    notification.style.right = '20px';
+    notification.style.maxWidth = '560px';
+    notification.style.whiteSpace = 'pre-line';
+    notification.style.backgroundColor = 'rgba(0, 0, 0, 0.78)';
+    notification.style.color = '#fff';
+    notification.style.padding = '10px 16px';
+    notification.style.borderRadius = '6px';
+    notification.style.zIndex = '100000';
+    notification.style.fontSize = '14px';
+    notification.style.lineHeight = '1.35';
+    notification.style.transition = 'opacity 0.25s ease';
+    document.body.appendChild(notification);
 
-    const button = document.createElement('button');
-    button.textContent = '复制售后信息';
-    button.style.position = 'fixed';
-    button.style.bottom = '20px';
-    button.style.right = '20px';
-    button.style.backgroundColor = '#007BFF';
-    button.style.color = '#fff';
-    button.style.border = 'none';
-    button.style.padding = '10px 20px';
-    button.style.borderRadius = '5px';
-    button.style.cursor = 'pointer';
-    button.style.zIndex = '100000';
-    button.disabled = true;
-    document.body.appendChild(button);
-
-    function showNotification(message, duration = 1800) {
-        const notification = document.createElement('div');
-        notification.textContent = message;
-        notification.style.position = 'fixed';
-        notification.style.bottom = '100px';
-        notification.style.right = '20px';
-        notification.style.maxWidth = '420px';
-        notification.style.whiteSpace = 'pre-line';
-        notification.style.backgroundColor = 'rgba(0, 0, 0, 0.78)';
-        notification.style.color = '#fff';
-        notification.style.padding = '10px 16px';
-        notification.style.borderRadius = '6px';
-        notification.style.zIndex = '100000';
-        notification.style.fontSize = '14px';
-        notification.style.lineHeight = '1.35';
-        notification.style.transition = 'opacity 0.25s ease';
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            setTimeout(() => notification.remove(), 250);
-        }, duration);
-    }
-
-    // ========= 工具函数 =========
-
-    function cleanText(s) {
-        return (s ?? '').toString().replace(/\s+/g, ' ').trim();
-    }
-
-    function getText(el) {
-        return cleanText(el?.textContent);
-    }
-
-    /**
-     * 从 .detail-box-left 里的 item-grid 按 label 精准取值：
-     * <span class="label">SKU</span>
-     * <div class="... value"><span> HLG092-WH </span>...</div>
-     */
-    function getGridValue(detailBoxLeft, labelText) {
-        if (!detailBoxLeft) return '';
-        const labels = Array.from(detailBoxLeft.querySelectorAll('.item-grid .label'));
-        const target = cleanText(labelText);
-
-        for (const lab of labels) {
-            const t = cleanText(lab.textContent);
-            if (t === target || t.includes(target)) {
-                const valueEl = lab.nextElementSibling;
-                if (!valueEl) return '';
-                // valueEl 里通常有 span 包着真实值
-                const span = valueEl.querySelector('span');
-                return cleanText(span ? span.textContent : valueEl.textContent);
-            }
-        }
-        return '';
-    }
-
-    /**
-     * 地址格式调整：
-     * - 去掉 "United States of America (USA)(美国)，"
-     * - 若格式为 "AZ，GILBERT" => "GILBERT，AZ"
-     * - 若格式为 "USA，AZ，GILBERT" => 取最后两段 "GILBERT，AZ"
-     */
-    function normalizeCityState(addressRaw) {
-        let s = cleanText(addressRaw)
-            .replace('United States of America (USA)(美国)，', '')
-            .trim();
-
-        if (!s) return '';
-
-        const parts = s.split('，').map(x => cleanText(x)).filter(Boolean);
-
-        if (parts.length === 2) return `${parts[1]}，${parts[0]}`;
-        if (parts.length >= 3) return `${parts[parts.length - 1]}，${parts[parts.length - 2]}`;
-
-        return s;
-    }
-
-    /**
-     * 找“订单号”：
-     * 你提供的新结构是：
-     * <div class="ak-align-center oneLine">
-     *   <span class="ak-blue ak-pointer">111-xxxx</span> ...
-     * </div>
-     * 为避免误抓，限定：必须匹配 Amazon 订单号形态 111-1234567-1234567
-     */
-    function findAmazonOrderNumber() {
-        const spans = Array.from(document.querySelectorAll('span.ak-blue.ak-pointer'));
-        const re = /\b\d{3}-\d{7}-\d{7}\b/;
-        for (const s of spans) {
-            const text = cleanText(s.textContent);
-            const m = text.match(re);
-            if (m) return m[0];
-        }
-        return '';
-    }
-
-    /**
-     * 获取 detail-box-left（你确认店铺名/品名/SKU 都在这里）
-     */
-    function getDetailBoxLeft() {
-        // 可能页面上有多个，优先取包含 item-grid + item-title 的那个
-        const list = Array.from(document.querySelectorAll('.detail-box-left'));
-        for (const el of list) {
-            if (el.querySelector('.item-grid') && el.querySelector('.item-title')) return el;
-        }
-        // 兜底：取第一个
-        return list[0] || null;
-    }
-
-    // ========= 核心：复制信息 =========
-
-    function copyInfo() {
-        const missing = []; // 用于提示“复制失败的信息”
-        try {
-            // 收件信息
-            const receiveInfo = document.querySelector('div.receive-info');
-            if (!receiveInfo) {
-                missing.push('收件信息区域(receive-info)未找到');
-            }
-
-            // 收件人、电话、邮编（新版 receive-info 的顺序可能变，避免 nth-child）
-            const recipient = receiveInfo ? (getText(receiveInfo.querySelector('.info-wrapper:nth-child(1) .value')) || '') : '';
-            if (!recipient) missing.push('收件人未找到');
-
-            // 电话：按 label 查找（避免新增“公司”等导致位置变化）
-            // 领星这里 label 文本是“电话”
-            let phoneRaw = '';
-            if (receiveInfo) {
-                // 在 receive-info-grid 里用 label 匹配更稳
-                const wrappers = Array.from(receiveInfo.querySelectorAll('.info-wrapper'));
-                for (const w of wrappers) {
-                    const lab = cleanText(w.querySelector('.label')?.textContent);
-                    if (lab.includes('电话')) {
-                        phoneRaw = cleanText(w.querySelector('.value')?.textContent);
-                        break;
-                    }
-                }
-            }
-            if (!phoneRaw) missing.push('电话未找到');
-
-            const phone = `电话：${phoneRaw}`;
-
-            const addressElement = receiveInfo ? getText(receiveInfo.querySelector('.receive-address-box .value')) : '';
-            const address = normalizeCityState(addressElement);
-            if (!address) missing.push('城市/州未找到');
-
-            const detailedAddress = receiveInfo ? getText(receiveInfo.querySelector('.detail-address-box .value')) : '';
-            if (!detailedAddress) missing.push('详细地址未找到');
-
-            // 邮编：按 label 取
-            let postalCode = '';
-            if (receiveInfo) {
-                const wrappers = Array.from(receiveInfo.querySelectorAll('.info-wrapper'));
-                for (const w of wrappers) {
-                    const lab = cleanText(w.querySelector('.label')?.textContent);
-                    if (lab.includes('邮编')) {
-                        postalCode = cleanText(w.querySelector('.value')?.textContent);
-                        break;
-                    }
-                }
-            }
-            if (!postalCode) missing.push('邮编未找到');
-
-            // 订单号：按你给的 class + 正则匹配
-            const orderNumber = findAmazonOrderNumber();
-            if (!orderNumber) missing.push('订单号未找到(111-xxxxxxx-xxxxxxx)');
-
-            // 商品信息：从 .detail-box-left 提取
-            const detailBoxLeft = getDetailBoxLeft();
-            if (!detailBoxLeft) {
-                missing.push('商品信息区域(detail-box-left)未找到');
-            }
-
-            // 店铺名：你说应取 BORNOON（来自 item-title 第一个词）
-            const itemTitle = detailBoxLeft ? getText(detailBoxLeft.querySelector('.item-title')) : '';
-            let brand = itemTitle ? itemTitle.split(' ')[0] : '';
-            if (!brand) missing.push('店铺名/品牌未找到(item-title)');
-
-            // 兼容：若 store-name 有特殊映射，优先用 store-name
-            const storeNameElement = document.querySelector('.store-name');
-            const fullStoreName = cleanText(storeNameElement?.textContent);
-            if (fullStoreName && storeToBrandMap[fullStoreName]) {
-                brand = storeToBrandMap[fullStoreName];
-            }
-
-            // SKU、品名：你提供的结构在 item-grid 内
-            const sku = detailBoxLeft ? (getGridValue(detailBoxLeft, 'SKU') || '') : '';
-            if (!sku) missing.push('SKU未找到(item-grid)');
-
-            const productName = detailBoxLeft ? (getGridValue(detailBoxLeft, '品名') || '') : '';
-            if (!productName) missing.push('品名未找到(item-grid)');
-
-            // 店铺简称映射
-            let storeShort = brandNameMap[brand];
-            if (!storeShort) {
-                storeShort = brand ? brand.substring(0, 3).toUpperCase() : 'N/A';
-                if (!brand) missing.push('品牌简称匹配失败');
-            }
-
-            // 拼接收件信息
-            const recipientInfo = [
-                recipient,
-                detailedAddress,
-                address,
-                postalCode,
-                phone
-            ].filter(Boolean).join('\n');
-
-            // 拼接最终输出
-            const output = [
-                orderNumber || '单号未找到',
-                recipientInfo,
-                `货号：${sku || 'SKU 未找到'}`,
-                `店铺：${storeShort || 'N/A'}`,
-                `${productName || '品名未找到'}，`
-            ].join('\n');
-
-            GM_setClipboard(output);
-
-            // 成功提示 + 若有缺失字段，补充提示
-            if (missing.length > 0) {
-                showNotification(`已复制（部分字段未识别）\n- ${missing.join('\n- ')}`, 2600);
-            } else {
-                showNotification('复制成功！');
-            }
-        } catch (err) {
-            console.error('[领星售后信息复制] Error:', err);
-            const msg = missing.length
-                ? `复制失败\n- ${missing.join('\n- ')}`
-                : `复制失败：页面结构可能已变更`;
-            showNotification(msg, 2800);
-        }
-    }
-
-    button.addEventListener('click', copyInfo);
-
-    // ========= 启用按钮：等待关键区域出现 =========
-    // 以 receive-info + detail-box-left 为准（你确认这两块都存在）
-    const observer = new MutationObserver(() => {
-        const receiveInfo = document.querySelector('div.receive-info');
-        const detailBoxLeft = getDetailBoxLeft();
-        if (receiveInfo && detailBoxLeft) {
-            button.disabled = false;
-            observer.disconnect();
-        }
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // 兜底：慢加载时也尝试启用（点击时仍会校验）
     setTimeout(() => {
-        const receiveInfo = document.querySelector('div.receive-info');
-        const detailBoxLeft = getDetailBoxLeft();
-        if (receiveInfo && detailBoxLeft) button.disabled = false;
-    }, 2500);
+      notification.style.opacity = '0';
+      setTimeout(() => notification.remove(), 250);
+    }, duration);
+  }
+
+  // ========= 工具 =========
+  const cleanText = (s) => (s ?? '').toString().replace(/\s+/g, ' ').trim();
+
+  function normalizeCityState(addressRaw) {
+    let s = cleanText(addressRaw)
+      .replace('United States of America (USA)(美国)，', '')
+      .trim();
+
+    if (!s) return '';
+    const parts = s.split('，').map(x => cleanText(x)).filter(Boolean);
+    if (parts.length === 2) return `${parts[1]}，${parts[0]}`;
+    if (parts.length >= 3) return `${parts[parts.length - 1]}，${parts[parts.length - 2]}`;
+    return s;
+  }
+
+  function getStoreNameFromPage() {
+    return cleanText(document.querySelector('.store-name')?.textContent);
+  }
+
+  function getDetailBoxLeft() {
+    const list = Array.from(document.querySelectorAll('.detail-box-left'));
+    for (const el of list) {
+      if (el.querySelector('.item-grid') && el.querySelector('.item-title')) return el;
+    }
+    return list[0] || null;
+  }
+
+  function getGridValue(detailBoxLeft, labelText) {
+    if (!detailBoxLeft) return '';
+    const labels = Array.from(detailBoxLeft.querySelectorAll('.item-grid .label'));
+    const target = cleanText(labelText);
+
+    for (const lab of labels) {
+      const t = cleanText(lab.textContent);
+      if (t === target || t.includes(target)) {
+        const valueEl = lab.nextElementSibling;
+        if (!valueEl) return '';
+        const span = valueEl.querySelector('span');
+        return cleanText(span ? span.textContent : valueEl.textContent);
+      }
+    }
+    return '';
+  }
+
+  function getReceiveInfoValueByLabel(receiveInfo, labelIncludes) {
+    if (!receiveInfo) return '';
+    const wrappers = Array.from(receiveInfo.querySelectorAll('.info-wrapper'));
+    for (const w of wrappers) {
+      const lab = cleanText(w.querySelector('.label')?.textContent);
+      if (lab.includes(labelIncludes)) {
+        return cleanText(w.querySelector('.value')?.textContent);
+      }
+    }
+    return '';
+  }
+
+  /**
+   * ✅ 平台单号：只从 vxe-table 中 “订单信息” 这一列提取
+   * 步骤：
+   * 1) 找到 header 中标题文字=订单信息 的 th，拿到 colid
+   * 2) 在同一个 vxe-table（同 xid）对应的 body 里，找 td[colid=该colid]，取 span 文本
+   *
+   */
+  function findPlatformOrderNumberFromOrderInfoColumn() {
+    // 找所有 vxe-table 的主容器
+    const wrappers = Array.from(document.querySelectorAll('.vxe-table--main-wrapper'));
+
+    const isVisible = (el) => {
+      if (!el) return false;
+      const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
+
+    // 从一个 wrapper 中取平台单号
+    const extractFromWrapper = (wrapper) => {
+      if (!wrapper) return '';
+
+      // 1) header 里找到“订单信息”的 th
+      const headerWrapper = wrapper.querySelector('.vxe-table--header-wrapper');
+      if (!headerWrapper) return '';
+
+      const ths = Array.from(headerWrapper.querySelectorAll('th.vxe-header--column'));
+      let orderInfoColId = '';
+      for (const th of ths) {
+        const titleText = cleanText(th.querySelector('.vxe-cell--title')?.textContent);
+        if (titleText === '订单信息' || titleText.includes('订单信息')) {
+          orderInfoColId = th.getAttribute('colid') || '';
+          break;
+        }
+      }
+      if (!orderInfoColId) return '';
+
+      // 2) body 里找 td[colid=orderInfoColId]
+      const bodyWrapper = wrapper.querySelector('.vxe-table--body-wrapper');
+      if (!bodyWrapper) return '';
+
+      // body 表格
+      const bodyTable = bodyWrapper.querySelector('table.vxe-table--body');
+      if (!bodyTable) return '';
+
+      // 找到第一行（一般详情页就一行；如果多行也优先取第一条有值的）
+      const tds = Array.from(bodyTable.querySelectorAll(`td[colid="${orderInfoColId}"]`));
+      for (const td of tds) {
+        const box = td.querySelector('div.vxe-cell.c--tooltip div.ak-align-center.oneLine');
+        if (!box) continue;
+
+        const hasCopyIcon = !!box.querySelector('i.iconfont.lx_copy');
+        if (!hasCopyIcon) continue;
+
+        const span = box.querySelector('span');
+        const text = cleanText(span?.textContent);
+        if (!text) continue;
+        if (!/\d/.test(text)) continue;
+
+        return text;
+      }
+
+      return '';
+    };
+
+    // 优先：可见的 wrapper
+    for (const w of wrappers) {
+      if (!isVisible(w)) continue;
+      const v = extractFromWrapper(w);
+      if (v) return v;
+    }
+
+    // 兜底：不可见也扫一遍
+    for (const w of wrappers) {
+      const v = extractFromWrapper(w);
+      if (v) return v;
+    }
+
+    return '';
+  }
+
+  // ========= 核心 =========
+  function copyInfo() {
+    const missing = [];
+    try {
+      const receiveInfo = document.querySelector('div.receive-info');
+      if (!receiveInfo) missing.push('收件信息区域(receive-info)未找到');
+
+      const recipient = receiveInfo ? cleanText(receiveInfo.querySelector('.info-wrapper:nth-child(1) .value')?.textContent) : '';
+      if (!recipient) missing.push('收件人未找到');
+
+      const phoneRaw = receiveInfo ? getReceiveInfoValueByLabel(receiveInfo, '电话') : '';
+      if (!phoneRaw) missing.push('电话未找到');
+      const phone = `电话：${phoneRaw}`;
+
+      const postalCode = receiveInfo ? getReceiveInfoValueByLabel(receiveInfo, '邮编') : '';
+      if (!postalCode) missing.push('邮编未找到');
+
+      const addressElement = receiveInfo ? cleanText(receiveInfo.querySelector('.receive-address-box .value')?.textContent) : '';
+      const address = normalizeCityState(addressElement);
+      if (!address) missing.push('城市/州未找到');
+
+      const detailedAddress = receiveInfo ? cleanText(receiveInfo.querySelector('.detail-address-box .value')?.textContent) : '';
+      if (!detailedAddress) missing.push('详细地址未找到');
+
+      const recipientInfo = [
+        recipient,
+        detailedAddress,
+        address,
+        postalCode,
+        phone
+      ].filter(Boolean).join('\n');
+
+      // ✅ 平台单号（只认“订单信息”列）
+      const platformOrderNumber = findPlatformOrderNumberFromOrderInfoColumn();
+      if (!platformOrderNumber) missing.push('平台单号未找到(表格列标题=订单信息)');
+
+      // 商品信息：detail-box-left
+      const detailBoxLeft = getDetailBoxLeft();
+      if (!detailBoxLeft) missing.push('商品信息区域(detail-box-left)未找到');
+
+      const itemTitle = detailBoxLeft ? cleanText(detailBoxLeft.querySelector('.item-title')?.textContent) : '';
+      let brand = itemTitle ? itemTitle.split(' ')[0] : '';
+      if (!brand) missing.push('店铺名/品牌未找到(item-title)');
+
+      const fullStoreName = getStoreNameFromPage();
+      if (fullStoreName && storeToBrandMap[fullStoreName]) {
+        brand = storeToBrandMap[fullStoreName];
+      }
+
+      const sku = detailBoxLeft ? getGridValue(detailBoxLeft, 'SKU') : '';
+      if (!sku) missing.push('SKU未找到(item-grid)');
+
+      const productName = detailBoxLeft ? getGridValue(detailBoxLeft, '品名') : '';
+      if (!productName) missing.push('品名未找到(item-grid)');
+
+      // 店铺输出兜底
+      let storeShort = brandNameMap[brand];
+      if (!storeShort) {
+        if (fullStoreName) {
+          storeShort = fullStoreName;
+          missing.push('未匹配品牌，已使用页面店铺名');
+        } else {
+          storeShort = brand ? brand.substring(0, 3).toUpperCase() : 'N/A';
+          if (!brand) missing.push('品牌简称匹配失败');
+        }
+      }
+
+      const output = [
+        platformOrderNumber || '平台单号未找到',
+        recipientInfo,
+        `货号：${sku || 'SKU 未找到'}`,
+        `店铺：${storeShort || 'N/A'}`,
+        `${productName || '品名未找到'}，`
+      ].join('\n');
+
+      GM_setClipboard(output);
+
+      if (missing.length > 0) {
+        showNotification(`已复制（未匹配品牌）\n- ${missing.join('\n- ')}`, 3400);
+      } else {
+        showNotification('复制成功！');
+      }
+    } catch (err) {
+      console.error('[领星售后信息复制] Error:', err);
+      showNotification('复制失败：页面结构可能已变更', 3400);
+    }
+  }
+
+  button.addEventListener('click', copyInfo);
+
+  // ========= 启用按钮 =========
+  const observer = new MutationObserver(() => {
+    const receiveInfo = document.querySelector('div.receive-info');
+    const detailBoxLeft = getDetailBoxLeft();
+    if (receiveInfo && detailBoxLeft) {
+      button.disabled = false;
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  setTimeout(() => {
+    const receiveInfo = document.querySelector('div.receive-info');
+    const detailBoxLeft = getDetailBoxLeft();
+    if (receiveInfo && detailBoxLeft) button.disabled = false;
+  }, 2500);
 
 })();

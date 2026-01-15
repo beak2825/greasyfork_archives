@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Name Changer
 // @namespace    http://tampermonkey.net/
-// @version      4.9.2
+// @version      4.9.4
 // @description  Universal name/text replacement with separate rules for general pages vs. specific character/artist/locale pages + item replacements
 // @author       You
 // @match        https://*.popmundo.com/*
@@ -45,7 +45,9 @@
     { find: /Ruth Kemp/g, replace: 'Juniper Pixx' },
     { find: /Ruby Hamm/g, replace: 'Ivy Pixx' },
     { find: /Nova Burrell/g, replace: 'Nik Pixx' },
-    { find: /Kâni Yeşilyurt/g, replace: 'Yuu Izumi 左' },
+    { find: /Kâni Yeşilyurt/g, replace: 'Alex Roy Park' },
+    { find: /Summer Sen/g, replace: 'Summer Candy' },
+      //Yuu Izumi 左
   ];
 
   // ===========================================================================
@@ -332,10 +334,10 @@
       { find: /beneath the noise./g, replace: 'all goes quiet in the end — silentia' },
     ],
     '3350835': [ // Kâni's page
-      { find: /Kâni/g, replace: 'Yuu' },
+      { find: /Kâni/g, replace: 'Roy' },
       { find: /00.1/g, replace: 'in fine, omnia silescunt.' },
       { find: /\d+\s*years\s*old/gi, replace: '18 years old' },
-      { find: /Yuu is located/g, replace: 'Yuu is also known as "注". Yuu is located' },
+      { find: /Roy is located/g, replace: 'Roy is also known as "注". Roy is located' },
     ],
   };
 

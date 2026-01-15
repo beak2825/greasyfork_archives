@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         srsValuebsns strategy Sniper Glows by srsbsns
 // @namespace    http://torn.com/
-// @version      2.3
-// @description  Advanced bazaar bargain highlighting with custom colors and labels Update:choose your own colours and write labels!
+// @version      2.4
+// @description  Advanced bazaar bargain highlighting with custom colors and labels (excludes manage/add pages)
 // @author       srsbsns
 // @match        *://www.torn.com/bazaar.php*
 // @grant        GM_addStyle
@@ -14,6 +14,11 @@
 
 (function() {
     'use strict';
+
+    // --- PAGE DETECTION HELPERS ---
+    const onManage = () => /^#\/manage\b/i.test(location.hash || '');
+    const onAdd = () => /^#\/add\b/i.test(location.hash || '');
+    const shouldSkip = () => onManage() || onAdd();
 
     // --- DEFAULT SETTINGS (matching your original structure) ---
     let igniteSettings = JSON.parse(localStorage.getItem('sniperSettings')) || {
@@ -189,6 +194,9 @@
     let isRunning = false; // Prevent simultaneous executions
 
     function runSniperLogic() {
+        // Skip on manage and add pages
+        if (shouldSkip()) return;
+
         if (isRunning) return; // Prevent overlapping executions
         isRunning = true;
 
@@ -378,6 +386,9 @@
 
     // --- OBSERVER (your original) ---
     const observer = new MutationObserver((mutations) => {
+        // Skip if on manage or add pages
+        if (shouldSkip()) return;
+
         // Debounce: only run if new nodes were added
         let shouldRun = false;
         mutations.forEach(mutation => {
@@ -393,6 +404,21 @@
 
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Initial run
-    setTimeout(runSniperLogic, 500);
+    // Initial run (only if not on manage/add pages)
+    if (!shouldSkip()) {
+        setTimeout(runSniperLogic, 500);
+    }
+
+    // --- HANDLE NAVIGATION (hash changes) ---
+    window.addEventListener('hashchange', () => {
+        // Clear processed flags when navigating
+        document.querySelectorAll('[data-sniper-processed]').forEach(item => {
+            delete item.dataset.sniperProcessed;
+        });
+
+        // Run logic if not on excluded pages
+        if (!shouldSkip()) {
+            setTimeout(runSniperLogic, 100);
+        }
+    });
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AO3 Avg Chapter Lengths
 // @namespace    https://semperintrepida.com
-// @version      0.1
+// @version      0.2
 // @description  Adds average chapter length to AO3 pages
 // @author       semperintrepida@protonmail.com
 // @match        https://archiveofourown.org/*
@@ -26,7 +26,7 @@
         var currentChapter = parseInt(chapterValues[0]);
         var totalChapters = parseInt(chapterValues[1]);
         var isIncomplete = false;
-        if (chapterValues[1] === '?') {
+        if (chapterValues[1] === '?' || currentChapter < totalChapters) {
             isIncomplete = true;
         }
         //console.log(wordcount, currentChapter, totalChapters);

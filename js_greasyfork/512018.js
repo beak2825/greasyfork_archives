@@ -2,7 +2,7 @@
 // @name   🌱【免费版】云南省干部在线学习学院|如需自动下一集、自动换课程、验证码识别等高级功能见收费版本：https://doc.zhanyc.cn/pages/yngb/
 // @namespace    http://jb.zhanyc.cn/
 // @icon    https://js.zhanyc.cn/img/js-logo.svg
-// @version      1.1
+// @version      1.2
 // @description  当前是免费版本，只包含了视频页面自动播放、解除播放暂停限制功能。如需自动下一集、自动换课程、验证码识别、全自动无人值守高级功能可升级付费版本，一杯咖啡钱，保你无忧学习，且永久使用|接各类脚本开发、代挂工作，微信：zhanyc_cn 备用微信:zhanfengkuo 个人网站：http://doc.zhanyc.cn
 // @author       zfk
 // @include    *://*.ynsgbzx.cn/*
@@ -18,8 +18,7 @@
 // @grant       GM_getResourceText
 // @grant       window.close
 // @run-at      document-body
-// @require http://libs.baidu.com/jquery/2.0.0/jquery.min.js
-// @require https://update.greasyfork.org/scripts/502187/1419386/base_lib.js
+// @require https://code.jquery.com/jquery-2.2.4.min.js
 // @require https://greasyfork.org/scripts/434540-layerjs-gm-with-css/code/layerjs-gm-with-css.js?version=1065982
 // @antifeature 
 // @license GPL

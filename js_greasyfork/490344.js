@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beans
 // @namespace    http://tampermonkey.net/
-// @version      0.9.11
+// @version      0.9.12
 // @description  eat it!
 // @author       You
 // @match        https://*.the-west.ru.com/game.php
@@ -16,7 +16,7 @@
 // ==/UserScript==
 
 (function () {
-    const SCRIPT_VERSION = '0.9.11';
+    const SCRIPT_VERSION = '0.9.12';
 
     (function AutoFortRegistration() {
         const DEFENCE_SIDE = 0;
@@ -384,7 +384,7 @@ const getMissedHealth = function () { return 100 - Character.health / Character.
         ],
         isMain: Game.worldName == "Ганнисон",
         maxJobs: 4,
-        botToken: "7194106399:AAHjteUE6YljOAOLU5ILdGVRQXwtcEgWt5k",
+        botToken: "7194106399:AAGjLzzqlccDHlrDwEdQRhBi5Q4Cx6GH_7U",
         // chatId: 1005292580,
         chatId: -732543551,
 

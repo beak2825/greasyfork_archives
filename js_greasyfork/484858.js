@@ -9,7 +9,7 @@
 // @match       *://*youku.com*/*
 // @require     https://code.jquery.com/jquery-1.11.0.min.js
 // @grant       none
-// @version     1.5.1
+// @version     1.5.2
 // @license     GPL
 // @author      忙里偷闲
 // @description 2024/10/06 下午10:40:15
@@ -76,12 +76,6 @@ $(document).ready(function () {
         $(".icon-news").parent().remove();
 
     }
-    else if (window.location.hostname.includes("xmflv.")) {
-       setInterval(function() {
-         if($("#adv_wrap_hh").length >0)
-        $("#adv_wrap_hh").remove();
-      }, 1000);
-    }
     else if (window.location.hostname.includes("qq.com")) {
        setInterval(function() {
          if($(".panel-tip-pay").length >0)
@@ -94,5 +88,19 @@ $(document).ready(function () {
         $(".cc_popup_window_close").click();
       }, 1000);
     }
+
+     setInterval(function() {
+         if($("#adv_wrap_hh").length >0) $("#adv_wrap_hh").remove();
+         if($(".playlist-overlay-minipay").length >0) $(".playlist-overlay-minipay").remove();
+         if($(".vip-button-wrapper").length >0) $(".vip-button-wrapper").remove();
+         if($(".playlist-intro__actions").length >0) $(".playlist-intro__actions").remove();
+         if($(".page-content__bottom").length >0) $(".page-content__bottom").remove();
+         if($(".game-switch-ad").length >0) $(".game-switch-ad").remove();
+         if($(".playlist-video-modules-union").length >0) $(".playlist-video-modules-union").remove();
+         if($(".game-switch-ad").length >0) $(".game-switch-ad").remove();
+
+      }, 1000);
+
+
 });
 

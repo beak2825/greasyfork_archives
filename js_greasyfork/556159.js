@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.8.7
+// @version      1.9.3
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -41,7 +41,7 @@
         GM_setValue('TMN_ARBITRAGE_INPUTS', '{}');
         GM_setValue('TMN_BF_TOKEN', '');
         //GM_setValue('TMN_CAPTCHA_KEY', '');
-        GM_setValue('TMN_EXPERIENCE', '');
+        GM_setValue('TMN_EXPERIENCE', '{ "value": 0, "unit": "percent" }');
         GM_setValue('TMN_LAST_NEW_MAIL', '{}');
         GM_setValue('TMN_NEXT_SYDNEY_SPAWN_TIME', '0');
         GM_setValue('TMN_NEXT_BOOZE', '');
@@ -684,28 +684,32 @@
         let interceptorInstalled = false;
 
         function UpdateRankbar() {
+            const experience = JSON.parse(GM_getValue('TMN_EXPERIENCE', '{ "value": "?", "unit": "percent" }'));
             const $tmnRankbar = $(window.top.document.querySelector('#ctl00_userInfo_lblRankbarPerc'));
             const $lblRank = $(window.top.document.querySelector('#ctl00_userInfo_lblrank'));
+            const toggledValue = experience.unit == 'percent' ? `${CalculateRankPercent(experience.value)}%` : experience.value;
 
             if ($tmnRankbar.length && $lblRank.length) {
                 $tmnRankbar.css({
                     /*color: 'blue',
                     fontWeight: 'bold'*/
-                }).text(`(${CalculateRankPercent(GM_getValue('TMN_EXPERIENCE', '?'))}%)`);
+                // }).text(`(${CalculateRankPercent(GM_getValue('TMN_EXPERIENCE', '?'))}%)`);
+                }).text(`(${toggledValue})`);
             } else {
-                const rankbarHtml = ` <a href="statistics.aspx?p=p"><span id="ctl00_userInfo_lblRankbarPerc" class="usrinfovalue" /*style="color: blue; font-weight: bold;*/">(${CalculateRankPercent(GM_getValue('TMN_EXPERIENCE', '?'))}%)</span></a>`
+                const rankbarHtml = ` <a href="statistics.aspx?p=p"><span id="ctl00_userInfo_lblRankbarPerc" class="usrinfovalue" /*style="color: blue; font-weight: bold;*/">(${toggledValue})</span></a>`
                 $('#ctl00_userInfo_lblrank').after(rankbarHtml);
             }
         };
 
         function CalculateRankPercent(exp) {
             if (exp === '?') return '?';
-            const savedExp = GM_getValue('TMN_EXPERIENCE', 0);
+            let experience = JSON.parse(GM_getValue('TMN_EXPERIENCE', '{ "value": "0", "unit": "percent" }'));
             const ranks = [ 'Scum', 'Wannabe', 'Thug', 'Criminal', 'Gangster', 'Hitman', 'Hired Gunner', 'Assassin', 'Boss', 'Don', 'Enemy of the State', 'Global Threat', 'Global Dominator', 'Global Disaster', 'Legend' ];
             const rankId = ranks.indexOf($('#ctl00_userInfo_lblrank').text());
             const totalExpAmts = [0, 5, 20, 80, 140, 220, 320, 450, 600, 800, 1100, 1500, 2000, 3000, 3000 ];
             const perRankReq = [5, 15, 60, 60, 80, 100, 130, 150, 200, 300, 400, 500, 1000, 2000, 2000 ];
-            GM_setValue('TMN_EXPERIENCE', Math.max(savedExp, exp));
+            experience.value = Math.max(experience.value, exp);
+            GM_setValue('TMN_EXPERIENCE', JSON.stringify(experience));
             const rankPerc = (exp - totalExpAmts[rankId]) / perRankReq[rankId] * 100;
             return rankPerc.toFixed(2).replace('.', ',').replace(/,(\d*[1-9])0+$|,0+$/,',$1').replace(/,$/, '');
         }
@@ -729,7 +733,9 @@
                         if (this.readyState === 4 && this.status === 200) {
                             try {
                                 let data = JSON.parse(this.responseText);
-                                GM_setValue('TMN_EXPERIENCE', data[0].Experience);
+                                const expUnit = JSON.parse(GM_getValue('TMN_EXPERIENCE', '{ "unit": "percent" }')).unit || 'percent';
+                                const experience = { 'value': data[0].Experience, 'unit': expUnit };
+                                GM_setValue('TMN_EXPERIENCE', JSON.stringify(experience));
                                 UpdateRankbar();
                                 /* ----------------------- UPDATE STATS -----------------------*/
                                 RefreshStats(data);
@@ -757,7 +763,10 @@
             await UpdateRankbar();
             $('#ctl00_userInfo_spnRankBar a').on('click', function(e) {
                 const rankbar = $('#ctl00_userInfo_lblRankbarPerc');
-                const toggledValue = rankbar.text().includes('%') ? GM_getValue('TMN_EXPERIENCE') : `${CalculateRankPercent(GM_getValue('TMN_EXPERIENCE', '?'))}%`
+                const experience = JSON.parse(GM_getValue('TMN_EXPERIENCE'));
+                experience.unit = experience.unit == "percent" ? "points" : "percent";
+                GM_setValue('TMN_EXPERIENCE', JSON.stringify(experience));
+                const toggledValue = rankbar.text().includes('%') ? experience.value : `${CalculateRankPercent(experience.value)}%`
                 e.preventDefault();
                 rankbar.text(`(${toggledValue})`);
             });
@@ -1058,13 +1067,19 @@
         return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
     
-
     function isFullHealth() {
         const $health = $('#ctl00_userInfo_lblhealth');
         if ($health.length) {
             if (parseInt($health.text(), 10) == 100) return true;
             else return false;
         }
+    }
+
+    async function isCurrentCityHot() {
+        const fetchedPage = await FetchPage('statistics.aspx');
+        const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
+        const currentCity = $('#ctl00_userInfo_lblcity').text().trim();
+        return currentCity == hotCity;
     }
     
     function isWaitingForSpawningBullets() {
@@ -1318,7 +1333,8 @@
             const playerName = JSON.parse(GM_getValue('TMN_PLAYER', '{}')).name;
             const fetchedPage = await FetchPage('ocads.aspx');
             const isAddedToClassifieds = fetchedPage.find('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === playerName }).length;
-            if (!isAddedToClassifieds) {
+            const isInHotCity = await isCurrentCityHot();
+            if ((isAddedToClassifieds && !isInHotCity) || (!isAddedToClassifieds && isInHotCity)) {
                 if (isMobile()) location.href = 'ocads.aspx?add';
                 else SetupContentFrame('ocads.aspx?add');
             }
@@ -1340,14 +1356,15 @@
 
         if (savedScriptStates['Auto Travel']) {
             const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
+            const isInHotCity = await isCurrentCityHot();
             if (nextFlight > now) {
                 const higherPrecedenceLogPresent = $('#console:contains("precedence")').length;
                 const nextFlightTime = new Date(nextFlight).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
                 if (!higherPrecedenceLogPresent) Log(`Next Flight: ${nextFlightTime}`);
             } else {
-                const fetchedPage = await FetchPage('statistics.aspx');
-                const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
-                if (currentCity != hotCity) {
+                if (!isInHotCity) {
+                    const fetchedPage = await FetchPage('statistics.aspx');
+                    const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
                     if (isMobile()) location.href = `travel.aspx?d=${hotCity}`
                     else SetupContentFrame(`travel.aspx?d=${hotCity}`);
                 }
@@ -2032,10 +2049,17 @@
         }
     }
 
-    function AddToClassifieds() {
+    async function AddToClassifieds() {
+        const playerName = JSON.parse(GM_getValue('TMN_PLAYER', '{}')).name;
+        const isAddedToClassifieds = $('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === playerName }).length;
         const lblMsg = $('#ctl00_lblMsg');
         const addBtn = $('#ctl00_main_btnAddOC');
-        if (lblMsg.text() == '') addBtn.click()
+        const isInHotCity = await isCurrentCityHot();
+
+        if (isAddedToClassifieds && !isInHotCity) {
+            addBtn.click();
+            //remove
+        } else if (lblMsg.text() == '') addBtn.click()
         else if (lblMsg.text().includes('It seems like you are unavailable to OC right now.')) LogCountdown(5000, 1000, 'Retrying ', () => { addBtn.click() })
         else {
             if (isMobile()) GoNextAction()

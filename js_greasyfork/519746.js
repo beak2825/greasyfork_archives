@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMDB 한국 지원 강화
 // @namespace    http://tampermonkey.net/
-// @version      3.1.7
+// @version      3.1.8
 // @description  TMDB 영화/TV 시리즈 페이지에 한국어, 영어, 원어 제목 추가, 개별 클립보드 복사 기능, 한국 시청등급 및 제작국 표시
 // @match        https://www.themoviedb.org/*
 // @grant        GM_xmlhttpRequest
@@ -287,8 +287,8 @@ titleContainer.innerHTML = `
                         ▶ <a href="https://www.netflix.com/search?q=${encodeURIComponent(koTitle)}" target="_blank">NF</a>
                         <a href="https://media.netflix.com/ko/search?countryCode=KR&term=${encodeURIComponent(koTitle)}" target="_blank">🌄</a>
                         <a href="https://laftel.net/search?keyword=${encodeURIComponent(koTitle)}" target="_blank">LF</a>
-                        <a href="https://www.tving.com/search?keyword=${encodeURIComponent(koTitle)}" target="_blank">TV</a>
                         <a href="https://www.wavve.com/search?searchWord=${encodeURIComponent(koTitle)}" target="_blank">WV</a>
+                        <a href="https://www.tving.com/search?keyword=${encodeURIComponent(koTitle)}" target="_blank">TV</a>
                         <a href="https://watcha.com/search?query=${encodeURIComponent(koTitle)}&domain=${type === 'tv' ? 'tv' : 'movie'}" target="_blank">WC</a>
                         <a href="https://pedia.watcha.com/ko-KR/search?query=${encodeURIComponent(koTitle)}">왓챠피디아</a>
                         <a href="https://anikids.ebs.co.kr/anikids/search?keyword=${encodeURIComponent(koTitle)}" target="_blank">애니키즈</a>

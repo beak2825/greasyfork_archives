@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Custom and nearest Torn events
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.27
 // @description  See the time until next event. Create and follow custom events
 // @author       ljovcheg  [3191064] 
 // @license      MIT
@@ -12,9 +12,10 @@
 // @grant        GM_deleteValue
 // @grant        GM_xmlhttpRequest
 // @match        https://www.torn.com/*
-// @icon         https://cte.tornscripts.co.za/cte_500.png
-// @connect      https://tornscripts.co.za
+// @icon         https://cte.tornscripts.co.za/cte_500_2.png
+// @connect      tornscripts.co.za
 // @connect      torn.com
+// @connect      api.torn.com
 
 
 // @downloadURL https://update.greasyfork.org/scripts/560816/Custom%20and%20nearest%20Torn%20events.user.js
@@ -23,13 +24,18 @@
 
 (function () {
     'use strict';
-    const SCRIPT_VERSION = '2.0.2';
+
+    let isTornPDA = typeof window.flutter_inappwebview !== 'undefined'; //detect tornPDA
+
+
+    const SCRIPT_VERSION = '2.0.27';
     if (typeof GM_info !== 'undefined' &&
         GM_info &&
         GM_info.script &&
         GM_info.script.version) {
         if (GM_info.script.version !== SCRIPT_VERSION) message('Incorrect version', true);
     }
+
 
     message(`CTE v ${SCRIPT_VERSION}`);
 
@@ -71,6 +77,7 @@
     let GLOBAL_DIVS = {};
 
     let allEvents = {}; // holder for all events
+    let isFetching = false;
 
     let timeHandler; // holder for setTimeout to clear
 
@@ -163,6 +170,7 @@
 
         if (!SETTINGS.tornEvents || SETTINGS.tornEvents.length === 0 || !SETTINGS.lasetUpdate || currentTimeStamp - SETTINGS.lasetUpdate > UPDATE_INTERVAL) {
             fetchData();
+            saveLog('fetch-auto')
             return;
         };
 
@@ -268,7 +276,13 @@
 
         let tc_clock_tooltip = $('.tc-clock-tooltip');  // Torn clock tooltip
         let server_date_time = $('.server-date-time');  // Torn server time 
+        /* //TODO check
         if (!server_date_time.length === 0 || !tc_clock_tooltip.length === 0) {
+            message('tc_clock_tooltip or server_date_time missing');
+            return;
+        }
+            */
+        if (server_date_time.length === 0 || tc_clock_tooltip.length === 0) {
             message('tc_clock_tooltip or server_date_time missing');
             return;
         }
@@ -339,16 +353,21 @@
                 API key: <button class="cte_apiKey_button cte_apiKey"> </button>
                
                 <button class="cte_fetch_button"><i class="fa-solid fa-rotate"></i></button>
+                <button class="cte_log_button"><i class="fa-solid fa-clipboard-list"></i></button>
 
                 <!--<button class="cte_gatherdata_button">gather data</button>-->
                 <div style="padding: 10px 0;">
                     Use limited key. Or <a href="https://www.torn.com/preferences.php#tab=api?step=addNewKey&title=Custom_Torn_Events&user=basic,calendar&torn=calendar" target="self">click here to generate custom</a> (torn calendar, user basic and calendar) api key
                 </div>
                 <div>
+                    <input type="checkbox" id="cte_showTooltipTime_checkbox" name="cte_showTooltipTime_checkbox" ${(SETTINGS.showTooltipTime) ? 'checked' : ''} />
+                    <label for="cte_showTooltipTime_checkbox">Always show hh:mm:ss for events</label>
+                </div>
+                <div>
                     <input type="checkbox" id="cte_participiate_checkbox" name="cte_participiate_checkbox" ${(SETTINGS.participateCTE) ? 'checked' : ''} />
                     <label for="cte_participiate_checkbox">Participate in CTE</label>
                 </div>
-
+                
                 <!--
                 <div>
                     <input type="checkbox" id="cte_smallTimer_checkbox" name="cte_smallTimer_checkbox" ${(SETTINGS.hideSmallTimer) ? 'checked' : ''} />
@@ -373,6 +392,8 @@
         let cte_fetch_button = $(".cte_fetch_button");
         let cte_participiate_checkbox = $("#cte_participiate_checkbox");
         let cte_smallTimer_checkbox = $("#cte_smallTimer_checkbox");
+        let cte_log_button = $(".cte_log_button");
+        let cte_showTooltipTime_checkbox = $("#cte_showTooltipTime_checkbox");
 
         displayApiKey(cte_apiKey)
 
@@ -387,11 +408,22 @@
                 displayApiKey(cte_apiKey);
                 saveSettings();
                 fetchData();
+                saveLog('api changed - api button')
             }
         });
 
         cte_fetch_button.on("click", function (e) {
             fetchData();
+            saveLog('fetch - manual')
+        });
+
+        cte_log_button.on("click", function (e) {
+            let logData = JSON.stringify(SETTINGS.log);
+
+            navigator.clipboard.writeText(logData);
+            alert('Log data has been copied to the clipboard');
+
+            //console.log(JSON.stringify(SETTINGS.log));
         });
 
 
@@ -432,7 +464,7 @@
                 }
                 generateCTEdisplay();
             }
-
+            saveLog(`Participage changed to ${this.checked}`)
             SETTINGS.participateCTE = this.checked;
             saveSettings();
         });
@@ -445,7 +477,18 @@
             }
             SETTINGS.hideSmallTimer = this.checked;
             saveSettings();
+
+            saveLog(`Small timer changed to ${this.checked}`)
         });
+
+
+        cte_showTooltipTime_checkbox.change(async function (e) {
+            SETTINGS.showTooltipTime = this.checked;
+            //saveSettings();
+            saveLog(`Show hhmmss changed to ${this.checked}`);
+            gatherData();
+        });
+
         if (SETTINGS.participateCTE) generateCTEdisplay();
     }
 
@@ -518,9 +561,11 @@
                 $(".cteHostEvent").remove();
 
                 detectOpenPages();
+                saveLog('Event delete - success');
 
             } else {
                 alert(`Error! ${answer.message}`);
+                saveLog(`Event delete - error`);
                 message(answer);
                 gatherData();
             }
@@ -535,7 +580,9 @@
             //event://sdasjdhasd
 
             navigator.clipboard.writeText(`event://${eventID}`);
-            alert('Event share link has been copied to the clipboard')
+            alert('Event share link has been copied to the clipboard');
+
+            saveLog(`Event share - clicked`);
         });
         $(".cteEventCopy").on("click", function (e) {
             let eventID = $(this).attr('eventid');
@@ -544,6 +591,7 @@
             navigator.clipboard.writeText(`${eventID}`);
             alert('Event id has been copied to the clipboard')
 
+            saveLog(`Event copy - clicked`);
         });
 
 
@@ -593,7 +641,9 @@
         $(".cteData_header_addWatch").on("click", function (e) {
             let w = prompt("Enter event id");
             if (w) {
+                saveLog(`Add to follow - clicked`);
                 addEventToWatch(w);
+
             }
         });
         $(".cteData_header_addHost").on("click", function (e) {
@@ -683,11 +733,32 @@
                     
 
                     <datalist id="fa-icons">
-                        <option value="fa-home"></option>
-                        <option value="fa-pluss"></option>
-                        <option value="Mint"></option>
-                        <option value="Strawberry"></option>
-                        <option value="Vanilla"></option>
+                        <option value="fa-apple-whole"></option>
+                        <option value="fa-atom"></option>
+                        <option value="fa-award"></option>
+                        <option value="fa-baby"></option>
+                        <option value="fa-baseball-bat-ball"></option>
+                        <option value="fa-basketball"></option>
+                        <option value="fa-bicycle"></option>
+                        <option value="fa-biohazard"></option>
+                        <option value="fa-bomb"></option>
+                        <option value="fa-brain"></option>
+                        <option value="fa-briefcase-medical"></option>
+                        <option value="fa-burger"></option>
+                        <option value="fa-car"></option>
+                        <option value="fa-carrot"></option>
+                        <option value="fa-circle-radiation"></option>
+                        <option value="fa-crosshairs"></option>
+                        <option value="fa-crown"></option>
+                        <option value="fa-dumbbell"></option>
+                        <option value="fa-explosion"></option>
+                        <option value="fa-flag-checkered"></option>
+                        <option value="fa-futbol"></option>
+                        <option value="fa-hand-middle-finger"></option>
+                        <option value="fa-heart-pulser"></option>
+                        <option value="fa-people-robbery"></option>
+                        <option value="fa-poop"></option>
+                        <option value="fa-pills"></option>
                     </datalist>
 
 
@@ -758,11 +829,12 @@
                 $(".cteHostEvent").remove();
 
                 detectOpenPages();
-
+                saveLog(`Event create - success`);
             } else {
                 alert(`Error! ${answer.message}`);
                 message(answer);
                 gatherData();
+                saveLog(`Event create - error`);
             }
 
             //fetchData();
@@ -793,7 +865,7 @@
             SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
             SETTINGS.watchEvents = cteData.watchEvents ?? [];
             saveSettings();
-
+            saveLog(`Follow add - sucess`);
             success = true;
 
         } else {
@@ -801,6 +873,7 @@
             if (answer.message) msg = answer.message
             alert(`Error!\n${msg}`);
             message(answer);
+            saveLog(`Follow add - error`);
         }
 
 
@@ -998,7 +1071,8 @@
                                     ${unixSecondsToGMT(event.start)}-${unixSecondsToGMT(event.end)}\n
                                 `
                             };
-                            alert(output)
+                            alert(output);
+                            saveLog(`Calendar event clicked`);
                         });
                     } else {
                         div.addClass('cte_calendar_active_overlap');
@@ -1068,11 +1142,12 @@
 
 
 
-    // You provide this somewhere globally:
+
     function onEventClicked(eventId, el) {
         let w = confirm(`Add event ${eventId} to your watch list?`);
         if (w) {
             addEventToWatch(eventId);
+            saveLog(`Add to follow - with button`);
         }
         //message("Event clicked:", eventId, el);
     }
@@ -1215,8 +1290,34 @@
         MAIN FUNCTIONS
     *************************************************************************************************/
 
-    async function fetchData() {
 
+    function saveLog(logname) {
+        const MAX_LOGS = 100;
+
+        let currentTimeStamp = Math.round(Date.now() / 1000);
+        if (!SETTINGS.log || !Array.isArray(SETTINGS.log)) SETTINGS.log = [];
+
+        const logEntry = {
+            data: logname,
+            timestamp: new Date().toISOString()
+        };
+        if (SETTINGS.log.length >= MAX_LOGS) SETTINGS.log.shift();
+        SETTINGS.log.push(logEntry);
+        saveSettings();
+
+    }
+
+    function saveLogCounter(logData) {
+        if (!SETTINGS.log) SETTINGS.log = {};
+        if (!SETTINGS.log.logData) SETTINGS.log.logData = 0;
+        SETTINGS.log.logData++;
+
+        saveSettings();
+    }
+
+    async function fetchData() {
+        if (isFetching) return;
+        isFetching = true;
         let currentTimeStamp = Math.round(Date.now() / 1000);
 
         let fetchInterval = 1; //TODO
@@ -1226,72 +1327,80 @@
         }
 
         //----- FETCH TORN CALENDAR -----------------------------------------
+        try {
+            message('fetching Torn data...')
+            TOOLTIP_ACTIONS.loading('fetching Torn data...');
 
-        message('fetching Torn data...')
-        TOOLTIP_ACTIONS.loading('fetching Torn data...');
+            const calendarData = await GM_fetch({ url: `https://api.torn.com/v2/torn/?selections=calendar&key=${SETTINGS.apiKey}` });
 
-        const calendarData = await GM_fetch({ url: `https://api.torn.com/v2/torn/?selections=calendar&key=${SETTINGS.apiKey}` });
-
-        if (calendarData.error) {
-            TOOLTIP_ACTIONS.error(calendarData.error.error);
-            return;
-        }
-
-
-        let json = calendarData.calendar;
-        if (json.events && json.competitions) {
-            SETTINGS.tornEvents = json["events"].concat(json.competitions);
-        } else {
-            SETTINGS.tornEvents = json.events;
-        }
-
-
-
-        //----- FETCH USER CALENDAR -----------------------------------------
-
-        message('fetching Torn user data...');
-        TOOLTIP_ACTIONS.loading('fetching Torn user data...');
-
-        const userData = await GM_fetch({ url: `https://api.torn.com/v2/user/?selections=calendar&key=${SETTINGS.apiKey}` });
-        if (userData.error) {
-            TOOLTIP_ACTIONS.error(userData.error.error);
-            return;
-        }
-
-        currentTimeStamp = Math.round(Date.now() / 1000);
-        SETTINGS.lasetUpdate = currentTimeStamp;
-        SETTINGS.userStartTime = userData.calendar.start_time;
-
-
-        //----- FETCH CTE  -----------------------------------------
-
-
-        if (SETTINGS.participateCTE) {
-            message('fetching CTE data...');
-            TOOLTIP_ACTIONS.loading('fetching CTE data...');
-            let shaKey = await sha256(SETTINGS.apiKey)
-            //const cteData =  await GM_fetch(`https://level5.ee/warehouse/torn/cte/index.php`, 'POST', { action: "test" }, { 'Authorization': `Bearer ${shaKey}` });
-            const cteData = await CTE_fetch();
-            if (cteData.success === true) {
-                message("success");
-                //message(cteData)
-                SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
-                SETTINGS.watchEvents = cteData.watchEvents ?? [];
-            } else {
-                TOOLTIP_ACTIONS.error('Error fetching CTE');
-                message(['ERROR in fetchData() for CTE', cteData], true);
+            if (calendarData.error) {
+                TOOLTIP_ACTIONS.error(calendarData.error.error);
                 return;
             }
 
 
+            let json = calendarData.calendar;
+            if (json.events && json.competitions) {
+                SETTINGS.tornEvents = json["events"].concat(json.competitions);
+            } else {
+                SETTINGS.tornEvents = json.events;
+            }
+
+
+
+            //----- FETCH USER CALENDAR -----------------------------------------
+
+            message('fetching Torn user data...');
+            TOOLTIP_ACTIONS.loading('fetching Torn user data...');
+
+            const userData = await GM_fetch({ url: `https://api.torn.com/v2/user/?selections=calendar&key=${SETTINGS.apiKey}` });
+            if (userData.error) {
+                TOOLTIP_ACTIONS.error(userData.error.error);
+                return;
+            }
+
+            currentTimeStamp = Math.round(Date.now() / 1000);
+            SETTINGS.lasetUpdate = currentTimeStamp;
+            SETTINGS.userStartTime = userData.calendar.start_time;
+
+
+            //----- FETCH CTE  -----------------------------------------
+
+
+            if (SETTINGS.participateCTE) {
+                message('fetching CTE data...');
+                TOOLTIP_ACTIONS.loading('fetching CTE data...');
+                let shaKey = await sha256(SETTINGS.apiKey)
+                //const cteData =  await GM_fetch(`https://level5.ee/warehouse/torn/cte/index.php`, 'POST', { action: "test" }, { 'Authorization': `Bearer ${shaKey}` });
+                const cteData = await CTE_fetch();
+                if (cteData.success === true) {
+                    message("success");
+                    //message(cteData)
+                    SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
+                    SETTINGS.watchEvents = cteData.watchEvents ?? [];
+                } else {
+                    TOOLTIP_ACTIONS.error('Error fetching CTE');
+                    message(['ERROR in fetchData() for CTE', cteData], true);
+                    return;
+                }
+
+
+            }
+
+
+
+
+            saveSettings();
+            gatherData();
+            //detectOpenPages(); //TODO
+        } catch (err) {
+            TOOLTIP_ACTIONS.error(`Fetch failed: open console`);
+            message(err, true);
+            //TOOLTIP_ACTIONS.error(`Fetch failed: ${String(err?.message || err)}`);
+        } finally {
+            isFetching = false;
         }
 
-
-
-
-        saveSettings();
-        gatherData();
-        //detectOpenPages(); //TODO
     }
 
     function setTimeOnUnix(unixTime, timeString) {
@@ -1355,6 +1464,7 @@
         } else if (days > 1) {
             // Include days, show full time
             //return `${days} day${days > 1 ? "s" : ""} ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+            if (SETTINGS.showTooltipTime) return `${days} day${days > 1 ? "s" : ""}, ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
             return `${days} day${days > 1 ? "s" : ""}`;
         } else if (hours > 0) {
             // Hours, minutes, seconds
@@ -1440,12 +1550,19 @@
             spec = true;
         }
 
-        if (func === 'log' || func === 'warn') {
-            console[func](`%cCTE`, 'background: #212c37; color: white;padding:5px; border-radius:3px;', msg);
+        if (!isTornPDA) {
+            if (func === 'log' || func === 'warn') {
+                console[func](`%cCTE`, 'background: #212c37; color: white;padding:5px; border-radius:3px;', msg);
+            } else {
+                console.log(`%c↓ CTE ↓`, 'background: #212c37; color: white;padding:5px; border-radius:3px;');
+                console[func](msg);
+            }
         } else {
-            console.log(`%c↓ CTE ↓`, 'background: #212c37; color: white;padding:5px; border-radius:3px;');
-            console[func](msg);
+            if (typeof msg !== 'string') msg = JSON.stringify(msg);
+            console.log(`[CTE] ${msg}`);
         }
+
+
 
 
 
@@ -1476,16 +1593,24 @@
 
         if (url === null) return ({ error: true });
 
+        const hasBody = !(method === 'GET' || method === 'HEAD') && data != null;
+
 
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: method,
                 url: url,
-                data: JSON.stringify(data),
+                //data: JSON.stringify(data),
+                ...(hasBody ? { data: JSON.stringify(data) } : {}),
                 headers: {
-                    "Content-Type": "application/json", //application/x-www-form-urlencoded
+                    //"Content-Type": "application/json", //application/x-www-form-urlencoded
+                    ...(hasBody ? { "Content-Type": "application/json" } : {}),
                     ...headers
                 },
+                timeout: 20000,               // <-- critical
+                ontimeout: () => reject(new Error("Request timed out")),
+                onabort: () => reject(new Error("Request aborted")),
+
                 onload: function (response) {
                     try {
                         if (!response || !response.responseText) {

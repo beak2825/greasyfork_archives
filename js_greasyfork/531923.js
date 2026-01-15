@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         E-Hentai Tag Selector
 // @namespace    http://tampermonkey.net/
-// @version      4.0.11
+// @version      4.0.10
 // @description  a floating tag selection panel for e-hentai.org search
 // @author       Orgacord
 // @match        https://e-hentai.org/*
@@ -15,11 +15,13 @@
     'use strict';
 
     window.addEventListener('load', function() {
-    setTimeout(updateToggleVisibility, 300);
-    let searchInput = document.getElementById("f_search");
-    if (!searchInput) return;
+        let searchInput = document.getElementById("f_search");
+        if (!searchInput) return;
+        console.log("Panel script started");
 
-    const tags = {"male": ["big penis", "muscular", "age regression", "age progression", "abortion", "absorption","adventitious mouth","adventitious penis","afro","ahegao","albino","alien","all the way through","amputee","anal","anal birth","anal intercource","anal prolapse","analphagia","angel","animal on animal","animal on furry","animegao","anorexic","apparel bukkake","apron","armpit licking","armpit sex","asphyxiation","ass expansion","assjob","autofellatio","bald","ball caressing","ball sucking","balljob","balls expansion","bandages","bandaid","bat boy","bbm","bdsm","bear", "beauty mark", "bee boy", "bestiality", "big areolae", "big ass", "big balls", "big breasts", "big lips", "big muscles", "big nipples","bike shorts", "bikini", "bird boy", "bisexual", "bite mark", "blackmail", "blind", "blindfold", "blood", "bloomers", "blowjob", "blowjob face","body modification", "body painting", "body swap", "body writing", "bodystocking", "bodysuit", "bondage", "braces", "brain fuck", "breast expansion","breast feeding", "bride", "brother", "bukkake", "bull", "bunny boy", "burping", "business suit", "butler", "camel", "cannibalism", "cashier", "cat", "catboy", "cbt", "centaur", "cervix prolapse", "chastity belt", "cheating", "cheerleader", "chikan", "chinese dress", "chloroform", "christmas", "clamp", "clit insertion", "clit stimulation", "cloaca insertion", "clone", "closed eyes", "clothed female nude male", "clown", "coach", "cock ring", "cockphagia", "cockslapping", "collar", "condom", "confinement", "conjoined", "coprophagia", "corpse", "corruption", "corset", "cosplaying", "cousin", "cowman", "crab", "crossdressing", "crotch tattoo", "crown", "crying", "cum bath", "cumflation", "cunnilingus", "cuntboy", "dark nipples", "dark sclera", "dark skin", "deepthroat", "deer", "deer boy", "demon", "denki anma", "detached sleeves", "diaper", "dickgirl on male", "dicknipples", "dilf", "dinosaur", "dismantling", "dog", "dog boy", "doll joints","dolphin", "domination loss", "donkey", "double anal", "double blowjob","double penetration", "dougi", "draenei", "dragon", "drill hair", "drugs","drunk", "ear fuck", "eel", "eggs", "electric shocks", "elephant", "elephant boy","elf", "emotionless sex", "enema", "exhibitionism", "exposed clothing", "eye penetration","eye-covering bang", "eyemask", "eyepatch", "facesitting", "facial hair", "fairy","fanny packing", "farting", "father", "feminization", "filming", "first person perspective","fish", "fishnets", "fisting", "focus anal", "focus blowjob", "focus paizuri", "food on body","foot insertion", "foot licking", "footjob", "forced exposure", "forniphilia", "fox", "fox boy","freckles", "frog", "frog boy", "frottage", "full tour", "fundoshi", "furry", "gag", "gang rape","gaping", "garter belt", "gasmask", "gender change", "gender morph", "genital piercing", "ghost","giant", "giant sperm", "gijinka", "giraffe boy", "glasses", "glory hole", "gloves", "goat", "goblin","gokkun", "gorilla", "gothic lolita", "grandfather", "group", "growth", "guro", "gyaru-oh", "gymshorts","haigure", "hair buns", "hairjob", "hairy", "hairy armpits", "halo", "handicapped", "handjob", "hanging","harem", "harness", "harpy","headphones", "heterochromia", "hidden sex", "high heels", "hijab", "hood", "horns", "horse", "horse boy", "horse cock", "hotpants", "huge penis", "human cattle","human on furry", "humiliation", "hyena boy", "impregnation", "incest", "infantilism", "inflation", "insect", "insect boy", "inseki", "internal urination", "inverted nipples", "invisible", "josou seme", "kangaroo", "kappa", "kemonomimi", "kigurumi pajama", "kimono", "kindergarten uniform", "kissing", "kodomo doushi", "kunoichi", "lab coat", "lactation", "large insertions", "large tattoo", "latex", "layer cake", "leash", "leg lock", "leotard", "lingerie", "lion", "lipstick mark", "living clothes", "lizard guy", "long tongue", "low bestiality", "low guro", "low incest", "low scat", "low shotacon", "low smegma", "machine", "maggot", "magical girl", "maid", "makeup", "males only", "masked face", "masturbation", "mecha boy", "merman", "mesugaki", "mesuiki", "metal armor", "midget", "miko", "military", "milking", "mind break", "mind control", "miniguy", "minotaur", "mmm threesome","monkey", "monkey boy", "monoeye", "monster", "moral degeneration", "mouse", "mouse boy", "mouth mask", "multimouth blowjob", "multiple arms", "multiple assjob", "multiple footjob", "multiple handjob", "multiple nipples", "multiple orgasms", "multiple penises", "multiple straddling", "muscle", "muscle growth", "mute","nakadashi", "navel birth", "navel fuck", "nazi", "necrophilia", "netorare", "netorase", "ninja", "nipple birth","nipple fuck", "nipple piercing", "nipple stimulation", "no balls", "nose fuck", "nose hook", "nun", "nurse", "octopus", "oil", "old man", "omorashi", "onahole", "oni", "orc", "orgasm denial", "ostrich", "otokofutanari","otter boy", "oyakodon", "painted nails", "paizuri", "panda boy", "panther", "pantyhose", "pantyjob", "parasite", "pasties", "pegasus", "pegging", "penis birth", "penis enlargement", "personality excretion", "petplay", "petrification","phimosis", "phone sex", "piercing", "pig", "pig man", "pillory", "pirate", "piss drinking", "pixie cut", "plant boy", "pole dancing", "policeman", "ponytail", "possession", "pregnant", "prehensile hair", "priest", "prolapse", "property tag","prostate massage", "prostitution", "pubic stubble", "public use", "pussyboys only", "rabbit", "raccoon boy", "randoseru","rape", "reptile", "retractable penis", "rhinoceros", "rimjob", "robot", "ryona", "saliva", "scar", "scat", "school gym uniform", "school swimsuit", "schoolboy uniform", "schoolgirl uniform", "scrotal lingerie", "selfcest","sex toys", "shared senses", "shark", "shark boy", "shaved head", "sheep", "sheep boy", "shibari", "shimaidon", "shimapan", "shotacon", "shrinking", "skeleton", "skinsuit", "skunk boy", "slave", "sleeping", "slime", "slime boy", "slug", "small penis", "smalldom", "smegma", "smell", "smoking", "snake", "snake boy", "snuff", "sockjob", "sole male", "sole pussyboy", "solo action", "spanking", "speculum", "spider", "spider boy", "squid boy", "squirrel boy", "ssbbm", "steward", "stewardess", "stirrup legwear", "stockings", "stomach deformation", "straitjacket", "strap-on", "stretching", "stuck in wall", "sumata", "sundress", "sunglasses", "sweating", "swimsuit", "swinging", "syringe", "table masturbation", "tail", "tail plug", "tailjob", "tailphagia", "tall man", "tanlines", "teacher", "tentacles", "thick eyebrows", "thigh high boots", "tiara", "tickling", "tiger", "tights", "toddlercon", "tomgirl", "tooth brushing", "torture", "tracksuit", "trampling", "transformation", "transparent clothing", "triple anal", "triple penetration", "tube", "turtle", "tutor", "twins", "twintails", "unbirth", "uncle", "underwater", "unicorn", "unusual insertions", "unusual pupils", "unusual teeth", "urethra insertion", "urination", "vacbed", "vaginal birth", "vampire", "very long hair", "virginity", "vomit", "vore", "voyeurism", "vtuber", "waiter", "waitress", "weight gain", "wet clothes", "whale", "whip", "widower", "wings", "witch", "wolf", "wolf boy", "wooden horse", "worm", "wormhole", "wrestling", "x-ray", "yandere", "yaoi", "zebra", "zombie"],
+        // shit work (maybe there is a better way but fuck it)
+        const tags = {
+            "male": ["big penis", "muscular", "age regression", "age progression", "abortion", "absorption","adventitious mouth","adventitious penis","afro","ahegao","albino","alien","all the way through","amputee","anal","anal birth","anal intercource","anal prolapse","analphagia","angel","animal on animal","animal on furry","animegao","anorexic","apparel bukkake","apron","armpit licking","armpit sex","asphyxiation","ass expansion","assjob","autofellatio","bald","ball caressing","ball sucking","balljob","balls expansion","bandages","bandaid","bat boy","bbm","bdsm","bear", "beauty mark", "bee boy", "bestiality", "big areolae", "big ass", "big balls", "big breasts", "big lips", "big muscles", "big nipples","bike shorts", "bikini", "bird boy", "bisexual", "bite mark", "blackmail", "blind", "blindfold", "blood", "bloomers", "blowjob", "blowjob face","body modification", "body painting", "body swap", "body writing", "bodystocking", "bodysuit", "bondage", "braces", "brain fuck", "breast expansion","breast feeding", "bride", "brother", "bukkake", "bull", "bunny boy", "burping", "business suit", "butler", "camel", "cannibalism", "cashier", "cat", "catboy", "cbt", "centaur", "cervix prolapse", "chastity belt", "cheating", "cheerleader", "chikan", "chinese dress", "chloroform", "christmas", "clamp", "clit insertion", "clit stimulation", "cloaca insertion", "clone", "closed eyes", "clothed female nude male", "clown", "coach", "cock ring", "cockphagia", "cockslapping", "collar", "condom", "confinement", "conjoined", "coprophagia", "corpse", "corruption", "corset", "cosplaying", "cousin", "cowman", "crab", "crossdressing", "crotch tattoo", "crown", "crying", "cum bath", "cumflation", "cunnilingus", "cuntboy", "dark nipples", "dark sclera", "dark skin", "deepthroat", "deer", "deer boy", "demon", "denki anma", "detached sleeves", "diaper", "dickgirl on male", "dicknipples", "dilf", "dinosaur", "dismantling", "dog", "dog boy", "doll joints","dolphin", "domination loss", "donkey", "double anal", "double blowjob","double penetration", "dougi", "draenei", "dragon", "drill hair", "drugs","drunk", "ear fuck", "eel", "eggs", "electric shocks", "elephant", "elephant boy","elf", "emotionless sex", "enema", "exhibitionism", "exposed clothing", "eye penetration","eye-covering bang", "eyemask", "eyepatch", "facesitting", "facial hair", "fairy","fanny packing", "farting", "father", "feminization", "filming", "first person perspective","fish", "fishnets", "fisting", "focus anal", "focus blowjob", "focus paizuri", "food on body","foot insertion", "foot licking", "footjob", "forced exposure", "forniphilia", "fox", "fox boy","freckles", "frog", "frog boy", "frottage", "full tour", "fundoshi", "furry", "gag", "gang rape","gaping", "garter belt", "gasmask", "gender change", "gender morph", "genital piercing", "ghost","giant", "giant sperm", "gijinka", "giraffe boy", "glasses", "glory hole", "gloves", "goat", "goblin","gokkun", "gorilla", "gothic lolita", "grandfather", "group", "growth", "guro", "gyaru-oh", "gymshorts","haigure", "hair buns", "hairjob", "hairy", "hairy armpits", "halo", "handicapped", "handjob", "hanging","harem", "harness", "harpy","headphones", "heterochromia", "hidden sex", "high heels", "hijab", "hood", "horns", "horse", "horse boy", "horse cock", "hotpants", "huge penis", "human cattle","human on furry", "humiliation", "hyena boy", "impregnation", "incest", "infantilism", "inflation", "insect", "insect boy", "inseki", "internal urination", "inverted nipples", "invisible", "josou seme", "kangaroo", "kappa", "kemonomimi", "kigurumi pajama", "kimono", "kindergarten uniform", "kissing", "kodomo doushi", "kunoichi", "lab coat", "lactation", "large insertions", "large tattoo", "latex", "layer cake", "leash", "leg lock", "leotard", "lingerie", "lion", "lipstick mark", "living clothes", "lizard guy", "long tongue", "low bestiality", "low guro", "low incest", "low scat", "low shotacon", "low smegma", "machine", "maggot", "magical girl", "maid", "makeup", "males only", "masked face", "masturbation", "mecha boy", "merman", "mesugaki", "mesuiki", "metal armor", "midget", "miko", "military", "milking", "mind break", "mind control", "miniguy", "minotaur", "mmm threesome","monkey", "monkey boy", "monoeye", "monster", "moral degeneration", "mouse", "mouse boy", "mouth mask", "multimouth blowjob", "multiple arms", "multiple assjob", "multiple footjob", "multiple handjob", "multiple nipples", "multiple orgasms", "multiple penises", "multiple straddling", "muscle", "muscle growth", "mute","nakadashi", "navel birth", "navel fuck", "nazi", "necrophilia", "netorare", "netorase", "ninja", "nipple birth","nipple fuck", "nipple piercing", "nipple stimulation", "no balls", "nose fuck", "nose hook", "nun", "nurse", "octopus", "oil", "old man", "omorashi", "onahole", "oni", "orc", "orgasm denial", "ostrich", "otokofutanari","otter boy", "oyakodon", "painted nails", "paizuri", "panda boy", "panther", "pantyhose", "pantyjob", "parasite", "pasties", "pegasus", "pegging", "penis birth", "penis enlargement", "personality excretion", "petplay", "petrification","phimosis", "phone sex", "piercing", "pig", "pig man", "pillory", "pirate", "piss drinking", "pixie cut", "plant boy", "pole dancing", "policeman", "ponytail", "possession", "pregnant", "prehensile hair", "priest", "prolapse", "property tag","prostate massage", "prostitution", "pubic stubble", "public use", "pussyboys only", "rabbit", "raccoon boy", "randoseru","rape", "reptile", "retractable penis", "rhinoceros", "rimjob", "robot", "ryona", "saliva", "scar", "scat", "school gym uniform", "school swimsuit", "schoolboy uniform", "schoolgirl uniform", "scrotal lingerie", "selfcest","sex toys", "shared senses", "shark", "shark boy", "shaved head", "sheep", "sheep boy", "shibari", "shimaidon", "shimapan", "shotacon", "shrinking", "skeleton", "skinsuit", "skunk boy", "slave", "sleeping", "slime", "slime boy", "slug", "small penis", "smalldom", "smegma", "smell", "smoking", "snake", "snake boy", "snuff", "sockjob", "sole male", "sole pussyboy", "solo action", "spanking", "speculum", "spider", "spider boy", "squid boy", "squirrel boy", "ssbbm", "steward", "stewardess", "stirrup legwear", "stockings", "stomach deformation", "straitjacket", "strap-on", "stretching", "stuck in wall", "sumata", "sundress", "sunglasses", "sweating", "swimsuit", "swinging", "syringe", "table masturbation", "tail", "tail plug", "tailjob", "tailphagia", "tall man", "tanlines", "teacher", "tentacles", "thick eyebrows", "thigh high boots", "tiara", "tickling", "tiger", "tights", "toddlercon", "tomgirl", "tooth brushing", "torture", "tracksuit", "trampling", "transformation", "transparent clothing", "triple anal", "triple penetration", "tube", "turtle", "tutor", "twins", "twintails", "unbirth", "uncle", "underwater", "unicorn", "unusual insertions", "unusual pupils", "unusual teeth", "urethra insertion", "urination", "vacbed", "vaginal birth", "vampire", "very long hair", "virginity", "vomit", "vore", "voyeurism", "vtuber", "waiter", "waitress", "weight gain", "wet clothes", "whale", "whip", "widower", "wings", "witch", "wolf", "wolf boy", "wooden horse", "worm", "wormhole", "wrestling", "x-ray", "yandere", "yaoi", "zebra", "zombie"],
             "female": ["abortion", "absorption", "adventitious mouth", "adventitious penis", "adventitious vagina", "afro", "alien girl","all the way through", "amputee", "anal", "anal birth", "anal intercourse", "anal prolapse", "analphagia", "angel","animal on animal", "animal on furry", "animegao", "anorexic", "apparel bukkake", "apron", "armpit licking", "armpit sex","asphyxiation", "ass expansion", "assjob", "aunt", "autofellatio", "autopaizuri", "bald", "ball caressing", "ball sucking","ball-less shemale", "balljob", "balls expansion", "bandages", "bandaid", "bat girl", "bbw", "bdsm", "bear", "bear girl","beauty mark", "bee girl", "bestiality", "big areolae", "big ass", "big balls", "big breasts", "big clit", "big lips", "big muscles", "big nipples", "big penis", "big vagina", "bike shorts", "bikini", "bird girl", "bisexual", "bite mark", "blackmail", "blind", "blindfold", "blood", "bloomers", "blowjob", "blowjob face", "body modification", "body painting", "body swap", "body writing", "bodystocking", "bodysuit", "bondage", "braces", "brain fuck", "breast expansion", "breast feeding", "breast reduction", "bride", "bukkake","bunny girl", "burping", "business suit", "butler", "cannibalism", "cashier", "cat", "catfight", "catgirl", "cbt", "centaur", "cervix penetration", "cervix prolapse", "chastity belt", "cheating", "cheerleader", "chikan", "chinese dress", "chloroform", "christmas", "clamp", "clit growth", "clit insertion", "clit stimulation", "clone", "closed eyes", "clothed male nude female", "clothed paizuri", "clown", "coach", "cock ring", "cockphagia", "cockslapping", "collar", "condom", "confinement", "conjoined", "coprophagia", "corpse", "corruption", "corset", "cosplaying", "cousin", "cow", "cowgirl", "crab", "crossdressing", "crotch tattoo", "crown","crying", "cum bath", "cum in eye", "cum swap", "cumflation", "cunnilingus", "cuntbusting", "dark nipples", "dark sclera","dark skin", "daughter", "deepthroat", "deer", "deer girl", "defloration", "demon girl", "denki anma", "detached sleeves","diaper", "dickgirl on dickgirl", "dickgirl on female", "dickgirls only", "dicknipples", "dinosaur", "dismantling", "dog","dog girl", "doll joints", "dolphin", "domination loss", "donkey", "double anal", "double blowjob", "double penetration","double vaginal", "dougi", "draenei", "dragon", "drill hair", "drugs", "drunk", "ear fuck", "eel", "eggs", "electric shocks","elephant", "elephant girl", "elf", "emotionless sex", "enema", "exhibitionism", "exposed clothing", "eye penetration","eye-covering bang", "eyemask", "eyepatch", "facesitting", "facial hair", "fairy", "fanny packing", "farting", "females only","femdom", "fff threesome", "fft threesome","filming", "fingering", "first person perspective", "fish", "fishnets", "fisting", "focus anal", "focus blowjob","focus paizuri", "food on body", "foot insertion", "foot licking", "footjob", "forced exposure", "forniphilia", "fox", "fox girl", "freckles", "frog", "frog girl", "frottage", "full tour", "full-packaged futanari", "fundoshi", "furry", "futanari", "futanarization", "gag", "gang rape", "gaping", "garter belt", "gasmask", "gender change", "gender morph", "genital piercing", "ghost", "giant sperm", "giantess", "gigantic breasts", "gijinka", "giraffe girl", "glasses", "glory hole", "gloves", "goat", "goblin", "gokkun", "gothic lolita", "granddaughter", "grandmother", "group", "growth", "guro", "gyaru", "gymshorts", "haigure", "hair buns", "hairjob", "hairy", "hairy armpits", "halo", "handicapped", "handjob", "hanging", "harem", "harness", "harpy", "headless", "headphones", "heterochromia", "hidden sex", "high heels", "hijab", "hood", "horns", "horse", "horse cock", "horse girl", "hotpants", "huge breasts", "huge penis", "human cattle", "human on furry", "humiliation", "hyena girl", "impregnation", "incest", "infantilism", "inflation", "insect", "insect girl", "inseki", "internal urination", "inverted nipples", "invisible","kangaroo", "kappa", "kemonomimi", "kigurumi pajama", "kimono", "kindergarten uniform", "kissing", "kneepit sex", "kodomo doushi","kunoichi", "lab coat", "lactation", "large insertions", "large tattoo", "latex", "layer cake", "leash", "leg lock", "legjob","leotard", "lingerie", "lioness", "lipstick mark", "living clothes", "lizard girl", "lolicon", "long tongue", "low bestiality","low guro", "low incest", "low lolicon", "low scat", "low smegma", "machine", "maggot", "magical girl", "maid", "makeup","male on dickgirl", "masked face", "masturbation", "mecha girl", "menstruation", "mermaid", "mesugaki", "mesuiki", "metal armor","midget", "miko", "milf", "military", "milking", "mind break", "mind control", "minigirl", "monkey", "monkey girl", "monoeye","monster girl", "moral degeneration", "moth girl", "mother", "mouse", "mouse girl", "mouth mask", "multimouth blowjob", "multiple arms","multiple assjob", "multiple breasts", "multiple footjob", "multiple handjob", "multiple nipples", "multiple orgasms", "multiple paizuri","multiple penises", "multiple straddling", "multiple vaginas", "muscle", "muscle growth", "mute", "nakadashi", "navel birth", "navel fuck","nazi","necrophilia", "netorare", "netorase", "niece", "nipple birth", "nipple expansion", "nipple fuck", "nipple piercing","nipple stimulation", "nose fuck", "nose hook", "nun", "nurse", "octopus", "oil", "old lady", "omorashi", "onahole","oni", "oppai loli", "orc", "orgasm denial", "otter girl", "oyakodon", "painted nails", "paizuri", "panda girl","pantyhose", "pantyjob", "parasite", "pasties", "pegasus", "penis birth", "penis enlargement", "personality excretion","petplay", "petrification", "phimosis", "phone sex", "piercing", "pig", "pig girl", "pillory", "pirate", "piss drinking","pixie cut", "plant girl", "pole dancing", "policewoman", "ponygirl", "ponytail", "possession", "pregnant","prehensile hair", "prolapse", "property tag", "prostate massage", "prostitution", "pubic stubble", "public use","rabbit", "raccoon girl", "race queen", "randoseru", "rape", "real doll", "reptile", "retractable penis", "rhinoceros","rimjob", "robot", "ryona", "saliva", "sarashi", "scar", "scat", "scat insertion", "school gym uniform", "school swimsuit","schoolboy uniform", "schoolgirl uniform", "scrotal lingerie", "selfcest", "sex toys", "shapening", "shared senses","shark", "shark girl", "shaved head", "sheep", "sheep girl", "shemale", "shibari", "shimaidon", "shimapan", "shrinking","sister", "skeleton", "skinsuit", "skunk girl", "slave", "sleeping", "slime", "slime girl", "slug", "small breasts","small penis", "smalldom", "smegma", "smell", "smoking", "snail girl", "snake", "snake girl", "snuff", "sockjob","sole dickgirl", "sole female", "solo action", "spanking", "speculum", "spider", "spider girl", "squid girl","squirrel girl", "squirting", "ssbbw", "stewardess", "stirrup legwear", "stockings", "stomach deformation", "straitjacket", "strap-on", "stretching", "stuck in wall", "sumata", "sundress", "sunglasses", "sweating", "swimsuit", "swinging", "syringe", "tabi socks", "table masturbation", "tail", "tail plug", "tailjob", "tailphagia", "tall girl", "tanlines", "teacher", "tentacles", "thick eyebrows", "thigh high boots", "tiara", "tickling", "tiger", "tights", "toddlercon", "tomboy", "tooth brushing", "torture", "tracksuit", "trampling", "transformation", "transparent clothing", "tribadism", "triple anal", "triple penetration", "triple vaginal", "ttf threesome", "ttt threesome", "tube", "turtle", "tutor", "twins", "twintails", "unbirth", "underwater", "unicorn", "unusual insertions", "unusual pupils", "unusual teeth", "urethra insertion", "urination", "vacbed", "vaginal birth", "vaginal sticker", "vampire", "very long hair", "vomit", "vore", "voyeurism", "vtuber", "waiter", "waitress", "weight gain", "wet clothes", "whale", "whip", "widow", "wingjob", "wings", "witch", "wolf", "wolf girl", "wooden horse", "worm", "wormhole", "wrestling", "x-ray", "yandere", "yuri", "zebra", "zombie"],
             "language": ["english", "japanese", "chinese", "german", "dutch", "french", "finnish", "turkish", "polish", "greek", "korean", "ukrainian", "russian"],
             "mixed": ["group", "ffm threesome", "incest", "mmf threesome", "kodomo doushi", "frottage", "body swap", "animal on animal", "gang rape", "inseki", "low incest", "mmt threesome", "mtf threesome", "multimouth blowjob", "multiple assjob", "multiple footjob", "multiple handjob", "nudism", "ttm threesome", "twins"],
@@ -32,6 +34,7 @@
             let savedTags = JSON.parse(localStorage.getItem("selectedTags")) || [];
             let savedQuery = savedTags.join(" ").trim();
 
+            // Check if we are on a tag page (e.g. /tag/female:anal)
             if (currentQuery === "" && window.location.pathname.startsWith("/tag/")) {
                 let pathParts = window.location.pathname.split('/tag/')[1].split(':');
                 if (pathParts.length === 2) {
@@ -53,12 +56,12 @@
                 });
 
                 if (currentQuery !== "") {
-                    let tagStrings = currentQuery.split(/\s+/);
+                    let tagStrings = currentQuery.split(/\s+/); // Split by spaces to get tags
                     tagStrings.forEach(tagStr => {
                         let isNegative = tagStr.startsWith("-");
                         let cleaned = tagStr.replace("-", "");
                         let [category, ...tagParts] = cleaned.split(":");
-                        let tags = tagParts.join(":").split(",");
+                        let tags = tagParts.join(":").split(","); // handle multiple tags in a category
 
                         tags.forEach(tag => {
                             let key = `${category}:${tag}`;
@@ -83,10 +86,14 @@
             }
         }
 
+        function isRealMobile() {
+            const ua = navigator.userAgent || "";
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        }
+
+
         // UI panel
         const panel = document.createElement("div");
-        panel.id = panel.id || "eh-tag-panel";
-        let compactMode = false;
         panel.style.position = "fixed";
         panel.style.background = "#282c34";
         panel.style.color = "white";
@@ -114,9 +121,9 @@
         const scrollContainer = document.createElement("div");
         function updateScrollContainerHeight() {
             const vh = window.innerHeight;
-            const available = vh - 450;
+            const available = vh - 250;
 
-            scrollContainer.style.maxHeight = available > 120 ? `${available}px` : "200px";
+            scrollContainer.style.maxHeight = available > 200 ? `${available}px` : "200px";
             scrollContainer.style.overflowY = "auto";
         }
 
@@ -141,10 +148,6 @@ Object.keys(tags).forEach(category => {
     catTitle.style.fontSize = "13px";
     catTitle.style.cursor = "pointer";
     catTitle.style.userSelect = "none";
-    catTitle.style.letterSpacing = "0.08em";
-    catTitle.style.opacity = "0.85";
-    catTitle.style.textTransform = "uppercase";
-    catTitle.style.background = "#3a3f4b";
 
     let isVisible = true;
     catTitle.addEventListener("click", function () {
@@ -156,7 +159,7 @@ Object.keys(tags).forEach(category => {
 
     const tagContainer = document.createElement("div");
     tagContainer.style.display = "grid";
-    tagContainer.style.gap = "4px";
+    tagContainer.style.gap = "6px";
 
     tags[category].sort().forEach(tag => {
         const label = document.createElement("label");
@@ -171,6 +174,7 @@ Object.keys(tags).forEach(category => {
         label.onmouseover = () => (label.style.background = "#44446b");
         label.onmouseout = () => (label.style.background = "#222234");
 
+        // Create the pin button
         const pinBtn = document.createElement("button");
         pinBtn.classList.add("pin-btn");
         pinBtn.innerText = "☆";
@@ -183,6 +187,7 @@ Object.keys(tags).forEach(category => {
         pinBtn.style.cursor = "pointer";
         pinBtn.style.marginLeft = "8px";
 
+        // Check if this tag is pinned and update the button's style accordingly
         if (localStorage.getItem(`pinned:${category}:${tag}`)) {
             pinBtn.style.backgroundColor = "#2ecc71";
             pinBtn.innerText = "⭐";
@@ -249,20 +254,17 @@ Object.keys(tags).forEach(category => {
     scrollContainer.appendChild(tagContainer);
 });
 
+
+        panel.appendChild(scrollContainer);
+
         selectedTagsContainer = document.createElement("div");
-        selectedTagsContainer.style.maxHeight = "90px";
+        selectedTagsContainer.style.maxHeight = "80px";
         selectedTagsContainer.style.overflowY = "auto";
         selectedTagsContainer.style.padding = "8px";
         selectedTagsContainer.style.background = "#2b2b3a";
         selectedTagsContainer.style.borderRadius = "8px";
         selectedTagsContainer.style.marginBottom = "10px";
-        selectedTagsContainer.style.position = "sticky";
-        selectedTagsContainer.style.top = "0";
-        selectedTagsContainer.style.zIndex = "5";
-        selectedTagsContainer.style.boxShadow ="0 4px 6px -4px rgba(0,0,0,0.6)";
-
         panel.appendChild(selectedTagsContainer);
-        panel.appendChild(scrollContainer);
 
         const buttonsContainer = document.createElement("div");
         buttonsContainer.style.display = "flex";
@@ -317,127 +319,55 @@ Object.keys(tags).forEach(category => {
         panel.appendChild(buttonsContainer);
 
         document.body.appendChild(panel);
+        console.log("Panel appended");
 
 
-        function renderSelectedTagPills(selectedTagsText) {
-    selectedTagsContainer.innerHTML = "";
-
-    if (!selectedTagsText.length) {
-        selectedTagsContainer.textContent = "No tags selected";
-        selectedTagsContainer.style.opacity = "0.6";
-        return;
-    }
-
-    selectedTagsContainer.style.display = "flex";
-    selectedTagsContainer.style.flexWrap = "wrap";
-    selectedTagsContainer.style.gap = "6px";
-    selectedTagsContainer.style.opacity = "1";
-
-    selectedTagsText.forEach(tagStr => {
-        const isNegative = tagStr.startsWith("-");
-        const cleaned = isNegative ? tagStr.slice(1) : tagStr;
-
-        const pill = document.createElement("div");
-        pill.textContent = cleaned;
-        pill.style.display = "flex";
-        pill.style.alignItems = "center";
-        pill.style.padding = "4px 8px";
-        pill.style.borderRadius = "999px";
-        pill.style.fontSize = "12px";
-        pill.style.cursor = "pointer";
-        pill.style.userSelect = "none";
-        pill.style.background = isNegative ? "#5a2a2a" : "#2a3b5a";
-        pill.style.color = isNegative ? "#ffb3b3" : "#cfe3ff";
-        pill.style.border = "1px solid rgba(255,255,255,0.15)";
-
-        const close = document.createElement("span");
-        close.textContent = " ×";
-        close.style.marginLeft = "6px";
-        close.style.fontWeight = "bold";
-        close.style.opacity = "0.7";
-
-        pill.appendChild(close);
-
-        pill.addEventListener("click", () => {
-            const [category, ...tagParts] = cleaned.split(":");
-            const tag = tagParts.join(":");
-            const checkbox = checkboxes[category + ":" + tag];
-
-            if (!checkbox) return;
-
-            if (isNegative) {
-                checkbox.nextSibling.checked = false;
-                localStorage.removeItem("negative:" + category + ":" + tag);
-            } else {
-                checkbox.checked = false;
-                localStorage.removeItem(category + ":" + tag);
-            }
-
-            updateSearchInput();
-        });
-
-        selectedTagsContainer.appendChild(pill);
-    });
-}
-
-      const savedPills = JSON.parse(localStorage.getItem("selectedPills") || "[]");
-      savedPills.forEach(tagStr => {
-          const isNegative = tagStr.startsWith("-");
-          const cleaned = isNegative ? tagStr.slice(1) : tagStr;
-          const [category, ...tagParts] = cleaned.split(":");
-          const tag = tagParts.join(":");
-          const checkbox = checkboxes[category + ":" + tag];
-          if (!checkbox) return;
-
-          if (isNegative) checkbox.nextSibling.checked = true;
-          else checkbox.checked = true;
-      });
-      
-      renderSelectedTagPills(savedPills);
 
         function updateSearchInput() {
-          let selectedTags = {};
-          let negativeTags = {};
-          let selectedTagsText = [];
+            let selectedTags = {};
+            let negativeTags = {};
+            let selectedTagsText = [];
 
-          Object.keys(checkboxes).forEach(key => {
-              let checkbox = checkboxes[key];
-              let category = checkbox.dataset.category;
-              let tag = checkbox.value;
-              let negativeCheckbox = checkbox.nextSibling;
 
-              if (!selectedTags[category]) selectedTags[category] = [];
-              if (!negativeTags[category]) negativeTags[category] = [];
+            Object.keys(checkboxes).forEach(key => {
+                let checkbox = checkboxes[key];
+                let category = checkbox.dataset.category;
+                let tag = checkbox.value;
+                let negativeCheckbox = checkbox.nextSibling;
 
-              if (checkbox.checked) {
-                  selectedTags[category].push(tag);
-                  selectedTagsText.push(`${category}:${tag}`);
-              }
-              if (negativeCheckbox && negativeCheckbox.checked) {
-                  negativeTags[category].push(tag);
-                  selectedTagsText.push(`-${category}:${tag}`);
-              }
-          });
+                if (!selectedTags[category]) selectedTags[category] = [];
+                if (!negativeTags[category]) negativeTags[category] = [];
 
-          localStorage.setItem("selectedPills", JSON.stringify(selectedTagsText));
+                if (checkbox.checked) {
+                    selectedTags[category].push(tag);
+                    selectedTagsText.push(`${category}:${tag}`);
+                }
+                if (negativeCheckbox && negativeCheckbox.checked) {
+                    negativeTags[category].push(tag);
+                    selectedTagsText.push(`-${category}:${tag}`);
+                }
+            });
 
-          let queryParts = [];
-          Object.keys(selectedTags).forEach(category => {
-              if (selectedTags[category].length > 0) {
-                  queryParts.push(`${category}:${selectedTags[category].join(",")}`);
-              }
-          });
-          Object.keys(negativeTags).forEach(category => {
-              if (negativeTags[category].length > 0) {
-                  queryParts.push(`-${category}:${negativeTags[category].join(",")}`);
-              }
-          });
+            localStorage.setItem("selectedTags", JSON.stringify(selectedTagsText));
 
-          renderSelectedTagPills(selectedTagsText);
+            let queryParts = [];
+            Object.keys(selectedTags).forEach(category => {
+                if (selectedTags[category].length > 0) {
+                    queryParts.push(`${category}:${selectedTags[category].join(",")}`);
+                }
+            });
+            Object.keys(negativeTags).forEach(category => {
+                if (negativeTags[category].length > 0) {
+                    queryParts.push(`-${category}:${negativeTags[category].join(",")}`);
+                }
+            });
 
-          searchInput.value = queryParts.join(" ");
-          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-      }
+            selectedTagsContainer.innerHTML = selectedTagsText.length > 0 ? selectedTagsText.join(", ") : "No tags selected";
+            searchInput.value = queryParts.join(" ");
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        // Filter tags by search
         searchBox.addEventListener("input", () => {
             let filterText = searchBox.value.toLowerCase();
             Object.values(checkboxes).forEach(checkbox => {
@@ -446,11 +376,6 @@ Object.keys(tags).forEach(category => {
                 label.style.display = tagText.includes(filterText) ? "flex" : "none";
             });
         });
-        const bookmarkBtnRow = document.createElement("div");
-        bookmarkBtnRow.style.display = "flex";
-        bookmarkBtnRow.style.gap = "6px";
-        bookmarkBtnRow.style.marginBottom = "10px";
-
         const bookmarkLabel = document.createElement("label");
         bookmarkLabel.innerText = "Bookmarks:";
         bookmarkLabel.style.marginTop = "10px";
@@ -469,7 +394,7 @@ Object.keys(tags).forEach(category => {
         panel.appendChild(bookmarkSelect);
 
         const bookmarkSaveBtn = document.createElement("button");
-        bookmarkSaveBtn.innerText = "Save";
+        bookmarkSaveBtn.innerText = "Save Bookmark";
         bookmarkSaveBtn.style.marginBottom = "6px";
         bookmarkSaveBtn.style.width = "100%";
         bookmarkSaveBtn.style.background = "#337ab7";
@@ -493,10 +418,10 @@ Object.keys(tags).forEach(category => {
 
         });
 
-
+        panel.appendChild(bookmarkSaveBtn);
 
         const bookmarkLoadBtn = document.createElement("button");
-        bookmarkLoadBtn.innerText = "Load";
+        bookmarkLoadBtn.innerText = "Load Bookmark";
         bookmarkLoadBtn.style.marginBottom = "6px";
         bookmarkLoadBtn.style.width = "100%";
         bookmarkLoadBtn.style.background = "#5bc0de";
@@ -514,10 +439,10 @@ Object.keys(tags).forEach(category => {
           loadBookmarks();
         });
 
-
+        panel.appendChild(bookmarkLoadBtn);
 
         const bookmarkDeleteBtn = document.createElement("button");
-        bookmarkDeleteBtn.innerText = "Delete";
+        bookmarkDeleteBtn.innerText = "Delete Bookmark";
         bookmarkDeleteBtn.style.marginBottom = "10px";
         bookmarkDeleteBtn.style.width = "100%";
         bookmarkDeleteBtn.style.background = "#d9534f";
@@ -550,7 +475,7 @@ Object.keys(tags).forEach(category => {
     });
 
 
-
+      panel.appendChild(bookmarkDeleteBtn);
       function loadBookmarks() {
         bookmarkSelect.innerHTML = "";
         const saved = JSON.parse(localStorage.getItem("bookmarks") || "{}");
@@ -561,21 +486,6 @@ Object.keys(tags).forEach(category => {
             bookmarkSelect.appendChild(opt);
         });
         }
-
-        bookmarkSaveBtn.style.flex = "1";
-        bookmarkLoadBtn.style.flex = "1";
-        bookmarkDeleteBtn.style.flex = "1";
-
-        bookmarkSaveBtn.style.marginBottom = "0";
-        bookmarkLoadBtn.style.marginBottom = "0";
-        bookmarkDeleteBtn.style.marginBottom = "0";
-
-        bookmarkBtnRow.appendChild(bookmarkSaveBtn);
-        bookmarkBtnRow.appendChild(bookmarkLoadBtn);
-        bookmarkBtnRow.appendChild(bookmarkDeleteBtn);
-
-        panel.appendChild(bookmarkBtnRow);
-
         const importBtn = document.createElement("button");
         importBtn.innerText = "Import Config";
         importBtn.style.marginTop = "6px";
@@ -632,152 +542,70 @@ Object.keys(tags).forEach(category => {
             link.download = "config.json";
             link.click();
         });
-        function isMobileDeviceUA() {
-            const ua = navigator.userAgent || "";
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
-        }
-        function isProbablyMobile() {
-            return isMobileDeviceUA() || ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
-        }
-
 
         function updatePanelLayout() {
-            const width = window.innerWidth;
-            const mobile = isProbablyMobile();
+        if (!panel) return;
 
-            if (!mobile && width > 1200) {
-                compactMode = false;
-                panel.style.top = "10px";
-                panel.style.right = "10px";
-                panel.style.bottom = "auto";
-                panel.style.left = "auto";
-                panel.style.width = "300px";
-                panel.style.height = "1000px";
-                panel.style.borderRadius = "12px";
-            } else if (!mobile && width > 800) {
-                compactMode = false;
-                panel.style.top = "20px";
-                panel.style.right = "10px";
-                panel.style.width = "250px";
-                panel.style.height = "80vh";
-                panel.style.borderRadius = "10px";
-            } else {
-                compactMode = true;
-                panel.style.top = "auto";
-                panel.style.right = "0";
-                panel.style.left = "0";
-                panel.style.bottom = "0";
-                panel.style.width = "100%";
-                panel.style.height = "35vh";
-                panel.style.borderRadius = "12px 12px 0 0";
-                panel.style.overflowY = "auto";
-            }
-
-            toggleCompactUI(compactMode);
-        }
-
-        function toggleCompactUI(isCompact) {
-            searchBox.style.display = isCompact ? "none" : "block";
-            selectedTagsContainer.style.display = isCompact ? "none" : "block";
-            bookmarkLabel.style.display = isCompact ? "none" : "block";
-            bookmarkSelect.style.display = isCompact ? "none" : "block";
-            bookmarkSaveBtn.style.display = isCompact ? "none" : "block";
-            bookmarkLoadBtn.style.display = isCompact ? "none" : "block";
-            bookmarkDeleteBtn.style.display = isCompact ? "none" : "block";
-            configBtnWrapper.style.display = isCompact ? "none" : "flex";
-
-            scrollContainer.style.padding = isCompact ? "0" : "5px";
-            scrollContainer.querySelectorAll("label").forEach(label => {
-                label.style.padding = isCompact ? "6px" : "8px";
-                label.style.marginBottom = isCompact ? "4px" : "2px";
-                label.style.fontSize = isCompact ? "1.1rem" : "0.95rem";
-                label.querySelector(".pin-btn").style.display = isCompact ? "none" : "inline-block";
+        if (isRealMobile()) {
+            panel.querySelectorAll("button, select, label, input, span").forEach(el => {
+                el.style.fontSize = "26px";
+                el.style.padding = "5px";
             });
-              if (isCompact) {
-                scrollContainer.style.fontSize = "1.2rem";
-                scrollContainer.style.lineHeight = "1.8rem";
-                scrollContainer.style.padding = "4px 8px";
-            } else {
-                scrollContainer.style.fontSize = "0.95rem";
-                scrollContainer.style.lineHeight = "1.4rem";
-                scrollContainer.style.padding = "5px";
-            }
-        }
-
-
-        function createToggleButtonIfMissing() {
-            let t = document.getElementById("eh-toggle-btn");
-            if (t) return t;
-
-            t = document.createElement("button");
-            t.id = "eh-toggle-btn";
-            t.textContent = "Tags";
-            Object.assign(t.style, {
-                position: "fixed",
-                bottom: "20px",
-                right: "10px",
-                zIndex: "2147483647",
-                padding: "10px 14px",
-                borderRadius: "10px",
-                background: "#444",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: "bold",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
-                display: "none"
+            panel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.style.transform = "scale(1.6)";
+                cb.style.marginRight = "10px";
+                cb.style.marginLeft = "10px";
+                cb.style.cursor = "pointer";
             });
-            t.addEventListener("click", () => {
-                const isVisible = panel.style.display === "flex";
-                panel.style.display = isVisible ? "none" : "flex";
-                if (!isVisible) panel.dataset.manuallyOpened = "1";
-                else delete panel.dataset.manuallyOpened;
+            panel.style.top = "auto";
+            panel.style.bottom = "0";
+            panel.style.left = "0";
+            panel.style.width = "100%";
+            panel.style.height = "35vh";
+            panel.style.paddingBottom = "env(safe-area-inset-bottom)";
+            document.body.style.paddingBottom = "35vh";
+            panel.style.borderRadius = "12px 12px 0 0";
+            panel.style.position = "fixed";
+            bookmarkLabel.style.display = "none";
+            bookmarkSelect.style.display = "none";
+            bookmarkSaveBtn.style.display = "none";
+            bookmarkLoadBtn.style.display = "none";
+            bookmarkDeleteBtn.style.display = "none";
+        } else {
+            panel.style.top = "50px";
+            panel.style.right = "10px";
+            panel.style.width = "300px";
+            panel.style.height = "900px";
+            panel.style.borderRadius = "12px";
+            panel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.style.transform = "scale(1)";
+                cb.style.marginRight = "4px";
             });
-
-            document.body.appendChild(t);
-            return t;
         }
+    }
 
-        updatePanelLayout();
-
-        function updateToggleVisibility() {
-          const toggleBtn = createToggleButtonIfMissing();
-          const mobile = isProbablyMobile();
-          const isPanelVisible = panel.style.display !== "none";
-
-          if (mobile) {
-              toggleBtn.style.display = "block";
-              panel.style.display = panel.dataset.manuallyOpened ? "flex" : "none";
-          } else {
-              toggleBtn.style.display = "none";
-              panel.style.display = "flex";
-          }
+      if (!document.body.contains(panel)) {
+          document.body.appendChild(panel);
       }
+      updatePanelLayout();
 
+      window.addEventListener('pageshow', updatePanelLayout);
 
-        function initResponsiveToggle() {
-            try {
-                updatePanelLayout();
-                setTimeout(updateToggleVisibility, 150);
-                setTimeout(updateToggleVisibility, 700);
-            } catch (e) {
-                console.error("initResponsiveToggle error", e);
-            }
+        window.addEventListener("resize", updatePanelLayout);
+        window.addEventListener("orientationchange", updatePanelLayout);
+        window.addEventListener("load", updatePanelLayout);
+
+        console.log("UA:", navigator.userAgent);
+        try {
+          localStorage.setItem("__test__", "1");
+          localStorage.removeItem("__test__");
+          console.log("localStorage works ✅");
+        } catch (e) {
+          console.warn("localStorage not supported ❌", e);
         }
 
-        window.addEventListener("load", initResponsiveToggle);
-        window.addEventListener("resize", () => { setTimeout(() => { updatePanelLayout(); updateToggleVisibility(); }, 80); });
-        window.addEventListener("orientationchange", () => { setTimeout(initResponsiveToggle, 200); });
 
-        toggleBtn.addEventListener("click", () => {
-            const isVisible = panel.style.display === "flex";
-            panel.style.display = isVisible ? "none" : "flex";
-            if (!isVisible) {
-                panel.dataset.manuallyOpened = "1";
-            } else {
-                delete panel.dataset.manuallyOpened;
-            }
-        });
+
         importBtn.addEventListener("click", () => {
         const input = document.createElement("input");
         input.type = "file";
@@ -792,6 +620,7 @@ Object.keys(tags).forEach(category => {
                     try {
                         const config = JSON.parse(event.target.result);
 
+                        // Restore selected tags
                         localStorage.setItem("selectedTags", JSON.stringify(config.selectedTags));
                         config.selectedTags.forEach(tag => {
     					const isNegative = tag.startsWith("-");
@@ -811,6 +640,7 @@ Object.keys(tags).forEach(category => {
 					});
 
 
+                        // Restore pinned tags
                         if (config.pinnedTags) {
                             config.pinnedTags.forEach(tag => {
                                 const [category, ...tagParts] = tag.split(":");
@@ -828,6 +658,7 @@ Object.keys(tags).forEach(category => {
                             });
                         }
 
+                        // Restore bookmarks
                         localStorage.setItem("bookmarks", JSON.stringify(config.bookmarks));
 
                         alert("Configuration imported successfully!");
@@ -845,3 +676,4 @@ Object.keys(tags).forEach(category => {
         loadBookmarks();
     });
 })();
+

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Card Helper AStars | AnimeStars | ASStars
 // @namespace    animestars.org
-// @version      7.38
+// @version      7.39
 // @description  Отображения спроса карт и Авто-Лут карточек с просмотра
 // @author       bmr
 // @match        https://astars.club/*
@@ -10,6 +10,8 @@
 // @match        https://animestars.org/*
 // @match        https://as1.astars.club/*
 // @match        https://asstars.tv/*
+// @match        https://animesss.com/*
+// @match        https://animesss.tv/*
 // @match        https://ass.astars.club/*
 // @match        https://as2.asstars.tv/*
 // @license      MIT

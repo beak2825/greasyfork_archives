@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Komica: F5 AI優化版
-// @version      1.1.0
+// @version      1.1.2
 // @description  Instant jump to top and fast refresh on F5.
 // @author       Hayao-Gai
 // @namespace    https://github.com/HayaoGai
-// @icon         https://i.imgur.com/ltLDPGc.jpg
+// @icon https://www.google.com/s2/favicons?sz=64&domain=komica1.org
 // @match        *://*.komica*.org/*
 // @match        *://*.komica1.org/*
 // @exclude      *://*.komica1.org/*/src/*

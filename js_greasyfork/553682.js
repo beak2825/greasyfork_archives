@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.9.6-alpha
+// @version      0.9.8-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -171,7 +171,7 @@ var version = GM_info.script.version;
         floatingHelpers: {
             enabled: true,
             position: 'right',
-            topOffset: '50%',
+            // topOffset: '20%',
             hideNativePopup: true,  // Hide native Battle Consumables popup
             potions: {
                 small: { enabled: true, quantities: [1, 3, 5] },
@@ -818,7 +818,7 @@ var version = GM_info.script.version;
                 display: flex;
                 flex-direction: column;
                 gap: 8px;
-                z-index: 2147483647;
+                z-index: 9999;
                 pointer-events: auto;
                 transition: right 0.3s ease, left 0.3s ease, opacity 0.3s ease, flex-direction 0.3s ease;
             }
@@ -1015,7 +1015,7 @@ var version = GM_info.script.version;
                 margin-bottom: 8px;
                 width: 100%;
                 background: linear-gradient(135deg, rgba(137, 180, 250, 0.2), rgba(139, 233, 253, 0.2));
-                border: 1px solid rgba(137, 180, 250, 0.4);
+                border: 1px solid rgba(123, 126, 131, 0.4);
                 border-radius: 6px;
                 color: #89b4fa;
                 font-size: 14px;
@@ -13440,7 +13440,7 @@ var version = GM_info.script.version;
 
             // Base inline styles (position handled by CSS based on data-position)
             container.style.cssText = `
-                top: ${cfg.floatingHelpers.topOffset};
+                top: 20%;
             `;
 
             console.log('[FloatingHelpers] Container created with position:', cfg.floatingHelpers.position);
@@ -16880,15 +16880,15 @@ var version = GM_info.script.version;
                                     <strong>AutoDS</strong>
                                     <span class="autods-chip">v<span data-meta="version"></span></span>
                                 </div>
-                                <button type="button" class="autods-panel-close" data-action="close-panel" aria-label="Minimizar" title="Minimizar (Ctrl+Shift+P)">✕</button>
+                                <button type="button" class="autods-panel-close" data-action="close-panel" aria-label="Minimize" title="Minimize (Ctrl+Shift+P)">✕</button>
                             </div>
                             <div class="autods-route"><code data-meta="route"></code></div>
                         </div>
 
                         <!-- Tab Navigation -->
                         <div class="autods-tabs-main">
-                            <button class="autods-tab" data-tab="profiles">📁 Perfis</button>
-                            <button class="autods-tab active" data-tab="quick">🎯 Rápido</button>
+                            <button class="autods-tab" data-tab="profiles">📁 Profiles</button>
+                            <button class="autods-tab active" data-tab="quick">🎯 Quick</button>
                             <button class="autods-tab" data-tab="ultrafastfarm">⚔️ Ultra Fast Farm</button>
                             <button class="autods-tab" data-tab="specialboss">👑 Special Boss</button>
                             <button class="autods-tab" data-tab="ultrafastattack">⚡ Ultra Fast Attack</button>
@@ -16897,20 +16897,20 @@ var version = GM_info.script.version;
                             <button class="autods-tab" data-tab="dungeon">🏰 Dungeon</button>
                             <button class="autods-tab" data-tab="battle">🗡️ Battle</button>
                             <button class="autods-tab" data-tab="pvp">🏆 PvP</button>
-                            <button class="autods-tab" data-tab="interface">⚙️ Interface</button>
+                            <button class="autods-tab" data-tab="interface">⚙️ Settings</button>
                         </div>
 
                         <!-- Tab Contents -->
                         <div class="autods-tabs-content">
-                            <!-- Tab: Rápido -->
+                            <!-- Tab: Quick -->
                             <div class="autods-tab-content active" data-tab-content="quick">
                                 <div class="autods-status-panel">
-                                    <h3>📊 Status Geral</h3>
+                                    <h3>📊 General Status</h3>
                                     <div class="autods-status-grid">
                                         <div class="autods-status-item">
                                             <label class="autods-checkbox">
                                                 <input type="checkbox" data-config="core.enabled" data-label="Core" data-toast="0" />
-                                                <span>🔌 Core Habilitado</span>
+                                                <span>🔌 Core Enabled</span>
                                             </label>
                                         </div>
                                         <div class="autods-status-item">
@@ -16952,19 +16952,19 @@ var version = GM_info.script.version;
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">⚔️ Ultra Fast Farm</h4>
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="wave.enabled" data-label="Ultra Fast Wave" data-toast="0" />
-                                    <span>⚡ Ativar Ultra Fast Mode</span>
+                                    <span>⚡ Enable Ultra Fast Mode</span>
                                 </label>
                                 
-                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">🎯 Filtro de Monstros</h6>
+                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">🎯 Monster Filter</h6>
                                 <label class="autods-field">
                                     <span>Include (Whitelist)</span>
-                                    <textarea data-config="wave.monsterFilter.includeNames" data-config-format="csv" data-label="Incluir Monstros" placeholder="If empty, attack all. One name per line. Ex:
+                                    <textarea data-config="wave.monsterFilter.includeNames" data-config-format="csv" data-label="Include Monsters" placeholder="If empty, attack all. One name per line. Ex:
 Orc Warrior
 Troll Brawler" rows="2"></textarea>
                                 </label>
                                 <label class="autods-field">
                                     <span>Exclude (Blacklist)</span>
-                                    <textarea data-config="wave.monsterFilter.excludeNames" data-config-format="csv" data-label="Excluir Monstros" placeholder="Monsters to ignore. One name per line. Ex:
+                                    <textarea data-config="wave.monsterFilter.excludeNames" data-config-format="csv" data-label="Exclude Monsters" placeholder="Monsters to ignore. One name per line. Ex:
 Mini Boss
 Event Monster" rows="2"></textarea>
                                 </label>
@@ -16981,14 +16981,14 @@ Event Monster" rows="2"></textarea>
                                         </select>
                                     </label>
                                     <label class="autods-field autods-field-small">
-                                        <span>Dano Alvo</span>
-                                        <input type="number" data-config="wave.damageTarget" data-config-format="int" data-label="Dano Alvo" min="100000" step="100000" />
+                                        <span>Target Damage</span>
+                                        <input type="number" data-config="wave.damageTarget" data-config-format="int" data-label="Target Damage" min="100000" step="100000" />
                                     </label>
                                 </div>
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Ataques //</span>
-                                        <input type="number" data-config="wave.parallelAttacks" data-config-format="int" data-label="Ataques Paralelos" min="1" max="20" />
+                                        <span>Parallel Attacks</span>
+                                        <input type="number" data-config="wave.parallelAttacks" data-config-format="int" data-label="Parallel Attacks" min="1" max="20" />
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Delay (ms)</span>
@@ -16999,17 +16999,17 @@ Event Monster" rows="2"></textarea>
                                 <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">💊 Auto Full Stamina Potion</h6>
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="wave.autoFSP" data-label="Auto FSP" data-toast="0" />
-                                    <span>💊 Auto FSP quando stamina baixa</span>
+                                    <span>💊 Auto FSP when stamina is low</span>
                                 </label>
                                 <label class="autods-field autods-field-small">
-                                    <span>Stamina Mín para FSP</span>
-                                    <input type="number" data-config="wave.minStaminaForFSP" data-config-format="int" data-label="Stamina Mín FSP" min="0" step="10" />
+                                    <span>Min Stamina for FSP</span>
+                                    <input type="number" data-config="wave.minStaminaForFSP" data-config-format="int" data-label="Min Stamina FSP" min="0" step="10" />
                                 </label>
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="wave.lootDeadBeforeFSP" data-label="Loot Dead antes FSP" data-toast="0" />
-                                    <span>💀 Lootar Dead Monsters antes de usar FSP</span>
+                                    <input type="checkbox" data-config="wave.lootDeadBeforeFSP" data-label="Loot Dead before FSP" data-toast="0" />
+                                    <span>💀 Loot Dead Monsters before using FSP</span>
                                 </label>
-                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Tenta lootar dead monsters para recuperar stamina via level up antes de gastar FSP.</p>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Attempts to loot dead monsters to recover stamina via level up before spending FSP.</p>
                             </div>
 
                             <!-- Tab: Special Boss Farm -->
@@ -17017,14 +17017,14 @@ Event Monster" rows="2"></textarea>
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">👑 Special Boss Farm</h4>
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="specialBossFarm.enabled" data-label="Special Boss Farm" data-toast="0" />
-                                    <span>👑 Farm Bosses Especiais (General/King/Empress/Bastion)</span>
+                                    <span>👑 Farm Special Bosses (General/King/Empress/Bastion)</span>
                                 </label>
-                                <p class="autods-info" style="font-size:11px;">Módulo dedicado para garantir 50M de dano em bosses raros com loot especial.</p>
+                                <p class="autods-info" style="font-size:11px;">Dedicated module to ensure 50M damage on rare bosses with special loot.</p>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Dano Alvo</span>
-                                        <input type="number" data-config="specialBossFarm.targetDamage" data-config-format="int" data-label="Dano Alvo Boss" value="50000000" min="1000000" step="1000000" />
+                                        <span>Target Damage</span>
+                                        <input type="number" data-config="specialBossFarm.targetDamage" data-config-format="int" data-label="Target Damage Boss" value="50000000" min="1000000" step="1000000" />
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Skill</span>
@@ -17039,7 +17039,7 @@ Event Monster" rows="2"></textarea>
                                 </div>
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Ataques //</span>
+                                        <span>Parallel Attacks</span>
                                         <input type="number" data-config="specialBossFarm.parallelAttacks" data-config-format="int" data-label="Parallel" min="1" max="10" />
                                     </label>
                                     <label class="autods-field autods-field-small">
@@ -17051,26 +17051,26 @@ Event Monster" rows="2"></textarea>
                                 <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">💊 Auto Stamina Potion</h6>
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="specialBossFarm.autoStaminaPotion" data-label="Auto Potion" data-toast="0" />
-                                    <span>💊 Usar poção automaticamente quando necessário</span>
+                                    <span>💊 Use potions automatically when needed</span>
                                 </label>
                                 <label class="autods-field autods-field-small">
-                                    <span>Stamina Mín</span>
+                                    <span>Min Stamina</span>
                                     <input type="number" data-config="specialBossFarm.minStaminaForPotion" data-config-format="int" data-label="Min Stamina" min="0" step="10" />
                                 </label>
                                 
-                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">💀 Configuração de Loot</h6>
+                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">💀 Loot Configuration</h6>
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="specialBossFarm.lootDeadBeforeFSP" data-label="Loot Dead antes FSP Boss" data-toast="0" />
-                                    <span>💀 Lootar Dead Monsters antes de usar FSP</span>
+                                    <input type="checkbox" data-config="specialBossFarm.lootDeadBeforeFSP" data-label="Loot Dead before FSP Boss" data-toast="0" />
+                                    <span>💀 Loot Dead Monsters before using FSP</span>
                                 </label>
-                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Durante farm de bosses, tenta lootar dead monsters para recuperar stamina via level up antes de gastar FSP.</p>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">During boss farming, attempts to loot dead monsters to recover stamina via level up before spending FSP.</p>
                                 
-                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">⏱️ Tempo de Espera</h6>
+                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">⏱️ Wait Time</h6>
                                 <label class="autods-field">
-                                    <span>Intervalo sem Boss (min)</span>
+                                    <span>Interval without Boss (ms)</span>
                                     <input type="number" data-config="specialBossFarm.checkInterval" data-config-format="int" data-label="Check Interval" min="60000" step="60000" value="300000" />
                                 </label>
-                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Tempo de espera se não encontrar bosses antes de recarregar (padrão: 5 minutos).</p>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Wait time if no bosses found before reload (default: 5 minutes).</p>
                             </div>
 
                             <!-- Tab: Ultra Fast Attack -->
@@ -17078,14 +17078,14 @@ Event Monster" rows="2"></textarea>
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">⚡ Ultra Fast Attack</h4>
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="ultraFastAttack.enabled" data-label="Ultra Fast Attack" data-toast="0" />
-                                    <span>⚡ Ativar Ultra Fast Attack (via botão Farm)</span>
+                                    <span>⚡ Enable Ultra Fast Attack (via Farm button)</span>
                                 </label>
-                                <p class="autods-info" style="font-size:11px;">Operações de ataque em lote paralelo via botão flutuante Farm. Modo manual.</p>
+                                <p class="autods-info" style="font-size:11px;">Batch parallel attack operations via floating Farm button. Manual mode.</p>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Max Paralelos</span>
-                                        <input type="number" data-config="ultraFastAttack.maxParallelBattles" data-config-format="int" data-label="Max Paralelos" min="1" max="20" />
+                                        <span>Max Parallel</span>
+                                        <input type="number" data-config="ultraFastAttack.maxParallelBattles" data-config-format="int" data-label="Max Parallel" min="1" max="20" />
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Max Concurrent</span>
@@ -17095,8 +17095,8 @@ Event Monster" rows="2"></textarea>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Ataques/Mob</span>
-                                        <input type="number" data-config="ultraFastAttack.attacksPerMonster" data-config-format="int" data-label="Ataques" min="1" max="10" />
+                                        <span>Attacks/Mob</span>
+                                        <input type="number" data-config="ultraFastAttack.attacksPerMonster" data-config-format="int" data-label="Attacks" min="1" max="10" />
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Skill</span>
@@ -17116,22 +17116,22 @@ Event Monster" rows="2"></textarea>
                                         <input type="number" data-config="ultraFastAttack.delayBetweenBatches" data-config-format="int" data-label="Delay" min="100" step="100" />
                                     </label>
                                     <label class="autods-field autods-field-small">
-                                        <span>Prioridade</span>
-                                        <select data-config="ultraFastAttack.priorityMode" data-label="Prioridade">
+                                        <span>Priority</span>
+                                        <select data-config="ultraFastAttack.priorityMode" data-label="Priority">
                                             <option value="lowest_hp">↓ HP</option>
                                             <option value="highest_hp">↑ HP</option>
-                                            <option value="random">🎲 Aleatório</option>
+                                            <option value="random">🎲 Random</option>
                                         </select>
                                     </label>
                                 </div>
                                 
                                 <label class="autods-field">
-                                    <span>Nomes de Monstros</span>
-                                    <textarea data-config="ultraFastAttack.monsterNames" data-config-format="csv" data-label="Monstros Attack" placeholder="Deixar vazio para todos. Um por linha. Ex:
+                                    <span>Monster Names</span>
+                                    <textarea data-config="ultraFastAttack.monsterNames" data-config-format="csv" data-label="Monsters Attack" placeholder="Leave empty for all. One per line. Ex:
 Orc Warrior
 Troll Brawler" rows="2"></textarea>
                                 </label>
-                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Deixe vazio para atacar todos os monstros disponíveis.</p>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Leave empty to attack all available monsters.</p>
                             </div>
 
                             <!-- Tab: Ultra Fast Loot -->
@@ -17139,14 +17139,14 @@ Troll Brawler" rows="2"></textarea>
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">🎁 Ultra Fast Loot</h4>
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="ultraFastLoot.enabled" data-label="Ultra Fast Loot" data-toast="0" />
-                                    <span>🎁 Ativar Ultra Fast Loot (via botão Loot)</span>
+                                    <span>🎁 Enable Ultra Fast Loot (via Loot button)</span>
                                 </label>
-                                <p class="autods-info" style="font-size:11px;">Loot automático em paralelo. Trabalha melhor após Ultra Fast Attack.</p>
+                                <p class="autods-info" style="font-size:11px;">Automatic parallel looting. Works best after Ultra Fast Attack.</p>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Max Paralelos</span>
-                                        <input type="number" data-config="ultraFastLoot.maxParallelLoots" data-config-format="int" data-label="Max Paralelos Loot" min="1" max="20" />
+                                        <span>Max Parallel</span>
+                                        <input type="number" data-config="ultraFastLoot.maxParallelLoots" data-config-format="int" data-label="Max Parallel Loot" min="1" max="20" />
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Delay (ms)</span>
@@ -17155,39 +17155,33 @@ Troll Brawler" rows="2"></textarea>
                                 </div>
                                 
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="ultraFastLoot.autoLootAfterFarm" data-label="Auto Loot" data-toast="0" />
-                                    <span>⚡ Auto-loot após Ultra Fast Attack completar</span>
-                                </label>
-                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Se ativado, iniciará automaticamente o loot após farm terminar.</p>
-                                
-                                <label class="autods-checkbox">
                                     <input type="checkbox" data-config="ultraFastLoot.lootSpecialBossBeforeFSP" data-label="Loot Special Boss" data-toast="0" />
-                                    <span>👑 Lootar Special Bosses (100B+ HP)</span>
+                                    <span>👑 Loot Special Bosses (100B+ HP)</span>
                                 </label>
-                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Se ativado, loota special bosses UM POR UM para recuperar stamina via level up.</p>
+                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">If enabled, loots special bosses ONE BY ONE to recover stamina via level up.</p>
                                 
                                 <label class="autods-field">
-                                    <span>Incluir Nomes</span>
-                                    <textarea data-config="ultraFastLoot.filters.monsterNames" data-config-format="csv" data-label="Incluir Loot" placeholder="Deixar vazio para todos os mobs. Um por linha. Ex:
+                                    <span>Include Names</span>
+                                    <textarea data-config="ultraFastLoot.filters.monsterNames" data-config-format="csv" data-label="Include Loot" placeholder="Leave empty for all mobs. One per line. Ex:
 Orc Warrior
 Troll Brawler" rows="2"></textarea>
                                 </label>
-                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Whitelist: apenas estes mobs serão looteados.</p>
+                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Whitelist: only these mobs will be looted.</p>
                                 
                                 <label class="autods-field">
-                                    <span>Excluir Nomes</span>
-                                    <textarea data-config="ultraFastLoot.filters.excludeNames" data-config-format="csv" data-label="Excluir Loot" placeholder="Deixar vazio para nenhuma exclusão. Um por linha. Ex:
+                                    <span>Exclude Names</span>
+                                    <textarea data-config="ultraFastLoot.filters.excludeNames" data-config-format="csv" data-label="Exclude Loot" placeholder="Leave empty for no exclusions. One per line. Ex:
 Minion
 Scout" rows="2"></textarea>
                                 </label>
-                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Blacklist: estes mobs serão ignorados.</p>
+                                <p class="autods-info" style="font-size:10px; margin-top: 4px;">Blacklist: these mobs will be ignored.</p>
                                 
                             </div>
 
                             <!-- Tab: Ultra Fast Boss -->
                             <div class="autods-tab-content" data-tab-content="boss">
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">🐉 Ultra Fast Boss</h4>
-                                <p class="autods-info" style="font-size:11px; margin-bottom: 12px;">⚠️ Navegue para battle.php ou dungeon_battle.php antes de usar. Clique em Start para iniciar.</p>
+                                <p class="autods-info" style="font-size:11px; margin-bottom: 12px;">⚠️ Navigate to battle.php or dungeon_battle.php before using. Click Start to begin.</p>
                                 
                                 <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                                     <button type="button" class="autods-btn autods-btn-primary" data-action="boss-start" style="flex: 1; background: linear-gradient(135deg, #4a2a6a 0%, #2a4a6a 100%); border: 1px solid #8af; color: #8af; padding: 8px 12px; border-radius: 4px; cursor: pointer;">▶️ Start</button>
@@ -17197,16 +17191,16 @@ Scout" rows="2"></textarea>
                                 
                                 <div id="autods-boss-status" style="background: rgba(74, 42, 106, 0.3); padding: 8px; border-radius: 4px; border-left: 3px solid #8af; margin-bottom: 12px; display: none;">
                                     <div style="font-size: 12px; color: #8af; line-height: 1.5;">
-                                        <div><strong>Dano:</strong> <span id="autods-boss-damage">0</span></div>
-                                        <div><strong>Ataques:</strong> <span id="autods-boss-attacks">0</span></div>
+                                        <div><strong>Damage:</strong> <span id="autods-boss-damage">0</span></div>
+                                        <div><strong>Attacks:</strong> <span id="autods-boss-attacks">0</span></div>
                                         <div><strong>DPS:</strong> <span id="autods-boss-dps">0</span></div>
-                                        <div><strong>Poções:</strong> <span id="autods-boss-potions">0</span></div>
+                                        <div><strong>Potions:</strong> <span id="autods-boss-potions">0</span></div>
                                     </div>
                                 </div>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Alvo Dano</span>
+                                        <span>Target Damage</span>
                                         <input type="number" data-config="ultraFastBoss.targetDamage" data-config-format="int" data-label="Target Damage" min="1000000" step="1000000" value="1000000000" />
                                     </label>
                                     <label class="autods-field autods-field-small">
@@ -17223,7 +17217,7 @@ Scout" rows="2"></textarea>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
-                                        <span>Ataques //</span>
+                                        <span>Parallel Attacks</span>
                                         <input type="number" data-config="ultraFastBoss.parallelAttacks" data-config-format="int" data-label="Parallel" min="1" max="20" value="10" />
                                     </label>
                                     <label class="autods-field autods-field-small">
@@ -17234,17 +17228,17 @@ Scout" rows="2"></textarea>
                                 
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="ultraFastBoss.autoPotion" data-label="Auto Potion" data-toast="0" />
-                                    <span>💊 Usar Full Stamina Potion automaticamente</span>
+                                    <span>💊 Use Full Stamina Potion automatically</span>
                                 </label>
-                                <p class="autods-info" style="font-size:10px; margin-top: 8px;">Usar Full Stamina Potion (FSP) automaticamente quando stamina acabar.</p>
+                                <p class="autods-info" style="font-size:10px; margin-top: 8px;">Use Full Stamina Potion (FSP) automatically when stamina runs out.</p>
                             </div>
                             <div class="autods-tab-content" data-tab-content="dungeon">
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">⚡ Ultra Fast Dungeon</h4>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field">
-                                        <span>Monstros</span>
-                                        <textarea data-config="ultraFastDungeon.monsterNames" data-config-format="csv" data-label="Monstros Dungeon Ultra Fast" placeholder="Um nome por linha. Ex:
+                                        <span>Monsters</span>
+                                        <textarea data-config="ultraFastDungeon.monsterNames" data-config-format="csv" data-label="Monsters Dungeon Ultra Fast" placeholder="One name per line. Ex:
 Ancient Dragon
 Magus" rows="2"></textarea>
                                     </label>
@@ -17252,28 +17246,28 @@ Magus" rows="2"></textarea>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field">
-                                        <span>Prioridade</span>
-                                        <select data-config="ultraFastDungeon.priorityMode" data-label="Prioridade">
-                                            <option value="lowest_damage">↓ Dano</option>
-                                            <option value="highest_damage">↑ Dano</option>
+                                        <span>Priority</span>
+                                        <select data-config="ultraFastDungeon.priorityMode" data-label="Priority">
+                                            <option value="lowest_damage">↓ Damage</option>
+                                            <option value="highest_damage">↑ Damage</option>
                                             <option value="lowest_hp">↓ HP</option>
                                             <option value="highest_hp">↑ HP</option>
                                         </select>
                                     </label>
                                     <label class="autods-field">
-                                        <span>HP Mín</span>
-                                        <input type="number" data-config="ultraFastDungeon.minMobHp" data-config-format="int" data-label="HP Mín" min="0" step="100000" />
+                                        <span>Min HP</span>
+                                        <input type="number" data-config="ultraFastDungeon.minMobHp" data-config-format="int" data-label="HP Min" min="0" step="100000" />
                                     </label>
                                 </div>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field">
-                                        <span>Ataques por Monstro</span>
-                                        <input type="number" data-config="ultraFastDungeon.attacksPerMonster" data-config-format="int" data-label="Ataques" min="1" max="10" />
+                                        <span>Attacks per Monster</span>
+                                        <input type="number" data-config="ultraFastDungeon.attacksPerMonster" data-config-format="int" data-label="Attacks" min="1" max="10" />
                                     </label>
                                     <label class="autods-field">
-                                        <span>Ataques //</span>
-                                        <input type="number" data-config="ultraFastDungeon.maxParallelBattles" data-config-format="int" data-label="Paralelos" min="1" max="20" />
+                                        <span>Parallel Attacks</span>
+                                        <input type="number" data-config="ultraFastDungeon.maxParallelBattles" data-config-format="int" data-label="Parallel" min="1" max="20" />
                                     </label>
                                 </div>
                                 
@@ -17288,37 +17282,37 @@ Magus" rows="2"></textarea>
                                     <h5>🧠 Smart Damage</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="ultraFastDungeon.useSmartDamage" data-label="Smart Damage" data-toast="0" />
-                                        <span>🧠 Usar Smart Damage para respeitar limites</span>
+                                        <span>🧠 Use Smart Damage to respect limits</span>
                                     </label>
                                     
                                     <div class="autods-field-row">
                                         <label class="autods-field autods-field-small">
-                                            <span>Dano Default</span>
+                                            <span>Default Damage</span>
                                             <input type="number" data-config="ultraFastDungeon.damageThresholds.default" data-config-format="int" data-label="Default" />
                                         </label>
                                         <label class="autods-field autods-field-small">
-                                            <span>Dano Magus</span>
+                                            <span>Magus Damage</span>
                                             <input type="number" data-config="ultraFastDungeon.damageThresholds.magus" data-config-format="int" data-label="Magus" />
                                         </label>
                                     </div>
                                     
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="ultraFastDungeon.respectExpLimit" data-label="Respect Exp Limit" data-toast="0" />
-                                        <span>Nunca exceder 20% HP para full EXP</span>
+                                        <span>Never exceed 20% HP for full EXP</span>
                                     </label>
                                 </div>
                                 
                                 <div class="autods-checkbox">
                                     <input type="checkbox" data-config="ultraFastDungeon.checkJoined" data-label="Check Joined" data-toast="0" />
-                                    <span>Verificar monstros que já entrei</span>
+                                    <span>Check monsters I already joined</span>
                                 </div>
                                 <div class="autods-checkbox">
                                     <input type="checkbox" data-config="ultraFastDungeon.checkNotJoined" data-label="Check Not Joined" data-toast="0" />
-                                    <span>Verificar monstros que não entrei</span>
+                                    <span>Check monsters I haven't joined</span>
                                 </div>
                                 
                                 <p class="autods-info" style="font-size: 11px; margin-top: 12px;">
-                                    💡 Stamina mínima compartilhada com Wave.
+                                    💡 Minimum stamina shared with Wave.
                                 </p>
                             </div>
 
@@ -17330,7 +17324,7 @@ Magus" rows="2"></textarea>
                                     <h5>🧠 Smart Damage</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="battle.smartDamage.enabled" data-label="Smart Damage" data-toast="0" />
-                                        <span>Ativar Smart Damage Automático</span>
+                                        <span>Enable Automatic Smart Damage</span>
                                     </label>
                                     
                                     <div class="autods-skill-grid" style="margin-top: 12px;">
@@ -17352,42 +17346,42 @@ Magus" rows="2"></textarea>
                                         </label>
                                     </div>
                                     <p class="autods-info" style="font-size: 10px; margin-top: 8px;">
-                                        Smart Damage seleciona skill automático conforme o dano atual se aproxima dos limites.
+                                        Smart Damage automatically selects skill as current damage approaches limits.
                                     </p>
                                 </div>
                                 
                                 <label class="autods-checkbox">
                                     <input type="checkbox" data-config="battle.randomizeDelays" data-label="Randomize Delays" data-toast="0" />
-                                    <span>Randomizar delays (anti-bot detection)</span>
+                                    <span>Randomize delays (anti-bot detection)</span>
                                 </label>
                             </div>
 
                             <!-- Tab: PvP -->
                             <div class="autods-tab-content" data-tab-content="pvp">
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">🏆 PvP (Ultra Fast Mode)</h4>
-                                <p class="autods-info" style="font-size:11px; margin-bottom: 12px;">Automação completa de PvP com ataques via API direto.</p>
+                                <p class="autods-info" style="font-size:11px; margin-bottom: 12px;">Complete PvP automation with direct API attacks.</p>
                                 
                                 <label class="autods-checkbox" style="background: linear-gradient(135deg, #2a1a3a 0%, #1a2a3a 100%); padding: 8px; border-radius: 6px; border: 1px solid #8af; margin-bottom: 12px;">
                                     <input type="checkbox" data-config="pvp.enabled" data-label="PvP" data-toast="0" />
-                                    <span>⚡ Ativar PvP Automation</span>
+                                    <span>⚡ Enable PvP Automation</span>
                                 </label>
                                 
                                 <div class="autods-field-row">
                                     <label class="autods-field">
-                                        <span>Modo</span>
-                                        <select data-config="pvp.autoMode" data-label="Modo PvP">
-                                            <option value="all">Todas as batalhas</option>
-                                            <option value="limited">Limitado</option>
+                                        <span>Mode</span>
+                                        <select data-config="pvp.autoMode" data-label="PvP Mode">
+                                            <option value="all">All Battles</option>
+                                            <option value="limited">Limited</option>
                                         </select>
                                     </label>
                                     <label class="autods-field">
-                                        <span>Limite</span>
-                                        <input type="number" data-config="pvp.limitedBattles" data-config-format="int" data-label="Limite" min="1" />
+                                        <span>Limit</span>
+                                        <input type="number" data-config="pvp.limitedBattles" data-config-format="int" data-label="Limit" min="1" />
                                     </label>
                                 </div>
                                 
                                 <div class="autods-subsection">
-                                    <h5>⚡ Configurações de Combate</h5>
+                                    <h5>⚡ Battle Settings</h5>
                                     <div class="autods-field-row">
                                         <label class="autods-field">
                                             <span>Skill</span>
@@ -17397,7 +17391,7 @@ Magus" rows="2"></textarea>
                                             </select>
                                         </label>
                                         <label class="autods-field">
-                                            <span>Delay Min (ms)</span>
+                                            <span>Min Delay (ms)</span>
                                             <input type="number" data-config="pvp.ultraFastConfig.minDelayBetweenAttacks" data-config-format="int" data-label="Delay Min" min="0" max="1000" step="10" />
                                         </label>
                                     </div>
@@ -17409,7 +17403,7 @@ Magus" rows="2"></textarea>
                                     
                                     <div id="smartRotationConfig" style="margin-top: 10px; padding: 10px; background: rgba(26, 58, 42, 0.3); border-radius: 6px; border: 1px solid #4a8;">
                                         <div style="font-size: 12px; color: #aaf; margin-bottom: 8px; line-height: 1.4;">
-                                            <strong>Configurar Rotação:</strong> Skill ID | Qtd
+                                            <strong>Configure Rotation:</strong> Skill ID | Qty
                                         </div>
                                         
                                         <div id="rotationItems" style="max-height: 300px; overflow-y: auto;">
@@ -17456,21 +17450,21 @@ Magus" rows="2"></textarea>
 
                             <!-- Tab: Interface -->
                             <div class="autods-tab-content" data-tab-content="interface">
-                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">⚙️ Interface & Config</h4>
+                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">⚙️ Settings & Config</h4>
                                 
                                 <div class="autods-subsection">
                                     <h5>📊 Log Floater</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="ui.logFloater.enabled" data-label="Log Floater" data-toast="0" />
-                                        <span>Exibir Log Flutuante</span>
+                                        <span>Show Floating Log</span>
                                     </label>
                                     <label class="autods-field">
-                                        <span>Posição</span>
+                                        <span>Position</span>
                                         <select data-config="ui.logFloater.position" data-label="Log Position">
-                                            <option value="bottom-right">Inferior Direita</option>
-                                            <option value="bottom-left">Inferior Esquerda</option>
-                                            <option value="top-right">Superior Direita</option>
-                                            <option value="top-left">Superior Esquerda</option>
+                                            <option value="bottom-right">Bottom Right</option>
+                                            <option value="bottom-left">Bottom Left</option>
+                                            <option value="top-right">Top Right</option>
+                                            <option value="top-left">Top Left</option>
                                         </select>
                                     </label>
                                 </div>
@@ -17479,19 +17473,19 @@ Magus" rows="2"></textarea>
                                     <h5>🔔 Toast Notifications</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="ui.toasts.enabled" data-label="Toasts" data-toast="0" />
-                                        <span>Ativar notificações tipo toast</span>
+                                        <span>Enable toast notifications</span>
                                     </label>
                                     <label class="autods-field">
-                                        <span>Posição</span>
+                                        <span>Position</span>
                                         <select data-config="ui.toasts.position" data-label="Toast Position">
-                                            <option value="bottom-right">Inferior Direita</option>
-                                            <option value="bottom-left">Inferior Esquerda</option>
-                                            <option value="top-right">Superior Direita</option>
-                                            <option value="top-left">Superior Esquerda</option>
+                                            <option value="bottom-right">Bottom Right</option>
+                                            <option value="bottom-left">Bottom Left</option>
+                                            <option value="top-right">Top Right</option>
+                                            <option value="top-left">Top Left</option>
                                         </select>
                                     </label>
                                     <label class="autods-field autods-field-small">
-                                        <span>Duração (ms)</span>
+                                        <span>Duration (ms)</span>
                                         <input type="number" data-config="ui.toasts.durationMs" data-config-format="int" data-label="Duration" min="1000" step="500" />
                                     </label>
                                 </div>
@@ -17500,18 +17494,18 @@ Magus" rows="2"></textarea>
                                     <h5>🎀 Floating Helpers</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="floatingHelpers.enabled" data-label="Floating Helpers" data-toast="0" />
-                                        <span>Exibir botões flutuantes</span>
+                                        <span>Show floating buttons</span>
                                     </label>
                                     <label class="autods-field">
-                                        <span>Posição</span>
+                                        <span>Position</span>
                                         <select data-config="floatingHelpers.position" data-label="Helpers Position">
-                                            <option value="right">Direita</option>
-                                            <option value="left">Esquerda</option>
+                                            <option value="right">Right</option>
+                                            <option value="left">Left</option>
                                         </select>
                                     </label>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="floatingHelpers.loot.enabled" data-label="Loot" data-toast="0" />
-                                        <span>Botões de loot</span>
+                                        <span>Loot buttons</span>
                                     </label>
                                 </div>
                                 
@@ -17519,18 +17513,12 @@ Magus" rows="2"></textarea>
                                     <h5>�️ Bloqueador de Imagens</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="imageBlocker.enabled" data-label="Image Blocker" data-toast="0" />
-                                        <span>Bloquear imagens (melhora performance)</span>
+                                        <span>Block images (improves performance)</span>
                                     </label>
-                                    <p class="autods-info" style="font-size: 11px; color: #aaa; margin-top: 8px;">
-                                        Carrega a página mais rápido bloqueando todas as imagens. Recarregue a página para ativar.
-                                    </p>
                                 </div>
                                 
                                 <div class="autods-subsection">
                                     <h5>�🔐 Credenciais de Login</h5>
-                                    <p class="autods-info" style="font-size: 11px; color: #aaa; margin-bottom: 12px;">
-                                        Salve suas credenciais para re-login automático (opcional).
-                                    </p>
                                     <label class="autods-field">
                                         <span>Email/Usuário</span>
                                         <input type="email" data-config="credentials.email" data-label="Email" placeholder="seu@email.com" />
@@ -17545,42 +17533,39 @@ Magus" rows="2"></textarea>
                                 </div>
                                 
                                 <div class="autods-subsection">
-                                    <h5>🔧 Sistema</h5>
+                                    <h5>🔧 System</h5>
                                     <label class="autods-field">
-                                        <span>Nível de Log</span>
+                                        <span>Log Level</span>
                                         <select data-config="core.logLevel" data-label="Log Level">
                                             <option value="debug">Debug</option>
                                             <option value="info">Info</option>
-                                            <option value="warn">Aviso</option>
-                                            <option value="error">Erro</option>
+                                            <option value="warn">Warning</option>
+                                            <option value="error">Error</option>
                                         </select>
                                     </label>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="core.shadowDom" data-label="Shadow DOM" data-toast="0" />
-                                        <span>Usar Shadow DOM (isolamento de estilos)</span>
+                                        <span>Use Shadow DOM (style isolation)</span>
                                     </label>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="core.unlockAttackButtons" data-label="Unlock Attack Buttons" data-toast="0" />
-                                        <span>Sempre desbloquear botões de ataque</span>
+                                        <span>Always unlock attack buttons</span>
                                     </label>
                                 </div>
                                 
                                 <div class="autods-subsection">
                                     <h5>🛒 Merchant</h5>
                                     <button id="autods-reset-merchant-schedule" class="autods-button-action" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s;">
-                                        🔄 Resetar Agendamento do Merchant
+                                        🔄 Reset Merchant Schedule
                                     </button>
-                                    <p class="autods-info" style="font-size: 11px; color: #aaa; margin-top: 8px;">
-                                        Limpa os timestamps e força uma nova verificação na próxima hora.
-                                    </p>
                                 </div>
                             </div>
 
                             <!-- Tab: Profiles -->
                             <div class="autods-tab-content" data-tab-content="profiles">
-                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">📁 Gerenciador de Perfis</h4>
+                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">📁 Profile Manager</h4>
                                 <p class="autods-info" style="font-size: 12px; margin-bottom: 16px;">
-                                    Salve e carregue diferentes configurações de automação.
+                                    Save and load different automation configurations.
                                 </p>
                                 <div id="autods-profile-manager-container" style="margin-top: 8px;">
                                     <!-- Profile Manager será renderizado aqui -->

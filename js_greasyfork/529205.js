@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         新球体育网亚盘统计
 // @namespace    http://dol.freevar.com/
-// @version      1.08
-// @description  新球体育网（球探）手机端网页，在赛程页面加入“统计”按钮，统计当前页面里所有已完场的比赛。在分析页面加入“统计”,“表格”,“预测”按钮，“统计”按钮统计当前页面这场比赛。“表格”按钮生成各个公司对已统计场次的准确性表格，误差越低的公司越准确。选择公司后可点击“预测”按钮，预测赛果仅供参考。
+// @version      1.09
+// @description  新球体育网（球探）手机端网页。在分析页面加入“统计”,“表格”,“开关”按钮，“统计”按钮统计当前页面这场比赛。“表格”按钮生成各个公司对已统计场次的准确性表格，误差越低的公司越准确。“开关”按钮在最近赛事里显示统计按钮。预测赛果仅供参考。
 // @author       Dolphin
-// @match        https://m.titan007.com/info/*
 // @match        https://m.titan007.com/Analy/Analysis/*
 // @match        https://m.titan007.com/analy/Analysis/*
 // @run-at       document-end
@@ -17,490 +16,650 @@
 (function() {
     'use strict';
 
-    // 公司映射
+    // 公司映射表
     const COMPANY_MAP = {
-        '澳门': 1,
-        '皇冠': 3,
-        'Bet365': 8,
-        '易胜博': 12,
-        '伟德': 14,
-        '明陞': 17,
-        '金宝博': 23,
-        '12Bet': 24,
-        '利记': 31,
-        '盈禾': 35,
-        '18Bet': 42,
-        '平博': 47,
-        '香港': 48,
-        '威廉': 9,
-        'Inter': 19,
-        '1xBet': 50
+        '澳门': {id: 1, name: '澳门'},
+        'Bet365': {id: 8, name: 'Bet365'},
+        '易胜博': {id: 12, name: '易胜博'},
+        '伟德': {id: 14, name: '伟德'},
+        '明陞': {id: 17, name: '明陞'},
+        '金宝博': {id: 23, name: '金宝博'},
+        '12bet': {id: 24, name: '12bet'},
+        '利记': {id: 31, name: '利记'},
+        '盈禾': {id: 35, name: '盈禾'},
+        '18Bet': {id: 42, name: '18Bet'},
+        '平博': {id: 47, name: '平博'},
+        '香港': {id: 48, name: '香港'},
+        '威廉': {id: 9, name: '威廉'},
+        'Interw': {id: 19, name: 'Interw'},
+        '1xBet': {id: 50, name: '1xBet'}
     };
 
-    // 公司ID到名称的映射
-    const COMPANY_ID_TO_NAME = {};
-    Object.keys(COMPANY_MAP).forEach(name => {
-        COMPANY_ID_TO_NAME[COMPANY_MAP[name]] = name;
-    });
+    // 默认选中的公司
+    const DEFAULT_SELECTED = ['Bet365', '易胜博', '伟德', '金宝博', '12bet', '利记', '盈禾', '18Bet', '平博'];
+
+    // 全局变量
+    let asianStats = null;
+    let isOpenMode = false;
+
+    // 初始化
+    function init() {
+        loadAsianStats();
+        createControlPanel();
+    }
+
+    // 加载统计数据
+    function loadAsianStats() {
+        const statsStr = localStorage.getItem('asianStats');
+        if (statsStr) {
+            try {
+                asianStats = JSON.parse(statsStr);
+            } catch (e) {
+                console.error('解析asianStats失败:', e);
+                asianStats = {selectComp: {}, result: {}};
+            }
+        } else {
+            asianStats = {selectComp: {}, result: {}};
+        }
+
+        // 初始化选择状态
+        Object.keys(COMPANY_MAP).forEach(company => {
+            if (asianStats.selectComp[company] === undefined) {
+                asianStats.selectComp[company] = DEFAULT_SELECTED.includes(company);
+            }
+        });
+    }
+
+    // 保存统计数据
+    function saveAsianStats() {
+        localStorage.setItem('asianStats', JSON.stringify(asianStats));
+    }
+
+    // 创建控制面板
+    function createControlPanel() {
+        // 创建容器
+        const ctrlPanel = document.createElement('div');
+        ctrlPanel.id = 'ctrlPanel';
+        ctrlPanel.style.cssText = `
+            text-align: right;
+            font-size: 16px;
+        `;
+
+        // 创建公司列表
+        const companyList = document.createElement('ul');
+        companyList.style.cssText = `
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        `;
+
+        Object.keys(COMPANY_MAP).forEach(company => {
+            const li = document.createElement('li');
+            li.textContent = company;
+            li.dataset.company = company;
+            li.style.cssText = `
+                padding: 2px 5px;
+                background: ${asianStats.selectComp[company] ? '#ffb' : '#FFF'};
+                cursor: pointer;
+                font-size: 16px;
+                border: 1px dashed #0170CA;
+            `;
+
+            li.addEventListener('click', () => {
+                asianStats.selectComp[company] = !asianStats.selectComp[company];
+                li.style.background = asianStats.selectComp[company] ? '#ffb' : '#FFF';
+                saveAsianStats();
+            });
+
+            companyList.appendChild(li);
+        });
+
+        ctrlPanel.appendChild(companyList);
+
+        // 创建按钮
+        const clearBtn = createButton('清除', '#FF6B6B', () => handleClear());
+        const statsBtn = createButton('统计', '#4CAF50', () => handleStats());
+        const tableBtn = createButton('表格', '#2196F3', () => handleTable());
+        const toggleBtn = createButton('开', '#FF9800', () => handleToggle());
+
+        ctrlPanel.appendChild(clearBtn);
+        ctrlPanel.appendChild(statsBtn);
+        ctrlPanel.appendChild(tableBtn);
+        ctrlPanel.appendChild(toggleBtn);
+
+        // 插入到页面
+        const contentDiv = document.getElementById('content');
+        if (contentDiv && contentDiv.firstChild) {
+            contentDiv.insertBefore(ctrlPanel, contentDiv.firstChild);
+        } else if (contentDiv) {
+            contentDiv.appendChild(ctrlPanel);
+        }
+    }
 
     // 创建按钮
-    function createButton(text, onClick, disabled = false) {
-        const button = document.createElement('button');
-        button.textContent = text;
-        button.style.fontSize = '16px';
-        button.style.margin = '5px';
-        button.style.padding = '5px 10px';
-        button.style.cursor = 'pointer';
-        button.disabled = disabled;
-        button.addEventListener('click', onClick);
-        return button;
-    }
-
-    // 获取存储的数据
-    function getStoredData() {
-        const stored = localStorage.getItem('asianStats');
-        return stored ? JSON.parse(stored) : {};
-    }
-
-    // 保存数据到存储
-    function saveData(data) {
-        localStorage.setItem('asianStats', JSON.stringify(data));
+    function createButton(text, color, onClick) {
+        const btn = document.createElement('button');
+        btn.textContent = text;
+        btn.style.cssText = `
+            padding: 2px 5px;
+            margin: 5px 5px 5px 0px;
+            background: ${color};
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        `;
+        btn.addEventListener('click', onClick);
+        return btn;
     }
 
     // 清除数据
-    function clearData() {
-        localStorage.removeItem('asianStats');
-        alert('统计数据已清除！');
-    }
+    function handleClear() {
+        if (confirm('确定要删除所有已统计的数据吗？')) {
+            localStorage.removeItem('asianStats');
+            asianStats = {selectComp: {}, result: {}};
 
-    // 获取实际比分差
-    function getActualScoreDiff(scoreText) {
-        const match = scoreText.match(/(\d+):(\d+)/);
-        if (match) {
-            return parseInt(match[1]) - parseInt(match[2]);
+            // 重置选择状态
+            Object.keys(COMPANY_MAP).forEach(company => {
+                asianStats.selectComp[company] = DEFAULT_SELECTED.includes(company);
+            });
+
+            // 重新渲染公司列表
+            document.querySelectorAll('#ctrlPanel li').forEach(li => {
+                const company = li.dataset.company;
+                li.style.background = asianStats.selectComp[company] ? '#ffb' : '#FFF';
+            });
         }
-        return null;
     }
 
-    // 计算预期比分差
-    function calculateExpectDiff(detail) {
-        const drawOdds = detail.firstDrawOdds || 0;
-        return drawOdds + (detail.firstAwayOdds - detail.firstHomeOdds) / 2;
-    }
+    // 统计当前比赛
+    async function handleStats() {
+        if (!scheduleId) {
+            alert('无法获取比赛ID');
+            return;
+        }
 
-    // 请求赔率数据
-    async function fetchOddsData(scheduleId) {
+        // 获取比分
+        const homeScoreElem = document.getElementById('homeScore');
+        const guestScoreElem = document.getElementById('guestScore');
+
+        if (!homeScoreElem || !guestScoreElem) {
+            alert('没有比分！');
+            return;
+        }
+
+        const homeScore = parseInt(homeScoreElem.textContent);
+        const guestScore = parseInt(guestScoreElem.textContent);
+        const actualDiff = homeScore - guestScore;
+
+        // 禁用按钮
+        const statsBtn = document.querySelector('#ctrlPanel button:nth-child(3)');
+        statsBtn.disabled = true;
+        statsBtn.textContent = '统计中';
+
         try {
-            const response = await fetch(`/HandicapDataInterface.ashx?scheid=${scheduleId}&type=1&oddskind=0&isHalf=0`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            await calculateAndSaveStats(scheduleId, actualDiff);
+        } catch (error) {
+            alert('统计失败: ' + error.message);
+        } finally {
+            // 恢复按钮
+            statsBtn.disabled = false;
+            statsBtn.textContent = '统计';
+        }
+    }
+
+    // 计算并保存统计数据
+    async function calculateAndSaveStats(scheduleId, actualDiff) {
+        // 获取选中的公司
+        const selectedCompanies = Object.keys(COMPANY_MAP).filter(
+            company => asianStats.selectComp[company]
+        );
+
+        if (selectedCompanies.length === 0) {
+            throw new Error('请至少选择一家公司');
+        }
+
+        // 获取各公司数据
+        const companyData = {};
+        const requests = selectedCompanies.map(async company => {
+            try {
+                const data = await fetchCompanyData(scheduleId, COMPANY_MAP[company].id);
+                companyData[company] = data;
+            } catch (error) {
+                console.error(`获取${company}数据失败:`, error);
+                throw new Error(`${company}: ${error.message}`);
             }
-            
+        });
+
+        await Promise.all(requests);
+
+        // 过滤有开盘的公司
+        const validCompanies = selectedCompanies.filter(
+            company => companyData[company] && companyData[company].length > 0
+        );
+
+        if (validCompanies.length === 0) {
+            throw new Error('没有公司开盘');
+        }
+
+        // 找出基准时间
+        const baseTime = findBaseTime(companyData, validCompanies);
+
+        // 计算各公司的预期比分差
+        const predictions = {};
+        validCompanies.forEach(company => {
+            const prediction = calculatePrediction(companyData[company], baseTime);
+            if (prediction !== null) {
+                predictions[company] = prediction;
+            }
+        });
+
+        // 找出最接近实际比分的公司
+        let closestCompany = null;
+        let minDiff = Infinity;
+
+        Object.keys(predictions).forEach(company => {
+            const diff = Math.abs(predictions[company] - actualDiff);
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestCompany = company;
+            }
+        });
+
+        if (!closestCompany) {
+            throw new Error('无法计算预期比分差');
+        }
+
+        // 以最接近的公司为标准，计算各公司的误差
+        const standardPrediction = predictions[closestCompany];
+        const errors = {};
+
+        Object.keys(predictions).forEach(company => {
+            const error = predictions[company] - standardPrediction;
+            errors[company] = error;
+
+            // 保存到统计数据
+            if (!asianStats.result[company]) {
+                asianStats.result[company] = {};
+            }
+            asianStats.result[company][scheduleId] = error;
+        });
+
+        saveAsianStats();
+        return errors;
+    }
+
+    // 获取公司数据
+    async function fetchCompanyData(scheduleId, companyId) {
+        const url = `/HandicapDataInterface.ashx?scheid=${scheduleId}&type=3&oddskind=0&companyid=${companyId}&isHalf=0`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('获取赔率数据失败:', error);
-            throw error;
+            throw new Error('请求失败: ' + error.message);
         }
     }
 
-    // 处理比赛数据
-    async function processMatchData(matches, updateProgress) {
-        const storedData = getStoredData();
-        let processedCount = 0;
+    // 找出基准时间
+    function findBaseTime(companyData, validCompanies) {
+        let earliestTimes = [];
 
-        for (const match of matches) {
-            try {
-                const oddsData = await fetchOddsData(match.id);
-                
-                if (oddsData && oddsData.companies) {
-                    // 计算标准比分差
-                    const companyDiffs = [];
-                    
-                    oddsData.companies.forEach(company => {
-                        const detail = company.details.find(d => d.num === 1);
-                        if (detail && detail.firstHomeOdds !== undefined && detail.firstAwayOdds !== undefined) {
-                            const expectDiff = calculateExpectDiff(detail);
-                            companyDiffs.push(expectDiff);
-                        }
-                    });
-
-                    if (companyDiffs.length > 0) {
-                        // 找到最接近实际比分差的预期比分差作为标准
-                        const standardDiff = companyDiffs.reduce((closest, current) => {
-                            return Math.abs(current - match.actualDiff) < Math.abs(closest - match.actualDiff) ? current : closest;
-                        }, companyDiffs[0]);
-
-                        // 计算各公司的误差并存储
-                        oddsData.companies.forEach(company => {
-                            const detail = company.details.find(d => d.num === 1);
-                            if (detail && detail.firstHomeOdds !== undefined && detail.firstAwayOdds !== undefined) {
-                                const companyName = COMPANY_ID_TO_NAME[company.companyId];
-                                if (companyName) {
-                                    const expectDiff = calculateExpectDiff(detail);
-                                    const expectError = expectDiff - standardDiff;
-                                    
-                                    if (!storedData[companyName]) {
-                                        storedData[companyName] = {};
-                                    }
-                                    
-                                    storedData[companyName][match.id] = {
-                                        expectDiff: expectDiff,
-                                        expectError: expectError
-                                    };
-                                }
-                            }
-                        });
-                    }
-                }
-                
-                processedCount++;
-                updateProgress(processedCount, matches.length);
-                
-                // 间隔100毫秒
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-            } catch (error) {
-                console.error(`处理比赛 ${match.id} 失败:`, error);
-                alert(`获取比赛 ${match.id} 数据失败: ${error.message}`);
+        validCompanies.forEach(company => {
+            const data = companyData[company];
+            // 过滤即时盘口
+            const instantData = data.filter(item => item.HappenTime === "");
+            if (instantData.length > 0) {
+                // 找出最早的时间
+                const times = instantData.map(item => item.ModifyTime);
+                const earliest = times.reduce((a, b) => a < b ? a : b);
+                earliestTimes.push(earliest);
             }
+        });
+
+        if (earliestTimes.length === 0) {
+            throw new Error('没有找到有效的即时盘口数据');
         }
-        
-        return storedData;
+
+        // 找出最晚开盘的公司的最早时间
+        return earliestTimes.reduce((a, b) => a > b ? a : b);
     }
 
-    // 处理信息页面
-    function handleInfoPage() {
-        const contentDiv = document.getElementById('content');
-        if (!contentDiv) return;
+    // 计算预期比分差
+    function calculatePrediction(data, baseTime) {
+        // 过滤即时盘口
+        const instantData = data.filter(item => item.HappenTime === "");
 
-        // 创建按钮容器
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.textAlign = 'right';
+        // 找出小于等于基准时间的最新数据
+        const validData = instantData.filter(item => item.ModifyTime <= baseTime);
 
-        const clearButton = createButton('清除', clearData);
-        clearButton.style.background = '#fbb';
-        const statsButton = createButton('统计', handleStats);
-        statsButton.style.background = '#bfb';
+        if (validData.length === 0) {
+            return null;
+        }
 
-        buttonContainer.appendChild(clearButton);
-        buttonContainer.appendChild(statsButton);
-        contentDiv.insertBefore(buttonContainer, contentDiv.firstChild);
+        // 按时间降序排序
+        validData.sort((a, b) => b.ModifyTime.localeCompare(a.ModifyTime));
 
-        async function handleStats() {
-            statsButton.disabled = true;
-            
-            // 获取所有比赛数据
-            const matches = [];
-            const trElements = document.querySelectorAll('tr[onclick]');
-            
-            trElements.forEach(tr => {
-                // 从onclick属性获取比赛ID
-                const match = tr.getAttribute('onclick').match(/ToAnaly\((\d+)/);
-                if (match) {
-                    const scheduleId = match[1];
-                    
-                    // 查找比分
-                    let scoreText = '';
-                    const redSpan = tr.querySelector('span[style*="color:red"], span.red');
-                    if (redSpan) {
-                        scoreText = redSpan.textContent;
-                    }
-                    
-                    const actualDiff = getActualScoreDiff(scoreText);
-                    if (actualDiff !== null) {
-                        matches.push({
-                            id: scheduleId,
-                            actualDiff: actualDiff
-                        });
-                    }
-                }
-            });
+        const latest = validData[0];
+        const panKou = parseFloat(latest.PanKou);
+        const homeOdds = parseFloat(latest.HomeOdds);
+        const awayOdds = parseFloat(latest.AwayOdds);
 
-            if (matches.length === 0) {
-                alert('未找到可统计的比赛数据');
-                statsButton.disabled = false;
-                return;
-            }
+        // 计算预期比分差
+        return panKou + (awayOdds - homeOdds) / 2;
+    }
 
-            // 更新进度
-            function updateProgress(current, total) {
-                statsButton.textContent = `${current}/${total}`;
-            }
+    // 生成表格
+    async function handleTable() {
+        if (!scheduleId) {
+            alert('无法获取比赛ID');
+            return;
+        }
 
-            try {
-                const finalData = await processMatchData(matches, updateProgress);
-                saveData(finalData);
-                alert(`统计完成，共处理 ${matches.length} 场比赛`);
-            } catch (error) {
-                alert('统计过程中发生错误');
-            } finally {
-                statsButton.disabled = false;
-                statsButton.textContent = '统计';
-            }
+        // 禁用按钮
+        const tableBtn = document.querySelector('#ctrlPanel button:nth-child(4)');
+        tableBtn.disabled = true;
+        tableBtn.textContent = '生成中';
+
+        try {
+            await generateTable(scheduleId);
+        } catch (error) {
+            alert('生成表格失败: ' + error.message);
+        } finally {
+            // 恢复按钮
+            tableBtn.disabled = false;
+            tableBtn.textContent = '表格';
         }
     }
 
-    // 处理分析页面
-    function handleAnalysisPage() {
-        const contentDiv = document.getElementById('content');
-        if (!contentDiv || typeof scheduleId === 'undefined') return;
+    // 生成统计表格
+    async function generateTable(scheduleId) {
+        // 获取选中的公司
+        const selectedCompanies = Object.keys(COMPANY_MAP).filter(
+            company => asianStats.selectComp[company]
+        );
 
-        // 创建按钮容器
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.textAlign = 'right';
-
-        const clearButton = createButton('清除', clearData);
-        clearButton.style.background = '#fbb';
-        const statsButton = createButton('统计', handleStats);
-        statsButton.style.background = '#ffb';
-        const tableButton = createButton('表格', handleTable);
-        tableButton.style.background = '#bfb';
-        const predictButton = createButton('预测', handlePredict);
-        predictButton.style.background = '#bbf';
-
-        buttonContainer.appendChild(clearButton);
-        buttonContainer.appendChild(statsButton);
-        buttonContainer.appendChild(tableButton);
-        buttonContainer.appendChild(predictButton);
-        contentDiv.insertBefore(buttonContainer, contentDiv.firstChild);
-
-        let tableData = null;
-
-        async function handleStats() {
-            statsButton.disabled = true;
-            
-            // 获取实际比分差
-            const homeScoreElem = document.getElementById('homeScore');
-            const guestScoreElem = document.getElementById('guestScore');
-            
-            if (!homeScoreElem || !guestScoreElem) {
-                alert('未找到比分数据');
-                statsButton.disabled = false;
-                return;
-            }
-            
-            const homeScore = parseInt(homeScoreElem.textContent);
-            const guestScore = parseInt(guestScoreElem.textContent);
-            const actualDiff = homeScore - guestScore;
-
-            const matches = [{
-                id: scheduleId,
-                actualDiff: actualDiff
-            }];
-
-            function updateProgress(current, total) {
-                statsButton.textContent = `${current}/${total}`;
-            }
-
-            try {
-                const finalData = await processMatchData(matches, updateProgress);
-                saveData(finalData);
-            } catch (error) {
-                alert('统计过程中发生错误');
-            } finally {
-                statsButton.disabled = false;
-                statsButton.textContent = '统计';
-            }
+        if (selectedCompanies.length === 0) {
+            throw new Error('请至少选择一家公司');
         }
 
-        async function handleTable() {
-            tableButton.disabled = true;
-            
+        // 获取各公司数据
+        const companyData = {};
+        const requests = selectedCompanies.map(async company => {
             try {
-                const oddsData = await fetchOddsData(scheduleId);
-                const storedData = getStoredData();
-                
-                if (!oddsData || !oddsData.companies) {
-                    throw new Error('未获取到赔率数据');
+                const data = await fetchCompanyData(scheduleId, COMPANY_MAP[company].id);
+                companyData[company] = data;
+            } catch (error) {
+                console.error(`获取${company}数据失败:`, error);
+                companyData[company] = [];
+            }
+        });
+
+        await Promise.all(requests);
+
+        // 过滤有开盘的公司
+        const validCompanies = selectedCompanies.filter(
+            company => companyData[company] && companyData[company].length > 0
+        );
+
+        if (validCompanies.length === 0) {
+            throw new Error('没有公司对本场比赛开盘');
+        }
+
+        // 找出基准时间
+        const baseTime = findBaseTime(companyData, validCompanies);
+
+        // 计算各公司的统计数据
+        const tableData = [];
+        let totalPrediction = 0;
+        let validCount = 0;
+
+        validCompanies.forEach(company => {
+            const data = companyData[company];
+            const instantData = data.filter(item => item.HappenTime === "");
+
+            // 找出基准时间的数据
+            const baseData = instantData.filter(item => item.ModifyTime <= baseTime);
+            if (baseData.length === 0) return;
+
+            baseData.sort((a, b) => b.ModifyTime.localeCompare(a.ModifyTime));
+            const latest = baseData[0];
+
+            const panKou = parseFloat(latest.PanKou);
+            const homeOdds = parseFloat(latest.HomeOdds);
+            const awayOdds = parseFloat(latest.AwayOdds);
+            const waterDiff = awayOdds - homeOdds;
+            const prediction = panKou + waterDiff / 2;
+
+            // 计算历史平均误差
+            const companyResults = asianStats.result[company];
+            let avgError = 0;
+            let matchCount = 0;
+
+            if (companyResults) {
+                const errors = Object.values(companyResults);
+                matchCount = errors.length;
+                if (matchCount > 0) {
+                    const absoluteErrors = errors.map(error => Math.abs(error));
+                    const sum = absoluteErrors.reduce((a, b) => a + b, 0);
+                    avgError = sum / matchCount;
                 }
-
-                tableData = [];
-
-                // 计算各公司数据
-                Object.keys(COMPANY_MAP).forEach(companyName => {
-                    const companyId = COMPANY_MAP[companyName];
-                    const companyData = oddsData.companies.find(c => c.companyId === companyId);
-                    
-                    const record = {
-                        company: companyName,
-                        openingCount: 0,
-                        avgError: 0,
-                        drawOdds: '没开盘',
-                        oddsDiff: '没开盘',
-                        expectDiff: null,
-                        selected: false
-                    };
-
-                    // 计算开盘次数和平均误差
-                    if (storedData[companyName]) {
-                        const matches = Object.values(storedData[companyName]);
-                        record.openingCount = matches.length;
-                        if (matches.length > 0) {
-                            const totalError = matches.reduce((sum, match) => sum + Math.abs(match.expectError), 0);
-                            record.avgError = totalError / matches.length;
-                        }
-                    }
-
-                    // 获取当前比赛的赔率数据
-                    if (companyData) {
-                        const detail = companyData.details.find(d => d.num === 1);
-                        if (detail) {
-                            const drawOdds = detail.firstDrawOdds || 0;
-                            record.drawOdds = drawOdds + '⚽';
-                            record.oddsDiff = (detail.firstAwayOdds - detail.firstHomeOdds).toFixed(2);
-                            record.expectDiff = calculateExpectDiff(detail);
-                        }
-                    }
-
-                    tableData.push(record);
-                });
-
-                // 按平均误差排序
-                tableData.sort((a, b) => a.avgError - b.avgError);
-
-                // 创建表格
-                createTable(tableData);
-                
-            } catch (error) {
-                alert('生成表格失败: ' + error.message);
-            } finally {
-                tableButton.disabled = false;
             }
-        }
 
-        function createTable(data) {
-            // 移除旧的表格
-            const oldTable = document.getElementById('asianStatsTable');
-            const oldResult = document.getElementById('predictionResult');
-            if (oldTable) oldTable.remove();
-            if (oldResult) oldResult.remove();
-
-            const table = document.createElement('table');
-            table.id = 'asianStatsTable';
-            table.style.borderCollapse = 'collapse';
-            table.style.margin = '0 auto';
-            table.style.fontSize = '16px';
-            table.style.textAlign = 'center';
-
-            // 表头
-            const header = table.createTHead();
-            const headerRow = header.insertRow();
-            const headers = ['公司', '开盘', '平均误差', '让球', '水差', '选'];
-            
-            headers.forEach(text => {
-                const th = document.createElement('th');
-                th.textContent = text;
-                th.style.border = '1px solid #888';
-                th.style.backgroundColor = '#eee';
-                headerRow.appendChild(th);
+            tableData.push({
+                company,
+                matchCount,
+                avgError,
+                panKou,
+                waterDiff,
+                prediction
             });
 
-            // 表格内容
-            const tbody = table.createTBody();
-            data.forEach(item => {
-                const row = tbody.insertRow();
-                
-                [item.company, item.openingCount, item.avgError.toFixed(5), item.drawOdds, item.oddsDiff].forEach(text => {
-                    const cell = row.insertCell();
-                    cell.textContent = text;
-                    cell.style.border = '1px solid #888';
-                });
+            totalPrediction += prediction;
+            validCount++;
+        });
 
-                // 选择框
-                const selectCell = row.insertCell();
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = item.selected;
-                checkbox.style.position = 'initial';
-                checkbox.addEventListener('change', () => {
-                    item.selected = checkbox.checked;
-                });
-                selectCell.appendChild(checkbox);
-                selectCell.style.border = '1px solid #888';
-            });
+        // 按平均误差升序排序
+        tableData.sort((a, b) => a.avgError - b.avgError);
 
-            buttonContainer.parentNode.insertBefore(table, buttonContainer.nextSibling);
+        // 创建表格
+        createTableElement(tableData, baseTime, totalPrediction / validCount);
+    }
+
+    // 创建表格元素
+    function createTableElement(tableData, baseTime, avgPrediction) {
+        // 移除已存在的表格
+        const oldTable = document.querySelector('#statsTable');
+        if (oldTable) {
+            oldTable.remove();
         }
 
-        function handlePredict() {
-            if (!tableData) {
-                alert('请先生成表格');
-                return;
-            }
+        // 格式化时间
+        const month = baseTime.substring(4, 6);
+        const day = baseTime.substring(6, 8);
+        const hour = baseTime.substring(8, 10);
+        const minute = baseTime.substring(10, 12);
+        const timeStr = `${month}/${day} ${hour}:${minute}`;
 
-            const selectedCompanies = tableData.filter(item => item.selected);
-            if (selectedCompanies.length < 2) {
-                alert('请选择至少两个公司');
-                return;
-            }
+        // 创建表格
+        const table = document.createElement('table');
+        table.id = 'statsTable';
+        table.style.cssText = `
+            border-collapse: collapse;
+            margin: 0px auto;
+            background: white;
+            font-size: 16px;
+            text-align: center;
+        `;
 
-            // 按平均误差排序
-            selectedCompanies.sort((a, b) => a.avgError - b.avgError);
+        // 表头
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr style="background: #0170CA; color: white;">
+                <th style="border: 1px solid #888;">公司</th>
+                <th style="border: 1px solid #888;">开盘</th>
+                <th style="border: 1px solid #888;">平均误差</th>
+                <th style="border: 1px solid #888;">让球</th>
+                <th style="border: 1px solid #888;">水差</th>
+            </tr>
+        `;
+        table.appendChild(thead);
 
-            // 分组
-            let smallErrorGroup, largeErrorGroup;
-            
-            if (selectedCompanies.length % 2 === 1) {
-                // 奇数个，去掉中间的那个
-                const midIndex = Math.floor(selectedCompanies.length / 2);
-                smallErrorGroup = selectedCompanies.slice(0, midIndex);
-                largeErrorGroup = selectedCompanies.slice(midIndex + 1);
-            } else {
-                // 偶数个，平均分组
-                const midIndex = selectedCompanies.length / 2;
-                smallErrorGroup = selectedCompanies.slice(0, midIndex);
-                largeErrorGroup = selectedCompanies.slice(midIndex);
-            }
+        // 表格内容
+        const tbody = document.createElement('tbody');
+        tableData.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="border: 1px solid #888;">${row.company}</td>
+                <td style="border: 1px solid #888;">${row.matchCount}</td>
+                <td style="border: 1px solid #888;">${row.avgError.toFixed(5)}</td>
+                <td style="border: 1px solid #888;">${row.panKou}⚽</td>
+                <td style="border: 1px solid #888;">${row.waterDiff.toFixed(2)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
 
-            // 计算总和
-            const smallErrorSum = smallErrorGroup.reduce((sum, company) => sum + company.expectDiff, 0);
-            const largeErrorSum = largeErrorGroup.reduce((sum, company) => sum + company.expectDiff, 0);
-            const avgExpectDiff = selectedCompanies.reduce((sum, company) => sum + company.expectDiff, 0) / selectedCompanies.length;
+        // 时间行
+        const timeRow = document.createElement('tr');
+        timeRow.style.backgroundColor = '#dfd';
+        timeRow.innerHTML = `
+            <td colspan="3" style="border: 1px solid #888;">
+                时间：${timeStr}
+            </td>
+            <td colspan="2" style="border: 1px solid #888;">
+                让球：${avgPrediction.toFixed(4)}
+            </td>
+        `;
+        tbody.appendChild(timeRow);
 
-            // 预测结果
-            let prediction = '';
-            if (smallErrorSum > largeErrorSum) {
-                prediction = '主队赢盘';
-            } else if (smallErrorSum < largeErrorSum) {
-                prediction = '客队赢盘';
-            } else {
-                prediction = '水低者赢';
-            }
+        // 分组计算
+        const groupSize = Math.floor(tableData.length / 2);
+        const lowErrorGroup = tableData.slice(0, groupSize);
+        const highErrorGroup = tableData.slice(-groupSize);
 
-            // 显示结果
-            showPredictionResult(avgExpectDiff, prediction, smallErrorSum / smallErrorGroup.length, largeErrorSum / largeErrorGroup.length);
+        const lowAvg = lowErrorGroup.reduce((sum, row) => sum + row.prediction, 0) / groupSize;
+        const highAvg = highErrorGroup.reduce((sum, row) => sum + row.prediction, 0) / groupSize;
+
+        // 预测行
+        const predictionRow = document.createElement('tr');
+        predictionRow.style.backgroundColor = '#fdd';
+        let predictionText = '';
+        if (lowAvg > highAvg) {
+            predictionText = '预测主队赢盘';
+        } else if (lowAvg < highAvg) {
+            predictionText = '预测客队赢盘';
+        } else {
+            predictionText = '预测水低者赢';
         }
 
-        function showPredictionResult(avgExpectDiff, prediction, smallErrorAvg, largeErrorAvg) {
-            const oldResult = document.getElementById('predictionResult');
-            if (oldResult) oldResult.remove();
+        predictionRow.innerHTML = `
+            <td colspan="3" style="border: 1px solid #888;">
+                上${lowAvg.toFixed(4)} 下${highAvg.toFixed(4)}
+            </td>
+            <td colspan="2" style="border: 1px solid #888;">
+                ${predictionText}
+            </td>
+        `;
+        tbody.appendChild(predictionRow);
 
-            const resultDiv = document.createElement('div');
-            resultDiv.id = 'predictionResult';
-            resultDiv.style.textAlign = 'center';
-            resultDiv.style.fontSize = '16px';
-            resultDiv.style.backgroundColor = '#fee';
+        table.appendChild(tbody);
 
-            resultDiv.innerHTML = `
-                <div>让球: ${avgExpectDiff.toFixed(5)} ⚽ 预测: ${prediction}</div>
-                <div>较准确公司: ${smallErrorAvg.toFixed(5)} 误差大公司: ${largeErrorAvg.toFixed(5)}</div>
+        // 插入到控制面板下方
+        const ctrlPanel = document.getElementById('ctrlPanel');
+        ctrlPanel.parentNode.insertBefore(table, ctrlPanel.nextSibling);
+    }
+
+    // 开关模式
+    function handleToggle() {
+        const toggleBtn = document.querySelector('#ctrlPanel button:nth-child(5)');
+
+        if (!isOpenMode) {
+            // 开启模式
+            isOpenMode = true;
+            toggleBtn.textContent = '关';
+            addStatsButtons();
+        } else {
+            // 关闭模式
+            isOpenMode = false;
+            toggleBtn.textContent = '开';
+            removeStatsButtons();
+        }
+    }
+
+    // 添加统计按钮到历史比赛
+    function addStatsButtons() {
+        const matchElements = document.querySelectorAll('#nearMatchDiv li.matchData');
+
+        matchElements.forEach(matchElem => {
+            // 检查是否已添加按钮
+            if (matchElem.querySelector('.stats-btn')) return;
+
+            // 创建按钮
+            const btn = document.createElement('button');
+            btn.textContent = '统';
+            btn.className = 'stats-btn';
+            btn.style.cssText = `
+                padding: 0px;
+                background: #4CAF50;
+                color: white;
+                cursor: pointer;
+                font-size: 16px;
             `;
 
-            const table = document.getElementById('asianStatsTable');
-            if (table) {
-                table.parentNode.insertBefore(resultDiv, table.nextSibling);
-            } else {
-                buttonContainer.parentNode.insertBefore(resultDiv, buttonContainer.nextSibling);
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+
+                // 获取比赛ID（从onclick属性中提取）
+                const onclickAttr = matchElem.getAttribute('onclick');
+                const match = onclickAttr.match(/GoAnalyUrl\((\d+)\)/);
+                if (!match) return;
+
+                const matchId = match[1];
+
+                // 获取比分
+                const scoreElem = matchElem.querySelector('.score2');
+                if (!scoreElem) return;
+
+                const scoreText = scoreElem.textContent;
+                const scoreMatch = scoreText.match(/(\d+)-(\d+)/);
+                if (!scoreMatch) return;
+
+                const homeScore = parseInt(scoreMatch[1]);
+                const guestScore = parseInt(scoreMatch[2]);
+                const actualDiff = homeScore - guestScore;
+
+                // 禁用按钮
+                btn.disabled = true;
+                btn.textContent = '等';
+
+                try {
+                    await calculateAndSaveStats(matchId, actualDiff);
+                } catch (error) {
+                    alert(`统计失败: ${error.message}`);
+                } finally {
+                    // 恢复按钮
+                    btn.disabled = false;
+                    btn.textContent = '统';
+                }
+            });
+
+            // 插入到球队信息后面
+            const oddDiv = matchElem.querySelector('div.odd');
+            if (oddDiv) {
+                matchElem.insertBefore(btn, oddDiv);
             }
-        }
+        });
     }
 
-    // 根据URL判断页面类型并初始化
-    if (window.location.href.includes('/info/')) {
-        handleInfoPage();
-    } else if (window.location.href.includes('/Analy/Analysis/') || window.location.href.includes('/analy/Analysis/')) {
-        handleAnalysisPage();
+    // 移除统计按钮
+    function removeStatsButtons() {
+        document.querySelectorAll('.stats-btn').forEach(btn => {
+            btn.remove();
+        });
     }
+    init();
 })();

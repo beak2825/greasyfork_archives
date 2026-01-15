@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MC-Skin
 // @namespace    https://viayoo.com/
-// @version      4.4
+// @version      4.5
 // @description  在网页里添加一个MC小人
 // @author       undefined303
 // @license      MIT
@@ -306,6 +306,7 @@
 
 	console.log("%cMcSkin.js", "color:orange");
 	var defaultRotation = GM_getValue("defaultRotation", -0.25);
+	var mouseFollowMode = GM_getValue("mouseFollowMode", "bedrock");
 	const box = document.createElement("div");
 	document.documentElement.append(box);
 	const shadow = box.attachShadow({
@@ -628,7 +629,9 @@ margin-top:20px;
 			// Always add an angle for cape around the x axis
 			const basicCapeRotationX = Math.PI * 0.06;
 			player.cape.rotation.x = Math.sin(t) * 0.01 + basicCapeRotationX;
-			player.rotation.y = defaultRotation;
+			if (mouseFollowMode != "java") {
+				player.rotation.y = defaultRotation;
+			}
 			addAnimation(player, pr)
 		}
 	});
@@ -785,6 +788,19 @@ margin-top:20px;
 		isTimeoutSetted = true;
 	}
 
+	var light;
+	if (mouseFollowMode == "java") {
+		skinViewer.globalLight.intensity = 1;
+		skinViewer.cameraLight.intensity = 0;
+		light = new THREE.HemisphereLight(0xffffff, 0x000000, 2.9);
+	} else {
+		skinViewer.globalLight.intensity = 2.5;
+		skinViewer.cameraLight.intensity = 0;
+		light = new THREE.DirectionalLight(0xffffff, 0.9);
+		light.position.set(1, 0, 1);
+	}
+	skinViewer.scene.add(light);
+
 	function handleMove(x, y) {
 		handleAfkAnimation();
 		const canvasRect = canvas.getBoundingClientRect();
@@ -793,6 +809,18 @@ margin-top:20px;
 		raycaster.setFromCamera(mouse, skinViewer.camera);
 		raycaster.ray.intersectPlane(plane, pointOfIntersection);
 		head.lookAt(pointOfIntersection);
+		if (mouseFollowMode == "java") {
+			const plane1 = new THREE.Plane(new THREE.Vector3(0, 0, 1), -25);
+			const raycaster1 = new THREE.Raycaster();
+			const pointOfIntersection1 = new THREE.Vector3();
+			const mouse1 = mouse;
+			mouse1.x *= Math.abs(Math.cos(skinViewer.playerObject.skin.rotation.y)); //鼠标平面x对应空间y
+			mouse1.y += 1.1;
+			mouse1.y *= 0.9;
+			raycaster1.setFromCamera(mouse1, skinViewer.camera);
+			raycaster1.ray.intersectPlane(plane1, pointOfIntersection1);
+			skinViewer.playerObject.skin.lookAt(pointOfIntersection1);
+		}
 		return canvasRect;
 	}
 
@@ -905,7 +933,9 @@ margin-top:20px;
 				isTimeoutSetted = true;
 				clearTimeout(waveTimeout);
 			}
-			player.rotation.y = defaultRotation;
+			if (mouseFollowMode != "java") {
+				player.rotation.y = defaultRotation;
+			}
 			const t = (progress - progress0) * 20;
 			player.skin.rightArm.rotation.x = -0.4537860552 * 2 + 2 * Math.sin(t + Math.PI) * 0.3;
 			const basicArmRotationZ = 0.01 * Math.PI + 0.06;
@@ -1125,6 +1155,8 @@ ${GM_getValue("positionLeft")?"位置:left "+GM_getValue("positionLeft")+" top:"
 		GM_deleteValue("opacity");
 		GM_deleteValue("skin");
 		GM_deleteValue("defaultRotation");
+		GM_deleteValue("fullscreenAddition");
+		GM_deleteValue("mouseFollowMode");
 	})
 	GM_registerMenuCommand("更换皮肤", function() {
 		createSkinPickerDialog(false, `选择皮肤 如需保存请点击菜单中 保存当前设置`)
@@ -1163,6 +1195,35 @@ ${GM_getValue("positionLeft")?"位置:left "+GM_getValue("positionLeft")+" top:"
 			passive: true
 		});
 		fc2 = GM_registerMenuCommand("点击禁用在全屏时显示皮肤", fc2Click);
+	}
+	var changeMouseModeMenu;
+	var changeMouseFollowMode = () => {
+		GM_unregisterMenuCommand(changeMouseModeMenu);
+		skinViewer.scene.remove(light);
+		if (mouseFollowMode == "bedrock") {
+			mouseFollowMode = "java";
+			changeMouseModeMenu = GM_registerMenuCommand("切换鼠标跟随至基岩版模式", changeMouseFollowMode);
+			skinViewer.globalLight.intensity = 1;
+			skinViewer.cameraLight.intensity = 0;
+			light = new THREE.HemisphereLight(0xffffff, 0x000000, 2.9);
+		} else {
+			mouseFollowMode = "bedrock";
+			changeMouseModeMenu = GM_registerMenuCommand("切换鼠标跟随至java版模式", changeMouseFollowMode);
+			skinViewer.playerObject.skin.rotation.y = 0;
+			skinViewer.playerObject.skin.rotation.x = 0;
+			skinViewer.playerObject.skin.rotation.z = 0;
+			skinViewer.globalLight.intensity = 2.5;
+			skinViewer.cameraLight.intensity = 0;
+			light = new THREE.DirectionalLight(0xffffff, 0.9);
+			light.position.set(1, 0, 1);
+		}
+		GM_setValue("mouseFollowMode", mouseFollowMode);
+		skinViewer.scene.add(light);
+	}
+	if (mouseFollowMode == "bedrock") {
+		changeMouseModeMenu = GM_registerMenuCommand("切换鼠标跟随至java版模式", changeMouseFollowMode);
+	} else {
+		changeMouseModeMenu = GM_registerMenuCommand("切换鼠标跟随至基岩版模式", changeMouseFollowMode);
 	}
 	var canvasScale = 1;
 	var resizeFunction = () => {

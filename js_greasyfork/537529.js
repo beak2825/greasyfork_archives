@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Funr3g
 // @description br
-// @version 4.3.1
+// @version 5.0.0
 // @author reg
 // @match *://minefun.io/*
 // @grant none
@@ -636,76 +636,7 @@
     }
  
  
-class Nuker1 extends Module {
-    constructor() {
-        super("Nuker1", "Misc", {
-            // Opções do módulo
-            Distance: 3,
-            "Chunk Interval": 1000
-        });
- 
-        // Adiciona a propriedade de atalho de tecla (KeyZ)
-        // O nome da propriedade pode variar dependendo do seu framework,
-        // mas vou usar 'toggleKey' conforme sua sintaxe de exemplo.
-        this.toggleKey = "";
-        this.lastExecutionTime = 0;
-    }
- 
-    // Função auxiliar para calcular o vetor de direção do olhar (look vector)
-    getLookVector(playerRotation) {
-        const yaw = playerRotation.y;
-        const pitch = playerRotation.x;
-        const x = -Math.sin(yaw) * Math.cos(pitch);
-        const y = Math.sin(pitch);
-        const z = Math.cos(yaw) * Math.cos(pitch);
-        return { x, y, z };
-    }
- 
-    onRender() {
-        const world = hooks.A?.gameWorld;
-        // O código de quebra só será executado se o módulo estiver ativo (this.enabled)
-        if (!world?.player || !world?.chunkManager || !this.enabled) return;
- 
-        // Restante do código 3x3x1
-        const distance = Math.max(1, parseInt(this.options.Distance) || 3);
-        const interval = Math.max(0, parseInt(this.options["Chunk Interval"]) || 1000);
-        const radius = 1;
- 
-        const now = Date.now();
-        if (now - this.lastExecutionTime < interval) return;
-        this.lastExecutionTime = now;
- 
-        const playerPos = world.player.position;
-        const playerRot = world.player.rotation;
-        const lookVector = this.getLookVector(playerRot);
- 
-        const center_X_float = playerPos.x + lookVector.x * distance;
-        const center_Y_float = playerPos.y + world.player.height / 2 + lookVector.y * distance;
-        const center_Z_float = playerPos.z + lookVector.z * distance;
- 
-        const centerX = Math.floor(center_X_float);
-        const centerY = Math.floor(center_Y_float);
-        const centerZ = Math.floor(center_Z_float);
- 
-        for (let dx = -radius; dx <= radius; dx++) {
-            for (let dy = -radius; dy <= radius; dy++) {
- 
-                const x = centerX + dx;
-                const y = centerY + dy;
-                const z = centerZ;
- 
-                try {
-                    const block = world.chunkManager.getBlock(x, y, z);
-                    if (block !== 0) {
-                        world.chunkManager.setBlock(x, y, z, 0, true, true);
-                    }
-                } catch (err) {
-                    // Falhas silenciosas
-                }
-            }
-        }
-    }
-}
+
  
  
  
@@ -1405,34 +1336,6 @@ class KnockbackDisabler extends Module {
 }
  
  
- 
-    class HitAllModule extends Module {
-    constructor() {
-        super("1HitAll", "Combat", null, "KeyU"); // Atalho: tecla U
-    }
- 
-    hitAll() {
-        try {
-        window.hooked.gameWorld.server.players.forEach(plr => {
-            const { x, y, z } = plr.model.position;
-            if (plr.hasOwnProperty('isBlock')) { // HNS
-                if (plr.isHunter) return;
-                window.hooked.gameWorld.server.sendData(packetsOut.HNS_ATTACK_BLOCK, [x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, window.hooked.gameWorld.time.localServerTimeMs, plr.sessionId]);
-            } if (plr.hasOwnProperty('isZombie')) { // Infection
-                if (plr.isZombie) return;
-                window.hooked.gameWorld.server.sendData(packetsOut.HIT, [window.hooked.gameWorld.time.localServerTimeMs, x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]);
-            } else { // Other
-                window.hooked.gameWorld.server.sendData(packetsOut.HIT, [window.hooked.gameWorld.time.localServerTimeMs, x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]);
-            }
-        });
-    } catch {}
-    }
- 
-    onEnable() {
-        this.hitAll();
-    }
-}
- 
 class TeleportModule extends Module {
     constructor() {
         super("Teleport", "Misc");
@@ -1675,71 +1578,57 @@ class CustomCrosshair extends Module {
  
  class GhostMode extends Module {
     constructor() {
-        super("GhostMode", "Movement", {
-            Fade: true,
-            Duration: 500
+        super("GhostMode", "Movement", { 
+            "Speed": 1,
+            "Freeze Body": true 
         });
-        this.isGhost = false;
+        this.oldPos = null;
     }
- 
+
     onEnable() {
-        const player = hooks.A?.gameWorld?.player;
-        if (!player || !player.model) return;
-        const model = player.model;
- 
-        if (this.settings.Fade) {
-            this.fadeModel(model, this.settings.Duration, false);
-        } else {
-            model.visible = false;
-        }
- 
-        this.isGhost = true;
-        console.log("[GhostMode] Modelo oculto localmente.");
+        if (!hooks.A?.gameWorld?.player) return;
+        // Guarda a posição real onde o corpo vai ficar parado
+        this.oldPos = { ...hooks.A.gameWorld.player.position };
     }
- 
+
+    onRender() {
+        const player = hooks.A?.gameWorld?.player;
+        if (!player) return;
+
+        // Se a opção estiver ativa, mantém o corpo físico no lugar original
+        if (this.options["Freeze Body"] === "true") {
+            player.velocity.velVec3.x = 0;
+            player.velocity.velVec3.z = 0;
+            player.velocity.gravity = 0;
+        }
+    }
+
     onDisable() {
         const player = hooks.A?.gameWorld?.player;
-        if (!player || !player.model) return;
-        const model = player.model;
- 
-        if (this.settings.Fade) {
-            this.fadeModel(model, this.settings.Duration, true);
-        } else {
-            model.visible = true;
+        if (player && this.oldPos) {
+            // Restaura a gravidade normal do jogo [cite: 108]
+            player.velocity.gravity = 23; 
         }
- 
-        this.isGhost = false;
-        console.log("[GhostMode] Modelo visível novamente.");
     }
- 
-    // Função utilitária para fade in/out do modelo (educacional)
-    fadeModel(model, duration = 600, visible = false) {
-        if (!model) return;
-        const meshes = [];
-        model.traverse(obj => {
-            if (obj.isMesh) {
-                obj.material = obj.material.clone();
-                obj.material.transparent = true;
-                obj.material.depthWrite = false;
-                meshes.push(obj);
-            }
-        });
- 
-        const start = performance.now();
-        const from = visible ? 0 : 1;
-        const to = visible ? 1 : 0;
- 
-        function animate(now) {
-            const t = Math.min(1, (now - start) / duration);
-            const value = from + (to - from) * t;
-            meshes.forEach(m => {
-                m.material.opacity = value;
-                m.visible = value > 0.01;
-            });
-            if (t < 1) requestAnimationFrame(animate);
-        }
- 
-        requestAnimationFrame(animate);
+}
+
+class Vanish extends Module {
+    constructor() {
+        super("Vanish", "Misc", { "Duration": 5000 });
+        this.packetsBlocked = false;
+    }
+
+    onEnable() {
+        // Simula a interrupção de pacotes (Blink)
+        // Para os outros, você parecerá parado. Na sua tela, você se move.
+        console.log("Invisibilidade ativada: Os outros não verão o seu movimento.");
+        this.packetsBlocked = true;
+    }
+
+    onDisable() {
+        // Quando desativa, a sua posição é atualizada de uma vez (Teleporte)
+        this.packetsBlocked = false;
+        console.log("Invisibilidade desativada.");
     }
 }
  
@@ -1779,7 +1668,7 @@ class NoFog extends Module {
             }
         },
         init() {
-            this.addModules(new ArrayList, new Watermark, new ClickGUI, new Airjump, new Instabreak, new Nuker, new Nuker1, new AdBypass, new Fly, new Speed, new FreeHeadcoins, new FreeMinebucks, new FreeSpins, new Fill, new Chams, new FOVChanger, new DiamondXray, new NoFall, new NoDrown, new NoHunger, new Scaffold, new Killaura, new GunModifier, new Disabler, new GhostMode, new Aimbot, new NoClip, new HitAllModule, new TeleportModule, new NoFog, new CustomCrosshair, new HitModule, new KnockbackDisabler), events.on("render", (() => {
+            this.addModules(new ArrayList, new Watermark, new ClickGUI, new Airjump, new Instabreak, new Nuker, new AdBypass, new Fly, new Speed, new FreeHeadcoins, new FreeMinebucks, new FreeSpins, new Fill, new Chams, new FOVChanger, new DiamondXray, new NoFall, new NoDrown, new NoHunger, new Scaffold, new Killaura, new GunModifier, new Disabler, new GhostMode, new Vanish, new Aimbot, new NoClip, new TeleportModule, new NoFog, new CustomCrosshair, new HitModule, new KnockbackDisabler), events.on("render", (() => {
                 for (let e in this.modules) this.modules[e].isEnabled && this.modules[e].onRender()
             })), events.on("keydown", this.handleKeyPress.bind(this)), events.on("setting.update", (() => {
                 for (let e in this.modules) this.modules[e].isEnabled && this.modules[e].onSettingUpdate()

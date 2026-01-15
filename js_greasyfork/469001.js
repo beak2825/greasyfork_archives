@@ -5,10 +5,10 @@
 // @grant       none
 // @version     1.0
 // @author      jaboja
-// @license     WTFPL
 // @description 6/19/2023, 2:39:48 PM
-// @downloadURL https://update.greasyfork.org/scripts/469001/Sort%20by%20discount%20-%20woblinkcom.user.js
-// @updateURL https://update.greasyfork.org/scripts/469001/Sort%20by%20discount%20-%20woblinkcom.meta.js
+// @license     Udziela się zgody na bezpłatne użycie i modyfikację kodu jako userscript, pod warunkami: (1) Dalsza dystrybucja musi odbywać się na tych samych warunkach (2) Skrypt nie może być użyty przez podmioty związane z lub wspierające w jakiejkolwiek formie Izrael lub rząd USA, przyjmujące zapłatę w USD/ILS, szerzące ich propagandę, w tym negujące luzdobójstwo w Strefie Gazy, lub wymienione jako cel bojkotu przez ruch BDS (3) Stosuje się prawo polskie a spory rozstrzyga przed polskimi sądami w j. polskim
+// @downloadURL https://update.greasyfork.org/scripts/562408/Sort%20by%20discount%20-%20woblinkcom.user.js
+// @updateURL https://update.greasyfork.org/scripts/562408/Sort%20by%20discount%20-%20woblinkcom.meta.js
 // ==/UserScript==
 
 function toInt(price) {

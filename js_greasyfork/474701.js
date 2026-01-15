@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         ZJSU抢课小棉袄
 // @namespace    https://github.com/Zzzcy-tx/ZJSU_GetMyCoursePLZ
-// @version      2.32
+// @version      2.43
 // @description  发送包含指定的数据的HTTP POST，用以模拟单次点击。
 // @author       Zzzcy
-// @match        */jwglxt/*gnmkdm=N253512*
+// @match        *://*/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html*
 // @icon         https://jwxt.zjgsu.edu.cn/jwglxt/logo/favicon.ico?t=1725699891340
 // @grant        unsafeWindow
 // @license      MPL
@@ -118,15 +118,16 @@ async function sendPostRequest() {
       const data = data1;
       let xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
-      xhr.open('POST', `https://jwxt.zjgsu.edu.cn/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512`);
+      const postUrl = `${location.origin}/jwglxt/xsxk/zzxkyzb_xkBcZyZzxkYzb.html?gnmkdm=N253512`;
+      xhr.open('POST', postUrl);
       xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0');
       xhr.setRequestHeader('Accept', 'application/json, text/javascript, */*; q=0.01');
       xhr.setRequestHeader('Accept-Language', 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2');
       xhr.setRequestHeader('Accept-Encoding', 'gzip, deflate, br');
-      xhr.setRequestHeader('Referer', `https://jwxt.zjgsu.edu.cn/jwglxt/xsxk/zzxkyzb_cxZzxkYzbIndex.html?gnmkdm=N253512&layout=default`);
+      xhr.setRequestHeader('Referer', location.href);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      xhr.setRequestHeader('Origin', 'http://jwxt.zjgsu.edu.cn');
+      xhr.setRequestHeader('Origin', location.origin);
       xhr.setRequestHeader('DNT', '1');
       xhr.setRequestHeader('Connection', 'keep-alive');
       xhr.setRequestHeader('Cookie', `${route}`);
@@ -281,5 +282,3 @@ function sleep(ms) {
         localStorage.removeItem('secondmenu');
     });
 })();
-
-

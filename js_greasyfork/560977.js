@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         雀渣 CHAGA 牌谱分析
-// @version      1.4.1
+// @version      1.5.1
 // @description  适用于雀渣平台的 CHAGA 牌谱分析工具
 // @author       Choimoe
 // @match        https://tziakcha.net/record/*
@@ -199,6 +199,25 @@
                 z-index: 10;
                 pointer-events: none;
             }
+            .review-container {
+                position: relative;
+                min-height: 128px;
+            }
+            .review-bg-image {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 128px;
+                height: 128px;
+                opacity: 0.50;
+                z-index: 0;
+                pointer-events: none;
+            }
+            #review {
+                position: relative;
+                z-index: 1;
+                padding-right: 10px;
+            }
         `;
         document.head.appendChild(style);
         
@@ -276,6 +295,7 @@
         w.__review_error = '';
         let highlightFirstTile = true;
         let showWeightBars = true;
+        let hideUserInfo = false;
         
         const getPlayerStep = () => {
             if (tzInstance && typeof tzInstance.stp === 'number') {
@@ -289,6 +309,46 @@
             const expWeights = weights.map(w => Math.exp(w - maxWeight));
             const sumExp = expWeights.reduce((a, b) => a + b, 0);
             return expWeights.map(w => w / sumExp);
+        };
+
+        const toggleUserInfo = (hide) => {
+            const nameElements = document.querySelectorAll('.name');
+            const eloElements = document.querySelectorAll('.elo');
+            
+            if (hide) {
+                nameElements.forEach((el, index) => {
+                    const currentText = el.textContent.trim();
+                    if (!currentText.match(/^用户\d+$/)) {
+                        el.dataset.originalName = currentText;
+                    }
+                    el.textContent = `用户${index + 1}`;
+                });
+                
+                eloElements.forEach((el) => {
+                    const eloValSpan = el.querySelector('.elo-val');
+                    if (eloValSpan) {
+                        el.dataset.originalElo = eloValSpan.textContent;
+                    }
+                    el.style.display = 'none';
+                });
+            } else {
+                nameElements.forEach((el) => {
+                    const currentText = el.textContent.trim();
+                    if (currentText.match(/^用户\d+$/) && el.dataset.originalName) {
+                        el.textContent = el.dataset.originalName;
+                    }
+                    delete el.dataset.originalName;
+                });
+                
+                eloElements.forEach((el) => {
+                    el.style.display = '';
+                    const eloValSpan = el.querySelector('.elo-val');
+                    if (eloValSpan && el.dataset.originalElo) {
+                        eloValSpan.textContent = el.dataset.originalElo;
+                    }
+                    delete el.dataset.originalElo;
+                });
+            }
         };
  
         const clearWeightBars = () => {
@@ -357,7 +417,6 @@
                 return;
             }
 
-            // 若已经有 tz 实例且之前留存的错误信息是补建提示，则清空
             if (tzInstance && w.__review_error) {
                 clearReviewError();
             }
@@ -374,15 +433,15 @@
                         `${act2str(act)}&nbsp;&nbsp;-&nbsp;&nbsp;${weight.toFixed(2)}`
                     )
                     .join("<br>");
-                const allPlays = resp.extra.candidates.every(([_, act]) => 
+                const hasPlay = resp.extra.candidates.some(([_, act]) => 
                     act.trim().startsWith("Play ")
                 );
-                if (allPlays && tzInstance) {
+                if (hasPlay && tzInstance) {
                     const currentStat = tzInstance.stat?.[tzInstance.stp];
                     const playerIndex = currentStat?.k ?? 0;
                     showWeightVisualization(resp.extra.candidates, playerIndex);
                 }
-                if (allPlays && highlightFirstTile && tzInstance) {
+                if (hasPlay && highlightFirstTile && tzInstance) {
                     const firstCand = resp.extra.candidates[0];
                     if (firstCand && firstCand[1]) {
                         const act = firstCand[1].trim();
@@ -474,6 +533,26 @@
             weightCheckboxLabel.appendChild(weightLabelText);
             weightCheckboxDiv.appendChild(weightCheckboxLabel);
             ctrlRtDiv.appendChild(weightCheckboxDiv);
+            
+            const hideInfoCheckboxDiv = document.createElement("div");
+            hideInfoCheckboxDiv.classList.add("ctrl-e", "no-sel");
+            const hideInfoCheckboxLabel = document.createElement("label");
+            const hideInfoCheckbox = document.createElement("input");
+            hideInfoCheckbox.type = "checkbox";
+            hideInfoCheckbox.id = "cb-hide-user-info";
+            hideInfoCheckbox.checked = hideUserInfo;
+            hideInfoCheckbox.onchange = function(e) {
+                hideUserInfo = e.target.checked;
+                toggleUserInfo(hideUserInfo);
+            };
+            const hideInfoLabelText = document.createElement("span");
+            hideInfoLabelText.classList.add("ml-02em");
+            hideInfoLabelText.innerText = "隐藏用户信息";
+            hideInfoCheckboxLabel.appendChild(hideInfoCheckbox);
+            hideInfoCheckboxLabel.appendChild(hideInfoLabelText);
+            hideInfoCheckboxDiv.appendChild(hideInfoCheckboxLabel);
+            ctrlRtDiv.appendChild(hideInfoCheckboxDiv);
+            
             const logDiv = document.createElement("div");
             logDiv.classList.add("fs-sm");
             const logSpan = document.createElement("span");
@@ -481,7 +560,18 @@
             logDiv.appendChild(logSpan);
             ctrlRtDiv.appendChild(logDiv);
             const reviewDiv = document.createElement("div");
-            reviewDiv.classList.add("fs-sm");
+            reviewDiv.classList.add("fs-sm", "review-container");
+            
+            const bgImage = document.createElement("img");
+            bgImage.className = "review-bg-image";
+            bgImage.src = "https://cdn.jsdelivr.net/gh/Choimoe/chaga-reviewer-script/doc/img/icon.png";
+            bgImage.onerror = function() {
+                console.log('[Reviewer] Failed to load image from jsdelivr, fallback to loli.net');
+                this.onerror = null;
+                this.src = "https://s2.loli.net/2026/01/12/JV3yI89rnRzO1E4.png";
+            };
+            reviewDiv.appendChild(bgImage);
+            
             const reviewSpan = document.createElement("span");
             reviewSpan.id = "review";
             reviewDiv.appendChild(reviewSpan);
@@ -489,6 +579,31 @@
             ctrl.appendChild(ctrlRtDiv);
             
             console.log('[Reviewer] UI elements created');
+            
+            const hookViewChange = () => {
+                const viewSelect = document.getElementById('view');
+                if (viewSelect) {
+                    const originalOnChange = viewSelect.onchange;
+                    viewSelect.onchange = function(e) {
+                        if (hideUserInfo) {
+                            const hideInfoCheckbox = document.getElementById('cb-hide-user-info');
+                            hideInfoCheckbox.checked = false;
+                            hideUserInfo = false;
+                            toggleUserInfo(false);
+                            
+                            const nameElements = document.querySelectorAll('.name');
+                            nameElements.forEach(el => {
+                                delete el.dataset.originalName;
+                            });
+                        }
+                        if (originalOnChange) {
+                            return originalOnChange.call(this, e);
+                        }
+                    };
+                    console.log('[Reviewer] View change hook installed');
+                }
+            };
+            
             const hookButtons = () => {
                 const buttons = ['nextstp', 'prevstp', 'ffstp', 'frstp', 'next', 'prev'];
                 buttons.forEach(id => {
@@ -497,17 +612,42 @@
                     if (btn.onclick) {
                         const original = btn.onclick;
                         btn.onclick = function(e) {
+                            if ((id === 'next' || id === 'prev') && hideUserInfo) {
+                                const hideInfoCheckbox = document.getElementById('cb-hide-user-info');
+                                hideInfoCheckbox.checked = false;
+                                hideUserInfo = false;
+                                toggleUserInfo(false);
+                                
+                                const nameElements = document.querySelectorAll('.name');
+                                nameElements.forEach(el => {
+                                    delete el.dataset.originalName;
+                                });
+                            }
                             const result = original.call(this, e);
                             setTimeout(show_cands, 50);
                             return result;
                         };
                     }
-                    btn.addEventListener('click', () => setTimeout(show_cands, 50), { passive: true });
+                    btn.addEventListener('click', () => {
+                        if ((id === 'next' || id === 'prev') && hideUserInfo) {
+                            const hideInfoCheckbox = document.getElementById('cb-hide-user-info');
+                            hideInfoCheckbox.checked = false;
+                            hideUserInfo = false;
+                            toggleUserInfo(false);
+                            
+                            const nameElements = document.querySelectorAll('.name');
+                            nameElements.forEach(el => {
+                                delete el.dataset.originalName;
+                            });
+                        }
+                        setTimeout(show_cands, 50);
+                    }, { passive: true });
                 });
                 
                 console.log('[Reviewer] Button hooks installed');
             };
             
+            setTimeout(hookViewChange, 500);
             setTimeout(hookButtons, 500);
             startStepWatcher();
         };
@@ -628,7 +768,7 @@
                     }
                 }
             }
-        }, 6000);
+        }, 1000);
     };
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {

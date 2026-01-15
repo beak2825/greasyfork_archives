@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         4khd 广告屏蔽
 // @namespace    https://viayoo.com
-// @version      1.5
+// @version      1.7
 // @description  移除4khd广告，兼容原生和GM环境。
 // @author       Via
 // @license      MIT
@@ -25,14 +25,14 @@
     const doc = document;
 
     const AD_SELECTORS = '.exo_wrapper,.popup,.centbtd,.exo-native-widget,.exo-native-widget-outer-container,ins[data-processed="true"],.popup-iframe,ins.adsbynetwork,.wb-contai,iframe[src*="pemsrv"],iframe[src*="magsrv"],iframe[src*="exoclick"]';
-    const BLOCK_REGEX = /magsrv|pemsrv|ad-provider\.js|disabley|ad-provider|exoclick|ads?[0-9]*\.|popunder|venor|popup|fxuuid|jduuid|linkSens|uuid|splash\.php/i;
+    const BLOCK_REGEX = /magsrv|interstitial|pemsrv|ad-provider\.js|disabley|ad-provider|exoclick|ads?[0-9]*\.|popunder|venor|popup|fxuuid|jduuid|linkSens|uuid|splash\.php/i;
     const PROTECT_REGEX = /popMagic|pemsrv|splash\.php|exoJsPop|BetterJsPop|disable-devtool|DisableDevtool|exoclick|magsrv/i;
 
     const currentHostname = location.hostname;
     const fuzzyDomain = currentHostname.replace(/\d+/g, '').replace(/\.+$/, '');
 
     function initStorageLock() {
-        const PROTECT_KEYS = new Set(['inData', 'inData2', 'requestClosed', 'ccc-my_favorite_post']);
+        const PROTECT_KEYS = new Set(['inData', 'inData2', 'requestClosed', 'BetterJsPop_lastOpenedAt']);
         const COOKIE_BLOCK_RE = /fxuuid|jduuid|adsie/i;
         const WIN_PROPS = ['DisableDevtool', 'AdProvider', 'adConfig', 'popMagic', 'exoJsPop101', 'exoclick', 'exoJsPop'];
         const hostname = location.hostname;
@@ -47,6 +47,7 @@
         Storage.prototype.getItem = function(key) {
             if (key === 'inData') return 'true';
             if (key === 'inData2') return '0';
+            if (key === 'BetterJsPop_lastOpenedAt') return '9999999999';
             return orgGet.apply(this, arguments);
         };
         Storage.prototype.setItem = function(key, value) {
@@ -75,21 +76,60 @@
 
     function initAdBlocker() {
         const css = `${AD_SELECTORS}{display:none!important;visibility:hidden!important;width:0!important;height:0!important;opacity:0!important;pointer-events:none!important;}`;
-        if (hasGM) {
-            GM_addStyle(css);
-        } else {
-            if (!doc.getElementById('viayoo-clean-style')) {
-                const s = doc.createElement('style');
-                s.id = 'viayoo-clean-style';
-                s.textContent = css;
-                (doc.head || doc.documentElement).appendChild(s);
-            }
+        if (hasGM) GM_addStyle(css);
+
+        const randomClass = 'via-clean-' + Math.random().toString(36).substring(2, 10);
+        const enhancedCss = `${AD_SELECTORS}{display:none!important;visibility:hidden!important;width:0!important;height:0!important;opacity:0!important;pointer-events:none!important;} .${randomClass}{display:none!important;}`;
+
+        function injectStyle(useRandom = false) {
+            const selector = useRandom ? `.${randomClass}` : 'style[data-via-adclean]';
+            if (document.querySelector(selector)) return;
+            const style = document.createElement('style');
+            if (useRandom) style.className = randomClass;
+            else style.dataset.viaAdclean = 'true';
+            style.textContent = useRandom ? enhancedCss : css;
+            (document.head || document.documentElement || document.body || document).appendChild(style);
         }
+
+        function earlyInject() {
+            injectStyle(false);
+            injectStyle(true);
+        }
+
+        if (document.documentElement) {
+            earlyInject();
+        } else {
+            document.addEventListener('readystatechange', () => {
+                if (document.readyState !== 'loading') earlyInject();
+            }, {
+                once: true
+            });
+            document.addEventListener('DOMContentLoaded', earlyInject, {
+                once: true
+            });
+        }
+
+        setInterval(() => {
+            if (!document.querySelector('style[data-via-adclean]') && !document.querySelector(`.${randomClass}`)) {
+                earlyInject();
+            }
+        }, 800 + Math.random() * 400);
+
+        function aggressiveClean() {
+            const ads = document.querySelectorAll(AD_SELECTORS);
+            if (ads.length === 0) return;
+            ads.forEach(el => {
+                el.remove();
+            });
+        }
+        setTimeout(aggressiveClean, 80);
+        setInterval(aggressiveClean, 800);
     }
 
     function checkExternal(href) {
         try {
             const url = new URL(href, location.href);
+            if (url.pathname.includes('splash.php') || url.search.includes('link.php')) return true;
             return !url.hostname.includes('4khd') && !url.hostname.includes(fuzzyDomain);
         } catch (e) {
             return false;
@@ -98,14 +138,15 @@
 
     function initEventListeners() {
         const blockExternalLinks = (e) => {
-            if (!e.isTrusted) return;
             const a = e.target.closest('a, area');
-            if (a?.href && checkExternal(a.href) && (a.target === '_blank' || e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
+            if (a?.href && checkExternal(a.href)) {
                 e.stopImmediatePropagation();
+                e.preventDefault();
             }
         };
         doc.addEventListener('click', blockExternalLinks, true);
+        doc.addEventListener('mouseover', blockExternalLinks, true);
+        doc.addEventListener('touchstart', blockExternalLinks, true);
     }
 
     function initNetworkInterceptors() {
@@ -211,25 +252,18 @@
         processImages();
     }
 
-    function aggressiveClean() {
-        doc.querySelectorAll(AD_SELECTORS).forEach(el => el.remove());
-        if (!hasGM && !doc.getElementById('viayoo-clean-style')) {
-            initAdBlocker();
+    win.popMagic = {
+        init: function() {
+            console.log('popMagic blocked');
         }
-    }
-
-    function initPeriodicCleanup() {
-        setInterval(aggressiveClean, 1000);
-    }
+    };
 
     function initAll() {
-        initStorageLock();
         initAdBlocker();
+        initStorageLock();
         initEventListeners();
         initNetworkInterceptors();
         initMutationObserver();
-        initPeriodicCleanup();
-        aggressiveClean();
         addImageButtons();
     }
 

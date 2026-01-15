@@ -1,14 +1,16 @@
 // ==UserScript==
 // @name         B站一键拉黑UP主
-// @description  在B站首页、视频页和搜索页添加拉黑按钮，一键拉黑UP主。完整支持BewlyBewly插件首页布局适配。
+// @description  在B站首页、视频页和搜索页添加拉黑按钮，一键拉黑UP主。完整支持BewlyBewly插件首页布局适配。新增首页隐藏直播卡片、屏蔽广告卡片功能。
 // @match        https://bilibili.com/
 // @match        https://www.bilibili.com/*
 // @match        https://www.bilibili.com/video/*
 // @match        https://search.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @version      1.2.0
+// @version      1.2.2
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @grant        GM_addStyle
 // @namespace    https://github.com/codertesla/bilibili-1-click-blocker
 // @author       codertesla
@@ -159,6 +161,11 @@
 
         .group\\/desc:hover .blacklist-button-container {
           opacity: 1 !important;
+        }
+
+        /* --- 隐藏直播卡片样式 --- */
+        body.hide-live-cards .floor-single-card:has(.floor-title) {
+            display: none !important;
         }
     `;
 
@@ -419,6 +426,67 @@
             };
             return ctl;
         };
+
+        // --- 隐藏直播卡片设置 ---
+        let hideLiveCards = GM_getValue('hideLiveCards', false);
+        let hideLiveMenuId = null;
+
+        function updateHideLiveCardsUI() {
+            if (hideLiveCards) {
+                document.body.classList.add('hide-live-cards');
+            } else {
+                document.body.classList.remove('hide-live-cards');
+            }
+        }
+
+        function registerHideLiveMenu() {
+            const menuText = hideLiveCards ? '✓ 首页隐藏直播卡片（已开启）' : '○ 首页隐藏直播卡片（已关闭）';
+            try {
+                hideLiveMenuId = GM_registerMenuCommand(menuText, () => {
+                    hideLiveCards = !hideLiveCards;
+                    GM_setValue('hideLiveCards', hideLiveCards);
+                    updateHideLiveCardsUI();
+                    // 重新注册菜单以更新状态
+                    if (hideLiveMenuId !== null) {
+                        try { GM_unregisterMenuCommand(hideLiveMenuId); } catch (e) { log('解除直播菜单失败:', e); }
+                    }
+                    registerHideLiveMenu();
+                    showToast(hideLiveCards ? '已开启隐藏直播卡片' : '已关闭隐藏直播卡片');
+                });
+                log('注册隐藏直播菜单成功:', menuText);
+            } catch (e) { log('注册隐藏直播菜单失败:', e); }
+        }
+
+        // --- 首页广告卡片屏蔽设置 ---
+        let blockAdCards = GM_getValue('blockAdCards', true);
+        let blockAdMenuId = null;
+
+        function registerBlockAdMenu() {
+            const menuText = blockAdCards ? '✓ 屏蔽首页广告卡片（已开启）' : '○ 屏蔽首页广告卡片（已关闭）';
+            try {
+                blockAdMenuId = GM_registerMenuCommand(menuText, () => {
+                    blockAdCards = !blockAdCards;
+                    GM_setValue('blockAdCards', blockAdCards);
+                    // 重新注册菜单以更新状态
+                    if (blockAdMenuId !== null) {
+                        try { GM_unregisterMenuCommand(blockAdMenuId); } catch (e) { log('解除广告菜单失败:', e); }
+                    }
+                    registerBlockAdMenu();
+                    showToast(blockAdCards ? '已开启广告屏蔽，刷新页面生效' : '已关闭广告屏蔽');
+                    if (blockAdCards) {
+                       removeAdCards(); // 立即尝试移除
+                    }
+                });
+                log('注册广告菜单成功:', menuText);
+            } catch (e) { log('注册广告菜单失败:', e); }
+        }
+
+        // 初始化广告屏蔽设置
+        registerBlockAdMenu();
+
+        // 初始化隐藏直播卡片设置
+        updateHideLiveCardsUI();
+        registerHideLiveMenu();
         const menu = menuctl({ initValue: 0 });
 
         // 显示自定义提示框 (保持不变)
@@ -518,6 +586,32 @@
             }).catch(err => { log('获取黑名单请求错误:', err); });
         }
 
+        // === 新增：移除广告卡片函数 ===
+        function removeAdCards() {
+            if (!blockAdCards) return;
+            // 查找包含“广告”文本的 stats 标记
+            // 目标选择器：.bili-video-card__stats--text 且内容为 "广告"
+            // 或者 .bili-video-card__info--text-ad
+            
+            const adTexts = findInShadowDOM('.bili-video-card__stats--text, .bili-video-card__info--text-ad');
+            
+            adTexts.each(function() {
+                const $text = $(this);
+                if ($text.text().trim() === '广告') {
+                    // 找到了广告标记，向上寻找卡片容器
+                    const $card = $text.closest('.feed-card, .bili-video-card, .video-card, .floor-single-card');
+                    if ($card.length > 0) {
+                       log('检测到广告卡片，准备移除:', $card[0]);
+                       $card.remove();
+                       // $card.css('border', '5px solid red'); // 调试用
+                    }
+                }
+            });
+            
+            // 针对特定结构的额外检查 (如 user request 中的 HTML)
+            // <div class="bili-video-card__stats"><span class="bili-video-card__stats--text">广告</span></div>
+        }
+
         // --- 新增：Shadow DOM 搜索函数 ---
         function findInShadowDOM(selector) {
             let results = $(selector);
@@ -560,6 +654,12 @@
 
             // 调试：检查页面中存在哪些可能的容器
             log('=== 首页调试信息 ===');
+            
+            // 执行广告移除
+            if (blockAdCards) {
+                removeAdCards();
+            }
+            
             possibleContainers.forEach(selector => {
                 const allElements = $(selector);
                 const unprocessedElements = $(`${selector}:not([data-toblack-processed="true"])`);

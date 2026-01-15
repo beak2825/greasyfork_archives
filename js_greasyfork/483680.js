@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         B站统计观看时长
 // @namespace    http://tampermonkey.net/
-// @version      1.0.5
+// @version      1.0.6
 // @description  try to take over the world!
-// @author       You
+// @author       _zgy_
 // @match        https://www.bilibili.com/video/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
@@ -130,11 +130,22 @@ function shuaxin1(){
         for(var video of videoList) {
             //获取视频时长的文本内容
             var duration = video.querySelector('.stats>.duration').textContent;
-            var minute = duration.split(':')[0];
-            var second = duration.split(':')[1];
-            totalDuration += minute*60+parseInt(second);
-            if(video.classList.contains('active') || video.getAttribute('data-scrolled') == 'true'){
-                watchedDuration = totalDuration - (minute*60+parseInt(second));
+            var timesplit = duration.split(':');
+            if(timesplit.length == 2){
+                var minute = timesplit[0];
+                var second = timesplit[1];
+                totalDuration += minute*60+parseInt(second);
+                if(video.classList.contains('active') || video.getAttribute('data-scrolled') == 'true'){
+                     watchedDuration = totalDuration - (minute*60+parseInt(second));
+                }
+            }else{
+                var hour = timesplit[0];
+                var minute = timesplit[1];
+                var second = timesplit[2];
+                totalDuration += hour*60*60+minute*60+parseInt(second);
+                if(video.classList.contains('active') || video.getAttribute('data-scrolled') == 'true'){
+                    watchedDuration = totalDuration - (hour*60*60+minute*60+parseInt(second));
+                }
             }
         }
         // 计算剩余未观看的时长，即总时长减去已观看时长

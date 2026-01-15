@@ -4,7 +4,7 @@
 // @author         Blaff, Rand0max, Atlantis
 // @namespace      ModoVert_JV_Chat
 // @license        MIT
-// @version        0.1.127.v105
+// @version        0.1.127.v110
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/128px/1f7e9.png
 // @match          http://*.jeuxvideo.com/forums/42-*
 // @match          https://*.jeuxvideo.com/forums/42-*
@@ -1558,7 +1558,7 @@ function parseMessage(elem) {
     let author = conteneur.getElementsByClassName("bloc-pseudo-msg")[0].textContent.trim();
 
     /* [ADD ModeColo] */
-    let classListe = conteneur.getElementsByClassName("bloc-pseudo-msg")[0]; 
+    let classListe = conteneur.getElementsByClassName("bloc-pseudo-msg")[0];
     let classUser = classListe.classList[classListe.classList.length - 1];
     /* [ADD END] */
 
@@ -1583,7 +1583,6 @@ function parseMessage(elem) {
     }
 
     let signalerHTML = "";
-    /* [RMV: Old Signal]
     const options = elem.getElementsByClassName("bloc-options-msg")[0];
     if (options) {
         let signalElem = options.querySelector(".picto-msg-exclam");
@@ -1594,7 +1593,10 @@ function parseMessage(elem) {
             signalerHTML = jvChatSignalElem.outerHTML;
         }
     }
-    [RMV: Old Signal] */
+
+    /* [ADD : Old Signal] */
+    signalerHTML = "";
+    /* [ADD END] */
 
     return {
 
@@ -2771,15 +2773,12 @@ function buildQuoteEvent(messageId) {
         const response = await fetch(url);
         const result = await response.json();
         let quoteText = result.txt;
-
-        /* [RMV : No message]
         if (!quoteText?.length) {
             quoteText = message.querySelector('.txt-msg')?.innerText.trim();
         }
-        [RMV END] */
 
         /* [ADD ModeColo : Choix Pseudo] */
-        let content = `\n> Le ${date}${show_pseudo ? ` ${author} a écrit ` : ' '}:\n> `;
+        let content = `\n> Le ${date} ${show_pseudo ? `${author} a écrit ` : ''}:\n> `;
         /* [ADD END] */
 
         /* [RMV : Pseudo unique]

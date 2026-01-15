@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili 字幕下载器
 // @namespace    http://tampermonkey.net/
-// @version      2.5.0
-// @description  一键下载B站视频字幕，支持多种格式 (TXT/SRT/ASS/VTT/LRC/BCC)，支持番剧/课程/稍后再看。参考@indefined佬的脚本实现。
+// @version      2.7.3
+// @description  一键下载B站视频字幕，支持多种格式 (TXT/SRT/ASS/VTT/LRC/BCC)，支持番剧/课程/稍后再看/列表/选集批量下载。参考@indefined佬的脚本实现。
 // @author       xiaoyu
 // @match        *://www.bilibili.com/video/*
 // @match        *://bilibili.com/video/*
@@ -10,6 +10,7 @@
 // @match        *://www.bilibili.com/bangumi/play/ep*
 // @match        *://www.bilibili.com/cheese/play/ss*
 // @match        *://www.bilibili.com/cheese/play/ep*
+// @match        *://www.bilibili.com/list/*
 // @match        *://www.bilibili.com/list/watchlater*
 // @match        *://www.bilibili.com/medialist/play/watchlater/*
 // @match        *://www.bilibili.com/medialist/play/ml*
@@ -27,6 +28,17 @@
     'use strict';
 
     // =========================================================================
+    // DEBUG SETTINGS
+    // =========================================================================
+    // 设置为 true 可在控制台输出详细调试日志
+    const DEBUG = false;
+
+    // 调试日志函数（仅在 DEBUG 模式下输出）
+    function debugLog(...args) {
+        if (DEBUG) console.log('[Bilibili 字幕下载器 DEBUG]', ...args);
+    }
+
+    // =========================================================================
     // CONFIGURATION & CONSTANTS
     // =========================================================================
     const CONFIG = {
@@ -34,7 +46,8 @@
             view: 'https://api.bilibili.com/x/web-interface/view',
             player: 'https://api.bilibili.com/x/player/v2',
             playerWbi: 'https://api.bilibili.com/x/player/wbi/v2',
-            pgcInfo: 'https://api.bilibili.com/pgc/view/web/season'
+            pgcInfo: 'https://api.bilibili.com/pgc/view/web/season',
+            seriesList: 'https://api.bilibili.com/x/series/list'  // 合集/列表 API
         },
         selectors: {
             // 普通视频
@@ -58,6 +71,7 @@
 	    // 用于避免重复请求导致的不稳定结果
 	    const subtitleListCache = new Map();
 	    const CACHE_TTL = 5 * 60 * 1000; // 5 分钟缓存有效期
+	    const MAX_CACHE_SIZE = 50; // 最大缓存条目数，防止内存无限增长
 
 	    // In-flight promise 缓存：防止并发点击导致多次 API 请求（字幕列表）
 	    // key = "<key>", value = Promise<{title, subtitles}>
@@ -66,6 +80,19 @@
     // =========================================================================
     // UTILITIES
     // =========================================================================
+
+    /**
+     * 清理字幕缓存，防止内存无限增长
+     * 当缓存大小超过限制时，删除最旧的条目
+     */
+    function cleanCacheIfNeeded() {
+        if (subtitleListCache.size >= MAX_CACHE_SIZE) {
+            // 删除最旧的条目（Map 迭代顺序按插入顺序）
+            const oldestKey = subtitleListCache.keys().next().value;
+            subtitleListCache.delete(oldestKey);
+            debugLog('缓存已满，删除最旧条目:', oldestKey);
+        }
+    }
 
     function formatTimeSRT(seconds) {
         const h = Math.floor(seconds / 3600);
@@ -113,7 +140,7 @@
         if (typeof GM_notification === 'function') {
             GM_notification({ text, title, timeout: 3000 });
         } else {
-            console.log(`[Subtitle Downloader] ${title}: ${text}`);
+            debugLog(`[Subtitle Downloader] ${title}: ${text}`);
         }
     }
 
@@ -328,6 +355,7 @@
         const path = window.location.pathname;
         if (path.includes('/bangumi/play/')) return 'bangumi';
         if (path.includes('/cheese/play/')) return 'cheese';
+        if (path.includes('/list/')) return 'list';
         if (path.includes('/watchlater') || path.includes('/medialist/play/')) return 'medialist';
         if (path.includes('/video/')) return 'video';
         return 'unknown';
@@ -378,6 +406,439 @@
         if (ssMatch) ctx.ssid = ssMatch[1];
 
         return ctx;
+    }
+
+    /**
+     * 验证 BV ID 格式是否正确
+     * @param {string} bvid - 待验证的 BV ID
+     * @returns {boolean} 格式是否正确
+     */
+    function isValidBvid(bvid) {
+        if (typeof bvid !== 'string') return false;
+        return /^BV[a-zA-Z0-9]{10}$/.test(bvid);
+    }
+
+    /**
+     * 从 URL 中提取 list_id（列表/合集 ID）
+     * @returns {string|null} 返回 list_id，失败返回 null
+     */
+    function extractListId() {
+        const win = window.unsafeWindow || window;
+        const path = window.location.pathname;
+
+        // 1. 从 URL 路径中提取（如 /list/3546955523295422）
+        const pathMatch = path.match(/\/list\/(\d+)/);
+        if (pathMatch) {
+            return pathMatch[1];
+        }
+
+        // 2. 从 __INITIAL_STATE__ 中提取
+        if (win.__INITIAL_STATE__) {
+            const state = win.__INITIAL_STATE__;
+
+            // 尝试多种可能的数据路径
+            const listIdPaths = [
+                () => state.playlistData?.listId,
+                () => state.playlist?.info?.list_id,
+                () => state.mediaListInfo?.info?.list_id,
+                () => state.mediaListInfo?.list_id,
+                () => state.listId,
+                () => state.seriesId,
+            ];
+
+            for (const getPath of listIdPaths) {
+                try {
+                    const listId = getPath();
+                    if (listId) {
+                        return listId;
+                    }
+                } catch (e) {
+                    // 继续尝试下一个路径
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 通过 API 获取合集/列表的完整视频列表（支持分页）
+     * B站列表 API 返回每页 20 个视频，需要循环获取所有页
+     * @param {string} listId - 列表/合集 ID
+     * @param {number} mid - 用户 mid
+     * @returns {Promise<Array>} 返回视频列表数组，每个元素包含 {title, bvid, cid, page}
+     */
+    async function fetchFullSeriesListFromApi(listId, mid) {
+        const LOG_PREFIX = '[Bilibili 字幕下载器]';
+        const allVideos = [];
+        const pageSize = 20;  // B站列表 API 每页返回 20 个
+        let pn = 1;
+        let hasMore = true;
+
+        debugLog(`${LOG_PREFIX} [API 分页] 开始获取列表 series_id=${listId}, mid=${mid} 的完整视频列表`);
+
+        while (hasMore) {
+            try {
+                // 使用正确的 API 端点：/x/series/archives
+                const apiUrl = `https://api.bilibili.com/x/series/archives?mid=${mid}&series_id=${listId}&pn=${pn}&ps=${pageSize}&only_normal=true&sort=desc&_t=${Date.now()}`;
+                debugLog(`${LOG_PREFIX} [API 分页] 正在获取第 ${pn} 页...`);
+                debugLog(`${LOG_PREFIX} [API 分页] 请求 URL: ${apiUrl}`);
+
+                const response = await fetchJsonStrict(apiUrl, { credentials: 'include', cache: 'no-store' }, `系列列表第${pn}页`);
+
+                // 详细记录响应结构，用于调试
+                debugLog(`${LOG_PREFIX} [API 分页] 响应 code: ${response?.code}, message: ${response?.message}`);
+                debugLog(`${LOG_PREFIX} [API 分页] response.data 存在: ${!!response?.data}`);
+                debugLog(`${LOG_PREFIX} [API 分页] response.data.archives 存在: ${!!response?.data?.archives}`);
+                if (response?.data) {
+                    debugLog(`${LOG_PREFIX} [API 分页] response.data 的键:`, Object.keys(response.data));
+                }
+
+                if (response && response.data && response.data.archives) {
+                    const videos = response.data.archives;
+                    const page = response.data.page;
+
+                    if (Array.isArray(videos) && videos.length > 0) {
+                        debugLog(`${LOG_PREFIX} [API 分页] 第 ${pn} 页获取到 ${videos.length} 个视频，总页数: ${page?.total || '未知'}`);
+
+                        // 转换为标准格式
+                        for (const v of videos) {
+                            if (v.bvid && isValidBvid(v.bvid)) {
+                                allVideos.push({
+                                    title: v.title,
+                                    bvid: v.bvid,
+                                    cid: v.cid || null,
+                                    page: 1  // 列表中的每个视频都是独立的 BV
+                                });
+                            }
+                        }
+
+                        // 检查是否还有更多页
+                        // 如果获取到的视频数量小于 pageSize，说明是最后一页
+                        if (videos.length < pageSize) {
+                            hasMore = false;
+                            debugLog(`${LOG_PREFIX} [API 分页] 已获取所有视频（第 ${pn} 页是最后一页）`);
+                        } else {
+                            pn++;
+                        }
+                    } else {
+                        // 没有更多数据了
+                        hasMore = false;
+                        debugLog(`${LOG_PREFIX} [API 分页] 第 ${pn} 页没有更多数据`);
+                    }
+                } else {
+                    hasMore = false;
+                    console.warn(`${LOG_PREFIX} [API 分页] 第 ${pn} 页响应格式异常:`, response);
+                }
+
+                // 请求间隔，避免触发风控
+                if (hasMore) {
+                    await sleep(200);
+                }
+
+            } catch (e) {
+                console.error(`${LOG_PREFIX} [API 分页] 第 ${pn} 页获取失败:`, e);
+                // 如果第一页就失败，抛出错误；否则继续使用已获取的数据
+                if (pn === 1) {
+                    throw new Error(`无法获取列表数据: ${e.message}`);
+                }
+                hasMore = false;
+                console.warn(`${LOG_PREFIX} [API 分页] 第 ${pn} 页失败，使用已获取的 ${allVideos.length} 个视频`);
+            }
+        }
+
+        debugLog(`${LOG_PREFIX} [API 分页] 完成，共获取 ${allVideos.length} 个视频`);
+        return allVideos;
+    }
+
+    /**
+     * 获取视频列表数据（用于批量下载）
+     * 支持两种场景：
+     * 1. 列表页面 (/list/*) - 从页面数据获取合集视频列表
+     * 2. 普通视频页面 (/video/BV*) - 获取多分集（P 列表）
+     * @returns {Array|null} 返回视频列表数组，每个元素包含 {title, bvid, cid, page}，失败返回 null
+     */
+    function getVideoListData() {
+        const win = window.unsafeWindow || window;
+        const ctx = getVideoContext();
+        const pageType = ctx.pageType;
+
+        // 场景1: 列表页面 (/list/*)
+        if (pageType === 'list') {
+            debugLog('[getVideoListData] 尝试获取列表页面视频列表');
+            debugLog('[getVideoListData] __INITIAL_STATE__ 存在:', !!win.__INITIAL_STATE__);
+
+            // 优先从 __INITIAL_STATE__ 获取完整列表
+            if (win.__INITIAL_STATE__) {
+                const state = win.__INITIAL_STATE__;
+                // 打印 state 的所有顶层键，方便调试
+                const stateKeys = Object.keys(state).filter(k => !k.startsWith('_'));
+                debugLog('[getVideoListData] __INITIAL_STATE__ 顶层键:', stateKeys);
+
+                // 检查是否有 playlistData（列表页面特有）
+                if (state.playlistData) {
+                    debugLog('[getVideoListData] 找到 playlistData:', {
+                        listId: state.playlistData.listId,
+                        title: state.playlistData.title,
+                        videosCount: state.playlistData.videos?.length || 0
+                    });
+                }
+
+                // 详细检查 playlist 和 mediaListInfo 的结构
+                if (state.playlist) {
+                    debugLog('[getVideoListData] playlist 结构:', {
+                        keys: Object.keys(state.playlist),
+                        hasInfo: !!state.playlist.info,
+                        hasVideos: !!state.playlist.videos,
+                        hasSplits: !!state.playlist.splits,
+                        videosCount: state.playlist.videos?.length || 0,
+                        splitsCount: state.playlist.splits?.length || 0
+                    });
+                }
+
+                if (state.mediaListInfo) {
+                    debugLog('[getVideoListData] mediaListInfo 结构:', {
+                        keys: Object.keys(state.mediaListInfo),
+                        hasInfo: !!state.mediaListInfo.info,
+                        hasVideos: !!state.mediaListInfo.videos,
+                        hasMediaList: !!state.mediaListInfo.mediaList,
+                        videosCount: state.mediaListInfo.videos?.length || 0,
+                        // 打印完整对象以便调试
+                        _full: JSON.stringify(state.mediaListInfo).substring(0, 500)
+                    });
+                }
+
+                // 检查 resourceList（可能是分页加载的列表）
+                if (state.resourceList) {
+                    debugLog('[getVideoListData] resourceList 结构:', {
+                        type: typeof state.resourceList,
+                        isArray: Array.isArray(state.resourceList),
+                        length: state.resourceList?.length || 0,
+                        firstItemKeys: state.resourceList?.[0] ? Object.keys(state.resourceList[0]) : [],
+                        listTotal: state.listTotal,
+                        pn: state.pn
+                    });
+                }
+
+                if (state.resourceListPnGroup) {
+                    debugLog('[getVideoListData] resourceListPnGroup 存在:', {
+                        type: typeof state.resourceListPnGroup,
+                        isArray: Array.isArray(state.resourceListPnGroup),
+                        length: state.resourceListPnGroup?.length || 0,
+                        // 检查是否包含分页数据
+                        hasPnGroups: state.resourceListPnGroup?.[0]?.pn ? true : false,
+                        firstPn: state.resourceListPnGroup?.[0]?.pn
+                    });
+                }
+
+                // 检查其他可能的列表数据路径
+                const additionalChecks = [
+                    'playlistData',
+                    'playlist',
+                    'videoList',
+                    'mediaListInfo',
+                    'favList',
+                    'watchLater'
+                ];
+                additionalChecks.forEach(key => {
+                    if (state[key]) {
+                        debugLog(`[getVideoListData] 发现 ${key}:`, typeof state[key], Array.isArray(state[key]) ? `length=${state[key].length}` : '');
+                    }
+                });
+
+                // 尝试所有可能的数据路径
+                const paths = [
+                    { name: 'resourceList', fn: () => state.resourceList },
+                    { name: 'resourceListPnGroup', fn: () => state.resourceListPnGroup },
+                    { name: 'mediaListInfo.videos', fn: () => state.mediaListInfo?.videos },
+                    { name: 'mediaListInfo.mediaList', fn: () => state.mediaListInfo?.mediaList },
+                    { name: 'mediaListInfo.info', fn: () => state.mediaListInfo?.info },
+                    { name: 'playlist.videos', fn: () => state.playlist?.videos },
+                    { name: 'playlist.splits', fn: () => state.playlist?.splits },
+                    { name: 'playlistData.videos', fn: () => state.playlistData?.videos },
+                    { name: 'videoListData.listData.archives', fn: () => state.videoListData?.listData?.archives },
+                    { name: 'videoListData.listData.seasonInfo.episodes', fn: () => state.videoListData?.listData?.seasonInfo?.episodes },
+                    { name: 'videoListData.listData.seasonInfo.sections', fn: () => state.videoListData?.listData?.seasonInfo?.sections },
+                    { name: 'aidata.list', fn: () => state.aidata?.list },
+                    { name: 'collection.detail.archives', fn: () => state.collection?.detail?.archives },
+                    { name: 'season.episodes', fn: () => state.season?.episodes },
+                    { name: 'mediaList.list', fn: () => state.mediaList?.list },
+                    { name: 'list.listData.archives', fn: () => state.list?.listData?.archives },
+                    { name: 'listData.archives', fn: () => state.listData?.archives },
+                    { name: 'archives', fn: () => state.archives },
+                ];
+
+                for (const { name, fn } of paths) {
+                    try {
+                        const list = fn();
+                        if (Array.isArray(list) && list.length > 0) {
+                            // 检查第一个元素是否有 bvid
+                            const firstBvid = list[0].bvid;
+                            if (firstBvid && isValidBvid(firstBvid)) {
+                                debugLog(`[getVideoListData] 成功从 __INITIAL_STATE__.${name} 获取列表，共 ${list.length} 个视频`);
+                                return list.map(v => ({
+                                    title: v.title,
+                                    bvid: v.bvid,
+                                    cid: v.cid || null,
+                                    page: 1
+                                }));
+                            } else if (firstBvid) {
+                                console.warn(`[getVideoListData] __INITIAL_STATE__.${name} 存在但 BV ID 格式无效: ${firstBvid}`);
+                            } else {
+                                debugLog(`[getVideoListData] __INITIAL_STATE__.${name} 存在但没有 bvid 字段，第一个元素:`, list[0]);
+                            }
+                        }
+                    } catch (e) {
+                        debugLog(`[getVideoListData] 路径 ${name} 访问失败:`, e.message);
+                    }
+                }
+                console.warn('[getVideoListData] 所有 __INITIAL_STATE__ 路径均无效');
+            }
+
+            // DOM 解析作为最后备选（只使用精确的选择器）
+            // 注意：B站列表页面使用虚拟滚动，DOM 只包含当前可见的视频
+            const selectors = [
+                { selector: '.video-list-item', name: 'video-list-item' },
+                { selector: '.list-item', name: 'list-item' },
+                { selector: '.video-episode-card', name: 'video-episode-card' },
+                { selector: '.bili-video-card', name: 'bili-video-card' },
+                { selector: '.archive-item', name: 'archive-item' },
+            ];
+
+            for (const { selector, name } of selectors) {
+                try {
+                    const items = document.querySelectorAll(selector);
+                    if (items.length > 0) {
+                        debugLog(`[getVideoListData] 从 DOM 获取列表，选择器: ${name}, 数量: ${items.length}`);
+                        const results = [];
+                        const seenBvids = new Set();  // 去重
+
+                        items.forEach((item, idx) => {
+                            // 获取 bvid
+                            const link = item.tagName === 'A' ? item : item.querySelector('a[href*="/video/"]');
+                            const bvidMatch = link?.href?.match(/\/video\/(BV[a-zA-Z0-9]{10})/);
+                            const bvid = bvidMatch ? `BV${bvidMatch[1]}` : null;
+
+                            // 验证 BV ID 格式
+                            if (bvid && isValidBvid(bvid) && !seenBvids.has(bvid)) {
+                                seenBvids.add(bvid);
+                                // 获取标题
+                                const titleEl = item.querySelector('.title, .video-title, .bili-video-card__info--tit, a');
+                                const title = titleEl?.textContent?.trim() || titleEl?.getAttribute('title') || `视频${results.length + 1}`;
+
+                                results.push({
+                                    title: title,
+                                    bvid: bvid,
+                                    cid: null,  // 需要后续通过 API 获取
+                                    page: 1
+                                });
+                            }
+                        });
+
+                        if (results.length > 0) {
+                            console.warn(`[getVideoListData] DOM 解析成功但可能不完整（虚拟滚动限制），共 ${results.length} 个视频`);
+                            return results;
+                        }
+                    }
+                } catch (e) {
+                    console.warn(`[getVideoListData] 选择器 ${name} 解析失败:`, e);
+                }
+            }
+
+            console.error('[getVideoListData] 无法从任何数据源获取列表页面视频列表');
+            return null;
+        }
+
+        // 场景2: 普通视频页面 - 检查是否有多个分集
+        if (pageType === 'video') {
+            debugLog('[getVideoListData] video 类型页面，检查是否有分集');
+
+            // 2a. 首先检查是否有 UGC 合集（多个独立的 BV 号）
+            // 合集数据在 sectionsInfo.sections[].episodes[] 中
+            if (win.__INITIAL_STATE__?.sectionsInfo?.sections) {
+                const sections = win.__INITIAL_STATE__.sectionsInfo.sections;
+                debugLog(`[getVideoListData] 找到 sectionsInfo，共 ${sections.length} 个 section`);
+
+                // 收集所有 section 中的 episodes
+                const allEpisodes = [];
+                for (const section of sections) {
+                    if (section.episodes && Array.isArray(section.episodes)) {
+                        allEpisodes.push(...section.episodes);
+                    }
+                }
+
+                if (allEpisodes.length > 1) {
+                    debugLog(`[getVideoListData] 检测到 UGC 合集，共 ${allEpisodes.length} 个视频`);
+                    return allEpisodes.map((ep, idx) => ({
+                        title: ep.title || `视频${idx + 1}`,
+                        bvid: ep.bvid,
+                        cid: ep.cid,
+                        // 合集视频每个都是独立的 BV 号，不需要 page 参数
+                        // ep.page 是一个对象，不是数字，所以直接传 1（或 null）
+                        page: 1
+                    }));
+                }
+            }
+
+            // 2b. 检查是否有普通多P视频（同一个 BV 号，多个分集）
+            if (win.__INITIAL_STATE__?.videoData?.pages) {
+                const pages = win.__INITIAL_STATE__.videoData.pages;
+                debugLog(`[getVideoListData] 找到 pages 数据，共 ${pages.length} 个分集`);
+                if (pages.length > 1) {
+                    const videoData = win.__INITIAL_STATE__.videoData;
+                    debugLog(`[getVideoListData] 检测到 ${pages.length} 个分集，bvid=${videoData.bvid}`);
+                    return pages.map((p, idx) => ({
+                        title: p.part || `P${idx + 1}`,
+                        bvid: videoData.bvid,
+                        cid: p.cid,
+                        page: p.page || idx + 1
+                    }));
+                }
+            } else {
+                debugLog('[getVideoListData] __INITIAL_STATE__.videoData.pages 不存在');
+            }
+            debugLog('[getVideoListData] 视频只有一个分集，不是列表');
+            return null;  // 只有一个分集，不算列表
+        }
+
+        debugLog(`[getVideoListData] 未知的页面类型: ${pageType}`);
+        return null;
+    }
+
+    /**
+     * 获取列表标题（用于批量下载文件名）
+     * @returns {string} 列表标题
+     */
+    function getListTitle() {
+        const win = window.unsafeWindow || window;
+        const ctx = getVideoContext();
+
+        // 列表页面
+        if (ctx.pageType === 'list') {
+            if (win.__INITIAL_STATE__?.videoListData?.listData?.info?.title) {
+                return win.__INITIAL_STATE__.videoListData.listData.info.title;
+            }
+            if (win.__INITIAL_STATE__?.aidata?.listTitle) {
+                return win.__INITIAL_STATE__.aidata.listTitle;
+            }
+            // 从页面标题提取
+            const titleMatch = document.title.match(/^(.+?)\s*[-_]\s*哔哩哔哩/);
+            return titleMatch ? titleMatch[1] : document.title;
+        }
+
+        // 普通视频页面（选集/合集）
+        if (ctx.pageType === 'video') {
+            // 优先使用合集标题
+            if (win.__INITIAL_STATE__?.sectionsInfo?.title) {
+                return win.__INITIAL_STATE__.sectionsInfo.title;
+            }
+            // 其次使用视频标题
+            if (win.__INITIAL_STATE__?.videoData?.title) {
+                return win.__INITIAL_STATE__.videoData.title;
+            }
+        }
+
+        return document.title.replace(' - 哔哩哔哩', '').replace('_哔哩哔哩_bilibili', '');
     }
 
 	    // =========================================================================
@@ -683,6 +1144,7 @@
 	                }
 
 	                // 6. 缓存字幕列表
+	                cleanCacheIfNeeded(); // 清理过期/多余的缓存
 	                subtitleListCache.set(cacheKey, {
 	                    title: videoTitle,
 	                    subtitles: validSubtitles,
@@ -843,6 +1305,7 @@
 	                    throw new Error('所有字幕的 URL 都无效');
 	                }
 
+	                cleanCacheIfNeeded(); // 清理过期/多余的缓存
 	                subtitleListCache.set(cacheKey, {
 	                    title: videoTitle,
 	                    subtitles: validSubtitles,
@@ -892,9 +1355,16 @@
                 '[Events]',
                 'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text'
             ];
-            const events = body.map(item =>
-                `Dialogue: 0,${formatTimeASS(item.from)},${formatTimeASS(item.to)},Default,,0,0,0,,${item.content.replace(/\n/g, '\\N')}`
-            );
+            const events = body.map(item => {
+                // 转义 ASS 控制字符，防止格式注入
+                // 使用全角花括号替换半角，避免被播放器解析为格式代码
+                const safeContent = item.content
+                    .replace(/\{/g, '｛')
+                    .replace(/\}/g, '｝')
+                    .replace(/\\/g, '＼')
+                    .replace(/\n/g, '\\N');
+                return `Dialogue: 0,${formatTimeASS(item.from)},${formatTimeASS(item.to)},Default,,0,0,0,,${safeContent}`;
+            });
             return head.concat(events).join('\r\n');
         },
 
@@ -908,6 +1378,38 @@
             `[${formatTimeSimple(item.from)}] ${item.content}`
         ).join('\n')
     };
+
+    /**
+     * 批量字幕格式生成器 - 用于列表/选集字幕合并下载
+     * 格式：LRC 格式 + 视频标题分隔线
+     * @param {Array} videos - 视频列表，每个元素包含 {title, subtitles, hasSubtitle}
+     * @returns {string} 合并后的字幕内容
+     */
+    function generateBatchLrc(videos) {
+        const lines = [];
+
+        videos.forEach((video, idx) => {
+            // 每个视频都添加标题分隔线（包括第一个视频）
+            if (idx > 0) {
+                lines.push('');
+            }
+            lines.push(`===== ${sanitizeFilename(video.title)} =====`);
+            lines.push('');
+
+            // 处理字幕内容
+            if (video.hasSubtitle && video.subtitles && video.subtitles.length > 0) {
+                // 有字幕：添加 LRC 格式字幕
+                video.subtitles.forEach(item => {
+                    lines.push(`${formatTimeLRC(item.from)} ${item.content.replace(/\n/g, ' ')}`);
+                });
+            } else {
+                // 无字幕：添加占位文本
+                lines.push('[该视频无字幕]');
+            }
+        });
+
+        return lines.join('\r\n');
+    }
 
     function getFileExtension(format) {
         const extMap = { timestamp: 'txt', bcc: 'json' };
@@ -943,6 +1445,282 @@
             notify(e.message, '下载失败');
         } finally {
             if (btn) btn.style.color = originalColor;
+        }
+    }
+
+    /**
+     * 批量下载列表/选集字幕
+     * 将所有视频的字幕合并到一个 .txt 文件中（LRC 格式）
+     * @param {string} preferredLan - 首选字幕语言
+     */
+    async function downloadListSubtitles(preferredLan = undefined) {
+        const btn = document.getElementById('bili-sub-dl-btn');
+        const originalColor = btn ? btn.style.color : '#61666d';
+        if (btn) btn.style.color = '#00AEEC';
+
+        try {
+            // 1. 获取视频列表
+            let videoList = getVideoListData();
+
+            // 对于 list 页面，尝试通过 API 获取完整的分页数据
+            const ctx = getVideoContext();
+            if (ctx.pageType === 'list') {
+                const listId = extractListId();
+                if (listId) {
+                    // 获取 mid（用户 ID）- 尝试多个可能的路径
+                    const win = window.unsafeWindow || window;
+                    const state = win.__INITIAL_STATE__ || {};
+
+                    // 尝试多个可能的 mid 路径
+                    const midPaths = [
+                        () => state.mediaListInfo?.mid,
+                        () => state.userInfo?.mid,
+                        () => state.upInfo?.mid,
+                        () => state.owner?.mid,
+                        () => state.mediaListInfo?.info?.mid,
+                        () => state.mediaListInfo?.owner?.mid,
+                    ];
+
+                    let mid = null;
+                    for (const getMid of midPaths) {
+                        try {
+                            const m = getMid();
+                            if (m && typeof m === 'number' && m > 0) {
+                                mid = m;
+                                break;
+                            }
+                        } catch (e) {
+                            // 继续尝试下一个路径
+                        }
+                    }
+
+                    debugLog(`[Bilibili 字幕下载器] list 页面 mid 获取结果: ${mid || '未找到'}`);
+                    if (!mid) {
+                        // 打印 state 结构用于调试
+                        debugLog(`[Bilibili 字幕下载器] __INITIAL_STATE__ 结构:`, {
+                            hasMediaListInfo: !!state.mediaListInfo,
+                            mediaListInfoKeys: state.mediaListInfo ? Object.keys(state.mediaListInfo) : [],
+                            hasUserInfo: !!state.userInfo,
+                            userInfoKeys: state.userInfo ? Object.keys(state.userInfo) : [],
+                            hasUpInfo: !!state.upInfo,
+                            upInfoKeys: state.upInfo ? Object.keys(state.upInfo) : [],
+                        });
+                    }
+
+                    // 检查获取到的 mid 是否有效（应该是用户 ID，不是列表 ID）
+                    // 列表 ID 通常是很大的数字（如 3546955523295422），而用户 mid 通常是较小的数字
+                    const isValidMid = mid && typeof mid === 'number' && mid > 0 && mid < 10000000000000;
+                    debugLog(`[Bilibili 字幕下载器] mid 有效性检查: mid=${mid}, isValidMid=${isValidMid}`);
+
+                    if (isValidMid) {
+                        debugLog(`[Bilibili 字幕下载器] 检测到 list 页面，list_id=${listId}, mid=${mid}，尝试通过 API 获取完整列表`);
+                        try {
+                            videoList = await fetchFullSeriesListFromApi(listId, mid);
+                            debugLog(`[Bilibili 字幕下载器] API 返回完整列表，共 ${videoList.length} 个视频`);
+                        } catch (e) {
+                            console.warn(`[Bilibili 字幕下载器] API 获取完整列表失败，使用缓存数据:`, e);
+                            // 使用 getVideoListData() 的结果作为备选
+                            if (!videoList || videoList.length === 0) {
+                                throw new Error(`无法获取列表数据: ${e.message}`);
+                            }
+                            console.warn(`[Bilibili 字幕下载器] 使用缓存数据，共 ${videoList.length} 个视频（可能不完整）`);
+                        }
+                    } else {
+                        console.warn(`[Bilibili 字幕下载器] 无法获取 mid，使用缓存数据`);
+                    }
+                } else {
+                    console.warn(`[Bilibili 字幕下载器] 无法从 URL 提取 list_id，使用缓存数据`);
+                }
+            }
+
+            if (!videoList || videoList.length === 0) {
+                throw new Error('无法获取视频列表');
+            }
+
+            const listTitle = getListTitle();
+            const LOG_PREFIX = '[Bilibili 字幕下载器]';
+
+            notify(`正在下载 ${videoList.length} 个视频的字幕，请稍候...`, '批量下载');
+            debugLog(`${LOG_PREFIX} 开始批量下载，共 ${videoList.length} 个视频`);
+
+            // 2. 遍历视频列表，获取字幕
+            const results = [];
+            let successCount = 0;
+            let noSubtitleCount = 0;
+            let errorCount = 0;
+
+            for (let i = 0; i < videoList.length; i++) {
+                const video = videoList[i];
+                debugLog(`${LOG_PREFIX} [${i + 1}/${videoList.length}] 正在处理: ${video.title}`);
+
+                try {
+                    // 统一使用 fetchVideoSubtitleByBvid
+                    // 对于选集分集，传入 page 参数；对于列表视频，不传 page
+                    const page = video.page || null;
+                    const subtitleData = await fetchVideoSubtitleByBvid(video.bvid, video.cid, preferredLan, page);
+
+                    if (subtitleData && subtitleData.body && subtitleData.body.length > 0) {
+                        results.push({
+                            title: video.title,
+                            subtitles: subtitleData.body,
+                            hasSubtitle: true
+                        });
+                        successCount++;
+                        debugLog(`${LOG_PREFIX} [${i + 1}/${videoList.length}] ✓ ${video.title} - 字幕获取成功`);
+                    } else {
+                        // 无字幕视频也要保留占位
+                        results.push({
+                            title: video.title,
+                            subtitles: null,
+                            hasSubtitle: false
+                        });
+                        noSubtitleCount++;
+                        debugLog(`${LOG_PREFIX} [${i + 1}/${videoList.length}] - ${video.title} - 无字幕`);
+                    }
+
+                    // 请求间隔，避免触发风控
+                    if (i < videoList.length - 1) {
+                        await sleep(300);  // 300ms 间隔
+                    }
+
+                } catch (e) {
+                    console.error(`${LOG_PREFIX} [${i + 1}/${videoList.length}] ✗ ${video.title} - 获取失败:`, e);
+                    // 失败的视频也保留占位
+                    results.push({
+                        title: video.title,
+                        subtitles: null,
+                        hasSubtitle: false
+                    });
+                    errorCount++;
+                }
+            }
+
+            // 3. 检查是否有任何字幕
+            const hasAnySubtitle = results.some(r => r.hasSubtitle);
+            if (!hasAnySubtitle) {
+                throw new Error('没有下载到任何字幕，请检查视频是否包含字幕');
+            }
+
+            // 4. 生成合并字幕内容
+            const content = generateBatchLrc(results);
+            const filename = `${sanitizeFilename(listTitle)}_字幕合集.txt`;
+
+            // 5. 下载文件
+            downloadContent(content, filename, 'txt');
+
+            // 6. 完成提示
+            const resultMsg = `批量下载完成！成功: ${successCount} 个` +
+                (noSubtitleCount > 0 ? `，无字幕: ${noSubtitleCount} 个` : '') +
+                (errorCount > 0 ? `，失败: ${errorCount} 个` : '');
+            notify(resultMsg, '下载完成');
+            debugLog(`${LOG_PREFIX} 批量下载完成: ${resultMsg}`);
+
+        } catch (e) {
+            console.error('[Bilibili 字幕下载器] 批量下载失败:', e);
+            notify(e.message, '批量下载失败');
+        } finally {
+            if (btn) btn.style.color = originalColor;
+        }
+    }
+
+    /**
+     * 通过 bvid 获取视频字幕（统一用于列表页面和选集分集）
+     *
+     * 重要：B站的 Player API 通过 cid 来区分不同分集，而不是 p 参数！
+     * 每个分集都有自己独立的 cid，必须从 View API 的 pages 数据中获取正确的 cid。
+     *
+     * @param {string} bvid - 视频 BV 号
+     * @param {number|null} cid - 视频 cid（如果有，为 null 时会从 View API 获取）
+     * @param {string} preferredLan - 首选字幕语言
+     * @param {number|null} page - 分集编号，用于从 pages 数据中获取正确的 cid
+     * @returns {Promise<Object|null>} 字幕数据，包含 {body, lan, lan_doc}
+     */
+    async function fetchVideoSubtitleByBvid(bvid, cid, preferredLan, page = null) {
+        const LOG_PREFIX = '[Bilibili 字幕下载器]';
+
+        try {
+            // 1. 获取视频信息（aid, pages）
+            const viewUrl = `${CONFIG.api.view}?bvid=${bvid}&_t=${Date.now()}`;
+            debugLog(`${LOG_PREFIX} [View API] 请求: ${viewUrl}`);
+            const viewRes = await fetchJsonStrict(viewUrl, { credentials: 'include', cache: 'no-store' }, '视频信息');
+
+            if (viewRes.code !== 0) {
+                console.error(`${LOG_PREFIX} [View API] 失败: code=${viewRes.code}, message=${viewRes.message}, bvid=${bvid}`);
+                return null;
+            }
+
+            const aid = viewRes.data.aid;
+            const pages = viewRes.data.pages || [];
+            let effectiveCid = cid;
+
+            // 2. 从 pages 数据中获取正确的 cid（关键！）
+            if (page !== null) {
+                // 有 page 参数：从对应分集获取 cid
+                const pageIndex = page - 1;
+                if (pageIndex >= 0 && pageIndex < pages.length) {
+                    effectiveCid = pages[pageIndex].cid;
+                    debugLog(`${LOG_PREFIX} [分集] page=${page}, 使用 cid=${effectiveCid} (从 pages[${pageIndex}].cid 获取)`);
+                } else {
+                    console.error(`${LOG_PREFIX} [分集] page=${page} 超出范围 (共 ${pages.length} 个分集)`);
+                    return null;
+                }
+            }
+
+            // 如果仍然没有 cid，使用第一个分集的 cid
+            if (!effectiveCid) {
+                if (pages.length > 0) {
+                    effectiveCid = pages[0].cid;
+                    debugLog(`${LOG_PREFIX} [默认] 使用第一个分集的 cid=${effectiveCid}`);
+                } else {
+                    console.error(`${LOG_PREFIX} [错误] 无法获取视频 cid (bvid=${bvid}, page=${page}, pages.length=${pages.length})`);
+                    return null;
+                }
+            }
+
+            // 3. 获取字幕列表 - 使用 WBI 版本 API，不使用 p 参数！
+            // 参考 ref/Bilibili_CC字幕工具.js:1169 - 正确的 API 调用方式
+            const playerUrl = `${CONFIG.api.playerWbi}?aid=${aid}&cid=${effectiveCid}&_t=${Date.now()}`;
+            debugLog(`${LOG_PREFIX} [Player API] 请求: aid=${aid}, cid=${effectiveCid}, page=${page}`);
+            const playerRes = await fetchJsonStrict(playerUrl, { credentials: 'include', cache: 'no-store' }, '字幕列表');
+
+            if (playerRes.code !== 0) {
+                console.error(`${LOG_PREFIX} [Player API] 失败: code=${playerRes.code}, message=${playerRes.message}, aid=${aid}, cid=${effectiveCid}`);
+                return null;
+            }
+
+            const subtitles = playerRes.data?.subtitle?.subtitles;
+            if (!Array.isArray(subtitles) || subtitles.length === 0) {
+                debugLog(`${LOG_PREFIX} [无字幕] bvid=${bvid}, page=${page}, aid=${aid}, cid=${effectiveCid}`);
+                return null;
+            }
+
+            // 4. 选择字幕
+            const selectedSub = pickSubtitle(subtitles, preferredLan);
+
+            // 5. 下载字幕内容
+            let subUrl = selectedSub.subtitle_url;
+            if (subUrl.startsWith('//')) subUrl = 'https:' + subUrl;
+
+            const subContentRes = await fetchJsonStrict(subUrl, { cache: 'no-store' }, '字幕内容');
+
+            if (!subContentRes.body || !Array.isArray(subContentRes.body)) {
+                console.warn(`${LOG_PREFIX} [字幕内容] 格式异常: bvid=${bvid}, page=${page}`);
+                return null;
+            }
+
+            const videoTitle = viewRes.data.title || bvid;
+            const pageStr = page !== null ? ` P${page}` : '';
+            debugLog(`${LOG_PREFIX} [成功] ${videoTitle}${pageStr}, 字幕语言: ${selectedSub.lan_doc}`);
+
+            return {
+                body: subContentRes.body,
+                lan: selectedSub.lan,
+                lan_doc: selectedSub.lan_doc
+            };
+
+        } catch (e) {
+            console.error(`${LOG_PREFIX} [异常] fetchVideoSubtitleByBvid 失败: bvid=${bvid}, page=${page}, error=${e.message}`);
+            return null;
         }
     }
 
@@ -1714,6 +2492,8 @@
 	    }
 
 	    function createMenu(btnContainer) {
+	        const LOG_PREFIX = '[Bilibili 字幕下载器]';
+	        debugLog(`${LOG_PREFIX} [createMenu] 开始创建菜单`);
 	        const container = document.createElement('div');
 	        container.id = 'bili-sub-dl-menu';
 	        container.style.cssText = `
@@ -1787,6 +2567,16 @@
 	        topArea.appendChild(hideRow);
 	        container.appendChild(topArea);
 
+	        // 检测是否有列表/选集，动态添加批量下载选项
+	        debugLog(`${LOG_PREFIX} [createMenu] 获取视频列表...`);
+	        const videoList = getVideoListData();
+	        debugLog(`${LOG_PREFIX} [createMenu] 视频列表结果:`, videoList ? `length=${videoList.length}` : 'null');
+	        const hasList = videoList && videoList.length > 1;
+	        debugLog(`${LOG_PREFIX} [createMenu] hasList: ${hasList}`);
+	        const ctx = getVideoContext();
+	        const isListPage = ctx.pageType === 'list';
+	        debugLog(`${LOG_PREFIX} [createMenu] isListPage: ${isListPage}`);
+
 	        const options = [
 	            { label: '纯文本 (.txt)', format: 'txt' },
 	            { label: 'SRT 字幕 (.srt)', format: 'srt' },
@@ -1795,9 +2585,21 @@
 	            { label: 'LRC 歌词 (.lrc)', format: 'lrc' },
 	            { label: 'BCC 原始 (.json)', format: 'bcc' },
 	            { label: 'divider', divider: true },
-	            // 预览项的格式不固定在菜单创建时，而是在点击时读取“当前偏好格式”
+	            // 预览项的格式不固定在菜单创建时，而是在点击时读取"当前偏好格式"
 	            { label: '预览字幕...', preview: true },
 	        ];
+
+	        // 如果有列表/选集，添加批量下载选项
+	        if (hasList) {
+	            // 在预览项前插入分隔线和批量下载选项
+	            const batchOptionIndex = options.findIndex(opt => opt.preview);
+	            if (batchOptionIndex !== -1) {
+	                options.splice(batchOptionIndex, 0,
+	                    { label: 'divider', divider: true },
+	                    { label: isListPage ? `下载列表字幕 (${videoList.length}个)` : `下载选集字幕 (${videoList.length}个)`, format: 'batch', batch: true }
+	                );
+	            }
+	        }
 
 	        options.forEach(opt => {
 	            const item = document.createElement('div');
@@ -1806,15 +2608,25 @@
                 item.style.cssText = 'height: 1px; background: #e3e5e7; margin: 4px 0;';
             } else {
                 item.innerText = opt.label;
-                item.style.cssText = `padding: 10px 20px; cursor: pointer; transition: background 0.2s;`;
+                // 批量下载选项使用不同样式
+                if (opt.batch) {
+                    item.style.cssText = `padding: 10px 20px; cursor: pointer; transition: background 0.2s; color: #00AEEC; font-weight: 500;`;
+                } else {
+                    item.style.cssText = `padding: 10px 20px; cursor: pointer; transition: background 0.2s;`;
+                }
                 item.onmouseenter = () => item.style.background = '#f1f2f3';
                 item.onmouseleave = () => item.style.background = 'transparent';
 		                item.onclick = (e) => {
 		                    e.stopPropagation();
 		                    container.style.display = 'none';
 		                    activeMenu = null;
-		                    const format = opt.preview ? getPreferredFormat() : opt.format;
-		                    startDownload(format, opt.preview, getSelectedLanFromMenu(container));
+		                    if (opt.batch) {
+		                        // 批量下载
+		                        downloadListSubtitles(getSelectedLanFromMenu(container));
+		                    } else {
+		                        const format = opt.preview ? getPreferredFormat() : opt.format;
+		                        startDownload(format, opt.preview, getSelectedLanFromMenu(container));
+		                    }
 		                };
 		            }
 		            container.appendChild(item);
@@ -1824,7 +2636,12 @@
 	    }
 
     function injectUI(toolbar) {
-        if (document.getElementById('bili-sub-dl-btn')) return;
+        const LOG_PREFIX = '[Bilibili 字幕下载器]';
+        debugLog(`${LOG_PREFIX} [injectUI] 开始注入按钮`);
+        if (document.getElementById('bili-sub-dl-btn')) {
+            debugLog(`${LOG_PREFIX} [injectUI] 按钮已存在，跳过`);
+            return;
+        }
 
         const btnContainer = document.createElement('div');
         btnContainer.id = 'bili-sub-dl-btn';
@@ -1835,8 +2652,10 @@
 	            cursor: pointer; position: relative; color: #61666d;
 	            transition: color 0.3s; padding: 6px 11px; margin-left: 5px;
 	        `;
-	        if (getHideWhenNoSubtitle()) {
-	            // 先隐藏，后续检测到“有字幕/无法判断”再显示，避免无字幕视频出现按钮闪烁
+	        const autoHide = getHideWhenNoSubtitle();
+	        debugLog(`${LOG_PREFIX} [injectUI] 自动隐藏设置: ${autoHide}`);
+	        if (autoHide) {
+	            // 先隐藏，后续检测到"有字幕/无法判断"再显示，避免无字幕视频出现按钮闪烁
 	            btnContainer.style.display = 'none';
 	        }
 
@@ -1852,12 +2671,30 @@
         btnContainer.onmouseenter = () => btnContainer.style.color = '#00AEEC';
         btnContainer.onmouseleave = () => btnContainer.style.color = '#61666d';
 
+	        debugLog(`${LOG_PREFIX} [injectUI] 开始创建菜单...`);
 	        const menu = createMenu(btnContainer);
+	        debugLog(`${LOG_PREFIX} [injectUI] 菜单创建完成，准备添加到按钮`);
 	        btnContainer.appendChild(menu);
 
-	        // 自动隐藏：注入后就检查一次（用户选择了“自动隐藏”）
-	        if (getHideWhenNoSubtitle()) {
+	        // 检查是否在列表页面或有批量下载选项
+	        const ctx = getVideoContext();
+	        const isListPage = ctx.pageType === 'list';
+	        const videoList = getVideoListData();
+	        const hasList = videoList && videoList.length > 1;
+	        debugLog(`${LOG_PREFIX} [injectUI] 页面类型检测: isListPage=${isListPage}, hasList=${hasList}`);
+
+	        // 自动隐藏：注入后就检查一次（用户选择了"自动隐藏"）
+	        // 注意：列表页面或有批量下载选项时不启用自动隐藏，因为即使当前视频无字幕，其他视频可能有字幕
+	        const shouldAutoHide = autoHide && !isListPage && !hasList;
+	        debugLog(`${LOG_PREFIX} [injectUI] 是否启用自动隐藏: ${shouldAutoHide} (autoHide=${autoHide}, isListPage=${isListPage}, hasList=${hasList})`);
+	        if (shouldAutoHide) {
 	            scheduleAutoHideCheck(menu, btnContainer);
+	        } else {
+	            // 列表页面或不启用自动隐藏时，确保按钮可见
+	            if (autoHide && (isListPage || hasList)) {
+	                debugLog(`${LOG_PREFIX} [injectUI] 列表页面跳过自动隐藏，显示按钮`);
+	                btnContainer.style.display = 'flex';
+	            }
 	        }
 
 	        btnContainer.onclick = (e) => {
@@ -1876,6 +2713,7 @@
 	        };
 
         toolbar.appendChild(btnContainer);
+        debugLog(`${LOG_PREFIX} [injectUI] 按钮已添加到工具栏，当前 display: ${btnContainer.style.display}`);
     }
 
     // Singleton global click listener
@@ -1921,6 +2759,7 @@
     }
 
     async function tryInject(retryCount = 0) {
+        const LOG_PREFIX = '[Bilibili 字幕下载器]';
         // 所有可能的工具栏选择器（同时检查，无顺序等待）
         const selectors = [
             '.video-toolbar-left-main',  // 新版主工具栏 (点赞/投币/收藏的容器)
@@ -1930,15 +2769,20 @@
             CONFIG.selectors.bangumiToolbar,
         ];
 
+        debugLog(`${LOG_PREFIX} [tryInject] 尝试注入按钮 (重试 ${retryCount + 1}/3)`);
         const result = await waitForAnyElement(selectors, 8000);
         if (result) {
+            debugLog(`${LOG_PREFIX} [tryInject] 找到工具栏: ${result.selector}`);
             injectUI(result.el);
 
             // 验证注入是否成功
             setTimeout(() => {
                 const btn = document.getElementById('bili-sub-dl-btn');
                 if (!btn && retryCount < 3) {
+                    console.warn(`${LOG_PREFIX} [tryInject] 按钮注入失败，准备重试`);
                     tryInject(retryCount + 1);
+                } else if (btn) {
+                    debugLog(`${LOG_PREFIX} [tryInject] 按钮注入成功`);
                 }
             }, 500);
             return;
@@ -1973,7 +2817,7 @@
     }
 
     // 持续监听，确保按钮存在（B站 Vue 可能会重新渲染删除我们的按钮）
-    // 使用 MutationObserver 替代 setInterval，更高效
+    // 使用 setInterval 轮询替代 MutationObserver，在高动态页面上性能更优
     function keepButtonAlive() {
         const TOOLBAR_SELECTORS = [
             '.video-toolbar-left-main',
@@ -1981,9 +2825,6 @@
             CONFIG.selectors.toolbar,
             CONFIG.selectors.bangumiToolbar
         ];
-
-        // 防抖：避免短时间内多次触发
-        let debounceTimer = null;
 
         const checkAndInject = () => {
             // 按钮已存在，无需操作
@@ -1999,17 +2840,9 @@
             }
         };
 
-        const observer = new MutationObserver(() => {
-            // 使用防抖，避免频繁触发
-            if (debounceTimer) clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(checkAndInject, 100);
-        });
-
-        // 监听 body 的子树变化
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        // 使用轮询而非 MutationObserver
+        // 在高动态页面（如 B 站）上，每 1.5 秒轮询一次比监听所有 DOM 变化更高效
+        setInterval(checkAndInject, 1500);
 
         // 初始检查一次
         checkAndInject();

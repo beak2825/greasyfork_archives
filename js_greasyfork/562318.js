@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name          Item Market Price Indicator
+// @name          Item Market Price Indicator + Hot Deals
 // @namespace     http://torn.com/
-// @version       3.7
-// @description   Shows price percentage indicators on Item Market listings relative to market value
+// @version       4.1
+// @description   Shows price percentage indicators on Item Market listings relative to market value with green highlighting for good deals
 // @author        srsbsns
 // @match         *://www.torn.com/page.php?sid=ItemMarket*
 // @match         *://www.torn.com/imarket.php*
@@ -13,8 +13,8 @@
 // @grant         GM_registerMenuCommand
 // @connect       api.torn.com
 // @license       MIT
-// @downloadURL https://update.greasyfork.org/scripts/562318/Item%20Market%20Price%20Indicator.user.js
-// @updateURL https://update.greasyfork.org/scripts/562318/Item%20Market%20Price%20Indicator.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562318/Item%20Market%20Price%20Indicator%20%2B%20Hot%20Deals.user.js
+// @updateURL https://update.greasyfork.org/scripts/562318/Item%20Market%20Price%20Indicator%20%2B%20Hot%20Deals.meta.js
 // ==/UserScript==
 
 (function() {
@@ -26,10 +26,21 @@
     const S = {
         apiKey: 'im_api_key',
         catalog: 'im_catalog',
-        catalogTs: 'im_catalog_ts'
+        catalogTs: 'im_catalog_ts',
+        settings: 'im_deal_settings'
     };
 
     const BASE = 'https://api.torn.com';
+
+    // Default settings for deal highlighting
+    let dealSettings = JSON.parse(localStorage.getItem(S.settings)) || {
+        tier1: { percent: 5, badgeColor: '#00A100', borderColor: '#00A100' },
+        tier2: { percent: 10, badgeColor: '#00D000', borderColor: '#00D000' },
+        tier3: { percent: 20, badgeColor: '#00FF00', borderColor: '#00FF00' }
+    };
+
+    // Set minDiscount to tier1 percent (lowest tier)
+    dealSettings.minDiscount = dealSettings.tier1.percent;
 
     // ============================================================================
     // STATE VARIABLES
@@ -38,7 +49,7 @@
     let busy = false;
     let observer = null;
     let debounceTimer = null;
-    let processedElements = new WeakSet(); // Track processed elements globally
+    let processedElements = new WeakSet();
 
     // ============================================================================
     // API KEY MANAGEMENT
@@ -98,10 +109,6 @@
             animation: none !important;
         }
 
-        .imp-price-badge.good {
-            color: #00A100 !important;
-        }
-
         .imp-price-badge.high {
             color: #BA5959 !important;
         }
@@ -114,6 +121,134 @@
         /* Dropdown listing badges (smaller) */
         .imp-dropdown-badge {
             font-size: 10px !important;
+        }
+
+        /* Hot deal highlighting - clean, no glow, no animation */
+        .imp-hot-deal {
+            transition: all 0.2s ease-in !important;
+            position: relative !important;
+            z-index: 1 !important;
+            border-radius: 4px !important;
+        }
+
+        /* Settings Menu Styles */
+        #market-deals-menu {
+            position: fixed;
+            bottom: 38px;
+            left: 20px;
+            z-index: 999999;
+            background: #222;
+            color: #ccc;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-family: Tahoma, Arial, sans-serif;
+            width: 200px;
+            box-shadow: 0 0 10px #000;
+        }
+
+        #market-menu-header {
+            padding: 6px;
+            cursor: pointer;
+            background: #333;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+            color: #fff;
+        }
+
+        #market-menu-content {
+            display: none;
+            padding: 10px;
+            border-top: 1px solid #444;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #market-menu-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #market-menu-content::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 3px;
+        }
+
+        .market-tier-section {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .market-tier-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #444;
+        }
+
+        .market-tier-title {
+            font-weight: bold;
+            font-size: 10px;
+            color: #fff;
+            flex: 1;
+        }
+
+        .market-setting-row {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 9px;
+        }
+
+        .market-setting-label {
+            color: #aaa;
+            width: 65px;
+            flex-shrink: 0;
+            font-size: 9px;
+        }
+
+        .market-setting-row input[type="number"] {
+            width: 45px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #555;
+            text-align: center;
+            border-radius: 2px;
+            font-size: 9px;
+            padding: 2px;
+        }
+
+        .market-setting-row input[type="color"] {
+            width: 40px;
+            height: 22px;
+            background: #000;
+            border: 1px solid #555;
+            border-radius: 2px;
+            cursor: pointer;
+            padding: 1px;
+        }
+
+        #market-save-btn {
+            width: 100%;
+            cursor: pointer;
+            background: #76c776;
+            color: #000;
+            border: none;
+            padding: 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        #market-save-btn:hover {
+            background: #8ed68e;
         }
     `);
 
@@ -153,14 +288,51 @@
     }
 
     // ============================================================================
+    // COLOR CALCULATION FOR BADGES
+    // ============================================================================
+    function getGreenColorForDiscount(pctDiff) {
+        // pctDiff is negative for discounts (e.g., -5%, -10%, -20%)
+        const discount = Math.abs(pctDiff);
+
+        // Return colors based on settings
+        if (discount >= dealSettings.tier3.percent) {
+            return dealSettings.tier3.badgeColor;
+        } else if (discount >= dealSettings.tier2.percent) {
+            return dealSettings.tier2.badgeColor;
+        } else if (discount >= dealSettings.tier1.percent) {
+            return dealSettings.tier1.badgeColor;
+        } else {
+            return dealSettings.tier1.badgeColor; // Default for small discounts
+        }
+    }
+
+    // ============================================================================
+    // COLOR CALCULATION FOR BORDER HIGHLIGHTING
+    // ============================================================================
+    function getGreenBorderColor(percentage) {
+        // percentage is already absolute (e.g., 3, 10, 35)
+        // Return colors based on settings
+
+        if (percentage >= dealSettings.tier3.percent) {
+            return dealSettings.tier3.borderColor;
+        } else if (percentage >= dealSettings.tier2.percent) {
+            return dealSettings.tier2.borderColor;
+        } else if (percentage >= dealSettings.tier1.percent) {
+            return dealSettings.tier1.borderColor;
+        } else {
+            return dealSettings.tier1.borderColor; // Default
+        }
+    }
+
+    // ============================================================================
     // CATALOG FETCH
     // ============================================================================
     async function fetchCatalog(force = false) {
         const cached = JGet(S.catalog);
         const ts = GM_getValue(S.catalogTs, 0);
 
-        // Use cached catalog if less than 12 hours old
-        if (!force && cached && (Date.now() - ts) < 12 * 3600 * 1000) {
+        // Use cached catalog if less than 1 hour old
+        if (!force && cached && (Date.now() - ts) < 1 * 3600 * 1000) {
             return cached;
         }
 
@@ -238,27 +410,93 @@
         badge.className = isMainListing ? 'imp-price-badge imp-main-badge' : 'imp-price-badge imp-dropdown-badge';
 
         let displayText = '';
-        let colorClass = '';
 
         if (pctDiff < 0) {
-            // Below MV - Green (good to buy)
+            // Below MV - Green (good to buy) - brightness increases with discount
             displayText = `${Math.round(pctDiff)}%`;
-            colorClass = 'good';
+            badge.style.color = getGreenColorForDiscount(pctDiff);
         } else if (pctDiff > 0) {
             // Above MV - Red (expensive)
             displayText = `+${Math.round(pctDiff)}%`;
-            colorClass = 'high';
+            badge.classList.add('high');
         } else {
-            // Exactly at MV - Green (at market value is acceptable)
+            // Exactly at MV - Base green (at market value is acceptable)
             displayText = `MV`;
-            colorClass = 'good';
+            badge.style.color = '#00A100';
         }
 
-        badge.classList.add(colorClass);
         badge.textContent = displayText;
         badge.title = `Market Value: $${marketValue.toLocaleString()}\nListing Price: $${price.toLocaleString()}`;
 
         return badge;
+    }
+
+    // ============================================================================
+    // HOT DEAL HIGHLIGHTING (like original script)
+    // ============================================================================
+    function applyHotDeals() {
+        // Find all span/div/p elements (like original script)
+        const elements = document.querySelectorAll('span, div, p');
+
+        // Track which parent elements should be highlighted
+        const highlightedParents = new Set();
+
+        elements.forEach(el => {
+            const text = el.innerText.trim();
+
+            // Target the pattern: -XX% or -XX.X% (negative percentages only)
+            if (/^-\d+(\.\d+)?%$/.test(text)) {
+                const percentage = Math.abs(parseFloat(text));
+
+                // Only highlight if discount meets minimum threshold from settings
+                if (percentage >= dealSettings.minDiscount) {
+                    const box = el.parentElement;
+                    if (box) {
+                        highlightedParents.add(box);
+
+                        if (!box.classList.contains('imp-hot-deal')) {
+                            box.classList.add('imp-hot-deal');
+                        }
+
+                        const color = getGreenBorderColor(percentage);
+
+                        // Thicker borders for better deals
+                        let borderWidth = '1px';
+                        if (percentage >= dealSettings.tier3.percent) {
+                            borderWidth = '3px'; // Thick border for amazing deals
+                        } else if (percentage >= dealSettings.tier2.percent) {
+                            borderWidth = '2px'; // Medium border for good deals
+                        }
+
+                        // Subtle background tint for better deals (very transparent)
+                        let bgColor = 'transparent';
+                        if (percentage >= dealSettings.tier2.percent) {
+                            bgColor = 'rgba(0, 200, 0, 0.05)'; // Very subtle green tint
+                        }
+
+                        // Apply styling - using box-sizing to prevent layout shift from thicker borders
+                        box.style.border = `${borderWidth} solid ${color}`;
+                        box.style.backgroundColor = bgColor;
+                        box.style.boxShadow = 'none';
+                        box.style.animation = 'none';
+                        box.style.boxSizing = 'border-box';
+                    }
+                }
+            }
+        });
+
+        // Remove highlighting from elements that no longer have good deals
+        const allHighlighted = document.querySelectorAll('.imp-hot-deal');
+        allHighlighted.forEach(el => {
+            if (!highlightedParents.has(el)) {
+                el.classList.remove('imp-hot-deal');
+                el.style.border = '';
+                el.style.backgroundColor = '';
+                el.style.boxShadow = '';
+                el.style.animation = '';
+                el.style.boxSizing = '';
+            }
+        });
     }
 
     // ============================================================================
@@ -290,9 +528,7 @@
             }
 
             // Find all item cards on the market
-            // Look for itemTile divs directly, or li elements that contain them
             const itemTiles = document.querySelectorAll('[class*="itemTile"]');
-
 
             itemTiles.forEach(card => {
                 // Skip if this card is inside a bazaar/NPC deals popup
@@ -303,7 +539,7 @@
 
                 const item = resolveItemFromElement(card);
 
-                // FIRST: Handle main item card prices (grid view)
+                // Handle main item card prices (grid view)
                 const mainPriceContainer = card.querySelector('[class*="priceAndTotal"]');
                 if (mainPriceContainer) {
                     // Find the span that contains the price (first span with $ in it)
@@ -442,6 +678,10 @@
     // INITIALIZATION
     // ============================================================================
     async function init() {
+        console.log('Item Market Price Indicator + Hot Deals: Initializing...');
+
+        // Create settings menu
+        createSettingsMenu();
 
         // Fetch catalog
         catalog = await fetchCatalog();
@@ -462,6 +702,109 @@
             annotateMarket();
         }, 5000);
 
+        // Apply hot deals highlighting every 400ms (like original script)
+        setInterval(() => {
+            applyHotDeals();
+        }, 400);
+    }
+
+    // ============================================================================
+    // SETTINGS MENU
+    // ============================================================================
+    function createSettingsMenu() {
+        const menu = document.createElement('div');
+        menu.id = 'market-deals-menu';
+        menu.innerHTML = `
+            <div id="market-menu-header">💚 Market Deals Settings</div>
+            <div id="market-menu-content">
+                <div class="market-tier-section">
+                    <div class="market-tier-header">
+                        <span class="market-tier-title">Tier 3 (Best Deals)</span>
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Min Discount %:</span>
+                        <input type="number" id="market-tier3-percent" value="${dealSettings.tier3.percent}" min="1" max="100" step="1">
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Badge Color:</span>
+                        <input type="color" id="market-tier3-badge" value="${dealSettings.tier3.badgeColor}">
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Border Color:</span>
+                        <input type="color" id="market-tier3-border" value="${dealSettings.tier3.borderColor}">
+                    </div>
+                </div>
+
+                <div class="market-tier-section">
+                    <div class="market-tier-header">
+                        <span class="market-tier-title">Tier 2 (Good Deals)</span>
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Min Discount %:</span>
+                        <input type="number" id="market-tier2-percent" value="${dealSettings.tier2.percent}" min="1" max="100" step="1">
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Badge Color:</span>
+                        <input type="color" id="market-tier2-badge" value="${dealSettings.tier2.badgeColor}">
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Border Color:</span>
+                        <input type="color" id="market-tier2-border" value="${dealSettings.tier2.borderColor}">
+                    </div>
+                </div>
+
+                <div class="market-tier-section">
+                    <div class="market-tier-header">
+                        <span class="market-tier-title">Tier 1 (Small Deals)</span>
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Min Discount %:</span>
+                        <input type="number" id="market-tier1-percent" value="${dealSettings.tier1.percent}" min="1" max="100" step="1">
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Badge Color:</span>
+                        <input type="color" id="market-tier1-badge" value="${dealSettings.tier1.badgeColor}">
+                    </div>
+                    <div class="market-setting-row">
+                        <span class="market-setting-label">Border Color:</span>
+                        <input type="color" id="market-tier1-border" value="${dealSettings.tier1.borderColor}">
+                    </div>
+                </div>
+
+                <button id="market-save-btn">Save & Apply</button>
+            </div>
+        `;
+        document.body.appendChild(menu);
+
+        // Event listeners
+        document.getElementById('market-menu-header').onclick = () => {
+            const content = document.getElementById('market-menu-content');
+            content.style.display = (content.style.display === 'block') ? 'none' : 'block';
+        };
+
+        document.getElementById('market-save-btn').onclick = () => {
+            // Save all settings
+            dealSettings.tier3.percent = parseInt(document.getElementById('market-tier3-percent').value);
+            dealSettings.tier3.badgeColor = document.getElementById('market-tier3-badge').value;
+            dealSettings.tier3.borderColor = document.getElementById('market-tier3-border').value;
+
+            dealSettings.tier2.percent = parseInt(document.getElementById('market-tier2-percent').value);
+            dealSettings.tier2.badgeColor = document.getElementById('market-tier2-badge').value;
+            dealSettings.tier2.borderColor = document.getElementById('market-tier2-border').value;
+
+            dealSettings.tier1.percent = parseInt(document.getElementById('market-tier1-percent').value);
+            dealSettings.tier1.badgeColor = document.getElementById('market-tier1-badge').value;
+            dealSettings.tier1.borderColor = document.getElementById('market-tier1-border').value;
+
+            // Use tier1 percent as the minimum discount
+            dealSettings.minDiscount = dealSettings.tier1.percent;
+
+            localStorage.setItem(S.settings, JSON.stringify(dealSettings));
+
+            // Immediate visual update
+            annotateMarket();
+            applyHotDeals();
+        };
     }
 
     // Start when DOM is ready

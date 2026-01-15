@@ -97,7 +97,7 @@
 // @require      https://greasyfork.org/scripts/444988-music-helper/code/music-helper.js?version=1268106
 // @icon         https://kp.m-team.cc//favicon.ico
 // @run-at       document-end
-// @version      2.6
+// @version      2.9
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setClipboard
 // @grant        GM_setValue
@@ -1060,7 +1060,7 @@ const default_site_info = {
     '麒麟': {'url': 'https://www.hdkyl.in/', 'enable': 1},
     'AGSV': {'url': 'https://www.agsvpt.com/', 'enable': 1},
     'ECUST': {'url': 'https://pt.ecust.pp.ua/', 'enable': 1},
-    'iloli': {'url': 'https://share.ilolicon.com/', 'enable': 1},
+    'iloli': {'url': 'https://mua.xloli.cc/', 'enable': 1},
     'CrabPt': {'url': 'https://crabpt.vip/', 'enable': 1},
     'QingWa': {'url': 'https://qingwapt.com/', 'enable': 1},
     'FNP': {'url': 'https://fearnopeer.com/', 'enable': 1},
@@ -15436,11 +15436,12 @@ function auto_feed() {
                     if (forward_site == 'BLU' || forward_site == 'Aither') {
                         raw_info.name = raw_info.name.replace(/Remux/i, 'REMUX');
                         raw_info.name = raw_info.name.replace(/(Atmos)(.*?)(TrueHD)(.*?)(7.1)/, '$2$3 $5 $1').replace(/ +/g, ' ');
-                        if (forward_site == 'BLU' && raw_info.name.match(/DV HDR/i)) {
-                            raw_info.name = raw_info.name.replace(/(1080|2160)[pi]/i, function(data){
-                                return 'Hybrid ' + data;
-                            });
-                        }
+                        // DreamRu大佬说不要了
+                        // if (forward_site == 'BLU' && raw_info.name.match(/DV HDR/i)) {
+                        //     raw_info.name = raw_info.name.replace(/(1080|2160)[pi]/i, function(data){
+                        //         return 'Hybrid ' + data;
+                        //     });
+                        // }
                         raw_info.name = raw_info.name.replace(/DDP/i, 'DD+');
                         raw_info.name = raw_info.name.replace(/(DD\+|DD|AAC|TrueHD|DTS.HD.?MA|DTS.HD.?HR|DTS.HD|DTS|L?PCM|FLAC)(.*?)(5\.1|2\.0|7\.1|1\.0)/i, '$1 $3');
                         raw_info.name = raw_info.name.replace(/(WEB-DL)(.*?)(AVC|x264|H264)/i, '$1$2H.264');
@@ -17276,7 +17277,7 @@ function auto_feed() {
                 case 'DTS': audiocodec_box.val(3); break;
                 case 'AC3':
                     audiocodec_box.val(4);
-                    if (raw_info.name.match(/DD[\+p]/)) {
+                    if (raw_info.name.match(/DD[\+p]/i)) {
                         audiocodec_box.val(11);
                     }
                     break;
@@ -23258,9 +23259,10 @@ function auto_feed() {
                 // assast 图片自动350
                 if (forward_site == 'BLU' || forward_site == 'Tik' || forward_site == 'Aither'){
                     pic_info = deal_img_350_ptpimg(infos.pic_info);
-                    if (raw_info.name.match(/DV HDR/i)) {
-                        pic_info = '[CODE]This release contains a derived Dolby Vision profile 8 layer. Comparisons not required as DV and HDR are from same provider.[/CODE]\n\n' + pic_info;
-                    }
+                    // DreamRu大佬说不要了
+                    // if (raw_info.name.match(/DV HDR/i)) {
+                    //     pic_info = '[CODE]This release contains a derived Dolby Vision profile 8 layer. Comparisons not required as DV and HDR are from same provider.[/CODE]\n\n' + pic_info;
+                    // }
                     $('#upload-form-mediainfo').parent().before(`<div style="margin-bottom:5px"><a id="img350" style="margin-left:5px" href="#">IMG350</a>
                         <font style="margin-left:5px" color="red">选中要转换的bbcode图片部分点击即可。</font></div>
                     `);
@@ -24448,7 +24450,7 @@ function auto_feed() {
                 case 'APE': audiocodec_box.val(2); break;
                 case 'AC3':
                     audiocodec_box.val(13);
-                    if (raw_info.name.match(/DD[\+p]/)) {
+                    if (raw_info.name.match(/DD[\+p]/i)) {
                         audiocodec_box.val(12);
                     }
                     break;

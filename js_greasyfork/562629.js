@@ -1,0 +1,52 @@
+// ==UserScript==
+// @name         M-Team屏蔽指定关键词种子
+// @namespace    m-teamblock
+// @version      20260114
+// @author       Badge8305@M-Team
+// @description  自动删除包含指定关键字的 <tr> 行
+// @match        https://*.m-team.cc/*
+// @grant        none
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/562629/M-Team%E5%B1%8F%E8%94%BD%E6%8C%87%E5%AE%9A%E5%85%B3%E9%94%AE%E8%AF%8D%E7%A7%8D%E5%AD%90.user.js
+// @updateURL https://update.greasyfork.org/scripts/562629/M-Team%E5%B1%8F%E8%94%BD%E6%8C%87%E5%AE%9A%E5%85%B3%E9%94%AE%E8%AF%8D%E7%A7%8D%E5%AD%90.meta.js
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    // 这里写你要屏蔽的所有关键词
+    const KEYWORDS = [
+        '男娘',
+        '大屌萌妹',
+        '男の娘',
+        '伪娘人妖',
+        '变性',
+        '喝尿',
+        '重口味',
+        '圣水',
+        '大便',
+        '神棍优选',
+        '屎'
+    ];
+
+    function removeRows() {
+        const rows = document.querySelectorAll('tr');
+        rows.forEach(tr => {
+            const text = tr.innerText || '';
+            if (KEYWORDS.some(k => text.includes(k))) {
+                tr.remove();
+            }
+        });
+    }
+
+    removeRows();
+
+    const observer = new MutationObserver(() => {
+        removeRows();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+})();

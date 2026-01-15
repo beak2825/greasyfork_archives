@@ -1,17 +1,18 @@
 // ==UserScript==
 // @name         CELMAN_BaseLinker
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
+// @version      1.4.0
 // @description  Baselinker: Optima buttons control, Couriers buttons, Other
 // @author       Smerechuk
 // @match        https://panel.baselinker.com/orders*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=baselinker.com
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/480279/CELMAN_BaseLinker.user.js
 // @updateURL https://update.greasyfork.org/scripts/480279/CELMAN_BaseLinker.meta.js
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
 
     const BUTTON_IDS = {
@@ -142,12 +143,69 @@
         });
     }
 
+    function calculateTotalWeight() {
+        if (typeof $ === 'undefined') return;
+
+        let totalSum = 0;
+        $('input[name="weight[]"]').each(function() {
+            let val = $(this).val().replace(',', '.');
+            let number = parseFloat(val);
+            if (!isNaN(number)) {
+                totalSum += number;
+            }
+        });
+
+        const displayEl = $('#total-package-weight');
+        if (displayEl.length) {
+            displayEl.text('Łączna waga: ' + totalSum.toFixed(2) + ' kg');
+        }
+    }
+
+    function initWeightListeners() {
+        if (document.body.dataset.weightListenersAdded === "true") return;
+        if (typeof $ === 'undefined') return;
+
+        $(document).on('keyup change paste', 'input[name="weight[]"]', function() {
+            calculateTotalWeight();
+        });
+
+        $(document).on('click', '.add_subpackage_btn, .btn i.fa-times', function() {
+            setTimeout(calculateTotalWeight, 150);
+        });
+
+        $(document).on('click', '.btn[onclick*="courierSubpackageDelete"]', function() {
+            setTimeout(calculateTotalWeight, 150);
+        });
+
+        document.body.dataset.weightListenersAdded = "true";
+    }
+
+    function handleWeightWidget() {
+        const addBtn = document.querySelector('.add_subpackage_btn');
+        if (!addBtn) return;
+
+        if (!document.getElementById('total-package-weight')) {
+            const widgetDiv = document.createElement('div');
+            widgetDiv.id = 'total-package-weight';
+            widgetDiv.classList = 'label lbl-red disabled';
+            widgetDiv.textContent = 'Łączna waga: 0.00 kg';
+
+            addBtn.parentElement.appendChild(widgetDiv);
+
+            calculateTotalWeight();
+        }
+    }
+
+    setTimeout(initWeightListeners, 500);
+
     const observer = new MutationObserver(() => {
         clearTimeout(window.celmanTimeout);
         window.celmanTimeout = setTimeout(() => {
             handleOptimaButtons();
             injectCustomButtons();
             visualTweaks();
+
+            handleWeightWidget();
         }, 150);
     });
 
@@ -156,4 +214,6 @@
     handleOptimaButtons();
     injectCustomButtons();
     visualTweaks();
+    handleWeightWidget();
+
 })();

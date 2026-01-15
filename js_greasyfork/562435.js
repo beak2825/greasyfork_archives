@@ -1,15 +1,16 @@
 // ==UserScript==
 // @name         Torn Market Watch
 // @namespace    https://www.torn.com/
-// @version      1.0
+// @version      1.0.1
 // @description  Multi-item market watcher
-// @license      GPL v3 - http://www.gnu.org/licenses/gpl-3.0.txt
 // @match        https://www.torn.com/*
 // @run-at       document-end
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @connect      api.torn.com
 // @connect      weav3r.dev
+// @icon         https://i.ibb.co/5WP9JNYn/item-market-icon.png
+// @license      GNU GPLv3
 // @downloadURL https://update.greasyfork.org/scripts/562435/Torn%20Market%20Watch.user.js
 // @updateURL https://update.greasyfork.org/scripts/562435/Torn%20Market%20Watch.meta.js
 // ==/UserScript==
@@ -98,6 +99,86 @@
         setTimeout(() => (el.style.display = "none"), 3000);
     }
 
+    /** Is the current page the ItemMarket page? */
+    function onItemMarketPage() {
+        const href = location.href;
+        return href.includes("/page.php?sid=ItemMarket");
+    }
+
+    /*** k/m/b formatting + parsing ***/
+    function formatShort(n) {
+        if (!Number.isFinite(n)) return "";
+        const abs = Math.abs(n);
+        const sign = n < 0 ? "-" : "";
+        let value, suffix;
+        if (abs >= 1_000_000_000) { value = abs / 1_000_000_000; suffix = "b"; }
+        else if (abs >= 1_000_000) { value = abs / 1_000_000; suffix = "m"; }
+        else if (abs >= 1_000) { value = abs / 1_000; suffix = "k"; }
+        else {
+            // For small numbers, show with thousand separators
+            return sign + abs.toLocaleString("en-US");
+        }
+        // Keep up to 2 decimals, trim trailing .0s
+        let str = (value >= 100)
+            ? Math.round(value).toString()
+            : (value >= 10 ? (Math.round(value * 10) / 10).toString()
+            : (Math.round(value * 100) / 100).toString());
+        str = str.replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
+        return sign + str + suffix;
+    }
+    function parseShort(str) {
+        if (typeof str !== "string") return NaN;
+        let s = str.replace(/,/g, "").trim().toLowerCase();
+        if (!s) return NaN;
+        const m = s.match(/^(-?\d+(?:\.\d+)?)([kmb])?$/);
+        if (!m) {
+            // If it's a plain number (possibly scientific), try Number()
+            const num = Number(s);
+            return Number.isFinite(num) ? num : NaN;
+        }
+        const num = parseFloat(m[1]);
+        const suf = m[2];
+        const mult = suf === "b" ? 1_000_000_000 : suf === "m" ? 1_000_000 : suf === "k" ? 1_000 : 1;
+        // Use integer cents to avoid float errors then round back
+        return Math.round(num * mult);
+    }
+    /** Attach live k/m/b formatting to an <input> (limit input) */
+    function attachLiveShortFormatting(input) {
+        // Keep the last parsed numeric value in data-value for reliable reads
+        const setValue = (n) => {
+            if (!Number.isFinite(n)) return;
+            input.dataset.value = String(n);
+            input.value = formatShort(n);
+            input.title = n.toLocaleString("en-US"); // tooltip shows full comma-separated
+        };
+        // Initialize if it has a value
+        if (input.value) {
+            const n0 = parseShort(input.value);
+            if (Number.isFinite(n0)) setValue(n0);
+        }
+        input.addEventListener("input", (e) => {
+            const val = input.value;
+            const n = parseShort(val);
+            if (Number.isFinite(n)) {
+                // Live reformat
+                setValue(n);
+                // Place cursor at end (simple approach for mobile/desktop)
+                if (input.setSelectionRange) {
+                    const len = input.value.length;
+                    input.setSelectionRange(len, len);
+                }
+            } else {
+                // Keep user's typing if not parseable yet
+                input.removeAttribute("data-value");
+                input.title = "";
+            }
+        });
+        input.addEventListener("blur", () => {
+            const n = parseShort(input.value);
+            if (Number.isFinite(n)) setValue(n);
+        });
+    }
+
     /***********************************
      * CSS
      ***********************************/
@@ -151,8 +232,10 @@
             padding-bottom: 6px;
             border-bottom: 1px solid #374151;
             cursor: move;
+            touch-action: none;
         }
-        .tw-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .tw-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .tw-row > div { flex: 1 1 160px; min-width: 160px; }
         .tw-input, .tw-num {
             width: 100%;
             padding: 6px 8px;
@@ -161,6 +244,7 @@
             background: #1f2937;
             color: #fff;
             font-size: 13px;
+            box-sizing: border-box;
         }
         .tw-btn {
             padding: 6px 10px;
@@ -171,7 +255,6 @@
         }
         .tw-btn-primary { background: #2563eb; color: #fff; }
         .tw-btn-ghost { background: #1f2937; color:#fff; border: 1px solid #374151; }
-
         /* Item rows */
         .tw-item {
             display: flex;
@@ -179,13 +262,17 @@
             align-items: center;
             padding: 4px 0;
             border-bottom: 1px dashed #374151;
+            gap: 8px;
+        }
+        .tw-item > div:first-child {
+            flex: 1 1 auto;
         }
         .tw-item-limit {
-            width: 90px;
+            width: 120px;
             text-align: right;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
-
-        /* Deals dialog (TOP RIGHT) */
+        /* Dialog window */
         .tw-alert {
             position: fixed;
             top: 70px;
@@ -196,6 +283,7 @@
             color: #fff;
             z-index: 999999;
             width: 360px;
+            max-width: 95vw;
             box-shadow: 0 10px 30px rgba(0,0,0,0.35);
         }
         .tw-alert-head {
@@ -222,7 +310,112 @@
             justify-content: flex-end;
             gap: 8px;
         }
+        .tw-error-code {
+            font-family: monospace;
+            background: #0b1220;
+            border: 1px solid #253056;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        @media (max-width: 480px) {
+            .tw-panel { left: 2.5vw; right: auto; }
+        }
     `);
+
+    /***********************************
+     * ERROR CODES + DIALOG
+     ***********************************/
+    const TORN_API_ERROR_MAP = {
+        0:  "Unknown error : Unhandled error, should not occur.",
+        1:  "Key is empty : Private key is empty in current request.",
+        2:  "Incorrect Key : Private key is wrong/incorrect format.",
+        3:  "Wrong type : Requesting an incorrect basic type.",
+        4:  "Wrong fields : Requesting incorrect selection fields.",
+        5:  "Too many requests : Requests are blocked for a small period of time because of too many requests per user (max 100 per minute).",
+        6:  "Incorrect ID : Wrong ID value.",
+        7:  "Incorrect ID-entity relation : A requested selection is private (e.g., personal data of another user/faction).",
+        8:  "IP block : Current IP is banned for a small period of time because of abuse.",
+        9:  "API disabled : Api system is currently disabled.",
+        10: "Key owner is in federal jail : Current key can't be used because owner is in federal jail.",
+        11: "Key change error : You can only change your API key once every 60 seconds.",
+        12: "Key read error : Error reading key from Database.",
+        13: "The key is temporarily disabled due to owner inactivity : The key owner hasn't been online for more than 7 days.",
+        14: "Daily read limit reached : Too many records have been pulled today by this user from our cloud services.",
+        15: "Temporary error : Testing-only code without dedicated meaning.",
+        16: "Access level of this key is not high enough : Selection requires higher permission level.",
+        17: "Backend error occurred, please try again.",
+        18: "API key has been paused by the owner.",
+        19: "Must be migrated to crimes 2.0.",
+        20: "Race not yet finished.",
+        21: "Incorrect category : Wrong cat value.",
+        22: "This selection is only available in API v1.",
+        23: "This selection is only available in API v2.",
+        24: "Closed temporarily."
+    };
+
+    function showErrorDialog(title, details, actions = []) {
+        const existing = document.querySelector(".tw-alert.tw-error");
+        if (existing) existing.remove();
+
+        const box = document.createElement("div");
+        box.className = "tw-alert tw-error";
+
+        let actionsHtml = "";
+        for (const a of actions) {
+            actionsHtml += `<button class="tw-btn ${a.primary ? "tw-btn-primary" : "tw-btn-ghost"} tw-act" data-key="${a.key || ""}">${a.label}</button>`;
+        }
+        if (!actionsHtml) {
+            actionsHtml = `<button class="tw-btn tw-btn-ghost tw-close">Close</button>`;
+        }
+
+        box.innerHTML = `
+            <div class="tw-alert-head">
+                <span>${title}</span>
+                <button class="tw-btn tw-btn-ghost tw-close">✕</button>
+            </div>
+            <div class="tw-alert-body">
+                ${details}
+            </div>
+            <div class="tw-alert-actions">
+                ${actionsHtml}
+            </div>
+        `;
+
+        box.querySelector(".tw-close").onclick = () => box.remove();
+        [...box.querySelectorAll(".tw-act")].forEach(btn => {
+            btn.onclick = () => {
+                const key = btn.dataset.key;
+                if (key === "open-settings") {
+                    const panel = document.querySelector(".tw-panel");
+                    if (panel) panel.style.display = "block";
+                }
+                box.remove();
+            };
+        });
+
+        document.body.appendChild(box);
+    }
+
+    function explainTornError(code, message) {
+        const mapped = TORN_API_ERROR_MAP[code];
+        const text = mapped ? mapped : (message || "Unknown Torn API error.");
+        return `
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <div><strong>Torn API Error</strong></div>
+                <div>Code: <span class="tw-error-code">${String(code)}</span></div>
+                <div>${text}</div>
+            </div>
+        `;
+    }
+
+    function explainNetworkError(source, err) {
+        return `
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <div><strong>${source} request failed</strong></div>
+                <div>${(err && err.message) ? err.message : "A network or CORS error occurred."}</div>
+            </div>
+        `;
+    }
 
     /***********************************
      * NETWORK
@@ -234,12 +427,11 @@
                 url,
                 responseType: "json",
                 onload: res => resolve(res.response),
-                onerror: reject,
-                ontimeout: reject
+                onerror: err => reject(err),
+                ontimeout: err => reject(err)
             });
         });
     }
-
     function tornURL(id, key) {
         return `https://api.torn.com/v2/market/${id}/itemmarket?limit=1&offset=0&key=${key}`;
     }
@@ -255,9 +447,24 @@
      ***********************************/
     async function checkTorn(settings, item) {
         if (!settings.apiKey) return null;
-
         try {
             const data = await getJSON(tornURL(item.id, settings.apiKey));
+
+            // If Torn API returns an error object, surface it
+            if (data && data.error && typeof data.error.code === "number") {
+                const code = data.error.code;
+                const details = explainTornError(code, data.error.error || data.error.message);
+                showErrorDialog(
+                    "API Error (Torn)",
+                    details,
+                    [
+                        { label: "Open Settings", primary: true, key: "open-settings" },
+                        { label: "Close", primary: false }
+                    ]
+                );
+                return null;
+            }
+
             const name = data?.itemmarket?.item?.name;
             if (name) setName(item.id, name);
 
@@ -265,8 +472,10 @@
             if (typeof price === "number" && price < item.limit) {
                 return { id: item.id, name: name || getName(item.id) || "Item", price, src: "Item Market" };
             }
-        } catch { }
-
+        } catch (err) {
+            const details = explainNetworkError("Torn API", err);
+            showErrorDialog("Network Error (Torn)", details, [{ label: "Close", primary: false }]);
+        }
         return null;
     }
 
@@ -285,17 +494,19 @@
 
         try {
             const data = await getJSON(weavURL(item.id));
-            localStorage.setItem(LS_WV_CHECK_PREFIX + item.id, now);
+            localStorage.setItem(LS_WV_CHECK_PREFIX + item.id, String(now));
 
             const price = data?.listings?.[0]?.price;
             if (typeof price === "number") {
-                localStorage.setItem(LS_WV_PRICE_PREFIX + item.id, price);
+                localStorage.setItem(LS_WV_PRICE_PREFIX + item.id, String(price));
                 if (price < item.limit) {
                     return { id: item.id, name: getName(item.id) || "Item", price, src: "Bazaar" };
                 }
             }
-        } catch { }
-
+        } catch (err) {
+            const details = explainNetworkError("Bazaar (weav3r.dev)", err);
+            showErrorDialog("Network Error (Bazaar)", details, [{ label: "Close", primary: false }]);
+        }
         return null;
     }
 
@@ -309,11 +520,11 @@
      * DEAL ALERT DIALOG
      ***********************************/
     function showDeals(deals, settings) {
-        const existing = document.querySelector(".tw-alert");
+        const existing = document.querySelector(".tw-alert.tw-deals");
         if (existing) existing.remove();
 
         const box = document.createElement("div");
-        box.className = "tw-alert";
+        box.className = "tw-alert tw-deals";
 
         let lines = "";
         for (const d of deals) {
@@ -363,6 +574,7 @@
         let offsetX = 0;
         let offsetY = 0;
 
+        // Mouse support
         handle.addEventListener("mousedown", e => {
             dragging = true;
             offsetX = e.clientX - panel.offsetLeft;
@@ -375,14 +587,32 @@
             panel.style.left = e.clientX - offsetX + "px";
             panel.style.top = e.clientY - offsetY + "px";
         });
-
         document.addEventListener("mouseup", () => (dragging = false));
+
+        // Touch support
+        handle.addEventListener("touchstart", e => {
+            const t = e.touches[0];
+            dragging = true;
+            offsetX = t.clientX - panel.offsetLeft;
+            offsetY = t.clientY - panel.offsetTop;
+            e.preventDefault();
+        }, { passive: false });
+        document.addEventListener("touchmove", e => {
+            if (!dragging) return;
+            const t = e.touches[0];
+            panel.style.left = t.clientX - offsetX + "px";
+            panel.style.top = t.clientY - offsetY + "px";
+            e.preventDefault();
+        }, { passive: false });
+        document.addEventListener("touchend", () => (dragging = false));
     }
 
     /***********************************
      * SETTINGS PANEL INJECTION
      ***********************************/
     function injectSettingsPanel(settings) {
+        if (!onItemMarketPage()) return;
+
         const container = document.querySelector(".content.responsive-sidebar-container.logged-in");
         if (!container) return;
 
@@ -397,14 +627,12 @@
         panel.className = "tw-panel";
         panel.innerHTML = `
             <div class="tw-panel-header">Market Watch Settings</div>
-
             <div class="tw-row">
                 <div style="flex:1;">
                     <label>API key</label>
                     <input class="tw-input tw-api" value="${settings.apiKey}">
                 </div>
             </div>
-
             <div class="tw-row">
                 <div style="flex:1;">
                     <label>Snooze minutes</label>
@@ -415,23 +643,19 @@
                     <input class="tw-num tw-wv" value="${settings.weav3rThrottle}">
                 </div>
             </div>
-
             <label>Items</label>
             <div class="tw-itemlist"></div>
-
             <div class="tw-row">
-                <input class="tw-num tw-add-id" placeholder="ID">
-                <input class="tw-num tw-add-lim" placeholder="Limit">
+                <input class="tw-num tw-add-id" placeholder="Item ID">
+                <input class="tw-num tw-add-lim" placeholder="Limit (e.g., 400k, 12.5m, 1b)">
                 <button class="tw-btn tw-btn-ghost tw-add-btn">Add</button>
             </div>
-
             <div class="tw-row" style="justify-content:flex-end;">
                 <button class="tw-btn tw-btn-primary tw-save">Save</button>
                 <button class="tw-btn tw-btn-ghost tw-clear">Clear Snooze</button>
                 <button class="tw-btn tw-btn-ghost tw-closep">Close</button>
             </div>
         `;
-
         document.body.appendChild(panel);
 
         /* DRAG ENABLE */
@@ -441,8 +665,10 @@
         btn.onclick = () => {
             panel.style.display = panel.style.display === "block" ? "none" : "block";
         };
-
         panel.querySelector(".tw-closep").onclick = () => (panel.style.display = "none");
+
+        /* LIVE k/m/b formatting on Limit input */
+        attachLiveShortFormatting(panel.querySelector(".tw-add-lim"));
 
         /* RENDER ITEMS */
         function renderItems() {
@@ -451,10 +677,12 @@
             for (let i = 0; i < settings.items.length; i++) {
                 const it = settings.items[i];
                 const nm = getName(it.id) || "Item";
+                const formatted = formatShort(it.limit);
+                const full = Number(it.limit).toLocaleString("en-US");
                 html += `
                     <div class="tw-item">
                         <div>${nm}</div>
-                        <div class="tw-item-limit">${it.limit}</div>
+                        <div class="tw-item-limit" title="${full}">${formatted}</div>
                         <button class="tw-btn tw-btn-ghost tw-rem" data-i="${i}">Remove</button>
                     </div>
                 `;
@@ -475,25 +703,35 @@
         /* ADD ITEM */
         panel.querySelector(".tw-add-btn").onclick = async () => {
             const id = Number(panel.querySelector(".tw-add-id").value);
-            const lim = Number(panel.querySelector(".tw-add-lim").value);
+            const limInput = panel.querySelector(".tw-add-lim");
+            const limParsed = limInput.dataset.value ? Number(limInput.dataset.value) : parseShort(limInput.value);
 
-            if (!id || !lim) {
-                showToast("Enter ID and limit");
+            if (!id || !Number.isFinite(limParsed) || limParsed <= 0) {
+                showToast("Enter a valid ID and limit (use k/m/b e.g., 400k, 12.5m)");
                 return;
             }
 
             // Fetch name immediately from Torn API
             try {
                 const data = await getJSON(tornURL(id, settings.apiKey));
-                const nm = data?.itemmarket?.item?.name;
-                if (nm) setName(id, nm);
-            } catch { }
-
-            settings.items.push({ id, limit: lim });
+                if (data && data.error && typeof data.error.code === "number") {
+                    const details = explainTornError(data.error.code, data.error.error || data.error.message);
+                    showErrorDialog("API Error (Torn)", details, [{ label: "Close", primary: false }]);
+                } else {
+                    const nm = data?.itemmarket?.item?.name;
+                    if (nm) setName(id, nm);
+                }
+            } catch (err) {
+                const details = explainNetworkError("Torn API", err);
+                showErrorDialog("Network Error (Torn)", details, [{ label: "Close", primary: false }]);
+            }
+            settings.items.push({ id, limit: limParsed });
             saveSettings(settings);
 
             panel.querySelector(".tw-add-id").value = "";
-            panel.querySelector(".tw-add-lim").value = "";
+            limInput.value = "";
+            limInput.removeAttribute("data-value");
+            limInput.title = "";
             renderItems();
         };
 
@@ -530,16 +768,27 @@
         if (!settings.items.length) return;
 
         const results = [];
-
         for (const it of settings.items) {
             /* eslint-disable no-await-in-loop */
             const r = await checkItem(settings, it);
             /* eslint-enable no-await-in-loop */
             if (r) results.push(r);
         }
-
         if (results.length) showDeals(results, settings);
     }
 
+    /* Initial run */
     main();
+
+    window.addEventListener("hashchange", () => {
+        if (onItemMarketPage()) {
+            if (!document.querySelector(".tw-settings-btn")) {
+                injectSettingsPanel(loadSettings());
+            }
+        } else {
+            // Optional clean-up when leaving ItemMarket (prevents stale UI)
+            document.querySelector(".tw-panel")?.remove();
+            document.querySelector(".tw-settings-btn")?.remove();
+        }
+    });
 })();

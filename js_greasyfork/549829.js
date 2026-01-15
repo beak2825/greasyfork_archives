@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         老魔已读标记
-// @version      1.2.6
+// @version      1.3.0
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
-// @description  JAV Library-推特 
+// @description  JAV Library、Twitter/X、Instagram 媒体已读标记
 // @match        *://www.javlibrary.com/*
 // @match        *://x.com/*/media*
+// @match        *://www.instagram.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=x.com
 // @license      GPL-3.0
 // @grant        GM_setValue
@@ -21,39 +22,6 @@
 
 !function() {
   "use strict";
-  const CONFIG_STORAGE_GM_GITHUB_TOKEN_KEY = "jav_readmark_github_token", CONFIG_STORAGE_GM_GIST_ID_KEY = "jav_readmark_gist_id", CONFIG_GIST_FILENAME = "jav_readmark_backup.json", CONFIG_GIST_DESCRIPTION = "JAV已读标记备份数据", CONFIG_UI_DIALOG = {
-    SETTINGS_Z_INDEX: "99999"
-  }, CONFIG_STYLES_READ_TOPIC = {
-    opacity: "0.6",
-    background: "#f0f0f0",
-    color: "#888"
-  }, CONFIG_STYLES_READ_BADGE = {
-    color: "#666",
-    fontSize: "12px",
-    marginLeft: "8px",
-    fontWeight: "normal"
-  }, CONFIG_STYLES_UNFINISHED_BADGE = {
-    color: "#d2691e",
-    fontSize: "12px",
-    marginLeft: "8px",
-    fontWeight: "bold"
-  }, CONFIG_STYLES_UNFINISHED_TOPIC = {
-    opacity: "1",
-    background: "#fff7e6",
-    color: "#c05000"
-  }, CONFIG_STYLES_FAV_BUTTON = {
-    color: "#999",
-    fontSize: "12px",
-    marginLeft: "4px",
-    fontWeight: "normal",
-    cursor: "pointer",
-    textDecoration: "underline"
-  }, CONFIG_STYLES_HIGHLIGHT_WORD = {
-    background: "#fffb8f",
-    color: "#d48806",
-    padding: "0 2px",
-    borderRadius: "2px"
-  }, CONFIG_SELECTORS_topicLinks = 'a.topictitle[href*="publictopic.php"]', CONFIG_SELECTORS_allTopicLinks = 'a[href*="publictopic.php"]', CONFIG_REGEX_topicId = /publictopic\.php\?id=(\d+)/, CONFIG_TEXT_readBadge = "[已读]", CONFIG_TEXT_unfinishedBadge = "[已读未完]", CONFIG_TEXT_favButton = "[收藏]", CONFIG_TEXT_unfavButton = "[取消收藏]";
   class Storage {
     static get(key, defaultValue = null) {
       try {
@@ -106,6 +74,410 @@
       } catch (error) {
         return !1;
       }
+    }
+  }
+  function addStyles(css, id) {
+    if (id) {
+      const existing = document.getElementById(id);
+      if (existing) return existing;
+    }
+    const style = document.createElement("style");
+    return id && (style.id = id), style.textContent = css, document.head.appendChild(style), 
+    style;
+  }
+  const THEME_STYLES = {
+    media: {
+      container: {
+        position: "relative"
+      },
+      badge: {
+        content: "✓ 已读",
+        position: "absolute",
+        background: "linear-gradient(135deg, #00ba7c, #00a06a)",
+        color: "#fff",
+        padding: "4px 10px",
+        borderRadius: "12px",
+        fontSize: "12px",
+        fontWeight: "600",
+        bottom: "8px",
+        left: "8px",
+        boxShadow: "0 2px 8px rgba(0, 186, 124, 0.4)"
+      },
+      item: {
+        opacity: .75
+      }
+    },
+    list: {
+      container: {
+        position: "relative"
+      },
+      badge: {
+        content: "[已读]",
+        position: "inline",
+        background: "transparent",
+        color: "#666",
+        padding: "0",
+        borderRadius: "0",
+        fontSize: "12px",
+        fontWeight: "normal",
+        marginLeft: "8px"
+      },
+      item: {
+        opacity: .6
+      }
+    },
+    minimal: {
+      container: {
+        position: "relative"
+      },
+      badge: {
+        content: "✓",
+        position: "absolute",
+        background: "rgba(0, 0, 0, 0.6)",
+        color: "#00ba7c",
+        padding: "2px 6px",
+        borderRadius: "4px",
+        fontSize: "14px",
+        fontWeight: "900",
+        bottom: "8px",
+        left: "8px",
+        border: "1px solid #00ba7c"
+      },
+      item: {
+        opacity: .8
+      }
+    }
+  };
+  class BaseReadMark {
+    constructor(config) {
+      this.observer = null, this.processedElements = new WeakSet, this.debounceTimer = null, 
+      this.config = config, this.readMedia = this.getReadMedia();
+    }
+    init() {
+      this.injectStyles(), this.processMediaItems(), this.setupObserver(), this.setupUrlListener(), 
+      this.onInit();
+    }
+    onInit() {}
+    getReadMedia() {
+      try {
+        const data = Storage.get(this.config.storageKey, []) || [];
+        return new Set(data);
+      } catch (error) {
+        return new Set;
+      }
+    }
+    saveReadMedia() {
+      try {
+        Storage.set(this.config.storageKey, Array.from(this.readMedia));
+      } catch (error) {}
+    }
+    markAsRead(mediaId) {
+      this.readMedia.has(mediaId) || (this.readMedia.add(mediaId), this.saveReadMedia());
+    }
+    isRead(mediaId) {
+      return this.readMedia.has(mediaId);
+    }
+    injectStyles() {
+      addStyles(this.generateStyles(), `${this.config.cssPrefix}-read-mark-styles`);
+    }
+    generateStyles() {
+      return function(cssPrefix, theme) {
+        const style = THEME_STYLES[theme], readClass = `${cssPrefix}-read`;
+        let css = `\n    /* 已读标记容器样式 - ${theme}主题 */\n    .${readClass} {\n      position: ${style.container.position};\n    }\n  `;
+        return "absolute" === style.badge.position && (css += `\n    /* 已读标签 - 悬浮定位 */\n    .${readClass}::after {\n      content: '${style.badge.content}';\n      position: absolute;\n      bottom: ${style.badge.bottom};\n      left: ${style.badge.left};\n      background: ${style.badge.background};\n      color: ${style.badge.color};\n      padding: ${style.badge.padding};\n      border-radius: ${style.badge.borderRadius};\n      font-size: ${style.badge.fontSize};\n      font-weight: ${style.badge.fontWeight};\n      pointer-events: none;\n      z-index: 10;\n      ${style.badge.boxShadow ? `box-shadow: ${style.badge.boxShadow};` : ""}\n      ${style.badge.border ? `border: ${style.badge.border};` : ""}\n      letter-spacing: 0.5px;\n    }\n    `), 
+        css += `\n    /* 已读项目样式 */\n    .${readClass} img {\n      opacity: ${style.item.opacity};\n    }\n  `, 
+        css;
+      }(this.config.cssPrefix, this.config.theme);
+    }
+    applyReadStyle(element) {
+      const container = this.findMediaContainer(element);
+      if (container) {
+        const readClass = `${this.config.cssPrefix}-read`;
+        container.classList.contains(readClass) || container.classList.add(readClass);
+      }
+    }
+    setupObserver() {
+      this.observer = new MutationObserver(mutations => {
+        let hasNewNodes = !1;
+        for (const mutation of mutations) if (mutation.addedNodes.length > 0) {
+          hasNewNodes = !0;
+          break;
+        }
+        hasNewNodes && this.debounceProcess();
+      }), this.observer.observe(document.body, {
+        childList: !0,
+        subtree: !0
+      });
+    }
+    debounceProcess() {
+      this.debounceTimer && clearTimeout(this.debounceTimer), this.debounceTimer = window.setTimeout(() => {
+        this.processMediaItems(), this.onDebounceProcess();
+      }, 200);
+    }
+    onDebounceProcess() {}
+    setupUrlListener() {
+      const originalPushState = history.pushState, originalReplaceState = history.replaceState, self = this;
+      history.pushState = function(...args) {
+        originalPushState.apply(this, args), self.onUrlChange();
+      }, history.replaceState = function(...args) {
+        originalReplaceState.apply(this, args), self.onUrlChange();
+      }, window.addEventListener("popstate", () => this.onUrlChange());
+    }
+    onUrlChange() {
+      this.isValidPage() && setTimeout(() => this.processMediaItems(), 500);
+    }
+    destroy() {
+      this.observer && (this.observer.disconnect(), this.observer = null), this.debounceTimer && (clearTimeout(this.debounceTimer), 
+      this.debounceTimer = null), this.onDestroy();
+    }
+    onDestroy() {}
+  }
+  const CONFIG_STORAGE_GM_GITHUB_TOKEN_KEY = "jav_readmark_github_token", CONFIG_STORAGE_GM_GIST_ID_KEY = "jav_readmark_gist_id", CONFIG_STORAGE_LAST_AUTO_BACKUP_DATE = "jav_readmark_last_auto_backup", CONFIG_GIST_FILENAME = "jav_readmark_backup.json", CONFIG_GIST_DESCRIPTION = "JAV已读标记备份数据", CONFIG_UI_DIALOG = {
+    SETTINGS_Z_INDEX: "99999"
+  }, CONFIG_STYLES_READ_TOPIC = {
+    opacity: "0.6",
+    background: "#f0f0f0",
+    color: "#888"
+  }, CONFIG_STYLES_READ_BADGE = {
+    color: "#666",
+    fontSize: "12px",
+    marginLeft: "8px",
+    fontWeight: "normal"
+  }, CONFIG_STYLES_UNFINISHED_BADGE = {
+    color: "#d2691e",
+    fontSize: "12px",
+    marginLeft: "8px",
+    fontWeight: "bold"
+  }, CONFIG_STYLES_UNFINISHED_TOPIC = {
+    opacity: "1",
+    background: "#fff7e6",
+    color: "#c05000"
+  }, CONFIG_STYLES_FAV_BUTTON = {
+    color: "#999",
+    fontSize: "12px",
+    marginLeft: "4px",
+    fontWeight: "normal",
+    cursor: "pointer",
+    textDecoration: "underline"
+  }, CONFIG_STYLES_HIGHLIGHT_WORD = {
+    background: "#fffb8f",
+    color: "#d48806",
+    padding: "0 2px",
+    borderRadius: "2px"
+  }, CONFIG_SELECTORS_topicLinks = 'a.topictitle[href*="publictopic.php"]', CONFIG_SELECTORS_allTopicLinks = 'a[href*="publictopic.php"]', CONFIG_REGEX_topicId = /publictopic\.php\?id=(\d+)/, CONFIG_TEXT_readBadge = "[已读]", CONFIG_TEXT_unfinishedBadge = "[已读未完]", CONFIG_TEXT_favButton = "[收藏]", CONFIG_TEXT_unfavButton = "[取消收藏]", TWITTER_CONFIG = {
+    name: "Twitter",
+    storageKey: "laomo_twitter_read_media",
+    cssPrefix: "twitter-media-container",
+    theme: "media",
+    features: {
+      scrollRestore: !0,
+      unlockDrag: !1,
+      favorite: !1,
+      highlight: !1
+    }
+  }, INSTAGRAM_CONFIG = {
+    name: "Instagram",
+    storageKey: "laomo_instagram_read_media",
+    cssPrefix: "instagram-media-container",
+    theme: "minimal",
+    features: {
+      scrollRestore: !1,
+      unlockDrag: !0,
+      favorite: !1,
+      highlight: !1
+    }
+  };
+  class TwitterReadMark extends BaseReadMark {
+    constructor() {
+      super(TWITTER_CONFIG), this.scrollPositions = {}, this.saveScrollTimer = null, this.restoreButton = null;
+    }
+    onInit() {
+      this.loadScrollPositions(), this.setupScrollSave(), this.createRestoreButton();
+    }
+    extractMediaId(src) {
+      if (!src) return null;
+      const mediaMatch = src.match(/\/media\/([A-Za-z0-9_-]+)/);
+      if (mediaMatch) return mediaMatch[1];
+      const gifMatch = src.match(/\/tweet_video_thumb\/([A-Za-z0-9_-]+)/);
+      if (gifMatch) return gifMatch[1];
+      const videoMatch = src.match(/\/ext_tw_video_thumb\/\d+\/pu\/img\/([A-Za-z0-9_-]+)/);
+      return videoMatch ? videoMatch[1] : null;
+    }
+    processMediaItems() {
+      const isPhotoPage = window.location.href.includes("/photo/");
+      document.querySelectorAll('img[src*="pbs.twimg.com/media"], img[src*="pbs.twimg.com/tweet_video_thumb"], img[src*="pbs.twimg.com/ext_tw_video_thumb"], img.css-9pa8cd').forEach(img => {
+        this.processMediaImage(img, isPhotoPage);
+      });
+    }
+    findMediaContainer(element) {
+      if (window.location.href.includes("/photo/")) return null;
+      let parent = element.parentElement, depth = 0;
+      for (;parent && depth < 10; ) {
+        if ("LI" === parent.tagName && "listitem" === parent.getAttribute("role")) return parent;
+        parent = parent.parentElement, depth++;
+      }
+      return null;
+    }
+    isValidPage() {
+      const url = window.location.href;
+      return url.includes("x.com") && url.includes("/media");
+    }
+    processMediaImage(img, isPhotoPage) {
+      if (this.processedElements.has(img)) return;
+      this.processedElements.add(img);
+      const src = img.src, mediaId = this.extractMediaId(src);
+      mediaId && (this.isRead(mediaId) && !isPhotoPage && this.applyReadStyle(img), this.bindClickEvent(img, mediaId));
+    }
+    bindClickEvent(img, mediaId) {
+      const clickHandler = () => {
+        this.markAsRead(mediaId), this.applyReadStyle(img);
+      };
+      img.addEventListener("click", clickHandler, !0);
+      const container = this.findMediaContainer(img);
+      container && container !== img && container.addEventListener("click", clickHandler, !0);
+    }
+    generateStyles() {
+      let css = super.generateStyles();
+      return css += "\n      /* 恢复位置按钮样式 */\n      #twitter-scroll-restore-btn {\n        position: fixed;\n        bottom: 160px;\n        right: 20px;\n        width: 48px;\n        height: 48px;\n        background: #fff;\n        border: 1px solid rgb(207, 217, 222);\n        border-radius: 16px;\n        box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 28px;\n        cursor: pointer;\n        z-index: 9999;\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        justify-content: center;\n        transition: all 0.2s ease;\n        user-select: none;\n      }\n\n      #twitter-scroll-restore-btn:hover {\n        background: rgb(247, 249, 249);\n        border-color: rgb(29, 155, 240);\n      }\n\n      #twitter-scroll-restore-btn:active {\n        transform: scale(0.95);\n      }\n\n      #twitter-scroll-restore-btn .restore-icon {\n        font-size: 20px;\n        color: rgb(29, 155, 240);\n        line-height: 1;\n      }\n\n      #twitter-scroll-restore-btn .restore-text {\n        font-size: 9px;\n        color: rgb(83, 100, 113);\n        margin-top: 2px;\n        white-space: nowrap;\n      }\n    ", 
+      css;
+    }
+    loadScrollPositions() {
+      try {
+        const data = Storage.get("laomo_twitter_scroll_position", {}) || {};
+        this.scrollPositions = data;
+      } catch (error) {
+        this.scrollPositions = {};
+      }
+    }
+    saveScrollPositions() {
+      try {
+        Storage.set("laomo_twitter_scroll_position", this.scrollPositions);
+      } catch (error) {}
+    }
+    extractUsername() {
+      const match = window.location.href.match(/x\.com\/([^\/]+)\/media/);
+      return match ? match[1] : null;
+    }
+    setupScrollSave() {
+      window.addEventListener("scroll", () => {
+        this.saveScrollTimer && clearTimeout(this.saveScrollTimer), this.saveScrollTimer = window.setTimeout(() => {
+          const username = this.extractUsername();
+          if (username) {
+            const scrollY = window.scrollY;
+            this.scrollPositions[username] = scrollY, this.saveScrollPositions(), this.updateRestoreButton();
+          }
+        }, 500);
+      });
+    }
+    createRestoreButton() {
+      this.restoreButton && this.restoreButton.remove();
+      const button = document.createElement("div");
+      button.id = "twitter-scroll-restore-btn", button.innerHTML = '\n      <div class="restore-icon">↓</div>\n      <div class="restore-text">恢复位置</div>\n    ';
+      const username = this.extractUsername(), savedPosition = username ? this.scrollPositions[username] : 0;
+      button.style.display = savedPosition > 100 ? "flex" : "none", button.addEventListener("click", () => this.restoreScrollPosition()), 
+      document.body.appendChild(button), this.restoreButton = button;
+    }
+    updateRestoreButton() {
+      if (!this.restoreButton) return;
+      const username = this.extractUsername(), savedPosition = username ? this.scrollPositions[username] : 0;
+      this.restoreButton.style.display = savedPosition > 100 ? "flex" : "none";
+    }
+    restoreScrollPosition() {
+      const username = this.extractUsername();
+      if (!username) return;
+      const savedPosition = this.scrollPositions[username];
+      !savedPosition || savedPosition <= 0 || (this.setButtonScrolling(!0), this.progressiveScroll(savedPosition));
+    }
+    setButtonScrolling(isScrolling) {
+      if (!this.restoreButton) return;
+      const icon = this.restoreButton.querySelector(".restore-icon"), text = this.restoreButton.querySelector(".restore-text");
+      isScrolling ? (icon && (icon.textContent = "⏳"), text && (text.textContent = "滚动中..."), 
+      this.restoreButton.style.pointerEvents = "none", this.restoreButton.style.opacity = "0.7") : (icon && (icon.textContent = "↓"), 
+      text && (text.textContent = "恢复位置"), this.restoreButton.style.pointerEvents = "auto", 
+      this.restoreButton.style.opacity = "1");
+    }
+    progressiveScroll(targetPosition) {
+      const stepHeight = .8 * window.innerHeight, scrollStep = () => {
+        const currentPosition = window.scrollY, remainingDistance = targetPosition - currentPosition;
+        if (remainingDistance <= 50) return void this.setButtonScrolling(!1);
+        const nextPosition = currentPosition + Math.min(stepHeight, remainingDistance);
+        window.scrollTo({
+          top: nextPosition,
+          behavior: "smooth"
+        }), setTimeout(() => {
+          Math.abs(window.scrollY - nextPosition) > 100 ? setTimeout(scrollStep, 300) : scrollStep();
+        }, 300);
+      };
+      scrollStep();
+    }
+    onDestroy() {
+      this.saveScrollTimer && (clearTimeout(this.saveScrollTimer), this.saveScrollTimer = null), 
+      this.restoreButton && (this.restoreButton.remove(), this.restoreButton = null);
+    }
+  }
+  class InstagramReadMark extends BaseReadMark {
+    constructor() {
+      super(INSTAGRAM_CONFIG), this.unlockedImages = new WeakSet;
+    }
+    onInit() {
+      this.unlockImageDrag();
+    }
+    onDebounceProcess() {
+      this.unlockImageDrag();
+    }
+    extractMediaId(href) {
+      if (!href) return null;
+      const match = href.match(/\/(?:p|reel)\/([A-Za-z0-9_-]+)/);
+      return match ? match[1] : null;
+    }
+    processMediaItems() {
+      document.querySelectorAll('a[href*="/p/"], a[href*="/reel/"]').forEach(link => {
+        this.processPostLink(link);
+      });
+    }
+    findMediaContainer(element) {
+      return element;
+    }
+    isValidPage() {
+      return window.location.href.includes("instagram.com");
+    }
+    processPostLink(link) {
+      if (this.processedElements.has(link)) return;
+      if (this.processedElements.add(link), !link.querySelector("img")) return;
+      const href = link.getAttribute("href");
+      if (!href) return;
+      const mediaId = this.extractMediaId(href);
+      mediaId && (this.isRead(mediaId) && this.applyReadStyle(link), this.bindClickEvent(link, mediaId));
+    }
+    bindClickEvent(element, mediaId) {
+      element.addEventListener("click", () => {
+        this.markAsRead(mediaId), this.applyReadStyle(element);
+      }, !0);
+    }
+    generateStyles() {
+      let css = super.generateStyles();
+      return css += "\n      /* 强制允许图片拖拽 */\n      .instagram-unlocked-image {\n        pointer-events: auto !important;\n      }\n      \n      /* 禁用遮挡层的鼠标事件（穿透）*/\n      .instagram-overlay-disabled {\n        pointer-events: none !important;\n      }\n    ", 
+      css;
+    }
+    unlockImageDrag() {
+      document.querySelectorAll("img.x5yr21d").forEach(img => {
+        if (this.unlockedImages.has(img)) return;
+        img.classList.add("instagram-unlocked-image"), img.setAttribute("draggable", "true"), 
+        this.unlockedImages.add(img);
+        let parent = img.parentElement, count = 0;
+        for (;parent && count < 4; ) {
+          const overlay = parent.querySelector("._aagw");
+          overlay && overlay.classList.add("instagram-overlay-disabled"), parent = parent.parentElement, 
+          count++;
+        }
+      });
+    }
+    setupUrlListener() {
+      let lastUrl = window.location.href;
+      setInterval(() => {
+        const currentUrl = window.location.href;
+        currentUrl !== lastUrl && (lastUrl = currentUrl, this.processMediaItems(), this.unlockImageDrag());
+      }, 1e3);
     }
   }
   function extractTopicId(url) {
@@ -514,196 +886,6 @@
       void 0 !== style.color && (row.style.color = style.color));
     }
   }
-  function addStyles(css, id) {
-    if (id) {
-      const existing = document.getElementById(id);
-      if (existing) return existing;
-    }
-    const style = document.createElement("style");
-    return id && (style.id = id), style.textContent = css, document.head.appendChild(style), 
-    style;
-  }
-  class TwitterReadMark {
-    constructor() {
-      this.observer = null, this.processedElements = new WeakSet, this.scrollPositions = {}, 
-      this.saveScrollTimer = null, this.restoreButton = null, this.debounceTimer = null, 
-      this.readMedia = this.getReadMedia();
-    }
-    init() {
-      this.loadScrollPositions(), this.injectStyles(), this.processMediaItems(), this.setupObserver(), 
-      this.setupUrlListener(), this.setupScrollSave(), this.createRestoreButton();
-    }
-    getReadMedia() {
-      try {
-        const data = Storage.get("laomo_twitter_read_media", []) || [];
-        return new Set(data);
-      } catch (error) {
-        return new Set;
-      }
-    }
-    saveReadMedia() {
-      try {
-        Storage.set("laomo_twitter_read_media", Array.from(this.readMedia));
-      } catch (error) {}
-    }
-    extractMediaId(src) {
-      if (!src) return null;
-      const mediaMatch = src.match(/\/media\/([A-Za-z0-9_-]+)/);
-      if (mediaMatch) return mediaMatch[1];
-      const gifMatch = src.match(/\/tweet_video_thumb\/([A-Za-z0-9_-]+)/);
-      if (gifMatch) return gifMatch[1];
-      const videoMatch = src.match(/\/ext_tw_video_thumb\/\d+\/pu\/img\/([A-Za-z0-9_-]+)/);
-      return videoMatch ? videoMatch[1] : null;
-    }
-    markAsRead(mediaId) {
-      this.readMedia.has(mediaId) || (this.readMedia.add(mediaId), this.saveReadMedia());
-    }
-    isRead(mediaId) {
-      return this.readMedia.has(mediaId);
-    }
-    injectStyles() {
-      addStyles("\n      /* 已读媒体容器样式 */\n      .twitter-media-container-read {\n        position: relative;\n      }\n      \n      /* 已读标记 - 左下角绿色标签 */\n      .twitter-media-container-read::after {\n        content: '✓ 已读';\n        position: absolute;\n        bottom: 8px;\n        left: 8px;\n        background: linear-gradient(135deg, #00ba7c, #00a06a);\n        color: #fff;\n        padding: 4px 10px;\n        border-radius: 12px;\n        font-size: 12px;\n        font-weight: 600;\n        pointer-events: none;\n        z-index: 10;\n        box-shadow: 0 2px 8px rgba(0, 186, 124, 0.4);\n        letter-spacing: 0.5px;\n      }\n\n      /* 恢复位置按钮样式 - 类似推特原生按钮 */\n      #twitter-scroll-restore-btn {\n        position: fixed;\n        bottom: 160px;\n        right: 20px;\n        width: 48px;\n        height: 48px;\n        background: #fff;\n        border: 1px solid rgb(207, 217, 222);\n        border-radius: 16px;\n        box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 28px;\n        cursor: pointer;\n        z-index: 9999;\n        display: flex;\n        flex-direction: column;\n        align-items: center;\n        justify-content: center;\n        transition: all 0.2s ease;\n        user-select: none;\n      }\n\n      #twitter-scroll-restore-btn:hover {\n        background: rgb(247, 249, 249);\n        border-color: rgb(29, 155, 240);\n      }\n\n      #twitter-scroll-restore-btn:active {\n        transform: scale(0.95);\n      }\n\n      #twitter-scroll-restore-btn .restore-icon {\n        font-size: 20px;\n        color: rgb(29, 155, 240);\n        line-height: 1;\n      }\n\n      #twitter-scroll-restore-btn .restore-text {\n        font-size: 9px;\n        color: rgb(83, 100, 113);\n        margin-top: 2px;\n        white-space: nowrap;\n      }\n    ", "twitter-read-mark-styles");
-    }
-    processMediaItems() {
-      const isPhotoPage = window.location.href.includes("/photo/");
-      document.querySelectorAll('img[src*="pbs.twimg.com/media"], img[src*="pbs.twimg.com/tweet_video_thumb"], img[src*="pbs.twimg.com/ext_tw_video_thumb"], img.css-9pa8cd').forEach(img => {
-        this.processMediaImage(img, isPhotoPage);
-      });
-    }
-    processMediaImage(img, isPhotoPage = !1) {
-      if (this.processedElements.has(img)) return;
-      this.processedElements.add(img);
-      const src = img.src, mediaId = this.extractMediaId(src);
-      mediaId && (this.isRead(mediaId) && !isPhotoPage && this.applyReadStyle(img), this.bindClickEvent(img, mediaId));
-    }
-    applyReadStyle(img) {
-      const container = this.findMediaContainer(img);
-      container && !container.classList.contains("twitter-media-container-read") && container.classList.add("twitter-media-container-read");
-    }
-    findMediaContainer(img) {
-      let parent = img.parentElement, depth = 0;
-      for (;parent && depth < 10; ) {
-        if ("LI" === parent.tagName && "listitem" === parent.getAttribute("role")) return parent;
-        parent = parent.parentElement, depth++;
-      }
-      return null;
-    }
-    bindClickEvent(img, mediaId) {
-      const clickHandler = () => {
-        this.markAsRead(mediaId), this.applyReadStyle(img);
-      };
-      img.addEventListener("click", clickHandler, !0);
-      const container = this.findMediaContainer(img);
-      container && container !== img && container.addEventListener("click", clickHandler, !0);
-    }
-    setupObserver() {
-      this.observer = new MutationObserver(mutations => {
-        let hasNewNodes = !1;
-        for (const mutation of mutations) if (mutation.addedNodes.length > 0) {
-          hasNewNodes = !0;
-          break;
-        }
-        hasNewNodes && this.debounceProcess();
-      }), this.observer.observe(document.body, {
-        childList: !0,
-        subtree: !0
-      });
-    }
-    debounceProcess() {
-      this.debounceTimer && clearTimeout(this.debounceTimer), this.debounceTimer = window.setTimeout(() => {
-        this.processMediaItems();
-      }, 200);
-    }
-    setupUrlListener() {
-      const originalPushState = history.pushState, originalReplaceState = history.replaceState, self = this;
-      history.pushState = function(...args) {
-        originalPushState.apply(this, args), self.onUrlChange();
-      }, history.replaceState = function(...args) {
-        originalReplaceState.apply(this, args), self.onUrlChange();
-      }, window.addEventListener("popstate", () => this.onUrlChange());
-    }
-    onUrlChange() {
-      this.isTwitterMediaPage() && setTimeout(() => this.processMediaItems(), 500);
-    }
-    isTwitterMediaPage() {
-      const url = window.location.href;
-      return url.includes("x.com") && url.includes("/media");
-    }
-    extractUsername() {
-      const match = window.location.href.match(/x\.com\/([^\/]+)\/media/);
-      return match ? match[1] : null;
-    }
-    loadScrollPositions() {
-      try {
-        const data = Storage.get("laomo_twitter_scroll_position", {}) || {};
-        this.scrollPositions = data;
-      } catch (error) {
-        this.scrollPositions = {};
-      }
-    }
-    saveScrollPositions() {
-      try {
-        Storage.set("laomo_twitter_scroll_position", this.scrollPositions);
-      } catch (error) {}
-    }
-    setupScrollSave() {
-      window.addEventListener("scroll", () => {
-        this.saveScrollTimer && clearTimeout(this.saveScrollTimer), this.saveScrollTimer = window.setTimeout(() => {
-          const username = this.extractUsername();
-          if (username) {
-            const scrollY = window.scrollY;
-            this.scrollPositions[username] = scrollY, this.saveScrollPositions(), this.updateRestoreButton();
-          }
-        }, 500);
-      });
-    }
-    createRestoreButton() {
-      this.restoreButton && this.restoreButton.remove();
-      const button = document.createElement("div");
-      button.id = "twitter-scroll-restore-btn", button.innerHTML = '\n            <div class="restore-icon">↓</div>\n            <div class="restore-text">恢复位置</div>\n        ';
-      const username = this.extractUsername(), savedPosition = username ? this.scrollPositions[username] : 0;
-      button.style.display = savedPosition > 100 ? "flex" : "none", button.addEventListener("click", () => this.restoreScrollPosition()), 
-      document.body.appendChild(button), this.restoreButton = button;
-    }
-    updateRestoreButton() {
-      if (!this.restoreButton) return;
-      const username = this.extractUsername(), savedPosition = username ? this.scrollPositions[username] : 0;
-      this.restoreButton.style.display = savedPosition > 100 ? "flex" : "none";
-    }
-    restoreScrollPosition() {
-      const username = this.extractUsername();
-      if (!username) return;
-      const savedPosition = this.scrollPositions[username];
-      !savedPosition || savedPosition <= 0 || (this.setButtonScrolling(!0), this.progressiveScroll(savedPosition));
-    }
-    setButtonScrolling(isScrolling) {
-      if (!this.restoreButton) return;
-      const icon = this.restoreButton.querySelector(".restore-icon"), text = this.restoreButton.querySelector(".restore-text");
-      isScrolling ? (icon && (icon.textContent = "⏳"), text && (text.textContent = "滚动中..."), 
-      this.restoreButton.style.pointerEvents = "none", this.restoreButton.style.opacity = "0.7") : (icon && (icon.textContent = "↓"), 
-      text && (text.textContent = "恢复位置"), this.restoreButton.style.pointerEvents = "auto", 
-      this.restoreButton.style.opacity = "1");
-    }
-    progressiveScroll(targetPosition) {
-      const stepHeight = .8 * window.innerHeight, scrollStep = () => {
-        const currentPosition = window.scrollY, remainingDistance = targetPosition - currentPosition;
-        if (remainingDistance <= 50) return void this.setButtonScrolling(!1);
-        const nextPosition = currentPosition + Math.min(stepHeight, remainingDistance);
-        window.scrollTo({
-          top: nextPosition,
-          behavior: "smooth"
-        }), setTimeout(() => {
-          Math.abs(window.scrollY - nextPosition) > 100 ? setTimeout(scrollStep, 300) : scrollStep();
-        }, 300);
-      };
-      scrollStep();
-    }
-    destroy() {
-      this.observer && (this.observer.disconnect(), this.observer = null), this.debounceTimer && clearTimeout(this.debounceTimer), 
-      this.saveScrollTimer && clearTimeout(this.saveScrollTimer), this.restoreButton && (this.restoreButton.remove(), 
-      this.restoreButton = null);
-    }
-  }
   const _Toast = class {
     static initContainer() {
       return this.container || (this.container = document.createElement("div"), this.container.id = "toast-container", 
@@ -919,13 +1101,20 @@
         scrollPositions: scrollPositions && "object" == typeof scrollPositions ? scrollPositions : {}
       };
     }
+    static getInstagramData() {
+      const readMedia = Storage.get("laomo_instagram_read_media", []) || [];
+      return {
+        readMedia: Array.isArray(readMedia) ? readMedia : []
+      };
+    }
     static getBackupData() {
-      const javData = this.getJavLibraryData(), twitterData = this.getTwitterData();
+      const javData = this.getJavLibraryData(), twitterData = this.getTwitterData(), instagramData = this.getInstagramData();
       return {
         timestamp: (new Date).toISOString(),
         version: "2.0.0",
         javLibrary: javData,
-        twitter: twitterData
+        twitter: twitterData,
+        instagram: instagramData
       };
     }
     static mergeArrays(local, remote) {
@@ -964,9 +1153,13 @@
       }, localTwitter = local.twitter || {
         readMedia: [],
         scrollPositions: {}
+      }, localInstagram = local.instagram || {
+        readMedia: []
       }, remoteTwitter = remote.twitter || {
         readMedia: [],
         scrollPositions: {}
+      }, remoteInstagram = remote.instagram || {
+        readMedia: []
       }, remoteJavData = {
         readTopics: Array.isArray(remote.javLibrary) ? remote.javLibrary : remote.javLibrary?.readTopics || [],
         unfinishedTopics: remote.unfinishedLibrary || remote.javLibrary?.unfinishedTopics || [],
@@ -983,6 +1176,9 @@
         twitter: {
           readMedia: this.mergeArrays(localTwitter.readMedia, remoteTwitter.readMedia),
           scrollPositions: this.mergeScrollPositions(localTwitter.scrollPositions, remoteTwitter.scrollPositions)
+        },
+        instagram: {
+          readMedia: this.mergeArrays(localInstagram.readMedia, remoteInstagram.readMedia)
         }
       };
     }
@@ -993,8 +1189,10 @@
       Storage.set("laomo_jav_highlight_words", mergedData.javLibrary.highlightWords)), 
       mergedData.twitter && (Storage.set("laomo_twitter_read_media", mergedData.twitter.readMedia), 
       Storage.set("laomo_twitter_scroll_position", mergedData.twitter.scrollPositions)), 
+      mergedData.instagram && Storage.set("laomo_instagram_read_media", mergedData.instagram.readMedia), 
       mergedData.javLibrary.readTopics.length, localData.javLibrary?.readTopics.length, 
-      mergedData.twitter.readMedia.length, localData.twitter?.readMedia.length, setTimeout(() => {
+      mergedData.twitter.readMedia.length, localData.twitter?.readMedia.length, mergedData.instagram.readMedia.length, 
+      localData.instagram?.readMedia.length, setTimeout(() => {
         window.location.reload();
       }, 1e3);
     }
@@ -1044,6 +1242,30 @@
         notification.remove(), Toast.show(error.message || "从Gist下载时发生错误。", "error");
       }
     }
+    static getTodayDateString() {
+      const now = new Date;
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    }
+    static async autoBackup() {
+      const token = this.getGitHubToken(), gistId = this.getGistId();
+      if (!token || !gistId) return;
+      const today = this.getTodayDateString();
+      if (Storage.get(CONFIG_STORAGE_LAST_AUTO_BACKUP_DATE, "") !== today) try {
+        let finalData;
+        try {
+          const gistFile = await this.getGistFile();
+          if (gistFile && gistFile.content) {
+            const remoteData = JSON.parse(gistFile.content), localData = this.getBackupData();
+            finalData = this.mergeBackupData(localData, remoteData);
+          } else finalData = this.getBackupData();
+        } catch {
+          finalData = this.getBackupData();
+        }
+        const content = JSON.stringify(finalData, null, 2);
+        await this.updateGistFile(content) && (Storage.set(CONFIG_STORAGE_LAST_AUTO_BACKUP_DATE, today), 
+        Toast.show("📦 每日自动备份完成", "success", 2e3));
+      } catch (error) {}
+    }
   }
   class SettingsPanel {
     static show() {
@@ -1083,8 +1305,9 @@
     static initialize() {
       try {
         const currentUrl = window.location.href;
-        this.isTwitterMediaPage(currentUrl) ? (new TwitterReadMark).init() : this.isJavLibraryPage(currentUrl) && (new ReadMarkManager).init(), 
-        (this.isTwitterMediaPage(currentUrl) || this.isJavLibraryPage(currentUrl)) && this.registerMenuCommands();
+        this.isTwitterMediaPage(currentUrl) ? (new TwitterReadMark).init() : this.isInstagramPage(currentUrl) ? (new InstagramReadMark).init() : this.isJavLibraryPage(currentUrl) && (new ReadMarkManager).init(), 
+        (this.isTwitterMediaPage(currentUrl) || this.isJavLibraryPage(currentUrl) || this.isInstagramPage(currentUrl)) && (this.registerMenuCommands(), 
+        GistSync.autoBackup());
       } catch (error) {}
     }
     static registerMenuCommands() {
@@ -1095,6 +1318,9 @@
       }), GM_registerMenuCommand("📥 从Gist下载数据", () => {
         GistSync.downloadFromGist();
       });
+    }
+    static isInstagramPage(url) {
+      return url.includes("instagram.com");
     }
     static isTwitterMediaPage(url) {
       return url.includes("x.com") && url.includes("/media");

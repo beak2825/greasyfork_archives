@@ -7,7 +7,7 @@
 // @description:zh-TW 網購查券小幫手，不花冤枉錢！！！支援平台：京東、淘寶、天貓、天貓超市、天貓國際、京東國際、京東圖書、京東大藥房、阿里大藥房、唯品會等；功能：1、搜索商品時會自動查詢標註有優惠券和活動的商品，無需進入詳情頁，方便快捷；2、瀏覽商品詳情頁時指令碼或直譯式程式會自動查詢商品是否有隱藏的優惠券；3、瀏覽記錄標註（本地存儲、可手動清空）；4、網頁顯示優化；指令碼或直譯式程式長期維護更新，請放心使用~
 // @icon		      data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAklJREFUWEfVl6tOA0EUhs+GOwkCX0hDQiEQHqBV9RTHxSCQaFBggAcAjQTJzdUQDEHQBDQkFEMC78CtZMnPcNqzw9xolzSM2U53uuc7//nP7DSK4zimNo7oXwHcPhDdPMSEKwZfJ7JqjutkNvq6ho4gBRDo6LwROOThs0WiuWLkXeoEaCawjBgCYQVA8K29dPy5sWQvixHgN8E7O1TOfT2N3PFd7UPN32tEL29ENggjwMKmP3MEQVAG8BX7+ZVobTGi8eHkyh8AMNvxuftxA/3hgeWTckNEK/NJYyYAXMHRWlMjEXV3+XJV98uXZhUBABAeCQCX9Aeb/paSaMvbZgBdhTqAz3gAqD4SlStuf5TyKkMbACClCnUAl/y93UT76xGVK3ZpOftSIaJS3g0wnSeaKShF6wDoed5apZQIDrfvrqYHIMvgBRgcUDgAwEAZXIMN5iqBEcBkQPQ4Wo4BELz6pOaQmefycy5DXg/IhOoKmABYfv6B9ACMtHOoDCk/h3jACGDygNxwUAJkjKCQEG5nANxjyUMAgj2gA7AHuM7sB9l2TQOY2pANmHYJjG1o2oj+CsC4ESFL3Qe2EmAtZJcl0MvjakNu6cRGhImuggRAbdFiIQOtansZSfl/AOgqNPvatUHqwY0AUgW5EYVk7lsjpee13iNZWiro5wAngPRDGirYghtLoMuI/eH0qvkjGJ8PbOUJ+mNychHT2bWvwo37vFXLo1dLAPxj9P3dY0z3329EfR8YzRCNDSXPfD7sIAV8D2nlftsBPgHDwZmwII4MigAAAABJRU5ErkJggg==
 // @namespace         chaowantianxia_coupon_downloader
-// @version           1.0.8
+// @version           1.0.9
 // @author            潮玩天下
 // @match             *://*.taobao.com/*
 // @match             *://*.tmall.com/*
@@ -17,6 +17,7 @@
 // @match             *://pages.tmall.com/wow/an/cs/search**
 // @match             *://*.jd.com/*
 // @match             *://*.jd.hk/*
+// @match             *://item.jingdonghealth.cn/*
 // @match             *://item.jkcsjd.com/*
 // @match             *://*.yiyaojd.com/*
 // @match             *://www.vipglobal.hk
@@ -40,6 +41,7 @@
 // @exclude           *://huodong.taobao.com/wow/z/guang/gg_publish/*
 // @exclude           *://passport.vip.com/*
 // @exclude           *://passport.suning.com/*
+// @connect           jtm.pub
 // @grant             GM_openInTab
 // @grant             GM.openInTab
 // @grant             GM_getValue
@@ -72,7 +74,7 @@
 	 */
 			
 	const browsingLocalStorageKey = "browsing_history_local_storage_key";
-	const details = ["detail.tmall.com", "item.taobao.com", "item.jd.com", "item.yiyaojd.com", "npcitem.jd.hk","detail.tmall.hk", "detail.vip.com", "item.jkcsjd.com", "product.suning.com"];
+	const details = ["detail.tmall.com", "item.taobao.com", "item.jd.com", "item.yiyaojd.com", "npcitem.jd.hk","detail.tmall.hk", "detail.vip.com", "item.jkcsjd.com", "product.suning.com", "item.jingdonghealth.cn"];
 	const browsedHtml = `<div style="position:absolute;white-space: nowrap; top:7px;padding:2px 5px;font-size:11px;background-color:rgb(3,106,251);color:#FFF;z-index:9999999999999;border-radius:20px;right:10px;"><b>已浏览</b></div>`;
 	
 	function quickSort(arr) {
@@ -144,8 +146,8 @@
 		
 	//基于tampermonkey网络请求方法
 	function gmRequest(method, url, param){
-		if(!param){
-			param = {};
+		if(method.toUpperCase()=="GET"){
+			param = null;
 		}
 		return new Promise((resolve, reject)=> {
 			GM_xmlhttpRequest({
@@ -284,7 +286,7 @@
 			platform = "taobao";
 		}else if(host.indexOf(".tmall.")!=-1){
 			platform = "tmall";
-		}else if(host.indexOf(".jd.")!=-1 || host.indexOf(".yiyaojd.")!=-1 || host.indexOf(".jkcsjd.")!=-1){
+		}else if(host.indexOf(".jd.")!=-1 || host.indexOf(".yiyaojd.")!=-1 || host.indexOf(".jkcsjd.")!=-1 || host.indexOf(".jingdonghealth.")!=-1){
 			platform = "jd";
 		}else if(host.indexOf(".vip.")!=-1 || host.indexOf(".vipglobal.")!=-1){
 			platform = "vpinhui";
@@ -411,8 +413,7 @@
 			const goodsCouponUrl = "https://t.jtm.pub/api/coupon/query?no=3&version=1.0.2&platform="+platform+"&id="+goodsId+"&q="+goodsName+"&addition="+addition;
 			//console.log("goodsCouponUrl",goodsCouponUrl);
 			try{
-				
-				const data = await makeRequest("GET", goodsCouponUrl, null, true);
+				const data = await makeRequest("GET", goodsCouponUrl, null, false);
 				if(data.code=="ok" && !!data.result){
 					const json = JSON.parse(data.result);
 					await this.generateCoupon(platform, json.data);
@@ -495,7 +496,7 @@
 							openInTab(href);
 							couponElementA.removeAttribute(clickedTag);
 						}else{
-							makeRequest("GET", goodsPrivateUrl+couponId, null, true).then((privateResultData)=>{
+							makeRequest("GET", goodsPrivateUrl+couponId, null, false).then((privateResultData)=>{
 								if(privateResultData.code==="ok" && !!privateResultData.result){
 									let url = JSON.parse(privateResultData.result).url;
 									if(url){
@@ -514,7 +515,7 @@
 				if(!canvasElement){
 					return;
 				}
-				const qrcodeResultData = await makeRequest("GET", goodsPrivateUrl+couponId, null, true);
+				const qrcodeResultData = await makeRequest("GET", goodsPrivateUrl+couponId, null, false);
 				if(!!qrcodeResultData && qrcodeResultData.code==="ok" && !!qrcodeResultData.result){
 					let img = JSON.parse(qrcodeResultData.result).img;
 					if(!!img){

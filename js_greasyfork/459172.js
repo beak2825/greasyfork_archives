@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         飞书任务管理-自动填充任务总工时
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.0.4
 // @description  自动填充任务总工时
 // @author       xiaolong、xulei
 // @match        https://k7n084n7rx.feishu.cn/base/bascnxklVJQ9VqGGkc4bmu3YJPb*
 // @match        https://k7n084n7rx.feishu.cn/base/BmGUb5Zp6a9WCasthF1cAWhTnSn*
 // @match        https://d5t3la2r90.feishu.cn/base/As2abCpPZaItARsJYNpc5f2Fn8b*
+// @match        https://ai.feishu.cn/base/DZ4pbG7XzaEsQpsCP1jcG4oQnsg*
 // @icon         https://www.feishu.cn/favicon.ico
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/layer/3.5.1/layer.min.js
@@ -57,6 +58,11 @@ GM_addStyle(GM_getResourceText('layerCSS'));
         {label: '1组', value: 1},
         {label: '2组', value: 2},
         {label: '3组', value: 3}
+        ],
+        'DZ4pbG7XzaEsQpsCP1jcG4oQnsg': [
+        {label: '1组', value: 1},
+        {label: '2组', value: 2},
+        {label: '3组', value: 3}
         ]
     };
 
@@ -72,7 +78,7 @@ GM_addStyle(GM_getResourceText('layerCSS'));
     ];
 
     var FeishuPluginConfig = {
-        departName : window.app_token === 'As2abCpPZaItARsJYNpc5f2Fn8b' ? '前端研发4部': '前端研发3部',
+        departName : (window.app_token === 'As2abCpPZaItARsJYNpc5f2Fn8b' || window.app_token === 'DZ4pbG7XzaEsQpsCP1jcG4oQnsg') ? '前端研发4部': '前端研发3部',
         group: groupData[window.app_token],
         memberData: memberData
     };

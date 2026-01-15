@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LANraragi 阅读模式
 // @namespace    https://github.com/Kelcoin
-// @version      4.5.1
+// @version      4.5.2
 // @description  为 LANraragi 阅读器添加阅读模式
 // @author       Kelcoin
 // @match        *://*/reader?id=*
@@ -25,6 +25,7 @@
     const STYLE_ID = 'lrr-reading-style-v4';
     const BODY_READING_CLASS = 'lrr-reading-mode';
     const SETTINGS_MODAL_ID = 'lrr-reading-settings-modal';
+    const LOADING_MASK_ID = 'lrr-reading-loading-mask';
 
     // 交互参数
     const MAX_DRAG_RATIO = 1.0;
@@ -37,7 +38,7 @@
     // 默认设置
     const DEFAULT_SETTINGS = {
         autoEnter: false,
-        btnPosition: 'right',
+        btnPosition: 'right', 
         pageGap: 0,
         expandDirection: 'up', // 默认向上展开
         autoTurnInterval: 3
@@ -62,7 +63,8 @@
     let indicatorHideTimer = null;
     let inputBlockUntil = 0;
     let imgResizeObserver = null;
-
+    let lastTurnTime = 0;
+    
     // 自动翻页状态
     let autoTurnState = {
         active: false,
@@ -127,12 +129,12 @@
         if (oldAutoHit) oldAutoHit.style.display = 'none';
 
         const isRight = userSettings.btnPosition === 'right';
-
+        
         // 1. 设置按钮锚点
         [mainBtn, thumbBtn, autoBtn].forEach(btn => {
             if (!btn) return;
             btn.style.left = ''; btn.style.right = ''; btn.style.top = ''; btn.style.bottom = '';
-            btn.style.transform = '';
+            btn.style.transform = ''; 
 
             btn.style.bottom = '30px';
             if (isRight) {
@@ -145,9 +147,9 @@
         // 2. 动态设置热区位置
         if (hitArea) {
             // 先重置，防止 CSS 干扰
-            hitArea.style.left = 'auto';
+            hitArea.style.left = 'auto'; 
             hitArea.style.right = 'auto';
-
+            
             if (isRight) {
                 hitArea.style.right = '0';
             } else {
@@ -159,7 +161,7 @@
             display.style.gap = `${userSettings.pageGap}px`;
         }
     }
-
+    
     // 监听窗口大小变化以调整布局
     window.addEventListener('resize', () => {
         requestAnimationFrame(applyLayoutSettings);
@@ -259,31 +261,42 @@
 
     function waitForPageImageLoaded(pageIndex, timeout = 5000) {
         const sessionId = typeof readingSessionId !== 'undefined' ? readingSessionId : 0;
+        
         return new Promise((resolve) => {
+            // 定义结束回调：无论成功失败，都关闭遮罩
+            const finish = (result) => {
+                toggleLoadingMask(false);
+                resolve(result);
+            };
+
+            // 1. 环境与参数校验
             if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
-                resolve(false); return;
+                finish(false); return;
             }
             const display = document.getElementById('display');
-            if (!display) { resolve(false); return; }
+            if (!display) { finish(false); return; }
 
             const targetUrl = getPageUrl(pageIndex);
-            if (!targetUrl) { resolve(false); return; }
+            // 如果获取不到 URL（可能是最后一页或其他情况），直接结束
+            if (!targetUrl) { finish(true); return; }
 
             const mainImg = document.getElementById('img') || display.querySelector('img.reader-image');
-            if (!mainImg) { resolve(false); return; }
+            if (!mainImg) { finish(false); return; }
 
+            // 2. 核心判定逻辑：Src 匹配 + 加载完成 + 有宽度
             const isTargetSrc = () => {
                 const src = mainImg.currentSrc || mainImg.src || '';
+                // 简单的字符串包含匹配，兼容相对路径和绝对路径
                 return src === targetUrl || src.startsWith(targetUrl) || targetUrl.startsWith(src);
             };
 
+            // 3. 快速路径：如果当前图片已经是目标图片且已加载好（缓存命中）
             if (isTargetSrc() && mainImg.complete && mainImg.naturalWidth > 0) {
-                if (sessionId && sessionId === readingSessionId && document.body.classList.contains(BODY_READING_CLASS)) {
-                    resolve(true);
-                } else { resolve(false); }
+                finish(true);
                 return;
             }
 
+            // 4. 慢速路径：监听 load 事件
             let done = false;
             const cleanup = () => {
                 if (done) return;
@@ -291,21 +304,29 @@
                 mainImg.removeEventListener('load', onLoad);
                 mainImg.removeEventListener('error', onError);
             };
+
             const onLoad = () => {
+                // 再次检查环境，防止在等待期间退出了阅读模式
                 if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
-                    cleanup(); resolve(false); return;
+                    cleanup(); finish(false); return;
                 }
-                if (isTargetSrc()) { cleanup(); resolve(true); }
+                // 只有加载完的图片是目标图片才算成功
+                // 如果 Reader 预加载机制导致 img src 快速变化，这里能确保对齐
+                if (isTargetSrc()) { 
+                    cleanup(); finish(true); 
+                }
             };
-            const onError = () => { cleanup(); resolve(false); };
+            
+            const onError = () => { cleanup(); finish(false); };
 
             mainImg.addEventListener('load', onLoad);
             mainImg.addEventListener('error', onError);
 
+            // 5. 超时保底：防止网络卡死导致遮罩永久不消失
             setTimeout(() => {
                 if (done) return;
                 cleanup();
-                resolve(false);
+                finish(false);
             }, timeout);
         });
     }
@@ -328,6 +349,12 @@
     // ==========================================
     //                 核心工具函数
     // ==========================================
+    function toggleLoadingMask(active) {
+        const mask = document.getElementById(LOADING_MASK_ID);
+        if (!mask) return;
+        if (active) mask.classList.add('visible');
+        else mask.classList.remove('visible');
+    }
 
     function clamp(val, min, max) {
         return Math.min(Math.max(val, min), max);
@@ -377,14 +404,14 @@
             r1.top > renderRect.bottom
         );
 
-        if (noOverlap) { indicator.classList.add('safe-zone'); }
+        if (noOverlap) { indicator.classList.add('safe-zone'); } 
         else { indicator.classList.remove('safe-zone'); }
     }
 
     function updatePageIndicator() {
         const info = getPageInfo();
         const el = document.getElementById(PAGE_INDICATOR_ID);
-
+        
         if (info && el) el.textContent = `${info.current} / ${info.total}`;
 
         if (isReadingMode()) {
@@ -410,10 +437,10 @@
             }
 
             requestAnimationFrame(checkIndicatorOverlap);
-
+            
             // 显示页码
             if (el) el.classList.add('visible');
-
+            
             if (indicatorHideTimer) clearTimeout(indicatorHideTimer);
             indicatorHideTimer = setTimeout(() => {
                 if (el) el.classList.remove('visible');
@@ -423,11 +450,11 @@
             hookReaderFunctions();
         }
     }
-
+    
     // ==========================================
     //               自动翻页功能
     // ==========================================
-
+    
     function scheduleNextAutoTurn() {
         if (autoTurnState.timer) clearTimeout(autoTurnState.timer);
         if (!autoTurnState.active) return;
@@ -447,10 +474,10 @@
 
     function startAutoTurn() {
         if (autoTurnState.active) return;
-
+        
         autoTurnState.active = true;
         updateAutoTurnBtnState();
-
+        
         const indicator = document.getElementById(PAGE_INDICATOR_ID);
         if (indicator) {
             indicator.textContent = "▶ 自动翻页开启";
@@ -463,7 +490,7 @@
         }
         scheduleNextAutoTurn();
     }
-
+    
     function stopAutoTurn() {
         autoTurnState.active = false;
         if (autoTurnState.timer) {
@@ -471,7 +498,7 @@
             autoTurnState.timer = null;
         }
         updateAutoTurnBtnState();
-
+        
         const indicator = document.getElementById(PAGE_INDICATOR_ID);
         if (indicator && isReadingMode()) {
             indicator.textContent = "■ 自动翻页停止";
@@ -483,12 +510,12 @@
             }, 1000);
         }
     }
-
+    
     function toggleAutoTurn() {
         if (autoTurnState.active) stopAutoTurn();
         else startAutoTurn();
     }
-
+    
     function updateAutoTurnBtnState() {
         const btn = document.getElementById(AUTO_BTN_ID);
         if (!btn) return;
@@ -525,6 +552,19 @@
                     overscroll-behavior: none !important;
                     box-sizing: border-box !important;
                 }
+                /* 加载遮罩层样式 */
+                #${LOADING_MASK_ID} {
+                    position: fixed; inset: 0;
+                    background: rgba(0,0,0,0.3); /* 灰色遮罩 */
+                    z-index: 199998; /* 低于按钮(200001)和热区(199999)，但高于图片 */
+                    display: none;
+                    pointer-events: auto; /* 阻止穿透点击触发翻页 */
+                    cursor: wait;
+                }
+                body.${BODY_READING_CLASS} #${LOADING_MASK_ID}.visible {
+                    display: block;
+                }
+
                 body.${BODY_READING_CLASS} * {
                     -webkit-tap-highlight-color: transparent !important;
                     -webkit-touch-callout: none !important;
@@ -589,7 +629,7 @@
                     left: 0 !important;
                     right: 0 !important;
                     top: 0 !important;
-                    transform: translateX(0);
+                    transform: translateX(0); 
                     /* 移除 will-change: transform，避免缩放时的模糊问题 */
                     cursor: grab; pointer-events: auto !important;
                     overflow: visible !important;
@@ -635,12 +675,12 @@
 
                 /* 按钮通用样式 */
                 #${BUTTON_ID}, #${THUMB_BUTTON_ID}, #${AUTO_BTN_ID} {
-                    position: fixed;
+                    position: fixed; 
                     z-index: 200001; /* 必须高于热区(199999) */
                     width: 48px; height: 48px; border-radius: 50%;
                     display: flex; align-items: center; justify-content: center;
                     cursor: pointer; font-size: 20px;
-                    background: rgba(0, 0, 0, 0.6);
+                    background: rgba(0, 0, 0, 0.6); 
                     backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
                     border: 1px solid rgba(255, 255, 255, 0.2);
                     color: rgba(255, 255, 255, 0.95);
@@ -667,17 +707,17 @@
                 }
 
                 /* 默认隐藏子按钮，层级稍低但需高于热区 */
-                #${THUMB_BUTTON_ID}, #${AUTO_BTN_ID} {
-                    opacity: 0; pointer-events: none; visibility: hidden;
+                #${THUMB_BUTTON_ID}, #${AUTO_BTN_ID} { 
+                    opacity: 0; pointer-events: none; visibility: hidden; 
                 }
-
+                
                 /* 阅读模式 */
                 body.${BODY_READING_CLASS} #${BUTTON_ID},
                 body.${BODY_READING_CLASS} #${THUMB_BUTTON_ID},
                 body.${BODY_READING_CLASS} #${AUTO_BTN_ID} {
                     opacity: 0; pointer-events: none; visibility: hidden;
                 }
-
+                
                 /* 非阅读模式 */
                 body:not(.${BODY_READING_CLASS}) #${BUTTON_ID} {
                     opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; transform: none !important;
@@ -688,12 +728,12 @@
 
                 /* 热区样式 */
                 #${HITAREA_ID} {
-                    position: fixed;
-                    bottom: 0;
+                    position: fixed; 
+                    bottom: 0; 
                     z-index: 199999;
                     width: 15vw;
-                    height: 15vh;
-                    background: transparent;
+                    height: 15vh; 
+                    background: transparent; 
                     pointer-events: none;
                 }
                 body.${BODY_READING_CLASS} #${HITAREA_ID} { pointer-events: auto; }
@@ -772,7 +812,7 @@
 
     function openSettingsModal() {
         let modal = document.getElementById(SETTINGS_MODAL_ID);
-
+        
         const closeSettings = () => {
             if (modal) {
                 modal.style.display = 'none';
@@ -800,7 +840,7 @@
                             </label>
                         </div>
                     </div>
-
+                    
                     <div class="lrr-setting-item">
                         <span class="lrr-setting-label">自动翻页间隔 (秒)</span>
                         <input type="number" class="lrr-input" id="lrr-cfg-interval" min="1" max="60" placeholder="3">
@@ -818,7 +858,7 @@
                             <option value="side">朝侧方展开</option>
                         </select>
                     </div>
-
+                    
                     <div class="lrr-setting-item">
                         <span class="lrr-setting-label">阅读模式按钮位置</span>
                         <select class="lrr-select" id="lrr-cfg-pos">
@@ -883,18 +923,18 @@
         const mainBtn = document.getElementById(BUTTON_ID);
         const thumbBtn = document.getElementById(THUMB_BUTTON_ID);
         const autoBtn = document.getElementById(AUTO_BTN_ID);
-        const buttons = [mainBtn, thumbBtn, autoBtn];
+        const buttons = [mainBtn, thumbBtn, autoBtn]; 
 
         // 1. 设置可见性、重置动画曲线
         buttons.forEach(btn => {
             if (!btn) return;
             btn.style.visibility = 'visible';
-            btn.style.zIndex = '200001';
-
+            btn.style.zIndex = '200001'; 
+            
             btn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s';
-
-            btn.style.pointerEvents = 'auto';
-            btn.style.opacity = '1';
+            
+            btn.style.pointerEvents = 'auto'; 
+            btn.style.opacity = '1';           
         });
 
         // 2. 计算展开位置
@@ -914,7 +954,7 @@
             } else {
                 y = -distance;
             }
-
+            
             btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
         });
 
@@ -926,7 +966,7 @@
     // 隐藏控件并收回动画
     function hideControls() {
         if (!isReadingMode()) return;
-
+        
         const btns = [
             document.getElementById(BUTTON_ID),
             document.getElementById(THUMB_BUTTON_ID),
@@ -935,14 +975,14 @@
 
         btns.forEach(btn => {
             if (!btn) return;
-
+            
             // --- 设置收起专用动画 ---
             btn.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease-out, visibility 0.3s';
-
+            
             // 执行收回
-            btn.style.transform = 'translate(0, 0) scale(0.8)';
+            btn.style.transform = 'translate(0, 0) scale(0.8)'; 
             btn.style.opacity = '0';
-            btn.style.pointerEvents = 'none';
+            btn.style.pointerEvents = 'none'; 
         });
 
         // 等待最长的动画时间 (0.3s) 结束后完全隐藏
@@ -974,10 +1014,10 @@
             return;
         }
 
-        if (e.target.closest(`#${BUTTON_ID}`) ||
-            e.target.closest(`#${THUMB_BUTTON_ID}`) ||
-            e.target.closest(`#${AUTO_BTN_ID}`) ||
-            e.target.closest(`#${HITAREA_ID}`) ||
+        if (e.target.closest(`#${BUTTON_ID}`) || 
+            e.target.closest(`#${THUMB_BUTTON_ID}`) || 
+            e.target.closest(`#${AUTO_BTN_ID}`) || 
+            e.target.closest(`#${HITAREA_ID}`) || 
             e.target.closest(`#${SETTINGS_MODAL_ID}`)) {
             return;
         }
@@ -1068,11 +1108,11 @@
             if (overlay) {
                 overlay.style.setProperty('display', 'block', 'important');
                 ensureThumbBackdrop();
-
+                
                 if (!overlay._hasDelegatedClick) {
                     overlay.addEventListener('click', function(e) {
                         const thumb = e.target.closest('.quick-thumbnail');
-
+                        
                         if (thumb) {
                             e.preventDefault();
                             e.stopPropagation();
@@ -1099,7 +1139,7 @@
                                 setTimeout(closeThumbnailOverlay, 50);
                             }
                         }
-                    }, true);
+                    }, true); 
                     overlay._hasDelegatedClick = true;
                 }
             }
@@ -1126,9 +1166,18 @@
     }
 
     function executePageTurn(intent) {
+        // 1. 时间间隔检查
+        const now = Date.now();
+        if (now - lastTurnTime < 150) return;
+        lastTurnTime = now;
+
+        // 2. 【关键修改】立即开启遮罩，防止后续操作和连点
+        toggleLoadingMask(true);
+
         const manga = isMangaMode();
         const canUseReader = (typeof Reader !== 'undefined') && Reader && typeof Reader.changePage === 'function';
 
+        // 3. 执行翻页动作
         if (canUseReader) {
             let dir = 0;
             if (intent === 'next') dir = manga ? -1 : 1;
@@ -1147,13 +1196,35 @@
             }
         }
 
+        // 4. 延迟检测加载状态
+        // 这里保留延迟是为了给底层 Reader 一点时间去更新 DOM 中的 src 属性，
+        // 否则 waitForPageImageLoaded 可能会立即检测到上一张已加载好的图片从而过早关闭遮罩。
         setTimeout(() => {
             updatePageIndicator();
             attachDragEvents();
-
+            
+            // 获取下一页的索引用于检测
+            const info = getPageInfo(); 
+            // 注意：这里并不一定准确，因为 DOM 可能还没更完，但 waitForPageImageLoaded 内部有重试/等待逻辑
+            // 如果自动翻页开启，继续调度
             if (autoTurnState.active) {
                 scheduleNextAutoTurn();
             }
+
+            // 开始等待图片加载，加载完后会自动关闭遮罩
+            // 我们传入 info.index (当前看到的页) 或根据 intent 预判的页
+            // 由于 Reader 翻页后 currentPage 通常会更新，直接用 info.index 比较稳妥
+            waitForPageImageLoaded(info.index).then(() => {
+                 // 动画优化：确保位置归位
+                const display = document.getElementById('display');
+                if (display) {
+                    display.style.transition = 'none';
+                    display.style.transform = 'translateX(0px)';
+                    void display.offsetWidth;
+                    display.style.transition = 'transform 0.2s ease-out';
+                }
+            });
+
         }, 150);
     }
 
@@ -1272,7 +1343,7 @@
                         nextCursor++;
                     }
                } else if (idx === 1) {
-                   logicalPrevIndices = [0];
+                   logicalPrevIndices = [0]; 
                    let nextCursor = idx + 2;
                    while (logicalNextIndices.length < nextLimit && nextCursor < total) {
                        logicalNextIndices.push(nextCursor);
@@ -1328,25 +1399,25 @@
        const createGhostContent = (indices) => {
            const validIndices = indices.filter(i => i >= 0 && i < total);
            if (validIndices.length === 0) return `<div class="lrr-ghost-text"></div>`;
-
+           
            let html = '';
            const visibleCount = double ? 2 : 1;
-           const isVisualDouble = double && validIndices.length > 1;
+           const isVisualDouble = double && validIndices.length > 1; 
            const containerClass = isVisualDouble ? 'double-view' : 'single-view';
-
+           
            html += `<div class="lrr-ghost-container ${containerClass}">`;
            let sortedIndices = [...validIndices];
-
+           
            if (manga && isVisualDouble) {
                sortedIndices.sort((a, b) => b - a);
            } else {
                sortedIndices.sort((a, b) => a - b);
            }
-
+           
            sortedIndices.forEach((pageIdx, loopIndex) => {
                const url = getPageUrl(pageIdx);
                if (!url) return;
-
+               
                let sizeStyle = '';
                if (baseWidth && baseHeight) {
                    sizeStyle = `width:${baseWidth}px; height:${baseHeight}px; max-width:none; max-height:none;`;
@@ -1405,7 +1476,7 @@
                  display.style.transform = `translateX(0px)`;
              }
         }
-
+        
         return { x: targetX, y: targetY }; // 返回修正后的坐标供状态更新
     }
 
@@ -1419,16 +1490,16 @@
             display.style.transition = `transform ${ZOOM_ANIM_SPEED} ease-out`;
             display.style.transform = 'translateX(0px)';
         }
-
+        
         const el = document.getElementById(PAGE_INDICATOR_ID);
         if (el) {
-            el.style.opacity = '';
+            el.style.opacity = ''; 
         }
     }
 
     function handleDblClick(e) {
         if (!isReadingMode()) return;
-
+        
         // 兼容 TouchEvent 和 MouseEvent 获取坐标
         let clientX;
         if (e.type === 'touchstart' && e.touches.length > 0) {
@@ -1450,7 +1521,7 @@
         let rectLeft = 0;
         const display = document.getElementById('display');
         const imgEl = display ? (display.querySelector('img.reader-image') || document.getElementById('img')) : null;
-
+        
         if (imgEl && imgEl.tagName === 'IMG') {
             const rect = imgEl.getBoundingClientRect();
             rectWidth = rect.width;
@@ -1461,10 +1532,10 @@
 
         // 逻辑：双击中间 -> 放大
         if (ratio >= 0.35 && ratio <= 0.65) {
-            if (e.preventDefault) e.preventDefault();
-
+            if (e.preventDefault) e.preventDefault(); 
+            
             zoomState.scale = 2.5;
-            zoomState.panX = 0;
+            zoomState.panX = 0; 
             zoomState.panY = 0;
 
             const ind = document.getElementById(PAGE_INDICATOR_ID);
@@ -1484,7 +1555,7 @@
     function handleWheel(e) {
         if (!isReadingMode()) return;
         e.preventDefault();
-
+        
         const display = document.getElementById('display');
         if (!display) return;
 
@@ -1496,12 +1567,12 @@
 
         if (Math.abs(newScale - zoomState.scale) > 0.01) {
             zoomState.scale = newScale;
-
+            
             if (zoomState.scale <= 1.01) {
                 zoomState.scale = 1;
                 zoomState.panX = 0;
                 zoomState.panY = 0;
-                resetZoom();
+                resetZoom(); 
             } else {
                 const ind = document.getElementById(PAGE_INDICATOR_ID);
                 if (ind) {
@@ -1521,8 +1592,8 @@
     function attachDragEvents() {
         const display = document.getElementById('display');
         if (!display) return;
-
-        let lastTapTime = 0;
+        
+        let lastTapTime = 0; 
 
         if (display._lrrDragBound) {
             display.removeEventListener('wheel', handleWheel);
@@ -1546,14 +1617,14 @@
             if (e.type === 'touchstart' && e.touches.length === 1) {
                 const currentTime = Date.now();
                 const tapLength = currentTime - lastTapTime;
-
+                
                 // 使用 DOUBLE_TAP_DELAY 变量
-                if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
-                    e.preventDefault();
+                if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) { 
+                    e.preventDefault(); 
                     handleDblClick(e);
-
+                    
                     lastTapTime = 0;
-                    dragState.active = false;
+                    dragState.active = false; 
                     return;
                 }
                 lastTapTime = currentTime;
@@ -1580,12 +1651,12 @@
 
             const clientX = dragState.isTouch ? e.touches[0].clientX : e.clientX;
             const clientY = dragState.isTouch ? e.touches[0].clientY : e.clientY;
-
+            
             dragState.startX = clientX;
             dragState.currentX = clientX;
             dragState.startY = clientY;
             dragState.currentY = clientY;
-
+            
             dragState.startPanX = zoomState.panX;
             dragState.startPanY = zoomState.panY;
 
@@ -1596,7 +1667,7 @@
         const move = (e) => {
             if (!dragState.active) return;
             if (dragState.isTouch && e.cancelable && (!e.touches || e.touches.length < 2)) {
-                e.preventDefault();
+                e.preventDefault(); 
             }
 
             if (dragState.isTouch && e.touches && e.touches.length === 2) {
@@ -1609,7 +1680,7 @@
                     let newScale = zoomState.initialScale * (currentDist / zoomState.initialDistance);
                     if (newScale < 1) newScale = 1;
                     if (newScale > 5) newScale = 5;
-
+                    
                     zoomState.scale = newScale;
 
                     if (newScale > 1.01) {
@@ -1619,7 +1690,7 @@
                              ind.style.opacity = '0';
                          }
                     }
-
+                    
                     requestAnimationFrame(() => {
                         const corrected = applyZoomTransform(display);
                     });
@@ -1629,7 +1700,7 @@
 
             const clientX = dragState.isTouch ? e.touches[0].clientX : e.clientX;
             const clientY = dragState.isTouch ? e.touches[0].clientY : e.clientY;
-
+            
             dragState.currentX = clientX;
             dragState.currentY = clientY;
 
@@ -1666,7 +1737,7 @@
             if (zoomState.scale > 1.05) {
                 const diffX = dragState.currentX - dragState.startX;
                 const diffY = dragState.currentY - dragState.startY;
-
+                
                 let finalX = dragState.startPanX + diffX;
                 let finalY = dragState.startPanY + diffY;
 
@@ -1674,16 +1745,16 @@
                 const vh = window.innerHeight;
                 const maxPanX = Math.max(0, (vw * zoomState.scale - vw) / 2);
                 const maxPanY = Math.max(0, (vh * zoomState.scale - vh) / 2);
-
+                
                 zoomState.panX = clamp(finalX, -maxPanX, maxPanX);
                 zoomState.panY = clamp(finalY, -maxPanY, maxPanY);
 
                 display.style.transition = `transform ${ZOOM_ANIM_SPEED} cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
                 applyZoomTransform(display);
-
-                return;
+                
+                return; 
             }
-
+            
             if (zoomState.scale !== 1) {
                 resetZoom();
             }
@@ -1778,7 +1849,7 @@
         display.style.transition = '';
         display._lrrDragBound = false;
         delete display._lrrDragHandlers;
-
+        
         // 重置缩放状态
         zoomState = { scale: 1, panX: 0, panY: 0, initialDistance: 0, initialScale: 1 };
 
@@ -1816,7 +1887,7 @@
                     el.style.transform = 'translate(0, 0) scale(1)';
                 }
             });
-
+            
             if (btnHideTimer) clearTimeout(btnHideTimer);
 
             updatePageIndicator();
@@ -1830,7 +1901,7 @@
             if (imgResizeObserver) imgResizeObserver.disconnect();
             const display = document.getElementById('display');
             const targetImg = display ? (display.querySelector('img.reader-image') || document.getElementById('img')) : null;
-
+            
             if (window.ResizeObserver && targetImg) {
                 imgResizeObserver = new ResizeObserver(() => {
                     requestAnimationFrame(checkIndicatorOverlap);
@@ -1845,7 +1916,7 @@
         } else {
             // --- 退出阅读模式逻辑 ---
             stopAutoTurn();
-
+            
             if (btnHideTimer) clearTimeout(btnHideTimer);
             if (imgResizeObserver) {
                 imgResizeObserver.disconnect();
@@ -1858,14 +1929,14 @@
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
                 btn.style.visibility = 'visible';
-                btn.style.transform = '';
+                btn.style.transform = ''; 
             }
 
             // 2. 子按钮
             [tb, autoBtn].forEach(el => {
                 if (el) {
                     el.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease-out, visibility 0.3s';
-
+                    
                     // 执行收回动作
                     el.style.transform = 'translate(0, 0) scale(0.8)';
                     el.style.opacity = '0';
@@ -1894,7 +1965,7 @@
         btn.id = BUTTON_ID;
         btn.innerHTML = '⌘';
         btn.title = '切换阅读模式 (长按设置)';
-
+        
         btn.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; });
         btn.addEventListener('click', (e) => { e.stopPropagation(); setReadingMode(!isReadingMode()); });
 
@@ -1912,7 +1983,7 @@
         thumbBtn.innerHTML = '☰';
         thumbBtn.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; });
         thumbBtn.addEventListener('click', (e) => { e.stopPropagation(); openThumbnailOverlay(); });
-
+        
         const autoBtn = document.createElement('div');
         autoBtn.id = AUTO_BTN_ID;
         autoBtn.innerHTML = '▶';
@@ -1924,17 +1995,21 @@
         indicator.id = PAGE_INDICATOR_ID;
 
         // 唯一的底部热区
-        const hitArea = document.createElement('div');
+        const hitArea = document.createElement('div'); 
         hitArea.id = HITAREA_ID;
-
-        document.body.append(btn, thumbBtn, autoBtn, indicator, hitArea);
+        
+        // 创建遮罩层
+        const mask = document.createElement('div');
+        mask.id = LOADING_MASK_ID;
+        
+        document.body.append(btn, thumbBtn, autoBtn, indicator, hitArea, mask);
 
         // --- 使用元素直接监听替代坐标计算 ---
         const triggerAction = () => handleZoneTrigger();
 
         // 1. 热区点击事件 (通用)
         hitArea.addEventListener('click', (e) => { e.stopPropagation(); triggerAction(); });
-
+        
         if (window.matchMedia('(hover: hover)').matches) {
             hitArea.addEventListener('mouseenter', triggerAction);
             hitArea.addEventListener('mousemove', triggerAction);

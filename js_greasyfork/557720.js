@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fuck YouTube Ads w/o Lubricant
 // @namespace    https://www.github.com/vippium/
-// @version      1.5.9
+// @version      1.6.0
 // @description  Very Useful for Ad-free experience (M*therF@ckers are not allowed to use this)
 // @author       vippium
 // @match        https://www.youtube.com/*
@@ -10,7 +10,6 @@
 // @match        https://www.youtubekids.com/*
 // @exclude      https://www.youtube.com/live_chat*
 // @exclude      https://www.youtube.com/embed*
-// @connect      https://api.cobalt.tools
 // @connect      api.sponsor.ajay.app
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
@@ -685,7 +684,6 @@
   }
 
   function on_page_change() {
-    let analyzing_download_url = false;
     function common() {
       if (page_type === "yt_shorts") {
         shorts_fun.check_shorts_exist();
@@ -860,49 +858,6 @@
         handler?.call(this, event);
       });
     }
-    function set_download_event(dislike_node, like_node, url = href) {
-      if (!like_node) log("like_node is null");
-      if (!dislike_node) log("dislike_node is null");
-      if (!like_node || !dislike_node) {
-        log("set_download_event error like_node or dislike_node is null", -1);
-        return;
-      }
-      function randomColor() {
-        var letters = "0123456789ABCDEF";
-        var color = "#";
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-      }
-      function set_node_download_event(node, type = "like") {
-        node.style.transition = `${
-          node.style.transition && node.style.transition + " , "
-        }background-color 0.5s ease`;
-        node.backgroundColor_ = node.style.backgroundColor;
-        node.resolve_background_color = function () {
-          if (this.background_color_interval_id)
-            clearInterval(this.background_color_interval_id);
-          this.style.backgroundColor = this.backgroundColor_;
-        };
-        set_dbclick(node, () => {
-          if (user_data.dbclick_download_video === "off") return;
-          const tips =
-            type === "like"
-              ? flag_info.download_video_confirm_tips
-              : flag_info.download_audio_confirm_tips;
-          if (!confirm(`${unsafeWindow.document.title}\n\n${tips}`)) return;
-          const result = video_download(url, type !== "like", node);
-          if (result) {
-            node.background_color_interval_id = setInterval(() => {
-              node.style.backgroundColor = randomColor();
-            }, 100);
-          }
-        });
-      }
-      set_node_download_event(like_node, "like");
-      set_node_download_event(dislike_node, "dislike");
-    }
     function set_shorts_dbclick_like(video_node) {
       video_node =
         page_type === "yt_shorts"
@@ -1007,101 +962,6 @@
         }
         this.play();
       });
-    }
-    function set_shorts_download(like_button) {
-      const dislike_button = $(
-        "ytd-reel-video-renderer[is-active] #dislike-button > yt-button-shape > label > button"
-      );
-      set_download_event(dislike_button, like_button);
-    }
-    function set_music_download(dislike_node) {
-      const like_node = dislike_node.parentElement.parentElement.querySelector(
-        "#button-shape-like > button"
-      );
-      set_download_event(dislike_node, like_node);
-    }
-    function set_watch_download(wrapper_node) {
-      const like_node = wrapper_node.querySelector(
-        "like-button-view-model button"
-      );
-      const dislike_node = wrapper_node.querySelector(
-        "dislike-button-view-model button"
-      );
-      set_download_event(dislike_node, like_node);
-    }
-    function set_mobile_shorts_download(wrapper_node) {
-      const nodes = wrapper_node.querySelectorAll("button");
-      if (nodes.length !== 2) {
-        log(
-          "set_mobile_shorts_download wrong number of nodes",
-          nodes.length,
-          -1
-        );
-        return;
-      }
-      const like_node = nodes[0];
-      const dislike_node = nodes[1];
-      dislike_node.click_intercept_propagation = true;
-      dislike_node.dbclick_intercept_propagation = true;
-      like_node.click_intercept_propagation = true;
-      like_node.dbclick_intercept_propagation = true;
-      set_download_event(dislike_node, like_node);
-    }
-    function video_download(
-      url = href,
-      isAudioOnly = false,
-      targetNode = null
-    ) {
-      if (page_type === "yt_music_watch") {
-        url = "https://www.youtube.com/watch?" + href.split("?")[1];
-      }
-      if (analyzing_download_url) return false;
-      analyzing_download_url = true;
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://api.cobalt.tools/api/json", true);
-      xhr.setRequestHeader("Cache-Control", "no-cache");
-      xhr.setRequestHeader("Accept", "application/json");
-      xhr.setRequestHeader("Content-Type", "application/json");
-
-      const data = JSON.stringify({
-        url: encodeURI(url),
-        vQuality: "max",
-        filenamePattern: "basic",
-        isAudioOnly: isAudioOnly,
-        disableMetadata: true,
-      });
-      xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const response = JSON.parse(xhr.responseText);
-          const download_url = response?.url;
-          if (download_url) {
-            window.open(download_url, "_blank");
-            analyzing_download_url = false;
-            targetNode.resolve_background_color();
-            return;
-          }
-        }
-        let tips;
-        try {
-          const json_data = JSON.parse(xhr.responseText);
-          tips = json_data?.text;
-        } catch (error) {
-          tips = xhr.responseText;
-        }
-        alert(
-          `download failed\nstatus: ${xhr.status}\nresponseText: ${tips}\n`
-        );
-        analyzing_download_url = false;
-        targetNode.resolve_background_color();
-      };
-
-      xhr.onerror = function (error) {
-        alert(`download failed\nstatus: ${xhr.status}\nerror: ${error}\n`);
-        analyzing_download_url = false;
-        targetNode.resolve_background_color();
-      };
-      xhr.send(data);
-      return true;
     }
   }
 
@@ -1231,10 +1091,6 @@
           page_info: "页面信息",
           rule_info: "规则信息",
           del_config_confirm_tips: "你确定要删除所有配置信息吗？",
-          btn_dbclick_download_video_tips: "双击赞下载视频，双击踩下载音频",
-          btn_dbclick_download_video_title: "双击下载视频",
-          download_video_confirm_tips: "要下载这个视频吗？",
-          download_audio_confirm_tips: "要下载这个音频吗？",
           btn_shorts_auto_scroll_title: "自动滚动",
           bt_shorts_disable_loop_play_title: "禁用循环播放",
           btn_shorts_dbclick_like_title: "双击视频点赞",
@@ -1287,11 +1143,6 @@
           page_info: "頁面資訊",
           rule_info: "規則資訊",
           del_config_confirm_tips: "你確定要刪除所有設定資訊嗎？",
-          btn_dbclick_download_video_tips:
-            "雙擊按讚下載影片，雙擊不喜歡下載音檔",
-          btn_dbclick_download_video_title: "雙擊下載影片",
-          download_video_confirm_tips: "要下載這個影片嗎？",
-          download_audio_confirm_tips: "要下載這個音檔嗎？",
           btn_shorts_auto_scroll_title: "自動捲動",
           bt_shorts_disable_loop_play_title: "禁止循環播放",
           btn_shorts_dbclick_like_title: "雙擊影片按讚",
@@ -1345,11 +1196,6 @@
           page_info: "頁面資訊",
           rule_info: "規則資訊",
           del_config_confirm_tips: "你確定要刪除所有設定資訊嗎？",
-          btn_dbclick_download_video_tips:
-            "雙擊喜歡下載影片，雙擊不喜歡下載音檔",
-          btn_dbclick_download_video_title: "雙擊下載影片",
-          download_video_confirm_tips: "要下載這個影片嗎？",
-          download_audio_confirm_tips: "要下載這個音檔嗎？",
           btn_shorts_auto_scroll_title: "自動捲動",
           bt_shorts_disable_loop_play_title: "禁止循環播放",
           btn_shorts_dbclick_like_title: "雙擊影片按讚",
@@ -1406,11 +1252,6 @@
           rule_info: "Rule info",
           del_config_confirm_tips:
             "Are you sure you want to delete all configuration settings?",
-          btn_dbclick_download_video_tips:
-            "Double-click the like button to download the video, double-click the dislike button to download the audio",
-          btn_dbclick_download_video_title: "DoubleClickDownloadVideo",
-          download_video_confirm_tips: "Do you want to download this video?",
-          download_audio_confirm_tips: "Do you want to download this audio?",
           btn_shorts_auto_scroll_title: "AutoScroll",
           bt_shorts_disable_loop_play_title: "DisableLoopPlay",
           btn_shorts_dbclick_like_title: "DoubleClickLikeVideo",
@@ -1990,6 +1831,8 @@
           "mobile_yt_home_searching",
           "mobile_yt_watch_searching",
           "yt_shorts",
+          "yt_music_home",
+          "yt_music_watch",
         ].includes(page_type)
       ) {
         clearInterval(interval_id);
@@ -1998,6 +1841,8 @@
       count++;
       const search_selector = href.includes("https://m.youtube.com/")
         ? "input.searchbox-input.title"
+        : href.includes("https://music.youtube.com/")
+        ? "input.ytmusic-search-box"
         : "input.yt-searchbox-input";
       const search_input_node = $(search_selector);
       if (search_input_node) {
@@ -2015,6 +1860,9 @@
             ].includes(this.value)
           ) {
             setTimeout(() => {
+              // Close search dropdown/suggestions
+              search_input_node.blur();
+
               if (search_input_node.value === open_config_keyword) {
                 search_input_node.value = "";
                 display_config_win();
@@ -2518,32 +2366,58 @@
   cursor:move;
   user-select:none;
   padding:4px 8px;
+  padding-right:60px;
   background-color:#3498db;
   color:#ffffff;
   border-radius:4px 4px 0 0;
   font-weight:bold;
   font-size:13px;
-}
-
-#yt-error-topbar{
-  flex:0 0 auto;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  padding:6px 8px 4px 8px;
-  background-color:#f5f7fb;
-  border-bottom:1px solid #e0e4f0;
+  position:relative;
 }
 
 #yt-error-close,#yt-error-copy{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
   cursor:pointer;
-  background-color:#3498db;
+  background-color:transparent;
   color:#ffffff;
   border:none;
-  padding:4px 12px;
-  border-radius:999px;
-  font-size:12px;
+  padding:0;
+  width:20px;
+  height:20px;
+  border-radius:3px;
+  font-size:16px;
+  font-weight:bold;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background-color 0.2s ease;
+}
+
+#yt-error-copy{
+  right:32px;
+}
+
+#yt-error-copy:hover{
+  background-color:rgba(46,204,113,0.9);
+}
+
+#yt-error-copy:active{
+  background-color:#27ae60;
+}
+
+#yt-error-close{
+  right:8px;
+}
+
+#yt-error-close:hover{
+  background-color:rgba(231,76,60,0.9);
+}
+
+#yt-error-close:active{
+  background-color:#c0392b;
 }
 
 #yt-error-body{
@@ -2572,21 +2446,23 @@
     header.id = "yt-error-header";
     header.textContent = "Information (message)";
 
-    const topbar = unsafeWindow.document.createElement("div");
-    topbar.id = "yt-error-topbar";
     const copyBtn = unsafeWindow.document.createElement("button");
     copyBtn.id = "yt-error-copy";
-    copyBtn.textContent = "Copy & Close";
+    copyBtn.innerHTML = "📋";
+    copyBtn.title = "Copy to clipboard";
+    header.appendChild(copyBtn);
+
     const closeBtn = unsafeWindow.document.createElement("button");
     closeBtn.id = "yt-error-close";
-    closeBtn.textContent = "Close";
-    topbar.append(copyBtn, closeBtn);
+    closeBtn.innerHTML = "×";
+    closeBtn.title = "Close";
+    header.appendChild(closeBtn);
 
     const body = unsafeWindow.document.createElement("div");
     body.id = "yt-error-body";
     body.textContent = msg;
 
-    popup.append(header, topbar, body);
+    popup.append(header, body);
     unsafeWindow.document.body.appendChild(popup);
 
     function close() {
@@ -2629,32 +2505,44 @@
   cursor:move;
   user-select:none;
   padding:4px 8px;
+  padding-right:32px;
   background-color:#3498db;
   color:#ffffff;
   border-radius:4px 4px 0 0;
   font-weight:bold;
   font-size:13px;
   text-align:left;
-}
-
-.popup-topbar{
-  flex:0 0 auto;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:6px 8px 4px 8px;
-  background-color:#f5f7fb;
-  border-bottom:1px solid #e0e4f0;
+  position:relative;
 }
 
 .popup-close-button{
+  position:absolute;
+  top:50%;
+  right:8px;
+  transform:translateY(-50%);
   cursor:pointer;
-  background-color:#3498db;
+  background-color:transparent;
   color:#ffffff;
   border:none;
-  padding:4px 12px;
-  border-radius:999px;
-  font-size:12px;
+  padding:0;
+  width:20px;
+  height:20px;
+  border-radius:3px;
+  font-size:16px;
+  font-weight:bold;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background-color 0.2s ease;
+}
+
+.popup-close-button:hover{
+  background-color:rgba(231,76,60,0.9);
+}
+
+.popup-close-button:active{
+  background-color:#c0392b;
 }
 
 .popup-body{
@@ -2944,6 +2832,26 @@ label{
       ],
     };
 
+    const music_config = {
+      recommend_btn: [
+        {
+          id: "sponsorblock",
+          title: "btn_sponsorblock_title",
+          tips: "btn_sponsorblock_tips",
+          items: [
+            {
+              tag: "btn_lable_open",
+              value: "on",
+            },
+            {
+              tag: "btn_lable_close",
+              value: "off",
+            },
+          ],
+        },
+      ],
+    };
+
     if (
       ["mobile_yt_home_searching", "mobile_yt_watch_searching"].includes(
         page_type
@@ -2962,7 +2870,15 @@ label{
       "mobile_yt_home_searching",
     ].includes(page_type) && (win_config = home_watch_config);
     ["yt_shorts"].includes(page_type) && (win_config = shorts_config);
-    win_config && win_config.recommend_btn.push(...common_config.recommend_btn);
+
+    // YouTube Music - has its own config, doesn't use common_config
+    if (["yt_music_home", "yt_music_watch"].includes(page_type)) {
+      win_config = music_config;
+    } else {
+      win_config &&
+        win_config.recommend_btn.push(...common_config.recommend_btn);
+    }
+
     if (!win_config) return;
     const popup_node = unsafeWindow.document.getElementById("xxx_popup");
     if (popup_node) {
@@ -2977,12 +2893,11 @@ label{
     header.className = "popup-header";
     header.textContent = flag_info.config_info || "Script Settings";
 
-    const topbar = unsafeWindow.document.createElement("div");
-    topbar.className = "popup-topbar";
     const closeButton = unsafeWindow.document.createElement("button");
     closeButton.className = "popup-close-button";
-    closeButton.textContent = "Close";
-    topbar.appendChild(closeButton);
+    closeButton.innerHTML = "×";
+    closeButton.title = "Close";
+    header.appendChild(closeButton);
 
     const body = unsafeWindow.document.createElement("div");
     body.className = "popup-body";
@@ -3054,7 +2969,7 @@ label{
     item_group.append(...item_groups);
 
     body.appendChild(item_group);
-    popup.append(header, topbar, body);
+    popup.append(header, body);
     unsafeWindow.document.body.append(popup);
 
     function remove_popup_hander(event) {
@@ -4389,7 +4304,6 @@ label{
           shorts_add_video_progress: "onTap",
           shorts_dbclick_like: "off",
           shorts_disable_loop_play: "on",
-          dbclick_download_video: "off",
           sponsorblock: "on",
           language: "en",
           channel_infos: {
@@ -4403,7 +4317,6 @@ label{
             hide_live_chat_replay: "on",
           },
           global_shorts_block: "on",
-          hide_download_button: "off",
           hide_share_button: "off",
           hide_thanks_button: "off",
           hide_clip_button: "off",
@@ -4413,6 +4326,7 @@ label{
           hide_like_bar: "off",
           hide_join_button: "off",
           hide_ask_button: "off",
+          hide_download_button: "off",
           login: false,
         };
         let diff = false;
@@ -4506,7 +4420,6 @@ label{
         }
 
         const newHideKeys = [
-          "hide_download_button",
           "hide_share_button",
           "hide_thanks_button",
           "hide_clip_button",
@@ -4516,6 +4429,7 @@ label{
           "hide_like_bar",
           "hide_join_button",
           "hide_ask_button",
+          "hide_download_button",
           "global_shorts_block",
         ];
         for (const key of newHideKeys) {
@@ -5398,7 +5312,14 @@ label{
   /* ============ SponsorBlock integration ============ */
 
   const SB_API = "https://api.sponsor.ajay.app/api/skipSegments";
-  const SB_SKIP_CATEGORIES = ["sponsor"];
+  const SB_SKIP_CATEGORIES = [
+    "sponsor",
+    "intro",
+    "outro",
+    "selfpromo",
+    "interaction",
+    "music_offtopic",
+  ];
   const SB_SKIP_PADDING = 0.35;
 
   const sb_segmentCache = new Map();
@@ -5568,28 +5489,55 @@ label{
       return;
     }
 
-    if (
-      ![
-        "yt_watch",
-        "mobile_yt_watch",
-        "yt_shorts",
-        "mobile_yt_shorts",
-        "yt_music_watch",
-      ].includes(page_type)
-    ) {
-      return;
+    // Handler function to check and attach skipper
+    function handleNavigation() {
+      if (user_data.sponsorblock === "off") return;
+
+      if (
+        ![
+          "yt_watch",
+          "mobile_yt_watch",
+          "yt_shorts",
+          "mobile_yt_shorts",
+          "yt_music_watch",
+        ].includes(page_type)
+      ) {
+        return;
+      }
+
+      const videoId = sb_getVideoId();
+      if (!videoId) {
+        sb_log("No videoId found for current page_type", page_type);
+        return;
+      }
+
+      unsafeWindow.setTimeout(() => {
+        sb_attachSkipper(videoId);
+      }, 800);
     }
 
-    const videoId = sb_getVideoId();
-    if (!videoId) {
-      sb_log("No videoId found for current page_type", page_type);
-      return;
-    }
+    // Listen to YouTube navigation events
+    unsafeWindow.document.addEventListener(
+      "yt-navigate-finish",
+      handleNavigation
+    );
+    unsafeWindow.document.addEventListener(
+      "yt-page-data-updated",
+      handleNavigation
+    );
 
-    unsafeWindow.setTimeout(() => {
-      sb_attachSkipper(videoId);
-    }, 800);
+    // Initial call for first video
+    handleNavigation();
+
+    // Fallback interval to handle missed events
+    unsafeWindow.setInterval(() => {
+      handleNavigation();
+    }, 3000);
+
+    sb_log("SponsorBlock navigation listeners attached");
   }
+
+  /* ====== HIDE CREATE BUTTON ====== */
 
   function init_create_button_observer() {
     const header =
@@ -5740,73 +5688,59 @@ label{
     };
   }
 
-  /* ====== 2666 WATCH BUTTON HIDER PANEL ====== */
+  /* ====== 2666 WATCH PAGE ELEMENTS HIDER PANEL ====== */
 
   function apply_hide_buttons_css() {
     const rules = [];
 
-    if (user_data.hide_all_buttons === "on") {
-      rules.push("ytd-watch-metadata #actions { display: none !important; }");
-    } else {
-      if (user_data.hide_ask_button === "on") {
-        rules.push('button[aria-label="Ask"] { display: none !important; }');
-        rules.push(
-          "button .yt-spec-button-shape-next__button-text-content:has(> span, > div, > *) { }"
-        );
-      }
+    if (user_data.hide_ask_button === "on") {
+      rules.push('button[aria-label="Ask"] { display: none !important; }');
+    }
 
-      if (user_data.hide_download_button === "on") {
-        rules.push(
-          "ytd-download-button-renderer { display: none !important; }"
-        );
-        rules.push(
-          'button[aria-label="Download"] { display: none !important; }'
-        );
-      }
+    if (user_data.hide_download_button === "on") {
+      rules.push('button[aria-label="Download"] { display: none !important; }');
+    }
 
-      if (user_data.hide_share_button === "on") {
-        rules.push(
-          "#actions #menu ytd-menu-renderer > yt-button-view-model { display: none !important; }"
-        );
-        rules.push('button[aria-label="Share"] { display: none !important; }');
-      }
+    if (user_data.hide_share_button === "on") {
+      rules.push(
+        "#actions #menu ytd-menu-renderer > yt-button-view-model { display: none !important; }"
+      );
+      rules.push('button[aria-label="Share"] { display: none !important; }');
+    }
 
-      if (user_data.hide_thanks_button === "on") {
-        rules.push('button[aria-label="Thanks"] { display: none !important; }');
-      }
+    if (user_data.hide_thanks_button === "on") {
+      rules.push('button[aria-label="Thanks"] { display: none !important; }');
+    }
 
-      if (user_data.hide_clip_button === "on") {
-        rules.push('button[aria-label="Clip"] { display: none !important; }');
-      }
+    if (user_data.hide_clip_button === "on") {
+      rules.push('button[aria-label="Clip"] { display: none !important; }');
+    }
 
-      if (user_data.hide_more_actions_button === "on") {
-        rules.push(
-          "yt-button-shape#button-shape { display: none !important; }"
-        );
-        rules.push(
-          'button[aria-label="More actions"] { display: none !important; }'
-        );
-      }
+    if (user_data.hide_more_actions_button === "on") {
+      rules.push("yt-button-shape#button-shape { display: none !important; }");
+      rules.push(
+        'button[aria-label="More actions"] { display: none !important; }'
+      );
+    }
 
-      if (user_data.hide_save_button === "on") {
-        rules.push(
-          'button[aria-label="Save to playlist"] { display: none !important; }'
-        );
-      }
+    if (user_data.hide_save_button === "on") {
+      rules.push(
+        'button[aria-label="Save to playlist"] { display: none !important; }'
+      );
+    }
 
-      if (user_data.hide_subscribe_button === "on") {
-        rules.push("#subscribe-button { display: none !important; }");
-      }
+    if (user_data.hide_subscribe_button === "on") {
+      rules.push("#subscribe-button { display: none !important; }");
+    }
 
-      if (user_data.hide_like_bar === "on") {
-        rules.push(
-          ".ytSegmentedLikeDislikeButtonViewModelSegmentedButtonsWrapper { display: none !important; }"
-        );
-      }
+    if (user_data.hide_like_bar === "on") {
+      rules.push(
+        ".ytSegmentedLikeDislikeButtonViewModelSegmentedButtonsWrapper { display: none !important; }"
+      );
+    }
 
-      if (user_data.hide_join_button === "on") {
-        rules.push("#sponsor-button { display: none !important; }");
-      }
+    if (user_data.hide_join_button === "on") {
+      rules.push("#sponsor-button { display: none !important; }");
     }
 
     let css = rules.join("\n");
@@ -5848,31 +5782,43 @@ label{
   cursor:move;
   user-select:none;
   padding:4px 8px;
+  padding-right:32px;
   background-color:#3498db;
   color:#ffffff;
   border-radius:4px 4px 0 0;
   font-weight:bold;
   font-size:13px;
-}
-
-#yt-hide-buttons-topbar{
-  flex:0 0 auto;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:6px 8px 4px 8px;
-  background-color:#f5f7fb;
-  border-bottom:1px solid #e0e4f0;
+  position:relative;
 }
 
 #yt-hide-buttons-close{
+  position:absolute;
+  top:50%;
+  right:8px;
+  transform:translateY(-50%);
   cursor:pointer;
-  background-color:#3498db;
+  background-color:transparent;
   color:#ffffff;
   border:none;
-  padding:4px 12px;
-  border-radius:999px;
-  font-size:12px;
+  padding:0;
+  width:20px;
+  height:20px;
+  border-radius:3px;
+  font-size:16px;
+  font-weight:bold;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background-color 0.2s ease;
+}
+
+#yt-hide-buttons-close:hover{
+  background-color:rgba(231,76,60,0.9);
+}
+
+#yt-hide-buttons-close:active{
+  background-color:#c0392b;
 }
 
 #yt-hide-buttons-body{
@@ -5907,12 +5853,11 @@ label{
     header.id = "yt-hide-buttons-header";
     header.textContent = "Watch buttons";
 
-    const topbar = unsafeWindow.document.createElement("div");
-    topbar.id = "yt-hide-buttons-topbar";
     const closeBtn = unsafeWindow.document.createElement("button");
     closeBtn.id = "yt-hide-buttons-close";
-    closeBtn.textContent = "Close";
-    topbar.appendChild(closeBtn);
+    closeBtn.innerHTML = "×";
+    closeBtn.title = "Close";
+    header.appendChild(closeBtn);
 
     const body = unsafeWindow.document.createElement("div");
     body.id = "yt-hide-buttons-body";
@@ -5931,8 +5876,8 @@ label{
     }
 
     const rows = [
-      row("hb_download", "Download"),
       row("hb_ask", "Ask (Gemini)"),
+      row("hb_download", "Download"),
       row("hb_share", "Share"),
       row("hb_thanks", "Thanks"),
       row("hb_clip", "Clip"),
@@ -5948,12 +5893,12 @@ label{
       body.appendChild(div);
     }
 
-    popup.append(header, topbar, body);
+    popup.append(header, body);
     unsafeWindow.document.body.appendChild(popup);
 
     const map = [
-      ["hb_download", "hide_download_button"],
       ["hb_ask", "hide_ask_button"],
+      ["hb_download", "hide_download_button"],
       ["hb_share", "hide_share_button"],
       ["hb_thanks", "hide_thanks_button"],
       ["hb_clip", "hide_clip_button"],

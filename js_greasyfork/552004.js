@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       博客网站留言评论信息自动填充
 // @namespace    https://www.tjsky.net
-// @version      1.0.6
+// @version      1.0.7
 // @description  博客网站留言评论自动填写个人信息方法
 // @author      去年夏天
 // @namespace   https://greasyfork.org/zh-CN/users/39819
@@ -232,9 +232,9 @@
         const authorUrl = GM_getValue('authorUrl', DEFAULT_CONFIG.authorUrl);
 
         // 匹配关键字定义
-        const nameKeywords = ['nick', 'name', 'author', 'user', 'displayname', '昵称', '名字', '姓名', '称呼', '大名'];
-        const emailKeywords = ['mail', 'email', 'e-mail', '邮箱', '邮件', '地址'];
-        const urlKeywords = ['url', 'site', 'web', 'link', 'homepage', '网址', '主页', '网站', '链接'];
+        const nameKeywords = ['nick', 'name', 'author', 'user', 'displayname', '昵称', '名字', '姓名', '称呼'];
+        const emailKeywords = ['mail', 'email', 'e-mail', '邮箱', '邮件'];
+        const urlKeywords = ['url', 'site', 'web', 'link', 'homepage', '网址', '网站'];
 
         // 获取输入框
         const allInputs = document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="image"]):not([type="file"]):not([type="checkbox"]):not([type="radio"])');

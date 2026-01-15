@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                KF FROG
 // @namespace           https://forum.blackrussia.online
-// @version             1.0.0
+// @version             1.0.1
 // @author              Kseniya_Frog
 // @connection          https://vk.com/kwaazzi
 // @updateversion       Создан 05.12.2025

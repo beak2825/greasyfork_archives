@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         猫猫放置强化助手
-// @version      v5.2.5
+// @version      v5.2.5.2
 // @description  通过原型链拦截实现功能的强化自动化工具。
 // @author       YuoHira
 // @license      MIT
@@ -10,6 +10,8 @@
 // @require      https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js
 // @namespace    https://greasyfork.org/users/397156
 // @grant        GM_xmlhttpRequest
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @grant        unsafeWindow
 // @connect      kokdmexaezqaylurjprj.supabase.co
 // @connect      *.supabase.co
@@ -83,189 +85,6 @@
     let enhanceStats = {
         baseItem: '', currentLevel: 0, targetLevel: 0, maxReachedLevel: 0,
         levelStats: {}, totalAttempts: 0, totalSuccess: 0, startTime: null
-    };
-
-    const enhanceableItemsMap = {
-        "ironCoat": "铁甲衣",
-        "steelCoat": "钢甲衣",
-        "silverCoat": "银护甲",
-        "woolBurqa": "羊毛罩袍",
-        "woolTightsCloth": "羊毛紧身衣",
-        "mithrilCoat": "秘银护甲",
-        "cuteOutfit": "可爱的衣服",
-        "silkMageBurqa": "丝质罩袍",
-        "silkTightsCloth": "丝质夜行衣",
-        "fluffMageBurqa": "绒毛法师罩袍",
-        "fluffDexCloth": "云布衣",
-        "woolTailorClothes": "羊毛裁缝服",
-        "woolArtisanOutfit": "羊毛工匠服",
-        "silkArtisanOutfit": "丝质工匠服",
-        "silkTailorClothes": "丝质裁缝服",
-        "woolChefApron": "羊毛围裙",
-        "silkChefApron": "丝质围裙",
-        "woolHeatInsulatingCloth": "羊毛隔热服",
-        "silkHeatInsulatingCloth": "丝质隔热服",
-        "fishscaleMineralCoat": "鱼鳞合金盔甲",
-        "shadowSteelCoat": "暗影精铁盔甲",
-        "starforgedAlloylCoat": "星辰合金盔甲",
-        "dragonScaleArmor": "龙鳞甲",
-        "dragonScaleGenesisEssencArmor": "棱彩龙鳞甲",
-        "ironPants": "铁护腿",
-        "steelPants": "钢护腿",
-        "silverPants": "银护腿",
-        "woolMagePants": "羊毛法师裤",
-        "woolTightsPants": "羊毛紧身裤",
-        "mithrilPants": "秘银护腿",
-        "cuteDress": "可爱的裙子",
-        "silkMagePants": "丝质法师裤",
-        "silkTightsPants": "丝质宽松裤",
-        "fluffMagePants": "绒毛法师裤",
-        "fluffDexPants": "云绒紧身裤",
-        "fishscaleMineralPants": "鱼鳞合金护腿",
-        "shadowSteelPants": "暗影精铁腿甲",
-        "starforgedAlloyPants": "星辰合金腿甲",
-        "cuteShoes": "可爱的鞋子",
-        "iceFeatherBoots": "冰羽靴",
-        "cloudwalkerBoots": "云行靴",
-        "phantomWalkerBoots": "幽径之履",
-        "axe": "斧头",
-        "goblinDaggerPlus": "哥布林匕首·改",
-        "silverDagger": "银质匕首",
-        "frostDagger": "冰霜匕首",
-        "amberGazeOddSignStaff": "奇兆短杖",
-        "cuteGun": "猫猫枪",
-        "ironDiddleNet": "铁抄网",
-        "mithrilDagger": "秘银匕首",
-        "shadowSteelDagger": "暗影精铁匕首",
-        "bambooCrossbow": "竹质弩",
-        "ironShovel": "铁铲",
-        "steelShovel": "钢铲",
-        "ironTongs": "铁钳",
-        "magicBook": "魔法书",
-        "starDustMagicBook": "星辰魔法书",
-        "lumenCodex": "光明法典",
-        "umbralCodex": "黑暗法典",
-        "clawFallenRadiance": "殇耀之爪",
-        "clawVowedRadiance": "荣誓之爪",
-        "onyx_shield": "玄曜盾",
-        "murkyCrystalDagger": "浊镜匕首",
-        "silverSword": "银质剑",
-        "woodSword": "木剑",
-        "icePickaxe": "冰镐",
-        "woodStaff": "木法杖",
-        "moonlightStaff": "月光法杖",
-        "mewShadowStaff": "喵影法杖",
-        "manacrystalStaff": "魔晶法杖",
-        "timeflowCatEyeStaff": "时光猫眼法杖",
-        "intertwinedCatEyeStaff": "交织猫瞳杖",
-        "cuteSword": "猫猫剑",
-        "shinyIronSword": "闪光铁剑",
-        "ironFishingRod": "铁钓竿",
-        "steelHammer": "钢制重锤",
-        "ironSword": "铁剑",
-        "steelSword": "钢剑",
-        "mithrilSword": "秘银剑",
-        "shadowSteelSword": "暗影精铁剑",
-        "genesisEssenceShadowSteelSword": "棱彩精铁剑",
-        "shadowSteelHammer": "暗影精铁大锤",
-        "shadowSteelScythe": "暗影精铁镰刀",
-        "timeflowCatEyeGenesisEssenceStaff": "棱彩时光法杖",
-        "intertwinedCatEyeGenesisEssenceStaff": "棱彩交织法杖",
-        "bambooBow": "竹质弓",
-        "ironPot": "铁锅",
-        "steelPot": "钢锅",
-        "ironMachinistHammer": "铁锤",
-        "steelMachinistHammer": "钢锤",
-        "mithrilMachinistHammer": "秘银工匠锤",
-        "trollClubPlus": "蛮力巨棍",
-        "spiritfeatherBow": "灵羽之弓",
-        "murkyCrystalStaff": "浊影法杖",
-        "ironGloves": "铁护手",
-        "steelGloves": "钢护手",
-        "silverGloves": "银护手",
-        "collectingBracelet": "采集手环",
-        "woolMageLongGloves": "羊毛法师手套",
-        "woolDexGloves": "羊毛绑带手套",
-        "mithrilGloves": "秘银手套",
-        "silkMageLongGloves": "丝质法师手套",
-        "silkDexGloves": "丝质绑带手套",
-        "fluffMageGloves": "绒毛法师手套",
-        "fluffDexGloves": "云绒绑带手套",
-        "woolTailorGloves": "羊毛裁缝手套",
-        "woolCuteGloves": "羊毛可爱手套",
-        "silkCuteGloves": "丝质可爱手套",
-        "silkTailorGloves": "丝质裁缝手套",
-        "woolHeatResistantGloves": "羊毛隔热手套",
-        "silkHeatResistantGloves": "丝质隔热手套",
-        "fishscaleMineralGloves": "鱼鳞合金护手",
-        "shadowSteelGloves": "暗影精铁臂甲",
-        "starforgedAlloyGloves": "星辰合金臂甲",
-        "ironHat": "铁头盔",
-        "steelHat": "钢头盔",
-        "silverHat": "银头盔",
-        "woolMageHat": "羊毛法师帽",
-        "woolDexHeadScarf": "羊毛裹头巾",
-        "mithrilHat": "秘银头盔",
-        "cuteHat": "可爱的帽子",
-        "fishingHat": "钓鱼帽",
-        "silkMageHat": "丝质法师帽",
-        "silkDexHeadScarf": "丝质裹头巾",
-        "fluffMageHat": "绒毛法师帽",
-        "fluffDexScarf": "云绒裹头巾",
-        "catFurCuteHat": "毛毛可爱帽",
-        "woolCuteHat": "羊毛可爱帽",
-        "silkCuteHat": "丝质可爱帽",
-        "fishscaleMineralHat": "鱼鳞合金头盔",
-        "shadowSteelHat": "暗影精铁头盔",
-        "starforgedAlloyHat": "星辰合金头盔",
-        "frostCrown": "霜之王冠",
-        "ancestorCrown": "猫祖王冠",
-        "starCrown": "星辉王冠",
-        "loadOfamusementPark": "“游乐园之王”",
-        "knowledgeCrown": "知识冠冕",
-        "overloadCrown": "霸主王冠",
-        "snowWolfCloak": "雪狼皮披风",
-        "cloudwalkerCloak": "云行斗篷",
-        "silkMageCloak": "丝质法师披肩",
-        "silkDexCloak": "丝质夜行斗篷",
-        "silkWarriorCloak": "丝质战斗披风",
-        "silkVitalityCloak": "丝质活力披肩",
-        "fluffMageCloak": "绒毛法师披肩",
-        "cashmereSingleCloak": "羊绒孤胆披风",
-        "cashmereSingleDexCloak": "羊绒孤胆利刃披风",
-        "cashmereSingleCloakPlus": "羊绒英雄孤胆披风",
-        "luckRainbowRibbon": "虹运飘带",
-        "genesisEssenceLuckRainbowRibbon": "棱彩飘带",
-        "moonlightPendant": "月光吊坠",
-        "cuteBracelet": "可爱的手环",
-        "cuteDoll": "可爱的娃娃",
-        "cuteLuckyCharm": "可爱的护身符",
-        "reconstructionCommemorative": "重建纪念徽章",
-        "guideBadge": "向导徽章",
-        "pathfinderBadge": "引路徽章",
-        "ironFishpot": "铁制捕鱼笼",
-        "ancientFishboneNecklace": "远古鱼骨项链",
-        "catPotionSilverBracelet": "猫薄荷手链",
-        "lv1EnemySpoilCollector": "一级战利品收集者徽章",
-        "lv2EnemySpoilCollector": "二级战利品收集者徽章",
-        "lv3EnemySpoilCollector": "三级战利品收集者徽章",
-        "lv4EnemySpoilCollector": "四级战利品收集者徽章",
-        "lv1BattleExpCollector": "战斗奖章",
-        "fermentationStirrer": "酿造搅拌器",
-        "tailorScissors": "裁缝剪刀",
-        "needleandThread": "针线包",
-        "bambooMiningCatbasket": "采矿收纳背篓",
-        "rainbowBracelet": "彩虹手链",
-        "rainbowNecklace": "彩虹项链",
-        "woolExplorerCatpack": "羊毛探险背包",
-        "fangNecklace": "兽牙项链",
-        "emberAegis": "余烬庇护",
-        "overloadGuardianCore": "过载核心",
-        "libraryKingBadge": "图书馆徽章",
-        "owlQuillpen": "智慧羽毛笔",
-        "domination_seal": "统御印记",
-        "blinkshadowGirdle": "瞬影护符",
-        "starEssence": "星辉精华"
     };
 
     const STORAGE_KEYS = {
@@ -562,8 +381,20 @@
     function translateItemId(itemId) {
         if (!itemId) return itemId;
         const itemInfo = parseItemLevel(itemId);
-        const name = enhanceableItemsMap[itemInfo.baseItem] || itemInfo.baseItem;
+        const tAllGameResource = loadOrSyncAllGameResource();
+        const name = tAllGameResource?.[itemInfo.baseItem]?.name || itemInfo.baseItem;
         return itemInfo.level > 0 ? `${name}+${itemInfo.level}` : name;
+    }
+
+    function loadOrSyncAllGameResource() {
+        let tAllGameResource = unsafeWindow?.tAllGameResource;
+        if (tAllGameResource) {
+            GM_setValue('tAllGameResource', tAllGameResource);
+            return tAllGameResource
+        }
+
+        console.log('未获得物品信息，尝试从存储加载...');
+        return GM_getValue('tAllGameResource', {});
     }
 
     function initStats(itemId, targetLevel, inheritRecordId = null) {

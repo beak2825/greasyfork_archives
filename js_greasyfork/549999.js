@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio 汉化脚本
 // @namespace    http://tampermonkey.net/
-// @version      1.8.1
+// @version      1.8.2
 // @description  将 Google AI Studio (aistudio.google.com) 页面的主要 UI 元素翻译为中文，已更新Gemini3等
 // @match        https://aistudio.google.com/*
 // @grant        none
@@ -26,14 +26,16 @@
     ['Block high probability of being harmful', '高概率有害，予以拦截'],
     ['Harassment', '骚扰'],['Hate', '憎恨'],['Sexually Explicit', '色情'],
     ['Block medium or high probability of being harmful', '阻止可能有害的内容'],
-    ['Block low, medium and high probability of being harmful', '阻止低、中、高风险的有害内容'],
-    ['Always show regardless of probability of being harmful', '无论有害的可能性如何，始终表现出来'],['Share', '分享'],['Rename', '重命名'],
-    ['Get API key', '获取 API 密钥'], ['Help', '帮助'], ['Settings', '设置'], ['Create new', '新建'],['Build your ideas with Gemini', '与Gemini一起构建您的想法'],
+    ['+ New app', '+ 新建应用'],['Build AI apps', '构建 AI 应用'],['Chat with models', '与模型对话'],['Monitor API usage', '监控 API 使用情况'],
+    ['Block low, medium and high probability of being harmful', '阻止低、中、高风险的有害内容'],['The fastest path from prompt to production with Gemini', '使用 Gemini 从提示到生产的最快路径'],
+    ['You have no Paid Project. Please view the Projects Page to choose a Project and Upgrade.', '您没有付费项目。请访问项目页面以选择项目并进行升级。'],['Upload files', '上传文件'],
+    ['Always show regardless of probability of being harmful', '无论有害的可能性如何，始终表现出来'],['Share', '分享'],['Rename', '重命名'],['Choose a paid API key', '选择付费 API 密钥'],
+    ['Get API key', '获取 API 密钥'], ['Help', '帮助'], ['Settings', '设置'], ['Create new', '新建'],['Build your ideas with Gemini', '与Gemini一起构建您的想法'],['Send prompt (Ctrl + Enter)', '发送提示 (Ctrl + Enter)'],
     ['Switch to a paid API key to unlock higher quota and more features.', '切换到付费API密钥以解锁更高配额和更多功能。'],['Stream, Imagen and Veo have moved to the model picker in chat!', 'Stream、Imagen和Veo都有移动到这里的实验区聊天！'],
-    ['Model', '模型'], ['Run', '运行'], ['Run settings', '运行设置'], ['Untitled prompt', '无标题提示'],['Set the thinking level', '设置思考等级'],['Let it snow', '下雪特效'],
-    ['This model is not stable and may not be suitable for production use.', '该模型不稳定，可能不适合生产环境使用。'],['Thinking level', '思考等级'],['High', '高'],['Remove Grounding with Google Search', '移除 Google 搜索基座'],
-    ['Off', '关闭'],['Block none', '无屏蔽'],['Block few', '屏蔽少数'],['Block some', '屏蔽一些'],['Block most', '屏蔽大部分'],['View status', '查看状态'],['Submit prompt key', '发送消息'],[' Remove URL context', '移除网址上下文'],
-    ['Enter a prompt here', '在此处输入提示'], ['Add an example', '添加示例'], ['Input', '输入'], ['Output', '输出'],['Do not run safety filters', '不运行安全过滤器'],['Home', '主页'],['Copied to clipboard', '已复制到剪贴板'],
+    ['Model', '模型'], ['Run', '运行'], ['Run settings', '运行设置'], ['Untitled prompt', '无标题提示'],['Set the thinking level', '设置思考等级'],['Let it snow', '下雪特效'],[' Remove Code execution', '移除代码执行'],
+    ['This model is not stable and may not be suitable for production use.', '该模型不稳定，可能不适合生产环境使用。'],['Thinking level', '思考等级'],['High', '高'],['Remove Grounding with Google Search', '移除 Google 搜索基座'],['Stop editing', '停止编辑'],
+    ['Off', '关闭'],['Block none', '无屏蔽'],['Block few', '屏蔽少数'],['Block some', '屏蔽一些'],['Block most', '屏蔽大部分'],['View status', '查看状态'],['Submit prompt key', '发送消息'],[' Remove URL context', '移除网址上下文'],['Go to Projects Page', '前往项目页面'],
+    ['Enter a prompt here', '在此处输入提示'], ['Add an example', '添加示例'], ['Input', '输入'], ['Output', '输出'],['Do not run safety filters', '不运行安全过滤器'],['Home', '主页'],['Copied to clipboard', '已复制到剪贴板'],['Delete prompt', '删除对话'],
     ['Get code', '获取代码'], ['Save', '保存'], ['Chat', '聊天'], ['Stream', '流式'], ['Generate media', '生成媒体'],['Run prompt', '输入提示'],['Reset defaults', '恢复默认设置'],['Insert images, videos, audio, or files', '插入图像、视频、音频，或文件'],
     ['Build', '构建'], ['History', '历史记录'], ['Dashboard', '仪表盘'], ['Documentation', '文档'],['Generate structured output', '生成结构化输出'],['Dangerous Content', '危险内容'],['Type', '类型'],['Developer docs', '开发者文档'],['Speech to text', '语音转文本'],
     ['Total API Requests per Day', '每天的 API 请求总数'],['Total API Errors per Day', '每天的 API 错误总数'],['Studio', '实验室'],['My history', '我的对话历史'],['Open in Drive', '在云端硬盘打开'],['Description', '描述'],[' Remove Structured outputs', '移除结构化输出'],
@@ -43,7 +45,7 @@
     ['Code execution', '代码执行'], ['Function calling', '函数调用'], ['Grounding with Google Search', '启用 Google 搜索基座'],['Usage & Billing', '使用情况和计费'],['Low', '低'],['Medium', '中'],['Saved to Drive', '保存至云端硬盘'],['Link a paid API key here.', '在此处链接付费API密钥。'],
     ['Source:', '来源：'], ['Source: Google Search', '来源：Google 搜索'],['Creativity allowed in the responses', '回复内容允许创意发挥'],['Changelog', '更新日志'],['API keys', 'API密钥'],['Start typing a prompt', '开始输入提示词'],['Get started with Gemini', '开始使用 Gemini'],
     ['Generate content', '生成内容'], ['Media resolution', '媒体分辨率'], ['Default', '默认'], ['Thinking', '思考'], ['Thinking mode', '思考模式'],['Truncate response including and after string', '截断包含字符串及其之后的内容的响应'],['Good response', '回复得好'],['Bad response', '回复不好'],
-    ['Set thinking budget', '设置思考预算'], ['Close?', '关闭？'], ['Cancel', '取消'], ['Continue', '继续'],['Browse the url context', '浏览网址上下文'],['Lets you define functions that Gemini can call', '此工具与当前活动工具不兼容。'],['User','用户'],
+    ['Set thinking budget', '设置思考预算'], ['Close?', '关闭？'], ['Cancel', '取消'], ['Continue', '继续'],['Browse the url context', '浏览网址上下文'],['Lets you define functions that Gemini can call', '此工具与当前活动工具不兼容。'],['User','用户'],['Are you sure?', '你确定？'],
     ['Model selection', '模型选择'], ['All', '全部'], ['Featured', '精选'], ['Images', '图像'], ['New', '新'],['Adjust harmful response settings', '调整有害内容设置'],['Run safety settings', '运行安全设置'],['Rerun', '重试'],['Delete', '删除'],['Google Search Suggestions', 'Google搜索建议'],
     ['Temporary chat', '临时聊天'], ['Reset default settings', '恢复默认设置'],['Higher resolutions may provide better understanding but use more tokens.', '更高的分辨率可能提供更好的理解，但会消耗更多 token。'],['Share prompt', '分享对话'],['Name', '名称'],
     ['You need to create and run a prompt in order to share it', '您需要创建并运行一个提示才能分享它。'],['More options', '更多选项'],['New chat', '开启新对话'],['Project', '项目'],['Generate structured outputs', '生成结构化输出'],['Structured outputs', '结构化输出'],
@@ -94,6 +96,17 @@
     ['Our state-of-the-art video generation model, available to developers on the paid tier of the Gemini API.', '我们最先进的视频生成模型，可通过 Gemini API 的付费层级提供给开发者使用。'],
     ['Gemini Robotics-ER 1.5 Preview', 'Gemini Robotics-ER 1.5 预览版'],
     ['Gemini Robotics-ER, short for Gemini Robotics-Embodied Reasoning, is a thinking model that enhances robots\' abilities to understand and interact with the physical world.', 'Gemini Robotics-ER，即 Gemini 机器人具身推理的缩写，是一种思维模型，可增强机器人理解物理世界并与之互动的能力。'],
+
+    // --- 图片 1: Veo 3.1 系列 ---
+    ['Veo 3.1', 'Veo 3.1'],
+    ['Veo 3.1 fast', 'Veo 3.1 fast'],
+    ['Our latest video generation model, available to developers on the paid tier of the Gemini API.', '我们最新的视频生成模型，可通过 Gemini API 的付费层级提供给开发者使用。'],
+    ['A faster, more accessible version of Veo 3.1, optimized for speed and business use cases. Available to developers on the paid tier of the Gemini API.', 'Veo 3.1 的更快、更易用的版本，针对速度和业务用例进行了优化。可通过 Gemini API 的付费层级提供给开发者使用。'],
+
+    // --- 图片 2: Gemini 2.5 Flash Native Audio ---
+    ['Gemini 2.5 Flash Native Audio Preview 12-2025', 'Gemini 2.5 Flash 原生音频预览版 12-2025'],
+    ['Our native audio model optimized for higher quality audio outputs with better pacing, voice naturalness, verbosity, and mood.', '我们的原生音频模型，经过优化可提供更高质量的音频输出，具有更好的节奏、语音自然度、详细程度和情绪。'],
+    ['Audio/Video', '音频/视频'],
 
     // —— 语音 (TTS) 与音频 ——
     ['Style instructions', '风格指令'],
@@ -201,6 +214,9 @@
     { pattern: /^Speaker\s+(?<num>\d+)(?<suffix>\s+settings)?$/i, replace: ({ groups }) => `演讲者 ${groups.num}${groups.suffix ? ' 设置' : ''}`},
     // 处理指向文本
     { pattern: /^Points to\s+(.+)$/i, replace: '指向 $1' },
+    { pattern: /\bAudio\/Video\b/i, replace: '音频/视频' },
+    { pattern: /\bInput\b/i, replace: '输入' },
+    { pattern: /\bOutput\b/i, replace: '输出' },
   ];
 
   // —— 动态数字解析 ——

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        EzyBot - Eventpop
 // @namespace   EzyBot - Eventpop
-// @version      1.4.1
+// @version      1.5
 // @description  Pop the Event!
 // @author       EzyBot - อีซี่บอท
 // @match        https://*.eventpop.me/*
@@ -36,6 +36,14 @@
     startTime: null,
     isRunning: !1,
   };
+  function normalizeZoneName(name) {
+    if (!name) return "";
+    return name
+      .trim()
+      .replace(/\s+/g, "") // ลบช่องว่างทั้งหมด
+      .replace(/-/g, "") // ลบขีดทั้งหมด
+      .toLowerCase();
+  }
   let numTickets = GM_getValue("numTickets", defaults.numTickets),
     ticketShowtime = GM_getValue("ticketShowtime", defaults.ticketShowtime),
     ticketType = GM_getValue("ticketType", defaults.ticketType),
@@ -52,24 +60,102 @@
     if (settingsModalOpen) return;
     settingsModalOpen = !0;
     const e = new Date()
-        .toLocaleString("sv-SE", { timeZone: "Asia/Bangkok" })
-        .replace(" ", "T")
-        .slice(0, 19),
-      t = `\n      <div id="settings-modal-wrapper">\n        <div class="modal fade setstart-form binded-html-validation" id="settings-modal" data-showing="settings"\n          style="display: block; padding-right: 15px;">\n          <div class="modal-dialog">\n            <div class="modal-content setstart-body px-2">\n              <div class="modal-header">\n                <button class="close" data-dismiss="modal">\n                  <span aria-hidden="true">×</span>\n                </button>\n                <h2 class="modal-title">ตั้งค่าโปรแกรม</h2>\n              </div>\n              <div class="modal-body py-0">\n                <div class="form-ezy">\n                  <form class="simple_form" id="settings-form" accept-charset="UTF-8" method="post">\n                    <div class="form-inputs">\n                      <div class="row">\n                        <div class="col-md-12 form-group required starturl">\n                          <label class="control-label required" for="settings-startUrl"><abbr title="จำเป็น">*</abbr>\n                            URL หน้าเว็บกดบัตร</label>\n                          <input class="form-control string required" required="required" aria-required="true" placeholder="https://www.eventpop.me/e/xxxxx" type="url" name="startUrl" id="settings-startUrl" value="${startUrl}"/>\n                        </div>\n                        <div class="col-md-12 form-group required starttime">\n                          <label class="control-label required" for="settings-startTime"><abbr title="จำเป็น">*</abbr>\n                            เวลาเริ่ม</label>\n                          <input class="form-control required" required="required" aria-required="true"\n                            placeholder="dd/mm/yyyy hh:mm:ss" type="datetime-local" step="1" name="startTime" id="settings-startTime" value="${
-        startTime || e
-      }" max="2099-12-31T23:59:59" />\n                        </div>\n                      </div>\n                      <div class="row">\n                        <div class="col-xs-6 form-group required num-tickets">\n                          <label class="control-label required" for="settings-numTickets"><abbr title="จำเป็น">*</abbr>\n                            จำนวนบัตร</label>\n                          <input class="form-control string required" autofocus="autofocus"\n                            required="required" aria-required="true" placeholder="เช่น 1" type="number" min="1" name="numTickets" id="settings-numTickets" value="${numTickets}"/>\n                        </div>\n                        <div class="col-xs-6 form-group required showtime">\n                          <label class="control-label required" for="settings-ticketShowtime"><abbr title="จำเป็น">*</abbr>\n                            รอบแสดง</label>\n                          <input class="form-control required" required="required" aria-required="true"\n                            placeholder="เช่น 1" type="number" min="1" name="ticketShowtime" id="settings-ticketShowtime" value="${ticketShowtime}" />\n                        </div>\n                      </div>\n                      <h4 class="mb-2">เฉพาะบัตรยืน</h4>\n                      <div class="row">\n                        <div class="col-md-12 form-group required ticket-type">\n                          <label class="control-label required" for="settings-ticketType"><abbr title="จำเป็น">*</abbr>\n                            ลำดับแถวบัตร</label>\n                          <input class="form-control string required" required="required" aria-required="true" placeholder="เช่น 1" type="number" min="1" name="ticketType" id="settings-ticketType" value="${ticketType}"/>\n                        </div>\n                      </div>\n                      <h4 class="mb-2">เฉพาะบัตรนั่ง</h4>\n                      <div class="row">\n                        <div class="col-md-6 form-group required zones">\n                          <label class="control-label required" for="settings-ticketZones"><abbr title="จำเป็น">*</abbr>\n                            ชื่อโซน</label>\n                          <input class="form-control string required" required="required" aria-required="true" placeholder="เช่น A1, Auto (คั่นด้วยลูกน้ำ)" type="text" name="ticketZones" id="settings-ticketZones" value="${ticketZones}"/>\n                        </div>\n                        <div class="col-md-6 form-group required select-mode">\n                          <label class="control-label required" for="settings-selectMode"><abbr title="จำเป็น">*</abbr>\n                            เลือกที่นั่ง</label>\n                          <select class="form-control required" required="required" aria-required="true" name="selectMode" id="settings-selectMode">\n                            <option value="random" ${
-        "random" === selectMode ? "selected" : ""
-      }>สุ่มที่นั่ง</option>\n                            <option value="first" ${
-        "first" === selectMode ? "selected" : ""
-      }>จากแถวหน้าสุด</option>\n                            <option value="last" ${
-        "last" === selectMode ? "selected" : ""
-      }>จากแถวหลังสุด</option>\n                          </select>\n                        </div>\n                      </div>\n                      <div class="row col-md-12 mb-3">\n                        <div class="col-md-12 form-group checkbox adjacent">\n                          <input class="boolean jcheck" type="checkbox" name="selectAdjacent" id="settings-selectAdjacent" ${
-        selectAdjacent ? "checked" : ""
-      } />\n                          <label class="control-label" for="settings-selectAdjacent">\n                            เลือกที่นั่งติดกันเท่านั้น\n                          </label>\n                        </div>\n                        <div class="col-md-12 form-group checkbox auto-click">\n                          <input class="boolean jcheck" type="checkbox" name="autoClick" id="settings-autoClick" ${
-        autoClick ? "checked" : ""
-      } />\n                          <label class="control-label" for="settings-autoClick">\n                            ซูมผังและคลิกที่นั่งอัตโนมัติ\n                          </label>\n                        </div>\n                        <div class="col-md-12 form-group checkbox auto-refresh">\n                          <input class="boolean jcheck" type="checkbox" name="autoRefresh" id="settings-autoRefresh" ${
-        autoRefresh ? "checked" : ""
-      } />\n                          <label class="control-label" for="settings-autoRefresh">\n                            รีเฟรชอัตโนมัติ\n                          </label>\n                        </div>\n                      </div>\n                    </div>\n                    <div class="row">\n                    <div class="col-xs-6">\n                        <button type="submit" class="btn btn-primary btn-block">บันทึก</button>\n                      </div>\n                      <div class="col-xs-6">\n                        <button id="resetBtn" class="btn btn-default btn-block">รีเซ็ต</button>\n                      </div>\n                    </div>\n                  </form>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class="modal-backdrop fade"></div>\n    `;
+      .toLocaleString("sv-SE", { timeZone: "Asia/Bangkok" })
+      .replace(" ", "T")
+      .slice(0, 19),
+      t = `<div id="settings-modal-wrapper">
+  <div class="modal fade setstart-form binded-html-validation" id="settings-modal" data-showing="settings"
+    style="display: block; padding-right: 15px;">
+    <div class="modal-dialog">
+      <div class="modal-content setstart-body px-2">
+        <div class="modal-header"><button class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+          <h2 class="modal-title">ตั้งค่าโปรแกรม</h2>
+        </div>
+        <div class="modal-body py-0">
+          <div class="form-ezy">
+            <form class="simple_form" id="settings-form" accept-charset="UTF-8" method="post">
+              <div class="form-inputs">
+                <div class="row">
+                  <div class="col-md-12 form-group required starturl"><label class="control-label required"
+                      for="settings-startUrl"><abbr title="จำเป็น">*</abbr>URL หน้าเว็บกดบัตร</label><input
+                      class="form-control string required" required="required" aria-required="true"
+                      placeholder="https://www.eventpop.me/e/xxxxx" type="url" name="startUrl" id="settings-startUrl"
+                      value="${startUrl}" /></div>
+                  <div class="col-md-12 form-group required starttime"><label class="control-label required"
+                      for="settings-startTime"><abbr title="จำเป็น">*</abbr>เวลาเริ่ม</label><input
+                      class="form-control required" required="required" aria-required="true"
+                      placeholder="dd/mm/yyyy hh:mm:ss" type="datetime-local" step="1" name="startTime"
+                      id="settings-startTime" value="${startTime || e
+        }" max="2099-12-31T23:59:59" /></div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 form-group required showtime"><label class="control-label required"
+                      for="settings-ticketShowtime"><abbr title="จำเป็น">*</abbr>รอบแสดง</label><input
+                      class="form-control required" required="required" aria-required="true" placeholder="เช่น 1"
+                      type="number" min="1" name="ticketShowtime" id="settings-ticketShowtime"
+                      value="${ticketShowtime}" /></div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 form-group required num-tickets"><label class="control-label required"
+                      for="settings-numTickets"><abbr title="จำเป็น">*</abbr>จำนวนบัตร</label><input
+                      class="form-control string required" autofocus="autofocus" required="required"
+                      aria-required="true" placeholder="เช่น 1" type="number" min="1" name="numTickets"
+                      id="settings-numTickets" value="${numTickets}" /></div>                  
+                </div>
+                <h4 class="mb-2" style="color:var(--brand-primary)">เฉพาะบัตรยืน</h4>
+                <div class="row">
+                  <div class="col-md-12 form-group required ticket-type"><label class="control-label required"
+                      for="settings-ticketType"><abbr title="จำเป็น">*</abbr>ลำดับแถวราคาบัตร <small style="font-weight:300;color:var(--gray-dark)">(นับเฉพาะที่แสดงราคาหรือ "ฟรี")</small></label><input
+                      class="form-control string required" required="required" aria-required="true" placeholder="เช่น 1"
+                      type="number" min="1" name="ticketType" id="settings-ticketType" value="${ticketType}" /></div>
+                </div>
+                <h4 class="mb-2" style="color:var(--brand-primary)">เฉพาะบัตรนั่ง</h4>
+                <div class="row">
+                  <div class="col-md-12 form-group required zones"><label class="control-label required"
+                      for="settings-ticketZones"><abbr title="จำเป็น">*</abbr>ชื่อโซน</label><input
+                      class="form-control string required" required="required" aria-required="true"
+                      placeholder="เช่น A1, Auto (คั่นด้วยลูกน้ำ)" type="text" name="ticketZones"
+                      id="settings-ticketZones" value="${ticketZones}" /></div>                  
+                </div>
+                <div class="row">
+                  <div class="col-md-12 form-group required select-mode"><label class="control-label required"
+                      for="settings-selectMode"><abbr title="จำเป็น">*</abbr>เลือกที่นั่ง</label><select
+                      class="form-control required" required="required" aria-required="true" name="selectMode"
+                      id="settings-selectMode">
+                      <option value="random" ${"random" === selectMode ? "selected" : ""
+        }>สุ่มที่นั่ง</option>
+                      <option value="first" ${"first" === selectMode ? "selected" : ""
+        }>จากแถวหน้าสุด</option>
+                      <option value="last" ${"last" === selectMode ? "selected" : ""
+        }>จากแถวหลังสุด</option>
+                    </select></div>
+                </div>
+                <div class="row col-md-12 mb-3">
+                  <div class="col-md-12 form-group checkbox adjacent"><input class="boolean jcheck" type="checkbox"
+                      name="selectAdjacent" id="settings-selectAdjacent" ${selectAdjacent ? "checked" : ""
+        } /><label
+                      class="control-label" for="settings-selectAdjacent">เลือกที่นั่งติดกันเท่านั้น</label></div>
+                  <div class="col-md-12 form-group checkbox auto-click"><input class="boolean jcheck" type="checkbox"
+                      name="autoClick" id="settings-autoClick" ${autoClick ? "checked" : ""
+        } /><label
+                      class="control-label" for="settings-autoClick">ซูมผังและคลิกที่นั่งอัตโนมัติ</label></div>
+                  <div class="col-md-12 form-group checkbox auto-refresh"><input class="boolean jcheck" type="checkbox"
+                      name="autoRefresh" id="settings-autoRefresh" ${autoRefresh ? "checked" : ""
+        } /><label
+                      class="control-label" for="settings-autoRefresh">รีเฟรชอัตโนมัติ</label></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6"><button type="submit" class="btn btn-primary btn-block">บันทึก</button></div>
+                <div class="col-xs-6"><button id="resetBtn" class="btn btn-default btn-block">รีเซ็ต</button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade"></div>`;
     let css = GM_getResourceText("customCSS");
     const base = "https://p-a.popcdn.net";
     (css = css.replace(
@@ -79,9 +165,9 @@
         return `url(${base}/${c})`;
       }
     )),
-    GM_addStyle(css);
+      GM_addStyle(css);
     GM_addStyle(
-      '\n      svg text{-webkit-user-select:none !important;user-select:none !important}\n      @keyframes slideDown {\n        from { transform: translateY(-20%); }\n        to { transform: translateY(0); }\n      }\n      @keyframes slideUp {\n        from { transform: translateY(0); }\n        to { transform: translateY(-20%); }\n      }\n      .setstart-body {\n        padding-top: 24px;\n        padding-bottom: 32px;\n      }\n      .setstart-form button.close {\n        position: absolute;\n        top: 10px;\n        right: 15px;\n      }\n      .modal-dialog {\n        animation: slideDown 0.3s ease-out;\n      }\n      .modal-dialog.closing {\n        animation: slideUp 0.3s ease-out;\n      }\n      .form-ezy .form-group {\n        margin-bottom: 1.5rem !important;\n      }\n      .form-group.checkbox {\n        margin-bottom: 1rem;\n      }\n      .form-group.checkbox input[type="checkbox"] {\n        margin-left: 0.5rem;\n        transform: scale(1.2);\n        position: relative;\n      }\n      h3 {\n        margin-top: 1.5rem;\n        margin-bottom: 1rem;\n        color: #333;\n        border-bottom: 1px solid #ddd;\n        padding-bottom: 0.5rem;\n      }\n      .form-group .col-xs-6,\n      .form-group .col-md-12 {\n        padding: 0 15px 15px 0;\n      }\n    '
+      '\nsvg text{-webkit-user-select:none !important;user-select:none !important}\n@keyframes slideDown {\nfrom { transform: translateY(-20%); }\nto { transform: translateY(0); }\n}\n@keyframes slideUp {\nfrom { transform: translateY(0); }\nto { transform: translateY(-20%); }\n}\n.setstart-body {\npadding-top: 24px;\npadding-bottom: 32px;\n}\n.setstart-form button.close {\nposition: absolute;\ntop: 10px;\nright: 15px;\n}\n.modal-dialog {\nanimation: slideDown 0.3s ease-out;\n}\n.modal-dialog.closing {\nanimation: slideUp 0.3s ease-out;\n}\n.form-ezy .form-group {\nmargin-bottom: 1.5rem !important;\n}\n.form-group.checkbox {\nmargin-bottom: 1rem;\n}\n.form-group.checkbox input[type="checkbox"] {\nmargin-left: 0.5rem;\ntransform: scale(1.2);\nposition: relative;\n}\nh3 {\nmargin-top: 1.5rem;\nmargin-bottom: 1rem;\ncolor: #333;\nborder-bottom: 1px solid #ddd;\npadding-bottom: 0.5rem;\n}\n.form-group .col-md-12,\n.form-group .col-md-12 {\npadding: 0 15px 15px 0;\n}\n'
     );
     const n = (() => {
       const e = document.createElement("div");
@@ -132,7 +218,7 @@
       i.addEventListener("click", (e) => {
         if (
           (e.preventDefault(),
-          confirm("รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นหรือไม่?"))
+            confirm("รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นหรือไม่?"))
         ) {
           const e = new Date()
             .toLocaleString("sv-SE", { timeZone: "Asia/Bangkok" })
@@ -176,8 +262,8 @@
       l.addEventListener("submit", (e) => {
         e.preventDefault();
         const t = parseInt(
-            document.getElementById("settings-numTickets").value
-          ),
+          document.getElementById("settings-numTickets").value
+        ),
           n = parseInt(
             document.getElementById("settings-ticketShowtime").value
           ),
@@ -192,7 +278,7 @@
         let f = !0;
         if (
           ([...l.querySelectorAll(".text-red")].forEach((e) => e.remove()),
-          isNaN(t) || t < 1)
+            isNaN(t) || t < 1)
         ) {
           l
             .querySelector(".num-tickets")
@@ -235,16 +321,16 @@
             "beforeend",
             '<span class="text-red">รูปแบบ URL ไม่ถูกต้อง (ต้องเริ่มต้นด้วย http:// หรือ https://)</span>'
           ),
-          (f = !1));
+            (f = !1));
         const b = l.querySelector(".form-group.starttime");
         m ||
           (b.insertAdjacentHTML(
             "beforeend",
             '<span class="text-red">รูปแบบเวลาไม่ถูกต้อง</span>'
           ),
-          (f = !1)),
+            (f = !1)),
           f &&
-            (GM_setValue("numTickets", t),
+          (GM_setValue("numTickets", t),
             GM_setValue("ticketShowtime", n),
             GM_setValue("ticketType", o),
             GM_setValue("ticketZones", s),
@@ -307,7 +393,7 @@
     if (
       (window.location.href.startsWith("https://www.eventpop.me/e/") &&
         (handleEventPage(), handleShowtime(ticketShowtime)),
-      window.location.href.includes("/showtime"))
+        window.location.href.includes("/showtime"))
     ) {
       observerQuantity(numTickets);
       const e = document.querySelector("#event-tickets");
@@ -325,12 +411,12 @@
         (window.waitInterval = setInterval(() => {
           new Date() >= e &&
             (clearInterval(window.waitInterval),
-            (isRunning = !0),
-            GM_setValue("isRunning", !0),
-            (window.location.href = startUrl));
+              (isRunning = !0),
+              GM_setValue("isRunning", !0),
+              (window.location.href = startUrl));
         }, 1e3)))
       : isRunning ||
-        ((isRunning = !0), GM_setValue("isRunning", !0), runBotLogic());
+      ((isRunning = !0), GM_setValue("isRunning", !0), runBotLogic());
   }
   function isValidUrl(e) {
     return /^(ftp|http|https):\/\/[^ "]+$/.test(e);
@@ -340,20 +426,27 @@
     e.dispatchEvent(t);
   }
   function handlePrequeuePage() {
-    const e = document.getElementById("action");
-    if (!e) return;
-    const t = () => {
-      const t = e.querySelector(".action-button");
-      return (
-        !(!t || t.classList.contains("disabled")) &&
-        (requestAnimationFrame(() => t.click()), !0)
-      );
-    };
-    if (t()) return;
-    const n = new MutationObserver(() => {
-      t() && n.disconnect();
-    });
-    n.observe(e, { childList: !0, subtree: !0 });
+    const targetNode = document.getElementById("action");
+    if (!targetNode) {
+      console.error("Target node #action not found!");
+      return;
+    }
+
+    let button = targetNode.querySelector(".action-button");
+    if (button && !button.classList.contains("disabled")) {
+      button.click();
+      console.log("Button clicked!");
+    } else {
+      const observer = new MutationObserver(() => {
+        button = targetNode.querySelector(".action-button");
+        if (button && !button.classList.contains("disabled")) {
+          button.click();
+          console.log("Button clicked!");
+          observer.disconnect();
+        }
+      });
+      observer.observe(targetNode, { childList: true, subtree: true });
+    }
   }
   function handleEventPage() {
     const e = new MutationObserver(() => {
@@ -361,14 +454,14 @@
         n = document.querySelector("#event-tickets");
       t
         ? (window.location.hash.includes("#event-showtimes-section") ||
-            window.location.hash.includes("#event-tickets") ||
-            (window.location.href += "#event-showtimes-section"),
+          window.location.hash.includes("#event-tickets") ||
+          (window.location.href += "#event-showtimes-section"),
           t.scrollIntoView({ behavior: "smooth" }),
           e.disconnect())
         : n &&
-          (window.location.hash.includes("#event-showtimes-section") ||
-            window.location.hash.includes("#event-tickets") ||
-            (window.location.href += "#event-tickets"),
+        (window.location.hash.includes("#event-showtimes-section") ||
+          window.location.hash.includes("#event-tickets") ||
+          (window.location.href += "#event-tickets"),
           n.scrollIntoView({ behavior: "smooth" }),
           e.disconnect());
     });
@@ -377,13 +470,21 @@
       const e = document.querySelector(".seating-action .select-seat");
       let n;
       if (e) {
-        if (e.hasAttribute("disabled"))
-          return (
+        if (e.hasAttribute("disabled")) {
+          if (autoRefresh) {
+            console.log(
+              "[EzyBot] ปุ่มเลือกที่นั่ง disabled + autoRefresh = true → รีเฟรชใน 1.5 วินาที"
+            );
             setTimeout(() => {
               window.location.reload();
-            }, 1500),
-            void t.disconnect()
-          );
+            }, 1500);
+          } else {
+            console.log(
+              "[EzyBot] ปุ่มเลือกที่นั่ง disabled แต่ autoRefresh = false → ไม่รีเฟรช"
+            );
+          }
+          return void t.disconnect();
+        }
         if (
           document.querySelectorAll(
             'evp-react-island[component*="HCaptchaGate"], evp-react-island[component*="hcaptchagate"]'
@@ -410,20 +511,31 @@
       }
       setTimeout(() => {
         n = document.querySelector('[data-testid="Increase quantity button"]');
-        const e = document.querySelector("#submit-order");
-        !n &&
-          e &&
-          setTimeout(() => {
-            window.location.reload();
-          }, 1e3),
-          t.disconnect();
+        const submitBtn = document.querySelector("#submit-order");
+
+        if (!n && submitBtn) {
+          if (autoRefresh) {
+            console.log(
+              "[EzyBot] ไม่พบปุ่มเพิ่มจำนวน แต่มี submit-order + autoRefresh = true → รีเฟรชใน 1 วินาที"
+            );
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            console.log(
+              "[EzyBot] ไม่พบปุ่มเพิ่มจำนวน แต่มี submit-order แต่ autoRefresh = false → ไม่รีเฟรช"
+            );
+          }
+        }
+
+        t.disconnect();
       }, 500);
     });
     t.observe(document.body, { childList: !0, subtree: !0 });
   }
   function autoClickDanger() {
     !(async function () {
-      for (; !document.querySelector("#floor-plan-svg"); )
+      for (; !document.querySelector("#floor-plan-svg");)
         await new Promise((e) => setTimeout(e, 100));
       new MutationObserver((e) => {
         let t = !1;
@@ -432,142 +544,181 @@
             e.addedNodes.forEach((e) => {
               e.nodeType === Node.ELEMENT_NODE &&
                 (e.matches && e.matches(".btn-danger") && (t = !0),
-                (e.querySelectorAll ? e.querySelectorAll(".btn-danger") : [])
-                  .length > 0 && (t = !0));
+                  (e.querySelectorAll ? e.querySelectorAll(".btn-danger") : [])
+                    .length > 0 && (t = !0));
             });
         }),
           t &&
-            document
-              .querySelectorAll('.btn-danger:not([data-clicked="true"])')
-              .forEach((e) => {
-                e.click(), e.setAttribute("data-clicked", "true");
-              });
+          document
+            .querySelectorAll('.btn-danger:not([data-clicked="true"])')
+            .forEach((e) => {
+              e.click(), e.setAttribute("data-clicked", "true");
+            });
       }).observe(document.body, { childList: !0, subtree: !0 });
     })();
   }
   GM_registerMenuCommand("ตั้งค่าโปรแกรม (Settings)", showSettingsModal);
+  GM_registerMenuCommand("ปิดรีเฟรชอัตโนมัติ (Disable Auto Refresh)", () => {
+    GM_setValue("autoRefresh", false); // บันทึกถาวร
+    autoRefresh = false; // อัปเดตตัวแปรปัจจุบันทันที
+    console.log("[EzyBot] Auto Refresh ถูกปิดเรียบร้อยแล้ว (จากเมนู)");
+  });
   var zones = ticketZones.split(",").map((e) => e.trim());
-  async function checkAvailabilityAndProceed(e) {
-    const t = e.toLowerCase(),
-      n = [
-        t,
-        t.replace(/[-\s]+/g, ""),
-        t.replace(/\s+/g, "-"),
-        t.replace(/-/g, " "),
-      ].filter((e, t, n) => n.indexOf(e) === t && e.length > 0);
-    let o = null;
-    const s = document.querySelectorAll(
-      "g[id], g[data-sector-name], g[data-zone-name]"
+  async function checkAvailabilityAndProceed(zoneInput) {
+    console.log(`[EzyBot] กำลังตรวจโซน: "${zoneInput}"`);
+    const normalizedInput = normalizeZoneName(zoneInput);
+
+    const allSectorElements = document.querySelectorAll(
+      "rect[data-sector-name], path[data-sector-name], circle[data-sector-name], ellipse[data-sector-name], line[data-sector-name], polyline[data-sector-name], polygon[data-sector-name]"
     );
-    e: for (let e of s) {
-      const t = [
-        e.id,
-        e.getAttribute("data-sector-name"),
-        e.getAttribute("data-zone-name"),
-      ].filter(Boolean);
-      for (let s of t) {
-        const t = s.toLowerCase(),
-          r = [
-            t,
-            t.replace(/[-\s]+/g, ""),
-            t.replace(/\s+/g, "-"),
-            t.replace(/-/g, " "),
-          ].filter((e, t, n) => n.indexOf(e) === t && e.length > 0);
-        for (let t of n)
-          if (r.includes(t)) {
-            const t = e.querySelector("rect, path");
-            if (t) {
-              o = t;
-              break e;
-            }
-          }
-      }
-    }
-    if (o) return await processZone(o);
-    {
-      let e,
-        t = [],
-        o = new Set();
-      if (
-        (document.querySelectorAll("g rect, g path").forEach((e) => {
-          const s = e.closest("g[id]");
-          if (s) {
-            const r = [
-              s.id,
-              s.getAttribute("data-sector-name"),
-              s.getAttribute("data-zone-name"),
-            ].filter(Boolean);
-            let l = !1,
-              c = null;
-            for (let e of r) {
-              const t = e.toLowerCase(),
-                o = [
-                  t,
-                  t.replace(/[-\s]+/g, ""),
-                  t.replace(/\s+/g, "-"),
-                  t.replace(/-/g, " "),
-                ].filter((e, t, n) => n.indexOf(e) === t && e.length > 0);
-              for (let t of n) {
-                for (let n of o)
-                  if (n.includes(t) || (t.includes(n) && n.length >= 3)) {
-                    (l = !0), (c = e);
-                    break;
-                  }
-                if (l) break;
-              }
-              if (l) break;
-            }
-            l && (t.push({ element: e, id: c }), o.add(c));
-          }
-        }),
-        !(t.length > 0))
-      )
-        return !1;
-      t.sort((e, t) => {
-        const n = (e.id || "").toLowerCase(),
-          o = (t.id || "").toLowerCase();
-        return n.localeCompare(o);
-      });
-      for (let n = 0; n < t.length; n++) {
-        e = t[n].element;
-        const o = e.closest("g[id]");
-        if (o.classList.contains("disabled")) {
-          o.id ||
-            o.getAttribute("data-id") ||
-            o.getAttribute("data-sector-name") ||
-            o.getAttribute("data-zone-name");
-        } else if (await processZone(e)) return !0;
-      }
-    }
-    return !1;
-  }
-  async function processZone(e) {
-    if (!e) return !1;
-    const t = e.closest("g[id]");
-    if (t && !t.classList.contains("disabled")) {
-      if (
-        "unknown" !==
-        (t.id ||
-          t.getAttribute("data-id") ||
-          t.getAttribute("data-sector-name") ||
-          t.getAttribute("data-zone-name") ||
-          "unknown")
+    let candidates = [];
+
+    for (let el of allSectorElements) {
+      const sectorName = el.getAttribute("data-sector-name") || "";
+      const normalizedSector = normalizeZoneName(sectorName);
+
+      let match = false;
+      if (normalizedSector === normalizedInput) {
+        match = true;
+      } else if (
+        !candidates.some(c => c.exact) &&  // partial match ได้ ถ้ายังไม่มี exact match
+        !zoneInput.includes("-") &&
+        !zoneInput.includes(" ")
       ) {
-        simulateClick(e),
-          await new Promise((e) => {
-            const t = setInterval(() => {
-              document.querySelectorAll(".seat-g").length > 0 &&
-                (clearInterval(t), e());
-            }, 100);
-          }),
-          await new Promise((e) => setTimeout(e, 500));
-        const t = document.querySelectorAll(".seat-g.available");
-        return t.length >= numTickets && t.length > 0;
+        if (
+          sectorName.toLowerCase().startsWith(zoneInput.toLowerCase() + "-") ||
+          sectorName.toLowerCase().startsWith(zoneInput.toLowerCase() + " ")
+        ) {
+          match = true;
+        }
       }
-      return !1;
+
+      if (!match) continue;
+
+      // หา outer g ที่มี class หรือ id (รองรับ g ซ้อนเปล่า)
+      let outerG = el.parentElement;
+      while (outerG && outerG.tagName === "g") {
+        // หยุดทันทีถ้าเจอ g ที่มี id หรือ class (ไม่เว้นว่าง)
+        if (outerG.id || (outerG.className && outerG.className.trim() !== "")) {
+          break;
+        }
+        // ถ้า g นี้เป็น "เปล่า" (ไม่มี id และ class ว่าง) → ขึ้นไปชั้นบน
+        outerG = outerG.parentElement;
+      }
+
+      // ตรวจสอบว่าพบ outerG ที่ถูกต้องหรือไม่
+      if (
+        !outerG ||
+        outerG.tagName !== "g" ||
+        (!outerG.id && (!outerG.className || outerG.className.trim() === ""))
+      ) {
+        console.log(
+          `[EzyBot] ข้าม ${sectorName} - ไม่พบ outer <g> ที่มี class หรือ id ที่สมเหตุสมผล`
+        );
+        continue;
+      }
+      candidates.push({
+        g: outerG,
+        el,
+        exact: normalizedSector === normalizedInput,
+        sectorName,
+      });
     }
-    t?.id || t?.getAttribute("data-id") || t?.getAttribute("data-sector-name");
-    return !1;
+
+    // เรียงตาม DOM order
+    candidates.sort((a, b) => {
+      const idxA = Array.from(allSectorElements).indexOf(a.el);
+      const idxB = Array.from(allSectorElements).indexOf(b.el);
+      return idxA - idxB;
+    });
+
+    const processedZones = new Set();  // เพิ่ม Set สำหรับ track sectorName ที่เคย log ข้าม
+
+    for (let { g, el, exact, sectorName } of candidates) {
+
+      if (processedZones.has(sectorName)) continue;  // ข้ามถ้าเคย log โซนนี้แล้ว
+    processedZones.add(sectorName);
+
+      const isActive = g.classList.contains("active");
+      const isDisabled = g.classList.contains("disabled");
+
+      if (!isActive || isDisabled) {
+        console.log(
+          `[EzyBot] ข้ามโซน "${sectorName}" (active: ${isActive}, disabled: ${isDisabled})`
+        );
+        continue;
+      }
+
+      console.log(
+        `[EzyBot] พบโซนใช้งานได้: "${sectorName}" ${exact ? "(exact)" : "(partial)"
+        } → ลองคลิก`
+      );
+
+      if (await processZone(el)) {
+        return true;
+      }
+    }
+
+    console.log(`[EzyBot] ไม่พบโซน "${zoneInput}" ที่ใช้งานได้`);
+    return false;
+  }
+  async function processZone(element) {
+    if (!element) return false;
+
+    // หา outer g เหมือนด้านบน
+    let outerG = element.parentElement;
+    while (outerG && outerG.tagName === "g") {
+      if (outerG.id || (outerG.className && outerG.className.trim() !== "")) {
+        break;
+      }
+      outerG = outerG.parentElement;
+    }
+
+    if (
+      !outerG ||
+      outerG.tagName !== "g" ||
+      (!outerG.id && (!outerG.className || outerG.className.trim() === ""))
+    ) {
+      console.log(`[EzyBot] ไม่พบ outer <g> ที่มี class/id สำหรับ element นี้`);
+      return false;
+    }
+
+    const sectorName = element.getAttribute("data-sector-name") || "unknown";
+
+    if (outerG.classList.contains("disabled")) {
+      console.log(`[EzyBot] ข้าม ${sectorName} เพราะ outer <g> disabled`);
+      return false;
+    }
+
+    if (!outerG.classList.contains("active")) {
+      console.log(`[EzyBot] ข้าม ${sectorName} เพราะ outer <g> ไม่ active`);
+      return false;
+    }
+
+    console.log(`[EzyBot] คลิกเข้าโซน: ${sectorName} (outer g active)`);
+    simulateClick(element);
+
+    // ส่วนที่เหลือเหมือนเดิม...
+    await new Promise((resolve) => {
+      const check = setInterval(() => {
+        if (document.querySelectorAll(".seat-g").length > 0) {
+          clearInterval(check);
+          resolve();
+        }
+      }, 100);
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const available = document.querySelectorAll(".seat-g.available");
+    const enough = available.length >= numTickets && available.length > 0;
+
+    console.log(
+      `[EzyBot] โซน ${sectorName} → ว่าง ${available.length}/${numTickets} → ${enough ? "พอ" : "ไม่พอ"
+      }`
+    );
+
+    return enough;
   }
   function shuffleArray(e) {
     for (let t = e.length - 1; t > 0; t--) {
@@ -577,23 +728,119 @@
     return e;
   }
   function checkAllZonesDisabled() {
-    const e = zones.some((e) => "auto" === e.toLowerCase()),
-      t = zones.filter((e) => "auto" !== e.toLowerCase());
-    if (e) {
-      const e = document.querySelectorAll("g[id].active");
-      return Array.from(e).every((e) => e.classList.contains("disabled"));
+    const hasAuto = zones.some((z) => z.toLowerCase() === "auto");
+    const specificZones = zones.filter((z) => z.toLowerCase() !== "auto");
+
+    console.log(
+      "[EzyBot] checkAllZonesDisabled: hasAuto =",
+      hasAuto,
+      "specificZones =",
+      specificZones
+    );
+
+    if (hasAuto) {
+      const activeGs = document.querySelectorAll("g.active[id]");
+      const allDisabled = Array.from(activeGs).every((g) =>
+        g.classList.contains("disabled")
+      );
+      console.log(
+        "[EzyBot] Auto mode: พบ g.active ทั้งหมด",
+        activeGs.length,
+        "ตัว, disabled หมด?",
+        allDisabled
+      );
+      return allDisabled;
     }
-    return t.every((e) => {
-      const t = document.querySelector(`g[id="${e}"], g[data-id="${e}"]`);
-      return t && t.classList.contains("disabled");
+
+    // โหมดระบุโซนเฉพาะ: ต้องเช็คทุกโซนว่าหายไปหรือ disabled ทั้งหมด
+    if (specificZones.length === 0) return true;
+
+    return specificZones.every((zoneName) => {
+      const normalizedInput = normalizeZoneName(zoneName);
+      console.log(
+        "[EzyBot] เช็คโซน:",
+        zoneName,
+        "(normalized:",
+        normalizedInput,
+        ")"
+      );
+
+      const sectorEls = document.querySelectorAll("[data-sector-name]");
+      let foundAny = false;
+      let allDisabledForThisZone = true;
+      const processed = new Set();  // เพิ่มตรงนี้
+
+      for (let el of sectorEls) {
+        const sectorName = el.getAttribute("data-sector-name") || "";
+
+        if (processed.has(sectorName)) continue;
+        processed.add(sectorName);
+
+
+        const normalizedSector = normalizeZoneName(sectorName);
+
+        let isMatch = normalizedSector === normalizedInput;
+
+        // partial match สำหรับเคสแบบ "SM"
+        if (!isMatch && !zoneName.includes("-") && !zoneName.includes(" ")) {
+          const lowerSector = sectorName.toLowerCase();
+          const lowerInput = zoneName.toLowerCase();
+          isMatch =
+            lowerSector.startsWith(lowerInput + "-") ||
+            lowerSector.startsWith(lowerInput + " ");
+        }
+
+        if (isMatch) {
+          foundAny = true;
+          let outerG = el.parentElement;
+          while (outerG && outerG.tagName === "g") {
+            if (
+              outerG.id ||
+              (outerG.className && outerG.className.trim() !== "")
+            ) {
+              break;
+            }
+            outerG = outerG.parentElement;
+          }
+
+          if (
+            outerG &&
+            outerG.tagName === "g" &&
+            (outerG.id || (outerG.className && outerG.className.trim() !== ""))
+          ) {
+            const isDisabled = outerG.classList.contains("disabled");
+            console.log(
+              `[EzyBot] พบ ${sectorName} (outerG: ${outerG.id || outerG.className.trim()
+              }) → disabled? ${isDisabled}`
+            );
+
+            if (!isDisabled) {
+              allDisabledForThisZone = false;
+              // ไม่ break เพราะอยาก log ทุกตัว แต่จริง ๆ ถ้าเจอตัวไม่ disabled ก็ถือว่าไม่ disabled หมดแล้ว
+            }
+          }
+        }
+      }
+
+      if (!foundAny) {
+        console.log(
+          `[EzyBot] ไม่พบโซนใด ๆ ที่ match "${zoneName}" → ถือว่า disabled/ยังไม่เปิด`
+        );
+        return true; // ไม่พบ = ถือว่า "disabled" หรือยังไม่พร้อม → ช่วยให้ refresh
+      }
+
+      console.log(
+        `[EzyBot] โซน "${zoneName}" disabled ทั้งหมด? ${allDisabledForThisZone}`
+      );
+      return allDisabledForThisZone;
     });
   }
   async function processZones() {
-    for (; !document.querySelector("#floor-plan-svg"); )
+    for (; !document.querySelector("#floor-plan-svg");)
       await new Promise((e) => setTimeout(e, 100));
     const e = Array.from(
       document.querySelectorAll(
-        "g.active:not(.disabled):not(.not-applicable) rect, g.active:not(.disabled):not(.not-applicable) path"
+        "g.active:not(.disabled):not(.not-applicable) [data-sector-name]"
       )
     );
     if (0 === e.length)
@@ -629,8 +876,15 @@
         const t = o[e];
         if (await checkAvailabilityAndProceed(t)) return;
       }
-    if ((autoClick && autoClickZoom(), autoRefresh)) {
-      checkAllZonesDisabled() && setTimeout(() => location.reload(), 1500);
+    if (autoRefresh) {
+      if (checkAllZonesDisabled()) {
+        console.log(
+          "[EzyBot] ทุกโซนที่ระบุ disabled หรือไม่พบ → รีเฟรชหน้าใน 1.5 วินาที"
+        );
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        console.log("[EzyBot] ยังมีโซนที่ใช้งานได้อยู่ → ไม่รีเฟรช");
+      }
     }
     return () => {
       e.forEach((e) => {
@@ -738,7 +992,7 @@
       for (let n = 1; n < t; n++) {
         if (
           parseFloat(e[o + n].getAttribute("cx")) -
-            parseFloat(e[o + n - 1].getAttribute("cx")) >
+          parseFloat(e[o + n - 1].getAttribute("cx")) >
           25
         ) {
           s = !1;
@@ -777,8 +1031,8 @@
       r = e - s;
     if (r <= 0) return;
     const l = Array.from(n).filter(
-        (e) => !e.parentElement.classList.contains("selected")
-      ),
+      (e) => !e.parentElement.classList.contains("selected")
+    ),
       c = t && e > 1;
     function i(e, t, n, o, s = !1) {
       e.getBoundingClientRect();
@@ -873,8 +1127,8 @@
             s.length < e &&
             (r === t ||
               parseFloat(n[r].getAttribute("cx")) -
-                parseFloat(n[r - 1].getAttribute("cx")) <=
-                25);
+              parseFloat(n[r - 1].getAttribute("cx")) <=
+              25);
 
           )
             s.push(n[r]), r++;
@@ -902,8 +1156,8 @@
           const c = m[t];
           c.sort((e, t) => e - t);
           const i = o.findIndex(
-              (e) => parseFloat(e.getAttribute("cx")) === c[0]
-            ),
+            (e) => parseFloat(e.getAttribute("cx")) === c[0]
+          ),
             u = o.findIndex(
               (e) => parseFloat(e.getAttribute("cx")) === c[c.length - 1]
             );
@@ -918,8 +1172,8 @@
               i.length < e &&
               (u === a ||
                 parseFloat(o[u].getAttribute("cx")) -
-                  parseFloat(o[u - 1].getAttribute("cx")) <=
-                  25);
+                parseFloat(o[u - 1].getAttribute("cx")) <=
+                25);
 
             )
               i.push(o[u]), u++;
@@ -936,8 +1190,8 @@
           const n = s;
           let r = 0;
           const c = Array.from(o).filter(
-              (e) => parseFloat(e.getAttribute("cy")) !== parseFloat(n)
-            ),
+            (e) => parseFloat(e.getAttribute("cy")) !== parseFloat(n)
+          ),
             i = c.length;
           if (i > 0)
             return void d(c, i, r, () => {
@@ -982,16 +1236,16 @@
         let n = Object.keys(a);
         "first" === selectMode
           ? (n = n.sort((e, t) => {
-              const n = getRowLabel(parseFloat(e)),
-                o = getRowLabel(parseFloat(t));
-              return getRowOrder(n) - getRowOrder(o);
-            }))
+            const n = getRowLabel(parseFloat(e)),
+              o = getRowLabel(parseFloat(t));
+            return getRowOrder(n) - getRowOrder(o);
+          }))
           : "last" === selectMode
-          ? (n = n.sort((e, t) => {
+            ? (n = n.sort((e, t) => {
               const n = getRowLabel(parseFloat(e));
               return getRowOrder(getRowLabel(parseFloat(t))) - getRowOrder(n);
             }))
-          : shuffleArray(n);
+            : shuffleArray(n);
         let o = !1;
         for (let t of n) {
           const n = a[t];
@@ -1048,12 +1302,12 @@
         let e = [];
         if ("first" === selectMode || "last" === selectMode) {
           let t = Object.keys(a).sort((e, t) => {
-              const n = getRowLabel(parseFloat(e)),
-                o = getRowLabel(parseFloat(t)),
-                s = getRowOrder(n),
-                r = getRowOrder(o);
-              return "first" === selectMode ? s - r : r - s;
-            }),
+            const n = getRowLabel(parseFloat(e)),
+              o = getRowLabel(parseFloat(t)),
+              s = getRowOrder(n),
+              r = getRowOrder(o);
+            return "first" === selectMode ? s - r : r - s;
+          }),
             n = [];
           for (let e of t) {
             const t = a[e] || [];
@@ -1126,8 +1380,8 @@
       r = e - s;
     if (r <= 0) return;
     const l = Array.from(n).filter(
-        (e) => !e.parentElement.classList.contains("selected")
-      ),
+      (e) => !e.parentElement.classList.contains("selected")
+    ),
       c = t && e > 1;
     function i(e, t, n, o, s = !1) {
       e.getBoundingClientRect();
@@ -1222,8 +1476,8 @@
             s.length < e &&
             (r === t ||
               parseFloat(n[r].getAttribute("cx")) -
-                parseFloat(n[r - 1].getAttribute("cx")) <=
-                25);
+              parseFloat(n[r - 1].getAttribute("cx")) <=
+              25);
 
           )
             s.push(n[r]), r++;
@@ -1251,8 +1505,8 @@
           const c = m[t];
           c.sort((e, t) => e - t);
           const i = o.findIndex(
-              (e) => parseFloat(e.getAttribute("cx")) === c[0]
-            ),
+            (e) => parseFloat(e.getAttribute("cx")) === c[0]
+          ),
             u = o.findIndex(
               (e) => parseFloat(e.getAttribute("cx")) === c[c.length - 1]
             );
@@ -1267,8 +1521,8 @@
               i.length < e &&
               (u === a ||
                 parseFloat(o[u].getAttribute("cx")) -
-                  parseFloat(o[u - 1].getAttribute("cx")) <=
-                  25);
+                parseFloat(o[u - 1].getAttribute("cx")) <=
+                25);
 
             )
               i.push(o[u]), u++;
@@ -1285,8 +1539,8 @@
           const n = s;
           let r = 0;
           const c = Array.from(o).filter(
-              (e) => parseFloat(e.getAttribute("cy")) !== parseFloat(n)
-            ),
+            (e) => parseFloat(e.getAttribute("cy")) !== parseFloat(n)
+          ),
             i = c.length;
           if (i > 0)
             return void d(c, i, r, () => {
@@ -1331,16 +1585,16 @@
         let n = Object.keys(a);
         "first" === selectMode
           ? (n = n.sort((e, t) => {
-              const n = getRowLabel(parseFloat(e)),
-                o = getRowLabel(parseFloat(t));
-              return getRowOrder(n) - getRowOrder(o);
-            }))
+            const n = getRowLabel(parseFloat(e)),
+              o = getRowLabel(parseFloat(t));
+            return getRowOrder(n) - getRowOrder(o);
+          }))
           : "last" === selectMode
-          ? (n = n.sort((e, t) => {
+            ? (n = n.sort((e, t) => {
               const n = getRowLabel(parseFloat(e));
               return getRowOrder(getRowLabel(parseFloat(t))) - getRowOrder(n);
             }))
-          : shuffleArray(n);
+            : shuffleArray(n);
         let o = !1;
         for (let t of n) {
           const n = a[t];
@@ -1397,12 +1651,12 @@
         let e = [];
         if ("first" === selectMode || "last" === selectMode) {
           let t = Object.keys(a).sort((e, t) => {
-              const n = getRowLabel(parseFloat(e)),
-                o = getRowLabel(parseFloat(t)),
-                s = getRowOrder(n),
-                r = getRowOrder(o);
-              return "first" === selectMode ? s - r : r - s;
-            }),
+            const n = getRowLabel(parseFloat(e)),
+              o = getRowLabel(parseFloat(t)),
+              s = getRowOrder(n),
+              r = getRowOrder(o);
+            return "first" === selectMode ? s - r : r - s;
+          }),
             n = [];
           for (let e of t) {
             const t = a[e] || [];
@@ -1463,9 +1717,9 @@
     return (
       void 0 !== s && (numTickets = Math.min(numTickets, s)),
       !!t &&
-        (n >= numTickets && t && !submitClicked
-          ? (t.click(), (submitClicked = !0), !0)
-          : (n < numTickets && (submitClicked = !1), !1))
+      (n >= numTickets && t && !submitClicked
+        ? (t.click(), (submitClicked = !0), !0)
+        : (n < numTickets && (submitClicked = !1), !1))
     );
   }
   function autoClickSubmitOrder() {
@@ -1550,9 +1804,9 @@
   initRunningGuard(),
     isRunning && runBotLogic(),
     window.location.href.startsWith("https://queue.eventpop.me/prequeue/") &&
-      handlePrequeuePage(),
+    handlePrequeuePage(),
     window.location.href.startsWith("https://eventpop.queue-it.net/") &&
-      autoclickQueueConfirm(),
+    autoclickQueueConfirm(),
     /^https:\/\/www\.eventpop\.me(\/)?(#.*|\?.*)?$/.test(
       window.location.href
     ) && handleHomepageRedirection();

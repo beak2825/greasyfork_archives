@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         アイヌ語鵡川方言の表記変換
 // @namespace    https://lit.link/toracatman
-// @version      2025-12-08
+// @version      2026-01-15
 // @description  アイヌ語鵡川方言の 表記を 変換します。
 // @author       トラネコマン
 // @match        http://itelmen.placo.net/Ainu-archives/mukawa/mukawa.cgi
@@ -289,7 +289,10 @@ let c = {
 
 let correct = [
     ["Nabezawa", "NABEZAWA"],
+    ["Sapporo", "Satporo"],
+    ["Tokyo", "Tokiyo"],
     ["iyairaykere", "iyayraykere"],
+    ["kabo", "kapo"],
     ["kaboca", "kapoca"],
     ["konbu", "kompu"]
 ];
@@ -366,11 +369,11 @@ function changeNotation(notation) {
 (() => {
     let style = document.createElement("style");
     style.textContent = css;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     //任意の表記のCSS
     add_display = document.createElement("style");
-    document.head.appendChild(add_display);
+    document.body.appendChild(add_display);
 
     //モーダルウィンドウの作成
     let html = `

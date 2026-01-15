@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         视频临时倍速+B站字幕开关记忆+播放器自动滚动
 // @namespace    http://tampermonkey.net/
-// @version      2.7.1
+// @version      2.7.2
 // @description  视频播放增强：1. 长按左键临时加速 2. B站字幕开关记忆 3. B站播放器自动滚动定位
 // @author       Alonewinds
 // @match        *://*/*
@@ -43,16 +43,32 @@
         VIDEO: 'video',
         SUBTITLE_BUTTON: '.bpx-player-ctrl-subtitle-result',
         SUBTITLE_TOGGLE: '.bpx-player-ctrl-btn.bpx-player-ctrl-subtitle',
-        CHINESE_LANGUAGE_OPTION: '.bpx-player-ctrl-subtitle-language-item[data-lan="ai-zh"]',
-        ACTIVE_CHINESE_LANGUAGE: '.bpx-player-ctrl-subtitle-language-item.bpx-state-active[data-lan="ai-zh"]',
-        OFF_SUBTITLE_OPTION: '.bpx-player-ctrl-subtitle-language-item[data-lan="off"]',
+        // 支持多种中文字幕格式：zh-CN, zh-Hans, ai-zh, ai-zh-Hans 等
+        // 注意：列表按优先级排序，AI字幕优先
+        CHINESE_LANGUAGE_OPTIONS: [
+            '.bpx-player-ctrl-subtitle-language-item[data-lan^="ai-zh"]',  // AI中文字幕（任意前缀）
+            '.bpx-player-ctrl-subtitle-language-item[data-lan="zh-Hans"]', // 简体中文
+            '.bpx-player-ctrl-subtitle-language-item[data-lan="zh-CN"]',   // 中文（中国）
+            '.bpx-player-ctrl-subtitle-language-item[data-lan^="zh"]'      // 任意以zh开头的字幕
+        ],
+        // 任意激活的语言选项
+        ACTIVE_LANGUAGE: '.bpx-player-ctrl-subtitle-language-item.bpx-state-active',
+        // 原始字幕关闭按钮（Origin Section）
+        CLOSE_SUBTITLE_SWITCH: '.bpx-player-ctrl-subtitle-close-switch',
+        CLOSE_SUBTITLE_ACTIVE: '.bpx-player-ctrl-subtitle-close-switch.bpx-state-active',
+        // 翻译字幕关闭按钮（Translation Section）- B站新版播放器有两个独立的字幕区域
+        CLOSE_TRANSLATION_SWITCH: '.bpx-player-ctrl-translation-close-switch',
+        CLOSE_TRANSLATION_ACTIVE: '.bpx-player-ctrl-translation-close-switch.bpx-state-active',
+        // 字幕面板（新版class名）
+        SUBTITLE_PANEL: '.bpx-player-ctrl-subtitle-menu',
         MAX_RETRIES: 5
     };
 
     const TIMING = {
-        INITIAL_SUBTITLE_DELAY: 2000,
+        INITIAL_SUBTITLE_DELAY: 3000,  // 增加延迟，等待B站原生逻辑完成
         SUBTITLE_CHECK_INTERVAL: 500,
-        LANGUAGE_CLICK_DELAY: 100
+        LANGUAGE_CLICK_DELAY: 500,     // 增加延迟以确保菜单完全渲染
+        VERIFY_DELAY: 1000             // 操作后验证延迟
     };
 
     // ================ 播放器滚动定位配置 ================
@@ -110,31 +126,62 @@
 
     // ================ 字幕功能 ================
 
+    // 获取保存的字幕状态：返回 { enabled: boolean, language: string|null }
     function getGlobalSubtitleState() {
-        return GM_getValue('globalSubtitleState', false);
+        const state = GM_getValue('globalSubtitleState', { enabled: false, language: null });
+        // 兼容旧版本的布尔值格式
+        if (typeof state === 'boolean') {
+            return { enabled: state, language: null };
+        }
+        return state;
     }
 
-    function saveGlobalSubtitleState(isOpen) {
-        GM_setValue('globalSubtitleState', isOpen);
-        debugLog('保存字幕状态:', isOpen);
+    // 保存字幕状态：同时保存开关状态和具体的语言类型
+    function saveGlobalSubtitleState(isOpen, language = null) {
+        const state = { enabled: isOpen, language: language };
+        GM_setValue('globalSubtitleState', state);
+        debugLog('保存字幕状态:', state);
+    }
+
+    // 获取当前激活的字幕语言
+    function getActiveSubtitleLanguage() {
+        const activeItem = document.querySelector(SUBTITLE_SELECTORS.ACTIVE_LANGUAGE);
+        return activeItem ? activeItem.getAttribute('data-lan') : null;
     }
 
     function isSubtitleOn() {
-        const activeLanguageItem = document.querySelector(SUBTITLE_SELECTORS.ACTIVE_CHINESE_LANGUAGE);
+        // 方法1：检查原始字幕"关闭"按钮是否激活
+        const originCloseSwitch = document.querySelector(SUBTITLE_SELECTORS.CLOSE_SUBTITLE_ACTIVE);
+        // 方法2：检查翻译字幕"关闭"按钮是否激活
+        const translationCloseSwitch = document.querySelector(SUBTITLE_SELECTORS.CLOSE_TRANSLATION_ACTIVE);
+
+        // 如果两个关闭按钮都激活，说明字幕已关闭
+        // 如果任一区域有字幕开启，则认为字幕是开启的
+        const originClosed = !!originCloseSwitch;
+        const translationClosed = !!translationCloseSwitch || !document.querySelector(SUBTITLE_SELECTORS.CLOSE_TRANSLATION_SWITCH);
+
+        // 如果两个区域都关闭了，字幕才算关闭
+        if (originClosed && translationClosed) {
+            return false;
+        }
+
+        // 方法3：检查是否有任意语言选项处于激活状态
+        const activeLanguageItem = document.querySelector(SUBTITLE_SELECTORS.ACTIVE_LANGUAGE);
         if (activeLanguageItem) {
             return true;
         }
 
+        // 方法4：检查字幕按钮本身是否有激活状态
         const subtitleBtn = document.querySelector(SUBTITLE_SELECTORS.SUBTITLE_TOGGLE);
         if (subtitleBtn && subtitleBtn.classList.contains('bpx-state-active')) {
             return true;
         }
 
-        const chineseOption = document.querySelector(SUBTITLE_SELECTORS.CHINESE_LANGUAGE_OPTION);
-        return !chineseOption;
+        // 默认返回false
+        return false;
     }
 
-    function setSubtitleState(desiredState) {
+    function setSubtitleState(desiredState, preferredLanguage = null) {
         if (isAutoSetting) return;
 
         isAutoSetting = true;
@@ -154,31 +201,91 @@
             clearInterval(intervalId);
 
             const currentState = isSubtitleOn();
-            if (currentState === desiredState) {
+            const currentLanguage = getActiveSubtitleLanguage();
+
+            // 如果状态和语言都匹配，无需操作
+            if (currentState === desiredState && (!desiredState || currentLanguage === preferredLanguage)) {
                 isAutoSetting = false;
                 return;
             }
 
+            // 点击字幕按钮打开菜单
             subtitleToggle.click();
 
             setTimeout(() => {
                 if (desiredState) {
-                    const chineseOption = document.querySelector(SUBTITLE_SELECTORS.CHINESE_LANGUAGE_OPTION);
-                    if (chineseOption) {
-                        chineseOption.click();
-                        debugLog('自动开启字幕');
+                    // 开启字幕：优先选择用户之前选择的语言
+                    let clicked = false;
+
+                    // 首先尝试用户之前选择的语言
+                    if (preferredLanguage) {
+                        const preferredOption = document.querySelector(
+                            `.bpx-player-ctrl-subtitle-language-item[data-lan="${preferredLanguage}"]`
+                        );
+                        if (preferredOption) {
+                            preferredOption.click();
+                            debugLog('自动恢复字幕语言:', preferredLanguage);
+                            clicked = true;
+                        }
+                    }
+
+                    // 如果找不到用户之前的选择，按优先级尝试中文选项
+                    if (!clicked) {
+                        for (const selector of SUBTITLE_SELECTORS.CHINESE_LANGUAGE_OPTIONS) {
+                            const option = document.querySelector(selector);
+                            if (option) {
+                                option.click();
+                                debugLog('自动开启字幕（按优先级选择）:', selector);
+                                clicked = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // 如果还是没找到，尝试第一个可用选项
+                    if (!clicked) {
+                        const firstOption = document.querySelector('.bpx-player-ctrl-subtitle-language-item:not(.bpx-state-active)');
+                        if (firstOption) {
+                            firstOption.click();
+                            debugLog('自动开启字幕（使用第一个可用选项）');
+                        }
                     }
                 } else {
-                    const offOption = document.querySelector(SUBTITLE_SELECTORS.OFF_SUBTITLE_OPTION);
-                    if (offOption) {
-                        offOption.click();
-                        debugLog('自动关闭字幕');
-                    }
+                    // 关闭字幕：需要同时关闭原始字幕和翻译字幕两个区域
+                    // 定义关闭函数
+                    const performClose = () => {
+                        // 关闭原始字幕区域
+                        const originCloseSwitch = document.querySelector(SUBTITLE_SELECTORS.CLOSE_SUBTITLE_SWITCH);
+                        if (originCloseSwitch && !originCloseSwitch.classList.contains('bpx-state-active')) {
+                            originCloseSwitch.click();
+                            debugLog('自动关闭原始字幕');
+                        }
+                        // 关闭翻译字幕区域
+                        const translationCloseSwitch = document.querySelector(SUBTITLE_SELECTORS.CLOSE_TRANSLATION_SWITCH);
+                        if (translationCloseSwitch && !translationCloseSwitch.classList.contains('bpx-state-active')) {
+                            translationCloseSwitch.click();
+                            debugLog('自动关闭翻译字幕');
+                        }
+                    };
+
+                    // 首次尝试关闭
+                    performClose();
+
+                    // 验证关闭是否成功，如果没成功则重试
+                    setTimeout(() => {
+                        if (isSubtitleOn()) {
+                            debugLog('关闭未成功，重试关闭...');
+                            // 重新打开菜单
+                            const toggle = document.querySelector(SUBTITLE_SELECTORS.SUBTITLE_TOGGLE);
+                            if (toggle) toggle.click();
+                            setTimeout(performClose, 300);
+                        }
+                    }, TIMING.VERIFY_DELAY);
                 }
 
                 setTimeout(() => {
                     isAutoSetting = false;
-                }, 500);
+                }, 500 + TIMING.VERIFY_DELAY);
 
             }, TIMING.LANGUAGE_CLICK_DELAY);
 
@@ -217,7 +324,8 @@
 
     function applySubtitleMemory() {
         const rememberedState = getGlobalSubtitleState();
-        setSubtitleState(rememberedState);
+        debugLog('应用保存的字幕状态:', rememberedState);
+        setSubtitleState(rememberedState.enabled, rememberedState.language);
     }
 
     function setupSubtitleButtonListener() {
@@ -226,8 +334,11 @@
                 if (mutation.type === 'childList') {
                     mutation.addedNodes.forEach((node) => {
                         if (node.nodeType === 1) {
+                            // 检测新版字幕菜单面板
                             if (node.classList && (
+                                node.classList.contains('bpx-player-ctrl-subtitle-menu') ||
                                 node.classList.contains('bpx-player-ctrl-subtitle-panel') ||
+                                node.querySelector('.bpx-player-ctrl-subtitle-menu') ||
                                 node.querySelector('.bpx-player-ctrl-subtitle-panel')
                             )) {
                                 setTimeout(() => {
@@ -250,20 +361,22 @@
             if (subtitleToggle && !isAutoSetting) {
                 setTimeout(() => {
                     const currentState = isSubtitleOn();
-                    saveGlobalSubtitleState(currentState);
-                    debugLog('用户点击字幕按钮，保存状态:', currentState);
+                    const currentLanguage = getActiveSubtitleLanguage();
+                    saveGlobalSubtitleState(currentState, currentLanguage);
+                    debugLog('用户点击字幕按钮，保存状态:', currentState, currentLanguage);
                 }, 1000);
             }
         }, true);
     }
 
     function setupSubtitleOptionListeners() {
-        const subtitleOptions = document.querySelectorAll([
-            SUBTITLE_SELECTORS.CHINESE_LANGUAGE_OPTION,
-            SUBTITLE_SELECTORS.OFF_SUBTITLE_OPTION
-        ].join(','));
+        // 获取所有语言选项和关闭按钮
+        const languageOptions = document.querySelectorAll('.bpx-player-ctrl-subtitle-language-item');
+        const originCloseSwitch = document.querySelector(SUBTITLE_SELECTORS.CLOSE_SUBTITLE_SWITCH);
+        const translationCloseSwitch = document.querySelector(SUBTITLE_SELECTORS.CLOSE_TRANSLATION_SWITCH);
 
-        subtitleOptions.forEach(option => {
+        // 为所有语言选项添加监听器
+        languageOptions.forEach(option => {
             if (!option._hasListener) {
                 option._hasListener = true;
                 option.addEventListener('click', () => {
@@ -271,12 +384,43 @@
 
                     setTimeout(() => {
                         const currentState = isSubtitleOn();
-                        saveGlobalSubtitleState(currentState);
-                        debugLog('用户选择字幕选项，保存状态:', currentState);
+                        const currentLanguage = getActiveSubtitleLanguage();
+                        saveGlobalSubtitleState(currentState, currentLanguage);
+                        debugLog('用户选择字幕语言，保存状态:', currentState, currentLanguage);
                     }, 500);
                 });
             }
         });
+
+        // 为原始字幕关闭按钮添加监听器
+        if (originCloseSwitch && !originCloseSwitch._hasListener) {
+            originCloseSwitch._hasListener = true;
+            originCloseSwitch.addEventListener('click', () => {
+                if (isAutoSetting) return;
+
+                setTimeout(() => {
+                    const currentState = isSubtitleOn();
+                    // 关闭时language传null
+                    saveGlobalSubtitleState(currentState, null);
+                    debugLog('用户点击关闭原始字幕，保存状态:', currentState);
+                }, 500);
+            });
+        }
+
+        // 为翻译字幕关闭按钮添加监听器
+        if (translationCloseSwitch && !translationCloseSwitch._hasListener) {
+            translationCloseSwitch._hasListener = true;
+            translationCloseSwitch.addEventListener('click', () => {
+                if (isAutoSetting) return;
+
+                setTimeout(() => {
+                    const currentState = isSubtitleOn();
+                    // 关闭时language传null
+                    saveGlobalSubtitleState(currentState, null);
+                    debugLog('用户点击关闭翻译字幕，保存状态:', currentState);
+                }, 500);
+            });
+        }
     }
 
     // ================ 播放器滚动定位功能 ================

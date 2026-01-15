@@ -1,11 +1,15 @@
 // ==UserScript==
 // @name         AS CC
 // @namespace    https://animestars.org/cards/
-// @version      1.1
+// @version      1.2
 // @description  Автоматически кликает на появившуюся карту и закрывает модальное окно после получения карты
 // @author Sandr
-// @match        https://animestars.org/aniserials/video/*
-// @match        https://asstars.tv/aniserials/video/*
+// @match        *://*.animestars.org/aniserials/video/*
+// @match        *://*.animesss.com/aniserials/video/*
+// @match        *://*.animesss.tv/aniserials/video/*
+// @match        *://*.asstars.tv/aniserials/video/*
+// @match        *://*.astars.club/aniserials/video/*
+// @match        *://*.asstars.online/aniserials/video/*
 // @noframes
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/557268/AS%20CC.user.js

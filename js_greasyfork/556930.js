@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Bcat] Shopee Flash Sale Auto Interceptor (All-in-One)
 // @namespace    http://tampermonkey.net/
-// @version      5.3
+// @version      5.4
 // @description  Tự động thu thập và gửi dữ liệu từ mọi trang Flash Sale của Shopee. Với bộ đếm và cấu hình dễ dàng.
 // @author       You
 // @match        https://shopee.vn/flash_sale*
@@ -16,7 +16,7 @@
 
     // ================== CONFIGURATION ==================
     // Thời gian chờ (tính bằng mili giây) sau khi cuộn trang để chờ dữ liệu mới tải
-    const SCROLL_WAIT_TIME = 2000; // 2 giây
+    const SCROLL_WAIT_TIME = 1500; // 1.5 giây
     // Thời gian chờ tối thiểu trước khi tải lại trang khi không có dữ liệu mới
     const MIN_PAGE_RELOAD_DELAY = 30000; // 30 giây
     // Thời gian chờ tối đa trước khi tải lại trang
@@ -26,7 +26,7 @@
     // Thời gian chờ ban đầu sau khi trang tải xong để bắt đầu quá trình
     const INITIAL_START_DELAY = 5000; // 5 giây
     // Tốc độ cuộn trang (ms cho mỗi pixel)
-    const SCROLL_SPEED = 5; // 10ms cho mỗi pixel
+    const SCROLL_SPEED = 10; // 10ms cho mỗi pixel
     // Khoảng thời gian giữa các hành vi giả lập người dùng
     const HUMAN_BEHAVIOR_INTERVAL = 60000; // 60 giây
 

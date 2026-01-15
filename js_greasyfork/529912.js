@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Kinorium +
 // @namespace    https://kinorium.com/
-// @version      1.7.8
+// @version      1.7.9
 // @description  Добавляет кнопки под постерами фильмов на Kinorium для поиска на трекерах и других сайтах
 // @author       CgPT & Vladimir0202
 // @include      /^https?:\/\/.*kinorium.*\/.*$/
@@ -45,7 +45,8 @@
         const titleElement = document.querySelector('.film-page__title-text.film-page__itemprop');
         const title = titleElement ? titleElement.textContent.trim() : '';
 
-        const titleEngElement = document.querySelector('.film-page__orig_with_comment') || document.querySelector('.film-page__subtitle');
+        const titleEngElement = document.querySelector('.film-page__orig_with_comment');
+        //|| document.querySelector('.film-page__subtitle');
         const titleEng = titleEngElement ? titleEngElement.textContent.trim() : '';
 
         const yearElement = document.querySelector('.film-page__date a[href*="years_min="]');

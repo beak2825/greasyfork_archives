@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HSGuru 中文美化脚本
 // @namespace    http://tampermonkey.net/
-// @version      34.2.2.1
+// @version      34.4.0.2
 // @description  将HSGuru网站的部分英文替换为中文，并提供界面美化。
 // @author       深海之鱼
 // @match        https://www.hsguru.com/*
@@ -2158,6 +2158,7 @@
             'Herenn':'赫雷恩',
             'Stego':'剑龙',
             'Toki':'托奇',
+            'Tick Tock':'新任务',
             'Loh-cky':'洛',
             'Wilted': '枯萎',
             'Malygos': '玛里苟斯',

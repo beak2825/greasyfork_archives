@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OWoTPing
 // @namespace    owot_ping
-// @version      1
+// @version      1.1
 // @description  Userscript that allows you to be pinged however you want.
 // @author       Helloim0_0
 // @match        *://*.ourworldoftext.com/*
@@ -16,8 +16,16 @@ ready.playbackRate = 1.25;
 ready.preservesPitch = false;
 var names = localStorage.hlping ? JSON.parse(localStorage.hlping) : [];
 w.on("chat", function (e) {
-    for (let name of [...names, YourWorld.Nickname, state.worldModel.username]) {
+    for (let name of [...names, YourWorld.Nickname || state.userModel.username, state.userModel.username]) {
         if (!e.message.includes("@" + name)) continue;
+        ready.currentTime = 0;
+        ready.play();
+        break;
+    }
+});
+w.on("cmd", function (e) {
+    for (let name of [...names, YourWorld.Nickname || state.userModel.username, state.userModel.username]) {
+        if (!e.data.includes("@" + name)) continue;
         ready.currentTime = 0;
         ready.play();
         break;

@@ -4,7 +4,7 @@
 // @description mec-itutorの演習画面を修正
 // @author      Nozom.u
 // @run-at      document-end
-// @version     2.1.0
+// @version     2.2.0
 // @namespace https://greasyfork.org/users/1534273
 // @downloadURL https://update.greasyfork.org/scripts/554849/BetterExercises.user.js
 // @updateURL https://update.greasyfork.org/scripts/554849/BetterExercises.meta.js
@@ -512,6 +512,7 @@
     /* フッターボタン共通スタイル */
     #ctl00_cplPageContent_lbnSuspend,
     #ctl00_cplPageContent_lbnGrading,
+    #ctl00_cplPageContent_lbnSkip,
     #ctl00_cplPageContent_lbnNext,
     #ctl00_cplPageContent_lbnFinish {
     width: 35% !important;
@@ -533,6 +534,7 @@
 
     /* プライマリボタン共通（採点・次へ・終了） */
     #ctl00_cplPageContent_lbnGrading,
+    #ctl00_cplPageContent_lbnSkip,
     #ctl00_cplPageContent_lbnNext,
     #ctl00_cplPageContent_lbnFinish {
     color: var(--button-text-color) !important;
@@ -625,6 +627,16 @@
 
     /* 採点ボタンアイコン */
     #ctl00_cplPageContent_lbnGrading::after {
+    font-family: 'Material Icons' !important;
+    content: 'subdirectory_arrow_right' !important; /* subdirectory_arrow_right = \\e5da */
+    color: var(--icon-color) !important;
+    position: relative !important;
+    top: 0.15em !important;
+    margin: 0 !important;
+    }
+    
+    /* 次へボタン(まとめて演習)アイコン */
+　　#ctl00_cplPageContent_lbnSkip::after {
     font-family: 'Material Icons' !important;
     content: 'subdirectory_arrow_right' !important; /* subdirectory_arrow_right = \\e5da */
     color: var(--icon-color) !important;

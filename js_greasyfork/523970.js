@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Link Checker
 // @namespace    http://tampermonkey.net/
-// @version      v1.0
+// @version      v1.1
 // @description  Check and update existing web links, load age ratings (Windows only!).
 // @author       tesnonwan
 // @grant        GM_xmlhttpRequest
@@ -314,7 +314,7 @@ function addExistingSiteLinks() {
                     }
                     //console.log(`Response from ${currentUrl}: ${resp.finalUrl}`);
                     let finalUrl = resp.finalUrl;
-                    if (/https:\/\/store[.]steampowered[.]com\/agecheck\//.test(resp.finalUrl)) {
+                    if (/agecheck/.test(resp.finalUrl)) {
                         console.log(`Hit age check on ${currentUrl}`);
                         makeHttpsIfNeeded(urlText);
                         return;
@@ -450,6 +450,19 @@ function promiseXhr(url, options) {
 }
 
 function processUrl(url, func, options = {}) {
+    if (url.indexOf('steampowered.com') !== -1) {
+        options = {
+            method: 'GET',
+            withCredentials: false,
+            credentials: 'omit',
+            mozAnon: true,
+            anonymous: true,
+            headers: {
+                'Cookie': 'wants_mature_content=1; birthtime=-63140399; lastagecheckage=1-January-1968',
+            },
+            ...options,
+        };
+    }
     promiseXhr(url, options)
         .then(res => {
             func(res);

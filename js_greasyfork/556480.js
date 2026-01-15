@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         移动端限制弹窗解除
 // @namespace    https://viayoo.com/hrgow0
-// @version      1.70
+// @version      1.71
 // @description  自用脚本，解除滑动禁止、触控禁止，移除弹窗。
 // @author       Via
 // @match        *://*/*
@@ -16,23 +16,29 @@
 
 (function() {
     'use strict';
-    let cleanupCount = 0, removeSelectors = [], clickSelectors = [], stayRules = new Set(), hideRules = new Set(), userAttemptedScroll = false, scrollRestorationAttempted = false;
+    let cleanupCount = 0,
+        removeSelectors = [],
+        clickSelectors = [],
+        stayRules = new Set(),
+        hideRules = new Set(),
+        userAttemptedScroll = false,
+        scrollRestorationAttempted = false;
     const MAX_CLEANUP_COUNT = 10;
-    
+
     let alertHistory = [];
     const originalAlert = window.alert;
     const MAX_ALERTS_PER_SECOND = 3;
 
-// 弹窗和元素隐藏规则
-// ##+js(dpopup, 元素名称，是否持续监控)。
-// 例如 ##+js(dpopup, .ad)，点击一次包含.ad的按钮，不隐藏。
-// ##+js(dpopup, .ad，stay)，就是点击后不隐藏，持续监控点击多个.ad。
-// ##+js(dpopup, .ad, hide)，就是点击后隐藏按钮，不持续监控。
-// 其他##就是普通的Adblock规则
-// bing.com###ads_popup就是隐藏#ads_popup元素
-// ###ads_popup就是通用规则
-// *bing.com###ads_popup，就是模糊匹配，例如www.bing.com或者cn.bing.com都会被匹配
-const Adblock_Rules = `
+    // 弹窗和元素隐藏规则
+    // ##+js(dpopup, 元素名称，是否持续监控)。
+    // 例如 ##+js(dpopup, .ad)，点击一次包含.ad的按钮，不隐藏。
+    // ##+js(dpopup, .ad，stay)，就是点击后不隐藏，持续监控点击多个.ad。
+    // ##+js(dpopup, .ad, hide)，就是点击后隐藏按钮，不持续监控。
+    // 其他##就是普通的Adblock规则
+    // bing.com###ads_popup就是隐藏#ads_popup元素
+    // ###ads_popup就是通用规则
+    // *bing.com###ads_popup，就是模糊匹配，例如www.bing.com或者cn.bing.com都会被匹配
+    const Adblock_Rules = `
 ###ads_popup
 ##.ad-dialog
 ##.ad-dialog ~ .float-dialog
@@ -58,6 +64,7 @@ const Adblock_Rules = `
 ##+js(dpopup, #unlock-htgpda, stay)
 ##+js(dpopup, .ad-area-close, stay)
 ##+js(dpopup, .btn-age-confirm)
+##+js(dpopup, #confirmAge)
 ##+js(dpopup, .gg-close)
 ##+js(dpopup, .js-adv-close)
 ##+js(dpopup, .popup-close, stay)
@@ -79,38 +86,40 @@ sina.cn##+js(dpopup, [id*="continue"][id*="Btn"], stay)
 sina.cn##+js(dpopup, [id*="continue"][id*="btn"], stay)
 tv.sohu.com##+js(dpopup, .mtv-banner-close_btn)
 yandex.*##+js(dpopup, .Button_checked)
+youwu.lol,yuwusangzhi.cc##+js(dpopup, .van-icon-close, stay)
+youwu.lol,yuwusangzhi.cc##div[role="dialog"]
 `.trim();
 
     const log = (msg) => console.log(`%c[弹窗解除] ${msg}`, 'color:#1abc9c;font-weight:bold;background:#000;border-radius:4px;padding:2px 6px;');
 
-  window.alert = function(...args) {
-    const now = Date.now();
-    alertHistory = alertHistory.filter(time => now - time < 1000);
-    alertHistory.push(now);
-    if (alertHistory.length > MAX_ALERTS_PER_SECOND) {
-        if (window.alert === originalAlert) {
-            window.alert = function() {};
-            log('alert弹窗已被禁用（1秒内超过3次）');
-            setTimeout(() => {
-                window.alert = originalAlert;
-                alertHistory = [];
-                log('alert弹窗限制已解除');
-            }, 30000);
+    window.alert = function(...args) {
+        const now = Date.now();
+        alertHistory = alertHistory.filter(time => now - time < 1000);
+        alertHistory.push(now);
+        if (alertHistory.length > MAX_ALERTS_PER_SECOND) {
+            if (window.alert === originalAlert) {
+                window.alert = function() {};
+                log('alert弹窗已被禁用（1秒内超过3次）');
+                setTimeout(() => {
+                    window.alert = originalAlert;
+                    alertHistory = [];
+                    log('alert弹窗限制已解除');
+                }, 30000);
+            }
+            return;
         }
-          return;
-     }
         return originalAlert.apply(this, args);
-  };
+    };
 
     function parseAdblockRules() {
         const currentHost = window.location.hostname;
         Adblock_Rules.split('\n').filter(line => line.trim()).forEach(line => {
             if (line.includes('##+js(dpopup,')) {
                 const match = line.match(/##\+js\(dpopup,\s*([^,)]+)(?:,\s*(stay|hide))?\)/);
-                if (match) { 
-                    clickSelectors.push(match[1].replace(/['"]/g, '').trim()); 
-                    if (match[2] === 'stay') stayRules.add(match[1]); 
-                    if (match[2] === 'hide') hideRules.add(match[1]); 
+                if (match) {
+                    clickSelectors.push(match[1].replace(/['"]/g, '').trim());
+                    if (match[2] === 'stay') stayRules.add(match[1]);
+                    if (match[2] === 'hide') hideRules.add(match[1]);
                 }
             } else if (line.startsWith('##')) {
                 removeSelectors.push(line.replace(/^#{2,3}/, '').trim());
@@ -123,13 +132,13 @@ yandex.*##+js(dpopup, .Button_checked)
                 if (domainMatch) {
                     if (rule.includes('+js(dpopup,')) {
                         const match = rule.match(/\+js\(dpopup,\s*([^,)]+)(?:,\s*(stay|hide))?\)/);
-                        if (match) { 
-                            clickSelectors.push(match[1].replace(/['"]/g, '').trim()); 
-                            if (match[2] === 'stay') stayRules.add(match[1]); 
-                            if (match[2] === 'hide') hideRules.add(match[1]); 
+                        if (match) {
+                            clickSelectors.push(match[1].replace(/['"]/g, '').trim());
+                            if (match[2] === 'stay') stayRules.add(match[1]);
+                            if (match[2] === 'hide') hideRules.add(match[1]);
                         }
-                    } else { 
-                        removeSelectors.push(rule.trim()); 
+                    } else {
+                        removeSelectors.push(rule.trim());
                     }
                 }
             }
@@ -138,56 +147,52 @@ yandex.*##+js(dpopup, .Button_checked)
         clickSelectors = [...new Set(clickSelectors)];
         // console.log('解析结果: clickSelectors:', clickSelectors, 'stayRules:', [...stayRules]);
     }
-    
-    function addScrollStyles() {
-        const css = `html,body{-webkit-overflow-scrolling:touch!important}body.no-scroll,body.modal-open,body.scroll-locked{overflow:auto!important;position:relative!important}.modal-backdrop,.popup-backdrop,.overlay-mask{display:none!important;}`;
-        if (typeof GM_addStyle !== 'undefined') GM_addStyle(css); 
-        else { const style = document.createElement('style'); style.textContent = css; (document.head || document.documentElement).appendChild(style); }
-    }
-    
+
     function removePopups() {
-        removeSelectors.forEach(selector => { 
-            try { 
+        removeSelectors.forEach(selector => {
+            try {
                 const elements = document.querySelectorAll(selector);
                 let hit = 0;
-                elements.forEach(element => { 
-                    if (element.offsetParent !== null) { 
-                        element.style.display = 'none'; 
-                        element.style.visibility = 'hidden'; 
+                elements.forEach(element => {
+                    if (element.offsetParent !== null) {
+                        element.style.display = 'none';
+                        element.style.visibility = 'hidden';
                         element.style.opacity = '0';
-                        if (typeof element.remove === 'function') { element.remove(); }
+                        if (typeof element.remove === 'function') {
+                            element.remove();
+                        }
                         hit++;
-                    } 
+                    }
                 });
                 if (hit > 0) {
                     log(`当前网页: ${location.href}\n运行规则: ${selector} ，原因: 匹配到弹窗/遮罩元素 ，状态: 成功 (已移除 ${hit} 个)`);
                 }
-            } catch(e) {} 
+            } catch (e) {}
         });
     }
-    
+
     function clickCloseButtons() {
-        clickSelectors.forEach(selector => { 
-            try { 
+        clickSelectors.forEach(selector => {
+            try {
                 const buttons = document.querySelectorAll(selector);
                 let hit = 0;
-                buttons.forEach(button => { 
-                    if (button.offsetParent !== null && button.getBoundingClientRect().width > 0 && button.getBoundingClientRect().height > 0) { 
-                        button.click(); 
+                buttons.forEach(button => {
+                    if (button.offsetParent !== null && button.getBoundingClientRect().width > 0 && button.getBoundingClientRect().height > 0) {
+                        button.click();
                         hit++;
-                        if (hideRules.has(selector)) { 
-                            button.style.display = 'none'; 
-                            button.style.visibility = 'hidden'; 
-                        } 
-                    } 
+                        if (hideRules.has(selector)) {
+                            button.style.display = 'none';
+                            button.style.visibility = 'hidden';
+                        }
+                    }
                 });
                 if (hit > 0) {
                     log(`当前网页: ${location.href}\n运行规则: ${selector} ，原因: 模拟点击关闭按钮 ，状态: 成功`);
                 }
-            } catch(e) {} 
+            } catch (e) {}
         });
     }
-    
+
     function initStayObserver() {
         if (stayRules.size === 0) return;
         const observer = new MutationObserver(mutations => {
@@ -200,38 +205,54 @@ yandex.*##+js(dpopup, .Button_checked)
                 });
             });
         });
-        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-    }
-    
-    function isScrollAbnormal() {
-        const bodyStyle = window.getComputedStyle(document.body);
-        const htmlStyle = window.getComputedStyle(document.documentElement);
-
-        const hasLockClass = document.body.classList.contains('no-scroll') ||
-                             document.body.classList.contains('scroll-locked') ||
-                             document.body.classList.contains('modal-open') ||
-                             document.body.classList.contains('overflow-hidden');
-
-        const hasLockStyle = bodyStyle.overflow === 'hidden' ||
-                             bodyStyle.position === 'fixed' ||
-                             bodyStyle.height === '100%' && bodyStyle.overflow === 'hidden';
-
-        const contentTallerThanViewport = document.documentElement.scrollHeight > window.innerHeight;
-        return (hasLockClass || hasLockStyle) && contentTallerThanViewport;
-    }
-    
-    function enableTouchAndScroll() {
-        ['touchmove', 'wheel', 'scroll', 'mousewheel'].forEach(eventType => {
-            document.addEventListener(eventType, e => {
-                if (e.defaultPrevented && e.cancelable) {
-                    e.stopImmediatePropagation();
-                }
-            }, { capture: true, passive: false });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true
         });
     }
 
-    document.addEventListener('wheel', function(e) { userAttemptedScroll = true; }, { passive: true });
-    document.addEventListener('touchmove', function(e) { userAttemptedScroll = true; }, { passive: true });
+    function addScrollStyles() {
+        const css = `
+            html, body {
+                -webkit-overflow-scrolling: touch!important;
+            }
+            body.no-scroll, body.modal-open, body.scroll-locked, body.overflow-hidden, body.touch {
+                overflow: auto!important;
+                position: relative!important;
+            }
+            .modal-backdrop, .popup-backdrop, .overlay-mask, .van-overlay, .am-modal-mask {
+                display: none!important;
+            }
+        `;
+        if (typeof GM_addStyle !== 'undefined') GM_addStyle(css);
+        else {
+            const style = document.createElement('style');
+            style.textContent = css;
+            (document.head || document.documentElement).appendChild(style);
+        }
+    }
+
+    function isScrollAbnormal() {
+
+        if (document.querySelector('ons-page, ons-toolbar, .page__content')) {
+            return false;
+        }
+
+        const bodyStyle = window.getComputedStyle(document.body);
+        const htmlStyle = window.getComputedStyle(document.documentElement);
+
+        const hasLockClass = /no-scroll|modal-open|scroll-locked|overflow-hidden|v-modal-open/i.test(document.body.className + ' ' + document.documentElement.className);
+
+        const hasLockStyle = bodyStyle.overflow === 'hidden' ||
+            htmlStyle.overflow === 'hidden' ||
+            bodyStyle.position === 'fixed' ||
+            (parseFloat(bodyStyle.height) <= window.innerHeight && bodyStyle.overflow === 'hidden');
+
+        const contentTallerThanViewport = document.documentElement.scrollHeight > window.innerHeight;
+
+        return (hasLockClass || hasLockStyle) && contentTallerThanViewport;
+    }
 
     function restoreBodyScroll() {
         if (this === window) {
@@ -242,27 +263,38 @@ yandex.*##+js(dpopup, .Button_checked)
         if (!this && !userAttemptedScroll && !isScrollAbnormal()) return;
 
         let changed = false;
-        document.body.style.cssText += 'overflow:auto!important;position:relative!important;-webkit-overflow-scrolling:touch!important;';
+        const html = document.documentElement;
+        const body = document.body;
 
-        
-        const style = document.body.style;
-        if (window.getComputedStyle(document.body).overflow === 'hidden') {
-            style.overflow = 'auto';
-            changed = true;
-        }
-        
-        if (window.getComputedStyle(document.body).position === 'fixed') {
-            style.position = 'relative';
-            style.top = '';
-            style.height = 'auto';
-            changed = true;
+        const scrollTop = parseFloat(body.style.top) || parseFloat(html.style.top) || 0;
+
+        const undoLock = (el) => {
+            const style = window.getComputedStyle(el);
+            if (style.overflow === 'hidden' || style.position === 'fixed') {
+                el.style.setProperty('overflow', 'visible', 'important');
+                el.style.setProperty('position', 'relative', 'important');
+
+                if (el.style.height) el.style.height = '';
+                if (el.style.maxHeight) el.style.maxHeight = '';
+                changed = true;
+            }
+        };
+
+        undoLock(html);
+        undoLock(body);
+
+        if (scrollTop < 0) {
+            body.style.top = '';
+            html.style.top = '';
+            window.scrollTo(0, Math.abs(scrollTop));
         }
 
         if (this === window) {
-            document.documentElement.style.overflow = 'auto';
-            document.documentElement.style.position = 'relative';
+            html.style.setProperty('overflow', 'visible', 'important');
+            body.style.setProperty('overflow', 'visible', 'important');
             window.scrollBy(0, 1);
             window.scrollBy(0, -1);
+            window.dispatchEvent(new Event('resize'));
         }
 
         if (changed || this === window) {
@@ -271,44 +303,73 @@ yandex.*##+js(dpopup, .Button_checked)
         }
     }
 
-    function cleanup() { 
-        if (cleanupCount >= MAX_CLEANUP_COUNT) return; 
-        try { 
-            removePopups(); 
-            clickCloseButtons(); 
-            restoreBodyScroll();
-            cleanupCount++;
-        } catch (error) {} 
+
+    function enableTouchAndScroll() {
+        ['touchmove', 'wheel', 'scroll', 'mousewheel'].forEach(eventType => {
+            document.addEventListener(eventType, e => {
+                if (e.defaultPrevented && e.cancelable) {
+                    e.stopImmediatePropagation();
+                }
+            }, {
+                capture: true,
+                passive: false
+            });
+        });
     }
 
-    function reInject() { 
+    document.addEventListener('wheel', function(e) {
+        userAttemptedScroll = true;
+    }, {
+        passive: true
+    });
+    document.addEventListener('touchmove', function(e) {
+        userAttemptedScroll = true;
+    }, {
+        passive: true
+    });
+
+    function cleanup() {
+        if (cleanupCount >= MAX_CLEANUP_COUNT) return;
+        try {
+            removePopups();
+            clickCloseButtons();
+            restoreBodyScroll();
+            cleanupCount++;
+        } catch (error) {}
+    }
+
+    function reInject() {
         log(`手动触发脚本（双击页面）…… 当前网页: ${location.href}`);
         enableTouchAndScroll();
-        addScrollStyles(); 
-        removePopups(); 
-        clickCloseButtons(); 
+        addScrollStyles();
+        removePopups();
+        clickCloseButtons();
         restoreBodyScroll.call(window);
     }
-    
+
     function initObserver() {
-        const observer = new MutationObserver(mutations => { 
+        const observer = new MutationObserver(mutations => {
             cleanup();
         });
-        observer.observe(document.body, { childList: true, subtree: true, attributes: false }); 
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: false
+        });
     }
-    
+
     function init() {
         enableTouchAndScroll();
-        parseAdblockRules(); 
-        addScrollStyles(); 
-        setTimeout(() => { 
-            cleanup(); 
-            initObserver(); 
-            initStayObserver(); 
+        parseAdblockRules();
+        addScrollStyles();
+        setTimeout(() => {
+            cleanup();
+            initObserver();
+            initStayObserver();
         }, 500);
         document.addEventListener('dblclick', reInject);
     }
-    
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); 
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else setTimeout(init, 100);
 })();

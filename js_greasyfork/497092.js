@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pixiv获取原图
 // @namespace    https://github.com/MuXia-0326/twitter-auto-original-picture
-// @version      1.12
+// @version      1.13
 // @description  pixiv页面生成按钮用于复制原图链接和下载原图
 // @author       Mossia
 // @icon         https://raw.githubusercontent.com/MuXia-0326/drawio/master/angri.png
@@ -251,7 +251,9 @@ Pages[PageType.Artwork] = {
 
       document.getElementById(`download_${i}`).addEventListener('click', function () {
         // 点击喜欢按钮
-        let likeDiv = document.querySelector('main section section div.sc-afc25555-3.dJtJCo');
+        let section = document.querySelector('main section section');
+        let likeDiv = section.children[2];
+
         if (likeDiv) {
           let a = likeDiv.querySelector('a');
           if (!a) {

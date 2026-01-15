@@ -2,7 +2,7 @@
 // @name            YouTube Helper API
 // @author          ElectroKnight22
 // @namespace       electroknight22_helper_api_namespace
-// @version         0.9.7.2
+// @version         0.9.7.3
 // @license         MIT
 // @description     A helper api for YouTube scripts that provides easy and consistent access for commonly needed functions, objects, and values.
 // ==/UserScript==
@@ -142,15 +142,15 @@ const youtubeHelperApi = (function () {
 
         try {
             const proxyHandler = {
-                get(target, prop) {
-                    if (prop === 'info') return target.info ?? { script: { version: '0.0.0' } };
+                get(target, property) {
+                    if (property === 'info') return target.info ?? { script: { version: '0.0.0' } };
 
-                    let realProp = prop;
-                    if (API_MAP[prop]) realProp = API_MAP[prop][0];
+                    let realProperty = property;
+                    if (API_MAP[property]) realProperty = API_MAP[property][0];
 
-                    if (Reflect.has(target, realProp)) {
-                        const val = target[realProp];
-                        return typeof val === 'function' ? val.bind(target) : val;
+                    if (Reflect.has(target, realProperty)) {
+                        const value = target[realProperty];
+                        return typeof value === 'function' ? value.bind(target) : value;
                     }
 
                     return () => {
@@ -163,12 +163,23 @@ const youtubeHelperApi = (function () {
                 },
             };
 
-            const descriptor = Object.getOwnPropertyDescriptor(window, 'GM');
-            if (!descriptor || descriptor.configurable || descriptor.writable) {
-                window.GM = new Proxy(realGM, proxyHandler);
+            try {
+                Object.defineProperty(window, 'GM', {
+                    value: new Proxy(realGM, proxyHandler),
+                    writable: true,
+                    enumerable: true,
+                    configurable: true,
+                });
+            } catch (definePropertyError) {
+                try {
+                    delete window.GM;
+                    window.GM = new Proxy(realGM, proxyHandler);
+                } catch (assignmentError) {
+                    console.warn('[YouTube Helper API] Completely failed to patch window.GM', assignmentError);
+                }
             }
         } catch (error) {
-            console.warn('[YouTube Helper API] Failed to patch window.GM', error);
+            console.warn('[YouTube Helper API] Critical shim error', error);
         }
     })();
     // --- GM API SHIM END ---

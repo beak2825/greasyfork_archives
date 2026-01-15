@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.1.2
 // @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + Demulti 실시간 알림
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -49,6 +49,7 @@
         const cachedCounts = GM_getValue(CACHE_KEY);
         const cachedTime = GM_getValue(CACHE_TIME_KEY);
 
+        // 캐시 데이터가 있으면 우선 표시 (새로고침 전까지 활용)
         if (cachedCounts) {
             updateUITimestamp(cachedTime);
             updateUI(cachedCounts);
@@ -56,12 +57,11 @@
 
         initModal();
 
-        // 초기 실행: 디멀티 데이터만 우선 갱신 (40번 업무 요청과 충돌 방지)
+        // 초기 실행: 40번 스크립트 부하 분산 후 필요한 데이터만 갱신
         setTimeout(() => {
             updateStatusDashboard('demulti');
-        }, 5000);
+        }, 10000);
 
-        // 5분마다 디멀티 데이터만 자동 갱신
         setInterval(() => {
             updateStatusDashboard('demulti');
         }, 5 * 60 * 1000);
@@ -184,17 +184,43 @@
 
     async function fetchLimsData(url, payload) {
         const csrf = getCsrfInfo();
+        const headers = {
+            "Content-Type": "application/json; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "Accept": "application/json, text/javascript, */*; q=0.01"
+        };
+        if (csrf.header && csrf.token) {
+            headers[csrf.header] = csrf.token;
+        }
+
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: "POST",
                 url: url,
                 data: JSON.stringify(payload),
-                headers: { "Content-Type": "application/json; charset=UTF-8", "X-Requested-With": "XMLHttpRequest", [csrf.header]: csrf.token },
+                headers: headers,
+                timeout: 30000, // 30초 타임아웃 추가
                 onload: (res) => {
-                    try { const data = JSON.parse(res.responseText); resolve(data.waits || data.result || data.dataSet?.demultiList || []); }
-                    catch (e) { resolve([]); }
+                    try {
+                        const data = JSON.parse(res.responseText);
+                        // 다양한 리턴 형태 대응 (waits, result, resultList, dataSet 내의 여러 키)
+                        const list = data.waits || data.result || data.resultList ||
+                            data.dataSet?.waits || data.dataSet?.result ||
+                            data.dataSet?.resultList || data.dataSet?.demultiList || [];
+                        resolve(Array.isArray(list) ? list : []);
+                    } catch (e) {
+                        console.error(`[LRS] Parse Error (${url}):`, e);
+                        resolve([]);
+                    }
                 },
-                onerror: () => resolve([])
+                onerror: (err) => {
+                    console.error(`[LRS] Network Error (${url}):`, err);
+                    resolve([]);
+                },
+                ontimeout: () => {
+                    console.error(`[LRS] Timeout Error (${url})`);
+                    resolve([]);
+                }
             });
         });
     }
@@ -216,7 +242,6 @@
             modalBtn.innerText = '⏳ 데이터 갱신 중...';
         }
 
-        // 시각적 피드백: 수치들을 먼저 '...'으로 초기화
         const groupIds = {
             'prep-qc': ['status-qc-dna', 'status-qc-rna', 'status-prep-dna', 'status-prep-rna'],
             'lib-run': ['status-run-wait', 'status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi', 'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc'],
@@ -231,14 +256,18 @@
         const clearIds = groupIds[type] || [];
         clearIds.forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.innerText = '...';
+            if (el) {
+                el.innerText = '--';
+                el.style.color = '#cbd5e1'; // 로딩 중인 필드만 초기화 (나머지 섹션은 캐시 유지)
+            }
         });
+
+        // 모달 데이터도 즉시 동기화하여 시각적 혼동 방지
         if (document.getElementById('lrs-modal-overlay')?.style.display === 'flex') {
             syncModalData();
         }
 
         try {
-            // 날짜 계산 (T-7)
             const today = new Date();
             const lastWeek = new Date();
             lastWeek.setDate(today.getDate() - 7);
@@ -273,95 +302,69 @@
 
             const targetQueries = type === 'all' ? queries : queries.filter(q => q.group === type || q.id === 'demulti-data');
 
-            // [수정] Promise.all 대신 순차적으로 실행하며 브라우저 요청 병목 방지
-            const results = [];
+            // 갱신 중인 섹션만 담을 임시 저장소
+            const sessionCounts = {};
+
             for (const q of targetQueries) {
-                const res = await q.fn();
-                results.push(res);
-                // 각 요청 사이에 300ms의 간격을 두어 서버 및 브라우저 부하 분산
-                await new Promise(r => setTimeout(r, 300));
+                const data = await q.fn();
+                const qId = q.id;
+
+                if (qId === 'demulti-data') {
+                    processDemultiData(data, sessionCounts);
+                } else {
+                    const isTarget = (item) => item && ['Revio', 'PromethION'].includes(item.pltfomNm || item.prfmPltfomNm);
+                    const isRevioOnly = (item) => item && (item.pltfomNm || item.prfmPltfomNm) === 'Revio';
+                    const isNot16s = (item) => item && item.libKitNm !== '[3.0] PacBio 16s full-length Library';
+
+                    if (qId === 'status-lib-wait') {
+                        const stats = { total: 0, mb: 0, msg: 0, hifi: 0, s16: 0, amp: 0, knx: 0, ont: 0, etc: 0 };
+                        const filteredData = data.filter(isTarget);
+                        stats.total = filteredData.length;
+                        filteredData.forEach(item => {
+                            const kitNm = item.libKitNm || '';
+                            const platform = item.pltfomNm || item.prfmPltfomNm || '';
+
+                            if (platform === 'PromethION') stats.ont++;
+                            else if (kitNm.includes('Kinnex')) stats.knx++;
+                            else if (kitNm === '[3.0] PacBio Microbial Library') stats.mb++;
+                            else if (kitNm === '[3.0] PacBio MetaShotgun Library') stats.msg++;
+                            else if (kitNm === '[3.0] PacBio HiFi Library') stats.hifi++;
+                            else if (kitNm === '[3.0] PacBio 16s full-length Library') stats.s16++;
+                            else if (kitNm === '[3.0] PacBio Amplicon Library') stats.amp++;
+                            else stats.etc++;
+                        });
+
+                        const mapping = { 'lib-total': stats.total, 'lib-mb': stats.mb, 'lib-msg': stats.msg, 'lib-hifi': stats.hifi, 'lib-16s': stats.s16, 'lib-amp': stats.amp, 'lib-knx': stats.knx, 'lib-ont': stats.ont, 'lib-etc': stats.etc };
+                        Object.entries(mapping).forEach(([k, v]) => sessionCounts[`status-${k}`] = v);
+                    } else {
+                        let count;
+                        if (qId.includes('prep') || qId.includes('qc')) {
+                            count = data.filter(i => isTarget(i) && isNot16s(i)).length;
+                        } else if (qId === 'status-run-wait') {
+                            count = data.filter(isRevioOnly).length;
+                        } else {
+                            count = data.filter(isTarget).length;
+                        }
+                        sessionCounts[qId] = count;
+                    }
+                }
+
+                // 갱신된 항목만 즉시 반영
+                updateUI(sessionCounts);
+
+                await new Promise(r => setTimeout(r, 500));
             }
 
-            const currentCounts = GM_getValue(CACHE_KEY) || {};
-
-            results.forEach((data, index) => {
-                const qId = targetQueries[index].id;
-                if (qId === 'demulti-data') {
-                    processDemultiData(data, currentCounts);
-                    return;
-                }
-
-                const isTarget = (item) => ['Revio', 'PromethION'].includes(item.pltfomNm || item.prfmPltfomNm);
-                const isRevioOnly = (item) => (item.pltfomNm || item.prfmPltfomNm) === 'Revio';
-                const isNot16s = (item) => item.libKitNm !== '[3.0] PacBio 16s full-length Library';
-
-                if (qId === 'status-lib-wait') {
-                    const stats = { total: 0, mb: 0, msg: 0, hifi: 0, s16: 0, amp: 0, knx: 0, ont: 0, etc: 0 };
-                    const filteredData = data.filter(isTarget);
-                    stats.total = filteredData.length;
-                    filteredData.forEach(item => {
-                        const kitNm = item.libKitNm || '';
-                        const platform = item.pltfomNm || '';
-
-                        if (platform === 'PromethION') stats.ont++;
-                        else if (kitNm.includes('Kinnex')) stats.knx++;
-                        else if (kitNm === '[3.0] PacBio Microbial Library') stats.mb++;
-                        else if (kitNm === '[3.0] PacBio MetaShotgun Library') stats.msg++;
-                        else if (kitNm === '[3.0] PacBio HiFi Library') stats.hifi++;
-                        else if (kitNm === '[3.0] PacBio 16s full-length Library') stats.s16++;
-                        else if (kitNm === '[3.0] PacBio Amplicon Library') stats.amp++;
-                        else stats.etc++;
-                    });
-
-                    currentCounts['status-lib-total'] = stats.total;
-                    currentCounts['status-lib-mb'] = stats.mb;
-                    currentCounts['status-lib-msg'] = stats.msg;
-                    currentCounts['status-lib-hifi'] = stats.hifi;
-                    currentCounts['status-lib-16s'] = stats.s16;
-                    currentCounts['status-lib-amp'] = stats.amp;
-                    currentCounts['status-lib-knx'] = stats.knx;
-                    currentCounts['status-lib-ont'] = stats.ont;
-                    currentCounts['status-lib-etc'] = stats.etc;
-                    currentCounts[qId] = stats.total;
-
-                    // 상세 ID들에 대해 UI 업데이트
-                    const libIds = ['total', 'mb', 'msg', 'hifi', '16s', 'amp', 'knx', 'ont', 'etc'];
-                    libIds.forEach(subId => {
-                        const fullId = `status-lib-${subId}`;
-                        const el = document.getElementById(fullId);
-                        if (el) {
-                            const val = stats[subId === '16s' ? 's16' : subId];
-                            el.innerText = val;
-                            el.style.color = getCountColor(val);
-                        }
-                    });
-                } else {
-                    let count;
-                    if (qId.includes('prep')) {
-                        count = data.filter(i => isTarget(i) && isNot16s(i)).length;
-                    } else if (qId === 'status-run-wait') {
-                        count = data.filter(isRevioOnly).length;
-                    } else {
-                        count = data.filter(isTarget).length;
-                    }
-
-                    currentCounts[qId] = count;
-                    const el = document.getElementById(qId);
-                    if (el) {
-                        el.innerText = count;
-                        el.style.color = getCountColor(count);
-                    }
-                }
-            });
-
             const updateTime = new Date().getTime();
-            GM_setValue(CACHE_KEY, currentCounts);
+            const globalCache = GM_getValue(CACHE_KEY, {});
+            Object.assign(globalCache, sessionCounts);
+
+            GM_setValue(CACHE_KEY, globalCache);
             GM_setValue(CACHE_TIME_KEY, updateTime);
-            updateUI(currentCounts); // 메인 UI 및 모달 동시 업데이트
             updateUITimestamp(updateTime);
 
         } catch (e) {
-            console.error('Update Dashboard Error:', e);
+            console.error('[LRS] Update Dashboard Error:', e);
         } finally {
             if (btn) { btn.style.opacity = '1'; btn.innerText = labelMap[type]; }
             if (modalBtn) {
@@ -485,7 +488,7 @@
                 📊 LRS 실시간 상세 현황
                 <span id="modal-update-time" style="font-size: 13px; color: #94a3b8; font-weight: normal;"></span>
             </h2>
-            
+
             <!-- (1) LIB 상세 -->
             <div style="background: #efefff; padding: 25px; border-radius: 20px; border: 2px solid #4834d4; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(72, 52, 212, 0.1);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 3px solid #fff; padding-bottom: 12px;">

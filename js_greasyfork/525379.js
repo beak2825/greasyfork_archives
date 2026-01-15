@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         全国统一规范电子税务局税号填写辅助工具
 // @namespace    http://tampermonkey.net/
-// @version      3.3
-// @description  在电子税务局旁边显示一个小窗口，方便登录与切换不同的公司，支持批量添加和制表符分隔导入
+// @version      3.4
+// @description  在电子税务局旁边显示一个小窗口，方便登录与切换不同的企业，支持批量添加和制表符分隔导入
 // @author       Herohub
 // @match        https://*.chinatax.gov.cn:8443/*
 // @license      MIT
@@ -11,32 +11,33 @@
 // @downloadURL https://update.greasyfork.org/scripts/525379/%E5%85%A8%E5%9B%BD%E7%BB%9F%E4%B8%80%E8%A7%84%E8%8C%83%E7%94%B5%E5%AD%90%E7%A8%8E%E5%8A%A1%E5%B1%80%E7%A8%8E%E5%8F%B7%E5%A1%AB%E5%86%99%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7.user.js
 // @updateURL https://update.greasyfork.org/scripts/525379/%E5%85%A8%E5%9B%BD%E7%BB%9F%E4%B8%80%E8%A7%84%E8%8C%83%E7%94%B5%E5%AD%90%E7%A8%8E%E5%8A%A1%E5%B1%80%E7%A8%8E%E5%8F%B7%E5%A1%AB%E5%86%99%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7.meta.js
 // ==/UserScript==
-
 (function () {
     'use strict';
 
-    // 判断是否为登录页面或切换公司页面，若都不是则直接退出脚本执行
+    // 判断是否为登录页面或切换企业页面，若都不是则直接退出脚本执行
     const isLoginPage = window.location.href.includes('login?redirect_uri');
     const isIdentitySwitchPage = window.location.href.includes('identitySwitch');
     if (!isLoginPage &&!isIdentitySwitchPage) return;
 
-    // 创建浮窗元素并设置样式
+// 创建浮窗元素并设置样式
     const createFloatWindow = () => {
         const floatWindow = document.createElement('div');
         Object.assign(floatWindow.style, {
             position: 'fixed',
             top: '50%',
-            right: '0', // 贴紧右侧
+            right: '0',
             transform: 'translateY(-50%)',
             background: '#fff',
             border: '1px solid #ccc',
+            borderRight: 'none', // 贴边处不显示边框
             padding: '15px',
-            borderRadius: '8px 0 0 8px', // 左侧圆角，右侧直角
+            borderRadius: '8px 0 0 8px',
             boxShadow: '0 4px 8px rgba(0,0,0,.1)',
             fontFamily: 'Arial,sans-serif',
             zIndex: 10000,
-            overflow: 'hidden',
-            transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)' // 更平滑的宽度变化动画
+            overflow: 'hidden', // 关键：收起时切割内容
+            boxSizing: 'border-box', // 关键：确保宽度包含边框
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
         });
         return floatWindow;
     };
@@ -254,19 +255,24 @@
 
     // 收起/展开功能
     function toggleCollapse() {
-        isCollapsed =!isCollapsed;
+        isCollapsed = !isCollapsed;
         GM_setValue('isCollapsed', isCollapsed);
 
         if (isCollapsed) {
+            // 收起状态逻辑
             mainContent.style.display = 'none';
             floatWindow.style.width = '0px';
             floatWindow.style.padding = '0';
+            floatWindow.style.border = 'none'; // 关键：宽度为0时去掉边框，消除白边
             toggleCollapseButton.innerHTML = '≪';
             toggleCollapseButton.style.right = '0';
         } else {
+            // 展开状态逻辑
             mainContent.style.display = 'block';
             floatWindow.style.width = windowWidth + 'px';
             floatWindow.style.padding = '15px';
+            floatWindow.style.border = '1px solid #ccc'; // 重新显示边框
+            floatWindow.style.borderRight = 'none';
             toggleCollapseButton.innerHTML = '≫';
             toggleCollapseButton.style.right = windowWidth + 'px';
         }
@@ -373,7 +379,7 @@
             overlay.style.opacity = '0.5';
         }, 10);
 
-        // 存储多组公司数据的数组
+        // 存储多组企业数据的数组
         const addFormItems = [{ taxNumber: '', note: '' }];
         // 输入框组容器（用于动态渲染）
         const inputGroupsContainer = document.createElement('div');
@@ -398,7 +404,7 @@
             justifyContent: 'center',
             gap: '5px'
         });
-        addInputBtn.innerHTML = '<span>+</span> 添加更多公司';
+        addInputBtn.innerHTML = '<span>+</span> 添加更多企业';
         // +号按钮悬停效果
         addInputBtn.addEventListener('mouseover', () => {
             addInputBtn.style.background = 'rgba(0, 123, 255, 0.05)';
@@ -437,7 +443,7 @@
                 groupTitle.style.fontSize = '13px';
                 groupTitle.style.color = '#666';
                 groupTitle.style.marginBottom = '2px';
-                groupTitle.textContent = `公司 ${index + 1}`;
+                groupTitle.textContent = `企业 ${index + 1}`;
                 inputGroup.appendChild(groupTitle);
 
                 // 税号输入框
@@ -464,7 +470,7 @@
 
                 // 备注输入框
                 const noteInput = document.createElement('input');
-                noteInput.placeholder = '请输入备注（如公司名称）';
+                noteInput.placeholder = '请输入名称';
                 noteInput.value = item.note;
                 noteInput.style.padding = '8px';
                 noteInput.style.border = '1px solid #ccc';
@@ -498,7 +504,7 @@
                         alignSelf: 'flex-end',
                         transition: 'background 0.2s ease'
                     });
-                    deleteGroupBtn.textContent = '删除此公司';
+                    deleteGroupBtn.textContent = '删除该企业';
                     deleteGroupBtn.addEventListener('mouseover', () => {
                         deleteGroupBtn.style.background = '#c82333';
                     });
@@ -550,7 +556,7 @@
             setTimeout(() => {
                 document.body.removeChild(modal);
                 document.body.removeChild(overlay);
-                alert(`批量添加成功！共添加 ${validItems.length} 家公司`);
+                alert(`批量添加成功！共添加 ${validItems.length} 家企业`);
             }, 300);
         });
         modal.appendChild(confirmButton);
@@ -1089,8 +1095,6 @@
                 }
 
                 clearSelection();
-                itemDiv.style.background = '#e0f7fa';
-                lastSelectedItem = content;
                 GM_setValue('lastSelectedItem', lastSelectedItem);
             }, 500);
         });
@@ -1102,9 +1106,7 @@
         });
 
         itemDiv.addEventListener('mouseout', () => {
-            if (itemDiv.dataset.content!== lastSelectedItem) {
-                itemDiv.style.background = '#fff';
-            }
+            itemDiv.style.background = '#fff';
         });
 
         itemDiv.dataset.content = content;
@@ -1112,11 +1114,6 @@
 
         // 设置拖动功能
         setupDragItem(itemDiv, dragButton);
-
-        if (content === lastSelectedItem) {
-            itemDiv.style.background = '#e0f7fa';
-        }
-
         return itemDiv;
     }
 
@@ -1503,187 +1500,82 @@
         GM_setValue('autoFillItems', newItemOrder);
     }
 
-    // 导入数据（支持逗号分隔和制表符分隔格式）
+    // 导入数据
     function importData() {
         const importModal = document.createElement('div');
         Object.assign(importModal.style, {
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            background: '#fff',
-            border: '1px solid #ccc',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            zIndex: 10001,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-            width: '500px',  // 加宽以适应长文本
-            opacity: '0',
-            transform: 'translate(-50%, -50%) scale(0.95)',
-            transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            background: '#fff', border: '1px solid #ccc', padding: '20px', borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 10001, display: 'flex',
+            flexDirection: 'column', gap: '10px', width: '500px', opacity: '0',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
         });
 
-        // 添加模态框背景遮罩
         const overlay = document.createElement('div');
         Object.assign(overlay.style, {
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            right: '0',
-            bottom: '0',
-            background: 'rgba(0,0,0,0.5)',
-            zIndex: 10000,
-            opacity: '0',
-            transition: 'opacity 0.3s ease'
+            position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+            background: 'rgba(0,0,0,0.5)', zIndex: 10000, opacity: '0', transition: 'opacity 0.3s ease'
         });
         document.body.appendChild(overlay);
 
-        // 触发动画
-        setTimeout(() => {
-            importModal.style.opacity = '1';
-            importModal.style.transform = 'translate(-50%, -50%) scale(1)';
-            overlay.style.opacity = '0.5';
-        }, 10);
+        setTimeout(() => { importModal.style.opacity = '1'; overlay.style.opacity = '0.5'; }, 10);
 
-        // 导入说明
         const importInfo = document.createElement('div');
-        importInfo.style.fontSize = '13px';
-        importInfo.style.color = '#666';
-        importInfo.style.marginBottom = '5px';
-        importInfo.innerHTML = '支持两种格式：<br>1. 税号,备注;税号,备注（逗号分隔，分号换行）<br>2. 税号\t备注（制表符分隔，每行一条）';
+        importInfo.style.cssText = 'font-size:13px; color:#666; margin-bottom:5px;';
+        importInfo.innerHTML = '支持格式：<br>1. <b>Excel/文本直粘：</b>税号 [空格或制表符] 备注（每行一个）<br>2. <b>旧版格式：</b>税号,备注;税号,备注';
         importModal.appendChild(importInfo);
 
         const dataTextarea = document.createElement('textarea');
-        dataTextarea.placeholder = '请输入要导入的数据...';
-        dataTextarea.style.padding = '8px';
-        dataTextarea.style.border = '1px solid #ccc';
-        dataTextarea.style.borderRadius = '3px';
-        dataTextarea.style.height = '200px';  // 加高以容纳更多数据
-        dataTextarea.style.transition = 'border-color 0.2s ease';
-        dataTextarea.style.fontFamily = 'monospace';  // 等宽字体更适合看分隔符
-        dataTextarea.addEventListener('focus', () => {
-            dataTextarea.style.borderColor = '#007BFF';
-            dataTextarea.style.boxShadow = '0 0 0 2px rgba(0, 123, 255, 0.25)';
-        });
-        dataTextarea.addEventListener('blur', () => {
-            dataTextarea.style.borderColor = '#ccc';
-            dataTextarea.style.boxShadow = 'none';
-        });
+        dataTextarea.placeholder = '请粘贴数据...';
+        dataTextarea.style.cssText = 'padding:8px; border:1px solid #ccc; border-radius:3px; height:200px; font-family:monospace;';
         importModal.appendChild(dataTextarea);
 
         const confirmButton = createButton('确认导入', () => {
             const dataStr = dataTextarea.value.trim();
-            if (!dataStr) {
-                alert('导入数据不能为空，请重新输入。');
-                return;
-            }
+            if (!dataStr) { alert('数据不能为空'); return; }
+
             try {
-                const importedItems = [];
-                
-                // 先按行分割（兼容Windows和Unix换行符）
-                const lines = dataStr.split(/\r\n|\n|\r/);
-                
-                // 检查是否包含分号（传统格式）
-                if (dataStr.includes(';')) {
-                    // 处理传统格式：税号,备注;税号,备注
-                    const items = dataStr.split(';');
-                    items.forEach((item, index) => {
-                        if (!item.trim()) return;
-                        
-                        const [content, note] = item.split(',');
-                        if (content && note) {
-                            importedItems.push({ 
-                                content: content.trim(), 
-                                note: note.trim() 
-                            });
-                        } else {
-                            throw new Error(`第${index + 1}条数据格式错误，应为"税号,备注"`);
-                        }
+                let importedItems = [];
+                // 自动识别：如果包含分号且不含换行，按旧格式解析；否则按行解析
+                if (dataStr.includes(';') && !dataStr.includes('\n')) {
+                    dataStr.split(';').forEach(raw => {
+                        const parts = raw.split(/[,，]/); // 兼容中英文逗号
+                        if (parts.length >= 2) importedItems.push({ content: parts[0].trim(), note: parts[1].trim() });
                     });
                 } else {
-                    // 处理新格式：制表符分隔，每行一条
-                    lines.forEach((line, index) => {
+                    dataStr.split(/\r?\n/).forEach(line => {
                         if (!line.trim()) return;
-                        
-                        // 按制表符分割
-                        const [content, note] = line.split('\t');
-                        if (content && note) {
-                            importedItems.push({ 
-                                content: content.trim(), 
-                                note: note.trim() 
-                            });
-                        } else {
-                            throw new Error(`第${index + 1}行数据格式错误，应为"税号\t备注"（制表符分隔）`);
-                        }
+                        // 尝试匹配制表符、多个空格或逗号作为分隔符
+                        const parts = line.split(/\t|\s{2,}|[,，]/);
+                        const content = parts[0]?.trim();
+                        const note = parts.slice(1).join(' ').trim(); // 备注可能包含空格
+                        if (content && note) importedItems.push({ content, note });
                     });
                 }
 
-                if (importedItems.length === 0) {
-                    throw new Error('未识别到有效数据，请检查格式');
-                }
+                if (importedItems.length === 0) throw new Error('未能识别有效数据，请检查分隔符');
 
-                // 清空现有条目动画
-                const existingItems = document.querySelectorAll('.tax-item');
-                existingItems.forEach((item, index) => {
-                    setTimeout(() => {
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateY(10px)';
+                // 更新存储并刷新界面
+                const existing = GM_getValue('autoFillItems', []);
+                const newList = [...existing, ...importedItems];
+                GM_setValue('autoFillItems', newList);
 
-                        if (index === existingItems.length - 1) {
-                            setTimeout(() => {
-                                itemList.innerHTML = '';
-                                GM_setValue('autoFillItems', importedItems);
-                                importedItems.forEach((item, i) => {
-                                    setTimeout(() => {
-                                        addItemToWindow(item.content, item.note, itemList);
-                                    }, i * 80);
-                                });
-                                alert(`数据导入成功！共导入 ${importedItems.length} 条记录`);
+                // 立即在界面上渲染新导入的项
+                importedItems.forEach(item => addItemToWindow(item.content, item.note, itemList));
 
-                                // 关闭模态框
-                                importModal.style.opacity = '0';
-                                importModal.style.transform = 'translate(-50%, -50%) scale(0.95)';
-                                overlay.style.opacity = '0';
-                                setTimeout(() => {
-                                    document.body.removeChild(importModal);
-                                    document.body.removeChild(overlay);
-                                }, 300);
-                            }, 300);
-                        }
-                    }, index * 50);
-                });
-            } catch (error) {
-                alert(`数据导入失败：${error.message}`);
-            }
+                alert(`成功导入 ${importedItems.length} 条数据！`);
+                closeModal();
+            } catch (e) { alert('导入失败: ' + e.message); }
         });
+
+        const closeModal = () => {
+            importModal.style.opacity = '0'; overlay.style.opacity = '0';
+            setTimeout(() => { [importModal, overlay].forEach(el => el.remove()); }, 300);
+        };
+
         importModal.appendChild(confirmButton);
-
-        const cancelButton = createButton('取消', () => {
-            // 关闭模态框
-            importModal.style.opacity = '0';
-            importModal.style.transform = 'translate(-50%, -50%) scale(0.95)';
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                document.body.removeChild(importModal);
-                document.body.removeChild(overlay);
-            }, 300);
-        }, true);
-        importModal.appendChild(cancelButton);
-
-        // 点击遮罩关闭模态框
-        overlay.addEventListener('click', () => {
-            importModal.style.opacity = '0';
-            importModal.style.transform = 'translate(-50%, -50%) scale(0.95)';
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                document.body.removeChild(importModal);
-                document.body.removeChild(overlay);
-            }, 300);
-        });
-
+        importModal.appendChild(createButton('取消', closeModal, true));
+        overlay.onclick = closeModal;
         document.body.appendChild(importModal);
     }
 

@@ -4,7 +4,7 @@
     // @namespace   https://greasyfork.org/de/users/541444-critias
     // @match       https://www.spiegel.de/
     // @match       https://www.spiegel.de/*
-    // @version     5.16
+    // @version     5.17.2
     // @author      Critias
     // @grant       none
     // @run-at      document-end
@@ -68,12 +68,14 @@
     // behebt einen Fehler, der oft dazu führt, dass kleine Icons und Buttons, wie z.B. der Playbutton bei Videos, nicht sichtbar sind.
     var svgs = [
         document.querySelector('svg[id="spon-play-f-m"]'),
+        document.querySelector('svg[id="spon-play-f-l"]'),
         document.querySelector('svg[id="spon-chevron-right-l"]'),
         document.querySelector('svg[id="spon-chevron-left-l"]'),
         document.querySelector('svg[id="spon-gallery-flag-m"]'),
         document.querySelector('svg[id="spon-gallery-f-m"]'),
         document.querySelector('svg[id="spon-video-flag-m"]'),
         document.querySelector('svg[id="spon-audio-flag-m"]')
+
     ];
     var knoten3 = document.createElement("div");
     knoten3.style.visibility = 'hidden';
@@ -353,7 +355,6 @@ for(var link of links) {
         'div [data-area="block>stocks"]', //Börse
         'div [data-area="block>topic:produkte_im_test"]', //Testbericht-"Artikel" (also eigentlich Produktwerbung)
         'div [data-area="group:manager_magazin"]', //Manager Magazin Artikel
-        'div [data-area*="_spiegel+"]', //Spiegel Plus Artikel
         'div [data-area^="block>podcastbox"]', //Podcast Menü
         'div [data-area^="block>storyslider"]', //Spiegel Stories
         'div [data-area="block>quiz"]', //Spiegel Quiz
@@ -371,6 +372,7 @@ for(var link of links) {
         'section[data-area="block>adobe_target"]', //Werbung "Verlagsangebot"
         'section[data-area="block>Effilee"]', //effilee.de Rezepte
         'section[data-advertisement*="mobile"]',//Werbung auf Mobilgeräten
+        'section[data-area="block>productslider"]',//Spiegel Shop
         '[data-area="block>sportdaten"]', //Sportdaten bzw. Spielergebnisse
         '[data-contains-flags^="Spplus-conditional"]', //Spiegel Plus Symbol bei kostenlosen Artikeln
         '[data-area^="block>podcastslider"]', //Podcast Menü
@@ -426,28 +428,6 @@ for(var link5 of links5) {
     }
 };
 
-//entfernt den "Verwandte Artikel" Abschnitt aus Artikeln, wenn alle vorgeschlagenen Artikel von Spiegel Plus sind und daher bereits entfernt wurden.
-var links6 = document.querySelectorAll("h3.leading-tight");
-for(var link6 of links6) {
-    if (link6.innerHTML.indexOf("Verwandte Artikel") !== -1) {
-         var group2 = link6.closest(".w-full");
-         var artikel2 = group2.querySelector(".pl-12, .pl-6");
-             if (!artikel2){
-             entfernen(link6);
-             }
-   }
-};
-
-//expandiert "Mehr anzeigen" im Abschnitt "Verwandte Artikel" unter Artikeln, wenn vorhanden, um ein einheitliches Layout wiederherzustellen.
-var bttn = document.querySelectorAll('button.border');
-for(var bttn1 of bttn){
-var mehr = bttn1.querySelectorAll('span.leading-normal');
-for(var mehr1 of mehr){
-if (mehr1.innerHTML.indexOf("Mehr anzeigen") !== -1) {
-    bttn1.click();
-    entfernen(bttn1);
-}}}
-
 //entfernt Newsletter-Angebote, die als iframe geladen werden
 function iframe_removal(){
 var newsletter_frame = document.querySelector('iframe[src*="embedded/newsletter/box"]');
@@ -469,6 +449,26 @@ if (iframe_detection){
 }});
 }
 
+//entfernt den großen Abschnitt unter Artikeln, der erst geladen wird, wenn der user bis zum Ende des Artikels scrollt
+function overscroll_removal(){
+var overscroll_frame = document.querySelector('div [data-area="block>smartfeed"]');
+if (overscroll_frame) {
+    var overscroll_box = overscroll_frame.closest('.sm\\:bg-shade-lightest');
+    overscroll_box.remove();
+    remember_usage2 = 1;
+    }
+}
+overscroll_removal();
+var remember_usage2 = '';
+if (window.location.href !== "https://www.spiegel.de/"){
+    window.addEventListener("scroll",
+                            function() {
+        if (remember_usage2 !== 1){
+            overscroll_removal();
+            setTimeout(overscroll_removal, 1000);
+}});
+}
+
 if(window.location.href === "https://www.spiegel.de/"){
 // entfernt etwaige Abschnitte von der Hauptseite, wenn alle enthaltenen Artikel von Spiegel Plus sind und daher bereits entfernt wurden.
 var links8 = document.querySelectorAll('[data-area^="block>topic"], [data-area^="block>latestarticles:"]');
@@ -480,18 +480,10 @@ var artikel4 = link8.querySelector('div [data-area^="article_teaser"]');
 };
     var zone_header = document.querySelectorAll('[data-area^="block>zoneheader"]');
     for (var zonehead of zone_header){
-        var next_up = zonehead.nextElementSibling;
-        if(next_up){
-            var article_inside = next_up.querySelector('div [data-area^="article_teaser"]');
-            while(next_up && !article_inside && !(next_up.hasAttribute('data-area') && next_up.getAttribute('data-area').indexOf('block>zoneheader') !== -1)){
-                next_up = next_up.nextElementSibling;
-                if (next_up){
-                    article_inside = next_up.querySelector('div [data-area^="article_teaser"]');
-                }
-            }
-            if(!next_up || next_up.hasAttribute('data-area') && next_up.getAttribute('data-area').indexOf('block>zoneheader') !== -1){
-                entfernen(zonehead);
-            }
+        var zone_parent = zonehead.parentElement?.parentElement;
+        var article_inside = zone_parent?.querySelector('div [data-area^="article_teaser"]');
+        if(!article_inside){
+            entfernen(zone_parent);
         }
     }
 

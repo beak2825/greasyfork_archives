@@ -2,7 +2,7 @@
 // @name         WME UR Color Selector
 // @author       DeKoerier
 // @namespace    https://greasyfork.org/users/1499279
-// @version      4.1
+// @version      5.0
 // @description  (NL) Hiermee geef je elke UR-taal een eigen kleur, zodat je snel ziet in welke taal de melder zijn app gebruikt. Slim gebruik: Kies Gebruik kleur voor overige talen zodat je gemakkelijk kunt zien of het bijvoorbeeld niet je eigen taal is. (EN) This script lets you assign a custom color per UR reporter language, so you can quickly see what language the Waze app is set to. Smart usage: choose Use color for other languages making it easy to see if it's not your native language.
 // @match        https://*.waze.com/*editor*
 // @grant        none
@@ -16,12 +16,13 @@
 /* global W, I18n, OpenLayers */
 
 const SCRIPT_NAME = "WME UR Color Selector";
-const SCRIPT_VERSION = '4.1';
+const SCRIPT_VERSION = '4.2';
 const VERSION_STORAGE_KEY = 'LCVersionCheckerKey';
 
 const WHATS_NEW = {
+    "5.0": "- Bugfix: Kleuren in Update Request popup worden nu correct weergegeven na Waze Editor update.\n- De UR Kleuren iconen laden nu altijd, ongeacht hoeveel, verplaatsen kaart of in- en uitzoomen.\nVerbeterde timing voor shadow DOM detectie.",
     "4.1": "- Due to an update to Waze Editors, you no longer see the colors in an Update Request window. To fix this, you need to reapply the colors.",
-    "4.0": "- Script name has been changed from WME Language Color Selector to WME UR Color Selector.\n- New collapsible sections: Language color settings, OS colors, and Vehicle type colors. Open/closed state is remembered per section.\n- Saved colors moved to a dedicated panel at the very bottom (outside the collapsibles).\n- UI polish for narrow sidebars: checkboxes aligned with labels, tighter grid layout, thicker card borders, and clearer visual grouping.\n- OS and Vehicle badges in the Update Request popup now use the same coloring logic as Language, with automatic black/white text selection for readability (WCAG contrast based).\n- UR overlay rework: small colored badges (Language → OS → Vehicle) are vertically stacked under the UR icon; refined glyphs; overlay ignores pointer events so map interactions aren’t blocked.\n- Canonicalization & auto-migration: OS keys normalized (e.g., ANDROID → ANDROID_MOBILE; aliases for CarPlay/Android Auto) and Vehicle types normalized/localized (PRIVATE, EV, and new MOTORCYCLE). Existing preferences are migrated automatically.\n- Swatch application now targets the currently focused field (Language/OS/Vehicle). Fixed a bug where applying a saved color to OS accidentally added the item under Languages.\n- Robustness/performance tweaks: safer badge detection, wait for UR icons to be visible before drawing, hide overlay while panning/zooming, and refresh after map moves.",
+    "4.0": "- Script name has been changed from WME Language Color Selector to WME UR Color Selector.\n- New collapsible sections: Language color settings, OS colors, and Vehicle type colors. Open/closed state is remembered per section.\n- Saved colors moved to a dedicated panel at the very bottom (outside the collapsibles).\n- UI polish for narrow sidebars: checkboxes aligned with labels, tighter grid layout, thicker card borders, and clearer visual grouping.\n- OS and Vehicle badges in the Update Request popup now use the same coloring logic as Language, with automatic black/white text selection for readability (WCAG contrast based).\n- UR overlay rework: small colored badges (Language → OS → Vehicle) are vertically stacked under the UR icon; refined glyphs; overlay ignores pointer events so map interactions aren't blocked.\n- Canonicalization & auto-migration: OS keys normalized (e.g., ANDROID → ANDROID_MOBILE; aliases for CarPlay/Android Auto) and Vehicle types normalized/localized (PRIVATE, EV, and new MOTORCYCLE). Existing preferences are migrated automatically.\n- Swatch application now targets the currently focused field (Language/OS/Vehicle). Fixed a bug where applying a saved color to OS accidentally added the item under Languages.\n- Robustness/performance tweaks: safer badge detection, wait for UR icons to be visible before drawing, hide overlay while panning/zooming, and refresh after map moves.",
     "3.3": "- Added expandable color detail menu (▼/▲) for each language.\n- New HEX field with Copy, Paste, and Save options.\n- Saved colors palette: quickly reuse previously chosen colors.\n- Apply saved colors to any language with a single click.\n- Remove saved colors via Alt+Click or right-click.",
     "3.2": "- The save button has been removed. With each update, it became increasingly useless, only saving the color change. Now, everything saves automatically when a change is made.",
     "3.1": "- Bugfix: When loading the page or moving the map the UR badges didn't reload. This has been resolved.",
@@ -41,15 +42,12 @@ const DEBUG_LOGGING = false;
 function log(...args) { if (DEBUG_LOGGING) console.log('[LC]', ...args); }
 function warn(...args) { if (DEBUG_LOGGING) console.warn('[LC]', ...args); }
 
-let LCSmoveEndTimeout = null;
+let LCSinitialized = false;
 
 (function () {
     'use strict';
 
     const LANG_STORAGE_KEY = 'languageColorPrefs';
-
-    // I wasn't able to find the shortcode of the languages below. Due to this, these are not yet available via WME LCS! Sorry!
-    // 'अंग्रेजी ', 'ქართული', 'Tiếng Việt',
 
     const LANGUAGE_MAP = {
         dutch: 'Nederlands',
@@ -180,6 +178,9 @@ let LCSmoveEndTimeout = null;
     let lastFocusTarget = null;
     let swatchDeleteMode = false;
 
+    let applyColorDebounceTimer = null;
+    let scheduleDebounceTimer = null;
+
     (function migratePrefsToCanonical() {
         let changed = false;
         const vNew = { ...vehicleColorPrefs };
@@ -212,7 +213,7 @@ let LCSmoveEndTimeout = null;
         }
     })();
 
-    const observer = new MutationObserver(() => applyLanguageColor());
+    let observer = null;
 
     function hexToRgb(hex) {
         if (!hex) return null;
@@ -242,21 +243,52 @@ let LCSmoveEndTimeout = null;
         return contrastWhite >= contrastBlack ? '#ffffff' : '#000000';
     }
 
+    function waitForShadowChip(wzBadgeEl, maxAttempts = 20, interval = 50) {
+        return new Promise((resolve) => {
+            let attempts = 0;
+            const check = () => {
+                attempts++;
+                const chip = wzBadgeEl?.shadowRoot?.querySelector('.wz-badge');
+                if (chip) {
+                    resolve(chip);
+                } else if (attempts < maxAttempts) {
+                    setTimeout(check, interval);
+                } else {
+                    resolve(null);
+                }
+            };
+            check();
+        });
+    }
+
+    async function paintBadge(wzBadgeEl, hex) {
+        if (!wzBadgeEl) return;
+
+        const chip = await waitForShadowChip(wzBadgeEl);
+        if (!chip) return;
+
+        if (hex && /^#[0-9A-F]{6}$/i.test(hex)) {
+            chip.style.backgroundColor = hex;
+            chip.style.color = pickTextColorOnBg(hex);
+        } else {
+            chip.style.backgroundColor = DEFAULT_BADGE_BG;
+            chip.style.color = DEFAULT_BADGE_TEXT;
+        }
+    }
+
     function applyLanguageColor() {
+        if (applyColorDebounceTimer) {
+            clearTimeout(applyColorDebounceTimer);
+        }
+
+        applyColorDebounceTimer = setTimeout(() => {
+            applyLanguageColorInternal();
+        }, 50);
+    }
+
+    async function applyLanguageColorInternal() {
         const root = document.querySelector('.reporter-preferences');
         if (!root) return;
-
-        const paint = (wzBadgeEl, hex) => {
-            const chip = wzBadgeEl?.shadowRoot?.querySelector('.wz-badge');
-            if (!chip) return;
-            if (hex && /^#[0-9A-F]{6}$/i.test(hex)) {
-                chip.style.backgroundColor = hex;
-                chip.style.color = pickTextColorOnBg(hex);
-            } else {
-                chip.style.backgroundColor = DEFAULT_BADGE_BG;
-                chip.style.color = DEFAULT_BADGE_TEXT;
-            }
-        };
 
         const langBadge = root.querySelector('wz-badge.reporterLanguage');
         if (langBadge) {
@@ -264,8 +296,8 @@ let LCSmoveEndTimeout = null;
             const isKnown = label in colorPrefs;
             const c = colorPrefs[label];
             const hex = (isKnown && /^#[0-9A-F]{6}$/i.test(c)) ? c :
-            (!isKnown && colorOtherPrefs.enabled ? colorOtherPrefs.color : null);
-            paint(langBadge, hex);
+                (!isKnown && colorOtherPrefs.enabled ? colorOtherPrefs.color : null);
+            await paintBadge(langBadge, hex);
         }
 
         let osBadge = root.querySelector('wz-badge.reporterOs, wz-badge.reporterOS, wz-badge.os, wz-badge.reporter-os') || null;
@@ -277,8 +309,8 @@ let LCSmoveEndTimeout = null;
         if (osBadge) {
             const key = normalizeToOSKey(osBadge.textContent.trim());
             const hex = (key && /^#[0-9A-F]{6}$/i.test(osColorPrefs[key])) ? osColorPrefs[key]
-            : (key && osOtherPrefs.enabled ? osOtherPrefs.color : null);
-            paint(osBadge, hex);
+                : (key && osOtherPrefs.enabled ? osOtherPrefs.color : null);
+            await paintBadge(osBadge, hex);
         }
 
         let vehBadge = root.querySelector('wz-badge.reporterVehicle, wz-badge.reporterVehicleType, wz-badge.vehicle, wz-badge.reporter-vehicle') || null;
@@ -290,8 +322,56 @@ let LCSmoveEndTimeout = null;
         if (vehBadge) {
             const key = normalizeToVehicleKey(vehBadge.textContent.trim());
             const hex = (key && /^#[0-9A-F]{6}$/i.test(vehicleColorPrefs[key])) ? vehicleColorPrefs[key]
-            : (key && vehicleOtherPrefs.enabled ? vehicleOtherPrefs.color : null);
-            paint(vehBadge, hex);
+                : (key && vehicleOtherPrefs.enabled ? vehicleOtherPrefs.color : null);
+            await paintBadge(vehBadge, hex);
+        }
+    }
+
+    function scheduleApplyColors() {
+        if (scheduleDebounceTimer) {
+            clearTimeout(scheduleDebounceTimer);
+        }
+
+        scheduleDebounceTimer = setTimeout(() => {
+            applyLanguageColor();
+            setTimeout(applyLanguageColor, 150);
+            setTimeout(applyLanguageColor, 400);
+        }, 50);
+    }
+
+    function setupObserver() {
+        if (observer) {
+            observer.disconnect();
+        }
+
+        let lastTriggerTime = 0;
+        const THROTTLE_MS = 100;
+
+        observer = new MutationObserver(() => {
+            const now = Date.now();
+            if (now - lastTriggerTime < THROTTLE_MS) return;
+
+            const reporterPrefs = document.querySelector('.reporter-preferences');
+            if (reporterPrefs) {
+                lastTriggerTime = now;
+                scheduleApplyColors();
+            }
+        });
+
+        const panelContainer = document.querySelector('#panel-container');
+        if (panelContainer) {
+            observer.observe(panelContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        const sidebarContainer = document.querySelector('#sidebar');
+        if (sidebarContainer && sidebarContainer !== panelContainer) {
+            observer.observe(sidebarContainer, {
+                childList: true,
+                subtree: true
+            });
         }
     }
 
@@ -331,17 +411,11 @@ let LCSmoveEndTimeout = null;
   --lcs-gap:6px; --lcs-border:#cfd8e3; --lcs-radius:12px;
   font:12.5px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#1f2937;
 }
-
-/* Titels */
 #languageColorConfig.lcs-ui h3{ margin:10px 0 6px; font-size:14px; font-weight:700; }
-
-/* Algemene “card”-sectie */
 #languageColorConfig.lcs-ui .lcs-section{
   background:#fff; border:1.6px solid var(--lcs-border); border-radius:var(--lcs-radius);
   padding:8px; margin:8px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);
 }
-
-/* Accordion (collapsible) */
 #languageColorConfig.lcs-ui .lcs-accordion details{
   background:#fff; border:1.6px solid var(--lcs-border); border-radius:var(--lcs-radius);
   overflow:hidden; margin:8px 0;
@@ -354,20 +428,14 @@ let LCSmoveEndTimeout = null;
 #languageColorConfig.lcs-ui .lcs-caret{ margin-left:auto; transition:transform .15s ease; }
 #languageColorConfig.lcs-ui details[open] .lcs-caret{ transform:rotate(180deg); }
 #languageColorConfig.lcs-ui .lcs-acc-body{ padding:10px; border-top:1px dashed #e5e7eb; }
-
-/* Rij met label + controls */
 #languageColorConfig.lcs-ui .lcs-row{
   display:grid; grid-template-columns:1fr auto auto auto; gap:var(--lcs-gap); align-items:center;
 }
 #languageColorConfig.lcs-ui .lcs-label{ font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-
-/* Checkbox + tekst op één lijn (en optioneel extra control rechts) */
 #languageColorConfig.lcs-ui .lcs-check{
   display:grid; grid-template-columns:auto 1fr auto; gap:8px; align-items:center;
 }
 #languageColorConfig.lcs-ui .lcs-check input[type="checkbox"]{ margin:0; transform:translateY(0); }
-
-/* Inputs/knoppen */
 #languageColorConfig.lcs-ui input[type="color"]{
   width:28px; height:22px; border:none; border-radius:6px; padding:0; cursor:pointer;
 }
@@ -378,8 +446,6 @@ let LCSmoveEndTimeout = null;
 #languageColorConfig.lcs-ui select{
   width:100%; padding:6px; border:1px solid #d8dee9; border-radius:8px; background:#fff;
 }
-
-/* Detailpaneeltje per item */
 #languageColorConfig.lcs-ui .lcs-details{
   margin-top:6px; padding:6px; border:1px dashed #e5e7eb; border-radius:8px; background:#f9fafb;
 }
@@ -387,8 +453,6 @@ let LCSmoveEndTimeout = null;
 #languageColorConfig.lcs-ui .lcs-hexrow input[type="text"]{
   width:96px; padding:4px 6px; border:1px solid #d1d5db; border-radius:6px;
 }
-
-/* Swatches onderaan */
 #languageColorConfig.lcs-ui .lcs-swatches{ display:grid; grid-template-columns:repeat(auto-fill, minmax(18px, 1fr)); gap:6px; }
 #languageColorConfig.lcs-ui .lcs-swatch-btn{ width:18px; height:18px; border-radius:4px; border:1px solid #aaa; cursor:pointer; }
 #languageColorConfig.lcs-ui .lcs-muted{ font-size:12px; color:#6b7280; }
@@ -410,6 +474,7 @@ let LCSmoveEndTimeout = null;
 
             ensureSidebarStyles();
             buildSidebar(document.getElementById('languageColorConfig'));
+            setupObserver();
         });
     }
 
@@ -476,7 +541,7 @@ let LCSmoveEndTimeout = null;
                 if (v === FALLBACK_COLOR_INPUT.toLowerCase()) { colorPrefs[lang]=''; hexInput.value=''; }
                 else if (/^#[0-9a-f]{6}$/.test(v)) { colorPrefs[lang]=v; hexInput.value=v; }
                 localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify(colorPrefs));
-                applyLanguageColor(); renderLanguageLabelsAsUROStyle();
+                scheduleApplyColors(); renderLanguageLabelsAsUROStyle();
             };
             hexInput.addEventListener('change', () => {
                 const h = toHex6(hexInput.value);
@@ -484,13 +549,13 @@ let LCSmoveEndTimeout = null;
                 else if (hexInput.value.trim()==='') { colorPrefs[lang]=''; }
                 else { hexInput.value = colorPrefs[lang] || ''; }
                 localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify(colorPrefs));
-                applyLanguageColor(); renderLanguageLabelsAsUROStyle();
+                scheduleApplyColors(); renderLanguageLabelsAsUROStyle();
             });
             copyBtn.onclick = async () => { const h = toHex6(hexInput.value) || toHex6(colorInput.value); if (!h) return; try{ await navigator.clipboard.writeText(h);}catch{} };
             pasteBtn.onclick = async () => {
                 try{ const txt = await navigator.clipboard.readText(); const h = toHex6(txt); if(!h) return;
                     hexInput.value=h; colorInput.value=h; colorPrefs[lang]=h; localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify(colorPrefs));
-                    applyLanguageColor(); renderLanguageLabelsAsUROStyle();
+                    scheduleApplyColors(); renderLanguageLabelsAsUROStyle();
                    }catch{}
             };
             saveSwatchBtn.onclick = () => { const h = toHex6(hexInput.value) || toHex6(colorInput.value); if(!h) return; addSwatchUnique(h); renderSwatches(); };
@@ -498,7 +563,7 @@ let LCSmoveEndTimeout = null;
                 delete colorPrefs[lang]; localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify(colorPrefs));
                 const badge = Array.from(document.querySelectorAll('.reporter-preferences wz-badge.reporterLanguage')).find(b=>b.textContent.trim()===lang);
                 if (badge?.shadowRoot) badge.shadowRoot.querySelector('.wz-badge')?.removeAttribute('style');
-                applyLanguageColor(); renderLanguageLabelsAsUROStyle(); buildSidebar(container);
+                scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); buildSidebar(container);
             };
 
             header.append(label, colorInput, toggleBtn, resetBtn);
@@ -524,7 +589,7 @@ let LCSmoveEndTimeout = null;
                 const val = dropdown.value;
                 if (val && !(val in colorPrefs)) {
                     colorPrefs[val] = ''; localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify(colorPrefs));
-                    applyLanguageColor(); renderLanguageLabelsAsUROStyle(); buildSidebar(container);
+                    scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); buildSidebar(container);
                 }
             };
             ddWrap.appendChild(dropdown);
@@ -537,8 +602,8 @@ let LCSmoveEndTimeout = null;
             const otherToggle = document.createElement('input'); otherToggle.type='checkbox'; otherToggle.checked = colorOtherPrefs.enabled; otherToggle.id='toggleOtherLangColor';
             const otherLabel = document.createElement('label'); otherLabel.setAttribute('for','toggleOtherLangColor'); otherLabel.textContent = isDutch ? 'Overige talen' : 'Other languages';
             const otherColorInput = document.createElement('input'); otherColorInput.type='color'; otherColorInput.value = colorOtherPrefs.color;
-            otherToggle.onchange = () => { colorOtherPrefs.enabled = otherToggle.checked; localStorage.setItem(OTHER_PREFS_KEY, JSON.stringify(colorOtherPrefs)); applyLanguageColor(); renderLanguageLabelsAsUROStyle(); };
-            otherColorInput.oninput = () => { colorOtherPrefs.color = otherColorInput.value; localStorage.setItem(OTHER_PREFS_KEY, JSON.stringify(colorOtherPrefs)); applyLanguageColor(); renderLanguageLabelsAsUROStyle(); };
+            otherToggle.onchange = () => { colorOtherPrefs.enabled = otherToggle.checked; localStorage.setItem(OTHER_PREFS_KEY, JSON.stringify(colorOtherPrefs)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); };
+            otherColorInput.oninput = () => { colorOtherPrefs.color = otherColorInput.value; localStorage.setItem(OTHER_PREFS_KEY, JSON.stringify(colorOtherPrefs)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); };
             row.append(otherToggle, otherLabel, otherColorInput); otherWrap.append(row); langBody.appendChild(otherWrap);
 
             const badgeWrap = document.createElement('div'); badgeWrap.className='lcs-section';
@@ -575,8 +640,8 @@ let LCSmoveEndTimeout = null;
             const toggle = document.createElement('input'); toggle.type='checkbox'; toggle.checked=osOtherPrefs.enabled; toggle.id='toggleOtherOS';
             const label = document.createElement('label'); label.setAttribute('for','toggleOtherOS'); label.textContent = isDutch ? 'Overige OS' : 'Other OS';
             const picker = document.createElement('input'); picker.type='color'; picker.value = osOtherPrefs.color;
-            toggle.onchange = () => { osOtherPrefs.enabled = toggle.checked; localStorage.setItem(OS_OTHER_PREFS_KEY, JSON.stringify(osOtherPrefs)); renderLanguageLabelsAsUROStyle(); };
-            picker.oninput = () => { osOtherPrefs.color = picker.value; localStorage.setItem(OS_OTHER_PREFS_KEY, JSON.stringify(osOtherPrefs)); renderLanguageLabelsAsUROStyle(); };
+            toggle.onchange = () => { osOtherPrefs.enabled = toggle.checked; localStorage.setItem(OS_OTHER_PREFS_KEY, JSON.stringify(osOtherPrefs)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); };
+            picker.oninput = () => { osOtherPrefs.color = picker.value; localStorage.setItem(OS_OTHER_PREFS_KEY, JSON.stringify(osOtherPrefs)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); };
             row.append(toggle, label, picker); otherWrap.append(row); osBody.appendChild(otherWrap);
 
             const bWrap = document.createElement('div'); bWrap.className='lcs-section';
@@ -612,8 +677,8 @@ let LCSmoveEndTimeout = null;
             const toggle = document.createElement('input'); toggle.type='checkbox'; toggle.checked=vehicleOtherPrefs.enabled; toggle.id='toggleOtherVehicle';
             const label = document.createElement('label'); label.setAttribute('for','toggleOtherVehicle'); label.textContent = isDutch ? 'Overige voertuigtypes' : 'Other vehicle types';
             const picker = document.createElement('input'); picker.type='color'; picker.value = vehicleOtherPrefs.color;
-            toggle.onchange = () => { vehicleOtherPrefs.enabled = toggle.checked; localStorage.setItem(VEH_OTHER_PREFS_KEY, JSON.stringify(vehicleOtherPrefs)); renderLanguageLabelsAsUROStyle(); };
-            picker.oninput = () => { vehicleOtherPrefs.color = picker.value; localStorage.setItem(VEH_OTHER_PREFS_KEY, JSON.stringify(vehicleOtherPrefs)); renderLanguageLabelsAsUROStyle(); };
+            toggle.onchange = () => { vehicleOtherPrefs.enabled = toggle.checked; localStorage.setItem(VEH_OTHER_PREFS_KEY, JSON.stringify(vehicleOtherPrefs)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); };
+            picker.oninput = () => { vehicleOtherPrefs.color = picker.value; localStorage.setItem(VEH_OTHER_PREFS_KEY, JSON.stringify(vehicleOtherPrefs)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); };
             row.append(toggle, label, picker); otherWrap.append(row); vehBody.appendChild(otherWrap);
 
             const bWrap = document.createElement('div'); bWrap.className='lcs-section';
@@ -666,20 +731,20 @@ let LCSmoveEndTimeout = null;
                 const v = colorInput.value.toLowerCase();
                 if (v === FALLBACK_COLOR_INPUT.toLowerCase()) { colorDict[key]=''; hexInput.value=''; }
                 else if (/^#[0-9a-f]{6}$/.test(v)) { colorDict[key]=v; hexInput.value=v; }
-                localStorage.setItem(STORAGE, JSON.stringify(colorDict)); renderLanguageLabelsAsUROStyle();
+                localStorage.setItem(STORAGE, JSON.stringify(colorDict)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle();
             };
             hexInput.addEventListener('change', () => {
                 const h = toHex6(hexInput.value);
                 if (h) { hexInput.value=h; colorInput.value=h; colorDict[key]=h; }
                 else if (hexInput.value.trim()==='') { colorDict[key]=''; }
                 else { hexInput.value = colorDict[key] || ''; }
-                localStorage.setItem(STORAGE, JSON.stringify(colorDict)); renderLanguageLabelsAsUROStyle();
+                localStorage.setItem(STORAGE, JSON.stringify(colorDict)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle();
             });
             copyBtn.onclick = async () => { const h = toHex6(hexInput.value) || toHex6(colorInput.value); if(!h)return; try{await navigator.clipboard.writeText(h);}catch{} };
-            pasteBtn.onclick = async () => { try{ const txt = await navigator.clipboard.readText(); const h = toHex6(txt); if(!h)return; hexInput.value=h; colorInput.value=h; colorDict[key]=h; localStorage.setItem(STORAGE, JSON.stringify(colorDict)); renderLanguageLabelsAsUROStyle(); }catch{} };
+            pasteBtn.onclick = async () => { try{ const txt = await navigator.clipboard.readText(); const h = toHex6(txt); if(!h)return; hexInput.value=h; colorInput.value=h; colorDict[key]=h; localStorage.setItem(STORAGE, JSON.stringify(colorDict)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); }catch{} };
             saveSwatchBtn.onclick = () => { const h = toHex6(hexInput.value) || toHex6(colorInput.value); if(!h)return; addSwatchUnique(h); window.renderSwatches?.(); };
 
-            resetBtn.onclick = () => { delete colorDict[key]; localStorage.setItem(STORAGE, JSON.stringify(colorDict)); renderLanguageLabelsAsUROStyle(); buildSidebar(container); };
+            resetBtn.onclick = () => { delete colorDict[key]; localStorage.setItem(STORAGE, JSON.stringify(colorDict)); scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); buildSidebar(container); };
 
             header.append(label, colorInput, toggleBtn, resetBtn);
             hexRow.append(hexInput, copyBtn, pasteBtn, saveSwatchBtn);
@@ -720,7 +785,7 @@ let LCSmoveEndTimeout = null;
                     else if (t.kind === 'OS') { dict = osColorPrefs; storageKey = OS_PREFS_KEY; }
                     else { dict = vehicleColorPrefs; storageKey = VEH_PREFS_KEY; }
                     dict[t.key] = hex; localStorage.setItem(storageKey, JSON.stringify(dict));
-                    applyLanguageColor(); renderLanguageLabelsAsUROStyle(); buildSidebar(container);
+                    scheduleApplyColors(); renderLanguageLabelsAsUROStyle(); buildSidebar(container);
                 });
                 b.addEventListener('contextmenu', (e) => { e.preventDefault(); removeSwatch(hex); renderSwatches(); });
                 swGrid.appendChild(b);
@@ -738,8 +803,7 @@ let LCSmoveEndTimeout = null;
                     const sdk = window.getWmeSdk({ scriptId: 'language_highlighter', scriptName: 'Language Highlighter' });
                     sdk.Events.once({ eventName: 'wme-ready' }).then(() => {
                         buildCustomTab(sdk);
-                        observer.observe(document.querySelector('#panel-container'), { childList: true, subtree: true });
-                        console.log("✅ WME UR Color Selector loaded. Thank you for using my script!");
+                        console.log("✅ Language Color Selector loaded. Thank you for using my script!");
                         checkVersionAndShowChangelog();
                         init();
                     });
@@ -765,23 +829,12 @@ let LCSmoveEndTimeout = null;
         box.style = 'position:fixed;top:15px;right:15px;background:#4caf50;color:#fff;padding:12px 16px;border-radius:8px;z-index:99999;max-width:320px;font-family:sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
 
         box.innerHTML = `
-      <strong>✅ WME UR Color Selector updated to v${version}</strong><br>
+      <strong>✅ Language Color Selector updated to v${version}</strong><br>
       <div style="margin-top:6px;white-space:pre-wrap;font-size:90%">${changelog}</div>
     `;
 
         document.body.appendChild(box);
         setTimeout(() => box.remove(), 15000);
-    }
-
-    function tryGetSdk(timeout = 1000) {
-        return new Promise(resolve => {
-            if (W?.userscripts?.sdk) return resolve(W.userscripts.sdk);
-            const timer = setTimeout(() => resolve(null), timeout);
-            document.addEventListener("wme-sdk-ready", () => {
-                clearTimeout(timer);
-                resolve(W.userscripts.sdk);
-            }, { once: true });
-        });
     }
 
     async function init() {
@@ -791,35 +844,12 @@ let LCSmoveEndTimeout = null;
             });
         }
 
-        log("🚀 WME klaar, initialisatie gestart...");
-
-        async function tellURs() {
-            const urList = Object.values(W.model.mapUpdateRequests?.objects || {});
-            log(`📦 Aantal URs zichtbaar op de kaart: ${urList.length}`);
-            const results = await Promise.all(urList.map(async ur => {
-                const id = ur.attributes?.id ?? ur.id ?? 'onbekend';
-
-                let taal = ur.attributes?.reporterLanguage;
-                if (!taal) {
-                    try {
-                        const upref = W.model.UpdateRequestUserPreferences.get(ur.userID);
-                        taal = upref?.attributes?.language;
-                    } catch {}
-                }
-
-                const osRaw = (ur.attributes?.os || '').toString().toUpperCase();
-                const osLabel = OS_LABEL[osRaw] || osRaw || 'Unknown';
-
-                const vehRaw = (ur.attributes?.hasEv ? 'EV' : (ur.attributes?.vehicleType || 'UNKNOWN')).toString().toUpperCase();
-                const vehLabel = vehicleDisplay(vehRaw) || vehRaw;
-
-                return `• ID ${id} → taal: ${taal ?? 'onbekend'} | OS: ${osLabel} | voertuig: ${vehLabel}`;
-            }));
-            log("🧾 UR’s:", results.join("\n"));
-        }
-
-        tellURs();
-        W.map.events.register("moveend", null, () => setTimeout(tellURs, 300));
+        W.map.events.register("moveend", null, () => {
+            setTimeout(() => {
+                const urList = Object.values(W.model.mapUpdateRequests?.objects || {});
+                log(`📦 Aantal URs zichtbaar op de kaart: ${urList.length}`);
+            }, 300);
+        });
     }
 
     const LABEL_CLASS = 'ur-language-label';
@@ -941,24 +971,15 @@ let LCSmoveEndTimeout = null;
     }
 
     function renderLanguageLabelsAsUROStyle() {
-        log("🎨 [renderLanguageLabelsAsUROStyle] Start");
-
         removeLanguageLabels();
 
         const urList = Object.values(W?.model?.mapUpdateRequests?.objects || {});
-        if (!urList?.length) {
-            log("❌ Geen UR’s gevonden op de kaart.");
-            return;
-        }
-        log(`🔍 ${urList.length} URs in model`);
+        if (!urList?.length) return;
 
         let badgeLayer = document.getElementById('LCBadgeLayer');
         if (!badgeLayer) {
             const svgRoot = document.querySelector('svg');
-            if (!svgRoot) {
-                warn("❌ Geen SVG-root gevonden");
-                return;
-            }
+            if (!svgRoot) return;
             badgeLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
             badgeLayer.setAttribute('id', 'LCBadgeLayer');
             svgRoot.appendChild(badgeLayer);
@@ -966,32 +987,21 @@ let LCSmoveEndTimeout = null;
 
         urList.forEach(ur => {
             const urId = ur.attributes?.id ?? ur.id;
-            if (!urId) {
-                warn("⚠️ Geen geldig UR-id gevonden, sla deze over.");
-                return;
-            }
+            if (!urId) return;
 
             let marker;
             try {
                 marker = W.userscripts.getMapElementByDataModel?.(ur);
-            } catch (e) {
-                warn(`⚠️ Fout bij ophalen marker voor UR ${urId}:`, e);
-            }
+            } catch (e) {}
             if (!marker) {
                 marker = document.querySelector(`g[id^="OpenLayers_Layer_Vector_"] use[*|href$="/${urId}"]`);
-                if (!marker) {
-                    warn(`❌ Geen marker gevonden voor UR ${urId} (ook niet via fallback)`);
-                    return;
-                }
-                log(`🔁 Marker gevonden via fallback-DOM voor UR ${urId}`);
+                if (!marker) return;
             }
 
             const lon = ur.attributes?.geoJSONGeometry?.coordinates?.[0];
             const lat = ur.attributes?.geoJSONGeometry?.coordinates?.[1];
-            if (typeof lon !== "number" || typeof lat !== "number") {
-                warn(`⚠️ Geen geldige coordinaten voor UR ${urId}`);
-                return;
-            }
+            if (typeof lon !== "number" || typeof lat !== "number") return;
+
             const olLonLat = new OpenLayers.LonLat(lon, lat);
             const pixel = W.map.getOLMap().getViewPortPxFromLonLat(
                 olLonLat.transform("EPSG:4326", W.map.getOLMap().getProjection())
@@ -1033,59 +1043,63 @@ let LCSmoveEndTimeout = null;
                 });
             });
         });
-
-        log("✅ [renderLanguageLabelsAsUROStyle] Voltooid");
     }
 
-    function waitForVisibleURs(maxWaitMs = 4000) {
-        return new Promise(resolve => {
-            const startTime = Date.now();
-            const check = () => {
-                const urCount = Object.keys(W?.model?.mapUpdateRequests?.objects || {}).length;
-                const icons = document.querySelectorAll('g[id^="OpenLayers_Layer_Vector_"] image');
-                const visibleURIcons = Array.from(icons).filter(img =>
-                                                                img.getAttribute('href')?.startsWith('blob:') || img.getAttribute('xlink:href')?.startsWith('blob:')
-                                                               );
-                const enoughLoaded = urCount > 0 && visibleURIcons.length >= urCount;
-                if (enoughLoaded || Date.now() - startTime > maxWaitMs) resolve();
-                else setTimeout(check, 250);
-            };
-            check();
-        });
+    let renderDebounceTimer = null;
+
+    function scheduleRenderLabels(delay = 150) {
+        if (renderDebounceTimer) clearTimeout(renderDebounceTimer);
+        renderDebounceTimer = setTimeout(() => {
+            renderLanguageLabelsAsUROStyle();
+            const badgeLayer = document.getElementById('LCBadgeLayer');
+            if (badgeLayer) badgeLayer.style.display = 'block';
+            renderDebounceTimer = null;
+        }, delay);
     }
 
-    function waitForMapAndBindMoveEnd() {
-        log("🔁 Controleren op W.map...");
+    function waitForMapAndBindEvents() {
         const check = setInterval(() => {
-            if (W?.map?.events?.register && W?.model?.mapUpdateRequests?.objects) {
+            if (W?.map?.events?.register && W?.model?.mapUpdateRequests) {
                 clearInterval(check);
-                log("✅ W.map gevonden, move-events geregistreerd");
 
                 W.map.events.register("movestart", null, () => {
                     const badgeLayer = document.getElementById('LCBadgeLayer');
                     if (badgeLayer) badgeLayer.style.display = 'none';
                 });
 
-                W.map.events.register("moveend", null, async () => {
-                    if (LCSmoveEndTimeout) clearTimeout(LCSmoveEndTimeout);
-                    LCSmoveEndTimeout = setTimeout(async () => {
-                        await waitForVisibleURs();
-                        renderLanguageLabelsAsUROStyle();
-                        const badgeLayer = document.getElementById('LCBadgeLayer');
-                        if (badgeLayer) badgeLayer.style.display = 'block';
-                        LCSmoveEndTimeout = null;
-                    }, 500);
+                W.map.events.register("zoomstart", null, () => {
+                    const badgeLayer = document.getElementById('LCBadgeLayer');
+                    if (badgeLayer) badgeLayer.style.display = 'none';
                 });
 
-                renderLanguageLabelsAsUROStyle();
+                W.map.events.register("moveend", null, () => {
+                    scheduleRenderLabels(200);
+                    setTimeout(() => scheduleRenderLabels(50), 600);
+                });
+
+                W.map.events.register("zoomend", null, () => {
+                    scheduleRenderLabels(300);
+                    setTimeout(() => scheduleRenderLabels(50), 800);
+                    setTimeout(() => scheduleRenderLabels(50), 1500);
+                });
+
+                if (W.model.mapUpdateRequests.on) {
+                    W.model.mapUpdateRequests.on('objectsadded', () => {
+                        scheduleRenderLabels(300);
+                    });
+                    W.model.mapUpdateRequests.on('objectschanged', () => {
+                        scheduleRenderLabels(300);
+                    });
+                }
+
+                scheduleRenderLabels(500);
             }
         }, 250);
     }
-    waitForMapAndBindMoveEnd();
+    waitForMapAndBindEvents();
 
-    LCSmoveEndTimeout = setTimeout(() => {
-        renderLanguageLabelsAsUROStyle();
-        LCSmoveEndTimeout = null;
-    }, 5000);
+    setTimeout(() => scheduleRenderLabels(100), 1000);
+    setTimeout(() => scheduleRenderLabels(100), 2000);
+    setTimeout(() => scheduleRenderLabels(100), 3500);
 
 })();

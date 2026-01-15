@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Intake FR
 // @namespace    http://tampermonkey.net/
-// @version      1.1.5
+// @version      1.1.21
 // @description  Intkae inladen voor FR
 // @match        *://*/*
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @connect      whisper.anzwerz.ai
 
 
 // @downloadURL https://update.greasyfork.org/scripts/559932/Intake%20FR.user.js
@@ -34,7 +35,11 @@
         const datumEl = document.getElementById('frm_input_indication_date_datepicker');
         if (datumEl){
             console.log("element gevonden");
-            sessionStorage.setItem('consultDate', datumEl.value);
+            const delen = datumEl.value.split(/[-/]/);
+            const [dag, maand, jaar] = delen;
+            const nieuweDatum = `${jaar}-${maand}-${dag}`;
+            
+            sessionStorage.setItem('consultDate', nieuweDatum);
 
         }
     }
@@ -53,402 +58,439 @@
         console.log("haal data op")
 
 
-        fetch("https://whisper.anzwerz.ai/api/v2/intake_fr/", {
-            method: 'POST',
+       GM_xmlhttpRequest({
+            method: "POST",
+            url: "https://whisper.anzwerz.ai/api/v2/intake_fr/",
             headers: {
-                'Content-Type': 'application/json',
-                'X-API-Key': 'mijn-geheime-sleutel'
-            },
-            body: JSON.stringify({ patient_name: patientName,
-                                   date_of_consult: dateConsult
-             })
-        })
-        .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json(); 
-        })
-        .then(data => {
-            console.log('Snowflake resultaat:', data);
-            if (data.ok){
-                //aanmelding
-                const aanmelding = data.response.aanmelding_aanmelding;
-                const verwijsdatum = data.response.aanmelding_verwijsgegevens_verwijsdatum;
-                const verwijsdiagnose = data.response.aanmelding_verwijsgegevens_medische_verwijsdiagnose;  
+                    'Content-Type': 'application/json',
+                    'X-API-Key': 'mijn-geheime-sleutel'
+                },
+            data: JSON.stringify({
+                patient_name: patientName,
+                date_of_consult: dateConsult
+            }),
+            onload: function (response) {
+
+                const data = JSON.parse(response.responseText);
+                console.log('Snowflake resultaat:', data);
+
+                if (data.ok){
+                    //aanmelding
+                    const aanmelding = data.response.aanmelding_aanmelding;
+                    const verwijsdatum = data.response.aanmelding_verwijsgegevens_verwijsdatum;
+                    const verwijsdiagnose = data.response.aanmelding_verwijsgegevens_medische_verwijsdiagnose;  
+                    
+                    //anamnese
+                    const patientbehoeften = data.response.anamnese_patientbehoeften;
+                    const stoornissen = data.response.anamnese_stoornissen;
+                    const historie = data.response.anamnese_historie;
+                    const beperkingen = data.response.anamnese_beperkingen
+                    const functioneringsproblemenSinds = data.response.anamnese_duur_functioneringsproblemen_sinds
+                    const functioneringsproblemenEenheid = data.response.anamnese_duur_functioneringsproblemen_eenheid
+                    const beloopTotNuToe = data.response.anamnese_beloop_tot_nu_toe;
+                    const aangedaneZijde = data.response.anamnese_aangedane_zijde;
+                    const klacht = data.response.anamnese_klacht;
+                    
+                    const medischeGezondheidsdeterminanten = data.response.anamnese_medische_gezondheidsdeterminanten_medisch
+                    const persoonlijkeGezondheidsdeterminanten = data.response.anamnese_medische_gezondheidsdeterminanten_persoonlijk
+                    const omgevingGezondheidsdeterminanten = data.response.anamnese_medische_gezondheidsdeterminanten_omgeving
+
+                    const operatieOnderwerp = data.response.anamnese_medische_voorgeschiedenis_operatie_onderwerp
+                    const operatieDatum = data.response.anamnese_medische_voorgeschiedenis_operatie_datum
+                    const traumaOnderwerp = data.response.anamnese_medische_voorgeschiedenis_trauma_onderwerp
+                    const traumaDatum = data.response.anamnese_medische_voorgeschiedenis_trauma_datum
+                    const medicijnenOnderwerp = data.response.anamnese_medische_voorgeschiedenis_medicijnen_onderwerp
+                    const medicijnenDatum = data.response.anamnese_medische_voorgeschiedenis_medicijnen_datum
+
+                    //screening
+                    const rodeVlaggenBesproken = data.response.screening_rode_vlaggen_besproken;
+                    const conclusieScreening = data.response.screening_conclusie_screening;
+                    const naOverlegHuisarts = data.response.screening_na_overleg_huisarts;
+                    const inhoudBesproken = data.response.screening_inhoud_besproken;
+                    const adviesContactOpnemenHA = data.response.screening_advies_contact_opnemen_ha;
+                    const patientOnderzoeken = data.response.screening_patient_onderzoeken;
+
+                    //onderzoek
+                    const conclusieOnderzoek = data.response.onderzoek_conclusie_onderzoek;
+                    const indicatieFysiotherapie = data.response.onderzoek_indicatie_fysiotherapie;
+                    const chronisch = data.response.onderzoek_chronisch
+                    const eersteAandoening = data.response.onderzoek_eerste_aandoening;
+                    const verwachtHerstel = data.response.onderzoek_prognose_verwacht_herstel;
+                    const verwachteDuurAantal = data.response.onderzoek_prognose_verwachte_duur_binnen;
+                    const verwachteDuurEenheid = data.response.onderzoek_prognose_verwachte_duur_eenheid;
+                    const aantalBehandelingen = data.response.onderzoek_prognose_aantal_behandelingen;
+
+                    //behandelplan           
+                    const hoofddoel = data.response.behandelplan_hoofddoel;
+                    const toestemmingPatient = data.response.behandelplan_toestemming_patient;
+
+
                 
-                //anamnese
-                const patientbehoeften = data.response.anamnese_patientbehoeften;
-                const stoornissen = data.response.anamnese_stoornissen;
-                const historie = data.response.anamnese_historie;
-                const beperkingen = data.response.anamnese_beperkingen
-                const functioneringsproblemenSinds = data.response.anamnese_duur_functioneringsproblemen_sinds
-                const functioneringsproblemenEenheid = data.response.anamnese_duur_functioneringsproblemen_eenheid
-                const beloopTotNuToe = data.response.anamnese_beloop_tot_nu_toe;
-                const aangedaneZijde = data.response.anamnese_aangedane_zijde;
-                const klacht = data.response.anamnese_klacht;
+                    //Aanmelding
+                    const aanmeldingEl = document.getElementById('frm_input_treatment_origin');
+                    if (aanmeldingEl) {
 
-                //screening
-                const rodeVlaggenBesproken = data.response.screening_rode_vlaggen_besproken;
-                const conclusieScreening = data.response.screening_conclusie_screening;
-                const naOverlegHuisarts = data.response.screening_na_overleg_huisarts;
-                const inhoudBesproken = data.response.screening_inhoud_besproken;
-                const adviesContactOpnemenHA = data.response.screening_advies_contact_opnemen_ha;
-                const patientOnderzoeken = data.response.screening_patient_onderzoeken;
-
-                //onderzoek
-                const conclusieOnderzoek = data.response.onderzoek_conclusie_onderzoek;
-                const indicatieFysiotherapie = data.response.onderzoek_indicatie_fysiotherapie;
-                const chronisch = data.response.onderzoek_chronisch
-                const eersteAandoening = data.response.onderzoek_eerste_aandoening;
-                const verwachtHerstel = data.response.onderzoek_prognose_verwacht_herstel;
-                const verwachteDuurAantal = data.response.onderzoek_prognose_verwachte_duur_binnen;
-                const verwachteDuurEenheid = data.response.onderzoek_prognose_verwachte_duur_eenheid;
-                const aantalBehandelingen = data.response.onderzoek_prognose_aantal_behandelingen;
-
-                //behandelplan           
-                const hoofddoel = data.response.behandelplan_hoofddoel;
-                const toestemmingPatient = data.response.behandelplan_toestemming_patient;
+                        const aanmeldingEl = document.getElementById('frm_input_treatment_origin');
 
 
-                const checkveld = (el, input, checkboxValue=null) => {
-                    if (!el) return { status: 'element niet gevonden', succes: false };
+                            let dropdownDuurAanmelding = '0';
+                            if (aanmeldingEl) {
+                                
+                                if (aanmelding) {
+                                    const aanmeldingText = aanmelding.toLowerCase();
+        
+                                    if (aanmeldingText == 'verwijzing') {
+                                        dropdownDuurAanmelding= 'send_by_referrer';
+                                    } else if (aanmeldingText == 'dtf') {
+                                        dropdownDuurAanmelding= 'direct_access_physiotherapy';
+                                    }
+                                }
 
-                    if (el.tagName === 'TEXTAREA'){
-                        if (el.innerHTML.trim().replace(/\s+/g, '')  !== input.trim().replace(/\s+/g, '') ) return {
-                            status: 'niet goed ingevuld', 
-                            succes: false,
-                            ingevuld: el.innerHTML.trim().replace(/\s+/g, ''),
-                            opgehaald: input.trim().replace(/\s+/g, '')
-                        }
-                    } else if (el.tagName === 'INPUT' && el.type === 'checkbox'){
-                        if (input) { 
-                            if (el.checked !== (input.toLowerCase() === checkboxValue.toLowerCase())) return {
-                                status: 'niet goed ingevuld', 
-                                succes: false,
-                                ingevuld: el.checked,
-                                opgehaald: input.toLowerCase(),
-                                checkbox_waarde: checkboxValue.toLowerCase()
+                                aanmeldingEl.value = dropdownDuurAanmelding
                             }
-                        }
-                    } else if (el.tagName === 'INPUT' && el.type === 'date'){
-                        if (el.value && el.value !== input) return {
-                            status: 'niet goed ingevuld', 
-                            succes: false,
-                            ingevuld: el.value,
-                            opgehaald: input
-                        }
-                    } else if (el.tagName === 'INPUT' && el.type === 'text'){
-                        if (el.getAttribute('data-slider') === 'true') {
-                            if (el !== input) return {
-                                status: 'niet goed ingevuld', 
-                                succes: false,
-                                ingevuld: el,
-                                opgehaald: input
-                            }
-                        } else {
-                            if (el.value !== input) return {
-                                status: 'niet goed ingevuld', 
-                                succes: false,
-                                ingevuld: el.value,
-                                opgehaald: input
-                            }
-                        }
-                    } else if (el.tagName === 'SELECT') {
-                        if (el.value && el.value !== input) return { 
-                            status: 'niet goed ingevuld', 
-                            succes: false,
-                            ingevuld: el.value,
-                            opgehaald: input
-                        };
-                    } else if (el.tagName === 'INPUT' && el.type === 'radio') {
-
-                        if (input) { 
-                            if (el.checked !== (input.toLowerCase() === checkboxValue.toLowerCase())) return {
-                                status: 'niet goed ingevuld', 
-                                succes: false,
-                                ingevuld: el.checked,
-                                opgehaald: input.toLowerCase(),
-                                checkbox_waarde: checkboxValue.toLowerCase()
-                            }
-                        }
-                    }
-
-                    return {status: 'ok', succes: true}
-                    
-                }
-
-                //Aanmelding
-                const aanmeldingEl = document.getElementById('frm_input_treatment_origin');
-                if (aanmeldingEl && aanmeldingEl.value == '') {
-                    if (aanmeldingEl && aanmelding) {
-                        aanmeldingEl.value = aanmelding;
-                    }
-
-                    const verwijsdatumEl = document.getElementById('frm_input_referral_date_datepicker');
-                    if (verwijsdatumEl && verwijsdatum) {
-                        verwijsdatumEl.value = verwijsdatum;
-                    }
-
-                    const verwijsdiagnoseEl = document.querySelector('textarea[name="anamnesis[medical_refererence_diagnosis]"]');
-                    console.log(verwijsdiagnoseEl)
-                    if (verwijsdiagnoseEl && verwijsdiagnose) {
-                        verwijsdiagnoseEl.value = verwijsdiagnose;
+                            aanmeldingEl.dispatchEvent(new Event('change', { bubbles: true }));
                         
-                    }
 
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-                    
-                    const rapport = {
-                        aanmelding: checkveld(aanmeldingEl, data.response.aanmelding_aanmelding),
-                        verwijsdatum: checkveld(verwijsdatumEl, data.response.aanmelding_verwijsgegevens_verwijsdatum),
-                        verwijsdiagnose: checkveld(verwijsdiagnoseEl, data.response.aanmelding_verwijsgegevens_medische_verwijsdiagnose),
-                    
-                    };
-
-                    const allesOK = Object.values(rapport).every(v => v.status === 'ok' && v.succes === true);
-
-                    console.log(rapport)
-
-
-                    // ✅ Stuur terug naar het systeem
-                    fetch('https://whisper.anzwerz.ai/api/som-feedback', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': 'mijn-geheime-sleutel'
-                    },
-                        body: JSON.stringify({
-                            timestamp: new Date().toISOString(),
-                            result: allesOK ? 'ok' : 'not ok',
-                            details: rapport,
-                            consult_type: 'intake - aanmelding',
-                            patient_number: String(patientName)
-                        })
-                    })
-                    .then(r => {
-                        if (!r.ok) {
-                            console.warn('Feedback verzenden mislukt:', r.status);
+                        const verwijsdatumEl = document.getElementById('frm_input_referral_date');
+                        console.log(verwijsdatum)
+                        console.log(verwijsdatumEl)
+                        if (verwijsdatumEl && verwijsdatum) {
+                            // const delen = verwijsdatum.value.split(/[-/]/);
+                            // const [jaar, maand, dag] = delen;
+                            // const nieuweDatum = `$${dag}-${maand}-{jaar}`;
+                            // console.log(nieuweDatum)
+                            verwijsdatumEl.value = verwijsdatum;
                         }
-                    })
-                    .catch(err => console.error('Fout bij terugsturen feedback:', err));
 
-                }
+                        const verwijsdiagnoseEl = document.getElementById('frm_input_anamnesis[medical_referrerence_diagnosis');
+                        console.log(verwijsdiagnoseEl)
+                        if (verwijsdiagnoseEl && verwijsdiagnose) {
+                            verwijsdiagnoseEl.innerHTML = verwijsdiagnose;
+                            
+                        }
+                        
+                        const rapport = {
+                            aanmelding: checkveld(aanmeldingEl, data.response.aanmelding_aanmelding),
+                            verwijsdatum: checkveld(verwijsdatumEl, data.response.aanmelding_verwijsgegevens_verwijsdatum),
+                            verwijsdiagnose: checkveld(verwijsdiagnoseEl, data.response.aanmelding_verwijsgegevens_medische_verwijsdiagnose),
+                        
+                        };
+
+                        console.log(rapport)
+                        sendReport(rapport)
+
+                    }
 
     ///////////////////////////////////////////////////////////////////////////////////
                 
-                //Anamnese
-                
-                const patientbehoeftenEl = document.querySelector('textarea[name="anamnesis[patient_needs]"]');
-                if (patientbehoeftenEl && patientbehoeftenEl.innerHTML == '') {
-
-                    if (patientbehoeftenEl && patientbehoeften) {
-                        patientbehoeftenEl.innerHTML = patientbehoeften;
-                    }
-                
-                    const stoornissenEl = document.querySelector('textarea[name="anamnesis[disorders]"]');
-                    if (stoornissenEl && stoornissen) {
-                        stoornissenEl.innerHTML = stoornissen;
-                    }
-
-                    const historieEl = document.querySelector('textarea[name="anamnesis[history]"]');
-                    if (historieEl && historie) {
-                        historieEl.innerHTML = historie;
-                    }
-
-                    const beperkingenEl = document.querySelector('textarea[name="anamnesis[constraints]"]');
-                    if (beperkingenEl && beperkingen) {
-                        beperkingenEl.innerHTML = beperkingen;
-                    }
-
-                    const functioneringsproblemenSindsEl = document.getElementById('frm_input_anamnesis[functioning_problem_duration_value]');
-                    if (functioneringsproblemenSindsEl && functioneringsproblemenSinds) {
-                        functioneringsproblemenSindsEl.value = functioneringsproblemenSinds;
-                    }
-
-
-                    const functioneringsproblemenEenheidEl = document.getElementById('frm_input_anamnesis[functioning_problem_duration_unit]');
-
-                    let dropdownDuurKlacht = '0';
-                    if (functioneringsproblemenEenheidEl) {
-                        
-                        if (functioneringsproblemenEenheid) {
-                            const functioneringsproblemenEenheidText = functioneringsproblemenEenheid.toLowerCase();
- 
-                            if (functioneringsproblemenEenheidText == 'dag') {
-                                dropdownDuurKlacht = '54';
-                            } else if (functioneringsproblemenEenheidText == 'dagen') {
-                                dropdownDuurKlacht = '53';
-                            } else if (functioneringsproblemenEenheidText == 'week') {
-                                dropdownDuurKlacht = '52';
-                            } else if (functioneringsproblemenEenheidText == 'weken') {
-                                dropdownDuurKlacht = '51';
-                            } else if (functioneringsproblemenEenheidText == 'maand') {
-                               dropdownDuurKlacht = '50';
-                            } else if (functioneringsproblemenEenheidText == 'maanden') {
-                               dropdownDuurKlacht = '49';
-                            } else if (functioneringsproblemenEenheidText == 'jaar') {
-                               dropdownDuurKlacht = '48';
-                            } else if (functioneringsproblemenEenheidText == 'jaren') {
-                               dropdownDuurKlacht = '47';
-                            }
-                        }
-
-                        functioneringsproblemenEenheidEl.value = dropdownDuurKlacht
-                    }
-
-
-
-                    const toegenomenEl = document.getElementById('form_input_anamnesis[course_so_far]_46');
-                    if (toegenomenEl && beloopTotNuToe && beloopTotNuToe == 'Toegenomen') {
-                        toegenomenEl.checked = true;
-                    }
-
-                    const afgenomenEl = document.getElementById('form_input_anamnesis[course_so_far]_45');
-                    if (afgenomenEl && beloopTotNuToe && beloopTotNuToe == 'Afgenomen') {
-                        afgenomenEl.checked = true;
-                    }
-
-                    const nietGewijzigdEl = document.getElementById('form_input_anamnesis[course_so_far]_44');
-                    if (nietGewijzigdEl && beloopTotNuToe && beloopTotNuToe == 'Niet gewijzigd') {
-                        nietGewijzigdEl.checked = true;
-                    }
-
-                    const wisselendEl = document.getElementById('form_input_anamnesis[course_so_far]_43');
-                    if (wisselendEl && beloopTotNuToe && beloopTotNuToe == 'Wisselend') {
-                        wisselendEl.checked = true;
-                    }
-
-                    const aangedaneZijdeEl = document.getElementById('frm_input_involved_side');
-
-                    let dropdownAangedaneZijde = '0';
-                    if (aangedaneZijdeEl ) {
-                        console.log(aangedaneZijde)
-                        if (aangedaneZijde) {
-     
-                            if (aangedaneZijde == 'Geen zijde') {
-                                dropdownAangedaneZijde = 'no_side';
-                            } else if (aangedaneZijde == 'Linker zijde') {
-                                dropdownAangedaneZijde = 'left_side';
-                            } else if (aangedaneZijde == 'Rechter zijde') {
-                                dropdownAangedaneZijde = 'right_side';
-                            } else if (aangedaneZijde == 'Beide zijdes') {
-                                dropdownAangedaneZijde = 'both_sides';
-                            }
-                          
-                        }
-                        aangedaneZijdeEl.value = dropdownAangedaneZijde
-                    }
-
-
-                    const klachtEl = document.getElementById('frm_input_complaint');
-
-                    let dropdownKlacht = '0';
-                    if (klachtEl ) {
-                        
-                        if (klacht) {
-     
-                            if (klacht == 'Chronisch ZorgNet - COPD') {
-                                dropdownKlacht = '22';
-                            } else if (klacht == 'Chronisch ZorgNet - Hart') {
-                                dropdownKlacht = '23';
-                            } else if (klacht == 'Chronisch ZorgNet - Osteoporose, vallen en breken') {
-                                dropdownKlacht = '21';
-                            } else if (klacht == 'Chronisch ZorgNet - Perifeer Arterieel Vaatlijden') {
-                                dropdownKlacht = '20';
-                            } else if (klacht == 'COPD') {
-                                dropdownKlacht = '16';
-                            } else if (klacht == 'Covid-19') {
-                                dropdownKlacht = '17';
-                            } else if (klacht == 'CWK') {
-                                dropdownKlacht = '1';
-                            } else if (klacht == 'Duizeligheid') {
-                                dropdownKlacht = '24';
-                            } else if (klacht == 'Elleboog') {
-                                dropdownKlacht = '2';
-                            } else if (klacht == 'Enkel/Voet') {
-                                dropdownKlacht = '3';
-                            } else if (klacht == 'Heup') {
-                                dropdownKlacht = '4';
-                            } else if (klacht == 'Kaak') {
-                                dropdownKlacht = '5';
-                            } else if (klacht == 'Knie') {
-                                dropdownKlacht = '6';
-                            } else if (klacht == 'LWK') {
-                                dropdownKlacht = '7';
-                            } else if (klacht == 'Neurologie') {
-                                dropdownKlacht = '8';
-                            } else if (klacht == 'Oedeem') {
-                                dropdownKlacht = '19';
-                            } else if (klacht == 'Oncologie') {
-                                dropdownKlacht = '9';
-                            } else if (klacht == 'Parkinson') {
-                                dropdownKlacht = '10';
-                            } else if (klacht == 'Pols/Hand') {
-                                dropdownKlacht = '11';
-                            } else if (klacht == 'Psychosomatiek') {
-                                dropdownKlacht = '12';
-                            } else if (klacht == 'Reumatologie') {
-                                dropdownKlacht = '13';
-                            } else if (klacht == 'Schouder') {
-                                dropdownKlacht = '14';
-                            } else if (klacht == 'Spierletsel') {
-                                dropdownKlacht = '18';
-                            } else if (klacht == 'TWK') {
-                                dropdownKlacht = '15';
-
-                            }
-                          
-                        }
-                        klachtEl.value = dropdownKlacht
-                    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
+                    //Anamnese
                     
-                    const rapport = {
-                        patientbehoeften: checkveld(patientbehoeftenEl, data.response.anamnese_patientbehoeften),
-                        stoornissen: checkveld(stoornissenEl,data.response.anamnese_stoornissen),
-                        historie: checkveld(historieEl, data.response.anamnese_historie),
-                        beperkingen: checkveld(beperkingenEl, data.response.anamnese_beperkingen),
-                        functioneringsproblemen_sinds: checkveld(functioneringsproblemenSindsEl, data.response.anamnese_duur_functioneringsproblemen_sinds),
-                        functioneringsproblemen_eenheid: checkveld(functioneringsproblemenEenheidEl, dropdownDuurKlacht),
-                        beloop_toegenomen: checkveld(toegenomenEl, data.response.anamnese_beloop_tot_nu_toe, "Toegenomen"),
-                        beloop_afgenomen: checkveld(afgenomenEl, data.response.anamnese_beloop_tot_nu_toe, "Afgenomen"),
-                        beloop_niet_gewijzigd: checkveld(nietGewijzigdEl, data.response.anamnese_beloop_tot_nu_toe, "Niet gewijzigd"),
-                        beloop_wisselend: checkveld(wisselendEl, data.response.anamnese_beloop_tot_nu_toe, "Wisselend"),   
-                        aangedane_zijde: checkveld(aangedaneZijdeEl, dropdownAangedaneZijde),         
-                        klacht: checkveld(klachtEl, dropdownKlacht), 
-                    };
+                    const patientbehoeftenEl = document.getElementById('frm_input_anamnesis[patient_needs]');
+                    if (patientbehoeftenEl && patientbehoeftenEl.innerHTML == '') {
 
-                    const allesOK = Object.values(rapport).every(v => v.status === 'ok' && v.succes === true);
-
-                    console.log(rapport)
-
-                    // ✅ Stuur terug naar het systeem
-                    fetch('https://whisper.anzwerz.ai/api/som-feedback', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': 'mijn-geheime-sleutel'
-                    },
-                        body: JSON.stringify({
-                            timestamp: new Date().toISOString(),
-                            result: allesOK ? 'ok' : 'not ok',
-                            details: rapport,
-                            consult_type: 'intake - anamnese',
-                            patient_number: String(patientName)
-                        })
-                    })
-                    .then(r => {
-                        if (!r.ok) {
-                            console.warn('Feedback verzenden mislukt:', r.status);
+                        if (patientbehoeftenEl && patientbehoeften) {
+                            patientbehoeftenEl.innerHTML = patientbehoeften;
                         }
-                    })
-                    .catch(err => console.error('Fout bij terugsturen feedback:', err));
-                }
+                    
+                        const stoornissenEl = document.getElementById('frm_input_anamnesis[disorders]');
+                        if (stoornissenEl && stoornissen) {
+                            stoornissenEl.innerHTML = stoornissen;
+                        }
+
+                        const historieEl = document.getElementById('frm_input_anamnesis[history]');
+                        if (historieEl && historie) {
+                            historieEl.innerHTML = historie;
+                        }
+
+                        const beperkingenEl = document.getElementById('frm_input_anamnesis[constraints]');
+                        if (beperkingenEl && beperkingen) {
+                            beperkingenEl.innerHTML = beperkingen;
+                        }
+
+                        const functioneringsproblemenSindsEl = document.getElementById('frm_input_anamnesis[functioning_problem_duration_value]');
+                        if (functioneringsproblemenSindsEl && functioneringsproblemenSinds) {
+                            functioneringsproblemenSindsEl.value = functioneringsproblemenSinds;
+                        }
+
+
+                        const functioneringsproblemenEenheidEl = document.getElementById('frm_input_anamnesis[functioning_problem_duration_unit]');
+
+                        let dropdownDuurKlacht = '0';
+                        if (functioneringsproblemenEenheidEl) {
+                            
+                            if (functioneringsproblemenEenheid) {
+                                const functioneringsproblemenEenheidText = functioneringsproblemenEenheid.toLowerCase();
+    
+                                if (functioneringsproblemenEenheidText == 'dag') {
+                                    dropdownDuurKlacht = '54';
+                                } else if (functioneringsproblemenEenheidText == 'dagen') {
+                                    dropdownDuurKlacht = '53';
+                                } else if (functioneringsproblemenEenheidText == 'week') {
+                                    dropdownDuurKlacht = '52';
+                                } else if (functioneringsproblemenEenheidText == 'weken') {
+                                    dropdownDuurKlacht = '51';
+                                } else if (functioneringsproblemenEenheidText == 'maand') {
+                                dropdownDuurKlacht = '50';
+                                } else if (functioneringsproblemenEenheidText == 'maanden') {
+                                dropdownDuurKlacht = '49';
+                                } else if (functioneringsproblemenEenheidText == 'jaar') {
+                                dropdownDuurKlacht = '48';
+                                } else if (functioneringsproblemenEenheidText == 'jaren') {
+                                dropdownDuurKlacht = '47';
+                                }
+                            }
+
+                            functioneringsproblemenEenheidEl.value = dropdownDuurKlacht
+                        }
+
+
+
+                        const toegenomenEl = document.getElementById('form_input_anamnesis[course_so_far]_46');
+                        if (toegenomenEl && beloopTotNuToe && beloopTotNuToe == 'Toegenomen') {
+                            toegenomenEl.checked = true;
+                        }
+
+                        const afgenomenEl = document.getElementById('form_input_anamnesis[course_so_far]_45');
+                        if (afgenomenEl && beloopTotNuToe && beloopTotNuToe == 'Afgenomen') {
+                            afgenomenEl.checked = true;
+                        }
+
+                        const nietGewijzigdEl = document.getElementById('form_input_anamnesis[course_so_far]_44');
+                        if (nietGewijzigdEl && beloopTotNuToe && beloopTotNuToe == 'Niet gewijzigd') {
+                            nietGewijzigdEl.checked = true;
+                        }
+
+                        const wisselendEl = document.getElementById('form_input_anamnesis[course_so_far]_43');
+                        if (wisselendEl && beloopTotNuToe && beloopTotNuToe == 'Wisselend') {
+                            wisselendEl.checked = true;
+                        }
+
+                        const aangedaneZijdeEl = document.getElementById('frm_input_involved_side');
+
+                        let dropdownAangedaneZijde = '0';
+                        if (aangedaneZijdeEl ) {
+                            console.log(aangedaneZijde)
+                            if (aangedaneZijde) {
+        
+                                if (aangedaneZijde == 'Geen zijde') {
+                                    dropdownAangedaneZijde = 'no_side';
+                                } else if (aangedaneZijde == 'Linker zijde') {
+                                    dropdownAangedaneZijde = 'left_side';
+                                } else if (aangedaneZijde == 'Rechter zijde') {
+                                    dropdownAangedaneZijde = 'right_side';
+                                } else if (aangedaneZijde == 'Beide zijdes') {
+                                    dropdownAangedaneZijde = 'both_sides';
+                                }
+                            
+                            }
+                            aangedaneZijdeEl.value = dropdownAangedaneZijde
+                        }
+
+
+                        const klachtEl = document.getElementById('frm_input_complaint');
+
+                        let dropdownKlacht = '0';
+                        if (klachtEl ) {
+                            
+                            if (klacht) {
+        
+                                if (klacht == 'Chronisch ZorgNet - COPD') {
+                                    dropdownKlacht = '22';
+                                } else if (klacht == 'Chronisch ZorgNet - Hart') {
+                                    dropdownKlacht = '23';
+                                } else if (klacht == 'Chronisch ZorgNet - Osteoporose, vallen en breken') {
+                                    dropdownKlacht = '21';
+                                } else if (klacht == 'Chronisch ZorgNet - Perifeer Arterieel Vaatlijden') {
+                                    dropdownKlacht = '20';
+                                } else if (klacht == 'COPD') {
+                                    dropdownKlacht = '16';
+                                } else if (klacht == 'Covid-19') {
+                                    dropdownKlacht = '17';
+                                } else if (klacht == 'CWK') {
+                                    dropdownKlacht = '1';
+                                } else if (klacht == 'Duizeligheid') {
+                                    dropdownKlacht = '24';
+                                } else if (klacht == 'Elleboog') {
+                                    dropdownKlacht = '2';
+                                } else if (klacht == 'Enkel/Voet') {
+                                    dropdownKlacht = '3';
+                                } else if (klacht == 'Heup') {
+                                    dropdownKlacht = '4';
+                                } else if (klacht == 'Kaak') {
+                                    dropdownKlacht = '5';
+                                } else if (klacht == 'Knie') {
+                                    dropdownKlacht = '6';
+                                } else if (klacht == 'LWK') {
+                                    dropdownKlacht = '7';
+                                } else if (klacht == 'Neurologie') {
+                                    dropdownKlacht = '8';
+                                } else if (klacht == 'Oedeem') {
+                                    dropdownKlacht = '19';
+                                } else if (klacht == 'Oncologie') {
+                                    dropdownKlacht = '9';
+                                } else if (klacht == 'Parkinson') {
+                                    dropdownKlacht = '10';
+                                } else if (klacht == 'Pols/Hand') {
+                                    dropdownKlacht = '11';
+                                } else if (klacht == 'Psychosomatiek') {
+                                    dropdownKlacht = '12';
+                                } else if (klacht == 'Reumatologie') {
+                                    dropdownKlacht = '13';
+                                } else if (klacht == 'Schouder') {
+                                    dropdownKlacht = '14';
+                                } else if (klacht == 'Spierletsel') {
+                                    dropdownKlacht = '18';
+                                } else if (klacht == 'TWK') {
+                                    dropdownKlacht = '15';
+
+                                }
+                            
+                            }
+                            klachtEl.value = dropdownKlacht
+                        }
+                    const button1 = document.querySelector('button[title="Medische voorgeschiedenis"]'); //Medische voorgeschiedenis
+
+                    
+                    //operatie
+                    if (button1 && operatieOnderwerp){
+                        button1.click()
+                        setTimeout(() => {
+                            // code die NA de vertraging moet draaien
+                            console.log('1 seconde later');
+                            const button2 = document.querySelector('.js-btn-create');
+                            button2.click()
+                            const datumEl = document.getElementById('frm_input_medical_history_date_datepicker');
+
+                            if (datumEl && operatieDatum){
+                                datumEl.value = operatieDatum
+                            }
+
+                            const typeEl = document.getElementById('frm_input_medical_history_type');
+
+                            if (typeEl) { 
+                                console.log("operatie")
+                                typeEl.value = "operation"
+                            }
+
+                            const onderwerpEl = document.querySelector('input[name="subject"]');
+                            if (onderwerpEl){
+                                onderwerpEl.value = operatieOnderwerp
+                            }
+                            
+                        }, 1000); // 1000 ms = 1 seconde
+
+                        
+                        //send report
+                    }
+
+                        //trauma
+                    if (button1 && traumaOnderwerp){
+                        button1.click()
+                        setTimeout(() => {
+                            // code die NA de vertraging moet draaien
+                            console.log('1 seconde later');
+                        }, 1000); // 1000 ms = 1 seconde
+
+                        const button2 = document.querySelector('.js-btn-create');
+                        button2.click()
+                        const datumEl = document.getElementById('frm_input_medical_history_date_datepicker');
+
+                        if (datumEl && traumaDatum){
+                            datumEl.value = traumaDatum
+                        }
+
+                        const typeEl = document.getElementById('frm_input_medical_history_type');
+
+                        if (typeEl) { 
+                            console.log("trauma")
+                            typeEl.value = "trauma"
+                        }
+
+                        const onderwerpEl = document.querySelector('input[name="subject"]');
+                        if (onderwerpEl){
+                            onderwerpEl.value = traumaOnderwerp
+                        }
+                        //send report
+                    }
+
+                    //medicijnen
+                    if (button1 && medicijnenOnderwerp){
+                        button1.click()
+                        setTimeout(() => {
+                            // code die NA de vertraging moet draaien
+                            console.log('1 seconde later');
+                        }, 1000); // 1000 ms = 1 seconde
+
+                        const button2 = document.querySelector('.js-btn-create');
+                        button2.click()
+                        const datumEl = document.getElementById('frm_input_medical_history_date_datepicker');
+
+                        if (datumEl && medicijnenDatum){
+                            datumEl.value = medicijnenDatum
+                        }
+
+                        const typeEl = document.getElementById('frm_input_medical_history_type');
+
+                        if (typeEl) { 
+                            console.log("medicijnen")
+                            typeEl.value = "medication"
+                        }
+
+                        const onderwerpEl = document.querySelector('input[name="subject"]');
+                        if (onderwerpEl){
+                            onderwerpEl.value = medicijnenOnderwerp
+                        }
+
+                        //send report
+                    }
+
+                    const button3 = document.getElementById('medische_gezondheidsdeterminanten'); //Medische gezondheidsdeterminanten
+
+                    if (button3){
+                        button3.click()
+                        const medischEl = document.getElementById('frm_input_rif_modal_co-morbidity');
+
+                        if (medischEl) {
+                            medischEl.innerHTML = medischeGezondheidsdeterminanten
+                        }
+
+                        const persoonlijkEl = document.getElementById('frm_input_rif_modal_personal-context');
+
+                        if (persoonlijkEl){
+                            persoonlijkEl.innerHTML = persoonlijkeGezondheidsdeterminanten
+                        }
+
+                        const omgevingEl = document.getElementById('frm_input_rif_modal_participation-context');
+
+                        if (omgevingEl){
+                            omgevingEl.innerHTML = omgevingGezondheidsdeterminanten
+                        }
+
+                        
+                        console.log("determinanten")
+                        //send report
+
+                    }
+                   
+                        const rapport = {
+                            patientbehoeften: checkveld(patientbehoeftenEl, data.response.anamnese_patientbehoeften),
+                            stoornissen: checkveld(stoornissenEl,data.response.anamnese_stoornissen),
+                            historie: checkveld(historieEl, data.response.anamnese_historie),
+                            beperkingen: checkveld(beperkingenEl, data.response.anamnese_beperkingen),
+                            functioneringsproblemen_sinds: checkveld(functioneringsproblemenSindsEl, data.response.anamnese_duur_functioneringsproblemen_sinds),
+                            functioneringsproblemen_eenheid: checkveld(functioneringsproblemenEenheidEl, dropdownDuurKlacht),
+                            beloop_toegenomen: checkveld(toegenomenEl, data.response.anamnese_beloop_tot_nu_toe, "Toegenomen"),
+                            beloop_afgenomen: checkveld(afgenomenEl, data.response.anamnese_beloop_tot_nu_toe, "Afgenomen"),
+                            beloop_niet_gewijzigd: checkveld(nietGewijzigdEl, data.response.anamnese_beloop_tot_nu_toe, "Niet gewijzigd"),
+                            beloop_wisselend: checkveld(wisselendEl, data.response.anamnese_beloop_tot_nu_toe, "Wisselend"),   
+                            aangedane_zijde: checkveld(aangedaneZijdeEl, dropdownAangedaneZijde),         
+                            klacht: checkveld(klachtEl, dropdownKlacht), 
+                        };
+
+                        console.log(rapport)
+                        sendReport(rapport)
+                    }
 
     ///////////////////////////////////////////////////////////////////////////////////
                         
@@ -507,8 +549,6 @@
                         adviesContactOpnemenHAEl.checked = true;
                     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
                     
                     const rapport = {
                         rode_vlaggen_besproken: checkveld(rodeVlaggenBesprokenEl,data.response.screening_rode_vlaggen_besproken,"ja"),
@@ -525,34 +565,9 @@
                       
                     };
 
-                    const allesOK = Object.values(rapport).every(v => v.status === 'ok' && v.succes === true);
-
                     console.log(rapport)
-
-
-                    // ✅ Stuur terug naar het systeem
-                    fetch('https://whisper.anzwerz.ai/api/som-feedback', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': 'mijn-geheime-sleutel'
-                    },
-                        body: JSON.stringify({
-                            timestamp: new Date().toISOString(),
-                            result: allesOK ? 'ok' : 'not ok',
-                            details: rapport,
-                            consult_type: 'intake - screening',
-                            patient_number: String(patientName)
-                        })
-                    })
-                    .then(r => {
-                        if (!r.ok) {
-                            console.warn('Feedback verzenden mislukt:', r.status);
-                        }
-                    })
-                    .catch(err => console.error('Fout bij terugsturen feedback:', err));
-
-                } 
+                    sendReport(rapport)
+                }
 
     ///////////////////////////////////////////////////////////////////////////////////
 
@@ -568,11 +583,11 @@
     
                         if (verwachtHerstel == 'Volledig herstel') {
                             dropdownHerstel  = '42';
-                        } else if (aangedaneZijde == 'Reductie') {
+                        } else if (verwachtHerstel == 'Reductie') {
                             dropdownHerstel  = '41';
-                        } else if (aangedaneZijde == 'Stabilisatie') {
+                        } else if (verwachtHerstel == 'Stabilisatie') {
                             dropdownHerstel  = '40';
-                        } else if (aangedaneZijde == 'Handhaven of verminderen progressie') {
+                        } else if (verwachtHerstel == 'Handhaven of verminderen van progressie') {
                             dropdownHerstel  = '39';
                         }
                         
@@ -638,11 +653,7 @@
                     if (aantalBehandelingenEl && aantalBehandelingen) {
                         aantalBehandelingenEl.value = aantalBehandelingen;
                     }
-
-
-
-                ////////////////////////////////////////////////////////////////////////////////////////////
-                    
+                   
 
                     const rapport = {
                         indicatie_fysio_niet: checkveld(indicatieFysiotherapieNeeEl,data.response.onderzoek_indicatie_fysiotherapie,"nee"),
@@ -654,35 +665,10 @@
                         verwachte_duur_eenheid: checkveld(verwachteDuurEenheidEl,dropdownVerwachteDuur),
                         aantal_behandelingen: checkveld(aantalBehandelingenEl,data.response.onderzoek_prognose_aantal_behandelingen)                       
                     };
-
-
-                    const allesOK = Object.values(rapport).every(v => v.status === 'ok' && v.succes === true);
  
                     console.log(rapport)
-
-                    // ✅ Stuur terug naar het systeem
-                    fetch('https://whisper.anzwerz.ai/api/som-feedback', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': 'mijn-geheime-sleutel'
-                    },
-                        body: JSON.stringify({
-                            timestamp: new Date().toISOString(),
-                            result: allesOK ? 'ok' : 'not ok',
-                            details: rapport,
-                            consult_type: 'intake - onderzoek',
-                            patient_number: String(patientName)
-                        })
-                    })
-                    .then(r => {
-                        if (!r.ok) {
-                            console.warn('Feedback verzenden mislukt:', r.status);
-                        }
-                    })
-                    .catch(err => console.error('Fout bij terugsturen feedback:', err));
-
-                } 
+                    sendReport(rapport)
+                }
 
     ///////////////////////////////////////////////////////////////////////////////////
 
@@ -700,64 +686,146 @@
                     }
 
                     
-                    
-    ////////////////////////////////////////////////////////////////////////////////////////////
-                    
                     const rapport = {
                         hoofddoel: checkveld(hoofddoelEl, data.response.behandelplan_hoofddoel),
                         toestemming_patient: checkveld(toestemmingPatientEl,data.response.behandelplan_toestemming_patient, 'ja'),
                     };
 
-
-                    const allesOK = Object.values(rapport).every(v => v.status === 'ok' && v.succes === true);
-
                     console.log(rapport)
-
-                    // ✅ Stuur terug naar het systeem
-                    fetch('https://whisper.anzwerz.ai/api/som-feedback', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': 'mijn-geheime-sleutel'
-                    },
-                        body: JSON.stringify({
-                            timestamp: new Date().toISOString(),
-                            result: allesOK ? 'ok' : 'not ok',
-                            details: rapport,
-                            consult_type: 'intake - behandelplan',
-                            patient_number: String(patientName)
-                        })
-                    })
-                    .then(r => {
-                        if (!r.ok) {
-                            console.warn('Feedback verzenden mislukt:', r.status);
-                        }
-                    })
-                    .catch(err => console.error('Fout bij terugsturen feedback:', err));
-
-                } 
+                    sendReport(rapport)
+                }
+            }
+        },
+        onerror: function (err) {
+                sendError(err);
             }
 
-///////////////////////////////////////////////////////////////////////////////////
-
-        })
-        .catch(err => {
-            console.error("❌ Fout bij ophalen of verwerken van data:", err);
-
-            fetch("https://whisper.anzwerz.ai/api/log_tm_error/", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-API-Key': 'mijn-geheime-sleutel'
-            },
-            body: JSON.stringify({ error_description: err.message,
-                                    error_log: err.stack,
-                                    error_type: err.name
-            })
-        })
         });
 
     }
-    
+
+
+    function checkveld (el, input, checkboxValue=null) {
+        if (!el) return { status: 'element niet gevonden', succes: false };
+
+        if (el.tagName === 'TEXTAREA'){
+            if (el.innerHTML.trim().replace(/\s+/g, '')  !== input.trim().replace(/\s+/g, '') ) return {
+                status: 'niet goed ingevuld', 
+                succes: false,
+                ingevuld: el.innerHTML.trim().replace(/\s+/g, ''),
+                opgehaald: input.trim().replace(/\s+/g, '')
+            }
+        } else if (el.tagName === 'INPUT' && el.type === 'checkbox'){
+            if (input) { 
+                if (el.checked !== (input.toLowerCase() === checkboxValue.toLowerCase())) return {
+                    status: 'niet goed ingevuld', 
+                    succes: false,
+                    ingevuld: el.checked,
+                    opgehaald: input.toLowerCase(),
+                    checkbox_waarde: checkboxValue.toLowerCase()
+                }
+            }
+        } else if (el.tagName === 'INPUT' && el.type === 'date'){
+            if (el.value && el.value !== input) return {
+                status: 'niet goed ingevuld', 
+                succes: false,
+                ingevuld: el.value,
+                opgehaald: input
+            }
+        } else if (el.tagName === 'INPUT' && el.type === 'text'){
+            if (el.getAttribute('data-slider') === 'true') {
+                if (el !== input) return {
+                    status: 'niet goed ingevuld', 
+                    succes: false,
+                    ingevuld: el,
+                    opgehaald: input
+                }
+            } else {
+                if (el.value !== input) return {
+                    status: 'niet goed ingevuld', 
+                    succes: false,
+                    ingevuld: el.value,
+                    opgehaald: input
+                }
+            }
+        } else if (el.tagName === 'SELECT') {
+            if (el.value && el.value !== input) return { 
+                status: 'niet goed ingevuld', 
+                succes: false,
+                ingevuld: el.value,
+                opgehaald: input
+            };
+        } else if (el.tagName === 'INPUT' && el.type === 'radio') {
+
+            if (input) { 
+                if (el.checked !== (input.toLowerCase() === checkboxValue.toLowerCase())) return {
+                    status: 'niet goed ingevuld', 
+                    succes: false,
+                    ingevuld: el.checked,
+                    opgehaald: input.toLowerCase(),
+                    checkbox_waarde: checkboxValue.toLowerCase()
+                }
+            }
+        }
+
+        return {status: 'ok', succes: true}
+        
+    }
+
+    function sendReport(rapport){
+
+        const allesOK = Object.values(rapport).every(v => v.status === 'ok' && v.succes === true);
+        console.log(allesOK)
+
+        console.log(new Date().toISOString())
+        console.log(allesOK ? 'succes' : 'fouten')
+        console.log(rapport)
+        console.log(patientName)
+
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: 'https://whisper.anzwerz.ai/api/som-feedback',
+            headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': 'mijn-geheime-sleutel'
+                },
+            data: JSON.stringify({
+                timestamp: new Date().toISOString(),
+                result: allesOK ? 'ok' : 'not ok',
+                details: rapport,
+                consult_type: 'behandeling',
+                patient_number: patientName
+            }),
+            onload: function (response) {
+                console.log(response)
+            },
+            onerror: function (err) {
+                sendError(err);
+            }
+        });
+    }
+
+    function sendError(err){
+        console.error("❌ Fout bij ophalen of verwerken van data:", err);
+         GM_xmlhttpRequest({
+            method: "POST",
+            url: 'https://whisper.anzwerz.ai/api/som-feedback',
+            headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': 'mijn-geheime-sleutel'
+                },
+            data: JSON.stringify({ error_description: err.message,
+                                    error_log: err.stack,
+                                    error_type: err.name
+            }),
+            onload: function (response) {
+                    console.log(response)
+                },
+            onerror: function (err) {
+                    console.error("Niet gelukt om error te loggen", err);
+                }
+        });
+    }
+
 }, false);
 })();

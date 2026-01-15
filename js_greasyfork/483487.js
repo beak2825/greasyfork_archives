@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili直播间显示更多信息
 // @description  bilibili直播间显示开播时间,直播时长,粉丝数,人气,收益,在线人数,封面,其他关注直播,pk等信息
-// @version      3.25
+// @version      3.26
 // @author       killall
 // @match        https://live.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
@@ -190,6 +190,7 @@ let LiveTimeModule = {
        margin-left: 10px;
        user-select: text;
        flex-direction: column;
+       white-space: nowrap;
        opacity: 1;
    }
    `,
@@ -805,24 +806,33 @@ const ut = {
 
   hook_wrapper() {
 
+    const seenIds = new Set();
     const cb_map = {
       ONLINE_RANK_COUNT: function (obj) {
         Dao.rank1 = obj.data.count;
         Dao.rank2 = obj.data.online_count;
       },
       GUARD_BUY: function (obj) {
-        // INFO("GUARD_BUY\n", obj);
+        DEBUG("GUARD_BUY\n", obj);
         const d = obj.data
-        // INFO(`GUARD_BUY: ${d.username} 开通 ${d.gift_name} (￥${d.price / 1000})`)
+        DEBUG(`GUARD_BUY: ${d.username} 开通 ${d.gift_name} (￥${d.price / 1000})`)
         Dao.income += d.price / 1000 / 2
-        // INFO("Dao.income += ", d.price / 1000);
+        DEBUG("Dao.income += ", d.price / 1000 / 2);
 
       },
       SUPER_CHAT_MESSAGE: function (obj) {
+        const uniqueKey = obj.cmd + (obj.data?.id || '');
+        if (seenIds.has(uniqueKey)) return; // 跳过重复项
+        seenIds.add(uniqueKey);
+
+        DEBUG("uniqueKey", uniqueKey);
+        DEBUG("SUPER_CHAT_MESSAGE:", obj);
+
         const d = obj.data
-        // INFO(`SUPER_CHAT_MESSAGE: (￥${d.price}) ${d.uinfo.base.name}: ${d.message}`)
-        Dao.income += d.price / 2
-        // INFO("Dao.income += ", d.price);
+        DEBUG(`SUPER_CHAT_MESSAGE: (￥${d.price}) ${d.uinfo.base.name}: ${d.message}`)
+        Dao.income += d.price
+        DEBUG("Dao.income += ", d.price, Dao.income);
+
       },
       COMBO_SEND: function (obj) {
         const d = obj.data
@@ -832,24 +842,28 @@ const ut = {
         // INFO("Dao.income += ", d.combo_total_coin / 1000);
       },
       SEND_GIFT: function (obj) {
-        // INFO("SEND_GIFT:", obj);
+        // DEBUG("SEND_GIFT:", obj);
         const d = obj.data
         const price = d.coin_type == 'gold' ? d.total_coin / 1000 : 0
-        // INFO(`SEND_GIFT: ${d.uname} ${d.action} ${d.num}个 ${d.giftName} (共￥${d.total_coin / 1000})`)
+        DEBUG(`SEND_GIFT: ${d.uname} ${d.action} ${d.num}个 ${d.giftName} (共￥${d.total_coin / 1000})`)
         Dao.income += price / 2
-        // INFO("Dao.income += ", price);
+        DEBUG("Dao.income += ", price / 2, Dao.income);
       },
     }
     const cmdTracker = new Map();
+
     Array.prototype.push = new Proxy(Array.prototype.push, {
       apply(target, thisArg, argArray) {
         try {
           if (argArray && argArray.length > 0) {
+
             for (let i = 0; i < argArray.length; i++) {
-              if (argArray[i] && argArray[i].cmd) {
-                !cmdTracker.has(argArray[i].cmd) && cmdTracker.set(argArray[i].cmd, argArray[i])
-                if (cb_map[argArray[i].cmd]) {
-                  cb_map[argArray[i].cmd](argArray[i])
+              const item = argArray[i];
+              if (item && item.cmd) {
+                !cmdTracker.has(item.cmd) && cmdTracker.set(item.cmd, item)
+
+                if (cb_map[item.cmd]) {
+                  cb_map[item.cmd](item)
                 }
               } else {
                 break
@@ -878,7 +892,7 @@ const ut = {
 
 function DEBUG(...args) {
   if (Config.debug.enable) {
-    console.log("INFO:", ...args);
+    console.log("%cDEBUG:", "color: blue;", ...args);
   }
 }
 function ERR(...args) {

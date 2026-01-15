@@ -8,7 +8,7 @@
 // @grant         GM_getValue
 // @resource      theList https://files.catbox.moe/idfplf.json
 // @homepageURL   https://web.archive.org/web/20210415002314/https://holocaustdeprogrammingcourse.com/
-// @version       1488.0.4
+// @version       1488.0.5
 // @license       GNU GPLv3
 // @namespace https://greasyfork.org/users/1185877
 // @downloadURL https://update.greasyfork.org/scripts/480944/%22Nonfren%20Radar%22.user.js
@@ -92,10 +92,18 @@
   }
 
   function handleText(textNode) {
-    var currentNode = textNode;
+    var currentNode = textNode.parentNode;
     while (currentNode) {
-      if (currentNode.nodeName.toLowerCase() === 'input' || currentNode.nodeName.toLowerCase() === 'textarea' || currentNode.isContentEditable) {
-        return; // Skip processing if the text node is within an interactive element
+      var nodeName = currentNode.nodeName.toLowerCase();
+      // Skip processing if the text node is within an interactive or code-related element
+      if (nodeName === 'input' ||
+          nodeName === 'textarea' ||
+          nodeName === 'code' ||
+          nodeName === 'pre' ||
+          nodeName === 'kbd' ||
+          nodeName === 'samp' ||
+          currentNode.isContentEditable) {
+        return;
       }
       currentNode = currentNode.parentNode;
     }

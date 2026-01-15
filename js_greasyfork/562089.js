@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2libra-enhance
 // @namespace    http://tampermonkey.net/
-// @version      1.6.1
+// @version      1.6.3
 // @description  2libra.com 论坛增强：帖子快速查看、智能返回顶部
 // @author       twocold0451
 // @homepage     https://github.com/twocold0451/2libra-enhance
@@ -377,7 +377,7 @@
         }
 
         /* 加载占位符样式 */
-        .modal-loading {
+        .libra-modal-loading {
             position: absolute;
             top: 60px;
             left: 0;
@@ -387,7 +387,7 @@
             align-items: center;
             justify-content: center;
             background: var(--libra-dynamic-bg);
-            z-index: 1;
+            z-index: 50;
         }
 
         .loading-content {
@@ -458,6 +458,79 @@
             border-left-color: var(--color-primary, #4a00ff);
             color: var(--color-primary, #4a00ff);
         }
+
+        /* 通知弹窗样式 */
+        #notifications-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 901;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        #notifications-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #notifications-modal .modal-content {
+            width: 80%;
+            max-width: 800px;
+            height: 80%;
+            background: var(--base-100, var(--libra-dynamic-bg, #fff));
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        #notifications-modal .modal-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #notifications-modal .modal-title {
+            font-weight: bold;
+        }
+        #notifications-modal .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+        #notifications-modal .btn-close {
+             padding: 4px 12px;
+            background-color: #e5e7eb;
+            color: #374151;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #notifications-modal .btn-back-notifications {
+             padding: 4px 12px;
+            background-color: var(--color-primary, #4a00ff);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #notifications-modal .btn-back-notifications:hover {
+            opacity: 0.9;
+        }
+        #notifications-modal iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     `;
     document.head.appendChild(style);
 
@@ -481,7 +554,7 @@
                 </div>
 
                 <!-- 加载占位符 -->
-                <div class="modal-loading" id="modal-loading">
+                <div class="libra-modal-loading" id="modal-loading">
                     <div class="loading-content">
                         ${animation.html}
                         <p class="loading-text">${text}</p>
@@ -535,7 +608,7 @@
 
         iframe.src = url;
         titleEl.textContent = title || '快速查看';
-        
+
         // 绑定跳转事件
         goBtn.onclick = () => {
             window.location.href = url;
@@ -544,13 +617,13 @@
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
 
-                iframe.onload = () => {
+        iframe.onload = () => {
             try {
                 const doc = iframe.contentDocument;
                 const css = `
                     header, .navbar, aside:not(.EmojiPickerReact), .menu:not(.dropdown-left), [role="banner"], [role="contentinfo"], footer.footer-center { display: none !important; }
                     div.breadcrumbs.text-sm.overflow-visible { display: none !important; }
-                    [data-main-left="true"], .flex-1 {
+                    [data-main-left="true"], .flex.w-full > .flex-1 {
                         position: fixed !important;
                         top: 0 !important;
                         left: 0 !important;
@@ -615,26 +688,9 @@
     }
 
 
-    // 主逻辑：尝试为单个 LI 元素添加按钮
-    function processListItem(li) {
-        if (!li) return;
-
-        // 查找这一行中的 time 元素
-        const timeEl = li.querySelector('time');
-        if (!timeEl) return;
-
-        // 查找帖子标题链接
-        const titleLink = timeEl.parentElement.parentElement.querySelector('a.link');
-        if (!titleLink || titleLink.tagName !== 'A') return;
-
-        // 查找元数据行 (标题下面的 div flex items-center gap-2)
-        const metaRow = timeEl.closest('.flex.items-center.gap-2');
-        if (!metaRow) return;
-
-        // 标记为已添加（如果还没有标记），用于CSS hover
-        if (!li.classList.contains('libra-post-item')) {
-            li.classList.add('libra-post-item');
-        }
+    // 更新标题链接样式和行为
+    function updateTitleLinkStyle(titleLink) {
+        if (!titleLink) return;
 
         // 总是更新设置相关的属性
         if (Settings.clickTitleQuickView) {
@@ -663,6 +719,39 @@
             if (titleLink.title === '点击快速查看') {
                 titleLink.title = '';
             }
+        }
+    }
+
+    // 主逻辑：尝试为单个 LI 元素添加按钮
+    function processListItem(li) {
+
+        //如果设置了点击标题快速查看，则不添加按钮
+        if (Settings.clickTitleQuickView){
+            //如果已存在按钮，则移除 ,隐藏libra-quick-btn
+            const existingBtn = li.querySelector('.libra-quick-btn');
+            if (existingBtn) {
+                existingBtn.remove();
+            }
+            return;
+        }
+
+        if (!li) return;
+
+        // 查找这一行中的 time 元素
+        const timeEl = li.querySelector('time');
+        if (!timeEl) return;
+
+        // 查找帖子标题链接
+        const titleLink = timeEl.parentElement.parentElement.querySelector('a.link');
+        if (!titleLink || titleLink.tagName !== 'A') return;
+
+        // 查找元数据行 (标题下面的 div flex items-center gap-2)
+        const metaRow = timeEl.closest('.flex.items-center.gap-2');
+        if (!metaRow) return;
+
+        // 标记为已添加（如果还没有标记），用于CSS hover
+        if (!li.classList.contains('libra-post-item')) {
+            li.classList.add('libra-post-item');
         }
 
         let btn = li.querySelector('.libra-quick-btn');
@@ -873,6 +962,130 @@
         return { animation, text };
     }
 
+    // --- 通知弹窗逻辑 ---
+    const NOTIFICATIONS_MODAL_ID = 'notifications-modal';
+
+    function createNotificationsModal() {
+        if (document.getElementById(NOTIFICATIONS_MODAL_ID)) return;
+
+        const modal = document.createElement('div');
+        modal.id = NOTIFICATIONS_MODAL_ID;
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">通知</span>
+                    <div class="modal-actions">
+                        <button class="btn-back-notifications">返回通知</button>
+                        <button class="btn-close">关闭</button>
+                    </div>
+                </div>
+                <div class="libra-modal-loading" id="notifications-modal-loading"></div>
+                <iframe src=""></iframe>
+            </div>
+        `;
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeNotificationsModal();
+            }
+        });
+        modal.querySelector('.btn-close').addEventListener('click', closeNotificationsModal);
+        
+        // 绑定返回通知按钮事件
+        modal.querySelector('.btn-back-notifications').addEventListener('click', () => {
+             const iframe = modal.querySelector('iframe');
+             iframe.src = '/notifications';
+        });
+
+        document.body.appendChild(modal);
+    }
+
+    function openNotificationsModal(url) {
+        createNotificationsModal();
+        const modal = document.getElementById(NOTIFICATIONS_MODAL_ID);
+
+        let bg = window.getComputedStyle(document.body).backgroundColor;
+        if (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') {
+            bg = window.getComputedStyle(document.documentElement).backgroundColor;
+        }
+        modal.style.setProperty('--libra-dynamic-bg', bg);
+
+        const iframe = modal.querySelector('iframe');
+        const loading = modal.querySelector('#notifications-modal-loading');
+
+        iframe.style.background = bg;
+        iframe.style.opacity = '0';
+
+        // 显示加载动画
+        const { animation, text } = getRandomLoadingContent();
+        loading.innerHTML = `
+            <div class="loading-content">
+                ${animation.html}
+                <p class="loading-text">${text}</p>
+            </div>
+        `;
+        loading.style.display = 'flex';
+
+        iframe.src = url;
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        iframe.onload = () => {
+            try {
+                const doc = iframe.contentDocument;
+                const css = `
+                    header, .navbar, aside, [role="banner"], [role="contentinfo"] { display: none !important; }
+                    .container { width: 100% !important; max-width: none !important; padding: 10px !important; }
+                    main { margin-top: 0 !important; }
+                    body { background: ${bg} !important; overflow-y: auto !important; }
+                    [data-right-sidebar="true"]{display: none !important;}
+                    .breadcrumbs{ display: none !important; }
+                    .footer-horizontal{ display: none !important; }
+                `;
+                const style = doc.createElement('style');
+                style.textContent = css;
+                doc.head.appendChild(style);
+
+                // 使用 MutationObserver 持续监听并隐藏目标元素（应对动态加载和SPA跳转）
+                const hideWorkNodeList = () => {
+                    const workNodeList = doc.querySelector('[role="work node list"]');
+                    if (workNodeList && workNodeList.parentElement && workNodeList.parentElement.parentElement) {
+                        const target = workNodeList.parentElement.parentElement;
+                        if (target.style.display !== 'none') {
+                            target.style.display = 'none';
+                        }
+                    }
+                };
+
+                // 立即执行一次
+                hideWorkNodeList();
+
+                // 持续监听 DOM 变化
+                const observer = new MutationObserver(hideWorkNodeList);
+                observer.observe(doc.body, { childList: true, subtree: true });
+
+                // 隐藏加载动画，显示iframe
+                iframe.style.opacity = '1';
+                loading.style.display = 'none';
+            } catch (e) {
+                iframe.style.opacity = '1';
+                loading.style.display = 'none';
+            }
+        };
+    }
+
+    function closeNotificationsModal() {
+        const modal = document.getElementById(NOTIFICATIONS_MODAL_ID);
+        if (modal) {
+            modal.classList.remove('active');
+            const iframe = modal.querySelector('iframe');
+            iframe.src = '';
+            document.body.style.overflow = '';
+        }
+    }
+
+
     // --- 设置功能 ---
 
     // 显示toast通知
@@ -909,13 +1122,20 @@
 
     // 全局扫描并处理所有帖子项
     function processAllPostItems() {
-        // 找到所有包含time元素的li，这些就是帖子项
-        const timeElements = document.querySelectorAll('time');
-        timeElements.forEach(timeEl => {
-            const li = timeEl.closest('li');
+        // 找到所有包含指定class的a标签，这些就是帖子项
+        const postLinks = document.querySelectorAll('a.link.link-hover.leading-4');
+        postLinks.forEach(postLink => {
+            const li = postLink.closest('li');
             if (li) {
                 processListItem(li);
             }
+        });
+        //找到所有 href 以 /post-flat开头的a标签
+        const postFlatLinks = document.querySelectorAll('a[href^="/post-flat"]');
+        postFlatLinks.forEach(postLink => {
+            //过滤掉class 包含 join-item 的标签
+            if (postLink.classList.contains('join-item')) return;
+            updateTitleLinkStyle(postLink);
         });
     }
 
@@ -924,7 +1144,12 @@
         clickTitleQuickView: {
             name: "点击帖子标题开启快速查看",
             type: "bool",
-            value: false
+            value: true
+        },
+        showQuickViewToast: {
+            name: "通知快速查看",
+            type: "bool",
+            value: true
         }
     };
 
@@ -938,20 +1163,89 @@
         },
         set clickTitleQuickView(value) {
             config.set('clickTitleQuickView', value);
+        },
+        get showQuickViewToast() {
+            return config.get('showQuickViewToast');
+        },
+        set showQuickViewToast(value) {
+            config.set('showQuickViewToast', value);
         }
     };
+
+    // 处理点击标题快速查看设置变化
+    function handleClickTitleQuickViewChange(enabled) {
+        const message = enabled ? '✅ 已启用：点击帖子标题开启快速查看' : '⬜ 已禁用：点击帖子标题开启快速查看';
+        showToast(message, enabled ? 'success' : 'info');
+        processAllPostItems();
+    }
+
+    // 处理通知快速查看设置变化
+    function handleShowQuickViewToastChange(enabled) {
+        const message = enabled ? '✅ 已启用：通知快速查看' : '⬜ 已禁用：通知快速查看';
+        showToast(message, enabled ? 'success' : 'info');
+        // 立即刷新通知链接的状态
+        updateNotificationLinkState();
+    }
 
     // 监听配置变化，实时生效
     config.addEventListener('set', (e) => {
         const { prop, after } = e.detail;
         if (prop === 'clickTitleQuickView') {
-            // 显示状态变化通知
-            const message = after ? '✅ 已启用：点击帖子标题开启快速查看' : '⬜ 已禁用：点击帖子标题开启快速查看';
-            showToast(message, after ? 'success' : 'info');
-
-            // 实时生效：重新处理所有帖子项
-            processAllPostItems();
+            handleClickTitleQuickViewChange(after);
+        } else if (prop === 'showQuickViewToast') {
+            handleShowQuickViewToastChange(after);
         }
     });
+
+    // --- 初始化功能 ---
+    function updateNotificationLinkState() {
+        const notificationLink = document.querySelector('a[href="/notifications"], a[href$="/notifications"]');
+        if (notificationLink) {
+            if (Settings.showQuickViewToast) {
+                notificationLink.title = '点击快速查看通知';
+                notificationLink.style.cursor = 'pointer';
+            } else {
+                notificationLink.title = '';
+            }
+
+            if (!notificationLink.dataset.notificationModalAdded) {
+                notificationLink.dataset.notificationModalAdded = 'true';
+                notificationLink.addEventListener('click', e => {
+                    // 动态检查设置，实现联动
+                    if (Settings.showQuickViewToast) {
+                        // 检查是否按下了Ctrl键（在新标签页打开）
+                        if (e.ctrlKey || e.metaKey) return; 
+                        
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openNotificationsModal(notificationLink.href);
+                    }
+                });
+            }
+        }
+    }
+
+    function initializeNotificationQuickView() {
+        // 初次尝试
+        updateNotificationLinkState();
+        
+        // 持续观察（针对 SPA 路由切换或动态加载）
+        const observer = new MutationObserver(() => {
+            updateNotificationLinkState();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // 启动所有初始化
+    initializeNotificationQuickView();
+
+    // 初始化帖子标题快速查看
+    processAllPostItems();
+
+    // 持续监听新加载的帖子（针对SPA和动态加载）
+    const postListObserver = new MutationObserver(() => {
+        processAllPostItems();
+    });
+    postListObserver.observe(document.body, { childList: true, subtree: true });
 
 })();

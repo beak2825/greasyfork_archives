@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         网页背景调节器
     // @namespace    http://tampermonkey.net/
-    // @version      1.72.3
+    // @version      1.72.4
     // @description  调整网页下方背景的透明度、颜色遮罩、模糊度，并支持上传本地图片作为背景。优化 UI 美观性并按域名单独记忆设置，反转遮罩透明度逻辑，支持自定义默认配置，重置恢复页面原始状态，Dark 模式下 UI 面板背景变黑，添加中英文切换，修复百分比更新、卡顿、元素错位、关闭按钮失效问题，保存默认配置时应用到所有网站。
     // @author       wwdboy-modifided from Grey333
     // @match        *://*/*
@@ -20,7 +20,7 @@
      
         // 原始默认设置
         const defaultSettings = {
-            transparency: 1,
+            transparency: 0.8,
             blur: 0,
             overlayColor: 'transparent',
             overlayOpacity: 0,

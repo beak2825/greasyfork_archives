@@ -1,28 +1,30 @@
 // ==UserScript==
-// @name         Color Dashboard
+// @name         Color Dashboard V2.3.2
 // @namespace    https://github.com/R0g3rT
-// @version      2.0
+// @version      2.3.2
 // @description  burn rubber not your soul!!
 // @author       R0g3rT
 // @license MIT
-// @match        https://partner.jifeline.com/portal/dashboard/*
+// @match        https://partner.jifeline.com/portal/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=jifeline.com
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/491696/Color%20Dashboard.user.js
-// @updateURL https://update.greasyfork.org/scripts/491696/Color%20Dashboard.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/491696/Color%20Dashboard%20V232.user.js
+// @updateURL https://update.greasyfork.org/scripts/491696/Color%20Dashboard%20V232.meta.js
 // ==/UserScript==
 
 (function () {
   "use strict";
 
+  // Variablen
   let ispause = null;
   let isstate = "";
   const n = "HitchCoder Saalfeld";
   const on = "Rameder Connect";
   let lastCheckMinute = -1;
   let isFullscreenInitialized = false;
-  const logSend = true;
+  const logSend = true; // Setze auf true um Logs zu aktivieren
 
+  // Logging Funktion
   function Log(message, data){
 
     if (logSend) {
@@ -35,12 +37,12 @@
 
   }
 
-  // Prüfe ob wir im Fullscreen sind
+  // Prüfe ob Fullscreen-Modus aktiv ist
   function isFullscreenMode() {
     return document.querySelector("body > app-root > app-layout > div > div > div > div > div > app-dashboard > div > app-wall-screen > div > div > div.header.d-flex.justify-content-between.align-items-center.pb-4.mb-4 > div:nth-child(1) > strong") !== null;
   }
 
-  // Beim Start oder Fullscreen-Wechsel: Prüfe localStorage und setze initial CSS
+  // Initialisiere Status aus localStorage
   function initializeFromLocalStorage() {
     const storedState = localStorage.getItem('Cstate');
     const storedPause = localStorage.getItem('Cpause');
@@ -56,6 +58,7 @@
     isFullscreenInitialized = true;
   }
 
+  // Hole Status von der API
   function getStatus() {
     Log("Fetching status from API...");
 
@@ -69,7 +72,7 @@
 
         Log("API Response:", { state: newState, pause: newPause });
 
-        // Nur wenn sich etwas geändert hat
+        // Nur bei Statusänderung CSS anpassen
         if (isstate !== newState || ispause !== newPause) {
           Log("Status changed:", {
             oldState: isstate,
@@ -87,6 +90,7 @@
       .catch((error) => console.error("Error fetching status:", error));
   }
 
+  // Ersetze Textinhalte
   function replaceText() {
     const elements = document.querySelectorAll(".title");
     elements.forEach((element) => {
@@ -96,6 +100,7 @@
     });
   }
 
+  // Modifiziere CSS basierend auf Status
   function modifyCSS() {
     const Copen = "green";
     const Cscheduled = "cadetblue";
@@ -112,7 +117,7 @@
       return;
     }
 
-    // Bestimme den aktuellen Status
+    // Bestimme aktuellen Status
     let currentStatus = "";
 
     if (ispause !== null && ispause !== "") {
@@ -125,7 +130,7 @@
 
     Log("Applying CSS for status:", currentStatus);
 
-    // Entferne alte Animationen
+    // Entferne vorherige Animationen
     const elementsToBlink = document.querySelectorAll(
       "app-wall-screen .ms-1.ng-star-inserted"
     );
@@ -133,7 +138,7 @@
       element.style.animation = "";
     });
 
-    // Setze CSS basierend auf Status
+    // Wende CSS basierend auf Status an
     if (currentStatus === "open") {
       setTimeout(() => {
         if (setStatus.textContent.trim() !== "Open") {
@@ -176,8 +181,9 @@
     }
   }
 
+  // Füge Blink-Animation hinzu
   function applyBlinkAnimation() {
-    // Verhindere mehrfaches Hinzufügen des Styles
+
     if (document.getElementById('blink-animation')) {
       const elementsToBlink = document.querySelectorAll(
         "app-wall-screen .ms-1.ng-star-inserted"
@@ -209,26 +215,28 @@
     });
   }
 
+  // Überprüfe die Zeit und rufe API zu bestimmten Zeiten ab
   function checkTime() {
-    const timeElement = document.querySelector(
-      "body > app-root > app-layout > div > div > div > div > div > app-dashboard > div > app-wall-screen > div > div > div.header.d-flex.justify-content-between.align-items-center.pb-4.mb-4 > div:nth-child(2)"
-    );
+    // const timeElement = document.querySelector(
+    //   "body > app-root > app-layout > div > div > div > div > div > app-dashboard > div > app-wall-screen > div > div > div.header.d-flex.justify-content-between.align-items-center.pb-4.mb-4 > div:nth-child(2)"
+    // );
 
-    if (!timeElement) return;
 
-    const timeText = timeElement.textContent.trim();
-    const date = new Date(timeText);
+    // if (!timeElement) return;
+
+    // const timeText = timeElement.textContent.trim();
+    const date = new Date(); //new Date(timeText);
 
     const currentMinute = date.getHours() * 60 + date.getMinutes();
 
-    // Prüfe, ob wir diese Minute bereits geprüft haben
+
     if (currentMinute === lastCheckMinute) return;
 
     const currentTime = date.getHours() * 100 + date.getMinutes();
 
-    // Prüfe zu bestimmten Zeiten
-    if (currentTime === 800 || currentTime === 1230 || currentTime === 1300 || currentTime === 1700) {
-      
+
+    if (currentTime === 800 || currentTime === 1230 || currentTime === 1330 || currentTime === 1700) {
+
       lastCheckMinute = currentMinute;
       setTimeout(() => {
           let currentTimetoString = currentTime.toString();
@@ -236,10 +244,12 @@
         getStatus();
            Log("Time check started at:", currentTimeformat);
       }, 2000);
+    }else {
+    // Log("No time check needed at:", date.getHours() + ":" + date.getMinutes());
     }
   }
 
-  // Beobachte DOM-Änderungen für Fullscreen-Wechsel
+  // Beobachte DOM-Änderungen für Fullscreen-Modus
   const observer = new MutationObserver(() => {
     if (isFullscreenMode() && !isFullscreenInitialized) {
       Log("Fullscreen mode detected, initializing from localStorage...");
@@ -247,6 +257,7 @@
       // Direkt nach Fullscreen-Start auch einmal API aufrufen
       setTimeout(() => {
         getStatus();
+        checkTime();
       }, 2000);
     } else if (!isFullscreenMode()) {
       isFullscreenInitialized = false;
@@ -267,6 +278,7 @@
       // Initial API Call
       setTimeout(() => {
         getStatus();
+        //checkTime();
        }, 2000);
      }
   }, 500);
@@ -275,6 +287,7 @@
   setInterval(() => {
     replaceText();
     checkTime();
+
 
     // Wenn Fullscreen-Elemente existieren aber noch nicht initialisiert
     if (isFullscreenMode() && !isFullscreenInitialized) {

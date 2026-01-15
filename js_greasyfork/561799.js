@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.3.0
+// @version      2.4.0
 // @description  Pokechill 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -45,10 +45,10 @@
         "Raichu": "雷丘",
         "Sandshrew": "穿山鼠",
         "Sandslash": "穿山王",
-        "Nidoran♀": "尼多兰",
+        "Nidoran F": "尼多兰",
         "Nidorina": "尼多娜",
         "Nidoqueen": "尼多后",
-        "Nidoran♂": "尼多朗",
+        "Nidoran M": "尼多朗",
         "Nidorino": "尼多力诺",
         "Nidoking": "尼多王",
         "Clefairy": "皮皮",
@@ -1091,7 +1091,11 @@
         //蕾冠王
         "Calyrex Ice": "白马蕾冠王",
         "Calyrex Shadow": "黑马蕾冠王",
-
+        //灵兽形态
+        "Tornadus Therian": "龙卷云 灵兽形态",
+        "Thundurus Therian": "雷电云 灵兽形态",
+        "Landorus Therian": "土地云 灵兽形态",
+        "Enamorus Therian": "眷恋云 灵兽形态",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
@@ -1152,6 +1156,7 @@
         "Gloomilate": "黑暗皮肤",
         "Espilate": "超能力皮肤",
         "Verdify": "青草皮肤" ,
+        "MetalHead": "铁头功" ,
 
 
         //官方特性
@@ -1918,7 +1923,7 @@
         "Wood Hammer": "木槌",
         "Aqua Jet": "水流喷射",
         "Attack Order": "攻击指令",
-        "Defend Order": "防御指令",
+        "Defend Order": "物防指令",
         "Heal Order": "回复指令",
         "Head Smash": "双刃头锤",
         "Double Hit": "二连击",
@@ -2402,6 +2407,7 @@
 
         //未有官方译名
         "Fog":"起雾",
+
     };
 
     const CN_LIST = Object.entries(EN_TO_CN)

@@ -491,11 +491,6 @@
 
                 /* ===== ФИКСЫ ===== */
 
-                /* Перенос слов */
-                #gamechat a, h1, h2, h3, h4, h5, h6, p, span, input, select, option, li {
-                    word-break: break-word;
-                }
-
                 .test {
                     height: 0 !important;
                 }

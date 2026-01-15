@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zendesk Red Word and Tags Highlighter Fuse
 // @namespace    http://tampermonkey.net/
-// @version      10.1
+// @version      10.2
 // @description  Highlights predefined red words in Zendesk dynamically with specific scopes and provides a management menu.
 // @author       Swiftlyx
 // @match        https://*.zendesk.com/agent/*
@@ -459,9 +459,15 @@
                 results = this.fuseInstances[category].search(text)
                     .filter(result => {
                         const shortWordThreshold = this.config.fuzzyThreshold * 1.5;
+
+                        // Stricter length check for short words to prevent "use" -> "abuse" (3 vs 5)
+                        // If text is 3 chars, max length diff should be 1 (matches 2, 3, 4 chars)
+                        // If text is 4-5 chars, max length diff can be 2
+                        const maxLenDiff = text.length <= 3 ? 1 : 2;
+
                         return result.score < shortWordThreshold &&
                             !this.isCommonWord(text) &&
-                            Math.abs(result.item.length - text.length) <= 2;
+                            Math.abs(result.item.length - text.length) <= maxLenDiff;
                     });
             } else {
                 results = this.fuseInstances[category].search(text)
@@ -511,7 +517,11 @@
         }
 
         isCommonWord(word) {
-            const commonWords = ['all', 'not', 'the', 'and', 'but', 'for', 'was', 'is', 'are', 'be'];
+            const commonWords = [
+                'all', 'not', 'the', 'and', 'but', 'for', 'was', 'is', 'are', 'be',
+                'use', 'can', 'will', 'has', 'had', 'have', 'that', 'this', 'from',
+                'with', 'you', 'your', 'his', 'her', 'they', 'them', 'who', 'what'
+            ];
             return commonWords.includes(word.toLowerCase());
         }
 

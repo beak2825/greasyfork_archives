@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Akuvox ChanDao-Project
 // @namespace    http://www.akuvox.com/
-// @version      2.0
+// @version      2.1
 // @description  内部使用，外部无效，方便快捷创建项目
 // @author       phoenixylf
 // @match        http://zentao.akuvox.local/zentao/project-create.html
@@ -22,7 +22,7 @@
     var embMember = new Array("巫有福","蔡在添","吕传芳","唐春林","严松松","汤培毅","蓝淋辉","钟文瑞","柳兵锋","柳文艺","许跃辉","王博奕","王辉龙","李兴武","郑龙斌","叶林凤") //,"叶林凤"
     var androidMember = new Array("陈敏杰","林国勇","周明辉","王伟建","江昊","吴铠嘉","杨乃容","杨智贤","黄世泽","熊凯","陈浩楠","陈鸿儒") //,"叶林凤"
     var mobileAndroidMember = new Array("游炳坤","杨伊莎","戴佳伟","林函","罗兴富")//,"叶林凤"
-    var mobileIosMember = new Array("游炳坤","许志明","温仲斌","曾华央")//,"叶林凤"
+    var mobileIosMember = new Array("游炳坤","许志明","温仲斌","曾华央","朱嘉宝")//,"叶林凤"
 
     var TYPE_EMB=0;
     var TYPE_Android=1;

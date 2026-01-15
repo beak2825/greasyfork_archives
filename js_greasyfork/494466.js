@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         易搭保存纯 HTML
-// @version      1.0.0
+// @version      1.0.1
 // @namespace    https://g.hz.netease.com/zhuning1
 // @description  访问易搭页面增加保存纯 HTML 按钮
-// @author       zhuning1@corp.netease.com
 // @match        https://*/g/yida/*
 // @icon         https://s1.music.126.net/style/favicon.ico
 // @grant        none

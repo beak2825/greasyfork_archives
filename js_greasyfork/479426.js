@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NodeSeek X
 // @namespace    http://www.nodeseek.com/
-// @version      0.3-beta.20
+// @version      0.3-beta.22
 // @description  【原NodeSeek增强】自动签到、无缝翻页帖子评论、快捷回复、代码高亮、屏蔽用户、屏蔽帖子、楼主低等级提醒
 // @author       dabao
 // @match        *://www.nodeseek.com/*
@@ -22,8 +22,8 @@
 // @grant        GM_addStyle
 // @grant        GM_openInTab
 // @grant        unsafeWindow
-// @run-at       document-end
-// @license      GPL-3.0 License
+// @run-at       document-idle
+// @license      GPL-3.0
 // @supportURL   https://www.nodeseek.com/post-36263-1
 // @homepageURL  https://www.nodeseek.com/post-36263-1
 // @downloadURL https://update.greasyfork.org/scripts/479426/NodeSeek%20X.user.js
@@ -429,10 +429,11 @@
                     const clientHeight = document.documentElement.clientHeight, clientWidth = document.documentElement.clientWidth;
                     const mdHeight = mdEditor.clientHeight, mdWidth = mdEditor.clientWidth;
                     const top = (clientHeight / 2) - (mdHeight / 2), left = (clientWidth / 2) - (mdWidth / 2);
-                    mdEditor.style.cssText = `position: fixed; top: ${top}px; left: ${left}px; margin: 30px 0px; width: 100%; max-width: ${mdWidth}px; z-index: 999;`;
-                    const moveEl = mdEditor.querySelector('.tab-select.window_header');
-                    moveEl.style.cursor = "move";
-                    moveEl.addEventListener('mousedown', startDrag);
+                    //mdEditor.style.cssText = `position: fixed; top: ${top}px; left: ${left}px; margin: 30px 0px; width: 100%; max-width: ${mdWidth}px; z-index: 999;`;
+                    mdEditor.style.cssText = `position: fixed; bottom: 0px; margin: 0px 0px; width: 100%; max-width: ${mdWidth}px; z-index: 999;`;
+                    //                     const moveEl = mdEditor.querySelector('.tab-select.window_header');
+                    //                     moveEl.style.cursor = "move";
+                    //                     moveEl.addEventListener('mousedown', startDrag);
                     addEditorCloseButton();
                     _this.is_show_quick_comment = true;
                 };
@@ -1221,6 +1222,214 @@
                 // 使用给定的配置选项开始观察目标节点
                 observer.observe(targetNode, observerConfig);
             },
+            callout(){
+                if (!opts.comment.pathPattern.test(location.pathname) && !(/^\/new-discussion/.test(location.pathname))) return;
+                
+                const CSS = `
+.post-content blockquote{border-left: none;border-radius: 4px;box-shadow: inset 4px 0 0 0 rgba(0, 0, 0, .1);}
+.callout{--c:8,109,221;overflow:hidden;border-radius:4px;margin:1em;background:rgba(var(--c),.1);padding:12px 12px 12px 24px!important;box-shadow:inset 4px 0 0 0 rgba(var(--c),.5)}
+.callout.is-collapsible .callout-title{cursor:pointer}
+.callout-title{display:flex;gap:4px;color:rgb(var(--c));line-height:1.3;align-items:flex-start}
+.callout-content{overflow-x:auto}.callout-content .callout{margin-top:20px}
+.callout-icon{flex:0 0 auto;display:flex;align-items:center}
+.callout-icon .svg-icon,.callout-fold .svg-icon{color:rgb(var(--c));height:18px;width:18px}
+.callout-title-inner{font-weight:600}
+.callout-fold{display:flex;align-items:center;padding-inline-end:8px}
+.callout-fold .svg-icon{transition:transform .1s}
+.callout-fold.is-collapsed .svg-icon{transform:rotate(-90deg)}
+.callout.is-collapsed .callout-content{display:none}
+.callout[data-callout="abstract"],.callout[data-callout="summary"],.callout[data-callout="tldr"]{--c:83,223,221}
+.callout[data-callout="info"],.callout[data-callout="todo"]{--c:8,109,221}
+.callout[data-callout="tip"],.callout[data-callout="hint"],.callout[data-callout="important"]{--c:83,223,221}
+.callout[data-callout="success"],.callout[data-callout="check"],.callout[data-callout="done"]{--c:68,207,110}
+.callout[data-callout="question"],.callout[data-callout="help"],.callout[data-callout="faq"]{--c:236,117,0}
+.callout[data-callout="warning"],.callout[data-callout="caution"],.callout[data-callout="attention"]{--c:236,117,0}
+.callout[data-callout="failure"],.callout[data-callout="fail"],.callout[data-callout="missing"]{--c:233,49,71}
+.callout[data-callout="danger"],.callout[data-callout="error"]{--c:233,49,71}
+.callout[data-callout="bug"]{--c:233,49,71}
+.callout[data-callout="example"]{--c:120,82,238}
+.callout[data-callout="quote"],.callout[data-callout="cite"]{--c:158,158,158}
+.callout-inserter-wrapper{position:relative;display:inline-flex;align-items:center}
+.callout-inserter-btn{padding:0;border:none;background:0 0;cursor:pointer;display:flex;color:currentColor}
+.callout-inserter-btn:hover{opacity:.7}
+.callout-inserter-dropdown{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:8px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:1000;min-width:140px;display:none;overflow:hidden}
+.callout-inserter-dropdown.show{display:block}
+.callout-inserter-item{padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;transition:background .15s}
+.callout-inserter-item:hover{background:#f5f5f5}
+.callout-inserter-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+@media(prefers-color-scheme:dark){.callout-inserter-dropdown{background:#2d2d2d;border-color:#444}.callout-inserter-item{color:#ddd}.callout-inserter-item:hover{background:#3d3d3d}}`;
+
+                const ICONS = {
+                    note: 'M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5zm-6.17-1.81 4 4',
+                    abstract: 'M8 2h8v4H8zM16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01',
+                    info: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 14v-4m0-4h.01',
+                    todo: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-3 10 2 2 4-4',
+                    tip: 'M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4',
+                    success: 'M20 6 9 17l-5-5',
+                    question: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01',
+                    warning: 'm21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01',
+                    failure: 'M18 6 6 18M6 6l12 12',
+                    danger: 'M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z',
+                    bug: 'M12 20v-9m2-6a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4zM14.12 3.88 16 2M8 2l1.88 1.88M9 7.13V6a3 3 0 1 1 6 0v1.13',
+                    example: 'M3 5h.01M3 12h.01M3 19h.01M8 5h13M8 12h13M8 19h13',
+                    quote: 'M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2zM5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z',
+                    fold: 'm6 9 6 6 6-6'
+                };
+
+                const TYPE_MAP = {
+                    summary:'abstract',tldr:'abstract',hint:'tip',important:'tip',check:'success',done:'success',
+                    help:'question',faq:'question',caution:'warning',attention:'warning',
+                    fail:'failure',missing:'failure',error:'danger',cite:'quote'
+                };
+
+                const MENU_TYPES = [
+                    { k: 'note', n: '笔记', c: '8,109,221', show: 1 },
+                    { k: 'abstract', n: '摘要', c: '83,223,221', show: 1 },
+                    { k: 'summary', n: '总结', c: '83,223,221' },
+                    { k: 'tldr', n: 'TL;DR', c: '83,223,221' },
+                    { k: 'info', n: '信息', c: '8,109,221', show: 1 },
+                    { k: 'todo', n: '待办', c: '8,109,221', show: 1 },
+                    { k: 'tip', n: '提示', c: '83,223,221', show: 1 },
+                    { k: 'hint', n: '线索', c: '83,223,221' },
+                    { k: 'important', n: '重要', c: '83,223,221', show: 1 },
+                    { k: 'success', n: '成功', c: '68,207,110', show: 1 },
+                    { k: 'check', n: '检查', c: '68,207,110' },
+                    { k: 'done', n: '完成', c: '68,207,110' },
+                    { k: 'question', n: '问题', c: '236,117,0', show: 1 },
+                    { k: 'help', n: '帮助', c: '236,117,0' },
+                    { k: 'faq', n: 'FAQ', c: '236,117,0' },
+                    { k: 'warning', n: '警告', c: '236,117,0', show: 1 },
+                    { k: 'caution', n: '注意', c: '236,117,0' },
+                    { k: 'attention', n: '注意', c: '236,117,0' },
+                    { k: 'failure', n: '失败', c: '233,49,71', show: 1 },
+                    { k: 'fail', n: '失败', c: '233,49,71' },
+                    { k: 'missing', n: '缺失', c: '233,49,71' },
+                    { k: 'danger', n: '危险', c: '233,49,71', show: 1 },
+                    { k: 'error', n: '错误', c: '233,49,71' },
+                    { k: 'bug', n: 'Bug', c: '233,49,71', show: 1 },
+                    { k: 'example', n: '示例', c: '120,82,238', show: 1 },
+                    { k: 'quote', n: '引用', c: '158,158,158' },
+                    { k: 'cite', n: '引述', c: '158,158,158' }
+                ];
+
+                const $ = (s, p = document) => p.querySelector(s);
+                const $$ = (s, p = document) => p.querySelectorAll(s);
+                const el = (t, c, h) => { const e = document.createElement(t); if(c) e.className = c; if(h) e.innerHTML = h; return e; };
+                const svg = d => `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="${d}"/></svg>`;
+                const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+                const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+                const getVAttr = e => e && [...e.attributes].find(a => a.name.startsWith('data-v-'))?.name;
+                const RE = /^\[!(\w+)\]([+-])?(?:\s+([^<\n]+))?(?:<br\s*\/?>)?([\s\S]*)$/i;
+
+                function render(bq) {
+                    if (bq.classList.contains('oc-done')) return;
+                    bq.classList.add('oc-done');
+                    bq.querySelectorAll(':scope > blockquote').forEach(render);
+
+                    const p = bq.querySelector(':scope > p');
+                    const m = (p?.innerHTML.trim() || '').match(RE);
+                    if (!m) return;
+
+                    const [, type, fold, title, content] = m;
+                    const t = type.toLowerCase();
+                    const base = TYPE_MAP[t] || t;
+                    const icon = ICONS[base] || ICONS.note;
+                    const isCollapsible = fold === '+' || fold === '-';
+                    const isCollapsed = fold === '-';
+
+                    const wrap = el('div', `callout ${isCollapsible ? 'is-collapsible' : ''} ${isCollapsed ? 'is-collapsed' : ''}`);
+                    wrap.dataset.callout = t;
+
+                    const titleEl = el('div', 'callout-title');
+                    titleEl.appendChild(el('div', 'callout-icon', svg(icon)));
+                    titleEl.appendChild(el('div', 'callout-title-inner', title?.trim() || cap(type)));
+
+                    if (isCollapsible) {
+                        const foldEl = el('div', `callout-fold ${isCollapsed ? 'is-collapsed' : ''}`, svg(ICONS.fold));
+                        titleEl.appendChild(foldEl);
+                        titleEl.onclick = e => { if (!e.target.closest('a,button')) { wrap.classList.toggle('is-collapsed'); foldEl.classList.toggle('is-collapsed'); } };
+                    }
+                    wrap.appendChild(titleEl);
+
+                    const cont = el('div', 'callout-content');
+                    if (content?.trim()) cont.appendChild(el('p', '', content.trim()));
+
+                    // Move all siblings after the first p into content
+                    let sibling = p.nextSibling;
+                    while (sibling) {
+                        const next = sibling.nextSibling;
+                        cont.appendChild(sibling);
+                        sibling = next;
+                    }
+
+                    if (cont.childNodes.length) wrap.appendChild(cont);
+
+                    bq.replaceWith(wrap);
+                }
+
+                // ==================== 编辑器 ====================
+                function insertCallout(editor, type) {
+                    try {
+                        const cm = $('.CodeMirror', editor)?.CodeMirror;
+                        if (!cm) return;
+                        const doc = cm.getDoc();
+                        let cur = doc.getCursor();
+                        const lvl = (doc.getLine(cur.line).match(/^(>\s*)+/)?.[0].match(/>/g) || []).length;
+
+                        if (lvl > 0) {
+                            let last = cur.line;
+                            for (let i = cur.line + 1; i < doc.lineCount(); i++) {
+                                if (doc.getLine(i).match(/^>\s*/)) last = i; else break;
+                            }
+                            cur = { line: last, ch: doc.getLine(last).length };
+                        }
+
+                        const pre = lvl > 0 ? '>'.repeat(lvl + 1) + ' ' : '> ';
+                        doc.replaceRange((lvl > 0 ? '\n' : '') + `${pre}[!${type}] \n${pre}`, cur);
+                        doc.setCursor({ line: cur.line + (lvl > 0 ? 1 : 0), ch: `${pre}[!${type}] `.length });
+                        cm.focus();
+                    } catch (e) { console.error('[Callout]', e); }
+                }
+
+                let clickBound = false;
+                function createInserter(editor) {
+                    const bar = $('.mde-toolbar', editor);
+                    if (!bar || $('.callout-inserter-wrapper', bar)) return;
+
+                    const vAttr = getVAttr($('.toolbar-item', bar));
+                    const setV = e => vAttr && e.setAttribute(vAttr, '');
+
+                    const wrap = el('span', 'callout-inserter-wrapper toolbar-item');
+                    wrap.title = 'Callout - NodeSeek X'; setV(wrap);
+
+                    const btn = el('span', 'callout-inserter-btn i-icon', `<svg width="16" height="16" viewBox="0 0 48 48" fill="none"><path d="M44 8H4v30h15l5 5 5-5h15V8Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 18v10" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="33" r="2" fill="currentColor"/></svg>`);
+                    setV(btn);
+
+                    const drop = el('div', 'callout-inserter-dropdown');
+                    MENU_TYPES.forEach(t => {
+                        if(!t.show) return;
+                        const item = el('div', 'callout-inserter-item', `<span class="callout-inserter-dot" style="background:rgb(${t.c})"></span>${t.n}[${t.k}]`);
+                        item.onclick = e => { e.stopPropagation(); insertCallout(editor, t.k); drop.classList.remove('show'); };
+                        drop.appendChild(item);
+                    });
+
+                    btn.onclick = e => { e.stopPropagation(); $$('.callout-inserter-dropdown.show').forEach(d => d !== drop && d.classList.remove('show')); drop.classList.toggle('show'); };
+                    if (!clickBound) { document.addEventListener('click', () => $$('.callout-inserter-dropdown.show').forEach(d => d.classList.remove('show'))); clickBound = true; }
+
+                    const sep = el('div', 'sep'); setV(sep);
+                    wrap.append(btn, drop);
+                    bar.append(sep, wrap);
+                }
+
+                // ==================== 初始化 ====================
+                const s = el('style', '', CSS); document.head.appendChild(s);
+
+                const runRender = () => $$('.post-content blockquote:not(.oc-done)').forEach(bq => { if (!bq.closest('blockquote.oc-done')) render(bq); });
+                const update = debounce(() => { runRender(); const e = $('.md-editor'); if (e) createInserter(e); }, 100);
+
+                update();
+                new MutationObserver(update).observe($('.nsk-post-wrapper,.post-content,#editor-body') || document.body, { childList: true, subtree: true });
+            },
             init() {
                 Config.initializeConfig();
                 this.addPluginStyle();
@@ -1234,6 +1443,7 @@
                         codeMirrorInstance.addKeyMap({"Ctrl-Enter":function(cm){ btnSubmit.click();}});
                     }
                 }
+                this.callout();
                 this.autoSignIn();//自动签到
                 this.addSignTips();//签到提示
                 this.autoJump();//自动点击跳转页
@@ -1255,6 +1465,10 @@
                 this.smoothScroll();
             }
         }
-        main.init();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', main.init);
+        } else {
+            main.init();
+        }
     });
 })();

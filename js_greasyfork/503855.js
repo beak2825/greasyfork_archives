@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         闲鱼管家上货助手
 // @namespace    http://tampermonkey.net/
-// @version      1.26.12
-// @description  在商品页面复制商品信息并在闲鱼管家后台上架页面插入“一键填充”按钮，添加下载商品详情图片的功能。包括选品功能，可在闲鱼商详页导出猜你喜欢的数据到Excel，支持动态数据
+// @version      1.27.0
+// @description  在商品页面复制商品信息并在闲鱼管家后台上架页面插入"一键填充"按钮，添加下载商品详情图片的功能。包括选品功能，可在闲鱼商详页导出猜你喜欢的数据到Excel，支持动态数据。v1.27.0: 重构接口拦截逻辑，优化性能和代码结构
 // @author       阿阅 wx：pangyue2    mail:pang-yue@qq.com
 // @match        https://goofish.pro/*
 // @match        https://www.goofish.pro/*
@@ -13,6 +13,8 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=goofish.pro
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_setClipboard
+// @grant        GM_addElement
 // @run-at       document-start
 // @require      https://registry.npmmirror.com/sweetalert2/11.22.5/files/dist/sweetalert2.min.js
 // @require      https://registry.npmmirror.com/xlsx/0.18.5/files/dist/xlsx.full.min.js
@@ -20,6 +22,11 @@
 // @downloadURL https://update.greasyfork.org/scripts/503855/%E9%97%B2%E9%B1%BC%E7%AE%A1%E5%AE%B6%E4%B8%8A%E8%B4%A7%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/503855/%E9%97%B2%E9%B1%BC%E7%AE%A1%E5%AE%B6%E4%B8%8A%E8%B4%A7%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
+
+GM_addElement('link', {
+    rel: 'stylesheet',
+    href: 'https://registry.npmmirror.com/sweetalert2/11.22.5/files/dist/sweetalert2.min.css'
+});
 
 (function () {
     "use strict";
@@ -38,9 +45,10 @@
     interceptRequests();
 
     function showToast(message, type = "success") {
+        console.log(message)
         Swal.fire({
             toast: true,
-            position: "top-end",
+            position: "top",
             icon: type,
             title: message,
             showConfirmButton: false,
@@ -178,14 +186,14 @@
         showToast("图片正在开始");
     }
 
-    // 闲鱼管家上架页面逻辑
-    if (window.location.hostname.includes("goofish.pro")) {
-        return;
+    function insertCopyCookiesButton()
+    {
         const button = document.createElement("button");
-        button.innerText = "一键填充";
+
+        button.innerHTML = `复制cookies`;
         button.style.position = "fixed";
-        button.style.bottom = "10px";
-        button.style.left = "150px";
+        button.style.bottom = "20px";
+        button.style.right = "20px";
         button.style.zIndex = 1000;
         button.style.padding = "10px 20px";
         button.style.backgroundColor = "#28a745";
@@ -197,15 +205,40 @@
         document.body.appendChild(button);
 
         button.addEventListener("click", () => {
-            // 检查当前页面是否是商品添加页面
-            if (!window.location.href.includes("/sale/product/add")) {
-                window.location.href =
-                    "https://goofish.pro/sale/product/add?from=%2Fon-sale";
-                setTimeout(() => fillProductInfo(), 1500);
-                return;
-            } else {
-                fillProductInfo();
-            }
+            GM_setClipboard(document.cookie);
+            showToast("已复制到剪贴板，请勿泄露");
+        });
+    }
+
+    // 闲鱼管家上架页面逻辑
+    if (window.location.hostname.includes("goofish.pro")) {
+        window.addEventListener("DOMContentLoaded", () => {
+            const button = document.createElement("button");
+            button.innerText = "一键填充";
+            button.style.position = "fixed";
+            button.style.bottom = "10px";
+            button.style.left = "150px";
+            button.style.zIndex = 1000;
+            button.style.padding = "10px 20px";
+            button.style.backgroundColor = "#28a745";
+            button.style.color = "white";
+            button.style.border = "none";
+            button.style.borderRadius = "5px";
+            button.style.cursor = "pointer";
+
+            document.body.appendChild(button);
+
+            button.addEventListener("click", () => {
+                // 检查当前页面是否是商品添加页面
+                if (!window.location.href.includes("/sale/product/add")) {
+                    window.location.href =
+                        "https://goofish.pro/sale/product/add?from=%2Fon-sale";
+                    setTimeout(() => fillProductInfo(), 1500);
+                    return;
+                } else {
+                    fillProductInfo();
+                }
+            });
         });
     }
 
@@ -213,9 +246,9 @@
         // 从 Tampermonkey 存储中获取商品信息
         const productName = GM_getValue("productName", "");
         const productDescription = GM_getValue("productDescription", "") || productName;
-        let prict = GM_getValue("productPrice");
+        let price = GM_getValue("productPrice");
         let productPrice = 100;
-        if (prict < 2) {
+        if (price < 2) {
             productPrice = 1.9;
         } else {
             productPrice = parseFloat(GM_getValue("productPrice", "100")) - 0.1;
@@ -319,17 +352,225 @@
         }, 500);
     }
 
+    // 全局 itemId 集合，用于高效去重
+    if (!window.collectedItemIds) {
+        window.collectedItemIds = new Set();
+    }
+
+    // 当前数据源类型
+    let currentDataSource = null;
+
+    // 接口配置
+    const API_CONFIGS = [
+        {
+            // 商品详情接口
+            urlPattern: 'h5api.m.goofish.com/h5/mtop.taobao.idle.pc.detail',
+            handler: (data) => {
+                if (data?.data?.itemDO?.desc) {
+                    let productDescription = data.data.itemDO.desc;
+                    const goodsId = new URL(location.href).searchParams.get("id");
+                    productDescription += `\n \n[钉子]发的是百 度 网 盘 链 接，永不失效，售出不退。
+[钉子]任何情况，不要申请退款，私信沟通给你处理，小店经营不易。
+[钉子]所有文件均获取自网络公开渠道，仅供学习和交流使用，所有版权归版权人所有，如版权方认为侵犯了您的版权，请及时联系小店删除。`;
+                    productDescription += `\n${goodsId}`;
+                    GM_setValue("productDescription", productDescription);
+                    console.log("商品详情:", productDescription);
+
+                    insertGoodsButton(data.data.itemDO.imageInfos.length);
+                    insertCopyCookiesButton();
+                    showGoodsViewCount();
+                }
+            }
+        },
+        {
+            // 猜你喜欢接口
+            urlPattern: 'h5api.m.goofish.com/h5/mtop.taobao.idle.item.web.recommend.list',
+            dataSource: 'recommend',
+            buttonTitle: '猜你喜欢',
+            extractItems: (data) => data?.data?.cardList,
+            validateItem: (item) => item?.cardData?.itemId,
+            transformToExcel: (item) => {
+                const itemId = item.cardData.itemId;
+                const title = item.cardData.title?.substr(0, 30) || '';
+                const wantNum = parseInt(item.cardData.clickParam?.args?.wantNum, 10) || 0;
+                const price = item.cardData.price || '';
+                const area = item.cardData.area || '';
+                const publishTime = timestampToFormattedDate(item.cardData?.clickParam?.args?.publishTime);
+
+                return {
+                    itemId,
+                    链接: {
+                        f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "https://www.goofish.com/item?id=${itemId}")`
+                    },
+                    标题: {
+                        f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "${title}")`
+                    },
+                    想要数: wantNum,
+                    价格: price,
+                    城市: area,
+                    发布日期: publishTime
+                };
+            }
+        },
+        {
+            // 搜索接口
+            urlPattern: 'h5api.m.goofish.com/h5/mtop.taobao.idlemtopsearch.pc.search',
+            dataSource: 'search',
+            buttonTitle: '搜索结果',
+            extractItems: (data) => data?.data?.resultList,
+            validateItem: (item) => {
+                return item?.data?.item?.main?.exContent?.itemId;
+            },
+            transformToExcel: (item) => {
+                const main = item.data.item.main;
+                const itemId = main.exContent.itemId;
+                const title = main.exContent.title?.substr(0, 30) || '';
+
+                // 提取想要数
+                const r3Tags = main.exContent.fishTags?.r3?.tagList || [];
+                const wantTag = r3Tags.find(tag => tag?.data?.content?.includes("人想要"));
+                let wantNum = 0;
+                if (wantTag) {
+                    const match = wantTag.data.content.match(/(\d+)/);
+                    if (match) {
+                        wantNum = parseInt(match[1], 10);
+                    }
+                }
+
+                const price = main.exContent.detailParams?.soldPrice || '';
+                const area = main.exContent.area || '';
+                const publishTime = timestampToFormattedDate(main.clickParam?.args?.publishTime);
+
+                return {
+                    itemId,
+                    链接: {
+                        f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "https://www.goofish.com/item?id=${itemId}")`
+                    },
+                    标题: {
+                        f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "${title}")`
+                    },
+                    想要数: wantNum,
+                    价格: price,
+                    城市: area,
+                    发布日期: publishTime
+                };
+            }
+        },
+        {
+            // 店铺页面接口
+            urlPattern: 'h5api.m.goofish.com/h5/mtop.idle.web.xyh.item.list',
+            dataSource: 'store',
+            buttonTitle: () => {
+                try {
+                    const nickNameElement = document.querySelector('[class^="personalWrap--"]')?.querySelector('[class^="nick--"]');
+                    const nickName = nickNameElement ? nickNameElement.innerText : '店铺';
+                    return nickName.replace(/[:\/\\?\*\[\]]/g, '-') + '店铺';
+                } catch (error) {
+                    console.error('获取店铺名称失败:', error);
+                    return '店铺';
+                }
+            },
+            extractItems: (data) => data?.data?.cardList,
+            validateItem: (item) => {
+                return item?.cardData?.id;
+            },
+            transformToExcel: (item) => {
+                const itemId = item.cardData.id;
+                const title = item.cardData.title?.substr(0, 30) || '';
+
+                // 提取想要数
+                const r3Tags = item.cardData?.itemLabelDataVO?.labelData?.r3?.tagList || [];
+                const wantTag = r3Tags.find(tag => tag?.data?.content?.includes("人想要"));
+                let wantNum = 0;
+                if (wantTag) {
+                    const match = wantTag.data.content.match(/(\d+)/);
+                    if (match) {
+                        wantNum = parseInt(match[1], 10);
+                    }
+                }
+
+                const price = item.cardData.priceInfo?.price || '';
+
+                return {
+                    itemId,
+                    链接: {
+                        f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "https://www.goofish.com/item?id=${itemId}")`
+                    },
+                    标题: {
+                        f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "${title}")`
+                    },
+                    想要数: wantNum,
+                    价格: price,
+                    城市: '',
+                    发布日期: ''
+                };
+            }
+        }
+    ];
+
+    // 统一的数据处理函数
+    function processApiResponse(config, data) {
+        try {
+            const items = config.extractItems(data);
+            if (!Array.isArray(items) || items.length === 0) {
+                return;
+            }
+
+            console.log(`[${config.buttonTitle}] 接收到 ${items.length} 条原始数据`);
+
+            // 切换数据源时清空数据
+            if (currentDataSource !== config.dataSource) {
+                console.log(`数据源切换: ${currentDataSource} -> ${config.dataSource}`);
+                window.collectedData = [];
+                window.collectedItemIds.clear();
+                currentDataSource = config.dataSource;
+            }
+
+            // 过滤、转换并去重
+            let newItemCount = 0;
+            items.forEach(item => {
+                if (!config.validateItem(item)) {
+                    return;
+                }
+
+                const excelData = config.transformToExcel(item);
+                const itemId = excelData.itemId;
+
+                // 增量去重
+                if (!window.collectedItemIds.has(itemId)) {
+                    window.collectedItemIds.add(itemId);
+                    window.collectedData.push(excelData);
+                    newItemCount++;
+                }
+            });
+
+            console.log(`[${config.buttonTitle}] 新增 ${newItemCount} 条数据，总计 ${window.collectedData.length} 条`);
+
+            // 获取按钮标题
+            const buttonTitle = typeof config.buttonTitle === 'function'
+                ? config.buttonTitle()
+                : config.buttonTitle;
+
+            // 插入或更新下载按钮
+            insertDownloadButton(buttonTitle);
+            updateDataCount();
+
+        } catch (error) {
+            console.error(`[${config.buttonTitle}] 处理数据时发生错误:`, error);
+        }
+    }
+
     // 拦截并处理接口请求
     function interceptRequests() {
-        // 覆盖原生的 XMLHttpRequest
         const originalXHR = unsafeWindow.XMLHttpRequest;
+
         unsafeWindow.XMLHttpRequest = function () {
             const xhr = new originalXHR();
 
             // 保存原始的 open 方法
             const originalOpen = xhr.open;
             xhr.open = function (method, url, ...rest) {
-                this._url = url; // 保存请求 URL
+                this._url = url;
                 return originalOpen.apply(this, [method, url, ...rest]);
             };
 
@@ -337,197 +578,28 @@
             const originalSend = xhr.send;
             xhr.send = function (...args) {
                 this.addEventListener("load", function () {
-                    // 拦截商品详情接口，获取详情文本内容
-                    if (
-                        this._url.includes(
-                            "h5api.m.goofish.com/h5/mtop.taobao.idle.pc.detail"
-                        )
-                    ) {
-                        try {
-                            const data = JSON.parse(this.responseText);
-                            console.log("接收到的数据:", data);
-                            // window.goodsInfo = data.data.itemDO;
-                            if (data?.data?.itemDO?.desc) {
-                                let productDescription = data.data.itemDO.desc;
-                                const goodsId = new URL(location.href).searchParams.get("id");
-                                productDescription += `\n \n[钉子]发的是百 度 网 盘 链 接，永不失效，售出不退。
-[钉子]任何情况，不要申请退款，私信沟通给你处理，小店经营不易。
-[钉子]所有文件均获取自网络公开渠道，仅供学习和交流使用，所有版权归版权人所有，如版权方认为侵犯了您的版权，请及时联系小店删除。`;
-                                productDescription += `\n${goodsId}`;
-                                GM_setValue("productDescription", productDescription);
-                                console.log("商品详情:", productDescription);
+                    try {
+                        // 遍历所有接口配置
+                        for (const config of API_CONFIGS) {
+                            if (this._url.includes(config.urlPattern)) {
+                                const data = JSON.parse(this.responseText);
+                                console.log(`[${config.urlPattern}] 接收到响应`);
 
-                                insertGoodsButton(data.data.itemDO.imageInfos.length);
-                                showGoodsViewCount();
-                            }
-                        } catch (error) {
-                            console.error("解析 XHR 响应时发生错误:", error);
-                        }
-                    }
-
-                    // 拦截商品详情接口，获取详情文本内容
-                    if (
-                        this._url.includes(
-                            "h5api.m.goofish.com/h5/mtop.taobao.idle.item.web.recommend.list"
-                        )
-                    ) {
-                        try {
-                            const data = JSON.parse(this.responseText);
-                            console.log('接收到的数据:', data);
-
-                            // 检查 data.data.cardList 是否为数组
-                            if (data && Array.isArray(data.data?.cardList)) {
-                                // 提取有效的数据
-                                const tempData = data.data.cardList.filter((item) => {
-                                    if (item && item.cardData && item.cardData.itemId) {
-                                        const price = item.cardData.price;
-                                        return price > 0;
-                                    }
-                                    return false;
-                                });
-
-                                // 合并到全局数组 window.collectedData
-                                window.collectedData.push(...tempData);
-                                console.log('新数据已追加:', data.data.cardList);
-
-                                // 去重：使用一个 Set 来追踪已经存在的 itemId
-                                const uniqueItems = [];
-                                const itemIdSet = new Set();
-
-                                // 遍历 window.collectedData，添加未重复的 item
-                                for (const item of window.collectedData) {
-                                    const itemId = item.cardData?.itemId;
-                                    if (itemId && !itemIdSet.has(itemId)) {
-                                        uniqueItems.push(item);
-                                        itemIdSet.add(itemId);
-                                    }
+                                if (config.handler) {
+                                    // 特殊处理器（如商品详情）
+                                    config.handler(data);
+                                } else {
+                                    // 通用数据收集处理
+                                    processApiResponse(config, data);
                                 }
-
-                                // 更新 window.collectedData 为去重后的结果
-                                window.collectedData = uniqueItems;
-
-                                console.log('去重后的数据:', window.collectedData);
-
-                                insertDownloadButton('猜你喜欢', recommentGoodListToExcel);
-
-                                // 更新数据计数
-                                updateDataCount();
+                                break;
                             }
-                        } catch (error) {
-                            console.error("解析 XHR 响应时发生错误:", error);
                         }
-                    }
-
-                    // 拦截搜索接口
-                    if (
-                        this._url.includes(
-                            "h5api.m.goofish.com/h5/mtop.taobao.idlemtopsearch.pc.search"
-                        )
-                    ) {
-                        try {
-                            const data = JSON.parse(this.responseText);
-                            console.log('接收到的数据:', data);
-
-                            // 检查 data.data.resultList 是否为数组
-                            if (data && Array.isArray(data.data?.resultList)) {
-                                // 提取有效的数据
-                                const tempData = data.data.resultList.filter((item) => {
-                                    if (item && item.data && item.data?.item?.main?.exContent?.itemId) {
-                                        const price = item.data?.item?.main?.exContent?.detailParams?.soldPrice;
-                                        return price > 0;
-                                    }
-                                    return false;
-                                });
-
-                                // 合并到全局数组 window.collectedData
-                                window.collectedData.push(...tempData);
-                                console.log('新数据已追加:', data.data.resultList);
-
-                                // 去重：使用一个 Set 来追踪已经存在的 itemId
-                                const uniqueItems = [];
-                                const itemIdSet = new Set();
-
-                                // 遍历 window.collectedData，添加未重复的 item
-                                for (const item of window.collectedData) {
-                                    const itemId = item.data?.item?.main?.exContent?.itemId;
-                                    if (itemId && !itemIdSet.has(itemId)) {
-                                        uniqueItems.push(item.data.item.main);
-                                        itemIdSet.add(itemId);
-                                    }
-                                }
-
-                                // 更新 window.collectedData 为去重后的结果
-                                window.collectedData = uniqueItems;
-
-                                console.log('去重后的数据:', window.collectedData);
-
-                                insertDownloadButton('搜索结果', searchGoodListToExcel);
-
-                                // 更新数据计数
-                                updateDataCount();
-                            }
-                        } catch (error) {
-                            console.error("解析 XHR 响应时发生错误:", error);
-                        }
-                    }
-
-                    // 拦截店铺页面接口
-                    if (
-                        this._url.includes(
-                            "h5api.m.goofish.com/h5/mtop.idle.web.xyh.item.list"
-                        )
-                    ) {
-                        try {
-                            const data = JSON.parse(this.responseText);
-                            console.log('接收到的数据:', data);
-
-                            // 检查 data.data.cardList 是否为数组
-                            if (data && Array.isArray(data.data?.cardList)) {
-                                // 提取有效的数据
-                                const tempData = data.data.cardList.filter((item) => {
-                                    if (item && item.cardData && item.cardData.id) {
-                                        const price = item.cardData.priceInfo.price;
-                                        return price > 0;
-                                    }
-                                    return false;
-                                });
-
-                                // 合并到全局数组 window.collectedData
-                                console.log('已存在的数据:', window.collectedData)
-                                window.collectedData.push(...tempData);
-                                console.log('新数据已追加:', window.collectedData);
-
-                                // 去重：使用一个 Set 来追踪已经存在的 itemId
-                                const uniqueItems = [];
-                                const itemIdSet = new Set();
-
-                                // 遍历 window.collectedData，添加未重复的 item
-                                for (const item of window.collectedData) {
-                                    const itemId = item.cardData?.id;
-                                    if (itemId && !itemIdSet.has(itemId)) {
-                                        uniqueItems.push(item);
-                                        itemIdSet.add(itemId);
-                                    }
-                                }
-
-                                // 更新 window.collectedData 为去重后的结果
-                                window.collectedData = uniqueItems;
-
-                                console.log('去重后的数据:', window.collectedData);
-
-                                const nickNameElement = document.querySelector('[class^="personalWrap--"]').querySelector('[class^="nick--"]');
-                                const nickName = (nickNameElement ? nickNameElement.innerText : '').replace(/[:\/\\?\*\[\]]/g, '-');
-
-                                insertDownloadButton(nickName + '店铺', storeGoodListToExcel);
-
-                                // 更新数据计数
-                                updateDataCount();
-                            }
-                        } catch (error) {
-                            console.error("解析 XHR 响应时发生错误:", error);
-                        }
+                    } catch (error) {
+                        console.error("拦截请求处理错误:", error);
                     }
                 });
+
                 return originalSend.apply(this, args);
             };
 
@@ -566,9 +638,9 @@
         }
     }*/
 
-    repleaceUrl();
+    replaceUrl();
     // 避免闲管家的域名混用，带www和不带www的，因为两者的cookie不同，导致登录状态是不共享的
-    function repleaceUrl() {
+    function replaceUrl() {
         // 获取当前页面的 URL
         const currentUrl = window.location.href;
 
@@ -655,37 +727,51 @@
 
     // 更新商品数量显示
     function updateDataCount() {
-        console.log('length:', window.collectedData.length)
+        console.log('已收集商品数量:', window.collectedData.length);
         const countElement = document.getElementById('data-count');
         if (countElement) {
             countElement.innerText = window.collectedData.length;
         }
     }
 
-    function insertDownloadButton(title, goodsListToExcel) {
-        const exportButton = document.getElementById('data-count-button');
-        if (exportButton){
+    // 统一的下载按钮插入函数
+    function insertDownloadButton(title) {
+        let exportButton = document.getElementById('data-count-button');
+
+        if (exportButton) {
+            // 按钮已存在，更新标题
+            const titleSpan = exportButton.querySelector('#button-title');
+            if (titleSpan && titleSpan.innerText !== title) {
+                titleSpan.innerText = title;
+                console.log(`下载按钮标题已更新: ${title}`);
+            }
             return;
         }
-        const button = document.createElement('button');
-        button.setAttribute('id', 'data-count-button');
-        button.innerHTML = `导出 [${title}] 商品 (<b id="data-count">0</b>)`;
-        button.style.position = 'fixed';
-        button.style.width = '240px';
-        button.style.left = '50%';
-        button.style.marginLeft = '-120px';
-        button.style.bottom = '20px';
-        button.style.zIndex = 9999;
-        button.style.padding = '10px 20px';
-        button.style.backgroundColor = 'rgb(40, 167, 69)';
-        button.style.color = '#FFFFFF';
-        button.style.border = 'none';
-        button.style.borderRadius = '5px';
-        button.style.cursor = 'pointer';
-        button.addEventListener('click', function() {
-            downloadExcel(title, goodsListToExcel)
+
+        // 创建新按钮
+        exportButton = document.createElement('button');
+        exportButton.setAttribute('id', 'data-count-button');
+        exportButton.innerHTML = `导出 [<span id="button-title">${title}</span>] 商品 (<b id="data-count">0</b>)`;
+        exportButton.style.position = 'fixed';
+        exportButton.style.width = '240px';
+        exportButton.style.left = '50%';
+        exportButton.style.marginLeft = '-120px';
+        exportButton.style.bottom = '20px';
+        exportButton.style.zIndex = 9999;
+        exportButton.style.padding = '10px 20px';
+        exportButton.style.backgroundColor = 'rgb(40, 167, 69)';
+        exportButton.style.color = '#FFFFFF';
+        exportButton.style.border = 'none';
+        exportButton.style.borderRadius = '5px';
+        exportButton.style.cursor = 'pointer';
+
+        exportButton.addEventListener('click', function() {
+            const currentTitle = document.getElementById('button-title')?.innerText || title;
+            downloadExcel(currentTitle);
         });
-        document.body.appendChild(button);
+
+        document.body.appendChild(exportButton);
+        console.log(`下载按钮已创建: ${title}`);
     }
 
     // 时间戳转换成日期格式
@@ -703,112 +789,46 @@
         return `${year}-${month}-${day}`;
     }
 
-    // 下载Excel文件
-    function downloadExcel(title, goodsListToExcel) {
-        const worksheetData = goodsListToExcel();
-        if (worksheetData.length === 0) {
-            alert('没有数据可导出');
+    // 下载Excel文件（统一处理，数据已经是 Excel 格式）
+    function downloadExcel(title) {
+        if (!window.collectedData || window.collectedData.length === 0) {
+            showToast('没有数据可导出', 'warning');
             return;
         }
 
-        // 创建Excel工作簿
-        const workbook = XLSX.utils.book_new();
+        try {
+            // 准备导出数据，移除 itemId（仅用于去重）
+            const worksheetData = window.collectedData
+                .map(item => {
+                    const { itemId, ...excelItem } = item;
+                    return excelItem;
+                })
+                .sort((a, b) => (b.想要数 || 0) - (a.想要数 || 0)); // 按想要数降序排列
 
-        // 将数据转化为工作表
-        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
-        XLSX.utils.book_append_sheet(workbook, worksheet, title);
+            // 创建Excel工作簿
+            const workbook = XLSX.utils.book_new();
 
-        // 生成Excel并触发下载
-        const workbookOut = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const blob = new Blob([workbookOut], { type: 'application/octet-stream' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = title + '商品.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
+            // 将数据转化为工作表
+            const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+            XLSX.utils.book_append_sheet(workbook, worksheet, title);
 
-    function recommentGoodListToExcel() {
-        return window.collectedData.map((item) => {
-            return {
-                链接: {
-                    f: `HYPERLINK("https://www.goofish.com/item?id=${item.cardData.itemId}", "https://www.goofish.com/item?id=${item.cardData.itemId}")`
-                },
-                标题: {
-                    f: `HYPERLINK("https://www.goofish.com/item?id=${item.cardData.itemId}", "${item.cardData.title}")`
-                },
-                想要数: parseInt(item.cardData.clickParam.args.wantNum, 10) || '',
-                价格: item.cardData.price || '',
-                城市: item.cardData.area || '',
-                发布日期: timestampToFormattedDate(item.cardData?.clickParam?.args?.publishTime)
-            }
-        }).sort((a, b) => b.想要数 - a.想要数);
-    }
+            // 生成Excel并触发下载
+            const workbookOut = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([workbookOut], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}商品.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
 
-    function searchGoodListToExcel() {
-        return window.collectedData.map((item) => {
-            const itemId = item.exContent.itemId
-            const title = item.exContent.title.substr(0,30)
-
-            const r3Tags = item.exContent.fishTags.r3?.tagList || [];
-            // 查找包含 "人想要" 的标签
-            const wantTag = r3Tags.find(tag => tag?.data?.content?.includes("人想要"));
-            // 提取数字
-            let wantCount = '';
-            if (wantTag) {
-                const match = wantTag.data.content.match(/(\d+)/);
-                if (match) {
-                    wantCount = parseInt(match[1], 10);
-                }
-            }
-            return {
-                链接: {
-                    f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "https://www.goofish.com/item?id=${itemId}")`
-                },
-                标题: {
-                    f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "${title}")`
-                },
-                想要数: wantCount,
-                价格: item.exContent.detailParams.soldPrice || '',
-                城市: item.exContent.area || '',
-                发布日期: timestampToFormattedDate(item.clickParam?.args?.publishTime)
-            }
-        }).sort((a, b) => b.想要数 - a.想要数);
-    }
-
-
-    function storeGoodListToExcel() {
-        return window.collectedData.map((item) => {
-            const itemId = item.cardData.id;
-            const title = item.cardData.title.substr(0,30);
-
-            const r3Tags = item.cardData?.itemLabelDataVO?.labelData?.r3?.tagList || [];
-            // 查找包含 "人想要" 的标签
-            const wantTag = r3Tags.find(tag => tag?.data?.content?.includes("人想要"));
-            // 提取数字
-            let wantCount = '';
-            if (wantTag) {
-                const match = wantTag.data.content.match(/(\d+)/);
-                if (match) {
-                    wantCount = parseInt(match[1], 10);
-                }
-            }
-
-            return {
-                链接: {
-                    f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "https://www.goofish.com/item?id=${itemId}")`
-                },
-                标题: {
-                    f: `HYPERLINK("https://www.goofish.com/item?id=${itemId}", "${title}")`
-                },
-                想要数: wantCount,
-                价格: item.cardData.priceInfo.price || '',
-                城市: '',
-                发布日期: ''
-            }
-        }).sort((a, b) => b.想要数 - a.想要数);
+            showToast(`成功导出 ${worksheetData.length} 条数据`);
+            console.log(`Excel导出成功: ${title}, 共 ${worksheetData.length} 条数据`);
+        } catch (error) {
+            console.error('Excel导出失败:', error);
+            showToast('Excel导出失败', 'error');
+        }
     }
 })();

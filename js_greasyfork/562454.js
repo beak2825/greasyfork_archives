@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CRM Calls Tracker
 // @namespace    http://tampermonkey.net/
-// @version      8
+// @version      9
 // @description  Дополнение к ЦРМ в виде статистики + мотивационные уведомления
 // @author       voodoo_lT
 // @match        https://hgh03.mamoth.club/app/*
@@ -574,11 +574,12 @@
         const hours = kyivTime.getHours();
         const minutes = kyivTime.getMinutes();
 
-        // Времена напоминаний: 9:59, 11:59, 15:59
+        // Времена напоминаний: 9:59, 11:59, 15:59, 17:59
         const reminderTimes = [
             { hour: 9, minute: 59 },
             { hour: 11, minute: 59 },
-            { hour: 15, minute: 59 }
+            { hour: 15, minute: 59 },
+            { hour: 17, minute: 59 }
         ];
 
         reminderTimes.forEach(time => {

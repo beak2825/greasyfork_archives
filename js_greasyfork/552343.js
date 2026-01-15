@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         湖北汽车工业学院新版教务系统课程表导出工具
 // @namespace    http://tampermonkey.net/
-// @version      1.6
-// @description  从湖北汽车工业学院新版教务系统获取并导出课程表数据
+// @version      2.1
+// @description  从湖北汽车工业学院新版教务系统获取并导出课程表数据（适配新API，支持HTTP/HTTPS自动切换）
 // @author       SkyDreamLG
 // @match        http://neweas.huat.edu.cn/*
+// @match        https://neweas.huat.edu.cn/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -18,6 +19,12 @@
 
 (function() {
     'use strict';
+
+    // 获取当前页面的协议，自动选择HTTP/HTTPS
+    function getBaseUrl() {
+        const protocol = window.location.protocol;
+        return `${protocol}//neweas.huat.edu.cn`;
+    }
 
     // 创建界面
     function createUI() {
@@ -172,29 +179,13 @@
                 min-width: 120px;
             }
 
-            .progress-container {
-                margin: 10px 0;
-            }
-
-            .progress-bar {
-                width: 100%;
-                height: 20px;
-                background: #f0f0f0;
-                border-radius: 10px;
-                overflow: hidden;
-            }
-
-            .progress-fill {
-                height: 100%;
-                background: #4b6cb7;
-                transition: width 0.3s ease;
-            }
-
-            .progress-text {
-                text-align: center;
-                margin-top: 5px;
+            .protocol-info {
+                background: #e8f4f8;
+                padding: 8px;
+                border-radius: 4px;
+                margin-bottom: 15px;
                 font-size: 12px;
-                color: #666;
+                color: #0c5460;
             }
         `;
 
@@ -209,17 +200,23 @@
 
         // 获取token信息
         const cookieToken = getCookie('Admin-Token');
+        const currentProtocol = window.location.protocol.replace(':', '');
 
         // 创建容器
         const container = document.createElement('div');
         container.className = 'schedule-export-container';
         container.innerHTML = `
             <button class="close-btn">&times;</button>
-            <h2>课程表导出工具</h2>
+            <h2>课程表导出工具 v2.1</h2>
 
             <div class="alert alert-error" id="errorAlert"></div>
             <div class="alert alert-success" id="successAlert"></div>
             <div class="alert alert-info" id="infoAlert"></div>
+
+            <div class="protocol-info">
+                <strong>当前协议:</strong> ${currentProtocol.toUpperCase()}<br>
+                <strong>服务器地址:</strong> ${getBaseUrl()}
+            </div>
 
             <div class="token-info">
                 <strong>Token状态:</strong><br>
@@ -235,7 +232,7 @@
                 <label for="term">学期</label>
                 <select id="term">
                     <option value="1">第一学期</option>
-                    <option value="2">第二学期</option>
+                    <option value="2" selected>第二学期</option>
                 </select>
             </div>
 
@@ -244,33 +241,11 @@
                 <input type="text" id="studentId" placeholder="请输入您的学号">
             </div>
 
-            <div class="form-group">
-                <label for="weekRange">周数范围</label>
-                <select id="weekRange">
-                    <option value="1-25">1-25周（完整学期）</option>
-                    <option value="1-10">1-10周</option>
-                    <option value="11-20">11-20周</option>
-                    <option value="21-25">21-25周</option>
-                    <option value="custom">自定义</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="customWeekGroup" style="display: none;">
-                <label for="customWeeks">自定义周数（用逗号分隔）</label>
-                <input type="text" id="customWeeks" placeholder="例如：1,2,3,4,5">
-            </div>
-
             <button id="fetchDataBtn">获取课程表数据</button>
 
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
                 <p>正在获取课程表数据，请稍候...</p>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                    </div>
-                    <div class="progress-text" id="progressText">正在准备...</div>
-                </div>
             </div>
 
             <div id="resultSection" style="display: none; margin-top: 20px;">
@@ -295,9 +270,6 @@
         const yearInput = container.querySelector('#year');
         const termInput = container.querySelector('#term');
         const studentIdInput = container.querySelector('#studentId');
-        const weekRangeInput = container.querySelector('#weekRange');
-        const customWeekGroup = container.querySelector('#customWeekGroup');
-        const customWeeksInput = container.querySelector('#customWeeks');
         const fetchDataBtn = container.querySelector('#fetchDataBtn');
         const errorAlert = container.querySelector('#errorAlert');
         const successAlert = container.querySelector('#successAlert');
@@ -307,22 +279,8 @@
         const exportJsonBtn = container.querySelector('#exportJsonBtn');
         const exportCsvBtn = container.querySelector('#exportCsvBtn');
         const courseCountSpan = container.querySelector('#courseCount');
-        const progressFill = container.querySelector('#progressFill');
-        const progressText = container.querySelector('#progressText');
 
         let courseData = [];
-
-        // 周数范围选择事件
-        weekRangeInput.addEventListener('change', function() {
-            customWeekGroup.style.display = this.value === 'custom' ? 'block' : 'none';
-        });
-
-        // 获取课程表数据按钮点击事件
-        fetchDataBtn.addEventListener('click', fetchScheduleData);
-
-        // 导出按钮点击事件
-        exportJsonBtn.addEventListener('click', () => exportData('json'));
-        exportCsvBtn.addEventListener('click', () => exportData('csv'));
 
         // 显示警告函数
         function showAlert(alertElement, message) {
@@ -333,13 +291,6 @@
             setTimeout(() => {
                 alertElement.style.display = 'none';
             }, 5000);
-        }
-
-        // 更新进度条
-        function updateProgress(current, total) {
-            const percent = Math.round((current / total) * 100);
-            progressFill.style.width = percent + '%';
-            progressText.textContent = `正在获取第 ${current} 周数据... (${current}/${total})`;
         }
 
         // 获取Cookie函数
@@ -386,24 +337,21 @@
             return ranges.join('、');
         }
 
-        // 获取要请求的周数列表
-        function getWeekList() {
-            const weekRange = weekRangeInput.value;
-
-            if (weekRange === 'custom') {
-                const customWeeks = customWeeksInput.value;
-                if (!customWeeks) {
-                    throw new Error('请输入自定义周数');
-                }
-                return customWeeks.split(',').map(w => parseInt(w.trim())).filter(w => !isNaN(w) && w > 0);
-            } else {
-                const [start, end] = weekRange.split('-').map(Number);
-                return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+        // 根据weekBegin和weekEnd生成周数数组
+        function generateWeeksArray(weekBegin, weekEnd) {
+            if (!weekBegin || !weekEnd || weekBegin > weekEnd) {
+                return [1]; // 默认返回第1周
             }
+            
+            const weeks = [];
+            for (let i = weekBegin; i <= weekEnd; i++) {
+                weeks.push(i);
+            }
+            return weeks;
         }
 
         // 获取课程表数据函数
-        async function fetchScheduleData() {
+        function fetchScheduleData() {
             const year = yearInput.value;
             const term = termInput.value;
             const studentId = studentIdInput.value;
@@ -431,19 +379,6 @@
                 return;
             }
 
-            // 获取周数列表
-            let weekList;
-            try {
-                weekList = getWeekList();
-                if (weekList.length === 0) {
-                    showAlert(errorAlert, '请选择有效的周数范围');
-                    return;
-                }
-            } catch (error) {
-                showAlert(errorAlert, error.message);
-                return;
-            }
-
             // 显示加载指示器
             loadingIndicator.style.display = 'block';
             fetchDataBtn.disabled = true;
@@ -452,80 +387,137 @@
             // 重置数据
             courseData = [];
 
-            try {
-                const totalWeeks = weekList.length;
-                let completedWeeks = 0;
+            // 构建请求体 - weekNum留空以获取全部课程
+            const payload = {
+                weekNum: "", // 留空获取全部课表
+                yearTermId: `${year}${term}`,
+                studId: studentId,
+            };
 
-                // 为每个周数发送请求
-                for (const weekNum of weekList) {
-                    updateProgress(completedWeeks + 1, totalWeeks);
+            const baseUrl = getBaseUrl();
+            
+            GM_xmlhttpRequest({
+                method: 'POST',
+                url: `${baseUrl}/api/teachTask/list`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-token': token,
+                },
+                data: JSON.stringify(payload),
+                onload: function(response) {
+                    loadingIndicator.style.display = 'none';
+                    fetchDataBtn.disabled = false;
 
-                    await new Promise((resolve, reject) => {
-                        const payload = {
-                            weekNum: weekNum.toString(),
-                            yearTermId: `${year}${term}`,
-                            studId: studentId,
-                        };
+                    if (response.status === 200) {
+                        try {
+                            const data = JSON.parse(response.responseText);
 
-                        GM_xmlhttpRequest({
-                            method: 'POST',
-                            url: 'http://neweas.huat.edu.cn/api/teachTask/list',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'x-token': token,
-                            },
-                            data: JSON.stringify(payload),
-                            onload: function(response) {
-                                if (response.status === 200) {
-                                    const data = JSON.parse(response.responseText);
+                            if (data && data.code === 200 && data.data && Array.isArray(data.data)) {
+                                // 解析课程表数据
+                                courseData = parseScheduleData(data.data);
+                                
+                                // 合并相同课程的多个条目（如单双周分开的情况）
+                                courseData = mergeCourseEntries(courseData);
+                                
+                                courseCountSpan.textContent = courseData.length;
 
-                                    if (data && data.code === 200 && data.data && Array.isArray(data.data)) {
-                                        // 解析本周数据并添加到总数据中
-                                        const weekData = parseScheduleData(data.data, weekNum);
-                                        courseData = courseData.concat(weekData);
-                                    }
+                                if (courseData.length > 0) {
+                                    resultSection.style.display = 'block';
+                                    showAlert(successAlert, `成功获取 ${courseData.length} 门课程数据！`);
+                                } else {
+                                    showAlert(infoAlert, '获取到的课程数据为空，请检查学年、学期和学号是否正确');
                                 }
-
-                                completedWeeks++;
-                                resolve();
-                            },
-                            onerror: function(error) {
-                                completedWeeks++;
-                                resolve(); // 即使失败也继续下一周
+                            } else {
+                                showAlert(errorAlert, '获取课程表数据失败：' + (data.message || '未知错误'));
                             }
-                        });
-                    });
-
-                    // 添加延迟避免请求过快
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                        } catch (error) {
+                            showAlert(errorAlert, '解析数据失败：' + error.message);
+                        }
+                    } else {
+                        showAlert(errorAlert, '请求失败，状态码：' + response.status);
+                    }
+                },
+                onerror: function(error) {
+                    loadingIndicator.style.display = 'none';
+                    fetchDataBtn.disabled = false;
+                    
+                    // 提供更详细的错误信息
+                    let errorMessage = '网络请求失败';
+                    if (error && error.error) {
+                        errorMessage += ': ' + error.error;
+                    }
+                    
+                    // 尝试提供解决方案
+                    if (baseUrl.includes('https')) {
+                        errorMessage += '\n提示：如果HTTPS请求失败，可以尝试切换到HTTP协议访问';
+                    } else {
+                        errorMessage += '\n提示：如果HTTP请求失败，可以尝试切换到HTTPS协议访问';
+                    }
+                    
+                    showAlert(errorAlert, errorMessage);
                 }
-
-                // 合并相同课程的周数
-                courseData = mergeCourseWeeks(courseData);
-                courseCountSpan.textContent = courseData.length;
-
-                if (courseData.length > 0) {
-                    resultSection.style.display = 'block';
-                    showAlert(successAlert, `成功获取 ${courseData.length} 门课程数据！`);
-                } else {
-                    showAlert(infoAlert, '获取到的课程数据为空，请检查学年、学期和学号是否正确');
-                }
-
-            } catch (error) {
-                showAlert(errorAlert, `获取课程表数据失败: ${error.message}`);
-            } finally {
-                // 隐藏加载指示器
-                loadingIndicator.style.display = 'none';
-                fetchDataBtn.disabled = false;
-            }
+            });
         }
 
-        // 合并相同课程的周数
-        function mergeCourseWeeks(courses) {
+        // 解析课程表数据函数（适配新API格式）
+        function parseScheduleData(data) {
+            if (!data || !Array.isArray(data)) {
+                return [];
+            }
+
+            const result = [];
+
+            for (const item of data) {
+                try {
+                    // 生成周数数组
+                    const weeks = generateWeeksArray(item.weekBegin, item.weekEnd);
+                    
+                    // 生成节数数组
+                    const sections = [];
+                    const startSection = parseInt(item.startSection) || 1;
+                    const endSection = parseInt(item.endSection) || startSection;
+                    
+                    for (let i = startSection; i <= endSection; i++) {
+                        sections.push(i);
+                    }
+
+                    // 获取教师名称
+                    let teacher = '未知教师';
+                    if (item.teacherList && item.teacherList.length > 0) {
+                        teacher = item.teacherList.map(t => t.teacherName).filter(name => name).join('、');
+                    } else if (item.teachResponse && item.teachResponse.courTeacherName1) {
+                        teacher = item.teachResponse.courTeacherName1;
+                    }
+
+                    // 构建地点信息
+                    const location = `${item.schoolAddr || ''} ${item.roomId || ''}`.trim() || '未知地点';
+
+                    const course = {
+                        name: item.courName || '未知课程',
+                        position: location,
+                        teacher: teacher,
+                        weeks: weeks,
+                        day: parseInt(item.weekDay) || 1,
+                        sections: sections,
+                        // 保留原始数据用于调试
+                        rawData: item
+                    };
+
+                    result.push(course);
+                } catch (error) {
+                    console.error('解析课程数据时出错:', error, item);
+                }
+            }
+
+            return result;
+        }
+
+        // 合并课程条目（处理单双周分开的情况）
+        function mergeCourseEntries(courses) {
             const courseMap = new Map();
 
             courses.forEach(course => {
-                // 创建唯一标识符
+                // 创建唯一标识符：课程名称+星期+节数+教师+地点
                 const key = `${course.name}-${course.day}-${course.sections.join(',')}-${course.teacher}-${course.position}`;
 
                 if (courseMap.has(key)) {
@@ -542,52 +534,12 @@
                         sections: course.sections,
                         teacher: course.teacher,
                         position: course.position,
-                        weeks: [...course.weeks] // 复制周数数组
+                        weeks: [...course.weeks]
                     });
                 }
             });
 
             return Array.from(courseMap.values());
-        }
-
-        // 解析课程表数据函数
-        function parseScheduleData(data, weekNum) {
-            if (!data || !Array.isArray(data)) {
-                return [];
-            }
-
-            const result = [];
-
-            for (const item of data) {
-                try {
-                    // 处理节数
-                    let sections = [];
-                    if (item.startSection && typeof item.startSection === 'string') {
-                        sections = item.startSection.split(',').map(Number).filter(n => !isNaN(n));
-                    } else if (item.startSection !== undefined && item.endSection !== undefined) {
-                        const start = parseInt(item.startSection) || 1;
-                        const end = parseInt(item.endSection) || 1;
-                        sections = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-                    } else {
-                        sections = [1];
-                    }
-
-                    const course = {
-                        name: item.courName || '未知课程',
-                        position: `${item.schoolAddr || ''} ${item.roomId || ''}`.trim() || '未知地点',
-                        teacher: (item.teacherList && item.teacherList.length > 0 && item.teacherList[0].teacherName) || '未知教师',
-                        weeks: [weekNum], // 使用当前请求的周数
-                        day: parseInt(item.weekDay) || 1,
-                        sections: sections
-                    };
-
-                    result.push(course);
-                } catch (error) {
-                    console.error('解析课程数据时出错:', error, item);
-                }
-            }
-
-            return result;
         }
 
         // 导出数据函数
@@ -669,6 +621,13 @@
 
             return csvContent;
         }
+
+        // 获取课程表数据按钮点击事件
+        fetchDataBtn.addEventListener('click', fetchScheduleData);
+
+        // 导出按钮点击事件
+        exportJsonBtn.addEventListener('click', () => exportData('json'));
+        exportCsvBtn.addEventListener('click', () => exportData('csv'));
     }
 
     // 添加菜单命令

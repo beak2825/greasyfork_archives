@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ULR steam
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.4
 // @description  Make steam ulr playable as a browser bookmark
 // @author       Me
 // @match        https://www.playunlight.online/?*
@@ -28,7 +28,7 @@ const CHECK_UPDATE_AT_START = true;
 
   const SCRIPTS = [
     [
-      "client/runtime.ea5bc35545f91f302e4a.js",
+      "client/runtime.9e620dbcc5b82a0f7a30.js",
       "client/main.b1021f9314abcd3d0c36.js",
     ],
   ];

@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2026.1.4
+// @version            2026.1.12
 // @description        支持寫真、H漫、漫畫的網站1000+，樸實無華直觀操作的UI，圖片全量載入，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，朴实无华直观操作的UI，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -27986,7 +27986,7 @@ if ("xx" in window) {
 	const FancyboxIdle = _GM_getValue("FancyboxIdle", 0) == 0 ? false : (Number(_GM_getValue("FancyboxIdle", 0)) * 1000);
 	const FancyboxSlideshowTimeout = Number(_GM_getValue("FancyboxSlideshowTimeout", 3));
 	const FancyboxSlideshowTimeoutNum = FancyboxSlideshowTimeout == 0 ? 500 : (FancyboxSlideshowTimeout * 1000);
-	const FancyboxSlideshowTransition = _GM_getValue("FancyboxSlideshowTransition", "fade");
+	const FancyboxSlideshowTransition = _GM_getValue("FancyboxSlideshowTransition", "fade") == "no" ? false : _GM_getValue("FancyboxSlideshowTransition", "fade");
 	const FancyboxShowThumbs = _GM_getValue("FancyboxShowThumbs", 0) == 1 ? true : false;
 	const FancyboxThumbnails = _GM_getValue("FancyboxThumbnails", "modern");
 	const FancyboxAutoClose = _GM_getValue("FancyboxAutoClose", 0);
@@ -28378,7 +28378,8 @@ if ("xx" in window) {
 			FancyboxTransition: {
 				fade: "淡出",
 				crossfade: "淡入淡出",
-				slide: "滑動"
+				slide: "滑動",
+				no: "無過場效果"
 			},
 			ShadowGalleryWheel: {
 				d: "畫廊滾動",
@@ -28678,7 +28679,8 @@ if ("xx" in window) {
 			FancyboxTransition: {
 				fade: "淡出",
 				crossfade: "淡入淡出",
-				slide: "滑动"
+				slide: "滑动",
+				no: "无过场效果"
 			},
 			ShadowGalleryWheel: {
 				d: "画廊滚动",
@@ -28972,7 +28974,8 @@ if ("xx" in window) {
 			FancyboxTransition: {
 				fade: "Fade",
 				crossfade: "Crossfade",
-				slide: "Slide"
+				slide: "Slide",
+				no: "No Animation"
 			},
 			ShadowGalleryWheel: {
 				d: "Gallery Scroll",
@@ -36330,7 +36333,7 @@ function setFancybox() {
             "--f-toolbar-padding": "0px"
         },
         Carousel: {
-            transition: "${FancyboxSlideshowTransition}",
+            transition: ${FancyboxSlideshowTransition ? '"' + FancyboxSlideshowTransition + '"' : false},
             Autoplay: {
                 autoStart: false,
                 timeout: "${FancyboxSlideshowTimeoutNum}",
@@ -38822,6 +38825,15 @@ img.horizontal {
     z-index: ${UI_zIndex} !important;
 }`
 		});
+		if (_GM_getValue("FancyboxSlideshowTransition") === "no") {
+			_GM_addElement(dom.head, "style", {
+				textContent: `
+.fancybox__container .to-next>.fancybox__content,
+.fancybox__container .to-prev>.fancybox__content {
+    display: none !important
+}`
+			});
+		}
 
 		const resetWidth = () => {
 			if (getType(changeSizeTimeId) == "Number") {
@@ -39976,7 +39988,7 @@ img.horizontal {
 							},
 							Carousel: {
 								...Fancybox.defaults.Carousel,
-								transition: FancyboxSlideshowTransition
+								transition: FancyboxSlideshowTransition ? FancyboxSlideshowTransition : "false"
 							},
 							Thumbs: {
 								showOnStart: FancyboxShowThumbs

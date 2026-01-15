@@ -1,7 +1,7 @@
 // ==UserScript==
 // @id             c6a206b6-1d09-479b-8f25-5d04425f3c40
 // @name           GameFAQs - Bluesky Embeds
-// @version        2.1
+// @version        2.2
 // @namespace      Takato
 // @author         Takato
 // @description    Bluesky embedding on GameFAQs
@@ -16,55 +16,85 @@
 // Section for Bluesky embed frames - enable inline videos on-click
 if (document.location.host == "embed.bsky.app") {
 	window.addEventListener('message', function (event) {
-		if (event.origin !== 'https://gamefaqs.gamespot.com' || event.data !== "inlinevideo") {
+		if (event.origin !== 'https://gamefaqs.gamespot.com') {
+			return;
+		}
+		if (event.data == "pausevideo") {
+			document.querySelectorAll(".gfbsky-video-container video").forEach((vid)=>{
+				vid.pause();
+			});
 			return;
 		}
 
-		var container = document.querySelector("div:has(> img[src*='https://video.bsky.app/'])");
-		var thumb = container?.querySelector("img[src*='https://video.bsky.app/']");
-		var meta = thumb?.src.match(/https:\/\/video\.bsky\.app\/watch\/(did%3Aplc%3A[\w]{24})\/([\w]{59})\/thumbnail\.jpg/);
-
-		if (!meta) {
+		if (event.data !== "inlinevideo") {
 			return;
 		}
 
 		var css = document.createElement("style");
 		css.setAttribute("type", "text/css");
 		css.innerHTML = `
-			div:has(> img[src*='https://video.bsky.app/']) {
-				cursor: pointer;
+			.gfbsky-video-container {
+				cursor: auto;
 
-				div.rounded-full:has(> img) {
-					transition: background-color 70ms, zoom 70ms;
+				&.activated {
+					background-size: contain;
+					background-position: center center;
+					background-repeat: no-repeat;
+					background-color: black;
+
+					.gfbsky-playbtn {
+						display: none;
+					}
 				}
 
-				&:hover div.rounded-full:has(> img) {
+				&:hover .gfbsky-playbtn {
 					background-color: #000c;
 					zoom: 1.1;
 				}
+
+				.gfbsky-playbtn {
+					transition: background-color 70ms, zoom 70ms;
+				}
+
 			}
 		`;
 		document.body.append(css);
 
-		container.addEventListener("click", function(e){
-			e.stopPropagation();
+		document.querySelectorAll("div:has(> img[src*='https://video.bsky.app/'])").forEach((container)=>{
+			var thumb = container.querySelector("img[src*='https://video.bsky.app/']");
+			var meta = thumb?.src.match(/https:\/\/video\.bsky\.app\/watch\/(did%3Aplc%3A[\w]{24})\/([\w]{59})\/thumbnail\.jpg/);
 
-			if (container.querySelector("video")) {
+			if (!meta) {
 				return;
 			}
 
-			var vid = document.createElement("video");
-			vid.src = `https://bsky.social/xrpc/com.atproto.sync.getBlob?did=${meta[1]}&cid=${meta[2]}`;
-			vid.poster = thumb.src;
-			vid.autoplay = vid.controls = vid.loop = true;
-			//vid.controls = true;
-			//vid.loop = true;
-			vid.playsinline = true;
-			vid.style = "width: 100%; height: 100%; object-fit: contain; background-color: black;";
+			container.classList.add("gfbsky-video-container");
+			container.querySelector("div.rounded-full:has(> img)")?.classList.add("gfbsky-playbtn");
 
-			thumb.replaceWith(vid);
+			container.addEventListener("click", function(e){
+				e.stopPropagation();
+				e.preventDefault();
 
-			container.querySelector("div.rounded-full:has(> img)")?.remove();
+				if (container.classList.contains("activated")) {
+					return;
+				}
+
+				container.classList.add("activated");
+
+				container.style.setProperty("background-image", `url(${thumb.src})`);
+
+				var vid = document.createElement("video");
+				vid.src = `https://bsky.social/xrpc/com.atproto.sync.getBlob?did=${meta[1]}&cid=${meta[2]}`;
+				vid.poster = thumb.src;
+				vid.title = thumb.alt;
+				vid.autoplay = true;
+				vid.controls = true;
+				vid.loop = true;
+				vid.playsinline = true;
+				vid.style = "width: 100%; height: 100%; object-fit: contain;";
+
+				thumb.replaceWith(vid);
+			});
 		});
 
 	});
@@ -230,6 +260,11 @@ if (document.location.host == "embed.bsky.app") {
 		`;
 
 		details.addEventListener("toggle", openDetails);
+		details.addEventListener("toggle", function() { // Pause embedded videos on collapse
+			if (!this.open) {
+				this.querySelector("iframe.bluesky-embed")?.contentWindow.postMessage("pausevideo", "https://embed.bsky.app"); // Tell iframe to pause any videos
+			}
+		});
 		element.replaceWith(details);
 	}
 
@@ -296,7 +331,6 @@ if (document.location.host == "embed.bsky.app") {
 		}
 	}
 
-
 	// Generate and insert the iframe
 	function generateIframe(element, didplc, messageid, color) {
 		var rand = String(Math.random()).slice(2); // required for bluesky to identify and size unique frames of the same message
@@ -308,6 +342,7 @@ if (document.location.host == "embed.bsky.app") {
 		iframe.loading = "lazy";
 		iframe.scrolling = "no";
 		iframe.setAttribute("target", "_blank");
+		iframe.allow = "fullscreen";
 		iframe.src = iframeUrl;
 
 		element.append(iframe);

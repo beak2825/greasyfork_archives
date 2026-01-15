@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zed Market Price Helper
 // @namespace    https://github.com/Mrgongm
-// @version      1.6.2
+// @version      1.6.3
 // @description  在物品详情中显示市场价格
 // @author       Owen
 // @license      MIT
@@ -10,7 +10,6 @@
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
 // @connect      api.zed.city
-// @connect      101.35.15.85
 // @downloadURL https://update.greasyfork.org/scripts/560709/Zed%20Market%20Price%20Helper.user.js
 // @updateURL https://update.greasyfork.org/scripts/560709/Zed%20Market%20Price%20Helper.meta.js
 // ==/UserScript==
@@ -45,9 +44,7 @@
                         }
                     });
                     localStorage.setItem("marketPriceHelper_itemWorths", JSON.stringify(itemWorths));
-                    localStorage.setItem("marketPriceHelper_itemWorths_sync",JSON.stringify(itemWorthsSyncList))
                     localStorage.setItem("marketPriceHelper_itemWorths_timestamp", Date.now());
-
                     log("✅ 已从 getMarket 响应更新物价表");
                 } catch (err) {
                     log("❌ getMarket 响应解析失败", err);
@@ -190,7 +187,6 @@
 
     // 生成可能的物品名称列表
     function generatePossibleNames(originalName) {
-        console.log(originalName)
         return [
             originalName,
             originalName.toLowerCase(),
@@ -217,10 +213,10 @@
                     return price;
                 }
             }
-            return 0;
+            return '暂无报价';
         } catch (e) {
             console.error('获取物品价格失败:', e);
-            return 0;
+            return '暂无报价';
         }
     }
 
@@ -255,9 +251,6 @@
             statVal.textContent = formatPrice(price);
             statVal.style.color = '#4CAF50';
         }
-
-        // 更新提示文本
-        priceStat.title = `物品: ${itemName}\n市场价格: ${formatPrice(price)}`;
     }
 
     // 创建价格显示元素
@@ -315,7 +308,7 @@
         // 参数校验
         const num = Number(price);
         if (isNaN(num)) {
-            return "0";
+            return "暂无报价";
         }
         return new Intl.NumberFormat('en-US', {
             maximumFractionDigits: 0, // 保留0位小数
@@ -364,12 +357,8 @@
                             }
                         });
                         //缓存至本地
-                        localStorage.setItem("marketPriceHelper_itemWorths_sync",JSON.stringify(itemWorthsSyncList))
                         localStorage.setItem("marketPriceHelper_itemWorths", JSON.stringify(itemWorths));
                         localStorage.setItem("marketPriceHelper_itemWorths_timestamp", Date.now());
-                        //同步价格数据至服务器（因数据暂时用不到，决定先不上传）
-                        //syncMarketPrice(itemWorthsSyncList)
-
                     } catch (err) {
                         log("❌ JSON解析失败", err);
                         resolve("JSON解析失败");
@@ -382,46 +371,6 @@
             });
         });
     }
-    //向服务器发送历史价格数据
-    function syncMarketPrice(itemWorths){
-        if(!itemWorths){
-            return;
-        }
-        GM_xmlhttpRequest({
-            method: 'POST',
-            url: 'http://101.35.15.85/admin-api/business/market-items-price/syncMarket',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({"items":itemWorths}),
-            onload: function(response) {
-                if (response.status != 200) {
-                    log('❌ 上传数据失败:', response.statusText);
-                }
-            },
-            onerror: function(error) {
-                log('❌ 请求失败:', error);
-            }
-        });
-    }
-
-    //同步数据(10分钟间隔上传）
-    function syncInterval(){
-        const lastSync = localStorage.getItem("marketPriceHelper_itemWorths_timestamp");
-        if (lastSync && Date.now() - lastSync > 1000*60*10) {
-            log("❌ 本地缓存超时，跳过同步（10分钟）");
-            return;
-        }
-        const itemWorthsStr = localStorage.getItem("marketPriceHelper_itemWorths_sync");
-        if (!itemWorthsStr) return;
-        const itemWorths = JSON.parse(itemWorthsStr);
-        if (!itemWorths) return;
-        //同步数据
-        log("✅ 开始同步");
-        syncMarketPrice(itemWorths)
-    }
-    //因数据暂时用不到，决定先不上传
-    //setInterval(syncInterval, 1000*60*10);
 
     // 调试日志
     function log(message) {

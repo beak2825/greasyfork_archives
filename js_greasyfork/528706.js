@@ -2,7 +2,7 @@
 // @name         Bilibili 账号已注销修正
 // @name:zh-CN   Bilibili 账号已注销修正
 // @namespace    http://tampermonkey.net/
-// @version      2.6.1
+// @version      2.7.0
 // @license      MIT
 // @description  修正Bilibili 账户已注销的主页链接，修改为 https://www.bilibili.com/list/$UID
 // @description:zh-CN  修正Bilibili 账户已注销的主页链接，修改为 https://www.bilibili.com/list/$UID
@@ -23,9 +23,9 @@
       "space.bilibili.com/\\d+/favlist": {
         query: "div.bili-video-card__subtitle a",
       },
-      "bilibili.com/(video|list)/": {
+      "www.bilibili.com/(video|list)/": {
         type: "intercept",
-        query: ".up-detail-top a",
+        query: [".up-detail-top a", "a.staff-name"],
       },
       "search.bilibili.com": {
         query: ".bili-video-card__info--owner",
@@ -39,9 +39,13 @@
     // 遍历执行
     Object.entries(rules).forEach(([host, { query, type }]) => {
       if (RegExp(host).test(location.href)) {
-        document
-          .querySelectorAll(query)
-          .forEach((el) => handleElement(el, type));
+        const queries = Array.isArray(query) ? query : [query];
+
+        queries.forEach((q) => {
+          document.querySelectorAll(q).forEach((el) => {
+            handleElement(el, type);
+          });
+        });
       }
     });
   }
@@ -77,7 +81,7 @@
       const match = type == "override" ? true : tag.href.match(/\/(\d+)\??/);
       tag.style.fontStyle = "italic";
       if (match && type == "override") {
-        // 劫持 window.open 获取 UID
+        // 动态
         const uid =
           window.__INITIAL_STATE__?.detail?.basic?.uid ??
           window.__INITIAL_STATE__?.detail?.modules?.find(
@@ -99,10 +103,15 @@
         return;
       }
       if (regular) tag.textContent += uidToShortId(match[1]);
-      else tag.textContent = tag.textContent.replace(
-        str,
-        str + uidToShortId(match[1])
-      );
+      else
+        tag.textContent = tag.textContent.replace(
+          str,
+          str + uidToShortId(match[1])
+        );
+      if (tag.scrollWidth > tag.clientWidth) {
+        // 内容溢出就加悬停提示
+        tag.title = tag.textContent;
+      }
       if (match && type == "normal") {
         tag.href = `https://www.bilibili.com/list/${match[1]}`;
       } else if (match && type == "intercept") {

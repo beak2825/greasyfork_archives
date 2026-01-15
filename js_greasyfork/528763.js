@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Text Explainer Settings
 // @namespace    http://tampermonkey.net/
-// @version      0.1.5
+// @version      0.2.0
 // @description  Settings module for Text Explainer
 // @author       RoCry
 // @license      MIT
@@ -9,14 +9,17 @@
 
 class TextExplainerSettings {
   constructor(defaultConfig = {}) {
-    this.defaultConfig = Object.assign({
-      model: "openai-large",
-      apiKey: "fake",
-      baseUrl: "https://text.pollinations.ai/openai#",
-      provider: "openai",
-      language: "Chinese",
+    this.storageKey = 'explainerConfig';
+    this.storage = this.createStorage();
+
+    this.defaultConfig = this.normalizeConfig({
+      model: 'openai-large',
+      apiKey: 'fake',
+      baseUrl: 'https://text.pollinations.ai/openai#',
+      provider: 'openai',
+      language: 'Chinese',
       shortcut: {
-        key: "d",
+        key: 'd',
         ctrlKey: false,
         altKey: true,
         shiftKey: false,
@@ -24,92 +27,106 @@ class TextExplainerSettings {
       },
       floatingButton: {
         enabled: true,
-        size: "medium", // small, medium, large
-      }
-    }, defaultConfig);
+        size: 'medium'
+      },
+      ...defaultConfig
+    });
 
     this.config = this.load();
   }
 
-  /**
-   * Load settings from storage
-   */
+  createStorage() {
+    if (typeof GM_getValue === 'function' && typeof GM_setValue === 'function') {
+      return {
+        get: (key, fallback) => GM_getValue(key, fallback),
+        set: (key, value) => GM_setValue(key, value)
+      };
+    }
+
+    if (typeof localStorage !== 'undefined') {
+      return {
+        get: (key, fallback) => {
+          const raw = localStorage.getItem(key);
+          if (raw === null) return fallback;
+          try {
+            return JSON.parse(raw);
+          } catch (error) {
+            throw new Error(`Invalid JSON in localStorage for ${key}`);
+          }
+        },
+        set: (key, value) => {
+          localStorage.setItem(key, JSON.stringify(value));
+        }
+      };
+    }
+
+    throw new Error('No storage available for TextExplainerSettings');
+  }
+
+  normalizeConfig(config) {
+    const shortcut = { ...this.defaultConfig?.shortcut, ...(config.shortcut || {}) };
+    const floatingButton = { ...this.defaultConfig?.floatingButton, ...(config.floatingButton || {}) };
+
+    return {
+      ...config,
+      shortcut,
+      floatingButton
+    };
+  }
+
   load() {
-    try {
-      const savedConfig = typeof GM_getValue === 'function'
-        ? GM_getValue('explainerConfig', {})
-        : JSON.parse(localStorage.getItem('explainerConfig') || '{}');
-      return Object.assign({}, this.defaultConfig, savedConfig);
-    } catch (e) {
-      console.error('Error loading settings:', e);
-      return Object.assign({}, this.defaultConfig);
+    const savedConfig = this.storage.get(this.storageKey, null);
+    if (savedConfig === null) {
+      return this.defaultConfig;
     }
+
+    if (!savedConfig || typeof savedConfig !== 'object') {
+      throw new Error('Invalid settings data in storage');
+    }
+
+    return this.normalizeConfig({
+      ...this.defaultConfig,
+      ...savedConfig
+    });
   }
 
-  /**
-   * Save settings to storage
-   */
   save() {
-    try {
-      if (typeof GM_setValue === 'function') {
-        GM_setValue('explainerConfig', this.config);
-      } else {
-        localStorage.setItem('explainerConfig', JSON.stringify(this.config));
-      }
-      return true;
-    } catch (e) {
-      console.error('Error saving settings:', e);
-      return false;
-    }
+    this.storage.set(this.storageKey, this.config);
   }
 
-  /**
-   * Get setting value
-   */
   get(key) {
     return this.config[key];
   }
 
-  /**
-   * Set setting value
-   */
   set(key, value) {
     this.config[key] = value;
     return this;
   }
 
-  /**
-   * Update multiple settings at once
-   */
   update(settings) {
-    Object.assign(this.config, settings);
+    this.config = this.normalizeConfig({
+      ...this.config,
+      ...settings
+    });
     return this;
   }
 
-  /**
-   * Reset settings to defaults
-   */
   reset() {
-    this.config = Object.assign({}, this.defaultConfig);
+    this.config = { ...this.defaultConfig };
     return this;
   }
 
-  /**
-   * Get all settings
-   */
   getAll() {
-    return Object.assign({}, this.config);
+    if (typeof structuredClone === 'function') {
+      return structuredClone(this.config);
+    }
+    return JSON.parse(JSON.stringify(this.config));
   }
 
-  /**
-   * Open settings dialog
-   */
   openDialog(onSave = null) {
-    // First check if dialog already exists and remove it
     const existingDialog = document.getElementById('explainer-settings-dialog');
     if (existingDialog) existingDialog.remove();
 
-    // Create dialog container
     const dialog = document.createElement('div');
     dialog.id = 'explainer-settings-dialog';
     dialog.style = `
@@ -130,7 +147,6 @@ class TextExplainerSettings {
       font-size: 14px;
     `;
 
-    // Add dark mode support
     const styleElement = document.createElement('style');
     styleElement.textContent = `
       #explainer-settings-dialog {
@@ -164,7 +180,6 @@ class TextExplainerSettings {
         box-sizing: border-box;
         font-size: 13px;
       }
-      /* Fix for shortcut key width */
       #explainer-settings-dialog input#explainer-shortcut-key {
         width: 30px !important;
         min-width: 30px;
@@ -207,7 +222,7 @@ class TextExplainerSettings {
         display: flex;
         align-items: center;
         gap: 8px;
-        height: 28px; /* Match the height of the input field */
+        height: 28px;
       }
       #explainer-settings-dialog .modifier {
         display: flex;
@@ -259,18 +274,17 @@ class TextExplainerSettings {
         }
       }
     `;
+
     document.head.appendChild(styleElement);
 
-    // Prepare shortcut configuration
     const shortcut = this.config.shortcut || this.defaultConfig.shortcut;
     const floatingButton = this.config.floatingButton || this.defaultConfig.floatingButton;
 
-    // Create dialog content with a more compact layout
     dialog.innerHTML = `
       <h3>Text Explainer Settings</h3>
-      
+
       <div class="section-title">Language & API Settings</div>
-      
+
       <div class="row">
         <div class="col">
           <label for="explainer-language">Language</label>
@@ -303,7 +317,7 @@ class TextExplainerSettings {
           </p>
         </div>
       </div>
-      
+
       <div>
         <label for="explainer-base-url">API Base URL</label>
         <input id="explainer-base-url" type="text" value="${this.config.baseUrl}">
@@ -311,14 +325,14 @@ class TextExplainerSettings {
           Ending with / ignores v1, ending with # forces use of input address
         </p>
       </div>
-      
+
       <div class="section-title">Shortcut Settings</div>
       <div class="shortcut-section">
         <div class="key-container">
           <label for="explainer-shortcut-key">Key</label>
           <input id="explainer-shortcut-key" type="text" maxlength="1" value="${shortcut.key}">
         </div>
-        
+
         <div class="modifier-group">
           <div class="modifier">
             <label for="explainer-shortcut-ctrl">⌃</label>
@@ -341,7 +355,7 @@ class TextExplainerSettings {
       <p style="font-size: 11px; color: #666; margin-top: 0; margin-bottom: 8px;">
         Tip: Choose a letter key (a-z) with at least one modifier key.
       </p>
-      
+
       <div class="section-title">Touch Device Settings</div>
       <div class="row">
         <div class="col">
@@ -351,7 +365,7 @@ class TextExplainerSettings {
           </div>
         </div>
       </div>
-      
+
       <div class="row">
         <div class="col">
           <label for="explainer-floating-size">Button Size</label>
@@ -362,7 +376,7 @@ class TextExplainerSettings {
           </select>
         </div>
       </div>
-      
+
       <div class="buttons">
         <button id="explainer-settings-cancel" class="secondary">Cancel</button>
         <button id="explainer-settings-save" class="primary">Save</button>
@@ -371,67 +385,57 @@ class TextExplainerSettings {
 
     document.body.appendChild(dialog);
 
-    // Add event listeners
-    document.getElementById('explainer-settings-save').addEventListener('click', () => {
-      // Get shortcut settings
+    const byId = (id) => document.getElementById(id);
+
+    byId('explainer-settings-save').addEventListener('click', () => {
       const shortcutSettings = {
-        key: document.getElementById('explainer-shortcut-key').value.toLowerCase(),
-        ctrlKey: document.getElementById('explainer-shortcut-ctrl').checked,
-        altKey: document.getElementById('explainer-shortcut-alt').checked,
-        shiftKey: document.getElementById('explainer-shortcut-shift').checked,
-        metaKey: document.getElementById('explainer-shortcut-meta').checked
+        key: byId('explainer-shortcut-key').value.toLowerCase(),
+        ctrlKey: byId('explainer-shortcut-ctrl').checked,
+        altKey: byId('explainer-shortcut-alt').checked,
+        shiftKey: byId('explainer-shortcut-shift').checked,
+        metaKey: byId('explainer-shortcut-meta').checked
       };
 
-      // Get floating button settings
       const floatingButtonSettings = {
-        enabled: document.getElementById('explainer-floating-enabled').checked,
-        size: document.getElementById('explainer-floating-size').value,
+        enabled: byId('explainer-floating-enabled').checked,
+        size: byId('explainer-floating-size').value
       };
 
-      // Update config with all form values
       this.update({
-        language: document.getElementById('explainer-language').value,
-        model: document.getElementById('explainer-model').value,
-        apiKey: document.getElementById('explainer-api-key').value,
-        baseUrl: document.getElementById('explainer-base-url').value,
-        provider: document.getElementById('explainer-provider').value,
+        language: byId('explainer-language').value,
+        model: byId('explainer-model').value,
+        apiKey: byId('explainer-api-key').value,
+        baseUrl: byId('explainer-base-url').value,
+        provider: byId('explainer-provider').value,
         shortcut: shortcutSettings,
         floatingButton: floatingButtonSettings
       });
 
-      // Save to storage
       this.save();
-
-      // Remove dialog
       dialog.remove();
       styleElement.remove();
 
-      // Call save callback if provided
       if (typeof onSave === 'function') {
         onSave(this.config);
       }
     });
 
-    document.getElementById('explainer-settings-cancel').addEventListener('click', () => {
+    byId('explainer-settings-cancel').addEventListener('click', () => {
       dialog.remove();
       styleElement.remove();
     });
 
-    // Focus first field
-    document.getElementById('explainer-language').focus();
-
-    // Add validation for the shortcut key
-    const keyInput = document.getElementById('explainer-shortcut-key');
+    const keyInput = byId('explainer-shortcut-key');
     keyInput.addEventListener('input', () => {
-      // Ensure it's a single character and convert to lowercase
       if (keyInput.value.length > 0) {
         keyInput.value = keyInput.value.charAt(0).toLowerCase();
       }
     });
+
+    byId('explainer-language').focus();
   }
 }
 
-// Make available globally and as a module if needed
 window.TextExplainerSettings = TextExplainerSettings;
 
 if (typeof module !== 'undefined') {

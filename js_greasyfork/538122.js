@@ -7,11 +7,10 @@
 // @include         https://beta.waze.com/*
 // @exclude         https://www.waze.com/user/*editor/*
 // @exclude         https://www.waze.com/*/user/*editor/*
-// @require         https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require         https://greasyfork.org/scripts/27254-clipboard-js/code/clipboardjs.js
 // @require         https://update.greasyfork.org/scripts/28502/187735/jQuery%20UI%20-%20v1114.js
 // @require         https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js
-// @version         2026.01.09.01
+// @version         2026.01.13.01
 // @grant           unsafeWindow
 // @downloadURL https://update.greasyfork.org/scripts/538122/WME%20BeenThere-dev.user.js
 // @updateURL https://update.greasyfork.org/scripts/538122/WME%20BeenThere-dev.meta.js
@@ -20,7 +19,6 @@
 
 /* ecmaVersion 2017 */
 /* global $ */
-/* global WazeWrap */
 /* global Clipboard */
 /* global turf */
 /* jslint esversion: 11 */
@@ -491,19 +489,6 @@
             };
             btSettings = $.extend({}, defaultSettings, loadedSettings);
 
-            let serverSettings;
-            try {
-                serverSettings = await WazeWrap.Remote.RetrieveSettings("BeenThere");
-            } catch {
-                serverSettings = null;
-            }
-            if (serverSettings && serverSettings.lastSaved > btSettings.lastSaved) {
-                if (! serverSettings.hasOwnProperty("converted")) {
-                    convertCoords(serverSettings);
-                }
-                $.extend(btSettings, serverSettings);
-            }
-
             if (parseInt(btSettings.LocLeft.replace('px', '')) < 0) {
                 btSettings.LocLeft = "6px";
             }
@@ -570,7 +555,6 @@
                 });
 
                 localStorage.setItem("WME_BeenThere", JSON.stringify(localsettings));
-                WazeWrap.Remote.SaveSettings("BeenThere", localsettings);
             }
         }
 
@@ -781,7 +765,6 @@
 
             LoadSettings();
 
-            WazeWrap.Interface.ShowScriptUpdate("WME BeenThere", GM_info.script.version, updateMessage, "https://greasyfork.org/scripts/27035-wme-beenthere", "https://www.waze.com/forum/viewtopic.php?f=819&t=218182");
             console.log("WME BeenThere: loaded!");
         });
     });

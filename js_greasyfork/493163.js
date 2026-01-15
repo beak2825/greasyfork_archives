@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         MZ Control Skills
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
+// @version      1.3.3
 // @description  Extension to show maximizations and scout report of players in Control
 // @author       xente
 // @match        https://control.managerzone.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=managerzone.com
+// @icon         https://statsxente.com/MZ1/View/Images/main_icon.png
 // @license      MIT
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue

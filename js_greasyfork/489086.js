@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         「新しい日本語を作る会」コメントシステムの改良
 // @namespace    http://lit.link/toracatman
-// @version      2025-02-27
+// @version      2026-01-15
 // @description  「新しい日本語を作る会」の コメントシステムを 改良します。
 // @author       トラネコマン
 // @match        http://www.tackns.net/*
@@ -12,16 +12,18 @@
 // @updateURL https://update.greasyfork.org/scripts/489086/%E3%80%8C%E6%96%B0%E3%81%97%E3%81%84%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%92%E4%BD%9C%E3%82%8B%E4%BC%9A%E3%80%8D%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%94%B9%E8%89%AF.meta.js
 // ==/UserScript==
 
-var css = `.mute .cs_name,.mute .cs_name+.cs_text,.mute input[type="button"]+input[type="button"],.mute input[type="submit"],.mute .cs_contents {
+let css = `
+.mute :is(.cs_name,.cs_name+.cs_text,input[type="button"]+input[type="button"],input[type="submit"],.cs_contents) {
     display: none;
 }
 .open * {
     display: initial !important;
-}`;
+}
+`;
 
 //ミュート追加
 function addMute(t, w) {
-    var mute = JSON.parse(localStorage.getItem("mute"));
+    let mute = JSON.parse(localStorage.getItem("mute"));
     if (mute == null) mute = { names: [], contents: [] };
 
     if (t == 0) {
@@ -39,14 +41,14 @@ function addMute(t, w) {
 
 //ミュート処理
 function muteProcess() {
-    var mute = JSON.parse(localStorage.getItem("mute"));
+    let mute = JSON.parse(localStorage.getItem("mute"));
     if (mute == null) mute = { names: [], contents: [] };
 
-    var a = document.querySelectorAll(".cs_comment:not(.mute) .cs_name");
-    for (var i = 0; i < a.length; i++) {
+    let a = document.querySelectorAll(".cs_comment:not(.mute) .cs_name");
+    for (let i = 0; i < a.length; i++) {
         //名前
-        var f = false;
-        for (var j = 0; j < mute.names.length; j++) {
+        let f = false;
+        for (let j = 0; j < mute.names.length; j++) {
             if (new RegExp(mute.names[j], "u").test(a[i].textContent)) {
                 applyMute(a[i], 0, mute.names[j]);
                 f = true;
@@ -56,7 +58,7 @@ function muteProcess() {
         if (f) continue;
 
         //本文
-        for (var j = 0; j < mute.contents.length; j++) {
+        for (let j = 0; j < mute.contents.length; j++) {
             if (new RegExp(mute.contents[j], "u").test(a[i].parentNode.lastElementChild.textContent)) {
                 applyMute(a[i], 1, mute.contents[j]);
                 break;
@@ -67,16 +69,16 @@ function muteProcess() {
 
 //ミュート適用
 function applyMute(a, t, w) {
-    var comment = a.parentNode;
+    let comment = a.parentNode;
     comment.setAttribute("data-mutetype", t);
     comment.setAttribute("data-muteword", w);
     comment.querySelector(".cs_button").value = "ミュート解除";
     comment.classList.add("mute");
-    var b = document.createElement("span");
+    let b = document.createElement("span");
     b.className = "cs_text";
     b.textContent = t == 0 ? "《ミュートしている投稿者によるコメントです》" : "《ミュートしている内容が含まれるコメントです》";
     a.nextElementSibling.after(b);
-    var c = document.createElement("input");
+    let c = document.createElement("input");
     c.type = "button";
     c.value = "表示";
     c.className = "cs_button";
@@ -87,7 +89,7 @@ function applyMute(a, t, w) {
 
 //ミュート解除
 function removeMute(t, w) {
-    var mute = JSON.parse(localStorage.getItem("mute"));
+    let mute = JSON.parse(localStorage.getItem("mute"));
     if (mute == null) return;
 
     if (t == 0) {
@@ -100,8 +102,8 @@ function removeMute(t, w) {
     localStorage.setItem("mute", JSON.stringify(mute));
     document.querySelector(`#mute_word_list input[data-mutetype="${t}"][data-muteword="${w}"]`).parentNode.remove();
 
-    var a = document.querySelectorAll(`.mute[data-mutetype="${t}"][data-muteword="${w}"]`);
-    for (var i = 0; i < a.length; i++) {
+    let a = document.querySelectorAll(`.mute[data-mutetype="${t}"][data-muteword="${w}"]`);
+    for (let i = 0; i < a.length; i++) {
         a[i].removeAttribute("data-mutetype");
         a[i].removeAttribute("data-muteword");
         a[i].classList.remove("mute");
@@ -114,17 +116,17 @@ function removeMute(t, w) {
 
 //ミュートした ワード一覧の 作成
 function makeMuteWordList() {
-    var mute = JSON.parse(localStorage.getItem("mute"));
+    let mute = JSON.parse(localStorage.getItem("mute"));
     if (mute == null) mute = { names: [], contents: [] };
 
-    var details = document.createElement("details");
+    let details = document.createElement("details");
     details.id = "mute_word_list";
-    var summary = document.createElement("summary");
+    let summary = document.createElement("summary");
     summary.textContent = "ミュートしたワード一覧";
     details.appendChild(summary);
 
-    var span;
-    var ul;
+    let span;
+    let ul;
 
     //名前
     span = document.createElement("span");
@@ -144,19 +146,19 @@ function makeMuteWordList() {
 
     document.muteform.after(details);
 
-    for (var i = 0; i < mute.names.length; i++) {
+    for (let i = 0; i < mute.names.length; i++) {
         makeMuteWordItem(0, mute.names[i]);
     }
-    for (var i = 0; i < mute.contents.length; i++) {
+    for (let i = 0; i < mute.contents.length; i++) {
         makeMuteWordItem(1, mute.contents[i]);
     }
 }
 
 //項目の 作成
 function makeMuteWordItem(t, w) {
-    var li = document.createElement("li");
+    let li = document.createElement("li");
     li.textContent = w;
-    var input = document.createElement("input");
+    let input = document.createElement("input");
     input.type = "button";
     input.value = "ミュート解除";
     input.className = "cs_button";
@@ -188,13 +190,13 @@ function convertSpecial(s) {
 }
 
 (() => {
-    var style = document.createElement("style");
+    let style = document.createElement("style");
     style.textContent = css;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     //ミュートフォームの 作成
     if (location.href.indexOf("comments.cgi") !== -1) {
-        var d = document.createElement("div");
+        let d = document.createElement("div");
         d.innerHTML = `
 <p>
     【ミュートについて】<br>
@@ -224,7 +226,7 @@ function convertSpecial(s) {
                 alert("ミュートするワードを入力してください。");
                 return;
             }
-            var s = document.muteform.muteword.value.replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
+            let s = document.muteform.muteword.value.replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
             switch (document.muteform.mutepat.value) {
                 case "name":
                     addMute(0, `^${s}\$`);
@@ -253,15 +255,16 @@ function convertSpecial(s) {
     }
 
     //ミュートボタンの 作成
-    var a = document.querySelectorAll(".cs_comment .cs_name");
-    for (var i = 0; i < a.length; i++) {
-        var b = document.createElement("input");
+    let a = document.querySelectorAll(".cs_comment .cs_name");
+    for (let i = 0; i < a.length; i++) {
+        let b = document.createElement("input");
         b.type = "button";
         b.value = "ミュート";
         b.className = "cs_button";
         b.onclick = function() {
             if (!this.parentNode.classList.contains("mute")) {
                 //ミュート
+                let s;
                 switch (document.muteform.mutepat.value) {
                     case "name":
                         addMute(0, `^${this.parentNode.querySelector(".cs_name").textContent.replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&")}\$`);
@@ -270,7 +273,7 @@ function convertSpecial(s) {
                         addMute(1, `^${this.parentNode.querySelector(".cs_contents").textContent.replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&")}\$`);
                         break;
                     case "namepart":
-                        var s = String(document.getSelection()).replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
+                        s = String(document.getSelection()).replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
                         if (s != "") {
                             addMute(0, s);
                         }
@@ -279,7 +282,7 @@ function convertSpecial(s) {
                         }
                         break;
                     case "contentpart":
-                        var s = String(document.getSelection()).replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
+                        s = String(document.getSelection()).replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
                         if (s != "") {
                             addMute(1, s);
                         }
@@ -289,7 +292,7 @@ function convertSpecial(s) {
                         break;
                     case "namereg":
                     case "contentreg":
-                        var s = String(document.getSelection()).replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
+                        s = String(document.getSelection()).replace(/[\[\]\.\|\^\$\(\)\*\+\?\{\}\\]/g, "\\$&");
                         console.log("aaa");
                         console.log(s);
                         if (s != "") {
@@ -304,7 +307,7 @@ function convertSpecial(s) {
             }
             else {
                 //ミュート解除
-                var comment = this.parentNode;
+                let comment = this.parentNode;
                 removeMute(Number(comment.getAttribute("data-mutetype")), comment.getAttribute("data-muteword"));
             }
         };
@@ -317,7 +320,7 @@ function convertSpecial(s) {
 
     //バックスラッシュ、特殊文字、リンク
     a = document.getElementsByClassName("cs_contents");
-    for (var i = 0; i < a.length; i++) {
+    for (let i = 0; i < a.length; i++) {
         a[i].innerHTML = convertSpecial(a[i].innerHTML);
     }
     if (location.href.indexOf("comment_post.cgi") !== -1) {

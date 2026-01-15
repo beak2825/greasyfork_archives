@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter autoload
 // @namespace    https://github.com/natsuyasai/TwitterAutoReloadScript
-// @version      1.4.4
+// @version      1.5.0
 // @description  Automatically retrieve the latest Tweet(X's).
 // @author       natsuyasai
 // @match        https://x.com
@@ -242,19 +242,17 @@ function addIntervalSetting() {
  * メイン処理
  */
 function reselectTab() {
-  // aタグの中からタグ要素かつ現在アクティブになっている要素を取得し、クリックイベントを発火させる
-  const tab = document.getElementsByTagName('a');
-  for (let i = 0; i < tab.length; i++) {
-    const elem = tab[i];
-    const isTab = elem.hasAttribute('role') && elem.getAttribute('role') === 'tab';
-    if (!isTab) {
-      continue;
+  // 現在アクティブになっている要素を取得し、クリックイベントを発火させる
+  const tabs = document.querySelectorAll("div[role='tab']");
+  for (let i = 0; i < tabs.length; i++) {
+    const elem = tabs[i];
+    const isSelectedTab =
+      elem.hasAttribute("aria-selected") &&
+      elem.getAttribute("aria-selected") === "true";
+    if (isSelectedTab) {
+      elem.click();
+      break;
     }
-    const isSelectedTabElement = elem.hasAttribute('aria-selected') && elem.getAttribute('aria-selected') === 'true';
-    if (!isSelectedTabElement) {
-      continue;
-    }
-    elem.click();
   }
 }
 

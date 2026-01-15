@@ -1,18 +1,15 @@
 // ==UserScript==
-// @name         Asstars Просветление
+// @name         Animesss Просветление
 // @namespace    http://tampermonkey.net/
-// @version      2.01
+// @version      2.02
 // @description  Помогает познать просветление
 // @author       test
-// @match        https://astars.club/*
-// @match        https://asstars1.astars.club/*
-// @match        https://animestars.org/*
-// @match        https://as1.astars.club/*
-// @match        https://asstars.tv/*
+// @match        https://animesss.com/*
+// @match        https://animesss.tv/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/527746/Asstars%20%D0%9F%D1%80%D0%BE%D1%81%D0%B2%D0%B5%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5.user.js
-// @updateURL https://update.greasyfork.org/scripts/527746/Asstars%20%D0%9F%D1%80%D0%BE%D1%81%D0%B2%D0%B5%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/527746/Animesss%20%D0%9F%D1%80%D0%BE%D1%81%D0%B2%D0%B5%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5.user.js
+// @updateURL https://update.greasyfork.org/scripts/527746/Animesss%20%D0%9F%D1%80%D0%BE%D1%81%D0%B2%D0%B5%D1%82%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5.meta.js
 // ==/UserScript==
 
 'use strict';

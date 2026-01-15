@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         98堂-预览
-// @version      1.11.0
+// @version      1.11.3
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
 // @description  98堂[原色花堂]增强：图片预览 · 无缝翻页
@@ -26,7 +26,6 @@
       imageLoadTimeout: 200
     },
     get(key) {
-      if ("maxPreviewImages" === key) return this.defaults[key];
       try {
         const stored = localStorage.getItem("SHT_PREVIEW_CONFIG");
         return (stored ? JSON.parse(stored) : {})[key] ?? this.defaults[key];
@@ -35,7 +34,7 @@
       }
     },
     set(key, value) {
-      if ("maxPreviewImages" !== key) try {
+      try {
         const stored = localStorage.getItem("SHT_PREVIEW_CONFIG"), storedConfig = stored ? JSON.parse(stored) : {};
         storedConfig[key] = value, localStorage.setItem("SHT_PREVIEW_CONFIG", JSON.stringify(storedConfig));
       } catch (e) {}
@@ -146,22 +145,76 @@
   _Lightbox.nextBtn = null, _Lightbox.closeBtn = null, _Lightbox.images = [], _Lightbox.currentIndex = 0;
   let Lightbox = _Lightbox;
   const _ImageProxy = class {
+    static getStorageKeys() {
+      return this.STORAGE_KEYS;
+    }
+    static getLevelConfigs() {
+      return this.LEVEL_CONFIGS;
+    }
+    static isEnabled() {
+      const stored = localStorage.getItem(this.STORAGE_KEYS.ENABLED), hasProxy = this.hasProxyUrl();
+      return "true" === stored && hasProxy;
+    }
+    static setEnabled(enabled) {
+      localStorage.setItem(this.STORAGE_KEYS.ENABLED, String(enabled));
+    }
+    static getRawEnabled() {
+      return "true" === localStorage.getItem(this.STORAGE_KEYS.ENABLED);
+    }
+    static hasProxyUrl() {
+      const url = localStorage.getItem(this.STORAGE_KEYS.PROXY_URL);
+      return !(!url || !url.trim());
+    }
+    static getProxyUrl() {
+      return localStorage.getItem(this.STORAGE_KEYS.PROXY_URL) || "";
+    }
+    static setProxyUrl(url) {
+      if (url && url.trim()) {
+        let normalizedUrl = url.trim();
+        normalizedUrl.endsWith("/") || (normalizedUrl += "/"), localStorage.setItem(this.STORAGE_KEYS.PROXY_URL, normalizedUrl);
+      } else localStorage.removeItem(this.STORAGE_KEYS.PROXY_URL), this.setEnabled(!1);
+    }
+    static getCompressionLevel() {
+      const stored = localStorage.getItem(this.STORAGE_KEYS.COMPRESSION_LEVEL);
+      return !stored || "low" !== stored && "medium" !== stored && "high" !== stored ? "medium" : stored;
+    }
+    static setCompressionLevel(level) {
+      localStorage.setItem(this.STORAGE_KEYS.COMPRESSION_LEVEL, level);
+    }
     static isTargetHost(url) {
       return !(url.includes("/static/") || url.includes("icon") || url.includes("avatar")) && ([ "ymawv.la", "wmaiv.la", "iili.io", "7pzzv.us" ].some(host => url.includes(host)) || url.toLowerCase().endsWith(".gif"));
     }
     static getCompressedUrl(originalUrl) {
+      const proxyUrl = this.getProxyUrl();
+      if (!proxyUrl) return null;
       try {
-        const cleanUrl = originalUrl.replace(/^https?:\/\//, ""), conf = originalUrl.toLowerCase().endsWith(".gif") ? this.CONFIG.ANIMATED : this.CONFIG.STATIC;
+        const cleanUrl = originalUrl.replace(/^https?:\/\//, ""), isGif = originalUrl.toLowerCase().endsWith(".gif"), level = this.getCompressionLevel(), levelConfig = this.LEVEL_CONFIGS[level], conf = isGif ? levelConfig.animated : levelConfig.static;
         let params = `url=${encodeURIComponent(cleanUrl)}&w=${conf.w}&q=${conf.q}&output=${conf.fmt}`;
-        return void 0 !== conf.n && (params += `&n=${conf.n}`), `${this.PROXY_URL}?${params}`;
+        return void 0 !== conf.n && (params += `&n=${conf.n}`), `${proxyUrl}?${params}`;
       } catch {
-        return originalUrl;
+        return null;
       }
     }
     static async load(img, originalUrl, isHighPriority = !1) {
-      if (isHighPriority && img.setAttribute("fetchpriority", "high"), !this.isTargetHost(originalUrl)) return this.directLoad(img, originalUrl);
+      if (isHighPriority && img.setAttribute("fetchpriority", "high"), !this.isEnabled()) return this.directLoad(img, originalUrl);
+      if (!this.isTargetHost(originalUrl)) return this.directLoad(img, originalUrl);
       const compressedUrl = this.getCompressedUrl(originalUrl);
-      return this.directLoad(img, compressedUrl);
+      return compressedUrl ? this.loadWithFallback(img, compressedUrl, originalUrl) : this.directLoad(img, originalUrl);
+    }
+    static loadWithFallback(img, proxyUrl, originalUrl) {
+      return new Promise((resolve, reject) => {
+        let timeoutId, resolved = !1;
+        const cleanup = () => {
+          resolved = !0, timeoutId && clearTimeout(timeoutId), img.onload = null, img.onerror = null;
+        };
+        timeoutId = window.setTimeout(() => {
+          resolved || (cleanup(), this.directLoad(img, originalUrl).then(resolve).catch(reject));
+        }, this.TIMEOUT_MS), img.decoding = "async", img.onload = () => {
+          resolved || (cleanup(), resolve());
+        }, img.onerror = () => {
+          resolved || (cleanup(), this.directLoad(img, originalUrl).then(resolve).catch(reject));
+        }, img.src = proxyUrl;
+      });
     }
     static directLoad(img, url) {
       return new Promise((resolve, reject) => {
@@ -172,18 +225,81 @@
         }, img.src = url;
       });
     }
+    static async testProxy(proxyUrl) {
+      if (!proxyUrl || !proxyUrl.trim()) return {
+        success: !1,
+        message: "请输入代理地址"
+      };
+      try {
+        let normalizedUrl = proxyUrl.trim();
+        normalizedUrl.endsWith("/") || (normalizedUrl += "/");
+        const testUrl = `${normalizedUrl}?url=${encodeURIComponent("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png".replace(/^https?:\/\//, ""))}&w=50&q=50&output=webp`, result = await Promise.race([ fetch(testUrl, {
+          method: "HEAD"
+        }), new Promise((_, reject) => setTimeout(() => reject(new Error("超时")), 5e3)) ]);
+        return result.ok ? {
+          success: !0,
+          message: "代理可用 ✓"
+        } : {
+          success: !1,
+          message: `代理返回错误: ${result.status}`
+        };
+      } catch (error) {
+        return {
+          success: !1,
+          message: `测试失败: ${error.message}`
+        };
+      }
+    }
   };
-  _ImageProxy.PROXY_URL = "https://images.weserv.nl/", _ImageProxy.CONFIG = {
-    STATIC: {
-      w: 400,
-      q: 80,
-      fmt: "webp"
+  _ImageProxy.STORAGE_KEYS = {
+    ENABLED: "SHT_IMAGE_ACCELERATION_ENABLED",
+    PROXY_URL: "SHT_IMAGE_PROXY_URL",
+    COMPRESSION_LEVEL: "SHT_IMAGE_COMPRESSION_LEVEL"
+  }, _ImageProxy.TIMEOUT_MS = 1e4, _ImageProxy.LEVEL_CONFIGS = {
+    low: {
+      label: "低",
+      desc: "最快速度，图片可能稍微模糊",
+      static: {
+        w: 300,
+        q: 60,
+        fmt: "webp"
+      },
+      animated: {
+        w: 300,
+        q: 50,
+        fmt: "webp",
+        n: -1
+      }
     },
-    ANIMATED: {
-      w: 300,
-      q: 60,
-      fmt: "webp",
-      n: -1
+    medium: {
+      label: "中",
+      desc: "平衡速度和质量",
+      static: {
+        w: 400,
+        q: 75,
+        fmt: "webp"
+      },
+      animated: {
+        w: 400,
+        q: 65,
+        fmt: "webp",
+        n: -1
+      }
+    },
+    high: {
+      label: "高",
+      desc: "保持清晰，适度压缩",
+      static: {
+        w: 600,
+        q: 85,
+        fmt: "webp"
+      },
+      animated: {
+        w: 500,
+        q: 75,
+        fmt: "webp",
+        n: -1
+      }
     }
   };
   let ImageProxy = _ImageProxy;
@@ -332,6 +448,84 @@
         e.preventDefault(), enabled = !enabled, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
         updateToggle(), enabled ? options.onEnable() : options.onDisable();
       }), updateToggle(), enabled && options.onEnable();
+      const settingsLi = document.createElement("li"), settingsContainer = document.createElement("div");
+      settingsContainer.id = "nav-toggle-settings";
+      const settingsLink = document.createElement("a");
+      settingsLink.href = "javascript:;", settingsLink.textContent = "脚本设置", settingsLink.title = "点击打开脚本设置面板", 
+      settingsContainer.appendChild(settingsLink), settingsLi.appendChild(settingsContainer), 
+      navMenu.appendChild(settingsLi), settingsContainer.addEventListener("click", e => {
+        e.preventDefault(), this.showSettingsPanel();
+      });
+    }
+    static showSettingsPanel() {
+      const existingPanel = document.getElementById("sht-settings-panel"), existingOverlay = document.getElementById("sht-settings-overlay");
+      if (existingPanel) return existingPanel.remove(), void existingOverlay?.remove();
+      const overlay = document.createElement("div");
+      overlay.id = "sht-settings-overlay", overlay.style.cssText = "\n      position: fixed; top: 0; left: 0; width: 100%; height: 100%;\n      background: rgba(0,0,0,0.5); z-index: 99998;\n    ";
+      const panel = document.createElement("div");
+      panel.id = "sht-settings-panel", panel.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: #fff; border-radius: 12px; padding: 24px; z-index: 99999;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 420px; max-width: 90vw;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      max-height: 90vh; overflow-y: auto;\n    ";
+      const levelConfigs = ImageProxy.getLevelConfigs(), currentLevel = ImageProxy.getCompressionLevel(), currentProxyUrl = ImageProxy.getProxyUrl(), hasProxy = ImageProxy.hasProxyUrl(), accelEnabled = ImageProxy.getRawEnabled(), currentPreviewCount = CONFIG.get("maxPreviewImages");
+      panel.innerHTML = `\n      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px;">\n        <h3 style="margin: 0; font-size: 18px; color: #333;">⚙️ 脚本设置</h3>\n        <button id="sht-settings-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>\n      </div>\n      \n      \x3c!-- 预览图张数设置 --\x3e\n      <div style="margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 10px;">\n        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: #333;">🖼️ 预览图张数</label>\n        <div style="display: flex; gap: 10px;">\n          ${[ 3, 4, 5 ].map(num => `\n            <label style="flex: 1; padding: 10px; border: 2px solid ${num === currentPreviewCount ? "#2196F3" : "#ddd"}; \n              border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s;\n              background: ${num === currentPreviewCount ? "#e3f2fd" : "#fff"};">\n              <input type="radio" name="preview-count" value="${num}" \n                ${num === currentPreviewCount ? "checked" : ""} style="display: none;">\n              <div style="font-size: 18px; font-weight: 600;">${num}</div>\n              <div style="font-size: 11px; color: #666;">张</div>\n            </label>\n          `).join("")}\n        </div>\n        <div style="font-size: 12px; color: #999; margin-top: 8px;">每个帖子显示的预览图数量</div>\n      </div>\n\n      \x3c!-- 图片加速设置区域 --\x3e\n      <div style="margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 10px;">\n        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">\n          <label style="font-weight: 600; color: #333;">🚀 图片加速</label>\n          <label style="position: relative; display: inline-block; width: 50px; height: 26px;">\n            <input type="checkbox" id="sht-accel-toggle" ${accelEnabled && hasProxy ? "checked" : ""} ${hasProxy ? "" : "disabled"}\n              style="opacity: 0; width: 0; height: 0;">\n            <span style="position: absolute; cursor: ${hasProxy ? "pointer" : "not-allowed"}; top: 0; left: 0; right: 0; bottom: 0; \n              background-color: ${accelEnabled && hasProxy ? "#4CAF50" : "#ccc"}; transition: .3s; border-radius: 26px;\n              opacity: ${hasProxy ? "1" : "0.6"};">\n              <span style="position: absolute; content: ''; height: 20px; width: 20px; left: ${accelEnabled && hasProxy ? "26px" : "3px"}; bottom: 3px; \n                background-color: white; transition: .3s; border-radius: 50%;"></span>\n            </span>\n          </label>\n        </div>\n        \n        <div style="font-size: 13px; color: #666; margin-bottom: 16px; padding: 10px; background: ${hasProxy ? "#e8f5e9" : "#fff3e0"}; border-radius: 6px;">\n          ${hasProxy ? "✅ 已设置代理，可使用图片加速功能" : "⚠️ 请先设置代理地址才能开启图片加速<br>💡 利用代理压缩图片加速加载，需要自行部署代理服务"}\n        </div>\n\n        <div style="margin-bottom: 16px;">\n          <label style="display: block; font-weight: 500; margin-bottom: 8px; color: #555; font-size: 14px;">🔧 代理地址</label>\n          <input type="text" id="sht-proxy-url" placeholder="自行搭建或寻找公益图片代理服务" \n            value="${currentProxyUrl}"\n            style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;">\n          <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">\n            <button id="sht-test-proxy" style="padding: 6px 12px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 13px;">\n              🔍 测试代理\n            </button>\n            <span id="sht-proxy-test-result" style="font-size: 13px;"></span>\n          </div>\n        </div>\n\n        <div>\n          <label style="display: block; font-weight: 500; margin-bottom: 10px; color: #555; font-size: 14px;">⚡ 压缩等级</label>\n          <div style="display: flex; gap: 8px;">\n            ${[ "low", "medium", "high" ].map(level => `\n              <label class="sht-level-label" style="flex: 1; padding: 10px 8px; border: 2px solid ${level === currentLevel ? "#4CAF50" : "#ddd"}; \n                border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s;\n                background: ${level === currentLevel ? "#e8f5e9" : "#fff"};">\n                <input type="radio" name="compression-level" value="${level}" \n                  ${level === currentLevel ? "checked" : ""} style="display: none;">\n                <div style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">${levelConfigs[level].label}</div>\n                <div style="font-size: 10px; color: #666; line-height: 1.3;">${levelConfigs[level].desc}</div>\n              </label>\n            `).join("")}\n          </div>\n        </div>\n      </div>\n\n      <div style="display: flex; gap: 12px;">\n        <button id="sht-settings-save" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4CAF50, #45a049); \n          color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">\n          ✓ 保存设置\n        </button>\n        <button id="sht-settings-cancel" style="padding: 12px 20px; background: #f5f5f5; color: #666; \n          border: 1px solid #ddd; border-radius: 8px; font-size: 15px; cursor: pointer;">\n          取消\n        </button>\n      </div>\n    `, 
+      overlay.addEventListener("click", () => {
+        overlay.remove(), panel.remove();
+      }), document.body.appendChild(overlay), document.body.appendChild(panel);
+      const closePanel = () => {
+        overlay.remove(), panel.remove();
+      };
+      panel.querySelector("#sht-settings-close")?.addEventListener("click", closePanel), 
+      panel.querySelector("#sht-settings-cancel")?.addEventListener("click", closePanel), 
+      panel.querySelectorAll('input[name="preview-count"]').forEach(input => {
+        input.addEventListener("change", () => {
+          panel.querySelectorAll('input[name="preview-count"]').forEach(inp => {
+            const label = inp.closest("label");
+            if (label) {
+              const isChecked = inp.checked;
+              label.style.borderColor = isChecked ? "#2196F3" : "#ddd", label.style.background = isChecked ? "#e3f2fd" : "#fff";
+            }
+          });
+        });
+      });
+      const levelLabels = panel.querySelectorAll(".sht-level-label");
+      levelLabels.forEach(label => {
+        label.addEventListener("click", () => {
+          levelLabels.forEach(l => {
+            l.style.borderColor = "#ddd", l.style.background = "#fff";
+          }), label.style.borderColor = "#4CAF50", label.style.background = "#e8f5e9";
+        });
+      });
+      const proxyInput = panel.querySelector("#sht-proxy-url"), accelToggle = panel.querySelector("#sht-accel-toggle"), toggleSlider = accelToggle.nextElementSibling, toggleDot = toggleSlider?.querySelector("span"), statusDiv = panel.querySelector('div[style*="background: #e8f5e9"], div[style*="background: #fff3e0"]'), updateToggleUI = (enabled, hasProxyNow) => {
+        accelToggle.disabled = !hasProxyNow, toggleSlider.style.cursor = hasProxyNow ? "pointer" : "not-allowed", 
+        toggleSlider.style.opacity = hasProxyNow ? "1" : "0.6", toggleSlider.style.backgroundColor = enabled && hasProxyNow ? "#4CAF50" : "#ccc", 
+        toggleDot && (toggleDot.style.left = enabled && hasProxyNow ? "26px" : "3px"), statusDiv && (statusDiv.style.background = hasProxyNow ? "#e8f5e9" : "#fff3e0", 
+        statusDiv.innerHTML = hasProxyNow ? "✅ 已设置代理，可使用图片加速功能" : "⚠️ 请先设置代理地址才能开启图片加速<br>💡 利用代理压缩图片加速加载，需要自行部署代理服务");
+      };
+      proxyInput.addEventListener("input", () => {
+        const hasProxyNow = !!proxyInput.value.trim();
+        hasProxyNow || (accelToggle.checked = !1), updateToggleUI(accelToggle.checked, hasProxyNow);
+      }), accelToggle.addEventListener("change", () => {
+        const hasProxyNow = !!proxyInput.value.trim();
+        updateToggleUI(accelToggle.checked, hasProxyNow);
+      }), panel.querySelector("#sht-test-proxy")?.addEventListener("click", async () => {
+        const resultSpan = panel.querySelector("#sht-proxy-test-result"), testUrl = proxyInput.value.trim();
+        if (!testUrl) return resultSpan.textContent = "请输入代理地址", void (resultSpan.style.color = "#f44336");
+        resultSpan.textContent = "测试中...", resultSpan.style.color = "#666";
+        const result = await ImageProxy.testProxy(testUrl);
+        resultSpan.textContent = result.message, resultSpan.style.color = result.success ? "#4CAF50" : "#f44336";
+      }), panel.querySelector("#sht-settings-save")?.addEventListener("click", () => {
+        const selectedPreviewCount = panel.querySelector('input[name="preview-count"]:checked'), selectedLevel = panel.querySelector('input[name="compression-level"]:checked');
+        let needsReload = !1;
+        if (selectedPreviewCount) {
+          const newCount = parseInt(selectedPreviewCount.value);
+          newCount !== CONFIG.get("maxPreviewImages") && (CONFIG.set("maxPreviewImages", newCount), 
+          needsReload = !0);
+        }
+        const newProxyUrl = proxyInput.value.trim();
+        newProxyUrl !== ImageProxy.getProxyUrl() && ImageProxy.setProxyUrl(newProxyUrl);
+        const wasEnabled = ImageProxy.isEnabled();
+        ImageProxy.setEnabled(accelToggle.checked), wasEnabled !== ImageProxy.isEnabled() && (needsReload = !0), 
+        selectedLevel && ImageProxy.setCompressionLevel(selectedLevel.value), closePanel(), 
+        needsReload && location.reload();
+      });
     }
     static createSearchPageSingleToggle(infiniteScrollOptions) {
       const titleContainer = this.setupSearchTitleContainer();

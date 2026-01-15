@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Loot Visualizer
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @author       Lotak - Guild leader of Casual Ahab
 // @description  Loot window, totals, rarity colors, summary, tooltips, and pop-in animation
 // @match        https://demonicscans.org/*
@@ -47,9 +47,8 @@
 
             // --- ADD YOUR CUSTOM BUTTONS BELOW ---
             const items = [
-                //{ icon: "🌊", label: "Event Gate", href: " /active_wave.php?event=4&wave=2" },
-                //{ icon: "🌀", label: "Gate 2", href: "/active_wave.php?gate=3&wave=5" },
                 { icon: "🌀", label: "Gate 3", href: "/active_wave.php?gate=3&wave=8" },
+                { icon: "🌀", label: "Gate Oly", href: "/active_wave.php?gate=5&wave=9" },
                 { icon: "⚒️", label: "Legendary Forge", href: "/legendary_forge.php" },
                 { icon: "📅", label: "Weekly", href: "/weekly.php" },
                 { icon: "📖", label: "Manga", href: "/index.php" },

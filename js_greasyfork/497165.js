@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         微博增强
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.8
 // @description  在微博搜索页面添加额外的搜索按钮：热门、关注人、文章。扩大热搜板块的宽度。
 // @author       coccvo
 // @match        https://s.weibo.com/*
 // @match        https://weibo.com/*
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IArs4c6QAAAFFQTFRF////++/w9Kgx8psQ7nl7AAAA8ZCS4yUo50ZK5TE17GxvxcXFoqKi6Vlc9rhV4iMn6mFjPj4+d3d35j1B9KuthoaG6enpJiYm98Nw98PE+MzNdfhZdQAAAHlJREFUeNqVj0kSwjAMBMfryI7j2FmB/z+UiHJxhr5IrZo5CP/wsM59xY85LttCAWAdalXnjSDPQIVVX6iMFJCY/P56RuEMxbOZs6yTbkkPaTPnFUKYYPjJ0OPopYdDyw1AE9wFTewkFPFmvXoxcTgQJceYE/OPL74BBt8EQ5m+Pm0AAAAASUVORK5CYII=
-// @grant        none
+// @grant        GM_addStyle
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/497165/%E5%BE%AE%E5%8D%9A%E5%A2%9E%E5%BC%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/497165/%E5%BE%AE%E5%8D%9A%E5%A2%9E%E5%BC%BA.meta.js
@@ -17,13 +17,15 @@
     'use strict';
 
     // 侧边栏宽度设置
-    [document.getElementById('pl_right_side'),
-     document.getElementById('hot-band-container'),
-     document.querySelector('.wbpro-side-main.SideIndex_sideMain_3jrwf'),
-     document.querySelector('.rightSide'),
-     document.querySelector('._sideBox_14sov_2')
-    ].filter(el => el).forEach(el => el.style.width = '380px');
-
+    GM_addStyle(`
+    #pl_right_side,
+    #hot-band-container,
+    .wbpro-side-main.SideIndex_sideMain_3jrwf,
+    .rightSide,
+    ._sideBox_14sov_2 {
+        width: 380px !important;
+    }
+`);
 
     // 获取主导航栏元素
     var mainNav = document.querySelector('.m-main-nav');
@@ -52,6 +54,7 @@
             var btn = document.createElement('button');
             btn.textContent = button.text;
             btn.style.padding = '8px 10px';
+            btn.style.color ='#333'
             btn.style.fontSize = '15px';
             btn.style.cursor = 'pointer';
             btn.style.backgroundColor = '#FFFFFF00';

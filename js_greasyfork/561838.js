@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         验证码识别 - Woodll
-// @namespace    http://ocrapi.geekwood.cn
-// @version      7.3
+// @namespace    WoodllOcr
+// @version      7.5
 // @description  没有简介
 // @author       crab
 // @license      MIT
@@ -30,7 +30,7 @@ class CaptchaWrite {
     }
 
     getCaptchaServerUrl() {
-        return "http://ocrapi.geekwood.cn";
+        return "https://ocrapi.geekwood.cn";
     }
 
     constructor() {

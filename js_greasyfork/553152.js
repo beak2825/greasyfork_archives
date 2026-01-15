@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Weibo+
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      4.0
 // @description  Minimal Weibo UI
 // @author       the3ash
 // @match        https://weibo.com/*
@@ -24,6 +24,11 @@ footer div[class*="_wrap_"] {
   background: none !important;
 }
 
+article div[class*="_wrap_"] {
+  border-top-left-radius:12px !important;
+  border-top-right-radius:12px !important;
+}
+
 [class*="_retweet_"] {
   margin: 16px -8px !important;
   padding-top:12px !important;
@@ -36,9 +41,10 @@ footer div[class*="_wrap_"] {
   width: 800px !important;
 }
 
-/* 侧边导航栏宽度 */
 [class*="_side_"] {
   width: 168px !important;
+  position: fixed;
+  left: 0;
 }
 
 a > [role="link"][class*="_main_"] {
@@ -47,14 +53,6 @@ a > [role="link"][class*="_main_"] {
 
 [class^="_wrap_"][role="navigation"]{
   border-top: none !important;
-}
-
-[class*="_logo_"]{
-  display: none !important;
-}
-
-.woo-pop-wrap-main > :nth-child(odd) {
-  display: none !important;
 }
 
 [class*="_inner_"]{
@@ -66,6 +64,7 @@ a > [role="link"][class*="_main_"] {
   left: 16px !important;
   width: 160px !important;
   opacity: 80% !important;
+  padding-left: 36px !important;
 }
 
 [class*="_search_"] .woo-pop-main{
@@ -83,23 +82,10 @@ a > [role="link"][class*="_main_"] {
   color: #606060 !important;
 }
 
-[class*="_search_"] .woo-input-hasIcon{
-  padding-left: 36px !important;
-}
-
 [class*="_nofold_"]{
   position: fixed !important;
   right: 16px !important;
   margin-right: 0 !important;
-}
-
-.woo-badge-bubble{
-  display: none !important;
-}
-
-[class*="_side_"]{
-  position: fixed;
-  left: 0;
 }
 
 [role="navigation"] .woo-box-flex.woo-box-alignCenter.woo-box-justifyCenter[class*="_mid_"] {
@@ -131,15 +117,6 @@ a > [role="link"][class*="_main_"] {
 
 [class*="_item_"]{
   border-radius: 10px !important;
-}
-
-.wbpro-screen-v2{
-  height:47px !important ;
-  opacity: 0;
-}
-
-[class*="readnum_"]{
-  display: none !important;
 }
 
 .woo-panel-main{
@@ -181,74 +158,58 @@ a > [role="link"][class*="_main_"] {
   border: none !important;
 }
 
-[class*="_ProfileHeader_pic_"] .woo-picture-img{
-  display: none !important;
-}
-
 [class*="_Profile_btn_"]{
   padding: 6px 24px !important;
 }
 
-[class*="_timer_desc_"]{
-  display:none !important;
+[class*="_visable_"] {
+  padding-top: 12px !important;
 }
 
-/* 隐藏侧边栏（右侧） */
-[class*="_sideMain_"]{
-  display: none !important;
-}
-
-/* 隐藏发布框和某些卡片 */
-.woo-panel-main[class*="_publishCard_"] {
-  display: none !important;
-}
-
-.woo-panel-main[class*="_card_"] {
-  display: none !important;
-}
-
-.wbpro-screen-v2{
-  display: none !important;
-}
-
-a[href="/hot"] {
-  display: none !important;
-}
-
-a[href="/tv"] {
-  display: none !important;
-}
-
-[class*="_title_"]{
-  display: none !important;
-}
-
-[class*="_none_"]:nth-of-type(n+3) {
-  display: none !important;
-}
-
-[class*="_split_"]{
-  display: none !important;
-}
-
-[class*="_editText_"]{
-  display: none !important;
-}
-
-.woo-button-main.xs{
-  display: none !important;
-}
-
-[class*="_uslogo_"]{
-  display: none !important;
-}
-
-[class*="_readWrap_"] {
-  display: none !important;
-}
+/* Hidden elements */
+#homeWrap [class*="_visable_"],
+#homeWrap [class*="_dispear_"],
+[class*="_logo_"],
+.woo-pop-wrap-main > :nth-child(odd),
+.woo-badge-bubble,
+[class*="readnum_"],
+[class*="_ProfileHeader_pic_"] .woo-picture-img,
+[class*="_timer_desc_"],
+[class*="_sideMain_"],
+.woo-panel-main[class*="_publishCard_"],
+.wbpro-screen-v2,
+a[href="/hot"],
+a[href="/tv"],
+[class*="_title_"],
+[class*="_none_"]:nth-of-type(n+3),
+[class*="_split_"],
+[class*="_editText_"],
+.woo-button-main.xs,
+[class*="_uslogo_"],
+[class*="_readWrap_"],
 
 .woo-pop-ctrl > div[class*="_sipt_"] {
   display: none !important;
 }
-    `);
+
+`);
+
+  function filterTabs() {
+    const tabs = document.querySelectorAll(
+      '.woo-tab-nav.woo-box-justifyAround .woo-tab-item-main'
+    );
+    const allowed = ['微博', '视频', '相册'];
+
+    tabs.forEach((tab) => {
+      const text = tab.textContent.trim();
+      if (text && !allowed.includes(text)) {
+        tab.style.cssText = 'display: none !important;';
+      }
+    });
+  }
+
+  filterTabs();
+
+  const observer = new MutationObserver(filterTabs);
+  observer.observe(document.body, { childList: true, subtree: true });
 })();

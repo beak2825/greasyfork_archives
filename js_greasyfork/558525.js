@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JAV-JHS
 // @namespace    JAV-JHS
-// @version      3.3.6.006
+// @version      3.3.6.008
 // @author       JAV-JHS
 // @description  Jav-鉴黄师 收藏、屏蔽、标记已下载; 屏蔽标签、屏蔽演员、同步收藏演员、新作品检测; 免VIP查看热播、Top250排行榜、Fc2ppv、可查看所有评论信息、相关清单; 支持云盘备份; 以图识图; 字幕搜索; JavDb|JavBus
 // @license      MIT
@@ -1717,7 +1717,7 @@ window.ImageHoverPreview = class {
             header.className = "console-logger-header";
             const title = document.createElement("div");
             title.className = "console-logger-title";
-            title.textContent = "JHS V3.3.6.006";
+            title.textContent = "JHS V3.3.6.008";
             const controls = document.createElement("div");
             controls.className = "console-logger-controls";
             this.maximizeBtn = document.createElement("button");
@@ -3591,7 +3591,7 @@ class NavBarPlugin extends BasePlugin {
             const urlParams = new URLSearchParams(window.location.search);
             let q = urlParams.get("q"), f = urlParams.get("f");
             $("#search-keyword").val(q);
-            f && $("#search-type").val(f);
+            f && $("#jhs-search-type").val(f);
             q && this.highlightKeyword(q);
         }
     }
@@ -3605,7 +3605,7 @@ class NavBarPlugin extends BasePlugin {
         }));
     }
     hookSearch() {
-        $("#navbar-menu-hero").after('\n            <div class="navbar-menu" id="search-box">\n                <div class="navbar-start" style="display: flex; align-items: center; gap: 5px;">\n                    <select id="search-type" style="padding: 8px 12px; border: 1px solid #555; border-radius: 4px; background-color: #333; color: #eee; font-size: 14px; outline: none;">\n                        <option value="all">影片</option>\n                        <option value="actor">演員</option>\n                        <option value="series">系列</option>\n                        <option value="maker">片商</option>\n                        <option value="director">導演</option>\n                        <option value="code">番號</option>\n                        <option value="list">清單</option>\n                    </select>\n                    <input id="search-keyword" type="text" placeholder="輸入影片番號，演員名等關鍵字進行檢索" style="padding: 8px 12px; border: 1px solid #555; border-radius: 4px; flex-grow: 1; font-size: 14px; background-color: #333; color: #eee; outline: none;">\n                    <a href="/advanced_search?noFold=1" title="進階檢索" style="padding: 6px 12px; background-color: #444; border-radius: 4px; text-decoration: none; color: #ddd; font-size: 14px; border: 1px solid #555;"><span>...</span></a>\n                    <a id="search-img-btn" style="padding: 6px 16px; background-color: #444; color: #fff; border-radius: 4px; text-decoration: none; font-weight: 500; cursor: pointer; border: 1px solid #555;">识图</a>\n                    <a id="search-btn" style="padding: 6px 16px; background-color: #444; color: #fff; border-radius: 4px; text-decoration: none; font-weight: 500; cursor: pointer; border: 1px solid #555;">檢索</a>\n                </div>\n            </div>\n        ');
+        $("#navbar-menu-hero").after('\n            <div class="navbar-menu" id="search-box">\n                <div class="navbar-start" style="display: flex; align-items: center; gap: 5px;">\n                    <select id="jhs-search-type" style="padding: 8px 12px; border: 1px solid #555; border-radius: 4px; background-color: #333; color: #eee; font-size: 14px; outline: none;">\n                        <option value="all">影片</option>\n                        <option value="actor">演員</option>\n                        <option value="series">系列</option>\n                        <option value="maker">片商</option>\n                        <option value="director">導演</option>\n                        <option value="code">番號</option>\n                        <option value="list">清單</option>\n                    </select>\n                    <input id="search-keyword" type="text" placeholder="輸入影片番號，演員名等關鍵字進行檢索" style="padding: 8px 12px; border: 1px solid #555; border-radius: 4px; flex-grow: 1; font-size: 14px; background-color: #333; color: #eee; outline: none;">\n                    <a href="/advanced_search?noFold=1" title="進階檢索" style="padding: 6px 12px; background-color: #444; border-radius: 4px; text-decoration: none; color: #ddd; font-size: 14px; border: 1px solid #555;"><span>...</span></a>\n                    <a id="search-img-btn" style="padding: 6px 16px; background-color: #444; color: #fff; border-radius: 4px; text-decoration: none; font-weight: 500; cursor: pointer; border: 1px solid #555;">识图</a>\n                    <a id="search-btn" style="padding: 6px 16px; background-color: #444; color: #fff; border-radius: 4px; text-decoration: none; font-weight: 500; cursor: pointer; border: 1px solid #555;">檢索</a>\n                </div>\n            </div>\n        ');
         $("#search-keyword").on("paste", (event => {
             const items = event.originalEvent.clipboardData.items;
             for (let i = 0; i < items.length; i++) if (-1 !== items[i].type.indexOf("image")) {
@@ -3627,7 +3627,7 @@ class NavBarPlugin extends BasePlugin {
             }), 0);
         }));
         $("#search-btn").on("click", (event => {
-            let keyword = $("#search-keyword").val(), searchCurrentType = $("#search-type option:selected").val();
+            let keyword = $("#search-keyword").val(), searchCurrentType = $("#jhs-search-type option:selected").val();
             "" !== keyword && (window.location.href.includes("/search") ? window.location.href = "/search?q=" + keyword + "&f=" + searchCurrentType : window.open("/search?q=" + keyword + "&f=" + searchCurrentType));
         }));
         $("#search-img-btn").on("click", (() => {
@@ -9185,12 +9185,12 @@ class ScreenShotPlugin extends BasePlugin {
         let url = `https://javstore.net/search?q=${carNum2}`;
         clog.log("正在解析缩略图:", url);
         let html = await gmHttp.get(url);
-        const $dom = utils.htmlTo$dom(html), tempCarNum = carNum2.toLowerCase().replace("fc2-", "");
+        const $dom = utils.htmlTo$dom(html), tempCarNum = carNum2.toLowerCase().replace("fc2-", "").replace("-", "");
         let detailPageUrl = null;
         const $itemList = $dom.find("main .grid a");
         for (let i = 0; i < $itemList.length; i++) {
             const href = $($itemList[i]).attr("href") || "";
-            if (href.toLowerCase().replace(/fc2-(ppv-)?/g, "").includes(tempCarNum)) {
+            if (href.toLowerCase().replace(/fc2-(ppv-)?/g, "").replace("-", "").includes(tempCarNum)) {
                 detailPageUrl = new URL(href, "https://javstore.net").href;
                 break;
             }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SearchEngineJumpPlusGlobalStyle
 // @namespace https://greasyfork.org/en/scripts/454280-searchenginejumpplus
-// @version 5.31.8
+// @version 5.32.0
 // @description Global style for SearchEngineJumpPlus
 // @author MUTED64
 // @license MIT
@@ -483,7 +483,8 @@ span#setBtn:hover {
   transform: translate(-50%);
   transition: 0.4s;
 }
-/* 夜间模式 */
+/* 夜间模式 - 默认主题变量 */
+:host,
 body {
   --font-color-qxin: #333;
   --background-color-qxin: #fffffff0;
@@ -497,6 +498,7 @@ body {
   --box-shadow-color-sej: hsla(0, 0%, 0%, 7%);
   --border-color-sej: #e1e6ea;
 }
+/* 暗黑模式变量 - 当主文档是暗黑模式时 */
 body[qxintheme="dark"] {
   --font-color-qxin: #bdc1bc;
   --background-color-qxin: #202124f0;
@@ -559,7 +561,8 @@ body[qxintheme="dark"] {
 }
 
 .sej-drop-list {
-  position: absolute;
+  /* 使用 fixed 定位确保在 Shadow DOM 中位置正确 */
+  position: fixed;
   display: none;
   opacity: 0.2;
   top: -10000px;

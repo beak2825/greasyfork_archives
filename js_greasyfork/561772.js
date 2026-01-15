@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         X Reels ++ NSFW ecchi ver. (Fork)
-// @name:en      X Reels ++ NSFW ecchi ver. (Fork)
+// @name:en         X Reels ++ NSFW ecchi ver. (Fork)
 // @namespace    http://tampermonkey.net/
 // @version      28.8.18
 // @description:en  Transforms the X/Twitter feed into a full-screen viewer with keyboard & mouse wheel navigation, smart auto-scroll, playback speed control, and a robust follow-and-return action.
@@ -82,6 +82,8 @@
             };
             
             this.hiddenPosts = []; // フィルタリングで非表示にしたポストを記録
+            this.uiHiddenMode = false; // UI非表示モード
+            this.hideUIButton = null; // UI非表示ボタン
         }
 
         init() {
@@ -92,11 +94,108 @@
             }
             this.setupEventListeners();
             setTimeout(() => this.addManualTrigger(), 1000);
+            
+            // 親ウィンドウでのみ全iframe起動ボタンを追加
+            if (window.self === window.top) {
+                setTimeout(() => this.addBulkLaunchButton(), 1500);
+            }
+        }
+
+        addBulkLaunchButton() {
+            let bulkButton = document.getElementById('xreels-bulk-launch');
+            if (bulkButton) bulkButton.remove();
+
+            bulkButton = document.createElement('div');
+            bulkButton.id = 'xreels-bulk-launch';
+            bulkButton.innerHTML = `
+                <div class="bulk-icon">🚀</div>
+                <div class="bulk-text">Launch All X Reels</div>
+            `;
+
+            bulkButton.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px; z-index: 1000001;
+                display: flex; align-items: center; gap: 10px;
+                padding: 12px 18px;
+                background: linear-gradient(135deg, rgba(29, 161, 242, 0.95) 0%, rgba(26, 145, 218, 0.95) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 14px;
+                cursor: pointer; user-select: none;
+                box-shadow: 0 6px 24px rgba(29, 161, 242, 0.4);
+                backdrop-filter: blur(20px);
+                transition: all 0.3s ease;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                color: white; font-size: 14px; font-weight: 600;
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = `
+                #xreels-bulk-launch:hover {
+                    transform: translateY(-2px) scale(1.02);
+                    box-shadow: 0 8px 28px rgba(29, 161, 242, 0.5);
+                }
+                #xreels-bulk-launch:active {
+                    transform: translateY(0) scale(0.98);
+                }
+                #xreels-bulk-launch .bulk-icon {
+                    font-size: 20px;
+                    animation: rocketPulse 1.5s ease-in-out infinite;
+                }
+                @keyframes rocketPulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+            `;
+            if (!document.getElementById('xreels-bulk-style')) {
+                style.id = 'xreels-bulk-style';
+                document.head.appendChild(style);
+            }
+
+            bulkButton.addEventListener('click', () => this.launchAllIframeXReels());
+            document.body.appendChild(bulkButton);
+        }
+
+        launchAllIframeXReels() {
+            const iframes = document.querySelectorAll('iframe');
+            let launchedCount = 0;
+
+            iframes.forEach(iframe => {
+                try {
+                    const iframeWindow = iframe.contentWindow;
+                    if (iframeWindow && iframeWindow.location.href.includes('x.com')) {
+                        const trigger = iframeWindow.document.getElementById('tiktok-trigger');
+                        if (trigger) {
+                            trigger.click();
+                            launchedCount++;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Cannot access iframe:', e);
+                }
+            });
+
+            console.log(`Launched X Reels in ${launchedCount} iframes`);
+            
+            // フィードバック表示
+            if (launchedCount > 0) {
+                const feedback = document.createElement('div');
+                feedback.textContent = `Launched ${launchedCount} X Reels`;
+                feedback.style.cssText = `
+                    position: fixed; bottom: 80px; right: 20px; z-index: 1000002;
+                    padding: 10px 16px; background: rgba(29, 161, 242, 0.9);
+                    color: white; border-radius: 8px;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                    font-size: 13px; font-weight: 600;
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+                    animation: fadeInOut 2s ease;
+                `;
+                document.body.appendChild(feedback);
+                setTimeout(() => feedback.remove(), 2000);
+            }
         }
 
         addManualTrigger() {
-            if (window.self !== window.top) return;
-            if (window.location !== window.parent.location) return;
+            // iframe内でも動作するようにチェックを削除
+            // if (window.self !== window.top) return;
+            // if (window.location !== window.parent.location) return;
 
             let trigger = document.getElementById('tiktok-trigger');
             if (trigger) trigger.remove();
@@ -240,15 +339,19 @@
             this.scrollDownButton = null;
             this.dateButton = null;
             this.datePanel = null;
+            this.hideUIButton = null;
             this.savedScrollPosition = 0;
             this.disconnectObserver();
             this.isReturningFromFollow = false;
             document.documentElement.style.overflowY = this.savedOverflowY || '';
 
-            // 再起動できるように終了後リフレッシュ
+            // X Reels自体を再初期化（iframe内でも確実に動作するように）
             setTimeout(() => {
-                window.location.reload();
-            }, 150);
+                const trigger = document.getElementById('tiktok-trigger');
+                if (!trigger) {
+                    this.addManualTrigger();
+                }
+            }, 300);
         }
 
         createContainer() {
@@ -334,6 +437,15 @@
 
                         <button id="xreels-date-toggle" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(21, 128, 61, 0.25) 100%); border: 1px solid rgba(34, 197, 94, 0.6); border-radius: 12px; padding: 8px 12px; color: white; font-size: 12px; font-weight: 700; cursor: pointer; backdrop-filter: blur(14px) saturate(160%); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); transition: all 0.3s ease; pointer-events: auto; display: flex; align-items: center; gap: 6px;">
                             <span class="date-label">Date</span>
+                        </button>
+
+                        <button id="tiktok-hideui-btn" style="background: linear-gradient(135deg, rgba(255, 165, 0, 0.25) 0%, rgba(255, 140, 0, 0.25) 100%); border: 1px solid rgba(255, 165, 0, 0.6); border-radius: 12px; padding: 8px 12px; color: white; font-size: 12px; font-weight: 700; cursor: pointer; backdrop-filter: blur(14px) saturate(160%); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); transition: all 0.3s ease; pointer-events: auto; display: flex; align-items: center; gap: 6px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="12" cy="12" r="3" stroke="white" stroke-width="2"/>
+                                <line x1="3" y1="3" x2="21" y2="21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span class="hideui-label">Hide UI</span>
                         </button>
 
                         <div style="color: white; background: rgba(0,0,0,0.6); padding: 8px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px; pointer-events: auto; cursor: pointer;" id="xreels-autoscroll-container">
@@ -464,6 +576,7 @@
             this.blurToggleButton = this.container.querySelector('#tiktok-blur-toggle');
             this.dateButton = this.container.querySelector('#xreels-date-toggle');
             this.datePanel = this.container.querySelector('#xreels-date-panel');
+            this.hideUIButton = this.container.querySelector('#tiktok-hideui-btn');
 
             this.likeButton.addEventListener('click', () => this.toggleLike());
             this.followButton.addEventListener('click', () => this.toggleFollow());
@@ -496,6 +609,13 @@
                     if (!this.datePanel.contains(e.target) && e.target !== this.dateButton) {
                         this.datePanel.style.display = 'none';
                     }
+                });
+            }
+
+            if (this.hideUIButton) {
+                this.hideUIButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleUIHidden();
                 });
             }
 
@@ -1126,6 +1246,45 @@
             const label = this.blurToggleButton ? this.blurToggleButton.querySelector('.blur-label') : null;
             if (label) label.textContent = `Blur: ${this.blurEnabled ? 'On' : 'Off'}`;
             this.applyBlurStyles();
+        }
+
+        toggleUIHidden() {
+            this.uiHiddenMode = !this.uiHiddenMode;
+            
+            // すべてのUI要素を取得
+            const uiElements = [
+                this.likeButton,
+                this.followButton,
+                this.exitButton,
+                this.scrollUpButton,
+                this.scrollDownButton,
+                this.repliesButton,
+                this.blurToggleButton,
+                this.dateButton,
+                this.container?.querySelector('#xreels-autoscroll-container'),
+                this.container?.querySelector('.info'),  // ツイート本文と著者情報
+                this.container?.querySelector('.media-info'),
+                this.prevPostsPanel,
+                this.nextPostsPanel
+            ];
+
+            // UI要素の表示/非表示を切り替え
+            uiElements.forEach(el => {
+                if (el) {
+                    el.style.display = this.uiHiddenMode ? 'none' : '';
+                }
+            });
+
+            // ボタンのラベルを更新
+            const label = this.hideUIButton?.querySelector('.hideui-label');
+            if (label) {
+                label.textContent = this.uiHiddenMode ? 'Show UI' : 'Hide UI';
+            }
+            
+            // hideUIButtonは常に表示
+            if (this.hideUIButton) {
+                this.hideUIButton.style.display = 'flex';
+            }
         }
 
         applyBlurStyles() {

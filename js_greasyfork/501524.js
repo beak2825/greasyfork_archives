@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         导出广告活动名称
 // @namespace    http://www.wukui.fun
-// @version      202407293
+// @version      2026010911
 // @description  在亚马逊广告后台导出广告活动名称的json文件
 // @author       You
 // @match        https://advertising.amazon.com/cm/campaigns?entityId=*
@@ -11,6 +11,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/501524/%E5%AF%BC%E5%87%BA%E5%B9%BF%E5%91%8A%E6%B4%BB%E5%8A%A8%E5%90%8D%E7%A7%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/501524/%E5%AF%BC%E5%87%BA%E5%B9%BF%E5%91%8A%E6%B4%BB%E5%8A%A8%E5%90%8D%E7%A7%B0.meta.js
 // ==/UserScript==
+
 
 (function() {
     'use strict';
@@ -111,8 +112,8 @@
                 if (!dataStore.hasOwnProperty(id)) { // 检查ID是否已存在
                     // 假设标题元素与子元素通过data-row-id属性关联
                     //const titleElement = parentElement.querySelector(`a[id^='campaignsDashboard:cell-name'][data-row-id='${id}'] > .cell-renderer-content-text`);
-                    const titleElement = childElement.querySelector("a[id^='campaignsDashboard:cell-name'] > .cell-renderer-content-text");
-                    let title = titleElement ? titleElement.textContent.trim() : "未知";
+                    const titleElement = childElement.querySelector("div > div > div.cell-renderer-main-content-container.link-cell-renderer-main-content-container > div.cell-renderer-main-content-interactive.link-cell-renderer-main-content-interactive > div");
+                    let title = titleElement ? titleElement.getAttribute('title') : "未知";
                     dataStore[id] = title;
                     //console.log(id,title);
                 }

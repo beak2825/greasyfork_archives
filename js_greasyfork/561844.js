@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         VNDB Steam 信息助手
 // @namespace    https://vndb.org/
-// @version      5.18.0
-// @description  在 VNDB 页面实时显示 Steam 国区价格、折扣及库存状态
+// @version      5.21.2
+// @description  在 VNDB 页面实时显示 Steam 国区价格、折扣、库存状态并且自动分类
 // @author       Your Name
 // @match        *://vndb.org/*
 // @icon         https://vndb.org/favicon.ico
@@ -389,6 +389,105 @@
       return { success: true, data: resultMap };
 
     } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  /**
+   * 批量查询 Release 的 Steam ID
+   * @param {Array<string>} rIds - Release ID 数组 (不带 'r' 前缀)
+   * @returns {Promise<Object>} {success: boolean, data?: {rid: [appids]}, error?: string}
+   */
+  async function handleReleaseBatchQuery(rIds) {
+    try {
+      const resultMap = {};
+      const targetIds = rIds.map(id => parseInt(id, 10)).filter(id => !isNaN(id)).map(id => "r" + id);
+      let hitRateLimit = false;
+
+      debugLog(`[Release批量查询] 开始查询 ${targetIds.length} 个 Release`);
+
+      // VNDB API 批量查询需要用 "or" 语法
+      const CHUNK_SIZE = 50; // 每批最多查询 50 个
+      
+      for (let i = 0; i < targetIds.length; i += CHUNK_SIZE) {
+        if (hitRateLimit) break;
+        
+        const chunk = targetIds.slice(i, i + CHUNK_SIZE);
+        debugLog(`[Release批量查询] 查询批次 ${Math.floor(i/CHUNK_SIZE)+1}: ${chunk.length} 个`);
+        
+        try {
+          // 构建 "or" 过滤器: ["or", ["id", "=", "r1"], ["id", "=", "r2"], ...]
+          let filters;
+          if (chunk.length === 1) {
+            // 单个 ID 直接查询
+            filters = ["id", "=", chunk[0]];
+          } else {
+            // 多个 ID 用 or 组合
+            filters = ["or", ...chunk.map(rid => ["id", "=", rid])];
+          }
+
+          const response = await gmFetch('https://api.vndb.org/kana/release', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filters: filters,
+              fields: "id, extlinks.url",
+              results: 100
+            })
+          });
+
+          // 检查限流
+          if (response.status === 429) {
+            hitRateLimit = true;
+            handleRateLimit();
+            break;
+          }
+
+          if (!response.ok) {
+            debugLog(`[Release批量查询] API 响应错误: ${response.status}`);
+            continue;
+          }
+
+          const data = await response.json();
+          debugLog(`[Release批量查询] API 返回 ${data.results?.length || 0} 个结果`);
+          
+          // 处理每个 Release 的结果
+          let foundSteamCount = 0;
+          if (data.results && Array.isArray(data.results)) {
+            data.results.forEach(release => {
+              const steamIds = new Set();
+              
+              if (release.extlinks && Array.isArray(release.extlinks)) {
+                release.extlinks.forEach(link => {
+                  const url = link.url || (typeof link === 'string' ? link : '');
+                  if (url && url.includes('store.steampowered.com/app/')) {
+                    const match = url.match(/app\/(\d+)/);
+                    if (match) steamIds.add(match[1]);
+                  }
+                });
+              }
+
+              if (steamIds.size > 0) {
+                const rawId = release.id.replace('r', '');
+                resultMap[rawId] = Array.from(steamIds);
+                foundSteamCount++;
+              }
+            });
+          }
+          debugLog(`[Release批量查询] 本批次找到 ${foundSteamCount} 个有 Steam 链接的 Release`);
+
+        } catch (err) {
+          console.error(`Release batch fetch error`, err);
+          debugLog(`[Release批量查询] 请求异常: ${err.message}`);
+        }
+      }
+
+      debugLog(`[Release批量查询] 完成，共找到 ${Object.keys(resultMap).length} 个有 Steam 的 Release`);
+      if (hitRateLimit) return { success: false, error: 'Throttled' };
+      return { success: true, data: resultMap };
+
+    } catch (e) {
+      debugLog(`[Release批量查询] 总体异常: ${e.message}`);
       return { success: false, error: e.message };
     }
   }
@@ -1747,104 +1846,120 @@
   }
 
   // ============================================================================
-  // SECTION 13: UI 组件 - 设置面板
+  // SECTION 13: UI 组件 - 设置面板（拆分为4个独立子面板）
   // ============================================================================
   // 【作用】创建和管理设置面板 UI
-  // 【设置项】
-  //   - VNDB 请求间隔 (vndbDelay)
-  //   - Steam 请求间隔 (steamDelay)
-  //   - Steam 并发数 (steamConcurrency)
-  // 【风险提示】设置值过激进时会显示红色警告
+  // 【子面板】
+  //   - 速度设置：VNDB/Steam 请求间隔和并发数
+  //   - 自动标记：自动标记已拥有 + API Token
+  //   - 自动分类：按条件自动分类 VN
+  //   - 缓存管理：管理各类缓存数据
   // ============================================================================
 
-  /**
-   * 切换设置面板的显示/隐藏
-   */
-  function toggleSettingsPanel() {
-    // 如果面板已存在，关闭它
-    if (settingsPanel) {
-      settingsPanel.remove();
-      settingsPanel = null;
-      return;
-    }
+  // 当前打开的子面板引用
+  let currentSubPanel = null;
+  let currentSubPanelType = null;
 
-    // 创建设置面板
-    settingsPanel = document.createElement('div');
-    settingsPanel.className = 'vndb-steam-settings-panel';
-    settingsPanel.style.cssText = `
-      position: fixed; bottom: 48px; right: 10px; width: 340px;
+  /**
+   * 关闭当前打开的子面板
+   */
+  function closeCurrentSubPanel() {
+    if (currentSubPanel) {
+      currentSubPanel.remove();
+      currentSubPanel = null;
+      currentSubPanelType = null;
+    }
+  }
+
+  /**
+   * 创建子面板基础容器
+   */
+  function createSubPanelBase(title, icon) {
+    const panel = document.createElement('div');
+    panel.className = 'vndb-steam-settings-panel';
+    panel.style.cssText = `
+      position: fixed; bottom: 48px; right: 10px; width: 300px;
       max-height: calc(100vh - 100px); overflow-y: auto;
       background: linear-gradient(135deg, rgba(30, 30, 35, 0.98) 0%, rgba(25, 25, 30, 0.98) 100%);
       color: #ecf0f1;
-      border: 1px solid rgba(100, 100, 120, 0.3); border-radius: 12px; padding: 20px;
+      border: 1px solid rgba(100, 100, 120, 0.3); border-radius: 12px; padding: 16px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       z-index: 100000; box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
       backdrop-filter: blur(20px); font-size: 13px;
       scrollbar-width: thin; scrollbar-color: rgba(100,100,120,0.5) transparent;
     `;
 
-    // 自定义滚动条样式 (Webkit)
-    const scrollStyle = document.createElement('style');
-    scrollStyle.textContent = `
-      .vndb-steam-settings-panel::-webkit-scrollbar { width: 6px; }
-      .vndb-steam-settings-panel::-webkit-scrollbar-track { background: transparent; }
-      .vndb-steam-settings-panel::-webkit-scrollbar-thumb {
-        background: rgba(100,100,120,0.5); border-radius: 3px;
-      }
-      .vndb-steam-settings-panel::-webkit-scrollbar-thumb:hover {
-        background: rgba(100,100,120,0.7);
-      }
-    `;
-    document.head.appendChild(scrollStyle);
-
-    // 标题
-    const title = document.createElement('div');
-    title.style.cssText = `
-      font-size: 15px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px;
+    const titleRow = document.createElement('div');
+    titleRow.style.cssText = `
+      font-size: 14px; font-weight: 600; margin-bottom: 14px; padding-bottom: 10px;
       border-bottom: 1px solid rgba(100, 100, 120, 0.2);
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; justify-content: space-between;
     `;
-    title.innerHTML = `<span style="font-size: 18px;">⚙️</span> 设置`;
-    settingsPanel.appendChild(title);
+    
+    const titleLeft = document.createElement('div');
+    titleLeft.style.cssText = 'display: flex; align-items: center; gap: 8px;';
+    titleLeft.innerHTML = `<span style="font-size: 16px;">${icon}</span> ${title}`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕';
+    closeBtn.style.cssText = `
+      background: transparent; border: none; color: #888; font-size: 16px;
+      cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s ease;
+    `;
+    closeBtn.onmouseover = () => { closeBtn.style.color = '#fff'; closeBtn.style.background = 'rgba(255,255,255,0.1)'; };
+    closeBtn.onmouseout = () => { closeBtn.style.color = '#888'; closeBtn.style.background = 'transparent'; };
+    closeBtn.onclick = closeCurrentSubPanel;
+    
+    titleRow.appendChild(titleLeft);
+    titleRow.appendChild(closeBtn);
+    panel.appendChild(titleRow);
 
-    /**
-     * 创建滑块设置项
-     * @param {string} label - 显示标签
-     * @param {string} key - 设置键名
-     * @param {number} min - 最小值
-     * @param {number} max - 最大值
-     * @param {number} step - 步进值
-     * @param {string} unit - 单位文字
-     * @param {string} desc - 描述文字
-     * @returns {HTMLElement} 设置行元素
-     */
+    return panel;
+  }
+
+  /**
+   * 切换子面板的显示/隐藏
+   */
+  function toggleSubPanel(panelType, createFn) {
+    if (currentSubPanelType === panelType) {
+      closeCurrentSubPanel();
+      return;
+    }
+    closeCurrentSubPanel();
+    currentSubPanel = createFn();
+    currentSubPanelType = panelType;
+    document.body.appendChild(currentSubPanel);
+  }
+
+  // ==================== 速度设置面板 ====================
+  function createSpeedPanel() {
+    const panel = createSubPanelBase('速度设置', '⚡');
+
     const createSlider = (label, key, min, max, step, unit, desc) => {
       const row = document.createElement('div');
-      row.style.marginBottom = '18px';
+      row.style.marginBottom = '16px';
 
-      // 判断当前值是否有风险（过激进）
       const isRisky = (key === 'vndbDelay' && SETTINGS[key] < 4000) ||
                       (key === 'steamDelay' && SETTINGS[key] < 800) ||
                       (key === 'steamConcurrency' && SETTINGS[key] > 3) ||
                       (key === 'classifyDelay' && SETTINGS[key] < 1000);
 
       row.innerHTML = `
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-          <span style="font-weight:500;color:#ddd;font-size:12px;">${label}</span>
-          <span id="val-${key}" style="color:${isRisky ? '#e74c3c' : '#3498db'};font-family:'SF Mono',Monaco,monospace;font-size:12px;font-weight:600;background:rgba(52,152,219,0.1);padding:2px 8px;border-radius:4px;">${SETTINGS[key]}${unit}</span>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-weight:500;color:#ddd;font-size:11px;">${label}</span>
+          <span id="val-${key}" style="color:${isRisky ? '#e74c3c' : '#3498db'};font-family:'SF Mono',Monaco,monospace;font-size:11px;font-weight:600;background:rgba(52,152,219,0.1);padding:2px 6px;border-radius:4px;">${SETTINGS[key]}${unit}</span>
         </div>
-        <div style="position:relative;height:6px;background:rgba(100,100,120,0.2);border-radius:3px;overflow:hidden;">
+        <div style="position:relative;height:5px;background:rgba(100,100,120,0.2);border-radius:3px;overflow:hidden;">
           <div id="fill-${key}" style="position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#3498db,#2980b9);border-radius:3px;width:${((SETTINGS[key] - min) / (max - min)) * 100}%;transition:width 0.15s ease;"></div>
         </div>
-        <input id="input-${key}" type="range" min="${min}" max="${max}" step="${step}" value="${SETTINGS[key]}" style="width:100%;cursor:pointer;opacity:0;position:relative;margin-top:-6px;height:20px;">
-        <div style="font-size:11px;color:#888;margin-top:6px;line-height:1.5;">${desc}</div>
+        <input id="input-${key}" type="range" min="${min}" max="${max}" step="${step}" value="${SETTINGS[key]}" style="width:100%;cursor:pointer;opacity:0;position:relative;margin-top:-5px;height:18px;">
+        <div style="font-size:10px;color:#888;margin-top:4px;line-height:1.4;">${desc}</div>
       `;
 
       const input = row.querySelector('input');
       const fill = row.querySelector(`#fill-${key}`);
       const valSpan = row.querySelector(`#val-${key}`);
 
-      // 滑块值变化时更新设置和 UI
       input.oninput = (e) => {
         const val = Number(e.target.value);
         SETTINGS[key] = val;
@@ -1852,62 +1967,67 @@
         fill.style.width = `${((val - min) / (max - min)) * 100}%`;
         localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
 
-        // 重新判断风险状态
         const isRiskyNow = (key === 'vndbDelay' && val < 2000) ||
                           (key === 'steamDelay' && val < 300) ||
                           (key === 'steamConcurrency' && val > 5) ||
                           (key === 'classifyDelay' && val < 1000);
         valSpan.style.color = isRiskyNow ? '#e74c3c' : '#3498db';
         valSpan.style.background = isRiskyNow ? 'rgba(231,76,60,0.1)' : 'rgba(52,152,219,0.1)';
-        fill.style.background = isRiskyNow ?
-          'linear-gradient(90deg,#e74c3c,#c0392b)' :
-          'linear-gradient(90deg,#3498db,#2980b9)';
+        fill.style.background = isRiskyNow ? 'linear-gradient(90deg,#e74c3c,#c0392b)' : 'linear-gradient(90deg,#3498db,#2980b9)';
       };
       return row;
     };
 
-    // 添加三个设置滑块
-    settingsPanel.appendChild(createSlider('VNDB 批次冷却', 'vndbDelay', 1000, 10000, 500, 'ms', '每批次(20个)处理完后的冷却时间。低于 2000ms 可能触发 429 限制。'));
-    settingsPanel.appendChild(createSlider('Steam 请求间隔', 'steamDelay', 100, 3000, 50, 'ms', '单个价格查询的间隔时间。低于 300ms 可能被限流。'));
-    settingsPanel.appendChild(createSlider('Steam 并发数', 'steamConcurrency', 1, 10, 1, '线程', '同时进行的查询数量。实际速度 ≈ 间隔/并发数。'));
-    settingsPanel.appendChild(createSlider('分类操作间隔', 'classifyDelay', 500, 5000, 100, 'ms', 'VNDB 限制 200请求/5分钟(≈1.5秒/请求)。低于 1000ms 容易触发 429。'));
+    panel.appendChild(createSlider('VNDB 批次冷却', 'vndbDelay', 1000, 10000, 500, 'ms', '每批次后冷却。<2000ms 可能 429'));
+    panel.appendChild(createSlider('Steam 请求间隔', 'steamDelay', 100, 3000, 50, 'ms', '价格查询间隔。<300ms 可能限流'));
+    panel.appendChild(createSlider('Steam 并发数', 'steamConcurrency', 1, 10, 1, '线程', '同时查询数。速度≈间隔/并发'));
+    panel.appendChild(createSlider('分类操作间隔', 'classifyDelay', 500, 5000, 100, 'ms', 'VNDB 限制≈1.5秒/请求'));
 
-    // 分隔线
-    const divider = document.createElement('div');
-    divider.style.cssText = 'height:1px;background:rgba(100,100,120,0.2);margin:20px 0;';
-    settingsPanel.appendChild(divider);
+    const resetBtn = document.createElement('button');
+    resetBtn.innerHTML = '↺ 重置为默认值';
+    resetBtn.style.cssText = `
+      width: 100%; background: transparent; color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3);
+      padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px;
+      transition: all 0.2s ease; margin-top: 8px;
+    `;
+    resetBtn.onmouseover = () => { resetBtn.style.background = 'rgba(243, 156, 18, 0.1)'; resetBtn.style.borderColor = '#f39c12'; };
+    resetBtn.onmouseout = () => { resetBtn.style.background = 'transparent'; resetBtn.style.borderColor = 'rgba(243, 156, 18, 0.3)'; };
+    resetBtn.onclick = () => {
+      SETTINGS.vndbDelay = DEFAULTS.vndbDelay;
+      SETTINGS.steamDelay = DEFAULTS.steamDelay;
+      SETTINGS.steamConcurrency = DEFAULTS.steamConcurrency;
+      SETTINGS.classifyDelay = DEFAULTS.classifyDelay;
+      localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
+      ['vndbDelay', 'steamDelay', 'steamConcurrency', 'classifyDelay'].forEach(k => {
+        const el = panel.querySelector(`#input-${k}`);
+        if(el) { el.value = SETTINGS[k]; el.oninput({target: el}); }
+      });
+      showStatus("已重置速度设置", 'success');
+    };
+    panel.appendChild(resetBtn);
 
-    /**
-     * 创建开关设置项
-     * @param {string} label - 显示标签
-     * @param {string} key - 设置键名
-     * @param {string} desc - 描述文字
-     * @returns {HTMLElement} 设置行元素
-     */
+    return panel;
+  }
+
+  // ==================== 自动标记面板 ====================
+  function createAutoMarkPanel() {
+    const panel = createSubPanelBase('自动标记', '✓');
+
     const createToggle = (label, key, desc) => {
       const row = document.createElement('div');
-      row.style.marginBottom = '18px';
-
+      row.style.marginBottom = '16px';
       const isOn = SETTINGS[key] === true;
 
       row.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-weight:500;color:#ddd;font-size:12px;">${label}</span>
-          <label style="position:relative;display:inline-block;width:44px;height:22px;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-weight:500;color:#ddd;font-size:11px;">${label}</span>
+          <label style="position:relative;display:inline-block;width:40px;height:20px;cursor:pointer;">
             <input id="toggle-${key}" type="checkbox" ${isOn ? 'checked' : ''} style="opacity:0;width:0;height:0;">
-            <span id="slider-${key}" style="
-              position:absolute;top:0;left:0;right:0;bottom:0;
-              background:${isOn ? 'linear-gradient(135deg,#27ae60,#2ecc71)' : 'rgba(100,100,120,0.3)'};
-              border-radius:22px;transition:all 0.3s ease;
-            "></span>
-            <span id="knob-${key}" style="
-              position:absolute;top:2px;left:${isOn ? '24px' : '2px'};width:18px;height:18px;
-              background:#fff;border-radius:50%;transition:all 0.3s ease;
-              box-shadow:0 2px 4px rgba(0,0,0,0.2);
-            "></span>
+            <span id="slider-${key}" style="position:absolute;top:0;left:0;right:0;bottom:0;background:${isOn ? 'linear-gradient(135deg,#27ae60,#2ecc71)' : 'rgba(100,100,120,0.3)'};border-radius:20px;transition:all 0.3s ease;"></span>
+            <span id="knob-${key}" style="position:absolute;top:2px;left:${isOn ? '22px' : '2px'};width:16px;height:16px;background:#fff;border-radius:50%;transition:all 0.3s ease;box-shadow:0 2px 4px rgba(0,0,0,0.2);"></span>
           </label>
         </div>
-        <div style="font-size:11px;color:#888;margin-top:6px;line-height:1.5;">${desc}</div>
+        <div style="font-size:10px;color:#888;line-height:1.4;">${desc}</div>
       `;
 
       const input = row.querySelector(`#toggle-${key}`);
@@ -1918,50 +2038,33 @@
         const isChecked = e.target.checked;
         SETTINGS[key] = isChecked;
         localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
-
-        // 更新视觉样式
-        slider.style.background = isChecked ?
-          'linear-gradient(135deg,#27ae60,#2ecc71)' :
-          'rgba(100,100,120,0.3)';
-        knob.style.left = isChecked ? '24px' : '2px';
+        slider.style.background = isChecked ? 'linear-gradient(135deg,#27ae60,#2ecc71)' : 'rgba(100,100,120,0.3)';
+        knob.style.left = isChecked ? '22px' : '2px';
       };
-
       return row;
     };
 
-    // 添加自动标记开关
-    settingsPanel.appendChild(createToggle(
-      '自动标记已拥有',
-      'autoMarkObtained',
-      '当检测到 Steam 库中已拥有某个 Release 时，自动将其状态设置为 "Obtained"。需要登录 VNDB。'
-    ));
+    panel.appendChild(createToggle('自动标记已拥有', 'autoMarkObtained', '检测到 Steam 库中已拥有时，自动设为 "Obtained"'));
 
-    // API Token 输入框
     const tokenRow = document.createElement('div');
-    tokenRow.style.marginBottom = '18px';
+    tokenRow.style.marginBottom = '16px';
     tokenRow.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-weight:500;color:#ddd;font-size:12px;">VNDB API Token</span>
-        <a href="https://vndb.org/u/tokens" target="_blank" style="color:#3498db;font-size:11px;text-decoration:none;">获取 Token ↗</a>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:500;color:#ddd;font-size:11px;">VNDB API Token</span>
+        <a href="https://vndb.org/u/tokens" target="_blank" style="color:#3498db;font-size:10px;text-decoration:none;">获取 ↗</a>
       </div>
       <input id="input-vndbApiToken" type="password" value="${SETTINGS.vndbApiToken || ''}"
-        placeholder="粘贴你的 API Token（需要 listwrite 权限）"
+        placeholder="粘贴 API Token（需 listwrite 权限）"
         style="width:100%;padding:8px 10px;border:1px solid rgba(100,100,120,0.3);border-radius:6px;
-        background:rgba(0,0,0,0.2);color:#ecf0f1;font-size:12px;box-sizing:border-box;
-        font-family:'SF Mono',Monaco,monospace;">
-      <div style="font-size:11px;color:#888;margin-top:6px;line-height:1.5;">
-        用于在列表页自动标记 Release。Token 仅保存在本地。
-        <span id="token-status" style="margin-left:8px;"></span>
+        background:rgba(0,0,0,0.2);color:#ecf0f1;font-size:11px;box-sizing:border-box;font-family:'SF Mono',Monaco,monospace;">
+      <div style="font-size:10px;color:#888;margin-top:4px;line-height:1.4;">
+        用于自动标记和分类。双击显示/隐藏。<span id="token-status" style="margin-left:6px;"></span>
       </div>
     `;
 
     const tokenInput = tokenRow.querySelector('#input-vndbApiToken');
     const tokenStatus = tokenRow.querySelector('#token-status');
-
-    // 显示当前 token 状态
-    if (SETTINGS.vndbApiToken) {
-      tokenStatus.innerHTML = '<span style="color:#27ae60;">✓ 已配置</span>';
-    }
+    if (SETTINGS.vndbApiToken) tokenStatus.innerHTML = '<span style="color:#27ae60;">✓ 已配置</span>';
 
     tokenInput.oninput = (e) => {
       const val = e.target.value.trim();
@@ -1969,77 +2072,47 @@
       localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
       tokenStatus.innerHTML = val ? '<span style="color:#27ae60;">✓ 已保存</span>' : '';
     };
+    tokenInput.ondblclick = () => { tokenInput.type = tokenInput.type === 'password' ? 'text' : 'password'; };
 
-    // 双击显示/隐藏 token
-    tokenInput.ondblclick = () => {
-      tokenInput.type = tokenInput.type === 'password' ? 'text' : 'password';
-    };
+    panel.appendChild(tokenRow);
+    return panel;
+  }
 
-    settingsPanel.appendChild(tokenRow);
+  // ==================== 自动分类面板 ====================
+  function createAutoClassifyPanel() {
+    const panel = createSubPanelBase('自动分类', '📁');
 
-    // === 自动分类设置区域 ===
-    const classifyTitle = document.createElement('div');
-    classifyTitle.style.cssText = `
-      font-size: 13px; font-weight: 600; margin: 20px 0 12px 0; padding-top: 16px;
-      border-top: 1px solid rgba(100, 100, 120, 0.2);
-      display: flex; align-items: center; gap: 8px; color: #ddd;
-    `;
-    classifyTitle.innerHTML = `<span style="font-size: 16px;">📁</span> 自动分类`;
-    settingsPanel.appendChild(classifyTitle);
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:10px;color:#888;margin-bottom:14px;line-height:1.4;';
+    note.innerHTML = `检测到符合条件的 VN 时，自动添加到指定 Label。<br>需要先在「自动标记」中配置 API Token。`;
+    panel.appendChild(note);
 
-    const classifyNote = document.createElement('div');
-    classifyNote.style.cssText = 'font-size:11px;color:#888;margin-bottom:16px;line-height:1.5;';
-    classifyNote.innerHTML = `检测到符合条件的 VN 时，自动添加到指定的自定义 Label。<br>
-      需要先配置 API Token 才能选择 Label。`;
-    settingsPanel.appendChild(classifyNote);
-
-    // 存储所有下拉菜单的引用，用于异步更新
     const labelSelects = [];
 
-    /**
-     * 创建自动分类设置行（使用下拉菜单 + 手动输入备选）
-     * @param {string} label - 显示名称
-     * @param {string} enabledKey - 开关设置键
-     * @param {string} idKey - Label ID 设置键
-     * @param {string} desc - 描述
-     * @param {string} color - 主题色
-     */
     const createClassifyRow = (label, enabledKey, idKey, desc, color) => {
       const row = document.createElement('div');
-      row.style.cssText = 'margin-bottom:16px;padding:12px;background:rgba(0,0,0,0.15);border-radius:8px;';
-
+      row.style.cssText = 'margin-bottom:12px;padding:10px;background:rgba(0,0,0,0.15);border-radius:8px;';
       const isOn = SETTINGS[enabledKey] === true;
       const currentLabelId = SETTINGS[idKey] || '';
 
       row.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-          <span style="font-weight:500;color:${color};font-size:12px;">${label}</span>
-          <label style="position:relative;display:inline-block;width:40px;height:20px;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:500;color:${color};font-size:11px;">${label}</span>
+          <label style="position:relative;display:inline-block;width:36px;height:18px;cursor:pointer;">
             <input id="toggle-${enabledKey}" type="checkbox" ${isOn ? 'checked' : ''} style="opacity:0;width:0;height:0;">
-            <span id="slider-${enabledKey}" style="
-              position:absolute;top:0;left:0;right:0;bottom:0;
-              background:${isOn ? color : 'rgba(100,100,120,0.3)'};
-              border-radius:20px;transition:all 0.3s ease;
-            "></span>
-            <span id="knob-${enabledKey}" style="
-              position:absolute;top:2px;left:${isOn ? '22px' : '2px'};width:16px;height:16px;
-              background:#fff;border-radius:50%;transition:all 0.3s ease;
-              box-shadow:0 2px 4px rgba(0,0,0,0.2);
-            "></span>
+            <span id="slider-${enabledKey}" style="position:absolute;top:0;left:0;right:0;bottom:0;background:${isOn ? color : 'rgba(100,100,120,0.3)'};border-radius:18px;transition:all 0.3s ease;"></span>
+            <span id="knob-${enabledKey}" style="position:absolute;top:2px;left:${isOn ? '20px' : '2px'};width:14px;height:14px;background:#fff;border-radius:50%;transition:all 0.3s ease;box-shadow:0 2px 4px rgba(0,0,0,0.2);"></span>
           </label>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:11px;color:#888;white-space:nowrap;">目标 Label:</span>
-          <select id="select-${idKey}" style="flex:1;padding:6px 8px;border:1px solid rgba(100,100,120,0.3);border-radius:4px;
-            background:rgba(0,0,0,0.3);color:#ecf0f1;font-size:11px;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:10px;color:#888;white-space:nowrap;">Label:</span>
+          <select id="select-${idKey}" style="flex:1;padding:5px 6px;border:1px solid rgba(100,100,120,0.3);border-radius:4px;background:rgba(0,0,0,0.3);color:#ecf0f1;font-size:10px;cursor:pointer;">
             <option value="">-- 加载中... --</option>
           </select>
           <input id="input-${idKey}" type="text" value="${currentLabelId}" placeholder="ID"
-            style="width:50px;padding:6px 8px;border:1px solid rgba(100,100,120,0.3);border-radius:4px;
-            background:rgba(0,0,0,0.3);color:#ecf0f1;font-size:11px;text-align:center;display:none;"
-            title="手动输入 Label ID">
+            style="width:45px;padding:5px 6px;border:1px solid rgba(100,100,120,0.3);border-radius:4px;background:rgba(0,0,0,0.3);color:#ecf0f1;font-size:10px;text-align:center;display:none;">
         </div>
-        <div style="font-size:10px;color:#666;margin-top:6px;">${desc}</div>
+        <div style="font-size:9px;color:#666;margin-top:5px;">${desc}</div>
       `;
 
       const toggle = row.querySelector(`#toggle-${enabledKey}`);
@@ -2048,7 +2121,6 @@
       const select = row.querySelector(`#select-${idKey}`);
       const input = row.querySelector(`#input-${idKey}`);
 
-      // 记录这个 select 和 input 以便异步更新
       labelSelects.push({ select, input, idKey, currentLabelId });
 
       toggle.onchange = (e) => {
@@ -2056,53 +2128,28 @@
         SETTINGS[enabledKey] = isChecked;
         localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
         slider.style.background = isChecked ? color : 'rgba(100,100,120,0.3)';
-        knob.style.left = isChecked ? '22px' : '2px';
+        knob.style.left = isChecked ? '20px' : '2px';
       };
 
       select.onchange = (e) => {
         SETTINGS[idKey] = e.target.value;
         localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
-        // 同步到手动输入框
         input.value = e.target.value;
       };
 
       input.oninput = (e) => {
-        const val = e.target.value.trim();
-        SETTINGS[idKey] = val;
+        SETTINGS[idKey] = e.target.value.trim();
         localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
       };
 
       return row;
     };
 
-    // 添加三个分类设置（按优先级顺序）
-    settingsPanel.appendChild(createClassifyRow(
-      '✅ 全部拥有',
-      'autoLabelAllOwnedEnabled',
-      'autoLabelAllOwnedId',
-      '当 VN 所有非 Demo 的 Steam 版本都已拥有时（优先级 1）',
-      '#27ae60'
-    ));
+    panel.appendChild(createClassifyRow('✅ 全部拥有', 'autoLabelAllOwnedEnabled', 'autoLabelAllOwnedId', '所有非Demo Steam版本都已拥有', '#27ae60'));
+    panel.appendChild(createClassifyRow('🔒 存在锁区', 'autoLabelLockedEnabled', 'autoLabelLockedId', '有任意Steam版本在国区锁区', '#f39c12'));
+    panel.appendChild(createClassifyRow('🚫 全部下架', 'autoLabelDelistedEnabled', 'autoLabelDelistedId', '所有Steam版本已下架', '#e74c3c'));
 
-    settingsPanel.appendChild(createClassifyRow(
-      '🔒 存在锁区',
-      'autoLabelLockedEnabled',
-      'autoLabelLockedId',
-      '当 VN 有任意 Steam 版本在国区锁区时（优先级 2）',
-      '#f39c12'
-    ));
-
-    settingsPanel.appendChild(createClassifyRow(
-      '🚫 全部下架',
-      'autoLabelDelistedEnabled',
-      'autoLabelDelistedId',
-      '当 VN 所有 Steam 版本均已下架或无价格时（优先级 3）',
-      '#e74c3c'
-    ));
-
-    // 异步加载用户的 Labels 并填充下拉菜单
     const loadLabelsToSelects = async (forceRefresh = false) => {
-      // 先显示加载状态
       labelSelects.forEach(({ select, input }) => {
         select.innerHTML = '<option value="">-- 加载中... --</option>';
         select.disabled = true;
@@ -2112,387 +2159,260 @@
 
       try {
         const labels = await fetchUserLabels(forceRefresh);
-
         labelSelects.forEach(({ select, input, idKey, currentLabelId }) => {
           select.disabled = false;
-
           if (!SETTINGS.vndbApiToken) {
-            // 未配置 Token，显示提示
-            select.innerHTML = '<option value="">-- 请先配置 API Token --</option>';
-            select.style.display = 'block';
-            if (input) input.style.display = 'none';
+            select.innerHTML = '<option value="">-- 请先配置 Token --</option>';
           } else if (labels.length === 0) {
-            // API 无法获取 labels，切换到手动输入模式
             select.style.display = 'none';
-            if (input) {
-              input.style.display = 'block';
-              input.style.flex = '1';
-              input.style.width = 'auto';
-              input.placeholder = '输入 Label ID（如 10）';
-              input.value = currentLabelId || '';
-            }
+            if (input) { input.style.display = 'block'; input.style.flex = '1'; input.style.width = 'auto'; input.placeholder = 'Label ID'; input.value = currentLabelId || ''; }
           } else {
-            // 有 labels，显示下拉菜单
             select.innerHTML = '<option value="">-- 不启用 --</option>';
-            select.style.display = 'block';
-            if (input) input.style.display = 'none';
-
             labels.forEach(l => {
               const opt = document.createElement('option');
               opt.value = l.id.toString();
-              opt.textContent = l.label;  // 只显示名称，不显示 ID
-              if (currentLabelId === l.id.toString()) {
-                opt.selected = true;
-              }
+              opt.textContent = l.label;
+              if (currentLabelId === l.id.toString()) opt.selected = true;
               select.appendChild(opt);
             });
-
-            // 如果当前值不在列表中但有值，添加一个自定义选项
             if (currentLabelId && !labels.find(l => l.id.toString() === currentLabelId)) {
               const opt = document.createElement('option');
               opt.value = currentLabelId;
-              opt.textContent = `自定义 ID: ${currentLabelId}`;
+              opt.textContent = `ID: ${currentLabelId}`;
               opt.selected = true;
               select.appendChild(opt);
             }
           }
         });
       } catch (error) {
-        // 加载失败，切换到手动输入模式
         labelSelects.forEach(({ select, input, currentLabelId }) => {
           select.style.display = 'none';
-          if (input) {
-            input.style.display = 'block';
-            input.style.flex = '1';
-            input.style.width = 'auto';
-            input.placeholder = '输入 Label ID（如 10）';
-            input.value = currentLabelId || '';
-          }
+          if (input) { input.style.display = 'block'; input.style.flex = '1'; input.style.width = 'auto'; input.value = currentLabelId || ''; }
         });
-        debugError(`[API] 加载 Labels 到下拉菜单失败:`, error);
       }
     };
 
-    // 刷新 Labels 按钮
-    const refreshLabelsBtn = document.createElement('button');
-    refreshLabelsBtn.innerHTML = '🔄 刷新 Label 列表';
-    refreshLabelsBtn.style.cssText = `
-      background: transparent; color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3);
-      padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;
-      margin-bottom: 12px; transition: all 0.2s ease;
-    `;
-    refreshLabelsBtn.onmouseover = () => {
-      refreshLabelsBtn.style.background = 'rgba(52, 152, 219, 0.1)';
-      refreshLabelsBtn.style.borderColor = '#3498db';
-    };
-    refreshLabelsBtn.onmouseout = () => {
-      refreshLabelsBtn.style.background = 'transparent';
-      refreshLabelsBtn.style.borderColor = 'rgba(52, 152, 219, 0.3)';
-    };
-    refreshLabelsBtn.onclick = async () => {
-      cachedUserLabels = null; // 清除缓存
-      refreshLabelsBtn.disabled = true;
-      refreshLabelsBtn.innerHTML = '🔄 刷新中...';
+    const refreshBtn = document.createElement('button');
+    refreshBtn.innerHTML = '🔄 刷新 Label 列表';
+    refreshBtn.style.cssText = `background: transparent; color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3);padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 10px;margin-top: 8px; transition: all 0.2s ease; width: 100%;`;
+    refreshBtn.onmouseover = () => { refreshBtn.style.background = 'rgba(52, 152, 219, 0.1)'; };
+    refreshBtn.onmouseout = () => { refreshBtn.style.background = 'transparent'; };
+    refreshBtn.onclick = async () => {
+      cachedUserLabels = null;
+      refreshBtn.disabled = true;
+      refreshBtn.innerHTML = '🔄 刷新中...';
       await loadLabelsToSelects(true);
-      refreshLabelsBtn.disabled = false;
-      refreshLabelsBtn.innerHTML = '🔄 刷新 Label 列表';
+      refreshBtn.disabled = false;
+      refreshBtn.innerHTML = '🔄 刷新 Label 列表';
     };
-    settingsPanel.appendChild(refreshLabelsBtn);
+    panel.appendChild(refreshBtn);
 
-    // 初始加载
     loadLabelsToSelects();
+    return panel;
+  }
 
-    // === 缓存管理区域 ===
-    const cacheTitle = document.createElement('div');
-    cacheTitle.style.cssText = `
-      font-size: 13px; font-weight: 600; margin: 20px 0 12px 0; padding-top: 16px;
-      border-top: 1px solid rgba(100, 100, 120, 0.2);
-      display: flex; align-items: center; gap: 8px; color: #ddd;
-    `;
-    cacheTitle.innerHTML = `<span style="font-size: 16px;">🗄️</span> 缓存管理`;
-    settingsPanel.appendChild(cacheTitle);
+  // ==================== 缓存管理面板 ====================
+  function createCachePanel() {
+    const panel = createSubPanelBase('缓存管理', '🗄️');
 
-    const cacheNote = document.createElement('div');
-    cacheNote.style.cssText = 'font-size:11px;color:#888;margin-bottom:12px;line-height:1.5;';
-    cacheNote.innerHTML = `本地缓存用于避免重复处理。如遇异常可清空特定缓存后重试。`;
-    settingsPanel.appendChild(cacheNote);
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:10px;color:#888;margin-bottom:12px;line-height:1.4;';
+    note.innerHTML = `本地缓存避免重复处理。如遇异常可清空后重试。`;
+    panel.appendChild(note);
 
-    // 获取 Steam 价格缓存数量的辅助函数
-    const getSteamCacheCount = () => {
-      const allKeys = GM_listValues();
-      return allKeys.filter(k => k.startsWith('vndb_steam_v26_')).length;
-    };
+    const getSteamCacheCount = () => GM_listValues().filter(k => k.startsWith('vndb_steam_v26_')).length;
 
-    // 缓存信息显示
     const cacheInfoDiv = document.createElement('div');
-    cacheInfoDiv.id = 'cache-info';
-    cacheInfoDiv.style.cssText = 'font-size:11px;color:#aaa;margin-bottom:16px;padding:12px;background:rgba(0,0,0,0.2);border-radius:6px;line-height:1.8;';
+    cacheInfoDiv.style.cssText = 'font-size:10px;color:#aaa;margin-bottom:14px;padding:10px;background:rgba(0,0,0,0.2);border-radius:6px;line-height:1.7;';
     
     const updateCacheInfo = () => {
       const markedCount = loadMarkedReleases().size;
       const vnCount = loadProcessedVns().size;
       const classifiedCount = loadClassifiedVns().size;
       const steamCacheCount = getSteamCacheCount();
-      
       cacheInfoDiv.innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div title="Steam 价格数据缓存（打折1天，其他1年）">
-            💰 <strong>价格缓存</strong>: ${steamCacheCount} 条
-          </div>
-          <div title="已检查过是否需要标记 Obtained 的 Release">
-            📋 <strong>Obtained 检查记录</strong>: ${markedCount} 条
-          </div>
-          <div title="已完成 Release 扫描的 VN">
-            📦 <strong>VN 扫描记录</strong>: ${vnCount} 个
-          </div>
-          <div title="已完成自动分类的 VN-Label 组合">
-            📁 <strong>分类记录</strong>: ${classifiedCount} 个
-          </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div>💰 价格: ${steamCacheCount}</div>
+          <div>📋 Obtained: ${markedCount}</div>
+          <div>📦 VN扫描: ${vnCount}</div>
+          <div>📁 分类: ${classifiedCount}</div>
         </div>
       `;
     };
     updateCacheInfo();
-    settingsPanel.appendChild(cacheInfoDiv);
+    panel.appendChild(cacheInfoDiv);
 
-    // 缓存说明
-    const cacheDescDiv = document.createElement('div');
-    cacheDescDiv.style.cssText = 'font-size:10px;color:#666;margin-bottom:12px;padding:8px;background:rgba(0,0,0,0.1);border-radius:4px;line-height:1.6;';
-    cacheDescDiv.innerHTML = `
-      <div style="margin-bottom:4px;"><strong>缓存说明：</strong></div>
-      <div>• <strong>价格缓存</strong>：Steam 价格信息（打折1天，其他1年）</div>
-      <div>• <strong>Obtained 检查记录</strong>：避免重复检查 Release 是否需要标记</div>
-      <div>• <strong>VN 扫描记录</strong>：避免重复扫描 VN 下的 Release</div>
-      <div>• <strong>分类记录</strong>：避免重复执行自动分类</div>
-    `;
-    settingsPanel.appendChild(cacheDescDiv);
+    /**
+     * 创建带本页/全部选择的缓存管理行
+     */
+    const createCacheRow = (icon, label, color, getPageCount, getAllCount, clearPage, clearAll, hasPageOption = true) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'margin-bottom:10px;padding:10px;background:rgba(0,0,0,0.15);border-radius:6px;';
 
-    // 创建缓存清除按钮的辅助函数
-    const createCacheBtn = (text, title, color, onClick) => {
-      const btn = document.createElement('button');
-      btn.innerHTML = text;
-      btn.title = title;
-      btn.style.cssText = `
-        background: transparent; color: ${color}; border: 1px solid ${color}40;
-        padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;
-        transition: all 0.2s ease; flex: 1; min-width: 100px;
+      const pageCount = hasPageOption ? getPageCount() : 0;
+      const allCount = getAllCount();
+
+      row.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-weight:500;color:${color};font-size:11px;">${icon} ${label}</span>
+          <span style="font-size:10px;color:#888;">${hasPageOption ? `本页: ${pageCount} / ` : ''}全部: ${allCount}</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          ${hasPageOption ? `
+          <button class="cache-btn-page" style="
+            flex:1;background:transparent;color:${color};border:1px solid ${color}40;
+            padding:5px 8px;border-radius:4px;cursor:pointer;font-size:10px;transition:all 0.2s ease;
+          ">↻ 刷新本页</button>
+          ` : ''}
+          <button class="cache-btn-all" style="
+            flex:1;background:transparent;color:${color};border:1px solid ${color}40;
+            padding:5px 8px;border-radius:4px;cursor:pointer;font-size:10px;transition:all 0.2s ease;
+          ">🗑 重置全部</button>
+        </div>
       `;
-      btn.onmouseover = () => {
-        btn.style.background = `${color}15`;
-        btn.style.borderColor = color;
+
+      const pageBtn = row.querySelector('.cache-btn-page');
+      const allBtn = row.querySelector('.cache-btn-all');
+
+      if (pageBtn) {
+        pageBtn.onmouseover = () => { pageBtn.style.background = `${color}15`; pageBtn.style.borderColor = color; };
+        pageBtn.onmouseout = () => { pageBtn.style.background = 'transparent'; pageBtn.style.borderColor = `${color}40`; };
+        pageBtn.onclick = () => {
+          const count = getPageCount();
+          if (count === 0) { showStatus('本页没有此类缓存', 'info'); return; }
+          if (confirm(`确定要刷新本页 ${count} 条「${label}」吗？\n\n刷新后页面将重新加载。`)) {
+            clearPage();
+            updateCacheInfo();
+            showStatus(`✅ 已刷新本页 ${count} 条${label}`, 'success');
+            setTimeout(() => window.location.reload(), 800);
+          }
+        };
+      }
+
+      allBtn.onmouseover = () => { allBtn.style.background = `${color}15`; allBtn.style.borderColor = color; };
+      allBtn.onmouseout = () => { allBtn.style.background = 'transparent'; allBtn.style.borderColor = `${color}40`; };
+      allBtn.onclick = () => {
+        const count = getAllCount();
+        if (count === 0) { showStatus(`没有${label}`, 'info'); return; }
+        if (confirm(`确定要重置全部 ${count} 条「${label}」吗？`)) {
+          clearAll();
+          updateCacheInfo();
+          showStatus(`✅ 已重置全部 ${count} 条${label}`, 'success');
+        }
       };
-      btn.onmouseout = () => {
-        btn.style.background = 'transparent';
-        btn.style.borderColor = `${color}40`;
-      };
-      btn.onclick = onClick;
-      return btn;
+
+      return row;
     };
 
-    // 清空缓存按钮行1：分类清除
-    const cacheBtnRow1 = document.createElement('div');
-    cacheBtnRow1.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;';
-
-    // 清空 Steam 价格缓存
-    cacheBtnRow1.appendChild(createCacheBtn(
-      '💰 重置价格缓存',
-      '清空 Steam 价格缓存，下次访问会重新获取',
-      '#3498db',
-      () => {
-        const allKeys = GM_listValues();
-        const steamKeys = allKeys.filter(k => k.startsWith('vndb_steam_v26_'));
-        if (steamKeys.length === 0) {
-          showStatus('没有价格缓存', 'info');
-          return;
-        }
-        if (confirm(`确定要清空 ${steamKeys.length} 条 Steam 价格缓存吗？\n\n清空后下次访问页面会重新获取价格。`)) {
-          steamKeys.forEach(k => GM_deleteValue(k));
-          updateCacheInfo();
-          showStatus(`✅ 已清空 ${steamKeys.length} 条价格缓存`, 'success');
-        }
-      }
+    // === 价格缓存 (支持本页刷新) ===
+    panel.appendChild(createCacheRow('💰', '价格缓存', '#3498db',
+      () => Array.from(currentPageCacheKeys).filter(k => k.startsWith('vndb_steam_v26_')).length,
+      () => GM_listValues().filter(k => k.startsWith('vndb_steam_v26_')).length,
+      () => { for (const key of currentPageCacheKeys) { if (key.startsWith('vndb_steam_v26_')) GM_deleteValue(key); } },
+      () => { GM_listValues().filter(k => k.startsWith('vndb_steam_v26_')).forEach(k => GM_deleteValue(k)); },
+      true
     ));
 
-    // 清空已标记 Release 缓存
-    cacheBtnRow1.appendChild(createCacheBtn(
-      '📋 重置 Obtained 记录',
-      '清空「已检查过的 Release」记录，下次会重新扫描并标记',
-      '#27ae60',
+    // === 未拥有价格缓存 (支持本页刷新) ===
+    panel.appendChild(createCacheRow('🎮', '未拥有价格', '#9b59b6',
       () => {
-        const count = markedReleasesSet.size;
-        if (count === 0) {
-          showStatus('没有 Obtained 检查记录', 'info');
-          return;
+        let count = 0;
+        for (const key of currentPageCacheKeys) {
+          try { const cached = JSON.parse(GM_getValue(key, 'null')); if (cached && !cacheContainsOwnedGame(cached)) count++; } catch (e) {}
         }
-        if (confirm(`确定要清空 ${count} 条「已检查 Release」记录吗？\n\n清空后下次访问页面会重新检查哪些 Release 需要标记为 Obtained。\n（不会删除 VNDB 上已有的 Obtained 状态）`)) {
-          localStorage.removeItem(MARKED_RELEASES_KEY);
-          markedReleasesSet.clear();
-          updateCacheInfo();
-          showStatus(`✅ 已清空 ${count} 条检查记录`, 'success');
+        return count;
+      },
+      () => {
+        let count = 0;
+        for (const key of GM_listValues().filter(k => k.startsWith('vndb_steam_v26_'))) {
+          try { const cached = JSON.parse(GM_getValue(key, 'null')); if (cached && !cacheContainsOwnedGame(cached)) count++; } catch (e) {}
         }
-      }
+        return count;
+      },
+      () => {
+        for (const key of currentPageCacheKeys) {
+          try { const cached = JSON.parse(GM_getValue(key, 'null')); if (cached && !cacheContainsOwnedGame(cached)) GM_deleteValue(key); } catch (e) {}
+        }
+      },
+      () => {
+        for (const key of GM_listValues().filter(k => k.startsWith('vndb_steam_v26_'))) {
+          try { const cached = JSON.parse(GM_getValue(key, 'null')); if (cached && !cacheContainsOwnedGame(cached)) GM_deleteValue(key); } catch (e) {}
+        }
+      },
+      true
     ));
 
-    settingsPanel.appendChild(cacheBtnRow1);
-
-    // 清空缓存按钮行2
-    const cacheBtnRow2 = document.createElement('div');
-    cacheBtnRow2.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;';
-
-    // 清空已处理 VN 缓存
-    cacheBtnRow2.appendChild(createCacheBtn(
-      '📦 重置 VN 扫描记录',
-      '清空「已扫描过的 VN」记录，下次会重新扫描 Release',
-      '#f39c12',
-      () => {
-        const count = processedVnsSet.size;
-        if (count === 0) {
-          showStatus('没有 VN 扫描记录', 'info');
-          return;
-        }
-        if (confirm(`确定要清空 ${count} 条「已扫描 VN」记录吗？\n\n清空后下次访问页面会重新扫描所有 VN 的 Release。`)) {
-          localStorage.removeItem(PROCESSED_VNS_KEY);
-          processedVnsSet.clear();
-          updateCacheInfo();
-          showStatus(`✅ 已清空 ${count} 条 VN 扫描记录`, 'success');
-        }
-      }
+    // === Obtained 检查记录 (仅全部重置) ===
+    panel.appendChild(createCacheRow('📋', 'Obtained记录', '#27ae60',
+      () => 0,
+      () => markedReleasesSet.size,
+      () => {},
+      () => { localStorage.removeItem(MARKED_RELEASES_KEY); markedReleasesSet.clear(); },
+      false
     ));
 
-    // 清空已分类 VN 缓存
-    cacheBtnRow2.appendChild(createCacheBtn(
-      '📁 重置分类记录',
-      '清空「已自动分类的 VN」记录，下次会重新执行自动分类',
-      '#9b59b6',
-      () => {
-        const count = classifiedVnsSet.size;
-        if (count === 0) {
-          showStatus('没有分类记录', 'info');
-          return;
-        }
-        if (confirm(`确定要清空 ${count} 条「已分类 VN」记录吗？\n\n清空后下次访问页面会重新执行自动分类。\n（如果 VNDB 上已有标签则不会重复添加）`)) {
-          localStorage.removeItem(CLASSIFIED_VNS_KEY);
-          classifiedVnsSet.clear();
-          autoClassifiedVns.clear(); // 同时清空运行时缓存
-          updateCacheInfo();
-          showStatus(`✅ 已清空 ${count} 条分类记录`, 'success');
-        }
-      }
+    // === VN 扫描记录 (仅全部重置) ===
+    panel.appendChild(createCacheRow('📦', 'VN扫描记录', '#f39c12',
+      () => 0,
+      () => processedVnsSet.size,
+      () => {},
+      () => { localStorage.removeItem(PROCESSED_VNS_KEY); processedVnsSet.clear(); },
+      false
     ));
 
-    settingsPanel.appendChild(cacheBtnRow2);
-
-    // 清空缓存按钮行3：全部清空和其他操作
-    const cacheBtnRow3 = document.createElement('div');
-    cacheBtnRow3.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;';
-
-    // 清空全部缓存
-    cacheBtnRow3.appendChild(createCacheBtn(
-      '🗑️ 重置全部缓存',
-      '清空所有本地缓存记录',
-      '#e74c3c',
-      () => {
-        const allKeys = GM_listValues();
-        const steamKeys = allKeys.filter(k => k.startsWith('vndb_steam_v26_'));
-        const totalCount = steamKeys.length + markedReleasesSet.size + processedVnsSet.size + classifiedVnsSet.size;
-        
-        if (totalCount === 0) {
-          showStatus('没有任何缓存', 'info');
-          return;
-        }
-        if (confirm(`确定要清空所有本地缓存吗？\n\n包括：\n• Steam 价格缓存: ${steamKeys.length} 条\n• Obtained 检查记录: ${markedReleasesSet.size} 条\n• VN 扫描记录: ${processedVnsSet.size} 个\n• 分类记录: ${classifiedVnsSet.size} 个\n\n清空后下次访问会重新处理所有内容。`)) {
-          // 清空 GM 存储
-          steamKeys.forEach(k => GM_deleteValue(k));
-          // 清空 localStorage
-          localStorage.removeItem(MARKED_RELEASES_KEY);
-          localStorage.removeItem(PROCESSED_VNS_KEY);
-          localStorage.removeItem(CLASSIFIED_VNS_KEY);
-          // 清空内存
-          markedReleasesSet.clear();
-          processedVnsSet.clear();
-          classifiedVnsSet.clear();
-          autoClassifiedVns.clear();
-          updateCacheInfo();
-          showStatus('✅ 已清空全部缓存', 'success');
-        }
-      }
+    // === 分类记录 (仅全部重置) ===
+    panel.appendChild(createCacheRow('📁', '分类记录', '#e67e22',
+      () => 0,
+      () => classifiedVnsSet.size,
+      () => {},
+      () => { localStorage.removeItem(CLASSIFIED_VNS_KEY); classifiedVnsSet.clear(); autoClassifiedVns.clear(); },
+      false
     ));
 
-    // 重置限流状态
-    cacheBtnRow3.appendChild(createCacheBtn(
-      '🔓 重置限流',
-      '如果误触发限流保护，可以手动重置',
-      '#9b59b6',
-      () => {
-        resetRateLimitState();
-        showStatus('✅ 已重置限流状态', 'success');
+    const actionsRow = document.createElement('div');
+    actionsRow.style.cssText = 'display:flex;gap:8px;margin-top:12px;';
+
+    const resetAllBtn = document.createElement('button');
+    resetAllBtn.innerHTML = '🗑️ 全部重置';
+    resetAllBtn.style.cssText = `flex:1;background:transparent;color:#e74c3c;border:1px solid rgba(231,76,60,0.4);padding:8px 10px;border-radius:4px;cursor:pointer;font-size:10px;transition:all 0.2s ease;`;
+    resetAllBtn.onmouseover = () => { resetAllBtn.style.background = 'rgba(231,76,60,0.15)'; };
+    resetAllBtn.onmouseout = () => { resetAllBtn.style.background = 'transparent'; };
+    resetAllBtn.onclick = () => {
+      const steamKeys = GM_listValues().filter(k => k.startsWith('vndb_steam_v26_'));
+      const totalCount = steamKeys.length + markedReleasesSet.size + processedVnsSet.size + classifiedVnsSet.size;
+      if (totalCount === 0) { showStatus('没有任何缓存', 'info'); return; }
+      if (confirm(`确定清空所有缓存吗？共 ${totalCount} 条记录`)) {
+        steamKeys.forEach(k => GM_deleteValue(k));
+        localStorage.removeItem(MARKED_RELEASES_KEY);
+        localStorage.removeItem(PROCESSED_VNS_KEY);
+        localStorage.removeItem(CLASSIFIED_VNS_KEY);
+        markedReleasesSet.clear();
+        processedVnsSet.clear();
+        classifiedVnsSet.clear();
+        autoClassifiedVns.clear();
+        updateCacheInfo();
+        showStatus('✅ 已清空全部缓存', 'success');
       }
-    ));
-
-    settingsPanel.appendChild(cacheBtnRow3);
-
-    // 底部按钮行
-    const btnRow = document.createElement('div');
-    btnRow.style.cssText = `
-      display: flex; justify-content: space-between; margin-top: 20px;
-      border-top: 1px solid rgba(100, 100, 120, 0.2); padding-top: 16px;
-    `;
-
-    // 恢复默认按钮（只针对速度设置）
-    const defaultBtn = document.createElement('button');
-    defaultBtn.innerText = '↺ 重置速度';
-    defaultBtn.title = '将 API 请求速度设置恢复为默认值';
-    defaultBtn.style.cssText = `
-      background: transparent; color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3);
-      padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
-      transition: all 0.2s ease;
-    `;
-    defaultBtn.onmouseover = () => {
-      defaultBtn.style.background = 'rgba(243, 156, 18, 0.1)';
-      defaultBtn.style.borderColor = '#f39c12';
     };
-    defaultBtn.onmouseout = () => {
-      defaultBtn.style.background = 'transparent';
-      defaultBtn.style.borderColor = 'rgba(243, 156, 18, 0.3)';
-    };
-    defaultBtn.onclick = () => {
-      // 只重置速度相关设置
-      SETTINGS.vndbDelay = DEFAULTS.vndbDelay;
-      SETTINGS.steamDelay = DEFAULTS.steamDelay;
-      SETTINGS.steamConcurrency = DEFAULTS.steamConcurrency;
-      localStorage.setItem('vndb_steam_settings', JSON.stringify(SETTINGS));
-      
-      // 更新滑块 UI
-      ['vndbDelay', 'steamDelay', 'steamConcurrency'].forEach(k => {
-        const el = settingsPanel.querySelector(`#input-${k}`);
-        if(el) { el.value = SETTINGS[k]; el.oninput({target: el}); }
-      });
-      showStatus("已重置速度设置", 'success');
-    };
+    actionsRow.appendChild(resetAllBtn);
 
-    // 关闭按钮
-    const closeBtn = document.createElement('button');
-    closeBtn.innerText = '关闭';
-    closeBtn.style.cssText = `
-      background: linear-gradient(135deg, #3498db, #2980b9); color: #fff;
-      border: none; padding: 6px 20px; border-radius: 6px; cursor: pointer; font-size: 12px;
-      font-weight: 500; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
-    `;
-    closeBtn.onmouseover = () => {
-      closeBtn.style.transform = 'translateY(-1px)';
-      closeBtn.style.boxShadow = '0 4px 12px rgba(52, 152, 219, 0.4)';
-    };
-    closeBtn.onmouseout = () => {
-      closeBtn.style.transform = 'translateY(0)';
-      closeBtn.style.boxShadow = '0 2px 8px rgba(52, 152, 219, 0.3)';
-    };
-    closeBtn.onclick = () => toggleSettingsPanel();
+    const resetRateLimitBtn = document.createElement('button');
+    resetRateLimitBtn.innerHTML = '🔓 重置限流';
+    resetRateLimitBtn.style.cssText = `flex:1;background:transparent;color:#9b59b6;border:1px solid rgba(155,89,182,0.4);padding:8px 10px;border-radius:4px;cursor:pointer;font-size:10px;transition:all 0.2s ease;`;
+    resetRateLimitBtn.onmouseover = () => { resetRateLimitBtn.style.background = 'rgba(155,89,182,0.15)'; };
+    resetRateLimitBtn.onmouseout = () => { resetRateLimitBtn.style.background = 'transparent'; };
+    resetRateLimitBtn.onclick = () => { resetRateLimitState(); showStatus('✅ 已重置限流状态', 'success'); };
+    actionsRow.appendChild(resetRateLimitBtn);
 
-    btnRow.appendChild(defaultBtn);
-    btnRow.appendChild(closeBtn);
-    settingsPanel.appendChild(btnRow);
-
-    document.body.appendChild(settingsPanel);
+    panel.appendChild(actionsRow);
+    return panel;
   }
+
+  // ==================== 兼容旧版 toggleSettingsPanel ====================
+  function toggleSettingsPanel() {
+    toggleSubPanel('speed', createSpeedPanel);
+  }
+
 
   // ============================================================================
   // SECTION 14: UI 组件 - 底部状态栏
@@ -2656,8 +2576,11 @@
       return btn;
     };
 
-    // 设置按钮
-    const settingBtn = createBtn('⚙️ 设置', '打开设置面板', toggleSettingsPanel, 'default');
+    // 四个设置子面板按钮
+    const speedBtn = createBtn('⚡ 速度', '速度设置', () => toggleSubPanel('speed', createSpeedPanel), 'primary');
+    const markBtn = createBtn('✓ 标记', '自动标记设置', () => toggleSubPanel('mark', createAutoMarkPanel), 'success');
+    const classifyBtn = createBtn('📁 分类', '自动分类设置', () => toggleSubPanel('classify', createAutoClassifyPanel), 'warning');
+    const cacheBtn = createBtn('🗄️ 缓存', '缓存管理', () => toggleSubPanel('cache', createCachePanel), 'purple');
 
     // 停止按钮
     const stopBtn = createBtn('⏹ 停止', '停止当前正在进行的查询任务', () => {
@@ -2666,82 +2589,12 @@
       ProgressManager.reset();
     }, 'danger');
 
-    // 刷新本页按钮
-    const resetPageBtn = createBtn('↻ 刷新本页价格', '重新获取本页所有 VN 的 Steam 价格信息', async () => {
-      if(currentPageCacheKeys.size === 0) {
-        showStatus('当前页面没有可刷新的数据', 'info');
-        return;
-      }
-      if(confirm(`将重新获取本页 ${currentPageCacheKeys.size} 个条目的 Steam 价格。\n\n适用场景：价格变化、促销开始/结束`)) {
-        let deletedCount = 0;
-        for (const cacheKey of currentPageCacheKeys) {
-          const exists = GM_getValue(cacheKey, null);
-          if (exists !== null) {
-            GM_deleteValue(cacheKey);
-            deletedCount++;
-          }
-        }
-        showStatus(`已清除 ${deletedCount} 条本页缓存，正在刷新...`, 'success');
-        setTimeout(() => window.location.reload(), 800);
-      }
-    }, 'primary');
-
-    // 刷新本页未拥有按钮
-    const resetPageUnownedBtn = createBtn('↻ 本页未拥有', '只刷新本页未拥有游戏的 Steam 价格', async () => {
-      const unownedKeys = await getUnownedCacheKeys('page');
-      if(unownedKeys.length === 0) {
-        showStatus('当前页面没有未拥有的游戏', 'info');
-        return;
-      }
-      if(confirm(`将刷新本页 ${unownedKeys.length} 个未拥有游戏的价格。\n\n适用场景：检查促销、价格波动`)) {
-        for (const key of unownedKeys) {
-          GM_deleteValue(key);
-        }
-        showStatus(`已清除 ${unownedKeys.length} 条未拥有缓存，正在刷新...`, 'success');
-        setTimeout(() => window.location.reload(), 800);
-      }
-    }, 'purple');
-
-    // 刷新全部按钮
-    const resetAllBtn = createBtn('🗑 全部价格缓存', '清空所有已保存的 Steam 价格数据', async () => {
-      const allKeys = GM_listValues();
-      const cacheKeys = allKeys.filter(k => k.startsWith('vndb_steam_'));
-      if(cacheKeys.length === 0) {
-        showStatus('没有已保存的数据', 'info');
-        return;
-      }
-      if(confirm(`⚠️ 将清空全部 ${cacheKeys.length} 条价格数据！\n\n下次访问时将重新获取。`)) {
-        for (const key of cacheKeys) {
-          GM_deleteValue(key);
-        }
-        showStatus(`已清除 ${cacheKeys.length} 条缓存，正在刷新...`, 'success');
-        setTimeout(() => window.location.reload(), 800);
-      }
-    }, 'success');
-
-    // 刷新全部未拥有按钮
-    const resetAllUnownedBtn = createBtn('🗑 全部未拥有', '清空所有未拥有游戏的 Steam 价格数据', async () => {
-      const unownedKeys = await getUnownedCacheKeys('all');
-      if(unownedKeys.length === 0) {
-        showStatus('没有未拥有的游戏数据', 'info');
-        return;
-      }
-      if(confirm(`将清空 ${unownedKeys.length} 条未拥有游戏的价格。\n\n⚠️ 重新获取可能需要较长时间！`)) {
-        for (const key of unownedKeys) {
-          GM_deleteValue(key);
-        }
-        showStatus(`已清除 ${unownedKeys.length} 条未拥有缓存，正在刷新...`, 'success');
-        setTimeout(() => window.location.reload(), 800);
-      }
-    }, 'warning');
-
-    // 添加所有按钮到右侧
-    right.appendChild(settingBtn);
+    // 添加按钮到右侧
+    right.appendChild(speedBtn);
+    right.appendChild(markBtn);
+    right.appendChild(classifyBtn);
+    right.appendChild(cacheBtn);
     right.appendChild(stopBtn);
-    right.appendChild(resetPageBtn);
-    right.appendChild(resetPageUnownedBtn);
-    right.appendChild(resetAllBtn);
-    right.appendChild(resetAllUnownedBtn);
 
     statusContainer.appendChild(left);
     statusContainer.appendChild(right);
@@ -3327,6 +3180,33 @@
       let finalPrice = 0;
       let discount = 0;
 
+      // 辅助函数：从 package_groups 中提取价格信息
+      const getPackagePrice = (data) => {
+        try {
+          const groups = data?.package_groups;
+          if (groups && groups.length > 0) {
+            for (const group of groups) {
+              if (group.subs && group.subs.length > 0) {
+                for (const sub of group.subs) {
+                  if (sub.price_in_cents_with_discount > 0) {
+                    return {
+                      final: sub.price_in_cents_with_discount,
+                      discount: sub.discount_pct || 0
+                    };
+                  }
+                  if (sub.is_free_license) {
+                    return { final: 0, discount: 0, isFree: true };
+                  }
+                }
+              }
+            }
+          }
+        } catch (e) {}
+        return null;
+      };
+
+      const packagePrice = getPackagePrice(d);
+
       // 判断价格状态
       if (d.is_free) {
         status = 'free';
@@ -3334,10 +3214,96 @@
         status = 'released';
         finalPrice = price.final;
         discount = price.discount_percent;
+      } else if (packagePrice) {
+        // 从 package_groups 获取价格（年龄限制游戏常见情况）
+        if (packagePrice.isFree) {
+          status = 'free';
+        } else {
+          status = 'released';
+          finalPrice = packagePrice.final;
+          discount = packagePrice.discount;
+          debugLog(`[CN-PackagePrice] appid=${appid} - 从 package_groups 获取价格: ${finalPrice/100}元, 折扣${discount}%`);
+        }
       } else if (isComingSoon) {
         status = 'soon';
       } else {
-        status = 'noprice';
+        // CN 区有商店页面但没有价格，需要检查 US 区来区分 noprice 和 locked
+        debugWarn(`[CN无价格] appid=${appid} - CN区有页面但无价格，尝试US区验证...`);
+        
+        try {
+          debugLog(`[请求US-价格检查] appid=${appid} 开始请求...`);
+          const usRes = await gmFetch(`https://store.steampowered.com/api/appdetails?appids=${appid}&cc=US`);
+          const usData = await usRes.json();
+
+          // 辅助函数：检查 package_groups 中是否有价格
+          const hasPackagePrice = (data) => {
+            try {
+              const groups = data?.package_groups;
+              if (groups && groups.length > 0) {
+                for (const group of groups) {
+                  if (group.subs && group.subs.length > 0) {
+                    for (const sub of group.subs) {
+                      // 检查是否有有效价格（price_in_cents_with_discount > 0 或 is_free_license）
+                      if (sub.price_in_cents_with_discount > 0 || sub.is_free_license) {
+                        return true;
+                      }
+                    }
+                  }
+                }
+              }
+            } catch (e) {}
+            return false;
+          };
+
+          const usHasPriceOverview = !!usData?.[appid]?.data?.price_overview;
+          const usHasPackagePrice = hasPackagePrice(usData?.[appid]?.data);
+
+          debugLog(`[请求US-价格检查] appid=${appid} 返回:`, {
+            success: usData?.[appid]?.success,
+            hasPrice: usHasPriceOverview,
+            hasPackagePrice: usHasPackagePrice,
+            isFree: usData?.[appid]?.data?.is_free,
+            rawData: usData
+          });
+
+          // 检查 US 区是否被限流
+          if (usData === null) {
+            debugError(`[限流检测] appid=${appid} - US区 rawData 为 null，Steam 正在限流`);
+            const rateLimitedResult = {
+              appid,
+              type: d.type,
+              status: 'rate_limited',
+              final: -1,
+              discount: 0,
+              is_free: false
+            };
+            return { data: rateLimitedResult, fromCache: false, error: 'rate_limited' };
+          }
+
+          if (usData && usData[appid]?.success) {
+            const usD = usData[appid].data;
+            const usPrice = usD.price_overview;
+            
+            // 检查价格：price_overview 或 package_groups 中有价格都算有价格
+            if (usD.is_free || usPrice || usHasPackagePrice) {
+              // US 区有价格或免费，CN 区没有 -> 锁区
+              debugWarn(`[确认锁区-价格] appid=${appid} - US区有价格/免费 (price_overview=${!!usPrice}, package_price=${usHasPackagePrice})，CN区无价格 -> 判定为锁区`);
+              status = 'locked';
+            } else {
+              // US 区也没有价格 -> 真正的 noprice
+              debugLog(`[确认无价格] appid=${appid} - US区也无价格 -> 判定为 noprice`);
+              status = 'noprice';
+            }
+          } else {
+            // US 区也没有数据，可能是下架或真的无价格
+            debugLog(`[US无数据] appid=${appid} - US区也无数据 -> 判定为 noprice`);
+            status = 'noprice';
+          }
+        } catch (e) {
+          debugError(`[US请求失败-价格检查] appid=${appid}`, e);
+          // 请求失败时，保守地标记为 noprice
+          status = 'noprice';
+        }
       }
 
       const result = {
@@ -3547,8 +3513,8 @@
       if (!match) return;
       const rid = match[1];
 
-      // 跳过已处理的元素
-      if (a.querySelector('.vndb-steam-wrapper') || a.parentNode?.querySelector('.vndb-steam-wrapper')) return;
+      // 跳过已处理的元素（只检查这个链接本身，不检查父元素中的其他链接）
+      if (a.dataset.vndbSteamProcessed || a.nextElementSibling?.classList?.contains('vndb-steam-wrapper')) return;
 
       // 如果这个 rid 有 Steam 链接，添加到列表
       if (ridToSteamIds.has(rid)) {
@@ -3705,9 +3671,42 @@
       }
     });
 
+    // --- 检测列表中的 Release 链接 (不在 v 详情页的 releases 表格内) ---
+    const listReleaseTargets = new Map(); // rid -> {element, ...}
+    const rIdsToQuery = new Set();
+    
+    document.querySelectorAll('a[href^="/r"]').forEach(a => {
+      // 跳过纯图片链接（没有文本内容的图片链接）
+      // 注意：不跳过包含图标但有文本的链接
+      const textContent = a.innerText.trim();
+      if (textContent.length < 1) return;
+      
+      // 跳过已经有徽章的
+      if (a.querySelector('.vndb-steam-wrapper') || a.parentNode?.querySelector('.vndb-steam-wrapper')) return;
+      
+      // 改进的正则：匹配 /r 后跟数字，允许有可选的尾部内容（如 ?tab=... 或 #anchor）
+      const match = a.href.match(/\/r(\d+)(?:[?#]|$)/);
+      if (match) {
+        const rid = match[1];
+        // 跳过在 v 详情页 releases 表格中已处理的 (releaseTargets)
+        const isInReleaseTable = releaseTargets.some(t => t.rid === rid);
+        if (!isInReleaseTable && !listReleaseTargets.has(rid)) {
+          listReleaseTargets.set(rid, { rid, element: a });
+          rIdsToQuery.add(rid);
+        }
+      }
+    });
+    
+    debugLog(`[Stage3] 检测到 ${listReleaseTargets.size} 个列表页 Release 链接`);
+
     // 记录当前页面的所有 VN 缓存 key
     for (const vid of vnIdsToQuery) {
       currentPageCacheKeys.add(STORAGE_PREFIX_V + vid);
+    }
+    
+    // 记录当前页面的所有 Release 缓存 key
+    for (const rid of rIdsToQuery) {
+      currentPageCacheKeys.add(STORAGE_PREFIX_R + rid);
     }
 
     // ===== 阶段1: 处理 Release 链接 (v 详情页内) =====
@@ -3779,6 +3778,7 @@
           };
           const sortedResults = [...results].sort((a, b) => score(b) - score(a));
           renderBadges(data.element, sortedResults);
+          data.element.dataset.vndbSteamProcessed = 'true'; // 标记为已处理
 
           // 只对每个唯一的 rid 添加一次到汇总
           if (!ridResultsCache.get(rid + '_added')) {
@@ -4212,22 +4212,140 @@
           }
         }
       }));
-    } else {
-      // 无需处理的情况，显示最终状态
-      if (IS_STOPPED) {
-        // 保持停止状态
-      } else if (releaseTargets.length > 0) {
-        const ownedCount = document.querySelectorAll('.vndb-steam-owned').length;
-        const extraText = ownedCount > 0 ? ` (库中包含 ${ownedCount} 款)` : '';
+    }
+    
+    // ===== 阶段3: 处理列表页的 Release 链接 (需要调用 VNDB API) =====
+    if (listReleaseTargets.size > 0 && !IS_STOPPED && !IS_RATE_LIMITED) {
+      debugLog(`[Stage3] 开始处理 ${listReleaseTargets.size} 个列表页 Release`);
+      const rIdsArray = Array.from(rIdsToQuery);
+      const storageData = await storage.get(null);
+      const rIdsNeedApi = [];
+      let cachedWithData = 0;
+      let cachedNoSteam = 0;
+      
+      // 先检查缓存，渲染已有缓存的
+      for (const [rid, target] of listReleaseTargets) {
+        const cacheKey = STORAGE_PREFIX_R + rid;
+        const cached = storageData[cacheKey];
+        if (cached && isCacheValid(cached) && cached.data) {
+          // 缓存有效，直接渲染
+          cachedWithData++;
+          const score = (item) => {
+            if (OWNED_SET.has(parseInt(item.appid))) return 5;
+            if (item.status === 'released') return 4;
+            if (item.status === 'free') return 3;
+            if (item.status === 'soon') return 2;
+            if (item.status === 'locked') return 1;
+            return 0;
+          };
+          const sortedResults = [...cached.data].sort((a, b) => score(b) - score(a));
+          renderBadges(target.element, sortedResults);
+        } else if (cached && isCacheValid(cached) && cached.noSteamId) {
+          // 之前查询过，确认没有 Steam ID，跳过
+          cachedNoSteam++;
+        } else {
+          // 需要从 API 获取
+          rIdsNeedApi.push(rid);
+        }
+      }
+      
+      debugLog(`[Stage3] 缓存命中: ${cachedWithData} 有数据, ${cachedNoSteam} 无Steam, ${rIdsNeedApi.length} 需查询`);
+      
+      // 批量查询需要 API 的 Release
+      if (rIdsNeedApi.length > 0 && !IS_STOPPED && !IS_RATE_LIMITED) {
+        showStatus(`正在查询 ${rIdsNeedApi.length} 个 Release 的 Steam 信息...`, 'info');
+        ProgressManager.setStage1(0, rIdsNeedApi.length);
+        
+        // 批量查询 Release 的 Steam ID
+        const releaseRes = await handleReleaseBatchQuery(rIdsNeedApi);
+        
+        if (releaseRes.success) {
+          let processedCount = 0;
+          
+          for (const rid of rIdsNeedApi) {
+            if (IS_STOPPED || IS_RATE_LIMITED) break;
+            
+            const steamIds = releaseRes.data[rid];
+            const target = listReleaseTargets.get(rid);
+            const cacheKey = STORAGE_PREFIX_R + rid;
+            
+            processedCount++;
+            ProgressManager.setStage1(processedCount, rIdsNeedApi.length);
+            
+            if (steamIds && steamIds.length > 0) {
+              showStatus(`获取价格中...`, 'info');
+              
+              const results = [];
+              for (const appid of steamIds) {
+                if (IS_STOPPED) break;
+                
+                const result = await getSteamPriceWithCache(appid);
+                
+                if (result.error === 'rate_limited') {
+                  STATS.fail++;
+                  showStatus(`⚠️ Steam API 限流，已自动停止`, 'error');
+                  IS_STOPPED = true;
+                  break;
+                }
+                
+                if (result.data && ['game', 'dlc', 'demo'].includes(result.data.type)) {
+                  results.push(result.data);
+                }
+              }
+              
+              if (results.length > 0) {
+                const score = (item) => {
+                  if (OWNED_SET.has(parseInt(item.appid))) return 5;
+                  if (item.status === 'released') return 4;
+                  if (item.status === 'free') return 3;
+                  if (item.status === 'soon') return 2;
+                  if (item.status === 'locked') return 1;
+                  return 0;
+                };
+                results.sort((a, b) => score(b) - score(a));
+                renderBadges(target.element, results);
+                
+                // 缓存结果
+                const cachableResults = results.filter(r => r.status !== 'rate_limited');
+                if (cachableResults.length > 0) {
+                  GM_setValue(cacheKey, JSON.stringify({ data: cachableResults, timestamp: Date.now() }));
+                }
+              }
+            } else {
+              // 没有 Steam ID，记录为无 Steam
+              await storage.set({ [cacheKey]: { noSteamId: true, timestamp: Date.now() } });
+            }
+          }
+        } else if (releaseRes.error === 'Throttled') {
+          showStatus("⚠️ VNDB API 限流，已自动停止", 'error');
+          IS_STOPPED = true;
+          STATS.fail++;
+        }
+      }
+    }
+    
+    // 显示最终状态
+    if (!IS_STOPPED && !IS_RATE_LIMITED) {
+      const ownedCount = document.querySelectorAll('.vndb-steam-owned').length;
+      const extraText = ownedCount > 0 ? ` (库中包含 ${ownedCount} 款)` : '';
+      
+      if (STATS.fail > 0) {
+        showStatus(`⚠️ 完成 (有 ${STATS.fail} 个错误)${extraText}`, 'error');
+      } else {
         showStatus(`✅ 完成${extraText}`, 'success');
         ProgressManager.complete();
-      } else if (idsToFetchFromApi.length > 0) {
-        showStatus("未发现新的 Steam 链接", 'success');
-      } else if (vnIdsToQuery.size > 0) {
-        showStatus("数据已是最新", 'success');
-      } else {
-        showStatus("就绪", 'info');
+        setTimeout(() => {
+          if (statusTxT && statusTxT.innerText.includes('完成')) {
+            statusTxT.style.color = '#7f8c8d';
+            statusTxT.innerText = `✅ 就绪${extraText}`;
+          }
+        }, 5000);
       }
+    } else if (IS_STOPPED && !IS_RATE_LIMITED) {
+      // 用户手动停止或发生错误
+      const ownedCount = document.querySelectorAll('.vndb-steam-owned').length;
+      const extraText = ownedCount > 0 ? ` (库中包含 ${ownedCount} 款)` : '';
+      showStatus(`⏹️ 已停止${extraText}`, 'info');
     }
   }
 })();

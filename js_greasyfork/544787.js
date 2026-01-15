@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Steam 語言切換下拉選單
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  在 Steam 網頁右上角插入語言切換下拉選單，支援繁中、簡中、日文、英文快速切換
 // @author       shanlan(ChatGPT o3-mini)
 // @match        https://store.steampowered.com/*
+// @match        https://steamcommunity.com/*
 // @grant        none
 // @run-at       document-end
 // @license      MIT

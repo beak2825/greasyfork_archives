@@ -9,7 +9,7 @@
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/tipso/1.0.8/tipso.min.js
-// @version      0.4.3.v860
+// @version      0.4.3.v871
 // @icon         https://image.jeuxvideo.com/stickers/p/1jnh
 // @grant        none
 // @license      MIT
@@ -465,12 +465,18 @@ function initmainstart() {
 
     //Simuler animation previs COMME sur le forum
     //Tactile ou PC
-    const deviceEventType = 'ontouchstart' in window ? 'click' : 'mouseover';
-    //Simuler animation previs sur le fofo
-    document.querySelector('#bloc-formulaire-forum .messageEditor__containerPreview')?.addEventListener(deviceEventType, (e) => {
-        if ( e.target.classList.contains('message__sticker') && e.target.src.includes('/p/st/')) {
-            //Remplace le lien statique (st) en lien anime
-            e.target.src = e.target.src.replace('/p/st/', '/p/');
-        }
+    function enableStickerPreviewAnimation() {
+        //Simuler animation previs sur le fofo
+        document.querySelector('#bloc-formulaire-forum .messageEditor__containerPreview')?.addEventListener('mouseover', (e) => {
+            if ( e.target.classList.contains('message__sticker') && e.target.src.includes('/p/st/')) {
+                //Remplace le lien statique (st) en lien anime
+                e.target.src = e.target.src.replace('/p/st/', '/p/');
+            }
+        });
+    }
+    enableStickerPreviewAnimation();
+    //SWITCH_PREVIEW
+    document.querySelector('.buttonsEditor__groupPreview > .buttonSwitch').addEventListener('click', () => {
+        setTimeout(enableStickerPreviewAnimation, 500);
     });
 }

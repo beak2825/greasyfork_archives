@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         4d4y.ai
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      5.1.0
 // @description  AI-powered auto-completion with page context
 // @author       屋大维
 // @license      MIT
@@ -22,9 +22,6 @@
     // =======================
     // Default settings
     const defaultSettings = {
-        AUTO_MODE: false,
-        AUTO_LEADING_WORDS: "根据楼上的回复，我已经找到以下杠精：",
-        AUTO_PREFIX: "论坛杠精纠察员：\n",
         FAST_REPLY_BTN: true,
         ATTITUDE: "",
         INCLUDE_IMG: true,
@@ -32,6 +29,8 @@
         MODEL_NAME: "deepseek-r1:14b",
         DOUBLE_TAB_MODE: true,
         ENABLE_TOKEN_SAVER: true,
+        LOCAL_GATE_ENABLED: true,
+        LOCAL_GATE_LEVEL: 2,
         OpenAIConfig: {
             enabled: false,
             API_URL: "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
@@ -96,11 +95,6 @@
           <label>Attitude: <input type="text" id="ATTITUDE" style="width: 100%;"></label><br>
           <label><input type="checkbox" id="INCLUDE_IMG"> Include Images</label><br>
 
-          <h4>⚡ Auto Mode Settings</h4>
-          <label><input type="checkbox" id="AUTO_MODE"> Enable Auto Mode</label><br>
-          <label>Leading Words: <input type="text" id="AUTO_LEADING_WORDS" style="width: 100%;"></label><br>
-          <label>Reply Prefix: <input type="text" id="AUTO_PREFIX" style="width: 100%;"></label><br>
-
           <h4>🧠 Model & API Settings</h4>
           <label>Ollama URL: <input type="text" id="OLLAMA_URL" style="width: 100%;"></label><br>
           <label>Model:
@@ -121,6 +115,14 @@
           <h4>🚀 Performance & UI Tweaks</h4>
           <label><input type="checkbox" id="DOUBLE_TAB_MODE"> Double Tab Mode</label><br>
           <label><input type="checkbox" id="ENABLE_TOKEN_SAVER"> Enable Token Saver</label><br>
+          <label><input type="checkbox" id="LOCAL_GATE_ENABLED"> Smart Trigger</label><br>
+          <label>Smart Trigger Level:
+              <select id="LOCAL_GATE_LEVEL" style="width: 100%;">
+                  <option value="1">Relaxed</option>
+                  <option value="2">Balanced</option>
+                  <option value="3">Strict</option>
+              </select>
+          </label><br>
 
           <button id="save-settings" style="width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Save</button>
           <button id="reset-settings" style="width: 100%; margin-top: 5px; padding: 5px; background: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer;">Reset to Default</button>
@@ -182,26 +184,108 @@
     // MAIN
     // =======================
     let lastRequest = null;
-    let suggestionBox = null;
     let statusBar = null;
     let activeElement = null;
     let suggestion = "";
     let lastInputText = "";
     let debounceTimer = null;
     let LAST_TAB_TIME = 0;
+    let lastTriggerAt = 0;
+    let lastTriggeredText = "";
+    let lastInputAt = 0;
+    let gateWorker = null;
+    let gateRequestId = 0;
+    let lastGatePayload = null;
+    let inlineOverlay = null;
+    let inlineOverlayInput = null;
+    let inlineOverlaySuggestion = null;
+    const SHORT_SUGGESTION_MAX_CHARS = 24;
+    const DEBUG_LOG = true;
+    const OCR_CACHE_KEY = "ocrCache";
+    const OCR_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+    const OCR_CACHE_MAX_ENTRIES = 200;
+
+    function debugLog(...args) {
+        if (DEBUG_LOG) {
+            console.log("[4d4y.ai]", ...args);
+        }
+    }
 
     function tokenSaver(input) {
         // 节省input token
         let processed = input
             .replace(/\r/g, "") // 移除回车符
             .replace(/<br\s*\/?>|<\/?p>/gi, "\n") // HTML 换行符转换为换行
+            .replace(/[\u200B-\u200D\uFEFF]/g, "") // 移除零宽字符
             .replace(/[\u00A0\u3000\u202F\u2009]/g, " ") // **替换所有特殊空格**
             .replace(/\t/g, " ") // 制表符变成空格
             .replace(/[ ]{2,}/g, " ") // **合并多个空格**
             .replace(/\n{3,}/g, "\n\n") // **合并多余的换行**
+            .replace(/([!?。！？,，；;:])\1{2,}/g, "$1$1") // 合并重复标点
             .trim(); // 去除首尾空白
-        console.log(`Token Saver: saved ${input.length - processed.length} tokens`);
+        debugLog(`Token Saver: saved ${input.length - processed.length} tokens`);
         return processed;
+    }
+
+    function loadOCRCache() {
+        return GM_getValue(OCR_CACHE_KEY, { entries: {}, order: [] });
+    }
+
+    function saveOCRCache(cache) {
+        GM_setValue(OCR_CACHE_KEY, cache);
+    }
+
+    function pruneOCRCache(cache) {
+        const now = Date.now();
+        let changed = false;
+        cache.order = cache.order.filter((key) => {
+            const entry = cache.entries[key];
+            if (!entry) {
+                changed = true;
+                return false;
+            }
+            if (now - entry.ts > OCR_CACHE_TTL_MS) {
+                delete cache.entries[key];
+                changed = true;
+                return false;
+            }
+            return true;
+        });
+
+        while (cache.order.length > OCR_CACHE_MAX_ENTRIES) {
+            const oldest = cache.order.shift();
+            if (oldest && cache.entries[oldest]) {
+                delete cache.entries[oldest];
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            debugLog(`OCR cache pruned. size=${cache.order.length}`);
+            saveOCRCache(cache);
+        }
+    }
+
+    function getOCRCache(id) {
+        const cache = loadOCRCache();
+        const entry = cache.entries[id];
+        if (!entry) return null;
+        if (Date.now() - entry.ts > OCR_CACHE_TTL_MS) {
+            delete cache.entries[id];
+            cache.order = cache.order.filter((key) => key !== id);
+            saveOCRCache(cache);
+            return null;
+        }
+        return entry.text;
+    }
+
+    function setOCRCache(id, text) {
+        const cache = loadOCRCache();
+        cache.entries[id] = { text, ts: Date.now() };
+        cache.order = cache.order.filter((key) => key !== id);
+        cache.order.push(id);
+        pruneOCRCache(cache);
+        saveOCRCache(cache);
     }
 
     function getTidFromUrl() {
@@ -322,20 +406,30 @@
             `);
     }
 
-    function createSuggestionBox() {
-        suggestionBox = document.createElement("div");
-        suggestionBox.id = "ai-suggestion-box";
-        document.body.appendChild(suggestionBox);
+    function createInlineOverlay() {
+        inlineOverlay = document.createElement("div");
+        inlineOverlay.id = "ai-inline-overlay";
+        inlineOverlayInput = document.createElement("span");
+        inlineOverlayInput.id = "ai-inline-input";
+        inlineOverlaySuggestion = document.createElement("span");
+        inlineOverlaySuggestion.id = "ai-inline-suggestion";
+        inlineOverlay.appendChild(inlineOverlayInput);
+        inlineOverlay.appendChild(inlineOverlaySuggestion);
+        document.body.appendChild(inlineOverlay);
         GM_addStyle(`
-                #ai-suggestion-box {
+                #ai-inline-overlay {
                     position: absolute;
-                    background: rgba(50, 50, 50, 0.9);
-                    color: #fff;
-                    padding: 5px 10px;
-                    font-size: 14px;
-                    border-radius: 5px;
-                    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
-                    display: none;
+                    pointer-events: none;
+                    white-space: pre-wrap;
+                    overflow: hidden;
+                    color: transparent;
+                    z-index: 9998;
+                }
+                #ai-inline-input {
+                    color: transparent;
+                }
+                #ai-inline-suggestion {
+                    color: rgba(140, 140, 140, 0.9);
                 }
             `);
     }
@@ -344,18 +438,143 @@
         return Array.from(text).filter((c) => /\S/.test(c)).length; // Count non-space characters
     }
 
+    function getGateProfile(level) {
+        switch (Number(level)) {
+            case 1:
+                return {
+                    minChars: 4,
+                    minDelta: 2,
+                    idleMs: 300,
+                    cooldownMs: 2500,
+                    threshold: 3,
+                };
+            case 3:
+                return {
+                    minChars: 8,
+                    minDelta: 6,
+                    idleMs: 700,
+                    cooldownMs: 6000,
+                    threshold: 4,
+                };
+            case 2:
+            default:
+                return {
+                    minChars: 6,
+                    minDelta: 4,
+                    idleMs: 500,
+                    cooldownMs: 4000,
+                    threshold: 4,
+                };
+        }
+    }
+
+    function initGateWorker() {
+        if (gateWorker) return;
+        if (typeof Worker === "undefined") return;
+        const workerSource = `
+self.onmessage = (event) => {
+    const { id, text, lastTriggeredText, cursorAtEnd, now, lastTriggerAt, profile } = event.data;
+    const result = { id, shouldTrigger: false, score: 0 };
+    if (!cursorAtEnd) return postMessage(result);
+    if (!text || text.length < profile.minChars) return postMessage(result);
+    if (now - lastTriggerAt < profile.cooldownMs) return postMessage(result);
+    const delta = text.length - (lastTriggeredText || "").length;
+    if (delta < profile.minDelta) return postMessage(result);
+    const lastChar = text.slice(-1);
+    if (/[^a-zA-Z0-9\\u4e00-\\u9fa5]/.test(lastChar)) return postMessage(result);
+    let score = 0;
+    score += Math.min(3, Math.floor(text.length / profile.minChars));
+    score += Math.min(2, Math.floor(delta / profile.minDelta));
+    score += /[a-zA-Z0-9\\u4e00-\\u9fa5]/.test(lastChar) ? 1 : 0;
+    result.score = score;
+    result.shouldTrigger = score >= profile.threshold;
+    postMessage(result);
+};
+        `;
+        const blob = new Blob([workerSource], { type: "application/javascript" });
+        gateWorker = new Worker(URL.createObjectURL(blob));
+        gateWorker.onmessage = (event) => {
+            const { id, shouldTrigger } = event.data;
+            if (!lastGatePayload || id !== lastGatePayload.id) return;
+            if (shouldTrigger) {
+                lastTriggerAt = lastGatePayload.now;
+                lastTriggeredText = lastGatePayload.text;
+                fetchCompletion(lastGatePayload.text, "short");
+            }
+        };
+    }
+
+    function requestShortCompletion(text) {
+        const profile = getGateProfile(settings.LOCAL_GATE_LEVEL);
+        const now = Date.now();
+        if (now - lastInputAt < profile.idleMs) return;
+        if (!activeElement) return;
+
+        if (!settings.LOCAL_GATE_ENABLED || !gateWorker) {
+            lastTriggerAt = now;
+            lastTriggeredText = text;
+            fetchCompletion(text, "short");
+            return;
+        }
+
+        const cursorAtEnd =
+            activeElement.selectionStart === activeElement.value.length &&
+            activeElement.selectionEnd === activeElement.value.length;
+        const id = ++gateRequestId;
+        lastGatePayload = { id, text, now };
+        gateWorker.postMessage({
+            id,
+            text,
+            lastTriggeredText,
+            cursorAtEnd,
+            now,
+            lastTriggerAt,
+            profile,
+        });
+    }
+
     function getTextFromElement(element) {
         return element.tagName === "TEXTAREA"
             ? element.value
             : element.innerText.replace(/\n/g, " "); // Remove HTML formatting
     }
 
-    function updateSuggestionBox(position) {
-        if (!suggestion || !suggestionBox) return;
-        suggestionBox.style.left = position.left + "px";
-        suggestionBox.style.top = position.top + 20 + "px";
-        suggestionBox.innerText = suggestion;
-        suggestionBox.style.display = "block";
+    function syncOverlayToTextarea(textarea) {
+        if (!inlineOverlay || !textarea) return;
+        const rect = textarea.getBoundingClientRect();
+        const style = window.getComputedStyle(textarea);
+        inlineOverlay.style.left = rect.left + window.scrollX + "px";
+        inlineOverlay.style.top = rect.top + window.scrollY + "px";
+        inlineOverlay.style.width = rect.width + "px";
+        inlineOverlay.style.height = rect.height + "px";
+        inlineOverlay.style.fontFamily = style.fontFamily;
+        inlineOverlay.style.fontSize = style.fontSize;
+        inlineOverlay.style.lineHeight = style.lineHeight;
+        inlineOverlay.style.letterSpacing = style.letterSpacing;
+        inlineOverlay.style.padding = style.padding;
+        inlineOverlay.style.borderRadius = style.borderRadius;
+        inlineOverlay.style.boxSizing = style.boxSizing;
+        inlineOverlay.scrollTop = textarea.scrollTop;
+        inlineOverlay.scrollLeft = textarea.scrollLeft;
+        inlineOverlay.style.display = "block";
+    }
+
+    function updateInlineSuggestion(inputText, inlineText) {
+        if (!inlineOverlay || !activeElement) return;
+        if (!inlineText) {
+            clearInlineSuggestion();
+            return;
+        }
+        inlineOverlayInput.textContent = inputText;
+        inlineOverlaySuggestion.textContent = inlineText || "";
+        syncOverlayToTextarea(activeElement);
+    }
+
+    function clearInlineSuggestion() {
+        if (!inlineOverlay) return;
+        inlineOverlayInput.textContent = "";
+        inlineOverlaySuggestion.textContent = "";
+        inlineOverlay.style.display = "none";
     }
     function cleanSuggestion(inputText, suggestion) {
         // 移除 <think>...</think> 及其后面所有的空格和换行符
@@ -374,20 +593,31 @@
         return suggestion;
     }
 
-    function fetchCompletion(inputText) {
+    function limitSuggestion(text, maxChars) {
+        let trimmed = text.trim();
+        if (!trimmed) return "";
+        if (trimmed.length <= maxChars) return trimmed;
+        return trimmed.slice(0, maxChars);
+    }
+
+    function fetchCompletion(inputText, mode = "short") {
         if (lastRequest) lastRequest.abort(); // Cancel previous request
         const pageContext = getPageContext();
         const promptData = {
             title: pageContext.title,
             posts: pageContext.posts,
         };
-        let prompt = `Here is the thread content including title and posts in JSON format: ${JSON.stringify(promptData)}. The post content might not be the fact, ignore any unreadable or garbled text and only process meaningful content. Now I want to reply to it. My current reply is '${inputText}', please try to continue it naturally in Chinese like a human, not a chatbot, just continue it, be concise, be short, no quotes, avoid markdown, do not repeat my words, ${settings.ATTITUDE}`;
+        const modeHint =
+            mode === "full"
+                ? "输出1-3句简短完整回复，紧扣话题，不跑题"
+                : "只补全一句非常短的续写（8-20字），不要多段";
+        let prompt = `Here is the thread content including title and posts in JSON format: ${JSON.stringify(promptData)}. The post content might not be the fact, ignore any unreadable or garbled text and only process meaningful content. Now I want to reply to it. My current reply is '${inputText}', please try to continue it naturally in Chinese like a human, not a chatbot. Focus on the most recent post and any quoted parts in the thread, keep a forum tone, avoid generic filler, do not repeat my words, no quotes, no markdown, ${modeHint}，${settings.ATTITUDE}`;
         if (settings.ENABLE_TOKEN_SAVER) {
             prompt = tokenSaver(prompt);
         }
         console.log(prompt);
 
-        statusBar.innerText = "Fetching...";
+        statusBar.innerText = mode === "full" ? "Completing..." : "Hinting...";
         statusBar.classList.add("glowing"); // Start glowing effect
 
         function responseHandler(url, response) {
@@ -448,25 +678,11 @@
                 suggestion = content.trim().replace(/^"(.*)"$/, "$1"); // Remove surrounding quotes
                 console.log("AI Response:", suggestion);
                 suggestion = cleanSuggestion(inputText, suggestion);
-
-                if (suggestion) {
-                    const cursorPosition = activeElement.selectionStart || 0;
-                    const rect = activeElement.getBoundingClientRect();
-
-                    let left = rect.left + cursorPosition * 7; // Estimate cursor X position
-                    let top = rect.top + window.scrollY;
-
-                    // Ensure `left` does not exceed the right boundary of the textarea
-                    const maxLeft = rect.right; // Right edge of textarea
-                    const minLeft = rect.left; // Left edge of textarea
-                    left = Math.min(Math.max(left, minLeft), maxLeft);
-
-                    // Ensure `top` stays within the viewport
-                    const maxTop = window.innerHeight + window.scrollY - 50; // Avoid bottom overflow
-                    top = Math.max(0, Math.min(top, maxTop));
-
-                    updateSuggestionBox({ left, top });
+                if (mode === "short") {
+                    suggestion = limitSuggestion(suggestion, SHORT_SUGGESTION_MAX_CHARS);
                 }
+
+                updateInlineSuggestion(inputText, suggestion);
 
                 statusBar.innerText = "Ready";
                 statusBar.classList.remove("glowing"); // Stop glowing effect
@@ -482,10 +698,16 @@
         if (!activeElement) return;
         const text = getTextFromElement(activeElement);
         const wordCount = countWords(text);
+        const profile = getGateProfile(settings.LOCAL_GATE_LEVEL);
+        if (text !== lastInputText && suggestion) {
+            suggestion = "";
+            clearInlineSuggestion();
+        }
 
         if (wordCount < 3) {
             statusBar.innerText = "Waiting for more input...";
-            suggestionBox.style.display = "none";
+            clearInlineSuggestion();
+            lastInputText = text;
             return;
         }
 
@@ -503,29 +725,10 @@
         }
 
         if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => fetchCompletion(text), 1000);
+        lastInputAt = Date.now();
+        debounceTimer = setTimeout(() => requestShortCompletion(text), profile.idleMs);
 
         lastInputText = text;
-    }
-
-    function handleDoubleTab(event) {
-        if (event.key === "Tab") {
-            event.preventDefault();
-            event.stopPropagation();
-
-            const currentTime = new Date().getTime();
-            const timeSinceLastTab = currentTime - LAST_TAB_TIME;
-            if (timeSinceLastTab < 300 && timeSinceLastTab > 0) {
-                console.log("Double Tab detected!");
-                let text = getTextFromElement(activeElement);
-                if (text.length === 0) {
-                    text = "根据楼上的发言，";
-                }
-                fetchCompletion(text);
-            }
-
-            LAST_TAB_TIME = currentTime;
-        }
     }
 
     function insertTextAtCursor(textarea, text) {
@@ -539,15 +742,40 @@
     }
 
     function handleKeyDown(event) {
-        if (event.key === "Tab" && suggestion) {
+        if (event.key !== "Tab") return;
+
+        if (settings.DOUBLE_TAB_MODE) {
             event.preventDefault();
             event.stopPropagation();
+            const currentTime = new Date().getTime();
 
+            if (suggestion) {
+                if (activeElement.tagName === "TEXTAREA") {
+                    insertTextAtCursor(activeElement, suggestion);
+                }
+                clearInlineSuggestion();
+                suggestion = "";
+                LAST_TAB_TIME = currentTime;
+                return;
+            }
+
+            const timeSinceLastTab = currentTime - LAST_TAB_TIME;
+            if (timeSinceLastTab < 300 && timeSinceLastTab > 0) {
+                console.log("Double Tab detected!");
+                let text = getTextFromElement(activeElement);
+                if (text.length === 0) {
+                    text = "根据楼上的发言，";
+                }
+                fetchCompletion(text, "full");
+            }
+            LAST_TAB_TIME = currentTime;
+        } else if (suggestion) {
+            event.preventDefault();
+            event.stopPropagation();
             if (activeElement.tagName === "TEXTAREA") {
                 insertTextAtCursor(activeElement, suggestion);
             }
-
-            suggestionBox.style.display = "none";
+            clearInlineSuggestion();
             suggestion = "";
         }
     }
@@ -556,23 +784,31 @@
         document.addEventListener("focusin", (event) => {
             if (event.target.matches("textarea")) {
                 activeElement = event.target;
-                // query 激活 listener
-                if (settings.DOUBLE_TAB_MODE) {
-                    // 双击TAB引发query
-                    activeElement.addEventListener("keydown", handleDoubleTab);
-                } else {
-                    // 用户输入引发query
-                    activeElement.addEventListener("input", handleInput);
-                }
+                // 输入引发短补全
+                activeElement.addEventListener("input", handleInput);
+                activeElement.addEventListener("input", () => {
+                    updateInlineSuggestion(getTextFromElement(activeElement), suggestion);
+                });
+                activeElement.addEventListener("scroll", () => {
+                    syncOverlayToTextarea(activeElement);
+                });
                 // 插入补全 listener
                 activeElement.addEventListener("keydown", handleKeyDown);
                 lastInputText = getTextFromElement(activeElement);
+                updateInlineSuggestion(lastInputText, suggestion);
             }
         });
 
         document.addEventListener("focusout", () => {
-            suggestionBox.style.display = "none";
+            clearInlineSuggestion();
             suggestion = "";
+        });
+
+        window.addEventListener("scroll", () => {
+            syncOverlayToTextarea(activeElement);
+        });
+        window.addEventListener("resize", () => {
+            syncOverlayToTextarea(activeElement);
         });
     }
     // OCR Module
@@ -621,8 +857,87 @@
             "",
         );
         cleaned = cleanOCRText(cleaned);
-        console.log(`Cleaned OCR text: ${cleaned}`);
+        debugLog(`Cleaned OCR text: ${cleaned}`);
         return cleaned;
+    }
+
+    function isMeaningfulOCRText(text) {
+        if (!text) return false;
+        const compact = text.replace(/\s+/g, "");
+        if (compact.length < 6) return false;
+        const validChars = compact.match(/[a-zA-Z0-9\u4e00-\u9fa5]/g) || [];
+        if (validChars.length < 6) return false;
+        const uniqueChars = new Set(validChars).size;
+        if (uniqueChars < 3) return false;
+        const ratio = validChars.length / compact.length;
+        return ratio >= 0.6;
+    }
+
+    function quickHasText(imageDataURL) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                if (img.width < 3 || img.height < 3) {
+                    debugLog(
+                        `Image too small to scan (${img.width}x${img.height}), skipping OCR.`,
+                    );
+                    resolve(false);
+                    return;
+                }
+                const maxWidth = 220;
+                const scale = Math.min(1, maxWidth / img.width);
+                const width = Math.max(1, Math.floor(img.width * scale));
+                const height = Math.max(1, Math.floor(img.height * scale));
+                if (width < 3 || height < 3) {
+                    debugLog(
+                        `Image too small after scale (${width}x${height}), skipping OCR.`,
+                    );
+                    resolve(false);
+                    return;
+                }
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+                const data = ctx.getImageData(0, 0, width, height).data;
+                let sum = 0;
+                let sumSq = 0;
+                let edgeCount = 0;
+                const total = width * height;
+                const lum = new Array(total);
+                for (let i = 0, p = 0; i < total; i++, p += 4) {
+                    const value =
+                        0.2126 * data[p] + 0.7152 * data[p + 1] + 0.0722 * data[p + 2];
+                    lum[i] = value;
+                    sum += value;
+                    sumSq += value * value;
+                }
+                const mean = sum / total;
+                const variance = sumSq / total - mean * mean;
+                for (let y = 0; y < height - 1; y++) {
+                    for (let x = 0; x < width - 1; x++) {
+                        const idx = y * width + x;
+                        const diff =
+                            Math.abs(lum[idx] - lum[idx + 1]) +
+                            Math.abs(lum[idx] - lum[idx + width]);
+                        if (diff > 50) edgeCount++;
+                    }
+                }
+                const edgeDensity = edgeCount / total;
+                debugLog(
+                    `Quick text scan: variance=${variance.toFixed(
+                        1,
+                    )} edge=${edgeDensity.toFixed(3)}`,
+                );
+                resolve(variance > 200 && edgeDensity > 0.02);
+            };
+            img.onerror = () => {
+                debugLog("Quick text scan failed to load image, falling back to OCR.");
+                resolve(true);
+            };
+            img.src = imageDataURL;
+        });
     }
 
     function runOCR(imageDataURL) {
@@ -641,7 +956,18 @@
                         .filter((word) => word.confidence >= minConfidence)
                         .map((word) => word.text)
                         .join(" ");
-                    resolve(cleanText(filteredText));
+                    const cleaned = cleanText(filteredText);
+                    if (!cleaned) {
+                        debugLog("OCR produced empty text.");
+                        resolve("(No text detected)");
+                        return;
+                    }
+                    if (!isMeaningfulOCRText(cleaned)) {
+                        debugLog("OCR text not meaningful, skipping.");
+                        resolve("(No text detected)");
+                        return;
+                    }
+                    resolve(cleaned);
                 })
                 .catch((err) => {
                     console.error("OCR Error:", err);
@@ -659,7 +985,7 @@
             return callback();
         }
         let images = document.querySelectorAll('img[onclick^="zoom"]');
-        console.log(`Found ${images.length} images for OCR processing.`);
+        debugLog(`Found ${images.length} images for OCR processing.`);
         let tasks = [];
 
         images.forEach((img) => {
@@ -667,7 +993,7 @@
             if (match && match[1]) {
                 let fullImageUrl = match[1];
                 let spanId = hashString(fullImageUrl); // Generate unique ID
-                console.log(`Processing image: ${fullImageUrl} (ID: ${spanId})`);
+                debugLog(`Processing image: ${fullImageUrl} (ID: ${spanId})`);
 
                 let existingSpan = document.getElementById(spanId);
                 if (!existingSpan) {
@@ -678,15 +1004,37 @@
                     img.insertAdjacentElement("afterend", resultSpan);
                 }
 
+                let cachedText = getOCRCache(spanId);
+                if (cachedText) {
+                    debugLog(`OCR cache hit for #${spanId}`);
+                    let resultSpan = document.getElementById(spanId);
+                    if (resultSpan) {
+                        resultSpan.textContent = cachedText;
+                    }
+                    return;
+                }
+
                 let task = fetchImageAsDataURL(fullImageUrl)
-                    .then((dataURL) => runOCR(dataURL))
+                    .then((dataURL) =>
+                        quickHasText(dataURL).then((hasText) => ({
+                            dataURL,
+                            hasText,
+                        })),
+                    )
+                    .then(({ dataURL, hasText }) => {
+                        if (!hasText) {
+                            return "(No text detected)";
+                        }
+                        return runOCR(dataURL);
+                    })
                     .then((ocrText) => {
                         let resultSpan = document.getElementById(spanId); // Query by ID before updating
                         if (resultSpan) {
                             resultSpan.textContent = ocrText.trim()
                                 ? ocrText
                                 : "(No text detected)";
-                            console.log(`✅ Inserted OCR text into #${spanId}`);
+                            debugLog(`Inserted OCR text into #${spanId}`);
+                            setOCRCache(spanId, resultSpan.textContent);
                         } else {
                             console.warn(
                                 `⚠️ Could not find span #${spanId} to insert OCR text.`,
@@ -699,7 +1047,7 @@
         });
 
         Promise.all(tasks).then(() => {
-            console.log(`OCR completed for ${images.length} images.`);
+        debugLog(`OCR completed for ${images.length} images.`);
             if (typeof callback === "function") callback();
         });
     }
@@ -781,22 +1129,11 @@
     }
     queryAvailableOllamaModels();
     createStatusBar();
+    initGateWorker();
     processImages(() => {
-        createSuggestionBox();
+        createInlineOverlay();
         initListeners();
         activeElement = document.querySelector("#fastpostmessage");
-        if (settings.AUTO_MODE && activeElement) {
-            setTimeout(() => {
-                fetchCompletion(settings.AUTO_LEADING_WORDS);
-                const s = setInterval(() => {
-                    if (suggestion !== "") {
-                        activeElement.value = settings.AUTO_PREFIX + suggestion;
-                        suggestionBox.style.display = "none";
-                        suggestion = "";
-                        clearInterval(s);
-                    }
-                }, 100);
-            }, 1000);
-        }
+        // Auto mode removed; user manually triggers completion.
     });
 })();

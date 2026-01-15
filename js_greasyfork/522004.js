@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            福利吧小助手
 // @namespace       https://greasyfork.org/zh-CN/users/860681-aoguai
-// @version         1.0.5.8
+// @version         1.0.5.9
 // @description     一个用于增强福利吧功能的油猴脚本，提供链接提取、界面美化、编解码等功能。
 // @author          aoguai
 // @match           http://fulibus.net/*
@@ -10,18 +10,68 @@
 // @match           https://fuliba2025.net/*
 // @match           http://*.fuliba2025.net/*
 // @match           https://*.fuliba2025.net/*
-// @match           http://fuliba20[0-9][0-9].net/*
-// @match           https://fuliba20[0-9][0-9].net/*
-// @match           http://fuliba[0-9][0-9].net/*
-// @match           https://fuliba[0-9][0-9].net/*
+// @match           http://fuliba2020.net/*
+// @match           https://fuliba2020.net/*
+// @match           http://fuliba2021.net/*
+// @match           https://fuliba2021.net/*
+// @match           http://fuliba2022.net/*
+// @match           https://fuliba2022.net/*
+// @match           http://fuliba2023.net/*
+// @match           https://fuliba2023.net/*
+// @match           http://fuliba2024.net/*
+// @match           https://fuliba2024.net/*
+// @match           http://fuliba2026.net/*
+// @match           https://fuliba2026.net/*
+// @match           http://fuliba2027.net/*
+// @match           https://fuliba2027.net/*
+// @match           http://fuliba2028.net/*
+// @match           https://fuliba2028.net/*
+// @match           http://fuliba2029.net/*
+// @match           https://fuliba2029.net/*
+// @match           http://fuliba2030.net/*
+// @match           https://fuliba2030.net/*
 // @match           http://f.uliba.net/*
 // @match           https://f.uliba.net/*
-// @match           http://*.wnflb20[0-9][0-9].com/*
-// @match           https://*.wnflb20[0-9][0-9].com/*
-// @match           http://*.wnflb[0-9][0-9].com/*
-// @match           https://*.wnflb[0-9][0-9].com/*
-// @match           http://www.wnflb*.com/*
-// @match           https://www.wnflb*.com/*
+// @match           http://*.wnflb2020.com/*
+// @match           https://*.wnflb2020.com/*
+// @match           http://*.wnflb2021.com/*
+// @match           https://*.wnflb2021.com/*
+// @match           http://*.wnflb2022.com/*
+// @match           https://*.wnflb2022.com/*
+// @match           http://*.wnflb2024.com/*
+// @match           https://*.wnflb2024.com/*
+// @match           http://*.wnflb2025.com/*
+// @match           https://*.wnflb2025.com/*
+// @match           http://*.wnflb2026.com/*
+// @match           https://*.wnflb2026.com/*
+// @match           http://*.wnflb2027.com/*
+// @match           https://*.wnflb2027.com/*
+// @match           http://*.wnflb2028.com/*
+// @match           https://*.wnflb2028.com/*
+// @match           http://*.wnflb2029.com/*
+// @match           https://*.wnflb2029.com/*
+// @match           http://*.wnflb2030.com/*
+// @match           https://*.wnflb2030.com/*
+// @match           http://www.wnflb2020.com/*
+// @match           https://www.wnflb2020.com/*
+// @match           http://www.wnflb2021.com/*
+// @match           https://www.wnflb2021.com/*
+// @match           http://www.wnflb2022.com/*
+// @match           https://www.wnflb2022.com/*
+// @match           http://www.wnflb2024.com/*
+// @match           https://www.wnflb2024.com/*
+// @match           http://www.wnflb2025.com/*
+// @match           https://www.wnflb2025.com/*
+// @match           http://www.wnflb2026.com/*
+// @match           https://www.wnflb2026.com/*
+// @match           http://www.wnflb2027.com/*
+// @match           https://www.wnflb2027.com/*
+// @match           http://www.wnflb2028.com/*
+// @match           https://www.wnflb2028.com/*
+// @match           http://www.wnflb2029.com/*
+// @match           https://www.wnflb2029.com/*
+// @match           http://www.wnflb2030.com/*
+// @match           https://www.wnflb2030.com/*
 // @match           http://wnflb2023.com/*
 // @match           https://wnflb2023.com/*
 // @match           http://*.wnflb2023.com/*
@@ -40,6 +90,7 @@
 // @grant           GM_xmlhttpRequest
 // @grant           GM_addStyle
 // @run-at          document-start
+// @early-start
 // @noframes
 // @license         GNU General Public License v3.0 or later
 // @namespace       https://greasyfork.org/scripts/522004
@@ -673,104 +724,6 @@
     "img.thumb",
     'img[decoding="async"]',
   ].join(",");
-
-  // 获取最新地址并设置常量
-  function initSiteUrls() {
-    return new Promise((resolve, reject) => {
-      GM_xmlhttpRequest({
-        method: "GET",
-        url: "https://fuliba123.com/",
-        timeout: 10000,
-        onload: function (response) {
-          if (response.status === 200) {
-            try {
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(
-                response.responseText,
-                "text/html"
-              );
-              // 获取所有链接元素
-              const linkElements = doc.querySelectorAll("a.card.no-c");
-              // 遍历链接元素设置常量
-              linkElements.forEach((element) => {
-                const titleElement = element.querySelector("strong");
-                if (titleElement) {
-                  const title = titleElement.textContent.trim();
-                  const url = element.href || element.getAttribute("data-url");
-                  if (title === "福利吧") {
-                    SITE_URLS.HOME = url;
-                    // 添加首页地址到 @match
-                    addMatchPattern(url);
-                  } else if (title === "福利吧论坛") {
-                    SITE_URLS.FORUM = url;
-                    // 添加论坛地址到 @match
-                    addMatchPattern(url);
-                  }
-                }
-              });
-              if (SITE_URLS.HOME && SITE_URLS.FORUM) {
-                console.debug(
-                  "福利吧小助手:\n网站地址初始化成功\n首页地址:" +
-                    SITE_URLS.HOME +
-                    "\n论坛地址:",
-                  SITE_URLS.FORUM
-                );
-                resolve(SITE_URLS);
-              } else {
-                reject(new Error("未找到所需的链接"));
-              }
-            } catch (error) {
-              reject(error);
-            }
-          } else {
-            reject(new Error(`请求失败，状态码：${response.status}`));
-          }
-        },
-        onerror: function (error) {
-          reject(new Error("网络请求错误：" + error));
-        },
-        ontimeout: function () {
-          reject(new Error("请求超时"));
-        },
-      });
-    });
-  }
-
-  // 添加新的 match pattern
-  function addMatchPattern(url) {
-    try {
-      const urlObj = new URL(url);
-      const hostname = urlObj.hostname;
-
-      // 构建符合要求的 match pattern
-      const schemes = ["http", "https"]; // 只处理 HTTP/HTTPS 协议
-      const patterns = [];
-
-      schemes.forEach((scheme) => {
-        // 主域名匹配
-        patterns.push(`${scheme}://${hostname}/*`);
-        // 子域名匹配（包含 www）
-        patterns.push(`${scheme}://*.${hostname}/*`);
-      });
-
-      // 获取当前脚本的元数据
-      const metadata = GM_info.script;
-
-      // 添加新的 @match (如果不存在)
-      patterns.forEach((pattern) => {
-        if (!metadata.match || !metadata.match.includes(pattern)) {
-          // 如果 match 数组不存在则创建它
-          if (!metadata.match) {
-            metadata.match = [];
-          }
-          metadata.match.push(pattern);
-          console.debug("福利吧小助手:\n添加新的 match pattern:", pattern);
-        }
-      });
-    } catch (error) {
-      console.warn("福利吧小助手:\n添加 match pattern 失败:", error);
-    }
-  }
 
   const status = {
     nightEnable: GM_config.getValue("nightEnable", false),
@@ -2733,6 +2686,11 @@
         }
       }
 
+      // 在论坛页面移除GzList广告位
+      if (!isFulibaDomain) {
+        removeGzListAds();
+      }
+
       // 头像勋章移除功能初始化
       if (GM_config.get("removeAvatarMedalEnable")) {
         handleAvatarAndMedal();
@@ -3050,6 +3008,25 @@
         article.querySelector(".post-like span")?.textContent
       );
       if (likeCount > 100) article.remove();
+    });
+  }
+
+  // 移除GzList广告位
+  function removeGzListAds() {
+    if (!GM_config.get("enableAdPurge")) return;
+
+    // 查找所有GzList广告位容器
+    const gzListElements = document.querySelectorAll(".GzList");
+
+    gzListElements.forEach((gzList) => {
+      // 移除GzList及其父容器
+      const parentContainer = gzList.closest("div.wp.cl");
+      if (parentContainer && parentContainer.parentNode) {
+        parentContainer.parentNode.removeChild(parentContainer);
+      } else if (gzList.parentNode) {
+        // 如果没有找到父容器，直接移除GzList元素
+        gzList.parentNode.removeChild(gzList);
+      }
     });
   }
   // 处理正文内容
@@ -3416,16 +3393,10 @@
     events: {
       init: async () => {
         console.debug("福利吧小助手:\n配置信息读取完成。");
-        try {
-          await initSiteUrls().catch((error) => {
-            console.warn("福利吧小助手:\n获取网站地址失败:", error);
-          });
-        } finally {
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", allInit);
-          } else {
-            allInit();
-          }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", allInit);
+        } else {
+          allInit();
         }
       },
       save: () => {
@@ -3433,6 +3404,7 @@
           removeElements();
           simplifyNavigation();
           removePromotions();
+          removeGzListAds();
         } else {
           location.reload();
         }

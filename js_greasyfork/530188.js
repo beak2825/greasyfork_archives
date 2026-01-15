@@ -1,18 +1,17 @@
 // ==UserScript==
 // @name         Wishlist Cards Indicator 2.0
 // @namespace    http://animestars.org/
-// @version      3.8
+// @version      3.9
 // @description  Обводка карт из списка желаемого
 // @author       Sandr
 // @license      MIT
-// @match        *://animestars.org/*
-// @match        *://asstars.tv/*
-// @match        *://astars.club/*
-// @match        *://as1.astars.club/*
-// @match        *://as1.asstars.tv/*
-// @match        *://as2.asstars.tv/*
-// @match        *://asstars.club/*
-// @match        *://asstars.online/*
+// @match        *://*.animestars.org/*
+// @match        *://*.animesss.com/*
+// @match        *://*.animesss.tv/*
+// @match        *://*.asstars.tv/*
+// @match        *://*.astars.club/*
+// @match        *://*.asstars.online/*
+
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand

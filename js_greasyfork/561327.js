@@ -1,42 +1,35 @@
 // ==UserScript==
-// @name         PTA清空题库工具 (增强版-支持选择题)
-// @version      1.0.8
-// @description  清空PTA平台已提交编程题代码及选择题选项，自动屏蔽弹窗，支持菜单拖动
-// @author       Shen
+// @name         PTA清空题库工具 (终极修复版)
+// @version      1.2.0
+// @description  清空PTA平台已提交编程题代码及选择题选项，支持单选题/多选题/编程题，暴力修复无响应
+// @author       Shen & Fixed by Gemini
 // @match        https://pintia.cn/problem-sets/*/exam/problems/type/*
 // @match        https://pintia.cn/problem-sets/*/exam/problems/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @namespace    https://greasyfork.org/users/1555804
-// @downloadURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E5%A2%9E%E5%BC%BA%E7%89%88-%E6%94%AF%E6%8C%81%E9%80%89%E6%8B%A9%E9%A2%98%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E5%A2%9E%E5%BC%BA%E7%89%88-%E6%94%AF%E6%8C%81%E9%80%89%E6%8B%A9%E9%A2%98%29.meta.js
+// @namespace https://greasyfork.org/users/1555804
+// @downloadURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E7%BB%88%E6%9E%81%E4%BF%AE%E5%A4%8D%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561327/PTA%E6%B8%85%E7%A9%BA%E9%A2%98%E5%BA%93%E5%B7%A5%E5%85%B7%20%28%E7%BB%88%E6%9E%81%E4%BF%AE%E5%A4%8D%E7%89%88%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // === 存储键名配置 ===
-    const CONFIG_KEY = 'pta_clear_config';
+    // === 配置常量 ===
+    const CONFIG_KEY = 'pta_clear_config_v2';
     const MENU_STATE_KEY = 'pta_menu_collapsed';
-    const TASK_QUEUE_KEY = 'pta_task_queue';            // 任务队列
-    const TASK_RUNNING_KEY = 'pta_task_is_running';     // 运行状态
-    const TASK_RETURN_URL_KEY = 'pta_return_url';       // 返回地址
-    const TASK_TOTAL_KEY = 'pta_task_total';            // 总任务数
-
-    // === 位置记忆键名 ===
+    const TASK_QUEUE_KEY = 'pta_task_queue';
+    const TASK_RUNNING_KEY = 'pta_task_is_running';
+    const TASK_RETURN_URL_KEY = 'pta_return_url';
+    const TASK_TOTAL_KEY = 'pta_task_total';
     const MENU_POS_TOP_KEY = 'pta_menu_pos_top';
     const MENU_POS_LEFT_KEY = 'pta_menu_pos_left';
 
-    // === 基础工具函数 ===
-
-    // 强力屏蔽离开页面的弹窗
+    // === 基础工具 ===
     function suppressLeaveWarning() {
         window.onbeforeunload = null;
-        window.addEventListener('beforeunload', function(e) {
-            delete e['returnValue'];
-            e.returnValue = undefined;
-        }, { capture: true });
+        window.addEventListener('beforeunload', e => { delete e['returnValue']; e.returnValue = undefined; }, { capture: true });
     }
 
     function getCurrentProblemSetId() {
@@ -45,43 +38,56 @@
     }
 
     function getConfig() {
-        const defaultConfig = {
-            enabledSets: [getCurrentProblemSetId()].filter(Boolean)
-        };
+        const defaultConfig = { enabledSets: [getCurrentProblemSetId()].filter(Boolean) };
         const saved = GM_getValue(CONFIG_KEY);
         return saved ? JSON.parse(saved) : defaultConfig;
     }
 
-    function saveConfig(config) {
-        GM_setValue(CONFIG_KEY, JSON.stringify(config));
-    }
+    function saveConfig(config) { GM_setValue(CONFIG_KEY, JSON.stringify(config)); }
 
     function isCurrentSetEnabled() {
         const config = getConfig();
-        const currentId = getCurrentProblemSetId();
-        return config.enabledSets.includes(currentId);
+        return config.enabledSets.includes(getCurrentProblemSetId());
     }
 
-    // --- 修改点1：升级清空逻辑，支持代码编辑器和复选框 ---
+    // === 针对 React/Vue 的强制事件触发 ===
+    function triggerReactChange(element) {
+        const eventNames = ['click', 'input', 'change', 'blur'];
+        eventNames.forEach(evt => {
+            element.dispatchEvent(new Event(evt, { bubbles: true }));
+        });
+    }
+
+    // === 核心清空逻辑 ===
     function clearCurrentProblem(silent = false) {
         let cleared = false;
 
-        // 1. 清空代码编辑器 (针对编程题)
+        // 1. 编程题：清空代码编辑器
         const editor = document.querySelector('.cm-content[role="textbox"]');
         if (editor) {
             editor.textContent = '';
-            const event = new Event('input', { bubbles: true });
-            editor.dispatchEvent(event);
+            triggerReactChange(editor);
+            // 针对 CodeMirror 6 的额外处理
+            if(editor.cmView && editor.cmView.view) {
+                try {
+                    const view = editor.cmView.view;
+                    view.dispatch({changes: {from: 0, to: view.state.doc.length, insert: ""}});
+                } catch(e) { console.log('CodeMirror error', e); }
+            }
             cleared = true;
         }
 
-        // 2. 清空复选框和单选框 (针对选择题)
-        // 查找所有已选中的输入框
-        const checkedInputs = document.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked');
+        // 2. 选择题：清空单选和多选
+        const checkedInputs = document.querySelectorAll('input:checked');
         if (checkedInputs.length > 0) {
             checkedInputs.forEach(input => {
-                // 在现代框架中，模拟点击通常比修改 checked 属性更有效，能触发 UI 更新
-                input.click();
+                if (input.type === 'checkbox') {
+                    input.click(); // 复选框点击即可取消
+                } else if (input.type === 'radio') {
+                    // 单选框比较特殊，点击自身无法取消，需要底层操作
+                    input.checked = false;
+                    triggerReactChange(input);
+                }
             });
             cleared = true;
         }
@@ -90,7 +96,7 @@
         return cleared;
     }
 
-    function waitForElement(selector, timeout = 5000) {
+    function waitForElement(selector, timeout = 3000) {
         return new Promise((resolve) => {
             if (document.querySelector(selector)) return resolve(document.querySelector(selector));
             const observer = new MutationObserver(() => {
@@ -104,28 +110,40 @@
         });
     }
 
-    // === 核心自动化逻辑 ===
-
+    // === 任务队列管理 (暴力扫描版) ===
     function startClearTask() {
-        const problemLinks = document.querySelectorAll('a[href*="problemSetProblemId"]');
+        // 策略：扫描页面上所有包含 problemSetProblemId 的链接
+        const allLinks = Array.from(document.querySelectorAll('a[href*="problemSetProblemId"]'));
         const queue = [];
 
-        problemLinks.forEach(link => {
-            // 这里假设 .PROBLEM_ACCEPTED_iri62 是已提交/通过的标志
-            // 如果 "提交过但错误" 的题目也需要清空，可能需要调整这个选择器，或者移除判断直接全部清空
-            const checkIcon = link.querySelector('.PROBLEM_ACCEPTED_iri62') || link.querySelector('.PROBLEM_PARTIALLY_ACCEPTED_...');// 视情况添加其他状态
-            // 目前只清空已有标记的，如果想清空所有，去掉 if checkIcon 即可
-            if (checkIcon) {
+        console.log(`[PTA工具] 页面共找到 ${allLinks.length} 个题目链接`);
+
+        allLinks.forEach(link => {
+            // 暴力检测：只要链接内部包含 svg 图标，或者包含 class 中有 "status"、"PROBLEM" 字样的元素，就认为做过了
+            // 你的 HTML 中，做过的题会有一个 div class="... problemStatusRect_..."
+            // 没做过的题通常只是一个数字，没有这个状态块
+            const innerHTML = link.innerHTML;
+            const hasStatusRect = innerHTML.includes('problemStatusRect') || 
+                                  innerHTML.includes('PROBLEM_') || 
+                                  link.querySelector('svg'); // 通常只有做过的题才会有图标 SVG
+            
+            if (hasStatusRect) {
                 queue.push(link.href);
             }
         });
 
         if (queue.length === 0) {
-            alert('当前页面没有找到已完成的题目！');
+            // 调试信息：如果一个都没找到，把页面上第一个链接的 HTML 打印出来给用户看
+            let debugMsg = "";
+            if (allLinks.length > 0) {
+                debugMsg = "\n\n检测到的第一个链接结构(供调试):\n" + allLinks[0].outerHTML.substring(0, 100) + "...";
+            }
+            
+            alert(`未检测到已提交/已判分的题目！\n(扫描了 ${allLinks.length} 个链接，但判定为“已做”的为 0)\n\n请确认：\n1. 您是否在题目列表页？\n2. 请先展开左侧侧边栏，确保题目列表可见。${debugMsg}`);
             return;
         }
 
-        if (!confirm(`找到 ${queue.length} 个已提交题目。\n\n点击确定后，脚本将自动跳转并逐个清空（含代码和选项）。\n请勿关闭浏览器！`)) {
+        if (!confirm(`扫描完成！\n\n共扫描到 ${allLinks.length} 个题目。\n其中有状态记录(需要清空)的题目：${queue.length} 个。\n\n点击【确定】开始自动清空。`)) {
             return;
         }
 
@@ -139,41 +157,45 @@
 
     function processNextTask() {
         const queue = GM_getValue(TASK_QUEUE_KEY, []);
-
         if (queue.length === 0) {
             finishTask();
             return;
         }
 
         const nextUrl = queue[0];
-
-        if (window.location.href !== nextUrl) {
+        // 宽松判断 URL，防止参数顺序不同导致无法识别
+        const targetId = nextUrl.match(/problemSetProblemId=(\d+)/)[1];
+        
+        if (!window.location.href.includes(targetId)) {
             suppressLeaveWarning();
             window.location.href = nextUrl;
         } else {
             showProcessingOverlay(queue.length);
-
-            // --- 修改点2：等待逻辑增加对 input 的检测 ---
-            // 等待 编辑器 OR 复选框 OR 单选框 出现
-            waitForElement('.cm-content[role="textbox"], input[type="checkbox"], input[type="radio"]').then((element) => {
-                if (element) {
-                    // 找到了元素，执行清空
+            
+            // 无论页面加载多慢，给一个基础等待时间，然后尝试清空
+            // 即使找不到元素，也要继续下一个，防止卡死
+            waitForElement('.cm-content, input[type="radio"], input[type="checkbox"]', 3000).then(() => {
+                setTimeout(() => {
                     clearCurrentProblem(true);
-
+                    
                     setTimeout(() => {
                         queue.shift();
                         GM_setValue(TASK_QUEUE_KEY, queue);
                         suppressLeaveWarning();
                         processNextTask();
-                    }, 500);
-                } else {
-                    console.warn('未找到编辑器或选项，可能是非交互题型，跳过此题');
+                    }, 500); // 清空后停留0.5秒
+                }, 800); // 进页面后等待0.8秒再操作
+            });
+            
+            // 5秒超时强制跳过机制
+            setTimeout(() => {
+                if(GM_getValue(TASK_RUNNING_KEY) && queue.length === GM_getValue(TASK_QUEUE_KEY).length){
+                    console.warn("超时强制跳过");
                     queue.shift();
                     GM_setValue(TASK_QUEUE_KEY, queue);
-                    suppressLeaveWarning();
                     processNextTask();
                 }
-            });
+            }, 5000);
         }
     }
 
@@ -182,292 +204,211 @@
         GM_setValue(TASK_QUEUE_KEY, []);
         const returnUrl = GM_getValue(TASK_RETURN_URL_KEY);
         suppressLeaveWarning();
-        if (returnUrl && window.location.href !== returnUrl) {
-            alert('所有题目清空完成！正在返回列表页...');
+        if (returnUrl) {
+            alert('清空完成！即将返回列表。');
             window.location.href = returnUrl;
         } else {
-            alert('所有题目清空完成！');
-            window.location.reload();
+            alert('清空完成！');
         }
     }
 
     function stopTask() {
-        if(confirm('确定要强制停止任务吗？')) {
+        if(confirm('要停止自动清空吗？')) {
             GM_setValue(TASK_RUNNING_KEY, false);
             GM_setValue(TASK_QUEUE_KEY, []);
             location.reload();
         }
     }
 
-    // === 界面 UI 相关 ===
-
-    function showProcessingOverlay(remainingCount) {
-        if (document.getElementById('pta-processing-overlay')) return;
-
-        const total = GM_getValue(TASK_TOTAL_KEY, remainingCount);
-        const current = total - remainingCount + 1;
-
+    // === UI 组件 ===
+    function showProcessingOverlay(remaining) {
+        if (document.getElementById('pta-overlay-ui')) {
+            document.getElementById('pta-count-display').innerText = GM_getValue(TASK_TOTAL_KEY, 0) - remaining + 1;
+            return;
+        }
+        const total = GM_getValue(TASK_TOTAL_KEY, remaining);
+        const current = total - remaining + 1;
+        
         const div = document.createElement('div');
-        div.id = 'pta-processing-overlay';
-        div.style.cssText = `
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8); color: white;
-            padding: 15px 30px; border-radius: 8px; z-index: 100000;
-            display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        `;
+        div.id = 'pta-overlay-ui';
+        div.style.cssText = `position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 12px 24px; border-radius: 30px; z-index: 999999; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); font-size: 14px; font-family: sans-serif;`;
         div.innerHTML = `
-            <div style="font-size: 16px; font-weight: bold;">
-                正在自动清空: 第 ${current} / ${total} 题
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <span style="color:#aaa; font-size:10px;">正在处理</span>
+                <span>第 <b id="pta-count-display" style="color:#4ade80; font-size:16px;">${current}</b> / ${total} 题</span>
             </div>
-            <button id="pta-stop-btn" style="
-                background: #ef4444; color: white; border: none; padding: 5px 10px;
-                border-radius: 4px; cursor: pointer; font-size: 12px;
-            ">强制停止</button>
+            <button id="pta-stop-btn" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-weight: bold;">停止</button>
         `;
         document.body.appendChild(div);
-
         document.getElementById('pta-stop-btn').onclick = stopTask;
     }
 
-    function createConfigPanel() {
-        if (document.getElementById('pta-config-panel')) return;
+    function createButtons() {
+        if (document.getElementById('pta-helper')) return;
+        
+        const top = GM_getValue(MENU_POS_TOP_KEY, '100px');
+        const left = GM_getValue(MENU_POS_LEFT_KEY, 'unset');
+        const right = left === 'unset' ? '20px' : 'unset';
 
-        const panel = document.createElement('div');
-        panel.id = 'pta-config-panel';
-        panel.style.cssText = `
-            display: none; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); background: white;
-            padding: 25px; border-radius: 12px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            z-index: 10001; min-width: 450px; max-height: 80vh; overflow-y: auto;
-        `;
+        const container = document.createElement('div');
+        container.id = 'pta-helper';
+        container.style.cssText = `position: fixed; top: ${top}; left: ${left}; right: ${right}; z-index: 99999; display: flex; flex-direction: column; align-items: flex-end; font-family: sans-serif;`;
 
-        const currentSetId = getCurrentProblemSetId();
-        const config = getConfig();
+        const isCollapsed = GM_getValue(MENU_STATE_KEY, false);
 
-        panel.innerHTML = `
-            <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #333;">题目集管理</h3>
-            <div style="margin-bottom: 20px;">
-                <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
-                    当前题目集ID: <strong style="color: #3b82f6;">${currentSetId || '未知'}</strong>
-                </div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <input id="pta-url-input" type="text" placeholder="粘贴完整URL或输入题目集ID" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;" />
-                <button id="pta-add-btn" style="margin-top: 10px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">添加</button>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <div style="font-size: 14px; font-weight: 500; margin-bottom: 10px; color: #333;">已启用的题目集：</div>
-                <div id="pta-set-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px;"></div>
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button id="pta-close-btn" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">关闭</button>
-            </div>
-        `;
+        const handle = document.createElement('div');
+        handle.textContent = 'PTA 助手 ≡';
+        handle.style.cssText = `background: #374151; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: move; font-size: 12px; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); user-select: none; text-align: center; width: 120px;`;
+        
+        const menu = document.createElement('div');
+        menu.style.cssText = `display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; gap: 8px; width: 120px;`;
 
-        document.body.appendChild(panel);
-        const overlay = document.createElement('div');
-        overlay.id = 'pta-overlay';
-        overlay.style.cssText = `display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 10000;`;
-        document.body.appendChild(overlay);
-
-        function renderSetList() {
-            const cfg = getConfig();
-            const listDiv = document.getElementById('pta-set-list');
-            if (cfg.enabledSets.length === 0) {
-                listDiv.innerHTML = '<div style="color: #9ca3af; text-align: center; padding: 20px;">暂无题目集</div>';
-                return;
-            }
-            listDiv.innerHTML = cfg.enabledSets.map(setId => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #f3f4f6;">
-                    <span style="font-family: monospace; color: #374151;">${setId}</span>
-                    <button class="pta-remove-btn" data-set-id="${setId}" style="padding: 5px 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">删除</button>
-                </div>
-            `).join('');
-
-            document.querySelectorAll('.pta-remove-btn').forEach(btn => {
-                btn.onclick = function() {
-                    const setId = this.getAttribute('data-set-id');
-                    const newCfg = getConfig();
-                    newCfg.enabledSets = newCfg.enabledSets.filter(id => id !== setId);
-                    saveConfig(newCfg);
-                    renderSetList();
-                };
-            });
-        }
-
-        renderSetList();
-
-        document.getElementById('pta-add-btn').onclick = function() {
-            const input = document.getElementById('pta-url-input');
-            const value = input.value.trim();
-            if (!value) return alert('请输入内容');
-            let setId = value.match(/problem-sets\/(\d+)/) ? value.match(/problem-sets\/(\d+)/)[1] : value;
-            if (!/^\d+$/.test(setId)) return alert('无效ID');
-            const newCfg = getConfig();
-            if (!newCfg.enabledSets.includes(setId)) {
-                newCfg.enabledSets.push(setId);
-                saveConfig(newCfg);
-                renderSetList();
-                input.value = '';
-                alert('添加成功');
-            } else {
-                alert('已存在');
-            }
+        const createBtn = (text, color, onClick) => {
+            const btn = document.createElement('button');
+            btn.textContent = text;
+            btn.style.cssText = `padding: 8px; background: ${color}; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: opacity 0.2s;`;
+            btn.onclick = onClick;
+            return btn;
         };
 
-        document.getElementById('pta-close-btn').onclick = () => { panel.style.display = 'none'; overlay.style.display = 'none'; };
-        overlay.onclick = () => { panel.style.display = 'none'; overlay.style.display = 'none'; };
-    }
+        // 按钮1：清空当前
+        menu.appendChild(createBtn('清空本题', '#3b82f6', () => {
+            if (!isCurrentSetEnabled()) return alert('请先点击下方的【设置】启用当前题库');
+            if(clearCurrentProblem()) alert('已尝试清空'); else alert('未找到可清空的内容');
+        }));
 
-    // 使元素可拖拽函数
-    function makeDraggable(element, handle) {
+        // 按钮2：清空所有 (暴力扫描)
+        menu.appendChild(createBtn('一键清空所有', '#ef4444', () => {
+            if (!isCurrentSetEnabled()) return alert('请先点击下方的【设置】启用当前题库');
+            startClearTask();
+        }));
+
+        // 按钮3：设置
+        menu.appendChild(createBtn('设置 / 启用', '#8b5cf6', () => {
+            createConfigPanel();
+        }));
+
+        container.appendChild(handle);
+        container.appendChild(menu);
+        document.body.appendChild(container);
+
+        // 拖拽逻辑
         let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
-
+        let startX, startY, startLeft, startTop;
+        
         handle.addEventListener('mousedown', (e) => {
-            e.preventDefault();
             isDragging = true;
             startX = e.clientX;
             startY = e.clientY;
-
-            const rect = element.getBoundingClientRect();
-            initialLeft = rect.left;
-            initialTop = rect.top;
-
+            const rect = container.getBoundingClientRect();
+            startLeft = rect.left;
+            startTop = rect.top;
             handle.style.cursor = 'grabbing';
-            element.style.transition = 'none';
+            e.preventDefault();
         });
 
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
-
-            element.style.left = `${initialLeft + dx}px`;
-            element.style.top = `${initialTop + dy}px`;
-            element.style.right = 'auto';
-            element.style.bottom = 'auto';
+            container.style.left = `${startLeft + dx}px`;
+            container.style.top = `${startTop + dy}px`;
+            container.style.right = 'unset';
         });
 
         window.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
                 handle.style.cursor = 'move';
-                GM_setValue(MENU_POS_TOP_KEY, element.style.top);
-                GM_setValue(MENU_POS_LEFT_KEY, element.style.left);
+                GM_setValue(MENU_POS_TOP_KEY, container.style.top);
+                GM_setValue(MENU_POS_LEFT_KEY, container.style.left);
             }
+        });
+
+        handle.addEventListener('dblclick', () => {
+            const collapsed = menu.style.display !== 'none';
+            menu.style.display = collapsed ? 'none' : 'flex';
+            GM_setValue(MENU_STATE_KEY, collapsed);
         });
     }
 
-    function createButtons() {
-        if (document.getElementById('pta-helper-container')) return;
-
-        let isCollapsed = GM_getValue(MENU_STATE_KEY, false);
-        const savedTop = GM_getValue(MENU_POS_TOP_KEY);
-        const savedLeft = GM_getValue(MENU_POS_LEFT_KEY);
-
-        const mainContainer = document.createElement('div');
-        mainContainer.id = 'pta-helper-container';
-
-        let posStyle = '';
-        if (savedTop && savedLeft) {
-            posStyle = `top: ${savedTop}; left: ${savedLeft};`;
-        } else {
-            posStyle = `top: 80px; right: 20px;`;
+    function createConfigPanel() {
+        if (document.getElementById('pta-config-view')) {
+            document.getElementById('pta-config-view').style.display = 'flex';
+            return;
         }
-
-        mainContainer.style.cssText = `
-            position: fixed; ${posStyle} z-index: 99999;
-            display: flex; flex-direction: column; align-items: flex-end;
-            user-select: none;
+        const overlay = document.createElement('div');
+        overlay.id = 'pta-config-view';
+        overlay.style.cssText = `position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100000; display: flex; justify-content: center; align-items: center;`;
+        
+        const content = document.createElement('div');
+        content.style.cssText = `background: white; padding: 25px; border-radius: 12px; width: 400px; max-height: 80vh; overflow-y: auto; font-family: sans-serif;`;
+        
+        const currentId = getCurrentProblemSetId() || '未识别';
+        
+        content.innerHTML = `
+            <h2 style="margin:0 0 15px 0; border-bottom:1px solid #eee; padding-bottom:10px; color:#333;">工具设置</h2>
+            <p style="font-size:14px; color:#666; margin-bottom:10px;">当前题目集ID: <b style="color:#2563eb">${currentId}</b></p>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input id="pta-id-input" value="${currentId !== '未识别' ? currentId : ''}" placeholder="输入ID" style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <button id="pta-add-id" style="padding:8px 16px; background:#2563eb; color:white; border:none; border-radius:4px; cursor:pointer;">启用此题库</button>
+            </div>
+            <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:10px; min-height:100px;">
+                <div style="font-size:12px; color:#888; margin-bottom:5px;">已启用列表 (点击可删除):</div>
+                <div id="pta-id-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+            </div>
+            <button id="pta-close-config" style="margin-top:15px; width:100%; padding:10px; background:#4b5563; color:white; border:none; border-radius:4px; cursor:pointer;">关闭</button>
         `;
+        
+        overlay.appendChild(content);
+        document.body.appendChild(overlay);
 
-        const toggleBtn = document.createElement('button');
-        toggleBtn.textContent = isCollapsed ? '↕ 展开菜单 (按住拖动)' : '↕ 收起菜单 (按住拖动)';
-        toggleBtn.title = "按住此按钮可拖动位置";
-        toggleBtn.style.cssText = `
-            padding: 5px 10px; background: #6b7280; color: white; border: none;
-            border-radius: 4px; cursor: move; margin-bottom: 8px;
-            opacity: 0.9; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            font-size: 12px; width: 140px;
-        `;
+        const renderList = () => {
+            const list = document.getElementById('pta-id-list');
+            list.innerHTML = '';
+            const cfg = getConfig();
+            if(cfg.enabledSets.length === 0) list.innerHTML = '<span style="color:#ccc; font-size:12px;">暂无</span>';
+            cfg.enabledSets.forEach(id => {
+                const tag = document.createElement('span');
+                tag.textContent = id + ' ×';
+                tag.style.cssText = `background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:12px; font-size:12px; cursor:pointer;`;
+                tag.onclick = () => {
+                    const newCfg = getConfig();
+                    newCfg.enabledSets = newCfg.enabledSets.filter(x => x !== id);
+                    saveConfig(newCfg);
+                    renderList();
+                };
+                list.appendChild(tag);
+            });
+        };
 
-        const contentContainer = document.createElement('div');
-        contentContainer.style.cssText = `
-            display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; gap: 10px; width: 100%;
-        `;
-
-        let startX, startY;
-        toggleBtn.addEventListener('mousedown', function(e) {
-            startX = e.clientX;
-            startY = e.clientY;
-        });
-        toggleBtn.addEventListener('click', function(e) {
-            const moveX = Math.abs(e.clientX - startX);
-            const moveY = Math.abs(e.clientY - startY);
-            if (moveX < 5 && moveY < 5) {
-                isCollapsed = !isCollapsed;
-                contentContainer.style.display = isCollapsed ? 'none' : 'flex';
-                toggleBtn.textContent = isCollapsed ? '↕ 展开菜单 (按住拖动)' : '↕ 收起菜单 (按住拖动)';
-                GM_setValue(MENU_STATE_KEY, isCollapsed);
+        document.getElementById('pta-add-id').onclick = () => {
+            const val = document.getElementById('pta-id-input').value.trim();
+            if(!val) return;
+            const cfg = getConfig();
+            if(!cfg.enabledSets.includes(val)) {
+                cfg.enabledSets.push(val);
+                saveConfig(cfg);
+                renderList();
             }
-        });
-
-        const btnStyle = `
-            padding: 10px 20px; color: white; border: none; border-radius: 6px;
-            cursor: pointer; font-size: 14px; font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2); width: 100%;
-        `;
-
-        // --- 修改点3：更新按钮点击事件 ---
-        const clearCurrentBtn = document.createElement('button');
-        clearCurrentBtn.textContent = '清空当前题目';
-        clearCurrentBtn.style.cssText = btnStyle + 'background: #3b82f6;';
-        clearCurrentBtn.onclick = () => {
-            if (!isCurrentSetEnabled()) return alert('请先在“管理题目集”中启用当前题库');
-            if (confirm('确定清空当前题目（代码或选项）？')) clearCurrentProblem();
+        };
+        
+        document.getElementById('pta-close-config').onclick = () => {
+            overlay.style.display = 'none';
         };
 
-        const clearAllBtn = document.createElement('button');
-        clearAllBtn.textContent = '清空所有已提交';
-        clearAllBtn.style.cssText = btnStyle + 'background: #ef4444;';
-        clearAllBtn.onclick = () => {
-            if (!isCurrentSetEnabled()) return alert('请先在“管理题目集”中启用当前题库');
-            startClearTask();
-        };
-
-        const configBtn = document.createElement('button');
-        configBtn.textContent = '管理题目集';
-        configBtn.style.cssText = btnStyle + 'background: #8b5cf6;';
-        configBtn.onclick = () => {
-            document.getElementById('pta-config-panel').style.display = 'block';
-            document.getElementById('pta-overlay').style.display = 'block';
-        };
-
-        contentContainer.appendChild(clearCurrentBtn);
-        contentContainer.appendChild(clearAllBtn);
-        contentContainer.appendChild(configBtn);
-        mainContainer.appendChild(toggleBtn);
-        mainContainer.appendChild(contentContainer);
-        document.body.appendChild(mainContainer);
-
-        makeDraggable(mainContainer, toggleBtn);
+        renderList();
     }
 
     function init() {
         if (GM_getValue(TASK_RUNNING_KEY, false)) {
             suppressLeaveWarning();
-            processNextTask();
+            // 页面加载后延迟执行，确保DOM就绪
+            setTimeout(processNextTask, 1500);
         } else {
-            createButtons();
-            createConfigPanel();
-            if (!isCurrentSetEnabled() && getCurrentProblemSetId()) {
-                console.log('PTA工具: 当前题目集未启用');
-            }
+            setTimeout(createButtons, 1000);
         }
     }
 
-    setTimeout(init, 1000);
-
+    init();
 })();

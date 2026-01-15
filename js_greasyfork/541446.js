@@ -1,21 +1,19 @@
 // ==UserScript==
 // @name         Alias Helper
 // @namespace    http://tampermonkey.net/
-// @version      1.5.2
+// @version      2.0
 // @description  Makes adding aliases easier.
 // @author       You
 // @match        https://gazellegames.net/torrents.php?action=editgroup&groupid=*
-// @match        https://steamdb.info/app/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gazellegames.net
 // @grant        GM_xmlhttpRequest
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.deleteValue
-// @grant        GM_openInTab
 // @grant        GM.addValueChangeListener
 // @grant        GM.removeValueChangeListener
+// @connect      *
 // @connect      api.vndb.org
-// @connect      steamdb.info
 // @connect      mobygames.com
 // @connect      id.twitch.tv
 // @connect      api.igdb.com
@@ -26,23 +24,9 @@
 (async () => {
     'use strict';
 
-    if (location.hostname === "steamdb.info") {
-        if (GM.getValue('checking_steamdb_aliases', 1)) {
-            if (document.getElementById('info')) {
-                const info = {};
-                const result = document.evaluate("//td[contains(text(),'name_localized')]/following-sibling::td[1]/table/tbody/tr/td[2]", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                const nodes = [];
-                for (let i = 0; i < result.snapshotLength; i++) {
-                    nodes.push(result.snapshotItem(i).textContent.trim());
-                }
-                info.name_localized = nodes;
-                GM.setValue('steamdb_alias_info', info);
-            }
-        }
-    }
-
     let IGDB_CLIENT = await GM.getValue("IGDB_CLIENT_ID", null);
     let IGDB_SECRET = await GM.getValue("IGDB_CLIENT_SECRET", null);
+    let STEAM_API_URL = await GM.getValue("STEAM_API_URL", null);
 
     if (!IGDB_CLIENT || !IGDB_SECRET) {
         IGDB_CLIENT = prompt("Enter your IGDB Client ID:");
@@ -52,6 +36,16 @@
             await GM.setValue("IGDB_CLIENT_SECRET", IGDB_SECRET);
         } else {
             alert("IGDB credentials are required.");
+            return;
+        }
+    }
+
+    if (!STEAM_API_URL) {
+        STEAM_API_URL = sanitizeUrl(prompt("Enter your steam api url:"));
+        if (STEAM_API_URL) {
+            await GM.setValue("STEAM_API_URL", STEAM_API_URL);
+        } else {
+            alert("Steam API url is required.");
             return;
         }
     }
@@ -66,6 +60,18 @@
             enhanceInput(originalInput);
         }
     }, 500);
+
+    function sanitizeUrl(input) {
+        if (typeof input !== "string") return null;
+
+        try {
+            const url = new URL(input.trim());
+            if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+            return url.origin + url.pathname.replace(/\/+$/, "");
+        } catch {
+            return null;
+        }
+    }
 
     function enhanceInput(originalInput) {
         originalInput.style.display = 'none';
@@ -102,7 +108,7 @@
             vndb: true,
             igdb: true,
             mobygames: false,
-            steamdb: false
+            steam: false
         };
 
         Object.entries(sources).forEach(([key, defaultValue]) => {
@@ -372,9 +378,10 @@
             const steamInput = document.querySelector("#steamuri");
             let steamAppId = null;
             if (steamInput?.value) {
-                const match = steamInput.value.match(/\d+/);
+                const match = steamInput.value.match(/(?:\/app\/)(\d+)|(?:%2Fapp%2F)(\d+)/);
+                console.log(match);
                 if (match) {
-                    steamAppId = match[0];
+                    steamAppId = match[1];
                 }
             }
 
@@ -384,7 +391,7 @@
             if (sources.vndb) tasks.push(fetchVNDBAliases(q));
             if (sources.igdb) tasks.push(fetchIGDBAliases(q));
             if (sources.mobygames) tasks.push(fetchMobyAliases(mobyInput?.value));
-            if (sources.steamdb && steamAppId) {
+            if (sources.steam && steamAppId) {
                 tasks.push(fetchSteamAliases(steamAppId));
             }
 
@@ -473,7 +480,7 @@
             function fetchIGDBAliases(query, token) {
                 return new Promise(async (resolve, reject) => {
                     try {
-                        const games = await igdbRequest("https://api.igdb.com/v4/games", `search "${query}"; fields name,alternative_names,game_localizations; limit 5;`, token);
+                        const games = await igdbRequest("https://api.igdb.com/v4/games", `search "${query}"; fields name,alternative_names,game_localizations; limit 1;`, token);
 
                         const aliasMap = new Map();
                         const localizationIds = new Set();
@@ -548,36 +555,32 @@
 
             // Steam
             function fetchSteamAliases(q) {
-                return new Promise((resolve) => {
-                    GM.deleteValue('steamdb_alias_info');
-                    GM.setValue('checking_steamdb_aliases', 1);
-                    const tab = GM_openInTab(`https://steamdb.info/app/${q}/info`);
-
-                    const listener = GM.addValueChangeListener(
-                        "steamdb_alias_info", (key, oldValue, newValue) => {
-                            GM.removeValueChangeListener(listener);
-                            tab.close();
-                            const aliases = newValue?.name_localized ?? [];
-
-                            GM.deleteValue(key);
-                            GM.deleteValue("checking_steamdb_aliases");
-                            if (!newValue) {
-                                console.warn("SteamDB returned no alias data");
-                                clearTimeout(timeout);
-                                resolve;
+                if (!q) {
+                    return Promise.resolve();
+                }
+                return new Promise(resolve => {
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: STEAM_API_URL + '/' + encodeURIComponent(q),
+                        responseType: "json",
+                        onload(res) {
+                            if (res.status < 200 || res.status >= 300) {
+                                console.warn(`Steam API request failed: ${res.status} ${res.statusText}`);
+                                return resolve([]);
                             }
-                            aliases.forEach((a) => collected.push({ name: a, src: "SteamDB" }));
-                            clearTimeout(timeout);
-                            resolve(aliases);
-                        }
-                    );
 
-                    const timeout = setTimeout(() => {
-                        GM.removeValueChangeListener(listener);
-                        try { tab.close(); } catch {}
-                        console.warn("Time out waiting for steamdb_alias_info");
-                        resolve();
-                    }, 15000);
+                            const data = typeof res.response === "string" ? JSON.parse(res.response) : res.response;
+                            const aliases = Array.isArray(data?.aliases) ? data.aliases : [];
+                            console.log(aliases);
+
+                            aliases.forEach((a) => {
+                                collected.push({name: a, src: "Steam"});
+                            });
+
+                            resolve(aliases);
+                        },
+                        onerror: resolve
+                    });
                 });
             }
         }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         在sp网址上展示店铺信息-整合版本
 // @namespace    http://tampermonkey.net/
-// @version      1.4.2
+// @version      1.4.3
 // @description  在smartpush网址上展示店铺信息按钮，整合灰度配置功能
 // @author       lulu
 // @match        *://*.smartpushedm.com/*
@@ -162,7 +162,6 @@
                 // MonkeyToast.show('配置未改变');
                 return;
             }
-            // 保存设置到session里
             localStorage.setItem(GRAY_CONFIG.STORAGE_KEY, modeId);
             const mode = Object.values(GRAY_CONFIG.MODES).find(m => m.id === modeId);
             if (mode) {
@@ -245,7 +244,7 @@
         displayText += `店铺merchantId：${storeId || '无'}\n`;
         displayText += `handle：${handle || '无'}\n`;
         displayText += `账号：${email || '无'}\n`;
-        displayText += `密码(写死)：Dw123456\n`;
+        displayText += `密码(写死)：Dw123456.\n`;
 
         if (env !== "OT") {
             displayText += isText
@@ -1028,7 +1027,7 @@
 
             // 9. 更新按钮
             const updateBtn_devops = document.createElement('button');
-            updateBtn_devops.textContent = currentCache !== getAccountInfo(true) ? '❎数据不一致' : '🔄 更新CICD';
+            updateBtn_devops.textContent = currentCache !== getAccountInfo(true) ? '❎数据不一致' : '🔄 手动更新';
             updateBtn_devops.className = 'smartpush-action-btn with-checkbox';
 
             const autoUpdateContainer = document.createElement('div');

@@ -1,0 +1,228 @@
+// ==UserScript==
+// @name:zh-CN          DCCG官网汉化
+// @name                DCCG_CN
+// @version             1.0
+// @description         DCCG官网汉化插件
+// @description:zh-cn   DCCG官网汉化插件
+// @author              klingeling
+// @match               https://www.takaratomy.co.jp/products/conan-cardgame/*
+// @license             AGPL-3.0
+// @resource            data https://raw.githubusercontent.com/BoardGameProj/conantcg-english/refs/heads/main/crawler/DCCG_CN.json
+// @grant               GM_addStyle
+// @grant               GM_getResourceText
+// @grant               GM_registerMenuCommand
+// @namespace https://greasyfork.org/users/866495
+// @downloadURL https://update.greasyfork.org/scripts/562592/DCCG_CN.user.js
+// @updateURL https://update.greasyfork.org/scripts/562592/DCCG_CN.meta.js
+// ==/UserScript==
+
+
+(function () {
+    "use strict";
+    const DEBUG = window.localStorage["dbg_mode"] == "开";
+    const OUTPUT = window.localStorage["out_word"] == "开";
+
+    GM_registerMenuCommand(`调试汉化文本: 【${DEBUG ? "开" : "关"}】`, () => {
+        window.localStorage["dbg_mode"] = DEBUG ? "关" : "开";
+        window.location.reload();
+    });
+
+    GM_registerMenuCommand(`在控制台输出未匹配文本: 【${OUTPUT ? "开" : "关"}】`, () => {
+        window.localStorage["out_word"] = OUTPUT ? "关" : "开";
+        window.location.reload();
+    });
+
+    document.querySelector("html").setAttribute("lang", "zh-CN");
+
+    let Locales;
+
+    if (DEBUG) {
+        const genBtn = (text, fun, cls = null) => {
+            const btn = document.createElement("button");
+            btn.textContent = text;
+            btn.addEventListener("click", fun);
+            if (cls !== null) {
+                btn.className = cls;
+            }
+            return btn;
+        };
+
+        const template = `{"DOC":{"更新时间":"调试模式","贡献名单":["调试模式"]},\n"STATIC":\n{\n\n},\n"INPUT":\n{\n\n},\n"LABEL":\n{\n\n},\n"DYNAMIC":\n{\n\n}\n}`;
+        const box = document.createElement("div");
+        box.className = "sdc";
+        const text = document.createElement("textarea");
+        box.appendChild(text);
+        const action = document.createElement("div");
+        action.className = "sdc-links";
+        box.appendChild(action);
+        const btnSave = genBtn("💾 保存并应用", () => {
+            const raw = text.value.trim();
+            if (!raw) {
+                alert("翻译文本不能为空!!!");
+            } else {
+                try {
+                    JSON.parse(raw);
+                    window.localStorage["dccg_lang"] = raw;
+                    window.location.reload();
+                } catch (e) {
+                    alert("翻译文本不是有效的JSON格式!!!");
+                }
+            }
+        });
+        action.appendChild(btnSave);
+        const btnReset = genBtn("🗑️ 清空文本", () => {
+            window.localStorage["dccg_lang"] = template;
+            window.location.reload();
+        });
+        action.appendChild(btnReset);
+        const btnOnline = genBtn("📄 当前在线文本", () => {
+            if (confirm("替换为在线版本后当前所做修改将会丢失, 确定要继续吗?")) {
+                text.value = GM_getResourceText("data");
+            }
+        });
+        action.appendChild(btnOnline);
+
+        const father = document.getElementById("conan");
+        father.insertBefore(box, father.firstChild);
+        const customLang = window.localStorage["dccg_lang"] ?? template;
+        text.value = customLang;
+        Locales = JSON.parse(customLang);
+    } else {
+        Locales = JSON.parse(GM_getResourceText("data"));
+    }
+
+    //计时
+    const Start = new Date().getTime();
+
+    {//静态元素
+        if (OUTPUT) { console.log("〖静态元素〗"); }
+        for (const [css, dic] of Object.entries(Locales.STATIC)) {
+            let hasUntranslated = false; // 标志变量，用于跟踪是否有未翻译的文本
+            const elements = document.querySelectorAll(css);
+            if (elements.length > 0) {
+                for (let i = 0; i < elements.length; i++) {
+                    const element = elements[i];
+                    if (element.childElementCount === 0) {//节点内部无其他元素
+                        const raw = element.innerText?.trim();
+                        if (!raw) { continue; }
+                        const txt = dic[raw];
+                        if (txt) {
+                            element.innerText = txt;
+                        } else if (OUTPUT) {
+                            if (!hasUntranslated) {
+                                console.log(`〖${css}〗`);
+                                hasUntranslated = true;
+                            }
+                            console.log(`"${raw}": "",`);
+                        }
+                    } else {//节点内部有其他元素
+                        const nodes = element.childNodes;
+                        for (let j = 0; j < nodes.length; j++) {
+                            const node = nodes[j];
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                const raw = node.textContent?.trim();
+                                if (!raw) { continue; }
+                                const txt = dic[raw];
+                                if (txt) {
+                                    node.textContent = txt;
+                                } else if (OUTPUT) {
+                                    if (!hasUntranslated) {
+                                        console.log(`〖${css}〗`);
+                                        hasUntranslated = true;
+                                    }
+                                    console.log(`"${raw}": "",`);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // if (OUTPUT) { console.warn(`CSS选择器未匹配到任何元素: ${css}`); }
+            }
+        }
+    }
+
+    {//输入框
+        const inputs = Locales.INPUT;
+        if (OUTPUT) { console.log("〖输入框〗"); }
+        const elements = document.querySelectorAll("input");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const raw = element.placeholder;
+            if (!raw) { continue; }
+            const txt = inputs[raw];
+            if (txt) {
+                element.placeholder = txt;
+            } else if (OUTPUT) {
+                console.log(`"${raw}": "",`);
+            }
+        }
+    }
+
+    {//悬浮提示
+        const labels = Locales.LABEL;
+        if (OUTPUT) { console.log("〖提示文本〗"); }
+        const elements = document.querySelectorAll("*[aria-label]");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const raw = element.getAttribute("aria-label");
+            if (!raw) { continue; }
+            const txt = labels[raw];
+            if (txt) {
+                element.setAttribute("aria-label", txt);
+            } else if (OUTPUT) {
+                console.log(`"${raw}": "",`);
+            }
+        }
+    }
+
+    const { script: { version } } = GM_info;
+    const { DOC: { "更新时间": update, "贡献名单": contribution } } = Locales;
+
+    const End = new Date().getTime();
+
+    // 统计耗时
+    console.log("执行耗时", `${End - Start} ms`);
+    console.log("=================================");
+    console.log(`插件版本: ${version}`);
+    console.log(`更新时间: ${update}`);
+    console.log(`贡献名单: ${contribution.join(", ")}`);
+    console.log("=================================");
+
+    // 添加样式
+    GM_addStyle(`
+  .tabnav-tabs > a {
+    min-width: 80px;
+  }
+  .sdc {
+    display: flex;
+  }
+  .sdc > textarea {
+    width: 100%;
+    height: 200px;
+    min-height: 200px;
+    resize: vertical;
+  }
+  .sdc > div.sdc-links {
+    width: 150px;
+    margin: 5px;
+  }
+  .sdc > div.sdc-links > * {
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #213145;
+    color: white;
+    font-size: 12px;
+    border-radius: 0px;
+    display: inline-block;
+    height: 30px;
+  }
+  .sdc > div.sdc-links > a:last-child {
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 0px;
+    color: #67c1f5;
+    background-color: #273b4b;
+  }
+`);
+})(); 

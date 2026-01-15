@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name    Office_Authentication
-// @version  1.3.1
+// @version  1.3.3
 // @description This module customizes the authentication system.
 // @license AGPLv3.0
 // @grant    none
@@ -160,13 +160,20 @@ Applications of this module:
             var fInputAddress1 = document.querySelector('input[name="address1"]');
             var fInputAddress2 = document.querySelector('input[name="address2"]');
             var fInputCity = document.querySelector('input[name="city"]');
-            var fInputState = document.querySelector('input[name="state"]');
+            var fInputState = document.querySelector('[name="state"]');
             var fInputPostalCode = document.querySelector('input[name="postcode"]');
             var fInputMelliCode = document.querySelector('input#customfield13');
 
             var fUserFullName = `${fInputFirstName.value} ${fInputLastName.value}`;
 
             var fFullAddress = "";
+
+            if (fInputState.tagName.toLowerCase() == "input" && fInputState.value.length > 0) {
+                fFullAddress += `${fInputState.value}`;
+            } else if (fInputState.tagName.toLowerCase() == "select") {
+                fFullAddress += `${fInputState.options[fInputState.selectedIndex].text}`;
+            }
+
             if (fInputState.value.length > 0) {
                 fFullAddress += `${fInputState.value}`;
             }

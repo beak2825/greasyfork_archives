@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         komica記憶發文自訂名稱跟類別
 // @namespace    http://tampermonkey.net/
-// @version      2.2.3
+// @version      2.2.4
 // @description  修復BUG
 // @author       Grok
 // @match        *://*.komica1.org/*
 // @exclude      *://*.komica1.org/*/src/*
 // @exclude      *://*.komica1.org/*/thumb/*
 // @exclude      *://*.komica1.org/*/pixmicat.php?mode=module*
+// @icon https://www.google.com/s2/favicons?sz=64&domain=komica1.org
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js

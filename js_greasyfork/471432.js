@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         手机助手
 // @namespace    http://tampermonkey.net/
-// @version      10.0.0.95
+// @version      10.0.0.96
 // @description  自动滚动，嗅探图片、视频，字体放大，去除广告浮动
 // @author       You
 // @match        *://*/*
@@ -2416,14 +2416,11 @@ opacity:1!important;
         function aOpenBlank() {
 
             docSltAll("head").forEach(function(elet) {
-
-                if (!elet.querySelector("base#JqMA-mark-openNew")) {
-                    elet.appendChild(createElement('base', {
-                        id: "JqMA-mark-openNew",
-                        target: "_blank",
-                        rel: "noopener noreferrer"
-                    }));
-                }
+                const baseId = "JqMA-mark-openNew";
+                !elet.querySelector(`#${baseId}`) && elet.appendChild(createElement('base', {id:baseId,target:"_blank",rel:"noopener noreferrer"}));
+            });
+            docSltAll('a[target]').forEach(link => {
+                link.removeAttribute('target');
             });
         }
 

@@ -2,7 +2,7 @@
 // @name         Milovana: Sidebar
 // @namespace    wompi72
 // @author       wompi72
-// @version      1.0.8
+// @version      1.0.9
 // @description  Milovana Sidebar
 // @match        *://milovana.com/*
 // @grant        none
@@ -85,33 +85,177 @@ function teaseUrl(teaseId) {
     return `https://milovana.com/webteases/showtease.php?id=${teaseId}`;
 }
 
+
 const STORAGE = {
-    SIDEBAR_COLLAPSED: `${STORAGE_PREFIX}_collapsed`,
-    VOLUME: `${STORAGE_PREFIX}_volume`,
+    SETTINGS: `${STORAGE_PREFIX}_settings`,
+    TEASE_SETTINGS: `${STORAGE_PREFIX}_${pageData.id}_settings`,
     NOTES: `${STORAGE_PREFIX}_${pageData.id}_notes`,
-    STOPWATCH_START_ON_LOAD: `${STORAGE_PREFIX}_${pageData.id}_stopwatch_start_on_load`,
     PAGES_VISITED: `${STORAGE_PREFIX}_${pageData.id}_pages_visited`,
-    RANDOM_PAGE_FROM: `${STORAGE_PREFIX}_${pageData.id}_random_page_from`,
-    RANDOM_PAGE_TO: `${STORAGE_PREFIX}_${pageData.id}_random_page_to`,
-    RANDOM_PAGE_RELATIVE: `${STORAGE_PREFIX}_${pageData.id}_random_page_relative`,
-    RNG_FROM: `${STORAGE_PREFIX}_${pageData.id}_rng_from`,
-    RNG_TO: `${STORAGE_PREFIX}_${pageData.id}_rng_to`,
     RNG_HISTORY: `${STORAGE_PREFIX}_${pageData.id}_rng_history`,
-    METRONOME_BPM: `${STORAGE_PREFIX}_${pageData.id}_metronome_bpm`,
-    METRONOME_TARGET_COUNT: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_count`,
-    METRONOME_TARGET_COUNT_ACTIVE: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_count_active`,
-    METRONOME_TARGET_TIME: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_time`,
-    METRONOME_TARGET_TIME_ACTIVE: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_time_active`,
     EDGE_TOTAL: `${STORAGE_PREFIX}_${pageData.id}_edge_total`,
-    EDGE_COOLDOWN_ACTIVE: `${STORAGE_PREFIX}_${pageData.id}_edge_cooldown_active`,
-    EDGE_COOLDOWN_TIME: `${STORAGE_PREFIX}_${pageData.id}_edge_cooldown_time`,
-    EDGE_PAUSE_METRONOME: `${STORAGE_PREFIX}_${pageData.id}_edge_pause_metronome`,
     TIMERS: `${STORAGE_PREFIX}_${pageData.id}_timers`,
-    OVERLAY_SIDEBAR: `${STORAGE_PREFIX}_overlay_sidebar`,
-    OVERLAY_EOS: `${STORAGE_PREFIX}_overlay_sidebar_eos`,
     CURRENT_SESSION: `${STORAGE_PREFIX}_current_session`,
     PAST_SESSIONS: `${STORAGE_PREFIX}_past_sessions`,
 }
+
+class Settings {
+    settings = {
+        SIDEBAR_COLLAPSED: false,
+        VOLUME: 0.5,
+        OVERLAY_SIDEBAR: false,
+        OVERLAY_EOS: false,
+    };
+    teaseSettings = {
+        STOPWATCH_START_ON_LOAD: false,
+        RANDOM_PAGE_FROM: 1,
+        RANDOM_PAGE_TO: 6,
+        RANDOM_PAGE_RELATIVE: false,
+        RNG_FROM: 1,
+        RNG_TO: 6,
+        METRONOME_BPM: 120,
+        METRONOME_TARGET_COUNT: 100,
+        METRONOME_TARGET_COUNT_ACTIVE: false,
+        METRONOME_TARGET_TIME: 60,
+        METRONOME_TARGET_TIME_ACTIVE: false,
+        EDGE_COOLDOWN_ACTIVE: true,
+        EDGE_COOLDOWN_TIME: 30,
+        EDGE_PAUSE_METRONOME: true,
+        SECTIONS_COLLAPSED: {},
+    }
+
+    DEPRECATED_STORAGE = {
+        SIDEBAR_COLLAPSED: `${STORAGE_PREFIX}_collapsed`,
+        VOLUME: `${STORAGE_PREFIX}_volume`,
+        OVERLAY_SIDEBAR: `${STORAGE_PREFIX}_overlay_sidebar`,
+        OVERLAY_EOS: `${STORAGE_PREFIX}_overlay_sidebar_eos`,
+        STOPWATCH_START_ON_LOAD: `${STORAGE_PREFIX}_${pageData.id}_stopwatch_start_on_load`,
+        RANDOM_PAGE_FROM: `${STORAGE_PREFIX}_${pageData.id}_random_page_from`,
+        RANDOM_PAGE_TO: `${STORAGE_PREFIX}_${pageData.id}_random_page_to`,
+        RANDOM_PAGE_RELATIVE: `${STORAGE_PREFIX}_${pageData.id}_random_page_relative`,
+        RNG_FROM: `${STORAGE_PREFIX}_${pageData.id}_rng_from`,
+        RNG_TO: `${STORAGE_PREFIX}_${pageData.id}_rng_to`,
+        METRONOME_BPM: `${STORAGE_PREFIX}_${pageData.id}_metronome_bpm`,
+        METRONOME_TARGET_COUNT: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_count`,
+        METRONOME_TARGET_COUNT_ACTIVE: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_count_active`,
+        METRONOME_TARGET_TIME: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_time`,
+        METRONOME_TARGET_TIME_ACTIVE: `${STORAGE_PREFIX}_${pageData.id}_metronome_target_time_active`,
+        EDGE_COOLDOWN_ACTIVE: `${STORAGE_PREFIX}_${pageData.id}_edge_cooldown_active`,
+        EDGE_COOLDOWN_TIME: `${STORAGE_PREFIX}_${pageData.id}_edge_cooldown_time`,
+        EDGE_PAUSE_METRONOME: `${STORAGE_PREFIX}_${pageData.id}_edge_pause_metronome`,
+    }
+
+    constructor() {
+        const loadedSettings = JSON.parse(localStorage.getItem(STORAGE.SETTINGS));
+        if (!isEmpty(loadedSettings)) {
+            for (const key in this.settings) {
+                if (loadedSettings[key] === undefined) {
+                    loadedSettings[key] = this.settings[key];
+                }
+            }
+            this.settings = loadedSettings;
+        } else {
+            this.migrateDeprecatedSettings();
+            this.saveSettings();
+        }
+
+        const loadedTeaseSettings = JSON.parse(localStorage.getItem(STORAGE.TEASE_SETTINGS));
+        if (!isEmpty(loadedTeaseSettings)) {
+            for (const key in this.teaseSettings) {
+                if (loadedTeaseSettings[key] === undefined) {
+                    loadedTeaseSettings[key] = this.teaseSettings[key];
+                }
+            }
+            this.teaseSettings = loadedTeaseSettings;
+        } else {
+            this.migrateDeprecatedTeaseSettings();
+            this.saveTeaseSettings();
+        }
+    }
+
+    migrateDeprecatedSettings() {
+        for (const key in this.settings) {
+            console.log(`Checking for deprecated storage key: ${key}`);
+            if (this.DEPRECATED_STORAGE[key]) {
+                let value = localStorage.getItem(this.DEPRECATED_STORAGE[key]);
+                console.log(`Found deprecated storage key: ${key} with value: ${value}`);
+                if (value === null) continue;
+
+                try {
+                    value = JSON.parse(value);
+                } catch (e) {}
+
+                console.log(`Migrating storage key: ${key} to ${value}`);
+                this.settings[key] = value;
+                localStorage.removeItem(this.DEPRECATED_STORAGE[key]);
+            }
+        }
+    }
+
+
+    migrateDeprecatedTeaseSettings() {
+        for (const key in this.teaseSettings) {
+            console.log(`Checking for deprecated storage key: ${key}`);
+            if (this.DEPRECATED_STORAGE[key]) {
+                let value = localStorage.getItem(this.DEPRECATED_STORAGE[key]);
+                console.log(`Found deprecated storage key: ${key} with value: ${value}`);
+                if (value === null) continue;
+
+                try {
+                    value = JSON.parse(value);
+                } catch (e) {}
+
+                console.log(`Migrating storage key: ${key} to ${value}`);
+                this.teaseSettings[key] = value;
+                localStorage.removeItem(this.DEPRECATED_STORAGE[key]);
+            }
+        }
+    }
+
+    saveSettings() {
+        localStorage.setItem(STORAGE.SETTINGS, JSON.stringify(this.settings));
+    }
+
+    saveTeaseSettings() {
+        localStorage.setItem(STORAGE.TEASE_SETTINGS, JSON.stringify(this.teaseSettings));
+    }
+
+    addSection() {
+        this.content = sidebar.addSection('settings', 'Settings');
+    }
+    addSectionContent() {
+        sidebar.addButton('Reset Everything', this.resetEverything.bind(this), this.content);
+        sidebar.addButton('Unfold All', this.unfoldAll.bind(this), this.content);
+        sidebar.addButton('Fold All', this.foldAll.bind(this), this.content);
+        this.overlaySidebar = sidebar.addCheckbox("Overlay Sidebar", () => {
+            this.settings.OVERLAY_SIDEBAR = this.overlaySidebar.checked;
+            this.saveSettings();
+        }, this.content)
+        this.overlaySidebar.checked = this.settings.OVERLAY_SIDEBAR;
+
+        this.overlayEos = sidebar.addCheckbox("Overlay Sidebar EOS", () => {
+            this.settings.OVERLAY_EOS = this.overlayEos.checked;
+            this.saveSettings();
+        }, this.content)
+        this.overlayEos.checked = this.settings.OVERLAY_EOS;
+    }
+
+    resetEverything() {
+        const keysToRemove = Object.keys(localStorage).filter(key => key.startsWith(`${STORAGE_PREFIX}_${pageData.id}`));
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        if (pageData.type === TEASE_TYPES.eos) return; // should still display reset data.
+
+        location.reload();
+    }
+    unfoldAll() {
+        sidebar.unfoldAll();
+    }
+    foldAll() {
+        sidebar.foldAll();
+        sidebar.unfoldSection('settings');
+    }
+}
+
+const settings = new Settings();
 
 class Sidebar {
     sidebar;
@@ -137,7 +281,7 @@ class Sidebar {
         document.body.appendChild(this.toggleBtn);
 
 
-        if (localStorage.getItem(STORAGE.SIDEBAR_COLLAPSED) === 'true') {
+        if (settings.settings.SIDEBAR_COLLAPSED) {
             this.collapse();
         } else {
             this.expand();
@@ -158,28 +302,29 @@ class Sidebar {
     foldSection(key) {
         const section = this.sections[key];
         if (!section) return;
-        const storageKey = `${STORAGE_PREFIX}_${pageData.id}_section_${key}`;
 
         section.indicator.textContent = '▶ ';
         section.content.style.display = 'none';
-        localStorage.setItem(storageKey, 'true');
+        settings.teaseSettings.SECTIONS_COLLAPSED[key] = true;
+        settings.saveTeaseSettings();
     }
 
     unfoldSection(key) {
         const section = this.sections[key];
         if (!section) return;
-        const storageKey = `${STORAGE_PREFIX}_${pageData.id}_section_${key}`;
 
         section.indicator.textContent = '▼ ';
         section.content.style.display = 'flex';
-        localStorage.setItem(storageKey, 'false');
+        settings.teaseSettings.SECTIONS_COLLAPSED[key] = false;
+        settings.saveTeaseSettings();
     }
 
     collapse() {
         this.sidebar.classList.add('collapsed');
         document.body.classList.remove('mv-sidebar-expanded');
         this.toggleBtn.style.display = 'block';
-        localStorage.setItem(STORAGE.SIDEBAR_COLLAPSED, 'true');
+        settings.settings.SIDEBAR_COLLAPSED = true;
+        settings.saveSettings();
     }
 
     expand() {
@@ -194,14 +339,15 @@ class Sidebar {
         }
 
         this.toggleBtn.style.display = 'none';
-        localStorage.setItem(STORAGE.SIDEBAR_COLLAPSED, 'false');
+        settings.settings.SIDEBAR_COLLAPSED = false;
+        settings.saveSettings();
     }
 
     getIsOverlayed() {
         if (pageData.type === TEASE_TYPES.eos) {
-            return localStorage.getItem(STORAGE.OVERLAY_EOS) === 'true';
+            return settings.settings.OVERLAY_EOS;
         } else if (pageData.type === TEASE_TYPES.text) {
-            return localStorage.getItem(STORAGE.OVERLAY_SIDEBAR) === 'true';
+            return settings.settings.OVERLAY_SIDEBAR;
         } else {
             return true;
         }
@@ -240,7 +386,7 @@ class Sidebar {
             content: content
         };
 
-        let collapsed = localStorage.getItem(storageKey) !== 'false';
+        let collapsed = settings.teaseSettings.SECTIONS_COLLAPSED[key] !== false;
 
         if (collapsed) {
             this.foldSection(key);
@@ -249,7 +395,7 @@ class Sidebar {
         }
 
         header.addEventListener('click', () => {
-            const isCollapsed = localStorage.getItem(storageKey) === 'true';
+            const isCollapsed = settings.teaseSettings.SECTIONS_COLLAPSED[key] !== false;
             if (isCollapsed) {
                 this.unfoldSection(key);
             } else {
@@ -392,8 +538,9 @@ class Sound {
     audioContext;
     volumeGainNode;
     content;
+
     constructor() {
-        this.storedVolume = Math.max(0, Math.min(1, parseFloat(localStorage.getItem(STORAGE.VOLUME)) || 0.5));
+        this.storedVolume = settings.settings.VOLUME;
     }
     
     initAudio() {
@@ -413,7 +560,8 @@ class Sound {
             if (this.audioContext) {
                 this.volumeGainNode.gain.setValueAtTime(val, this.audioContext.currentTime);
             }
-            localStorage.setItem(STORAGE.VOLUME, val);
+            settings.settings.VOLUME = val;
+            settings.saveSettings();
         }, settingsContent);
 
         sidebar.addButton('Test', this.playSound.bind(this), settingsContent);
@@ -466,7 +614,7 @@ class Stopwatch {
         this.content = sidebar.addSection('stopwatch', 'Stopwatch');
         this.timerDisplay = document.createElement('div');
         this.timerDisplay.classList.add('auto-margin-height');
-        const startOnLoadSetting = localStorage.getItem(STORAGE.STOPWATCH_START_ON_LOAD) === 'true';
+        const startOnLoadSetting = settings.teaseSettings.STOPWATCH_START_ON_LOAD;
         this.content.appendChild(this.timerDisplay);
         this.toggleButton = sidebar.addButton('Start', this.toggleTimer.bind(this), this.content);
         this.updateDisplay()
@@ -474,12 +622,13 @@ class Stopwatch {
             this.startTimer();
         }
         sidebar.addButton('Reset', this.resetTimer.bind(this), this.content);
-        this.startOnLoadCheckbox = sidebar.addCheckbox('Start on page load', this.startOnLoad.bind(this), this.content);
+        this.startOnLoadCheckbox = sidebar.addCheckbox('Start on page load', this.startOnLoadChange.bind(this), this.content);
         this.startOnLoadCheckbox.checked = startOnLoadSetting;
     }
 
-    startOnLoad() {
-        localStorage.setItem(STORAGE.STOPWATCH_START_ON_LOAD, this.startOnLoadCheckbox.checked ? 'true' : 'false');
+    startOnLoadChange() {
+        settings.teaseSettings.STOPWATCH_START_ON_LOAD = this.startOnLoadCheckbox.checked;
+        settings.saveTeaseSettings();
     }
 
     toggleTimer() {
@@ -570,18 +719,21 @@ class TextTeasePageNavigation {
 
         sidebar.addButton('Random', this.goRandom.bind(this), randomRow);
         this.randFrom = sidebar.addNumberInput('From', randomRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.RANDOM_PAGE_FROM, this.randFrom.value);
+            settings.teaseSettings.RANDOM_PAGE_FROM = parseInt(this.randFrom.value);
+            settings.saveTeaseSettings();
         });
         this.randTo = sidebar.addNumberInput('To', randomRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.RANDOM_PAGE_TO, this.randTo.value);
+            settings.teaseSettings.RANDOM_PAGE_TO = parseInt(this.randTo.value);
+            settings.saveTeaseSettings();
         });
-        this.randFrom.value = localStorage.getItem(STORAGE.RANDOM_PAGE_FROM) || 1;
-        this.randTo.value = localStorage.getItem(STORAGE.RANDOM_PAGE_TO) || 6;
+        this.randFrom.value = settings.teaseSettings.RANDOM_PAGE_FROM;
+        this.randTo.value = settings.teaseSettings.RANDOM_PAGE_TO;
 
         this.relativeRandom = sidebar.addCheckbox('Relative to current Page', () => {
-            localStorage.setItem(STORAGE.RANDOM_PAGE_RELATIVE, this.relativeRandom.checked);
+            settings.teaseSettings.RANDOM_PAGE_RELATIVE = this.relativeRandom.checked;
+            settings.saveTeaseSettings();
         }, this.content);
-        this.relativeRandom.checked = localStorage.getItem(STORAGE.RANDOM_PAGE_RELATIVE) === 'true';
+        this.relativeRandom.checked = settings.teaseSettings.RANDOM_PAGE_RELATIVE;
 
         const gotoRow = document.createElement('div');
         gotoRow.classList.add('flex-row');
@@ -663,22 +815,25 @@ class EdgeCounter {
         const cooldownRow = document.createElement('div');
         cooldownRow.classList.add('flex-row');
         this.cooldownActive = sidebar.addCheckbox('Cooldown (s):', (e) => {
-            localStorage.setItem(STORAGE.EDGE_COOLDOWN_ACTIVE, e.target.checked);
+            settings.teaseSettings.EDGE_COOLDOWN_ACTIVE = e.target.checked;
+            settings.saveTeaseSettings();
         }, cooldownRow);
         this.cooldownInput = sidebar.addNumberInput('Secs', cooldownRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.EDGE_COOLDOWN_TIME, this.cooldownInput.value);
+            settings.teaseSettings.EDGE_COOLDOWN_TIME = parseInt(this.cooldownInput.value);
+            settings.saveTeaseSettings();
         });
         this.cooldownDisplay = sidebar.addText('', cooldownRow, ['auto-margin-height']);
         this.content.appendChild(cooldownRow);
 
         this.pauseMetronomeCheckbox = sidebar.addCheckbox('Pause Metronome on Edge', (e) => {
-            localStorage.setItem(STORAGE.EDGE_PAUSE_METRONOME, e.target.checked);
+            settings.teaseSettings.EDGE_PAUSE_METRONOME = e.target.checked;
+            settings.saveTeaseSettings();
         }, this.content);
 
         this.totalCount = parseInt(localStorage.getItem(STORAGE.EDGE_TOTAL)) || 0;
-        this.cooldownInput.value = localStorage.getItem(STORAGE.EDGE_COOLDOWN_TIME) || 30;
-        this.cooldownActive.checked = localStorage.getItem(STORAGE.EDGE_COOLDOWN_ACTIVE) !== 'false';
-        this.pauseMetronomeCheckbox.checked = localStorage.getItem(STORAGE.EDGE_PAUSE_METRONOME) !== 'false';
+        this.cooldownInput.value = settings.teaseSettings.EDGE_COOLDOWN_TIME;
+        this.cooldownActive.checked = settings.teaseSettings.EDGE_COOLDOWN_ACTIVE;
+        this.pauseMetronomeCheckbox.checked = settings.teaseSettings.EDGE_PAUSE_METRONOME;
 
         this.updateDisplay();
     }
@@ -768,7 +923,7 @@ class Metronome {
         ctrlRow.classList.add('flex-row');
         sidebar.addText('BPM:', ctrlRow, ["auto-margin-height"]);
         this.bpmInput = sidebar.addNumberInput('BPM', ctrlRow, ['small-input']);
-        this.bpmInput.value = localStorage.getItem(STORAGE.METRONOME_BPM) || 120;
+        this.bpmInput.value = settings.teaseSettings.METRONOME_BPM;
         this.bpmInput.addEventListener('change', () => {
             this.saveToStorage();
         });
@@ -796,35 +951,38 @@ class Metronome {
         // Targets Section
         const targetCountRow = document.createElement('div');
         targetCountRow.classList.add('flex-row');
-        const targetCountActiveValue = localStorage.getItem(STORAGE.METRONOME_TARGET_COUNT_ACTIVE) === 'true';
         this.targetCountActive = sidebar.addCheckbox('Target Count:', () => {
-            localStorage.setItem(STORAGE.METRONOME_TARGET_COUNT_ACTIVE, this.targetCountActive.checked ? 'true' : 'false');
+            settings.teaseSettings.METRONOME_TARGET_COUNT_ACTIVE = this.targetCountActive.checked;
+            settings.saveTeaseSettings();
         }, targetCountRow);
-        this.targetCountActive.checked = targetCountActiveValue;
+        this.targetCountActive.checked = settings.teaseSettings.METRONOME_TARGET_COUNT_ACTIVE;
         this.targetCountInput = sidebar.addNumberInput('Count', targetCountRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.METRONOME_TARGET_COUNT, this.targetCountInput.value);
+            settings.teaseSettings.METRONOME_TARGET_COUNT = parseInt(this.targetCountInput.value);
+            settings.saveTeaseSettings();
         });
-        this.targetCountInput.value = localStorage.getItem(STORAGE.METRONOME_TARGET_COUNT) || 100;
+        this.targetCountInput.value = settings.teaseSettings.METRONOME_TARGET_COUNT;
         this.content.appendChild(targetCountRow);
 
         const targetTimeRow = document.createElement('div');
         targetTimeRow.classList.add('flex-row');
-        const targetTimeActiveValue = localStorage.getItem(STORAGE.METRONOME_TARGET_TIME_ACTIVE) === 'true';
         this.targetTimeActive = sidebar.addCheckbox('Target Time (s):', () => {
-            localStorage.setItem(STORAGE.METRONOME_TARGET_TIME_ACTIVE, this.targetTimeActive.checked ? 'true' : 'false');
+            settings.teaseSettings.METRONOME_TARGET_TIME_ACTIVE = this.targetTimeActive.checked;
+            settings.saveTeaseSettings();
         }, targetTimeRow);
-        this.targetTimeActive.checked = targetTimeActiveValue;
+        this.targetTimeActive.checked = settings.teaseSettings.METRONOME_TARGET_TIME_ACTIVE;
         this.targetTimeInput = sidebar.addNumberInput('Secs', targetTimeRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.METRONOME_TARGET_TIME, this.targetTimeInput.value);
+            settings.teaseSettings.METRONOME_TARGET_TIME = parseInt(this.targetTimeInput.value);
+            settings.saveTeaseSettings();
         });
-        this.targetTimeInput.value = localStorage.getItem(STORAGE.METRONOME_TARGET_TIME) || 60;
+        this.targetTimeInput.value = settings.teaseSettings.METRONOME_TARGET_TIME;
         this.content.appendChild(targetTimeRow);
     }
 
     saveToStorage() {
         const val = parseInt(this.bpmInput.value);
         if (val > 0) {
-            localStorage.setItem(STORAGE.METRONOME_BPM, val);
+            settings.teaseSettings.METRONOME_BPM = val;
+            settings.saveTeaseSettings();
             if (this.isRunning) this.bpmUpdatePending = true;
         }
     }
@@ -938,13 +1096,15 @@ class RNG {
         randomRow.classList.add(...['flex-row', 'full-width']);
         this.content.appendChild(randomRow);
         this.randFrom = sidebar.addNumberInput('From', randomRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.RNG_FROM, this.randFrom.value);
+            settings.teaseSettings.RNG_FROM = parseInt(this.randFrom.value);
+            settings.saveTeaseSettings();
         });
         this.randTo = sidebar.addNumberInput('To', randomRow, ['small-input'], () => {
-            localStorage.setItem(STORAGE.RNG_TO, this.randTo.value);
+            settings.teaseSettings.RNG_TO = parseInt(this.randTo.value);
+            settings.saveTeaseSettings();
         });
-        this.randFrom.value = localStorage.getItem(STORAGE.RNG_FROM) || 1;
-        this.randTo.value = localStorage.getItem(STORAGE.RNG_TO) || 6;
+        this.randFrom.value = settings.teaseSettings.RNG_FROM;
+        this.randTo.value = settings.teaseSettings.RNG_TO;
         sidebar.addButton('Generate', this.generateNumber.bind(this), randomRow);
         this.displayGenerated = sidebar.addText("...", randomRow, ["rng-result"])
         this.hitoryEl = sidebar.addText(`History: ${this.rngHistory.join(',')}`, this.content, ["text-small"]);
@@ -969,44 +1129,7 @@ class RNG {
     }
 }
 
-class Settings {
-    constructor() {
-        this.overlaySidebarStored = localStorage.getItem(STORAGE.OVERLAY_SIDEBAR) === 'true';
-        this.overlayEosStored = localStorage.getItem(STORAGE.OVERLAY_EOS) === 'true';
-    }
-    addSection() {
-        this.content = sidebar.addSection('settings', 'Settings');
-    }
-    addSectionContent() {
-        sidebar.addButton('Reset Everything', this.resetEverything.bind(this), this.content);
-        sidebar.addButton('Unfold All', this.unfoldAll.bind(this), this.content);
-        sidebar.addButton('Fold All', this.foldAll.bind(this), this.content);
-        this.overlaySidebar = sidebar.addCheckbox("Overlay Sidebar", () => {
-            localStorage.setItem(STORAGE.OVERLAY_SIDEBAR, this.overlaySidebar.checked);
-        }, this.content)
-        this.overlaySidebar.checked = this.overlaySidebarStored;
 
-        this.overlayEos = sidebar.addCheckbox("Overlay Sidebar EOS", () => {
-            localStorage.setItem(STORAGE.OVERLAY_EOS, this.overlayEos.checked);
-        }, this.content)
-        this.overlayEos.checked = this.overlayEosStored;
-    }
-
-    resetEverything() {
-        const keysToRemove = Object.keys(localStorage).filter(key => key.startsWith(`${STORAGE_PREFIX}_${pageData.id}`));
-        keysToRemove.forEach(key => localStorage.removeItem(key));
-        if (pageData.type === TEASE_TYPES.eos) return; // should still display reset data.
-
-        location.reload();
-    }
-    unfoldAll() {
-        sidebar.unfoldAll();
-    }
-    foldAll() {
-        sidebar.foldAll();
-        sidebar.unfoldSection('settings');
-    }
-}
 
 class Timers {
     content;
@@ -1307,7 +1430,6 @@ class Sessions {
     }
 }
 
-const settings = new Settings();
 const session = new Sessions();
 
 new TextTeasePageNavigation();

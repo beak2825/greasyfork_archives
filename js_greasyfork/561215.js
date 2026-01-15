@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         黑与白自动抽卡助手
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
-// @description  自动进行十连抽卡操作
-// @author       Bay
+// @version      3.3.0
+// @description  修复UI点击溢出问题，优化步进逻辑，极致顺滑
+// @author       Bay (Optimized by Expert)
 // @license      MIT
 // @match        https://cdk.hybgzs.com/*
 // @grant        none
@@ -15,511 +15,537 @@
 (function () {
   "use strict";
 
-  // 目标抽卡路径
-  const TARGET_PATH = "/entertainment/cards/draw";
+  // ================= 核心配置 =================
+  const DEFAULT_CONFIG = {
+    paidLimit: 400,        // 默认改为400
+    timeout: 10000,
+  };
 
-  // 状态变量
+  const INTERNAL_CONFIG = {
+    minDelay: 1000,
+    maxDelay: 2000,
+    pollInterval: 500,
+    maxConsecutiveErrors: 5,
+    maxDisabledRetries: 10
+  };
+
+  let CONFIG = { ...DEFAULT_CONFIG };
+  try {
+      const saved = localStorage.getItem("cdk_auto_config_v3");
+      if (saved) CONFIG = { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
+  } catch (e) { console.error(e); }
+
+  const CONSTANTS = { targetPath: "/entertainment/cards/draw" };
   let isRunning = false;
   let drawCount = 0;
+  let consecutiveErrors = 0;
+  let disabledRetries = 0;
 
-  // 日志函数
-  function log(message, type = "info") {
-    const timestamp = new Date().toLocaleTimeString("zh-CN");
-    const prefix = "[CDK自动抽卡]";
-    const logMessage = `${prefix} [${timestamp}] ${message}`;
+  // ================= 工具函数 =================
 
-    switch (type) {
-      case "error":
-        console.error(logMessage);
-        break;
-      case "warn":
-        console.warn(logMessage);
-        break;
-      case "success":
-        console.log("%c" + logMessage, "color: #38ef7d");
-        break;
-      default:
-        console.log(logMessage);
-    }
+  function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `ios-toast ${type}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 300);
+      }, 3000);
   }
 
-  // 延迟函数
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const randomDelay = () => delay(Math.floor(Math.random() * (INTERNAL_CONFIG.maxDelay - INTERNAL_CONFIG.minDelay + 1) + INTERNAL_CONFIG.minDelay));
 
-  // 查找包含指定文本的按钮
+  function saveConfig() {
+      localStorage.setItem("cdk_auto_config_v3", JSON.stringify(CONFIG));
+      updatePanelConfigDisplay();
+  }
+
+  // ================= DOM 解析与逻辑 =================
+
+  function getStatValue(labelText) {
+      const allDivs = document.querySelectorAll('div');
+      for (const div of allDivs) {
+          if (div.textContent.trim() === labelText) {
+              const valueDiv = div.previousElementSibling;
+              if (valueDiv) return valueDiv.textContent.trim();
+          }
+      }
+      return null;
+  }
+
+  function getFreeRemaining() {
+      const text = getStatValue("免费剩余");
+      return text ? parseInt(text, 10) : 0;
+  }
+
+  function getPaidUsed() {
+      const text = getStatValue("付费已用");
+      if (!text) return 0;
+      const parts = text.split('/');
+      return parts.length > 0 ? parseInt(parts[0], 10) : 0;
+  }
+
   function findButtonByText(text) {
-    log(`正在查找包含文本"${text}"的按钮...`);
-
     const buttons = document.querySelectorAll("button");
     for (const btn of buttons) {
-      if (btn.textContent.includes(text)) {
-        log(`找到按钮: ${btn.textContent.trim()}`, "success");
-        return btn;
-      }
+      if (btn.textContent.includes(text) && isVisible(btn)) return btn;
     }
-    // 也检查 div、span 等可能作为按钮的元素
     const allElements = document.querySelectorAll("div, span, a");
     for (const el of allElements) {
       if (el.textContent.trim() === text || el.textContent.includes(text)) {
-        // 检查是否可点击
         const style = window.getComputedStyle(el);
-        if (
-          style.cursor === "pointer" ||
-          el.onclick ||
-          el.getAttribute("role") === "button"
-        ) {
-          log(`找到可点击元素: ${el.textContent.trim()}`, "success");
+        if ((style.cursor === "pointer" || el.getAttribute("role") === "button") && isVisible(el)) {
           return el;
         }
       }
     }
-    log(`未找到包含文本"${text}"的按钮`, "warn");
     return null;
   }
 
-  // 查找弹窗中的确认按钮
   function findConfirmButton() {
-    // 常见的确认按钮文本
-    const confirmTexts = ["确认", "确定", "OK", "Confirm", "是", "好的"];
-
-    log("正在查找确认按钮...");
-
-    // 首先查找弹窗/对话框
-    const dialogs = document.querySelectorAll(
-      '[role="dialog"], .modal, .popup, .dialog, [class*="modal"], [class*="popup"], [class*="dialog"]'
-    );
-    log(`找到 ${dialogs.length} 个弹窗元素`);
-
+    const confirmTexts = ["确认", "确定", "OK", "Confirm", "是", "好的", "领取", "再抽一次"];
+    const dialogs = document.querySelectorAll('[role="dialog"], .modal, .popup, .dialog, .van-dialog');
     for (const dialog of dialogs) {
-      const buttons = dialog.querySelectorAll(
-        'button, [role="button"], .btn, [class*="btn"]'
-      );
+      if (!isVisible(dialog)) continue;
+      const buttons = dialog.querySelectorAll('button, [role="button"], .btn, div, span');
       for (const btn of buttons) {
         for (const text of confirmTexts) {
-          if (btn.textContent.includes(text)) {
-            log(`在弹窗中找到确认按钮: ${btn.textContent.trim()}`, "success");
+          if (btn.textContent && btn.textContent.includes(text) && isVisible(btn)) {
+            if (btn.textContent.includes("取消")) continue;
             return btn;
           }
         }
       }
     }
-
-    // 如果没有找到弹窗，全局查找确认按钮
-    const allButtons = document.querySelectorAll('button, [role="button"]');
+    const allButtons = document.querySelectorAll('button, [role="button"], .van-button');
     for (const btn of allButtons) {
       for (const text of confirmTexts) {
         if (btn.textContent.includes(text) && isVisible(btn)) {
-          log(`全局查找到确认按钮: ${btn.textContent.trim()}`, "success");
-          return btn;
+           if (btn.textContent.includes("取消")) continue;
+           return btn;
         }
       }
     }
-
-    log("未找到确认按钮", "warn");
     return null;
   }
 
-  // 检查元素是否可见
+  async function waitForElement(finderFunc, description) {
+    const maxAttempts = CONFIG.timeout / INTERNAL_CONFIG.pollInterval;
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      if (!isRunning) return null;
+      const element = finderFunc();
+      if (element) return element;
+      await delay(INTERNAL_CONFIG.pollInterval);
+      attempts++;
+      if (attempts % 4 === 0) updateStatus(`等待${description}...`);
+    }
+    return null;
+  }
+
   function isVisible(el) {
     if (!el) return false;
     const style = window.getComputedStyle(el);
-    return (
-      style.display !== "none" &&
-      style.visibility !== "hidden" &&
-      style.opacity !== "0" &&
-      el.offsetParent !== null
-    );
+    return style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0" && el.offsetParent !== null;
   }
 
-  // 检查按钮是否可点击
   function isButtonClickable(btn) {
     if (!btn) return false;
-    if (btn.disabled) {
-      log("按钮已禁用 (disabled属性)", "warn");
-      return false;
-    }
-    if (btn.classList.contains("disabled")) {
-      log("按钮已禁用 (disabled类名)", "warn");
-      return false;
-    }
-    if (btn.getAttribute("disabled") !== null) {
-      log("按钮已禁用 (disabled attribute)", "warn");
-      return false;
-    }
+    if (btn.disabled || btn.classList.contains("disabled")) return false;
     const style = window.getComputedStyle(btn);
-    if (style.pointerEvents === "none") {
-      log("按钮已禁用 (pointer-events: none)", "warn");
-      return false;
-    }
+    if (style.pointerEvents === "none") return false;
     return isVisible(btn);
   }
 
-  // 检查当前是否在目标路径
-  function isOnTargetPath() {
-    return window.location.pathname === TARGET_PATH;
-  }
-
-  // 跳转到目标路径
-  function navigateToTargetPath() {
-    log(`当前路径: ${window.location.pathname}`);
-    log(`目标路径: ${TARGET_PATH}`);
-    log("正在跳转到抽卡页面...", "info");
-    window.location.href = TARGET_PATH;
-  }
-
-  // 执行单次抽卡流程
   async function performDraw() {
-    log("========== 开始新一轮抽卡 ==========");
-    updateStatus("正在查找十连抽按钮...");
+    const paidUsed = getPaidUsed();
+    const freeRemaining = getFreeRemaining();
 
-    // 查找十连抽按钮
-    const drawButton = findButtonByText("十连抽");
+    updateStatus(`状态: 免费${freeRemaining} | 付费${paidUsed}/${CONFIG.paidLimit}`);
 
-    if (!drawButton) {
-      log("未找到十连抽按钮", "error");
-      updateStatus("未找到十连抽按钮");
-      return false;
+    if (freeRemaining <= 0 && paidUsed >= CONFIG.paidLimit) {
+        stopAutoDraw(`达到付费上限 (${paidUsed})`);
+        showToast(`已达到付费上限 ${paidUsed} 次，脚本停止`, "warn");
+        return false;
     }
+
+    const drawButton = findButtonByText("十连抽");
+    if (!drawButton) {
+      consecutiveErrors++;
+      if (consecutiveErrors >= INTERNAL_CONFIG.maxConsecutiveErrors) {
+        stopAutoDraw("找不到入口");
+        return false;
+      }
+      await delay(2000);
+      return true;
+    }
+    consecutiveErrors = 0;
 
     if (!isButtonClickable(drawButton)) {
-      log("十连抽按钮不可点击，停止自动抽卡", "warn");
-      updateStatus("十连抽按钮不可点击，停止自动抽卡");
-      return false;
+      disabledRetries++;
+      updateStatus(`重试 ${disabledRetries}/${INTERNAL_CONFIG.maxDisabledRetries}`);
+      if (disabledRetries >= INTERNAL_CONFIG.maxDisabledRetries) {
+        stopAutoDraw("按钮长时间不可用");
+        return false;
+      }
+      await delay(3000);
+      return true;
     }
+    disabledRetries = 0;
 
-    // 点击十连抽按钮
-    log("点击十连抽按钮", "info");
-    updateStatus("点击十连抽按钮...");
     drawButton.click();
-    await delay(1000);
+    await randomDelay();
 
-    // 等待第一个弹窗并点击确认
-    log("等待第一个确认弹窗...", "info");
-    updateStatus("等待第一个确认弹窗...");
-    let confirmBtn = null;
-    let attempts = 0;
+    updateStatus("等待弹窗...");
+    const confirmBtn1 = await waitForElement(findConfirmButton, "第1个弹窗");
 
-    while (!confirmBtn && attempts < 20) {
-      confirmBtn = findConfirmButton();
-      if (!confirmBtn) {
-        await delay(300);
-        attempts++;
-        log(`等待弹窗中... (尝试 ${attempts}/20)`);
-      }
-    }
+    if (!confirmBtn1) return true;
+    confirmBtn1.click();
+    await randomDelay();
 
-    if (confirmBtn) {
-      log("点击第一个确认按钮", "success");
-      updateStatus("点击第一个确认按钮...");
-      confirmBtn.click();
-      await delay(1000);
-    } else {
-      log("未找到第一个确认按钮", "error");
-      updateStatus("未找到第一个确认按钮");
-      return false;
-    }
-
-    // 等待第二个弹窗并点击确认
-    log("等待第二个确认弹窗...", "info");
-    updateStatus("等待第二个确认弹窗...");
-    confirmBtn = null;
-    attempts = 0;
-
-    while (!confirmBtn && attempts < 20) {
-      confirmBtn = findConfirmButton();
-      if (!confirmBtn) {
-        await delay(300);
-        attempts++;
-        log(`等待弹窗中... (尝试 ${attempts}/20)`);
-      }
-    }
-
-    if (confirmBtn) {
-      log("点击第二个确认按钮", "success");
-      updateStatus("点击第二个确认按钮...");
-      confirmBtn.click();
-      await delay(1000);
-    } else {
-      log("未找到第二个确认按钮", "error");
-      updateStatus("未找到第二个确认按钮");
-      return false;
+    if (freeRemaining === 0) {
+        updateStatus("等待结果...");
+        const confirmBtn2 = await waitForElement(findConfirmButton, "第2个弹窗");
+        if (!confirmBtn2) return true;
+        confirmBtn2.click();
+        await randomDelay();
     }
 
     drawCount++;
-    log(`第 ${drawCount} 次抽卡完成！`, "success");
-    updateStatus(`第 ${drawCount} 次抽卡完成`);
-
     return true;
   }
 
-  // 主循环
   async function startAutoDrawLoop() {
-    log("========== 自动抽卡启动 ==========", "success");
-
-    // 检查是否在目标路径，如果不是则跳转
-    if (!isOnTargetPath()) {
-      log("当前不在抽卡页面，将自动跳转...", "warn");
-      updateStatus("正在跳转到抽卡页面...");
-
-      // 保存启动状态到 sessionStorage
-      sessionStorage.setItem("cdk_auto_draw_start", "true");
-      navigateToTargetPath();
-      return;
+    if (window.location.pathname !== CONSTANTS.targetPath) {
+        sessionStorage.setItem("cdk_auto_draw_start", "true");
+        window.location.href = CONSTANTS.targetPath;
+        return;
     }
-
     isRunning = true;
-    drawCount = 0;
+    consecutiveErrors = 0;
+    disabledRetries = 0;
     updateButtonState();
-
-    log("开始自动抽卡循环", "info");
+    showToast("脚本已启动 🚀");
 
     while (isRunning) {
-      const success = await performDraw();
-
-      if (!success) {
-        isRunning = false;
-        updateButtonState();
-        log(`自动抽卡结束，共完成 ${drawCount} 次抽卡`, "success");
-        updateStatus(`自动抽卡结束，共完成 ${drawCount} 次抽卡`);
-        break;
-      }
-
-      // 等待一段时间再进行下一次
-      log("等待2秒后进行下一次抽卡...", "info");
-      await delay(2000);
+      const shouldContinue = await performDraw();
+      if (!shouldContinue) break;
+      if (isRunning) await delay(1000);
     }
   }
 
-  // 停止自动抽卡
-  function stopAutoDraw() {
-    log("用户手动停止自动抽卡", "warn");
+  function stopAutoDraw(reason = "用户停止") {
     isRunning = false;
     updateButtonState();
-    updateStatus(`已停止，共完成 ${drawCount} 次抽卡`);
+    updateStatus(`已停止: ${reason}`);
   }
 
-  // 更新按钮状态
+  // ================= UI (v3.3) =================
+
   function updateButtonState() {
     const startBtn = document.getElementById("cdk-start-btn");
     const stopBtn = document.getElementById("cdk-stop-btn");
-
     if (startBtn && stopBtn) {
       startBtn.style.display = isRunning ? "none" : "block";
       stopBtn.style.display = isRunning ? "block" : "none";
     }
   }
 
-  // 更新状态显示
   function updateStatus(message) {
-    const statusEl = document.getElementById("cdk-status");
-    if (statusEl) {
-      statusEl.textContent = message;
-    }
+    const el = document.getElementById("cdk-status");
+    if (el) el.textContent = message;
   }
 
-  // 创建控制面板
-  function createPanel() {
-    // 检查是否已存在面板
-    if (document.getElementById("cdk-auto-draw-panel")) {
-      log("面板已存在，跳过创建");
-      return;
-    }
+  function updatePanelConfigDisplay() {
+      const el = document.getElementById("cdk-config-display");
+      if (el) {
+          el.innerHTML = `
+            <div class="ios-row">
+                <span class="ios-label">付费上限</span>
+                <span class="ios-val">${CONFIG.paidLimit} <span class="ios-unit">次</span></span>
+            </div>
+            <div class="ios-row">
+                <span class="ios-label">超时时间</span>
+                <span class="ios-val">${CONFIG.timeout/1000} <span class="ios-unit">秒</span></span>
+            </div>
+          `;
+      }
+  }
 
-    log("创建控制面板", "info");
+  function showSettingsModal() {
+      const existing = document.getElementById('cdk-settings-modal');
+      if (existing) existing.remove();
+
+      const modal = document.createElement('div');
+      modal.id = 'cdk-settings-modal';
+      // 这里的 input 添加了 step="10"
+      modal.innerHTML = `
+        <div class="ios-backdrop"></div>
+        <div class="ios-modal">
+            <div class="ios-modal-header">
+                <div class="ios-modal-title">设置参数</div>
+                <div class="ios-modal-subtitle">修改脚本运行限制</div>
+            </div>
+            <div class="ios-modal-body">
+                <div class="ios-input-group">
+                    <div class="ios-input-row">
+                        <label>付费抽卡上限</label>
+                        <input type="number" id="inp-limit" value="${CONFIG.paidLimit}" step="10" min="0" placeholder="400">
+                    </div>
+                    <div class="ios-divider"></div>
+                    <div class="ios-input-row">
+                        <label>弹窗超时 (秒)</label>
+                        <input type="number" id="inp-timeout" value="${CONFIG.timeout / 1000}" step="1" min="1" placeholder="10">
+                    </div>
+                </div>
+            </div>
+            <div class="ios-modal-footer">
+                <button id="btn-cancel-settings" class="ios-btn ios-btn-cancel">取消</button>
+                <button id="btn-save-settings" class="ios-btn ios-btn-save">保存</button>
+            </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      modal.querySelector('.ios-backdrop').onclick = () => modal.remove();
+      document.getElementById('btn-cancel-settings').onclick = () => modal.remove();
+      document.getElementById('btn-save-settings').onclick = () => {
+          let newLimit = parseInt(document.getElementById('inp-limit').value, 10);
+          const newTimeout = parseFloat(document.getElementById('inp-timeout').value) * 1000;
+
+          if (isNaN(newLimit) || isNaN(newTimeout)) {
+              showToast("请输入有效的数字", "warn");
+              return;
+          }
+
+          // 强制对齐到10的倍数（可选，这里做个取整优化）
+          if (newLimit % 10 !== 0) {
+              newLimit = Math.round(newLimit / 10) * 10;
+          }
+
+          CONFIG.paidLimit = newLimit;
+          CONFIG.timeout = newTimeout;
+          saveConfig();
+          modal.remove();
+          showToast("配置已保存");
+      };
+  }
+
+  function injectStyles() {
+      const style = document.createElement('style');
+      style.textContent = `
+        /* 全局字体 */
+        #cdk-auto-draw-panel, #cdk-settings-modal, .ios-toast {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Toast 通知 */
+        .ios-toast {
+            position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            color: #1d1d1f; padding: 12px 24px; border-radius: 99px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.04);
+            font-size: 14px; font-weight: 500; letter-spacing: -0.2px;
+            z-index: 1000001; opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none; display: flex; align-items: center; justify-content: center;
+        }
+        .ios-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .ios-toast.warn { color: #ff3b30; background: rgba(255, 240, 240, 0.95); }
+
+        /* 主面板 - 黄金比例优化 (宽320px) */
+        #cdk-auto-draw-panel {
+            position: fixed; top: 50px; right: 50px; width: 320px;
+            background: rgba(28, 28, 30, 0.85); backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            z-index: 999999; color: #fff;
+            overflow: hidden; transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .panel-header {
+            padding: 18px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: move; border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+        }
+        .panel-title { font-weight: 600; font-size: 16px; letter-spacing: -0.3px; color: rgba(255,255,255,0.95); }
+        .panel-body { padding: 20px; }
+
+        /* 按钮 */
+        .btn {
+            width: 100%; height: 44px; border: none; border-radius: 12px;
+            cursor: pointer; font-weight: 600; font-size: 15px; margin-bottom: 14px;
+            color: white; transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .btn:active { transform: scale(0.98); opacity: 0.9; }
+        #cdk-start-btn { background: #30d158; box-shadow: 0 4px 12px rgba(48, 209, 88, 0.2); }
+        #cdk-stop-btn { background: #ff453a; box-shadow: 0 4px 12px rgba(255, 69, 58, 0.2); display: none; }
+        #cdk-setting-btn {
+            background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9);
+            font-weight: 500; font-size: 14px;
+        }
+        #cdk-setting-btn:hover { background: rgba(255,255,255,0.15); }
+
+        /* 配置显示区 */
+        .config-box { margin-bottom: 20px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px 16px; }
+        .ios-row { display: flex; justify-content: space-between; margin-bottom: 6px; align-items: center; }
+        .ios-row:last-child { margin-bottom: 0; }
+        .ios-label { font-size: 13px; color: rgba(235, 235, 245, 0.6); }
+        .ios-val { color: #fff; font-weight: 600; font-size: 14px; }
+        .ios-unit { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 400; margin-left: 2px; }
+
+        .status-box {
+            font-size: 12px; color: rgba(235, 235, 245, 0.5); text-align: center; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: background 0.3s; }
+
+        .minimize-btn {
+            background: rgba(255,255,255,0.1); border:none; color:rgba(255,255,255,0.8);
+            width: 28px; height: 28px; border-radius: 50%; cursor:pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; line-height: 1; padding-bottom: 2px; transition: background 0.2s;
+        }
+        .minimize-btn:hover { background: rgba(255,255,255,0.2); }
+        .minimized .panel-body { display: none; }
+        .minimized { width: 200px; }
+
+        /* 设置弹窗 */
+        #cdk-settings-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 1000000; display: flex; justify-content: center; align-items: center;
+        }
+        .ios-backdrop {
+            position: absolute; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+        .ios-modal {
+            position: relative; width: 320px;
+            background: rgba(30, 30, 30, 0.85); backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 18px;
+            animation: scaleIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        .ios-modal-header {
+            padding: 20px 16px 10px 16px; text-align: center;
+        }
+        .ios-modal-title { font-weight: 600; font-size: 17px; color: #fff; margin-bottom: 4px; }
+        .ios-modal-subtitle { font-size: 13px; color: rgba(235, 235, 245, 0.6); }
+
+        .ios-modal-body { padding: 10px 16px 20px 16px; }
+        .ios-input-group {
+            background: rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;
+        }
+        .ios-input-row {
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; height: 48px; box-sizing: border-box;
+        }
+        .ios-input-row label { font-size: 16px; color: #fff; }
+
+        .ios-input-row input[type=number] {
+            width: 100px; background: transparent; border: none;
+            color: #0a84ff; text-align: right; font-size: 17px; outline: none;
+            -moz-appearance: textfield; font-weight: 400; padding: 0;
+        }
+        .ios-input-row input[type=number]::-webkit-inner-spin-button,
+        .ios-input-row input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none; margin: 0;
+        }
+
+        .ios-divider { height: 1px; background: rgba(84, 84, 88, 0.5); margin-left: 16px; }
+
+        .ios-modal-footer {
+            display: flex; border-top: 1px solid rgba(84, 84, 88, 0.5); height: 48px;
+        }
+        .ios-btn {
+            flex: 1; height: 100%; border: none; background: transparent;
+            font-size: 17px; cursor: pointer; transition: background 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        /* 修复：给按钮添加圆角，防止点击背景溢出 */
+        .ios-btn-cancel {
+            color: #0a84ff; border-right: 1px solid rgba(84, 84, 88, 0.5); font-weight: 400;
+            border-bottom-left-radius: 18px;
+        }
+        .ios-btn-save {
+            color: #0a84ff; font-weight: 600;
+            border-bottom-right-radius: 18px;
+        }
+        .ios-btn:active { background: rgba(255,255,255,0.1); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+      `;
+      document.head.appendChild(style);
+  }
+
+  function createPanel() {
+    if (document.getElementById("cdk-auto-draw-panel")) return;
+    injectStyles();
 
     const panel = document.createElement("div");
     panel.id = "cdk-auto-draw-panel";
     panel.innerHTML = `
-            <style>
-                #cdk-auto-draw-panel {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    width: 280px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    border-radius: 12px;
-                    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-                    z-index: 999999;
-                    font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
-                    color: white;
-                    overflow: hidden;
-                }
-                #cdk-auto-draw-panel .panel-header {
-                    padding: 15px 20px;
-                    background: rgba(0,0,0,0.2);
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    cursor: move;
-                }
-                #cdk-auto-draw-panel .panel-header h3 {
-                    margin: 0;
-                    font-size: 16px;
-                    font-weight: 600;
-                }
-                #cdk-auto-draw-panel .panel-header .minimize-btn {
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 20px;
-                    cursor: pointer;
-                    padding: 0 5px;
-                    opacity: 0.8;
-                    transition: opacity 0.2s;
-                }
-                #cdk-auto-draw-panel .panel-header .minimize-btn:hover {
-                    opacity: 1;
-                }
-                #cdk-auto-draw-panel .panel-body {
-                    padding: 20px;
-                }
-                #cdk-auto-draw-panel .btn {
-                    width: 100%;
-                    padding: 12px 20px;
-                    border: none;
-                    border-radius: 8px;
-                    font-size: 15px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    margin-bottom: 10px;
-                }
-                #cdk-auto-draw-panel #cdk-start-btn {
-                    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-                    color: white;
-                }
-                #cdk-auto-draw-panel #cdk-start-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 20px rgba(17,153,142,0.4);
-                }
-                #cdk-auto-draw-panel #cdk-stop-btn {
-                    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-                    color: white;
-                    display: none;
-                }
-                #cdk-auto-draw-panel #cdk-stop-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 20px rgba(235,51,73,0.4);
-                }
-                #cdk-auto-draw-panel .status-box {
-                    background: rgba(255,255,255,0.15);
-                    border-radius: 8px;
-                    padding: 12px 15px;
-                    font-size: 13px;
-                    line-height: 1.5;
-                }
-                #cdk-auto-draw-panel .status-label {
-                    font-size: 12px;
-                    opacity: 0.8;
-                    margin-bottom: 5px;
-                }
-                #cdk-auto-draw-panel #cdk-status {
-                    word-break: break-all;
-                }
-                #cdk-auto-draw-panel.minimized .panel-body {
-                    display: none;
-                }
-                #cdk-auto-draw-panel .tip {
-                    font-size: 11px;
-                    opacity: 0.7;
-                    margin-top: 10px;
-                    text-align: center;
-                }
-            </style>
             <div class="panel-header">
-                <h3>🎴 自动抽卡助手</h3>
-                <button class="minimize-btn" title="最小化">−</button>
+                <span class="panel-title">抽卡助手 Pro</span>
+                <button class="minimize-btn">−</button>
             </div>
             <div class="panel-body">
-                <button id="cdk-start-btn" class="btn">🚀 开始自动抽卡</button>
-                <button id="cdk-stop-btn" class="btn">⏹️ 停止抽卡</button>
+                <div class="config-box" id="cdk-config-display"></div>
+                <button id="cdk-start-btn" class="btn">开始运行</button>
+                <button id="cdk-stop-btn" class="btn">停止运行</button>
+                <button id="cdk-setting-btn" class="btn">设置参数</button>
                 <div class="status-box">
-                    <div class="status-label">当前状态：</div>
-                    <div id="cdk-status">等待开始...</div>
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="cdk-status">准备就绪</span>
                 </div>
-                <div class="tip">💡 日志输出在浏览器控制台 (F12)</div>
             </div>
         `;
-
     document.body.appendChild(panel);
 
-    // 绑定事件
-    document
-      .getElementById("cdk-start-btn")
-      .addEventListener("click", startAutoDrawLoop);
-    document
-      .getElementById("cdk-stop-btn")
-      .addEventListener("click", stopAutoDraw);
+    updatePanelConfigDisplay();
 
-    // 最小化功能
-    const minimizeBtn = panel.querySelector(".minimize-btn");
-    minimizeBtn.addEventListener("click", () => {
-      panel.classList.toggle("minimized");
-      minimizeBtn.textContent = panel.classList.contains("minimized")
-        ? "+"
-        : "−";
+    document.getElementById("cdk-start-btn").addEventListener("click", () => {
+        document.getElementById("status-dot").style.background = "#30d158";
+        startAutoDrawLoop();
     });
-
-    // 拖拽功能
-    let isDragging = false;
-    let currentX;
-    let currentY;
-    let initialX;
-    let initialY;
+    document.getElementById("cdk-stop-btn").addEventListener("click", () => stopAutoDraw("用户手动停止"));
+    document.getElementById("cdk-setting-btn").addEventListener("click", showSettingsModal);
 
     const header = panel.querySelector(".panel-header");
+    const minBtn = panel.querySelector(".minimize-btn");
+    minBtn.onclick = () => { panel.classList.toggle("minimized"); minBtn.textContent = panel.classList.contains("minimized") ? "+" : "−"; };
 
-    header.addEventListener("mousedown", (e) => {
-      if (e.target === minimizeBtn) return;
-      isDragging = true;
-      initialX = e.clientX - panel.offsetLeft;
-      initialY = e.clientY - panel.offsetTop;
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      currentX = e.clientX - initialX;
-      currentY = e.clientY - initialY;
-      panel.style.left = currentX + "px";
-      panel.style.right = "auto";
-      panel.style.top = currentY + "px";
-    });
-
-    document.addEventListener("mouseup", () => {
-      isDragging = false;
-    });
-
-    log("控制面板创建完成", "success");
+    let isDragging = false, startX, startY, initialLeft, initialTop;
+    header.onmousedown = (e) => {
+        if(e.target === minBtn) return;
+        isDragging = true; startX = e.clientX; startY = e.clientY; initialLeft = panel.offsetLeft; initialTop = panel.offsetTop; e.preventDefault();
+    };
+    document.onmousemove = (e) => {
+        if(!isDragging) return;
+        panel.style.left = (initialLeft + e.clientX - startX) + "px"; panel.style.top = (initialTop + e.clientY - startY) + "px"; panel.style.right = "auto";
+    };
+    document.onmouseup = () => isDragging = false;
   }
 
-  // 检查是否需要自动启动
-  function checkAutoStart() {
+  function init() {
+    createPanel();
     if (sessionStorage.getItem("cdk_auto_draw_start") === "true") {
       sessionStorage.removeItem("cdk_auto_draw_start");
-      log("检测到自动启动标记，将在2秒后开始抽卡...", "info");
       setTimeout(() => {
-        startAutoDrawLoop();
+          document.getElementById("status-dot").style.background = "#30d158";
+          startAutoDrawLoop();
       }, 2000);
     }
   }
 
-  // 初始化
-  function init() {
-    log("========== CDK自动抽卡助手已加载 ==========", "success");
-    log(`当前页面: ${window.location.href}`);
-    log(`当前路径: ${window.location.pathname}`);
-    log(`目标路径: ${TARGET_PATH}`);
-    log(`是否在目标页面: ${isOnTargetPath() ? "是" : "否"}`);
+  if (document.readyState === "complete") init();
+  else window.addEventListener("load", init);
 
-    createPanel();
-    checkAutoStart();
-  }
-
-  // 页面加载完成后初始化
-  if (document.readyState === "complete") {
-    init();
-  } else {
-    window.addEventListener("load", init);
-  }
 })();

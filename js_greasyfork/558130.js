@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         TGFC论坛助手
 // @namespace    http://tampermonkey.net/
-// @version      2.2.4
-// @description  TGFC论坛增强：Neo-Retro深色主题、快捷工具栏、用户/关键词屏蔽、多标签标注、紧凑模式、Markdown渲染、摘录库、发帖统计(含连发统计)、自定义配色/字体、十大话题优化
+// @version      2.2.6
+// @description  TGFC论坛增强：Neo-Retro深色主题、快捷工具栏、用户/关键词屏蔽、多标签标注、紧凑模式、Markdown渲染、摘录库、发帖统计(含连发统计)、关注话题、自定义配色/字体、十大话题优化
 // @author       Heiren + AI
 // @match        https://s.tgfcer.com/*
 // @match        https://s.tgfcer.com/forum-*.html
@@ -44,18 +44,32 @@
 
     // 立即注入关键布局样式（防止页面闪烁）
     (function injectCriticalStyles() {
-        let mainWidth, bgColor, font, fontSize;
+        let mainWidth, bgColor, font, fontSize, lineHeight;
         try {
             mainWidth = GM_getValue("mainWidth", "1200");
             bgColor = GM_getValue("bgColor", "#BDBEBD");
             font = GM_getValue("font", "");
             fontSize = GM_getValue("fontSize", "");
+            lineHeight = GM_getValue("lineHeight", "");
         } catch (e) {
             mainWidth = "1200";
             bgColor = "#BDBEBD";
             font = "";
             fontSize = "";
+            lineHeight = "";
         }
+
+        // 根据字号动态计算行距：小字号 1.6，大字号逐步增加到 2.0
+        function calcLineHeight(fs) {
+            const size = parseInt(fs) || 14;
+            if (size <= 14) return 1.6;
+            if (size <= 18) return 1.7;
+            if (size <= 24) return 1.8;
+            return 2.0;
+        }
+
+        // 获取最终行距：优先用户设置，否则自动计算
+        const finalLineHeight = lineHeight || (fontSize ? calcLineHeight(fontSize) : '');
 
         const criticalCSS = `
             :root {
@@ -68,6 +82,7 @@
                 background: var(--tgfc-bg-color) !important;
             }
             /* 字体设置应用到帖子内容 */
+            /* 字体家族应用到更广泛的区域 */
             .t_f, .postmessage, .quote, .blockcode, .reply_wrap,
             .t_f *, .postmessage *, .quote *, .reply_wrap *,
             #threadlist, #threadlist td, #threadlist th, #threadlist a,
@@ -75,8 +90,18 @@
             #postlist, #postlist td, 
             textarea[name="message"] {
                 ${font ? `font-family: var(--tgfc-font) !important;` : ''}
+            }
+            
+            /* 字号和行距仅应用到帖子内容区，避免影响列表页布局 */
+            .t_f, .postmessage, .quote, .blockcode, .reply_wrap,
+            .t_f *, .postmessage *, .quote *, .reply_wrap *,
+            textarea[name="message"] {
                 ${fontSize ? `font-size: var(--tgfc-font-size) !important;` : ''}
-                ${fontSize ? `line-height: 1.6 !important;` : ''}
+                ${finalLineHeight ? `line-height: ${finalLineHeight} !important;` : ''}
+            }
+            /* 用户区只应用字体，不改变字号（紧凑模式有固定布局） */
+            .postauthor, .postauthor *, .postauthor cite, .postauthor .postinfo {
+                ${font ? `font-family: var(--tgfc-font) !important;` : ''}
             }
             /* 设置面板使用固定字体 */
             #tgfc-panel, #tgfc-panel * {
@@ -87,8 +112,29 @@
             #tgfc-panel h3 {
                 font-size: 16px !important;
             }
-            #tgfc-panel select, #tgfc-panel input[type="text"] {
-                font-size: 12px !important;
+            /* 统一控件样式 - 强制覆盖浏览器默认样式 */
+            .tgfc-u-ctrl {
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+                height: 28px !important;
+                line-height: normal !important;
+                padding: 0 8px !important;
+                border: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                background-color: #fff !important;
+                font-size: 13px !important;
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                vertical-align: middle !important;
+                color: #333 !important;
+                display: inline-block !important;
+            }
+            select.tgfc-u-ctrl {
+                padding-right: 24px !important;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23666' d='M0 0l5 5 5-5z'/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 8px center !important;
             }
             
             /* 发帖输入框行高重置 */
@@ -165,6 +211,7 @@
         customPresets: [],
         font: "",
         fontSize: "",
+        lineHeight: "",
         bgColor: "#BDBEBD",
         mainWidth: "1200",
         pageZoom: "1.0",
@@ -262,6 +309,7 @@
             customPresets: Safe_GetValue("customPresets", defaultConfig.customPresets) || [],
             font: Safe_GetValue("font", defaultConfig.font),
             fontSize: Safe_GetValue("fontSize", defaultConfig.fontSize),
+            lineHeight: Safe_GetValue("lineHeight", defaultConfig.lineHeight),
             bgColor: Safe_GetValue("bgColor", defaultConfig.bgColor),
             mainWidth: Safe_GetValue("mainWidth", defaultConfig.mainWidth),
             globalPostBg: Safe_GetValue("globalPostBg", defaultConfig.globalPostBg),
@@ -297,6 +345,7 @@
         Safe_SetValue("customPresets", c.customPresets);
         Safe_SetValue("font", c.font);
         Safe_SetValue("fontSize", c.fontSize);
+        Safe_SetValue("lineHeight", c.lineHeight);
         Safe_SetValue("bgColor", c.bgColor);
         Safe_SetValue("mainWidth", c.mainWidth);
         Safe_SetValue("globalPostBg", c.globalPostBg);
@@ -1296,6 +1345,7 @@
         body.tgfc-neoretro-dark * {
             color: #cccccc;
         }
+        
         
         /* 1. 所有链接默认亮粉色 */
         body.tgfc-neoretro-dark a {
@@ -2498,7 +2548,7 @@
         
     
     body { transition: background 0.2s; }
-    .mainbox.viewthread td.postauthor { width: 240px !important; overflow: visible !important; }
+    .mainbox.viewthread td.postauthor { width: 250px !important; overflow: visible !important; }
 
     /* 全局屏蔽广告 */
     ins.adsbygoogle,
@@ -2546,14 +2596,14 @@
     .tgfc-list-tip-inner { background:#f9f9f9; color:#999; text-align:center; padding:6px; font-size:12px; }
     .tgfc-list-tip-inner span { cursor:pointer; color:#3897ff; margin-left:10px; }
 
-    /* 紧凑模式专用 */
-    .tgfc-compact-body { font-size: 12px; color: #666; line-height: 1.2; text-align: left; margin-top: 0; }
+    /* 紧凑模式专用 - 高优先级覆盖 */
+    html body.tgfc-compact .tgfc-compact-body { font-size: 12px !important; color: #666; line-height: 1.2 !important; text-align: left; margin-top: 0; display: block !important; }
     .tgfc-compact-row { margin: 0; padding: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .tgfc-c-id-row { white-space: normal !important; overflow: visible !important; margin-bottom: 1px; }
     .tgfc-c-id a { font-size: 14px; font-weight: bold; color: #333; text-decoration: none; }
     .tgfc-c-tag-row { white-space: normal !important; height: auto; margin-bottom: 2px; }
     .tgfc-c-rank { color: #ff4d4f; font-weight: normal; font-style: italic; margin-bottom: 2px; }
-    .tgfc-c-data { font-size: 11px; color: #999; margin-bottom: 2px; }
+    html body.tgfc-compact .tgfc-c-data { font-size: 11px !important; color: #999; margin-bottom: 2px; }
     .tgfc-c-sep { margin: 0 4px; color: #ddd; }
     .tgfc-c-medal { margin-top: 2px; white-space: normal !important; }
     .tgfc-c-medal img { height: 30px; width: auto; margin-right: 2px; vertical-align: middle; }
@@ -2765,16 +2815,16 @@
 
     /* 21. 今日十大话题面板 */
     .tgfc-top10-panel { margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
-    .tgfc-top10-header { display: flex; align-items: center; justify-content: center; padding: 2px 10px; background: linear-gradient(135deg, #ff6b6b, #ffa502); color: #fff !important; cursor: pointer; user-select: none; position: relative; min-height: 26px; }
+    .tgfc-top10-header { display: flex; align-items: center; justify-content: center; padding: 0 10px; background: linear-gradient(135deg, #ff6b6b, #ffa502); color: #fff !important; cursor: pointer; user-select: none; position: relative; height: 24px; overflow: hidden; }
     .tgfc-top10-header:hover { background: linear-gradient(135deg, #ff5252, #ff9500); }
-    .tgfc-top10-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; color: #fff !important; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
+    .tgfc-top10-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; color: #fff !important; text-shadow: 0 1px 1px rgba(0,0,0,0.2); line-height: 1; }
     .tgfc-top10-right { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 4px; }
     .tgfc-top10-tabs { display: flex; align-items: center; gap: 1px; }
     .tgfc-top10-tab { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff !important; padding: 0 3px; border-radius: 2px; cursor: pointer; font-size: 11px; font-weight: 500; transition: all 0.2s; line-height: 14px; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
     .tgfc-top10-tab:hover { background: rgba(255,255,255,0.25); }
     .tgfc-top10-tab.active { background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.8); font-weight: 600; }
     .tgfc-top10-status { font-size: 10px; opacity: 0.9; color: #fff !important; }
-    .tgfc-top10-refresh { background: transparent; border: none; color: #fff !important; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 3px; cursor: pointer; font-size: 16px; transition: all 0.2s; padding: 0; display: flex; align-items: center; justify-content: center; opacity: 0.9; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
+    .tgfc-top10-refresh { background: transparent; border: none; color: #fff !important; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 3px; cursor: pointer; font-size: 14px; transition: all 0.2s; padding: 0; display: flex; align-items: center; justify-content: center; opacity: 0.9; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
     .tgfc-top10-refresh:hover { background: rgba(255,255,255,0.2); opacity: 1; transform: scale(1.1); }
     .tgfc-top10-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
     .tgfc-top10-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
@@ -2825,6 +2875,63 @@
     body.tgfc-neoretro-dark .tgfc-top10-rank.gold { background: linear-gradient(135deg, #ffd700, #ffb300); color: #3d2e00; }
     body.tgfc-neoretro-dark .tgfc-top10-rank.silver { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #333; }
     body.tgfc-neoretro-dark .tgfc-top10-rank.bronze { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+
+    /* 关注话题 - 内容页按钮样式（与Ban/Diff按钮风格一致）*/
+    .tgfc-follow-btn { display: inline-block; font-size: 10px; font-weight: bold; padding: 0 4px; cursor: pointer; line-height: 12px; margin-left: 6px; border-radius: 3px; transition: all 0.1s; border: 1px solid #2196F3; user-select: none; background: #2196F3; vertical-align: 2px; color: #fff; }
+    .tgfc-follow-btn:hover { background: #ff9500; border-color: #ff9500; color: #fff; }
+    .tgfc-follow-btn.followed { color: #999; border-color: #999; }
+    .tgfc-follow-btn.followed:hover { background: #999; color: #fff; }
+    
+    /* 关注话题 - 列表页面板样式（与十大话题保持一致）*/
+    .tgfc-followed-panel { margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+    .tgfc-followed-header { display: flex; align-items: center; justify-content: center; padding: 0 10px; background: linear-gradient(135deg, #ff9500, #ff6b00); color: #fff !important; cursor: pointer; user-select: none; position: relative; height: 24px; overflow: hidden; }
+    .tgfc-followed-header:hover { background: linear-gradient(135deg, #ffa726, #ff7043); }
+    .tgfc-followed-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; color: #fff !important; text-shadow: 0 1px 1px rgba(0,0,0,0.2); line-height: 1; }
+    .tgfc-followed-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .tgfc-followed-body.expanded { max-height: 500px; overflow-y: auto; }
+    .tgfc-followed-list { list-style: none; margin: 0; padding: 0; }
+    .tgfc-followed-list li { display: flex; align-items: center; padding: 3px 12px; border-bottom: 1px solid #f0f0f0; transition: background 0.15s; }
+    .tgfc-followed-list li:last-child { border-bottom: none; }
+    .tgfc-followed-list li:hover { background: #fffbf0; }
+    .tgfc-followed-rank { min-width: 20px; height: 20px; line-height: 20px; text-align: center; border-radius: 50%; font-size: 10px; font-weight: 600; margin-right: 8px; background: #f0f0f0; color: #666; }
+    .tgfc-followed-link { flex: 1; color: #0077cc; font-weight: bold; text-decoration: none; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tgfc-followed-link:visited { color: #0077cc; }
+    .tgfc-followed-link:hover { color: #e74c3c; text-decoration: underline; }
+    .tgfc-followed-stats { font-size: 11px; color: #e74c3c; font-weight: 600; margin-left: 10px; white-space: nowrap; }
+    .tgfc-followed-author { font-size: 11px; color: #666; margin-left: 10px; white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+    .tgfc-followed-date { font-size: 11px; color: #888; margin-left: 10px; white-space: nowrap; }
+    .tgfc-followed-unfollow { font-size: 11px; color: #ccc; margin-left: 10px; cursor: pointer; transition: all 0.15s; padding: 1px 6px; border-radius: 3px; }
+    .tgfc-followed-unfollow:hover { color: #fff; background: #e74c3c; }
+    .tgfc-followed-empty { padding: 16px; text-align: center; color: #999; font-size: 12px; }
+
+    /* Neo-Retro 狐狸主题适配 */
+    body.tgfc-neoretro-mode .tgfc-followed-panel { background: #f5f0e8; border-color: #d4cfc5; }
+    body.tgfc-neoretro-mode .tgfc-followed-header { background: linear-gradient(135deg, #c49a6c, #a67c52); }
+    body.tgfc-neoretro-mode .tgfc-followed-list li { border-bottom-color: #e0dbd3; }
+    body.tgfc-neoretro-mode .tgfc-followed-list li:hover { background: #ebe6de; }
+    body.tgfc-neoretro-mode .tgfc-followed-rank { background: #e0dbd3; color: #555; }
+    body.tgfc-neoretro-mode .tgfc-followed-link { color: #0077cc; }
+    body.tgfc-neoretro-mode .tgfc-followed-link:visited { color: #0077cc; }
+    body.tgfc-neoretro-mode .tgfc-followed-link:hover { color: #8b5a2b; }
+    
+    /* Neo-Retro Dark 暗黑主题适配 */
+    body.tgfc-neoretro-dark .tgfc-follow-btn { border-color: #ff9500; color: #ff9500; background: #303030; }
+    body.tgfc-neoretro-dark .tgfc-follow-btn:hover { background: #ff9500; color: #000; }
+    body.tgfc-neoretro-dark .tgfc-follow-btn.followed { border-color: #666; color: #666; }
+    body.tgfc-neoretro-dark .tgfc-follow-btn.followed:hover { background: #666; color: #fff; }
+    body.tgfc-neoretro-dark .tgfc-followed-panel { background: #1e1e1e; border-color: #444; }
+    body.tgfc-neoretro-dark .tgfc-followed-header { background: linear-gradient(135deg, #e65100, #bf360c); }
+    body.tgfc-neoretro-dark .tgfc-followed-list li { border-bottom-color: #3a3a3a; background: #1e1e1e; }
+    body.tgfc-neoretro-dark .tgfc-followed-list li:hover { background: #2a2a2a; }
+    body.tgfc-neoretro-dark .tgfc-followed-rank { background: #444; color: #fff; }
+    body.tgfc-neoretro-dark .tgfc-followed-link { color: #fff !important; }
+    body.tgfc-neoretro-dark .tgfc-followed-link:visited { color: #999 !important; }
+    body.tgfc-neoretro-dark .tgfc-followed-link:hover { color: #ffab91 !important; }
+    body.tgfc-neoretro-dark .tgfc-followed-stats { color: #ff8a80; }
+    body.tgfc-neoretro-dark .tgfc-followed-author { color: #ccc; }
+    body.tgfc-neoretro-dark .tgfc-followed-date { color: #999; }
+    body.tgfc-neoretro-dark .tgfc-followed-unfollow { color: #666; }
+    body.tgfc-neoretro-dark .tgfc-followed-unfollow:hover { color: #fff; background: #e74c3c; }
   `;
 
     // 模块 4: 核心逻辑
@@ -3337,7 +3444,7 @@
                     if (contentBg && con) con.style.setProperty('background', contentBg, 'important');
                     if (contentColor && con) {
                         con.style.setProperty('color', contentColor, 'important');
-                        con.querySelectorAll('*').forEach(el => el.style.setProperty('color', contentColor, 'important'));
+                        con.querySelectorAll('*').forEach(el => { if (!el.closest('font[color]')) el.style.setProperty('color', contentColor, 'important'); });
                     }
                 }
                 // 字号（无论哪种模式都应用）
@@ -3352,14 +3459,14 @@
                 if (cfg.globalContentBg && con) con.style.setProperty('background', cfg.globalContentBg, 'important');
                 if (cfg.globalContentColor && con) {
                     con.style.setProperty('color', cfg.globalContentColor, 'important');
-                    con.querySelectorAll('*').forEach(el => el.style.setProperty('color', cfg.globalContentColor, 'important'));
+                    con.querySelectorAll('*').forEach(el => { if (!el.closest('font[color]')) el.style.setProperty('color', cfg.globalContentColor, 'important'); });
                 }
             } else if (cfg.globalPostBg || cfg.globalPostColor) {
                 // 兼容旧全局配色
                 if (cfg.globalPostBg) { td.style.setProperty('background', cfg.globalPostBg, 'important'); if (con) con.style.setProperty('background', cfg.globalPostBg, 'important'); }
                 if (cfg.globalPostColor && con) {
                     con.style.setProperty('color', cfg.globalPostColor, 'important');
-                    con.querySelectorAll('*').forEach(el => el.style.setProperty('color', cfg.globalPostColor, 'important'));
+                    con.querySelectorAll('*').forEach(el => { if (!el.closest('font[color]')) el.style.setProperty('color', cfg.globalPostColor, 'important'); });
                 }
             }
             td.dataset.done = 1;
@@ -3633,6 +3740,8 @@
             md = md.replace(/^> ?(.+)$/gm, '<blockquote>$1</blockquote>');
             md = md.replace(/^\s*(\d+)\.\s+(.+)$/gm, '<li class="tgfc-md-li" style="list-style:decimal;" value="$1">$2</li>');
             md = md.replace(/^\s*[-*+] +(.+)$/gm, '<li class="tgfc-md-li">$1</li>');
+            // 先将连续的换行符合并成一个，避免空行变成大间距
+            md = md.replace(/\n{2,}/g, '\n');
             md = md.replace(/(?<!>)\n/g, '<br>');
             md = md.replace(/(<li class="tgfc-md-li" style="list-style:decimal;">[\s\S]*?<\/li>)+/gm, '<ol class="tgfc-md-ol">$&</ol>');
             md = md.replace(/(<li class="tgfc-md-li">[\s\S]*?<\/li>)+/gm, '<ul class="tgfc-md-ul">$&</ul>');
@@ -5296,15 +5405,28 @@
             <input type="text" id="in-width" placeholder="1200">
         </div>
         <div class="grp">
-            <div style="display:flex;gap:12px;align-items:center;flex-wrap:nowrap;">
-                <label style="display:flex;align-items:center;gap:4px;">
-                    字体
-                    <select id="sel-font" style="padding:2px 4px;border-radius:4px;border:1px solid #ccc;font-size:12px;"></select>
-                </label>
+            <label style="display:flex;align-items:center;gap:4px;margin-bottom:8px;">
+                字体
+                <select id="sel-font" class="tgfc-u-ctrl" style="width:120px;"></select>
+            </label>
+            <div style="display:flex;gap:12px;align-items:center;">
                 <label style="display:flex;align-items:center;gap:4px;">
                     大小
-                    <select id="sel-fontsize" style="padding:2px 4px;border-radius:4px;border:1px solid #ccc;width:80px;font-size:12px;"></select>
-                    <input type="text" id="in-fontsize" style="width: 50px; padding: 2px 4px; border-radius: 4px; border: 1px solid #ccc;" placeholder="自定义">
+                    <select id="sel-fontsize" class="tgfc-u-ctrl" style="width:70px;"></select>
+                    <input type="text" id="in-fontsize" class="tgfc-u-ctrl" style="width:55px;" placeholder="自定义">
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;">
+                    行距
+                    <select id="sel-lineheight" class="tgfc-u-ctrl" style="width:70px;">
+                        <option value="">默认</option>
+                        <option value="1.4">1.4</option>
+                        <option value="1.5">1.5</option>
+                        <option value="1.6">1.6</option>
+                        <option value="1.7">1.7</option>
+                        <option value="1.8">1.8</option>
+                        <option value="2.0">2.0</option>
+                        <option value="2.2">2.2</option>
+                    </select>
                 </label>
             </div>
         </div>
@@ -5487,6 +5609,7 @@
 
             c.font = document.querySelector('#sel-font').value;
             c.fontSize = document.querySelector('#in-fontsize').value;
+            c.lineHeight = document.querySelector('#sel-lineheight').value;
             c.bgColor = document.querySelector('#in-bg').value;
             saveConfig(c);
             location.reload();
@@ -5513,6 +5636,7 @@
         let fs = c.fontSize || '';
         document.querySelector('#in-fontsize').value = fs;
         document.querySelector('#sel-fontsize').value = fs;
+        document.querySelector('#sel-lineheight').value = c.lineHeight || '';
         document.querySelector('#in-bg').value = c.bgColor;
         document.querySelector('#in-bg-picker').value = c.bgColor.startsWith('#') ? c.bgColor : '#BDBEBD';
     }
@@ -5911,6 +6035,331 @@
     }
 
     // ==========================================
+    // 模块 7: 关注话题
+    // ==========================================
+    const FOLLOWED_THREADS_KEY = 'tgfc_followed_threads';
+
+    // 获取所有关注的话题
+    function getFollowedThreads() {
+        try {
+            return JSON.parse(Safe_GetValue(FOLLOWED_THREADS_KEY, '[]'));
+        } catch (e) {
+            return [];
+        }
+    }
+
+    // 保存关注列表
+    function saveFollowedThreads(threads) {
+        Safe_SetValue(FOLLOWED_THREADS_KEY, JSON.stringify(threads));
+    }
+
+    // 添加关注
+    function addFollowedThread(thread) {
+        const threads = getFollowedThreads();
+        // 检查是否已关注
+        if (threads.some(t => t.tid === thread.tid)) return false;
+        // 保存所有传入的字段
+        threads.push({
+            ...thread,  // 包括 tid, title, url, fid, author, postDate, replies, views
+            addedAt: Date.now()
+        });
+        saveFollowedThreads(threads);
+
+        return true;
+    }
+
+    // 取消关注
+    function removeFollowedThread(tid) {
+        let threads = getFollowedThreads();
+        threads = threads.filter(t => t.tid !== tid);
+        saveFollowedThreads(threads);
+    }
+
+    // 检查是否已关注
+    function isThreadFollowed(tid) {
+        return getFollowedThreads().some(t => t.tid === tid);
+    }
+
+    // 获取当前版面的关注列表（按关注时间排序，最新在前）
+    function getFollowedThreadsByFid(fid) {
+        return getFollowedThreads()
+            .filter(t => {
+                // 如果保存的fid为空，也显示在当前版面
+                if (!t.fid) return true;
+                // 支持字符串和数字类型的比较
+                return String(t.fid) === String(fid);
+            })
+            .sort((a, b) => b.addedAt - a.addedAt);
+    }
+
+    // 从内容页URL提取版面ID
+    function extractFidFromPage() {
+        let fid = null;
+
+        // 方法1: 从标题分类链接获取 (如 [有感而发] 链接)
+        const h1 = document.querySelector('div.viewthread h1');
+        if (h1) {
+            const catLink = h1.querySelector('a[href*="fid="], a[href*="forum-"], a[href*="filter=type"]');
+            if (catLink) {
+                let match = catLink.href.match(/fid=(\d+)/);
+                if (match) fid = match[1];
+                if (!fid) {
+                    match = catLink.href.match(/forum-(\d+)-/);
+                    if (match) fid = match[1];
+                }
+            }
+        }
+
+        // 方法2: 从导航面包屑获取
+        if (!fid) {
+            const navLinks = document.querySelectorAll('#nav a, .viewthread a[href*="forum-"], .viewthread a[href*="forumdisplay"]');
+            for (const link of navLinks) {
+                let match = link.href.match(/forum-(\d+)-/);
+                if (match) { fid = match[1]; break; }
+                match = link.href.match(/fid=(\d+)/);
+                if (match) { fid = match[1]; break; }
+            }
+        }
+
+        // 方法3: 从页面中的隐藏表单获取
+        if (!fid) {
+            const fidInput = document.querySelector('input[name="fid"]');
+            if (fidInput) fid = fidInput.value;
+        }
+
+        // 方法4: 从 JS 全局变量获取
+        if (!fid && typeof window.fid !== 'undefined' && window.fid) {
+            fid = String(window.fid);
+        }
+
+
+        return fid;
+    }
+
+    // 内容页：初始化关注按钮
+    function initFollowButton() {
+        const h1 = document.querySelector('div.viewthread h1');
+        if (!h1) return;
+        if (h1.querySelector('.tgfc-follow-btn')) return;
+
+        const tid = getThreadId();
+        if (!tid) return;
+
+        const fid = extractFidFromPage();
+
+        // 获取纯净标题（移除分类标签）
+        let title = '';
+        const titleSpan = h1.querySelector('span');
+        if (titleSpan) {
+            title = titleSpan.textContent.trim();
+        } else {
+            // 如果没有span，取整个h1的文本但去掉分类链接
+            title = h1.textContent.replace(/^\[[^\]]+\]\s*/, '').replace(/关注$|已关注$/, '').trim();
+        }
+
+        // 提取作者信息
+        let author = '';
+        // 尝试多种选择器
+        const authorSelectors = [
+            'td.postauthor cite a',
+            '.postauthor cite a',
+            '.postinfo cite a',
+            'td.postauthor a[href*="space"]',
+            '.viewthread .postauthor a'
+        ];
+        for (const sel of authorSelectors) {
+            const el = document.querySelector(sel);
+            if (el && el.textContent.trim()) {
+                author = el.textContent.trim();
+                break;
+            }
+        }
+
+        // 提取发帖日期（第一个帖子的时间）
+        let postDate = '';
+        const dateEl = document.querySelector('.postinfo em[id^="authorpost"], .postinfo .postdate, td.postcontent .postinfo');
+        if (dateEl) {
+            const dateMatch = dateEl.textContent.match(/(\d{4}-\d{1,2}-\d{1,2})/);
+            if (dateMatch) postDate = dateMatch[1];
+        }
+        // 备用：从 em 元素提取
+        if (!postDate) {
+            const emElements = document.querySelectorAll('.postinfo em');
+            for (const em of emElements) {
+                const match = em.textContent.match(/(\d{4}-\d{1,2}-\d{1,2})/);
+                if (match) { postDate = match[1]; break; }
+            }
+        }
+
+        // 尝试提取回复/浏览数（这些信息在内容页通常不直接显示，标记为0）
+        let replies = 0, views = 0;
+        // 有些论坛在页面某处显示 "本帖有 X 次阅读"
+        const statsText = document.body.innerText;
+        const viewMatch = statsText.match(/本帖有\s*(\d+)\s*次阅读/);
+        if (viewMatch) views = parseInt(viewMatch[1]);
+
+
+
+        const btn = document.createElement('span');
+        btn.className = 'tgfc-follow-btn';
+
+        const updateBtn = () => {
+            if (isThreadFollowed(tid)) {
+                btn.textContent = '已关注';
+                btn.classList.add('followed');
+            } else {
+                btn.textContent = '关注';
+                btn.classList.remove('followed');
+            }
+        };
+        updateBtn();
+
+        btn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (isThreadFollowed(tid)) {
+                if (confirm('确定取消关注此话题？')) {
+                    removeFollowedThread(tid);
+                    updateBtn();
+                }
+            } else {
+                addFollowedThread({
+                    tid: tid,
+                    title: title,
+                    url: location.href.split('#')[0],
+                    fid: fid,
+                    author: author,
+                    postDate: postDate,
+                    replies: replies,
+                    views: views
+                });
+                updateBtn();
+            }
+        };
+
+        h1.appendChild(btn);
+    }
+
+    // 列表页：渲染关注区域
+    const FOLLOWED_COLLAPSED_KEY = 'tgfc_followed_collapsed';
+
+    function renderFollowedSection(fid) {
+        const threads = getFollowedThreadsByFid(fid);
+
+
+        // 查找版块主题分隔栏 (在 table#forum_XX 内)
+        const separationThead = document.querySelector('table[id^="forum_"] thead.separation') || document.querySelector('thead.separation');
+
+        if (!separationThead) return;
+
+        // 移除旧的关注区域
+        const oldSection = document.querySelector('.tgfc-followed-panel');
+        if (oldSection) oldSection.remove();
+
+        // 无关注时不显示
+        if (threads.length === 0) return;
+
+        // 找到 table 容器
+        const parentTable = separationThead.closest('table');
+        if (!parentTable) return;
+
+        // 获取折叠状态
+        const isCollapsed = Safe_GetValue(FOLLOWED_COLLAPSED_KEY, 'false') === 'true';
+
+        // 创建关注面板
+        const panel = document.createElement('div');
+        panel.id = 'tgfc-followed-panel';
+        panel.className = 'tgfc-followed-panel';
+
+        // 构建列表内容（使用 ul/li 结构，和十大话题一致）
+        let listHtml = threads.map((t, i) => {
+            // 构建统计信息
+            let statsHtml = '';
+            if (t.replies || t.views) {
+                statsHtml = `<span class="tgfc-followed-stats">${t.replies || 0}/${t.views || 0}</span>`;
+            }
+            // 构建作者信息
+            let authorHtml = t.author ? `<span class="tgfc-followed-author">${t.author}</span>` : '';
+            // 构建日期信息
+            let dateHtml = t.postDate ? `<span class="tgfc-followed-date">${t.postDate}</span>` : '';
+
+            return `
+            <li>
+                <span class="tgfc-followed-rank">${i + 1}</span>
+                <a href="${t.url}" class="tgfc-followed-link" title="${t.title}">${t.title}</a>
+                ${statsHtml}
+                ${authorHtml}
+                ${dateHtml}
+                <span class="tgfc-followed-unfollow" data-tid="${t.tid}" title="取消关注">×</span>
+            </li>`;
+        }).join('');
+
+        panel.innerHTML = `
+            <div class="tgfc-followed-header">
+                <span class="tgfc-followed-title">⭐ 我的关注 (${threads.length})</span>
+            </div>
+            <div class="tgfc-followed-body ${isCollapsed ? '' : 'expanded'}">
+                <ul class="tgfc-followed-list">${listHtml}</ul>
+            </div>
+        `;
+
+        // 标题点击展开/收起
+        const header = panel.querySelector('.tgfc-followed-header');
+        const body = panel.querySelector('.tgfc-followed-body');
+        header.onclick = () => {
+            body.classList.toggle('expanded');
+            const nowCollapsed = !body.classList.contains('expanded');
+            Safe_SetValue(FOLLOWED_COLLAPSED_KEY, nowCollapsed ? 'true' : 'false');
+        };
+
+        // 绑定取消关注事件
+        panel.querySelectorAll('.tgfc-followed-unfollow').forEach(btn => {
+            btn.onclick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const tid = this.dataset.tid;
+                if (confirm('确定取消关注此话题？')) {
+                    removeFollowedThread(tid);
+                    renderFollowedSection(fid);
+                }
+            };
+        });
+
+        // 插入逻辑调整：
+        // 为了避免被列表容器的白色背景影响（导致外围出现白边），
+        // 尝试将面板插入到 threadlist 容器的外部（与十大话题一致）
+        const threadListDiv = document.querySelector('div.mainbox.threadlist') || parentTable.closest('.mainbox');
+
+        if (threadListDiv && threadListDiv.parentNode) {
+            // 检查十大话题面板是否已存在
+            const top10Panel = document.getElementById('tgfc-top10-panel');
+            if (top10Panel && top10Panel.nextSibling) {
+                // 如果有十大话题，插入到它后面
+                top10Panel.parentNode.insertBefore(panel, top10Panel.nextSibling);
+            } else {
+                // 否则插入到 threadListDiv 前面
+                threadListDiv.parentNode.insertBefore(panel, threadListDiv);
+            }
+        } else {
+            // 降级方案：如果找不到外部容器，还是插在表格里
+
+            parentTable.parentNode.insertBefore(panel, parentTable);
+        }
+    }
+
+    // 列表页：初始化关注区域
+    function initFollowedPanel() {
+        if (!isForumListPage()) return;
+
+        const fid = getForumId();
+        if (!fid) return;
+
+
+
+        renderFollowedSection(fid);
+    }
+
+    // ==========================================
     // 模块 5: 启动
     // ==========================================
 
@@ -5960,6 +6409,16 @@
                         document.querySelector('#col-text').value = c.globalPostColor;
                     }
                 }
+
+                // 暗黑主题下，将平台标识等彩色文字统一设置为浅蓝色，使其更醒目
+                const darkModeHighlightColor = '#7dd3e8'; // 浅蓝色
+                document.querySelectorAll('.postcontent font[color]').forEach(el => {
+                    el.style.setProperty('color', darkModeHighlightColor, 'important');
+                    // 同时为所有子元素设置颜色
+                    el.querySelectorAll('*').forEach(child => {
+                        child.style.setProperty('color', darkModeHighlightColor, 'important');
+                    });
+                });
             } else {
                 document.body.classList.remove('tgfc-neoretro-dark');
 
@@ -6072,6 +6531,8 @@
         scan();
         initTagStatsLink();
         initTop10Panel(); // 今日十大话题
+        initFollowedPanel(); // 关注话题
+        initFollowButton(); // 内容页关注按钮
         window.mdEnhancer = new TGMarkdownEnhancer();
         setInterval(scan, 2000);
     }

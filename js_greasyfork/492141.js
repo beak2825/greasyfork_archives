@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zeitbuchungs Summenbilder
 // @namespace    http://kanojo.de/
-// @version      1.0.0
+// @version      2026-01-12
 // @description  Sum the blocks and a daily total
 // @author       Dario Ernst
 // @match        https://zeiterfassung.haufe.group/*
@@ -49,7 +49,7 @@ function CalculateAndAppendTimes(titleElementId) {
     const elm = document.getElementById("__xmlview0--idEventsTable-tblBody");
     if(!elm) return;
     //console.log("Have table element to calculate times");
-    const timeElements = getElementsByXPath('//tbody//tr/td[3]/div/div[2]/span', elm);
+    const timeElements = getElementsByXPath('//tbody//tr/td[4]//span', elm);
     //console.log("got timeElements", timeElements);
 
     var times = [];
@@ -61,6 +61,7 @@ function CalculateAndAppendTimes(titleElementId) {
         const now = new Date();
         times.push(now.toLocaleTimeString());
     }
+
     //console.log("got times", times);
 
 
@@ -112,7 +113,7 @@ function CalculateAndAppendTimes(titleElementId) {
         for(let mut of mutations) if(mut.target.id=="sap-ui-destroyed-SAMLDialog-footer") window.location.reload(); */
 
         CalculateAndAppendTimes();
-        console.log("calcing");
+        console.log("calc'ed");
     });
     observer.observe(document.body, {
         childList: true,

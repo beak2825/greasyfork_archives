@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LZT Contests Info (Firefox)
 // @namespace    LZTContestsInfo
-// @version      1.5
+// @version      1.6
 // @description  Информация о розыгрышах в профиле LZT с кэшем на 10 минут, с обходом CSP (Firefox)
 // @author       llimonix
 // @match        https://zelenka.guru/*
@@ -98,6 +98,9 @@
                     width: 24px;
                     height: 24px;
                     font-size: 24px;
+                }
+                .LZTContestsInfo--statusContainer {
+                    margin-top: 12px;
                 }
                 .LZTContestsInfo--status {
                     display: flex;
@@ -312,16 +315,23 @@
                     </div>
                 \`;
 
-                const $contestsInfo = $(\`
-                    <div class="LZTContestsInfoWrapper">
-                      <div class="LZTContestsInfo">
-                        \${$items}
-                      </div>
-                      \${$warningContestsInfo}
+                const $contestsInfo = $('<div class="LZTContestsInfoWrapper">');
+                const $info = $('<div class="LZTContestsInfo">').append($items);
+                $contestsInfo.append($info);
+                $contestsInfo.append($warningContestsInfo);
+
+                const $modal = $(\`
+                    <div class="sectionMain">
+                        <h2 class="heading h1">LZT Contests Info</h2>
+                        <div class="overlayContent" style="padding:15px"></div>
                     </div>
                 \`);
 
-                XenForo.alert($contestsInfo.prop('outerHTML'), 'LZT Contests Info');
+                $modal.find('.overlayContent').append($contestsInfo);
+
+                XenForo.createOverlay(null, $modal, {
+                    severalModals: true
+                }).load();
             }
         })();
     `;

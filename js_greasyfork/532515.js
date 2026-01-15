@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🌌V2 Kастомизация для сайта Black Russia Forum
 // @namespace    http://tampermonkey.net/
-// @version      17.6.10
+// @version      17.6.11
 // @description  Полный визуальный редизайн форума Black Russia. Выбор обоев, плавные анимации, оптимизация интерфейса и гибкая настройка под себя.
 // @author       Maras Rofls
 // @match        https://forum.blackrussia.online/*
@@ -46,7 +46,7 @@ class DOMWatcher {
     const globalDOMWatcher = new DOMWatcher();
     const STYLE_ID = 'blackrussia-custom-style';
     const WELCOME_SCREEN_ID = 'br-style-welcome-screen';
-    const SCRIPT_VERSION = '17.6.10';
+    const SCRIPT_VERSION = '17.6.11';
     const PANEL_ID = 'blackrussia-settings-panel';
     const BOTTOM_NAV_ID = 'blackrussia-bottom-nav-bar';
     const CLOCK_ID = 'br-style-clock';
@@ -119,7 +119,8 @@ class DOMWatcher {
         };
     }
 
-const defaultSettings={fontColor:'#F0F8FF',bgImageDataUri:'',opacityValue:0.3, borderRadius:'10px',bgColor:'#18181b',enableRounding:true,enableEdge:true,edgeColor:'#4A90E2',edgeWidth:'1px',edgeOpacity:0.5,edgeStyle:'cloud_glow',fontFamily:'"Georgia", serif',transparentElementsOpacity:1,enableGradient:false,gradientColor1:'#333333',gradientColor2:'#000000',gradientColor3:'#555555',gradientColor4:'#222222',gradientDirection:'135deg',enableAnimatedGradient:false,animatedGradientSpeed:'5s',enableBottomNav:true,bottomNavOpacity:0.85,bottomNavBorderRadius:'25px',bottomNavPosition:'bottom-center',quickLinks:[{name:'Главная',url:'https://forum.blackrussia.online/',icon:'fas fa-home'},{name:'Правила',url:'https://forum.blackrussia.online/index.php?forums/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%BE%D0%B2.10/',icon:'fas fa-gavel'},{name:'Жалобы',url:'https://forum.blackrussia.online/index.php?forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B.14/',icon:'fas fa-exclamation-shield'}],enableTextGlow:false,textGlowColor:'#FFFF00',textGlowIntensity:'5px',effectType:'none',effectIntensity:50,effectSpeed:1,effectSwayIntensity:1,effectRainLength:20,customPresets:{},enableBlockBlur:false,blockBlurAmount:5,enableOwnMessageHighlight:false,ownMessageHighlightBgColor:'#2c3e50',ownMessageHighlightEdgeColor:'#3498db',ownMessageHighlightEdgeWidth:'0.2px', enableAvatarBorder:false,avatarBorderColor1:'#FF00DE',avatarBorderColor2:'#00F0FF',avatarBorderColor3:'#00FF85',avatarBorderSize:'2px',avatarBorderSpeed:'3s',avatarBorderStyle:'gradient',avatarPulsateColor:'#FFFFFF',enablePulsatingNicks:false,pulsatingNickColor:'#FFFFFF',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableGradientNicks:false,gradientNickColor1:'#FFFFFF',gradientNickColor2:'#00F0FF',gradientNickColor3:'#FF00DE',gradientNickSpeed:'3s',enableUiAnimations:false,uiAnimationSpeed:'0.2s',enableScrollFadeIn:true,scrollFadeInType:'fade-in-up',enableParallaxScroll:false,enableScrollIndicator:true,scrollIndicatorColor:'#00F0FF',scrollIndicatorHeight:'3px',enableWideMode:false,enableOpHighlight:true,opHighlightBgColor:'#3a2e4a',opHighlightEdgeColor:'#9b59b6',opHighlightEdgeWidth:'1px',enableSmartNav:true,enable3DAvatarHover:false,enableLikeAnimations:false,enableDynamicWelcome:true,enableInteractiveParticles:false,enableContextualBackgrounds:false,contextualBgUrl:'zhaloby',contextualBgPreset:'default_dark',enableLiveCounters:true,enableLiveFeed:true, enableHotTopicPulse:false,liveUpdateInterval:60,imgbbApiKey:'',uploaderBtnBgUrl:'',enableComplaintTracker:true,complaintTrackerWarnTime:12,complaintTrackerCritTime:24,complaintTrackerSections:'жалоб, обжалован, техническ, биографи, заявлен',panelTheme:'classic_dark',enableTopicAnimation:false,topicAnimationType:'fade-in',enableBinder:true,bottomNavTheme:'nav_theme_fire',enableThreadPreview:false,enableSectionStats:false,enableSkeletonLoading:true,enableCopyToast:true,};const availableFonts=[{name:"Georgia",value:'"Georgia", serif',url:''},{name:"Science Gothic",value:'"Science Gothic", sans-serif',url:'https://fonts.googleapis.com/css2?family=Science+Gothic&display=swap'},{name:"Rubik",value:'"Rubik", sans-serif',url:'https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap'},{name:"Roboto Slab",value:'"Roboto Slab", serif',url:'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap'},{name:"Pacifico",value:'"Pacifico", cursive',url:'https://fonts.googleapis.com/css2?family=Pacifico&display=swap'},{name:"Lobster",value:'"Lobster", cursive',url:'https://fonts.googleapis.com/css2?family=Lobster&display=swap'},{name:"Russo One",value:'"Russo One", sans-serif',url:'https://fonts.googleapis.com/css2?family=Russo+One&display=swap'},{name:"Playfair Display SC",value:'"Playfair Display SC", serif',url:'https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&display=swap'},{name:"Dela Gothic One",value:'"Dela Gothic One", cursive',url:'https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap'},{name:"Orelega One",value:'"Orelega One", cursive',url:'https://fonts.googleapis.com/css2?family=Orelega+One&display=swap'},{name:"Rubik Vinyl",value:'"Rubik Vinyl", cursive',url:'https://fonts.googleapis.com/css2?family=Rubik+Vinyl&display=swap'}];const builtInPresets={'new_year':{enableGradient:true,gradientColor1:'#0a1931',gradientColor2:'#173a6a',gradientColor3:'#ffffff',gradientColor4:'#0a1931',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'15s',bgColor:'#1a2a47',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:3,enableRounding:true,borderRadius:'10px',enableEdge:true,edgeColor:'#ffffff',edgeWidth:'1px',edgeOpacity:0.7,enableTextGlow:true,textGlowColor:'#cce7ff',textGlowIntensity:'8px',effectType:'snow',effectIntensity:100,effectSpeed:1,effectSwayIntensity:1.2,enableAvatarBorder:true,avatarBorderColor1:'#ffffff',avatarBorderColor2:'#cce7ff',avatarBorderColor3:'#89cff0',enablePulsatingNicks:false,enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#ffffff'},'halloween':{enableGradient:true,gradientColor1:'#1a0000',gradientColor2:'#ff6600',gradientColor3:'#000000',gradientColor4:'#3d0000',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'10s',bgColor:'#2b0f00',opacityValue:0.9,enableBlockBlur:false,enableRounding:true,borderRadius:'6px',enableEdge:true,edgeColor:'#ff6600',edgeWidth:'2px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#ff9900',textGlowIntensity:'10px',effectType:'leaves-autumn_maple',effectIntensity:60,effectSpeed:0.8,effectSwayIntensity:1,enableAvatarBorder:true,avatarBorderColor1:'#ff6600',avatarBorderColor2:'#f0ad4e',avatarBorderColor3:'#000000',enablePulsatingNicks:true,pulsatingNickColor:'#ff6600',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#ff6600'},'cyberpunk':{enableGradient:true,gradientColor1:'#000000',gradientColor2:'#ff00ff',gradientColor3:'#00ffff',gradientColor4:'#000000',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'6s',bgColor:'#1a001a',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:2,enableRounding:true,borderRadius:'2px',enableEdge:true,edgeColor:'#00ffff',edgeWidth:'1px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#ff00ff',textGlowIntensity:'10px',effectType:'matrix',effectIntensity:90,effectSpeed:1.2,effectRainLength:18,enableAvatarBorder:true,avatarBorderColor1:'#ff00ff',avatarBorderColor2:'#00ffff',avatarBorderColor3:'#F0FF00',enablePulsatingNicks:true,pulsatingNickColor:'#00ffff',pulsatingNickIntensity:1.05,pulsatingNickSpeed:'1.5s',enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#00ffff'},'valentines':{...defaultSettings,enableGradient:true,gradientColor1:'#ffc0cb',gradientColor2:'#e63946',gradientColor3:'#ffffff',gradientColor4:'#ffb6c1',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'12s',bgColor:'#3d1a2a',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:3,enableRounding:true,borderRadius:'22px',enableEdge:true,edgeColor:'#ff8fab',edgeWidth:'1px',edgeOpacity:0.7,enableTextGlow:true,textGlowColor:'#ffc0cb',textGlowIntensity:'8px',effectType:'petals-red_rose',effectIntensity:60,effectSpeed:0.8,effectSwayIntensity:1.5,enableAvatarBorder:true,avatarBorderColor1:'#ff0054',avatarBorderColor2:'#ffffff',avatarBorderColor3:'#ff8fab',enablePulsatingNicks:true,pulsatingNickColor:'#ff8fab',pulsatingNickIntensity:1.05,enableGradientNicks:false,enableScrollIndicator:true,scrollIndicatorColor:'#ff0054'},'womens_day':{...defaultSettings,enableGradient:true,gradientColor1:'#f8c5c8',gradientColor2:'#a4d4ae',gradientColor3:'#ffffff',gradientColor4:'#fffdd0',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'15s',bgColor:'#333333',opacityValue:0.85,enableBlockBlur:true,blockBlurAmount:4,enableRounding:true,borderRadius:'10px',enableEdge:true,edgeColor:'#90ee90',edgeWidth:'1px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#d4ffb8',textGlowIntensity:'6px',effectType:'petals-sakura',effectIntensity:70,effectSpeed:1,effectSwayIntensity:1.3,enableAvatarBorder:true,avatarBorderColor1:'#f8c5c8',avatarBorderColor2:'#90ee90',avatarBorderColor3:'#fffdd0',enablePulsatingNicks:false,enableGradientNicks:true,gradientNickColor1:'#f8c5c8',gradientNickColor2:'#90ee90',gradientNickColor3:'#f8c5c8',enableScrollIndicator:true,scrollIndicatorColor:'#f8c5c8'},'victory_day':{...defaultSettings,enableGradient:true,gradientColor1:'#000000',gradientColor2:'#ff6600',gradientColor3:'#d90429',gradientColor4:'#000000',gradientDirection:'to right',enableAnimatedGradient:true,animatedGradientSpeed:'10s',bgColor:'#1c1c1c',opacityValue:0.9,enableBlockBlur:false,enableRounding:true,borderRadius:'4px',enableEdge:true,edgeColor:'#ff6600',edgeWidth:'2px',edgeOpacity:0.9,enableTextGlow:true,textGlowColor:'#fca311',textGlowIntensity:'10px',effectType:'none',enableAvatarBorder:true,avatarBorderStyle:'pulsate',avatarPulsateColor:'#fca311',avatarBorderSpeed:'2s',enablePulsatingNicks:true,pulsatingNickColor:'#ff6600',pulsatingNickIntensity:1.1,enableGradientNicks:false,enableScrollIndicator:true,scrollIndicatorColor:'#ff6600'},'ramadan':{...defaultSettings,enableGradient:true,gradientColor1:'#004d40',gradientColor2:'#ffd700',gradientColor3:'#ffffff',gradientColor4:'#00695c',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'14s',bgColor:'#003d33',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:2,enableRounding:true,borderRadius:'8px',enableEdge:true,edgeColor:'#ffd700',edgeWidth:'0.3px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#fff59d',textGlowIntensity:'8px',effectType:'fireflies',effectIntensity:50,effectSpeed:0.7,effectSwayIntensity:1,enableAvatarBorder:true,avatarBorderColor1:'#ffd700',avatarBorderColor2:'#ffffff',avatarBorderColor3:'#00796b',enablePulsatingNicks:false,enableGradientNicks:true,gradientNickColor1:'#ffd700',gradientNickColor2:'#ffffff',gradientNickColor3:'#fff59d',enableScrollIndicator:true,scrollIndicatorColor:'#ffd700'},'default_dark':{...defaultSettings}};
+const defaultSettings={fontColor:'#F0F8FF',bgImageDataUri:'',opacityValue:0.3, borderRadius:'10px',bgColor:'#18181b',enableRounding:true,enableEdge:true,edgeColor:'#4A90E2',edgeWidth:1.5,edgeOpacity:0.6,edgeStyle:'cloud_glow',fontFamily:'"Georgia", serif',transparentElementsOpacity:1,enableGradient:false,gradientColor1:'#333333',gradientColor2:'#000000',gradientColor3:'#555555',gradientColor4:'#222222',gradientDirection:'135deg',enableAnimatedGradient:false,animatedGradientSpeed:'5s',enableBottomNav:true,bottomNavOpacity:0.85,bottomNavBorderRadius:'25px',bottomNavPosition:'bottom-center',quickLinks:[{name:'Главная',url:'https://forum.blackrussia.online/',icon:'fas fa-home'},{name:'Правила',url:'https://forum.blackrussia.online/index.php?forums/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%BE%D0%B2.10/',icon:'fas fa-gavel'},{name:'Жалобы',url:'https://forum.blackrussia.online/index.php?forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B.14/',icon:'fas fa-exclamation-shield'}],enableTextGlow:false,textGlowColor:'#FFFF00',textGlowIntensity:'5px',effectType:'none',effectIntensity:50,effectSpeed:1,effectSwayIntensity:1,effectRainLength:20,customPresets:{},enableBlockBlur:false,blockBlurAmount:5,enableOwnMessageHighlight:false,ownMessageHighlightBgColor:'#2c3e50',ownMessageHighlightEdgeColor:'#3498db',ownMessageHighlightEdgeWidth:'0.2px', enableAvatarBorder:false,avatarBorderColor1:'#FF00DE',avatarBorderColor2:'#00F0FF',avatarBorderColor3:'#00FF85',avatarBorderSize:'2px',avatarBorderSpeed:'3s',avatarBorderStyle:'gradient',avatarPulsateColor:'#FFFFFF',enablePulsatingNicks:false,pulsatingNickColor:'#FFFFFF',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableGradientNicks:false,gradientNickColor1:'#FFFFFF',gradientNickColor2:'#00F0FF',gradientNickColor3:'#FF00DE',gradientNickSpeed:'3s',enableUiAnimations:false,uiAnimationSpeed:'0.2s',enableScrollFadeIn:true,scrollFadeInType:'fade-in-up',enableParallaxScroll:false,enableScrollIndicator:true,scrollIndicatorColor:'#00F0FF',scrollIndicatorHeight:'3px',enableWideMode:false,enableOpHighlight:true,opHighlightBgColor:'#3a2e4a',opHighlightEdgeColor:'#9b59b6',opHighlightEdgeWidth:'1px',enableSmartNav:true,enable3DAvatarHover:false,enableLikeAnimations:false,enableDynamicWelcome:true,enableInteractiveParticles:false,enableContextualBackgrounds:false,contextualBgUrl:'zhaloby',contextualBgPreset:'default_dark',enableLiveCounters:true,enableLiveFeed:true, enableHotTopicPulse:false,liveUpdateInterval:60,imgbbApiKey:'',uploaderBtnBgUrl:'',enableComplaintTracker:true,complaintTrackerWarnTime:12,complaintTrackerCritTime:24,complaintTrackerSections:'жалоб, обжалован, техническ, биографи, заявлен',panelTheme:'classic_dark',enableTopicAnimation:false,topicAnimationType:'fade-in',enableBinder:true,bottomNavTheme:'nav_theme_fire',enableThreadPreview:false,enableSectionStats:false,enableSkeletonLoading:true,enableCopyToast:true,};
+const availableFonts=[{name:"Georgia",value:'"Georgia", serif',url:''},{name:"Science Gothic",value:'"Science Gothic", sans-serif',url:'https://fonts.googleapis.com/css2?family=Science+Gothic&display=swap'},{name:"Rubik",value:'"Rubik", sans-serif',url:'https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap'},{name:"Roboto Slab",value:'"Roboto Slab", serif',url:'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap'},{name:"Pacifico",value:'"Pacifico", cursive',url:'https://fonts.googleapis.com/css2?family=Pacifico&display=swap'},{name:"Lobster",value:'"Lobster", cursive',url:'https://fonts.googleapis.com/css2?family=Lobster&display=swap'},{name:"Russo One",value:'"Russo One", sans-serif',url:'https://fonts.googleapis.com/css2?family=Russo+One&display=swap'},{name:"Playfair Display SC",value:'"Playfair Display SC", serif',url:'https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&display=swap'},{name:"Dela Gothic One",value:'"Dela Gothic One", cursive',url:'https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap'},{name:"Orelega One",value:'"Orelega One", cursive',url:'https://fonts.googleapis.com/css2?family=Orelega+One&display=swap'},{name:"Rubik Vinyl",value:'"Rubik Vinyl", cursive',url:'https://fonts.googleapis.com/css2?family=Rubik+Vinyl&display=swap'}];const builtInPresets={'new_year':{enableGradient:true,gradientColor1:'#0a1931',gradientColor2:'#173a6a',gradientColor3:'#ffffff',gradientColor4:'#0a1931',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'15s',bgColor:'#1a2a47',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:3,enableRounding:true,borderRadius:'10px',enableEdge:true,edgeColor:'#ffffff',edgeWidth:'1px',edgeOpacity:0.7,enableTextGlow:true,textGlowColor:'#cce7ff',textGlowIntensity:'8px',effectType:'snow',effectIntensity:100,effectSpeed:1,effectSwayIntensity:1.2,enableAvatarBorder:true,avatarBorderColor1:'#ffffff',avatarBorderColor2:'#cce7ff',avatarBorderColor3:'#89cff0',enablePulsatingNicks:false,enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#ffffff'},'halloween':{enableGradient:true,gradientColor1:'#1a0000',gradientColor2:'#ff6600',gradientColor3:'#000000',gradientColor4:'#3d0000',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'10s',bgColor:'#2b0f00',opacityValue:0.9,enableBlockBlur:false,enableRounding:true,borderRadius:'6px',enableEdge:true,edgeColor:'#ff6600',edgeWidth:'2px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#ff9900',textGlowIntensity:'10px',effectType:'leaves-autumn_maple',effectIntensity:60,effectSpeed:0.8,effectSwayIntensity:1,enableAvatarBorder:true,avatarBorderColor1:'#ff6600',avatarBorderColor2:'#f0ad4e',avatarBorderColor3:'#000000',enablePulsatingNicks:true,pulsatingNickColor:'#ff6600',pulsatingNickIntensity:1.1,pulsatingNickSpeed:'2s',enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#ff6600'},'cyberpunk':{enableGradient:true,gradientColor1:'#000000',gradientColor2:'#ff00ff',gradientColor3:'#00ffff',gradientColor4:'#000000',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'6s',bgColor:'#1a001a',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:2,enableRounding:true,borderRadius:'2px',enableEdge:true,edgeColor:'#00ffff',edgeWidth:'1px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#ff00ff',textGlowIntensity:'10px',effectType:'matrix',effectIntensity:90,effectSpeed:1.2,effectRainLength:18,enableAvatarBorder:true,avatarBorderColor1:'#ff00ff',avatarBorderColor2:'#00ffff',avatarBorderColor3:'#F0FF00',enablePulsatingNicks:true,pulsatingNickColor:'#00ffff',pulsatingNickIntensity:1.05,pulsatingNickSpeed:'1.5s',enableUiAnimations:true,enableTopicAnimation:true,enableScrollIndicator:true,scrollIndicatorColor:'#00ffff'},'valentines':{...defaultSettings,enableGradient:true,gradientColor1:'#ffc0cb',gradientColor2:'#e63946',gradientColor3:'#ffffff',gradientColor4:'#ffb6c1',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'12s',bgColor:'#3d1a2a',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:3,enableRounding:true,borderRadius:'22px',enableEdge:true,edgeColor:'#ff8fab',edgeWidth:'1px',edgeOpacity:0.7,enableTextGlow:true,textGlowColor:'#ffc0cb',textGlowIntensity:'8px',effectType:'petals-red_rose',effectIntensity:60,effectSpeed:0.8,effectSwayIntensity:1.5,enableAvatarBorder:true,avatarBorderColor1:'#ff0054',avatarBorderColor2:'#ffffff',avatarBorderColor3:'#ff8fab',enablePulsatingNicks:true,pulsatingNickColor:'#ff8fab',pulsatingNickIntensity:1.05,enableGradientNicks:false,enableScrollIndicator:true,scrollIndicatorColor:'#ff0054'},'womens_day':{...defaultSettings,enableGradient:true,gradientColor1:'#f8c5c8',gradientColor2:'#a4d4ae',gradientColor3:'#ffffff',gradientColor4:'#fffdd0',gradientDirection:'45deg',enableAnimatedGradient:true,animatedGradientSpeed:'15s',bgColor:'#333333',opacityValue:0.85,enableBlockBlur:true,blockBlurAmount:4,enableRounding:true,borderRadius:'10px',enableEdge:true,edgeColor:'#90ee90',edgeWidth:'1px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#d4ffb8',textGlowIntensity:'6px',effectType:'petals-sakura',effectIntensity:70,effectSpeed:1,effectSwayIntensity:1.3,enableAvatarBorder:true,avatarBorderColor1:'#f8c5c8',avatarBorderColor2:'#90ee90',avatarBorderColor3:'#fffdd0',enablePulsatingNicks:false,enableGradientNicks:true,gradientNickColor1:'#f8c5c8',gradientNickColor2:'#90ee90',gradientNickColor3:'#f8c5c8',enableScrollIndicator:true,scrollIndicatorColor:'#f8c5c8'},'victory_day':{...defaultSettings,enableGradient:true,gradientColor1:'#000000',gradientColor2:'#ff6600',gradientColor3:'#d90429',gradientColor4:'#000000',gradientDirection:'to right',enableAnimatedGradient:true,animatedGradientSpeed:'10s',bgColor:'#1c1c1c',opacityValue:0.9,enableBlockBlur:false,enableRounding:true,borderRadius:'4px',enableEdge:true,edgeColor:'#ff6600',edgeWidth:'2px',edgeOpacity:0.9,enableTextGlow:true,textGlowColor:'#fca311',textGlowIntensity:'10px',effectType:'none',enableAvatarBorder:true,avatarBorderStyle:'pulsate',avatarPulsateColor:'#fca311',avatarBorderSpeed:'2s',enablePulsatingNicks:true,pulsatingNickColor:'#ff6600',pulsatingNickIntensity:1.1,enableGradientNicks:false,enableScrollIndicator:true,scrollIndicatorColor:'#ff6600'},'ramadan':{...defaultSettings,enableGradient:true,gradientColor1:'#004d40',gradientColor2:'#ffd700',gradientColor3:'#ffffff',gradientColor4:'#00695c',gradientDirection:'135deg',enableAnimatedGradient:true,animatedGradientSpeed:'14s',bgColor:'#003d33',opacityValue:0.9,enableBlockBlur:true,blockBlurAmount:2,enableRounding:true,borderRadius:'8px',enableEdge:true,edgeColor:'#ffd700',edgeWidth:'0.3px',edgeOpacity:0.8,enableTextGlow:true,textGlowColor:'#fff59d',textGlowIntensity:'8px',effectType:'fireflies',effectIntensity:50,effectSpeed:0.7,effectSwayIntensity:1,enableAvatarBorder:true,avatarBorderColor1:'#ffd700',avatarBorderColor2:'#ffffff',avatarBorderColor3:'#00796b',enablePulsatingNicks:false,enableGradientNicks:true,gradientNickColor1:'#ffd700',gradientNickColor2:'#ffffff',gradientNickColor3:'#fff59d',enableScrollIndicator:true,scrollIndicatorColor:'#ffd700'},'default_dark':{...defaultSettings}};
 const navThemes = {
     'nav_theme_fire': { mainBg: '#111111', borderColor: 'rgba(255, 102, 0, 0.3)', boxShadow: '0 0 10px rgba(255, 102, 0, 0.4), inset 0 0 5px #000000', glowGradient: 'linear-gradient(45deg, #FF6600, #B83E00, #4B0082, #FF6600)', glowOpacity: '0.5', linkHoverBg: 'rgba(255, 140, 0, 0.1)', linkHoverShadow: '0 0 5px rgba(255, 140, 0, 0.3)', accentColor: '#FF6600', mainGradient: 'linear-gradient(120deg, #80DEEA, #A7FFEB, #E1BEE7, #BA68C8, #80DEEA)' },
     'nav_theme_ocean': { mainBg: '#0F1A2F', borderColor: 'rgba(0, 114, 255, 0.3)', boxShadow: '0 0 10px rgba(0, 114, 255, 0.4), inset 0 0 5px #000000', glowGradient: 'linear-gradient(45deg, #00F0FF, #0072FF, #00C6FF, #00F0FF)', glowOpacity: '0.6', linkHoverBg: 'rgba(0, 114, 255, 0.1)', linkHoverShadow: '0 0 5px rgba(0, 114, 255, 0.3)', accentColor: '#00F0FF', mainGradient: 'linear-gradient(120deg, #4facfe, #00f2fe, #00c6ff, #0072ff, #4facfe)' },
@@ -134,7 +135,11 @@ function hexToRgb(hex){const m=/^#?([a-f\d]{6})$/i.exec(hex);if(!m)return null;c
 function rgbToHslLocal(r,g,b){r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;let h=0,s=0,l=(max+min)/2;if(d!==0){s=l>0.5?d/(2-max-min):d/(max+min);switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break;}h/=6;}return[h,s,l];}
 function hslToRgbLocal(h,s,l){const k=n=>(n+h*12)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));const toHex=x=>Math.round(x*255).toString(16).padStart(2,'0');return`#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;}
 function hexToRgbSimple(hex){const bigint=parseInt(hex.slice(1),16);return[(bigint>>16)&255,(bigint>>8)&255,bigint&255];}function readFileAsDataURL(file){return new Promise((resolve,reject)=>{if(file.size>MAX_IMAGE_SIZE_MB*1024*1024){reject(new Error(`Файл слишком большой! Макс. размер: ${MAX_IMAGE_SIZE_MB} МБ.`));return;}const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=(error)=>reject(error);reader.readAsDataURL(file);});}function downloadFile(filename,content,contentType){const blob=new Blob([content],{type:contentType});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}function isValidEffectType(type){return['none','rain','snow','petals-sakura','petals-red_rose','leaves-autumn_maple','fireflies','matrix','bubbles'].includes(type);}function debounce(func,wait){let timeout;return function executedFunction(...args){const later=()=>{clearTimeout(timeout);func(...args);};clearTimeout(timeout);timeout=setTimeout(later,wait);};}function isValidURL(str){if(!str||typeof str!=='string')return false;try{new URL(str);return str.startsWith('http://')||str.startsWith('https://')||str.startsWith('ftp://');}catch(_){return str.startsWith('/');}}function getRandomInRange(min,max){return Math.random()*(max-min)+min;}function getRandomIntInRange(min,max){min=Math.ceil(min);max=Math.floor(max);return Math.floor(Math.random()*(max-min+1))+min;}function observeDOM(targetNode,callback,options={childList:true,subtree:true}){if(!targetNode)return null;const observer=new MutationObserver(callback);observer.observe(targetNode,options);return observer;}function injectScript(src){return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.async=true;script.onload=resolve;script.onerror=reject;(document.head||document.documentElement).appendChild(script);});}function injectStyle(href){return new Promise((resolve,reject)=>{const link=document.createElement('link');link.rel='stylesheet';link.href=href;link.onload=resolve;link.onerror=reject;(document.head||document.documentElement).appendChild(link);});}function createRipple(event){const button=event.currentTarget;if(!button)return;let rippleContainer=button.querySelector('.br-ripple-container');if(!rippleContainer){rippleContainer=document.createElement('div');rippleContainer.className='br-ripple-container';button.appendChild(rippleContainer);}const ripple=document.createElement('span');ripple.className='br-ripple-effect';const rect=button.getBoundingClientRect();const size=Math.max(rect.width,rect.height);ripple.style.width=ripple.style.height=`${size}px`;const x=event.clientX-rect.left-size/2;const y=event.clientY-rect.top-size/2;ripple.style.left=`${x}px`;ripple.style.top=`${y}px`;rippleContainer.appendChild(ripple);ripple.addEventListener('animationend',()=>{ripple.remove();});}let capsuleTimer;function showToast(message,type='info',duration=3000){let container=document.getElementById('br-capsule-container');if(!container){container=document.createElement('div');container.id='br-capsule-container';container.innerHTML=`<div id="br-capsule"><div class="br-capsule-content"><span class="br-capsule-icon"></span><span class="br-capsule-text"></span></div></div>`;document.body.appendChild(container);}const capsule=document.getElementById('br-capsule');const iconEl=capsule.querySelector('.br-capsule-icon');const textEl=capsule.querySelector('.br-capsule-text');let iconHtml='<i class="fas fa-info-circle c-info"></i>';if(type==='success')iconHtml='<i class="fas fa-check-circle c-success"></i>';if(type==='error')iconHtml='<i class="fas fa-exclamation-triangle c-error"></i>';if(type==='loading')iconHtml='<i class="fas fa-spinner fa-spin c-load"></i>';clearTimeout(capsuleTimer);iconEl.innerHTML=iconHtml;textEl.textContent=message;if(!capsule.classList.contains('br-active')){requestAnimationFrame(()=>{capsule.classList.add('br-active');});}capsuleTimer=setTimeout(()=>{capsule.classList.remove('br-active');},duration);}function throttle(f,t){let w;return(...a)=>{if(!w){f(...a);w=true;setTimeout(()=>w=false,t);}};}
-function validateSetting(key,value,defaultValue){const dValue=(defaultValue!==undefined)?defaultValue:defaultSettings[key];const dType=typeof dValue;if(dType==='boolean'){return(value===true||value==='true');}if(dType==='number'){const parsedValue=parseFloat(value);if(isNaN(parsedValue))return dValue;let numValue=parsedValue;switch(key){case'opacityValue':case'edgeOpacity':case'bottomNavOpacity':case'transparentElementsOpacity':return Math.max(0,Math.min(1,numValue));case'effectIntensity':return Math.max(10,Math.min(200,parseInt(numValue,10)));case'effectSpeed':return Math.max(0.1,Math.min(5,numValue));case'effectSwayIntensity':return Math.max(0,Math.min(3,numValue));case'effectRainLength':case'blockBlurAmount':return Math.max(0,Math.min(50,parseInt(numValue,10)));case'pageTransitionDuration':case'pulsatingNickIntensity':return Math.max(0.1,Math.min(2,numValue));default:return Number.isInteger(dValue)?parseInt(numValue,10):numValue;}}if(dType==='string'){const strValue=(value!==null&&value!==undefined)?String(value).trim():String(dValue);if(strValue===''||strValue.toLowerCase()==='null'||strValue.toLowerCase()==='undefined')return dValue;if(key==='effectType'&&!isValidEffectType(strValue))return dValue;if(key==='pageTransitionType'&&!['fade-in','slide-in-left','slide-in-right','zoom-in'].includes(strValue))return dValue;const validateUnit=(val,unit)=>/^\d+(\.\d+)?$/.test(val)?`${val}${unit}`:(new RegExp(`^\\d+(\\.\\d+)?${unit}$`).test(val)?val:dValue);if(['borderRadius','edgeWidth','textGlowIntensity','ownMessageHighlightEdgeWidth','avatarBorderSize','scrollIndicatorHeight'].includes(key)){return validateUnit(strValue,'px');}if(['animatedGradientSpeed','avatarBorderSpeed','pulsatingNickSpeed','uiAnimationSpeed'].includes(key)){return validateUnit(strValue,'s');}return strValue;}if(dType==='object'&&dValue!==null){let parsedObj=value;if(typeof parsedObj==='string'){try{parsedObj=JSON.parse(parsedObj);}catch(e){parsedObj=dValue;}}if(key==='quickLinks'){return Array.isArray(parsedObj)?parsedObj.filter(l=>l&&l.name&&l.url):dValue;}return(typeof parsedObj==='object'&&parsedObj!==null&&!Array.isArray(parsedObj))?parsedObj:dValue;}return value;}function addQuickLinkInput(container,link={name:'',url:''}){if(!container)return;const linkInputDiv=document.createElement('div');linkInputDiv.className='quick-link-input-item';linkInputDiv.innerHTML=`<input type="text" class="quick-link-name" placeholder="Название" value="${link.name||''}"><input type="text" class="quick-link-url" placeholder="URL (https://...)" value="${link.url||''}"><button class="remove-quick-link-btn panel-small-btn panel-btn-danger" title="Удалить ссылку">➖</button>`;container.appendChild(linkInputDiv);linkInputDiv.querySelector('.remove-quick-link-btn').addEventListener('click',(e)=>{createRipple(e);linkInputDiv.remove();});}
+function validateSetting(key,value,defaultValue){const dValue=(defaultValue!==undefined)?defaultValue:defaultSettings[key];const dType=typeof dValue;if(dType==='boolean'){return(value===true||value==='true');}if(dType==='number'){const parsedValue=parseFloat(value);if(isNaN(parsedValue))return dValue;let numValue=parsedValue;switch(key){case'opacityValue':case'edgeOpacity':case'bottomNavOpacity':case'transparentElementsOpacity':return Math.max(0,Math.min(1,numValue));case'effectIntensity':return Math.max(10,Math.min(200,parseInt(numValue,10)));case'effectSpeed':return Math.max(0.1,Math.min(5,numValue));case'effectSwayIntensity':return Math.max(0,Math.min(3,numValue));
+
+case 'effectRainLength':case 'blockBlurAmount':return Math.max(0,Math.min(50,parseInt(numValue,10)));case 'edgeWidth': return Math.max(0, Math.min(10, numValue)); case 'pageTransitionDuration':case 'pulsatingNickIntensity':return Math.max(0.1,Math.min(2,numValue));default:return Number.isInteger(dValue)?parseInt(numValue,10):numValue;}}if(dType==='string'){const strValue=(value!==null&&value!==undefined)?String(value).trim():String(dValue);if(strValue===''||strValue.toLowerCase()==='null'||strValue.toLowerCase()==='undefined')return dValue;if(key==='effectType'&&!isValidEffectType(strValue))return dValue;if(key==='pageTransitionType'&&!['fade-in','slide-in-left','slide-in-right','zoom-in'].includes(strValue))return dValue;const validateUnit=(val,unit)=>/^\d+(\.\d+)?$/.test(val)?`${val}${unit}`:(new RegExp(`^\\d+(\\.\\d+)?${unit}$`).test(val)?val:dValue);if(['borderRadius','textGlowIntensity','ownMessageHighlightEdgeWidth','avatarBorderSize','scrollIndicatorHeight'].includes(key)){return validateUnit(strValue,'px');}
+
+if(['animatedGradientSpeed','avatarBorderSpeed','pulsatingNickSpeed','uiAnimationSpeed'].includes(key)){return validateUnit(strValue,'s');}return strValue;}if(dType==='object'&&dValue!==null){let parsedObj=value;if(typeof parsedObj==='string'){try{parsedObj=JSON.parse(parsedObj);}catch(e){parsedObj=dValue;}}if(key==='quickLinks'){return Array.isArray(parsedObj)?parsedObj.filter(l=>l&&l.name&&l.url):dValue;}return(typeof parsedObj==='object'&&parsedObj!==null&&!Array.isArray(parsedObj))?parsedObj:dValue;}return value;}function addQuickLinkInput(container,link={name:'',url:''}){if(!container)return;const linkInputDiv=document.createElement('div');linkInputDiv.className='quick-link-input-item';linkInputDiv.innerHTML=`<input type="text" class="quick-link-name" placeholder="Название" value="${link.name||''}"><input type="text" class="quick-link-url" placeholder="URL (https://...)" value="${link.url||''}"><button class="remove-quick-link-btn panel-small-btn panel-btn-danger" title="Удалить ссылку">➖</button>`;container.appendChild(linkInputDiv);linkInputDiv.querySelector('.remove-quick-link-btn').addEventListener('click',(e)=>{createRipple(e);linkInputDiv.remove();});}
 
         async function loadSettings() {
         const SIG = "TWFyYXMgUm9mbHM=";
@@ -266,9 +271,7 @@ function validateSetting(key,value,defaultValue){const dValue=(defaultValue!==un
 const mainElementsSelector = '.block-container, .block-filterBar, .message-inner, .widget-container .widget, .bbCodeBlock-content, .formPopup .menu-content, .tooltip-content, .structItem, .notice-content, .overlay-container .overlay-content, .p-header, .p-nav, .p-navSticky.is-sticky .p-nav, .p-footer, .offCanvasMenu-content, .p-body, .p-body-header, .p-body-sidebar, .menu, .menu-content, .menu-row, .menu-linkRow, .menu-header, .menu-footer, .menu-scroller, .menu-separator, .pageHeader, .pageNav, .pageNav-page, .pageNav-jump, .tabs-tab, .tabs--standalone, .block-header, .block-minorHeader, .block-tabHeader, .block-footer, .block-formSection, .block-formRow, .filterBar, .filterBar-menuTrigger, .p-footer-inner, .p-footer-row, .p-sectionLinks, .uix_extendedFooterRow, .fr-toolbar, .fr-box, .input, .p-breadcrumbs, .memberTooltip, .memberTooltip-content, .tooltip, .reactionsBar, .p-quickSearch, .attachedFiles, .bbCodeCode';
 const transparentElementsSelector = '.p-body-inner, .message, .message-cell, .block-body, .bbCodeBlock, .bbCodeBlock-title, .widget-container, .notice, .overlay-container .overlay, .message-responseRow, .buttonGroup, .fr-box.fr-basic.is-focused, .fr-toolbar .fr-more-toolbar, .fr-command.fr-btn+.fr-dropdown-menu, .fr-box.fr-basic, button.button, a.button.button--link, .input, .input:focus, .input.is-focused, .select, .inputGroup, .inputGroup-text, .formRow, .formRow .input, .block-minorTabHeader, .blockMessage, .js-quickReply.block .message, .block--messages .block-row, .js-quickReply .block-row, .node--depth2:nth-child(even) .node-body, .node-body, .message-cell.message-cell--user, .message-cell.message-cell--action, .block--messages.block .message, .button.button--link, .offCanvasMenu-linkHolder, .offCanvasMenu-list, .offCanvasMenu-subList, .formPopup-outer, .inputChoices, .inputChoices-choice, .button--primary, .button--plain, .button--icon, .p-navEl, .p-navEl-link, .hScroller-action, .p-sectionLinks-list, .blockLink, .uix_extendedFooterRow .block-container, .uix_extendedFooterRow .block-body, .p-nav-search, .p-nav-search .input, .p-breadcrumbs--parent, .p-breadcrumbs--child, .node-main, .node-stats, .node-extra, .node-icon, .structItem-cell, .structItem-parts, .memberHeader, .memberHeader-content, .memberHeader-main, .fr-wrapper, .fr-element, .fr-popup, .menu-link';
 const pageWrapperSelector = '.p-pageWrapper';
-const fontTargetSelector = `
-*:not(.fa):not(.fas):not(.far):not(.fab):not(.fal):not(.fad):not([class*="fa-"]):not(i):not(.material-icons)
-`.trim();
+const fontTargetSelector = 'body, button, input, textarea, select, .p-body-header, .p-title-value, .structItem-title, .username, .block-header';
 
 const textGlowTargetSelector = `
 a:not(.button):not(.tabs-tab),
@@ -605,51 +608,47 @@ a.button.button--cta,
 .button.button--link,
 .button.button--icon,
 .button.button--plain {
-    background: color-mix(in srgb, var(--br-edge-color) 70%, transparent) !important;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--br-edge-color), white 15%) 0%,
+        var(--br-edge-color) 45%,
+        color-mix(in srgb, var(--br-edge-color), black 10%) 100%
+    ) !important;
     color: #ffffff !important;
-    border: 0.5px solid rgba(255, 255, 255, 0.9) !important;
-    border-radius: var(--br-border-radius, 6px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+    border-radius: 50px !important;
     text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    font-weight: 700 !important;
     font-size: 12px !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.2s ease !important;
+    box-shadow: 
+        inset 0 2px 1px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 1px rgba(0, 0, 0, 0.1),
+        0 4px 10px rgba(0, 0, 0, 0.2) !important;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s !important;
     position: relative !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     z-index: 1 !important;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3) !important;
 }
 
 .button:hover,
 a.button:hover,
 .button.button--primary:hover,
-a.button.button--primary:hover {
-    background: var(--br-edge-color) !important;
-    border-color: #ffffff !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 5px 20px color-mix(in srgb, var(--br-edge-color) 50%, transparent) !important;
+a.button.button--primary:hover,
+.button.button--cta:hover,
+a.button.button--cta:hover {
+    filter: brightness(1.2) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 4px 15px color-mix(in srgb, var(--br-edge-color) 40%, transparent) !important;
 }
 
 .button::before,
 a.button::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: radial-gradient(
-        circle at 50% 50%,
-        color-mix(in srgb, var(--br-edge-color) 50%, white) 0%,
-        transparent 70%
-    ) !important;
-    opacity: 0.4 !important;
-    transform: translateX(-120%);
-    animation: br-pendulum-sway 5s ease-in-out infinite !important;
-    z-index: -1 !important;
-    pointer-events: none !important;
-    display: block !important;
-    filter: blur(10px) !important;
+    display: none !important;
 }
 
 .button:hover::before,
@@ -671,9 +670,24 @@ a.button::after {
 }
                 #${BACKGROUND_ELEMENT_ID} {
                     ${backgroundElementStyle}
+                    transform: translateZ(0) !important;
+                    will-change: transform !important;
                 }
                 ${animatedGradientKeyframes}
-              ${pageWrapperSelector},${mainElementsSelector}{background-color:${mainElementBgColor}!important;border-radius:${finalBorderRadius}!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;backface-visibility:visible!important;transform:none!important;perspective:none!important;overflow:visible!important}
+               
+${pageWrapperSelector}, ${mainElementsSelector} {
+                    background-color: ${mainElementBgColor} !important;
+                    border-radius: ${finalBorderRadius} !important;
+                    box-shadow: ${finalEdgeBoxShadow} !important;
+                    ${settings.enableRounding ? 'overflow: hidden;' : ''}
+                    backdrop-filter: ${finalBlockBlur};
+                    -webkit-backdrop-filter: ${finalBlockBlur};
+                }
+              
+              html, body {
+                  touch-action: manipulation !important;
+                  -webkit-tap-highlight-color: transparent !important;
+              }
               .block-container,.bbCodeBlock,.notice,.overlay-content,.menu-content,.p-nav,.p-sectionLinks,.input,.inputGroup,.select,.textarea,.tag,.label,.fr-box,.structItem-cell--skeleton,.alert{border-radius:${finalBorderRadius}!important}
               .bbCodeBlock{border:1px solid color-mix(in srgb,var(--br-edge-color) 30%,transparent)!important;background:rgba(0,0,0,0.2)!important;overflow:hidden!important}
               .bbCodeBlock-header{border-radius:${finalBorderRadius} ${finalBorderRadius} 0 0!important;border-bottom:1px solid color-mix(in srgb,var(--br-edge-color) 20%,transparent)!important}
@@ -693,6 +707,8 @@ a.button::after {
                     opacity: 1 !important;
                     transition: none !important;
                     animation: none !important;
+                    transform: translateZ(0) !important;
+                    will-change: transform !important;
                 }
 
                 .p-nav-list .p-navEl-link {
@@ -749,7 +765,8 @@ a.button::after {
                     position: absolute !important;
                     inset: 0 !important;
                     pointer-events: none !important;
-                    will-change: background-position !important;
+                    will-change: transform !important;
+                    transform: translate3d(0,0,0) !important;
                     mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%) !important;
                     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%) !important;
                 }
@@ -825,28 +842,20 @@ a.button::after {
             document.documentElement.style.setProperty('--br-border-radius', finalBorderRadius);
 
                 ${settings.enableEdge ?
-                `
-                 .block-container::before,
-                .node-body::before,
-                .message-inner::before,
-                .structItem::before,
-                .p-nav::before,
-                .offCanvasMenu-content::before,
-                .overlay-content::before,
-                .notice-content::before {
-                    content: "" !important;
-                    position: absolute !important;
-                    inset: 0 !important;
-                    border-radius: var(--br-border-radius) !important;
-                    pointer-events: none !important;
-                    z-index: 50 !important;
-                    background: transparent !important;
-                    border: none !important;
-                    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9) !important;
-                    will-change: opacity !important;
-                    transition: opacity 0.3s ease !important;
-                }
-                ` : ''}
+`
+ .block-container,
+.node-body,
+.message-inner,
+.structItem,
+.p-nav,
+.offCanvasMenu-content,
+.overlay-content,
+.notice-content {
+    border: ${edgeWidthValue} solid rgba(255, 255, 255, 0.1) !important;
+    border-color: color-mix(in srgb, var(--br-edge-color) ${settings.edgeOpacity * 100}%, rgba(255,255,255,0.05)) !important;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1) !important;
+}
+` : ''}
                ${transparentElementsSelector} {
                     background: none !important;
                     border: none !important;
@@ -872,14 +881,14 @@ a.button::after {
                     position: fixed;
                     bottom: 20px;
                     left: 50%;
-                    transform: translateX(-50%) translateZ(0);
+                    transform: translate3d(-50%, 0, 0); 
                     width: auto;
                     max-width: 95vw;
                     height: 54px;
                     padding: 0 12px;
-                    background: rgba(30, 30, 35, 0.4);
-                    backdrop-filter: blur(6px);
-                    -webkit-backdrop-filter: blur(6px);
+                    background: rgba(30, 30, 35, 0.85); /* Чуть меньше прозрачности для снижения нагрузки на блюр */
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                     border: 1.5px solid rgba(255, 255, 255, 0.7);
                     border-radius: 40px;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -890,6 +899,8 @@ a.button::after {
                     gap: 10px;
                     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease !important;
                     will-change: transform, opacity;
+                    backface-visibility: hidden;
+                    perspective: 1000px;
                     animation: br-levitate 8s ease-in-out infinite;
                 }
 
@@ -1016,14 +1027,15 @@ a.button::after {
                 ${scrollIndicatorStyle}
                 .menu, .menu-content, .menu-header, .menu-footer, .menu-tabHeader, .menu-row, .menu-link,
                 .p-drawer, .p-drawer-body, .p-drawer-header, .p-drawer-footer,
-                .tooltip-content, .memberTooltip, .memberTooltip-header {
-                    background-color: rgba(7, 2, 51, 0) !important;
-                 backdrop-filter: blur(2px) !important;
-                -webkit-backdrop-filter: blur(10px) !important;
-                    border-radius: ${finalBorderRadius} !important;
-                    box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                .tooltip-content, .memberTooltip, .memberTooltip-header, .memberTooltip-content {
+                    background-color: color-mix(in srgb, var(--br-edge-color) 10%, rgba(0,0,0,0.1)) !important;
+                    backdrop-filter: blur(22px) !important;
+                    -webkit-backdrop-filter: blur(22px) !important;
+                    border-radius: var(--br-border-radius, 10px) !important;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
                     z-index: 9999 !important;
+                    transform: translateZ(0) !important;
                 }
 
                 .offCanvasMenu {
@@ -1048,7 +1060,9 @@ a.button::after {
                     box-shadow: 15px 0 40px rgba(0, 0, 0, 0.6) !important;
                     transform: translate3d(0, 0, 0) !important;
                     transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
-                    will-change: transform;
+                    will-change: transform !important;
+                    backface-visibility: hidden !important;
+                    perspective: 1000px !important;
                     overflow-y: auto !important;
                     height: 100% !important;
                     max-height: 100vh !important;
@@ -1089,8 +1103,9 @@ a.button::after {
                     color: #ffffff !important;
                     backdrop-filter: blur(4px);
                     -webkit-backdrop-filter: blur(4px);
-                    transition: all 0.3s ease !important;
+                    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s, transform 0.3s !important;
                     outline: none !important;
+                    transform: translateZ(0);
                 }
 
                 input[type="text"]:focus, input[type="search"]:focus, input[type="password"]:focus, textarea:focus, .search-input:focus, .inputbox:focus, .fr-box.is-focused {
@@ -1473,7 +1488,7 @@ a.button::after {
                             <div class="setting-group">${h.slider('opacityValue', 'opacityValue', '<i class="fas fa-adjust br-gradient-icon"></i> Прозрачность', 0, 1, 0.05)}</div>
                             <div class="setting-group">${h.checkbox('enableBlockBlur', 'enableBlockBlur', 'Размытие (Blur)', 'fas fa-tint')}<div class="sub-settings" id="block-blur-sub-settings">${h.slider('blockBlurAmount', 'blockBlurAmount', 'Сила', 0, 50, 1, 'px')}</div></div>
                             <div class="setting-group">${h.checkbox('enableRounding', 'enableRounding', 'Скругление углов', 'far fa-square')}<div class="sub-settings" id="rounding-sub-settings">${h.slider('borderRadius', 'borderRadius', 'Радиус', 0, 50, 1, 'px')}</div></div>
-                            <div class="setting-group">${h.checkbox('enableEdge', 'enableEdge', 'Окантовка (Cyber HUD)', 'far fa-lightbulb')}<div class="sub-settings" id="edge-sub-settings">${h.color('edgeColor', 'edgeColor', 'Цвет')}<div style="margin-top:8px">${h.slider('edgeWidth', 'edgeWidth', 'Размер угла', 10, 100, 5, 'px')}</div><div style="margin-top:8px">${h.slider('edgeOpacity', 'edgeOpacity', 'Яркость', 0, 1, 0.05)}</div></div></div>
+                            <div class="setting-group">${h.checkbox('enableEdge', 'enableEdge', 'Окантовка', 'far fa-lightbulb')}<div class="sub-settings" id="edge-sub-settings">${h.color('edgeColor', 'edgeColor', 'Цвет')}<div style="margin-top:8px">${h.slider('edgeWidth', 'edgeWidth', 'Толщина', 0.5, 5, 0.5, 'px')}</div><div style="margin-top:8px">${h.slider('edgeOpacity', 'edgeOpacity', 'Насыщенность', 0.1, 1, 0.1)}</div></div></div>
                         </div>`;
 
                         html += `
@@ -1890,7 +1905,7 @@ a.button::after {
                             const settings = { ...currentSettings, bgImageDataUri: dataUri, enableGradient: false, bgColor: bg, enableEdge: true, edgeColor: bo, enableRounding: true, borderRadius: rd, enableScrollIndicator: true, scrollIndicatorColor: hl, enableAvatarBorder: true, avatarBorderColor1: hl, avatarBorderColor2: bo, avatarBorderColor3: hl, enableOpHighlight: true, opHighlightEdgeColor: bo, opHighlightBgColor: bg, enableOwnMessageHighlight: true, ownMessageHighlightEdgeColor: hl, bottomNavTheme: 'nav_theme_custom_dynamic', opacityValue: 0.2 };
                             const styleId = 'br-dynamic-gradient-vars'; const old = document.getElementById(styleId); if (old) old.remove();
                             const st = document.createElement('style'); st.id = styleId;
-                            st.textContent = `:root{--br-edge-color:${bo}!important;--br-bg-color:${bg}!important;--br-nav-main-gradient:linear-gradient(135deg,${sh} 0%,${hl} 50%,${sh} 100%)!important;--br-nav-accent-color:${hl}!important;--br-nav-border-color:${bo}!important;--br-primary:${hl}!important;--br-secondary:${sh}!important}@keyframes br-liquid-metal{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.button,a.button{background-image:linear-gradient(60deg,${sh},${hl},${bg},${hl},${sh})!important;background-size:300% 300%!important;animation:br-liquid-metal 4s ease infinite!important;border-color:${bo}!important;color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,0.5)!important;box-shadow:0 4px 15px ${sh}66!important;position:relative!important;z-index:1;transition:transform 0.2s,box-shadow 0.2s!important}.button:hover,a.button:hover{transform:translateY(-2px)!important;box-shadow:0 0 20px ${hl}!important;filter:brightness(1.2)}.p-nav{background:linear-gradient(180deg,${sh}99 0%,${bg}CC 100%)!important}`;
+                            st.textContent = `:root{--br-edge-color:${bo}!important;--br-bg-color:${bg}!important;--br-nav-main-gradient:linear-gradient(135deg,${sh} 0%,${hl} 50%,${sh} 100%)!important;--br-nav-accent-color:${hl}!important;--br-nav-border-color:${bo}!important;--br-primary:${hl}!important;--br-secondary:${sh}!important}@keyframes br-liquid-metal{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.p-nav{background:linear-gradient(180deg,${sh}99 0%,${bg}CC 100%)!important}`;
                             document.head.appendChild(st);
                             if (settingsPanel) {
                                 const setVal = (id, val) => { const el = settingsPanel.querySelector('#' + id); if (el) el.value = val; };
@@ -2666,40 +2681,25 @@ function updateBottomNavBarContent(settings) {
     }
 
     function performScrollLogic() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrollPercent = (scrollHeight > 0) ? (scrollTop / scrollHeight) * 100 : 0;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollIndicatorElement && currentSettings.enableScrollIndicator) {
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollHeight > 0) ? (scrollTop / scrollHeight) : 0;
+            scrollIndicatorElement.style.transform = `scaleX(${scrollPercent})`;
+        }
 
-    if (scrollIndicatorElement && currentSettings.enableScrollIndicator) {
-        scrollIndicatorElement.style.transform = `scaleX(${scrollPercent / 100})`;
-        scrollIndicatorElement.style.display = 'block';
-    } else if (scrollIndicatorElement) {
-        scrollIndicatorElement.style.display = 'none';
-    }
-
-    if (currentSettings.enableSmartNav) {
-        const nav = document.querySelector('.p-navSticky');
-        const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-
-        if (nav && isFirefox) {
-            if (scrollTop > lastScrollTop && scrollTop > nav.offsetHeight) {
-                nav.style.transform = `translateY(-100%)`;
-            } else {
-                nav.style.transform = `translateY(0)`;
+        if (bottomNavElement && currentSettings.enableBottomNav) {
+            if (Math.abs(scrollTop - lastScrollTop) > 10) {
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    bottomNavElement.classList.add('br-bottom-nav-hidden');
+                } else {
+                    bottomNavElement.classList.remove('br-bottom-nav-hidden');
+                }
+                lastScrollTop = scrollTop;
             }
-            nav.style.transition = 'transform 0.3s ease-out';
         }
     }
-
-    if (bottomNavElement && currentSettings.enableBottomNav) {
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            bottomNavElement.classList.add('br-bottom-nav-hidden');
-        } else {
-            bottomNavElement.classList.remove('br-bottom-nav-hidden');
-        }
-    }
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-}
 
 function setupScrollObserver(settings) {
     if (scrollObserver) {
@@ -2726,8 +2726,8 @@ function setupScrollObserver(settings) {
 
     const observerOptions = {
         root: null,
-        rootMargin: '50px 0px',
-        threshold: 0.01
+        rootMargin: '200px 0px',
+        threshold: 0
     };
 
     const observerCallback = (entries, observer) => {
@@ -3858,9 +3858,11 @@ letter-spacing: 0.02em; }
                     white-space: nowrap;
                     scrollbar-width: none;
                     -webkit-overflow-scrolling: touch;
-                    mask-image: linear-gradient(to right, transparent, black 10px, black 90%, transparent);
-                    -webkit-mask-image: linear-gradient(to right, transparent, black 10px, black 90%, transparent);
+                    mask-image: none !important;
+                    -webkit-mask-image: none !important;
+                    transform: translateZ(0);
                 }
+
                 #${BOTTOM_NAV_ID} .br-nav-links::-webkit-scrollbar { display: none; }
 
                 #${CLOCK_ID} {
@@ -3916,11 +3918,10 @@ letter-spacing: 0.02em; }
 
                 .br-anim-scroll {
                     opacity: 0;
-                    transform: translateY(15px);
-                    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+                    transform: translateY(20px);
+                    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
                     pointer-events: none;
-                    content-visibility: auto;
-                    contain-intrinsic-size: 100px 100px;
+                    will-change: opacity, transform;
                 }
                 .br-anim-scroll.br-is-visible {
                     opacity: 1;
@@ -4896,10 +4897,13 @@ staticCss += `
         .br-modal-window {
             background: #141414; width: 92%; max-width: 750px; max-height: 85vh;
             border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8); transform: scale(0.95) translateY(10px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8); 
+            transform: scale(0.95) translateY(10px) translateZ(0);
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column;
+            will-change: transform;
+            backface-visibility: hidden;
         }
-        .br-modal-overlay.active .br-modal-window { transform: scale(1) translateY(0); }
+        .br-modal-overlay.active .br-modal-window { transform: scale(1) translateY(0) translateZ(0); }
         .br-modal-header {
             padding: 14px 20px; background: var(--br-nav-bg, rgba(255,255,255,0.03)); border-bottom: 1px solid rgba(255,255,255,0.05);
             display: flex; gap: 15px; align-items: center;
@@ -6222,17 +6226,50 @@ function showSkeletonLoader() {
         const style = document.createElement('style');
         style.id = 'br-skeleton-css';
         style.textContent = `
-            .p-pageWrapper { opacity: 0; transition: opacity 0.3s ease; }
+            .p-pageWrapper { opacity: 0; transition: opacity 0.3s ease; will-change: opacity; }
             .br-content-visible { opacity: 1 !important; }
-            #br-skeleton-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0e0e10; z-index: 9000; overflow-y: scroll; transition: opacity 0.3s; }
+            #br-skeleton-layer { 
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: #0e0e10; z-index: 9000; overflow-y: scroll; 
+                transition: opacity 0.3s linear; 
+                will-change: opacity, transform;
+                transform: translate3d(0,0,0);
+                backface-visibility: hidden;
+            }
             .br-skeleton-fade-out { opacity: 0 !important; pointer-events: none; }
-            @keyframes br-glare { 0% { transform: translateX(-150%) skewX(-20deg); } 100% { transform: translateX(250%) skewX(-20deg); } }
-            @keyframes br-progress { 0% { width: 0%; } 40% { width: 60%; } 100% { width: 95%; } }
+            
+            @keyframes br-glare { 
+                0% { transform: translateX(-100%) skewX(-20deg) translateZ(0); } 
+                100% { transform: translateX(200%) skewX(-20deg) translateZ(0); } 
+            }
+            @keyframes br-progress { 
+                0% { transform: scaleX(0); } 
+                40% { transform: scaleX(0.6); } 
+                100% { transform: scaleX(0.95); } 
+            }
 
-            .br-shimmer { position: relative; background: #1c1c1f; overflow: hidden; border: none !important; box-shadow: none !important; }
-            .br-shimmer::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: translateX(-100%); animation: br-glare 1.4s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+            .br-shimmer { 
+                position: relative; background: #1c1c1f; overflow: hidden; 
+                border: none !important; box-shadow: none !important; 
+                transform: translateZ(0);
+            }
+            .br-shimmer::after { 
+                content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent); 
+                transform: translateX(-100%) translateZ(0); 
+                animation: br-glare 1.5s infinite linear; 
+                will-change: transform;
+            }
 
-            .br-sk-progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--br-edge-color, #d32f2f); z-index: 9001; box-shadow: 0 0 15px var(--br-edge-color, #d32f2f); animation: br-progress 4s forwards; }
+            .br-sk-progress-bar { 
+                position: fixed; top: 0; left: 0; height: 3px; width: 100%;
+                background: var(--br-edge-color, #d32f2f); z-index: 9001; 
+                box-shadow: 0 0 15px var(--br-edge-color, #d32f2f); 
+                transform-origin: left;
+                transform: scaleX(0);
+                will-change: transform;
+                animation: br-progress 4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+            }
 
             .br-sk-body { display: flex; width: 96%; margin: 130px auto 50px; gap: 20px; align-items: flex-start; }
             .br-sk-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 15px; }
@@ -6365,6 +6402,12 @@ function showSkeletonLoader() {
 
         if (document.readyState === 'complete') onLoad();
         else window.addEventListener('load', onLoad);
+
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                removeSkeleton();
+            }
+        });
     }
 
 function setupPageTransitions() {
@@ -6376,7 +6419,10 @@ function setupPageTransitions() {
         .br-page-exit-overlay {
             position: fixed; inset: 0; background: #09090b; opacity: 0;
             pointer-events: none; z-index: 19999;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.3s linear;
+            will-change: opacity;
+            transform: translate3d(0,0,0);
+            backface-visibility: hidden;
         }
         .br-page-exit-active { opacity: 1; pointer-events: auto; }
     `;
@@ -6417,8 +6463,10 @@ function setupPageTransitions() {
         }, 2000);
     });
 
-    window.addEventListener('pageshow', () => {
+    window.addEventListener('pageshow', (event) => {
         overlay.classList.remove('br-page-exit-active');
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
     });
 }
 
@@ -6783,8 +6831,15 @@ this.state.modal = {
 
             requestAnimationFrame(() => {
                 if (antiFouc) {
-                    antiFouc.innerHTML = 'html { opacity: 1 !important; visibility: visible !important; transition: opacity 0.4s ease !important; }';
+                    antiFouc.innerHTML = 'html { opacity: 1 !important; visibility: visible !important; }';
                     setTimeout(() => antiFouc.remove(), 600);
+                }
+            });
+
+            window.addEventListener('pageshow', (event) => {
+                if (event.persisted) {
+                    applyForumStyles(currentSettings);
+                    document.documentElement.style.opacity = '1';
                 }
             });
 
@@ -6952,7 +7007,7 @@ globalDOMWatcher.start();
     }
 
     (function() {
-    const A="TWFyYXMgUm9mbHM=",V="MTcuNi4xMA==",K="0J/QvtC70L3Ri9C5INCy0LjQt9GD0LDQu9GM0L3Ri9C5INGA0LXQtNC40LfQsNC50L0g0YTQvtGA0YPQvNCwIEJsYWNrIFJ1c3NpYQ==",C=98;
+    const A="TWFyYXMgUm9mbHM=",V="MTcuNi4xMQ==",K="0J/QvtC70L3Ri9C5INCy0LjQt9GD0LDQu9GM0L3Ri9C5INGA0LXQtNC40LfQsNC50L0g0YTQvtGA0YPQvNCwIEJsYWNrIFJ1c3NpYQ==",C=98;
         try{
             const s=GM_info.script;
             if(s.author!==atob(A)||s.version!==atob(V)||!s.description.includes(decodeURIComponent(escape(atob(K))))||Object.keys(defaultSettings).length!==C)throw 0;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Slow.pics Random Comparisons Link Generator
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Selects 10 random comparisons and generates links in [comparison=][/comparison] format
 // @author       Auto
 // @match        https://slow.pics/*
@@ -112,6 +112,12 @@
             return [];
         }
 
+        // Extract source names from the first comparison (if available)
+        let sourceNames = [];
+        if (collection.comparisons.length > 0 && collection.comparisons[0].images) {
+            sourceNames = collection.comparisons[0].images.map(img => img.name || '').filter(name => name);
+        }
+
         collection.comparisons.forEach((comparison) => {
             if (comparison.images && Array.isArray(comparison.images) && comparison.images.length >= 2) {
                 const imageUrls = comparison.images.map(img => {
@@ -125,7 +131,8 @@
                     comparisons.push({
                         id: comparison.key,
                         name: comparison.name,
-                        images: imageUrls
+                        images: imageUrls,
+                        sourceNames: sourceNames
                     });
                 }
             }
@@ -149,7 +156,18 @@
         const shuffled = shuffle(allComparisons);
         const selectedComparisons = shuffled.slice(0, numToSelect);
 
-        let output = '[comparison=]\n';
+        // Extract source names from the first comparison (if available)
+        let sourceNames = [];
+        if (selectedComparisons.length > 0 && selectedComparisons[0].sourceNames) {
+            sourceNames = selectedComparisons[0].sourceNames;
+        }
+
+        // Build the comparison tag with source names
+        const comparisonHeader = sourceNames.length > 0
+            ? `[comparison=${sourceNames.join(', ')}]\n`
+            : '[comparison=]\n';
+
+        let output = comparisonHeader;
 
         selectedComparisons.forEach((comparison, index) => {
             comparison.images.forEach((imgUrl) => {

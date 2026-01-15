@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Instagram Views Parser
-// @version      0.30
+// @version      0.30.2
 // @description  Считает количество просмотров на reels за определённый отрезок
 // @author       Михаил Смирнов
 // @match        https://www.instagram.com/*
@@ -224,7 +224,7 @@ function checkLink() {
     // if (fixes.includes(channel)) {
     // 	element.style.borderBottom = "5px solid green"
     // 	element.title = "Фиксовик, можно без ссылки"
-    // } else 
+    // } else
     if (!result && !button) {
         element.style.borderBottom = "5px solid red"
         element.title = "Нет ссылки!"
@@ -396,11 +396,12 @@ function collectReels() {
         let href = el.querySelector("a").href
         let reel = reels.find((element) => element.href === href)
 
+        let viewsSpan = el.querySelector(":is(._aaj-, ._a6hd) div > span > span")
+
         if ((!reel && href.includes("/reel/")) || (reel && !reel.views)) {
 
-            let viewsSpan = el.querySelector("._aajy > div > span > span")
-            let likesSpan = el.querySelector("._aaj- ul > li:nth-child(1) > span > span")
-            let commentsSpan = el.querySelector("._aaj- ul > li:nth-child(2) > span > span")
+            let likesSpan = el.querySelector(":is(._aaj-, ._a6hd) ul > li:nth-child(1) > span > span")
+            let commentsSpan = el.querySelector(":is(._aaj-, ._a6hd) ul > li:nth-child(2) > span > span")
 
             let viewsValue = viewsSpan ? parseValue(viewsSpan.innerText) : 0
             let likesValue = likesSpan ? parseValue(likesSpan.innerText) : 0
@@ -473,9 +474,9 @@ function collectReels() {
 
         let er = parseFloat(reel.er)
         if (er == 0) {
-            el.querySelector("._aajy > div > span > span").style.borderBottom = "2px solid yellow"
+            viewsSpan.style.borderBottom = "2px solid yellow"
         } else if (er < 1.5 || er > 5) {
-            el.querySelector("._aajy > div > span > span").style.borderBottom = "2px solid red"
+            viewsSpan.style.borderBottom = "2px solid red"
         }
 
     }

@@ -2,7 +2,7 @@
 // @name        BTN - Embed trailer
 // @author      Perilune/darisk
 // @namespace   https://github.com/soranosita
-// @version     2.1
+// @version     2.3
 // @description Embed trailer on series page
 // @match       https://broadcasthe.net/series.php*
 // @match       https://broadcasthe.net/user.php*action=edit*
@@ -69,10 +69,11 @@ function addTrailerSettings() {
     sidebar.appendChild(settingsBox);
 
     const savedPlacement = GM_getValue("trailerPlacement", "aboveRequests");
-    document.querySelector(`input[value="${savedPlacement}"]`).checked = true;
+    const placementRadio = settingsBox.querySelector(`input[value="${savedPlacement}"]`);
+    if (placementRadio) placementRadio.checked = true;
 
     const trailerDefaultHidden = GM_getValue("trailerDefaultHidden", false);
-    document.querySelector('input[name="trailerDefaultHidden"]').checked = trailerDefaultHidden;
+    settingsBox.querySelector('input[name="trailerDefaultHidden"]').checked = trailerDefaultHidden;
 
     settingsBox.addEventListener("change", (e) => {
         if (e.target.name === "trailerPlacement") {
@@ -97,7 +98,9 @@ function closeOverlay() {
         videoContainer.style.display = "none";
         formContainer.style.display = "none";
         videoContainer.innerHTML = "";
-    }, 10);
+
+        overlay.removeEventListener("click", closeOverlay);
+    }, 500);
 }
 
 function clickHandler() {
@@ -107,8 +110,7 @@ function clickHandler() {
     const param = document.querySelector("param[name='movie']");
     if (param) {
         if (!videoContainer.firstChild) {
-            const rawURL = param.value;
-            const embedURL = normalizeYouTubeURL(rawURL, true);
+            const embedURL = normalizeYouTubeURL(param.value, true);
 
             const iframe = document.createElement("iframe");
             iframe.id = "video-frame";
@@ -118,11 +120,8 @@ function clickHandler() {
             iframe.referrerPolicy = "strict-origin-when-cross-origin";
             iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
 
-            // Delay to ensure stable initialization
-            setTimeout(() => {
-                videoContainer.appendChild(iframe);
-                videoContainer.style.display = "block";
-            }, 200);
+            videoContainer.appendChild(iframe);
+            videoContainer.style.display = "block";
         }
     } else {
         const seriesId = document.querySelector("input[name='seriesid']").value;
@@ -131,11 +130,7 @@ function clickHandler() {
         <div id="addtrailer" class="box">
           <div class="head">Add Trailer</div>
           <ul class="nobullet">
-            <li>No trailer has been added for this show. You can add one by inserting its URL.</li>
-            <li>Accepted formats:
-              <br> http://www.youtube.com/watch?v=XXXXXXXXXXX
-              <br> http://www.youtube.com/v/XXXXXXXXXXX
-            </li>
+            <li>No trailer has been added for this show, you could add one by inserting its URL.<br> The link has to be in one of the following formats:<br> http://www.youtube.com/watch?v=XXXXXXXXXXX <br> http://www.youtube.com/v/XXXXXXXXXXX</li>
             <li>
               <form action="series.php" method="post">
                 <input type="hidden" name="action" value="add_youtube">
@@ -148,17 +143,17 @@ function clickHandler() {
           </ul>
         </div>
       </div>`;
-        formContainer.style.display = "block";
-        formContainer.querySelector("#close").addEventListener("click", closeOverlay);
-    }
+    formContainer.style.display = "block";
+    formContainer.querySelector("#close").addEventListener("click", closeOverlay);
+}
 
-    overlay.addEventListener("click", closeOverlay);
+    overlay.addEventListener("click", closeOverlay, { once: true });
 }
 
 function normalizeYouTubeURL(url, autoplay = false) {
     try {
         const match = url.match(/(?:v=|\/v\/|embed\/)([A-Za-z0-9_-]{11})/);
-        const id = match ? match[1] : null;
+        const id = match?.[1];
         if (!id) return url;
 
         const iframeUrl = new URL(`https://www.youtube.com/embed/${id}`);
@@ -174,34 +169,22 @@ function normalizeYouTubeURL(url, autoplay = false) {
     }
 }
 
-function fixBigTrailer() {
-    overlay = document.createElement("div");
-    overlay.id = "overlay";
+function getYouTubeLink() {
+    return (
+        document.querySelector("object param[name='movie']")?.value ||
+        document.querySelector("object embed[src*='youtube.com']")?.src
+    );
+}
 
-    videoContainer = document.createElement("div");
-    videoContainer.id = "video-container";
+function createElementFromHTML(htmlString) {
+    const div = document.createElement("div");
+    div.innerHTML = htmlString.trim();
+    return div.firstChild;
+}
 
-    formContainer = document.createElement("div");
-    formContainer.id = "form-container";
-
-    overlay.append(videoContainer);
-    document.body.append(overlay, formContainer);
-
-    const oldBanner = document.querySelector("#playbutton").parentElement;
-    const banner = oldBanner.cloneNode(true);
-    oldBanner.replaceWith(banner);
-    banner.addEventListener("click", clickHandler);
-
-    function getYouTubeLink() {
-        return (
-            document.querySelector("object param[name='movie']")?.value ||
-            document.querySelector("object embed[src*='youtube.com']")?.src
-        );
-    }
-
-    function createYouTubeBox(videoURL) {
-        const embedURL = normalizeYouTubeURL(videoURL, false);
-        const tableHTML = `
+function createYouTubeBox(videoURL) {
+    const embedURL = normalizeYouTubeURL(videoURL, false);
+    const tableHTML = `
       <table class="torrent_table" id="discog_table" width="100%">
         <tbody>
           <tr class="colhead_dark">
@@ -222,52 +205,64 @@ function fixBigTrailer() {
         </tbody>
       </table>`;
 
-        const torrentTable = document.querySelector("table.torrent_table#discog_table");
-        const requestsTable = document.querySelector("table.border");
+    const torrentTable = document.querySelector("table.torrent_table#discog_table");
+    const requestsTable = document.querySelector("table.border");
 
-        if (torrentTable && requestsTable) {
-            const trailerPlacement = GM_getValue("trailerPlacement", "aboveTorrent");
-            const container =
-                  trailerPlacement === "aboveTorrent"
-            ? torrentTable.parentNode
-            : requestsTable.parentNode;
+    if (!torrentTable || !requestsTable) return;
 
-            container.insertBefore(createElementFromHTML(tableHTML),
-                                   trailerPlacement === "aboveTorrent" ? torrentTable : requestsTable);
+    const trailerPlacement = GM_getValue("trailerPlacement", "aboveRequests");
+    const container = trailerPlacement === "aboveTorrent"
+    ? torrentTable.parentNode
+    : requestsTable.parentNode;
 
-            const trailerDefaultHidden = GM_getValue("trailerDefaultHidden", false);
-            const content = container.querySelector(".trailer-content");
-            const toggleButton = container.querySelector(".toggle-trailer");
+    const insertBefore = trailerPlacement === "aboveTorrent" ? torrentTable : requestsTable;
 
-            if (trailerDefaultHidden) {
-                content.style.display = "none";
-                toggleButton.textContent = "show";
-            } else {
-                content.style.display = "table-row-group";
-                toggleButton.textContent = "hide";
-            }
+    container.insertBefore(createElementFromHTML(tableHTML), insertBefore);
 
-            toggleButton.addEventListener("click", function (e) {
-                e.preventDefault();
-                if (content.style.display === "none") {
-                    content.style.display = "table-row-group";
-                    toggleButton.textContent = "hide";
-                } else {
-                    content.style.display = "none";
-                    toggleButton.textContent = "show";
-                }
-            });
-        }
-    }
+    const trailerDefaultHidden = GM_getValue("trailerDefaultHidden", false);
+    const content = container.querySelector(".trailer-content");
+    const toggleButton = container.querySelector(".toggle-trailer");
 
-    function createElementFromHTML(htmlString) {
-        const div = document.createElement("div");
-        div.innerHTML = htmlString.trim();
-        return div.firstChild;
+    content.style.display = trailerDefaultHidden ? "none" : "table-row-group";
+    toggleButton.textContent = trailerDefaultHidden ? "show" : "hide";
+
+    toggleButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const isHidden = content.style.display === "none";
+        content.style.display = isHidden ? "table-row-group" : "none";
+        toggleButton.textContent = isHidden ? "hide" : "show";
+    });
+}
+
+function fixBigTrailer() {
+    overlay = document.createElement("div");
+    overlay.id = "overlay";
+
+    videoContainer = document.createElement("div");
+    videoContainer.id = "video-container";
+
+    formContainer = document.createElement("div");
+    formContainer.id = "form-container";
+
+    overlay.append(videoContainer);
+    document.body.append(overlay, formContainer);
+
+    const oldBanner = document.querySelector("#playbutton")?.parentElement;
+    if (oldBanner) {
+        const banner = oldBanner.cloneNode(true);
+        oldBanner.replaceWith(banner);
+        banner.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            clickHandler();
+        });
     }
 
     const observer = new MutationObserver(() => {
-        if (document.querySelector("table.torrent_table#discog_table") && !document.querySelector(".border iframe")) {
+        const torrentTable = document.querySelector("table.torrent_table#discog_table");
+        const hasTrailerEmbed = document.querySelector(".border iframe");
+
+        if (torrentTable && !hasTrailerEmbed) {
             const videoURL = getYouTubeLink();
             if (videoURL) {
                 createYouTubeBox(videoURL);

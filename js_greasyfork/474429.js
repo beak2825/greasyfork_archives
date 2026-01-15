@@ -7,7 +7,7 @@
 // @match        https://automat-it.pagerduty.com/incidents*
 // @grant        GM_xmlhttpRequest
 // @connect      vo8gfttl53.execute-api.eu-central-1.amazonaws.com
-// @version      3.7.14
+// @version      3.7.17
 // @author      -
 // URL https://greasyfork.org/en/scripts/474429-pddashboard
 // @description AIT PD Dashboard tuning
@@ -721,6 +721,30 @@ const playbooks = {
     contact: 5389648087,
     knownIssues: 5389648167,
     slack: "C09KRFB0JPR",
+  },
+    "SpoiledChild-Vision": {
+    mainPage: 5295112193,
+    alarm: [5295112390],
+    healthcheck: 5295112251,
+    contact: 5295112290,
+    knownIssues: 5295112279,
+    slack: "C09U91X6QEN",
+  },
+    "IlMakiage-Vision": {
+    mainPage: 5295341569,
+    alarm: [5295341766],
+    healthcheck: 5295341627,
+    contact: 5295341666,
+    knownIssues: 5295341655,
+    slack: "C09U91U3TD0",
+  },
+    "Teavaro": {
+    mainPage: 5329289217,
+    alarm: [5329289558],
+    healthcheck: 5329289356,
+    contact: 5329289431,
+    knownIssues: 5329289511,
+    slack: "C09R2HAEZ53",
   }
 };
 

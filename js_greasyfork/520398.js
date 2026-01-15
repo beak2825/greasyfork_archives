@@ -2,7 +2,7 @@
 // @name         斗鱼星推红包自动领取
 // @namespace    https://github.com/qianjiachun
 // @icon         data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNzMzODg5ODg4MzM2IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9Ijg2NDUiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PHBhdGggZD0iTTM4NC4wMDAwMDQgMTI3Ljk5OTk5NmMtMTcuNzI3OTk5IDAtNDAuNDc5OTk5IDE2Ljg2Mzk5OS0zMS45OTk5OTkgMzMuMTgzOTk5bDMxLjk5OTk5OSA2MS42MzE5OThjOC40OCAxNi4zMTk5OTkgMTQuMjcyIDMzLjE4Mzk5OSAzMS45OTk5OTkgMzMuMTgzOTk5aDE5MS45OTk5OTRjMTcuNzI3OTk5IDAgMjMuNTE5OTk5LTE2Ljg2Mzk5OSAzMS45OTk5OTktMzMuMTgzOTk5bDMxLjk5OTk5OS02MS42MzE5OThDNjgwLjQ3OTk5NSAxNDQuODYzOTk1IDY1Ny43Mjc5OTUgMTI3Ljk5OTk5NiA2MzkuOTk5OTk2IDEyNy45OTk5OTZoLTQ3Ljk5OTk5OGEzMS45OTk5OTkgMzEuOTk5OTk5IDAgMCAwLTMxLjk5OTk5OSAzMS45OTk5OTkgMzEuOTk5OTk5IDMxLjk5OTk5OSAwIDAgMC0zMS45OTk5OTktMzEuOTk5OTk5SDM4NC4wMDAwMDR6IiBmaWxsPSIjRTYwMDFGIiBwLWlkPSI4NjQ2Ij48L3BhdGg+PHBhdGggZD0iTTQzMC45NzYwMDMgMTc1Ljc3NTk5NWExNiAxNiAwIDAgMC0xNC41MjggMjAuMTU5OTk5bDE1Ljk5OTk5OSA2My45OTk5OThhMTYgMTYgMCAxIDAgMzEuMDcyLTcuODRsLTE2LTYzLjk5OTk5OGExNiAxNiAwIDAgMC0xNi41NDM5OTktMTIuMzE5OTk5ek01MTEuNzc2IDE3NS43NzU5OTVBMTYgMTYgMCAwIDAgNDk2IDE5MS45OTk5OTR2NjMuOTk5OTk4YTE2IDE2IDAgMSAwIDMyIDB2LTYzLjk5OTk5OGExNiAxNiAwIDAgMC0xNi4yNTYtMTYuMTkxOTk5ek01OTIuNTExOTk3IDE3NS43NzU5OTVhMTYgMTYgMCAwIDAtMTYuMDYzOTk5IDEyLjMxOTk5OWwtMTYgNjMuOTk5OTk4YTE2IDE2IDAgMSAwIDMxLjA3MiA3LjgwOGwxNS45OTk5OTktNjMuOTk5OTk4YTE2IDE2IDAgMCAwLTE1LjAwOC0yMC4xMjc5OTl6IiBmaWxsPSIjOTkwMDEyIiBwLWlkPSI4NjQ3Ij48L3BhdGg+PHBhdGggZD0iTTgzMS45OTk5OSA2NzAuNDk1OTc5QzgzMS45OTk5OSA3NzcuNjk1OTc2IDcyMy41MTk5OTMgODYzLjk5OTk3MyA1ODguNzk5OTk4IDg2My45OTk5NzNoLTE1My41OTk5OTZDMzAwLjQ4MDAwNyA4NjMuOTk5OTczIDE5Mi4wMDAwMSA3NzcuNjk1OTc2IDE5Mi4wMDAwMSA2NzAuNDk1OTc5VjYzOS45OTk5OGMwLTIxMi4wNjM5OTMgMTQzLjI2Mzk5Ni0zODMuOTk5OTg4IDMxOS45OTk5OS0zODMuOTk5OTg4czMxOS45OTk5OSAxNzEuOTM1OTk1IDMxOS45OTk5OSAzODMuOTk5OTg4eiIgZmlsbD0iI0U2MDAxRiIgcC1pZD0iODY0OCI+PC9wYXRoPjxwYXRoIGQ9Ik0zODQuMDAwMDA0IDIyMy45OTk5OTNoMjU1Ljk5OTk5MmMxNy43Mjc5OTkgMCAzMS45OTk5OTkgMTQuMjcyIDMxLjk5OTk5OSAzMS45OTk5OTlzLTE0LjI3MiAzMS45OTk5OTktMzEuOTk5OTk5IDMxLjk5OTk5OWgtMjU1Ljk5OTk5MmMtMTcuNzI3OTk5IDAtMzEuOTk5OTk5LTE0LjI3Mi0zMS45OTk5OTktMzEuOTk5OTk5czE0LjI3Mi0zMS45OTk5OTkgMzEuOTk5OTk5LTMxLjk5OTk5OXoiIGZpbGw9IiNDN0M2Q0UiIHAtaWQ9Ijg2NDkiPjwvcGF0aD48cGF0aCBkPSJNNTk1Ljk2Nzk5NyA3MDMuOTk5OTc4bC04NC4wOTU5OTctNDQuMzE5OTk5LTg0LjE1OTk5NyA0NC4xNTk5OTkgMTYuMTU5OTk5LTkzLjY2Mzk5Ny02Ny45Njc5OTgtNjYuMzk5OTk4IDk0LjA3OTk5Ny0xMy41NjggNDIuMTExOTk5LTg1LjE4Mzk5NyA0MS45ODM5OTkgODUuMjc5OTk3IDk0LjAxNTk5NyAxMy43Ni02OC4wOTU5OTggNjYuMjM5OTk4eiIgZmlsbD0iI0ZGOUEwMCIgcC1pZD0iODY1MCI+PC9wYXRoPjwvc3ZnPg==
-// @version      2025.09.16.01
+// @version      2026.01.09.01
 // @description  全自动领取斗鱼星推红包
 // @author       小淳
 // @match			*://*.douyu.com/0*
@@ -26,6 +26,8 @@
 // @updateURL https://update.greasyfork.org/scripts/520398/%E6%96%97%E9%B1%BC%E6%98%9F%E6%8E%A8%E7%BA%A2%E5%8C%85%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96.meta.js
 // ==/UserScript==
 "use strict";
+const coinNumLimit = 2000; // 不抢金币小于多少数量的红包
+
 function initPkg() {
 	initPkg_AnchorStarRedpacket();
 }
@@ -77,7 +79,6 @@ function showMessage(msg, type="success", options) {
 	}
 	new NoticeJs(option).show();
 }
-const coinNumLimit = 2000; // 不抢金币小于多少数量的红包
 let anchorStarRedpacketList = [];
 let anchorStarRedpacketTimerMonitor = null;
 let anchorStarRedpacketTimerCheck = null;
@@ -86,6 +87,13 @@ let anchorStarIsGettingRoomList = []; // 正在领取/观看的直播间
 const anchorStarLoginLimit = 8; // 最多同时8个直播间领取红包
 const anchorStarExpireRedpacketIdList = []; // 过期的红包id
 let isEnd = false;
+
+const headers = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  Accept: "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  Referer: "https://www.douyu.com/"
+};
 
 function initPkg_AnchorStarRedpacket() {
   isEnd = checkIsEnd();
@@ -114,9 +122,11 @@ async function monitorAnchorStarRedpacket() {
     return;
   }
   const roomList = await getAnchorStarRedpacketList();
+  console.log("roomList", roomList);
   for (const room of roomList) {
     const rid = room.rid;
     getAnchorStarRoomRedpacketList(rid).then((redpacketList) => {
+      console.log("redpacketList", redpacketList);
       for (const redpacket of redpacketList) {
         const status = redpacket.status;
         const id = redpacket.id;
@@ -221,10 +231,11 @@ function getAnchorStarWebsocketOption(rid) {
 
 function getAnchorStarRedpacketList() {
   return new Promise((resolve, reject) => {
-    fetch(`https://www.douyu.com/japi/livebiznc/web/anchorstardiscover/redbag/square/list?rid=${rid}`, {
+    fetch(`https://www.douyu.com/japi/livebiznc/web/anchorstardiscover/redbag/square/list?rid=4042402`, {
       method: "GET",
       mode: "no-cors",
-      credentials: "include"
+      credentials: "include",
+      headers: headers
     })
       .then((res) => {
         return res.json();
@@ -248,7 +259,8 @@ function getAnchorStarRoomRedpacketList(rid) {
     fetch(`https://www.douyu.com/japi/livebiznc/web/anchorstardiscover/redbag/room/list?rid=${rid}`, {
       method: "GET",
       mode: "no-cors",
-      credentials: "include"
+      credentials: "include",
+      headers
     })
       .then((res) => {
         return res.json();
@@ -662,11 +674,6 @@ function initRouter(href) {
 }
 function initRouter_DouyuRoom_Main() {
     let intID = setInterval(() => {
-        let dom1 = document.getElementsByClassName("BackpackButton")[0];
-        let dom2 = document.getElementsByClassName("Barrage-main")[0];
-        if (!dom1 || !dom2) {
-            return;
-        }
         setTimeout(() => {
             initStyles();
             initPkg();

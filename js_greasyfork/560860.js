@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Character Enhancer Pro
 // @namespace    http://tampermonkey.net/
-// @version      6.9.6
+// @version      6.9.9
 // @description  Complete character page enhancements: VIP visuals, talkboxes, achievement remapping, cash/star quality/points overrides, health/mood bars
 // @author       You
 // @match        https://*.popmundo.com/World/Popmundo.aspx/Character*
@@ -88,7 +88,7 @@
     const vipCharacterIds = [
         '3620479', '3620400', '3609829', '3581055',
         '3552119', '3613832', '3552255', '3617745', '3613365', '3580776',
-        '3616012',
+        '3616012', '3623372'
     ];
 
     const talkboxes = {
@@ -121,6 +121,7 @@
         '3614576': "kinda dead inside but the outfit slays",
         '3613871': "smiles in lowercase ツ",
         '3616012': "manifest me. /off",
+        '3623372': "lets fvck roy ✩₊˚ ─ on/off",
         // uhhh, blows kisses ₊˚⊹♡" //
         // ⠀★ ⠀ misty’s mom⠀ ⠀/ ⠀ ⠀pienso en tu mira, lili
         // ⠀★ ⠀ yuu’s baby⠀ ⠀/ ⠀ ⠀pienso en tu mira, lili
@@ -227,8 +228,10 @@
         '3616012': { 'Achievement_428': 'Achievement_290', 'Achievement_340': 'Achievement_285', 'Achievement_80': 'Achievement_330' },
         '3579423': { 'Achievement_238': 'Achievement_404', 'Achievement_357': 'Achievement_238', 'Achievement_315': 'Achievement_400' },
         '3602139': { 'Achievement_359': 'Achievement_227', 'Achievement_428': 'Achievement_82', 'Achievement_429': 'Achievement_362' },
-        '3350835': { 'Achievement_115': 'Achievement_129', 'Achievement_291': 'Achievement_95', 'Achievement_24': 'Achievement_272' },
-
+        '3350835': { 'Achievement_5': 'Achievement_379', 'Achievement_186': 'Achievement_126', 'Achievement_153': 'Achievement_381' },
+        '3623372': { 'Achievement_222': 'Achievement_282', 'Achievement_291': 'Achievement_238', 'Achievement_115': 'Achievement_398' },
+       // '3350835': { 'Achievement_5': 'Achievement_129', 'Achievement_186': 'Achievement_95', 'Achievement_153': 'Achievement_272' },
+       // '3577905': { 'Achievement_290': 'Achievement_125', 'Achievement_129': 'Achievement_127', 'Achievement_264': 'Achievement_404' },
     };
 
     const genericReplacements = {
@@ -242,7 +245,7 @@
         '3580776': '3,013,073.00 M$', '3581055': '2,013,073.00 M$',
         '3602175': '2,013,073.00 M$', '3570776': '2,013,073.00 M$',
         '3616012': '2,013,073.00 M$', '3602139': '2,013,073.00 M$',
-        '3350835': '2,013,073.00 M$',
+        '3350835': '2,013,073.00 M$', '3623372': '2,013,073.00 M$',
     };
 
     // 🌟 Star Quality override
@@ -255,7 +258,7 @@
     const pointsValues = {
         '2887796': '7200', '3620479': '8800', '3620400': '6400', '3602139': '6400',
         '3498957': '5000', '3247354': '3100', '3581055': '3100', '3350835': '7200',
-        '3580776': '3120', '3602175': '3120', '3570776': '7200',
+        '3580776': '3120', '3602175': '3120', '3570776': '7200', '3623372': '4240',
     };
 
     // 🏆 Achievement remapping

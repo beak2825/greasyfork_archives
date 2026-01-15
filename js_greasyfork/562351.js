@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Dio Enhancer
-// @version      127.0.0.17
+// @version      127.0.0.24
 // @namespace    http://tampermonkey.net/
-// @description  测试服添加队列强化+20 & 贤者之镜合成辅助 (代码结构极致优化版)
+// @description  测试服添加队列强化+20 & 贤者之镜合成辅助 (v24: 修复空闲状态下界面挤压扭曲的问题)
 // @author       DelayNoMore
 // @match        https://test.milkywayidle.com/*
 // @match        https://test.milkywayidlecn.com/*
@@ -14,18 +14,15 @@
 // ==/UserScript==
 
 /*
-版本说明 v127.0.0.17:
-    大量优化，懒得写了，自己上手体验吧
+版本说明 v127.0.0.24:
+1. 【界面修复】修复了在“当前空闲”状态下，插件面板因父容器收缩而变形扭曲的问题。
+   - 强制面板宽度为 100%，并添加了最小宽度限制，确保按钮和网格始终对齐。
+2. 包含 v23 的所有功能（移除镜子检查、增强日志、1:1 溢出转化）。
 */
 
 (function() {
     'use strict';
 
-    /**
-     * ==============================
-     * 1. 全局配置 (CONFIG)
-     * ==============================
-     */
     const CONFIG = {
         MAX_LEVEL: 20,
         SAFE_LIMIT: 5000,
@@ -33,7 +30,7 @@
         DEFAULT_PROT: "mirror_of_protection",
         MOO_SECONDARY: "philosophers_mirror",
         DIO_DELAY: { MIN: 1500, MAX: 1800 },
-        MOO_DELAY: 4500,
+        MOO_DELAY: 6000,
         SELECTORS: {
             ENHANCE_BTN: 'button[class*="Button_success"][class*="Button_fullWidth"]',
             ITEM_CONTAINER: '.SkillActionDetail_primaryItemSelectorContainer__nrvNW',
@@ -42,11 +39,6 @@
         FIB_TABLE: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040]
     };
 
-    /**
-     * ==============================
-     * 2. 状态管理 (State)
-     * ==============================
-     */
     const State = {
         ws: null,
         characterId: new URLSearchParams(window.location.search).get('characterId'),
@@ -66,11 +58,6 @@
         }
     };
 
-    /**
-     * ==============================
-     * 3. 工具函数 (Utils)
-     * ==============================
-     */
     const Utils = {
         sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
         sleepRandom: (min, max) => Utils.sleep(Math.floor(Math.random() * (max - min + 1)) + min),
@@ -80,7 +67,6 @@
             const useEl = container?.querySelector('use');
             return useEl ? useEl.getAttribute('href').split('#')[1] : null;
         },
-        // 【优化】直接从底部的 DATA_MAPPING 读取，结构更简单
         getProtectionName: (itemHrid) => {
             return DATA_MAPPING[itemHrid] || CONFIG.DEFAULT_PROT;
         },
@@ -101,14 +87,19 @@
             }
             children.forEach(child => element.appendChild(typeof child === 'string' ? document.createTextNode(child) : child));
             return element;
+        },
+        log: (msg, type = 'info', data = null) => {
+            const styles = {
+                info: 'color: #0ea5e9; font-weight: bold;',
+                success: 'color: #22c55e; font-weight: bold;',
+                step: 'color: #eab308; font-weight: bold;',
+                error: 'color: #ef4444; font-weight: bold;'
+            };
+            if (data) console.log(`%c[Dio] ${msg}`, styles[type], data);
+            else console.log(`%c[Dio] ${msg}`, styles[type]);
         }
     };
 
-    /**
-     * ==============================
-     * 4. 网络层 (Network)
-     * ==============================
-     */
     const Network = {
         hook: () => {
             const origSend = WebSocket.prototype.send;
@@ -136,18 +127,16 @@
             });
         },
 
-        createPayload: (itemHrid, targetOrLevel, isMoo) => {
+        createDioPayload: (itemHrid, level) => {
+            const protName = Utils.getProtectionName(itemHrid);
             const savedId = State.getSavedLoadoutId();
-            const primaryLevel = isMoo ? targetOrLevel - 1 : 0;
-            const secondaryItem = isMoo ? CONFIG.MOO_SECONDARY : Utils.getProtectionName(itemHrid);
-
             return {
                 type: "new_character_action",
                 newCharacterActionData: {
                     actionHrid: "/actions/enhancing/enhance",
-                    primaryItemHash: `${State.characterId}::/item_locations/inventory::/items/${itemHrid}::${primaryLevel}`,
-                    secondaryItemHash: `${State.characterId}::/item_locations/inventory::/items/${secondaryItem}::0`,
-                    enhancingMaxLevel: targetOrLevel,
+                    primaryItemHash: `${State.characterId}::/item_locations/inventory::/items/${itemHrid}::0`,
+                    secondaryItemHash: `${State.characterId}::/item_locations/inventory::/items/${protName}::0`,
+                    enhancingMaxLevel: level,
                     enhancingProtectionMinLevel: CONFIG.FIXED_MIN_LEVEL,
                     characterLoadoutId: savedId || 0,
                     shouldClearQueue: false,
@@ -156,19 +145,40 @@
             };
         },
 
-        send: async (itemHrid, val, isMoo) => {
+        createMooPayload: (itemHrid, targetLevel) => {
+            const savedId = State.getSavedLoadoutId();
+            const currentLevel = targetLevel - 1;
+            return {
+                type: "new_character_action",
+                newCharacterActionData: {
+                    actionHrid: "/actions/enhancing/enhance",
+                    primaryItemHash: `${State.characterId}::/item_locations/inventory::/items/${itemHrid}::${currentLevel}`,
+                    secondaryItemHash: `${State.characterId}::/item_locations/inventory::/items/${CONFIG.MOO_SECONDARY}::0`,
+                    enhancingMaxLevel: targetLevel,
+                    enhancingProtectionMinLevel: CONFIG.FIXED_MIN_LEVEL,
+                    characterLoadoutId: savedId || 0,
+                    shouldClearQueue: false,
+                    hasMaxCount: false,
+                    maxCount: 0
+                }
+            };
+        },
+
+        sendDioAction: async (itemHrid, level) => {
             if (!State.ws) throw new Error("WebSocket 未连接");
-            State.ws.send(JSON.stringify(Network.createPayload(itemHrid, val, isMoo)));
-            if (isMoo) await Utils.sleep(CONFIG.MOO_DELAY);
-            else await Utils.sleepRandom(CONFIG.DIO_DELAY.MIN, CONFIG.DIO_DELAY.MAX);
+            const payload = Network.createDioPayload(itemHrid, level);
+            State.ws.send(JSON.stringify(payload));
+            await Utils.sleepRandom(CONFIG.DIO_DELAY.MIN, CONFIG.DIO_DELAY.MAX);
+        },
+
+        sendMooAction: async (itemHrid, targetLevel) => {
+            if (!State.ws) throw new Error("WebSocket 未连接");
+            const payload = Network.createMooPayload(itemHrid, targetLevel);
+            State.ws.send(JSON.stringify(payload));
+            await Utils.sleep(CONFIG.MOO_DELAY);
         }
     };
 
-    /**
-     * ==============================
-     * 5. 核心逻辑 (Core)
-     * ==============================
-     */
     const Core = {
         Planner: {
             calcHardcoreNeeds: (inventoryInput) => {
@@ -176,19 +186,22 @@
                 let dioNeeds = { 10: 0, 11: 0 };
                 let mooSteps = [];
                 const resolveNeed = (level) => {
-                    if (level <= 11) { dioNeeds[level] = (dioNeeds[level] || 0) + 1; return; }
+                    if (level <= 11) {
+                        if (simInventory[level] && simInventory[level] > 0) { simInventory[level]--; }
+                        else { dioNeeds[level] = (dioNeeds[level] || 0) + 1; }
+                        return;
+                    }
                     if (simInventory[level] && simInventory[level] > 0) { simInventory[level]--; return; }
                     resolveNeed(level - 1); resolveNeed(level - 2);
                     mooSteps.push({ target: level });
                 };
                 resolveNeed(20);
-                return { dioNeeds, mooSteps };
+                return { dioNeeds, mooSteps, leftovers: simInventory };
             },
 
             getDioPlan: (input) => {
                 let tasks = [];
                 let msg = "";
-
                 if (State.isHardcore) {
                     const plan = Core.Planner.calcHardcoreNeeds(input);
                     const c10 = plan.dioNeeds[10] || 0, c11 = plan.dioNeeds[11] || 0;
@@ -211,19 +224,39 @@
             getMooPlan: (input) => {
                 let tasks = [];
                 let msg = "";
-
                 if (State.isHardcore) {
                     const plan = Core.Planner.calcHardcoreNeeds(input);
-                    if ((plan.dioNeeds[10] || 0) > 0 || (plan.dioNeeds[11] || 0) > 0) {
-                        throw new Error(`基底不足！请先执行 Dio 补充：\n+10: ${plan.dioNeeds[10]||0}个, +11: ${plan.dioNeeds[11]||0}个`);
+                    let need10 = plan.dioNeeds[10] || 0;
+                    let need11 = plan.dioNeeds[11] || 0;
+                    let conversionMsg = "";
+                    let canProceed = false;
+
+                    if (need10 === 0 && need11 === 0) {
+                        canProceed = true;
+                    } else if (need11 > 0) {
+                        canProceed = false;
+                    } else if (need10 > 0) {
+                        const surplus11 = plan.leftovers[11] || 0;
+                        if (surplus11 >= need10) {
+                            canProceed = true;
+                            conversionMsg = `\n✅ 智能策略：检测到 +10 不足，但 +11 溢出。\n利用溢出抵扣，允许执行。\n`;
+                        } else {
+                            canProceed = false;
+                        }
+                    }
+
+                    if (!canProceed) {
+                        throw new Error(`基底不足！请先执行 Dio 补充：\n+10: ${need10}个, +11: ${need11}个`);
                     }
                     if (plan.mooSteps.length === 0) return null;
 
-                    tasks = plan.mooSteps.map(s => s.target);
+                    tasks = plan.mooSteps.sort((a, b) => a.target - b.target).map(s => s.target);
+
                     const counts = {};
                     tasks.forEach(t => { counts[t] = (counts[t] || 0) + 1 });
                     let details = Object.keys(counts).sort((a,b)=>a-b).map((l, i) => `${i+1}、+${l} 队列 x${counts[l]}`).join('\n');
-                    msg = `Hardcore Moo 确认：\n共 ${tasks.length} 步合成。\n\n${details}`;
+
+                    msg = `Hardcore Moo 确认：\n共 ${tasks.length} 步合成。${conversionMsg}\n\n${details}`;
                 } else {
                     const startLevel = input;
                     const firstTarget = startLevel + 2;
@@ -251,6 +284,10 @@
                 let processed = 0;
                 const total = plan.tasks.length;
 
+                console.group(`🚀 Dio Enhancer Task [${new Date().toLocaleTimeString()}]`);
+                Utils.log(`Mode: ${plan.isMoo ? 'Moo' : 'Dio'} | Total Steps: ${total}`);
+                Utils.log(`Task List:`, 'info', plan.tasks);
+
                 try {
                     for (const target of plan.tasks) {
                         if (State.stopRequested) break;
@@ -261,26 +298,31 @@
                         const eta = Utils.formatTime(remaining * plan.avgDelay);
                         updateUI(actionName, Math.floor((processed / total) * 100), eta);
 
-                        await Network.send(itemHrid, target, plan.isMoo);
+                        Utils.log(`[Step ${processed}/${total}] ${actionName}`, 'step');
+
+                        if (plan.isMoo) await Network.sendMooAction(itemHrid, target);
+                        else await Network.sendDioAction(itemHrid, target);
                     }
 
-                    if (State.stopRequested) alert(`⛔ 已手动停止！完成 ${processed}/${total}`);
-                    else alert(`✅ 任务完成！共处理 ${total} 个队列。`);
+                    if (State.stopRequested) {
+                        Utils.log('User stopped the process.', 'error');
+                        alert(`⛔ 已手动停止！完成 ${processed}/${total}`);
+                    } else {
+                        Utils.log('All tasks completed successfully.', 'success');
+                        alert(`✅ 任务完成！共处理 ${total} 个队列。`);
+                    }
 
                 } catch (e) {
+                    Utils.log(`Error: ${e.message}`, 'error');
                     alert(`❌ 错误: ${e.message}`);
                 } finally {
+                    console.groupEnd();
                     State.isProcessing = false;
                 }
             }
         }
     };
 
-    /**
-     * ==============================
-     * 6. 用户界面 (UI)
-     * ==============================
-     */
     const UI = {
         init: () => {
             UI.injectStyles();
@@ -307,8 +349,24 @@
             if (document.getElementById('dnm-style')) return;
             const style = document.createElement('style');
             style.id = 'dnm-style';
+            // 【UI 修复核心】
+            // 1. width: 100% -> 强制占满父容器宽度
+            // 2. min-width: 350px -> 保证在空闲状态下，容器缩得太窄时，面板依然保持足够宽度撑开
+            // 3. box-sizing: border-box -> 防止 padding 导致宽度溢出
             style.textContent = `
-                .dnm-enhancer-panel { margin-top: 15px; padding: 15px; background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 12px; color: #e2e8f0; position: relative; }
+                .dnm-enhancer-panel {
+                    margin-top: 15px;
+                    padding: 15px;
+                    background: linear-gradient(145deg, #1e293b, #0f172a);
+                    border: 1px solid #334155;
+                    border-radius: 12px;
+                    color: #e2e8f0;
+                    position: relative;
+                    width: 100%;
+                    min-width: 350px;
+                    box-sizing: border-box;
+                    clear: both;
+                }
                 .dnm-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 15px; color: #94a3b8; }
                 .dnm-id-indicator { font-size: 11px; color: #38bdf8; background: #0f172a; padding: 2px 6px; border-radius: 4px; }
                 .dnm-switch-container { display: flex; align-items: center; gap: 8px; font-weight: bold; color: #fbbf24; cursor: pointer; }
@@ -350,7 +408,7 @@
 
             const header = el('div', 'dnm-header', {}, [
                 el('div', '', {}, [
-                    el('span', '', {}, ['DIO ENHANCER v127.0.0.17']),
+                    el('span', '', {}, ['DIO ENHANCER v127.0.0.24']),
                     el('br'),
                     el('span', 'dnm-id-indicator', { textContent: savedId ? `ID: ${savedId}` : '未激活' })
                 ]),
@@ -487,535 +545,533 @@
         }
     };
 
-    console.log('🚀 Dio Enhancer v127.0.0.17 Loaded');
+    console.log('🚀 Dio Enhancer v127.0.0.24 Loaded');
     Network.hook();
     UI.init();
 
     // ==========================================
-    // 7. 数据映射表 (DATA_MAPPING) - 已扁平化
+    // 7. 数据映射表 (DATA_MAPPING)
     // ==========================================
-    // 这里放你那几百行数据，格式为 "item_name": "protection_name"
-    // 如果没有特殊映射，代码会默认使用 mirror_of_protection
-    // 下面是示例，请替换为你完整的数据
+    // 请替换为你完整的数据
     const DATA_MAPPING = {
-        "cotton_hat": "cotton_hat",
-        "cotton_boots": "cotton_boots",
-        "wooden_shield": "wooden_shield",
-        "wooden_bow": "wooden_bow",
-        "wooden_crossbow": "wooden_crossbow",
-        "silk_hat": "silk_hat",
-        "silk_boots": "silk_boots",
-        "bamboo_hat": "bamboo_hat",
-        "bamboo_boots": "bamboo_boots",
-        "umbral_boots": "umbral_boots",
-        "rainbow_pot": "rainbow_pot",
-        "rainbow_sword": "rainbow_sword",
-        "rainbow_boots": "rainbow_boots",
-        "rainbow_needle": "rainbow_needle",
-        "rough_boots": "rough_boots",
-        "verdant_pot": "verdant_pot",
-        "verdant_sword": "verdant_sword",
-        "verdant_boots": "verdant_boots",
-        "verdant_needle": "verdant_needle",
-        "large_pouch": "large_pouch",
-        "radiant_hat": "radiant_hat",
-        "radiant_boots": "radiant_boots",
-        "black_bear_shoes": "black_bear_fluff",
-        "redwood_shield": "redwood_shield",
-        "redwood_bow": "redwood_bow",
-        "redwood_crossbow": "redwood_crossbow",
-        "birch_shield": "birch_shield",
-        "birch_bow": "birch_bow",
-        "birch_crossbow": "birch_crossbow",
-        "crimson_pot": "crimson_pot",
-        "crimson_sword": "crimson_sword",
-        "crimson_boots": "crimson_boots",
-        "crimson_needle": "crimson_needle",
-        "cotton_robe_top": "cotton_robe_top",
-        "cotton_robe_bottoms": "cotton_robe_bottoms",
-        "cotton_gloves": "cotton_gloves",
-        "cheese_pot": "cheese_pot",
-        "cheese_sword": "cheese_sword",
-        "cheese_boots": "cheese_boots",
-        "cheese_needle": "cheese_needle",
-        "knights_aegis": "knights_ingot",
-        "burble_pot": "burble_pot",
-        "burble_sword": "burble_sword",
-        "burble_boots": "burble_boots",
-        "burble_needle": "burble_needle",
-        "arcane_shield": "arcane_shield",
-        "arcane_bow": "arcane_bow",
-        "arcane_crossbow": "arcane_crossbow",
-        "holy_pot": "holy_pot",
-        "holy_sword": "holy_sword",
-        "holy_boots": "holy_boots",
-        "holy_needle": "holy_needle",
-        "vision_shield": "magnifying_glass",
-        "treant_shield": "treant_bark",
-        "silk_gloves": "silk_gloves",
-        "azure_pot": "azure_pot",
-        "azure_sword": "azure_sword",
-        "azure_boots": "azure_boots",
-        "azure_needle": "azure_needle",
-        "sorcerer_boots": "sorcerers_sole",
-        "vampiric_bow": "vampire_fang",
-        "small_pouch": "small_pouch",
-        "manticore_shield": "manticore_sting",
-        "celestial_pot": "butter_of_proficiency",
-        "celestial_needle": "butter_of_proficiency",
-        "cedar_shield": "cedar_shield",
-        "cedar_bow": "cedar_bow",
-        "cedar_crossbow": "cedar_crossbow",
-        "linen_hat": "linen_hat",
-        "linen_boots": "linen_boots",
-        "beast_boots": "beast_boots",
-        "ginkgo_shield": "ginkgo_shield",
-        "ginkgo_bow": "ginkgo_bow",
-        "ginkgo_crossbow": "ginkgo_crossbow",
-        "medium_pouch": "medium_pouch",
-        "bamboo_robe_top": "bamboo_robe_top",
-        "bamboo_robe_bottoms": "bamboo_robe_bottoms",
-        "bamboo_gloves": "bamboo_gloves",
-        "purpleheart_shield": "purpleheart_shield",
-        "purpleheart_bow": "purpleheart_bow",
-        "purpleheart_crossbow": "purpleheart_crossbow",
-        "grizzly_bear_shoes": "grizzly_bear_fluff",
-        "umbral_hood": "umbral_hood",
-        "umbral_bracers": "umbral_bracers",
-        "umbral_chaps": "umbral_chaps",
-        "umbral_tunic": "umbral_tunic",
-        "centaur_boots": "centaur_hoof",
-        "earrings_of_critical_strike": "earrings_of_critical_strike",
-        "ring_of_critical_strike": "ring_of_critical_strike",
-        "guzzling_pouch": "mirror_of_protection",
-        "polar_bear_shoes": "polar_bear_fluff",
-        "frost_staff": "frost_sphere",
-        "icy_robe_top": "icy_cloth",
-        "icy_robe_bottoms": "icy_cloth",
-        "tailors_top": "thread_of_expertise",
-        "tailors_bottoms": "thread_of_expertise",
-        "earrings_of_gathering": "earrings_of_gathering",
-        "ring_of_gathering": "ring_of_gathering",
-        "rainbow_hammer": "rainbow_hammer",
-        "rainbow_hatchet": "rainbow_hatchet",
-        "rainbow_spatula": "rainbow_spatula",
-        "rainbow_gauntlets": "rainbow_gauntlets",
-        "rainbow_shears": "rainbow_shears",
-        "rainbow_brush": "rainbow_brush",
-        "rainbow_helmet": "rainbow_helmet",
-        "rainbow_plate_legs": "rainbow_plate_legs",
-        "rainbow_plate_body": "rainbow_plate_body",
-        "rainbow_buckler": "rainbow_buckler",
-        "rainbow_chisel": "rainbow_chisel",
-        "rainbow_spear": "rainbow_spear",
-        "rainbow_bulwark": "rainbow_bulwark",
-        "chefs_top": "thread_of_expertise",
-        "chefs_bottoms": "thread_of_expertise",
-        "magnetic_gloves": "magnet",
-        "rough_hood": "rough_hood",
-        "rough_bracers": "rough_bracers",
-        "rough_chaps": "rough_chaps",
-        "rough_tunic": "rough_tunic",
-        "verdant_hammer": "verdant_hammer",
-        "verdant_hatchet": "verdant_hatchet",
-        "verdant_spatula": "verdant_spatula",
-        "verdant_gauntlets": "verdant_gauntlets",
-        "verdant_shears": "verdant_shears",
-        "verdant_brush": "verdant_brush",
-        "verdant_helmet": "verdant_helmet",
-        "verdant_plate_legs": "verdant_plate_legs",
-        "verdant_plate_body": "verdant_plate_body",
-        "verdant_buckler": "verdant_buckler",
-        "verdant_chisel": "verdant_chisel",
-        "verdant_spear": "verdant_spear",
-        "verdant_bulwark": "verdant_bulwark",
-        "demonic_plate_legs": "demonic_core",
-        "demonic_plate_body": "demonic_core",
-        "gator_vest": "gator_vest",
-        "enchanted_gloves": "chrono_sphere",
-        "gobo_boots": "gobo_boots",
-        "crafters_top": "thread_of_expertise",
-        "crafters_bottoms": "thread_of_expertise",
-        "radiant_robe_top": "radiant_robe_top",
-        "radiant_robe_bottoms": "radiant_robe_bottoms",
-        "radiant_gloves": "radiant_gloves",
-        "turtle_shell_legs": "turtle_shell",
-        "turtle_shell_body": "turtle_shell",
-        "marine_tunic": "marine_scale",
-        "marine_chaps": "marine_scale",
-        "earrings_of_armor": "earrings_of_armor",
-        "ring_of_armor": "ring_of_armor",
-        "earrings_of_regeneration": "earrings_of_regeneration",
-        "ring_of_regeneration": "ring_of_regeneration",
-        "chaotic_flail": "chaotic_chain",
-        "spiked_bulwark": "stalactite_shard",
-        "crimson_hammer": "crimson_hammer",
-        "crimson_hatchet": "crimson_hatchet",
-        "crimson_spatula": "crimson_spatula",
-        "crimson_gauntlets": "crimson_gauntlets",
-        "crimson_shears": "crimson_shears",
-        "crimson_brush": "crimson_brush",
-        "crimson_helmet": "crimson_helmet",
-        "crimson_plate_legs": "crimson_plate_legs",
-        "crimson_plate_body": "crimson_plate_body",
-        "crimson_buckler": "crimson_buckler",
-        "crimson_chisel": "crimson_chisel",
-        "crimson_spear": "crimson_spear",
-        "crimson_bulwark": "crimson_bulwark",
-        "necklace_of_wisdom": "necklace_of_wisdom",
-        "shoebill_shoes": "shoebill_feather",
-        "watchful_relic": "eye_of_the_watcher",
-        "giant_pouch": "mirror_of_protection",
-        "colossus_plate_legs": "colossus_core",
-        "colossus_plate_body": "colossus_core",
-        "regal_sword": "regal_jewel",
-        "earrings_of_resistance": "earrings_of_resistance",
-        "ring_of_resistance": "ring_of_resistance",
-        "furious_spear": "regal_jewel",
-        "werewolf_slasher": "werewolf_claw",
-        "infernal_battlestaff": "infernal_ember",
-        "flaming_robe_top": "flaming_cloth",
-        "flaming_robe_bottoms": "flaming_cloth",
-        "sundering_crossbow": "sundering_jewel",
-        "anchorbound_plate_legs": "damaged_anchor",
-        "anchorbound_plate_body": "damaged_anchor",
-        "enchanted_cloak": "enchanted_cloak",
-        "sighted_bracers": "sighted_bracers",
-        "magicians_hat": "magicians_cloth",
-        "cheese_hammer": "cheese_hammer",
-        "cheese_hatchet": "cheese_hatchet",
-        "cheese_spatula": "cheese_spatula",
-        "cheese_gauntlets": "cheese_gauntlets",
-        "cheese_shears": "cheese_shears",
-        "cheese_brush": "cheese_brush",
-        "cheese_helmet": "cheese_helmet",
-        "cheese_plate_legs": "cheese_plate_legs",
-        "cheese_plate_body": "cheese_plate_body",
-        "cheese_buckler": "cheese_buckler",
-        "cheese_chisel": "cheese_chisel",
-        "cheese_spear": "cheese_spear",
-        "cheese_bulwark": "cheese_bulwark",
-        "maelstrom_plate_legs": "maelstrom_plating",
-        "maelstrom_plate_body": "maelstrom_plating",
-        "chimerical_quiver": "chimerical_quiver",
-        "snake_fang_dirk": "snake_fang",
-        "ranger_necklace": "ranger_necklace",
-        "burble_hammer": "burble_hammer",
-        "burble_hatchet": "burble_hatchet",
-        "burble_spatula": "burble_spatula",
-        "burble_gauntlets": "burble_gauntlets",
-        "burble_shears": "burble_shears",
-        "burble_brush": "burble_brush",
-        "burble_helmet": "burble_helmet",
-        "burble_plate_legs": "burble_plate_legs",
-        "burble_plate_body": "burble_plate_body",
-        "burble_buckler": "burble_buckler",
-        "burble_chisel": "burble_chisel",
-        "burble_spear": "burble_spear",
-        "burble_bulwark": "burble_bulwark",
-        "marksman_bracers": "marksman_brooch",
-        "holy_hammer": "holy_hammer",
-        "holy_hatchet": "holy_hatchet",
-        "holy_spatula": "holy_spatula",
-        "holy_gauntlets": "holy_gauntlets",
-        "holy_shears": "holy_shears",
-        "holy_brush": "holy_brush",
-        "holy_helmet": "holy_helmet",
-        "holy_plate_legs": "holy_plate_legs",
-        "holy_plate_body": "holy_plate_body",
-        "holy_buckler": "holy_buckler",
-        "holy_chisel": "holy_chisel",
-        "holy_spear": "holy_spear",
-        "holy_bulwark": "holy_bulwark",
-        "griffin_chaps": "griffin_leather",
-        "griffin_tunic": "griffin_leather",
-        "griffin_bulwark": "griffin_talon",
-        "stalactite_spear": "stalactite_shard",
-        "chrono_gloves": "chrono_sphere",
-        "vision_helmet": "goggles",
-        "collectors_boots": "gobo_rag",
-        "silk_robe_top": "silk_robe_top",
-        "silk_robe_bottoms": "silk_robe_bottoms",
-        "necklace_of_speed": "necklace_of_speed",
-        "gluttonous_pouch": "mirror_of_protection",
-        "revenant_chaps": "revenant_anima",
-        "revenant_tunic": "revenant_anima",
-        "azure_hammer": "azure_hammer",
-        "azure_hatchet": "azure_hatchet",
-        "azure_spatula": "azure_spatula",
-        "azure_gauntlets": "azure_gauntlets",
-        "azure_shears": "azure_shears",
-        "azure_brush": "azure_brush",
-        "azure_helmet": "azure_helmet",
-        "azure_plate_legs": "azure_plate_legs",
-        "azure_plate_body": "azure_plate_body",
-        "azure_buckler": "azure_buckler",
-        "azure_chisel": "azure_chisel",
-        "azure_spear": "azure_spear",
-        "azure_bulwark": "azure_bulwark",
-        "wizard_necklace": "wizard_necklace",
-        "philosophers_earrings": "mirror_of_protection",
-        "philosophers_ring": "mirror_of_protection",
-        "philosophers_necklace": "mirror_of_protection",
-        "necklace_of_efficiency": "necklace_of_efficiency",
-        "pincer_gloves": "crab_pincer",
-        "celestial_hammer": "butter_of_proficiency",
-        "celestial_hatchet": "butter_of_proficiency",
-        "celestial_spatula": "butter_of_proficiency",
-        "celestial_shears": "butter_of_proficiency",
-        "celestial_brush": "butter_of_proficiency",
-        "celestial_chisel": "butter_of_proficiency",
-        "panda_gloves": "panda_fluff",
-        "linen_robe_top": "linen_robe_top",
-        "linen_robe_bottoms": "linen_robe_bottoms",
-        "linen_gloves": "linen_gloves",
-        "beast_hood": "beast_hood",
-        "beast_bracers": "beast_bracers",
-        "beast_chaps": "beast_chaps",
-        "beast_tunic": "beast_tunic",
-        "sinister_cape": "sinister_cape",
-        "tome_of_the_elements": "tome_of_the_elements",
-        "luna_robe_top": "luna_wing",
-        "luna_robe_bottoms": "luna_wing",
-        "fighter_necklace": "fighter_necklace",
-        "eye_watch": "eye_of_the_watcher",
-        "tome_of_healing": "tome_of_healing",
-        "cursed_bow": "cursed_ball",
-        "bishops_codex": "bishops_scroll",
-        "foragers_top": "thread_of_expertise",
-        "foragers_bottoms": "thread_of_expertise",
-        "rainbow_mace": "rainbow_mace",
-        "rainbow_enhancer": "rainbow_enhancer",
-        "rainbow_alembic": "rainbow_alembic",
-        "blazing_trident": "kraken_fang",
-        "verdant_mace": "verdant_mace",
-        "verdant_enhancer": "verdant_enhancer",
-        "verdant_alembic": "verdant_alembic",
-        "dodocamel_gauntlets": "dodocamel_plume",
-        "lumberjacks_top": "thread_of_expertise",
-        "lumberjacks_bottoms": "thread_of_expertise",
-        "gobo_shooter": "gobo_shooter",
-        "gobo_hood": "gobo_hood",
-        "gobo_slasher": "gobo_slasher",
-        "gobo_bracers": "gobo_bracers",
-        "gobo_boomstick": "gobo_boomstick",
-        "gobo_chaps": "gobo_chaps",
-        "gobo_tunic": "gobo_tunic",
-        "gobo_stabber": "gobo_stabber",
-        "red_culinary_hat": "red_panda_fluff",
-        "redwood_fire_staff": "redwood_fire_staff",
-        "redwood_water_staff": "redwood_water_staff",
-        "granite_bludgeon": "living_granite",
-        "birch_fire_staff": "birch_fire_staff",
-        "birch_water_staff": "birch_water_staff",
-        "dairyhands_top": "thread_of_expertise",
-        "dairyhands_bottoms": "thread_of_expertise",
-        "crimson_mace": "crimson_mace",
-        "crimson_enhancer": "crimson_enhancer",
-        "crimson_alembic": "crimson_alembic",
-        "kraken_chaps": "kraken_leather",
-        "kraken_tunic": "kraken_leather",
-        "rippling_trident": "kraken_fang",
-        "alchemists_top": "thread_of_expertise",
-        "alchemists_bottoms": "thread_of_expertise",
-        "soul_hunter_crossbow": "soul_fragment",
-        "jackalope_staff": "jackalope_antler",
-        "corsair_helmet": "corsair_crest",
-        "wooden_fire_staff": "wooden_fire_staff",
-        "wooden_water_staff": "wooden_water_staff",
-        "cheese_mace": "cheese_mace",
-        "cheese_enhancer": "cheese_enhancer",
-        "cheesemakers_top": "thread_of_expertise",
-        "cheesemakers_bottoms": "thread_of_expertise",
-        "cheese_alembic": "cheese_alembic",
-        "reptile_boots": "reptile_boots",
-        "fluffy_red_hat": "red_panda_fluff",
-        "enhancers_top": "thread_of_expertise",
-        "enhancers_bottoms": "thread_of_expertise",
-        "burble_mace": "burble_mace",
-        "burble_enhancer": "burble_enhancer",
-        "burble_alembic": "burble_alembic",
-        "arcane_fire_staff": "arcane_fire_staff",
-        "arcane_water_staff": "arcane_water_staff",
-        "holy_mace": "holy_mace",
-        "holy_enhancer": "holy_enhancer",
-        "holy_alembic": "holy_alembic",
-        "azure_mace": "azure_mace",
-        "azure_enhancer": "azure_enhancer",
-        "azure_alembic": "azure_alembic",
-        "snail_shell_helmet": "snail_shell",
-        "vampire_fang_dirk": "vampire_fang",
-        "celestial_enhancer": "butter_of_proficiency",
-        "celestial_alembic": "butter_of_proficiency",
-        "cedar_fire_staff": "cedar_fire_staff",
-        "cedar_water_staff": "cedar_water_staff",
-        "ginkgo_fire_staff": "ginkgo_fire_staff",
-        "ginkgo_water_staff": "ginkgo_water_staff",
-        "brewers_top": "thread_of_expertise",
-        "brewers_bottoms": "thread_of_expertise",
-        "acrobatic_hood": "acrobats_ribbon",
-        "blooming_trident": "kraken_fang",
-        "purpleheart_fire_staff": "purpleheart_fire_staff",
-        "purpleheart_water_staff": "purpleheart_water_staff",
-        "master_foraging_charm": "mirror_of_protection",
-        "master_brewing_charm": "mirror_of_protection",
-        "master_woodcutting_charm": "mirror_of_protection",
-        "master_defense_charm": "mirror_of_protection",
-        "master_tailoring_charm": "mirror_of_protection",
-        "master_attack_charm": "mirror_of_protection",
-        "master_milking_charm": "mirror_of_protection",
-        "master_melee_charm": "mirror_of_protection",
-        "master_alchemy_charm": "mirror_of_protection",
-        "master_magic_charm": "mirror_of_protection",
-        "master_stamina_charm": "mirror_of_protection",
-        "master_cooking_charm": "mirror_of_protection",
-        "master_enhancing_charm": "mirror_of_protection",
-        "master_ranged_charm": "mirror_of_protection",
-        "master_crafting_charm": "mirror_of_protection",
-        "master_intelligence_charm": "mirror_of_protection",
-        "advanced_foraging_charm": "mirror_of_protection",
-        "advanced_brewing_charm": "mirror_of_protection",
-        "advanced_woodcutting_charm": "mirror_of_protection",
-        "advanced_defense_charm": "mirror_of_protection",
-        "advanced_tailoring_charm": "mirror_of_protection",
-        "advanced_attack_charm": "mirror_of_protection",
-        "advanced_milking_charm": "mirror_of_protection",
-        "advanced_melee_charm": "mirror_of_protection",
-        "advanced_alchemy_charm": "mirror_of_protection",
-        "advanced_magic_charm": "mirror_of_protection",
-        "advanced_stamina_charm": "mirror_of_protection",
-        "advanced_cooking_charm": "mirror_of_protection",
-        "advanced_enhancing_charm": "mirror_of_protection",
-        "advanced_task_badge": "advanced_task_badge",
-        "advanced_ranged_charm": "mirror_of_protection",
-        "advanced_crafting_charm": "mirror_of_protection",
-        "advanced_intelligence_charm": "mirror_of_protection",
-        "gobo_defender": "gobo_defender",
-        "gobo_smasher": "gobo_smasher",
-        "redwood_nature_staff": "redwood_nature_staff",
-        "birch_nature_staff": "birch_nature_staff",
-        "royal_fire_robe_top": "royal_cloth",
-        "royal_fire_robe_bottoms": "royal_cloth",
-        "royal_water_robe_top": "royal_cloth",
-        "royal_water_robe_bottoms": "royal_cloth",
-        "basic_foraging_charm": "mirror_of_protection",
-        "basic_brewing_charm": "mirror_of_protection",
-        "basic_woodcutting_charm": "mirror_of_protection",
-        "basic_defense_charm": "mirror_of_protection",
-        "basic_tailoring_charm": "mirror_of_protection",
-        "basic_attack_charm": "mirror_of_protection",
-        "basic_milking_charm": "mirror_of_protection",
-        "basic_melee_charm": "mirror_of_protection",
-        "basic_alchemy_charm": "mirror_of_protection",
-        "basic_magic_charm": "mirror_of_protection",
-        "basic_stamina_charm": "mirror_of_protection",
-        "basic_cooking_charm": "mirror_of_protection",
-        "basic_enhancing_charm": "mirror_of_protection",
-        "basic_task_badge": "basic_task_badge",
-        "basic_ranged_charm": "mirror_of_protection",
-        "basic_crafting_charm": "mirror_of_protection",
-        "basic_intelligence_charm": "mirror_of_protection",
-        "earrings_of_essence_find": "earrings_of_essence_find",
-        "ring_of_essence_find": "ring_of_essence_find",
-        "wooden_nature_staff": "wooden_nature_staff",
-        "reptile_hood": "reptile_hood",
-        "reptile_bracers": "reptile_bracers",
-        "reptile_chaps": "reptile_chaps",
-        "reptile_tunic": "reptile_tunic",
-        "knights_aegis_refined": "knights_aegis_refined",
-        "arcane_nature_staff": "arcane_nature_staff",
-        "trainee_foraging_charm": "mirror_of_protection",
-        "trainee_brewing_charm": "mirror_of_protection",
-        "trainee_woodcutting_charm": "mirror_of_protection",
-        "trainee_defense_charm": "mirror_of_protection",
-        "trainee_tailoring_charm": "mirror_of_protection",
-        "trainee_attack_charm": "mirror_of_protection",
-        "trainee_milking_charm": "mirror_of_protection",
-        "trainee_melee_charm": "mirror_of_protection",
-        "trainee_alchemy_charm": "mirror_of_protection",
-        "trainee_magic_charm": "mirror_of_protection",
-        "trainee_stamina_charm": "mirror_of_protection",
-        "trainee_cooking_charm": "mirror_of_protection",
-        "trainee_enhancing_charm": "mirror_of_protection",
-        "trainee_ranged_charm": "mirror_of_protection",
-        "trainee_crafting_charm": "mirror_of_protection",
-        "trainee_intelligence_charm": "mirror_of_protection",
-        "earrings_of_rare_find": "earrings_of_rare_find",
-        "ring_of_rare_find": "ring_of_rare_find",
-        "cedar_nature_staff": "cedar_nature_staff",
-        "ginkgo_nature_staff": "ginkgo_nature_staff",
-        "expert_foraging_charm": "mirror_of_protection",
-        "expert_brewing_charm": "mirror_of_protection",
-        "expert_woodcutting_charm": "mirror_of_protection",
-        "expert_defense_charm": "mirror_of_protection",
-        "expert_tailoring_charm": "mirror_of_protection",
-        "expert_attack_charm": "mirror_of_protection",
-        "expert_milking_charm": "mirror_of_protection",
-        "expert_melee_charm": "mirror_of_protection",
-        "expert_alchemy_charm": "mirror_of_protection",
-        "expert_magic_charm": "mirror_of_protection",
-        "expert_stamina_charm": "mirror_of_protection",
-        "expert_cooking_charm": "mirror_of_protection",
-        "expert_enhancing_charm": "mirror_of_protection",
-        "expert_task_badge": "expert_task_badge",
-        "expert_ranged_charm": "mirror_of_protection",
-        "expert_crafting_charm": "mirror_of_protection",
-        "expert_intelligence_charm": "mirror_of_protection",
-        "purpleheart_nature_staff": "purpleheart_nature_staff",
-        "grandmaster_foraging_charm": "mirror_of_protection",
-        "grandmaster_brewing_charm": "mirror_of_protection",
-        "grandmaster_woodcutting_charm": "mirror_of_protection",
-        "grandmaster_defense_charm": "mirror_of_protection",
-        "grandmaster_tailoring_charm": "mirror_of_protection",
-        "grandmaster_attack_charm": "mirror_of_protection",
-        "grandmaster_milking_charm": "mirror_of_protection",
-        "grandmaster_melee_charm": "mirror_of_protection",
-        "grandmaster_alchemy_charm": "mirror_of_protection",
-        "grandmaster_magic_charm": "mirror_of_protection",
-        "grandmaster_stamina_charm": "mirror_of_protection",
-        "grandmaster_cooking_charm": "mirror_of_protection",
-        "grandmaster_enhancing_charm": "mirror_of_protection",
-        "grandmaster_ranged_charm": "mirror_of_protection",
-        "grandmaster_crafting_charm": "mirror_of_protection",
-        "grandmaster_intelligence_charm": "mirror_of_protection",
-        "royal_nature_robe_top": "royal_cloth",
-        "royal_nature_robe_bottoms": "royal_cloth",
-        "chaotic_flail_refined": "mirror_of_protection",
-        "regal_sword_refined": "mirror_of_protection",
-        "furious_spear_refined": "mirror_of_protection",
-        "sundering_crossbow_refined": "mirror_of_protection",
-        "anchorbound_plate_legs_refined": "mirror_of_protection",
-        "anchorbound_plate_body_refined": "mirror_of_protection",
-        "enchanted_cloak_refined": "mirror_of_protection",
-        "magicians_hat_refined": "mirror_of_protection",
-        "maelstrom_plate_legs_refined": "mirror_of_protection",
-        "maelstrom_plate_body_refined": "mirror_of_protection",
-        "chimerical_quiver_refined": "mirror_of_protection",
-        "marksman_bracers_refined": "mirror_of_protection",
-        "griffin_bulwark_refined": "mirror_of_protection",
-        "sinister_cape_refined": "mirror_of_protection",
-        "cursed_bow_refined": "mirror_of_protection",
-        "bishops_codex_refined": "mirror_of_protection",
-        "blazing_trident_refined": "mirror_of_protection",
-        "master_cheesesmithing_charm": "mirror_of_protection",
-        "dodocamel_gauntlets_refined": "mirror_of_protection",
-        "advanced_cheesesmithing_charm": "mirror_of_protection",
-        "basic_cheesesmithing_charm": "mirror_of_protection",
-        "kraken_chaps_refined": "mirror_of_protection",
-        "kraken_tunic_refined": "mirror_of_protection",
-        "rippling_trident_refined": "mirror_of_protection",
-        "corsair_helmet_refined": "mirror_of_protection",
-        "trainee_cheesesmithing_charm": "mirror_of_protection",
-        "acrobatic_hood_refined": "mirror_of_protection",
-        "blooming_trident_refined": "mirror_of_protection",
-        "expert_cheesesmithing_charm": "mirror_of_protection",
-        "grandmaster_cheesesmithing_charm": "mirror_of_protection",
-        "royal_fire_robe_top_refined": "mirror_of_protection",
-        "royal_fire_robe_bottoms_refined": "mirror_of_protection",
-        "royal_water_robe_top_refined": "mirror_of_protection",
-        "royal_water_robe_bottoms_refined": "mirror_of_protection",
-        "royal_nature_robe_top_refined": "mirror_of_protection",
-        "royal_nature_robe_bottoms_refined": "mirror_of_protection",
+"cotton_hat": "cotton_hat",
+    "cotton_boots": "cotton_boots",
+    "wooden_shield": "wooden_shield",
+    "wooden_bow": "wooden_bow",
+    "wooden_crossbow": "wooden_crossbow",
+    "silk_hat": "silk_hat",
+    "silk_boots": "silk_boots",
+    "bamboo_hat": "bamboo_hat",
+    "bamboo_boots": "bamboo_boots",
+    "umbral_boots": "umbral_boots",
+    "rainbow_pot": "rainbow_pot",
+    "rainbow_sword": "rainbow_sword",
+    "rainbow_boots": "rainbow_boots",
+    "rainbow_needle": "rainbow_needle",
+    "rough_boots": "rough_boots",
+    "verdant_pot": "verdant_pot",
+    "verdant_sword": "verdant_sword",
+    "verdant_boots": "verdant_boots",
+    "verdant_needle": "verdant_needle",
+    "large_pouch": "large_pouch",
+    "radiant_hat": "radiant_hat",
+    "radiant_boots": "radiant_boots",
+    "black_bear_shoes": "black_bear_fluff",
+    "redwood_shield": "redwood_shield",
+    "redwood_bow": "redwood_bow",
+    "redwood_crossbow": "redwood_crossbow",
+    "birch_shield": "birch_shield",
+    "birch_bow": "birch_bow",
+    "birch_crossbow": "birch_crossbow",
+    "crimson_pot": "crimson_pot",
+    "crimson_sword": "crimson_sword",
+    "crimson_boots": "crimson_boots",
+    "crimson_needle": "crimson_needle",
+    "cotton_robe_top": "cotton_robe_top",
+    "cotton_robe_bottoms": "cotton_robe_bottoms",
+    "cotton_gloves": "cotton_gloves",
+    "cheese_pot": "cheese_pot",
+    "cheese_sword": "cheese_sword",
+    "cheese_boots": "cheese_boots",
+    "cheese_needle": "cheese_needle",
+    "knights_aegis": "knights_ingot",
+    "burble_pot": "burble_pot",
+    "burble_sword": "burble_sword",
+    "burble_boots": "burble_boots",
+    "burble_needle": "burble_needle",
+    "arcane_shield": "arcane_shield",
+    "arcane_bow": "arcane_bow",
+    "arcane_crossbow": "arcane_crossbow",
+    "holy_pot": "holy_pot",
+    "holy_sword": "holy_sword",
+    "holy_boots": "holy_boots",
+    "holy_needle": "holy_needle",
+    "vision_shield": "magnifying_glass",
+    "treant_shield": "treant_bark",
+    "silk_gloves": "silk_gloves",
+    "azure_pot": "azure_pot",
+    "azure_sword": "azure_sword",
+    "azure_boots": "azure_boots",
+    "azure_needle": "azure_needle",
+    "sorcerer_boots": "sorcerers_sole",
+    "vampiric_bow": "vampire_fang",
+    "small_pouch": "small_pouch",
+    "manticore_shield": "manticore_sting",
+    "celestial_pot": "butter_of_proficiency",
+    "celestial_needle": "butter_of_proficiency",
+    "cedar_shield": "cedar_shield",
+    "cedar_bow": "cedar_bow",
+    "cedar_crossbow": "cedar_crossbow",
+    "linen_hat": "linen_hat",
+    "linen_boots": "linen_boots",
+    "beast_boots": "beast_boots",
+    "ginkgo_shield": "ginkgo_shield",
+    "ginkgo_bow": "ginkgo_bow",
+    "ginkgo_crossbow": "ginkgo_crossbow",
+    "medium_pouch": "medium_pouch",
+    "bamboo_robe_top": "bamboo_robe_top",
+    "bamboo_robe_bottoms": "bamboo_robe_bottoms",
+    "bamboo_gloves": "bamboo_gloves",
+    "purpleheart_shield": "purpleheart_shield",
+    "purpleheart_bow": "purpleheart_bow",
+    "purpleheart_crossbow": "purpleheart_crossbow",
+    "grizzly_bear_shoes": "grizzly_bear_fluff",
+    "umbral_hood": "umbral_hood",
+    "umbral_bracers": "umbral_bracers",
+    "umbral_chaps": "umbral_chaps",
+    "umbral_tunic": "umbral_tunic",
+    "centaur_boots": "centaur_hoof",
+    "earrings_of_critical_strike": "earrings_of_critical_strike",
+    "ring_of_critical_strike": "ring_of_critical_strike",
+    "guzzling_pouch": "mirror_of_protection",
+    "polar_bear_shoes": "polar_bear_fluff",
+    "frost_staff": "frost_sphere",
+    "icy_robe_top": "icy_cloth",
+    "icy_robe_bottoms": "icy_cloth",
+    "tailors_top": "thread_of_expertise",
+    "tailors_bottoms": "thread_of_expertise",
+    "earrings_of_gathering": "earrings_of_gathering",
+    "ring_of_gathering": "ring_of_gathering",
+    "rainbow_hammer": "rainbow_hammer",
+    "rainbow_hatchet": "rainbow_hatchet",
+    "rainbow_spatula": "rainbow_spatula",
+    "rainbow_gauntlets": "rainbow_gauntlets",
+    "rainbow_shears": "rainbow_shears",
+    "rainbow_brush": "rainbow_brush",
+    "rainbow_helmet": "rainbow_helmet",
+    "rainbow_plate_legs": "rainbow_plate_legs",
+    "rainbow_plate_body": "rainbow_plate_body",
+    "rainbow_buckler": "rainbow_buckler",
+    "rainbow_chisel": "rainbow_chisel",
+    "rainbow_spear": "rainbow_spear",
+    "rainbow_bulwark": "rainbow_bulwark",
+    "chefs_top": "thread_of_expertise",
+    "chefs_bottoms": "thread_of_expertise",
+    "magnetic_gloves": "magnet",
+    "rough_hood": "rough_hood",
+    "rough_bracers": "rough_bracers",
+    "rough_chaps": "rough_chaps",
+    "rough_tunic": "rough_tunic",
+    "verdant_hammer": "verdant_hammer",
+    "verdant_hatchet": "verdant_hatchet",
+    "verdant_spatula": "verdant_spatula",
+    "verdant_gauntlets": "verdant_gauntlets",
+    "verdant_shears": "verdant_shears",
+    "verdant_brush": "verdant_brush",
+    "verdant_helmet": "verdant_helmet",
+    "verdant_plate_legs": "verdant_plate_legs",
+    "verdant_plate_body": "verdant_plate_body",
+    "verdant_buckler": "verdant_buckler",
+    "verdant_chisel": "verdant_chisel",
+    "verdant_spear": "verdant_spear",
+    "verdant_bulwark": "verdant_bulwark",
+    "demonic_plate_legs": "demonic_core",
+    "demonic_plate_body": "demonic_core",
+    "gator_vest": "gator_vest",
+    "enchanted_gloves": "chrono_sphere",
+    "gobo_boots": "gobo_boots",
+    "crafters_top": "thread_of_expertise",
+    "crafters_bottoms": "thread_of_expertise",
+    "radiant_robe_top": "radiant_robe_top",
+    "radiant_robe_bottoms": "radiant_robe_bottoms",
+    "radiant_gloves": "radiant_gloves",
+    "turtle_shell_legs": "turtle_shell",
+    "turtle_shell_body": "turtle_shell",
+    "marine_tunic": "marine_scale",
+    "marine_chaps": "marine_scale",
+    "earrings_of_armor": "earrings_of_armor",
+    "ring_of_armor": "ring_of_armor",
+    "earrings_of_regeneration": "earrings_of_regeneration",
+    "ring_of_regeneration": "ring_of_regeneration",
+    "chaotic_flail": "chaotic_chain",
+    "spiked_bulwark": "stalactite_shard",
+    "crimson_hammer": "crimson_hammer",
+    "crimson_hatchet": "crimson_hatchet",
+    "crimson_spatula": "crimson_spatula",
+    "crimson_gauntlets": "crimson_gauntlets",
+    "crimson_shears": "crimson_shears",
+    "crimson_brush": "crimson_brush",
+    "crimson_helmet": "crimson_helmet",
+    "crimson_plate_legs": "crimson_plate_legs",
+    "crimson_plate_body": "crimson_plate_body",
+    "crimson_buckler": "crimson_buckler",
+    "crimson_chisel": "crimson_chisel",
+    "crimson_spear": "crimson_spear",
+    "crimson_bulwark": "crimson_bulwark",
+    "necklace_of_wisdom": "necklace_of_wisdom",
+    "shoebill_shoes": "shoebill_feather",
+    "watchful_relic": "eye_of_the_watcher",
+    "giant_pouch": "mirror_of_protection",
+    "colossus_plate_legs": "colossus_core",
+    "colossus_plate_body": "colossus_core",
+    "regal_sword": "regal_jewel",
+    "earrings_of_resistance": "earrings_of_resistance",
+    "ring_of_resistance": "ring_of_resistance",
+    "furious_spear": "regal_jewel",
+    "werewolf_slasher": "werewolf_claw",
+    "infernal_battlestaff": "infernal_ember",
+    "flaming_robe_top": "flaming_cloth",
+    "flaming_robe_bottoms": "flaming_cloth",
+    "sundering_crossbow": "sundering_jewel",
+    "anchorbound_plate_legs": "damaged_anchor",
+    "anchorbound_plate_body": "damaged_anchor",
+    "enchanted_cloak": "enchanted_cloak",
+    "sighted_bracers": "sighted_bracers",
+    "magicians_hat": "magicians_cloth",
+    "cheese_hammer": "cheese_hammer",
+    "cheese_hatchet": "cheese_hatchet",
+    "cheese_spatula": "cheese_spatula",
+    "cheese_gauntlets": "cheese_gauntlets",
+    "cheese_shears": "cheese_shears",
+    "cheese_brush": "cheese_brush",
+    "cheese_helmet": "cheese_helmet",
+    "cheese_plate_legs": "cheese_plate_legs",
+    "cheese_plate_body": "cheese_plate_body",
+    "cheese_buckler": "cheese_buckler",
+    "cheese_chisel": "cheese_chisel",
+    "cheese_spear": "cheese_spear",
+    "cheese_bulwark": "cheese_bulwark",
+    "maelstrom_plate_legs": "maelstrom_plating",
+    "maelstrom_plate_body": "maelstrom_plating",
+    "chimerical_quiver": "chimerical_quiver",
+    "snake_fang_dirk": "snake_fang",
+    "ranger_necklace": "ranger_necklace",
+    "burble_hammer": "burble_hammer",
+    "burble_hatchet": "burble_hatchet",
+    "burble_spatula": "burble_spatula",
+    "burble_gauntlets": "burble_gauntlets",
+    "burble_shears": "burble_shears",
+    "burble_brush": "burble_brush",
+    "burble_helmet": "burble_helmet",
+    "burble_plate_legs": "burble_plate_legs",
+    "burble_plate_body": "burble_plate_body",
+    "burble_buckler": "burble_buckler",
+    "burble_chisel": "burble_chisel",
+    "burble_spear": "burble_spear",
+    "burble_bulwark": "burble_bulwark",
+    "marksman_bracers": "marksman_brooch",
+    "holy_hammer": "holy_hammer",
+    "holy_hatchet": "holy_hatchet",
+    "holy_spatula": "holy_spatula",
+    "holy_gauntlets": "holy_gauntlets",
+    "holy_shears": "holy_shears",
+    "holy_brush": "holy_brush",
+    "holy_helmet": "holy_helmet",
+    "holy_plate_legs": "holy_plate_legs",
+    "holy_plate_body": "holy_plate_body",
+    "holy_buckler": "holy_buckler",
+    "holy_chisel": "holy_chisel",
+    "holy_spear": "holy_spear",
+    "holy_bulwark": "holy_bulwark",
+    "griffin_chaps": "griffin_leather",
+    "griffin_tunic": "griffin_leather",
+    "griffin_bulwark": "griffin_talon",
+    "stalactite_spear": "stalactite_shard",
+    "chrono_gloves": "chrono_sphere",
+    "vision_helmet": "goggles",
+    "collectors_boots": "gobo_rag",
+    "silk_robe_top": "silk_robe_top",
+    "silk_robe_bottoms": "silk_robe_bottoms",
+    "necklace_of_speed": "necklace_of_speed",
+    "gluttonous_pouch": "mirror_of_protection",
+    "revenant_chaps": "revenant_anima",
+    "revenant_tunic": "revenant_anima",
+    "azure_hammer": "azure_hammer",
+    "azure_hatchet": "azure_hatchet",
+    "azure_spatula": "azure_spatula",
+    "azure_gauntlets": "azure_gauntlets",
+    "azure_shears": "azure_shears",
+    "azure_brush": "azure_brush",
+    "azure_helmet": "azure_helmet",
+    "azure_plate_legs": "azure_plate_legs",
+    "azure_plate_body": "azure_plate_body",
+    "azure_buckler": "azure_buckler",
+    "azure_chisel": "azure_chisel",
+    "azure_spear": "azure_spear",
+    "azure_bulwark": "azure_bulwark",
+    "wizard_necklace": "wizard_necklace",
+    "philosophers_earrings": "mirror_of_protection",
+    "philosophers_ring": "mirror_of_protection",
+    "philosophers_necklace": "mirror_of_protection",
+    "necklace_of_efficiency": "necklace_of_efficiency",
+    "pincer_gloves": "crab_pincer",
+    "celestial_hammer": "butter_of_proficiency",
+    "celestial_hatchet": "butter_of_proficiency",
+    "celestial_spatula": "butter_of_proficiency",
+    "celestial_shears": "butter_of_proficiency",
+    "celestial_brush": "butter_of_proficiency",
+    "celestial_chisel": "butter_of_proficiency",
+    "panda_gloves": "panda_fluff",
+    "linen_robe_top": "linen_robe_top",
+    "linen_robe_bottoms": "linen_robe_bottoms",
+    "linen_gloves": "linen_gloves",
+    "beast_hood": "beast_hood",
+    "beast_bracers": "beast_bracers",
+    "beast_chaps": "beast_chaps",
+    "beast_tunic": "beast_tunic",
+    "sinister_cape": "sinister_cape",
+    "tome_of_the_elements": "tome_of_the_elements",
+    "luna_robe_top": "luna_wing",
+    "luna_robe_bottoms": "luna_wing",
+    "fighter_necklace": "fighter_necklace",
+    "eye_watch": "eye_of_the_watcher",
+    "tome_of_healing": "tome_of_healing",
+    "cursed_bow": "cursed_ball",
+    "bishops_codex": "bishops_scroll",
+    "foragers_top": "thread_of_expertise",
+    "foragers_bottoms": "thread_of_expertise",
+    "rainbow_mace": "rainbow_mace",
+    "rainbow_enhancer": "rainbow_enhancer",
+    "rainbow_alembic": "rainbow_alembic",
+    "blazing_trident": "kraken_fang",
+    "verdant_mace": "verdant_mace",
+    "verdant_enhancer": "verdant_enhancer",
+    "verdant_alembic": "verdant_alembic",
+    "dodocamel_gauntlets": "dodocamel_plume",
+    "lumberjacks_top": "thread_of_expertise",
+    "lumberjacks_bottoms": "thread_of_expertise",
+    "gobo_shooter": "gobo_shooter",
+    "gobo_hood": "gobo_hood",
+    "gobo_slasher": "gobo_slasher",
+    "gobo_bracers": "gobo_bracers",
+    "gobo_boomstick": "gobo_boomstick",
+    "gobo_chaps": "gobo_chaps",
+    "gobo_tunic": "gobo_tunic",
+    "gobo_stabber": "gobo_stabber",
+    "red_culinary_hat": "red_panda_fluff",
+    "redwood_fire_staff": "redwood_fire_staff",
+    "redwood_water_staff": "redwood_water_staff",
+    "granite_bludgeon": "living_granite",
+    "birch_fire_staff": "birch_fire_staff",
+    "birch_water_staff": "birch_water_staff",
+    "dairyhands_top": "thread_of_expertise",
+    "dairyhands_bottoms": "thread_of_expertise",
+    "crimson_mace": "crimson_mace",
+    "crimson_enhancer": "crimson_enhancer",
+    "crimson_alembic": "crimson_alembic",
+    "kraken_chaps": "kraken_leather",
+    "kraken_tunic": "kraken_leather",
+    "rippling_trident": "kraken_fang",
+    "alchemists_top": "thread_of_expertise",
+    "alchemists_bottoms": "thread_of_expertise",
+    "soul_hunter_crossbow": "soul_fragment",
+    "jackalope_staff": "jackalope_antler",
+    "corsair_helmet": "corsair_crest",
+    "wooden_fire_staff": "wooden_fire_staff",
+    "wooden_water_staff": "wooden_water_staff",
+    "cheese_mace": "cheese_mace",
+    "cheese_enhancer": "cheese_enhancer",
+    "cheesemakers_top": "thread_of_expertise",
+    "cheesemakers_bottoms": "thread_of_expertise",
+    "cheese_alembic": "cheese_alembic",
+    "reptile_boots": "reptile_boots",
+    "fluffy_red_hat": "red_panda_fluff",
+    "enhancers_top": "thread_of_expertise",
+    "enhancers_bottoms": "thread_of_expertise",
+    "burble_mace": "burble_mace",
+    "burble_enhancer": "burble_enhancer",
+    "burble_alembic": "burble_alembic",
+    "arcane_fire_staff": "arcane_fire_staff",
+    "arcane_water_staff": "arcane_water_staff",
+    "holy_mace": "holy_mace",
+    "holy_enhancer": "holy_enhancer",
+    "holy_alembic": "holy_alembic",
+    "azure_mace": "azure_mace",
+    "azure_enhancer": "azure_enhancer",
+    "azure_alembic": "azure_alembic",
+    "snail_shell_helmet": "snail_shell",
+    "vampire_fang_dirk": "vampire_fang",
+    "celestial_enhancer": "butter_of_proficiency",
+    "celestial_alembic": "butter_of_proficiency",
+    "cedar_fire_staff": "cedar_fire_staff",
+    "cedar_water_staff": "cedar_water_staff",
+    "ginkgo_fire_staff": "ginkgo_fire_staff",
+    "ginkgo_water_staff": "ginkgo_water_staff",
+    "brewers_top": "thread_of_expertise",
+    "brewers_bottoms": "thread_of_expertise",
+    "acrobatic_hood": "acrobats_ribbon",
+    "blooming_trident": "kraken_fang",
+    "purpleheart_fire_staff": "purpleheart_fire_staff",
+    "purpleheart_water_staff": "purpleheart_water_staff",
+    "master_foraging_charm": "mirror_of_protection",
+    "master_brewing_charm": "mirror_of_protection",
+    "master_woodcutting_charm": "mirror_of_protection",
+    "master_defense_charm": "mirror_of_protection",
+    "master_tailoring_charm": "mirror_of_protection",
+    "master_attack_charm": "mirror_of_protection",
+    "master_milking_charm": "mirror_of_protection",
+    "master_melee_charm": "mirror_of_protection",
+    "master_alchemy_charm": "mirror_of_protection",
+    "master_magic_charm": "mirror_of_protection",
+    "master_stamina_charm": "mirror_of_protection",
+    "master_cooking_charm": "mirror_of_protection",
+    "master_enhancing_charm": "mirror_of_protection",
+    "master_ranged_charm": "mirror_of_protection",
+    "master_crafting_charm": "mirror_of_protection",
+    "master_intelligence_charm": "mirror_of_protection",
+    "advanced_foraging_charm": "mirror_of_protection",
+    "advanced_brewing_charm": "mirror_of_protection",
+    "advanced_woodcutting_charm": "mirror_of_protection",
+    "advanced_defense_charm": "mirror_of_protection",
+    "advanced_tailoring_charm": "mirror_of_protection",
+    "advanced_attack_charm": "mirror_of_protection",
+    "advanced_milking_charm": "mirror_of_protection",
+    "advanced_melee_charm": "mirror_of_protection",
+    "advanced_alchemy_charm": "mirror_of_protection",
+    "advanced_magic_charm": "mirror_of_protection",
+    "advanced_stamina_charm": "mirror_of_protection",
+    "advanced_cooking_charm": "mirror_of_protection",
+    "advanced_enhancing_charm": "mirror_of_protection",
+    "advanced_task_badge": "advanced_task_badge",
+    "advanced_ranged_charm": "mirror_of_protection",
+    "advanced_crafting_charm": "mirror_of_protection",
+    "advanced_intelligence_charm": "mirror_of_protection",
+    "gobo_defender": "gobo_defender",
+    "gobo_smasher": "gobo_smasher",
+    "redwood_nature_staff": "redwood_nature_staff",
+    "birch_nature_staff": "birch_nature_staff",
+    "royal_fire_robe_top": "royal_cloth",
+    "royal_fire_robe_bottoms": "royal_cloth",
+    "royal_water_robe_top": "royal_cloth",
+    "royal_water_robe_bottoms": "royal_cloth",
+    "basic_foraging_charm": "mirror_of_protection",
+    "basic_brewing_charm": "mirror_of_protection",
+    "basic_woodcutting_charm": "mirror_of_protection",
+    "basic_defense_charm": "mirror_of_protection",
+    "basic_tailoring_charm": "mirror_of_protection",
+    "basic_attack_charm": "mirror_of_protection",
+    "basic_milking_charm": "mirror_of_protection",
+    "basic_melee_charm": "mirror_of_protection",
+    "basic_alchemy_charm": "mirror_of_protection",
+    "basic_magic_charm": "mirror_of_protection",
+    "basic_stamina_charm": "mirror_of_protection",
+    "basic_cooking_charm": "mirror_of_protection",
+    "basic_enhancing_charm": "mirror_of_protection",
+    "basic_task_badge": "basic_task_badge",
+    "basic_ranged_charm": "mirror_of_protection",
+    "basic_crafting_charm": "mirror_of_protection",
+    "basic_intelligence_charm": "mirror_of_protection",
+    "earrings_of_essence_find": "earrings_of_essence_find",
+    "ring_of_essence_find": "ring_of_essence_find",
+    "wooden_nature_staff": "wooden_nature_staff",
+    "reptile_hood": "reptile_hood",
+    "reptile_bracers": "reptile_bracers",
+    "reptile_chaps": "reptile_chaps",
+    "reptile_tunic": "reptile_tunic",
+    "knights_aegis_refined": "knights_aegis_refined",
+    "arcane_nature_staff": "arcane_nature_staff",
+    "trainee_foraging_charm": "mirror_of_protection",
+    "trainee_brewing_charm": "mirror_of_protection",
+    "trainee_woodcutting_charm": "mirror_of_protection",
+    "trainee_defense_charm": "mirror_of_protection",
+    "trainee_tailoring_charm": "mirror_of_protection",
+    "trainee_attack_charm": "mirror_of_protection",
+    "trainee_milking_charm": "mirror_of_protection",
+    "trainee_melee_charm": "mirror_of_protection",
+    "trainee_alchemy_charm": "mirror_of_protection",
+    "trainee_magic_charm": "mirror_of_protection",
+    "trainee_stamina_charm": "mirror_of_protection",
+    "trainee_cooking_charm": "mirror_of_protection",
+    "trainee_enhancing_charm": "mirror_of_protection",
+    "trainee_ranged_charm": "mirror_of_protection",
+    "trainee_crafting_charm": "mirror_of_protection",
+    "trainee_intelligence_charm": "mirror_of_protection",
+    "earrings_of_rare_find": "earrings_of_rare_find",
+    "ring_of_rare_find": "ring_of_rare_find",
+    "cedar_nature_staff": "cedar_nature_staff",
+    "ginkgo_nature_staff": "ginkgo_nature_staff",
+    "expert_foraging_charm": "mirror_of_protection",
+    "expert_brewing_charm": "mirror_of_protection",
+    "expert_woodcutting_charm": "mirror_of_protection",
+    "expert_defense_charm": "mirror_of_protection",
+    "expert_tailoring_charm": "mirror_of_protection",
+    "expert_attack_charm": "mirror_of_protection",
+    "expert_milking_charm": "mirror_of_protection",
+    "expert_melee_charm": "mirror_of_protection",
+    "expert_alchemy_charm": "mirror_of_protection",
+    "expert_magic_charm": "mirror_of_protection",
+    "expert_stamina_charm": "mirror_of_protection",
+    "expert_cooking_charm": "mirror_of_protection",
+    "expert_enhancing_charm": "mirror_of_protection",
+    "expert_task_badge": "expert_task_badge",
+    "expert_ranged_charm": "mirror_of_protection",
+    "expert_crafting_charm": "mirror_of_protection",
+    "expert_intelligence_charm": "mirror_of_protection",
+    "purpleheart_nature_staff": "purpleheart_nature_staff",
+    "grandmaster_foraging_charm": "mirror_of_protection",
+    "grandmaster_brewing_charm": "mirror_of_protection",
+    "grandmaster_woodcutting_charm": "mirror_of_protection",
+    "grandmaster_defense_charm": "mirror_of_protection",
+    "grandmaster_tailoring_charm": "mirror_of_protection",
+    "grandmaster_attack_charm": "mirror_of_protection",
+    "grandmaster_milking_charm": "mirror_of_protection",
+    "grandmaster_melee_charm": "mirror_of_protection",
+    "grandmaster_alchemy_charm": "mirror_of_protection",
+    "grandmaster_magic_charm": "mirror_of_protection",
+    "grandmaster_stamina_charm": "mirror_of_protection",
+    "grandmaster_cooking_charm": "mirror_of_protection",
+    "grandmaster_enhancing_charm": "mirror_of_protection",
+    "grandmaster_ranged_charm": "mirror_of_protection",
+    "grandmaster_crafting_charm": "mirror_of_protection",
+    "grandmaster_intelligence_charm": "mirror_of_protection",
+    "royal_nature_robe_top": "royal_cloth",
+    "royal_nature_robe_bottoms": "royal_cloth",
+    "chaotic_flail_refined": "mirror_of_protection",
+    "regal_sword_refined": "mirror_of_protection",
+    "furious_spear_refined": "mirror_of_protection",
+    "sundering_crossbow_refined": "mirror_of_protection",
+    "anchorbound_plate_legs_refined": "mirror_of_protection",
+    "anchorbound_plate_body_refined": "mirror_of_protection",
+    "enchanted_cloak_refined": "mirror_of_protection",
+    "magicians_hat_refined": "mirror_of_protection",
+    "maelstrom_plate_legs_refined": "mirror_of_protection",
+    "maelstrom_plate_body_refined": "mirror_of_protection",
+    "chimerical_quiver_refined": "mirror_of_protection",
+    "marksman_bracers_refined": "mirror_of_protection",
+    "griffin_bulwark_refined": "mirror_of_protection",
+    "sinister_cape_refined": "mirror_of_protection",
+    "cursed_bow_refined": "mirror_of_protection",
+    "bishops_codex_refined": "mirror_of_protection",
+    "blazing_trident_refined": "mirror_of_protection",
+    "master_cheesesmithing_charm": "mirror_of_protection",
+    "dodocamel_gauntlets_refined": "mirror_of_protection",
+    "advanced_cheesesmithing_charm": "mirror_of_protection",
+    "basic_cheesesmithing_charm": "mirror_of_protection",
+    "kraken_chaps_refined": "mirror_of_protection",
+    "kraken_tunic_refined": "mirror_of_protection",
+    "rippling_trident_refined": "mirror_of_protection",
+    "corsair_helmet_refined": "mirror_of_protection",
+    "trainee_cheesesmithing_charm": "mirror_of_protection",
+    "acrobatic_hood_refined": "mirror_of_protection",
+    "blooming_trident_refined": "mirror_of_protection",
+    "expert_cheesesmithing_charm": "mirror_of_protection",
+    "grandmaster_cheesesmithing_charm": "mirror_of_protection",
+    "royal_fire_robe_top_refined": "mirror_of_protection",
+    "royal_fire_robe_bottoms_refined": "mirror_of_protection",
+    "royal_water_robe_top_refined": "mirror_of_protection",
+    "royal_water_robe_bottoms_refined": "mirror_of_protection",
+    "royal_nature_robe_top_refined": "mirror_of_protection",
+    "royal_nature_robe_bottoms_refined": "mirror_of_protection",
     };
 
 })();

@@ -4,7 +4,7 @@
 // @description bs games info
 // @license     MIT
 // @include     https://www.fanatical.com/*
-// @version     2025.08.11.1
+// @version     2026.01.13.1
 // @run-at      document-start
 // @connect     data.fixer.io
 // @require     https://code.jquery.com/jquery-1.12.4.min.js
@@ -210,8 +210,8 @@ function parse2(data){
                 c.push(d.code);
             exc = c.join();
         }
-        var p = (v.price.USD / 100).toFixed(2);
-        $('#a').append(`<tr><td>${i++}</td><td>${name}</td><td>${v.type}</td><td>${p}</td><td>${inc}</td><td>${exc}</td></tr>`);
+        var p1 = (v.price.USD / 100).toFixed(2);
+        $('#a').append(`<tr><td>${i++}</td><td>${name}</td><td>${v.type}</td><td>${p1}</td><td>${inc}</td><td>${exc}</td></tr>`);
     }
     $('#d').append('<table id="b" style="text-align:right"><tr><td>-</td><td>AUD</td><td>CAD</td><td>EUR</td><td>GBP</td><td>JPY</td><td>RUB</td><td>USD</td></tr></table>');
 
@@ -443,7 +443,7 @@ function DOM_ContentReady () {
     r = ratio();
 
     $("body").on('click', '#fetch', function(){
-        $('.key-container .btn.btn-primary.btn-block').each(function(){
+        $('.key-container .btn.btn-primary.d-block').each(function(){
             $(this).click();
         });
     });
@@ -469,7 +469,7 @@ var ratio = function(){
     if (Date.now() - tm < 60 * 24 * 60000)
         return r;
     $.ajax({
-        url: `http://data.fixer.io/api/latest?access_key=93bba107d8e24746fe6220b043df2695&symbols=CNY,JPY,RUB,AUD,CAD,USD,GBP`,
+        url: `https://data.fixer.io/api/latest?access_key=93bba107d8e24746fe6220b043df2695&symbols=CNY,JPY,RUB,AUD,CAD,USD,GBP`,
         type: "GET",
         async: false,
         success: function(data){

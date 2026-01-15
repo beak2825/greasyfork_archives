@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         CNKI Batch Downloader (Bilingual)
-// @name:zh-CN   知网CNKI论文PDF批量下载-双语版
+// @name         CNKI Batch Downloader (Bilingual) - Turbo & AutoVerify
+// @name:zh-CN   知网CNKI论文PDF批量下载-双语版 (极速+自动验证)
 // @namespace    https://greasyfork.org/zh-CN/users/236397-hust-hzb
-// @version      1.2
+// @version      1.3.0
 // @icon         https://www.cnki.net/favicon.ico
 // @description  Batch download CNKI papers/theses PDF (Bilingual, Smart monitoring, Auto verification)
-// @description:zh-CN  知网文献、硕博论文PDF批量下载 (中英双语，智能驻守，自动核对)
-// @author       HUST HuangZhenbin
+// @description:zh-CN 知网文献、硕博论文PDF批量下载 (极速版，自动弹出验证窗口并模拟点击，滑块验证后自动重试)
+// @author       HUST HuangZhenbin (Modified for User)
 // @license      MIT
 // @match        *://*.cnki.net/*
 // @run-at       document-idle
@@ -16,24 +16,59 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_download
 // @grant        GM_registerMenuCommand
-// @downloadURL https://update.greasyfork.org/scripts/560374/CNKI%20Batch%20Downloader%20%28Bilingual%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/560374/CNKI%20Batch%20Downloader%20%28Bilingual%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560374/CNKI%20Batch%20Downloader%20%28Bilingual%29%20-%20Turbo%20%20AutoVerify.user.js
+// @updateURL https://update.greasyfork.org/scripts/560374/CNKI%20Batch%20Downloader%20%28Bilingual%29%20-%20Turbo%20%20AutoVerify.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
+    // --- 0. 验证模式专用逻辑 (子窗口自动点击) ---
+    // 如果当前URL包含特定的hash标记，说明这是脚本自动打开的验证窗口
+    if (window.location.hash === '#auto_verify_mode') {
+        console.log("CNKI Downloader: Auto Verify Mode Active");
+
+        // 注入提示样式
+        const tipDiv = document.createElement('div');
+        tipDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:60px;background:#fef2f2;color:#dc2626;z-index:999999;display:flex;justify-content:center;align-items:center;font-size:16px;font-weight:bold;box-shadow:0 2px 10px rgba(0,0,0,0.2);border-bottom:2px solid #ef4444;';
+        tipDiv.innerHTML = '🛡️ 自动验证模式：请完成滑块验证，成功后直接关闭本窗口即可！';
+        document.body.appendChild(tipDiv);
+
+        const checkAndClick = setInterval(() => {
+            // 尝试查找常见的下载按钮ID或类名
+            const btn = document.getElementById('pdfDown') ||
+                        document.querySelector('.btn-dlpdf a') ||
+                        document.querySelector('a:contains("PDF下载")');
+
+            if (btn) {
+                clearInterval(checkAndClick);
+                console.log("CNKI Downloader: Found button, clicking...", btn);
+                // 模拟点击触发验证码
+                btn.click();
+
+                // 更改提示文字
+                tipDiv.style.background = '#f0fdf4';
+                tipDiv.style.color = '#16a34a';
+                tipDiv.style.borderBottom = '2px solid #22c55e';
+                tipDiv.innerHTML = '✅ 已自动点击下载。<b>请手动完成滑块验证</b>，然后关闭此窗口。';
+            }
+        }, 500);
+
+        // 30秒后如果没反应则停止查找
+        setTimeout(() => clearInterval(checkAndClick), 30000);
+        return; // 在验证窗口中不运行主面板代码
+    }
+
     // --- 配置与状态 ---
     let useWebVPN = GM_getValue('useWebVPN', false);
-    // 命名模式: 'title', 'year_title', 'date_title'
     let namingMode = GM_getValue('namingMode', 'title');
 
-    // 默认语言检测
     const defaultLang = navigator.language.includes('zh') ? 'zh' : 'en';
     let currentLang = GM_getValue('cnki_lang', defaultLang);
 
-    const DEFAULT_MIN_DELAY = 5000;
-    const DEFAULT_MAX_DELAY = 10000;
+    // [修改] 缩短冷却时间，提升速度
+    const DEFAULT_MIN_DELAY = 1500; // 1.5秒
+    const DEFAULT_MAX_DELAY = 3000; // 3.0秒
     const DEFAULT_FOLDER = "CNKI_Downloads";
 
     let isRunning = false;
@@ -42,33 +77,31 @@
     // --- 国际化文本字典 ---
     const i18n = {
         zh: {
-            title: "📚 CNKI 批量下载助手",
-            version: "v1.2",
-            close: "关闭",
-            guide_title: "使用前请务必检查以下配置，否则无法自动下载：",
-            guide_browser: "<b>浏览器设置：</b>请关闭“下载前询问每个文件的保存位置”（设置 -> 下载 -> 询问保存位置 -> 关）。",
-            guide_tamper: "<b>油猴权限：</b>请允许 Tampermonkey 扩展访问“管理下载”权限（扩展管理 -> 详情 -> 允许访问文件URL/下载）。",
-            guide_overwrite: "<b>文件去重：</b>下载时若本地存在同名文件，脚本将直接<b>替换覆盖</b>。",
-            mask_title: "任务已暂停：需要人工验证",
-            mask_desc: "检测到知网验证码拦截。<br>已为您自动打开验证窗口，请在<strong>新窗口中手动点击下载并完成滑块验证</strong>。<br>验证成功且开始下载后，关闭那个窗口，回来点击下方按钮。",
-            btn_resume: "✅ 我已解除，继续下载",
+            title: "📚 CNKI 批量下载 (极速版)",
+            version: "v1.3",
+            guide_title: "使用配置检查：",
+            guide_browser: "<b>浏览器设置：</b>请关闭“下载前询问位置”。",
+            guide_tamper: "<b>权限：</b>请允许扩展访问“管理下载”权限。",
+            guide_overwrite: "<b>去重：</b>同名文件将自动跳过或覆盖。",
+            mask_title: "等待验证...",
+            mask_desc: "检测到验证码。已为您自动打开验证窗口并点击了下载。<br>请在<b>新窗口中完成滑块验证</b>，验证成功后<b>关闭那个窗口</b>，脚本将自动继续。",
+            btn_resume: "✅ 我已完成验证 (或窗口已关闭)",
             btn_stop_task: "⏹ 停止任务",
-            report_title: "📊 下载结果核对报告",
-            report_retry: "🔄 重试失败项目",
-            report_close: "关闭报告",
-            label_folder: "📂 归档文件夹:",
+            report_title: "📊 下载报告",
+            report_retry: "🔄 重试失败项",
+            report_close: "关闭",
+            label_folder: "📂 保存子文件夹:",
             label_naming: "🏷️ 命名:",
             opt_title_only: "仅标题",
-            opt_year_title: "年份_标题 (2025_Title)",
-            opt_date_title: "日期_标题 (20250521_Title)",
-            label_vpn: "开启 WebVPN 模式",
-            btn_scan: "🔍 1. 扫描当前页",
-            btn_start: "▶ 2. 开始下载选中",
-            btn_verify: "🛠️ 仅打开验证页",
-            btn_clear: "🗑 清空列表",
-            btn_reset_history: "🧹 清除历史记录",
-            tip_shift: "💡 <b>提示：</b> 按住 <b>Shift</b> 键点击复选框可进行批量多选。文件名纯净，同名文件将自动覆盖。",
-            th_check: "选",
+            opt_year_title: "年份_标题",
+            opt_date_title: "日期_标题",
+            label_vpn: "WebVPN模式",
+            btn_scan: "🔍 1. 扫描本页",
+            btn_start: "▶ 2. 开始下载",
+            btn_verify: "🛠️ 手动验证",
+            btn_clear: "🗑 清空",
+            btn_reset_history: "🧹 清除历史",
+            tip_shift: "💡 <b>提示：</b> 按住 Shift 可多选。保存路径为浏览器下载目录下的子文件夹。",
             th_no: "No.",
             th_title: "标题",
             th_author: "日期/作者",
@@ -82,56 +115,50 @@
             status_running: "⟳ 解析中...",
             status_downloading: "⬇ 下载中...",
             status_skip: "⚠ 跳过",
-            status_ready: "等待操作...",
-            status_stopped: "🚫 任务已手动停止",
-            status_scanned: "扫描完成，新增 {new} 条，共 {total} 条。",
-            status_total: "列表共 {total} 条文献",
-            status_finished: "✅ 批量任务完成",
-            alert_no_item: "未找到文献，请确保在搜索结果页",
-            alert_no_check: "请先勾选需要下载的文献",
-            alert_history_clear: "确定要清除所有下载历史记录吗？\n这将导致脚本不再跳过同名文件。",
-            alert_history_done: "历史记录已清除。",
+            status_ready: "准备就绪",
+            status_stopped: "🚫 已停止",
+            status_scanned: "新增 {new} 条，共 {total} 条。",
+            status_total: "列表共 {total} 条",
+            status_finished: "✅ 任务完成",
+            status_verifying: "🛡️ 正在验证...",
+            alert_no_item: "未找到文献",
+            alert_no_check: "请先勾选文献",
+            alert_history_clear: "确定清除下载历史记录？",
+            alert_history_done: "已清除。",
             report_success: "成功",
-            report_exists: "已存在",
-            report_pay: "需付费",
-            report_nopdf: "无PDF",
             report_fail: "失败",
-            report_msg_check: "请检查以下失败项目：",
-            report_msg_none: "🎉 没有下载失败的项目",
-            main_btn: "CNKI批量导出",
-            err_captcha: "触发验证码",
-            err_no_auth: "无权限/收费",
+            main_btn: "批量下载",
+            err_captcha: "需验证",
+            err_no_auth: "无权限",
             err_download_fail: "下载失败",
             cool_down: "冷却"
         },
         en: {
-            title: "📚 CNKI Batch Downloader",
-            version: "v1.2",
-            close: "Close",
-            guide_title: "Please check the following configurations before use:",
-            guide_browser: "<b>Browser:</b> Disable 'Ask where to save each file before downloading' (Settings -> Downloads).",
-            guide_tamper: "<b>Tampermonkey:</b> Allow 'Manage Downloads' permission (Extension Management -> Details).",
-            guide_overwrite: "<b>Overwrite:</b> If a file with the same name exists locally, it will be <b>overwritten</b>.",
-            mask_title: "Task Paused: Manual Verification Required",
-            mask_desc: "CNKI CAPTCHA detected.<br>A verification window has been opened. Please <strong>manually click download and solve the slider</strong> in the new window.<br>After success, close that window and click the button below.",
-            btn_resume: "✅ I've Solved it, Continue",
-            btn_stop_task: "⏹ Stop Task",
-            report_title: "📊 Download Result Report",
-            report_retry: "🔄 Retry Failed Items",
-            report_close: "Close Report",
-            label_folder: "📂 Folder:",
+            title: "📚 CNKI Downloader (Turbo)",
+            version: "v1.3",
+            guide_title: "Config Check:",
+            guide_browser: "<b>Browser:</b> Disable 'Ask where to save'.",
+            guide_tamper: "<b>Tampermonkey:</b> Allow 'Manage Downloads'.",
+            guide_overwrite: "<b>Duplicate:</b> Will be overwritten/skipped.",
+            mask_title: "Verifying...",
+            mask_desc: "Captcha detected. A window has opened and download clicked.<br>Please <b>solve the slider</b> in the new window, then <b>close it</b> to resume.",
+            btn_resume: "✅ Done / Window Closed",
+            btn_stop_task: "⏹ Stop",
+            report_title: "📊 Report",
+            report_retry: "🔄 Retry",
+            report_close: "Close",
+            label_folder: "📂 Sub-folder:",
             label_naming: "🏷️ Name:",
             opt_title_only: "Title Only",
-            opt_year_title: "Year_Title (2025_Title)",
-            opt_date_title: "Date_Title (20250521_Title)",
-            label_vpn: "Enable WebVPN Mode",
-            btn_scan: "🔍 1. Scan Page",
-            btn_start: "▶ 2. Start Download",
-            btn_verify: "🛠️ Open Verify Page",
-            btn_clear: "🗑 Clear List",
+            opt_year_title: "Year_Title",
+            opt_date_title: "Date_Title",
+            label_vpn: "WebVPN",
+            btn_scan: "🔍 1. Scan",
+            btn_start: "▶ 2. Start",
+            btn_verify: "🛠️ Verify",
+            btn_clear: "🗑 Clear",
             btn_reset_history: "🧹 Reset History",
-            tip_shift: "💡 <b>Tip:</b> Hold <b>Shift</b> to select multiple items. Filenames are clean and will overwrite duplicates.",
-            th_check: "chk",
+            tip_shift: "💡 <b>Tip:</b> Shift+Click to select multiple. Saves to sub-folder of browser downloads.",
             th_no: "No.",
             th_title: "Title",
             th_author: "Date/Author",
@@ -145,27 +172,23 @@
             status_running: "⟳ Parsing...",
             status_downloading: "⬇ Downloading...",
             status_skip: "⚠ Skipped",
-            status_ready: "Ready...",
-            status_stopped: "🚫 Task Stopped",
-            status_scanned: "Scanned, added {new}, total {total}.",
-            status_total: "Total {total} items",
-            status_finished: "✅ Batch Task Completed",
-            alert_no_item: "No papers found. Please use on search result page.",
-            alert_no_check: "Please select items first.",
-            alert_history_clear: "Are you sure to clear download history?\nThis will cause re-downloading of existing files.",
-            alert_history_done: "History cleared.",
+            status_ready: "Ready",
+            status_stopped: "🚫 Stopped",
+            status_scanned: "Added {new}, Total {total}.",
+            status_total: "Total {total}",
+            status_finished: "✅ Finished",
+            status_verifying: "🛡️ Verifying...",
+            alert_no_item: "No items found",
+            alert_no_check: "Select items first",
+            alert_history_clear: "Clear download history?",
+            alert_history_done: "Cleared.",
             report_success: "Success",
-            report_exists: "Exists",
-            report_pay: "Pay Req",
-            report_nopdf: "No PDF",
             report_fail: "Failed",
-            report_msg_check: "Please check failed items:",
-            report_msg_none: "🎉 No failed items",
-            main_btn: "CNKI Export",
-            err_captcha: "Captcha Triggered",
-            err_no_auth: "No Auth/Paid",
-            err_download_fail: "Download Failed",
-            cool_down: "Cooldown"
+            main_btn: "Batch DL",
+            err_captcha: "Captcha",
+            err_no_auth: "No Auth",
+            err_download_fail: "Failed",
+            cool_down: "Cooling"
         }
     };
 
@@ -190,68 +213,42 @@
     .cnki-ui-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 99999; display: flex; justify-content: center; align-items: center; }
     .cnki-ui-modal { background: #fff; width: 950px; height: 90vh; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; overflow: hidden; font-family: "Microsoft YaHei", sans-serif; animation: fadeIn 0.3s ease; position: relative;}
     @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
     .cnki-ui-header { padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; }
     .cnki-ui-title { font-size: 18px; font-weight: bold; color: #333; display: flex; align-items: center; gap: 8px; }
     .cnki-ui-close { cursor: pointer; border: none; background: none; font-size: 24px; color: #999; transition: color 0.2s; }
     .cnki-ui-close:hover { color: #333; }
     .cnki-lang-btn { font-size: 12px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-right: 10px; }
-
     .cnki-config-guide { background: #fff1f2; border-bottom: 1px solid #fecdd3; padding: 12px 25px; font-size: 13px; color: #881337; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
-    .cnki-guide-icon { font-size: 18px; }
-    .cnki-guide-list { margin: 0; padding-left: 20px; }
-
     .cnki-ui-toolbar { padding: 15px 25px; border-bottom: 1px solid #eee; background: #fff; display: flex; flex-direction: column; gap: 12px; }
     .cnki-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-
     .cnki-ui-btn { padding: 8px 16px; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
     .cnki-ui-btn:hover { background: #f3f4f6; transform: translateY(-1px); }
-    .cnki-ui-btn:active { transform: translateY(0); }
-
-    .cnki-btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; box-shadow: 0 2px 5px rgba(59,130,246,0.3); }
+    .cnki-btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; }
     .cnki-btn-primary:hover { background: #2563eb; }
     .cnki-btn-warn { background: #f59e0b; color: #fff; border-color: #f59e0b; }
-    .cnki-btn-warn:hover { background: #d97706; }
     .cnki-btn-danger { background: #ef4444; color: #fff; border-color: #ef4444; }
-    .cnki-btn-danger:hover { background: #dc2626; }
     .cnki-btn-info { background: #0ea5e9; color: #fff; border-color: #0ea5e9; }
-    .cnki-btn-info:hover { background: #0284c7; }
-
     .cnki-input-group { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; background: #f9fafb; padding: 5px 10px; border-radius: 6px; border: 1px solid #e5e7eb; }
     .cnki-input { padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
-    .cnki-input:focus { border-color: #3b82f6; outline: none; }
-
     .cnki-table-wrap { flex: 1; overflow-y: auto; padding: 0; background: #fdfdfd; }
     .cnki-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .cnki-table th { position: sticky; top: 0; background: #f1f5f9; padding: 12px 15px; text-align: left; color: #475569; font-weight: 600; border-bottom: 1px solid #e2e8f0; z-index: 10; }
     .cnki-table td { padding: 10px 15px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: middle; }
     .cnki-table tr:hover { background: #f8fafc; }
     .cnki-row-selected { background: #eff6ff !important; }
-
     .cnki-footer { padding: 10px 25px; border-top: 1px solid #eee; background: #f8f9fa; font-size: 12px; color: #666; display: flex; justify-content: space-between; align-items: center; }
-    .cnki-orcid-link { color: #a3d014; text-decoration: none; display: flex; align-items: center; gap: 5px; font-weight: bold; }
-    .cnki-orcid-link:hover { text-decoration: underline; }
-
     .cnki-pause-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
     .cnki-pause-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #eee; text-align: center; max-width: 450px; }
-
-    /* 结果报告遮罩 */
     .cnki-report-mask { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 30; display: none; justify-content: center; align-items: center; }
     .cnki-report-box { background: white; width: 650px; max-height: 85%; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: fadeIn 0.2s ease; }
     .cnki-report-header { padding: 20px; background: #f0fdf4; border-bottom: 1px solid #dcfce7; }
     .cnki-report-header.has-error { background: #fef2f2; border-bottom: 1px solid #fee2e2; }
     .cnki-report-list { flex: 1; overflow-y: auto; padding: 20px; }
     .cnki-report-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 13px; align-items: center; }
-    .cnki-report-item:last-child { border-bottom: none; }
     .cnki-report-status-fail { color: #dc2626; font-weight: bold; background: #fef2f2; padding: 2px 6px; border-radius: 4px; font-size: 12px;}
-    .cnki-report-status-pay { color: #b45309; font-weight: bold; background: #fffbeb; padding: 2px 6px; border-radius: 4px; font-size: 12px;}
-    .cnki-report-status-nopdf { color: #6b7280; font-weight: bold; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 12px;}
     .cnki-report-btn { padding: 15px; text-align: right; border-top: 1px solid #eee; background: #fff; display: flex; justify-content: flex-end; gap: 10px;}
-
-    /* 主按钮 */
     .cnki-main-btn { position: fixed; bottom: 60px; right: 40px; padding: 12px 20px; border-radius: 50px; background: #3b82f6; color: white; border: none; box-shadow: 0 4px 15px rgba(59,130,246,0.4); cursor: pointer; z-index: 2147483647 !important; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: bold; transition: all 0.2s; }
     .cnki-main-btn:hover { transform: translateY(-2px); background: #2563eb; }
-
     .cnki-status-wait { color: #94a3b8; }
     .cnki-status-run { color: #3b82f6; font-weight: bold; }
     .cnki-status-ok { color: #16a34a; font-weight: bold; }
@@ -263,7 +260,7 @@
         document.head.appendChild(style);
     }
 
-    // --- 核心入口：智能驻守 (轮询检测) ---
+    // --- 核心入口：智能驻守 ---
     function tryCreateButton() {
         if (document.getElementById('cnki-main-btn')) return;
         const currentURL = window.location.href;
@@ -310,10 +307,10 @@
                 </div>
 
                 <div class="cnki-config-guide">
-                    <div class="cnki-guide-icon">⚠️</div>
+                    <div style="font-size:18px">⚠️</div>
                     <div>
                         <div style="font-weight:bold;margin-bottom:5px">${t('guide_title')}</div>
-                        <ul class="cnki-guide-list">
+                        <ul style="margin:0;padding-left:20px">
                             <li>${t('guide_browser')}</li>
                             <li>${t('guide_tamper')}</li>
                             <li>${t('guide_overwrite')}</li>
@@ -366,7 +363,7 @@
                         <div class="cnki-input-group">
                             <label style="cursor:pointer;display:flex;align-items:center;gap:5px"><input type="checkbox" id="cnki-webvpn" ${useWebVPN?'checked':''}> ${t('label_vpn')}</label>
                         </div>
-                        <button class="cnki-ui-btn cnki-btn-info" id="cnki-reset-history" title="">${t('btn_reset_history')}</button>
+                        <button class="cnki-ui-btn cnki-btn-info" id="cnki-reset-history">${t('btn_reset_history')}</button>
                     </div>
 
                     <div class="cnki-row">
@@ -399,11 +396,7 @@
                 <div class="cnki-footer">
                     <span id="cnki-status-text">${t('status_ready')}</span>
                     <div style="display:flex;gap:15px;align-items:center">
-                        <span style="color:#999">Author: HuangZhenbin</span>
-                        <a href="https://orcid.org/0000-0002-0628-0387" target="_blank" class="cnki-orcid-link">
-                            <svg viewBox="0 0 256 256" width="16" height="16" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"><path fill="#A6CE39" d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#FFF" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 61.6c-5.8 0-10.5-4.7-10.5-10.5s4.7-10.5 10.5-10.5 10.5 4.7 10.5 10.5-4.7 10.5-10.5 10.5zM127 186.2H111.6V79.1h15.4v12.9c3.3-5.9 10.6-15.5 28.1-15.5 22.3 0 35.8 13.9 35.8 45.4v64.3h-15.4v-61.6c0-15.3-6.1-24.9-19.4-24.9-13.9 0-21.1 10.3-21.1 27.9v58.6z"/></svg>
-                            ORCID
-                        </a>
+                        <span style="color:#999">Script by HuangZhenbin</span>
                     </div>
                 </div>
             </div>
@@ -421,7 +414,7 @@
             document.getElementById('cnki-report-mask').style.display = 'none';
             startBatchDownload(true);
         };
-        document.getElementById('cnki-verify').onclick = () => openVerificationWindow(null);
+        document.getElementById('cnki-verify').onclick = () => openVerificationWindow(null, true);
         document.getElementById('cnki-reset-history').onclick = () => {
             if(confirm(t('alert_history_clear'))) {
                 GM_setValue('cnki_dl_history', []);
@@ -455,9 +448,10 @@
         else tr.classList.remove('cnki-row-selected');
     }
 
-    // --- 核心功能 ---
+    // --- 自动验证窗口逻辑 ---
 
-    function openVerificationWindow(targetUrl) {
+    // 打开验证窗口，autoMode=true 时会自动带上hash触发子脚本
+    function openVerificationWindow(targetUrl, autoMode = false) {
         let url = targetUrl;
         if (!url) {
             const data = JSON.parse(sessionStorage.getItem('cnki_data') || '[]');
@@ -465,23 +459,61 @@
         }
         if (!url) {
             alert(t('alert_no_item'));
-            return;
+            return null;
         }
-        window.open(url, '_blank', 'width=1024,height=768');
+
+        // 自动模式添加 hash
+        if (autoMode) {
+            url = url.split('#')[0] + '#auto_verify_mode';
+        }
+
+        return window.open(url, '_blank', 'width=1024,height=768');
     }
 
+    // 等待用户验证（自动模式）
     function waitForUserVerification(url) {
         return new Promise((resolve) => {
-            openVerificationWindow(url);
+            // 打开带自动hash的窗口
+            const popup = openVerificationWindow(url, true);
+
             const mask = document.getElementById('cnki-pause-mask');
             const resumeBtn = document.getElementById('cnki-resume');
             const stopBtn = document.getElementById('cnki-stop-pause');
+
             mask.style.display = 'flex';
-            const onResume = () => { mask.style.display = 'none'; cleanup(); resolve(true); };
-            const onStop = () => { mask.style.display = 'none'; cleanup(); resolve(false); };
-            const cleanup = () => { resumeBtn.removeEventListener('click', onResume); stopBtn.removeEventListener('click', onStop); };
+
+            let timer = null;
+
+            const cleanup = () => {
+                if(timer) clearInterval(timer);
+                resumeBtn.removeEventListener('click', onResume);
+                stopBtn.removeEventListener('click', onStop);
+            };
+
+            const onResume = () => {
+                mask.style.display = 'none';
+                cleanup();
+                resolve(true);
+            };
+
+            const onStop = () => {
+                mask.style.display = 'none';
+                cleanup();
+                if(popup && !popup.closed) popup.close();
+                resolve(false);
+            };
+
             resumeBtn.addEventListener('click', onResume);
             stopBtn.addEventListener('click', onStop);
+
+            // 轮询检查弹出窗口是否已关闭
+            // 如果用户在弹窗里验证完并关闭了窗口，我们视为验证成功
+            timer = setInterval(() => {
+                if(popup.closed) {
+                    console.log("CNKI Downloader: Popup closed, resuming...");
+                    onResume();
+                }
+            }, 1000);
         });
     }
 
@@ -521,7 +553,6 @@
             const dateNode = row.querySelector('.date') || row.querySelectorAll('td')[4];
             if (dateNode) {
                 const text = dateNode.innerText.trim();
-                // 提取完整日期 YYYY-MM-DD 或 YYYY/MM/DD
                 const fullDateMatch = text.match(/(\d{4})[-/年](\d{1,2})[-/月](\d{1,2})/);
                 if (fullDateMatch) {
                     const y = fullDateMatch[1];
@@ -530,11 +561,10 @@
                     dateStr = `${y}${m}${d}`;
                     year = y;
                 } else {
-                    // 仅提取年份
                     const yearMatch = text.match(/\d{4}/);
                     if (yearMatch) {
                         year = yearMatch[0];
-                        dateStr = year; // 如果没有具体日期，日期字段就是年份
+                        dateStr = year;
                     }
                 }
             }
@@ -543,7 +573,7 @@
                 currentData.push({
                     id: Date.now() + index,
                     title, author, source,
-                    year, dateStr, // 存入年份和日期字符串
+                    year, dateStr,
                     detailUrl, status: 'wait', errorMsg: ''
                 });
                 newCount++;
@@ -572,7 +602,6 @@
             if(item.status === 'running') statusHtml = `<span class="cnki-status-run">${t('status_running')}</span>`;
             if(item.status === 'downloading') statusHtml = `<span class="cnki-status-run">${t('status_downloading')}</span>`;
 
-            // 显示日期：如果有完整日期显示完整，否则显示年份
             const displayDate = item.dateStr && item.dateStr.length === 8
                 ? `${item.dateStr.slice(0,4)}-${item.dateStr.slice(4,6)}-${item.dateStr.slice(6,8)}`
                 : (item.year || '-');
@@ -660,7 +689,7 @@
 
         if (failed > 0) {
             header.classList.add('has-error');
-            reportHtml += `<div style="color:#666">${t('report_msg_check')}</div>`;
+            reportHtml += `<div style="color:#666">请检查失败项:</div>`;
             summary.innerHTML = reportHtml;
 
             failedList.forEach((item, idx) => {
@@ -676,7 +705,7 @@
         } else {
             header.classList.remove('has-error');
             summary.innerHTML = reportHtml;
-            list.innerHTML = `<div style="text-align:center;color:#999;margin-top:30px">${t('report_msg_none')}</div>`;
+            list.innerHTML = `<div style="text-align:center;color:#999;margin-top:30px">🎉 全部完成</div>`;
             retryBtn.style.display = 'none';
         }
     }
@@ -710,42 +739,54 @@
             const item = data.find(d => d.id === id);
             if(!item) continue;
 
-            const result = await processSingleItem(item, folder);
+            // 递归处理逻辑（支持验证码重试）
+            const processRecursive = async () => {
+                const result = await processSingleItem(item, folder);
 
-            if (result === 'captcha') {
-                updateStatus(id, 'error', `⛔ ${t('err_captcha')}`);
-                item.errorMsg = t('err_captcha');
-                const userChoice = await waitForUserVerification(item.detailUrl);
-                if (userChoice) { i--; continue; } else { stopDownload(); return; }
-            } else if (result === 'skip') {
+                if (result === 'captcha') {
+                    updateStatus(id, 'error', `🛡️ ${t('status_verifying')}`);
+                    item.errorMsg = t('err_captcha');
+                    // 弹出窗口等待用户处理
+                    const userChoice = await waitForUserVerification(item.detailUrl);
+                    if (userChoice) {
+                        // 用户验证后，重试当前项
+                        return await processRecursive();
+                    } else {
+                        stopDownload();
+                        return 'stopped';
+                    }
+                }
+                return result;
+            };
+
+            const result = await processRecursive();
+            if(result === 'stopped') return;
+
+            if (result === 'skip') {
                 updateStatus(id, 'skip', `⚠ ${t('err_no_auth')}`);
                 item.status = 'skip';
                 item.errorMsg = t('err_no_auth');
-                sessionStorage.setItem('cnki_data', JSON.stringify(data));
                 checkedBoxes[i].checked = false;
             } else if (result === 'no_pdf') {
                 updateStatus(id, 'no_pdf', `⚪ ${t('status_nopdf')}`);
                 item.status = 'no_pdf';
-                sessionStorage.setItem('cnki_data', JSON.stringify(data));
                 checkedBoxes[i].checked = false;
             } else if (result === 'exists') {
                 updateStatus(id, 'exists', `🔁 ${t('status_exists')}`);
                 item.status = 'exists';
-                sessionStorage.setItem('cnki_data', JSON.stringify(data));
                 checkedBoxes[i].checked = false;
-                continue;
+                continue; // 已存在不冷却
             } else if (result === true) {
                 updateStatus(id, 'done', t('status_done'));
                 item.status = 'done';
                 item.errorMsg = '';
-                sessionStorage.setItem('cnki_data', JSON.stringify(data));
                 checkedBoxes[i].checked = false;
             } else {
                 updateStatus(id, 'error', `✘ ${t('status_error')}`);
                 item.status = 'error';
                 item.errorMsg = t('err_download_fail');
-                sessionStorage.setItem('cnki_data', JSON.stringify(data));
             }
+            sessionStorage.setItem('cnki_data', JSON.stringify(data));
 
             if(i < checkedBoxes.length - 1 && isRunning) {
                 if (result === true) {
@@ -754,22 +795,14 @@
                     let finalText = t('status_done');
                     const timer = setInterval(() => {
                         if(!isRunning) clearInterval(timer);
-                        updateStatus(id, item.status, `${finalText} (${t('cool_down')} ${remaining.toFixed(0)}s)`);
-                        remaining--;
-                    }, 1000);
+                        updateStatus(id, item.status, `${finalText} (${t('cool_down')} ${remaining.toFixed(1)}s)`);
+                        remaining -= 0.5;
+                    }, 500);
                     await new Promise(r => setTimeout(r, delay));
                     clearInterval(timer);
                     updateStatus(id, item.status, finalText);
                 } else {
-                     let msg = '';
-                     if(item.status === 'exists') msg = `🔁 ${t('status_exists')}`;
-                     else if(item.status === 'no_pdf') msg = `⚪ ${t('status_nopdf')}`;
-                     else if(item.status === 'pay') msg = `💰 ${t('status_pay')}`;
-                     else msg = `✘ ${t('status_error')}`;
-
-                     updateStatus(id, item.status, msg + ` (⏩ ${t('status_skip')})`);
                      await new Promise(r => setTimeout(r, 500));
-                     updateStatus(id, item.status, msg);
                 }
             }
         }
@@ -800,11 +833,9 @@
                 const safeTitle = item.title.replace(/[\\/:*?"<>|]/g, '_').trim();
                 let fileNameBase = safeTitle;
 
-                // 应用命名规则
                 if (namingMode === 'year_title' && item.year) {
                     fileNameBase = `${item.year}_${safeTitle}`;
                 } else if (namingMode === 'date_title' && item.dateStr) {
-                    // 如果有完整日期则使用日期，否则退化为年份
                     fileNameBase = `${item.dateStr}_${safeTitle}`;
                 }
 
@@ -829,17 +860,24 @@
                 });
 
                 const doc = new DOMParser().parseFromString(res.responseText, 'text/html');
-                if (res.responseText.includes('captcha-element') || res.responseText.includes('TencentCaptcha') || res.responseText.includes('拼图校验')) {
+
+                // 增强的验证码检测
+                if (res.responseText.includes('captcha-element') ||
+                    res.responseText.includes('TencentCaptcha') ||
+                    res.responseText.includes('拼图校验') ||
+                    res.responseText.includes('waf_captcha_marker')) {
                     resolve('captcha');
                     return;
                 }
 
                 let pdfLink = null;
+                // 根据提供的HTML结构优化选择器
                 const btnArea = doc.querySelector('.operate-btn') || doc.querySelector('#DownLoadParts');
                 if(btnArea) {
                     const links = btnArea.querySelectorAll('a');
                     for(let a of links) {
-                        if(a.textContent.includes('PDF') || a.textContent.includes('整本') || a.textContent.includes('Whole')) {
+                        // 包含PDF关键字 或 id="pdfDown"
+                        if(a.id === 'pdfDown' || a.textContent.includes('PDF') || a.textContent.includes('整本')) {
                             pdfLink = a.href;
                             break;
                         }
@@ -869,21 +907,10 @@
                     },
                     onload: function(response) {
                         const blob = response.response;
-                        const contentType = response.responseHeaders.match(/content-type:\s*(.*)/i)?.[1] || '';
-
-                        if(contentType.includes('text/html')) {
-                            const reader = new FileReader();
-                            reader.onload = function() {
-                                const text = reader.result;
-                                if (text.includes('captcha-element') || text.includes('TencentCaptcha')) {
-                                    resolve('captcha');
-                                } else if (text.includes('充值') || text.includes('登录') || text.includes('权限') || text.includes('fee') || text.includes('cz-alert') || text.includes('购买')) {
-                                    resolve('pay');
-                                } else {
-                                    resolve(false);
-                                }
-                            };
-                            reader.readAsText(blob);
+                        // 检查文件头或类型
+                        if(blob.type.includes('text/html')) {
+                             // 如果下载链接返回的是HTML，可能是触发了下载验证或收费页
+                            resolve('captcha');
                             return;
                         }
 

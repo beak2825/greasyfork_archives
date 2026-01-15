@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         客優雲匯出供應商貨號
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-17
+// @version      2026-01-05
 // @description  匯出供應商貨號 功能
 // @author       You
 // @match        https://erp.keyouyun.com/purchase/order
@@ -64,7 +64,7 @@
 
             var content = "";
             for(var stock of stocks){
-             content +=`${stock.scItemName.slice(-13)}*${stock.count} ${stock.scItemSkuName.slice(6)}\r\n`;
+                content +=`${stock.scItemName.slice(-13)}*${stock.count} ${stock.scItemSkuName.slice(6)}\r\n`;
             }
             console.log(content);
 
@@ -106,7 +106,7 @@
 
             var content = "";
             for(var stock of stocks){
-             content +=`${stock.scItemName.slice(-13)}*${stock.count}\r\n`;
+                content +=`${stock.scItemName.slice(-13)}*${stock.count}\r\n`;
             }
             console.log(content);
 
@@ -114,6 +114,68 @@
             alert("可以貼上POLYWELL貨號");
         });
         function getProdNos(){
+
+
+            var orders = [];
+            $('div.order-table-cell').each((index,ele)=>{
+                //var check = $(ele).find('input[aria-checked="true"]');
+                var check = $(ele).find('div.v-input--selection-controls__ripple.primary--text');
+                if(check.length>0){
+                    //console.log(check);
+                    var segment = $(ele).find('.sub-text:eq(1)').text().trim().split(/[\s、\/,]+/);
+                    //console.log(segment);
+                    var order = segment[0];
+                    orders.push(order);
+                }
+            });
+
+            console.log(orders);
+            var stocks;
+            $.ajax({
+                url:`https://world.keyouyun.com/vn/api/purchase-bill/item/stock/batch?purchaseBillIds=${orders.join('&purchaseBillIds=')}`,
+                type:"GET",
+                contentType:"application/json; charset=utf-8",
+                //dataType:"json",
+                success: function(data){
+                    stocks = data;
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                async: false
+            });
+
+            let ordersns = [];
+            let prodNos = [];
+            var prodNo
+            for(var stock of stocks){
+
+
+                ordersns.push({ordersn:stock.scItemSkuName,number:stock.count});
+                prodNo= stock.scItemSkuName.split('-')[0].trim();
+                if(!prodNos.includes(prodNo)){
+                    prodNos.push(prodNo);
+                }
+            }
+
+
+            var settings = getGoogleSheetSettings(prodNos.join('|'));
+            var mapping = {};
+            for(var setting of settings){
+                mapping[setting["貨號"]]=setting["供應商貨號"];
+            }
+            //console.log(mapping);
+
+            var content = "";
+            for(var ordersn of ordersns){
+                prodNo= ordersn.ordersn.split('-')[0].trim();
+                content +=`${mapping[prodNo]??""}-${ordersn.ordersn.replace(`${prodNo}-`,"")}*${ordersn.number}\r\n`;
+            }
+            //console.log(content);
+            return content;
+
+            /*
+
             let ordersns = [];
             let prodNos = [];
             $('div.order-table-cell').each((index,ele)=>{
@@ -125,32 +187,28 @@
                     rows.each((index1,ele1)=>{
                         console.log($(ele1).find('.cursor-pointer'));
                         var ordersn = $(ele1).find('.cursor-pointer').first().text().trim();
+                        console.log(ordersn);
                         var number = $(ele1).find('.cursor-pointer:eq(1)').text().trim();
+                        console.log(number);
+
                         //console.log($(ele1).find('.cursor-pointer').first().text());
                         ordersns.push({ordersn,number});
                         var prodNo= ordersn.split('-')[0].trim();
+                        console.log(prodNo);
+
                         if(!prodNos.includes(prodNo)){
                             prodNos.push(prodNo);
                         }
                     });
                 }
             });
-            //console.log(ordersns);
-            //console.log(prodNos);
-            var settings = getGoogleSheetSettings(prodNos.join('|'));
-            var mapping = {};
-            for(var setting of settings){
-                mapping[setting["貨號"]]=setting["供應商貨號"];
-            }
-            //console.log(mapping);
 
-            var content = "";
-            for(var ordersn of ordersns){
-                var prodNo= ordersn.ordersn.split('-')[0].trim();
-                content +=`${mapping[prodNo]??""}-${ordersn.ordersn.replace(`${prodNo}-`,"")}*${ordersn.number}\r\n`;
-            }
-            //console.log(content);
-            return content;
+
+            console.log(ordersns);
+            console.log(ordersns0);
+            console.log(prodNos);
+            console.log(prodNos0);
+*/
         }
         function getGoogleSheetSettings(prodNos){
             var url = `https://docs.google.com/spreadsheets/u/3/d/1ZxQ_l5Nx3wTSarilsjH1M23J4P-s8DGfC1xkpquoF14/gviz/tq?&sheet=${sheetName}&headers=1&tq=SELECT+A,B,C+WHERE+A+matches+'${prodNos}'+order by A`;

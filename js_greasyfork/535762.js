@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Snickelmarket-dev-version
 // @namespace    https://greasyfork.org/en/scripts/535762-snickelmarket-dev-version
-// @version      0.1.92b
+// @version      0.2.0b
 // @description  Add quality and bonus percent to the item market, auction house, and bazaars.
 // @author       https://www.torn.com/profiles.php?XID=2487979
 // @match        https://www.torn.com/page.php?sid=ItemMarket*
@@ -149,6 +149,14 @@
     `;
     const state = {
         processedElements: new WeakSet(),
+        visibility: {
+            isVisible: !document.hidden
+        },
+        cached: {
+            hasValidCategory: null,
+            currentCategory: null,
+            parsedHash: null
+        },
         theme: {
             observer: null,
             colors: {
@@ -180,7 +188,8 @@
                 currentCategory: null,
                 isInitialized: false,
                 backgroundMonitor: null,
-                sliderInsertionAttempts: 0
+                sliderInsertionAttempts: 0,
+                pendingHighlights: []
             }
         }
     };
@@ -505,6 +514,9 @@
             return unitless.includes(bonusName.toLowerCase());
         },
         parseHash: () => {
+            if (state.cached.parsedHash !== null) {
+                return state.cached.parsedHash;
+            }
             const hash = location.hash.startsWith('#') ? location.hash.slice(1) : location.hash;
             let paramString = '';
             if (hash.includes('view=search&')) {
@@ -526,7 +538,9 @@
                     bonusIds.push(Number(value));
                 }
             }
-            return { category, bonusIds, armourySet, itemID, itemName };
+            const result = { category, bonusIds, armourySet, itemID, itemName };
+            state.cached.parsedHash = result;
+            return result;
         },
         addHashListener: (cb) => {
             window.addEventListener('hashchange', cb);
@@ -551,15 +565,8 @@
         }
     };
     const theme = {
-        _isDarkCached: null,
-        _cacheFrame: -1,
         isDark: () => {
-            const currentFrame = performance.now() >> 4;
-            if (theme._cacheFrame !== currentFrame) {
-                theme._isDarkCached = document.body.classList.contains('dark-mode');
-                theme._cacheFrame = currentFrame;
-            }
-            return theme._isDarkCached;
+            return document.body.classList.contains('dark-mode');
         },
         updateColors: () => {
             const isDark = theme.isDark();
@@ -588,6 +595,45 @@
                 attributeFilter: ['class']
             });
             cleanup.addObserver(state.theme.observer);
+        }
+    };
+    const visibility = {
+        isPageVisible: () => {
+            return !document.hidden;
+        },
+        setupListener: () => {
+            const handleVisibilityChange = () => {
+                const isVisible = visibility.isPageVisible();
+                const wasVisible = state.visibility.isVisible;
+                state.visibility.isVisible = isVisible;
+                if (isVisible && !wasVisible) {
+                    utils.log('Page became visible, reprocessing items');
+                    if (state.pages.itemMarket.isInitialized && location.href.includes('sid=ItemMarket')) {
+                        itemMarket.processItems();
+                        if (state.pages.itemMarket.pendingHighlights.length > 0) {
+                            itemMarket.highlightNewItems(state.pages.itemMarket.pendingHighlights);
+                            state.pages.itemMarket.pendingHighlights = [];
+                        }
+                        if (!state.pages.itemMarket.backgroundMonitor) {
+                            itemMarket.startBackgroundMonitor();
+                        }
+                    }
+                    if (location.href.includes('amarket.php')) {
+                        auctionHouse.processItems();
+                    }
+                    if (location.href.includes('bazaar.php')) {
+                        bazaar.processItems();
+                    }
+                    colors.updateAll();
+                    if (USER_SETTINGS.enableFilter && location.href.includes('sid=ItemMarket')) {
+                        filters.apply();
+                    }
+                } else if (!isVisible && wasVisible) {
+                    utils.log('Page became hidden, visual updates will be paused');
+                }
+            };
+            cleanup.addListener(document, 'visibilitychange', handleVisibilityChange);
+            utils.log(`Initial page visibility: ${state.visibility.isVisible ? 'visible' : 'hidden'}`);
         }
     };
     const calculations = {
@@ -1131,9 +1177,15 @@
                             }
                         });
                     }
-                    await itemMarket.processItems();
-                    if (action === "add" && newListingIDs.length > 0) {
-                        itemMarket.highlightNewItems(newListingIDs);
+                    if (visibility.isPageVisible()) {
+                        await itemMarket.processItems();
+                        if (action === "add" && newListingIDs.length > 0) {
+                            itemMarket.highlightNewItems(newListingIDs);
+                        }
+                    } else {
+                        if (action === "add" && newListingIDs.length > 0) {
+                            state.pages.itemMarket.pendingHighlights.push(...newListingIDs);
+                        }
                     }
                     state.debounce.websocket.pending = false;
                 }, CONFIG.debounce.websocket);
@@ -1142,19 +1194,13 @@
             }
         },
         highlightNewItems: (listingIDs) => {
+            const cache = state.pages.itemMarket.fetchResponseCache;
+            const category = itemMarket.detectCategory();
             listingIDs.forEach(listingID => {
                 const items = utils.querySelectorAll('.itemTile___cbw7w');
                 items.forEach(item => {
-                    const cache = state.pages.itemMarket.fetchResponseCache;
-                    const itemData = cache.find(data => {
-                        const price = parseInt(utils.querySelector('.priceAndTotal___eEVS7 span', item)?.textContent.replace(/[^\d]/g, ''), 10);
-                        const damage = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(1) .value___cwqHv', item)?.textContent.trim());
-                        const accuracy = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(2) .value___cwqHv', item)?.textContent.trim());
-                        return data.listingID === listingID &&
-                            data.minPrice === price &&
-                            (data.damage === damage || data.accuracy === accuracy);
-                    });
-                    if (itemData) {
+                    const itemData = itemMarket.matchItemToData(item, cache, category);
+                    if (itemData && itemData.listingID === listingID) {
                         item.classList.add('snickel-websocket-highlight');
                         setTimeout(() => {
                             item.classList.add('permanent');
@@ -1164,10 +1210,28 @@
             });
         },
         detectCategory: () => {
+            if (state.cached.currentCategory !== null) {
+                return state.cached.currentCategory;
+            }
             const firstItem = state.pages.itemMarket.fetchResponseCache?.[0];
             if (!firstItem) return null;
-            return firstItem.type === "Defensive" ? "Armor" :
+            const result = firstItem.type === "Defensive" ? "Armor" :
                 (["Primary", "Secondary", "Melee"].includes(firstItem.type) ? "Weapon" : null);
+            state.cached.currentCategory = result;
+            return result;
+        },
+        matchItemToData: (itemElement, cache, category) => {
+            const price = parseInt(utils.querySelector('.priceAndTotal___eEVS7 span', itemElement)?.textContent.replace(/[^\d]/g, ''), 10);
+            const damageVal = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(1) .value___cwqHv', itemElement)?.textContent.trim());
+            const accuracyVal = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(2) .value___cwqHv', itemElement)?.textContent.trim());
+            const armorVal = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(1) .value___cwqHv', itemElement)?.textContent.trim());
+            return cache.find(data => {
+                if (category === "Armor") {
+                    return data.minPrice === price && data.armor === armorVal;
+                } else {
+                    return data.minPrice === price && data.damage === damageVal && data.accuracy === accuracyVal;
+                }
+            });
         },
         getActualRawBonusRangeFromCache: (bonusName) => utils.getActualRawBonusRange(state.pages.itemMarket.fetchResponseCache, bonusName),
         cloneSliderWrapper: (originalWrapper, labelText, min, max, onChange) => {
@@ -1508,17 +1572,7 @@
             let processedCount = 0;
             itemTileElements.forEach((itemElement) => {
                 if (utils.isProcessed(itemElement)) return;
-                const price = parseInt(utils.querySelector('.priceAndTotal___eEVS7 span', itemElement)?.textContent.replace(/[^\d]/g, ''), 10);
-                const damageVal = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(1) .value___cwqHv', itemElement)?.textContent.trim());
-                const accuracyVal = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(2) .value___cwqHv', itemElement)?.textContent.trim());
-                const armorVal = parseFloat(utils.querySelector('.properties___QCPEP .property___SHm8e:nth-of-type(1) .value___cwqHv', itemElement)?.textContent.trim());
-                const fetchData = fetchDataList.find(data => {
-                    if (category === "Armor") {
-                        return data.minPrice === price && data.armor === armorVal;
-                    } else {
-                        return data.minPrice === price && data.damage === damageVal && data.accuracy === accuracyVal;
-                    }
-                });
+                const fetchData = itemMarket.matchItemToData(itemElement, fetchDataList, category);
                 if (fetchData) {
                     itemMarket.injectData(itemElement, fetchData);
                     processedCount++;
@@ -1585,6 +1639,9 @@
                     state.pages.itemMarket.backgroundMonitor = null;
                     return;
                 }
+                if (!visibility.isPageVisible()) {
+                    return;
+                }
                 const unprocessedItems = utils.querySelectorAll('.itemTile___cbw7w').filter(item =>
                     !utils.isProcessed(item)
                 );
@@ -1604,6 +1661,9 @@
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     if (!hasValidCategory()) {
+                        return;
+                    }
+                    if (!visibility.isPageVisible()) {
                         return;
                     }
                     const unprocessedItems = utils.querySelectorAll('.itemTile___cbw7w').filter(item =>
@@ -1640,7 +1700,7 @@
                 }
                 if (hasNewItems && state.pages.itemMarket.fetchResponseCache.length > 0) {
                     if (processingTimeout) clearTimeout(processingTimeout);
-                    if (hasValidCategory()) {
+                    if (hasValidCategory() && visibility.isPageVisible()) {
                         processingTimeout = setTimeout(() => itemMarket.processItems(), 10);
                     }
                 }
@@ -1670,9 +1730,6 @@
                     itemMarket.waitForItemsWithRetry();
                 }
             }
-            state.pages.itemMarket.sockets.forEach(ws => {
-                ws.addEventListener('message', itemMarket.handleWebSocket);
-            });
             try {
                 itemMarket.setupScrollMonitor();
             } catch (e) {
@@ -1858,14 +1915,6 @@
                 const shift = Math.abs(currentTop - lastKnownTop);
                 if (shift > 50) {
                     window.dispatchEvent(new Event('resize'));
-                    const scrollContainer = virtualizedGrid.parentElement;
-                    if (scrollContainer) {
-                        const originalScrollTop = scrollContainer.scrollTop;
-                        scrollContainer.scrollTop = originalScrollTop + 1;
-                        setTimeout(() => {
-                            scrollContainer.scrollTop = originalScrollTop;
-                        }, 10);
-                    }
                     lastKnownTop = currentTop;
                 }
             };
@@ -2145,9 +2194,6 @@
             settingsMenu.pendingSettings[key] = value;
             settingsMenu.showRefreshButton();
         },
-        forceRefresh: () => {
-            window.location.reload();
-        },
         applyPendingSettings: () => {
             if (!settingsMenu.pendingSettings) return;
             const hasChanges = Object.keys(settingsMenu.pendingSettings).some(
@@ -2155,7 +2201,6 @@
             );
             if (hasChanges) {
                 saveUserSettings(settingsMenu.pendingSettings);
-                setTimeout(() => settingsMenu.forceRefresh(), 100);
             }
             settingsMenu.pendingSettings = null;
             settingsMenu.hideRefreshButton();
@@ -2196,7 +2241,15 @@
             settingsMenu.setupMenuObserver();
         }
     };
+    function invalidateCache() {
+        state.cached.hasValidCategory = null;
+        state.cached.currentCategory = null;
+        state.cached.parsedHash = null;
+    }
     function hasValidCategory() {
+        if (state.cached.hasValidCategory !== null) {
+            return state.cached.hasValidCategory;
+        }
         const validCategories = ['Melee', 'Primary', 'Secondary', 'Defensive'];
         const hash = window.location.hash;
         let urlParams;
@@ -2210,9 +2263,11 @@
         const categoryName = urlParams.get('categoryName');
         const itemType = urlParams.get('itemType');
         const itemID = urlParams.get('itemID');
-        return validCategories.includes(categoryName) ||
-               validCategories.includes(itemType) ||
-               (itemID && itemID.trim() !== '');
+        const result = validCategories.includes(categoryName) ||
+                       validCategories.includes(itemType) ||
+                       (itemID && itemID.trim() !== '');
+        state.cached.hasValidCategory = result;
+        return result;
     }
     function interceptRequests() {
         const nativeFetch = window.fetch;
@@ -2243,8 +2298,10 @@
                     );
                 });
                 state.pages.itemMarket.fetchResponseCache = [...existingCache, ...newItems];
-                itemMarket.waitForItemsWithRetry();
-                itemMarket.startBackgroundMonitor();
+                if (visibility.isPageVisible()) {
+                    itemMarket.waitForItemsWithRetry();
+                    itemMarket.startBackgroundMonitor();
+                }
             }).catch(err => {
                 utils.error(`Error parsing intercepted response for ${url}:`, err);
             });
@@ -2287,13 +2344,16 @@
             }
             theme.updateColors();
             theme.setupObserver();
+            visibility.setupListener();
             if (pageType === 'itemMarket') {
                 utils.log('Initializing Item Market.');
                 itemMarket.init();
                 utils.addHashListener(() => {
+                    invalidateCache();
                     state.pages.itemMarket.fetchResponseCache = [];
                     state.processedElements = new WeakSet();
                     state.pages.itemMarket.sliderInsertionAttempts = 0;
+                    state.pages.itemMarket.pendingHighlights = [];
                     state.filters.qualityMin = 0;
                     state.filters.qualityMax = 300;
                     state.filters.bonusMin = 0;

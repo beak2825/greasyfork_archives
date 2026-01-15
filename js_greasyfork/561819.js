@@ -11,7 +11,7 @@
 // @name         NotebookLM easy use
 // @namespace    http://tampermonkey.net/
 // @version      1.0.1
-// @description  Automatically batch update Google Drive sources (Docs/Sheets/Slides) in NotebookLM. 自动批量更新 NotebookLM 中的 Google Drive 资料（文档/表格/幻灯片）。
+// @description  Batch update Google Drive sources in NotebookLM
 // @author       Victor Cheng
 // @match        https://notebooklm.google.com/notebook/*
 // @grant        none

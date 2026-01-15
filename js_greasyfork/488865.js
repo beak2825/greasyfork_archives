@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         蓝奏云优化
-// @version      4.1
+// @version      4.2
 // @description  蓝奏云apk文件重定向域名，自动点击下载，记住分享密码自动填写
-// @author       ChatGPT
+// @author       DeepSeek
 // @include      *.lanosso.com/*
 // @include      *.lanzn.com/*
 // @include      *.lanzog.com/*
@@ -37,28 +37,27 @@ if (iframes.length > 0) {
   }
 }
 
-
 //当前标签打开
 // 修改所有链接的target属性
- function modifyLinks() {
- const links = document.getElementsByTagName('a');
- for (let i = 0; i < links.length; i++) {
- links[i].setAttribute('target', '_self');
- }
- 
- // 处理base标签
- let base = document.getElementsByTagName('base')[0];
- if (base) {
- base.setAttribute('target', '_self');
- } else {
- const head = document.getElementsByTagName('head')[0];
- const newBase = document.createElement('base');
- newBase.setAttribute('target', '_self');
- head.appendChild(newBase);
- }
- }
+function modifyLinks() {
+  const links = document.getElementsByTagName('a');
+  for (let i = 0; i < links.length; i++) {
+    links[i].setAttribute('target', '_self');
+  }
+  
+  // 处理base标签
+  let base = document.getElementsByTagName('base')[0];
+  if (base) {
+    base.setAttribute('target', '_self');
+  } else {
+    const head = document.getElementsByTagName('head')[0];
+    const newBase = document.createElement('base');
+    newBase.setAttribute('target', '_self');
+    head.appendChild(newBase);
+  }
+}
 
- modifyLinks();
+modifyLinks();
 
 //重定向域名
 // 检查页面是否包含"会员"文本
@@ -80,7 +79,7 @@ if (document.body.innerText.includes('会员')) {
     }
 }
 
-//自动下载
+//自动下载 - 增加了0.5秒延迟重试
 // 定义要点击的选择器数组
 const selectorsToClick = [
   'a.appa',
@@ -88,11 +87,43 @@ const selectorsToClick = [
   'a[href^="/tp/"]'
 ];
 
-// 遍历每个选择器并点击匹配的元素
-selectorsToClick.forEach(selector => {
-  document.querySelectorAll(selector).forEach(link => link.click());
-});
+// 执行点击操作的函数
+function performAutoClick() {
+  let clicked = false;
+  
+  // 遍历每个选择器并点击匹配的元素
+  selectorsToClick.forEach(selector => {
+    document.querySelectorAll(selector).forEach(link => {
+      link.click();
+      clicked = true;
+    });
+  });
+  
+  // 获取所有 href 包含 "/file/" 的 <a> 标签，并自动点击
+  document.querySelectorAll('a[href*="/file/"]').forEach(link => {
+    link.click();
+    clicked = true;
+  });
+  
+  // 查找具有 onclick='m_load();' 属性的父元素，并在该父元素中查找子元素 <a> 进行点击
+  const mLoadLink = document.querySelector("[onclick='m_load();'] > a");
+  if (mLoadLink) {
+    mLoadLink.click();
+    clicked = true;
+  }
+  
+  return clicked;
+}
 
+// 初始执行点击
+let hasClicked = performAutoClick();
+
+// 如果初始没有点击到任何元素，延迟0.5秒后重试
+if (!hasClicked) {
+  setTimeout(() => {
+    performAutoClick();
+  }, 500); // 延迟500毫秒（0.5秒）
+}
 
 // 选择要监视的目标元素
 const targetNode = document.body;
@@ -124,11 +155,6 @@ const observer = new MutationObserver(function(mutationsList) {
 
 // 通过观察器实例与目标节点绑定
 observer.observe(targetNode, config);
-
-// 获取所有 href 包含 "/file/" 的 <a> 标签，并自动点击
-document.querySelectorAll('a[href*="/file/"]').forEach(link => {
-  link.click();
-});
 
 function extractAndNavigateURL() {
   // 获取整个页面的 HTML 源码，包括 script 标签中的内容

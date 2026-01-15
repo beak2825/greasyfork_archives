@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         极致净化稀土掘金文章页
 // @namespace    https://evgo2017.com/purify-page
-// @version      0.11
+// @version      0.11.3
 // @description  完美阅读体验，去除广告、推荐等一系列和阅读无关的内容
 // @author       evgo2017
 // @match        https://juejin.cn/post/*
@@ -12,39 +12,48 @@
 // @updateURL https://update.greasyfork.org/scripts/457422/%E6%9E%81%E8%87%B4%E5%87%80%E5%8C%96%E7%A8%80%E5%9C%9F%E6%8E%98%E9%87%91%E6%96%87%E7%AB%A0%E9%A1%B5.meta.js
 // ==/UserScript==
 
+
 (function() {
     'use strict';
 
-    const maxRetryCount = 5; // 最大重试次数
+    const maxRetryCount = 10; // 最大重试次数
 
-    // 移除区域
-    // 得逆向来，否则部分组件加载不出来
-    remove("顶部导航条", `.main-header-box`, { repeat: true, remove: (dom) => { dom.style.display = "none" } }) // 移除后部分组件加载错误
-    remove("右侧作者信息", `.author-block`, { repeat: true, remove: (dom) => { dom.innerHTML = ''; dom.style.padding = '0' } })
-    remove("左侧点赞、推荐", `.article-suspended-panel`, { repeat: true })
-    remove("右侧掘金会员广告", `img.banner`, { getDom: (dom) => dom ? dom.parentElement : null })
-    remove("右侧广告", `.sidebar-bd-entry`)
-    remove("右侧相关文章", `.related-entry-sidebar-block`)
-    remove("右侧下一篇", `.next-article`)
-    remove("页面固定掘金浏览器插件", `.extension`)
-    remove("下方安装掘金浏览器插件", `.extension-banner`, { repeat: true })
-    remove("下方课程推荐", `.category-course-recommend`)
-    remove("下方相关推荐", `.recommended-area`)
-    remove("下方友情链接", `.recommended-links`)
-    remove("回到顶部、反馈", `.suspension-panel`)
+    switch (window.location.hostname) {
+      case 'juejin.cn': {
+        console.log('匹配到 掘金 页面')
+        remove("顶部导航条", `#juejin > div.view-container > div.main-header-box`)
+        remove("右侧作者信息", `.author-block`)
+        remove("右侧精选内容", `.sidebar-block `)
+        remove("右侧广告", `.ad-container `)
+        remove("下方相关推荐", `.recommended-area`)
+        remove("回到顶部", `.suspension-panel`)
+        remove("登录掘金领取礼包", `.bottom-login-guide`)
+        remove("相关推荐", `#sidebar-container > div:nth-child(2) > div:nth-child(2)`)
+        remove("精选内容", `#sidebar-container > div:nth-child(2) > div:nth-child(3)`)
+        remove("相关推荐", `#sidebar-container > div:nth-child(2) > div:nth-child(4))`)
+        remove("找对属于你的技术圈子", `#sidebar-container > div.sidebar-block.wechat-sidebar-block.pure.wechat-ad`)
+        break;
+      }
+    }
 
     // Helper
-    function remove(label, selector, userOption = {}, count = 1) {
-       const option = Object.assign({ repeat: false, getDom: (dom) => dom, remove: (dom) => dom.remove() }, userOption)
-       const dom = option.getDom(document.querySelector(selector))
+    function remove(label, selector, option, count = 1) {
+       const dom = document.querySelector(selector)
        if (dom) {
-          option.remove(dom)
-          console.log(`${label}，%c已移除%c。（第 ${count} 次处理）`, "color: red; font-weight: bold", "color: black")
-          if (option.repeat) {
-            setTimeout(() => { remove(label, selector, option, count + 1) }, 1000)
+          option = Object.assign({ isClick: false, isRemove: false, isRepeat: false }, option)
+          if (option.isClick) {
+            dom.click()
+          } else if (option.isRemove) {
+            dom.remove()
+          } else {
+            dom.style.display = 'none'
           }
+          if (option.isRepeat && count <= maxRetryCount) {
+           setTimeout(() => { remove(label, selector, option, count + 1) }, 1000)
+          }
+          console.log(`${label}，%c已移除%c。（第 ${count} 次处理）`, "color: red; font-weight: bold", "color: black")
        } else {
-         if (count < maxRetryCount) {
+         if (count <= maxRetryCount) {
            console.log(`${label}，未找到。（第 ${count} 次处理）`)
            setTimeout(() => { remove(label, selector, option, count + 1) }, 1000)
          } else {
@@ -52,6 +61,7 @@
          }
        }
     }
+
     function $ (selector) {
         return document.querySelector(selector)
     }

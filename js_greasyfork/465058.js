@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🔥拓展增强🔥妖火网插件
 // @namespace    https://yaohuo.me/
-// @version      3.19.4
+// @version      3.19.5
 // @description  发帖ubb增强、回帖ubb增强、回帖表情增强、查看贴子显示用户等级增强、手动吃肉增强、自动加载更多帖子、自动加载更多回复、一键自动上传图床、支持个性化菜单配置
 // @author       龙少c(id:20469)开发，参考其他大佬：外卖不用券(id:23825)、侯莫晨、Swilder-M
 // @match        *://yaohuo.me/*
@@ -1426,7 +1426,7 @@
               <hr class="title-line title-line-right" />
             </li>
             <li>
-              <span style="color: #b80303;"><img src="/NetImages/jing.gif" alt="精" style="margin-bottom: -1px"><a href="https://haokawx.lot-ml.com/Product/Index/129848" target="_blank">大流量卡，返现几十不等</a></span>
+              <span style="color: #b80303;"><img src="/NetImages/jing.gif" alt="精" style="margin-bottom: -1px"><a href="https://172.lot-ml.com/ProductEn/Index/5d632759ef286928" target="_blank">大流量卡，返现几十不等</a></span>
               <div>
                 <a href="https://yaohuo.me/bbs/userinfo.aspx?touserid=20469" target="_blank">返现联系</a>
               </div>

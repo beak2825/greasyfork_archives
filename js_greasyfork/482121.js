@@ -2,7 +2,7 @@
 // @name         Fiverr - Inbox Enhancer + (Optimized)
 // @namespace    https://www.fiverr.com/web_coder_nsd
 // @description  Optimized version: Lightweight inbox enhancer with reduced memory usage, back to top, markdown conversion, chat features
-// @version      7.5
+// @version      7.6
 // @author       Noushad Bhuiyan (Optimized by Claude)
 // @icon         https://www.fiverr.com/favicon.ico
 // @match        https://*.fiverr.com/inbox*
@@ -56,26 +56,6 @@
     /* HOW TO USE GEMINI API ENDS */
 
     var displayNameTriggerText = '{disp}'
-
-    // ========== OPTIMIZATION: Inject CSS once for common styles ==========
-    const STYLES = Object.freeze(`
-        .scroll-top-btn, .select-msg-btn, .clear-button, .openWithChatGPTBtn, .openWithDeepseekBtn {
-            contain: layout style;
-        }
-        #advanced-quick-reply button {
-            contain: layout style;
-        }
-        .accordion-item {
-            contain: layout style paint;
-        }
-        #translationConverter {
-            contain: layout style;
-        }
-    `);
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = STYLES;
-    document.head.appendChild(styleSheet);
-
     var selector = {
         msgWrapper: ".message-wrapper",
         msgBody: ".message-body",
@@ -91,6 +71,7 @@
         detailsPane: '[data-testid="details-pane"]',
         msgHeader: ".header",
         msgContent: ".message-content",
+        checkbox: ".select-msg-checkbox",
         clientTime: 'header time'
     };
 
@@ -112,7 +93,10 @@
 
         // Message body - updated to handle nested structures
         MESSAGE_BODY: "p",
-        MESSAGE_BODY_CONTAINER: "div[class*='a17q93kp']"
+        MESSAGE_BODY_CONTAINER: "div[class*='a17q93kp']",
+
+        // Checkbox selection
+        CHECKBOX: ".select-msg-checkbox"
     };
 
     var API_ACTIONS = {
@@ -190,39 +174,7 @@
 
 
     };
-
-    // ========== OPTIMIZATION: Pre-compiled regex patterns (created once, reused) ==========
-    const REGEX_PATTERNS = {
-        numberWithBold: /(\d+)\. (\*\*.*?\*\*)/g,
-        header: /### (.*?)(\r\n|\r|\n|$)/g,
-        bold: /\*\*(.*?)\*\*/g,
-        bullet1: /^   - /gm,
-        bullet2: /^    - /gm,
-        bullet3: /^        - /gm,
-        weHaveYourBack: /WE HAVE YOUR BACK/i,
-        forAddedSafety: /For added safety/i,
-        fiverrPro: /Fiverr Pro/i
-    };
-
-    // ========== OPTIMIZATION: DOM element cache to avoid repeated queries ==========
-    const domCache = new Map();
-    function getCachedElement(selector) {
-        if (!domCache.has(selector)) {
-            domCache.set(selector, document.querySelector(selector));
-        }
-        return domCache.get(selector);
-    }
-    function clearCache() { domCache.clear(); }
-
-    // ========== OPTIMIZATION: Debounce for MutationObserver ==========
-    let debounceTimer = null;
-    function debouncedCallback(fn, delay = 100) {
-        return function(...args) {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => fn.apply(this, args), delay);
-        };
-    }
-
+    console.log(advancedReplyBtns)
     class GeminiClient {
         constructor() {
             this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
@@ -314,21 +266,50 @@
         }
     }
 
-    // ========== OPTIMIZATION: Inline SVG icons (no external Font Awesome) ==========
-    const ICONS = Object.freeze({
-        checkSquare: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <path d="M9 11l3 3L22 4"></path>
-        </svg>`,
-        arrowCircleUp: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 8v8M8 12l4-4 4 4"></path>
-        </svg>`,
-        times: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>`
-    });
+    // Add Font Awesome CSS link to the document's head
+    const fontAwesomeLink = document.createElement('link');
+    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css';
+    fontAwesomeLink.rel = 'stylesheet';
+    fontAwesomeLink.type = 'text/css';
+    document.head.appendChild(fontAwesomeLink);
+
+    function addSelectMsgBtn() {
+        const chatTopButtonSection = document.querySelector(selector.chatTopButtonSection);
+
+        if (chatTopButtonSection) {
+            var existingScrollTopBtn = document.querySelector(".select-msg-btn");
+            if (existingScrollTopBtn) existingScrollTopBtn.remove();
+
+            const scrollTopButton = document.createElement("button");
+            scrollTopButton.innerHTML = '<i class="fa fa-check-square" style="font-size:2em;padding:0.4em;margin:0;"></i>';
+            scrollTopButton.className = "select-msg-btn";
+            scrollTopButton.title = "Select messages to copy";
+            scrollTopButton.addEventListener("click", toggleCheckboxes);
+
+            chatTopButtonSection.appendChild(scrollTopButton);
+        }
+    }
+
+    function toggleCheckboxes() {
+        const messageElements = document.querySelectorAll(".message");
+        var willSendToChatGPT = false
+        messageElements.forEach((message, index) => {
+            const existingCheckbox = message.querySelector(".select-msg-checkbox");
+
+            if (!existingCheckbox) {
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.className = "select-msg-checkbox";
+                message.insertBefore(checkbox, message.firstChild);
+            } else {
+                const selectedCheckboxes = document.querySelectorAll(".select-msg-checkbox:checked");
+                if (selectedCheckboxes.length > 0) {
+                    willSendToChatGPT = true
+                }
+            }
+        });
+        if (willSendToChatGPT) conversationFormatter(true)
+    }
 
     /* ----- SCROLL TO TOP CODE STARTS ----- */
     function addScrollToTopBtn() {
@@ -338,7 +319,7 @@
             if (existingScrollTopBtn) existingScrollTopBtn.remove();
 
             const scrollTopButton = document.createElement("button");
-            scrollTopButton.innerHTML = ICONS.arrowCircleUp;
+            scrollTopButton.innerHTML = '<i class="fa fa-arrow-circle-up"></i>';
             scrollTopButton.className = "scroll-top-btn";
             scrollTopButton.title = "Scroll to Top";
             scrollTopButton.addEventListener("click", toggleScrollToTop);
@@ -383,76 +364,93 @@
     /* ----- SCROLL TO TOP CODE ENDS ----- */
 
 
-    // ========== OPTIMIZATION: Pre-allocated char mappings for markdown conversion ==========
-    const CHAR_MAPPING = Object.freeze({
-        'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝',
-        'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧',
-        'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭', 'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱',
-        'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻',
-        'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅',
-        'y': '𝘆', 'z': '𝘇'
-    });
-
-    const CHAR_MAPPING_UNDERLINE = Object.freeze({
-        'A': 'A͟', 'B': 'B͟', 'C': 'C͟', 'D': 'D͟', 'E': 'E͟', 'F': 'F͟', 'G': 'G͟', 'H': 'H͟', 'I': 'I͟', 'J': 'J͟',
-        'K': 'K͟', 'L': 'L͟', 'M': 'M͟', 'N': 'N͟', 'O': 'O͟', 'P': 'P͟', 'Q': 'Q͟', 'R': 'R͟', 'S': 'S͟', 'T': 'T͟',
-        'U': 'U͟', 'V': 'V͟', 'W': 'W͟', 'X': 'X͟', 'Y': 'Y͟', 'Z': 'Z͟', 'a': 'a͟', 'b': 'b͟', 'c': 'c͟', 'd': 'd͟',
-        'e': 'e͟', 'f': 'f͟', 'g': 'g͟', 'h': 'h͟', 'i': 'i͟', 'j': 'j͟', 'k': 'k͟', 'l': 'l͟', 'm': 'm͟', 'n': 'n͟',
-        'o': 'o͟', 'p': 'p͟', 'q': 'q͟', 'r': 'r͟', 's': 's͟', 't': 't͟', 'u': 'u͟', 'v': 'v͟', 'w': 'w͟', 'x': 'x͟',
-        'y': 'y͟', 'z': 'z͟'
-    });
-
-    const NUMBER_FORMATTING = Object.freeze({
-        '1': '⑴', '2': '⑵', '3': '⑶', '4': '⑷', '5': '⑸', '6': '⑹', '7': '⑺', '8': '⑻', '9': '⑼', '0': '⑽'
-    });
-
-    const NEGATIVE_TEXTS = Object.freeze([
-        { original: "email", replacement: "e-mail" },
-        { original: "emails", replacement: "e-mails" },
-        { original: "Email", replacement: "E-mail" },
-        { original: "Emails", replacement: "E-mails" },
-        { original: "pay", replacement: "𝗉𝖺𝗒" },
-        { original: "money", replacement: "𝗆𝗈𝗇𝖾𝗒" }
-    ]);
-
     function convertMarkdownToUnicode(text) {
-        // Format numbers using pre-compiled regex
-        text = text.replace(REGEX_PATTERNS.numberWithBold, (_, number, txt) => {
+        // Replace characters one by one in headers and bold texts
+        const charMapping = {
+            'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝',
+            'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧',
+            'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭', 'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱',
+            'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻',
+            'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅',
+            'y': '𝘆', 'z': '𝘇'
+        };
+
+        const charMappingUnderline = {
+            'A': 'A͟', 'B': 'B͟', 'C': 'C͟', 'D': 'D͟', 'E': 'E͟', 'F': 'F͟', 'G': 'G͟', 'H': 'H͟', 'I': 'I͟', 'J': 'J͟',
+            'K': 'K͟', 'L': 'L͟', 'M': 'M͟', 'N': 'N͟', 'O': 'O͟', 'P': 'P͟', 'Q': 'Q͟', 'R': 'R͟', 'S': 'S͟', 'T': 'T͟',
+            'U': 'U͟', 'V': 'V͟', 'W': 'W͟', 'X': 'X͟', 'Y': 'Y͟', 'Z': 'Z͟', 'a': 'a͟', 'b': 'b͟', 'c': 'c͟', 'd': 'd͟',
+            'e': 'e͟', 'f': 'f͟', 'g': 'g͟', 'h': 'h͟', 'i': 'i͟', 'j': 'j͟', 'k': 'k͟', 'l': 'l͟', 'm': 'm͟', 'n': 'n͟',
+            'o': 'o͟', 'p': 'p͟', 'q': 'q͟', 'r': 'r͟', 's': 's͟', 't': 't͟', 'u': 'u͟', 'v': 'v͟', 'w': 'w͟', 'x': 'x͟',
+            'y': 'y͟', 'z': 'z͟'
+        };
+
+        const numberFormatting = {
+            '1': '⑴', '2': '⑵', '3': '⑶', '4': '⑷', '5': '⑸', '6': '⑹', '7': '⑺', '8': '⑻', '9': '⑼', '0': '⑽'
+        };
+
+        // Format numbers as 𝟙 𝟚 𝟛 ...
+        text = text.replace(/(\d+)\. (\*\*.*?\*\*)/g, (_, number, text) => {
             let formattedNumber = '';
+            // Format each digit of the number
             for (const digit of number) {
-                formattedNumber += NUMBER_FORMATTING[digit];
+                formattedNumber += numberFormatting[digit];
             }
-            return formattedNumber + '. ' + txt;
+            // Add a dot and the formatted text at the end
+            formattedNumber += '. ' + text;
+            return formattedNumber;
         });
 
-        // Header conversion using pre-compiled regex
-        text = text.replace(REGEX_PATTERNS.header, (_, header) => {
-            for (const [sourceChar, targetChar] of Object.entries(CHAR_MAPPING_UNDERLINE)) {
-                header = header.replace(new RegExp(sourceChar, 'g'), targetChar);
+        // Header conversion with English alphabets replacement
+        text = text.replace(/### (.*?)(\r\n|\r|\n|$)/g, (_, header) => {
+            // Replace English alphabets using charMapping
+            for (const [sourceChar, targetChar] of Object.entries(charMappingUnderline)) {
+                const regex = new RegExp(sourceChar, 'g');
+                header = header.replace(regex, targetChar);
             }
-            for (const [sourceChar, targetChar] of Object.entries(CHAR_MAPPING)) {
-                header = header.replace(new RegExp(sourceChar, 'g'), targetChar);
+            // Replace English alphabets using charMapping
+            for (const [sourceChar, targetChar] of Object.entries(charMapping)) {
+                const regex = new RegExp(sourceChar, 'g');
+                header = header.replace(regex, targetChar);
             }
-            return "❒ " + header + " ❱";
+            return ("❒ " + header + " ❱");
         });
 
-        // Bold text conversion using pre-compiled regex
-        text = text.replace(REGEX_PATTERNS.bold, (_, boldText) => {
-            for (const [sourceChar, targetChar] of Object.entries(CHAR_MAPPING)) {
-                boldText = boldText.replace(new RegExp(sourceChar, 'g'), targetChar);
+        // Bold text conversion with English alphabets replacement
+        text = text.replace(/\*\*(.*?)\*\*/g, (_, boldText) => {
+            // Replace English alphabets using charMapping
+            for (const [sourceChar, targetChar] of Object.entries(charMapping)) {
+                const regex = new RegExp(sourceChar, 'g');
+                boldText = boldText.replace(regex, targetChar);
             }
             return boldText;
         });
 
-        // Convert hyphens to bullet points using pre-compiled regex
-        text = text.replace(REGEX_PATTERNS.bullet1, "   ◉ ");
-        text = text.replace(REGEX_PATTERNS.bullet2, "    • ");
-        text = text.replace(REGEX_PATTERNS.bullet3, "        ‣ ");
+        // Convert hyphens to bullet points
+        text = text.replace(/^   - /gm, "   ◉ ");
+        // Convert hyphens to bullet points
+        text = text.replace(/^    - /gm, "    • ");
+        // Convert hyphens to bullet points
+        text = text.replace(/^        - /gm, "        ‣ ");
 
-        // Negative text replacements
-        for (const { original, replacement } of NEGATIVE_TEXTS) {
-            text = text.replace(new RegExp(`\\b${original}\\b`, 'g'), replacement);
-        }
+        const negativeTexts = [
+            { original: "email", replacement: "e-mail" },
+            { original: "emails", replacement: "e-mails" },
+            { original: "Email", replacement: "E-mail" },
+            { original: "Emails", replacement: "E-mails" },
+            { original: "pay", replacement: "𝗉𝖺𝗒" },
+            { original: "money", replacement: "𝗆𝗈𝗇𝖾𝗒" }
+        ];
+
+        text = replaceNegativeTexts(text, negativeTexts)
+        return text;
+    }
+
+    // Function to replace negative texts
+    function replaceNegativeTexts(text, negativeTexts) {
+        negativeTexts.forEach(({ original, replacement }) => {
+            const regex = new RegExp(`\\b${original}\\b`, 'g'); // Create a regex for whole word match
+            text = text.replace(regex, replacement); // Replace occurrences in the text
+        });
 
         return text;
     }
@@ -463,7 +461,7 @@
         if (!existingClrBtn) {
             // Create the button element
             const clearButton = document.createElement('button');
-            clearButton.innerHTML = ICONS.times;
+            clearButton.innerHTML = '<i class="fa fa-times"></i>';
             clearButton.classList.add('clear-button');
             // Set the button's tooltip
             clearButton.title = 'Clear all text';
@@ -487,79 +485,89 @@
         }
     }
 
-    // ========== OPTIMIZATION: Pre-defined reply actions (created once, reused) ==========
-    const REPLY_ACTIONS = Object.freeze({
-        'Greet': () => {
-            setText('Welcome {disp}, thank you for reaching out!', true)
-        },
-        'No Time': () => {
-            setText(' But I am sorry to say I am packed for the next couple of weeks.', false, true)
-        },
-        'Checking': () => {
-            setText(' Let me check out your requirements and attachments for a moment, please!', false, true)
-        },
-        'What do you need?': () => {
-            setText(' Could you please provide more details about what the requirement?', false, true)
-        },
-        "Let's Join": () => {
-            setText(` Let's join here : https://remotedesktop.google.com/support/?lfhs=2
-
-            1. Once you go to the link in the browser, you will see an icon of download. Click on it, it will install the program on your device.
-
-            2. After installing, go to the page again, and you will see "Generate Code" button. If you click on it, it will give you an access code.
-
-            3. Please share the access code with me to join you.`, false, true)
-        },
-        'Not Interested': () => {
-            setText('I am sorry, I am not able to implement this.', false, true)
-        },
-        'Explain it': async () => {
-            var userInput = prompt("Please enter your command:")
-            if (!userInput) return
-            var conversationText = conversationFormatter(false, false)
-            function showResponsePopup(response) {
-                const existingPopup = document.getElementById('response-popup');
-                if (existingPopup) document.body.removeChild(existingPopup);
-                const popup = document.createElement('div');
-                popup.id = 'response-popup';
-                popup.style.cssText = "overflow: scroll; height: 70vh;position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: white; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); border-radius: 8px";
-                popup.innerHTML = `<h2>AI Response</h2>
-                    <p><strong>Client Mood:</strong> ${response.clientMood || 'N/A'}</p>
-                    <p><strong>Explanation:</strong> ${response.explanation || 'N/A'}</p>
-                    <p><strong>Suggestion:</strong> ${response.suggestion || 'N/A'}</p>
-                    <p><strong>What to Say:</strong> ${response.whatToSay || 'N/A'}</p>
-                    <button id="closePopup">Close</button>`;
-                document.body.appendChild(popup);
-                document.getElementById('closePopup').addEventListener('click', () => document.body.removeChild(popup));
-            }
-            try {
-                var reply = await callGeminiAPI(API_ACTIONS["explainIt"], conversationText, userInput)
-                var start = reply.indexOf('{');
-                var end = reply.lastIndexOf('}');
-                var replyString = reply.substring(start, end + 1);
-                showResponsePopup(JSON.parse(replyString));
-            } catch (error) {
-                setText(reply, false, false)
-                showResponsePopup({ clientMood: 'N/A', explanation: reply, suggestion: reply, whatToSay: 'N/A' });
-            }
-        },
-        'Build the reply': async () => {
-            var userInput = prompt("Please enter your command:")
-            if (!userInput) return
-            var conversationText = conversationFormatter(false, false)
-            var reply = await callGeminiAPI(API_ACTIONS["buildReply"], conversationText, userInput)
-            setText(reply, false, false)
-        },
-        'Guess next reply': async () => {
-            var conversationText = conversationFormatter(false, false)
-            var nextReply = await callGeminiAPI(API_ACTIONS["guessNextReply"], conversationText, "")
-            setText(nextReply, false, false)
-        }
-    });
-
     function addAdvancedQuickReplySection() {
+        const replyActions = {
+            'Greet': () => {
+                setText('Welcome {disp}, thank you for reaching out!', true)
+            },
+            'No Time': () => {
+                setText(' But I am sorry to say I am packed for the next couple of weeks.', false, true)
+                // Add your logic for "No Time"
+            },
+            'Checking': () => {
+                setText(' Let me check out your requirements and attachments for a moment, please!', false, true)
+            },
+            'What do you need?': () => {
+                setText(' Could you please provide more details about what the requirement?', false, true)
+
+            },
+            "Let's Join": () => {
+                setText(` Let's join here : https://remotedesktop.google.com/support/?lfhs=2
+
+                1. Once you go to the link in the browser, you will see an icon of download. Click on it, it will install the program on your device.
+
+                2. After installing, go to the page again, and you will see “Generate Code” button. If you click on it, it will give you an access code.
+
+                3. Please share the access code with me to join you.`, false, true)
+            },
+            'Not Interested': () => {
+                setText('I am sorry, I am not able to implement this.', false, true)
+            },
+            'Explain it': async () => {
+                var userInput = prompt("Please enter your command:")
+                if (!userInput) return // Exit if user cancels
+                var checkboxesLength = document.querySelectorAll(".select-msg-checkbox:checked").length
+                var conversationText = conversationFormatter(checkboxesLength > 0, false)
+                function showResponsePopup(response) {
+                    console.log(response);
+                    // Remove existing popup if it exists
+                    const existingPopup = document.getElementById('response-popup');
+                    if (existingPopup) document.body.removeChild(existingPopup);
+                    const popup = document.createElement('div');
+                    popup.id = 'response-popup';
+                    popup.style.cssText = "overflow: scroll; height: 70vh;position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: white; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); border-radius: 8px";
+                    popup.innerHTML = `<h2>AI Response</h2>
+                        <p><strong>Client Mood:</strong> ${response.clientMood || 'N/A'}</p>
+                        <p><strong>Explanation:</strong> ${response.explanation || 'N/A'}</p>
+                        <p><strong>Suggestion:</strong> ${response.suggestion || 'N/A'}</p>
+                        <p><strong>What to Say:</strong> ${response.whatToSay || 'N/A'}</p>
+                        <button id="closePopup">Close</button>`;
+                    document.body.appendChild(popup);
+                    document.getElementById('closePopup').addEventListener('click', () => document.body.removeChild(popup));
+                }
+                try {
+                    var reply = await callGeminiAPI(API_ACTIONS["explainIt"], conversationText, userInput)
+                    var start = reply.indexOf('{');
+                    var end = reply.lastIndexOf('}');
+                    var replyString = reply.substring(start, end + 1);
+                    // const replyString = JSON.stringify(reply);
+                    showResponsePopup(JSON.parse(replyString));
+                } catch (error) {
+                    setText(reply, false, false)
+                    console.error("Error displaying response:", error);
+                    showResponsePopup({ clientMood: 'N/A', explanation: reply, suggestion: reply, whatToSay: 'N/A' });
+                }
+
+                // setText(reply, false, false)
+            },
+            'Build the reply': async () => {
+                var userInput = prompt("Please enter your command:")
+                if (!userInput) return // Exit if user cancels
+                var checkboxesLength = document.querySelectorAll(".select-msg-checkbox:checked").length
+                var conversationText = conversationFormatter(checkboxesLength > 0, false)
+                var reply = await callGeminiAPI(API_ACTIONS["buildReply"], conversationText, userInput)
+                setText(reply, false, false)
+            },
+            'Guess next reply': async () => {
+                var checkboxesLength = document.querySelectorAll(".select-msg-checkbox:checked").length
+                var conversationText = conversationFormatter(checkboxesLength > 0, false)
+                var nextReply = await callGeminiAPI(API_ACTIONS["guessNextReply"], conversationText, "")
+                setText(nextReply, false, false)
+            }
+        };
+
         const offerButton = document.querySelector('[data-testid="create-custom-offer-button"]');
-        const actionBar = offerButton?.closest('div');
+        const actionBar = offerButton?.closest('div'); // or fine-tune the level if needed
 
         var existingDiv = document.querySelector('#advanced-quick-reply')
         if (actionBar && !existingDiv) {
@@ -567,61 +575,52 @@
             newDiv.id = 'advanced-quick-reply';
             newDiv.style.cssText = 'display:flex;gap:10px;border:2px solid rgb(0 5 30 / 6%);border-radius:12px;padding:5px;align-items:center;';
 
-            // ========== OPTIMIZATION: Event delegation for all buttons ==========
-            // Single listener instead of individual listeners per button
-            newDiv.addEventListener('click', async (e) => {
-                const btn = e.target.closest('button[data-action]');
-                if (!btn) return;
-
-                const action = btn.dataset.action;
-                const svg = btn.dataset.svg;
-
-                // Async actions with loading state
-                if (action === "Guess next reply" || action === "Build the reply" || action === 'Explain it') {
-                    btn.style.backgroundColor = 'transparent';
-                    btn.innerHTML = svgLoading;
-                    btn.disabled = true;
-                    btn.classList.add('disabled-btn');
-
-                    try {
-                        await REPLY_ACTIONS[action]();
-                    } finally {
-                        btn.disabled = false;
-                        btn.classList.remove('disabled-btn');
-                        btn.innerHTML = svg;
-                    }
-                } else {
-                    // Sync actions
-                    REPLY_ACTIONS[action]();
-                }
-            });
-
-            // ========== OPTIMIZATION: DocumentFragment for bulk insert (single reflow) ==========
-            const fragment = document.createDocumentFragment();
             Object.entries(advancedReplyBtns).forEach(([key, svg]) => {
-                const btn = document.createElement('button');
-                btn.dataset.action = key;
-                btn.dataset.svg = svg;
-                btn.style.cssText = 'border-radius:5px;margin:0;padding:0;display:inherit;';
-                btn.innerHTML = svg;
 
-                // Hover effect for background
-                btn.addEventListener('mouseover', () => {
+                const btn = document.createElement('button');
+                btn.style.borderRadius = '5px'
+                btn.innerHTML = svg;
+                btn.style.margin = '0px';
+                btn.style.padding = '0px';
+                btn.style.display = 'inherit';
+                // Add hover effect for background
+                btn.onmouseover = () => {
                     if (!btn.disabled) {
                         btn.style.backgroundColor = '#4e536e5e';
                         btn.title = key;
                     }
-                });
+                };
 
-                btn.addEventListener('mouseout', () => {
+                // Revert on mouseout
+                btn.onmouseout = () => {
                     btn.style.backgroundColor = 'transparent';
-                });
+                };
 
-                fragment.appendChild(btn);
+                // if the key is "Guess next reply" and "Build the reply", then add loading svg once the button onClick, set it as disabled , and remove it when the reply is generated
+                if (key === "Guess next reply" || key === "Build the reply" || key === 'Explain it') {
+                    btn.onclick = async () => {
+                        btn.style.backgroundColor = 'transparent';
+                        btn.innerHTML = svgLoading;
+                        btn.disabled = true;
+                        btn.classList.add('disabled-btn'); // Add disabled class
+
+                        try {
+                            await replyActions[key]();
+                        } finally {
+                            btn.disabled = false;
+                            btn.classList.remove('disabled-btn'); // Remove disabled class
+                            btn.innerHTML = svg;
+                        }
+                    }
+                } else {
+                    btn.onclick = replyActions[key]
+                }
+                newDiv.appendChild(btn);
             });
-            newDiv.appendChild(fragment);
 
             actionBar.insertBefore(newDiv, actionBar.children[0]);
+        } else {
+            console.warn('message-action-bar not found');
         }
     }
 
@@ -688,7 +687,7 @@
         image.src = 'https://cdn-icons-png.flaticon.com/512/7512/7512915.png';
         image.alt = 'Create Conversation Icon';
         button.title = 'Create New Conversation in DeepSeek';
-        button.addEventListener('click', () => { conversationFormatter(true) });
+        button.addEventListener('click', () => { conversationFormatter(false) });
     }
 
     function createOpenInChatGPTBtn() {
@@ -704,71 +703,37 @@
         button.addEventListener('click', () => window.open(`https://chat.deepseek.com?search=${window.location.pathname.split('/').pop()}`, '_blank'));
     }
 
-    // ========== OPTIMIZATION: Lazy-load translation iframe (only loads when clicked) ==========
-    let translationIframeLoaded = false;
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     async function addTranslationIframe() {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // Check if already exists
+        await delay(1000)
+        // Check if an element with the ID "translationConverter" already exists
         if (document.getElementById('translationConverter')) {
-            console.log('Translation converter already exists.');
+            console.warn('Translation converter iframe already exists.');
             return;
         }
+
+        var translationHtml = `<div id="translationConverter" style="margin-top: 20px;
+        width: -webkit-fill-available;
+        height: -webkit-fill-available;
+
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0;"><h6 class="text-center">Translation Widget</h6><iframe id="translation-iframe" src="https://noushadbug.github.io/translator-interface-web/" style="padding: 1em;border: 1px solid black;
+        border-radius: 8%;height: -webkit-fill-available;min-height: 350px;width: -webkit-fill-available;"></iframe></div>`;
 
         const detailsPane = document.querySelector('[data-testid="details-pane"]');
         if (!detailsPane) return;
 
-        // Create a collapsible widget placeholder (no iframe loaded yet)
-        const translationWidget = document.createElement('div');
-        translationWidget.id = 'translationConverter';
-        translationWidget.style.cssText = 'margin-top: 20px; width: -webkit-fill-available; margin-left: 0; margin-right: 0; padding: 0;';
-
-        // Create header with click-to-expand
-        const header = document.createElement('div');
-        header.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f0f0f0; border-radius: 8px 8px 0 0; cursor: pointer;';
-        const title = document.createElement('h6');
-        title.style.cssText = 'margin: 0;';
-        title.textContent = 'Translation Widget';
-        const toggleIcon = document.createElement('span');
-        toggleIcon.className = 'toggle-icon';
-        toggleIcon.style.cssText = 'font-size: 12px;';
-        toggleIcon.textContent = '▼ Click to expand';
-        header.appendChild(title);
-        header.appendChild(toggleIcon);
-
-        // Create content container (initially hidden/collapsed)
-        const content = document.createElement('div');
-        content.id = 'translation-content';
-        content.style.cssText = 'display: none; padding: 10px; border: 1px solid #ccc; border-top: none; border-radius: 0 0 8px 8px; min-height: 400px;';
-        const placeholder = document.createElement('p');
-        placeholder.style.cssText = 'text-align: center; color: #666;';
-        placeholder.textContent = 'Click above to load translator';
-        content.appendChild(placeholder);
-
-        // Toggle visibility on click
-        header.addEventListener('click', async () => {
-            const isHidden = content.style.display === 'none';
-            content.style.display = isHidden ? 'block' : 'none';
-            header.querySelector('.toggle-icon').textContent = isHidden ? '▲ Click to collapse' : '▼ Click to expand';
-
-            // Load iframe only on first expand
-            if (isHidden && !translationIframeLoaded) {
-                translationIframeLoaded = true;
-                content.textContent = ''; // Clear placeholder
-                const iframe = document.createElement('iframe');
-                iframe.id = 'translation-iframe';
-                iframe.src = 'https://noushadbug.github.io/translator-interface-web/';
-                iframe.style.cssText = 'padding: 0; border: none; border-radius: 8px; height: 400px; width: 100%;';
-                content.appendChild(iframe);
-            }
-        });
-
-        translationWidget.appendChild(header);
-        translationWidget.appendChild(content);
-        detailsPane.appendChild(translationWidget);
+        // Insert the translationHtml into the detailsPane at the end
+        detailsPane.insertAdjacentHTML('beforeend', translationHtml);
     }
 
+
     function addTopButtons() {
+        addSelectMsgBtn();
         addScrollToTopBtn();
     }
 
@@ -778,42 +743,43 @@
         if (detailsPane) {
             var existingDiv = detailsPane.querySelector(".custom-btn-area")
             if (existingDiv) existingDiv.remove()
-            const customBtnArea = document.createElement('div');
+            const customBtnArea = detailsPane.appendChild(document.createElement('div'));
             customBtnArea.classList.add('custom-btn-area');
             customBtnArea.id = "custom-btn-area"
             customBtnArea.style.display = 'flex';
             customBtnArea.style.justifyContent = 'center';
-
-            // Insert custom-btn-area before translationConverter if it exists
-            const translationConverter = document.getElementById('translationConverter');
-            if (translationConverter) {
-                detailsPane.insertBefore(customBtnArea, translationConverter);
-            } else {
-                detailsPane.appendChild(customBtnArea);
-            }
-
             createOpenInChatGPTBtn();
             createGPTConv()
             addTranslationIframe()
         }
     }
 
-    function conversationFormatter(isChatGPTRedirect = true) {
+    function conversationFormatter(isSelected = false, isChatGPTRedirect = true) {
         let conversationText = '';
         let wrappers = [];
         let url = '';
 
-        // Get all messages from the conversation
-        const messageFlow = document.querySelector(DOM_SELECTORS.MESSAGE_FLOW);
-        if (messageFlow) {
-            // Get all message elements from the flow
-            wrappers = Array.from(messageFlow.querySelectorAll(DOM_SELECTORS.MESSAGE));
-            // Also check for any message-wrapper elements that might not have the .message class
-            const additionalWrappers = Array.from(messageFlow.querySelectorAll(DOM_SELECTORS.MESSAGE_WRAPPER))
-                .filter(w => !wrappers.includes(w));
-            wrappers = wrappers.concat(additionalWrappers);
+        if (isSelected) {
+            const checkedBoxes = document.querySelectorAll(`${DOM_SELECTORS.CHECKBOX}:checked`);
+            checkedBoxes.forEach(cb => {
+                // Find the closest message container (could be .message or .message-wrapper)
+                const wrapper = cb.closest(DOM_SELECTORS.MESSAGE) || cb.closest(DOM_SELECTORS.MESSAGE_WRAPPER);
+                if (wrapper) wrappers.push(wrapper);
+            });
+            url = `https://chat.deepseek.com/?search=${window.location.pathname.split('/').pop()}&doCopy=true`;
+        } else {
+            // Handle both direct children and nested message structures
+            const messageFlow = document.querySelector(DOM_SELECTORS.MESSAGE_FLOW);
+            if (messageFlow) {
+                // Get all message elements from the flow
+                wrappers = Array.from(messageFlow.querySelectorAll(DOM_SELECTORS.MESSAGE));
+                // Also check for any message-wrapper elements that might not have the .message class
+                const additionalWrappers = Array.from(messageFlow.querySelectorAll(DOM_SELECTORS.MESSAGE_WRAPPER))
+                    .filter(w => !wrappers.includes(w));
+                wrappers = wrappers.concat(additionalWrappers);
+            }
+            url = `https://chat.deepseek.com/?createChat=${window.location.pathname.split('/').pop()}`;
         }
-        url = `https://chat.deepseek.com/?createChat=${window.location.pathname.split('/').pop()}`;
 
         wrappers.forEach(wrapper => {
             let messageBody = '';
@@ -1054,6 +1020,10 @@
             }
         });
 
+        if (isSelected || document.querySelectorAll(DOM_SELECTORS.CHECKBOX).length) {
+            document.querySelectorAll(DOM_SELECTORS.CHECKBOX).forEach(cb => cb.remove());
+        }
+
         GM_setClipboard(conversationText, 'text');
 
         if (isChatGPTRedirect) {
@@ -1135,51 +1105,29 @@
     }
 
 
-    // ========== OPTIMIZATION: Flags to prevent redundant processing ==========
-    const processedElements = new WeakSet();
-
     // Observe mutations in the inbox
-    const inboxObserverCallback = function (mutations) {
-        // Early exit if no relevant mutations
-        let hasRelevantMutation = false;
-        for (const mutation of mutations) {
-            if (mutation.target.id === "send-message-text-area" ||
-                mutation.target.classList?.contains("layout_service") ||
-                mutation.target.querySelector?.('[data-testid="buyer-analytics"]')) {
-                hasRelevantMutation = true;
-                break;
-            }
-        }
-        if (!hasRelevantMutation) return;
-
-        for (const mutation of mutations) {
-            // Optimized: Use cached element queries and early exits
+    const inboxObserver = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
             var sellerPlusSection = document.querySelector('[data-testid="buyer-analytics"]');
             if (sellerPlusSection && !sellerPlusSection.querySelector('.accordion-item')) {
                 createAccordion(sellerPlusSection, "Seller Plus Details");
             }
-
+            // Minimizing the Order Section with accordion
             const orderCardElement = document.querySelector('[role="order-card"]');
             if (orderCardElement && !orderCardElement.querySelector('.accordion-item')) {
                 const div = orderCardElement.closest(".w7m89t0");
-                if (div && !processedElements.has(div)) {
-                    createAccordion(div, "Order History");
-                    processedElements.add(div);
+                createAccordion(div, "Order History");
 
-                    const userCardElement = document.querySelector(".MYCOWEK");
-                    if (userCardElement && !processedElements.has(userCardElement)) {
-                        createAccordion(userCardElement, "User Details");
-                        processedElements.add(userCardElement);
-                    }
+                // Minimizing the User Details Section with accordion
+                const userCardElement = document.querySelector(".MYCOWEK");
+                if (userCardElement) {
+                    createAccordion(userCardElement, "User Details");
                 }
             }
-
             const buyerPane = document.querySelector('[data-testid="buyer-analytics"]')
-            if (buyerPane && !processedElements.has(buyerPane)) {
+            if (buyerPane) {
                 if (!buyerPane.textContent.includes("Metrics below reflect past orders with public reviews, except where noted.")) {
-                    buyerPane.remove();
-                } else {
-                    processedElements.add(buyerPane);
+                    buyerPane.remove()
                 }
             }
 
@@ -1189,18 +1137,17 @@
                 if (termsError) termsError.style.display = 'none';
                 // replacing markdown format to unicode
                 displayNamePlacer()
-                const textArea = document.querySelector(selector.textArea);
-                if (!textArea) return;
-                var rawValue = textArea.value;
-                var markedDownValue = convertMarkdownToUnicode(rawValue);
+                var rawValue = document.querySelector(selector.textArea).value
+                var markedDownValue = convertMarkdownToUnicode(document.querySelector(selector.textArea).value)
 
-                if (rawValue !== markedDownValue) {
-                    setText(markedDownValue);
-                } else {
-                    textArea.value = markedDownValue;
+                if (rawValue == markedDownValue) {
+                    document.querySelector(selector.textArea).value = markedDownValue
                 }
-            }
+                else {
+                    setText(markedDownValue)
+                }
 
+            }
             if (mutation.type === 'childList' && mutation.target.classList.contains("layout_service")) {
                 // removing oredered message block
                 const orderMsgEl = document.querySelector(selector.orderMsgBlock);
@@ -1211,20 +1158,22 @@
                 // Update tab title with username
                 updateTabTitle();
 
-                showOtherMsgTooltip();
+                showOtherMsgTooltip()
                 const textArea = document.querySelector(selector.textArea);
                 if (textArea && !textArea.hasAttribute('data-scroll-set')) {
                     textArea.style.overflowY = "scroll";
                     textArea.setAttribute('data-scroll-set', 'true');
                 }
-                addMsgClearBtn();
-                addTopButtons();
-                addDetailsPaneButtons();
-                addAdvancedQuickReplySection();
+                addMsgClearBtn()
+                addTopButtons()
+                addDetailsPaneButtons()
+                addAdvancedQuickReplySection()
 
                 const detailsPane = document.querySelector('[data-testid="details-pane"]');
-                if (detailsPane && !detailsPane.classList.contains("min-width-pane")) {
-                    detailsPane.classList.add("min-width-pane");
+                if (detailsPane) {
+                    if (detailsPane && !detailsPane.classList.contains("min-width-pane")) {
+                        detailsPane.classList.add("min-width-pane");
+                    }
 
                     // Get all child elements of detailsPane
                     const elements = Array.from(detailsPane.children);
@@ -1232,16 +1181,21 @@
                     // Sort the elements while prioritizing the first three child elements
                     elements.sort((a, b) => {
                         const priorityElements = ['custom-btn-area', 'search-area', 'nav-buttons'];
+
+                        // Get the index of each element in the priorityElements array
                         const indexA = priorityElements.indexOf(a.id);
                         const indexB = priorityElements.indexOf(b.id);
 
+                        // If both elements are part of the priorityElements array, sort based on their indices
                         if (indexA !== -1 && indexB !== -1) {
                             return indexA - indexB;
                         }
 
+                        // If only one of the elements is part of the priorityElements array, prioritize it
                         if (indexA !== -1) return -1;
                         if (indexB !== -1) return 1;
 
+                        // If neither element is part of the priorityElements array, sort alphabetically
                         return a.id.localeCompare(b.id);
                     });
 
@@ -1252,30 +1206,25 @@
                     elements.forEach(element => {
                         detailsPane.appendChild(element);
                     });
+
+
+
                 }
+
             }
-        }
-    };
+        });
+    });
 
-    // ========== OPTIMIZATION: Debounced observer to reduce processing frequency ==========
-    const inboxObserver = new MutationObserver(debouncedCallback(inboxObserverCallback, 50));
 
-    // ========== OPTIMIZATION: Target specific elements instead of entire document ==========
-    function startObserver() {
-        // First, try to observe the main inbox container
-        const inboxContainer = document.querySelector('.layout_service') || document.querySelector('[data-testid="inbox-layout"]') || document.body;
-        inboxObserver.observe(inboxContainer, { childList: true, subtree: true });
-    }
-
-    // Start observing
-    startObserver();
+    // Start observing the inbox for changes
+    inboxObserver.observe(document, { childList: true, subtree: true });
 
     // Initial tab title update
     setTimeout(updateTabTitle, 1000);
 
     // Append the keyframes CSS to the head
     const keyframesCSS = `@keyframes rotateInfinite{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}`;
-    const otherCSS = `.message-container{display: flex !important;flex-direction: row !important;}.accordion {--border-color: #cccccc;--background-color: #f1f1f1;--transition: all 0.2s ease;display: flex;flex-direction: column;gap: 10px;max-width: 500px;}.accordion .accordion-item {border: 1px solid var(--border-color);border-radius: 5px;}.accordion .accordion-item .accordion-item-description-wrapper hr {border: none;border-top: 1px solid var(--border-color);visibility: visible;}.accordion .accordion-item.open .accordion-item-description-wrapper hr {visibility: visible;}.accordion .accordion-item .accordion-item-header {background-color: var(--background-color);display: flex;align-items: center;justify-content: space-between;padding: 10px;cursor: pointer;}.accordion .accordion-item .accordion-item-header .accordion-item-header-title {font-weight: 600;}.accordion .accordion-item .accordion-item-header .accordion-item-header-icon {transition: var(--transition);}.accordion .accordion-item.open .accordion-item-header .accordion-item-header-icon {transform: rotate(-180deg);}.accordion .accordion-item .accordion-item-description-wrapper {margin:0 1em 0 1em;display: grid;grid-template-rows: 0fr;overflow: hidden;transition: var(--transition);}.accordion .accordion-item.open .accordion-item-description-wrapper {grid-template-rows: 1fr;}.accordion .accordion-item .accordion-item-description-wrapper .accordion-item-description {min-height: 0;}.accordion .accordion-item .accordion-item-description-wrapper .accordion-item-description p {padding: 10px;line-height: 1.5;}.highlighted-background{background:cornsilk;}.min-width-pane{min-width: 350px !important;padding-right: 12px;}.highlighted-count{text-align:center;margin:auto .3em}.nav-buttons span{margin-left:.1em;margin-right:.1em;cursor:pointer;border-radius:50%;background:#000;color:#fff;padding:.3em;width:1.1em}.nav-buttons{margin-left:auto;margin-right:auto;}.scroll-top-btn{background:#000;color:#fff;border-radius:50%;border:2px solid #000}.scroll-top-btn.active{background:#000;color:#ff0;border-radius:50%;border:2px solid #000}.highlighted{border:4px solid #54d314;border-radius:2em}.pseudo-search{width:100%;display:inline;border-bottom:2px solid #ccc;padding:10px 15px}.pseudo-search input{border:0;background-color:transparent;width:95%;}.pseudo-search input:focus{outline:0}.pseudo-search button,.pseudo-search i{border:none;background:0 0;cursor:pointer}.pseudo-search select{border:none}.custom-btn-area{border: 2px solid;border-radius: 2em;}.custom-btn-area img{height: 30px;}.custom-btn-area button{padding: 0.2em;display: flex;}.clear-button{background:#80808099;margin:5px;color:#fff;padding:1px 9px;border-radius:50px;}
+    const otherCSS = `.message-container{display: flex !important;flex-direction: row !important;}.accordion {--border-color: #cccccc;--background-color: #f1f1f1;--transition: all 0.2s ease;display: flex;flex-direction: column;gap: 10px;max-width: 500px;}.accordion .accordion-item {border: 1px solid var(--border-color);border-radius: 5px;}.accordion .accordion-item .accordion-item-description-wrapper hr {border: none;border-top: 1px solid var(--border-color);visibility: visible;}.accordion .accordion-item.open .accordion-item-description-wrapper hr {visibility: visible;}.accordion .accordion-item .accordion-item-header {background-color: var(--background-color);display: flex;align-items: center;justify-content: space-between;padding: 10px;cursor: pointer;}.accordion .accordion-item .accordion-item-header .accordion-item-header-title {font-weight: 600;}.accordion .accordion-item .accordion-item-header .accordion-item-header-icon {transition: var(--transition);}.accordion .accordion-item.open .accordion-item-header .accordion-item-header-icon {transform: rotate(-180deg);}.accordion .accordion-item .accordion-item-description-wrapper {margin:0 1em 0 1em;display: grid;grid-template-rows: 0fr;overflow: hidden;transition: var(--transition);}.accordion .accordion-item.open .accordion-item-description-wrapper {grid-template-rows: 1fr;}.accordion .accordion-item .accordion-item-description-wrapper .accordion-item-description {min-height: 0;}.accordion .accordion-item .accordion-item-description-wrapper .accordion-item-description p {padding: 10px;line-height: 1.5;}.highlighted-background{background:cornsilk;}.min-width-pane{min-width: 350px !important;padding-right: 12px;}.select-msg-checkbox{margin:1em;}.highlighted-count{text-align:center;margin:auto .3em}.nav-buttons span{margin-left:.1em;margin-right:.1em;cursor:pointer;border-radius:50%;background:#000;color:#fff;padding:.3em;width:1.1em}.nav-buttons{margin-left:auto;margin-right:auto;}.scroll-top-btn{background:#000;color:#fff;border-radius:50%;border:2px solid #000}.scroll-top-btn.active{background:#000;color:#ff0;border-radius:50%;border:2px solid #000}.highlighted{border:4px solid #54d314;border-radius:2em}.pseudo-search{width:100%;display:inline;border-bottom:2px solid #ccc;padding:10px 15px}.pseudo-search input{border:0;background-color:transparent;width:95%;}.pseudo-search input:focus{outline:0}.pseudo-search button,.pseudo-search i{border:none;background:0 0;cursor:pointer}.pseudo-search select{border:none}.custom-btn-area{border: 2px solid;border-radius: 2em;}.custom-btn-area img{height: 30px;}.custom-btn-area button{padding: 0.2em;display: flex;}.clear-button{background:#80808099;margin:5px;color:#fff;padding:1px 9px;border-radius:50px;}
     .scroll-top-btn,.search-btn{font-size:20px;margin:3px;}.disabled-btn{opacity:0.6;cursor:not-allowed;pointer-events: none;}`;
     const styleTag = document.createElement('style');
     styleTag.textContent = keyframesCSS + otherCSS;

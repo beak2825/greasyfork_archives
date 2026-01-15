@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://asil.kr/app/apt_info.jsp?*
 // @grant       none
-// @version     2.21
+// @version     2.30
 // @author      -
 // @description 버튼 배치/레이아웃 동일 + 로드시 h2 위치를 기준으로 apt_info의 top을 (h2 top + 45px)로 보정
 // @downloadURL https://update.greasyfork.org/scripts/490832/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EC%95%84%EC%8B%A4%20%EC%B0%A8%ED%8A%B8%20%EA%B0%80%EA%B2%A9%ED%91%9C.user.js
@@ -11,10 +11,10 @@
 // ==/UserScript==
 
 
- const TS  = () => new Date().toISOString();
-  const log = (...a) => console.log(`[%s][ASIL]`, TS(), ...a);
-  const warn= (...a) => console.warn(`[%s][ASIL]`, TS(), ...a);
-  const err = (...a) => console.error(`[%s][ASIL]`, TS(), ...a);
+const TS  = () => new Date().toISOString();
+const log = (...a) => console.log(`[%s][ASIL]`, TS(), ...a);
+const warn= (...a) => console.warn(`[%s][ASIL]`, TS(), ...a);
+const err = (...a) => console.error(`[%s][ASIL]`, TS(), ...a);
 
 (function () {
   'use strict';
@@ -127,6 +127,23 @@
   function safeAppend(parent, node){ return safeInsert(parent, node, null); }
   function safeRemove(node){ try { return __remove.call(node); } catch(_){} }
 
+  /* ===================== (추가) 추가정보 토글(로컬스토리지 저장) ===================== */
+  const ASIL_EXTRA_KEY = 'asil_priceTable_extraInfo'; // 1=show, 0=hide
+  function getExtraInfoEnabled(){ return localStorage.getItem(ASIL_EXTRA_KEY) === '1'; }
+  function setExtraInfoEnabled(v){ localStorage.setItem(ASIL_EXTRA_KEY, v ? '1' : '0'); }
+  function applyExtraInfoVisibility(){
+    const show = getExtraInfoEnabled();
+    const ids = ['gapSpanId', 'new_chart_info1', 'new_chart_info2']; // 현재 갭/최고 전세가율/전고점
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = show ? '' : 'none';
+    });
+    // ✅ 추가정보 OFF면 돋보기(🔎)도 숨김
+    document.querySelectorAll('.magnifier_emoji').forEach(el => {
+      el.style.display = show ? '' : 'none';
+    });
+  }
+
   /* ===================== 1) 버전 안내 팝업(기존 유지) ===================== */
 
 
@@ -141,13 +158,32 @@
         '.asil-titlebar{display:flex;gap:8px;align-items:center;',
         'margin:0 0 10px 0;padding:6px 10px;background:#fff;border-radius:8px;',
         'box-shadow:inset 0 0 0 1px #e5e7eb;position:relative;z-index:9;flex-wrap:wrap;}',
-        '.asil-titlebar .hongbu-btn{display:inline-flex;align-items:center;justify-content:center;height:26px;',
-        'padding:0 10px;border-radius:6px;border:1px solid rgba(0,0,0,.1);font-size:12px;font-weight:600;line-height:1;',
+        '.asil-titlebar .hongbu-btn{display:inline-flex;align-items:center;justify-content:center;height:24px;',
+        'padding:0 8px;border-radius:6px;border:1px solid rgba(0,0,0,.1);font-size:11px;font-weight:600;line-height:1;',
+
         'cursor:pointer;user-select:none;box-shadow:0 1px 0 rgba(0,0,0,.05);transition:filter .12s ease,transform .04s ease;}',
         '.asil-titlebar .hongbu-btn:hover{filter:brightness(.97);} .asil-titlebar .hongbu-btn:active{transform:translateY(1px);}',
         '.hongbu-green{background:#99CC00;color:#fff;border-color:#8ab800;}',
         '.hongbu-orange{background:#EB7B43;color:#fff;border-color:#d36f3d;}',
         '.hongbu-blue{background:#0070C0;color:#fff;border-color:#0063a8;}',
+
+        // ✅ 거래현황 더보기 + 추가정보를 한 덩어리로(줄바꿈 방지)
+        '.asil-titlebar .asil-rightgroup{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex:0 0 auto;}',
+
+        // (추가) 추가정보 체크박스(작게)
+        '.asil-titlebar .asil-extra-toggle{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 6px;border-radius:6px;border:1px solid rgba(0,0,0,.12);background:#fff;color:#111;font-size:11px;font-weight:700;cursor:pointer;user-select:none;white-space:nowrap;flex:0 0 auto;}',
+        //'.asil-titlebar .asil-extra-toggle input{margin:0;transform:translateY(1px);}',
+          '.asil-titlebar .asil-extra-toggle input{',
+          '  -webkit-appearance: checkbox !important;',
+          '  appearance: auto !important;',
+          '  opacity: 1 !important;',
+          '  width: 14px !important;',
+          '  height: 14px !important;',
+          '  margin: 0 !important;',
+          '  transform: translateY(1px);',
+          '}',
+
+
         'body > div.asilScroll > div.apt_info > div.hgroup{padding:8px 12px 6px !important;}',
         'body > div.asilScroll > div.apt_info > div.hgroup h2.h2{margin:0 0 6px 0 !important;line-height:1.25;}',
       ].join('');
@@ -211,7 +247,34 @@
 
       safeAppend(bar, btnNaver);
       safeAppend(bar, btnBig);
-      safeAppend(bar, btnMore);
+
+      // ✅ 거래현황 더보기 + 추가정보를 같은 그룹으로 묶기(줄바꿈 방지)
+      const rightGroup = document.createElement('div');
+      rightGroup.className = 'asil-rightgroup';
+      safeAppend(rightGroup, btnMore);
+
+      // (추가) 거래현황 더보기 버튼 옆: 추가정보 체크박스
+      const extraLabel = document.createElement('label');
+      extraLabel.className = 'asil-extra-toggle';
+
+      const extraChk = document.createElement('input');
+      extraChk.type = 'checkbox';
+      extraChk.checked = getExtraInfoEnabled();
+
+      const extraTxt = document.createElement('span');
+      extraTxt.textContent = '추가정보';
+
+      extraChk.addEventListener('change', () => {
+        setExtraInfoEnabled(extraChk.checked);
+        try { if (extraChk.checked) showGapSpan?.(); } catch(_) {}
+        applyExtraInfoVisibility();
+      });
+
+      extraLabel.appendChild(extraChk);
+      extraLabel.appendChild(extraTxt);
+      safeAppend(rightGroup, extraLabel);
+
+      safeAppend(bar, rightGroup);
 
       safeInsert(headerDiv, bar, h2);
       window.__asil_titlebar_installed = true;
@@ -221,6 +284,9 @@
       ro.observe(headerDiv);
       window.addEventListener('resize', () => reflowForHeader(headerDiv));
       setTimeout(() => reflowForHeader(headerDiv), 0);
+
+      // (추가) 초기 표시 상태 반영
+      applyExtraInfoVisibility();
 
       return true;
     }
@@ -283,6 +349,12 @@
   }
 
   function showIcon(){
+    // ✅ 추가정보 OFF면 무조건 돋보기 숨김
+    if (!getExtraInfoEnabled()) {
+      document.querySelectorAll('.magnifier_emoji').forEach(el => el.style.display = 'none');
+      return;
+    }
+
     const mTxt = document.getElementById('chart_info_m')?.textContent || '';
     const jTxt = document.getElementById('chart_info_j')?.textContent || '';
     const mEl  = document.querySelector("body > div.asilScroll > div.apt_info > div.article.apt_info_chart.mt0 > p > div:nth-child(1) > span.magnifier_emoji");
@@ -327,67 +399,70 @@
       box.appendChild(spanJ); box.appendChild(emoji);
       parent.appendChild(box);
     }
+
+    // ✅ 돋보기 생성 직후에도 체크 상태 반영
+    applyExtraInfoVisibility();
   }
 
 
-/* ========== 6) 호버 시 chart_info 갱신 (중복 설치 방지) ========== */
-(function installHoverUpdateOnce(){
-  // 두 스크립트 공용 플래그 (한 번만 설치)
-  const GLOBAL_FLAG = '__asil_hover_update_installed';
-  if (window[GLOBAL_FLAG]) {
-    log('[hover] already installed — skip');
-    return;
-  }
-  window[GLOBAL_FLAG] = true;
+  /* ========== 6) 호버 시 chart_info 갱신 (중복 설치 방지) ========== */
+  (function installHoverUpdateOnce(){
+    // 두 스크립트 공용 플래그 (한 번만 설치)
+    const GLOBAL_FLAG = '__asil_hover_update_installed';
+    if (window[GLOBAL_FLAG]) {
+      log('[hover] already installed — skip');
+      return;
+    }
+    window[GLOBAL_FLAG] = true;
 
-  // 개별 함수에 달아둘 식별자 (다른 스크립트가 덮어써도 판별 가능)
-  const PATCH_FLAG = '__asilHoverPatched';
+    // 개별 함수에 달아둘 식별자 (다른 스크립트가 덮어써도 판별 가능)
+    const PATCH_FLAG = '__asilHoverPatched';
 
-  const newFn = function(seriesId, seriesName, index, xName, yName, data, values){
-    if (!data) return '';
-    if (seriesId === 'G') return '';
-    if (seriesId === 'M' || seriesId === 'J') {
-      try { showChartInfo(data); } catch (e) {}
+    const newFn = function(seriesId, seriesName, index, xName, yName, data, values){
+      if (!data) return '';
+      if (seriesId === 'G') return '';
+      if (seriesId === 'M' || seriesId === 'J') {
+        try { showChartInfo(data); } catch (e) {}
+        return '';
+      }
       return '';
-    }
-    return '';
-  };
-  // 우리 패치임을 명시
-  try { newFn[PATCH_FLAG] = true; } catch (_) {}
+    };
+    // 우리 패치임을 명시
+    try { newFn[PATCH_FLAG] = true; } catch (_) {}
 
-  // 최초 주입
-  try {
-    Object.defineProperty(window, 'dataTipFuncForSingle', {
-      configurable: true, writable: true, value: newFn
-    });
-  } catch {
-    window.dataTipFuncForSingle = newFn;
-  }
-
-  // 원본/다른 스크립트가 다시 바꿔치기해도 40회(≈20초) 동안 감시해서,
-  // 우리 패치가 아니면 다시 덮어씀
-  let guardCount = 0;
-  const guard = setInterval(() => {
-    const fn = window.dataTipFuncForSingle;
-    const patched = (typeof fn === 'function' && fn[PATCH_FLAG] === true);
-
-    if (!patched) {
-      try {
-        window.dataTipFuncForSingle = newFn;
-        window.dataTipFuncForSingle[PATCH_FLAG] = true;
-        log('[hover] re-patched');
-      } catch (_) {}
+    // 최초 주입
+    try {
+      Object.defineProperty(window, 'dataTipFuncForSingle', {
+        configurable: true, writable: true, value: newFn
+      });
+    } catch {
+      window.dataTipFuncForSingle = newFn;
     }
 
-    if (++guardCount > 40) clearInterval(guard);
-  }, 500);
+    // 원본/다른 스크립트가 다시 바꿔치기해도 40회(≈20초) 동안 감시해서,
+    // 우리 패치가 아니면 다시 덮어씀
+    let guardCount = 0;
+    const guard = setInterval(() => {
+      const fn = window.dataTipFuncForSingle;
+      const patched = (typeof fn === 'function' && fn[PATCH_FLAG] === true);
 
-  log('[hover] installed (idempotent)');
-})();
+      if (!patched) {
+        try {
+          window.dataTipFuncForSingle = newFn;
+          window.dataTipFuncForSingle[PATCH_FLAG] = true;
+          log('[hover] re-patched');
+        } catch (_) {}
+      }
+
+      if (++guardCount > 40) clearInterval(guard);
+    }, 500);
+
+    log('[hover] installed (idempotent)');
+  })();
 
   function showGapSpan() {
 
-	showIcon();
+    showIcon();
     var chartInfoM = document.getElementById("chart_info_m").innerText;
     var chartInfoJ = document.getElementById("chart_info_j").innerText;
 
@@ -404,15 +479,15 @@
     var gapSpan = document.createElement('span');
     gapSpan.textContent = ' 갭 '.padEnd(6, '\u00A0') + gap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " / " + jspercent + "%";
     gapSpan.style.color = 'green';
-	gapSpan.setAttribute("id", "gapSpanId");
+    gapSpan.setAttribute("id", "gapSpanId");
 
     // Append the span element to the parent of chart_info_j
     var parentElement = document.querySelector('.chart_info');
-	if(!document.getElementById("gapSpanId")){
-		parentElement.appendChild(gapSpan);
-	}else{
-		document.getElementById("gapSpanId").textContent = ' 갭 '.padEnd(6, '\u00A0') + gap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " / " + jspercent + "%";
-	}
+    if(!document.getElementById("gapSpanId")){
+      parentElement.appendChild(gapSpan);
+    }else{
+      document.getElementById("gapSpanId").textContent = ' 갭 '.padEnd(6, '\u00A0') + gap.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " / " + jspercent + "%";
+    }
     // 가장 높은 전세가율과 해당 날짜를 저장할 변수 초기화
     var highestRentRatio = 0;
     var highestRentDate = "";
@@ -421,34 +496,34 @@
 
     // 데이터 순회하여 가장 높은 전세가율과 해당 날짜, 전체 기간 중 가장 큰 M 값과 해당 날짜 찾기
     for (var i = 0; i < chartPData.length; i++) {
-        var rent = parseInt(chartPData[i].J);
-        var monthly = parseInt(chartPData[i].M);
+      var rent = parseInt(chartPData[i].J);
+      var monthly = parseInt(chartPData[i].M);
 
-        // J 값이 null인 경우 무시
-        if (!isNaN(rent) && !isNaN(monthly)) {
-            var rentRatio = (rent / monthly) * 100;
-            if (rentRatio > highestRentRatio) {
-                highestRentRatio = rentRatio;
-                highestRentDate = chartPData[i].date;
-            }
+      // J 값이 null인 경우 무시
+      if (!isNaN(rent) && !isNaN(monthly)) {
+        var rentRatio = (rent / monthly) * 100;
+        if (rentRatio > highestRentRatio) {
+          highestRentRatio = rentRatio;
+          highestRentDate = chartPData[i].date;
         }
+      }
 
-        // M 값이 null이 아니고 현재 저장된 최대값보다 큰 경우 업데이트
-        if (!isNaN(monthly) && monthly > highestMValue) {
-            highestMValue = monthly;
-            highestMDate = chartPData[i].date;
-        }
+      // M 값이 null이 아니고 현재 저장된 최대값보다 큰 경우 업데이트
+      if (!isNaN(monthly) && monthly > highestMValue) {
+        highestMValue = monthly;
+        highestMDate = chartPData[i].date;
+      }
     }
 
     // 날짜 형식 변환 함수
     function formatDate(date) {
-        var parts = date.split("/");
-        return parts[0] + "." + parts[1];
+      var parts = date.split("/");
+      return parts[0] + "." + parts[1];
     }
 
     // 숫자에 콤마 추가 함수
     function addCommas(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     // 새로운 <p> 요소 생성
@@ -467,17 +542,17 @@
     newSpan2.innerHTML += "&nbsp;"; // 공백 문자 삽입
 
     function convertToDateFormat(monthYear) {
-        // "19년 11월"을 "19"와 "11"로 분할
-        var parts = monthYear.split(" ");
+      // "19년 11월"을 "19"와 "11"로 분할
+      var parts = monthYear.split(" ");
 
-        // 연도 부분을 추출하고 "20"을 추가하여 4자리 연도로 변환
-        var year = "20" + parts[0].slice(0, -1);
+      // 연도 부분을 추출하고 "20"을 추가하여 4자리 연도로 변환
+      var year = "20" + parts[0].slice(0, -1);
 
-        // 월 부분을 추출하고 한 자리 숫자인 경우 앞에 0을 추가하여 2자리 숫자로 변환
-        var month = ("0" + parts[1].slice(0, -1)).slice(-2);
+      // 월 부분을 추출하고 한 자리 숫자인 경우 앞에 0을 추가하여 2자리 숫자로 변환
+      var month = ("0" + parts[1].slice(0, -1)).slice(-2);
 
-        // 변환된 연도와 월을 결합하여 "YYYY/MM/01" 형식의 문자열로 반환
-        return year + "/" + month + "/01";
+      // 변환된 연도와 월을 결합하여 "YYYY/MM/01" 형식의 문자열로 반환
+      return year + "/" + month + "/01";
     }
 
     // 테스트를 위해 주어진 문자열 "19년 11월"을 "2017/12/01"로 변환하는 예시
@@ -489,19 +564,19 @@
     var yyyymmddObj = new Date(yyyymmdd);
 
     var redTextSpan = document.createElement("span");
-	redTextSpan.setAttribute("id", "new_chart_info3");
+    redTextSpan.setAttribute("id", "new_chart_info3");
     var updownPercent = "";
 
 
     // 전고점 시점보다 이전이면 상승률로 표시
     if (valueM !== "" && highestMDateObj >= yyyymmddObj) {
-        updownPercent = Math.round(((highestMValue / valueM - 1) * 100));
+      updownPercent = Math.round(((highestMValue / valueM - 1) * 100));
 
-        redTextSpan.textContent = "전고까지 상승률 : " + updownPercent + "%";
+      redTextSpan.textContent = "전고까지 상승률 : " + updownPercent + "%";
     } else if (valueM !== "" && highestMDateObj < yyyymmddObj) {
-        updownPercent = Math.round(((valueM / highestMValue - 1) * 100));
+      updownPercent = Math.round(((valueM / highestMValue - 1) * 100));
 
-        redTextSpan.textContent = "전고대비 하락률 : " + updownPercent + "%";
+      redTextSpan.textContent = "전고대비 하락률 : " + updownPercent + "%";
     }
 
     redTextSpan.style.color = 'red';
@@ -512,27 +587,30 @@
     newSpan2.style.color = 'black';
 
     // Append the span elements to the parent element
-	if(!document.getElementById("new_chart_info1")){
-		parentElement.appendChild(newSpan1);
-	}else{
-		document.getElementById("new_chart_info1").textContent = "최고 전세가율 : " + Math.floor(highestRentRatio) + "% (" + formatDate(highestRentDate) + ")";
+    if(!document.getElementById("new_chart_info1")){
+      parentElement.appendChild(newSpan1);
+    }else{
+      document.getElementById("new_chart_info1").textContent = "최고 전세가율 : " + Math.floor(highestRentRatio) + "% (" + formatDate(highestRentDate) + ")";
 
-	}
-	if(!document.getElementById("new_chart_info2")){
-		parentElement.appendChild(newSpan2);
-	}else{
-		var newChartInfo2Span = document.getElementById('new_chart_info2');
-		if (newChartInfo2Span) {
-			newChartInfo2Span.parentNode.removeChild(newChartInfo2Span);
-		}
-		parentElement.appendChild(newSpan2);
-		//document.getElementById("new_chart_info2").textContent = "전고점 : " + addCommas(highestMValue) + "(" + formatDate(highestMDate) + ") ";
-		//document.getElementById("new_chart_info2").innerHTML += "&nbsp;";
-		//document.getElementById("new_chart_info2").textContent += "전고대비 하락률 : " + updownPercent + "%"
-		//document.getElementById("new_chart_info2").appendChild(newSpan2);
-	}
+    }
+    if(!document.getElementById("new_chart_info2")){
+      parentElement.appendChild(newSpan2);
+    }else{
+      var newChartInfo2Span = document.getElementById('new_chart_info2');
+      if (newChartInfo2Span) {
+        newChartInfo2Span.parentNode.removeChild(newChartInfo2Span);
+      }
+      parentElement.appendChild(newSpan2);
+      //document.getElementById("new_chart_info2").textContent = "전고점 : " + addCommas(highestMValue) + "(" + formatDate(highestMDate) + ") ";
+      //document.getElementById("new_chart_info2").innerHTML += "&nbsp;";
+      //document.getElementById("new_chart_info2").textContent += "전고대비 하락률 : " + updownPercent + "%"
+      //document.getElementById("new_chart_info2").appendChild(newSpan2);
+    }
     //showDetail();
-}
+
+    // ✅ 체크 상태에 따라 표시/숨김 반영
+    applyExtraInfoVisibility();
+  }
 
 // chart_info DOM과 값이 실제로 준비되었을 때만 cb 실행
 function whenChartInfoReady(cb){
@@ -968,20 +1046,17 @@ function whenChartInfoReady(cb){
       }
 
       if (chartElement && chartElement.dataset.asilRevealBound !== '1') {
-  chartElement.addEventListener('mouseup', () => {
-    const div = document.getElementById("priceTableDiv");
-    if (div) div.style.display = "block";
-  });
-  chartElement.dataset.asilRevealBound = '1';
-}
+        chartElement.addEventListener('mouseup', () => {
+          const div = document.getElementById("priceTableDiv");
+          if (div) div.style.display = "block";
+        });
+        chartElement.dataset.asilRevealBound = '1';
+      }
 
 
       tbl?.setAttribute('contenteditable', 'true');
     }
   }
-
-
-
 
 })();
 
@@ -1052,5 +1127,3 @@ function whenChartInfoReady(cb){
     }, 250);
   }
 })();
-
-

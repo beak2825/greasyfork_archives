@@ -1,19 +1,20 @@
 // ==UserScript==
-// @name         test_battle_damage_tooltip
+// @name         battle_damage_tooltip
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.5.12
 // @description  Скрины с функционалом ниже. 1.) Показывает урон всех стеков одной стороны по одному выбранному стеку второй стороны. 2.) Если навести курсор на 1 существо, нажать 'e' (русская 'у'), сделать то же самое со вторым, то в чате появится урон первого по второму. Доп. выборы и настройка скорости анимации в настройках боя.
 // @author       Something begins
-// @license      University of Sugma
+// @license      MIT
 // @match       https://www.heroeswm.ru/war*
 // @match       https://my.lordswm.com/war*
 // @match       https://www.lordswm.com/war*
+// @match       https://mirror.heroeswm.ru/war*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant unsafeWindow
-// @downloadURL https://update.greasyfork.org/scripts/483777/test_battle_damage_tooltip.user.js
-// @updateURL https://update.greasyfork.org/scripts/483777/test_battle_damage_tooltip.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/483777/battle_damage_tooltip.user.js
+// @updateURL https://update.greasyfork.org/scripts/483777/battle_damage_tooltip.meta.js
 // ==/UserScript==
 // Активация горячих кнопок на Alt, поменять можно в переменной triggerKey
 // Выбор биндов горячих кнопок, редактировать можно снизу, спец символы копировать из списка keyboardKeycodes на 23 строке
@@ -22,7 +23,7 @@
 const seeDamage = "E";
 // посмотреть рельсу
 const seeMagShot = "U"
-// кнопка, зажав которую, становятся активны кнопки ниже
+    // кнопка, зажав которую, становятся активны кнопки ниже
 const triggerKey = "alt";
 // автобой
 const autoBattle = "A";
@@ -154,18 +155,41 @@ document.addEventListener("keyup", handleKeyUp);
 let outer_chat = document.getElementById("chat_format");
 let atLaunch = true;
 const physCalcColor = "#141736";
+let lastTurnDefended;
 const magCalcColor = "#150f1c";
 const calcHellFireColor = "rgba(255,0,0,0.1)";
 const inputHTML = `<input type="text" id="uprava_filter_input" placeholder="Ник для управы">`;
+const infoImgHTML = `<img style='height: 1.3em; width: auto; vertical-align: middle; margin-left: 1em' src="https://dcdn2.heroeswm.ru/i/combat/btn_info.png?v=6">`;
+document.body.insertAdjacentHTML("afterbegin", `
+    <style>
+        .custom-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+<div class="custom-popup" id="customPopup">
+        <span class="popup-icon">⚠️</span>
+        <i id="popupMessage"></i>
+    </div>`);
 outer_chat.insertAdjacentHTML("beforeend", `
 <div id="cre_distance_div" style="display: none"></div>
 <div id="individual_calc"></div>
 <div id="mag_calc"></div>
 <div id="dmg_list_container"></div>
-<button id="dmg_list_refresh" style="background-color: #3d3d29; color: white; padding: 5px 10px; border: none; border-radius: 4px; font-size: 10px; cursor: pointer">Открыть</button>
+<button id="dmg_list_refresh" style="background-color: #3d3d29; opacity: 0.7; font-size:100%; color: white; padding: 5px 10px; border: none; border-radius: 4px;  cursor: pointer">Список🔽</button>
 <select style="display : none; background-color: #333; color: white; margin: 10px" id="choose_cre"></select>
-<button id="change_side" style="background-color: #6b6b47; color: white; padding: 5px 10px; border: none; border-radius: 4px; font-size: 10px; cursor: pointer; display: none">Сменить сторону</button>
-<button id="collapse" style="background-color: #000000; color: white; padding: 5px 10px; border: none; border-radius: 4px; font-size: 10px; cursor: pointer; display: none; margin:10px">Свернуть</button> `)
+<button id="change_side" style="background-color: #6b6b47; color: white; padding: 5px 10px; border: none; border-radius: 4px;  cursor: pointer; display: none">Сменить сторону</button>
+<button id="collapse" style="background-color: #000000; color: white; padding: 5px 10px; border: none; border-radius: 4px;  cursor: pointer; display: none; margin:10px">❌</button> `)
 
 let last_individual_calc = {}
 let isOpen = false
@@ -183,6 +207,15 @@ let dmg_list_container = document.querySelector("#dmg_list_container")
 cre_distance_div.innerHTML = `<span>Выбранное расстояние: ${GM_getValue('cre_distance')}</span><br>`;
 
 // ========= utils ============
+function showPopup(message) {
+    const popup = document.getElementById('customPopup');
+    popup.querySelector("i").textContent = message;
+    popup.style.display = 'block';
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 2000);
+}
+
 function get_GM_value_if_exists(GM_key, default_value) {
     const GM_value = GM_getValue(GM_key)
     return GM_value != undefined ? GM_value : default_value;
@@ -216,15 +249,31 @@ function setBattleSpeed(value) {
     !unsafeWindow.timer_interval && unsafeWindow.timer_interval++;
     return value
 }
+
 function countOccurrences(arr, element) {
     return arr.reduce((acc, curr) => (curr === element ? acc + 1 : acc), 0);
 }
+
 function insertInput() {
     const parent = document.querySelector("#bcontrol_users");
     if (parent.querySelector("#uprava_filter_input")) return;
     parent.insertAdjacentHTML("afterbegin", inputHTML);
 }
-function upravaEvent(event){
+
+function send_get(url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, false);
+    xhr.overrideMimeType('text/plain; charset=windows-1251');
+    xhr.send(null);
+
+    if (xhr.status == 200)
+        return xhr.responseText;
+
+    return null;
+}
+
+
+function upravaEvent(event) {
     const parent = document.querySelector("#bcontrol_users");
     for (const child of parent.children) {
         if (child.tagName === "INPUT") continue;
@@ -239,6 +288,33 @@ function upravaEvent(event){
             child.classList.add("hidden");
         }
     }
+}
+const damageMultipliers = {
+    "doublestrike": 1.8, // двойной удар
+    "cleave": 1.75, // колун
+    "triplestrike": 2.5, // тройной удар
+    "doubleshoot": 2, // двойной выстрел
+    "assault": 1.3 // штурм
+}
+
+function evalStrength(attacker, defender) {
+    const cre_collection = unsafeWindow.stage.pole.obj;
+    let dmg = get_dmg_info(attacker.obj_index, defender.obj_index)
+    let practical_overall_hp;
+    if (cre_collection[defender.obj_index].attack > attacker.defence) {
+        practical_overall_hp = attacker.maxhealth * attacker.nownumber / (1 + 0.05 * Math.abs(cre_collection[defender.obj_index].attack - attacker.defence))
+    } else {
+        practical_overall_hp = attacker.maxhealth * attacker.nownumber * (1 + 0.05 * Math.abs(cre_collection[defender.obj_index].attack - attacker.defence))
+    }
+    let multiplier = 1;
+    for (const abil in damageMultipliers) {
+        if (attacker.data_string.includes(abil)) multiplier *= damageMultipliers[abil];
+    }
+    let avgDmg = ((dmg.max + dmg.min) / 2) * multiplier * (attacker.maxinit * attacker.initmodifier / 10);
+
+    let koef = avgDmg / practical_overall_hp;
+    if (attacker.hero || defender.hero) koef = 0;
+    return { avgDmg: avgDmg, koef: koef, practical_overall_hp: practical_overall_hp };
 }
 // инфа о гейтах на карте
 function initGates() {
@@ -260,7 +336,8 @@ function initGates() {
             padding: 10px;
             border-radius: 8px;
             pointer-events: none;
-            white-space: nowrap;
+            white-space: normal;
+            word-wrap: break-word;
             display: none;
         }
         .line {
@@ -277,9 +354,10 @@ function initGates() {
     </div>
     `);
     const floatingBox = document.getElementById('floatingBox');
-    document.addEventListener("mousemove", event => {
-        const [gate_x, gate_y] = [xr_last, yr_last]
-        if (gate_x > defxn || gate_y > defyn || gate_x < 0 || gate_y < 0) {
+
+    function showGates(event = null) {
+        const [gate_x, gate_y] = [xr_last, yr_last];
+        if (gate_x > defxn || gate_y > defyn || gate_x < 0 || gate_y < 0 || (event && event.target.tagName !== "CANVAS")) {
             floatingBox.style.display = "none";
             return;
         }
@@ -297,8 +375,8 @@ function initGates() {
             return;
         };
         floatingBox.style.display = "block";
-        const mouseX = event.pageX;
-        const mouseY = event.pageY;
+        const mouseX = event.pageX || event.touches[0].pageX;
+        const mouseY = event.pageY || event.touches[0].pageY;
         floatingBox.style.left = mouseX + 10 + 'px';
         floatingBox.style.top = mouseY + 10 + 'px';
         document.querySelector("#gate_name").innerHTML = `${curGate.nametxt} [${curGate.maxnumber}]`;
@@ -307,8 +385,13 @@ function initGates() {
         if (demonsNo < 2) return;
         const owner = stage.pole.obj[heroes[curGate.owner]]
         document.querySelector("#gate_owner").innerHTML = `${owner.nametxt} [${owner.maxhealth}]`
-    })
+    }
+    document.addEventListener("mousemove", showGates);
+    document.addEventListener("touchstart", event => {
+        showGates(event);
+    });
 }
+
 function calcKilled(dmg, defender) {
     let killed;
     if (dmg % defender.maxhealth > defender.nowhealth) killed = Math.floor(dmg / defender.maxhealth) + 1
@@ -327,13 +410,12 @@ function calcHellFireHTML(attacker, defender, cre_collection, physDamage) {
     const maxKilled = calcKilled(dmg + physDamage.max, defender);
     return `<p id="${0}" style=" background-color: ${calcHellFireColor}">
     <span style="color:white; font-size: 90%">Адское пламя: </span> <span style = "color:red">${dmg}</span> <span style = "font-size: 80%">урона</span><br>
-    <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">${minKilled}-${maxKilled}</b> существ <span style="color:#ffffff">(${minDamage}-${maxDamage})
+    <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">💀️ ${minKilled}-${maxKilled}</b><span style="color:#ffffff">💥${minDamage}-${maxDamage}
   </p><br>`;
 }
 
 function calcStormHTML(attacker, defender) {
     let koef;
-    //console.log(attacker);
     if (attacker.stormstrike) koef = 0.5;
     else if (attacker.flamestrike) koef = 1.2;
     else return "";
@@ -388,17 +470,16 @@ function calcStormHTML(attacker, defender) {
     if (b != 0) {
         magic[hera]['mle']['effect'] = b;
     }
-    //console.log(dmgMap);
     return `<p id="${0}" style=" background-color: ${calcHellFireColor}">
     <span style="color:white; font-size: 90%">Урон абилкой: </span><br>
-    <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">${dmgMap.min_killed}-${dmgMap.max_killed}</b> существ <span style="color:#ffffff">(${dmgMap.min}-${dmgMap.max})
+    <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">💀️ ${dmgMap.min_killed}-${dmgMap.max_killed}</b><span style="color:#ffffff">💥${dmgMap.min}-${dmgMap.max}
   </p><br>`;
 }
 
 function calcMagicHTML(attacker, defender, cre_collection, dmg, inList = false) {
     if (!mag_damage_on) return "";
     let calcHTML = "";
-    const disclaimerHTML = `<span class="tooltip"> !!! <span class="tooltiptext" style = "width:3000%; transform: translateX(-30%);"> (в КБО) это заклинание показывает <br> неправильный урон </span>
+    const disclaimerHTML = `<span class="tooltip"> ⚠️ <span class="tooltiptext chat_tooltip" style = " transform: translateX(-30%);"> (в КБО) это заклинание показывает <br> неправильный урон </span>
     </span>`;
 
     const incorrectSpellIDs = ["circle_of_winter", "swarm", "stormcaller"];
@@ -416,10 +497,10 @@ function calcMagicHTML(attacker, defender, cre_collection, dmg, inList = false) 
                     let killed2 = calcKilled(dmg2, defender);
                     const poweredDamage = Math.round(dmg2 * 1.5);
                     const poweredKilled = calcKilled(poweredDamage, defender);
-                    const poweredDamageText = isPowered ? `<span style = "font-style:italic; font-size:80%"><br>\t[1.5x] ${poweredKilled} существ (${poweredDamage})<br></span>` : "";
-                    meteorText += `[${i+1}]: ${killed2} существ (${dmg2}) ${poweredDamageText}<br>`;
+                    const poweredDamageText = isPowered ? `💀️ <span style = "font-style:italic; font-size:80%"><br>\t[1.5x] ${poweredKilled}  💥${poweredDamage}<br></span>` : "";
+                    meteorText += `[${i+1}]: 💀${killed2} 💥${dmg2} ${poweredDamageText}<br>`;
                 }
-                additionalInfoHTML = `<span class="tooltip"> +++ <span class="tooltiptext" style = "width:1000%; transform: ${isPowered? "translateY(30%);" : "translateX(-60%);"}">${meteorText}</span>
+                additionalInfoHTML = `<span class="tooltip"> ${infoImgHTML} <span class="tooltiptext chat_tooltip" style = " transform: ${isPowered? "translateY(30%);" : "translateX(-60%);"}">${meteorText}</span>
                 </span>`;
             }
             if (spellID === "chainlighting") {
@@ -430,24 +511,23 @@ function calcMagicHTML(attacker, defender, cre_collection, dmg, inList = false) 
                     let killed2 = calcKilled(dmg2, defender);
                     const poweredDamage = Math.round(dmg2 * 1.5);
                     const poweredKilled = calcKilled(poweredDamage, defender);
-                    const poweredDamageText = isPowered ? `<span style = "font-style:italic; font-size:80%"><br>\t[1.5x] ${poweredKilled} существ (${poweredDamage})<br></span>` : "";
-                    chainText += `${i+2} : ${killed2} существ (${dmg2}) ${poweredDamageText}<br>`;
+                    const poweredDamageText = isPowered ? `💀<span style = "font-style:italic; font-size:80%"><br>\t[1.5x] ${poweredKilled} 💥${poweredDamage}<br></span>` : "";
+                    chainText += `${i+2} : 💀${killed2}  💥${dmg2} ${poweredDamageText}<br>`;
                 }
-                additionalInfoHTML = `<span class="tooltip"> +++ <span class="tooltiptext" style = "width:1000%; transform: ${isPowered? "translateY(30%);" : "translateX(-60%);"};">${chainText}</span>
+                additionalInfoHTML = `<span class="tooltip"> ${infoImgHTML} <span class="tooltiptext chat_tooltip" style = " transform: ${isPowered? "translateY(30%);" : "translateX(-60%);"};">${chainText}</span>
                 </span>`;
             }
             if (spellID === "poison") {
-                additionalInfoHTML = `<span class="tooltip"> !!! <span class="tooltiptext" style = "width:1000%; transform: ${isPowered? "translateY(30%);" : "translateX(-60%);"};">Погрешность +-10%</span>
+                additionalInfoHTML = `<span class="tooltip"> ${infoImgHTML} <span class="tooltiptext chat_tooltip" style = " transform: ${isPowered? "translateY(30%);" : "translateX(-60%);"};">Погрешность +-10%</span>
                 </span>`;
             }
             let killed = calcKilled(dmg, defender);
             const poweredDamage = Math.round(dmg * 1.5);
             const poweredKilled = calcKilled(poweredDamage, defender);
-            const poweredDamageText = isPowered ? `<span style = "font-style:italic; font-size:80%"><br>\t[1.5x] ${poweredKilled} существ (${poweredDamage})<br></span>` : "";
-            // calcHTML+= `${damageSpells[spellID]} ---> ${dmg} \t (${killed} существ)`;
+            const poweredDamageText = isPowered ? `💀<span style = "font-style:italic; font-size:80%"><br>\t[1.5x] ${poweredKilled}  💥${poweredDamage}<br></span>` : "";
             calcHTML += `<p id="${0}" style=" background-color: ${magCalcColor}">
-            <span style="color:white; font-size: 90%">${damageSpells[spellID]}: </span><br>
-            <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">${killed}</b> существ <span style="color:#ffffff">(${dmg}) ${poweredDamageText}</span> ${incorrectSpellIDs.includes(spellID) ? disclaimerHTML : additionalInfoHTML}
+            <span style="color:white; font-size: 90%">${damageSpells[spellID]}: </span><br>💀
+            <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">${killed}</b>  <span style="color:#ffffff">💥${dmg} ${poweredDamageText}</span> ${incorrectSpellIDs.includes(spellID) ? disclaimerHTML : additionalInfoHTML}
           </p>`;
         }
     }
@@ -467,7 +547,7 @@ function calcPhysHTML(attacker, defender, dmg, distance_str) {
 </div>
 <p id="${0}" style=" background-color: ${physCalcColor}">
   <span style=color:#bfbfbf"></span>
-  <b style="color:#ffffff; font-size: 120%; text-decoration: underline;">${dmg.min_killed}-${dmg.max_killed}</b> существ (<span style="color:#ffffff">${dmg.min}-${dmg.max}</span>)
+  💀<b style="color:#ffffff; font-size: 120%; text-decoration: underline;">${dmg.min_killed}-${dmg.max_killed}</b> <span style="color:#ffffff">💥${dmg.min}-${dmg.max}</span>
 </p>
 <br>`;
 }
@@ -497,16 +577,7 @@ function paint_coords(x, y, color, timeout = 2077) {
         set_visible(tile, 0)
     }, timeout)
 }
-// const observer = new MutationObserver((mutationsList, observer) => {
-//     for (const mutation of mutationsList) {
-//         if (mutation.type !== 'childList') return
-//         for (const addedNode of mutation.addedNodes) {
-//             if (!(addedNode.classList && addedNode.classList.contains('cont') || ["B", "BR"].includes(addedNode.tagName))) continue
-//             wrap_battlehelper();
-//             battlehelper_div.style.display = battleHelper_on ? "inline" : "none";
-//         }
-//     }
-// });
+
 
 function GM_toggle_boolean(GM_key, boolean) {
     boolean = !boolean
@@ -545,36 +616,47 @@ const new_settings = `
   .tooltip {
     position: relative;
     display: inline-block;
-    text-size: 150%;
+    text-size: 120%;
     color: brown;
-    text-decoration: underline;
   }
 
-  .tooltip .tooltiptext {
+.tooltip .tooltiptext {
     visibility: hidden;
     position: absolute;
     bottom: 100%;
     left: 50%;
+    transform: translateX(-50%);
     padding: 5px;
     background-color: #555;
     color: #fff;
     border-radius: 6px;
-    word-wrap: break-word;
-  }
-
-  .tooltip:hover .tooltiptext {
+    word-wrap: break-word;      /* wrap long words */
+    white-space: normal;        /* allow multiple lines */
+    z-index: 1000;              /* above panel content */
+}
+    .chat_tooltip{
+        min-width: 500%;
+    max-width: 700%;
+    }
+.settings_tooltip{
+        min-width: 1500%;
+    max-width: 3000%;
+}
+.tooltip:hover .tooltiptext,
+.tooltip:active .tooltiptext {
     visibility: visible;
-  }
+}
+
 </style>
 <div class="info_row">
-  <label class="checkbox_container">коэф. урона <span class="tooltip">? <span class="tooltiptext" style = "width: 5000%; transform: translateX(-30%);">отношение урон/хп (т.е. у кого больше всех коэф., с того выгоднее начинать. <br>Работает в списке уронов если нажать на "Открыть" в чате)</span>
+  <label class="checkbox_container">⚖️коэф. урона<span class="tooltip">🔍<span class="tooltiptext settings_tooltip" style = "transform: translateX(-30%);">отношение урон/хп (т.е. у кого больше всех коэф., с того выгоднее начинать. <br>Работает в списке уронов если нажать на "Список" в чате)</span>
   </span>
     <input type="checkbox" checked="true" id="coeff_on">
     <span class="checkbox_checkmark"></span>
   </label>
 </div>
 <div class="info_row">
-  <label class="checkbox_container">Расстояние между стеками <span class="tooltip">? <span class="tooltiptext transform: translateX(-30%);" style = "width: 5000%;">Расстояние между атакующим и защищающимся стеками. Выбирать расстояние стрелочками в текстовом поле снизу. <br>
+  <label class="checkbox_container">Расстояние между стеками <span class="tooltip">🔍<span class="tooltiptext settings_tooltip" "style = "transform: translateX(-30%);">Расстояние между атакующим и защищающимся стеками. Выбирать расстояние стрелочками в текстовом поле снизу. <br>
     Влияет на статус урона стрелка (ближний/дальний урон, кривая/прямая стрела),
      разбег и прочие абилки, зависящие от расстояния. <br> Если выставить "Расстояние: 1", то стрелок будет считаться заблокированным.
       Если выставить расстояние больше 1,
@@ -583,18 +665,23 @@ const new_settings = `
     <input type="checkbox" checked="true" id="cre_distance_on">
     <span class="checkbox_checkmark"></span>
   </label>
-  <input type="number" style="width: 4%; margin: 2px 2px 2px 80px" id="cre_distance" onkeydown="return false;" value=${cre_distance}>
+  <ass style="display: inline-flex; align-items: center; gap: 2px;">
+  <button type="button" id="cre_distance_minus" style="padding: 0 4px;">−</button>
+  <input type="number" id="cre_distance" style="width: 40px; text-align: center;" value="${cre_distance}">
+  <button type="button" id="cre_distance_plus" style="padding: 0 4px;">+</button>
+</ass>
 </div>
 <div class="info_row">
-    <label class="checkbox_container">Скорость анимации <span class="tooltip">? <span class="tooltiptext" style = "width: 5000%; transform: translateX(-30%);"> Скорость боевых анимаций. <br> Выбирать расстояние стрелочками в текстовом поле снизу или если зажать кнопку Alt и нажимать на стрелки клавиатуры.<br> Включить/выключить анимацию [Alt + P (русская З)].<br> Анимацию можно как ускорить, так и замедлить.<br>Верхний потолок у скорости 20, нижнего нету.<br> Негативный показатель означает скорость ниже возможной гвдшной. </span>
+    <label class="checkbox_container">Скорость анимации <span class="tooltip">🔍<span class="tooltiptext settings_tooltip" style = " transform: translateX(-30%);"> Скорость боевых анимаций. <br> Выбирать расстояние стрелочками в текстовом поле снизу или если зажать кнопку Alt и нажимать на стрелки клавиатуры.<br> Включить/выключить анимацию [Alt + P (русская З)].<br> Анимацию можно как ускорить, так и замедлить.<br>Верхний потолок у скорости 20, нижнего нету.<br> Негативный показатель означает скорость ниже возможной гвдшной. </span>
       </span>
       <input type="checkbox" checked="true" id="animation_speed_on">
       <span class="checkbox_checkmark"></span>
     </label>
-    <input type="number" style="width: 5%; margin: 2px 2px 2px 80px" id="anim_speed" onkeydown="return false;" >
+  <input type="range" id="anim_speed" min="1" max="20" step="1" value="4" style="width:150px;">
+  <span id="anim_speed_val">4</span>
 </div>
 <div class="info_row">
-  <label class="checkbox_container">Расчет маг. урона <span class="tooltip"> * <span class="tooltiptext" style = "width: 5000%; transform: translateX(-30%);"> Расчет магического урона не работает во время расстановки
+  <label class="checkbox_container">Расчет маг. урона <span class="tooltip"> ⚠️ <span class="tooltiptext" style = " transform: translateX(-30%);"> Расчет магического урона не работает во время расстановки
   </span></span>
     <input type="checkbox" checked="true" id="mag_damage_on">
     <span class="checkbox_checkmark"></span>
@@ -606,17 +693,16 @@ settings_panel.insertAdjacentHTML("beforeend", new_settings)
 let settings_interval = setInterval(() => {
     if (Object.keys(unsafeWindow.stage.pole.obj).length !== 0) {
         initMagicCalc();
-
         document.querySelector("#mag_damage_on").checked = mag_damage_on;
         document.querySelector("#coeff_on").checked = coeff_on
         document.querySelector("#cre_distance_on").checked = cre_distance_on
-        document.querySelector("#animation_speed_on").checked = animation_speed_on
-        let spd = get_GM_value_if_exists("anim_speed", getCurrentBattleSpeed())
+        document.querySelector("#animation_speed_on").checked = animation_speed_on;
+        let spd = get_GM_value_if_exists("anim_speed", getCurrentBattleSpeed());
+        document.getElementById("anim_speed_val").textContent = spd;
         document.querySelector("#anim_speed").value = spd
         if (GM_getValue("animation_speed_on")) setBattleSpeed(spd);
-        // без таймаута гвд крашится :\
+        // авторасстановка в ГВ
         //if (btype === 66) setTimeout(make_ins_but, 1000);
-        // убрал, чет лагает с этим
         if (location.href.includes("&lt")) {
             const test = document.querySelector("#pause_button");
             if (test.style.display === "none") {
@@ -635,7 +721,7 @@ const upravaInterval = setInterval(() => {
     else {
         clearInterval(upravaInterval);
         upravaRoot.insertAdjacentHTML("afterbegin",
-                                      `
+            `
         <style>
             .hidden {
                 display: none;
@@ -661,27 +747,32 @@ const anim_speed_counter = document.querySelector("#anim_speed")
 
 
 // =========  Event Listeners ============
+let speedCount, distance;
 document.body.addEventListener('input', function(event) {
     switch (event.target.id) {
         case "cre_distance":
-            if (distance_counter.value < 1) {
-                distance_counter.value = 1
-                return
+            distance = parseInt(distance_counter.value);
+            if (isNaN(distance)) {
+                distance_counter.value = "";
+                return;
+            }
+            if (distance < 1) {
+                distance_counter.value = 1;
+                return;
             }
             if (!cre_distance_on) return
-            GM_setValue('cre_distance', distance_counter.value)
+            GM_setValue('cre_distance', distance)
             if (isOpen) refresh()
             individual_calc.innerHTML = individual_calc_innerHTML(last_individual_calc.atk_obj_index, last_individual_calc.def_obj_index)
-            cre_distance_div.innerHTML = `<span>Выбранное расстояние: ${GM_getValue('cre_distance')}</span><br>`
+            cre_distance_div.innerHTML = `Выбранное расстояние: <span style= "color:white">${GM_getValue('cre_distance')}</span><br>`
             break;
         case "anim_speed":
-            if (anim_speed_counter.value > 20) {
-                anim_speed_counter.value = 20
-                return
-            }
-            GM_setValue('anim_speed', anim_speed_counter.value)
-            if (!animation_speed_on) return
-            setBattleSpeed(anim_speed_counter.value)
+            speedCount = Number(event.target.value);
+            GM_setValue('anim_speed', speedCount);
+            document.getElementById("anim_speed_val").textContent = document.getElementById("anim_speed").value;
+            if (!animation_speed_on) return;
+            setBattleSpeed(speedCount);
+
             break;
     }
 });
@@ -690,9 +781,7 @@ document.addEventListener('keydown', event => {
     if ((document.querySelector("#chattext") === document.activeElement) || (document.querySelector("#chattext_classic") === document.activeElement)) return;
 
     const keyCode = parseInt(event.keyCode);
-    //console.log(keyboardKeycodes[triggerKey.toLowerCase()].toString(), pressedKeys);
     if (!pressedKeys.has(keyboardKeycodes[triggerKey.toLowerCase()]) || !Object.values(keyboardKeycodes).includes(keyCode)) return;
-    //console.log(keyCode, keyboardKeycodes[backToGame.toLocaleLowerCase()], keyboardKeycodes[backToGame.toLocaleLowerCase()] === keyCode);
     if (keyCode === keyboardKeycodes[toggleSpeed.toLowerCase()]) {
         animation_speed_on = GM_toggle_boolean("animation_speed_on", GM_getValue("animation_speed_on"))
         document.querySelector("#animation_speed_on").checked = animation_speed_on
@@ -719,7 +808,6 @@ document.addEventListener('keydown', event => {
         document.querySelector("#confirm_ins_img") && triggerMouseUpEvent(document.querySelector("#confirm_ins_img"));
     }
     if (keyCode === keyboardKeycodes[backToGame.toLowerCase()]) {
-        // document.querySelector("#back_to_game > img") && document.querySelector("#back_to_game > img").click();
         if (history.length > 1) {
             back_to_game_button_onRelease();
         } else {
@@ -787,22 +875,25 @@ document.body.addEventListener('click', function(event) {
         case "collapse":
             readjust_elements()
             isOpen = false
-            refresh_button.innerHTML = "Открыть";
+            refresh_button.innerHTML = "Список🔽";
             set_Display([select, side_button, collapse_button, document.querySelector("#chosen_cre_heading"), dmg_list_container, individual_calc, cre_distance_div], "none")
-            break
-            // case "confirm_ins_img":
-            //     observer.observe(outer_chat, { childList: true });
-            //     setTimeout(function() {
-            //         observer.disconnect();
-            //     }, 190000);
-            //     break;
+            break;
+
+        case "cre_distance_plus":
+            document.getElementById('cre_distance').value = parseInt(document.getElementById('cre_distance').value || 0) + 1;
+            document.getElementById('cre_distance').dispatchEvent(new Event('input', { bubbles: true }));
+            break;
+        case "cre_distance_minus":
+            document.getElementById('cre_distance').value = parseInt(document.getElementById('cre_distance').value || 0) - 1;
+            document.getElementById('cre_distance').dispatchEvent(new Event('input', { bubbles: true }));
+            break;
     }
 });
 
 function paint_two_coords() {
 
 }
-let calc_x, calc_y, magshot_x, magshot_y;
+let calc_attacker, magshot_x, magshot_y;
 
 function manageDamageCalc() {
     // если бой не начался, популизирует mapobj
@@ -811,37 +902,35 @@ function manageDamageCalc() {
             unsafeWindow.mapobj[cre.x + cre.y * defxn] = cre.obj_index;
         }
     }
-    let cre_collection = unsafeWindow.stage.pole.obj
+    let cre_collection = unsafeWindow.stage.pole.obj;
     if (mapobj[xr_last + yr_last * defxn] === undefined || cre_collection[mapobj[xr_last + yr_last * defxn]].rock === 1) {
-        paint_coords(xr_last, yr_last, "#cccccc")
-        return
+        paint_coords(xr_last, yr_last, "#cccccc");
+        return;
     }
-    if (calc_x === undefined) {
-        [calc_x, calc_y] = [xr_last, yr_last];
+    if (calc_attacker === undefined) {
+        calc_attacker = cre_collection[mapobj[xr_last + yr_last * defxn]];
         paint_coords(xr_last, yr_last, "#800000");
-        let attacker = cre_collection[mapobj[calc_x + calc_y * defxn]]
-        if (attacker.hero === 1) {
+        if (calc_attacker.hero === 1) {
             readjust_elements();
             individual_calc.innerHTML = ` <div id="individual_cre_heading" style="display:inline; background-color: ${physCalcColor}">
                   <span>Урон <br>
                   </span>
-                    <b>${attacker.nametxt}</b> по
+                    <b>${calc_attacker.nametxt}</b> по
                     <br>
                     </div>
                     `;
         }
     } else {
         readjust_elements();
-        let atk_obj_index = unsafeWindow.mapobj[calc_x + calc_y * defxn]
-        let def_obj_index = unsafeWindow.mapobj[xr_last + yr_last * defxn]
-        set_Display([individual_calc, collapse_button], "inline")
+        let def_obj_index = unsafeWindow.mapobj[xr_last + yr_last * defxn];
+        set_Display([individual_calc, collapse_button], "inline");
         if (cre_distance_on) {
             cre_distance_div.style.display = "inline";
             cre_distance_div.innerHTML = `<span>Выбранное расстояние: ${GM_getValue('cre_distance')}</span><br>`
         }
-        individual_calc.innerHTML = individual_calc_innerHTML(atk_obj_index, def_obj_index);
-        calc_x = calc_y = undefined
-        paint_coords(xr_last, yr_last, "blue")
+        individual_calc.innerHTML = individual_calc_innerHTML(calc_attacker.obj_index, def_obj_index);
+        calc_attacker = undefined;
+        paint_coords(xr_last, yr_last, "blue");
     }
 }
 
@@ -866,19 +955,22 @@ const mobileInterval = setInterval(() => {
     })
     document.addEventListener("touchend", event => {
         info_btn_cnt = 0;
-        if (!helpButton.classList.contains("active") || event.target.id === "help_imgScript") return;
+        if (!helpButton.classList.contains("active") || event.target.id === "help_imgScript" || event.target.tagName !== "CANVAS") return;
         manageDamageCalc();
     })
 
 }, 100);
-
-// Урон одного стека по другому по выбору нажатием кнопки E
+document.addEventListener("click", event => {
+        if (!info_btn_cnt) return;
+        info_btn_cnt = 0;
+    })
+    // Урон одного стека по другому по выбору нажатием кнопки E
 
 window.addEventListener("keyup", event => {
     const keyCode = parseInt(event.keyCode);
     if ((document.querySelector("#chattext") === document.activeElement) || (document.querySelector("#chattext_classic") === document.activeElement)) return;
     if (keyCode === keyboardKeycodes[seeDamage.toLowerCase()]) manageDamageCalc();
-    if (event.target.id === "uprava_filter_input"){
+    if (event.target.id === "uprava_filter_input") {
         upravaEvent(event);
     }
     if (keyCode === keyboardKeycodes[seeMagShot.toLowerCase()]) {
@@ -895,38 +987,6 @@ window.addEventListener("keyup", event => {
 });
 // -----------------------------------
 
-// =========  battleHelper ============
-// function wrap_battlehelper() {
-//     for (const child of battlehelper_div.children) {
-//         if (child.className === "cont") return
-//     }
-//     readjust_elements();
-//     let el_transfer = [];
-//     [...outer_chat.children].forEach(child => {
-//         if (["B", "BR"].includes(child.tagName) || child.className == "cont") {
-//             el_transfer.push(child)
-//         }
-//     });
-//     for (const el of el_transfer) battlehelper_div.appendChild(el);
-//     const first_icons = battlehelper_div.querySelectorAll('br + div.cont');
-//     let teams_text = [...outer_chat.childNodes].filter(node => (node.nodeType === node.TEXT_NODE && /Команда №(\d)/.test(node.textContent.trim())));
-//     let i = 0
-//     for (const img_div of first_icons) {
-//         img_div.previousSibling.insertAdjacentHTML('beforebegin', teams_text[i].textContent);
-//         i++;
-//     }
-//     for (const el of teams_text) el.remove()
-//     let title_arr = [...battlehelper_div.children].filter(child => child.textContent === "Стартовый бонус АТБ")
-//     if (battlehelper_div.children.length === 2 && title_arr.length === 1) {
-//         battlehelper_div.innerHTML = " "
-//     }
-// }
-// observer.observe(outer_chat, { childList: true });
-// setTimeout(function() {
-//     observer.disconnect();
-// }, 30000);
-
-// -----------------------------------
 // =========  маг. урон ============
 
 const damageSpells = {
@@ -967,10 +1027,7 @@ function calcHellFire(attacker, defender, cre_collection) {
     const factionModifier = calcFactionModifier(attacker, defender);
     const spellPower = cre_collection[heroes[attacker.owner]].maxnumber;
     const perkModifier = isperk(attacker.obj_index, 104) ? 1.5 : 1;
-    // console.log("round: ", Math.round((7 * spellPower + 7) * perkModifier) * factionModifier);
     const res = Math.floor(Math.round((7 * spellPower + 7) * perkModifier) * factionModifier);
-    // console.log("floor: ", Math.floor((7 * spellPower + 7) * perkModifier) * factionModifier);
-    // return Math.round((7 * spellPower + 7) * perkModifier * factionModifier);
     return res;
 }
 // добавление spellname_magiceff для объекта для дальнийших расчетов
@@ -1001,7 +1058,6 @@ function initMagicCalc() {
 
     // родной calcmagic с удалением кодом массовых заклов и др. побочных эффектов наведения курсора с активным заклом
     unsafeWindow.stage.pole.calcmagic_script = function calcmagic(atk_x, atk_y, xr, yr, magicuse, penalty = 1) {
-        //console.log(magicuse);
         let i = mapobj[atk_x + defxn * atk_y];
         const activeobj_S = i;
         initEff(magicuse, i);
@@ -1088,34 +1144,20 @@ function initMagicCalc() {
             ok = true;
         };
         if (magicuse == 'circle_of_winter') {
-            //console.log("mul", mul);
-            //console.log("eff", unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff']);
             unsafeWindow.stage.pole.attackmagic(i, mapobj[xr + yr * defxn], Math.round(unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff'] * mul), 'water', magicuse, 0, 0, 0);
             ok = true;
         };
 
         if (magicuse == 'stonespikes') {
-            // unsafeWindow.stage.pole.attackmagic(i, mapobj[xr + yr * defxn + 1], Math.round(unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff'] * mul), 'earth', magicuse, 0, 0, 0);
-            // unsafeWindow.stage.pole.attackmagic(i, mapobj[xr + yr * defxn - 1], Math.round(unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff'] * mul), 'earth', magicuse, 0, 0, 0);
-            // unsafeWindow.stage.pole.attackmagic(i, mapobj[xr + (yr + 1) * defxn], Math.round(unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff'] * mul), 'earth', magicuse, 0, 0, 0);
-            // unsafeWindow.stage.pole.attackmagic(i, mapobj[xr + (yr - 1) * defxn], Math.round(unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff'] * mul), 'earth', magicuse, 0, 0, 0);
             unsafeWindow.stage.pole.attackmagic(i, mapobj[xr + yr * defxn], Math.round(unsafeWindow.stage.pole.obj[activeobj_S][magicuse + '_magiceff'] * mul), 'earth', magicuse, 0, 0, 0);
             ok = true;
         };
-        // if ((ok) && (magicuse != '') && ((magicuse == 'circle_of_winter') || (magicuse == 'icebolt')) && (((unsafeWindow.stage.pole.obj[activeobj_S]['hero']) && (isperk(activeobj_S, 99))) || (unsafeWindow.stage.pole.obj[activeobj_S]['master_of_ice']))) {
-        //     unsafeWindow.stage.pole.showatb();
-        // };
-
-        // if ((ok) && (magicuse != '') && (unsafeWindow.stage.pole.obj[activeobj_S][magicuse + 'elem'] == 'air') && (((unsafeWindow.stage.pole.obj[activeobj_S]['hero']) && (isperk(activeobj_S, 100))) || (unsafeWindow.stage.pole.obj[activeobj_S]['master_of_storms']))) {
-        //     unsafeWindow.stage.pole.showatb();
-        // };
         return Totalmagicdamage;
     };
     // копипаст с удаленем запрета на показ урона по своим стекам
     stage.pole.attackmagic = function attackmagic(attacker, defender, eff, element, iname, noexp, nodamage, nomult) {
         if (defender == 1000) return 0;
         if ((defender <= 0) || (defender == undefined) || (!this.obj[defender])) return 0;
-        // if (this.obj[attacker].getside()==this.obj[defender]['side']) return 0;
         if ((this.obj[defender]['rock']) || (this.obj[defender]['hero'])) return 0;
         if (!nomult) nomult = 0;
         if (this.obj[defender]['y'] < 0) return 0;
@@ -1179,8 +1221,6 @@ function initMagicCalc() {
             eff *= 2;
         };
 
-
-        //eff1=24 eff2=24 eff3=31.056 eff4=27.28 imm=70.6 imm2=83.0068 eff5=22.64425504
         eff = this.calceffmagic(attacker, defender, eff, element);
         ignor = 0;
         if ((magic[defender]['mmn']) && (element != 'neutral')) {
@@ -1355,10 +1395,7 @@ function initMagicCalc() {
 
 
         }
-        //experimental();
-
         if ((defender <= 0) || (defender == undefined)) return 0;
-        // if (stage.pole.obj[attacker].getside() == stage.pole.obj[defender]['side']) return 0;
         if ((stage.pole.obj[defender]['rock']) || (stage.pole.obj[defender]['hero'])) return 0;
         if (stage.pole.obj[defender]['y'] < 0) return 0;
         if (stage.pole.obj[defender]['attacked'] != 1) return 0;
@@ -1458,8 +1495,12 @@ function initMagicCalc() {
             return 0;
         }
         if (Object.values(heroes).includes(activeobj) && activeobj !== 0) {
-            alert("Скрипт battle_damage_tooltip заблокировал оборону во время хода героя! Клик по кнопке свободен.")
-            return 0;
+            if (lastTurnDefended !== lastturn) {
+                showPopup("Оборона была одноразово заблокирована");
+                lastTurnDefended = lastturn;
+                return 0;
+            }
+
         }
         if ((loader.loading) || (activeobj == 0)) {
             return 0;
@@ -1473,7 +1514,37 @@ function initMagicCalc() {
             pl_id = player2;
         loadmy('battle.php?warid=' + warid + '&move=1&defend=1&pl_id=' + pl_id + '&my_monster=' + activeobj + '&x=' + stage[war_scr].obj[activeobj].x + '&y=' + stage[war_scr].obj[activeobj].y + '&lastturn=' + lastturn + '&lastmess=' + lastmess + '&lastmess2=' + lastmess2 + '&rand=' + mathrandom());
     }
-    }
+    stage[war_scr].check_timer = () => {
+        var anyway = false;
+        //    anyway = true; total_time = 396;
+        if ((anyway) || ((total_time > 0) && (total_time < 950) && ((!demomode) || (total_time < 100)) && (!battle_ended))) {
+            var timer = Math.max(0, total_time - Math.floor((Date.now() - count_time) / 1000));
+            ctime = timer;
+            if ((anyway) || (timer != lasttimer)) {
+                lasttimer = timer;
+                if (document.getElementById('timer')) {
+                    if ((stage[war_scr]) && (stage[war_scr].ground) && (stage[war_scr].ground.inited_ground)) {
+                        show_button('timer');
+                    }
+                    if (timer <= 5 && activeobj) {
+                        document.getElementById('timer').innerHTML = `<span style="color:red">${timer}</span>`;
+                    } else {
+                        document.getElementById('timer').innerHTML = timer
+                    }
+                };
+                stage[war_scr].scale_timer();
+
+            };
+        } else {
+            var was_visible = 0;
+            if ((stage[war_scr].infos.timer_text) && (btype != 86) && (btype != 87)) {
+                if (get_visible(stage[war_scr].infos.timer_text) == 1) was_visible = 1;
+                set_visible(stage[war_scr].infos.timer_text, 0);
+                if (was_visible) { stage[war_scr].scale_timer(); };
+            };
+        };
+    };
+}
 // -----------------------------------
 
 // Функция рельсы гвд с поправкой на выбор клеток юзером
@@ -1676,6 +1747,10 @@ function attackmonster(attacker, ax, ay, x, y, defender, cre_distance, shootok, 
     };
     if ((cre_collection[attacker]['fearofstrong']) && (cre_collection[defender]['level'] == 7)) {
         unsafeWindow.PhysicalModifiers *= 0.5;
+    };
+
+    if ((defender > 0) && (cre_collection[attacker]['sorcererslayer']) && (cre_collection[defender]['caster']) && (cre_collection[defender]['maxmanna'] > 3)) {
+        unsafeWindow.PhysicalModifiers *= 1.4 + 0.02 * Math.max(0, cre_collection[defender]['maxmanna'] - cre_collection[defender]['nowmanna']);
     };
     if ((hera > 0) && (unsafeWindow.magic[hera]['bna'])) {
         unsafeWindow.PhysicalModifiers = unsafeWindow.PhysicalModifiers * (1 + unsafeWindow.magic[hera]['bna']['effect'] / 100);
@@ -1991,7 +2066,7 @@ function attackmonster(attacker, ax, ay, x, y, defender, cre_distance, shootok, 
             if (unsafeWindow.isperk(attacker, _PERK_ATTACK2)) {
                 unsafeWindow.PhysicalModifiers *= 1.2;
             } else
-                if (unsafeWindow.isperk(attacker, _PERK_ATTACK1)) unsafeWindow.PhysicalModifiers *= 1.1;
+            if (unsafeWindow.isperk(attacker, _PERK_ATTACK1)) unsafeWindow.PhysicalModifiers *= 1.1;
         };
         if (unsafeWindow.isperk(defender, _PERK_DEFENSE3)) {
             unsafeWindow.PhysicalModifiers *= 0.7;
@@ -2158,55 +2233,124 @@ let defender_obj_id = 0
 let selected_id = 0
 
 function refresh() {
-    isOpen = true
+    isOpen = true;
     let cre_collection = unsafeWindow.stage.pole.obj;
+
     if (cre_distance_on) {
         cre_distance_div.style.display = "inline";
-        cre_distance_div.innerHTML = `<span>Выбранное расстояние: ${GM_getValue('cre_distance')}</span><br>`
+        cre_distance_div.innerHTML = `<span>Выбранное расстояние: ${GM_getValue('cre_distance')}</span><br>`;
     }
-    set_Display([select, side_button, collapse_button, document.querySelector("#chosen_cre_heading"), dmg_list_container, individual_calc], "inline")
 
-    refresh_button.innerHTML = "Обновить"
+    set_Display([select, side_button, collapse_button, document.querySelector("#chosen_cre_heading"), dmg_list_container, individual_calc], "inline");
+
+    refresh_button.innerHTML = "🔄";
+
     let cre_list = Object.values(cre_collection);
-    cre_list.sort(function(a, b) {
-        return a.obj_index - b.obj_index;
-    });
+    cre_list.sort((a, b) => a.obj_index - b.obj_index);
+
     dmg_list_container.innerHTML = "";
-    [...select.children].forEach(child => child.remove())
-    let found_defender = false
+    [...select.children].forEach(child => child.remove());
+
+    let found_defender = false;
+
     cre_list.forEach(defender => {
         if (defender.nownumber > 0 && defender.nametxt != "" && defender.side == chosen.side && defender.hero === undefined) {
             let option_id = `cre_no${cre_list.indexOf(defender)}`;
-            select.insertAdjacentHTML("beforeend", `<option id = "${option_id}" value = "${defender.obj_index}">${defender.nametxt} [${defender.nownumber}] </option>`)
+            select.insertAdjacentHTML("beforeend",
+                `<option id="${option_id}" value="${defender.obj_index}">
+                    ${defender.nametxt} [${defender.nownumber}]
+                </option>`
+            );
+
             if (!found_defender) {
-                if (`${defender.obj_index}` == chosen.creature) found_defender = true
-                defender_obj_id = defender.obj_index
-                selected_id = [...select.children].indexOf(select.lastChild)
+                if (`${defender.obj_index}` == chosen.creature) found_defender = true;
+                defender_obj_id = defender.obj_index;
+                selected_id = [...select.children].indexOf(select.lastChild);
             }
         }
     });
 
-    dmg_list_container.insertAdjacentHTML("beforeend", `<div id = "chosen_cre_heading" style="display:inline; background-color: ${physCalcColor}">
-  <span>Урон по </span><span style="color:#ffffff; font-size: 110%; font-weight: bold;">${cre_collection[defender_obj_id].nametxt} [${cre_collection[defender_obj_id].nownumber}] :</span>
-</div>`)
+    dmg_list_container.insertAdjacentHTML("beforeend", `
+        <div id="chosen_cre_heading" style="display:inline; background-color: ${physCalcColor}">
+            <span>Урон по </span>
+            <span style="color:#ffffff; font-size: 110%; font-weight: bold;">
+                ${cre_collection[defender_obj_id].nametxt} [${cre_collection[defender_obj_id].nownumber}] :
+            </span>
+        </div>
+    `);
+
+    /* ===========================
+       COLLECT + CALCULATE
+    ============================ */
+
+    let attackerRows = [];
+
     cre_list.forEach(attacker => {
         if (attacker.side == -chosen.side && attacker.nownumber > 0 && attacker.nametxt != "") {
-            let dmg = get_dmg_info(attacker.obj_index, defender_obj_id)
+            let dmg = get_dmg_info(attacker.obj_index, defender_obj_id);
             let practical_overall_hp;
-            if (cre_collection[defender_obj_id].attack > attacker.defence) {
-                practical_overall_hp = attacker.maxhealth * attacker.nownumber / (1 + 0.05 * Math.abs(cre_collection[defender_obj_id].attack - attacker.defence))
-            } else {
-                practical_overall_hp = attacker.maxhealth * attacker.nownumber * (1 + 0.05 * Math.abs(cre_collection[defender_obj_id].attack - attacker.defence))
-            }
-            let row_id = `row_no${cre_list.indexOf(attacker)}`
-            let koef_string = `(коэф. урона <b>${(  ((dmg.max + dmg.min) / 2) / practical_overall_hp  ).toFixed(2)}</b>)`;
-            dmg_list_container.insertAdjacentHTML("beforeend", `<p id = "${row_id}"><span style = "text-decoration: underline;color:#bfbfbf" >${attacker.nametxt}</span> [${attacker.nownumber}] --> <b style = "color:#bfbfbf">${dmg.min_killed}-${dmg.max_killed}</b> существ (${dmg.min}-${dmg.max}) ${(attacker.hero == undefined&&coeff_on) ? koef_string : ""}  </p>`);
-            dmg_list_container.insertAdjacentHTML("beforeend", calcHellFireHTML(attacker, cre_collection[defender_obj_id], cre_collection, dmg));
-            dmg_list_container.insertAdjacentHTML("beforeend", calcStormHTML(attacker, cre_collection[defender_obj_id]));
 
-            mag_damage_on && lastturn > 0 && dmg_list_container.insertAdjacentHTML("beforeend", calcMagicHTML(attacker, cre_collection[defender_obj_id], cre_collection, dmg));
+            if (cre_collection[defender_obj_id].attack > attacker.defence) {
+                practical_overall_hp = attacker.maxhealth * attacker.nownumber /
+                    (1 + 0.05 * Math.abs(cre_collection[defender_obj_id].attack - attacker.defence));
+            } else {
+                practical_overall_hp = attacker.maxhealth * attacker.nownumber *
+                    (1 + 0.05 * Math.abs(cre_collection[defender_obj_id].attack - attacker.defence));
+            }
+
+            let coef = evalStrength(attacker, cre_collection[defender_obj_id]).koef;
+
+            attackerRows.push({ attacker, dmg, coef });
         }
-    })
-    select.options.item(selected_id).selected = true
+    });
+
+    /* ===========================
+       SORT BY DANGER COEF (DESC)
+    ============================ */
+
+    attackerRows.sort((a, b) => b.coef - a.coef);
+
+    /* ===========================
+       RENDER WITH ALTERNATING ROW COLORS
+    ============================ */
+
+    const color1 = "#1a1a1a"; // dark row
+    const color2 = "#262626"; // slightly lighter row
+
+    attackerRows.forEach((row, index) => {
+        let { attacker, dmg, coef } = row;
+
+        let row_id = `row_no${index}`;
+        let koef_string = `<span title="коэф. урона">⚖️</span><b style="color:white">${coef.toFixed(2)}</b>`;
+
+        // pick alternating background color
+        let bgColor = index % 2 === 0 ? color1 : color2;
+
+        dmg_list_container.insertAdjacentHTML("beforeend", `
+            <p id="${row_id}" style="color:white; background-color:${bgColor}; padding:2px 5px; margin:0;">
+                <span style="text-decoration: underline;color:#bfbfbf">${attacker.nametxt}</span>
+                [${attacker.nownumber}] |
+                💀️<b style="color:#bfbfbf">${dmg.min_killed}-${dmg.max_killed}</b>
+                 💥${dmg.min}-${dmg.max}
+                ${(attacker.hero == undefined && coeff_on) ? koef_string : ""}
+            </p>
+        `);
+
+        dmg_list_container.insertAdjacentHTML("beforeend",
+            calcHellFireHTML(attacker, cre_collection[defender_obj_id], cre_collection, dmg)
+        );
+
+        dmg_list_container.insertAdjacentHTML("beforeend",
+            calcStormHTML(attacker, cre_collection[defender_obj_id])
+        );
+
+        mag_damage_on && lastturn > 0 &&
+            dmg_list_container.insertAdjacentHTML("beforeend",
+                calcMagicHTML(attacker, cre_collection[defender_obj_id], cre_collection, dmg)
+            );
+    });
+
+    select.options.item(selected_id).selected = true;
 }
+
 initGates();

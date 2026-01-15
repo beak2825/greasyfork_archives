@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Enhance Incubator Plus 2.0
 // @namespace    https://lit.link/toracatman
-// @version      2025-09-06
+// @version      2026-01-15
 // @description  Enhances Incubator Plus 2.0.
 // @author       トラネコマン
 // @match        https://incubator.miraheze.org/*
@@ -12,18 +12,19 @@
 // @updateURL https://update.greasyfork.org/scripts/541094/Enhance%20Incubator%20Plus%2020.meta.js
 // ==/UserScript==
 
-let css = `.allpagesredirect a {
+let css = `
+.allpagesredirect a {
     color: green;
 }
-
 .delete {
     color: red !important;
-}`;
+}
+`;
 
 (() => {
     let style = document.createElement("style");
     style.textContent = css;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     let member = {};
     let dct = "Category:Maintenance:Delete";

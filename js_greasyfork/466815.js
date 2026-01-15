@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         哔哩哔哩网页版显示 IP 属地 B站 Bilibili IP 属地显示
+// @name         BiliReveal - 哔哩哔哩网页版显示 IP 属地
 // @namespace    http://zhangmaimai.com
-// @version      1.6.8
+// @version      1.6.9
 // @author       MaxChang3
-// @description  我不喜欢 IP 属地，但是你手机都显示了，为什么电脑不显示呢？显示网页版 B 站 IP 属地，支持大部分场景的评论区
+// @description  我不喜欢 IP 属地，但是你手机都显示了，为什么电脑不显示呢？在哔哩哔哩网页版大部分场景中显示 IP 属地。
 // @license      MIT
 // @icon         https://www.bilibili.com/favicon.ico
 // @match        https://www.bilibili.com/video/*
@@ -21,19 +21,78 @@
 // @match        https://manga.bilibili.com/detail/*
 // @match        https://www.bilibili.com/v/topic/detail*
 // @require      https://update.greasyfork.org/scripts/449444/1081400/Hook%20Vue3%20app.js
+// @grant        GM.setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
 // @grant        unsafeWindow
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/466815/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%BD%91%E9%A1%B5%E7%89%88%E6%98%BE%E7%A4%BA%20IP%20%E5%B1%9E%E5%9C%B0%20B%E7%AB%99%20Bilibili%20IP%20%E5%B1%9E%E5%9C%B0%E6%98%BE%E7%A4%BA.user.js
-// @updateURL https://update.greasyfork.org/scripts/466815/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%BD%91%E9%A1%B5%E7%89%88%E6%98%BE%E7%A4%BA%20IP%20%E5%B1%9E%E5%9C%B0%20B%E7%AB%99%20Bilibili%20IP%20%E5%B1%9E%E5%9C%B0%E6%98%BE%E7%A4%BA.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/466815/BiliReveal%20-%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%BD%91%E9%A1%B5%E7%89%88%E6%98%BE%E7%A4%BA%20IP%20%E5%B1%9E%E5%9C%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/466815/BiliReveal%20-%20%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%BD%91%E9%A1%B5%E7%89%88%E6%98%BE%E7%A4%BA%20IP%20%E5%B1%9E%E5%9C%B0.meta.js
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  var __defProp = Object.defineProperty;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __publicField = (obj, key, value) => __defNormalProp(obj, key + "" , value);
+  var _GM = /* @__PURE__ */ (() => typeof GM != "undefined" ? GM : void 0)();
+  var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_registerMenuCommand = /* @__PURE__ */ (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
   var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
+  const REPLACEMENTS_KEY = "locationReplacements";
+  const safeJSONParse = (text, defaultValue) => {
+    try {
+      return JSON.parse(text);
+    } catch {
+      return defaultValue;
+    }
+  };
+  const parseReplacements = (rawJson) => {
+    const json = _GM_getValue(REPLACEMENTS_KEY, "{}");
+    const parsed = safeJSONParse(json, {});
+    return new Map(Object.entries(parsed));
+  };
+  const replacements = parseReplacements();
+  const preprocessLocation = (location2) => {
+    if (!location2 || replacements.size === 0) return location2;
+    let result = location2;
+    for (const [target, replacement] of replacements) {
+      if (result.includes(target)) {
+        result = result.replaceAll(target, replacement);
+      }
+    }
+    return result;
+  };
+  const getLocationString = (replyItem) => {
+    const locationString = replyItem?.reply_control?.location;
+    return preprocessLocation(locationString);
+  };
+  const fromError = (error) => error instanceof Error ? error.message : String(error);
+  const registerConfigMenus = () => {
+    _GM_registerMenuCommand("配置文本替换", () => {
+      const currentRules = JSON.stringify(Object.fromEntries(replacements), null, 2);
+      const input = prompt(
+        '请输入新的位置替换规则（JSON格式的键值对，例如 {"旧字符串": "新字符串"}）：',
+        currentRules
+      );
+      if (!input) {
+        alert("替换规则未更改。");
+        return;
+      }
+      try {
+        const parsed = JSON.parse(input);
+        if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+          throw new Error("必须是键值对对象格式");
+        }
+      } catch (error) {
+        alert(`JSON 格式错误：${fromError(error)}`);
+        return;
+      }
+      _GM.setValue(REPLACEMENTS_KEY, input).then(() => {
+        location.reload();
+      }).catch((error) => {
+        alert(`更新替换规则失败：${fromError(error)}`);
+      });
+    });
+  };
   const isElementLoaded = async (selector, root = document) => {
     const getElement = () => root.querySelector(selector);
     return new Promise((resolve) => {
@@ -65,15 +124,8 @@
       }, 100);
     });
   };
-  const getLocationString = (replyItem) => {
-    var _a;
-    const locationString = (_a = replyItem == null ? void 0 : replyItem.reply_control) == null ? void 0 : _a.location;
-    return locationString;
-  };
   class Router {
-    constructor() {
-      __publicField(this, "routes", []);
-    }
+    routes = [];
     serve(prefix, action, constrait = {}) {
       if (Array.isArray(prefix)) {
         prefix.forEach((p) => this.routes.push({ prefix: p, action, constrait }));
@@ -169,10 +221,10 @@
     let locationString;
     if (replyItemEl.className.startsWith("sub")) {
       replyElement = replyItemEl;
-      locationString = getLocationString(replyElement == null ? void 0 : replyElement.__vue__.vnode.props.subReply);
+      locationString = getLocationString(replyElement?.__vue__.vnode.props.subReply);
     } else {
       replyElement = replyItemEl;
-      locationString = getLocationString(replyElement == null ? void 0 : replyElement.__vue__.vnode.props.reply);
+      locationString = getLocationString(replyElement?.__vue__.vnode.props.reply);
     }
     return locationString;
   };
@@ -247,16 +299,14 @@
     /** 专栏 */
     "https://www.bilibili.com/read/",
     async () => {
-      var _a, _b;
       observeAndInjectComments();
       const articleDetail = await isElementLoaded(".article-detail");
       await isConditionTrue(() => {
-        var _a2;
         const readInfo = document.querySelector(".article-read-info");
-        return !!(readInfo && ((_a2 = readInfo.lastElementChild) == null ? void 0 : _a2.textContent) !== "--评论");
+        return !!(readInfo && readInfo.lastElementChild?.textContent !== "--评论");
       });
       const publishText = articleDetail.querySelector(".publish-text");
-      if (!publishText || !((_b = (_a = articleDetail.__vue__) == null ? void 0 : _a.readViewInfo) == null ? void 0 : _b.location)) return;
+      if (!publishText || !articleDetail.__vue__?.readViewInfo?.location) return;
       publishText.innerHTML += `&nbsp;&nbsp;IP属地：${articleDetail.__vue__.readViewInfo.location}`;
     }
   );
@@ -273,7 +323,7 @@
     "https://space.bilibili.com/",
     async () => {
       const biliMainHeader = await isElementLoaded("#biliMainHeader");
-      const isFreshSpace = (biliMainHeader == null ? void 0 : biliMainHeader.tagName) === "HEADER";
+      const isFreshSpace = biliMainHeader?.tagName === "HEADER";
       if (isFreshSpace) {
         hookLit();
       } else {
@@ -284,7 +334,7 @@
   );
   router.serve("https://space.bilibili.com/", async () => {
     const biliMainHeader = await isElementLoaded("#biliMainHeader");
-    const isFreshSpace = (biliMainHeader == null ? void 0 : biliMainHeader.tagName) === "HEADER";
+    const isFreshSpace = biliMainHeader?.tagName === "HEADER";
     if (isFreshSpace) {
       const dyanmicTab = await isElementLoaded(".nav-tab__item:nth-child(2)");
       dyanmicTab.addEventListener(
@@ -310,8 +360,7 @@
     async () => {
       const dynHome = await isElementLoaded(".bili-dyn-home--member");
       const isNewDyn = (() => {
-        var _a;
-        const dynBtnText = (_a = dynHome.querySelector(".bili-dyn-sidebar__btn")) == null ? void 0 : _a.textContent;
+        const dynBtnText = dynHome.querySelector(".bili-dyn-sidebar__btn")?.textContent;
         return dynBtnText ? dynBtnText.includes("新版反馈") || dynBtnText.includes("回到旧版") : false;
       })();
       if (isNewDyn) {
@@ -336,5 +385,6 @@
   const { origin, pathname } = new URL(location.href);
   const urlWithoutQueryOrHash = `${origin}${pathname}`;
   router.match(urlWithoutQueryOrHash);
+  registerConfigMenus();
 
 })();

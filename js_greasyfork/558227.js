@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         115转存助手 (115 Auto Save)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  115网盘分享页面自动点击提交、一键转存及确认按钮
-// @author       油猴大师
+// @author       Xiaowu
 // @match        https://115cdn.com/s/*
 // @icon         https://115.com/favicon.ico
 // @grant        none
@@ -44,45 +44,50 @@
     const runScript = async () => {
         console.log('[115转存助手] 脚本启动...');
 
-        // === 步骤 1: 等待 0.5s 后点击提交按钮 ===
+        // === 步骤 1: 等待 0.5s 后点击"确定"按钮（提交访问码） ===
         await sleep(500);
-        const submitBtn = document.querySelector('.sharing-public-decode .form-decode .submit .button');
-        safeClick(submitBtn, '提取码提交按钮');
+        const allButtons = document.querySelectorAll('button');
+        let submitBtnFound = false;
+        
+        for (const btn of allButtons) {
+            if (btn.textContent.trim() === '确定') {
+                safeClick(btn, '确定按钮（提交访问码）');
+                submitBtnFound = true;
+                break;
+            }
+        }
+        if (!submitBtnFound) console.warn('[115转存助手] 未找到"确定"按钮');
 
-        // === 步骤 2: 等待 0.5s 后点击"一键转存"按钮 ===
-        await sleep(500);
-        // 获取所有符合选择器的元素
-        const menuLinks = document.querySelectorAll('.context-menu .cell-icon a, .context-menu .icon-cell a');
+        // === 步骤 2: 等待 1s 后点击"转存"按钮 ===
+        await sleep(1000);
         let saveBtnFound = false;
-
-        for (const link of menuLinks) {
-            // 检查文本内容是否包含目标文字 (处理可能的空白字符)
-            if (link.textContent.trim().includes('一键转存')) {
-                safeClick(link, '一键转存按钮');
+        
+        const buttons2 = document.querySelectorAll('button');
+        for (const btn of buttons2) {
+            if (btn.textContent.trim() === '转存') {
+                safeClick(btn, '转存按钮');
                 saveBtnFound = true;
-                break; // 找到后点击并退出循环
+                break;
             }
         }
-        if (!saveBtnFound) console.warn('[115转存助手] 未找到内容为“一键转存”的按钮');
+        if (!saveBtnFound) console.warn('[115转存助手] 未找到"转存"按钮');
 
-        // === 步骤 3: 等待 0.5s 后点击确认转存按钮 ===
+        // === 步骤 3: 等待 0.5s 后点击"转存到此"确认按钮 ===
         await sleep(500);
-        // 使用 CSS 属性选择器匹配 class 以 dgac 开头且包含 dgac-confirm 的元素
-        const confirmBtns = document.querySelectorAll('html:root .dialog-action a[class^="dgac"].dgac-confirm');
-        for (const confirmBtn of confirmBtns) {
-            // 检查文本内容是否包含目标文字 (处理可能的空白字符)
-            if (confirmBtn.textContent.trim().includes('立即转存')) {
-                safeClick(confirmBtn, '立即转存确认按钮');
-                saveBtnFound = true;
-                break; // 找到后点击并退出循环
+        let confirmBtnFound = false;
+        
+        const buttons3 = document.querySelectorAll('button');
+        for (const btn of buttons3) {
+            if (btn.textContent.trim() === '转存到此') {
+                safeClick(btn, '转存到此确认按钮');
+                confirmBtnFound = true;
+                break;
             }
         }
-        //console.log(confirmBtn);
-        //safeClick(confirmBtn, '立即转存确认按钮');
+        if (!confirmBtnFound) console.warn('[115转存助手] 未找到"转存到此"按钮');
 
         console.log('[115转存助手] 流程结束');
     };
-
     // 页面加载完成后执行 (由于 @run-at document-idle，此处直接执行即可，但也为了保险起见可以再次监听页面加载)
     if (document.readyState === 'complete') {
         runScript();

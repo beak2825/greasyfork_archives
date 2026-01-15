@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Moon UI
 // @namespace    http://tampermonkey.net/
-// @version      2.8.0
+// @version      2.8.3
 // @description  Melhorias para interface e jogabilidade, incluindo agendamento, favoritos avançados e backup.
 // @author       crazyphantombr & Gemini
 // @license      MIT
@@ -18,15 +18,13 @@
 // ==/UserScript==
 //
 // --- HISTÓRICO DE VERSÕES (CHANGELOG) ---
-// v2.8.0 (2026-01-03) [Stable Release]:
-// - [STABLE] Consolidação das funcionalidades de Fila Inteligente e Otimização de Rotas.
-// - [FEATURE] Fila Inteligente (Best Fit): O sistema agora ignora ataques para os quais faltam naves e preenche o lote com os próximos ataques da fila que cabem no estoque.
-// - [FEATURE] Otimização de Rota: Reordenação automática da fila de ataques baseada na proximidade (Galáxia > Sistema) em relação à origem atual.
-// - [SAFETY] Verificação de Estoque: O envio de frotas agora é validado matematicamente contra o cache local de naves, prevenindo erros de envio.
-// - [UI] Melhorias gerais e renomeação dos botões de Importar/Exportar.
+// v2.8.3 (2026-01-11) [Stable Fix]:
+// - [FIX] Fluxo de Lançamento: Retorno à lógica estável (v2.8.0) com adição de uma visita única prévia à página de frotas para atualização de cache antes da confirmação.
+// - [FIX] Botão de Emergência: Agora interrompe fisicamente o ciclo de auto-submit verificando a existência da sessão ativa.
+// - [UI] Manutenção das melhorias visuais (Alerta Amarelo, Title Case, sem contador em edifícios).
 //
-// v2.7.5 (2026-01-03) [Development]:
-// - [FIX] Lógica de Fila Inteligente (Best Fit).
+// v2.8.2 (2026-01-11) [Development]:
+// - [UI] Ajustes estéticos e correções de redundância.
 // --- FIM DO HISTÓRICO ---
 
 
@@ -59,9 +57,10 @@
     const FLEET_SLOTS_KEY = `${UNIVERSE_ID}_fleetSlotsInfo`;
     const PANEL_COLLAPSED_KEY = `${UNIVERSE_ID}_panelCollapsed`;
 
-    // Chaves de sessão para o novo fluxo de agendamento
+    // Chaves de sessão
     const DRAFT_SCHEDULE_PARAMS_KEY = 'moon_draft_params';
     const DRAFT_SCHEDULE_ACTIVE_KEY = 'moon_draft_active';
+    const PENDING_CACHE_UPDATE_KEY = 'moon_pending_cache_update'; // Chave para o fluxo de visita única
 
     function getAttackQueueKey() {
         const planetId = getPlanetaOrigemId();
@@ -162,6 +161,7 @@
         };
 
         await GM_setValue(key, JSON.stringify(shipCounts));
+        log('Contagem de naves atualizada.');
     }
 
     async function atualizarContagemNavesDisponiveis() {
@@ -624,7 +624,7 @@
                 } else {
                     launchSpyBatchButton.style.display = 'block';
                     originWarningDiv.style.display = 'none';
-                    launchSpyBatchButton.textContent = `LANÇAR (${spyQueue.length})`; // Atualizado
+                    launchSpyBatchButton.textContent = `Lançar (${spyQueue.length})`; // Atualizado
                 }
             } else {
                 spyFavoritesButton.disabled = false;
@@ -640,7 +640,7 @@
         const queue = attackQueueKey ? JSON.parse(localStorage.getItem(attackQueueKey)) || [] : [];
         const launchButton = document.getElementById('launch-queue-button');
         if (launchButton) {
-            launchButton.textContent = `LANÇAR (${queue.length})`; // Atualizado
+            launchButton.textContent = `Lançar (${queue.length})`; // Atualizado
             launchButton.disabled = queue.length === 0;
         }
 
@@ -648,10 +648,10 @@
         const allFavorites = JSON.parse(localStorage.getItem(FAVORITE_PLANETS_KEY)) || {};
         const favoritesForCurrentPlanet = allFavorites[origemId] ? Object.values(allFavorites[origemId]) : [];
         const scheduled = JSON.parse(localStorage.getItem(SCHEDULED_ATTACKS_KEY)) || [];
-        if (spyFavoritesButton) spyFavoritesButton.textContent = `ESPIONAR (${favoritesForCurrentPlanet.length})`; // Atualizado
+        if (spyFavoritesButton) spyFavoritesButton.textContent = `Espionar (${favoritesForCurrentPlanet.length})`; // Atualizado
 
         const scheduledBtn = document.getElementById('show-scheduled-button');
-        if(scheduledBtn) scheduledBtn.textContent = `AGENDADOS (${scheduled.length})`; // Atualizado
+        if(scheduledBtn) scheduledBtn.textContent = `Agendados (${scheduled.length})`; // Atualizado
 
         const fleetSlotsButton = document.getElementById('fleet-slots-display');
         if (fleetSlotsButton) {
@@ -1241,10 +1241,10 @@ Entrada (HH:MM ou HH:MM:SS):
 
         const titleSpy = document.createElement('div');
         titleSpy.className = 'panel-title';
-        titleSpy.textContent = 'FAVORITOS';
+        titleSpy.textContent = 'Favoritos';
         panelContent.appendChild(titleSpy);
         const showFavsButton = document.createElement('button');
-        showFavsButton.textContent = 'EXIBIR';
+        showFavsButton.textContent = 'Exibir';
         showFavsButton.onclick = () => toggleLista('favorites-container', construirListaFavoritos);
         panelContent.appendChild(showFavsButton);
         const spyButton = document.createElement('button');
@@ -1265,7 +1265,7 @@ Entrada (HH:MM ou HH:MM:SS):
         panelContent.appendChild(launchSpyBatchButton);
         const clearSpyQueueButton = document.createElement('button');
         clearSpyQueueButton.id = 'clear-spy-queue-button';
-        clearSpyQueueButton.textContent = 'Limpar Fila de Esp.';
+        clearSpyQueueButton.textContent = 'Limpar Fila Esp.';
         clearSpyQueueButton.onclick = async () => await limparFilaEspionagem();
         clearSpyQueueButton.style.display = 'none';
         panelContent.appendChild(clearSpyQueueButton);
@@ -1292,7 +1292,7 @@ Entrada (HH:MM ou HH:MM:SS):
         panelContent.appendChild(titleAttacks);
 
         const showQueueButton = document.createElement('button');
-        showQueueButton.textContent = 'EXIBIR';
+        showQueueButton.textContent = 'Exibir';
         showQueueButton.onclick = () => toggleLista('queue-container', construirListaFila);
         panelContent.appendChild(showQueueButton);
         const launchButton = document.createElement('button');
@@ -1306,7 +1306,7 @@ Entrada (HH:MM ou HH:MM:SS):
         panelContent.appendChild(queueReqDisplay);
 
         const clearButton = document.createElement('button');
-        clearButton.textContent = 'LIMPAR FILA';
+        clearButton.textContent = 'Limpar Fila';
         clearButton.onclick = limparFilaDeAtaques;
         panelContent.appendChild(clearButton);
 
@@ -1319,7 +1319,7 @@ Entrada (HH:MM ou HH:MM:SS):
         showScheduledButton.onclick = () => toggleLista('scheduled-container', construirListaAgendados);
         panelContent.appendChild(showScheduledButton);
         const forceClearSessionButton = document.createElement('button');
-        forceClearSessionButton.textContent = 'Limpar Sessão de Ataque';
+        forceClearSessionButton.textContent = 'Limpar Sessão';
         forceClearSessionButton.style.color = '#FFA500';
         forceClearSessionButton.title = 'Botão de emergência para destravar o script se um ataque ficar preso em loop.';
         forceClearSessionButton.onclick = forcarLimpezaSessao;
@@ -1423,7 +1423,51 @@ Entrada (HH:MM ou HH:MM:SS):
         }
     }
 
+    // Função auxiliar para detectar perigo no texto do relatório
+    function verificarAmeacaAtiva(textoRelatorio) {
+        // Lista branca: Apenas o que atira de volta ou representa frota
+        // Interceptor e Mísseis Interplanetários foram EXCLUÍDOS propositalmente.
+        const unidadesDePerigo = [
+            // Defesas Planetárias
+            'Missile Launcher', 'Light Laser Turret', 'Heavy Laser Turret',
+            'Gauss Cannon', 'Ion Cannon', 'Plasma Cannon',
+            'Small Shield Dome', 'Large Shield Dome',
+            // Naves (Frota)
+            'Small Cargo', 'Large Cargo', 'Light Fighter', 'Heavy Fighter',
+            'Cruiser', 'Battleship', 'Colony Ship', 'Recycler',
+            'Spy Probe', 'Planet Bomber', 'Solar Satellite',
+            'Destroyer', 'Death Fortress', 'Battle Cruiser'
+        ];
+
+        const textoLimpo = textoRelatorio.replace(/\s+/g, ' '); 
+
+        for (const unidade of unidadesDePerigo) {
+            const regex = new RegExp(`${unidade}\\s*[:]?\\s*([\\d\\.]+)`, 'i');
+            const match = textoLimpo.match(regex);
+
+            if (match) {
+                const quantidade = parseInt(match[1].replace(/\./g, ''), 10);
+                if (quantidade > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     async function iniciarLoteDeAtaques() {
+        // Passo 1: Se ainda não fizemos a visita prévia para atualizar o cache, faz agora
+        if (!sessionStorage.getItem(PENDING_CACHE_UPDATE_KEY)) {
+            sessionStorage.setItem(PENDING_CACHE_UPDATE_KEY, 'true');
+            // Redireciona para a página de frotas para atualizar a contagem de naves
+            // A função 'salvarContagemNaves' será executada automaticamente lá.
+            window.location.href = 'game.php?page=fleetTable';
+            return;
+        }
+
+        // Passo 2: Já estamos de volta (ou na página de frotas). Removemos a pendência e seguimos.
+        sessionStorage.removeItem(PENDING_CACHE_UPDATE_KEY);
+
         const key = getAttackQueueKey();
         if (!key) return;
         let queue = JSON.parse(localStorage.getItem(key)) || [];
@@ -1491,11 +1535,11 @@ Entrada (HH:MM ou HH:MM:SS):
         }
 
         if (batchToSend.length === 0) {
-            alert('Frotas insuficientes (baseado no cache) para enviar qualquer ataque da fila.');
+            alert('Frotas insuficientes (baseado no cache atualizado) para enviar qualquer ataque da fila.');
             return;
         }
 
-        if (confirm(`Slots Livres: ${availableSlots}\nFila Total: ${queue.length}\nEncontrados (Cabem no estoque): ${batchToSend.length}\n\nLançar este lote?`)) {
+        if (confirm(`Cache Atualizado!\nSlots Livres: ${availableSlots}\nFila Total: ${queue.length}\nEncontrados (Cabem no estoque): ${batchToSend.length}\n\nLançar este lote?`)) {
             sessionStorage.setItem('attackQueueActive', JSON.stringify(batchToSend));
             localStorage.setItem(key, JSON.stringify(remainingQueue));
             atualizarContadoresPainel();
@@ -1638,6 +1682,10 @@ Entrada (HH:MM ou HH:MM:SS):
                 const bodyRow = header.nextElementSibling;
                 if (bodyRow) {
                     try {
+                        // Verifica se há ameaça no corpo da mensagem
+                        const textoCorpo = bodyRow.textContent;
+                        const isDangerous = verificarAmeacaAtiva(textoCorpo);
+
                         const getResourceValue = (selector) => {
                             const element = bodyRow.querySelector(selector);
                             return element ? parseInt(element.parentElement.nextElementSibling.textContent.trim().replace(/\./g, ''), 10) || 0 : 0;
@@ -1663,16 +1711,27 @@ Entrada (HH:MM ou HH:MM:SS):
                             return url;
                         };
 
+                        const aplicarEstiloPerigo = (btn) => {
+                            if (isDangerous) {
+                                btn.style.color = '#FFD700'; // Amarelo Ouro
+                                btn.style.borderColor = '#FFD700';
+                                btn.title = 'ATENÇÃO: Defesa ou Frota detectada!';
+                            }
+                        };
+
                         const scButton = document.createElement('button');
                         scButton.textContent = `SC: ${scCount}`;
+                        aplicarEstiloPerigo(scButton);
                         scButton.onclick = () => adicionarAtaqueAFila(createAttackUrl(baseUrl, 'ship202', scCount), scButton);
 
                         const lcButton = document.createElement('button');
                         lcButton.textContent = `LC: ${lcCount}`;
+                        aplicarEstiloPerigo(lcButton);
                         lcButton.onclick = () => adicionarAtaqueAFila(createAttackUrl(baseUrl, 'ship203', lcCount), lcButton);
 
                         const bsButton = document.createElement('button');
                         bsButton.textContent = 'BS';
+                        aplicarEstiloPerigo(bsButton);
                         bsButton.onclick = (e) => {
                             e.preventDefault();
                             const currentVal = senderCell.dataset.bsCount || '0';
@@ -1685,6 +1744,7 @@ Entrada (HH:MM ou HH:MM:SS):
 
                         const pbButton = document.createElement('button');
                         pbButton.textContent = 'PB';
+                        aplicarEstiloPerigo(pbButton);
                         pbButton.onclick = (e) => {
                             e.preventDefault();
                             const currentVal = senderCell.dataset.pbCount || '0';
@@ -1711,6 +1771,9 @@ Entrada (HH:MM ou HH:MM:SS):
 
     function autoSubmitFleetPage1() {
         const urlParams = new URLSearchParams(window.location.search);
+        // FIX: Se a sessão foi limpa pelo botão de emergência, não submeter
+        if (!sessionStorage.getItem('autoFleetInProgress')) return;
+
         if (urlParams.get('page') === 'fleetTable' && urlParams.get('auto_submit') === 'true' && sessionStorage.getItem('autoFleetInProgress') !== 'step2') {
             log('Tela 1 (fleetTable): Submetendo...');
             sessionStorage.setItem('autoFleetInProgress', 'step2');
@@ -1721,6 +1784,9 @@ Entrada (HH:MM ou HH:MM:SS):
 
     function autoSubmitFleetPage2() {
         const urlParams = new URLSearchParams(window.location.search);
+        // FIX: Se a sessão foi limpa pelo botão de emergência, não submeter
+        if (!sessionStorage.getItem('autoFleetInProgress')) return;
+
         if (sessionStorage.getItem(DRAFT_SCHEDULE_ACTIVE_KEY) === 'true') {
              log('Modo de agendamento detectado. Interrompendo auto-submit para aguardar usuário.');
              adicionarBotaoConfirmarAgendamento();
@@ -1737,6 +1803,9 @@ Entrada (HH:MM ou HH:MM:SS):
 
     function autoSubmitFleetPage3() {
         const urlParams = new URLSearchParams(window.location.search);
+        // FIX: Se a sessão foi limpa pelo botão de emergência, não submeter
+        if (!sessionStorage.getItem('autoFleetInProgress')) return;
+
         if (urlParams.get('page') === 'fleetStep2' && sessionStorage.getItem('autoFleetInProgress') === 'step3') {
             log('Tela 3 (fleetStep2): Submetendo...');
             sessionStorage.setItem('autoFleetInProgress', 'finished');
@@ -1838,7 +1907,9 @@ Entrada (HH:MM ou HH:MM:SS):
     }
 
     function calcularHoraTermino() {
-        if (new URLSearchParams(window.location.search).get('page') === 'fleetTable') return;
+        const page = new URLSearchParams(window.location.search).get('page');
+        if (page === 'fleetTable' || page === 'buildings') return;
+
         document.querySelectorAll(".timer:not([data-endtime-calculated]), .fleets:not([data-endtime-calculated])").forEach(timer => {
             timer.setAttribute("data-endtime-calculated", "true");
             let segundosRestantes;
@@ -1884,6 +1955,14 @@ Entrada (HH:MM ou HH:MM:SS):
         exporComposicaoFrota();
         await carregarRankingCompleto();
         calcularTempoParaRecursos();
+
+        // Se tivermos voltado da visita única, executa o cálculo automaticamente
+        const pendingUpdate = sessionStorage.getItem(PENDING_CACHE_UPDATE_KEY);
+        if (pendingUpdate && page === 'fleetTable') {
+            await salvarContagemNaves(); // Garante atualização
+            // Pequeno delay para garantir que o DOM esteja ok
+            setTimeout(iniciarLoteDeAtaques, 300);
+        }
 
         if (page === 'fleetTable') {
             await salvarContagemNaves();

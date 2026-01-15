@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT-Workspace-Helper
 // @namespace    https://chatgpt.com
-// @version      1.8.0
+// @version      1.9.0
 // @description  ChatGPT Workspace 管理一体化面板
 // @author       Marx
 // @license      MIT
@@ -148,6 +148,7 @@
   let tokenTs = 0;
   let userId = null;
   let accounts = [];
+  let userEmail = null;
   let selected = null;
   let lastDomain = null;
   let inviteState = true;
@@ -263,11 +264,16 @@
   btnLeaveCur.className = 'wdd-btn warn';
   btnLeaveCur.textContent = '退出当前工作区';
 
+  const btnOwnerToAdmin = document.createElement('button');
+  btnOwnerToAdmin.className = 'wdd-btn secondary';
+  btnOwnerToAdmin.textContent = 'Owner→Admin';
+
+
   wsBtns.append(
     btnRefresh, btnReloadDomains, btnPatchMember,
     btnEnableLegacyCurrent, btnEnableApple, btnSeat1000n,
     btnQuickCur, btnQuickAll, btnOnboardCur,
-    btnOnboardAll, btnLegacyAll, btnLeaveCur
+    btnOnboardAll, btnLegacyAll, btnOwnerToAdmin, btnLeaveCur
   );
 
   rowWs.append(lblWs, selWs, wsBar, wsBtns);
@@ -647,6 +653,7 @@
     btnK12Run.disabled = !flag;
     btnTeamCheckout.disabled = !flag;
     btnTeamOpen.disabled = !flag;
+    btnOwnerToAdmin.disabled = !flag || !selected;
   }
 
   async function getAccessToken(){
@@ -656,6 +663,7 @@
     const t = j && j.accessToken;
     if(!t) throw new Error('未获取到 accessToken');
     userId = j?.user?.id || j?.user_id || userId || null;
+    userEmail = (j?.user?.email || j?.email || userEmail || null);
     return t;
   }
 
@@ -865,8 +873,16 @@
       selWs.appendChild(o);
     });
     const pref = store.k.sel?.account_id;
-    if (pref && accounts.find(x=>x.id===pref)) selWs.value = pref;
-    const cur = accounts.find(x=>x.id===selWs.value) || accounts[0];
+    if (pref && accounts.find(x=>x.id===pref)) {
+      selWs.value = pref;
+    } else {
+      const firstNamed = accounts.find(x => ((x?.account?.name || '').trim()));
+      if(firstNamed) selWs.value = firstNamed.id;
+    }
+    const cur =
+      accounts.find(x=>x.id===selWs.value) ||
+      accounts.find(x => ((x?.account?.name || '').trim())) ||
+      accounts[0];
     setWsInfo(cur);
   }
 
@@ -896,6 +912,17 @@
         const id = String(it.id || '').toLowerCase();
         return name !== 'default' && id !== 'default';
       });
+      accounts.sort((a,b)=>{
+        const na = (a?.account?.name || '').trim();
+        const nb = (b?.account?.name || '').trim();
+        const au = !na; // unnamed?
+        const bu = !nb;
+        if(au !== bu) return au ? 1 : -1; // unnamed 放后面
+        const cmp = na.localeCompare(nb, 'zh-CN', { numeric:true, sensitivity:'base' });
+        if(cmp) return cmp;
+        return String(a.id||'').localeCompare(String(b.id||''));
+      });
+
       if(!accounts.length) throw new Error('无可用工作区');
       renderWsOptions();
       setStatus('已载入工作区', null);
@@ -1556,31 +1583,54 @@
     return fetchJsonWithRetry(u, init, {retry:1});
   }
 
+  const SEAT_1000_TO_N_DELAY_MS = 11;
+  const SEAT_UI_UNLOCK_DELAY_MS = 80;
   btnSeat1000n.addEventListener('click', async ()=>{
     if(!selected){ setStatus('请选择工作区', 'err'); return; }
     setStatus('SEAT 1000→n 执行中...', null, true);
     enableOps(false);
+
+    let scheduled = false;
+
     try{
       await ensureToken();
+
       const seats = await fetchSeatsEntitled(selected.account_id);
       const target = seats + 1;
+
       if(target > 5){
         setStatus(`不执行：seats_entitled=${seats}，目标=${target} > 5`, 'err');
         log(`SEAT 不执行：seats_entitled=${seats}，目标=${target} > 5`, 'e');
-        enableOps(true);
         return;
       }
+
+      const accountId = selected.account_id;
       log(`SEAT 当前 seats_entitled=${seats}，目标 n=${target}`, 'i');
-      await updateSeats(selected.account_id, 1000);
-      await sleep(12);
-      await updateSeats(selected.account_id, target);
+      updateSeats(accountId, 1000)
+        .then(()=>log(`SEAT(1) OK: updated_seats=1000`, 's'))
+        .catch(e=>log(`SEAT(1) FAIL: updated_seats=1000 (${e.message||e})`, 'e'));
+
+      setTimeout(() => {
+        updateSeats(accountId, target)
+          .then(()=>log(`SEAT(2) OK: updated_seats=${target}`, 's'))
+          .catch(e=>log(`SEAT(2) FAIL: updated_seats=${target} (${e.message||e})`, 'e'));
+      }, SEAT_1000_TO_N_DELAY_MS);
+
+      scheduled = true;
+
       setStatus(`已触发：1000 → ${target}`, 'ok');
-      log(`SEAT 已触发：1000 → ${target}`, 's');
+      log(`SEAT 已触发：1000 → ${target}（timer=${SEAT_1000_TO_N_DELAY_MS}ms）`, 's');
+
     }catch(e){
       setStatus(`SEAT 失败：${e.message||e}`, 'err');
       log(`SEAT 失败：${e.message||e}`, 'e');
+    }finally{
+      if(scheduled){
+        setTimeout(()=>enableOps(true), SEAT_UI_UNLOCK_DELAY_MS);
+      }else{
+        enableOps(true);
+      }
     }
-    enableOps(true);
   });
 
   async function leaveWorkspace(accountId){
@@ -1599,6 +1649,126 @@
     };
     return fetchJsonWithRetry(u, init, {retry:1, allowEmpty:true});
   }
+
+  async function fetchAccountUsersPage(accountId, offset=0, limit=25){
+    const u = `/backend-api/accounts/${encodeURIComponent(accountId)}/users?offset=${encodeURIComponent(offset)}&limit=${encodeURIComponent(limit)}&query=`;
+    const init = {
+      method:'GET',
+      credentials:'include',
+      headers:{
+        'accept':'*/*',
+        'authorization':'Bearer ' + token,
+        'chatgpt-account-id': accountId
+      }
+    };
+    return fetchJsonWithRetry(u, init, {retry:1});
+  }
+
+  async function findMyWorkspaceUser(accountId){
+    const limit = 25;
+    let offset = 0;
+
+    const email = (userEmail || '').trim().toLowerCase();
+    const uid = (userId || '').trim();
+
+    for(let page=0; page<50; page++){
+      const j = await fetchAccountUsersPage(accountId, offset, limit);
+      const items = Array.isArray(j?.items) ? j.items : [];
+      if(!items.length) break;
+
+      let me = null;
+      if(email) me = items.find(x => (x?.email || '').toLowerCase() === email);
+      if(!me && uid) me = items.find(x => x?.id === uid || x?.account_user_id?.startsWith(uid + '__'));
+
+      if(me) return me;
+
+      offset += limit;
+      if(items.length < limit) break;
+    }
+    return null;
+  }
+
+  async function patchAccountUserRole(accountId, targetUserId, role){
+    const u = `/backend-api/accounts/${encodeURIComponent(accountId)}/users/${encodeURIComponent(targetUserId)}`;
+    const init = {
+      method:'PATCH',
+      credentials:'include',
+      headers:{
+        'accept':'*/*',
+        'content-type':'application/json',
+        'authorization':'Bearer ' + token,
+        'chatgpt-account-id': accountId
+      },
+      body: JSON.stringify({ role })
+    };
+    return fetchJsonWithRetry(u, init, {retry:1});
+  }
+
+  btnOwnerToAdmin.addEventListener('click', async ()=>{
+    if(!selected){ setStatus('请选择工作区', 'err'); return; }
+
+    setStatus('查询当前用户角色中...', null, true);
+    enableOps(false);
+
+    try{
+      await ensureToken();
+
+      if(!userEmail){
+        log('警告：未获取到 userEmail，将尝试用 userId 匹配', 'e');
+      }
+
+      const accountId = selected.account_id;
+      const wsName = selected.name || accountId;
+
+      const me = await findMyWorkspaceUser(accountId);
+      if(!me){
+        setStatus('未在该工作区 users 列表中找到当前用户（可能需要更高 limit 或权限不足）', 'err');
+        log(`Owner→Admin：未找到当前用户。email=${userEmail||'null'} userId=${userId||'null'}`, 'e');
+        return;
+      }
+
+      const curRole = me.role || 'unknown';
+      const emailShow = me.email || userEmail || '(unknown email)';
+
+      if(curRole === 'account-admin'){
+        setStatus('当前已是 account-admin，无需修改', 'ok');
+        log(`Owner→Admin：无需修改（${emailShow} 已是 account-admin）`, 's');
+        return;
+      }
+
+      const ok = window.confirm(
+        `工作区：${wsName}\n` +
+        `账号：${emailShow}\n` +
+        `当前角色：${curRole}\n\n` +
+        `是否将该账号角色修改为：account-admin ？\n` +
+        `（注意：若你当前是 account-owner，这会把 owner 降为 admin）`
+      );
+      if(!ok){
+        setStatus('已取消', null);
+        log('Owner→Admin：用户取消', 'i');
+        return;
+      }
+
+      setStatus('修改角色中...', null, true);
+      const res = await patchAccountUserRole(accountId, me.id, 'account-admin');
+
+      if(res?.success === true){
+        setStatus('修改成功：account-admin ✅', 'ok');
+        log(`Owner→Admin：成功 ${emailShow} -> account-admin`, 's');
+        showToast('已改为 admin');
+      }else{
+        setStatus('请求已完成（未返回 success 字段）', 'ok');
+        log(`Owner→Admin：完成（响应=${JSON.stringify(res||{})}）`, 's');
+        showToast('已提交修改');
+      }
+
+    }catch(e){
+      setStatus(`Owner→Admin 失败：${e.message||e}`, 'err');
+      log(`Owner→Admin FAIL：${e.message||e}`, 'e');
+    }finally{
+      enableOps(true);
+    }
+  });
 
   btnLeaveCur.addEventListener('click', async ()=>{
     if(!selected){ setStatus('请选择工作区', 'err'); return; }

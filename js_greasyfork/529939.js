@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Dark Mode (kid4rm90s fork)
 // @namespace    https://greasyfork.org/en/users/1434751-poland-fun
-// @version      1.09.1
+// @version      1.10
 // @description  Enable dark mode in WME.
 // @author       poland_fun
 // @contributor	 kid4rm90s and luan_tavares_127
@@ -161,6 +161,12 @@ Version
 1.09.0 - Fixed -
 		- Clicksaver road type chip border color override in compact mode
 1.09.1 - Fixed - Temporary fix for alerts not displaying properly.
+1.10 - Fixed - 
+		- Fixed for visual + towards instruction icons in turn instructions panel
+		- Fixed for URC-E comment box close button color
+		- Fixed for WME Bookmarks
+		- Fixed for UR Colors
+		- Other bug fixes and memory leaks improvements
 
 */
 
@@ -172,7 +178,7 @@ Version
 
 (function main() {
   ('use strict');
-  const updateMessage = '<strong>Fixed :</strong><br> - Temporary fix for alerts not displaying properly.';
+  const updateMessage = '<strong>Fixed :</strong><br> - Fixed for visual + towards instruction icons in turn instructions panel<br>- Fixed for URC-E comment box close button color <br>- Fixed for WME Bookmarks<br>- Fixed for UR Colors<br>- Other bug fixes and memory leaks improvements <br>';
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
 	const downloadUrl = 'https://greasyfork.org/scripts/529939-wme-dark-mode-kid4rm90s-fork/code/WME%20Dark%20Mode%20%28kid4rm90s%20fork%29.user.js';
@@ -189,6 +195,17 @@ Version
   var autoButton;
 
   var darkModeSwitch;
+
+  // Store references for cleanup
+  let mainObserver = null;
+  let chipObserver = null;
+  let settingsObserver = null;
+  let profileTimeoutId = null;
+  let settingsTimeoutId = null;
+  const themeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const themeAbortController = new AbortController();
+  let styleInjected = false;
+  let discussStyleInjected = false;
 
   function updateUI() {
     const theme = getPreferredTheme();
@@ -264,12 +281,12 @@ Version
   // Detect changes in the system theme.
   // We always need to update the UI to change the text in ()s - Auto Mode ([mode])
   // Calling setTheme even if there is no need to change is fine
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+  themeMediaQuery.addEventListener('change', (event) => {
     if (!discussRegex.test(window.location.href)) {
       updateUI();
       setTheme();
     }
-  });
+  }, { signal: themeAbortController.signal });
 
   const discussCSSModifications = `
         /*********** WME Wazebar ***********************************************/
@@ -302,6 +319,7 @@ Version
 				background: var(--d-sidebar-highlight-background) !important;
 				color: var(--primary) !important;
             }
+
 #WazeBarAddFavorite:hover,
             #WazeBarAddCustomLink:hover,
             .favorite-item:hover,
@@ -391,7 +409,6 @@ Version
 			/* 'Show dismissed alerts again after' button */
 			[wz-theme="dark"] .alert-settings .alert-settings-period-label {
 				color: var(--content_p1);
-				;
 			}
 
 			[wz-theme="dark"] body {
@@ -709,6 +726,7 @@ Version
 			
     /* Turn Instructions */
 			[wz-theme="dark"] .turn-instructions-panel .exit-signs,
+			[wz-theme="dark"] .container--AW7A9,
 			[wz-theme="dark"] .turn-instructions-panel .turn-instructions,
 			[wz-theme="dark"] .turn-instructions-panel .towards-instructions {
 				background: var(--always_dark_surface_default);
@@ -723,6 +741,9 @@ Version
 			[wz-theme="dark"] .wz-tooltip-content-holder {
 				background-color: var(--background_default);
 			}
+			[wz-theme="dark"] .turn-instructions-panel .exit-sign-item>i.w-icon-x, .turn-instructions-panel .turn-instruction-item>i.w-icon-x  {
+      			color: initial;
+    		}
 
     /* Date Range Pickers */
 			[wz-theme="dark"] .daterangepicker {
@@ -801,6 +822,10 @@ Version
 			[wz-theme="dark"] #zoomOutLink2,
 			[wz-theme="dark"] #zoomOutLink3 {
 				color: var(--content_p1) !important;
+			}
+
+			[wz-theme="dark"] #sidepanel-urc-e .URCE-legend.urStyle {
+				background-color: var(--always_dark_surface_default) !important;
 			}
 
     /* Grey screen when your save has errors */
@@ -1086,11 +1111,11 @@ Version
 				color: white !important;
 			}
 
-   [wz-theme="dark"] #inRSSaveName,
-   [wz-theme="dark"] tbody input[type="text"], 
-   [wz-theme="dark"] tbody input[type="number"] {
-   color: var(--content_p1) !important; /* font color overrided */
-    } 
+			[wz-theme="dark"] #inRSSaveName,
+			[wz-theme="dark"] tbody input[type="text"], 
+			[wz-theme="dark"] tbody input[type="number"] {
+			color: var(--content_p1) !important; /* font color overrided */
+			} 
 
    /* UR-MP Tracking Plugin */
 			[wz-theme="dark"] .popup-pannel-trigger-class-FilterUR,
@@ -1307,12 +1332,12 @@ Version
 			}
 			
 	/*********** WME FUME *************************************/
-	[wz-theme="dark"] .yslider-stops,
-	[wz-theme="dark"] .olButton,
-	[wz-theme="dark"] .olControlPanZoomBar,
-	[wz-theme="dark"] .slider {
-	background-color: var(--background_default) !important;
-	}
+			[wz-theme="dark"] .yslider-stops,
+			[wz-theme="dark"] .olButton,
+			[wz-theme="dark"] .olControlPanZoomBar,
+			[wz-theme="dark"] .slider {
+			background-color: var(--background_default) !important;
+			}
 	
     /* I am not 100% positive this was the FUME update box */
 			[wz-theme="dark"] #abAlerts {
@@ -1508,10 +1533,10 @@ Version
 			}
 
 /**** Closure helper ******************************************************/
-    [wz-theme="dark"] .wmech_closurebutton.wmech_presetdeletebutton,
-	[wz-theme="dark"] button#wmechButton1.wmech_closurebutton {
-	background-color: var(--always_dark_surface_default) !important;
-	}
+			[wz-theme="dark"] .wmech_closurebutton.wmech_presetdeletebutton,
+			[wz-theme="dark"] button#wmechButton1.wmech_closurebutton {
+			background-color: var(--always_dark_surface_default) !important;
+			}
 	
 			[wz-theme="dark"] .wmech_closurebutton.wmech_presetsavebutton {
 				background-color: var(--background_default) !important;
@@ -1657,6 +1682,66 @@ Version
             [wz-theme="dark"] #wms-info-popup {
                 background-color: var(--background_default) !important;
             }
+
+/*********** WME Bookmarks ***********************************************/			
+            [wz-theme="dark"] .bkm-edit-form-container,
+			[wz-theme="dark"] #divContent,
+			[wz-theme="dark"] #divShareContent,
+			[wz-theme="dark"] #divHistoContent,
+			[wz-theme="dark"] .divContainer {
+               background-color: var(--background_default) !important;
+            }
+			[wz-theme="dark"] .bkm-item {
+			   background-color: var(--always_dark_inactive) !important;
+			}
+			[wz-theme="dark"] .bkm-item:hover, .bkm-actions:hover {
+				background-color: var(--background_default) !important;
+				border-color: var(--always_dark_surface_default) !important;
+			}
+			[wz-theme="dark"] .bkm-actions:hover {
+				background-color: var(--background_default) !important;
+			}
+			
+			[wz-theme="dark"] .bkm-edit-form-container label {
+				color: var(--content_p2) !important;
+			}
+				
+/*********** WME UR Colors ***********************************************/
+			[wz-theme="dark"] #languageColorConfig.lcs-ui {
+				--lcs-gap: 6px;
+				--lcs-radius: 12px;
+				color: var(--content_p1) !important;
+			}
+
+			[wz-theme="dark"] #languageColorConfig.lcs-ui .lcs-accordion details {
+				background-color: var(--background_default) !important;
+			}
+
+			[wz-theme="dark"] #languageColorConfig.lcs-ui .lcs-section {
+				background-color: var(--always_dark_surface_default) !important;
+			}
+			
+			[wz-theme="dark"] #languageColorConfig.lcs-ui select {
+				background-color: var(--always_dark_surface_default) !important;
+			}
+
+			[wz-theme="dark"] #languageColorConfig.lcs-ui .lcs-muted {
+				color: var(--content_p2) !important;
+			}
+
+			[wz-theme="dark"] #languageColorConfig.lcs-ui button {
+				background: var(--always_dark_surface_default);
+			}
+			
+			[wz-theme="dark"] #languageColorConfig.lcs-ui button:hover {
+				background: var(--always_dark_inactive);
+			}
+
+			[wz-theme="dark"] #languageColorConfig.lcs-ui .lcs-details {
+				background: var(--background_default) !important;
+			}
+
+
 			`;
 
   // This CSS block cannot be part of the 'theme' because the base pallete
@@ -1675,7 +1760,7 @@ Version
 
     if (theme == 'auto') {
       // If the theme is auto, look up the system theme
-      document.documentElement.setAttribute('wz-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('wz-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     } else {
       document.documentElement.setAttribute('wz-theme', theme);
     }
@@ -1714,14 +1799,20 @@ Version
 
   // Function to inject styles into the page
   function injectStyle() {
+    if (styleInjected) return;
+    styleInjected = true;
     let styleElement = document.createElement('style');
     styleElement.innerHTML = cssModifications;
+    styleElement.id = 'wme-dark-mode-styles';
     document.head.appendChild(styleElement);
   }
 
   function injectDiscussStyle() {
+    if (discussStyleInjected) return;
+    discussStyleInjected = true;
     let styleElement = document.createElement('style');
     styleElement.innerHTML = discussCSSModifications;
+    styleElement.id = 'wme-dark-mode-discuss-styles';
     document.head.appendChild(styleElement);
   }
 
@@ -1730,18 +1821,24 @@ Version
     let wzMenuItem = userBox?.querySelector('wz-menu-item');
 
     if (!wzMenuItem) {
-      if (profileTries <= maxUIRetries) {
+      if(profileTries <= maxUIRetries) {
         profileTries++;
-        setTimeout(() => addProfileToggle(), 1000);
+        profileTimeoutId = setTimeout(() => addProfileToggle(), 1000);
       } else {
         console.log('wz-user-box not found.');
       }
       return;
     }
 
-    let darkModeMenuItem = document.createElement('wz-menu-item');
+    // Clear timeout since we found the element
+    if (profileTimeoutId) {
+      clearTimeout(profileTimeoutId);
+      profileTimeoutId = null;
+    }
 
-    darkModeMenuItem.style = 'pointer-events: none; border-bottom: 1px solid var(--separator_default, #e8eaed);';
+    let darkModeMenuItem  = document.createElement('wz-menu-item');
+
+    darkModeMenuItem.style     = 'pointer-events: none; border-bottom: 1px solid var(--separator_default, #e8eaed);';
     darkModeMenuItem.innerHTML = `<wz-toggle-switch style="pointer-events: all;" checked="true" tabindex="0" name="wmeDarkMode" id="wme-dark-mode_switch">Dark Mode<input type="checkbox" name="wmeDarkMode" value="" style="display: none; visibility: hidden;"></wz-toggle-switch>`;
 
     userBox.insertBefore(darkModeMenuItem, wzMenuItem);
@@ -1758,7 +1855,7 @@ Version
     let settingsDiv = document.querySelector('.settings');
 
     if (!settingsDiv && settingsTries <= maxUIRetries) {
-      setTimeout(() => addSettingsToggle(), 1000);
+      settingsTimeoutId = setTimeout(() => addSettingsToggle(), 1000);
       settingsTries++;
       return;
     }
@@ -1767,6 +1864,12 @@ Version
       console.log('Settings div with class "settings" not found.');
       settingsTries = 0;
       return;
+    }
+
+    // Clear timeout since we found the element
+    if (settingsTimeoutId) {
+      clearTimeout(settingsTimeoutId);
+      settingsTimeoutId = null;
     }
 
     const formDiv = settingsDiv.querySelector('.settings__form');
@@ -1806,8 +1909,10 @@ Version
 
       lightButton.addEventListener('click', changeToLight);
       darkButton.addEventListener('click', changeToDark);
-      autoButton.addEventListener('click', changeToAuto);
-
+		autoButton.addEventListener('click', changeToAuto);
+		
+      // We technically call updateUI() twice since it is called per toggle option,
+      // but repeatedly calling this function is harmless.
       updateUI();
     } else {
       console.log('Form div with class "settings__form" not found.');
@@ -1818,13 +1923,15 @@ Version
   function observeSettingsUI() {
     const target = document.body;
     if (!target) return;
-    const observer = new MutationObserver(() => {
+    if (settingsObserver) return; // Prevent duplicate observers
+    settingsObserver = new MutationObserver(() => {
       const settingsDiv = document.querySelector('.settings');
       if (settingsDiv) {
         addSettingsToggle();
+        // Keep observer running since settings panel is dynamically added/removed
       }
     });
-    observer.observe(target, { childList: true, subtree: true });
+    settingsObserver.observe(target, { childList: true, subtree: true });
   }
 
   function addThemeToggleButtons() {
@@ -1888,7 +1995,7 @@ Version
     }
   }
 
-  /* if (W?.userscripts?.state.isInitialized) {
+   if (W?.userscripts?.state.isInitialized) {
         init();
     } else {
         document.addEventListener('wme-initialized',
@@ -1899,9 +2006,9 @@ Version
         // callback. In that case, we setup a timeout to call init anyway in a second.
         // This currently impacts the profile page.
         setTimeout(() => init(), 2000);
-    } */
+    }
 
-  const observer = new MutationObserver((mutationsList, observer) => {
+  mainObserver = new MutationObserver((mutationsList, observer) => {
     for (let mutation of mutationsList) {
       if (mutation.type === 'childList') {
         // Check if added nodes contain a custom element
@@ -1954,9 +2061,9 @@ Version
   });
 
   // Start observing the document or a specific container
-  observer.observe(document.body, {
+  mainObserver.observe(document.body, {
     childList: true,
-    subtree: true,
+    subtree: true
   });
 	
 // -----------------------------------------for the clicksaver road type chip border color override in compact mode -------------------------------------------
@@ -1979,13 +2086,15 @@ Version
   setTimeout(setBorderOnCheckedChips, 500);
 
   // Observe for changes and re-apply as needed
-  const Chipobserver = new MutationObserver(() => {
-    // Only run if dark mode is active
-    if (document.documentElement.getAttribute('wz-theme') === 'dark') {
-      requestAnimationFrame(setBorderOnCheckedChips);
-    }
-  });
-  Chipobserver.observe(document.body, { childList: true, subtree: true });
+  if (!chipObserver) {
+    chipObserver = new MutationObserver(() => {
+      // Only run if dark mode is active
+      if (document.documentElement.getAttribute('wz-theme') === 'dark') {
+        requestAnimationFrame(setBorderOnCheckedChips);
+      }
+    });
+    chipObserver.observe(document.body, { childList: true, subtree: true });
+  }
 
 // -----------------------------------------for the clicksaver road type chip border color override in compact mode -------------------------------------------
 	
@@ -2002,6 +2111,16 @@ Version
       }
     }
     scriptupdatemonitor();
+
+  // Cleanup function to prevent memory leaks on page unload
+  window.addEventListener('beforeunload', () => {
+    if (mainObserver) mainObserver.disconnect();
+    if (chipObserver) chipObserver.disconnect();
+    if (settingsObserver) settingsObserver.disconnect();
+    if (profileTimeoutId) clearTimeout(profileTimeoutId);
+    if (settingsTimeoutId) clearTimeout(settingsTimeoutId);
+    themeAbortController.abort();
+  });
 
   console.log(`${scriptName} initialized.`);
 })();

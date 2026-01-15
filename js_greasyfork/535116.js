@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Проверка артов перед ГТ
 // @namespace    http://tampermonkey.net/
-// @version      4.44
+// @version      4.60
 // @description  проверка перед ГТ
 // @author       Sky
 // @license      MIT
@@ -19,7 +19,6 @@
         ? 'https://my.lordswm.com'
         : 'https://www.heroeswm.ru';
 
-    /* ---------- helpers ---------- */
 
     const createEl = (tag, style, text) => {
         const el = document.createElement(tag);
@@ -30,7 +29,6 @@
 
     function insertUnderGT(wrap) {
 
-        // берём ПОСЛЕДНИЙ заголовок "Гильдия Тактиков" (не меню)
         const titles = [...document.querySelectorAll('*')]
             .filter(el =>
                 el.children.length === 0 &&
@@ -45,7 +43,6 @@
 
         const gtTitle = titles[titles.length - 1];
 
-        // поднимаемся к "широкому" контейнеру окна
         let container = gtTitle.closest('td, div');
         while (container && container.offsetWidth < 500) {
             container = container.parentElement;
@@ -58,7 +55,6 @@
         }
     }
 
-    /* ---------- main logic ---------- */
 
     function fetchInventoryAndRender() {
         const xhr = new XMLHttpRequest();
@@ -95,7 +91,6 @@
             const mirrorEl = doc.getElementById('slot11');
             const mirrorOn = mirrorEl && mirrorEl.innerText.trim();
 
-            /* ---------- render ---------- */
 
             const wrap = createEl(
                 'div',

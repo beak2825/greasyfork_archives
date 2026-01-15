@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         无锡市人才培训-继续教育
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.0.1
 // @description  无锡专业技术人员继续教育，自动播放下一个
-// @author       You
+// @author       xiajie
 // @match        https://rs.hrss.wuxi.gov.cn:8031/rcrs/lxStuWeb.html
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=wuxi.gov.cn
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
@@ -55,6 +55,7 @@
         let currentTime = 0
         checkPlay = setInterval(function(){
             let len = $('.childSection').length;
+            let index = 0;
             console.log("检测是否完成")
             for(let i=0;i<len;i++){
                 let text = $('.childSection').eq(i).find('.isFinsh').text();
@@ -65,13 +66,18 @@
                         break;
                     }
                 }
+                if($('.childSection').eq(i).hasClass('active')){
+                    index = i;
+                }
             }
             //当前播放时间
             let now = $('#myVideo')[0].currentTime;
-            //console.log("时间",currentTime,now);
+            console.log("时间",currentTime,now);
             //停止播放，重新播放
             if(currentTime == now){
-                $('.childSection.active').click();
+                if(index > 0){
+                    $('.childSection').eq(index - 1).click();
+                }
             }else{
                 currentTime = now;
             }
@@ -88,5 +94,13 @@
         $('#playText').remove();
         clearInterval(checkPlay);
 
+        window.alert = function(msg=''){
+            console.log(msg);
+            return true;
+        }
+        window.confirm = function(msg=''){
+            console.log(msg);
+            return true;
+        }
     }
 })();

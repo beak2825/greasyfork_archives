@@ -5,8 +5,6 @@
 // @description  夸克网盘 Web 播放器自动选择最高可用画质（事件驱动、无轮询）+ 手动优先（不抢回）+ 配置UI
 // @match        *://pan.quark.cn/*
 // @run-at       document-start
-// @author       run
-// @license      MIT
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562245/%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98%E8%A7%86%E9%A2%91%E9%BB%98%E8%AE%A4%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8.user.js
 // @updateURL https://update.greasyfork.org/scripts/562245/%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98%E8%A7%86%E9%A2%91%E9%BB%98%E8%AE%A4%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8.meta.js

@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         大地维修厂管理系统页面优化
 // @namespace    https://claim.ccic-net.com.cn
-// @icon         https://sso.ccic-net.com.cn/casserver/favicon.ico
+// @icon         /favicon.ico
 // @require      https://unpkg.com/xlsx/dist/xlsx.full.min.js
-// @version      0.1.9.4
+// @version      0.1.9.7
 // @description  维修厂系统自动化填写
 // @author       zexjpg
 // @match        http://claim.ccic-net.com.cn:35003/claimfactorysys/casLoginController.do?newlogin
+// @match        http://fimage.ccic-net.com.cn:25175/h5img/app/upload.img*
 // @grant        GM_notification
 // @grant        GM_closeNotification
 // @grant        GM_xmlhttpRequest
@@ -20,7 +21,7 @@
 // @updateURL https://update.greasyfork.org/scripts/536682/%E5%A4%A7%E5%9C%B0%E7%BB%B4%E4%BF%AE%E5%8E%82%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96.meta.js
 // ==/UserScript==
 
-var elmGetter = function() {
+const elmGetter = function () {
     const win = window.unsafeWindow || document.defaultView || window;
     const doc = win.document;
     const listeners = new WeakMap();
@@ -46,7 +47,7 @@ var elmGetter = function() {
             }
         });
         observer.canceled = false;
-        observer.observe(target, {childList: true, subtree: true, attributes: true});
+        observer.observe(target, { childList: true, subtree: true, attributes: true });
         return () => {
             observer.canceled = true;
             observer.disconnect();
@@ -236,51 +237,51 @@ const utils = {};
  * @returns {Promise<Object|Document>} 返回JSON对象或HTML文档（根据响应Content-Type决定）
  */
 utils.httpRequest = async function (url, data = "", json = "", headers = {}) {
-	const options = {
-		//如果data或json不为空，则为POST请求，否则为GET请求
-		method: data || json ? "POST" : "GET",
-		credentials: "include",
-		headers: {
-			...headers,
-			"Content-Type": data
-				? "application/x-www-form-urlencoded"
-				: json
-				? "application/json;charset=UTF-8"
-				: "text/html",
-		},
-	};
+    const options = {
+        //如果data或json不为空，则为POST请求，否则为GET请求
+        method: data || json ? "POST" : "GET",
+        credentials: "include",
+        headers: {
+            ...headers,
+            "Content-Type": data
+                ? "application/x-www-form-urlencoded"
+                : json
+                    ? "application/json;charset=UTF-8"
+                    : "text/html",
+        },
+    };
 
-	if (data) {
-		options.body = new URLSearchParams(data).toString();
-	}
+    if (data) {
+        options.body = new URLSearchParams(data).toString();
+    }
 
-	if (json) {
-		options.body = JSON.stringify(json);
-		//   options.body = new URLSearchParams(json).toString();
-	}
+    if (json) {
+        options.body = JSON.stringify(json);
+        //   options.body = new URLSearchParams(json).toString();
+    }
 
-	try {
-		const response = await fetch(url, options);
+    try {
+        const response = await fetch(url, options);
 
-		if (!response.ok) {
-			const errorInfo = await response.json();
-			throw new Error(
-				`HTTP error! status: ${response.status}, message: ${errorInfo.message}`
-			);
-		}
+        if (!response.ok) {
+            const errorInfo = await response.json();
+            throw new Error(
+                `HTTP error! status: ${response.status}, message: ${errorInfo.message}`
+            );
+        }
 
-		// 根据 Content-Type 返回对应格式
-		const contentType = response.headers.get("Content-Type");
-		if (contentType?.includes("application/json")) {
-			return await response.json();
-		} else {
-			const text = await response.text();
-			const parser = new DOMParser();
-			return parser.parseFromString(text, "text/html");
-		}
-	} catch (error) {
-		throw error;
-	}
+        // 根据 Content-Type 返回对应格式
+        const contentType = response.headers.get("Content-Type");
+        if (contentType?.includes("application/json")) {
+            return await response.json();
+        } else {
+            const text = await response.text();
+            const parser = new DOMParser();
+            return parser.parseFromString(text, "text/html");
+        }
+    } catch (error) {
+        throw error;
+    }
 };
 
 /**
@@ -292,52 +293,52 @@ utils.httpRequest = async function (url, data = "", json = "", headers = {}) {
  * @returns {Promise<HTMLElement>} 返回包含元素的Promise，超时或失败时拒绝
  */
 utils.async_querySelector = function (
-	selector,
-	{ timeout = 5000, parent = document } = {}
+    selector,
+    { timeout = 5000, parent = document } = {}
 ) {
-	return new Promise((resolve, reject) => {
-		// 立即检查元素是否存在
-		const element = parent.querySelector(selector);
-		if (element) {
-			return resolve(element);
-		}
+    return new Promise((resolve, reject) => {
+        // 立即检查元素是否存在
+        const element = parent.querySelector(selector);
+        if (element) {
+            return resolve(element);
+        }
 
-		// 配置 MutationObserver
-		const observer = new MutationObserver((mutations, obs) => {
-			const foundElement = parent.querySelector(selector);
-			if (foundElement) {
-				cleanup();
-				resolve(foundElement);
-			}
-		});
+        // 配置 MutationObserver
+        const observer = new MutationObserver((mutations, obs) => {
+            const foundElement = parent.querySelector(selector);
+            if (foundElement) {
+                cleanup();
+                resolve(foundElement);
+            }
+        });
 
-		// 超时处理
-		const timeoutId = setTimeout(() => {
-			cleanup();
-			reject(new Error(`Element "${selector}" not found within ${timeout}ms`));
-		}, timeout);
+        // 超时处理
+        const timeoutId = setTimeout(() => {
+            cleanup();
+            reject(new Error(`Element "${selector}" not found within ${timeout}ms`));
+        }, timeout);
 
-		// 清理函数
-		const cleanup = () => {
-			observer.disconnect();
-			clearTimeout(timeoutId);
-		};
+        // 清理函数
+        const cleanup = () => {
+            observer.disconnect();
+            clearTimeout(timeoutId);
+        };
 
-		// 开始观察 DOM 变化
-		observer.observe(parent, {
-			childList: true,
-			subtree: true,
-			attributes: false,
-			characterData: false,
-		});
+        // 开始观察 DOM 变化
+        observer.observe(parent, {
+            childList: true,
+            subtree: true,
+            attributes: false,
+            characterData: false,
+        });
 
-		// 再次检查防止竞争条件
-		const immediateCheck = parent.querySelector(selector);
-		if (immediateCheck) {
-			cleanup();
-			resolve(immediateCheck);
-		}
-	});
+        // 再次检查防止竞争条件
+        const immediateCheck = parent.querySelector(selector);
+        if (immediateCheck) {
+            cleanup();
+            resolve(immediateCheck);
+        }
+    });
 };
 
 /**
@@ -347,7 +348,7 @@ utils.async_querySelector = function (
 utils.monitorIframes = function () {
     // 新增：使用Set存储已观察的iframe
     const observedIframes = new Set();
-    
+
     // 监控 iframe 的加载完成事件
     function bindIframeLoadEvent(iframe) {
         if (observedIframes.has(iframe)) return;
@@ -361,7 +362,7 @@ utils.monitorIframes = function () {
         });
 
         if (iframe.contentDocument?.readyState === "complete") {
-            console.debug("iframe 已缓存加载完成:", iframe,iframe.name);
+            console.debug("iframe 已缓存加载完成:", iframe, iframe.name);
         }
     }
 
@@ -391,9 +392,9 @@ utils.monitorIframes = function () {
  * @returns {Object} 包含四种消息类型方法的对象
  */
 utils.toast = function () {
-	// 创建样式
-	const style = document.createElement("style");
-	style.textContent = `
+    // 创建样式
+    const style = document.createElement("style");
+    style.textContent = `
       .brmenu-container {
           position: fixed;
           bottom: 10px;
@@ -448,70 +449,70 @@ utils.toast = function () {
       .toast-warning { background-color: #f39c12; }
       .toast-error { background-color: #e74c3c; }
   `;
-	document.head.appendChild(style);
+    document.head.appendChild(style);
 
-	// 创建容器
-	const container = document.createElement("div");
-	container.className = "brmenu-container";
-	document.body.appendChild(container);
+    // 创建容器
+    const container = document.createElement("div");
+    container.className = "brmenu-container";
+    document.body.appendChild(container);
 
-	function createToast(content, type) {
-		const toast = document.createElement("div");
-		toast.className = `brmenu-toast toast-${type}`;
+    function createToast(content, type) {
+        const toast = document.createElement("div");
+        toast.className = `brmenu-toast toast-${type}`;
 
-		// 关闭按钮
-		const closeBtn = document.createElement("button");
-		closeBtn.className = "toast-close";
-		closeBtn.innerHTML = "×";
-		closeBtn.onclick = () => removeToast(toast);
+        // 关闭按钮
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "toast-close";
+        closeBtn.innerHTML = "×";
+        closeBtn.onclick = () => removeToast(toast);
 
-		// 内容
-		const contentDiv = document.createElement("div");
-		contentDiv.innerHTML = content;
+        // 内容
+        const contentDiv = document.createElement("div");
+        contentDiv.innerHTML = content;
 
-		toast.appendChild(closeBtn);
-		toast.appendChild(contentDiv);
+        toast.appendChild(closeBtn);
+        toast.appendChild(contentDiv);
 
-		// 鼠标交互
-		let timeout;
-		const startTimeout = () => {
-			timeout = setTimeout(() => removeToast(toast), 3000);
-		};
+        // 鼠标交互
+        let timeout;
+        const startTimeout = () => {
+            timeout = setTimeout(() => removeToast(toast), 3000);
+        };
 
-		toast.addEventListener("mouseenter", () => clearTimeout(timeout));
-		toast.addEventListener("mouseleave", startTimeout);
+        toast.addEventListener("mouseenter", () => clearTimeout(timeout));
+        toast.addEventListener("mouseleave", startTimeout);
 
-		return { toast, startTimeout };
-	}
+        return { toast, startTimeout };
+    }
 
-	function removeToast(toast) {
-		toast.classList.add("hide");
-		setTimeout(() => {
-			toast.remove();
-			// 当没有消息时移除容器
-			if (container.children.length === 0) {
-				container.remove();
-			}
-		}, 300);
-	}
+    function removeToast(toast) {
+        toast.classList.add("hide");
+        setTimeout(() => {
+            toast.remove();
+            // 当没有消息时移除容器
+            if (container.children.length === 0) {
+                container.remove();
+            }
+        }, 300);
+    }
 
-	function showMessage(type, content) {
-		// 确保容器存在
-		if (!document.body.contains(container)) {
-			document.body.appendChild(container);
-		}
+    function showMessage(type, content) {
+        // 确保容器存在
+        if (!document.body.contains(container)) {
+            document.body.appendChild(container);
+        }
 
-		const { toast, startTimeout } = createToast(content, type);
-		container.appendChild(toast);
-		startTimeout();
-	}
+        const { toast, startTimeout } = createToast(content, type);
+        container.appendChild(toast);
+        startTimeout();
+    }
 
-	return {
-		info: (content) => showMessage("info", content),
-		success: (content) => showMessage("success", content),
-		warning: (content) => showMessage("warning", content),
-		error: (content) => showMessage("error", content),
-	};
+    return {
+        info: (content) => showMessage("info", content),
+        success: (content) => showMessage("success", content),
+        warning: (content) => showMessage("warning", content),
+        error: (content) => showMessage("error", content),
+    };
 };
 
 
@@ -557,20 +558,20 @@ utils.sleep = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
 
 // 修改后的重试查询方法
 utils.retryQuery = async function (queryFn, retries = 3, delay = 500) {
-	// 封装原生setTimeout为Promise
-	const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+    // 封装原生setTimeout为Promise
+    const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-	for (let i = 1; i <= retries; i++) {
-		try {
-			const result = await queryFn();
-			if (result) return result;
-			console.debug(`第 ${i} 次重试未找到元素`);
-		} catch (e) {
-			console.warn(`第 ${i} 次查询失败:`, e.message);
-		}
-		await wait(delay);
-	}
-	throw new Error(`元素未找到，已重试 ${retries} 次`);
+    for (let i = 1; i <= retries; i++) {
+        try {
+            const result = await queryFn();
+            if (result) return result;
+            console.debug(`第 ${i} 次重试未找到元素`);
+        } catch (e) {
+            console.warn(`第 ${i} 次查询失败:`, e.message);
+        }
+        await wait(delay);
+    }
+    throw new Error(`元素未找到，已重试 ${retries} 次`);
 }
 
 
@@ -578,23 +579,23 @@ utils.retryQuery = async function (queryFn, retries = 3, delay = 500) {
  * 按顺序输出特定日期格式的工具函数
  * @returns {string} 每次调用按顺序返回：当前年最后一天 → 当前时间+9天 → 9999-01-01 → 循环
  */
-utils.getRotatingDate = (function() {
+utils.getRotatingDate = (function () {
     let counter = 0;
-	const day = 9
+    const day = 9
     // const formatDate = (date) => date.toISOString().split('T')[0];
 
-	const formatDate = (date) => {
-		return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-			2,
-			"0"
-		)}-${String(date.getDate()).padStart(2, "0")}`;
-	};
+    const formatDate = (date) => {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+            2,
+            "0"
+        )}-${String(date.getDate()).padStart(2, "0")}`;
+    };
 
-    return function() {
+    return function () {
         const now = new Date();
         let result;
-        
-        switch(counter % 3) {
+
+        switch (counter % 3) {
             case 0: // 当前年最后一天
                 result = new Date(now.getFullYear(), 11, 31);
                 break;
@@ -607,7 +608,7 @@ utils.getRotatingDate = (function() {
                 counter = -1; // 重置计数器
                 break;
         }
-        
+
         counter++;
         return typeof result === 'string' ? result : formatDate(result);
     };
@@ -618,73 +619,75 @@ utils.getRotatingDate = (function() {
  */
 function createDateShortcutLink(iframe) {
 
-	const iframeDocument = iframe.contentDocument;
+    const iframeDocument = iframe.contentDocument;
     const $ = (selector) => iframeDocument.querySelector(selector);
     // 查找目标输入框
     const dateInput = $('#channelEndDate');
     if (dateInput) {
 
-		let linkdate = utils.getRotatingDate()
+        let linkdate = utils.getRotatingDate()
 
-		// 创建链接元素
-		const link = iframeDocument.createElement('a');
-		link.style.cssText = 'margin-left:10px; color:#2196F3; cursor:pointer; text-decoration:underline;';
-		// link.className = 'dan-btn'; // 使用页面已有样式
-		link.innerHTML = `📅 ${linkdate}`;
-		
-		// 点击事件处理
-		link.addEventListener('click', () => {
-			// dateInput.value = linkdate;
-			linkdate = utils.getRotatingDate()
-			const islong = iframe.contentDocument.querySelector("#longTimeFlag").checked
-			if (linkdate == '9999-01-01'){
-				if (!islong) {$("#longTimeFlag").click()
-				}
-			}
-			else  {
-				if (islong) {$("#longTimeFlag").click()
-				}
-			}
-			link.innerHTML = `📅 ${linkdate}`;
-			dateInput.value = linkdate;
-			linkdate = utils.getRotatingDate()
-		});
+        // 创建链接元素
+        const link = iframeDocument.createElement('a');
+        link.style.cssText = 'margin-left:10px; color:#2196F3; cursor:pointer; text-decoration:underline;';
+        // link.className = 'dan-btn'; // 使用页面已有样式
+        link.innerHTML = `📅 ${linkdate}`;
 
-		// 添加到最近的父元素td
-		const parentTd = dateInput.closest('td');
-		if (parentTd) {
-			parentTd.appendChild(link);
-		}
-	}
+        // 点击事件处理
+        link.addEventListener('click', () => {
+            // dateInput.value = linkdate;
+            linkdate = utils.getRotatingDate()
+            const islong = iframe.contentDocument.querySelector("#longTimeFlag").checked
+            if (linkdate == '9999-01-01') {
+                if (!islong) {
+                    $("#longTimeFlag").click()
+                }
+            }
+            else {
+                if (islong) {
+                    $("#longTimeFlag").click()
+                }
+            }
+            link.innerHTML = `📅 ${linkdate}`;
+            dateInput.value = linkdate;
+            linkdate = utils.getRotatingDate()
+        });
 
-	const targetBtn = iframeDocument.querySelector("#addRowBtn3");
-    
+        // 添加到最近的父元素td
+        const parentTd = dateInput.closest('td');
+        if (parentTd) {
+            parentTd.appendChild(link);
+        }
+    }
+
+    const targetBtn = iframeDocument.querySelector("#addRowBtn3");
+
     if (targetBtn) {
-		// 创建新按钮
-		const newBtn = document.createElement('a');
-		newBtn.className = targetBtn.className; // 继承原按钮样式
-		newBtn.style.marginRight = "10px"; // 添加右边距分隔按钮
-		newBtn.innerHTML = '<span class="l-btn-left">填充工时</span>';
+        // 创建新按钮
+        const newBtn = document.createElement('a');
+        newBtn.className = targetBtn.className; // 继承原按钮样式
+        newBtn.style.marginRight = "10px"; // 添加右边距分隔按钮
+        newBtn.innerHTML = '<span class="l-btn-left">填充工时</span>';
 
-		// 插入到原按钮前
-		targetBtn.parentNode.insertBefore(newBtn, targetBtn);
-		newBtn.addEventListener('click', async () => {
-			const is4s = iframeDocument.querySelector("#type4sY").checked
-			processRuleLists(iframeDocument,is4s)
-		});
-	}
+        // 插入到原按钮前
+        targetBtn.parentNode.insertBefore(newBtn, targetBtn);
+        newBtn.addEventListener('click', async () => {
+            const is4s = iframeDocument.querySelector("#type4sY").checked
+            processRuleLists(iframeDocument, is4s)
+        });
+    }
 };
 
 // 新增重试查询方法
 async function retryQuery(queryFn, retries = 3, delay = 500) {
-	for (let i = 0; i < retries; i++) {
-		try {
-			const result = await queryFn();
-			if (result) return result;
-		} catch (e) {/* 忽略错误 */}
-		await utils.sleep(delay);
-	}
-	throw new Error(`Element not found after ${retries} retries`);
+    for (let i = 0; i < retries; i++) {
+        try {
+            const result = await queryFn();
+            if (result) return result;
+        } catch (e) {/* 忽略错误 */ }
+        await utils.sleep(delay);
+    }
+    throw new Error(`Element not found after ${retries} retries`);
 }
 
 
@@ -699,19 +702,21 @@ async function autofill(iframe) {
     const is4s = $("#type4sY").checked;
 
     // if (!is4s){
-	// 	$("#longTimeFlag").click(); //规则时间,长期
-	// }else {
-	// 	$("#channelEndDate").value = "2025-12-31"; //日期,点击长期时该位置不可用 readonly
-	// }
+    // 	$("#longTimeFlag").click(); //规则时间,长期
+    // }else {
+    // 	$("#channelEndDate").value = "2026-12-31"; //日期,点击长期时该位置不可用 readonly
+    // }
     $("#longTimeFlag").click(); //规则时间,长期
-    
+
     // 使用 Promise 链优化
     await elmGetter.get("#_easyui_combobox_i6_2", iframeDocument, 3000)
         .then(el => el.click())
         .catch(() => console.warn("品牌价元素未找到"));
 
     //直供管理费率,录入40
-    $("#prpLmanagefeeRatePageList\\[1\\]\\.straightManageRate").value = 40; 
+    // const straightManageRate = iframeDocument.querySelector("#isCooperationY").checked?40:0
+    const straightManageRate = 0
+    $("#prpLmanagefeeRatePageList\\[1\\]\\.straightManageRate").value = straightManageRate;
     $("#ruleExplain").value = "新增"; //规则说明,录入新增
     $("#applyRemark").value = "新增"; //申请说明,录入新增
 
@@ -751,23 +756,22 @@ async function autofill(iframe) {
     //点击添加工时列表
 
     await elmGetter.get('iframe[name="seriesGroupfeeRuleSelectId"]')
-    .then(iframe => {
-        return utils.getIframeDocument(iframe);
-    })
-    .then(iframeDoc => {
-    iframeDoc.querySelector("#allchecked").click();
-    
-    if (iframeDoc.querySelector("#allchecked").checked) {
-        const closestTable = iframeDoc.defaultView.frameElement
-        .closest("table");
-        closestTable.querySelector("input").click();
-    }
-    })
-    .catch(error => {
-    console.error("[添加工时列表]流程执行失败:", error);
-    });
+        .then(iframe => {
+            return utils.getIframeDocument(iframe);
+        })
+        .then(iframeDoc => {
+            iframeDoc.querySelector("#allchecked").click();
+            if (iframeDoc.querySelector("#allchecked").checked) {
+                const closestTable = iframeDoc.defaultView.frameElement
+                    .closest("table");
+                closestTable.querySelector("input").click();
+            }
+        })
+        .catch(error => {
+            console.error("[添加工时列表]流程执行失败:", error);
+        });
 
-    processRuleLists(iframeDocument,is4s)
+    processRuleLists(iframeDocument, is4s)
 
 
     //填充空白折扣
@@ -775,70 +779,70 @@ async function autofill(iframe) {
 
 }
 
-async function processRuleLists(iframeDocument,is4s=true) {
-	const RuleLists = iframeDocument.querySelectorAll('#feeRule2_mainRow [id^="prpLseriesGroupfeeRulePageList"][id$="discountLevel"]');
-	
-	// 转换为数组处理
-	const elementsArray = Array.from(RuleLists);
+async function processRuleLists(iframeDocument, is4s = true) {
+    const RuleLists = iframeDocument.querySelectorAll('#feeRule2_mainRow [id^="prpLseriesGroupfeeRulePageList"][id$="discountLevel"]');
 
-	// 使用 for...of 实现顺序执行
-	let i = 0;
-	for (const element of elementsArray) {
-		try {
-			i++;
-			console.debug(`正在处理: ${i}`);
+    // 转换为数组处理
+    const elementsArray = Array.from(RuleLists);
 
-			// await utils.delay(100);
-			await element.click();
+    // 使用 for...of 实现顺序执行
+    let i = 0;
+    for (const element of elementsArray) {
+        try {
+            i++;
+            console.debug(`正在处理: ${i}`);
 
-			// 等待后续流程执行完成
-			await clickrepairgroup(is4s);
-			
-			// 可选：添加间隔防止操作过快
-			await utils.sleep(100);
-		} catch (error) {
-			console.error(`处理元素时出错: ${error.message}`);
-			// 根据需求决定是否继续执行
-			// throw error; // 如果要终止流程
-		}
-	}
+            // await utils.delay(100);
+            await element.click();
+
+            // 等待后续流程执行完成
+            await clickrepairgroup(is4s);
+
+            // 可选：添加间隔防止操作过快
+            await utils.sleep(100);
+        } catch (error) {
+            console.error(`处理元素时出错: ${error.message}`);
+            // 根据需求决定是否继续执行
+            // throw error; // 如果要终止流程
+        }
+    }
 }
-async function clickrepairgroup(is4s=true) {
-	
-	// const groupname=is4s?'广东服务站工时标准202004':'广东综修厂工时标准202004'
-	const groupname=is4s?'广东分公司服务站通用工时标准--202505':'广东分公司综修厂通用工时标准--202505'
-	const groupname2025=is4s?'广东分公司服务站通用工时标准-202505':'广东分公司综修厂通用工时标准-202505'
-	let iframeDoc;
+async function clickrepairgroup(is4s = true) {
+
+    // const groupname=is4s?'广东服务站工时标准202004':'广东综修厂工时标准202004'
+    const groupname = is4s ? '广东分公司服务站通用工时标准--202505' : '广东分公司综修厂通用工时标准--202505'
+    const groupname2025 = is4s ? '广东分公司服务站通用工时标准-202505' : '广东分公司综修厂通用工时标准-202505'
+    let iframeDoc;
 
 
-		// 修改后的调用方式
-	const element = await retryQuery(async () => {
+    // 修改后的调用方式
+    const element = await retryQuery(async () => {
         const iframe = await elmGetter.get('iframe[name="getSeriesGroupFeeRuleId"]');
-		iframeDoc = await utils.getIframeDocument(iframe);
-		
-		const targetNames = ['广东特货车工时标准202003', '广东特货车工时标准--202003',groupname,groupname2025];
-		const elements = iframeDoc.querySelectorAll('td[field="schemeName"] div');
-		
-		for (const el of elements) {
-			if (targetNames.includes(el.textContent?.trim())) {
-				console.debug(`找到匹配方案: ${el.textContent}`);
-				return el;
-			}
-		}
-		return null; // 显式返回null表示未找到
-	}, 3, 500);
-	if (element) {
-		await utils.sleep(10);
-		element.click();
-		//延迟1秒
-		await utils.sleep(10);
-		
-		// 获取 closestTable
-		const closestTable = iframeDoc.defaultView.frameElement.closest("table");
-		closestTable.querySelector("input").click();
-		
+        iframeDoc = await utils.getIframeDocument(iframe);
 
-	}
+        const targetNames = ['广东特货车工时标准202003', '广东特货车工时标准--202003', groupname, groupname2025];
+        const elements = iframeDoc.querySelectorAll('td[field="schemeName"] div');
+
+        for (const el of elements) {
+            if (targetNames.includes(el.textContent?.trim())) {
+                console.debug(`找到匹配方案: ${el.textContent}`);
+                return el;
+            }
+        }
+        return null; // 显式返回null表示未找到
+    }, 3, 500);
+    if (element) {
+        await utils.sleep(10);
+        element.click();
+        //延迟1秒
+        await utils.sleep(10);
+
+        // 获取 closestTable
+        const closestTable = iframeDoc.defaultView.frameElement.closest("table");
+        closestTable.querySelector("input").click();
+
+
+    }
 
 
 }
@@ -847,82 +851,82 @@ async function clickrepairgroup(is4s=true) {
 function addinitBTN(iframe) {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-const minimizeIcon = document.createElement('div');
-	const styleObj = {
-		fontSize: '18px',
-		width: '25px',
-		height: '25px',
-		backgroundColor: '#007bff',
-		borderRadius: '50%',
-		cursor: 'pointer',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-		boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-		color: 'white'
-	};
-	Object.assign(minimizeIcon.style, styleObj);
-	minimizeIcon.innerHTML = '🚗'
-    
+    const minimizeIcon = document.createElement('div');
+    const styleObj = {
+        fontSize: '18px',
+        width: '25px',
+        height: '25px',
+        backgroundColor: '#007bff',
+        borderRadius: '50%',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+        color: 'white'
+    };
+    Object.assign(minimizeIcon.style, styleObj);
+    minimizeIcon.innerHTML = '🚗'
+
     // 现在可以安全地添加到目标位置
     const positiontd = iframeDocument.querySelector("#type4sN").closest('td');
     positiontd.appendChild(minimizeIcon);
 
     //开始初始化填写,包括修改原来的管理费费率
 
-        //直供管理费率,录入40
-    iframeDocument.querySelector(
-        "#prpLmanagefeeRatePageList\\[1\\]\\.straightManageRate"
-    ).value = 40; 
+    //直供管理费率,录入40
+    // const straightManageRate = iframeDocument.querySelector("#isCooperationY").checked?40:0
+    const straightManageRate = 0
+    iframeDocument.querySelector("#prpLmanagefeeRatePageList\\[1\\]\\.straightManageRate").value = straightManageRate;
     //点选不调级
     const isChangeGradeN = iframeDocument.querySelector("#isChangeGradeN")
-    if(isChangeGradeN){isChangeGradeN.click()}
+    if (isChangeGradeN) { isChangeGradeN.click() }
 
 
 
-	// 点击按钮展开对应动作
-	minimizeIcon.addEventListener("click", function () {
-		autofill(iframe)
-		// processRuleLists(iframeDocument)
+    // 点击按钮展开对应动作
+    minimizeIcon.addEventListener("click", function () {
+        autofill(iframe)
+        // processRuleLists(iframeDocument)
 
-	});
+    });
 
 }
 
 // 在iframe中添加待处理点击按钮
 function addBTN_tudo(iframe) {
-	const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     const $ = (selector) => iframeDocument.querySelector(selector);
-	positiontd=$("#applyRemark").closest('td');
+    positiontd = $("#applyRemark").closest('td');
 
-	// 创建小图标
-	const minimizeIcon = document.createElement('div');
-	minimizeIcon.style.fontSize = '18px';
-	minimizeIcon.style.width = '25px';
-	minimizeIcon.style.height = '25px';
-	minimizeIcon.style.backgroundColor = '#007bff';
-	minimizeIcon.style.borderRadius = '50%';
-	minimizeIcon.style.cursor = 'pointer';
-	minimizeIcon.style.display = 'flex'; // 初始状态显示
-	minimizeIcon.style.alignItems = 'center';
-	minimizeIcon.style.justifyContent = 'center';
-	minimizeIcon.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)';
-	minimizeIcon.style.color = 'white';
-	minimizeIcon.innerHTML = '待'
+    // 创建小图标
+    const minimizeIcon = document.createElement('div');
+    minimizeIcon.style.fontSize = '18px';
+    minimizeIcon.style.width = '25px';
+    minimizeIcon.style.height = '25px';
+    minimizeIcon.style.backgroundColor = '#007bff';
+    minimizeIcon.style.borderRadius = '50%';
+    minimizeIcon.style.cursor = 'pointer';
+    minimizeIcon.style.display = 'flex'; // 初始状态显示
+    minimizeIcon.style.alignItems = 'center';
+    minimizeIcon.style.justifyContent = 'center';
+    minimizeIcon.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)';
+    minimizeIcon.style.color = 'white';
+    minimizeIcon.innerHTML = '待'
 
 
-	// iframeDocument.body.appendChild(minimizeIcon);
-	positiontd.appendChild(minimizeIcon);
+    // iframeDocument.body.appendChild(minimizeIcon);
+    positiontd.appendChild(minimizeIcon);
 
-	// // 点击按钮展开对应动作
-	// minimizeIcon.addEventListener("click", function () {
+    // // 点击按钮展开对应动作
+    // minimizeIcon.addEventListener("click", function () {
     //     auto_fill_tudo(iframe) 
 
-	// });
+    // });
 
-	minimizeIcon.addEventListener("click", () => {
-		auto_fill_tudo(iframe) 
-	});
+    minimizeIcon.addEventListener("click", () => {
+        auto_fill_tudo(iframe)
+    });
 
 
     function auto_fill_tudo(iframe) {
@@ -930,41 +934,48 @@ function addBTN_tudo(iframe) {
         const $ = (selector) => iframeDocument.querySelector(selector);
         $("#applyRemark").value = "非合作调整折扣";
 
-		//直供管理费率,录入40
-		$("#prpLmanagefeeRatePageList\\[1\\]\\.straightManageRate").value = 40; 
-		//点选不调级
-		const isChangeGradeN = $("#isChangeGradeN")
-		if(isChangeGradeN){isChangeGradeN.click()}
+        //直供管理费率,录入40或0
+        // const straightManageRate = iframeDocument.querySelector("#isCooperationY").checked?40:0
+        const straightManageRate = 0
+        $("#prpLmanagefeeRatePageList\\[1\\]\\.straightManageRate").value = straightManageRate;
+        //点选不调级
+        const isChangeGradeN = $("#isChangeGradeN")
+        if (isChangeGradeN) { isChangeGradeN.click() }
 
-		const e開始时间=$("#prpLfactoryCarBrandAuthInfoPageList\\[0\\]\\.authStartDate")
-		const e結束时间=$("#prpLfactoryCarBrandAuthInfoPageList\\[0\\]\\.authEndDate")
-		if(e開始时间&&e開始时间.value==""){e開始时间.value="2025-01-01"}
-		if(e結束时间&&e結束时间.value==""){e結束时间.value="2025-12-31"}
+        const e開始时间 = $("#prpLfactoryCarBrandAuthInfoPageList\\[0\\]\\.authStartDate")
+        const e結束时间 = $("#prpLfactoryCarBrandAuthInfoPageList\\[0\\]\\.authEndDate")
+        if (e開始时间 && e開始时间.value == "") { e開始时间.value = "2026-01-01" }
+        if (e結束时间 && e結束时间.value == "") { e結束时间.value = "2026-12-31" }
 
-}
+    }
 
 }
 
 // 填写空白折扣
-function fill_discount(iframe){
+function fill_discount(iframe) {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     //填充空白折扣
-    const zhekouinputs=iframeDocument.querySelectorAll('input[id$="iscount"]:not([readonly])')
-    zhekouinputs.forEach((input)=>{
-        if(input.value==""){input.value=100}
+    // const Cooperrate = iframeDocument.querySelector("#isCooperationY").checked?100:85
+    const Cooperrate = 100
+    const zhekouinputs = iframeDocument.querySelectorAll('input[id$="iscount"]:not([readonly])')
+    zhekouinputs.forEach((input) => {
+        if (input.value == "") { 
+            //非配件类折扣(工时类),全部配置为100,配件类按是否合作来配置
+            if (!input.id.includes("componentRule")) { input.value = 100 }
+            input.value = Cooperrate }
     })
 }
 
-function fill_authdate(iframe,StartDate="2025-01-01",EndDate="2025-12-31") {
+function fill_authdate(iframe, StartDate = "2026-01-01", EndDate = "2026-12-31") {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
     //填写授权起止时间
-    const trs=iframeDocument.querySelectorAll("#carBrandAuthInfo_mainRow tr")
-    trs.forEach((tr)=>{
+    const trs = iframeDocument.querySelectorAll("#carBrandAuthInfo_mainRow tr")
+    trs.forEach((tr) => {
         const authStartDate = tr.querySelector("input[id$='authStartDate']");
         const authEndDate = tr.querySelector("input[id$='authEndDate']");
-        if(authStartDate&&authEndDate){ 
-            if(authStartDate.value === "")authStartDate.value=StartDate
-            if(authEndDate.value === "")authEndDate.value=EndDate
+        if (authStartDate && authEndDate) {
+            if (authStartDate.value === "") authStartDate.value = StartDate
+            if (authEndDate.value === "") authEndDate.value = EndDate
         }
     })
 }
@@ -972,15 +983,16 @@ function fill_authdate(iframe,StartDate="2025-01-01",EndDate="2025-12-31") {
 // 创建按钮快捷链接
 function handlerUI(iframe) {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-    let btntemplate = iframeDocument.querySelector("button#addRowBtn4")
+    let btntemplate = iframeDocument.querySelector("button#addRowBtn1")
+    // console.log(btntemplate)
     const btn_ahthdatafill = iframeDocument.createElement("a");
     btn_ahthdatafill.textContent = "填写空白值";
-    btn_ahthdatafill.addEventListener("click", () => { 
+    btn_ahthdatafill.addEventListener("click", () => {
         fill_authdate(iframe)
         fill_discount(iframe)
     });
     btn_ahthdatafill.className = btntemplate.className
-    btn_ahthdatafill.title = "默认开始时间:2025-01-01,结束:2025-12-31,默认折扣:100"
+    btn_ahthdatafill.title = "默认开始时间:2026-01-01,结束:2026-12-31,默认折扣:100"
     btntemplate.parentNode.insertBefore(btn_ahthdatafill, btntemplate);
 
 
@@ -991,12 +1003,12 @@ function handlerUI(iframe) {
 
 //在修理厂信息iframe内初始化
 function initiframe_edit(iframe) {
-	if (!(iframe.name && iframe.name =='factoryMainEditId')){return}
-	addinitBTN(iframe)
-	
-	createDateShortcutLink(iframe)
+    if (!(iframe.name && iframe.name == 'factoryMainEditId')) { return }
+    addinitBTN(iframe)
 
-	addBTN_tudo(iframe)
+    createDateShortcutLink(iframe)
+
+    addBTN_tudo(iframe)
 
     handlerUI(iframe)
 
@@ -1004,21 +1016,21 @@ function initiframe_edit(iframe) {
 
 // 在一个无法修改的修理厂iframe内新增一个照片上传的连接
 function initiframe_view(iframe) {
-	if (!(iframe.name && iframe.name =='factoryMainViewId')){return}
-	const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    if (!(iframe.name && iframe.name == 'factoryMainViewId')) { return }
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-	//创建一个上传文件的连接,在[单证查看]的后面添加这个元素
-	const link = iframeDocument.createElement('a');
-	link.href = "javascript:uploadCertifyOpt('CLRole01');";
-	link.className = "dan-btn";
-	link.textContent = "单证上传";
-	const positiontd=iframeDocument.querySelector("#factoryName").closest('td');
-	positiontd.appendChild(link);
+    //创建一个上传文件的连接,在[单证查看]的后面添加这个元素
+    const link = iframeDocument.createElement('a');
+    link.href = "javascript:uploadCertifyOpt('CLRole01');";
+    link.className = "dan-btn";
+    link.textContent = "单证上传";
+    const positiontd = iframeDocument.querySelector("#factoryName").closest('td');
+    positiontd.appendChild(link);
 
     //自动填写折扣
-    const inputs=iframeDocument.querySelectorAll('input[id$="iscount"]')
-    inputs.forEach((input)=>{
-        if(input.value==""){input.value=100}
+    const inputs = iframeDocument.querySelectorAll('input[id$="iscount"]')
+    inputs.forEach((input) => {
+        if (input.value == "") { input.value = 100 }
     })
 
 
@@ -1026,16 +1038,16 @@ function initiframe_view(iframe) {
 }
 
 async function initiframe_pad(iframe) {
-	// if (!(iframe.name && iframe.name =='factoryMainEditId')){return}
-	if (!(iframe.src && iframe.src.includes('isIframe') && iframe.src.includes('clickFunctionId'))) { return }
-	const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-	
-	//点击归属机构
-	comCode = iframeDocument.querySelector("#comCodeShow").nextElementSibling.querySelector("a"); 
-	comCode.click();
-	//点击广东分公司
-    await elmGetter.get("#datagrid-row-r1-2-0",iframeDocument)
-    .then((element)=>{element.click()})
+    // if (!(iframe.name && iframe.name =='factoryMainEditId')){return}
+    if (!(iframe.src && iframe.src.includes('isIframe') && iframe.src.includes('clickFunctionId'))) { return }
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+    //点击归属机构
+    comCode = iframeDocument.querySelector("#comCodeShow").nextElementSibling.querySelector("a");
+    comCode.click();
+    //点击广东分公司
+    await elmGetter.get("#datagrid-row-r1-2-0", iframeDocument)
+        .then((element) => { element.click() })
 
 }
 
@@ -1043,41 +1055,7 @@ async function initiframe_pad(iframe) {
 
 
 // 循环检查退回
-async function 循环检查退回(delay = 300000) {
-
-    function json2list(data) {
-        const list = [];
-        data.rows.forEach(element => {
-            list.push(`${element.factoryName} ${element.operateTimeForHis}`)
-        });
-        return list
-    }
-
-    //遍历检查第二个数组的元素不在第一个数组内,获取不在的元素,输出一个新数组
-    function getNotInArray(pre, now) {
-        const prerows = json2list(pre)
-        const nowrows = json2list(now)
-        const result = [];
-        nowrows.forEach(element => {
-            if (!prerows.includes(element)) {
-                result.push(element);
-            }
-        });
-        return result;
-    }
-
-    function notification(pre, now) {
-        const result = getNotInArray(pre, now);
-        if (result.length > 0) {
-            const message = `${result.join('\n')}`;
-            console.log(message);
-            GM_notification({
-                title: `新增${result.length}个回退`,
-                text: message,
-                timeout: 5000
-            })
-        }
-    }
+async function 循环检查退回(delay = 200000) {
 
     //检查退回量
     async function checkrollback() {
@@ -1086,28 +1064,42 @@ async function 循环检查退回(delay = 300000) {
         return utils.httpRequest(url, data)
     }
 
-    const 原始退回 = await checkrollback()
-    if (原始退回.total > 0) {
-        原始退回list = json2list(原始退回)
-        const title = `有${原始退回.total}个回退待处理`
-        const msg = `${原始退回list.join('\n')}`
-        console.log(msg)
-        GM_notification({
-            title: title,
-            text: msg,
-            timeout: 5000
-        })
+    function getAddedFactories(originalData, currentData) {
+        // 创建原始数据的 Map，以 factoryCode 为键
+        const originalMap = new Map();
+        originalData.rows.forEach(item => {
+            originalMap.set(item.factoryCode, item);
+        });
+
+        // 筛选出新增的元素
+        const addedRows = currentData.rows.filter(item => !originalMap.has(item.factoryCode));
+
+        return {
+            rows: addedRows
+        };
     }
-    await utils.sleep(delay)
+
+    let originalData = null
+
+
     while (true) {
-        const 现有退回 = await checkrollback()
-        console.log(`现有回退: ${现有退回.total}`)
-        const msg = notification(原始退回, 现有退回)
-        if (msg) {
-            // const msg = `新增${现有退回.total - 原始退回.total}个回退待处理`
+        const currentData = await checkrollback()
+        if (originalData == null) {
+            if(currentData.rows.length > 0){
             GM_notification({
-                title: "有新增维修厂回退待处理",
-                text: msg,
+                title: `有回退待处理:${currentData.rows.length}个`,
+                text: `${currentData.rows[0].factoryName}......`,
+                timeout: 5000
+            })
+console.table(currentData.rows,["factoryName",'operateTimeForHis'])
+            }
+            
+            originalData = currentData}
+        const newRows = getAddedFactories(originalData, currentData)
+        if (newRows.length > 0) {
+            GM_notification({
+                title: "有新增回退待处理",
+                text: `${newRows[0].factoryName}......`,
                 timeout: 5000
             })
         }
@@ -1115,26 +1107,27 @@ async function 循环检查退回(delay = 300000) {
 
     }
 
+
 }
 
 
 (function () {
-	"use strict";
+    "use strict";
 
-	unsafeWindow.utils = utils;
-	// unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
-	// unsafeWindow.GM_setValue = GM_setValue;
-	// unsafeWindow.GM_getValue = GM_getValue;
-	// unsafeWindow.GM_notification = GM_notification;
-	// unsafeWindow.GM_closeNotification = GM_closeNotification;
+    unsafeWindow.utils = utils;
+    // unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
+    // unsafeWindow.GM_setValue = GM_setValue;
+    // unsafeWindow.GM_getValue = GM_getValue;
+    // unsafeWindow.GM_notification = GM_notification;
+    // unsafeWindow.GM_closeNotification = GM_closeNotification;
     utils.monitorIframes();
     const iframe_TopMSG = document.querySelector("iframe#Top_Message");
     unsafeWindow.iframe_TopMSG = iframe_TopMSG;
     循环检查退回()
+    if (window.location.href.includes('h5img/app/upload.img')) {
+        const autoUpload = document.querySelector("#autoUpload")
+        if (autoUpload && !autoUpload.checked) { autoUpload.click() }
+    }
 })();
-
-
-
-
 
 

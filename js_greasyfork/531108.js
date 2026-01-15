@@ -1,18 +1,19 @@
 // ==UserScript==
 // @name        etopfun_roulette_jackpot
 // @namespace   etopfun_roulette_jackpot
-// @match       https://etopfun.com/*/roulette/
-// @match       https://www.etopfun.com/*/roulette/
+// @match       *://*.etopfun.*/*/roulette/
 // @grant       GM_addStyle
 // @grant       GM_getValue
 // @grant       GM_setValue
-// @version     1.0.9
+// @version     1.1.0
 // @author      HVD
 // @license     MIT
 // @description etopfun roulette jackpot
 // @downloadURL https://update.greasyfork.org/scripts/531108/etopfun_roulette_jackpot.user.js
 // @updateURL https://update.greasyfork.org/scripts/531108/etopfun_roulette_jackpot.meta.js
 // ==/UserScript==
+
+console.log(123123)
 
 GM_addStyle(`
 
@@ -202,7 +203,7 @@ span.inserted-last hr {
         if (target.matches('.count-right span[role="button"]') || target.closest('div.item_box')) {
             let selectedAmountElement = document.querySelector('#selected-amount');
             if (!selectedAmountElement) {
-                document.querySelector('.modal-body-tab').insertAdjacentHTML('beforeend', `<div><div class="btn btn-info" disabled><span id="selected-amount">Đã chọn: 0</span></div></div>`);
+                document.querySelector('.modal-body-tab').insertAdjacentHTML('beforeend', `<div><div class="btn btn-info" disabled><span id="selected-amount">Đã chọn: 0 $</span></div></div>`);
                 selectedAmountElement = document.querySelector('#selected-amount');
             }
             selectedAmount = Number(VNEngine.define.inst.selectedList.reduce((acc, item) => acc + item.value, 0).toFixed(2));
@@ -268,7 +269,7 @@ span.inserted-last hr {
                     const selectedAmountElement = document.querySelector('#selected-amount');
                     if (selectedAmountElement) {
                         selectedAmount = 0;
-                        selectedAmountElement.textContent = `Đã chọn: 0`;
+                        selectedAmountElement.textContent = `Đã chọn: 0 $`;
                     }
                 }
                 this._isJoinBet = url.includes('jackpot/join.do');

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWH Tweaker
 // @namespace       http://tampermonkey.net/
-// @version         5.9.4
+// @version         5.9.5
 // @description     Extension for HeroWarsHelper by ZingerY - Adds adventure path editor, custom buttons, and tweaks
 // @author          AI Assistant
 // @license         MIT
@@ -16,7 +16,7 @@
 
 
 // Configuration at the top of the script
-const TWEAKER_VERSION = '5.9.4'
+const TWEAKER_VERSION = '5.9.5'
 const DEBUG_MODE = localStorage.getItem('hwh_debug_mode') === 'true';
 const TOURNAMENT_RETENTION_DAYS = 7;
 const TOURNAMENT_RETENTION_MS = TOURNAMENT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
@@ -4304,6 +4304,9 @@ ${eightCoinLines.join('\n')}`;
                 font-size: 14px;
                 box-sizing: border-box;
             ">
+<div id="storm-manual-path-count" style="color: #99bbdd; font-size: 11px; margin-top: 6px; text-align: center;">
+                0 stops (excluding start)
+            </div>
         </div>
         <div style="padding: 8px; background: rgba(70,100,140,0.3); border-top: 2px solid #4a6a8a; display: flex; gap: 6px;">
             <button id="storm-manual-start-btn" style="
@@ -4337,6 +4340,17 @@ ${eightCoinLines.join('\n')}`;
                     const input = manualPopup.querySelector('#storm-manual-path-input');
                     input.focus();
                     input.select();
+                    const counter = manualPopup.querySelector('#storm-manual-path-count');
+                    function updateCount() {
+                        const value = input.value.trim();
+                        if (!value) { counter.textContent = '0 stops (excluding start)'; return; }
+                        let parts = value.split(',');
+                        if (parts.length < 2) parts = value.split('-');
+                        const stops = Math.max(0, parts.filter(p => p.trim() && !isNaN(parseInt(p.trim()))).length - 1);
+                        counter.textContent = `${stops} stop${stops !== 1 ? 's' : ''} (excluding start)`;
+                    }
+                    input.addEventListener('input', updateCount);
+                    updateCount();
 
                     input.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter') {
@@ -4824,6 +4838,9 @@ z-index: 999998;
                 font-size: 14px;
                 box-sizing: border-box;
             ">
+                        <div id="manual-path-count" style="color: #999; font-size: 11px; margin-top: 6px; text-align: center;">
+                0 stops (excluding start)
+            </div>
         </div>
         <div style="padding: 8px; background: rgba(139,105,20,0.3); border-top: 2px solid #8b6914; display: flex; gap: 6px;">
             <button id="manual-start-btn" style="
@@ -4857,6 +4874,17 @@ z-index: 999998;
                     const input = manualPopup.querySelector('#manual-path-input');
                     input.focus();
                     input.select();  // Select existing text so user can easily replace or continue
+                    const counter = manualPopup.querySelector('#manual-path-count');
+                    function updateCount() {
+                        const value = input.value.trim();
+                        if (!value) { counter.textContent = '0 stops (excluding start)'; return; }
+                        let parts = value.split(',');
+                        if (parts.length < 2) parts = value.split('-');
+                        const stops = Math.max(0, parts.filter(p => p.trim() && !isNaN(parseInt(p.trim()))).length - 1);
+                        counter.textContent = `${stops} stop${stops !== 1 ? 's' : ''} (excluding start)`;
+                    }
+                    input.addEventListener('input', updateCount);
+                    updateCount(); // Initial count if lastManualPath has value
 
                     input.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter') {
@@ -10027,6 +10055,12 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                         args: {},
                         context: { actionTs: Date.now() + 3 },
                         ident: "clanDomination_passiveQueueReward"
+                    },
+                    {
+                        name: "clanDomination_getInfo",
+                        args: {},
+                        context: { actionTs: Date.now() + 4 },
+                        ident: "clanDomination_getInfo"
                     }
                 ]
             }));
@@ -10039,7 +10073,8 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 mapState: response.results[0]?.result?.response,
                 castleInfo: response.results[1]?.result?.response,
                 dominationStats: response.results[2]?.result?.response,
-                passiveReward: response.results[3]?.result?.response
+                passiveReward: response.results[3]?.result?.response,
+                eventInfo: response.results[4]?.result?.response
             };
         } catch (error) {
             // Return null instead of throwing - event likely ended
@@ -12845,9 +12880,28 @@ display: flex; flex-direction: column;
         }
 
         // === HEADER WITH ALL BUTTONS ===
+        // Event timing display
+        let eventTimingHtml = '';
+        if (liveData.eventInfo?.startTime && liveData.eventInfo?.endTime) {
+            const evtStart = new Date(liveData.eventInfo.startTime * 1000);
+            const evtEnd = new Date(liveData.eventInfo.endTime * 1000);
+            const remaining = liveData.eventInfo.endTime * 1000 - now;
+            const formatDT = (d) => d.toLocaleDateString([], {month: 'short', day: 'numeric'}) + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            let remainingStr = '';
+            if (remaining > 0) {
+                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                remainingStr = days > 0 ? `⏱️ ${days}d ${hours}h remaining` : `⏱️ ${hours}h ${mins}m remaining`;
+            } else {
+                remainingStr = '⚠️ Event ended';
+            }
+            eventTimingHtml = `</h3><div style="font-size: 11px; color: #aaa; margin-top: 2px;">📅 ${formatDT(evtStart)} → ${formatDT(evtEnd)} | ${remainingStr}</div>`;
+        }
+
         content += `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #8b6914; flex-shrink: 0;">
-            <h3 style="margin: 0; color: #ffd700; font-size: 14px;">🗺️ Area of Conquest</h3>
+<div><h3 style="margin: 0; color: #ffd700; font-size: 14px;">🗺️ Area of Conquest${eventTimingHtml}</div>
 <div class="twk-flex-gap8">
     <button id="contribute-coins-btn" style="background: #2a5a2a; color: #fff; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">💰 Contribute</button>
 <button id="export-data-btn" style="background: #4a4a90; color: #fff; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px;">📤 Export</button>
@@ -13848,7 +13902,16 @@ display: flex; flex-direction: column;
             historicalData = JSON.parse(localStorage.getItem('hwh_aoc_history')) || [];
         } catch(e) {}
 
-        if (historicalData.length >= 2) {
+        // Use actual event start time if available for accurate rate calculation
+        const eventStartMs = liveData.eventInfo?.startTime ? liveData.eventInfo.startTime * 1000 : null;
+
+        if (eventStartMs && myGuildId) {
+            const elapsedMinutes = (Date.now() - eventStartMs) / (1000 * 60);
+            if (elapsedMinutes > 0) {
+                ourAvgRate = Math.round(myGuildScore / elapsedMinutes);
+            }
+        } else if (historicalData.length >= 2) {
+            // Fallback to historical data
             const firstEntry = historicalData[0];
             const lastEntry = historicalData[historicalData.length - 1];
             const elapsedMinutes = (lastEntry.timestamp - firstEntry.timestamp) / (1000 * 60);
@@ -14223,7 +14286,20 @@ display: flex; flex-direction: column;
         const guildRates = {};
         let totalHistoricalRate = 0;
 
-        if (historicalData.length >= 2) {
+        // Use actual event start time if available for accurate rate calculation
+        const eventStartMs = liveData.eventInfo?.startTime ? liveData.eventInfo.startTime * 1000 : null;
+
+        if (eventStartMs) {
+            const elapsedMinutes = (Date.now() - eventStartMs) / (1000 * 60);
+            if (elapsedMinutes > 0) {
+                guilds.forEach(guild => {
+                    const rate = Math.round(guild.coins / elapsedMinutes);
+                    guildRates[guild.id] = rate;
+                    totalHistoricalRate += rate;
+                });
+            }
+        } else if (historicalData.length >= 2) {
+            // Fallback to historical data
             const firstEntry = historicalData[0];
             const lastEntry = historicalData[historicalData.length - 1];
             const elapsedMinutes = (lastEntry.timestamp - firstEntry.timestamp) / (1000 * 60);
@@ -14423,7 +14499,8 @@ display: flex; flex-direction: column;
         guilds.sort((a, b) => b.coins - a.coins);
 
         // Graph dimensions
-        const graphWidth = 700;
+        // Graph dimensions - fill container width
+        const graphWidth = container.clientWidth - 40 || 900;
         const graphHeight = 350;
         const padding = { top: 20, right: 120, bottom: 40, left: 70 };
         const plotWidth = graphWidth - padding.left - padding.right;
@@ -14434,19 +14511,39 @@ display: flex; flex-direction: column;
         let minTime = historicalData[0].timestamp;
         let maxTime = historicalData[historicalData.length - 1].timestamp;
 
-        // Snap left edge to 2:00 UTC before first data (like tournament)
-        const startDate = new Date(minTime);
-        const snapTime = new Date(Date.UTC(
-            startDate.getUTCFullYear(),
-            startDate.getUTCMonth(),
-            startDate.getUTCDate(),
-            2, 0, 0, 0
-        ));
-        if (snapTime.getTime() > minTime) {
-            snapTime.setUTCDate(snapTime.getUTCDate() - 1);
-        }
-        minTime = snapTime.getTime();
+        // Use actual event times if available, otherwise fall back to 2:00 UTC snapping
+        const eventInfo = liveData?.eventInfo;
+        let snapTime; // Keep defined for dayOfEvent calculation
 
+        if (eventInfo?.startTime) {
+            minTime = eventInfo.startTime * 1000;
+            snapTime = new Date(minTime);
+            debugLog(`🏰 AoC graph using server startTime: ${new Date(minTime).toISOString()}`);
+        } else {
+            // Fallback: Snap left edge to 2:00 UTC before first data
+            const startDate = new Date(minTime);
+            snapTime = new Date(Date.UTC(
+                startDate.getUTCFullYear(),
+                startDate.getUTCMonth(),
+                startDate.getUTCDate(),
+                2, 0, 0, 0
+            ));
+            if (snapTime.getTime() > minTime) {
+                snapTime.setUTCDate(snapTime.getUTCDate() - 1);
+            }
+            minTime = snapTime.getTime();
+        }
+
+        if (eventInfo?.endTime) {
+            const eventEndMs = eventInfo.endTime * 1000;
+            const now = Date.now();
+            // Clip to current time if event still active, otherwise show full range
+            maxTime = eventEnded ? eventEndMs : Math.min(eventEndMs, now);
+            debugLog(`🏰 AoC graph using ${eventEnded ? 'server endTime' : 'current time'}: ${new Date(maxTime).toISOString()}`);
+        } else if (!eventEnded) {
+            // No event info, clip to now
+            maxTime = Math.min(maxTime, Date.now());
+        }
         historicalData.forEach(entry => {
             Object.values(entry.guilds || {}).forEach(g => {
                 maxCoins = Math.max(maxCoins, g.coins);
@@ -14527,9 +14624,11 @@ display: flex; flex-direction: column;
                 }
             });
 
-            // Extend line horizontally to right edge (clip boundary)
+            // Extend line horizontally to current time (not future)
             if (pathData) {
-                const rightEdgeX = padding.left + plotWidth;
+                const now = Date.now();
+                const effectiveEndTime = Math.min(maxTime, now);
+                const rightEdgeX = padding.left + ((effectiveEndTime - minTime) / timeRange) * plotWidth;
                 pathData += `L${rightEdgeX.toFixed(1)},${lastY.toFixed(1)} `;
                 paths += `<path d="${pathData}" stroke="${color}" stroke-width="2" fill="none" clip-path="url(#plotClip)"/>`;
                 // Legend positioned at right edge
@@ -14548,13 +14647,17 @@ display: flex; flex-direction: column;
             yLabels += `<line x1="${padding.left}" y1="${y}" x2="${padding.left + plotWidth}" y2="${y}" stroke="#333" stroke-dasharray="2,2"/>`;
         }
 
-        // X-axis labels (time)
+        // X-axis labels (time with day/date)
         let xLabels = '';
         for (let i = 0; i <= 4; i++) {
             const t = minTime + (timeRange * i / 4);
             const x = padding.left + (i / 4) * plotWidth;
-            const timeStr = new Date(t).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-            xLabels += `<text x="${x}" y="${graphHeight - 10}" fill="#999" font-size="10" text-anchor="middle">${timeStr}</text>`;
+            const d = new Date(t);
+            const dayName = d.toLocaleDateString([], {weekday: 'short'});
+            const dateStr = d.toLocaleDateString([], {month: 'short', day: 'numeric'});
+            const timeStr = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            xLabels += `<text x="${x}" y="${graphHeight - 22}" fill="#999" font-size="9" text-anchor="middle">${dayName} ${dateStr}</text>`;
+            xLabels += `<text x="${x}" y="${graphHeight - 10}" fill="#ccc" font-size="10" text-anchor="middle">${timeStr}</text>`;
         }
 
         container.innerHTML = `

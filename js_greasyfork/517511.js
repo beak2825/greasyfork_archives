@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页漫画下载为pdf格式
 // @namespace    http://tampermonkey.net/
-// @version      3.2.0
+// @version      3.2.1
 // @description  将网页漫画下载为pdf方便阅读，目前仅适用于如漫画(http://www.rumanhua1.com/)、漫蛙库(https://manwaku.cc/)等漫画网站
 // @author       MornLight
 // @match        http://m.rumanhua1.com/*
@@ -17,6 +17,9 @@
 // @match        https://www.mwai.cc/*
 // @match        https://www.mwku.cc/*
 // @match        https://www.mwrr.cc/*
+// @match        https://www.manwaku.com/*
+// @match        https://www.mwbu.cc/*
+// @match        https://www.mwdu.cc/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=greasyfork.org
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
@@ -886,14 +889,14 @@
         isChapterPage() {
             const url = window.location.href;
             // 匹配 https://www.mwdd.cc/comic/xxxxx/xxxxx 格式
-            const chapterPagePattern = /https?:\/\/(www\.)?(mwdd|mwhh|mhtmh|mwai|mwku|mwrr)\.(cc|org)\/comic\/\d+\/\d+\/?$/;
+            const chapterPagePattern = /https?:\/\/(www\.)?(mwdd|mwhh|mhtmh|mwai|mwku|mwrr|manwaku|mwbu|mwdu)\.(cc|org|com)\/comic\/\d+\/\d+\/?$/;
             return chapterPagePattern.test(url);
         }
 
         isDirectoryPage() {
             const url = window.location.href;
             // 匹配 https://www.mwdd.cc/comic/xxxxx/ 格式（只有漫画ID，没有章节ID）
-            const directoryPagePattern = /https?:\/\/(www\.)?(mwdd|mwhh|mhtmh|mwai|mwku|mwrr)\.(cc|org)\/comic\/\d+\/?$/;
+            const directoryPagePattern = /https?:\/\/(www\.)?(mwdd|mwhh|mhtmh|mwai|mwku|mwrr|manwaku|mwbu|mwdu)\.(cc|org|com)\/comic\/\d+\/?$/;
             return directoryPagePattern.test(url) && !this.isChapterPage();
         }
 
@@ -1097,7 +1100,7 @@
                 return new RumanhuaMobileNewAdapter();
             case url.includes('https://mangapark.net/'):
                 return new MangaparkAdapter();
-            case url.includes('mwdd.cc') || url.includes('mwhh.cc') || url.includes('mhtmh.org') || url.includes('mwai.cc') || url.includes('mwku.cc') || url.includes('mwrr.cc'):
+            case url.includes('mwdd.cc') || url.includes('mwhh.cc') || url.includes('mhtmh.org') || url.includes('mwai.cc') || url.includes('mwku.cc') || url.includes('mwrr.cc') || url.includes('manwaku.com') || url.includes('mwbu.cc') || url.includes('mwdu.cc'):
                 return new ManwakuAdapter();
             default:
                 throw new Error('不支持的页面格式');

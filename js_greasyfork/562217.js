@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Erepublik Epic PT
 // @include     *www.erepublik.com/*
-// @version     1.8
+// @version     1.9
 // @description Monitoriza Batalhas épicas, e contagem de Gold ganho.
 // @grant       GM_addStyle
 // @grant       unsafeWindow
@@ -38,16 +38,9 @@ function getTodayKey() {
 
 function getWeekKey() {
     var today = new Date();
-    // Calcular o número da semana ISO 8601 (segunda-feira como primeiro dia)
-    var tempDate = new Date(today.valueOf());
-    var dayNum = (today.getDay() + 6) % 7;
-    tempDate.setDate(tempDate.getDate() - dayNum + 3);
-    var firstThursday = tempDate.valueOf();
-    tempDate.setMonth(0, 1);
-    if (tempDate.getDay() !== 4) {
-        tempDate.setMonth(0, 1 + ((4 - tempDate.getDay()) + 7) % 7);
-    }
-    var weekNumber = 1 + Math.ceil((firstThursday - tempDate) / 604800000);
+    var firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+    var pastDaysOfYear = (today - firstDayOfYear) / 86400000;
+    var weekNumber = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
     return today.getFullYear() + "-S" + weekNumber;
 }
 
@@ -255,48 +248,22 @@ function updateEnergyTimer() {
 function main() {
 	$("#epl").html('');
 	$.getJSON("/en/military/campaigns-new", function (r) {
-        // Validação inicial dos dados recebidos
-        if (!r || !r.battles || typeof r.battles !== 'object') {
-            console.log("Dados de batalhas inválidos ou ausentes");
-            $('#epl').html("<div style='color: orange;'>A aguardar dados das batalhas...</div>");
-            return;
-        }
-        
 		var a = 0;
         var fl = true;
         $('#mybattles').html('');
-        
         $.getJSON("/en/military/campaignsJson/citizen", function (j) {
-            if (j && j.contributions && Array.isArray(j.contributions)) {
-                $.each(j.contributions, function (i, e) {
-                    if (e && e.battle_id && r.battles[e.battle_id] && r.battles[e.battle_id].region) {
-                        var country = getKeyByValue(img_country, e.side_country_id);
-                        if (country) {
-                            var flag = "<img src='https://www.erepublik.net/images/flags_png/S/" + country + ".png' alt=''>";
-                            $('#mybattles').append("<div><a href='https://erepublik.com/en/military/battlefield/" + e.battle_id + "'>" + flag + " D"+ e.division + ", " + r.battles[e.battle_id].region.name + "</a></div>");
-                        }
-                    }
-                });
-            }
-        }).fail(function() {
-            console.log("Erro ao obter contribuições do cidadão");
+            $.each(j.contributions, function (i, e) {
+                var country = getKeyByValue(img_country, e.side_country_id);
+                var flag = "<img src='https://www.erepublik.net/images/flags_png/S/" + country + ".png' alt=''>";
+                $('#mybattles').append("<div><a href='https://erepublik.com/en/military/battlefield/" + e.battle_id + "'>" + flag + " D"+ e.division + ", " + r.battles[e.battle_id].region.name + "</a></div>");
+            });
         });
-        
 		$('#epl').append("<div id='eps'></div>");
-        
-        $.each(r.battles, function (i, b) {
-            if (!b || !b.div || !Array.isArray(b.div)) {
-                return true; // continua para a próxima iteração
-            }
-            
+		$.each(r.battles, function (i, b) {
 			fl = true;
-			$.each(b.div, function (idx, d) {
-                if (!d) {
-                    return true; // continua para a próxima iteração
-                }
-                
+			$.each(b.div, function (i, d) {
 				if (typeof d.epic !== "undefined" && d.epic >= 1) {
-					if (fl && b.id && b.region && b.region.name) {
+					if (fl) {
 						$('#eps').append("<div id='epid" + b.id + "'><p> &gt;&gt; <a href='/en/military/battlefield/" + b.id + "'>" + b.region.name + "</a></p></div>");
 						fl = false;
 					}
@@ -305,97 +272,53 @@ function main() {
 				}
 			});
 		});
-        
 		if (nefl) {
 			$('#eps').append("<div id='ne'><p> Nenhuma Batalha Épica</p></div>");
 			fl = false;
 		}
-        
 		if (/military\/battlefield/.test(location.href)) {
-            var citizenData = unsafeWindow.erepublik && unsafeWindow.erepublik.citizen;
-            if (!citizenData) {
-                console.log("Dados do cidadão não disponíveis");
-                return;
-            }
-            
-            var cCountry = citizenData.citizenshipCountryId;
-            var cMU = citizenData.muId;
-            
+            var cCountry = unsafeWindow.erepublik.citizen.citizenshipCountryId;
+            var cMU = unsafeWindow.erepublik.citizen.muId;
 			$('#eps').append("<div class='div pointer'> <span title='Lado' style='width: 16px; display: inline-block; text-align: center;'> L </span> <span title='Divisão'> D </span> <span title='Disponibilidade (Global / Bloqueado para país/UM)'> B </span> Detalhes</div>");
 			var battleId = location.href.replace(/[^0-9]/g, '');
-            
-            if (!battleId || !r.battles[battleId]) {
-                console.log("Batalha não encontrada:", battleId);
-                return;
-            }
-            
-            var currentBattle = r.battles[battleId];
-            if (!currentBattle.div || !Array.isArray(currentBattle.div)) {
-                console.log("Divisões da batalha não disponíveis");
-                return;
-            }
-            
-            if (!currentBattle.def || !currentBattle.inv) {
-                console.log("Informação de defensor/invasor não disponível");
-                return;
-            }
-            
-            $.each(currentBattle.div, function (idx, d) {
-                if (!d || !d.co) {
-                    return true; // continua para a próxima iteração
-                }
-                
-                if (typeof d.co.inv !== "undefined" || typeof d.co.def !== "undefined") {
-                    var def = getKeyByValue(img_country, currentBattle.def.id);
-                    var inv = getKeyByValue(img_country, currentBattle.inv.id);
-                    
-                    if (!def || !inv) {
-                        return true; // continua se não encontrou os países
-                    }
-                    
+			$.each(r.battles[battleId].div, function (i, d) {
+				if (typeof d.co.inv !== "undefined" || typeof d.co.def !== "undefined") {
+                    var def = getKeyByValue(img_country, r.battles[battleId].def.id);
+                    var inv = getKeyByValue(img_country, r.battles[battleId].inv.id);
                     var defFlag = "https://www.erepublik.net/images/flags_png/S/" + def + ".png";
                     var invFlag = "https://www.erepublik.net/images/flags_png/S/" + inv + ".png";
-                    $('#epl').append("<div id='eps" + a + "'></div>");
-                    
-                    if (typeof d.co.inv !== "undefined" && Array.isArray(d.co.inv)) {
-                        $.each(d.co.inv, function (i, cc) {
-                            if (!cc) return true;
+					$('#epl').append("<div id='eps" + a + "'></div>");
+					if (typeof d.co.inv !== "undefined") {
+						$.each(d.co.inv, function (i, cc) {
                             var lock = (cc.sub_mu !== 0 && cc.sub_mu !== cMU) || (cc.sub_country !== 0 && cc.sub_country !== cCountry) ? ' &#128274;' : ' &#128154;';
-                            $('#eps' + a).append("<div class='div'><img src='" + invFlag +"' alt=''> " + d.div + lock + " <span>" + cc.reward + "/mil.</span><span>  / " + cc.threshold + "%</span><span>  / " + cc.budget + " cc </span></div>");
-                        });
-                    }
-                    
-                    if (typeof d.co.def !== "undefined" && Array.isArray(d.co.def)) {
-                        $.each(d.co.def, function (i, cc) {
-                            if (!cc) return true;
+							$('#eps' + a).append("<div class='div'><img src='" + invFlag +"' alt=''> " + d.div + lock + " <span>" + cc.reward + "/mil.</span><span>  / " + cc.threshold + "%</span><span>  / " + cc.budget + " cc </span></div>");
+						});
+					}
+					if (typeof d.co.def !== "undefined") {
+						$.each(d.co.def, function (i, cc) {
                             var lock = (cc.sub_mu !== 0 && cc.sub_mu !== cMU) || (cc.sub_country !== 0 && cc.sub_country !== cCountry) ? ' &#128274;' : ' &#128154;';
-                            $('#eps' + a).append("<div class='div'><img src='" + defFlag +"' alt=''> " + d.div + lock + " <span>" + cc.reward + "/mil.</span><span>  / " + cc.threshold + "%</span><span>  / " + cc.budget + " cc </span></div>");
-                        });
-                    }
-                    a++;
-                }
-            });
-            
+							$('#eps' + a).append("<div class='div'><img src='" + defFlag +"' alt=''> " + d.div + lock + " <span>" + cc.reward + "/mil.</span><span>  / " + cc.threshold + "%</span><span>  / " + cc.budget + " cc </span></div>");
+						});
+					}
+					a++;
+				}
+			});
             $("#maxhit").html('');
-            $.getJSON("/en/military/nbp-stats/" + battleId, function (statsData) {
-                if (statsData && typeof statsData.maxHit !== 'undefined' && statsData.maxHit > 0) {
-                    $('#maxhit').html("<div>Meu hit máximo: <b>" + statsData.maxHit + "</b></div>");
+            $.getJSON("/en/military/nbp-stats/" + battleId, function (r) {
+                var maxHit = r.maxHit;
+                if (typeof maxHit !== 'undefined' && maxHit > 0) {
+                    $('#maxhit').html("<div>Meu hit máximo: <b>" + maxHit + "</b></div>");
                 }
-            }).fail(function() {
-                console.log("Erro ao obter estatísticas NBP");
             });
         }
-	}).fail(function(xhr, status, error) {
-        console.log("Erro ao obter campanhas:", status, error);
-        $('#epl').html("<div style='color: red;'>Erro ao carregar dados das batalhas</div>");
-    });
+	});
 
     // Atualiza o timer de energia e gold tracker
     updateEnergyTimer();
     updateGoldTracker();
 }
 
-style("#epinf{z-index: 99999; position: fixed; top: 0; left: 0;margin: 7px;padding: 5px;border-radius: 3px;font-size: 11px;background-color:rgba(255,255,255,0.8);border:1px solid #999;box-shadow: 1px 1px 8px #aaaaaa; max-width: 350px; cursor: move;};");
+style("#epinf{z-index: 99999; position: fixed; top: 0; right: 0;margin: 7px;padding: 5px;border-radius: 3px;font-size: 11px;background-color:rgba(255,255,255,0.8);border:1px solid #999;box-shadow: 1px 1px 8px #aaaaaa; max-width: 350px; cursor: move;};");
 style("#epinf.dragging{cursor: grabbing;};");
 style(".bb{font-weight: 700;}");
 style(".div, #ne, #mybattles {border-bottom: 1px solid #666; margin-bottom: 4px;}");

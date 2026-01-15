@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LynxChan Extended Minus Minus
 // @namespace    https://rentry.org/8chanMinusMinus
-// @version      2.4.14
+// @version      2.4.15
 // @description  LynxChan Extended with even more features
 // @author       SaddestPanda & Dandelion & /gfg/
 // @license      UNLICENSE
@@ -20,9 +20,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/533169/LynxChan%20Extended%20Minus%20Minus.user.js
 // @updateURL https://update.greasyfork.org/scripts/533169/LynxChan%20Extended%20Minus%20Minus.meta.js
 // ==/UserScript==
-
-//TODO: MAYBE keep the reverse search button near the filename now?
-//TODO: MAYBE keep the reverse search button near the filename now?
 
 //TODO LATER MAYBE: combine all CSS into one <style> and use classes on html or body instead.
 (async function () {
@@ -501,29 +498,6 @@
 
         .lynxReverseImageSearch {
             margin-left: 2px;
-        }
-
-        .multipleUploads .uploadCell:has(.lynxReverseImageSearch) {
-            position: relative;
-        }
-
-        .multipleUploads .lynxReverseImageSearch {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            margin-left: 0;
-            z-index: 2; /* Fixes the button not being clickable if you have spoiler thumbs disabled */
-
-            & a {
-                font-size: 1em;
-                filter: drop-shadow(0px 0px 1px black) drop-shadow(0px 0px 1px var(--contrast-color)) drop-shadow(0px 0px 1px var(--contrast-color));
-                &:hover,
-                &:active {
-                    background: var(--contrast-color);
-                    opacity: 0.9;
-                    max-width: 999px;
-                }
-            }
         }
 
         /* video icons for filenames */

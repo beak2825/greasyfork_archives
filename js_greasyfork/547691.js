@@ -5191,15 +5191,20 @@ notifyListeners() {
   }
   function injectYahooSearchButton() {
     registerYahooShortcut();
-    if (document.querySelector('[data-anki="yahoo-search"]')) return;
     const url = new URL(window.location.href);
     const keyword = url.searchParams.get("keyword");
     if (!keyword) return;
+    const yahooHref = `https://news.yahoo.co.jp/search?p=${encodeURIComponent(keyword)}&ei=utf-8`;
+    const existingBtn = document.querySelector('[data-anki="yahoo-search"]');
+    if (existingBtn) {
+      existingBtn.href = yahooHref;
+      return;
+    }
     const searchContainer = document.querySelector(".ui.fluid.right.action.left.icon.right.labeled.input.icon");
     if (!searchContainer) return;
     const yahooBtn = document.createElement("a");
     yahooBtn.className = "ui basic button";
-    yahooBtn.href = `https://news.yahoo.co.jp/search?p=${encodeURIComponent(keyword)}&ei=utf-8`;
+    yahooBtn.href = yahooHref;
     yahooBtn.target = "_blank";
     yahooBtn.rel = "noopener noreferrer";
     yahooBtn.dataset.anki = "yahoo-search";

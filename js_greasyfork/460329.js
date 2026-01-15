@@ -1,7 +1,7 @@
 // ==UserScript==
 // @match https://www.youtube.com/*
 // @match https://www.youtube.com/live_chat*
-// @version 0.7.0
+// @version 0.7.1
 // @run-at document-start
 // @name Return YouTube Comment Username
 // @name:ja YouTubeコメント欄の名前を元に戻す
@@ -185,7 +185,71 @@ status: ${res.status}`),
         });
     }
 
+    // src/utils/formatUserName.ts
+    function formatUserName(userName, userHandle, settings) {
+      if (settings.isShowNameToHandle) {
+        return decodeURI(userHandle) + `  ( ${userName} )`;
+      }
+      if (settings.isShowHandleToName) {
+        return userName + `  ( ${decodeURI(userHandle)} )`;
+      }
+      return userName;
+    }
+
+    // src/types/SyncSettings.ts
+    var syncSettings = (settings) => {
+      bypassSendMessage(
+        {
+          type: "getShowHandleToName",
+          value: null,
+        },
+        {},
+        (isShowHandleToName) => {
+          settings.isShowHandleToName = isShowHandleToName;
+        },
+      );
+      bypassSendMessage(
+        {
+          type: "getShowNameToHandle",
+          value: null,
+        },
+        {},
+        (isShowNameToHandle) => {
+          settings.isShowNameToHandle = isShowNameToHandle;
+        },
+      );
+      bypassSendMessage(
+        {
+          type: "getReplaceComments",
+          value: null,
+        },
+        {},
+        (isReplaceComments) => {
+          settings.isReplaceComments = isReplaceComments;
+        },
+      );
+      bypassSendMessage(
+        {
+          type: "getReplaceLiveChats",
+          value: null,
+        },
+        {},
+        (isReplaceLiveChats) => {
+          settings.isReplaceLiveChats = isReplaceLiveChats;
+        },
+      );
+    };
+
     // src/liveChat.ts
+    if (getRunningRuntime() === "Extension") {
+      syncSettings(parent.window.__rycu.settings);
+    }
+    var asyncSyncSettings =
+      getRunningRuntime() === "Extension"
+        ? async (settings) => {
+            Promise.resolve().then(() => syncSettings(settings));
+          }
+        : async (settings) => {};
     var chat = document.querySelector("#chat");
     var cache = {};
     if (chat !== null) {
@@ -221,21 +285,39 @@ status: ${res.status}`),
         }
       }
     }
-    function rewrite(nodes) {
+    function rewrite(nodes, async = true) {
+      if (async) {
+        asyncSyncSettings(parent.window.__rycu.settings).then(() => {
+          handleRewrite(nodes);
+        });
+      } else {
+        if (getRunningRuntime() === "Extension") {
+          syncSettings(parent.window.__rycu.settings);
+        }
+        handleRewrite(nodes);
+      }
+    }
+    function handleRewrite(nodes) {
+      const settings = parent.window.__rycu.settings;
+      if (!settings.isReplaceLiveChats) {
+        return;
+      }
       nodes.forEach((node) => {
         const nameElem = node.querySelector("#author-name");
         if (nameElem !== null) {
-          const authorExternalChannelId =
-            nameElem.__shady.parentNode.host.__dataHost.__data.data
-              .authorExternalChannelId;
-          if (cache[authorExternalChannelId] !== void 0) {
-            nameElem.textContent = cache[authorExternalChannelId];
-          } else {
-            getUserName(authorExternalChannelId).then((name) => {
-              cache[authorExternalChannelId] = name;
-              nameElem.textContent = name;
-            });
-          }
+          const msgData =
+            nameElem.__shady.parentNode.host.__dataHost.__data.data;
+          const { authorExternalChannelId } = msgData;
+          const userHandle = msgData.authorName.simpleText;
+          const cachedUserName = cache[authorExternalChannelId];
+          const pullUserName =
+            cachedUserName !== void 0
+              ? Promise.resolve(cachedUserName)
+              : getUserName(authorExternalChannelId);
+          pullUserName.then((name) => {
+            cache[authorExternalChannelId] = name;
+            nameElem.textContent = formatUserName(name, userHandle, settings);
+          });
         }
       });
     }
@@ -312,7 +394,7 @@ function c3JjL2luZGV4LnRz() {
     // package.json
     var package_default = {
       name: "return-youtube-comment-username",
-      version: "0.6.2",
+      version: "0.7.1",
       devDependencies: {
         "@types/chrome": "^0.0.263",
         "@types/encoding-japanese": "^2.0.5",
@@ -718,6 +800,17 @@ status: ${res.status}`),
         });
     }
 
+    // src/utils/formatUserName.ts
+    function formatUserName(userName, userHandle, settings) {
+      if (settings.isShowNameToHandle) {
+        return decodeURI(userHandle) + `  ( ${userName} )`;
+      }
+      if (settings.isShowHandleToName) {
+        return userName + `  ( ${decodeURI(userHandle)} )`;
+      }
+      return userName;
+    }
+
     // src/rewrites/rewriteOfCommentRenderer/nameRewriteOfCommentViewModel.ts
     function isCommentViewModelElement(obj) {
       if (obj === null || typeof obj !== "object") {
@@ -736,7 +829,10 @@ status: ${res.status}`),
           "string"
       );
     }
-    function nameRewriteOfCommentViewModel(commentViewModel) {
+    function nameRewriteOfCommentViewModel(
+      commentViewModel,
+      settings = window.__rycu.settings,
+    ) {
       const commentViewModelBody =
         commentViewModel.__shady_native_children.namedItem("body");
       if (commentViewModelBody === null) {
@@ -768,13 +864,7 @@ status: ${res.status}`),
             if (nameElem.getAttribute("is-empty") !== null) {
               nameElem.removeAttribute("is-empty");
             }
-            let innerText = name;
-            if (window.__rycu.settings.isShowNameToHandle) {
-              innerText = decodeURI(userHandle) + `  ( ${name} )`;
-            }
-            if (window.__rycu.settings.isShowHandleToName) {
-              innerText = name + `  ( ${decodeURI(userHandle)} )`;
-            }
+            const innerText = formatUserName(name, userHandle, settings);
             if (isNameContainerRender) {
               nameElem.textContent = escapeString(innerText);
             } else {
@@ -955,7 +1045,13 @@ status: ${res.status}`),
     }
 
     // src/rewrites/comment.ts
-    function rewriteCommentNameFromContinuationItems(continuationItems) {
+    function rewriteCommentNameFromContinuationItems(
+      continuationItems,
+      settings = window.__rycu.settings,
+    ) {
+      if (!settings.isReplaceComments) {
+        return;
+      }
       debugLog("Rewrite Comment.");
       for (let i = 0; i < continuationItems.length; i++) {
         if (continuationItems[i].commentThreadRenderer !== void 0) {
@@ -1175,36 +1271,73 @@ status: ${res.status}`),
       }
     }
 
+    // src/types/RycuSettings.ts
+    var getDefaultSettings = () => ({
+      isShowHandleToName: false,
+      isShowNameToHandle: false,
+      isReplaceComments: true,
+      isReplaceLiveChats: true,
+    });
+
+    // src/types/SyncSettings.ts
+    var syncSettings = (settings) => {
+      bypassSendMessage(
+        {
+          type: "getShowHandleToName",
+          value: null,
+        },
+        {},
+        (isShowHandleToName) => {
+          settings.isShowHandleToName = isShowHandleToName;
+        },
+      );
+      bypassSendMessage(
+        {
+          type: "getShowNameToHandle",
+          value: null,
+        },
+        {},
+        (isShowNameToHandle) => {
+          settings.isShowNameToHandle = isShowNameToHandle;
+        },
+      );
+      bypassSendMessage(
+        {
+          type: "getReplaceComments",
+          value: null,
+        },
+        {},
+        (isReplaceComments) => {
+          settings.isReplaceComments = isReplaceComments;
+        },
+      );
+      bypassSendMessage(
+        {
+          type: "getReplaceLiveChats",
+          value: null,
+        },
+        {},
+        (isReplaceLiveChats) => {
+          settings.isReplaceLiveChats = isReplaceLiveChats;
+        },
+      );
+    };
+
     // src/index.ts
     function main() {
-      const settings = {
-        isShowHandleToName: false,
-        isShowNameToHandle: false,
-      };
       window.__rycu = {
-        settings,
+        settings: getDefaultSettings(),
       };
       if (getRunningRuntime() === "Extension") {
-        bypassSendMessage(
-          {
-            type: "getShowHandleToName",
-            value: null,
-          },
-          {},
-          (isShowHandleToName) => {
-            window.__rycu.settings.isShowHandleToName = isShowHandleToName;
-          },
-        );
-        bypassSendMessage(
-          {
-            type: "getShowNameToHandle",
-            value: null,
-          },
-          {},
-          (isShowNameToHandle) => {
-            window.__rycu.settings.isShowNameToHandle = isShowNameToHandle;
-          },
-        );
+        ((settings) => {
+          syncSettings(settings);
+          document.addEventListener("yt-action", () => {
+            syncSettings(settings);
+          });
+          document.addEventListener("yt-navigate-finish", () => {
+            syncSettings(settings);
+          });
+        })(window.__rycu.settings);
       }
       const handleYtAction = (e) => {
         switch (e.detail.actionName) {

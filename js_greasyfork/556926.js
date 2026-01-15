@@ -1,11 +1,16 @@
 // ==UserScript==
 // @name         AS Watcher
 // @namespace    https://animestars.org/
-// @version      1.2
+// @version      1.3
 // @description  Скрипт для отслеживания выпадения новых карт по id, с уведомлениями
 // @author       Sandr
-// @match        https://animestars.org/*
-// @match        https://asstars.tv/*
+// @match        *://*.animestars.org/*
+// @match        *://*.animesss.com/*
+// @match        *://*.animesss.tv/*
+// @match        *://*.asstars.tv/*
+// @match        *://*.astars.club/*
+// @match        *://*.asstars.online/*
+
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_notification

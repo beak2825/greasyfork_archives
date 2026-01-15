@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SimpleBalancer
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2.0
 // @description  Balances API key and URL pairs usage
 // @author       RoCry
 // @grant        GM_setValue
@@ -10,34 +10,58 @@
 // ==/UserScript==
 
 class SimpleBalancer {
-  /**
-   * Balances API key and URL pairs usage
-   */
-  constructor() {
-    this.loadUsageData();
+  constructor(storageKey = 'simpleBalancerUsage') {
+    this.storageKey = storageKey;
+    this.storage = this.createStorage();
+    this.pairUsage = this.loadUsageData();
+  }
+
+  createStorage() {
+    if (typeof GM_getValue === 'function' && typeof GM_setValue === 'function') {
+      return {
+        get: (key, fallback) => GM_getValue(key, fallback),
+        set: (key, value) => GM_setValue(key, value)
+      };
+    }
+
+    if (typeof localStorage !== 'undefined') {
+      return {
+        get: (key, fallback) => {
+          const raw = localStorage.getItem(key);
+          if (raw === null) return fallback;
+          return JSON.parse(raw);
+        },
+        set: (key, value) => {
+          localStorage.setItem(key, JSON.stringify(value));
+        }
+      };
+    }
+
+    throw new Error('No storage available for SimpleBalancer');
   }
 
   loadUsageData() {
-    try {
-      // Use GM_getValue for Tampermonkey/Greasemonkey persistence
-      this.pairUsage = GM_getValue('simpleBalancerUsage', {});
-    } catch (error) {
-      console.error('Error loading balancer data:', error);
-      this.pairUsage = {};
+    const data = this.storage.get(this.storageKey, {});
+    if (!data || typeof data !== 'object') {
+      throw new Error('Invalid balancer data in storage');
     }
+    return data;
   }
 
   saveUsageData() {
-    try {
-      // Use GM_setValue for Tampermonkey/Greasemonkey persistence
-      GM_setValue('simpleBalancerUsage', this.pairUsage);
-    } catch (error) {
-      console.error('Error saving balancer data:', error);
-    }
+    this.storage.set(this.storageKey, this.pairUsage);
   }
 
   parseItems(items) {
-    return items.split(',').map(item => item.trim()).filter(item => item);
+    if (typeof items !== 'string') {
+      throw new Error('Expected comma-separated string');
+    }
+
+    const parsed = items.split(',').map(item => item.trim()).filter(Boolean);
+    if (parsed.length === 0) {
+      throw new Error('Keys and URLs cannot be empty');
+    }
+    return parsed;
   }
 
   createPairKey(key, url) {
@@ -49,27 +73,10 @@ class SimpleBalancer {
     return [key, url];
   }
 
-  /**
-   * Choose a key-URL pair based on usage balancing.
-   * Cases:
-   * 1. 1 key, 1 url -> single pair
-   * 2. 1 key, n urls -> key paired with each url
-   * 3. n keys, n urls -> matching pairs
-   * 4. n keys, 1 url -> each key paired with url
-   * 
-   * @param {string} keys - Comma-separated list of API keys
-   * @param {string} urls - Comma-separated list of URLs
-   * @returns {Array} - [key, url] pair that was selected
-   */
   choosePair(keys, urls) {
     const keyList = this.parseItems(keys);
     const urlList = this.parseItems(urls);
 
-    if (keyList.length === 0 || urlList.length === 0) {
-      throw new Error("Keys and URLs cannot be empty");
-    }
-
-    // Generate valid pairs based on the cases
     let pairs = [];
 
     if (urlList.length === 1) {
@@ -78,12 +85,11 @@ class SimpleBalancer {
       pairs = urlList.map(url => [keyList[0], url]);
     } else {
       if (keyList.length !== urlList.length) {
-        throw new Error("When using multiple keys and URLs, their counts must match");
+        throw new Error('When using multiple keys and URLs, their counts must match');
       }
       pairs = keyList.map((key, index) => [key, urlList[index]]);
     }
 
-    // Convert pairs to pairKeys and initialize usage count if needed
     const pairKeys = pairs.map(([key, url]) => {
       const pairKey = this.createPairKey(key, url);
       if (!(pairKey in this.pairUsage)) {
@@ -92,23 +98,14 @@ class SimpleBalancer {
       return pairKey;
     });
 
-    // Find the minimum usage count
     const minUsage = Math.min(...pairKeys.map(key => this.pairUsage[key]));
-
-    // Find all pairs with minimum usage
     const leastUsedPairKeys = pairKeys.filter(key => this.pairUsage[key] === minUsage);
-
-    // Randomly select one of the least used pairs
     const randomIndex = Math.floor(Math.random() * leastUsedPairKeys.length);
     const chosenPairKey = leastUsedPairKeys[randomIndex];
 
-    // Increment usage for the chosen pair
-    this.pairUsage[chosenPairKey]++;
-
-    // Save updated usage data
+    this.pairUsage[chosenPairKey] += 1;
     this.saveUsageData();
 
-    // Return the chosen pair
     return this.parsePairKey(chosenPairKey);
   }
 
@@ -127,7 +124,6 @@ class SimpleBalancer {
   }
 }
 
-// Make it available globally for other scripts to use
 if (typeof module !== 'undefined') {
   module.exports = SimpleBalancer;
 } else {

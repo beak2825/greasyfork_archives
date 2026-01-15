@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT瑞士军刀
 // @namespace    http://tampermonkey.net/
-// @version      7.8
+// @version      8.0
 // @description  侧边栏按钮呼出工具箱：支付链接生成 + Token一键复制 + 账单门户管理 + 取消订阅 + 重构还原JSON
 // @author       ChatGPT指导员V：chatgpt4v
 // @license      MIT
@@ -264,7 +264,6 @@
             let token = null;
             let inputJson = null;
 
-            // 1. 尝试解析输入是否为 JSON 对象
             try {
                 if (rawVal.startsWith('{')) {
                     inputJson = JSON.parse(rawVal);
@@ -276,14 +275,12 @@
 
             if (!token || !token.startsWith('ey')) return showToast("❌ 无法提取有效 Token", 'error');
 
-            // 2. 解码 JWT 获取用户真实信息
             const payload = parseJwt(token);
             if (!payload) return showToast("❌ Token 解码失败", 'error');
 
-            // 提取 JWT 核心数据
             const userId = payload['https://api.openai.com/auth']?.user_id || payload.user?.id || payload.sub;
             const email = payload['https://api.openai.com/profile']?.email || payload.email || "user@example.com";
-            // 提取 IDP (Identity Provider) 例如 google-oauth2
+            
             let idp = "auth0";
             if (payload.sub && payload.sub.includes('|')) {
                 idp = payload.sub.split('|')[0];
@@ -291,19 +288,16 @@
                 idp = payload.authProvider;
             }
 
-            // 3. 构建 Account 信息 (关键步骤：从混合 Json 中提取真实数据)
             let finalAccount = {
-                "id": userId, // 默认回退
+                "id": userId,
                 "planType": "free",
                 "structure": "personal",
                 "organizationId": null
             };
 
-            // 如果输入包含 accounts_info (XYHelper格式)，则提取真实 Account
             if (inputJson && inputJson.accounts_info && inputJson.accounts_info.accounts) {
                 let targetAccount = null;
 
-                // 策略A: 优先匹配 accountCheckInfo 中的 Team ID
                 if (inputJson.accountCheckInfo && inputJson.accountCheckInfo.team_ids && inputJson.accountCheckInfo.team_ids.length > 0) {
                     const teamId = inputJson.accountCheckInfo.team_ids[0];
                     if (inputJson.accounts_info.accounts[teamId]) {
@@ -311,15 +305,13 @@
                     }
                 }
 
-                // 策略B: 按优先级查找高等级账户
                 if (!targetAccount) {
-                    // 权重定义：Pro最优先，Team其次，Plus和Go再次
                     const priorityMap = { 'pro': 4, 'team': 3, 'plus': 2, 'go': 2 };
                     let currentMaxPriority = 0;
 
                     for (const key in inputJson.accounts_info.accounts) {
                         const acc = inputJson.accounts_info.accounts[key].account;
-                        const p = priorityMap[acc.plan_type] || 0; // 未知套餐(如free)默认为0
+                        const p = priorityMap[acc.plan_type] || 0;
 
                         if (p > currentMaxPriority) {
                             currentMaxPriority = p;
@@ -328,12 +320,10 @@
                     }
                 }
 
-                // 策略C: 如果还是没找到，使用 default (通常是 Free)
                 if (!targetAccount && inputJson.accounts_info.default) {
                     targetAccount = inputJson.accounts_info.default.account;
                 }
 
-                // 赋值真实数据
                 if (targetAccount) {
                     finalAccount = {
                         "id": targetAccount.account_id,
@@ -344,14 +334,13 @@
                 }
             }
 
-            // 4. 组装最终完整 JSON
             const restoredJson = {
                 "user": {
                     "id": userId,
                     "email": email,
                     "idp": idp,
                     "iat": payload.iat,
-                    "mfa": true, // 大多数 Token 默认开启 MFA
+                    "mfa": true,
                     "intercom_hash": null
                 },
                 "expires": new Date(payload.exp * 1000).toISOString(),
@@ -363,7 +352,6 @@
                 }
             };
 
-            // 5. 复制
             navigator.clipboard.writeText(JSON.stringify(restoredJson, null, 2))
                 .then(() => {
                     showToast("✅ 已还原并复制 (基于真实数据)！", 'green');
@@ -375,12 +363,36 @@
     }
 
     // =========================================================================
-    // 现有功能保持不变
+    // 逻辑检测
     // =========================================================================
-    function checkSubscriptionStatus(planType) {
-        if (!planType) return true;
-        if (planType === 'plus') { alert("此账号已是 Plus 订阅用户，无需再次升级。"); return false; }
-        if (planType === 'team') { return confirm("此账号已是 Team 账户，确定继续升级 Plus 吗？"); }
+    function checkSubscriptionStatus(currentPlan, targetPlanName) {
+        if (!currentPlan || currentPlan === 'free') return true;
+
+        if (targetPlanName === 'chatgptplusplan') {
+            if (currentPlan === 'plus') {
+                alert("❌ 此账号已是 Plus 订阅用户，无需重复订阅。");
+                return false;
+            }
+            if (currentPlan === 'pro') {
+                alert("❌ 此账号已是 Pro 订阅用户 (等级高于Plus)，无需降级操作。");
+                return false;
+            }
+            if (currentPlan === 'team') {
+                return confirm("⚠️ 此账号是 Team (团队) 账户，你确定要为它开通个人 Plus 订阅吗？");
+            }
+        }
+
+        if (targetPlanName === 'chatgptpro') {
+            if (currentPlan === 'pro') {
+                alert("❌ 此账号已是 Pro 订阅用户，无需重复订阅。");
+                return false;
+            }
+            
+            if (currentPlan === 'team') {
+                return confirm("⚠️ 此账号是 Team (团队) 账户，你确定要为它开通个人 Pro 订阅吗？");
+            }
+        }
+
         return true;
     }
 
@@ -414,20 +426,57 @@
         container.appendChild(createBtn(`⬅️ 返回上级菜单`, "btn-back", () => buildMainMenu(container, overlay)));
     }
 
+    // =========================================================================
+    // 支付 / PRO 菜单逻辑
+    // =========================================================================
+
     function showPayMenu(container, overlay, code, currency) {
         container.innerHTML = '';
-        container.appendChild(createDivider(`选择 ${currency} 支付数据来源`));
-        container.appendChild(createBtn(`🤖 当前账号Token(自动)`, "btn-pay", async () => {
+        container.appendChild(createDivider(`选择 ${currency} 支付数据来源 (Plus)`));
+
+        container.appendChild(createBtn(`🤖 Plus-当前账号Token(自动)`, "btn-pay", async () => {
             document.body.removeChild(overlay);
             if (!var_TokenOnly) await preLoadAllData(true);
             if (!var_TokenOnly) return showToast("❌ 未检测到登录状态 (请手动模式)", 'error');
-            const plan = var_FullJson?.account?.planType;
-            if (!checkSubscriptionStatus(plan)) return;
-            handlePayAction(overlay, code, currency, var_TokenOnly);
+
+            const currentPlan = var_FullJson?.account?.planType;
+            if (!checkSubscriptionStatus(currentPlan, "chatgptplusplan")) return;
+
+            handlePayAction(overlay, code, currency, var_TokenOnly, "chatgptplusplan");
         }));
-        container.appendChild(createBtn(`✍️ 其他账号Token(手动)`, "btn-data", () => showPayManualInput(container, overlay, code, currency)));
+
+        container.appendChild(createBtn(`✍️ Plus-其他账号Token(手动)`, "btn-data", () =>
+            showPayManualInput(container, overlay, code, currency, "chatgptplusplan")
+        ));
+
+        container.appendChild(createBtn(`🚀 <span class="grad-top">GPT PRO 订阅入口</span>`, "btn-restore", () =>
+            showProMenu(container, overlay, code, currency)
+        ));
+
         container.appendChild(createDivider(""));
         container.appendChild(createBtn(`⬅️ 返回上级菜单`, "btn-back", () => buildMainMenu(container, overlay)));
+    }
+
+    function showProMenu(container, overlay, code, currency) {
+        container.innerHTML = '';
+        container.appendChild(createDivider(`${currency} - GPT PRO 订阅`));
+
+        container.appendChild(createBtn(`🤖 PRO-当前账号Token(自动)`, "btn-pay", async () => {
+            document.body.removeChild(overlay);
+            if (!var_TokenOnly) await preLoadAllData(true);
+            if (!var_TokenOnly) return showToast("❌ 未检测到登录状态 (请手动模式)", 'error');
+
+            const currentPlan = var_FullJson?.account?.planType;
+            if (!checkSubscriptionStatus(currentPlan, "chatgptpro")) return;
+
+            handlePayAction(overlay, code, currency, var_TokenOnly, "chatgptpro");
+        }));
+
+        container.appendChild(createBtn(`✍️ PRO-其他账号Token(手动)`, "btn-data", () =>
+            showPayManualInput(container, overlay, code, currency, "chatgptpro")
+        ));
+
+        container.appendChild(createBtn(`⬅️ 返回`, "btn-back", () => showPayMenu(container, overlay, code, currency)));
     }
 
     function showCancelMenu(container, overlay) {
@@ -461,23 +510,35 @@
         container.appendChild(createBtn(`⬅️ 返回`, "btn-back", () => showBillingOptions(container, overlay)));
     }
 
-    function showPayManualInput(container, overlay, code, currency) {
+    function showPayManualInput(container, overlay, code, currency, planName = "chatgptplusplan") {
         container.innerHTML = '';
-        container.appendChild(createDivider(`请粘贴 JSON / Token 以获取 ${currency} 链接`));
+        const titleType = planName === "chatgptpro" ? "PRO" : "Plus";
+        container.appendChild(createDivider(`粘贴 Token 以获取 ${currency} (${titleType})`));
+
         const textarea = document.createElement('textarea');
         textarea.className = 'gpt-textarea';
         textarea.placeholder = '在此粘贴 JSON {"accessToken":...} \n或直接粘贴 Token 字符串 (ey...)';
         container.appendChild(textarea);
+
         container.appendChild(createBtn(`✅ 提取并跳转 (Submit)`, "btn-pay", () => {
             const rawVal = textarea.value.trim();
             const { token, plan } = extractTokenAndPlan(rawVal);
             if (!token) return showToast("❌ 格式错误：请粘贴有效 JSON 或 Token", 'error');
-            if (!checkSubscriptionStatus(plan)) return;
-            showToast(`✅ Token 提取成功! 跨域请求中……`, 'green');
+
+            if (!checkSubscriptionStatus(plan, planName)) return;
+
+            showToast(`✅ Token 提取成功! 正在请求 ${titleType} 链接……`, 'green');
             document.body.removeChild(overlay);
-            handlePayAction(overlay, code, currency, token);
+            handlePayAction(overlay, code, currency, token, planName);
         }));
-        container.appendChild(createBtn(`⬅️ 返回`, "btn-back", () => showPayMenu(container, overlay, code, currency)));
+
+        container.appendChild(createBtn(`⬅️ 返回`, "btn-back", () => {
+            if (planName === "chatgptpro") {
+                showProMenu(container, overlay, code, currency);
+            } else {
+                showPayMenu(container, overlay, code, currency);
+            }
+        }));
     }
 
     function showCancelManualInput(container, overlay) {
@@ -523,13 +584,15 @@
         .catch((err) => { if (err.message === "401") return; win.close(); showToast(`❌ 请求失败: ${err.message}`, 'error'); });
     }
 
-    function handlePayAction(overlay, code, currency, explicitToken) {
-        const win = createLoadingWindow(`<h2>正在获取 <span style="font-weight:bold;color:#fff;">${currency}</span> 支付链接...</h2>`);
+    function handlePayAction(overlay, code, currency, explicitToken, planName = "chatgptplusplan") {
+        const titleType = planName === "chatgptpro" ? "PRO" : "Plus";
+        const win = createLoadingWindow(`<h2>正在获取 <span style="font-weight:bold;color:#fff;">${currency} ${titleType}</span> 支付链接...</h2>`);
         if (!win) return showToast("❌ 请允许弹窗！", 'error');
         if (!explicitToken) { win.close(); return showToast("❌ 获取 Token 失败", 'error'); }
+
         gmFetch(CHECKOUT_API_PATH, {
             method: "POST", headers: { "Authorization": "Bearer " + explicitToken, "Content-Type": "application/json" },
-            body: JSON.stringify({ plan_name: "chatgptplusplan", billing_details: { country: code, currency } })
+            body: JSON.stringify({ plan_name: planName, billing_details: { country: code, currency } })
         })
         .then(async r => { if (r.status === 401) { showToast("❌ Token 已失效 (401)", 'error'); win.close(); throw new Error("401"); } return r.json(); })
         .then(res => res.url ? win.location.href = res.url : win.close())

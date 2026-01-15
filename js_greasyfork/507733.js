@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         已访问链接颜色标记
-// @version      2.1
-// @description  标记已访问链接的颜色，支持多种自定义颜色设置
+// @version      2.2
+// @description  标记已访问链接的颜色，仅标记包含斜杠的链接
 // @author       DeepSeek
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -10,7 +10,7 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @run-at       document-end
-// @namespace https://greasyfork.org/users/452911
+// @namespace    https://greasyfork.org/users/452911
 // @downloadURL https://update.greasyfork.org/scripts/507733/%E5%B7%B2%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5%E9%A2%9C%E8%89%B2%E6%A0%87%E8%AE%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/507733/%E5%B7%B2%E8%AE%BF%E9%97%AE%E9%93%BE%E6%8E%A5%E9%A2%9C%E8%89%B2%E6%A0%87%E8%AE%B0.meta.js
 // ==/UserScript==
@@ -42,7 +42,7 @@
         '青色': '#00FFFF', '粉色': '#FFC0CB', '棕色': '#8B4513',
         '深红': '#8B0000', '深蓝': '#00008B', '深绿': '#006400',
         '浅蓝': '#ADD8E6', '浅绿': '#90EE90', '浅灰': '#D3D3D3',
-        '金色': '#FFD700', '银色': '#C0C0C0', '青色': '#00FFFF',
+        '金色': '#FFD700', '银色': '#C0C0C0',
         '品红': '#FF00FF', '茶色': '#D2B48C', '橄榄色': '#808000',
         // 英文名称
         'red': '#FF0000', 'blue': '#0000FF', 'green': '#00FF00',
@@ -66,6 +66,9 @@
 
     // 已访问链接集合（使用Set提高性能）
     let visitedLinks = new Set();
+
+    // 定义选择器常量
+    const LINK_SELECTOR = 'a[href*="/"]';
 
     // ==================== 核心功能 ====================
     
@@ -99,28 +102,36 @@
     }
 
     /**
+     * 检查链接是否包含斜杠
+     */
+    function isLinkWithSlash(linkElement) {
+        if (!linkElement || !linkElement.href) return false;
+        return linkElement.href.includes('/');
+    }
+
+    /**
      * 创建样式表
      */
     function createStyleSheet() {
         const css = `
-            /* 已访问链接基础样式 - 仅修改颜色 */
-            a.visited-link-color {
+            /* 仅对包含斜杠的已访问链接应用样式 */
+            ${LINK_SELECTOR}.visited-link-color {
                 color: ${userSettings.color} !important;
             }
             
             /* 增强选择器以覆盖更多场景 */
-            button a.visited-link-color,
-            div a.visited-link-color,
-            span a.visited-link-color,
-            li a.visited-link-color,
-            td a.visited-link-color,
-            .link a.visited-link-color,
-            .btn a.visited-link-color,
-            .menu-item a.visited-link-color,
-            .nav-link a.visited-link-color,
-            .item a.visited-link-color,
-            .title a.visited-link-color,
-            .content a.visited-link-color {
+            button ${LINK_SELECTOR}.visited-link-color,
+            div ${LINK_SELECTOR}.visited-link-color,
+            span ${LINK_SELECTOR}.visited-link-color,
+            li ${LINK_SELECTOR}.visited-link-color,
+            td ${LINK_SELECTOR}.visited-link-color,
+            .link ${LINK_SELECTOR}.visited-link-color,
+            .btn ${LINK_SELECTOR}.visited-link-color,
+            .menu-item ${LINK_SELECTOR}.visited-link-color,
+            .nav-link ${LINK_SELECTOR}.visited-link-color,
+            .item ${LINK_SELECTOR}.visited-link-color,
+            .title ${LINK_SELECTOR}.visited-link-color,
+            .content ${LINK_SELECTOR}.visited-link-color {
                 color: ${userSettings.color} !important;
             }
         `;
@@ -139,17 +150,17 @@
         // 添加新样式
         const newCss = `
             <style id="visited-links-color-style">
-                a.visited-link-color {
+                ${LINK_SELECTOR}.visited-link-color {
                     color: ${userSettings.color} !important;
                 }
                 
-                button a.visited-link-color,
-                div a.visited-link-color,
-                span a.visited-link-color,
-                li a.visited-link-color,
-                td a.visited-link-color,
-                .link a.visited-link-color,
-                .btn a.visited-link-color {
+                button ${LINK_SELECTOR}.visited-link-color,
+                div ${LINK_SELECTOR}.visited-link-color,
+                span ${LINK_SELECTOR}.visited-link-color,
+                li ${LINK_SELECTOR}.visited-link-color,
+                td ${LINK_SELECTOR}.visited-link-color,
+                .link ${LINK_SELECTOR}.visited-link-color,
+                .btn ${LINK_SELECTOR}.visited-link-color {
                     color: ${userSettings.color} !important;
                 }
             </style>
@@ -162,6 +173,9 @@
      */
     function markLinkAsVisited(linkElement) {
         if (!linkElement || !linkElement.href) return;
+        
+        // 只处理包含斜杠的链接
+        if (!isLinkWithSlash(linkElement)) return;
         
         const linkUrl = linkElement.href;
         
@@ -182,7 +196,7 @@
     function applyInitialStyles() {
         // 等待页面完全加载
         setTimeout(() => {
-            const allLinks = document.querySelectorAll('a[href]');
+            const allLinks = document.querySelectorAll(LINK_SELECTOR);
             
             allLinks.forEach(link => {
                 if (visitedLinks.has(link.href)) {
@@ -214,15 +228,15 @@
     function handleClickEvent(event) {
         const clickedElement = event.target;
         
-        // 如果是链接直接标记
-        if (clickedElement.tagName === 'A' && clickedElement.href) {
+        // 如果是链接且包含斜杠，直接标记
+        if (clickedElement.tagName === 'A' && isLinkWithSlash(clickedElement)) {
             markLinkAsVisited(clickedElement);
             return;
         }
         
         // 查找最近的链接元素
         const nearestLink = clickedElement.closest('a');
-        if (nearestLink && nearestLink.href) {
+        if (nearestLink && isLinkWithSlash(nearestLink)) {
             markLinkAsVisited(nearestLink);
             return;
         }
@@ -230,10 +244,10 @@
         // 检查按钮内是否包含链接
         const buttonElement = clickedElement.closest('button');
         if (buttonElement) {
-            const linkInButton = buttonElement.querySelector('a[href]');
-            if (linkInButton) {
-                markLinkAsVisited(linkInButton);
-            }
+            const linksInButton = buttonElement.querySelectorAll(LINK_SELECTOR);
+            linksInButton.forEach(link => {
+                markLinkAsVisited(link);
+            });
         }
     }
 
@@ -254,17 +268,17 @@
             mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === 1) { // 元素节点
-                        // 检查新节点中的链接
+                        // 检查新节点中的包含斜杠的链接
                         const links = node.querySelectorAll ? 
-                                     node.querySelectorAll('a[href]') : [];
+                                     node.querySelectorAll(LINK_SELECTOR) : [];
                         links.forEach(link => {
                             if (visitedLinks.has(link.href)) {
                                 link.classList.add('visited-link-color');
                             }
                         });
                         
-                        // 如果节点本身就是链接
-                        if (node.tagName === 'A' && node.href && 
+                        // 如果节点本身就是包含斜杠的链接
+                        if (node.tagName === 'A' && isLinkWithSlash(node) && 
                             visitedLinks.has(node.href)) {
                             node.classList.add('visited-link-color');
                         }
@@ -343,6 +357,8 @@
         }
     }
 
+    // ==================== 工具函数 ====================
+    
     /**
      * 生成颜色提示信息
      */
@@ -376,8 +392,6 @@
         return message;
     }
 
-    // ==================== 工具函数 ====================
-    
     /**
      * 解析颜色输入
      */
@@ -413,7 +427,7 @@
         }
         
         // 检查是否为颜色关键字
-        if (CSS.supports('color', input)) {
+        if (CSS && CSS.supports && CSS.supports('color', input)) {
             return input;
         }
         
@@ -444,7 +458,7 @@
      * 刷新所有已访问链接的样式
      */
     function refreshAllVisitedLinks() {
-        const visitedElements = document.querySelectorAll('.visited-link-color');
+        const visitedElements = document.querySelectorAll(`${LINK_SELECTOR}.visited-link-color`);
         visitedElements.forEach(element => {
             element.classList.remove('visited-link-color');
             // 强制重绘
@@ -462,7 +476,7 @@
             GM_deleteValue('visitedLinks');
             
             // 移除所有样式类
-            const visitedElements = document.querySelectorAll('.visited-link-color');
+            const visitedElements = document.querySelectorAll(`${LINK_SELECTOR}.visited-link-color`);
             visitedElements.forEach(element => {
                 element.classList.remove('visited-link-color');
             });

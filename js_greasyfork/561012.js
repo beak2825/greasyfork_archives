@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Unlock Billboard Pro charts
+// @name         Unlock Billboard Pro charts (private)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Remove Billboard Pro payment requests and unhide the charts.
 // @author       Hướng Dương
 // @match        *://www.billboard.com/charts/*
 // @grant        none
 // @license      GNU GPLv3
 
-// @downloadURL https://update.greasyfork.org/scripts/561012/Unlock%20Billboard%20Pro%20charts.user.js
-// @updateURL https://update.greasyfork.org/scripts/561012/Unlock%20Billboard%20Pro%20charts.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561012/Unlock%20Billboard%20Pro%20charts%20%28private%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561012/Unlock%20Billboard%20Pro%20charts%20%28private%29.meta.js
 // ==/UserScript==
 
 (
@@ -17,9 +17,9 @@
         'use strict';
 
         const removePaywall = () => {
-            let paywallDivs = document.querySelectorAll('div.pmc-paywall.a-article-cropped');
+            let proCharts = document.querySelectorAll('div.pmc-paywall.a-article-cropped');
 
-            paywallDivs.forEach(div => {
+            proCharts.forEach(div => {
                 div.classList.remove('pmc-paywall', 'a-article-cropped');
             });
 

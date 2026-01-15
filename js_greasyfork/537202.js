@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         自动打开b站字幕
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.3.2
 // @description  自动检测并打开b站的ai字幕，按键盘z键打开或关闭ai字幕,增加字幕状态的记忆功能
 // @author       lhr3572651322
 // @license      MIT
-// @match        https://www.bilibili.com/video/*
+// @match       https://www.bilibili.com/video/*
+// @match       https://www.bilibili.com/list/watchlater*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=bilibili.com
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -17,9 +18,10 @@
     let checkCount = 0;
 const checkAndClick = setInterval(() => {
     const aiSub = document.querySelector('div[data-lan="ai-zh"]');
-    if (!aiSub) return; // 如果AI字幕不存在，直接返回
     const isOpened = GM_getValue('isOpened', false);
     const closeSub = document.querySelector('.bpx-player-ctrl-subtitle-close-switch');
+        // 如果AI字幕不存在，直接返回
+    if (!aiSub) return;
         // 事件监听器只需要绑定一次
     if (!aiSub.hasListener) {
         aiSub.addEventListener('click', () => {

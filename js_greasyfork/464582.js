@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NotSoSharp
 // @namespace    https://github.com/gui-ying233/NotSoSharp
-// @version      1.6.0
+// @version      1.7.0
 // @description  尝试还原萌娘百科部分一方通行所屏蔽的内容
 // @author       鬼影233
 // @license      MIT
@@ -9,8 +9,12 @@
 // @match        mzh.moegirl.org.cn/*
 // @match        mobile.moegirl.org.cn/*
 // @match        commons.moegirl.org.cn/*
+// @match        library.moegirl.org.cn/*
+// @match        en.moegirl.org.cn/*
+// @match        ja.moegirl.org.cn/*
 // @icon         https://img.moegirl.org.cn/common/b/b7/%E5%A4%A7%E8%90%8C%E5%AD%97.svg
 // @supportURL   https://github.com/gui-ying233/NotSoSharp/issues
+// @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/464582/NotSoSharp.user.js
 // @updateURL https://update.greasyfork.org/scripts/464582/NotSoSharp.meta.js
 // ==/UserScript==
@@ -68,36 +72,49 @@
 	r(document, "title", `${pageName} - 萌娘百科_万物皆可萌的百科全书`);
 	switch (mw.config.get("skin")) {
 		case "vector":
-			document.body
-				.getElementsByClassName("toctext")
-				.forEach(e =>
-					r(e, "innerText", decodeURI(e.parentElement.hash.slice(1)))
-				);
+			[...document.body.getElementsByClassName("toctext")].forEach(e =>
+				r(e, "innerText", decodeURI(e.parentElement.hash.slice(1)))
+			);
 			break;
 		case "moeskin":
 		default:
-			document.body
-				.querySelectorAll(".moe-toc-tree.root a.anchor-link")
-				.forEach(e =>
-					r(e, "title", decodeURI(e.hash.replaceAll(".", "%")))
-				);
-			document.body
-				.querySelectorAll(".moe-toc-tree.root a.anchor-link > .text")
-				.forEach(e =>
-					r(
-						e,
-						"innerText",
-						decodeURI(
-							e.parentElement.hash.replaceAll(".", "%")
-						).slice(1)
+			[
+				...document.body.querySelectorAll(
+					".moe-toc-tree.root a.anchor-link"
+				),
+			].forEach(e =>
+				r(e, "title", decodeURI(e.hash.replaceAll(".", "%")))
+			);
+			[
+				...document.body.querySelectorAll(
+					".moe-toc-tree.root a.anchor-link > .text"
+				),
+			].forEach(e =>
+				r(
+					e,
+					"innerText",
+					decodeURI(e.parentElement.hash.replaceAll(".", "%")).slice(
+						1
 					)
-				);
+				)
+			);
 			break;
 	}
-	document.body
-		.getElementsByClassName("mw-headline")
-		.forEach(e => r(e, "innerText", decodeURI(e.id)));
-	document.body.querySelectorAll("a:not(#catlinks a)").forEach(e => {
+	[...document.body.querySelectorAll(".mw-heading > [id]")].forEach(e => {
+		if (
+			e.innerText.includes("\u266F") &&
+			e.innerText.length === e.id.length
+		)
+			e.childNodes.forEach(n => {
+				if (
+					n.nodeType === Node.TEXT_NODE &&
+					n.nodeValue.includes("\u266F") &&
+					n.nodeValue.length === e.id.length
+				)
+					n.nodeValue = e.id;
+			});
+	});
+	[...document.body.querySelectorAll("a:not(#catlinks a)")].forEach(e => {
 		if (
 			e.innerText.includes("\u266F") &&
 			(new Set(e.innerHTML).size === 1 ||
@@ -109,7 +126,7 @@
 				e.getAttribute("data-username") ||
 				decodeURI(e.pathname).slice(1);
 	});
-	document.body.getElementsByClassName("mw-selflink").forEach(e => {
+	[...document.body.getElementsByClassName("mw-selflink")].forEach(e => {
 		switch (e.innerHTML.length) {
 			case pageName.length:
 				r(e, "innerText");
@@ -119,11 +136,11 @@
 				break;
 		}
 	});
-	document.body.querySelectorAll("#catlinks a").forEach(e => {
+	[...document.body.querySelectorAll("#catlinks a")].forEach(e => {
 		if (e.innerText.includes("\u266F") && new Set(e.innerHTML).size === 1)
 			e.innerText = decodeURI(e.pathname).slice(10);
 	});
-	document.body.getElementsByTagName("a").forEach(e => {
+	[...document.body.getElementsByTagName("a")].forEach(e => {
 		if (!e.innerHTML.includes("\u266F")) return;
 		const file = e.querySelector("span.mw-file-element.mw-broken-media");
 		if (
@@ -155,5 +172,21 @@
 			.replaceAll(".", "\\.")
 			.replaceAll("\u266F", ".")}`;
 		if (url.match(regexp)) e.innerText = url.match(regexp)[0];
+	});
+	[
+		...document.body.querySelectorAll(
+			".infoBox.patroller-show > .infoBoxContent > .infoBoxText > big > center > b"
+		),
+	].forEach(e => {
+		[...e.childNodes].forEach(
+			n =>
+				n.nodeType === Node.TEXT_NODE &&
+				n.nodeValue.includes("\u266F") &&
+				n.nodeValue.length === pageName.length + 11 &&
+				(n.nodeValue = n.nodeValue.replace(
+					/^致(?:(维护人员：本页面“)[^\u266F]*\u266F+[^\u266F]*(”)|(維護人員：本頁面「)[^\u266F]*\u266F+[^\u266F]*(」))$/giu,
+					`致$1$3${pageName}$2$4`
+				))
+		);
 	});
 })();

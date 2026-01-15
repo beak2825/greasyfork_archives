@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Intake SOM FitClinic
 // @namespace    http://tampermonkey.net/
-// @version      1.2.2
+// @version      1.2.3
 // @description  Intake inladen voor SOM
 // @match        *://*/*
 // @grant        none
@@ -179,11 +179,13 @@ window.addEventListener('load', function() {
                     if (!el) return { status: 'element niet gevonden', succes: false };
 
                     if (el.tagName === 'TEXTAREA'){
-                        if (el.innerHTML.trim().replace(/\s+/g, '')  !== input.trim().replace(/\s+/g, '') ) return {
-                            status: 'niet goed ingevuld', 
-                            succes: false,
-                            ingevuld: el.innerHTML.trim().replace(/\s+/g, ''),
-                            opgehaald: input.trim().replace(/\s+/g, '')
+                        if (el.innerHTML){
+                            if (el.innerHTML.trim().replace(/\s+/g, '')  !== input.trim().replace(/\s+/g, '') ) return {
+                                status: 'niet goed ingevuld', 
+                                succes: false,
+                                ingevuld: el.innerHTML.trim().replace(/\s+/g, ''),
+                                opgehaald: input.trim().replace(/\s+/g, '')
+                            }
                         }
                     } else if (el.tagName === 'INPUT' && el.type === 'checkbox'){
                         if (input) { 

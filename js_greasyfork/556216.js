@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Click&Fit
 // @namespace    https://precilens.com/
-// @version      5.1.1
+// @version      5.2.4
 // @description  Module Click&Fit avec upload topographies et autres fonctionnalités
 // @author       Precilens
 // @match        https://click-fit.precilens.com/*
@@ -9,7 +9,6 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @license      MIT
-// DEV MODE: Auto-update désactivé temporairement
 // @downloadURL https://update.greasyfork.org/scripts/556216/ClickFit.user.js
 // @updateURL https://update.greasyfork.org/scripts/556216/ClickFit.meta.js
 // ==/UserScript==
@@ -2837,8 +2836,6 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
 
                  // Attendre clic utilisateur sur "Ajouter" puis auto-clic sur "Confirmer"
                  await new Promise((resolve) => {
-                     console.log('[ClickFit] Attente clic sur Ajouter...');
-
                      const checkInterval = setInterval(() => {
                          // Chercher le bouton "Confirmer" avec plusieurs méthodes
                          let confirmBtn = null;
@@ -2953,14 +2950,6 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
                                  // found by text
                                  return btn;
                              }
-                         }
-
-                         // Debug: lister les boutons disponibles à la dernière tentative
-                         if (attempt === maxAttempts) {
-                             // Debug: buttons not found
-                             allButtons.forEach((btn, i) => {
-                                 if (i < 15) console.log(`  ${i}: "${btn.textContent?.trim().substring(0, 50)}"`);
-                             });
                          }
 
                          if (attempt < maxAttempts) {
@@ -4280,6 +4269,7 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
         sphere: null,
         cylinder: null,
         axis: null,
+        addition: null,
         kerato: {
           kFlat: null,
           kSteep: null,
@@ -4290,6 +4280,7 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
         sphere: null,
         cylinder: null,
         axis: null,
+        addition: null,
         kerato: {
           kFlat: null,
           kSteep: null,
@@ -4306,6 +4297,10 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
     if (odSphere && odSphere.value) data.od.sphere = odSphere.value;
     if (odCylinder && odCylinder.value) data.od.cylinder = odCylinder.value;
     if (odAxis && odAxis.value) data.od.axis = odAxis.value;
+
+    // Capturer l'addition OD
+    const odAddition = document.querySelector('#input-rightaddition');
+    if (odAddition && odAddition.value) data.od.addition = odAddition.value;
 
     // Capturer les valeurs de kératométrie OD
     const odKFlat = document.querySelector('#input-rightkParameter');
@@ -4324,6 +4319,10 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
     if (ogSphere && ogSphere.value) data.og.sphere = ogSphere.value;
     if (ogCylinder && ogCylinder.value) data.og.cylinder = ogCylinder.value;
     if (ogAxis && ogAxis.value) data.og.axis = ogAxis.value;
+
+    // Capturer l'addition OG
+    const ogAddition = document.querySelector('#input-leftaddition');
+    if (ogAddition && ogAddition.value) data.og.addition = ogAddition.value;
 
     // Capturer les valeurs de kératométrie OG
     const ogKFlat = document.querySelector('#input-leftkParameter');
@@ -4503,6 +4502,13 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
         refractionText = 'Non renseignée';
       }
 
+      // Formater l'addition
+      let additionText = '';
+      if (eyeData.addition && parseFloat(eyeData.addition) !== 0) {
+        const addition = parseFloat(eyeData.addition);
+        additionText = 'Add +' + addition.toFixed(2).replace('.', ',');
+      }
+
       // Formater la kératométrie
       let keratoText = '';
       if (eyeData.kerato.kFlat && eyeData.kerato.kSteep) {
@@ -4556,6 +4562,14 @@ ObserverManager.createInterval('astigmatismeInterval', recolorAstigmatisme, 2000
             <span style="font-weight: 500;">Réfraction :</span>
             <span style="font-weight: 600; color: ${colors.textPrimary};">${refractionText}</span>
           </div>
+
+          ${additionText ? `
+          <span style="color: ${colors.separator}; font-weight: 300;">|</span>
+
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-weight: 600; color: ${colors.textPrimary};">${additionText}</span>
+          </div>
+          ` : ''}
 
           <span style="color: ${colors.separator}; font-weight: 300;">|</span>
 

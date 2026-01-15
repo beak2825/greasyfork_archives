@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BOOTH Library Beautifier
 // @description  BOOTHのライブラリ/ギフト一覧の情報量を増やし見やすくします（簡易実装）
-// @version      0.5
+// @version      0.7.0
 // @author       amamamaou
 // @namespace    https://misskey.niri.la/@amamamaou
 // @match        https://accounts.booth.pm/library*
@@ -12,6 +12,39 @@
 // ==/UserScript==
 
 {
+  // スタイル挿入
+  const style = document.createElement('style');
+  style.textContent = `
+.am-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--charcoal-surface4);
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+
+  &::before,
+  &::after {
+    content: '';
+    flex-shrink: 0;
+    height: 100px;
+  }
+}
+
+.am-list > div {
+  padding-block: 4px;
+  border-bottom-width: 1px;
+  borer-style: solid;
+}
+`;
+  document.head.append(style);
+
   /** @type {HTMLElement} リストコンテナー */
   const container = document.querySelector('.ui-segmented-tablet-nav').nextElementSibling;
   container.className = 'container grid gap-16 grid-cols-5 u-pb-600';
@@ -39,7 +72,7 @@
    * 次のページを読み込む
    * @param {string} url 読み込むURL
    */
-  const loadNextPage = async (url) => {
+  async function loadNextPage(url) {
     const responce = await fetch(url);
 
     if (!responce.ok) {
@@ -55,40 +88,47 @@
     /** @type {HTMLElement} リストコンテナー */
     const newContainer = dom.querySelector('.ui-segmented-tablet-nav').nextElementSibling;
 
-    /** @type {HTMLCollectionOf<HTMLElement>} */
-    const items = newContainer.children;
+    const items = [...newContainer.children];
 
-    setNewStyle(items);
     container.append(...items);
-  };
+    setNewStyle(items, true);
+  }
 
   /**
    * 詳細モーダルを表示する
    * @param {HTMLElement} item アイテム要素
+   * @param {HTMLElement} clonedItem リスト用要素
    */
-  const showDetailModal = (item) => {
+  function showDetailModal(item, clonedItem) {
     const overlay = document.createElement('div');
-    overlay.className = 'fixed inset-0 z-[10000] flex justify-center items-center cursor-pointer';
+    overlay.className = 'am-overlay';
     overlay.style.backgroundColor = 'var(--charcoal-surface4)';
 
     const content = document.createElement('div');
     content.className = 'cursor-default';
     content.style.width = '800px';
 
-    overlay.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', () => {
+      item.hidden = true;
+      clonedItem.before(item);
+      overlay.remove();
+    });
     content.addEventListener('click', event => event.stopPropagation());
 
-    content.append(item.cloneNode(true));
+    content.append(item);
     overlay.append(content);
 
+    item.hidden = false;
+
     document.body.append(overlay);
-  };
+  }
 
   /**
    * 新しいスタイルにする
-   * @param {HTMLCollectionOf<HTMLElement>} items アイテム要素郡
+   * @param {HTMLElement[]} items アイテム要素郡
+   * @param {boolean} isAppend 後から追加した要素フラグ
    */
-  const setNewStyle = (items) => {
+  function setNewStyle(items, isAppend) {
     for (const item of items) {
       // ページャーなら監視させる
       if (item.classList.contains('pager')) {
@@ -97,39 +137,14 @@
         continue;
       }
 
+      // リスト用要素生成
       /** @type {HTMLElement} 複製要素 */
       const clonedItem = item.cloneNode(true);
-
-      /** @type {HTMLElement} ダウンロードリスト */
-      const dlList = clonedItem.lastElementChild;
-      dlList.style.overflow = 'auto';
-      dlList.style.overscrollBehavior = 'contain';
-      dlList.style.maxHeight = '50vh';
-
-      for (const dlItem of dlList.children) {
-        const btn = dlItem.querySelector('.js-download-button');
-
-        if (btn.firstElementChild) continue;
-
-        const wrapper = document.createElement('div');
-        const button = document.createElement('a');
-
-        wrapper.className = 'relative w-fit';
-        button.className = 'charcoal-button focus-visible:!shadow-secondary-focus !text-text-default hover:enabled:!text-[#0B1628] active:enabled:!text-[#0B1628] !w-fit';
-        button.textContent = 'ダウンロード';
-        button.href = btn.dataset.href;
-
-        wrapper.append(button);
-        btn.append(wrapper);
-      }
-
-      item.className = 'p-8 bg-white rounded-8';
-
-      // ダウンロードリンク箇所を削除
-      item.lastElementChild.remove();
+      clonedItem.className = 'p-8 bg-white rounded-8';
+      clonedItem.lastElementChild.remove();
 
       /** @type {HTMLElement} */
-      const infoBlock = item.firstElementChild;
+      const infoBlock = clonedItem.firstElementChild;
       infoBlock.className = 'item-card__summary h-full flex flex-col';
 
       // サムネイル
@@ -161,13 +176,144 @@
       detailTrigger.style.margin = 'auto 0 0';
       detailTrigger.textContent = '詳細を見る';
 
-      detailTrigger.addEventListener('click', () => showDetailModal(clonedItem));
+      detailTrigger.addEventListener('click', () => showDetailModal(item, clonedItem));
 
       infoBlock.append(detailTrigger);
-    }
-  };
 
-  /** @type {HTMLCollectionOf<HTMLElement>} */
-  const items = container.children;
-  setNewStyle(items);
+      // オリジナルは隠しておく
+      item.hidden = true;
+
+      /** @type {HTMLElement} ダウンロードリスト */
+      const dlList = item.lastElementChild;
+
+      dlList.classList.remove('mt-16');
+      dlList.classList.add('am-list');
+
+      for (const dlItem of dlList.children) {
+        dlItem.classList.remove('mt-16');
+        dlItem.classList.add('border-border300');
+        if (isAppend) setDlButton(dlItem);
+      }
+
+      item.after(clonedItem);
+    }
+  }
+
+  /**
+   * ボタン生成
+   * @param {boolean} isDropdown 
+   * @return {HTMLButtonElement}
+   */
+  function createButton(isDropdown) {
+    const pixivIconDl = document.querySelector('pixiv-icon[name="16/Download"]');
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'charcoal-button focus-visible:!shadow-secondary-focus !text-text-default hover:enabled:!text-[#0B1628] active:enabled:!text-[#0B1628] !w-fit';
+    button.dataset.variant = 'Default';
+    button.dataset.size = 'S';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-center gap-4';
+    wrapper.append(pixivIconDl.cloneNode(true), isDropdown ? 'その他のDL方法' : 'ダウンロード');
+
+    if (isDropdown) {
+      const pixivIconArrow = document.querySelector('pixiv-icon[name="24/ArrowOpenDown"]');
+      wrapper.append(pixivIconArrow.cloneNode(true));
+    }
+
+    button.append(wrapper);
+
+    return button;
+  }
+
+  /**
+   * その他のDL方法ボタン生成
+   * @param {{ deeplinkDownloadableUrl: string, fallbackMessage: string, fallbackUrl: string, text: string }[]} data 
+   * @return {DocumentFragment}
+   */
+  function createExtraButton(data) {
+    const pixivIconDl = document.querySelector('pixiv-icon[name="16/Download"]');
+    const pixivIconArrow = document.querySelector('pixiv-icon[name="24/ArrowOpenRight"]');
+    const fragment = document.createDocumentFragment();
+
+    for (const item of data) {
+      const button = document.createElement('div');
+      button.className = 'text-14 text-text-default font-normal py-4 px-6 hover:bg-surface-2 flex items-center gap-8 px-16 py-8 text-16 no-underline hover:bg-surface3-hover focus-visible:bg-surface3-press cursor-pointer';
+      
+      button.addEventListener('click', () => {
+        const timer = window.setTimeout(() => {
+          if (window.confirm(item.fallbackMessage)) {
+            location.assign(item.fallbackUrl);
+          } else {
+            window.clearTimeout(timer);
+          }
+        }, 1500);
+
+        const canceller = () => {
+          window.clearTimeout(timer);
+          window.removeEventListener('blur', canceller, true);
+          window.removeEventListener('pagehide', canceller, true);
+        }
+
+        window.addEventListener('blur', canceller, true);
+        window.addEventListener('pagehide', canceller, true);
+        location.assign(item.deeplinkDownloadableUrl);
+      });
+      
+      button.append(pixivIconDl.cloneNode(true), item.text, pixivIconArrow.cloneNode(true));
+      fragment.append(button);
+    }
+
+    return fragment;
+  }
+
+  /**
+   * ダウンロードボタン設定
+   * @param {HTMLElement} dlItem 
+   */
+  function setDlButton(dlItem) {
+    /** @type {NodeListOf<HTMLElement>} */
+    const dlButtons = dlItem.querySelectorAll('.js-download-button');
+    for (const buttonBlock of dlButtons) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'relative w-fit';
+      buttonBlock.append(wrapper);
+
+      if (buttonBlock.dataset.href) {
+        const button = createButton(false);
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          location.assign(buttonBlock.dataset.href);
+        });
+        wrapper.append(button);
+      } else {
+        const dropdownWrapper = document.createElement('div');
+        dropdownWrapper.hidden = true;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed top-0 left-0 bottom-0 right-0 w-full h-full opacity-100 z-10 cursor-default';
+        overlay.addEventListener('click', () => {
+          dropdownWrapper.hidden = true;
+        });
+
+        const button = createButton(true);
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          dropdownWrapper.hidden = !dropdownWrapper.hidden;
+        });
+
+        const dropdown = document.createElement('div');
+        dropdown.className = 'absolute top-full w-[288px] bg-surface-1 px-0 py-8 bg-white border border-border500 rounded-8 list-none my-4 z-20 right-0';
+        
+        const fragment = createExtraButton(JSON.parse(buttonBlock.dataset.dropdownItems));
+        
+        dropdown.append(fragment);
+        dropdownWrapper.append(dropdown, overlay);
+        wrapper.append(button, dropdownWrapper);
+      }
+    }
+  }
+
+  setNewStyle([...container.children]);
 }

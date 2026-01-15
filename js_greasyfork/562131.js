@@ -4,7 +4,7 @@
 // @description  Améliore l'interface de Kraland
 // @author       Somin
 // @namespace    somin
-// @version      beta.0.11
+// @version      beta.0.14
 // @match        http://www.kraland.org/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kraland.org
 // @grant        none
@@ -181,11 +181,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             kili=navbar.querySelector('li.dropdown.active');
             if(kili){
                 lia=kili.querySelector('a').textContent.trim().split(/\s+/)[0];
-            }else{
-                motd();
-            }
-
-            switch(lia){
+                switch(lia){
                 case 'Jouer' :
                     play();
                     break;
@@ -197,9 +193,28 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                     break;
                 default:
                     return;
+                }
+            }else{
+                let titleLeft = document.querySelector('#col-left .list-group-item');
+                if(titleLeft){
+                    let nameLeft=titleLeft.textContent.trim();
+                    switch(nameLeft){
+                        case 'Nouvelles' :
+                            console.log('test');
+                            motd();
+                            break;
+                        case 'Kramails' :
+                            km();
+                            break;
+                        default:
+                            console.log('err not main 2');
+                            return;
+                    }
+                }
+
             }
         }else{
-            console.log('err not main');
+            console.log('err not main 1');
             return;
         }
     }
@@ -266,8 +281,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     }
 
     function play(){
-        //pinup();
-
+        pinup();
+/*
         var content=document.querySelector('#content');
         //content.style.display='flex';
         var row=document.querySelector('#content');
@@ -275,7 +290,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
         var cLeft=document.querySelector('#col-left');
         cLeft.style.width='fit-content';
-
+*/
         var cRight=document.querySelector('#col-right');
         //cRight.style.flex='1';
 
@@ -561,43 +576,12 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         ezSpoiler();
     }
 
-    //------------ flèches pour navigation --------------
-    function arrowsHead(currentP,isTopic){
-        if(!currentP){return;}
-        let currentPa = Array.from(currentP.parentNode.querySelectorAll('li'));
-        currentPa.shift();
-        currentPa.pop();
-        let currentpIndex = currentPa.findIndex(el => el.classList.contains('active'));
-        let pnb = parseInt(currentpIndex);
-        let allPa = Array.from(currentP.parentNode.querySelectorAll('a')).filter(a => a.textContent.trim() !== '...' && a.textContent.trim() !== '');
+    function km(){
+        var cLeft=document.querySelector('#col-left');
 
-        let n, nlink;
-        document.addEventListener('keydown', (event) => {
-            const activeElement = document.activeElement;
-            const isTextInput = activeElement.tagName === 'INPUT' ||
-                  activeElement.tagName === 'TEXTAREA' ||
-                  activeElement.isContentEditable;
-
-            if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-
-            event.preventDefault();
-            switch (event.key) {
-                case 'ArrowLeft':
-                    n = pnb - 1;
-                    if (n < 0) { n = currentPa.length - 1 }
-                    break;
-                case 'ArrowRight':
-                    n = pnb + 1;
-                    if (n === currentPa.length) { n = 0 }
-                    break;
-                default:
-                    return;
-            }
-            nlink = allPa[n].href;
-            window.open(nlink, '_self');
-        });
     }
 
+    //+------------ Carte du cybermonde --------------+
     function cybermap(){
         let mapCont=document.querySelector('#mapname-container');
 
@@ -615,12 +599,13 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
     }
 
+    //+------------ Rapport privé --------------+
     function rp(){
         // bg-info
         var newEv=document.querySelectorAll('.bg-info');
         for(let i=0;i<newEv.length;i++){
             newEv[i].style.backgroundColor=getComputedStyle(document.body).backgroundColor;
-            newEv[i].style.borderLeft = '1px solid red';
+            newEv[i].style.borderLeft = '3px solid red';
             /*if(i===newEv.length-1){
                 newEv[i].style.borderBottom = '2px solid red';
             }*/
@@ -660,6 +645,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
             cLeft.style.flex = '0 0 auto';
             cLeft.style.width = 'fit-content';
+            //cLeft.style.minWidth = 'fit-content';
+            //cLeft.style.maxWidth = '17%';
 
             let hr=cLeft.querySelector('hr')
             if(hr){
@@ -699,4 +686,42 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             cRight.style.overflowY = 'auto';
         }
     }
+
+    //------------ flèches pour navigation --------------
+    function arrowsHead(currentP,isTopic){
+        if(!currentP){return;}
+        let currentPa = Array.from(currentP.parentNode.querySelectorAll('li'));
+        currentPa.shift();
+        currentPa.pop();
+        let currentpIndex = currentPa.findIndex(el => el.classList.contains('active'));
+        let pnb = parseInt(currentpIndex);
+        let allPa = Array.from(currentP.parentNode.querySelectorAll('a')).filter(a => a.textContent.trim() !== '...' && a.textContent.trim() !== '');
+
+        let n, nlink;
+        document.addEventListener('keydown', (event) => {
+            const activeElement = document.activeElement;
+            const isTextInput = activeElement.tagName === 'INPUT' ||
+                  activeElement.tagName === 'TEXTAREA' ||
+                  activeElement.isContentEditable;
+
+            if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+
+            event.preventDefault();
+            switch (event.key) {
+                case 'ArrowLeft':
+                    n = pnb - 1;
+                    if (n < 0) { n = currentPa.length - 1 }
+                    break;
+                case 'ArrowRight':
+                    n = pnb + 1;
+                    if (n === currentPa.length) { n = 0 }
+                    break;
+                default:
+                    return;
+            }
+            nlink = allPa[n].href;
+            window.open(nlink, '_self');
+        });
+    }
+//--- fin du code
 })();

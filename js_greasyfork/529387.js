@@ -1,28 +1,21 @@
 // ==UserScript==
-// @name         Web性能综合优化工具箱
+// @name         Web性能综合优化工具箱 (通用增强版)
 // @namespace    http://tampermonkey.net/
-// @version      3.5.0-chromium-optimized
-// @description  Web浏览提速80% + 全面性能优化
+// @version      3.6.1-compatibility-optimized
+// @description  Web浏览提速80%，DOM渲染及GPU加速，适用于现代网站。
 // @author       KiwiFruit
 // @match        *://*/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js
-// @updateURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1%20%28%E9%80%9A%E7%94%A8%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/529387/Web%E6%80%A7%E8%83%BD%E7%BB%BC%E5%90%88%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1%20%28%E9%80%9A%E7%94%A8%E5%A2%9E%E5%BC%BA%E7%89%88%29.meta.js
 // ==/UserScript==
+
 (function () {
     'use strict';
-
+    /* global selector */
     // ========================
-    // 0. 启用开关
-    // ========================
-    if (!localStorage.getItem('PerfOptEnabled')) {
-        console.log('[PerfOpt] 未启用。执行：localStorage.setItem("PerfOptEnabled", "1"); location.reload();');
-        return;
-    }
-
-    // ========================
-    // 1. 新增：空闲任务调度器（Chromium 专用）
+    // 1. 空闲任务调度器
     // ========================
     const IdleTaskScheduler = {
         schedule(taskFn, options = {}) {
@@ -36,7 +29,7 @@
             } catch (e) {
                 setTimeout(() => {
                     try { taskFn({ didTimeout: true, timeRemaining: () => Infinity }); }
-                    catch (e) { console.warn('[IdleTaskScheduler] Fallback task error', e); }
+                    catch (err) { console.warn('[IdleTaskScheduler] Fallback task error', err); }
                 }, 0);
             }
         },
@@ -96,13 +89,42 @@
             debounceDelay: 300,
             retryAttempts: 3,
             retryDelay: 1000,
-            lazyLoad: { enabled: true, selector: '.js-lazy-load', rootMargin: '100px 0px', preferNative: true },
-            criticalCSS: { enabled: true, selectors: ['.js-critical-css'], preloadTimeout: 5000 },
-            hardwareAcceleration: { enabled: true, selector: '.js-animate, .js-transform, .js-fade' },
-            webWorker: { enabled: true, customTask: null },
-            performanceMonitor: { enabled: false, metrics: ['fcp', 'lcp', 'cls'] },
-            domAnalyzer: { enabled: true, maxDepth: 12 },
-            contentVisibility: { enabled: true, selector: '.js-section' }
+            // 通用优化：支持常见的 data-src, data-original 等属性
+            lazyLoad: {
+                enabled: true,
+                selector: 'img[data-src], img[data-original], iframe[data-src], img.lazy, .js-lazy-load',
+                rootMargin: '100px 0px',
+                preferNative: true
+            },
+            criticalCSS: {
+                enabled: true,
+                selectors: ['.js-critical-css'],
+                preloadTimeout: 5000
+            },
+            // 通用优化：包含常见的导航栏、侧边栏和动画元素
+            hardwareAcceleration: {
+                enabled: true,
+                selector: 'header, nav, aside, .sticky, .fixed, .js-animate, .js-transform, [style*="transform"]'
+            },
+            performanceMonitor: {
+                enabled: false,
+                metrics: ['fcp', 'lcp', 'cls']
+            },
+            domAnalyzer: {
+                enabled: true,
+                maxDepth: 12
+            },
+            // 优化策略：针对语义化容器标签
+            contentVisibility: {
+                enabled: true,
+                selector: 'section, article, main, .content, .post, .js-section',
+                // 轻量级样式配置：更保守的默认值
+                containIntrinsicSize: 'auto 200px',
+                // 条件排除选择器：用户可自定义排除的元素
+                excludeSelectors: '.js-interactive, .js-hover, [data-interactive], [style*="animation"]',
+                // 网站黑名单：完全禁用content-visibility的网站
+                siteBlacklist: ['google.com', 'sankaku.com']
+            }
         };
         return {
             get(key) {
@@ -141,7 +163,7 @@
         }
     };
 
-    // === 开发模式：布局抖动检测 ===
+    // 开发模式：布局抖动检测
     if (Config.get('debug')) {
         const layoutProps = ['offsetTop', 'offsetLeft', 'offsetWidth', 'offsetHeight', 'clientWidth', 'clientHeight', 'scrollHeight', 'scrollWidth'];
         layoutProps.forEach(prop => {
@@ -214,6 +236,7 @@
         },
         safeGetData: (el, name, defaultValue) => {
             try {
+                // 支持连字符写法 data-src, 也可以直接传 'src'
                 const value = el.dataset[name];
                 if (!value) return defaultValue;
                 if (value.match(/^[{[]/)) return JSON.parse(value);
@@ -382,26 +405,123 @@
     class ContentVisibilityOptimizer extends BaseModule {
         constructor() {
             super('ContentVisibilityOptimizer');
+            this.observer = null;
+            this.originalStyles = new WeakMap(); // 存储原始样式
         }
         init() {
             super.init();
             if (!Config.get('contentVisibility.enabled')) return;
+
+            // 检查网站黑名单
+            const blacklist = Config.get('contentVisibility.siteBlacklist');
+            if (blacklist && blacklist.includes(window.location.hostname)) {
+                Logger.info(this.moduleName, `网站 ${window.location.hostname} 在黑名单中，禁用content-visibility`);
+                return;
+            }
+
             const selector = Config.get('contentVisibility.selector');
             if (!selector) return;
+
+            // 应用初始样式
             document.querySelectorAll(selector).forEach(el => {
-                if (!el.style.contentVisibility) {
-                    el.style.contentVisibility = 'auto';
-                    el.style.containIntrinsicSize = '1px 1000px';
-                }
+                this.applyToElement(el);
             });
+
+            // 监听DOM变化
+            this.setupMutationObserver();
         }
-        applyToElements(elements) {
-            elements.forEach(el => {
-                if (!el.style.contentVisibility) {
-                    el.style.contentVisibility = 'auto';
-                    el.style.containIntrinsicSize = '1px 1000px';
+
+        setupMutationObserver() {
+            this.observer = new MutationObserver(Utils.throttle((mutations) => {
+                const newElements = [];
+                mutations.forEach(m => {
+                    m.addedNodes.forEach(node => {
+                        if (node.nodeType !== 1) return;
+                        if (node.matches?.(selector)) newElements.push(node);
+                        if (node.querySelectorAll) {
+                            node.querySelectorAll(selector).forEach(el => newElements.push(el));
+                        }
+                    });
+                });
+
+                if (newElements.length) {
+                    IdleTaskScheduler.scheduleChunked(newElements, el => {
+                        this.applyToElement(el);
+                    }, { chunkSize: 3 });
                 }
+            }, 200));
+
+            this.observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        applyToElement(el) {
+            // 检查是否需要排除
+            const excludeSelectors = Config.get('contentVisibility.excludeSelectors');
+            if (excludeSelectors && el.matches(excludeSelectors)) {
+                Logger.debug(this.moduleName, `跳过排除元素: ${el.tagName}`);
+                return;
+            }
+
+            // 存储原始样式
+            if (!this.originalStyles.has(el)) {
+                this.originalStyles.set(el, {
+                    contentVisibility: el.style.contentVisibility,
+                    containIntrinsicSize: el.style.containIntrinsicSize
+                });
+            }
+
+            // 应用轻量级样式
+            try {
+                el.style.contentVisibility = 'auto';
+                el.style.containIntrinsicSize = Config.get('contentVisibility.containIntrinsicSize');
+
+                // 监听样式变化，检测问题
+                this.setupStyleMonitor(el);
+            } catch (error) {
+                Logger.error(this.moduleName, `应用样式失败: ${error.message}`);
+                this.revertStyle(el);
+            }
+        }
+
+        setupStyleMonitor(el) {
+            // 使用MutationObserver监听样式变化
+            const styleObserver = new MutationObserver((mutations) => {
+                mutations.forEach(mutation => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        const currentStyle = el.style.contentVisibility;
+                        if (currentStyle === 'visible' || currentStyle === '') {
+                            Logger.warn(this.moduleName, `检测到样式回退，元素可能有问题: ${el.tagName}`);
+                            this.revertStyle(el);
+                            styleObserver.disconnect();
+                        }
+                    }
+                });
             });
+
+            styleObserver.observe(el, { attributes: true, attributeFilter: ['style'] });
+
+            // 存储观察器以便后续清理
+            if (!el.dataset.styleObserver) {
+                el.dataset.styleObserver = JSON.stringify(styleObserver);
+            }
+        }
+
+        revertStyle(el) {
+            const originalStyle = this.originalStyles.get(el);
+            if (originalStyle) {
+                el.style.contentVisibility = originalStyle.contentVisibility;
+                el.style.containIntrinsicSize = originalStyle.containIntrinsicSize;
+                Logger.info(this.moduleName, `回退样式: ${el.tagName}`);
+            }
+        }
+
+        destroy() {
+            super.destroy();
+            if (this.observer) {
+                this.observer.disconnect();
+            }
+            // 清理所有存储的原始样式和观察器
+            this.originalStyles = new WeakMap();
         }
     }
 
@@ -412,6 +532,7 @@
             this.loadStrategies = {
                 IMG: { src: (el, src) => { el.src = src; } },
                 SCRIPT: { src: (el, src) => { el.src = src; el.async = true; } },
+                IFRAME: { src: (el, src) => { el.src = src; } },
                 LINK: { href: (el, href) => { el.href = href; } }
             };
         }
@@ -427,13 +548,18 @@
             }
         }
         useNativeLazyLoad() {
-            document.querySelectorAll(Config.get('lazyLoad.selector')).forEach(el => {
-                if (['IMG', 'IFRAME'].includes(el.tagName)) {
+            // 原生懒加载主要处理 img 和 iframe
+            const selector = 'img, iframe';
+            document.querySelectorAll(selector).forEach(el => {
+                const src = el.src || el.dataset.src || el.dataset.original;
+                if (src && !el.loading) {
                     el.loading = 'lazy';
-                    const src = el.src || el.dataset.src;
-                    if (src) prefetchDomain(src);
+                    prefetchDomain(src);
                 }
-                this.loadElement(el);
+                // 即使有原生，也要检查是否需要从 data-src 移动到 src (如果页面还未加载)
+                if (el.dataset.src && !el.src) {
+                    this.loadElement(el);
+                }
             });
         }
         useObserverLazyLoad() {
@@ -454,16 +580,21 @@
         loadElement(el) {
             if (!Utils.is.elem(el) || el.classList.contains('loaded')) return;
             try {
-                const src = Utils.safeGetData(el, 'src', '') || Utils.safeGetData(el, 'lazySrc', '');
+                // 优先级：data-src > data-original > src (如果src为占位符)
+                const src = Utils.safeGetData(el, 'src', '') ||
+                            Utils.safeGetData(el, 'original', '') ||
+                            Utils.safeGetData(el, 'lazySrc', '');
                 const href = Utils.safeGetData(el, 'href', '') || Utils.safeGetData(el, 'lazyHref', '');
+
                 if (src) prefetchDomain(src);
                 if (href) prefetchDomain(href);
+
                 const strategy = this.loadStrategies[el.tagName]?.[src ? 'src' : 'href'];
                 if (strategy && (src || href)) {
                     strategy(el, src || href);
                     this.bindLoadEvents(el, src || href);
                 } else {
-                    this.markFailed(el);
+                    this.markLoaded(el); // 无需加载资源，标记为已处理
                 }
             } catch (error) {
                 this.markFailed(el);
@@ -533,14 +664,16 @@
         init() {
             super.init();
             if (!Config.get('hardwareAcceleration.enabled')) return;
+            // 在低性能模式下，减少 GPU 加速的覆盖范围，仅保留动画元素
             if (Environment.isLowPerformance()) {
-                Config.set('hardwareAcceleration.selector', '.js-animate');
+                Config.set('hardwareAcceleration.selector', '.js-animate, [style*="animation"]');
             }
             this.injectStyles();
             this.createObserver(() => {}, '50px');
             this.observeElements(Config.get('hardwareAcceleration.selector'));
         }
         injectStyles() {
+            if (this.styleEl) return;
             this.styleEl = document.createElement('style');
             this.styleEl.textContent = `
                 .gpu-accelerate {
@@ -555,6 +688,10 @@
             document.head.appendChild(this.styleEl);
         }
         handleIntersect(target) {
+            // 避免对已经内联了 transform 的元素产生冲突
+            if (target.style.transform && !target.style.transform.includes('none')) {
+                return;
+            }
             target.classList.add('gpu-accelerate');
             target.classList.remove('inactive');
             target.style.transform = 'translateZ(0)';
@@ -595,7 +732,11 @@
                 });
             });
             const meta = document.querySelector('meta[name="critical-css"]');
-            if (meta) meta.content.split(',').forEach(url => url && urls.add(url.trim()));
+            if (meta) {
+                meta.content.split(',').forEach(url => {
+                    if (url) urls.add(url.trim());
+                });
+            }
             return Array.from(urls);
         }
         preloadCSS(url) {
@@ -705,6 +846,7 @@
         init() {
             super.init();
             try {
+                // 核心功能初始化顺序
                 this.modules.criticalCSSLoader = new CriticalCSSLoader();
                 this.modules.criticalCSSLoader.init();
 
@@ -726,6 +868,7 @@
                 this.modules.styleComplexityMonitor = new StyleComplexityMonitor();
                 this.modules.styleComplexityMonitor.init();
 
+                // DOM 监听必须最后初始化，以观察上述模块可能引起的DOM变化（如果有）
                 this.modules.domObserver = new DomObserver(
                     this.modules.lazyLoader,
                     this.modules.gpuAccelerator,
@@ -734,6 +877,7 @@
                 this.modules.domObserver.init();
 
                 window.addEventListener('beforeunload', () => this.destroy());
+                // 监听单页应用路由变化（需页面触发自定义事件）
                 window.addEventListener('spa:navigate', () => {
                     this.destroy();
                     this.init();
@@ -776,6 +920,7 @@
         }
     }
 
+    // 暴露全局工具以便调试
     window.PerfUtils = {
         getConfig: Config.getAll,
         setConfig: Config.set,

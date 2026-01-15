@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрипт КФ BIO Black Russia
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Стиль - скрипт для тех. раздела
 // @author       I.Drag
 // @match        https://forum.blackrussia.online/threads/*
@@ -57,7 +57,7 @@ const buttons = [
         '[FONT=Verdana][CENTER][COLOR=rgb(209, 213, 216)]Доброго времени суток, уважаемый[/COLOR][/CENTER]<br>' +
         '[CENTER][COLOR=rgb(255, 204, 0)]{{ user.name }}[/COLOR][/CENTER]<br><br>'+
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/tgD5Xwhj/1618083711121.png[/img][/url][/CENTER]<br><br>'+
-        '[CENTER]Ваша RolePlay биография одобрена[/U][/CENTER]<br><br>'+
+        '[CENTER]Ваша RolePlay биография одобрена[/CENTER]<br><br>'+
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/tgD5Xwhj/1618083711121.png[/img][/url][/CENTER]<br><br>'+
         '[CENTER][COLOR=rgb(0, 256, 0)]Одобрено. Закрыто.[/COLOR][/CENTER][/FONT]',
       prefix: ACCСEPT_PREFIX,

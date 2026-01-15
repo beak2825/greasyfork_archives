@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Trade Helper (Tracker Import)
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Scrape Torn trade page, aggregate added items, show panel and POST to Tracker backend to import trades
 // @author       ---
 // @match        https://www.torn.com/trade.php*
@@ -39,10 +39,14 @@
     function parseAddedItemsFromText(text){
         const items = [];
         if (!text || typeof text !== 'string') return items;
-        // Normalize separators and remove the leading "added by <user>" if present
-        // Allow patterns like "72x Item, 10x Other and 5x Foo to the trade."
-        const cleaned = text.replace(/\u00A0/g,' ').replace(/\band\b/gi, ',').replace(/to the trade\.?/i,'');
-        // matches "1x Can of Crocozade" and variations, non-greedy name capture
+        // Normalize separators and remove common Torn log fluff
+        const cleaned = text.replace(/\u00A0/g,' ')
+                            .replace(/\band\b/gi, ',')
+                            .replace(/from the trade\.?/i,'') // Added specifically to handle "removed X from the trade"
+                            .replace(/to the trade\.?/i,'')
+                            .replace(/\s+items\b/gi, '')
+                            .trim();
+        // matches "1x Can of Crocozade" and variations
         const re = /(\d+)\s*x\s*([^,]+?)(?:,|$)/gi;
         let m;
         while ((m = re.exec(cleaned)) !== null){
@@ -101,7 +105,8 @@
                     <button id="tth-collapse-btn" style="background:#222;border:1px solid #444;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;">Close</button>
                 </div>
             </div>
-            <div id="tth-body" style="font-size:13px;line-height:1.2;color:#ddd;max-height:320px;overflow:auto;padding-bottom:6px;">Waiting for trade items...</div>
+            <div id="tth-body" style="font-size:13px;line-height:1.2;color:#ddd;max-height:280px;overflow:auto;padding-bottom:6px;">Waiting for trade items...</div>
+            <div id="tth-console" style="font-size:11px;line-height:1.2;color:#aaa;height:80px;overflow:auto;padding:4px;background:rgba(0,0,0,0.3);border-radius:4px;margin-top:4px;border-top:1px solid #444;font-family:monospace;">Script activity console...</div>
             <div style="display:flex;gap:8px;margin-top:8px;">
                 <button id="tth-copy" style="flex:1;padding:8px;background:#28a745;border:none;border-radius:6px;color:#fff;cursor:pointer;">Copy Receipt</button>
                 <button id="tth-clear" style="padding:8px;background:#6c757d;border:none;border-radius:6px;color:#fff;cursor:pointer;">Clear</button>
@@ -111,9 +116,20 @@
     }
 
     const bodyEl = panel.querySelector('#tth-body');
+    const consoleEl = panel.querySelector('#tth-console');
     const importBtn = panel.querySelector('#tth-copy');
     const clearBtn = panel.querySelector('#tth-clear');
     const collapseBtn = panel.querySelector('#tth-collapse-btn');
+
+    function tthLog(msg) {
+        if (!consoleEl) return;
+        const time = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const line = document.createElement('div');
+        line.textContent = `[${time}] ${msg}`;
+        consoleEl.appendChild(line);
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+        if (consoleEl.children.length > 50) consoleEl.removeChild(consoleEl.firstChild);
+    }
 
     // Delegated copy button handler inside the panel
     panel.addEventListener('click', (ev) => {
@@ -182,12 +198,45 @@
     });
 
     let aggregated = { seller: null, items: [], timestamp: null };
+    // Memory of processed messages to prevent re-processing on refresh
+    let processedMessageHashes = new Set();
+    const messageDeltas = new Map();
+
+    function normalizeName(name) {
+        if (!name) return '';
+        return name.toLowerCase()
+            .replace(/\s+items$/i, '')
+            .replace(/[^a-z0-9]/g, '')
+            .trim();
+    }
+
+    function getMessageHash(msgEl) {
+        const text = (msgEl.textContent || '').trim();
+        const dateEl = msgEl.closest && msgEl.closest('li') ? msgEl.closest('li').querySelector('.date') : null;
+        const dateText = dateEl ? dateEl.textContent.trim() : '';
+        return `${dateText}|${text}`;
+    }
 
     function aggregateItems(newItems){
         newItems.forEach(it => {
-            const found = aggregated.items.find(x => x.name.toLowerCase() === it.name.toLowerCase());
+            const normalizedSearch = normalizeName(it.name);
+            const found = aggregated.items.find(x => normalizeName(x.name) === normalizedSearch);
             if (found) found.qty += it.qty; else aggregated.items.push({ name: it.name, qty: it.qty });
         });
+        if (newItems.length > 0) {
+            const details = newItems.map(i => `${i.qty}x ${i.name}`).join(', ');
+            tthLog(`Added ${details}`);
+            logConclusion();
+        }
+    }
+
+    function logConclusion() {
+        if (!aggregated.items.length) {
+            tthLog(`Conclusion: [ Empty ]`);
+            return;
+        }
+        const details = aggregated.items.map(i => `${i.qty}x ${i.name}`).join(', ');
+        tthLog(`Conclusion: [ ${details} ]`);
     }
 
     function updatePanel(){
@@ -201,66 +250,155 @@
     // NOTE: setupObservers is now defined above where it's used so skip the old local definition
 
     function handleMutations(mutations){
+        const allNewMsgEls = [];
         mutations.forEach(m=>{
             m.addedNodes.forEach(node=>{
-                try{
-                    // If node itself is a .msg or contains .msg children, process them
-                    const msgEls = [];
-                    if (node.nodeType === 1){
-                        if (node.matches && node.matches('.msg')) msgEls.push(node);
-                        msgEls.push(...Array.from(node.querySelectorAll && node.querySelectorAll('.msg') || []));
-                    }
-                    msgEls.forEach(msgEl => {
-                        try {
-                            // Skip if we've already processed this message node
-                            if (msgEl.dataset && msgEl.dataset.tthParsed) return;
-                            const text = (msgEl.textContent || '').trim();
-                            if (!text) return;
-                            if (/\badded\b/i.test(text)){
-                                const parsed = parseAddedItemsFromText(text);
-                                if (parsed.length){
-                                    aggregated.seller = aggregated.seller || findSellerName();
-                                    // try to find sibling date element
-                                    const dateEl = msgEl.closest && msgEl.closest('li') ? msgEl.closest('li').querySelector('.date') : null;
-                                    aggregated.timestamp = aggregated.timestamp || (dateEl ? dateEl.textContent.trim() : (new Date()).toLocaleString());
-                                    aggregateItems(parsed);
-                                    refreshPanelWithPrices();
-                                    // mark as processed to avoid double-counting
-                                    try { msgEl.dataset.tthParsed = '1'; } catch(e) { /* ignore */ }
-                                }
-                            }
-                        } catch(e) { console.warn('tth inner parse err', e); }
-                    });
-                }catch(e){ console.warn('tth parse err', e); }
+                if (node.nodeType === 1){
+                    if (node.matches && node.matches('.msg')) allNewMsgEls.push(node);
+                    allNewMsgEls.push(...Array.from(node.querySelectorAll && node.querySelectorAll('.msg') || []));
+                }
             });
         });
-    }
 
-    // Initial scan (in case items already present)
-    function initialScan(){
-        // Scan all existing .msg elements across the page for "added" entries
-        document.querySelectorAll('.msg').forEach(msgEl => {
-            try{
-                // Skip if already processed
-                if (msgEl.dataset && msgEl.dataset.tthParsed) return;
-                const text = (msgEl.textContent || '').trim();
-                if (!text) return;
-                if (/\badded\b/i.test(text)){
+        // Filter for "added" or "removed" items and sort by date element if present (oldest first)
+        const toProcess = allNewMsgEls.filter(msgEl => {
+            const hash = getMessageHash(msgEl);
+            if (messageDeltas.has(hash)) return false;
+            
+            const text = (msgEl.textContent || '').trim();
+            const hasAdded = /\badded\b/i.test(text);
+            const hasRemoved = /\bremoved\b/i.test(text);
+            
+            // Only process if it contains a quantity like "1x" to avoid false positives
+            const hasQty = /(\d+)\s*x\s*/i.test(text);
+            
+            return (hasAdded || hasRemoved) && hasQty;
+        }).sort((a, b) => {
+            const dateA = a.closest && a.closest('li') ? a.closest('li').querySelector('.date') : null;
+            const dateB = b.closest && b.closest('li') ? b.closest('li').querySelector('.date') : null;
+            if (dateA && dateB) {
+                const parseDate = (el) => {
+                    const txt = el.textContent.trim();
+                    const [time, date] = txt.split(' - ');
+                    const [d, m, y] = date.split('/');
+                    return new Date(`${m}/${d}/${y} ${time}`).getTime();
+                };
+                return parseDate(dateA) - parseDate(dateB);
+            }
+            return 0;
+        });
+
+        if (toProcess.length > 0) {
+            toProcess.forEach(msgEl => {
+                try {
+                    const hash = getMessageHash(msgEl);
+                    if (messageDeltas.has(hash)) return;
+                    messageDeltas.set(hash, true);
+
+                    const text = (msgEl.textContent || '').trim();
+                    const isRemoval = /\bremoved\b/i.test(text);
                     const parsed = parseAddedItemsFromText(text);
                     if (parsed.length){
                         aggregated.seller = aggregated.seller || findSellerName();
                         const dateEl = msgEl.closest && msgEl.closest('li') ? msgEl.closest('li').querySelector('.date') : null;
-                        aggregated.timestamp = aggregated.timestamp || (dateEl ? dateEl.textContent.trim() : null);
+                        aggregated.timestamp = aggregated.timestamp || (dateEl ? dateEl.textContent.trim() : (new Date()).toLocaleString());
+                        
+                        if (isRemoval) {
+                            removeItems(parsed);
+                        } else {
+                            aggregateItems(parsed);
+                        }
+                    }
+                } catch(e) { console.warn('tth mutation process err', e); }
+            });
+            refreshPanelWithPrices();
+        }
+    }
+
+    function removeItems(itemsToRemove) {
+        itemsToRemove.forEach(it => {
+            const searchName = normalizeName(it.name);
+            const foundIndex = aggregated.items.findIndex(x => {
+                const existingName = normalizeName(x.name);
+                return existingName === searchName;
+            });
+
+            if (foundIndex !== -1) {
+                const currentQty = aggregated.items[foundIndex].qty;
+                const newQty = currentQty - it.qty;
+                
+                if (newQty <= 0) {
+                    aggregated.items.splice(foundIndex, 1);
+                } else {
+                    aggregated.items[foundIndex].qty = newQty;
+                }
+            }
+        });
+        if (itemsToRemove.length > 0) {
+            const details = itemsToRemove.map(i => `${i.qty}x ${i.name}`).join(', ');
+            tthLog(`Removed ${details}`);
+            logConclusion();
+        }
+    }
+
+    // Initial scan (in case items already present)
+    function initialScan(){
+        // Scan all existing .msg elements across the page
+        const allMsgEls = Array.from(document.querySelectorAll('.msg'));
+        
+        // Filter for "added" or "removed" items and sort by date element if present (oldest first)
+        const toProcess = allMsgEls.filter(msgEl => {
+            const hash = getMessageHash(msgEl);
+            if (messageDeltas.has(hash)) return false;
+            const text = (msgEl.textContent || '').trim();
+            return /\badded\b/i.test(text) || /\bremoved\b/i.test(text);
+        }).sort((a, b) => {
+            const dateA = a.closest && a.closest('li') ? a.closest('li').querySelector('.date') : null;
+            const dateB = b.closest && b.closest('li') ? b.closest('li').querySelector('.date') : null;
+            if (dateA && dateB) {
+                const parseDate = (el) => {
+                    const txt = el.textContent.trim();
+                    const [time, date] = txt.split(' - ');
+                    const [d, m, y] = date.split('/');
+                    return new Date(`${m}/${d}/${y} ${time}`).getTime();
+                };
+                return parseDate(dateA) - parseDate(dateB);
+            }
+            return 0;
+        });
+
+        toProcess.forEach(msgEl => {
+            try {
+                const hash = getMessageHash(msgEl);
+                if (messageDeltas.has(hash)) return;
+                messageDeltas.set(hash, true);
+                
+                const text = (msgEl.textContent || '').trim();
+                const isRemoval = /\bremoved\b/i.test(text);
+                const parsed = parseAddedItemsFromText(text);
+                if (parsed.length){
+                    aggregated.seller = aggregated.seller || findSellerName();
+                    const dateEl = msgEl.closest && msgEl.closest('li') ? msgEl.closest('li').querySelector('.date') : null;
+                    aggregated.timestamp = aggregated.timestamp || (dateEl ? dateEl.textContent.trim() : null);
+                    
+                    if (isRemoval) {
+                        removeItems(parsed);
+                    } else {
                         aggregateItems(parsed);
-                        try { msgEl.dataset.tthParsed = '1'; } catch(e) { /* ignore */ }
                     }
                 }
-            }catch(e){/* ignore */}
+            } catch(e) { /* ignore */ }
         });
         refreshPanelWithPrices();
     }
 
-    clearBtn.addEventListener('click', ()=>{ aggregated = { seller:null, items:[], timestamp:null }; refreshPanelWithPrices(); });
+    clearBtn.addEventListener('click', ()=>{ 
+        aggregated = { seller:null, items:[], timestamp:null }; 
+        processedMessageHashes.clear();
+        messageDeltas.clear();
+        refreshPanelWithPrices(); 
+        tthLog('Cleared panel data');
+    });
 
     // Header-embedded toggle: create button in Torn header/news-ticker area and wire it
     let collapsed = false;
@@ -454,8 +592,9 @@
         let grandTotal = 0;
         let grandMarket = 0;
         aggregated.items.forEach(it => {
-            const key = it.name.toLowerCase();
-            const found = map[key] || null;
+            const normalizedName = it.name.toLowerCase().replace(/\s+items$/i, '').trim();
+            const key = normalizedName;
+            const found = map[key] || map[it.name.toLowerCase()] || null;
             const adjusted_unit = found && found.adjusted_price ? found.adjusted_price : null;
             const base_unit = found && found.base_price ? found.base_price : null;
             const total = adjusted_unit ? adjusted_unit * it.qty : 0;
@@ -490,8 +629,13 @@
     try{ window.tthCopy = tthCopy; }catch(e){ /* ignore */ }
 
     async function refreshPanelWithPrices(){
-        if (!aggregated.items.length){ updatePanel(); return; }
         const { rows, grandTotal, grandMarket, error } = await buildDisplayData();
+        
+        if (!rows.length){ 
+            bodyEl.innerHTML = '<em style="color:#999;">Waiting for trade items...</em>'; 
+            return; 
+        }
+
         const header = `<div style="margin-bottom:6px;color:#9bf;font-size:12px;">Seller: <strong>${escapeHtml(aggregated.seller || 'Unknown')}</strong>${aggregated.timestamp? ' • '+escapeHtml(aggregated.timestamp):''}</div>`;
         const bodyRows = rows.map(r=>{
             const warn = r.adjusted_unit === null ? '<span style="color:#ffc107;margin-left:6px;">⚠️ missing</span>' : '';
@@ -510,6 +654,7 @@
                             <div style="display:flex;justify-content:space-between;align-items:center;"><div>Value Total</div><div>${formatMoney(grandTotal)} <button class=\"tth-copy-btn\" data-val=${JSON.stringify(grandTotal)} title=\"Copy total value\" style=\"margin-left:8px;font-size:12px;padding:4px 6px;\">📋</button></div></div>
                             <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;"><div>Market Value Total</div><div>${formatMoney(grandMarket)} <button class=\"tth-copy-btn\" data-val=${JSON.stringify(grandMarket)} title=\"Copy market value total\" style=\"margin-left:8px;font-size:12px;padding:4px 6px;\">📋</button></div></div>
                         </div>`;
+        
         let errHtml = '';
         if (error) errHtml = `<div style="color:#ffc107;margin-top:8px;font-size:12px;">⚠️ Pricelist fetch error: ${escapeHtml(String(error))}</div>`;
         bodyEl.innerHTML = header + bodyRows + totals + errHtml;
@@ -538,73 +683,123 @@
         importBtn.disabled = true; importBtn.textContent = 'Processing...';
         try{
             const logged = await ensureLoggedIn();
-            if (!logged) { throw new Error('Authentication failed. Please configure valid admin credentials in Settings.'); }
+            if (!logged) { 
+                tthLog('❌ Auth failed. Check settings.');
+                throw new Error('Authentication failed. Please configure valid admin credentials in Settings.'); 
+            }
+            
+            tthLog('🔍 Looking up item IDs...');
             const { rows, grandTotal } = await buildDisplayData();
             // build trade items for server
-            const tradeItems = rows.map(r => {
-                const purchasePrice = r.adjusted_unit ? r.adjusted_unit : 0;
+            const tradeItems = await Promise.all(rows.map(async r => {
+                const purchasePriceUnit = r.adjusted_unit ? r.adjusted_unit : 0;
+                const qty = Number(r.qty || 0);
+                const purchasePriceTotal = purchasePriceUnit * qty;
+
                 // Calculate expected price: (purchase_price * (1 + profit%)) / (1 - market_fee%)
-                // Since we don't have the config here, we'll use defaults or try to fetch it if we had an endpoint
-                // For now, let's use the standard 5% fee and 0% markup as a baseline, 
-                // or just pass what the dashboard expects
                 const marketFee = 5; 
-                const expectedPriceUnit = Math.ceil(purchasePrice / (1 - marketFee / 100));
+                const expectedPriceUnit = Math.ceil(purchasePriceUnit / (1 - marketFee / 100));
+
+                let itemId = null;
+                try {
+                    const searchUrl = BACKEND_BASE + '/api/items/search/' + encodeURIComponent(r.name);
+                    const searchResp = await gmGetText(searchUrl);
+                    const searchData = JSON.parse(searchResp);
+                    if (searchData && searchData.id) {
+                        itemId = String(searchData.id);
+                    }
+                } catch (e) {
+                    console.warn('tth: failed to lookup item id for ' + r.name, e);
+                }
 
                 return {
                     name: r.name,
                     extra_name: '',
-                    item_id: null,
-                    quantity: Number(r.qty),
-                    remaining_qty: Number(r.qty),
-                    purchase_price: purchasePrice * r.qty,
-                    expected_price: expectedPriceUnit * r.qty,
+                    item_id: itemId,
+                    quantity: qty,
+                    remaining_qty: qty,
+                    purchase_price: purchasePriceTotal, // Use total price instead of unit price
+                    expected_price: expectedPriceUnit,
                     sold_price: null,
                     paid_out: false,
                     needs_config: !r.found
                 };
-            });
+            }));
 
             const tradeId = `import_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
-            // Determine timestamp to send to backend.
-            // Prefer the parsed timestamp from the trade (if available and parseable),
-            // otherwise use the current time. Backend expects UNIX seconds.
-            let payloadTimestampMs = Date.now();
-            if (aggregated.timestamp) {
-                try{
-                    // Some date strings include the word 'at' (e.g. "1/21/25 at 2:00:26 AM"); normalize before parsing
-                    const normalized = String(aggregated.timestamp).replace(/\s+at\s+/i, ' ');
-                    const parsed = Date.parse(normalized);
-                    if (!isNaN(parsed)) payloadTimestampMs = parsed;
-                }catch(e){ /* fall back to now */ }
-            }
-            const payloadTimestampSec = Math.floor(payloadTimestampMs / 1000);
-
+            
+            // Partner is required by the backend, mapped from aggregated.seller
             const tradePayload = {
-                trade_id: tradeId,
+                trader_name: aggregated.seller || 'Unknown',
                 partner: aggregated.seller || 'Unknown',
-                // UNIX epoch seconds (backend expects seconds, not ms)
-                timestamp: payloadTimestampSec,
-                // keep human-readable original time for backup/diagnostics
-                trade_time_text: aggregated.timestamp || null,
-                items: tradeItems
+                trader_id: null,
+                items: tradeItems,
+                total_value: Math.round(grandTotal),
+                // Backend expects timestamp as a Number (Unix timestamp in SECONDS)
+                timestamp: aggregated.timestamp ? (function(){
+                    try {
+                        const txt = aggregated.timestamp.trim();
+                        // Handle "HH:mm:ss - DD/MM/YY" format
+                        const [timePart, datePart] = txt.split(' - ');
+                        if (!timePart || !datePart) throw new Error("Invalid format");
+                        
+                        const [d, m, y] = datePart.split('/');
+                        const [HH, MM, SS] = timePart.split(':');
+                        
+                        // Ensure year is 20YY if only 2 digits
+                        const fullYear = y.length === 2 ? '20' + y : y;
+                        
+                        // Create date using individual components to avoid browser parsing quirks
+                        // monthIndex is 0-based
+                        const dateObj = new Date(
+                            parseInt(fullYear),
+                            parseInt(m) - 1,
+                            parseInt(d),
+                            parseInt(HH),
+                            parseInt(MM),
+                            parseInt(SS)
+                        );
+                        
+                        const tsMs = dateObj.getTime();
+                        if (isNaN(tsMs)) {
+                            console.warn("tth: Date parsing resulted in NaN", txt);
+                            return Math.floor(Date.now() / 1000);
+                        }
+                        return Math.floor(tsMs / 1000);
+                    } catch(e) { 
+                        console.warn("tth: Timestamp parse error", e, aggregated.timestamp);
+                        return Math.floor(Date.now() / 1000); 
+                    }
+                })() : Math.floor(Date.now() / 1000),
+                status: 'pending',
+                source: 'helper_script',
+                trade_id: tradeId
             };
 
+            tthLog(`📤 Sending trade for ${aggregated.seller}...`);
             const postUrl = (function(){ let b = BACKEND_BASE; if (!/^https?:\/\//i.test(b)) b = 'https://' + b.replace(/^\/+/, ''); return b.replace(/\/$/, '') + '/api/trades'; })();
             const resp = await gmPostJson(postUrl, tradePayload);
             if (!resp || !(resp.status >= 200 && resp.status < 400)){
                 const txt = resp && resp.text ? resp.text : 'HTTP ' + (resp && resp.status || '??');
+                tthLog(`❌ Save failed: ${txt}`);
                 throw new Error(txt || 'Trade POST failed');
             }
 
+            tthLog(`✅ Trade saved successfully!`);
             // Build receipt text (short variant)
             const receiptLink = `${BACKEND_BASE}/receipt/${tradeId}`;
-            const receiptText = `Hey ${aggregated.seller || 'Trader'}! 👋\n\n🤝 Thank you for our Trade!\n\n💰 Total of your trade: ${Math.round(grandTotal).toLocaleString()}\n📋 [View your Receipt Here]( ${receiptLink} )\n\nHave a nice day!! 😊✨`;
+            const receiptText = `Hey ${aggregated.seller || 'Trader'}! 👋\n\n🤝 Thank you for the Trade!\n\n💰 Total trade: ${Math.round(grandTotal).toLocaleString()}\n📋 [View your Receipt Here]( ${receiptLink} )\n\nHave a nice day!! 😊✨`;
 
             await navigator.clipboard.writeText(receiptText);
+            tthLog(`📋 Receipt copied to clipboard`);
             alert('Receipt copied to clipboard and trade saved.');
             aggregated = { seller:null, items:[], timestamp:null };
             await refreshPanelWithPrices();
-        }catch(e){ console.error('Copy+Save failed', e); alert('Save or copy failed: '+e.message); }
+        }catch(e){ 
+            console.error('Copy+Save failed', e); 
+            tthLog(`❌ Error: ${e.message}`);
+            alert('Save or copy failed: '+e.message); 
+        }
         finally{ importBtn.disabled = false; importBtn.textContent = 'Copy Receipt'; }
     });
 

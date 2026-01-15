@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name			AI Chat Tools
 // @namespace		https://muyi.tw/lab/tokens-tools
-// @version			0.6.4
+// @version			0.6.5
 // @description		Count tokens and manage context with export functions
 // @author			MuYi + Copilot
 // @match			*://chatgpt.com/*
@@ -33,7 +33,8 @@
 				'article div[data-message-author-role="assistant"]',
 				'article div.cm-content',
 				'div[class*="ChatMessage-module__ai"] h3.sr-only + div',
-				'model-response message-content.model-response-text'
+				'model-response message-content.model-response-text',
+				'model-response .response-content .model-response-text',
 			].join(', ')
 		},
 		validPathPatterns: [

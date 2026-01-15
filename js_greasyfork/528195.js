@@ -1,28 +1,35 @@
 // ==UserScript==
-// @name         手机虎扑内容自动跳转网页版
-// @version      0.4
-// @description  手机虎扑hupu内容自动跳转网页版
+// @name         虎扑手机版自动跳转网页版
+// @version      1.0
+// @description  兼容 Google 搜索链接与 App 分享链接，自动跳转 PC 网页版
 // @author       GeBron
-// @match        *://m.hupu.com/*
+// @match        *://m.hupu.com/bbs-share/*
+// @match        *://m.hupu.com/bbs/*
 // @icon         https://w1.hoopchina.com.cn/images/pc/old/favicon.ico
+// @run-at       document-start
 // @grant        none
-// @namespace    http://tampermonkey.net/
-// @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/528195/%E6%89%8B%E6%9C%BA%E8%99%8E%E6%89%91%E5%86%85%E5%AE%B9%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E7%BD%91%E9%A1%B5%E7%89%88.user.js
-// @updateURL https://update.greasyfork.org/scripts/528195/%E6%89%8B%E6%9C%BA%E8%99%8E%E6%89%91%E5%86%85%E5%AE%B9%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E7%BD%91%E9%A1%B5%E7%89%88.meta.js
+// @license      MIT
+// @namespace http://tampermonkey.net/
+// @downloadURL https://update.greasyfork.org/scripts/528195/%E8%99%8E%E6%89%91%E6%89%8B%E6%9C%BA%E7%89%88%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E7%BD%91%E9%A1%B5%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/528195/%E8%99%8E%E6%89%91%E6%89%8B%E6%9C%BA%E7%89%88%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E7%BD%91%E9%A1%B5%E7%89%88.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
-    var url = location.href;
 
-    // 匹配 m.hupu.com 的链接，并捕获帖子 ID（去掉 -数字 部分）
-    var pattern = /https:\/\/m\.hupu\.com\/(bbs-share|bbs)\/(\d+)(?:-\d+)?(\.html)/;
-    var match = url.match(pattern);
+    // 优化后的正则：
+    // 1. (?:bbs-share|bbs) 非捕获组匹配路径
+    // 2. (\d+) 捕获纯数字 ID
+    // 3. (?:-\d+)? 忽略可能存在的页码（如 -1）
+    // 4. (?:\.html)? 关键点：将 .html 设为可选，兼容 Google 搜索页链接
+    const pattern = /\/(?:bbs-share|bbs)\/(\d+)(?:-\d+)?(?:\.html)?/;
+    const match = location.pathname.match(pattern);
 
-    if (match) {
-        // 组合成电脑版链接（去掉 -数字 部分，跳转到第一页）
-        var newUrl = `https://bbs.hupu.com/${match[2]}${match[3]}`;
-        location.href = newUrl;
+    if (match && match[1]) {
+        const postId = match[1];
+        const newUrl = `https://bbs.hupu.com/${postId}.html`;
+        
+        // 使用 replace 替换历史记录，防止回退死循环
+        location.replace(newUrl);
     }
 })();

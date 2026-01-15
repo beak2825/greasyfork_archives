@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FC2PPVDB页面添加AV链接快捷搜素
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.6.1
 // @description  在FC2PPVDB页面添加AV链接快捷搜素
 // @author       kaers
 // @match        https://fc2ppvdb.com/articles/*
@@ -30,7 +30,8 @@
                 { text: '🔍Google', href: `https://www.google.com/search?q=FC2PPV ${id}` },
                 { text: '🔍M-Team', href: `https://kp.m-team.cc/browse/adult?keyword=${id}` },
                 { text: '🔍Sukebei', href: `https://sukebei.nyaa.si/?f=0&c=0_0&q=${id}` },
-                { text: '🔍FC2', href: `https://adult.contents.fc2.com/article/${id}/` }
+                { text: '🔍FC2', href: `https://adult.contents.fc2.com/article/${id}/` },
+                { text: '🔍FC2Hub', href: `https://javten.com/search?kw=${id}` }
             ];
 
             // 遍历创建并插入链接

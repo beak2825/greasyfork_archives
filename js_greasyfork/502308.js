@@ -6,7 +6,7 @@
 // @require     https://cdn.jsdelivr.net/gh/honxinn/workday-cn@48b29366ab802a70b7ca54caf9d3b60982accb10/lib/workday-cn.umd.js
 // @grant       GM_addStyle
 // @grant       GM_setClipboard
-// @version     2.1.1
+// @version     2.1.2
 // @author      LHQ & CHH & ZCX && zagger
 // @license     GPLv3
 // @description 禅道助手: 工时统计(工时提醒/每日工时计算)、Bug管理(留存时间标记/一键复制/新标签页打开)、工作流优化(强制工时填写/解决方案提示)、悬浮球快捷工具
@@ -1922,6 +1922,9 @@
 
             // 使用新的切换方法
             await panelStrategies.switchStrategy(strategyName, panel.find('.zm-panel-content'));
+            if (panel.is(':visible')) {
+                updatePanelPosition();
+            }
           });
 
           // 初始加载内容
@@ -1943,6 +1946,9 @@
               
               const strategy = panelStrategies.get(currentStrategy);
               await strategy.render(panel.find('.zm-panel-content'));
+              if (panel.is(':visible')) {
+                  updatePanelPosition();
+              }
               
               setTimeout(() => {
                 refreshIcon.css({
@@ -1958,6 +1964,7 @@
           let startX, startY;
           let initialLeft, initialTop;
           const margin = 20;
+          const dragThreshold = 5;
           let hasDragged = false;
 
           // 更新位置的动画函数
@@ -2015,19 +2022,23 @@
               e.preventDefault();
           });
 
-          floatBall[0].addEventListener('pointermove', function(e) {
-              if (isDragging) {
+          document.addEventListener('pointermove', function(e) {
+              if (!isDragging) return;
+              if (Math.abs(e.clientX - startX) > dragThreshold || Math.abs(e.clientY - startY) > dragThreshold) {
                   hasDragged = true;
-                  updatePosition(e.clientX, e.clientY);
-                  e.preventDefault();
               }
+              updatePosition(e.clientX, e.clientY);
+              e.preventDefault();
           });
 
-          floatBall[0].addEventListener('pointerup', function(e) {
-              if (isDragging) {
-                  isDragging = false;
-                  floatBall.removeClass('dragging');
-                  this.releasePointerCapture(e.pointerId);
+          document.addEventListener('pointerup', function(e) {
+              if (!isDragging) return;
+              isDragging = false;
+              floatBall.removeClass('dragging');
+              try {
+                  floatBall[0].releasePointerCapture(e.pointerId);
+              } catch (err) {
+                  // Ignore PointerCapture errors in some browsers.
               }
           });
 
@@ -2059,6 +2070,7 @@
                   
                   const strategy = panelStrategies.get(currentStrategy);
                   await strategy.render(panel.find('.zm-panel-content'));
+                  updatePanelPosition();
               } else {
                   panel.fadeOut(200, function() {
                       $('.zm-panel-content').empty();
@@ -2074,6 +2086,7 @@
               const panelHeight = panel.outerHeight();
               const windowWidth = window.innerWidth;
               const windowHeight = window.innerHeight;
+              const gap = 10;
               
               // 计算各个方向的可用空间
               const leftSpace = ballRect.left;
@@ -2083,31 +2096,31 @@
               
               // 水平位置计算
               let left;
-              // 优先选择空间较大的左右侧
-              if (leftSpace >= rightSpace && leftSpace >= panelWidth + 10) {
-                  // 左侧空间足够
-                  left = ballRect.left - panelWidth - 10;
-              } else if (rightSpace >= panelWidth + 10) {
-                  // 右侧空间足够
-                  left = ballRect.right + 10;
+              const preferRight = rightSpace >= leftSpace;
+              if (rightSpace >= panelWidth + gap || (preferRight && rightSpace > 0)) {
+                  left = ballRect.right + gap;
+              } else if (leftSpace >= panelWidth + gap) {
+                  left = ballRect.left - panelWidth - gap;
               } else {
-                  // 两侧空间都不够，强制靠左或靠右
-                  left = leftSpace > rightSpace ? 10 : windowWidth - panelWidth - 10;
+                  left = preferRight ? (windowWidth - panelWidth - gap) : gap;
               }
+              left = Math.max(gap, Math.min(left, windowWidth - panelWidth - gap));
+
+              
               
               // 垂直位置计算
               let top;
-              // 优先考虑上下空间是否足够显示完整面板
-              if (bottomSpace >= panelHeight + 10) {
-                  // 底部空间足够
-                  top = Math.min(ballRect.top, windowHeight - panelHeight - 10);
-              } else if (topSpace >= panelHeight + 10) {
-                  // 顶部空间足够
-                  top = Math.max(10, ballRect.bottom - panelHeight);
+              const preferBottom = bottomSpace >= topSpace;
+              if (bottomSpace >= panelHeight + gap || (preferBottom && bottomSpace > 0)) {
+                  top = ballRect.bottom + gap;
+              } else if (topSpace >= panelHeight + gap) {
+                  top = ballRect.top - panelHeight - gap;
               } else {
-                  // 上下空间都不够，强制靠上或靠下
-                  top = topSpace > bottomSpace ? 10 : windowHeight - panelHeight - 10;
+                  top = preferBottom ? (windowHeight - panelHeight - gap) : gap;
               }
+              top = Math.max(gap, Math.min(top, windowHeight - panelHeight - gap));
+
+              
               
               panel.css({
                   left: left + 'px',
@@ -2127,6 +2140,27 @@
               attributes: true,
               attributeFilter: ['style']
           });
+
+          // Update position when panel size changes after content loads.
+          if (window.ResizeObserver) {
+              const panelSizeObserver = new ResizeObserver(() => {
+                  if (panel.is(':visible')) {
+                      updatePanelPosition();
+                  }
+              });
+              panelSizeObserver.observe(panel[0]);
+          } else {
+              const panelContentObserver = new MutationObserver(() => {
+                  if (panel.is(':visible')) {
+                      updatePanelPosition();
+                  }
+              });
+              panelContentObserver.observe(panel.find('.zm-panel-content')[0], {
+                  childList: true,
+                  subtree: true,
+                  characterData: true
+              });
+          }
 
           // 点击其他区域隐藏面板时也需要更新状态
           $(document).click(function(e) {

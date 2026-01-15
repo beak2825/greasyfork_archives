@@ -1,57 +1,26 @@
 // ==UserScript==
-// @name         B站净化器
+// @name         B站小助手
 // @namespace    http://tampermonkey.net/
-// @version      1.3.4
-// @description  B站净化器 是一款Tampermonkey脚本，旨在为您提供更清爽、无广告的B站浏览体验。它能自动过滤广告、推广内容，并允许您根据播放量、视频时长、UP主、标题关键词和分区等多种条件自定义隐藏视频，让您的B站首页和视频页面只显示您真正感兴趣的内容。轻松配置，即刻享受纯净B站！
+// @version      1.4.2
+// @description  B站小助手 是一款Tampermonkey脚本，旨在为您提供更清爽、无广告的B站浏览体验。它能自动过滤广告、推广内容，并允许您根据播放量、视频时长、UP主、标题关键词和分区等多种条件自定义隐藏视频，让您的B站首页和视频页面只显示您真正感兴趣的内容。轻松配置，即刻享受纯净B站！
 // @author       Kiyuiro
 // @match        https://*.bilibili.com/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @grant        none
+// @grant        unsafeWindow
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @license      Apache-2.0
-// @downloadURL https://update.greasyfork.org/scripts/542468/B%E7%AB%99%E5%87%80%E5%8C%96%E5%99%A8.user.js
-// @updateURL https://update.greasyfork.org/scripts/542468/B%E7%AB%99%E5%87%80%E5%8C%96%E5%99%A8.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/542468/B%E7%AB%99%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/542468/B%E7%AB%99%E5%B0%8F%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    function findElement(selector, timeout = 5000, interval = 50) {
-        return new Promise((resolve) => {
-            const start = Date.now();
-            function check() {
-                const element = document.querySelector(selector);
-                if (element) {
-                    resolve(element);
-                } else if (Date.now() - start >= timeout) {
-                    resolve(undefined);
-                } else {
-                    setTimeout(check, interval);
-                }
-            }
-            check();
-        });
-    }
-
-    function findElements(selector, timeout = 5000, interval = 50) {
-        return new Promise((resolve) => {
-            const start = Date.now();
-            function check() {
-                const elements = document.querySelectorAll(selector) || [];
-                if (elements.length > 0) {
-                    resolve(elements);
-                } else if (Date.now() - start >= timeout) {
-                    resolve([]);
-                } else {
-                    setTimeout(check, interval);
-                }
-            }
-            check();
-        });
-    }
-
     class FetchHook {
         constructor() {
-            this.originalFetch = window.fetch; // 保存原始的 fetch 函数
+            this.targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+            this.originalFetch = this.targetWindow.fetch; // 保存原始的 fetch 函数
             this.preFns = []; // 前置处理函数数组
             this.postFns = []; // 后置处理函数数组
 
@@ -63,63 +32,52 @@
 
         // 劫持 window.fetch
         hook() {
-            if (window.fetch !== this.originalFetch) {
-                console.warn('FetchHook: fetch 已经被劫持，跳过再次劫持。');
+            if (this.targetWindow.fetch !== this.originalFetch) {
                 return;
             }
 
-            window.fetch = async (input, init) => {
+            // 重新定义真实环境下的 fetch
+            this.targetWindow.fetch = async (input, init) => {
                 let processedInput = input;
                 let processedInit = init;
 
-                // 执行前置处理函数
+                // 执行前置处理
                 for (const fn of this.preFns) {
-                    const result = fn(processedInput, processedInit);
-                    if (result instanceof Promise) {
-                        [processedInput, processedInit] = await result;
-                    } else if (Array.isArray(result) && result.length === 2) {
+                    const result = await fn(processedInput, processedInit);
+                    if (result === null || result === undefined) {
+                        return Promise.resolve(new Response(null, {status: 204, statusText: 'Hooked'}));
+                    }
+                    if (Array.isArray(result)) {
                         [processedInput, processedInit] = result;
                     } else {
-                        processedInput = result; // 兼容只返回 input 的情况
-                    }
-
-                    if (processedInput === null || processedInput === undefined) {
-                        // console.log('FetchHook: 请求被前置函数中断。', input);
-                        return Promise.resolve(new Response(null, { status: 204, statusText: 'No Content (Hooked)' }));
+                        processedInput = result;
                     }
                 }
 
-                // 调用原生 fetch 发送请求
+                // 使用 .call(this.targetWindow, ...) 确保 context 正确
                 let response;
                 try {
-                    response = await this.originalFetch.call(window, processedInput, processedInit);
+                    response = await this.originalFetch.call(this.targetWindow, processedInput, processedInit);
                 } catch (error) {
-                    console.error('FetchHook: 原生 fetch 请求失败。', error);
                     throw error;
                 }
 
-                // 执行后置处理函数
+                // 执行后置处理
                 let processedResponse = response;
                 for (const fn of this.postFns) {
-                    const result = fn(processedResponse, processedInput, processedInit);
-                    if (result instanceof Promise) {
-                        processedResponse = await result;
-                    } else {
-                        processedResponse = result;
-                    }
+                    processedResponse = await fn(processedResponse, processedInput, processedInit);
                 }
                 return processedResponse;
             };
-            // console.log('FetchHook: 成功劫持 window.fetch。');
         }
 
         // 恢复 window.fetch 到原始状态
         unhook() {
-            if (window.fetch === this.originalFetch) {
+            if (this.targetWindow.fetch === this.originalFetch) {
                 console.warn('FetchHook: fetch 未被劫持或已恢复，跳过。');
                 return;
             }
-            window.fetch = this.originalFetch;
+            this.targetWindow.fetch = this.originalFetch;
             // console.log('FetchHook: 恢复 window.fetch 到原始状态。');
         }
 
@@ -166,6 +124,44 @@
         }
     }
 
+    function findElement(selector, {timeout = 5000, interval = 100, host = document} = {}) {
+        return new Promise((resolve) => {
+            const start = Date.now();
+
+            function check() {
+                const element = host.querySelector(selector);
+                if (element) {
+                    resolve(element);
+                } else if (Date.now() - start >= timeout) {
+                    resolve(undefined);
+                } else {
+                    setTimeout(check, interval);
+                }
+            }
+
+            check();
+        });
+    }
+
+    function findElements(selector, {timeout = 5000, interval = 100, host = document} = {}) {
+        return new Promise((resolve) => {
+            const start = Date.now();
+
+            function check() {
+                const elements = host.querySelectorAll(selector) || [];
+                if (elements.length > 0) {
+                    resolve(elements);
+                } else if (Date.now() - start >= timeout) {
+                    resolve([]);
+                } else {
+                    setTimeout(check, interval);
+                }
+            }
+
+            check();
+        });
+    }
+
     function parseDuration(duration) {
         const parts = duration.split(':').map(Number);
         let hours = 0, minutes = 0, seconds = 0;
@@ -176,7 +172,7 @@
             // hh:mm:ss 格式
             [hours, minutes, seconds] = parts;
         } else {
-            throw new Error('Invalid duration format');
+            throw new Error('时间格式错误');
         }
         return hours * 3600 + minutes * 60 + seconds;
     }
@@ -188,20 +184,40 @@
     const fetchHook = new FetchHook();
     fetchHook.hook(); // 在脚本加载时立即劫持 fetch
 
-    // 广告tips
-    async function adblockClear() {
-        const adblock = await findElement('.adblock-tips');
-        if (adblock) {
-            adblock.remove();
-        }
+    // 加载配置
+    function loadConfig() {
+        config = JSON.parse(GM_getValue("BiliFilterConfig") || '{}');
+        // config = JSON.parse(localStorage.getItem("BiliFilterConfig")) || {};
+        const DEFAULT_CONFIG = {
+            ad: true,
+            prom: true,
+            ip: true,
+            upList: [],
+            titleList: [],
+            partList: [],
+            video: { playCount: '',duration: '', maxDuration: '' },
+        };
+        config = {
+            ...DEFAULT_CONFIG,
+            ...(config || {}),
+        };
+        return config;
     }
 
-    // 扩展加载
-    function increaseLoad() {
+    // 广告tips
+    function adblockClear() {
+        findElement('.adblock-tips').then(it => {
+            if (it) {
+                it.remove();
+            }
+        })
+    }
+
+    // 添加前置处理
+    function increasePreFn() {
         const preloadFn = (input, init) => {
             if (typeof input === 'string'
                 && input.includes('api.bilibili.com')
-                && input.includes('feed/rcmd')
                 && init?.method?.toUpperCase() === "GET") {
                 input = input.replace("&ps=12&", "&ps=24&");
                 // console.log(`FetchHook: 修改了B站推荐请求的 ps 参数为 ${24}。`);
@@ -211,53 +227,143 @@
         fetchHook.addPreFn(preloadFn);
     }
 
+    // 添加后置处理
+    function increasePostFn() {
+        const videoReqFilter = (resp, input, init) => {
+            if (!(typeof input === 'string'
+                && input.includes('api.bilibili.com')
+                && input.includes('feed/rcmd')
+                && init?.method?.toUpperCase() === "GET")) {
+                return resp;
+            }
+            return resp.clone().json().then(data => {
+                const items = data?.data?.item;
+                if (!items) return;
+                // 过滤条件
+                const conditions = [
+                    // 视频时长过滤
+                    (it) => {
+                        return it.duration <= parseDuration(config.video?.duration || '00:00')
+                            || it.duration >= parseDuration(config.video?.maxDuration || '99:59:59');
+                    },
+                    // up 主过滤
+                    (it) => {
+                        if (!config.upList && config.upList.length === 0) return false;
+                        return config.upList.some(up => (it.owner ? it.owner.name : '未知').includes(up))
+                    },
+                    // 播放量过滤
+                    (it) => {
+                        if (!config.video?.playCount) return false;
+                        return (it.stat ? it.stat.view : 0) < config.video.playCount;
+                    },
+                ];
+                // 过滤
+                const [filteredItems, excludedItems] = items.reduce((acc, it) => {
+                    const [filtered, excluded] = acc;
+                    if (conditions.some(condition => condition(it))) {
+                        excluded.push(it);
+                    } else {
+                        filtered.push(it);
+                    }
+                    return [filtered, excluded];
+                }, [[], []]);
+                console.log("过滤后的数据：", filteredItems.map(it => {
+                    return {
+                        bvid: it.bvid,
+                        title: it.title,
+                        duration: it.duration,
+                        owner: it.owner ? it.owner.name : '未知',
+                        view: it.stat.view,
+                    }
+                }));
+                console.log("被排除的数据：", excludedItems.map(it => {
+                    return {
+                        bvid: it.bvid,
+                        title: it.title,
+                        duration: it.duration,
+                        owner: it.owner ? it.owner.name : '未知',
+                        view: (it.stat ? it.stat.view : 0),
+                    }
+                }))
+                // 更新数据
+                data.data.item = filteredItems;
+                return new Response(JSON.stringify(data), {
+                    status: resp.status,
+                    statusText: resp.statusText,
+                    headers: resp.headers
+                });
+            }).catch(err => {
+                console.log(err)
+                return resp
+            })
+        };
+
+        const rpidSet = new Set();
+        const ipLocalFetch = (resp, input, init) => {
+            const isTargetApi = typeof input === 'string' &&
+                input.includes('api.bilibili.com') &&
+                (input.includes('reply/wbi/main') || input.includes('reply/reply'));
+            if (!isTargetApi || init?.method?.toUpperCase() !== "GET") {
+                return resp;
+            }
+
+            // 回复数据处理
+            const processReply = (reply) => {
+                if (!reply) return;
+                if (rpidSet.has(reply.rpid)) return;
+                const location = reply?.reply_control?.location;
+                const content = reply?.content;
+                if (location && content) {
+                    content.message = `[${location}]${content.message || ''}`;
+                }
+                // 递归处理子回复
+                if (Array.isArray(reply.replies)) {
+                    reply.replies.forEach(processReply);
+                }
+                rpidSet.add(reply.rpid);
+            };
+
+            // 处理 JSON 数据
+            return resp.clone().json().then(data => {
+                const replies = data?.data?.replies;
+                // 处理置顶回复
+                if (Array.isArray(replies)) {
+                    // 遍历所有一级回复
+                    replies.forEach(processReply);
+                }
+                // 返回修改后的响应
+                return new Response(JSON.stringify(data), {
+                    status: resp.status,
+                    statusText: resp.statusText,
+                    headers: resp.headers
+                });
+            }).catch(err => {
+                console.error('IP定位注入失败:', err);
+                return resp;
+            });
+        };
+
+        fetchHook.addPostFn(videoReqFilter);
+        if (config.ip)
+            fetchHook.addPostFn(ipLocalFetch);
+    }
+
     // 视频过滤
     function videoFilter() {
-        config = JSON.parse(localStorage.getItem('BiliFilterConfig')) || [];
-        // console.log(config);
+
+        // 处理函数
+        const process = (items, filters) => {
+            items.forEach(it => {
+                if (filters.some(filter => filter(it))) {
+                    it.remove();
+                }
+            })
+        }
         // 广告过滤
         const filterByAd = (it) => {
             if (!config.ad) return false;
             const el = it.querySelector('.bili-video-card__stats--text')
             return !!(el && el.innerHTML === '广告');
-        }
-        // 播放量过滤
-        const filterByPlayCount = (it) => {
-            if (!config.video?.playCount) return false;
-            const el = it.querySelector('.bili-video-card__stats--text')
-            if (!el || el.innerHTML === '广告') return false;
-            let count;
-            const countText = el.innerHTML;
-            if (countText.includes('万')) {
-                count = parseFloat(countText.replace('万', '')) * 10000;
-            } else if (countText.includes('亿')) {
-                count = parseFloat(countText.replace('亿', '')) * 100000000;
-            } else {
-                count = parseInt(countText);
-            }
-            return count < config.video.playCount;
-        }
-        // 时长过滤
-        const filterByDuration = (it) => {
-            if (!config.video?.playCount) return false;
-            const el = it.querySelector('.bili-video-card__stats__duration')
-            if (!el) return false;
-            const configDuration = parseDuration(config.video.duration);
-            const duration = parseDuration(el.innerHTML);
-            return duration < configDuration;
-        }
-        // 推广过滤
-        const filterByProm = (it) => {
-            if (!config.prom) return false;
-            const el = it.querySelector('.vui_icon');
-            return !!el;
-        }
-        // UP主过滤
-        const filterByUp = (it) => {
-            if (!config.upList || config.upList.length === 0) return false;
-            const el = it.querySelector('.bili-video-card__info--author');
-            if (!el) return false;
-            return config.upList.some(up => el.title.includes(up));
         }
         // 标题过滤
         const filterByTitle = (it) => {
@@ -282,59 +388,222 @@
                 });
             });
         }
-        // 分区过滤
-        const filterByPart = (it) => {
-            if (!it.className.includes('floor-single-card')) return false;
-            if (!config.partList || config.partList.length === 0) return false;
-            if (config.partList[0] === 'ALL') return true;
-            const el = it.querySelector('.floor-title');
+        // 时长过滤
+        const filterByDuration = (it) => {
+            if (!(config.video.duration || config.video.maxDuration)) return false;
+            const el = it.querySelector('.bili-video-card__stats__duration')
             if (!el) return false;
-            return config.partList.some(part => el.title.includes(part));
+            const configDuration = parseDuration(config.video.duration || "00:00");
+            const configMaxDuration = parseDuration(config.video.maxDuration || "99:59:59");
+            const duration = parseDuration(el.innerHTML);
+            return duration < configDuration || duration > configMaxDuration;
+        }
+        // 播放量过滤
+        const filterByPlayCount = (it) => {
+            if (!config.video?.playCount) return false;
+            const el = it.querySelector('.bili-video-card__stats--text')
+            if (!el || el.innerHTML === '广告') return false;
+            let count;
+            const countText = el.innerHTML;
+            if (countText.includes('万')) {
+                count = parseFloat(countText.replace('万', '')) * 10000;
+            } else if (countText.includes('亿')) {
+                count = parseFloat(countText.replace('亿', '')) * 100000000;
+            } else {
+                count = parseInt(countText);
+            }
+            return count < config.video.playCount;
+        }
+        // UP主过滤
+        const filterByUp = (it) => {
+            if (!config.upList || config.upList.length === 0) return false;
+            const el = it.querySelector('.bili-video-card__info--author');
+            if (!el) return false;
+            return config.upList.some(up => el.title.includes(up));
         }
         // 空元素清除
         const filterByNull = (it) => {
             return it.innerHTML.length < 1;
         }
-        // 过滤
-        const filters = [
-            filterByAd,
-            filterByPlayCount,
-            filterByDuration,
-            filterByProm,
-            filterByUp,
-            filterByTitle,
-            filterByPart,
-            filterByNull
-        ];
-        const process = (items) => {
-            items.forEach(it => {
-                if (filters.some(filter => filter(it))) {
-                    // console.log(it)
-                    it.remove();
-                }
+
+        // 主页
+        if (path === "https://www.bilibili.com/") {
+            // 推广过滤
+            const filterByProm = (it) => {
+                if (!config.prom) return false;
+                const el = it.querySelector('.vui_icon');
+                return !!el;
+            }
+            // 分区过滤
+            const filterByPart = (it) => {
+                if (!it.className.includes('floor-single-card')) return false;
+                if (!config.partList || config.partList.length === 0) return false;
+                if (config.partList.includes("ALL")) return true;
+                const el = it.querySelector('.floor-title');
+                if (!el) return false;
+                return config.partList.some(part => el.title.includes(part));
+            }
+            // 过滤
+            const filters = [filterByAd, filterByProm, filterByTitle, filterByPart, filterByNull];
+            // 初始化 MutationObserver
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType !== 1) return;
+                            let items;
+                            if (node.matches('.feed-card, .bili-feed-card, .floor-single-card')) {
+                                items = [node];
+                            } else {
+                                items = Array.from(node.querySelectorAll('.feed-card, .bili-feed-card, .floor-single-card'));
+                            }
+                            process(items, filters)
+                        });
+                    }
+                });
+            });
+            observer.observe(document.body, {childList: true, subtree: true});
+            findElements('.feed-card, .bili-feed-card, .floor-single-card').then(items => {
+                process(items, filters)
             })
         }
-        // 初始化 MutationObserver
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.type === 'childList') {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType !== 1) return;
-                        let items;
-                        if (node.matches('.feed-card, .bili-feed-card, .floor-single-card')) {
-                            items = [node];
-                        } else {
-                            items = Array.from(node.querySelectorAll('.feed-card, .bili-feed-card, .floor-single-card'));
-                        }
-                        process(items)
-                    });
+
+        // 搜索页
+        if (paths.indexOf('search.bilibili.com') !== -1) {
+            // 推广过滤
+            const filterByPart = (it) => {
+                if (!config.partList || config.partList.length === 0) return false;
+                if (config.partList.includes("ALL") || config.partList.includes("课堂")) {
+                    const el = it.querySelector('.bili-video-card__info--cheese');
+                    if (el) return true;
                 }
+                if (config.partList.includes("ALL") || config.partList.includes("直播")) {
+                    const el = it.querySelector('.bili-video-card__info--living')
+                    if (el) return true;
+                }
+                return false;
+            }
+            const filters = [filterByAd, filterByTitle, filterByPart,
+                filterByDuration, filterByPlayCount, filterByUp, filterByNull]
+            // 初始化 MutationObserver
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType !== 1) return;
+                            if (node.matches('.search-page, .video-list')) {
+                                const threads = node.querySelectorAll('.video-list > *');
+                                process(threads, filters);
+                            }
+                        });
+                    }
+                });
             });
+            observer.observe(document.body, {childList: true, subtree: true});
+            findElements('.video-list > *').then(items => {
+                process(items, filters)
+            })
+        }
+    }
+
+    // IP属地样式优化
+    async function ipStyleOptimize() {
+        if (!config.ip) return;
+        if (paths.indexOf('video') === -1) return;
+
+        const processedComments = new Set(); // 记录已处理的主评论
+        const processedReplies = new Set(); // 记录已处理的二级评论
+
+        // 处理主评论
+        async function processThread(thread) {
+            if (processedComments.has(thread)) return;
+            processedComments.add(thread);
+            try {
+                // 穿透 thread 的 Shadow DOM 找到 renderer
+                const renderer = await findElement("bili-comment-renderer", {host: thread.shadowRoot});
+                // 穿透 renderer 的 Shadow DOM 找到 rich-text
+                const rich = await findElement("bili-rich-text", {host: renderer.shadowRoot});
+                // 穿透 rich-text 的 Shadow DOM 找到 #contents
+                const contentEl = await findElement("#contents", {host: rich.shadowRoot});
+                // 穿透 renderer 的 Shadow DOM 找到 #header
+                const header = await findElement("#header", {host: renderer.shadowRoot});
+                const text = contentEl.innerHTML || contentEl.innerText;
+                const match = text.match(/\[([^\]]+)]/);
+                if (match) {
+                    const ipSpan = document.createElement("span");
+                    ipSpan.textContent = match[1];
+                    ipSpan.style.cssText = "position:relative; bottom:10px; font-size:14px; color:#267129;";
+                    header.insertAdjacentElement("afterend", ipSpan);
+                    contentEl.innerHTML = text.replace(/\[([^\]]+)]/, '');
+                }
+                // 处理二级评论 (replies)
+                const repliesRenderer = await findElement("bili-comment-replies-renderer", {host: thread.shadowRoot});
+                const replyTarget = repliesRenderer.shadowRoot;
+                // 为回复区域增加独立的监听器
+                const replyObserver = new MutationObserver((mutations) => {
+                    for (const mutation of mutations) {
+                        mutation.addedNodes.forEach(node => {
+                            if (node.nodeType !== 1) return;
+                            if (node.tagName === 'BILI-COMMENT-REPLY-RENDERER') {
+                                processReply(node);
+                            } else {
+                                node.querySelectorAll('bili-comment-reply-renderer').forEach(processReply);
+                            }
+                        });
+                    }
+                });
+                replyObserver.observe(replyTarget, {childList: true, subtree: true});
+                // 处理已经存在的回复
+                const existingReplies = await findElements("bili-comment-reply-renderer", {host: replyTarget});
+                existingReplies.forEach(processReply);
+            } catch (err) {
+                processedComments.delete(thread);
+                console.warn("解析评论错误:", err);
+            }
+        }
+
+        // 处理单个二级评论
+        async function processReply(replyRenderer) {
+            if (processedReplies.has(replyRenderer)) return;
+            processedReplies.add(replyRenderer);
+            try {
+                const replyRich = await findElement("bili-rich-text", {host: replyRenderer.shadowRoot});
+                const replyContentEl = await findElement("#contents", {host: replyRich.shadowRoot});
+                const replyText = replyContentEl.innerHTML || replyContentEl.innerText;
+                const replyMatch = replyText.match(/\[([^\]]+)]/);
+                if (replyMatch) {
+                    const replyUserInfo = await findElement("bili-comment-user-info", {host: replyRenderer.shadowRoot});
+                    const replyIpSpan = document.createElement("p");
+                    replyIpSpan.textContent = replyMatch[1];
+                    replyIpSpan.style.cssText = "position:relative; bottom:5px; font-size:14px; color:#267129; margin:0;";
+                    replyUserInfo.insertAdjacentElement("afterend", replyIpSpan);
+                    replyContentEl.innerHTML = replyText.replace(/\[([^\]]+)]/, '');
+                }
+            } catch (e) {
+                processedReplies.delete(replyRenderer);
+            }
+        }
+
+        // 监听主评论列表
+        const commentApp = await findElement("bili-comments");
+        const targetNode = commentApp.shadowRoot || commentApp;
+        const mainObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType !== 1) return;
+                    if (node.tagName === 'BILI-COMMENT-THREAD-RENDERER' || node.tagName === 'BILI-COMMENT-REPLY-RENDERER') {
+                        processThread(node);
+                    } else {
+                        const threads = node.querySelectorAll('bili-comment-thread-renderer');
+                        threads.forEach(processThread);
+                    }
+                });
+            }
         });
-        observer.observe(document.body, {childList: true, subtree: true});
-        findElements('.feed-card, .bili-feed-card, .floor-single-card').then(items => {
-            process(items)
-        })
+        mainObserver.observe(targetNode, {childList: true, subtree: true});
+        // 初始化
+        const initialComments = await findElements("bili-comment-thread-renderer", {host: targetNode});
+        initialComments.forEach(processThread);
     }
 
     // 视频页
@@ -357,6 +626,7 @@
             if (ads) {
                 ads.forEach(ad => {
                     ad.innerHTML = "";
+                    ad.style.cssText = "height:0px; display:none;"
                 });
             }
         }, 100);
@@ -386,7 +656,7 @@
                 <!-- 视频过滤设置 -->
                 <div class="config-section">
                     <h3 class="text-xl font-semibold mb-4 text-center">视频过滤设置</h3>
-                    
+
                     <!-- 广告 -->
                     <div class="flex items-center mb-4">
                         <label for="adToggle" class="switch-label">广告</label>
@@ -395,7 +665,7 @@
                             <span class="slider round"></span>
                         </label>
                     </div>
-                    
+
                     <!-- 推广 -->
                     <div class="flex items-center mb-4">
                         <label for="promToggle" class="switch-label">推广</label>
@@ -405,15 +675,28 @@
                         </label>
                     </div>
                     
+                    <!-- IP展示 -->
+                    <div class="flex items-center mb-4">
+                        <label for="ipToggle" class="switch-label">评论区显示IP定位</label>
+                        <label class="switch">
+                            <input type="checkbox" id="ipToggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
                     <label for="videoPlayCount">播放量：</label>
                     <input type="text" id="videoPlayCount" placeholder="输入播放量（例如：10000）">
 
                     <label for="videoDuration">视频时长：</label>
-                    <input type="text" id="videoDuration" placeholder="输入视频时长（例如：05:30）">
-                    
+                    <div style="display: flex">
+                        <input style="flex: 1" type="text" id="videoDuration" placeholder="视频时长（例如：5:30）">
+                        <span style="margin: 8px 6px; font-size: 16px;">-</span>
+                        <input style="flex: 1" type="text" id="videoMaxDuration" placeholder="视频时长（例如：5:30）">
+                    </div>
+
                     <label for="upList">UP过滤：</label>
                     <textarea id="upList" placeholder="每行输入一个 UP 名称"></textarea>
-                    
+
                     <label for="titleList" style="margin-bottom: 0">标题过滤(支持下列匹配方式)：</label>
                     <span class="block" style="font-size: 12px; margin-bottom: 10px; color: rgba(0,0,0,0.5);">
                     A B：必须同时包含 A 和 B（与）<br\>
@@ -421,7 +704,7 @@
                     !A：不能包含 A（非）
                     </span>
                     <textarea id="titleList" placeholder="每行输入一个标题"></textarea>
-                    
+
                     <label for="partList">分区过滤(填写ALL表示所有分区)：</label>
                     <textarea id="partList" placeholder="每行输入一个分区，例如：直播、游戏、综艺"></textarea>
                 </div>
@@ -575,55 +858,60 @@
         const biliFilterConfigOverlay = document.getElementById('BiliFilterConfigOverlay');
 
         // 配置窗口的 JavaScript 逻辑
-        // 确保在 DOM 元素可用后再执行
         tailwindScript.onload = () => { // 等待 Tailwind 加载完成
             const saveConfigButton = document.getElementById('saveConfig');
             const closeConfigButton = document.getElementById('closeConfig');
 
             // 收集所有配置数据并返回一个对象
             const collectConfigData = () => {
-                return {
+                const config = {
                     ad: document.getElementById('adToggle').checked,
                     prom: document.getElementById('promToggle').checked,
+                    ip: document.getElementById('ipToggle').checked,
                     upList: document.getElementById('upList').value.split('\n').filter(item => item.trim() !== ''),
                     titleList: document.getElementById('titleList').value.split('\n').filter(item => item.trim() !== ''),
                     partList: document.getElementById('partList').value.split('\n').filter(item => item.trim() !== ''),
                     video: {
                         playCount: parseInt(document.getElementById('videoPlayCount').value.trim()),
-                        duration: document.getElementById('videoDuration').value.trim()
+                        duration: document.getElementById('videoDuration').value.trim(),
+                        maxDuration: document.getElementById('videoMaxDuration').value.trim(),
                     },
-                };
+                }
+                const videoDuration = parseDuration(config.video.duration || "00:00");
+                const videoMaxDuration = parseDuration(config.video.maxDuration || "99:59:59");
+                if (videoDuration >= videoMaxDuration) {
+                    throw new Error("最大时长必须大于最小时长");
+                }
+                return config
             };
 
             // 加载配置数据到表单
-            const loadConfigData = (data) => {
-                if (!data) { // 如果没有数据，则初始化为空对象
-                    data = {
-                        ad: false,
-                        prom: false,
-                        upList: [],
-                        titleList: [],
-                        partList: [],
-                        video: {playCount: '', duration: ''},
-                    };
-                }
-                document.getElementById('adToggle').checked = data.ad;
-                document.getElementById('promToggle').checked = data.prom;
-                document.getElementById('upList').value = data.upList ? data.upList.join('\n') : '';
-                document.getElementById('titleList').value = data.titleList ? data.titleList.join('\n') : '';
-                document.getElementById('partList').value = data.partList ? data.partList.join('\n') : '';
-                if (data.video) {
-                    document.getElementById('videoPlayCount').value = data.video.playCount || '';
-                    document.getElementById('videoDuration').value = data.video.duration || '';
+            const loadConfigData = () => {
+                document.getElementById('adToggle').checked = config.ad;
+                document.getElementById('promToggle').checked = config.prom;
+                document.getElementById('ipToggle').checked = config.ip;
+                document.getElementById('upList').value = config.upList ? config.upList.join('\n') : '';
+                document.getElementById('titleList').value = config.titleList ? config.titleList.join('\n') : '';
+                document.getElementById('partList').value = config.partList ? config.partList.join('\n') : '';
+                if (config.video) {
+                    document.getElementById('videoPlayCount').value = config.video.playCount || '';
+                    document.getElementById('videoDuration').value = config.video.duration || '';
+                    document.getElementById('videoMaxDuration').value = config.video.maxDuration || '';
                 }
             };
 
             // 保存配置按钮点击事件
             saveConfigButton.addEventListener('click', () => {
-                config = collectConfigData();
+                try {
+                    config = collectConfigData();
+                } catch (err) {
+                    alert(err);
+                    return;
+                }
                 console.log('保存的配置数据:', config);
                 // 将配置数据保存到 localStorage
-                localStorage.setItem('BiliFilterConfig', JSON.stringify(config));
+                // localStorage.setItem('BiliFilterConfig', JSON.stringify(config));
+                GM_setValue('BiliFilterConfig', JSON.stringify(config));
                 const messageBox = document.createElement('div');
                 messageBox.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
                 messageBox.innerHTML = `
@@ -645,7 +933,7 @@
             });
 
             // 注入配置按钮，在头像下面
-            findElement('.links-item', 999999).then(links => {
+            findElement('.links-item', {timeout: 999999}).then(links => {
                 if (links) {
                     const configButton = document.createElement('div');
                     configButton.className = 'single-link-item';
@@ -654,7 +942,8 @@
                 `);
                     links.appendChild(configButton);
                     configButton.addEventListener('click', () => {
-                        loadConfigData(JSON.parse(localStorage.getItem('BiliFilterConfig')));
+                        // loadConfigData(JSON.parse(localStorage.getItem('BiliFilterConfig')));
+                        loadConfigData();
                         biliFilterConfigOverlay.classList.remove('hidden'); // 显示配置窗口
                     });
                 }
@@ -680,11 +969,22 @@
     }
 
     function _main() {
+        // 读取配置
+        loadConfig();
+        // 请求前后置处理
+        increasePreFn();
+        increasePostFn();
+        // 抬头广告处理
         adblockClear();
-        increaseLoad();
+        // 视频过滤
         videoFilter();
-        videoPage();
+        // IP属地样式优化
+        ipStyleOptimize().then();
+        // 视频页处理
+        videoPage().then();
+        // 添加配置窗口
         addConfigOverlay();
+        // 添加全局样式(优化滚动加载)
         additionalStyles();
     }
 

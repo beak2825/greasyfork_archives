@@ -1,1640 +1,4130 @@
 // ==UserScript==
 // @name         快速查包
 // @namespace    fsh
-// @version      7.4
+// @version      1.0.4
 // @description  快速跳转至指定包或指定分支
-// @author       xxtest
+// @author       05128
 // @match        *://ci.meitu.city/*
-// @match        *://omnibus.meitu-int.com/*
 // @match        *://ios.meitu-int.com/ipa/*
 // @match        *://jira.meitu.com/*
 // @match        *://cf.meitu.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_addStyle
 // @grant        GM_deleteValue
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js
-// @homepage     https://greasyfork.org/zh-CN/scripts/454567-%E5%BF%AB%E9%80%9F%E6%9F%A5%E5%8C%85
 // @license MIT
-// @note 7.4 回滚至7.2
-// @note 7.2 logwork打卡标签新增社区
-// @note 7.1 logwork打卡标签新增海外
-// @note 7.0 logwork打卡标签新增证件照
-// @note 6.9 logwork打卡标签新增订阅、商业化
-// @note 6.8 logwork打卡弹窗选项，新增视频美化、视频美容
-// @note 6.7 logwork打卡弹框，下拉框选型增加全部；一键复制需求bug修复
-// @note 6.6 logwork打卡弹框，支持下拉框填入标签名
-// @note 6.5 修复bug，解决鸿蒙和web平台影响版本判断问题
-// @note 6.4 创建bug判断平台和影响版本是否一致
-// @note 6.3 解决Jira获取分支，偶尔会填写错误的问题
-// @note 6.2 解决iOS魔法屋跑图异常问题
-// @note 6.1 解决跨年日期获取不到版本号问题
-// @note 6.0 一键复制需求列表，增加容错
 // @downloadURL https://update.greasyfork.org/scripts/454567/%E5%BF%AB%E9%80%9F%E6%9F%A5%E5%8C%85.user.js
 // @updateURL https://update.greasyfork.org/scripts/454567/%E5%BF%AB%E9%80%9F%E6%9F%A5%E5%8C%85.meta.js
 // ==/UserScript==
 
-(function () {
-    'use strict';
-    // 设置刷新时间
-    const refreshTime = 1000;
-    // 添加CSS
-    $('head').append($(`
-  <style>
-  .search{
-    position: relative;
-    width: 220px;
-  }
-  .search input{
-    height: 40px;
-    width: 220px;
-    border-radius: 40px;
-    border: 2px solid #324B4E;
-    background: #F9F0DA;
-    transition: .3s linear;
-    float: left;
-    text-indent: 10px;
-  }
+// Auto-generated bundle - DO NOT EDIT DIRECTLY
+// Generated at: 2026-01-14T10:18:43.348Z
 
-  .search input:focus::placeholder{
-    opacity: 0;
-  }
-  .search button{
-    height: 37px;
-    border-radius: 37px;
-    border-right: 1px solid #324B4E;
-    border-left: 0px;
-    background: #F9F0DA;
-    right: 0;
-    position: absolute;
-  }
+// 兼容性函数
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  .btn_find_build{
-    width: 40px;
-    text-align: center;
-  }
+// ======== styles.js ========
+/**
+ * 样式管理器 - 优化版本
+ * 使用CSS变量和合并相似样式，减少代码重复
+ */
+const StyleManager = {
+  injectStyles() {
+    const styles = `
+      :root {
+        --primary-color: #324B4E;
+        --bg-color: #F9F0DA;
+        --border-radius: 40px;
+        --border-radius-small: 25px;
+        --transition: .3s linear;
+      }
 
-  .search_span{
-    /*border: 1px dashed #000;*/
-    cursor: pointer;
-    height: 16px;
-    margin: 0px 10px;
-    padding: 3px;
-    border-radius: 25px;
-  }
+      .search {
+        position: relative;
+        width: 220px;
+      }
 
-  .to_new_build{
-    height: 30px;
-    width: 120px;
-    border-radius: 42px;
-    border: 1px solid #324B4E;
-    background: #fff;
-    transition: .3s linear;
-    color: #544d4d;
-    margin: 0px 10px;
-    font-size:14px;
-  }
+      .search input {
+        height: 40px;
+        width: 220px;
+        border-radius: var(--border-radius);
+        border: 2px solid var(--primary-color);
+        background: var(--bg-color);
+        transition: var(--transition);
+        float: left;
+        text-indent: 10px;
+      }
 
-  .myimg{
-    height:16px;
-  }
-  #input_last_build{
-    border-radius: 30px;
-    border: 1px solid #324B4E;
-  }
+      .search input:focus::placeholder {
+        opacity: 0;
+      }
 
-  </style>`));
-    // 当是ci域名时，才触发后续的操作，如果不是则不触发
-    // CI
-    // CI
-    // CI
-    if (location.href.indexOf('ci.meitu.city') > 0) {
-        clearInterval(refreshTime);
-        setInterval(function () {
-            let input_find_build = document.getElementById('input_find_build');
-            let to_new_build = document.getElementById('to_new_build');
+      .search button {
+        height: 37px;
+        border-radius: 37px;
+        border-right: 1px solid var(--primary-color);
+        border-left: 0px;
+        background: var(--bg-color);
+        right: 0;
+        position: absolute;
+      }
 
+      .btn_find_build {
+        width: 40px;
+        text-align: center;
+      }
 
-            // 不存在输入框和跳转按钮则添加
-            if (!input_find_build) {
-                addFindButtonCicity();
+      .search_span {
+        cursor: pointer;
+        height: 16px;
+        margin: 0px 10px;
+        padding: 3px;
+        border-radius: var(--border-radius-small);
+      }
 
-                // 当用户按下键盘上的某个键时触发
-                document.addEventListener("keyup", function (event) {
-                    // 如果按下的是回车键
-                    if (event.keyCode === 13) {
-                        // 触发按钮的点击事件
-                        $('#btn_find_build').click();
-                    }
-                });
+      .to_new_build {
+        height: 30px;
+        width: 120px;
+        border-radius: 42px;
+        border: 1px solid var(--primary-color);
+        background: #fff;
+        transition: var(--transition);
+        color: #544d4d;
+        margin: 0px 10px;
+        font-size: 14px;
+      }
 
-                // 跳转按钮点击
-                $('#btn_find_build').unbind("click").click(function () {
-                    // 获取当前url, 用正则表达式获取项目名
-                    let localUrl = window.location.href
-                    let project = ''
-                    let reg = /(?<=build\/)\w*/
-                    project = localUrl.match(reg)[0]
+      .myimg {
+        height: 16px;
+      }
 
-                    if (project != null) {
-                        let baseUrl = 'https://ci.meitu.city/build/' + project + '/'
-                        // 获取用户输入
-                        let input_build_content = document.getElementById("input_find_build").value.trim()
-                        if (input_build_content === "") {
-                            return false;
-                        }
-                        let targetUrl = ""
-                        // 如果输入的是纯数字，视为build id
-                        if (/^\d+$/.test(input_build_content)) {
-                            targetUrl = baseUrl + 'number/' + input_build_content
-                        } else {// 否则按输入的是分支处理
-                            input_build_content = input_build_content.replaceAll("/", "%2F")
-                            targetUrl = baseUrl + 'branch/' + input_build_content
-                        }
-                        // 跳转到指定页面
-                        window.location.href = targetUrl
-                    }
-                    else {
-                        input_find_build.value = "未能正确获取项目名称"
-                    }
-                });
+      #input_last_build {
+        border-radius: 30px;
+        border: 1px solid var(--primary-color);
+      }
+    `;
 
-            }
-
-            // 不存在跳转至最新按钮则添加
-            if (!to_new_build) {
-                addToNewCicity();
-                $('.to_new_build').unbind("click").click(function () {
-                    // 判断当前所处的页面, 用正则表达式获取项目名
-                    let localUrl = window.location.href
-                    let project = ''
-                    let reg = /(?<=build\/)\w*/
-                    project = localUrl.match(reg)[0]
-                    // 获取所要跳转的分支名
-                    let full_build_name = this.parentNode.children[0].innerText.trim()
-                    let targetUrl = ""
-                    let baseUrl = 'https://ci.meitu.city/build/' + project + '/branch/'
-                    full_build_name = full_build_name.replaceAll("/", "%2F")
-                    targetUrl = baseUrl + full_build_name
-                    // 跳转到指定页面
-                    window.location.href = targetUrl
-                });
-            }
-        }, refreshTime);
+    try {
+      if (typeof GM_addStyle !== "undefined") {
+        GM_addStyle(styles);
+      } else {
+        $("head").append($(`<style>${styles}</style>`));
+      }
+    } catch (error) {
+      const styleElement = document.createElement("style");
+      styleElement.textContent = styles;
+      document.head.appendChild(styleElement);
     }
+  }
+};
 
-    if (location.href.indexOf('omnibus.meitu-int.com') > 0) {
-        clearInterval(refreshTime);
-        setInterval(function () {
-            let input_find_build = document.getElementById('input_find_build');
-            let to_new_build = document.getElementById('to_new_build');
-            let input_last_build = document.getElementById('input_last_build');
-            let build_magichouse = document.getElementById('build_magichouse');
+// ======== config.js ========
+/**
+ * 配置管理器 - 优化版本
+ * 统一配置结构，减少重复定义
+ */
+const ConfigManager = {
+  CONSTANTS: {
+    REFRESH_INTERVAL: 1000,
+    DOMAINS: {
+      JIRA: "jira.meitu.com",
+    },
+    JIRA_FIELD_IDS: {
+      BUILD_ID: "customfield_10303",
+      STEP_TEXT: "customfield_10203",
+      PLATFORM: "customfield_10301",
+      CREATE_DIALOG: "create-issue-dialog",
+      CLOSE_DIALOG: "workflow-transition-21-dialog",
+      REOPEN_DIALOG: "workflow-transition-31-dialog",
+      COMMENT_TOOLBAR: "wiki-edit-wikiEdit0",
+      SEARCH_SPAN: "search_span_create",
+      CHANGE_SIDE_BUTTON: "change_side_ios",
+    },
+    // LogWork 打卡标签类别配置
+    LOG_WORK_CATEGORIES: [
+      "海外",
+      "闪传",
+      "AI垂类",
+      "非AI垂类",
+      "美化",
+      "美容",
+      "拼图",
+      "相机",
+      "视频美化",
+      "视频美容",
+      "证件照",
+      "素材中心",
+      "订阅",
+      "商业化",
+      "社区",
+      "其他"
+    ]
+  },
 
-            // 不存在输入框和跳转按钮则添加
-            if (!input_find_build) {
-                addFindButtonOmnibus();
-
-                // 当用户按下键盘上的某个键时触发
-                document.addEventListener("keyup", function (event) {
-                    // 如果按下的是回车键
-                    if (event.keyCode === 13) {
-                        // 触发按钮的点击事件
-                        $('#btn_find_build').click();
-                    }
-                });
-
-                // 跳转按钮点击
-                $('#btn_find_build').unbind("click").click(function () {
-                    // 获取当前url, 用正则表达式获取项目名
-                    let localUrl = window.location.href
-                    let project = ''
-                    let platform = ''
-                    let reg_platform = /:\/\/[^\/]+\/apps\/[^:]+:(\w+)/;
-                    let reg = /\/apps\/([^/:]+)/
-                    project = localUrl.match(reg)[1]
-
-                    if (project != null) {
-                        console.log(project.length)
-                        let baseUrl = ""
-                        if (project.length < 10) {
-                            // 适配iOS的情况
-                            platform = localUrl.match(reg_platform)[1]
-                            console.log(platform)
-                            baseUrl = ' https://omnibus.meitu-int.com/apps/' + project + ':' + platform + '/build'
-                        }
-                        else {
-                            baseUrl = ' https://omnibus.meitu-int.com/apps/' + project + '/build'
-                        }
-                        console.log(baseUrl)
-                        // 获取用户输入
-                        let input_build_content = document.getElementById("input_find_build").value.trim()
-                        if (input_build_content === "") {
-                            return false;
-                        }
-                        let targetUrl = ""
-                        // 如果输入的是纯数字，视为build id
-                        if (/^\d+$/.test(input_build_content)) {
-                            targetUrl = baseUrl + '/number/' + input_build_content
-                        } else {// 否则按输入的是分支处理
-                            input_build_content = input_build_content.replaceAll("/", "%2F")
-                            targetUrl = baseUrl + '?branch=' + input_build_content
-                        }
-                        console.log(targetUrl)
-                        // 跳转到指定页面
-                        window.location.href = targetUrl
-                    }
-                    else {
-                        input_find_build.value = "未能正确获取项目名称"
-                    }
-                });
-
-            }
-
-            // 不存在跳转至最新按钮则添加
-            if (!to_new_build) {
-                addToNewOmnibus();
-                $('.to_new_build').unbind("click").click(function () {
-                    let localUrl = window.location.href
-                    // 项目名
-                    let project = ''
-                    // 平台
-                    let platform = ''
-                    let reg_platform = /:\/\/[^\/]+\/apps\/[^:]+:(\w+)/;
-                    let reg = /\/apps\/([^/:]+)/
-                    project = localUrl.match(reg)[1]
-                    // 获取对应节点，因重复节点较多只能这么处理
-                    let parent_node = this.parentNode.parentNode.parentNode
-                    let bracnh_span = parent_node.children[2].children[0].children[1].querySelector('span.el-link__inner')
-                    // 获取所要跳转的分支名
-                    let full_build_name = bracnh_span.innerText.trim()
-                    if (project != null) {
-                        let baseUrl = ""
-                        // 区分通过appuid还是通过项目:平台
-                        if (project.length < 10) {
-                            // 适配iOS的情况，获取对应平台
-                            platform = localUrl.match(reg_platform)[1]
-                            baseUrl = ' https://omnibus.meitu-int.com/apps/' + project + ':' + platform + '/build?branch=' + full_build_name
-                        }
-                        else {
-                            baseUrl = ' https://omnibus.meitu-int.com/apps/' + project + '/build?branch=' + full_build_name
-                        }
-                        // 跳转到指定页面
-                        window.location.href = baseUrl
-                    }
-                });
-            }
-            // 不存在魔法屋跑图按钮则添加
-            if (!build_magichouse) {
-                addOmnibusMagichouse();
-                $('.build_magichouse').unbind("click").click(function () {
-                    let buildIdB = document.getElementById("input_last_build").value.trim()
-                    if (buildIdB === "") {
-                        alert("请输入上个版本提交的build id");
-                        return false;
-                    }
-                    let buildIdA = this.parentNode.parentNode.parentNode.children[0].children[0].children[0].innerText.trim()
-                    // 获取请求的URL
-                    let url = window.location.href
-                    //分割，获取平台（可能是mtxx:ios，也可能是aze3897z9xi8g3dzvw8ce6thc5）
-                    let path_url = url.split('/');
-                    let platform = path_url.includes('apps') ? path_url[path_url.indexOf('apps') + 1] : null;
-                    if (confirm("确定构建魔法屋任务吗？点击确定构建")) {
-                        if (platform == "hydsriakywi7a4wtukhxh6zt6q" || platform.split(":")[1] == 'android') {
-                            buildMagichouseTask(2, buildIdA, buildIdB);
-                        }
-                        else if (platform == "aze3897z9xi8g3dzvw8ce6thc5" || platform.split(":")[1] == 'ios') {
-                            buildMagichouseTask(0, buildIdA, buildIdB);
-                        }
-                        else {
-                            console.log(platform);
-                            alert("出现错误，请联系阿德");
-                        }
-                    }
-                });
-            }
-        }, refreshTime);
+  // 统一项目配置 - 避免Android/iOS重复定义
+  PROJECT_CONFIG: {
+    '美图秀秀': {
+      name: 'mtxx',
+      androidUid: 'hydsriakywi7a4wtukhxh6zt6q',
+      iosUid: 'aze3897z9xi8g3dzvw8ce6thc5'
+    },
+    '美颜相机': {
+      name: 'beautycam',
+      androidUid: 'afpqgy5mqyiyejvj7tu5pvkb3s',
+      iosUid: 'cd2z8rxy5uic9iaz6dbjv8xhw6'
+    },
+    '美拍': {
+      name: 'meipai',
+      androidUid: 'a3cat9d2fnieu5ghyjr6uvysd7',
+      iosUid: 'e79mtyimnwixp46e6hvspus6v2'
+    },
+    '美妆相机': {
+      name: 'makeup',
+      androidUid: 'e69r7unz2bi2rm4d5hhmejunjt',
+      iosUid: 'ffp224ksztiqhi58ud7n33fvs2'
+    },
+    '潮自拍': {
+      name: 'selfiecity',
+      androidUid: 'au89qds8ipjnfmq6y36yxrwwqr',
+      iosUid: 'etiv8nbxjpihni6cr9qhba4u3r'
+    },
+    '设计室': {
+      name: 'mtsjs',
+      androidUid: 'e57ixjbvhjj3pkjtqbircekw4g',
+      iosUid: 'gki88wa2nfiqxi7vhyf2xux6cw'
+    },
+    'wink': {
+      name: 'wink',
+      androidUid: 'a7wb9ngehrjhs5s6kbc8jhpmut',
+      iosUid: 'bhks37k3uaizn4yvcspt4j3nma'
+    },
+    'BeautyPlus': {
+      name: 'beautyplus',
+      androidUid: 'b4ecchhcsgibw5kfamgxdr4z2f',
+      iosUid: 'eprvgz2kwujgvmyt7bvw92fae7'
+    },
+    'AirBrush': {
+      name: 'airbrush',
+      androidUid: 'ap6s3sujqjjze3nzd8e46sgwg8',
+      iosUid: 'e8new3bg3eiximneygeizjyrn6'
+    },
+    'eve': {
+      name: 'eve',
+      androidUid: 'bqn9z5twij9d3jqjgpg6dvws3',
+      iosUid: 'b3huanjy32ipcmhkq6cfnvvspp'
+    },
+    'chic': {
+      name: 'chic',
+      androidUid: 'ajbmhzdremjtk5nkx9eezbc2ps',
+      iosUid: 'hfkv4chfbgj56kuphtpe656t6g'
+    },
+    '美图宜肤V': {
+      name: 'eveking',
+      androidUid: 'cprbcrdb58jwxjne7z5daitprd',
+      iosUid: 'dcjubb2t6ajvyjxaymkvtpp5az'
+    },
+    'EveNetAssist': {
+      name: 'evenetassist',
+      androidUid: 'epynw2drmbjyz5amwe4eirqm3f',
+      iosUid: 'bqn9z5twij9d3jqjgpg6dvws3'
+    },
+    'VChat': {
+      name: 'vchatbeauty',
+      androidUid: 'envi6ei33biw7kn9zi42t2yqm2',
+      iosUid: 'envi6ei33biw7kn9zi42t2yqm2'
+    },
+    'vcut': {
+      name: 'vcut',
+      androidUid: 'envi6ei33biw7kn9zi42t2yqm2',
+      iosUid: 'envi6ei33biw7kn9zi42t2yqm2'
+    },
+    'Vmake': {
+      name: 'beautyplusvideo',
+      androidUid: 'b4ecchhcsgibw5kfamgxdr4z2f',
+      iosUid: 'b4ecchhcsgibw5kfamgxdr4z2f'
+    },
+    'PixEngine': {
+      name: 'pixengine',
+      androidUid: 'pixengine',
+      iosUid: 'pixengine'
+    },
+    '智肤APP': {
+      name: 'skinar',
+      androidUid: 'ecsgbwkuj5iffmjg3jzjq82ti4',
+      iosUid: 'ecsgbwkuj5iffmjg3jzjq82ti4'
+    },
+    '美图秀秀Starii': {
+      name: 'starii',
+      androidUid: 'enri33faz6ibwj5t7f9jpq4cvi',
+      iosUid: 'hmeb767rjnjh8i3vmy3rwmkxn7'
     }
+  },
 
-    var project_android_omnibus = {
-        "美图秀秀": "mtxx", "美颜相机": "beautycam",
-        "美拍": "meipai", "美妆相机": "makeup",
-        "潮自拍": "selfiecity", "设计室": "mtsjs",
-        "wink": "wink", "BeautyPlus": "beautyplus",
-        "AirBrush": "airbrush", "eve": "eve",
-        "chic": "chic", "美图宜肤V": "eveking",
-        "EveNetAssist": "evenetassist", "VChat": "vchatbeauty",
-        "vcut": "vcut", "Vmake": "beautyplusvideo",
-        "PixEngine": "pixengine", "智肤APP": "skinar",
-        "美图秀秀Starii": "starii"
+  // 获取项目配置的辅助方法
+  getProjectConfig(projectName, platform) {
+    const config = this.PROJECT_CONFIG[projectName];
+    if (!config) return null;
+
+    return {
+      name: config.name,
+      uid: platform === 'iOS' ? config.iosUid : config.androidUid
+    };
+  },
+
+  // Jira表单字段配置
+  FORM_FIELD_CONFIG: {
+    summary: "#summary",
+    platform: 'input[name="customfield_10301"]:checked',
+    priority: "#priority-field",
+    path0: "#selectCFLevel0",
+    path1: "#selectCFLevel1",
+    assignee: "#assignee-field",
+    severity: "#customfield_10406",
+    version: "#versions-textarea",
+    bugType: "#customfield_10201",
+    find: "#customfield_11801",
+    howFind: "#customfield_10202",
+    frequency: "#customfield_10204",
+    branch: "#customfield_10303",
+    step: "#customfield_10203",
+    labels: "#labels-textarea",
+  },
+
+  // UI隐藏配置
+  UI_HIDE_CONFIGS: [
+    {
+      name: "隐藏Starii项目UI",
+      condition: () => Utils.ui.getPageInfo().projectName === "美图秀秀Starii",
+      hideParentIds: [
+        "customfield_10422", "customfield_10202", "customfield_10305",
+        "customfield_11100", "customfield_11101", "customfield_11102",
+        "customfield_10304", "fixVersions", "reporter", "customfield_13601"
+      ],
     }
+  ],
 
-    var appuid_android = {
-        "美图秀秀": "hydsriakywi7a4wtukhxh6zt6q", "美颜相机": "afpqgy5mqyiyejvj7tu5pvkb3s",
-        "美拍": "a3cat9d2fnieu5ghyjr6uvysd7", "美妆相机": "e69r7unz2bi2rm4d5hhmejunjt",
-        "潮自拍": "au89qds8ipjnfmq6y36yxrwwqr", "设计室": "e57ixjbvhjj3pkjtqbircekw4g",
-        "wink": "a7wb9ngehrjhs5s6kbc8jhpmut", "BeautyPlus": "b4ecchhcsgibw5kfamgxdr4z2f",
-        "AirBrush": "ap6s3sujqjjze3nzd8e46sgwg8", "eve": "bqn9z5twij9d3jqjgpg6dvws3",
-        "chic": "ajbmhzdremjtk5nkx9eezbc2ps", "美图宜肤V": "cprbcrdb58jwxjne7z5daitprd",
-        "EveNetAssist": "epynw2drmbjyz5amwe4eirqm3f", "VChat": "envi6ei33biw7kn9zi42t2yqm2",
-        "PixEngine": "pixengine", "智肤APP": "ecsgbwkuj5iffmjg3jzjq82ti4",
-        "美图秀秀Starii": "enri33faz6ibwj5t7f9jpq4cvi"
+  // 企业微信文档API配置
+  WECHAT_WORK_API: {
+    CORPID: 'wxb7b291e71c4e8823',
+    CORPSECRET: 'po-FCTwPK7lsu7UnWMCmVn4yuH8GdHHj_orCHf_s_B8',
+    GETTOKEN_URL: 'https://qyapi.weixin.qq.com/cgi-bin/gettoken',
+    CREATE_DOC_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/create_doc',
+    MOD_DOC_MEMBER_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/mod_doc_member',
+    GET_SHEET_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/get_sheet',
+    GET_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/get_fields',
+    ADD_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/add_fields',
+    DELETE_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/delete_fields',
+    ADD_RECORDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/add_records',
+    // localStorage缓存键名
+    ACCESS_TOKEN_KEY: 'wework_access_token',
+    ACCESS_TOKEN_EXPIRE_KEY: 'wework_access_token_expire',
+    // token有效期（秒）
+    TOKEN_EXPIRE_TIME: 7200
+  }
+};
+
+// ======== utils.js ========
+/**
+ * DOM工具集 - 精简版本
+ * 提供常用的DOM操作方法
+ */
+const Utils = {
+  /**
+   * DOM操作工具
+   */
+  dom: {
+    safeGetElement(id) {
+      try {
+        return document.getElementById(id);
+      } catch (error) {
+        console.warn(`获取元素失败: ${id}`, error);
+        return null;
+      }
+    },
+
+    elementExists(id) {
+      return this.safeGetElement(id) !== null;
     }
+  },
 
-    var appuid_ios = {
-        "美图秀秀": "aze3897z9xi8g3dzvw8ce6thc5", "美颜相机": "cd2z8rxy5uic9iaz6dbjv8xhw6",
-        "美拍": "e79mtyimnwixp46e6hvspus6v2", "美妆相机": "ffp224ksztiqhi58ud7n33fvs2",
-        "潮自拍": "etiv8nbxjpihni6cr9qhba4u3r", "设计室": "gki88wa2nfiqxi7vhyf2xux6cw",
-        "wink": "bhks37k3uaizn4yvcspt4j3nma", "BeautyPlus": "eprvgz2kwujgvmyt7bvw92fae7",
-        "AirBrush": "e8new3bg3eiximneygeizjyrn6", "eve": "b3huanjy32ipcmhkq6cfnvvspp",
-        "chic": "hfkv4chfbgj56kuphtpe656t6g", "美图宜肤V": "dcjubb2t6ajvyjxaymkvtpp5az",
-        "PixEngine": "pixengine", "智肤APP": "ecsgbwkuj5iffmjg3jzjq82ti4",
-        "美图秀秀Starii": "hmeb767rjnjh8i3vmy3rwmkxn7"
+  /**
+   * 存储工具
+   */
+  storage: {
+    setValue(key, value) {
+      try {
+        GM_setValue(key, value);
+      } catch (error) {
+        console.error(`存储失败: ${key}`, error);
+      }
+    },
+
+    getValue(key, defaultValue = "") {
+      try {
+        return GM_getValue(key, defaultValue);
+      } catch (error) {
+        console.error(`读取失败: ${key}`, error);
+        return defaultValue;
+      }
     }
+  },
 
-    var project_ios_omnibus = {
-        "美图秀秀": "mtxx", "美颜相机": "beautycam",
-        "美拍": "meipai", "美妆相机": "makeup",
-        "潮自拍": "selfiecity", "设计室": "mtsjs",
-        "wink": "wink", "BeautyPlus": "beautyplus",
-        "AirBrush": "airbrush", "eve": "eve",
-        "chic": "chic", "美图宜肤V": "eveking",
-        "EveNetAssist": "evenetassist", "VChat": "vchatbeauty",
-        "vcut": "vcut", "Vmake": "beautyplusvideo",
-        "PixEngine": "pixengine", "智肤APP": "skinar",
-        "美图秀秀Starii": "starii"
+  /**
+   * URL工具
+   */
+  url: {
+    isDomain(domain) {
+      return location.href.indexOf(domain) > -1;
     }
+  },
 
+  /**
+   * 事件工具
+   */
+  events: {
+    addCaptureClick(selector, callback) {
+      try {
+        document.addEventListener("click", function (e) {
+          const t = e.target && e.target.closest && e.target.closest(selector);
+          if (!t) return;
+          try {
+            callback(t, e);
+          } catch (err) {
+            console.error("事件回调执行失败:", err);
+          }
+        }, true);
+      } catch (e) {
+        console.error("注册捕获监听失败:", e);
+      }
+    },
 
-    // omnibus页面,添加输入框和跳转按钮
-    function addFindButtonOmnibus() {
-        let span = $('<main class="search" style="display:inline-block;margin-left: 150px;" ></main>')
-        let input_find_build = $('<input type="text" class="text" id="input_find_build" placeholder="  输入Build id或分支名">');
-        let btn_find_build = $('<button type="submit" class="btn_find_build" id="btn_find_build">🔍</button>');
-        span.append(input_find_build);
-        span.append(btn_find_build);
-        // jQuery不能直接插入，需要转一下格式，转成HTML才行
-        let spanHtml = span.prop('outerHTML');
-        // 获取第一个再插入；
-        let firstDivWithTitleClass = document.querySelector('.is-plain');
-        firstDivWithTitleClass.insertAdjacentHTML('beforebegin', spanHtml);
-    }
-
-    // omnibus页面,添加跳转至最新按钮
-    function addToNewOmnibus() {
-        let to_new_build = $('<button type="submit" class="to_new_build" id="to_new_build">跳转至最新➔</button>');
-        $(".el-text--primary").after(to_new_build);
-    }
-
-    // omnibus页面,在其后方添加魔法屋跑图任务按钮
-    function addOmnibusMagichouse() {
-        let input_last_build = $('<input type="text" class="text" id="input_last_build" placeholder="  输入上个版本正式包">');
-        let build_magichouse = $('<button  type="button" class="build_magichouse" id="build_magichouse">魔法屋跑图</button>');
-        $(".to_new_build").after(build_magichouse);
-        $(".to_new_build").after(input_last_build);
-    }
-    function buildMagichouseTask(osType, buildIdA, buildIdB) {
-        let url = "http://mh-mng.meitu-int.com/xianyao/schedule/run/report";
-        let module_list = [2, 3, 4, 5]
-        for (var i = 0; i < module_list.length; i++) {
-            var module = module_list[i]
-            GM_xmlhttpRequest({
-                url: url,
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                data: JSON.stringify({
-                    osType: osType,
-                    module: module,
-                    buildIdA: buildIdA,
-                    buildIdB: buildIdB,
-                    creator: "ydr@meitu.com"
-                }),
-                onload: function (res) {
-                    console.log(res)
-                },
-                onerror: function (err) {
-                    result = '接口请求失败，建议重新关闭开启脚本再试试';
-                }
-            });
+    safeCallChangeBugPlatform(platform) {
+      try {
+        const fn = typeof window !== "undefined" &&
+                   typeof window.changeBugPlatform === "function" ?
+                   window.changeBugPlatform :
+                   typeof changeBugPlatform === "function" ?
+                   changeBugPlatform : null;
+        if (!fn) {
+          console.warn("changeBugPlatform 未定义");
+          return;
         }
-        if (confirm("点击确定跳转魔法屋查看任务，如无任务联系阿德")) {
-            window.open('https://magichouse.meitu-int.com/check/media/run/tasks', '_blank');
+        fn(platform);
+      } catch (err) {
+        console.error("changeBugPlatform 调用失败:", err);
+      }
+    },
+
+    registerPlatformCapture(selector, platform) {
+      this.addCaptureClick(selector, () => this.safeCallChangeBugPlatform(platform));
+    }
+  },
+
+  /**
+   * 按钮工具
+   */
+  button: {
+    addLabelAfter(targetSelector, labelFor, buttonConfig = null) {
+      const label = $(`<label for="${labelFor}"></label>`);
+      $(targetSelector).after(label);
+
+      if (buttonConfig) {
+        const btn = $(`<input type="button" class="${buttonConfig.className || "aui-button"}" value="${buttonConfig.text}" id="${buttonConfig.id}">`);
+        label.append(btn);
+      }
+      return label;
+    },
+
+    addButtonsToContainer(containerSelector, buttons) {
+      const container = $(containerSelector);
+      if (container.length === 0) {
+        console.warn(`容器 ${containerSelector} 不存在`);
+        return;
+      }
+
+      buttons.forEach((btnConfig) => {
+        const btn = $(`<button class="${btnConfig.className || "aui-button"}" id="${btnConfig.id}" type="button">${btnConfig.text}</button>`);
+        container.append(btn);
+      });
+    },
+
+    addBranchButtons(containerSelector) {
+      this.addButtonsToContainer(containerSelector, [
+        { className: "aui-button", id: "get_branch_btn", text: "获取分支" },
+        { className: "aui-button", id: "last_branch_btn", text: "上次分支" }
+      ]);
+    }
+  },
+
+  /**
+   * 通用工具
+   */
+  common: {
+    sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    },
+
+    showToast(message, backgroundColor = "#4CAF50") {
+      const toast = document.createElement("div");
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        padding: 10px; background: ${backgroundColor}; color: white;
+        border-radius: 5px; z-index: 9999;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => document.body.removeChild(toast), 2000);
+    }
+  },
+
+  /**
+   * UI工具
+   */
+  ui: {
+    hideParentById(childNodeId) {
+      const element = document.getElementById(childNodeId);
+      if (element && element.parentNode) {
+        element.parentNode.style.display = "none";
+      }
+    },
+
+    hideParentsByIds(childNodeIds) {
+      childNodeIds.forEach((id) => this.hideParentById(id));
+    },
+
+    hideElement(selector) {
+      const element = typeof selector === "string" ? document.querySelector(selector) : selector;
+      if (element) {
+        element.style.display = "none";
+      }
+    },
+
+    hideElements(selectors) {
+      selectors.forEach((selector) => this.hideElement(selector));
+    },
+
+    hideIf(condition, targets) {
+      const shouldHide = typeof condition === "function" ? condition() : condition;
+      if (!shouldHide) return;
+
+      if (Array.isArray(targets)) {
+        this.hideParentsByIds(targets);
+      } else if (typeof targets === "object" && targets !== null) {
+        const { hideIds = [], hideSelectors = [], hideParentIds = [] } = targets;
+
+        if (hideIds.length > 0) {
+          hideIds.forEach((id) => this.hideElement(`#${id}`));
         }
+
+        if (hideSelectors.length > 0) {
+          this.hideElements(hideSelectors);
+        }
+
+        if (hideParentIds.length > 0) {
+          this.hideParentsByIds(hideParentIds);
+        }
+      } else if (typeof targets === "string") {
+        this.hideParentById(targets);
+      }
+    },
+
+    getProjectName() {
+      const projectOptionsDiv = document.getElementById("project-options");
+      if (projectOptionsDiv) {
+        try {
+          const dataSuggestionsValue = projectOptionsDiv.getAttribute("data-suggestions");
+          const jsonObject = JSON.parse(dataSuggestionsValue);
+          const project = jsonObject[0]["items"][0].label.trim();
+          return project.replace(/\s*\([^)]*\)\s*/, "").trim();
+        } catch (error) {
+          console.warn("从 project-options 获取项目名失败:", error);
+        }
+      }
+
+      const projectNameElement = $("#project-name-val");
+      if (projectNameElement.length > 0) {
+        return projectNameElement.text().trim();
+      }
+
+      return "";
+    },
+
+    getPageInfo() {
+      return {
+        projectName: this.getProjectName(),
+        currentUrl: window.location.href,
+        pageTitle: document.title,
+        hasElement: (selector) => !!document.querySelector(selector),
+        getElementText: (selector) => {
+          const element = document.querySelector(selector);
+          return element ? element.textContent.trim() : "";
+        }
+      };
     }
+  }
+};
 
-    // CI页面,添加输入框和跳转按钮
-    function addFindButtonCicity() {
-        let span = $('<span class="search"></span>')
-        let input_find_build = $('<input type="text" class="text" id="input_find_build" placeholder="  输入Build id或分支名">');
-        let btn_find_build = $('<button type="submit" class="btn_find_build" id="btn_find_build">🔍</button>');
+// ======== field-fillers.js ========
+/**
+ * 字段填充工具集 - 优化版本
+ * 统一字段填充逻辑，减少重复代码
+ */
+const FieldFillers = {
+  // 通用字段填充方法
+  fillField(selector, value, type = 'input') {
+    const element = $(selector);
+    if (element.length === 0) return false;
 
-        span.append(input_find_build);
-        span.append(btn_find_build);
-        $(".project-label__name").after(span);
+    try {
+      switch (type) {
+        case 'radio':
+          element.prop("checked", true).trigger("change");
+          break;
+        case 'input':
+          element.val(value).trigger("input").trigger("change");
+          break;
+        case 'select':
+          element.val(value).trigger("change");
+          // 验证是否设置成功
+          if (element.val() !== value) {
+            const option = element.find(`option:contains("${value}")`).first();
+            if (option.length > 0) {
+              element.val(option.val()).trigger("change");
+            }
+          }
+          break;
+        default:
+          element.val(value).trigger("input").trigger("change");
+      }
+      return true;
+    } catch (error) {
+      console.error(`填充字段失败: ${selector}`, error);
+      return false;
     }
-
-    // CI页面,在分支名后方添加跳转至最新按钮
-    function addToNewCicity() {
-        let to_new_build = $('<button type="submit" class="to_new_build" id="to_new_build">跳转至最新➔</button>');
-        $(".message-card__subtitle").after(to_new_build);
-    }
-
-    // 当是granary域名时，才触发后续的操作，如果不是则不触发
-    // Granary
-    // Granary
-    // Granary
-    if (location.href.indexOf('ios.meitu-int.com') > 0) {
-        clearInterval(refreshTime);
-        setInterval(function () {
-            let input_find_build = document.getElementById('input_find_build');
-            let to_new_build = document.getElementById('to_new_build');
-            let input_last_build = document.getElementById('input_last_build');
-            let build_magichouse = document.getElementById('build_magichouse');
-
-            // 项目名
-            var project = ''
-            var reg = /(?<=ipa\/)\w*/
-            // 当前页面Url, 用正则表达式获取项目名
-            var localUrl = window.location.href
-            project = localUrl.match(reg)[0]
-
-            // 不存在输入框和跳转按钮则添加
-            if (!input_find_build) {
-                addFindButtonGranary();
-
-                // 当用户按下键盘上的某个键时触发
-                document.addEventListener("keyup", function (event) {
-                    // 如果按下的是回车键
-                    if (event.keyCode === 13) {
-                        // 触发按钮的点击事件
-                        $('#btn_find_build').click();
-                    }
-                });
-
-                // 按钮绑定点击事件
-                $('#btn_find_build').unbind("click").click(function () {
-                    if (project != null) {
-                        // 获取用户输入
-                        let input_build_content = document.getElementById("input_find_build").value.trim()
-                        if (input_build_content === "") {
-                            return false;
-                        }
-                        let targetUrl = ""
-                        // 如果输入的是纯数字，视为build id
-                        if (/^\d+$/.test(input_build_content)) {
-                            let baseUrl = 'http://ios.meitu-int.com/ipa/' + project + '/build/'
-                            targetUrl = baseUrl + input_build_content
-                        } else {// 否则按分支处理
-                            let baseUrl = 'http://ios.meitu-int.com/ipa/' + project + '/'
-                            input_build_content = input_build_content.replaceAll("/", "%2F")
-                            targetUrl = baseUrl + input_build_content
-                        }
-                        // 跳转到指定页面
-                        window.location.href = targetUrl
-                    }
-                    else {
-                        input_build_content.value = "未能正确获取项目名称"
-                    }
-                });
-            }
-
-            //不存在跳转至最新按钮则添加
-            if (!to_new_build) {
-                addToNewGranary();
-                // 跳转按钮点击
-                $('.to_new_build').unbind("click").click(function (event) {
-                    // 分支名,去掉首尾的字符串，“/”转为“%2F”
-                    let parentNode = event.target.parentNode;
-                    let branchName = parentNode.querySelector("span.branch-name").innerText.trim()
-                    branchName = branchName.substring(1, branchName.length - 1).replaceAll("/", "%2F");
-
-                    // 跳转链接
-                    let baseUrl = 'http://ios.meitu-int.com/ipa/' + project + '/'
-                    let targetUrl = baseUrl + branchName
-
-                    // 跳转
-                    window.location.href = targetUrl
-                });
-            }
-
-            if (!build_magichouse) {
-                addGranaryMagichouse();
-                $('.build_magichouse').unbind("click").click(function () {
-                    let buildIdB = document.getElementById("input_last_build").value.trim()
-                    if (buildIdB === "") {
-                        alert("请输入上个版本提交的build id");
-                        return false;
-                    }
-                    let parentNode = event.target.parentNode.children[0].innerText.trim();
-                    let buildIdA = parentNode.match(/#Build\s+(\d+)/)[1].trim();
-                    if (confirm("确定构建魔法屋任务吗？点击确定构建")) {
-                        buildMagichouseTask(0, buildIdA, buildIdB)
-                    }
-                });
-            }
-        }, refreshTime);
-    }
-
-    // granary页面,添加输入框和跳转按钮
-    function addFindButtonGranary() {
-        let span = $('<span class="search"></span>')
-        let input_find_build = $('<input type="text" class="text" id="input_find_build" placeholder=" 输入Build id或分支名">');
-        let btn_find_build = $('<button type="submit" class="btn_find_build" id="btn_find_build">🔍</button>');
-
-        span.append(input_find_build);
-        span.append(btn_find_build);
-        $("#myTab").append(span);
-    }
-
-    // granary页面,在分支名后方添加跳转至最新按钮
-    function addToNewGranary() {
-        let to_new_build = $('<button type="submit" class="to_new_build" id="to_new_build">跳转至最新➔</button>');
-        $("div#list-home span.branch-name").after(to_new_build);
-    }
-
-    // granary页面,在其他后方添加魔法屋跑图任务按钮
-    function addGranaryMagichouse() {
-        let input_last_build = $('<input type="text" class="text" id="input_last_build" placeholder="  输入上个版本企业包">');
-        let build_magichouse = $('<button  type="button" class="build_magichouse" id="build_magichouse">魔法屋跑图</button>');
-        $(".to_new_build").after(build_magichouse);
-        $(".to_new_build").after(input_last_build);
-    }
-
-
-    // 当是jira域名时，才触发后续的操作，如果不是则不触发
-    // Jira
-    // Jira
-    // Jira
-    if (location.href.indexOf('jira.meitu.com') > 0) {
-        clearInterval(refreshTime);
-        var counter = 0;
-        // 定时器循环操作：页面元素添加等
-        setInterval(function () {
-            var search_span = document.getElementById('search_span_create');
-            // 因为切至iOS按钮和切至Android按钮一般都会成对出现，所以这里只获取iOS按钮，用于判断按钮是否已存在
-            var change_side_button = document.getElementById('change_side_ios');
-            var create_input = document.getElementById('customfield_10303');
-            var step_text = document.getElementById('customfield_10203');
-            var create_issue_dialog = document.getElementById('create-issue-dialog');
-            var close_bug_dialog = document.getElementById('workflow-transition-21-dialog');
-            var reopen_bug_dialog = document.getElementById('workflow-transition-31-dialog');
-            var comment_bug_toolbar = document.getElementById('wiki-edit-wikiEdit0');
-
-            // 如果不存在bug跳转按钮则添加一个，需要判断url是bug页面而不是bug列表页，否则会报错
-            if (!search_span) {
-                addButtonJira();
-                // 存储bug平台
-                GM_setValue('platform', $('#customfield_10301-val').text().trim())
-            }
-
-            // 在创建问题dialog添加获取分支按钮组
-            if (create_issue_dialog) {
-                // 加个计时避免按钮显示不出来
-                // Bug模版按钮
-                if (change_side_button == undefined || change_side_button.length == 0) {
-                    addChangeSideButton();
-                }
-                // 获取分支按钮
-                if (create_input !== undefined || create_input.length !== 0) {
-                    var branch_span = $('<label for="customfield_10304"></label>');
-                    $("#customfield_10303").after(branch_span)
-                    add_get_branch_btn($(branch_span));
-                }
-                // 重置步骤按钮
-                if (step_text !== undefined || step_text.length !== 0) {
-                    var step_span = $('<label for="customfield_10204"></label>');
-                    $("#customfield_10203").after(step_span);
-                    var step_btn = $('<input type="button" class="aui-button" value="重置步骤" id="reset_step">');
-                    step_span.append(step_btn)
-                }
-                // 隐藏starii项目不必要的UI
-                hideUI();
-                // 自动填充build号
-                fillBuildIdAuto();
-
-            }
-
-            // 自动往指定的input组件中填build号
-            function fillBuildIdAuto() {
-                // 获取输入框内容
-                var inputContent = $("#customfield_10303").val();
-                // 使用正则表达式检查当前文本内容是否是纯数字
-                var isCurrentNumber = /^\d+$/.test(inputContent);
-                if (isCurrentNumber) {
-                    counter++;
-                    console.log(counter)
-                    // 如果当前文本内容是纯数字
-                    if (counter % 6 === 0) {
-                        // 往输入框内填写
-                        set_branch('get_branch_btn', 'create-issue-dialog')
-                        counter = 0;
-                    }
-                }
-            }
-
-            // 在关闭问题dialog 或 重新打开dialog 添加获取分支按钮组
-            if (close_bug_dialog || reopen_bug_dialog) {
-                var pre_text_button = $('<input class="aui-button" id="close-text" type="button" value="上次填写"></input>');
-                var pre_text_btn = document.getElementById('close-text');
-                var branch_span_close = $('<span id="close_text">输入id：</span>');
-                var input_text_close = $('<input type="text" class="text medium-field" id="build_id_close">');
-                setTimeout(function () {
-                    if (!pre_text_btn) {
-                        $(".jira-dialog-content .form-footer").append(branch_span_close).append(input_text_close);// buildid输入框
-                        add_get_branch_btn($(".jira-dialog-content").find(".form-footer"));//获取分支按钮
-                        $(".jira-dialog-content .form-footer").append(pre_text_button);//上次填写按钮
-                    }
-                }, 500);
-            }
-
-            // 在备注窗口添加获取分支按钮组
-            if (comment_bug_toolbar) {
-                var pre_text_span = $('<span id="pre_text">输入id：</span>');
-                var pre_text_span_element = document.getElementById('pre_text');
-                var input_text = $('<input type="text" class="text medium-field" id="input_text">');
-                setTimeout(function () {
-                    if (!pre_text_span_element && !close_bug_dialog) {
-                        var branch_span = $('<span></span>');
-                        branch_span.append(pre_text_span).append(input_text);
-                        add_get_branch_btn($(branch_span));
-                        $(".security-level .current-level").after(branch_span);
-                    }
-                }, 500);
-            }
-
-
-            // 获取分支按钮点击事件
-            $('#get_branch_btn, #last_branch_btn').unbind("click").click(function (event) {
-                setTimeout(function () {
-                    // 当前节点的父节点
-                    var parentNode = event.target.parentNode;
-
-                    // 如果父节点没有Id属性，则往上遍历
-                    while (parentNode != null) {
-                        if (parentNode.hasAttribute("id")) {
-                            // 找到第一个有id属性的父节点
-                            var parentWithId = parentNode;
-                            break;
-                        }
-                        parentNode = parentNode.parentNode;
-                    }
-                    //  第一个拥有Id的父节点的id
-                    let parentId = parentWithId.getAttribute("id");
-
-                    // 获取当前节点id
-                    var selfId = event.target.id
-
-                    // 往网页中填入分支名
-                    set_branch(selfId, parentId);
-                }, 500);
-            });
-
-            // 重置步骤按钮点击事件
-            $('#reset_step').unbind('click').click(function (event) {
-                let default_text = '[预置条件]\n\n[步骤]\n\n[结果]\n\n[期望]\n\n[备注机型]\n\n[BUG出现频次]\n\n\n'
-                document.getElementById('customfield_10203').value = default_text;
-            })
-
-            function hideUI() {
-                // 获取具有id为project-options的div元素
-                var projectOptionsDiv = document.getElementById('project-options');
-                if (projectOptionsDiv) {
-                    // 获取data-suggestions属性的值
-                    var dataSuggestionsValue = projectOptionsDiv.getAttribute('data-suggestions');
-                    var jsonObject = JSON.parse(dataSuggestionsValue);
-                    // 项目名
-                    var project = jsonObject[0]['items'][0].label.trim();
-                    var project_name = project.replace(/\s*\([^)]*\)\s*/, '').trim();
-                } else {
-                    var project_name = $('#project-name-val').text().trim(); // 项目名
-                }
-                if (project_name === "美图秀秀Starii") {
-                    hideParentNodeById("customfield_10422");
-                    hideParentNodeById("customfield_10202");
-                    hideParentNodeById("customfield_10305");
-                    hideParentNodeById("customfield_11100");
-                    hideParentNodeById("customfield_11101");
-                    hideParentNodeById("customfield_11102");
-                    hideParentNodeById("customfield_10304");
-                    hideParentNodeById("fixVersions");
-                    hideParentNodeById("reporter");
-                    hideParentNodeById("customfield_13601");
-                }
-            }
-
-            // 隐藏指定ID节点的父节点
-            function hideParentNodeById(childNodeId) {
-                // 隐藏bug优先级
-                var element = document.getElementById(childNodeId);
-                // 检查是否找到了元素
-                if (element) {
-                    // 获取父节点并将其样式的display属性设置为"none"
-                    element.parentNode.style.display = "none";
-                }
-            }
-
-            // 往网页中填入分支名称
-            async function set_branch(selfId, parentId) {
-                if (selfId === "get_branch_btn") {
-                    switch (parentId) {
-                        // 创建Bug窗口填写分支
-                        case "create-issue-dialog":
-                            // bug平台节点和buildId节点
-                            var $platform = $('input:radio[name="customfield_10301"]:checked');
-                            var $buildId = $('#customfield_10303');
-
-                            // 通过buildId节点（input）定位到bug平台节点（label）
-                            var id = $platform.attr("id")
-                            var label = document.querySelector("label[for='" + id + "']");
-
-                            // bug平台和buildId
-                            try {
-                                var platform = label.textContent;
-                            } catch (error) {
-                                GM_setValue('branch_value', "#请先选择Bug平台");
-                                fillInBranch('#customfield_10303');
-                                return;
-                            }
-                            var buildId = $buildId.val();
-                            if (buildId === undefined || buildId === '' || buildId === null) {
-                                GM_setValue('branch_value', "#请先填写Build号");
-                                fillInBranch('#customfield_10303');
-                                return;
-                            }
-                            console.log(platform)
-                            // 获取分支名
-                            await get_branch(platform, buildId);
-                            // 填入分支
-                            await fillInBranch('#customfield_10303');
-                            counter = 0;
-
-                            break;
-
-                        // 关闭||重新打开窗口填写分支
-                        case "issue-workflow-transition":
-                            var $platform = $('#customfield_10301-val');
-                            var $buildId = $('#build_id_close');
-
-                            // bug平台和buildId
-                            var platform = $platform.text().trim();
-                            var buildId = $buildId.val();
-
-                            // 获取分支名
-                            await get_branch(platform, buildId);
-
-                            // 填入分支
-                            await fillInBranchTextarea('div#comment-wiki-edit textarea#comment');
-
-                            // 聚焦到输入框
-                            sleep(500).then(() => {
-                                $('#comment-wiki-edit textarea').focus();
-                            })
-                            break;
-                        // 备注
-                        case "issue-comment-add":
-                            var $platform = $('#customfield_10301-val');
-                            var $buildId = $('#input_text');
-
-                            // bug平台和buildId
-                            var platform = $platform.text().trim();
-                            var buildId = $buildId.val();
-
-                            // 获取分支名
-                            await get_branch(platform, buildId);
-
-                            // 填入分支
-                            await fillInBranchTextarea('div#comment-wiki-edit textarea#comment');
-
-                            // 聚焦到输入框
-                            sleep(500).then(() => {
-                                $('#comment-wiki-edit textarea').focus();
-                            })
-                            break;
-
-                        default:
-
-                    }
-                } else if (selfId === "last_branch_btn") {
-                    switch (parentId) {
-                        case "create-issue-dialog":
-                            // 填入分支
-                            await fillInBranch('#customfield_10303');
-                            break;
-
-                        case "issue-workflow-transition":
-                            // 填入分支
-                            await fillInBranchTextarea('div#comment-wiki-edit textarea#comment');
-                            break;
-                        // 备注
-                        case "issue-comment-add":
-                            await fillInBranchTextarea('div#comment-wiki-edit textarea#comment');
-                            break;
-                        default:
-
-                    }
-                }
-            }
-
-            // 跳转到创建分支
-            $('#search_span_create').unbind("click").click(function () {
-                var build_id = getBuildId("customfield_10303-val");
-                console.log(build_id)
-                // 存储bug平台
-                GM_setValue('platform', $('#customfield_10301-val').text().trim())
-                sleep(500).then(() => {
-                    var targetUrl = getBaseUrl() + build_id;
-                    window.open(targetUrl);
-                })
-
-            });
-
-            // 跳转到解决分支
-            $('#search_span_solved').unbind("click").click(function () {
-                var build_id = getBuildId("customfield_10304-val");
-                // 存储bug平台
-                GM_setValue('platform', $('#customfield_10301-val').text().trim())
-                sleep(500).then(() => {
-                    var targetUrl = getBaseUrl() + build_id;
-                    window.open(targetUrl);
-                })
-            });
-
-            // 切换到iOS bug模版
-            $('.ios').unbind("click").click(function () {
-                changeBugPlatform('iOS')
-            });
-
-            // 切换到Androidbug模版
-            $('.android').unbind("click").click(function () {
-                changeBugPlatform('Android')
-            });
-
-            // 切换到Webbug模版
-            $('.web').unbind("click").click(function () {
-                changeBugPlatform('Web')
-            });
-
-            // 点击关闭问题按钮，记录下填写的内容
-            var text_area = $('.jira-dialog-content').find('#comment')
-            $('#issue-workflow-transition-submit').unbind("click").click(function () {
-                if ($('#issue-workflow-transition-submit').val().trim() == "关闭问题") {
-                    // 存储bug平台
-                    GM_setValue('closeText', text_area.val().trim())
-                }
-            })
-
-            // 点击上次填写按钮，填充上次填写的内容
-            $('#close-text').unbind("click").click(function () {
-                text_area.val(GM_getValue('closeText'))
-                text_area.focus()
-            })
-
-            // TODO:点击「创建」按钮时记录下所有的bug信息
-            const $createBtn = $('#create-issue-submit');
-            const $summary = $('#summary');
-            const $business = $('input:radio[name="customfield_12903"]:checked');
-            const $platform = $('input:radio[name="customfield_10301"]:checked');
-            const $path0 = $("#selectCFLevel0 option:selected");
-            const $path1 = $("#selectCFLevel1 option:selected");
-            const $assignee = $("#assignee-field");
-            const $severity = $("#customfield_10406 option:selected");
-            const $version = $("#versions-multi-select .value-text");
-            const $find = $("#customfield_10202 option:selected");
-            const $frequency = $("#customfield_10204 option:selected");
-            const $branch = $("#customfield_10303");
-            const $step = $("#customfield_10203");
-            const $tips = $("#labels-multi-select .representation .value-text");
-
-            $createBtn.unbind('click').click(function () {
-                const bugDict = {
-                    'summary': $summary.val(),
-                    'business': $business.attr("id"),
-                    'platform': $platform.attr("id"),
-                    'path0': $path0.text(),
-                    'path1': $path1.text(),
-                    'assignee': $assignee.val(),
-                    'severity': $severity.text(),
-                    'version': $version.text(),
-                    'find': $find.attr("value"),
-                    'frequency': $frequency.attr("value"),
-                    'branch': $branch.val(),
-                    'step': $step.val(),
-                    'tips': $tips.text()
-                };
-                GM_setValue('bugDict', bugDict);
-            });
-
-            // 点击再提一个
-            // 已知问题：1. 路径2无法填写
-            $('#once-again').unbind('click').click(function () {
-                const bugDict = GM_getValue('bugDict');
-
-                function setValue(selector, value) {
-                    $(selector).val(value);
-                }
-                function setChecked(selector, value) {
-                    $(selector).attr("checked", value);
-                }
-                function setSelected(selector, value) {
-                    $(selector).find(`option[value='${value}']`).attr("selected", true);
-                }
-
-                console.log(bugDict);
-                setValue("#summary", bugDict.summary);
-                setChecked(`input[id=${bugDict.business}]`, true);
-                setChecked(`input[id=${bugDict.platform}]`, true);
-                setValue("#selectCFLevel0", bugDict.path0);
-                setValue("#selectCFLevel1", bugDict.path1);
-                setValue("#assignee-field", bugDict.assignee);
-                // $('#assignee').append($('<option>', {
-                //     value: 'qwj@meitu.com',
-                //     text: '丘文坚',
-                //     title: "undefined",
-                //     selected: "selected",
-                //     style: "background-image: url(\"https://jira.meitu.com/secure/useravatar?size=xsmall&ownerId=qwj%40meitu.com&avatarId=13404\");"
-                // }));
-                setSelected("#customfield_10406", bugDict.severity);
-                setValue("#versions-textarea", bugDict.version);
-                setSelected("#customfield_10202", bugDict.find);
-                //setSelected("#customfield_10204", bugDict.frequency);
-                setValue("#customfield_10303", bugDict.branch);
-                setValue("#customfield_10203", bugDict.step);
-                //setValue("#labels-textarea",bugDict.tips)
-            });
-
-            // 点击创建按钮
-            $('#create-issue-submit').unbind('click').click(function () {
-                var $platform = $('input:radio[name="customfield_10301"]:checked');
-                // 通过buildId节点（input）定位到bug平台节点（label）
-                var id = $platform.attr("id")
-                var label = document.querySelector("label[for='" + id + "']");
-                try {
-                    var platform = label.textContent;
-                } catch (error) {
-                    platform = "";
-                    console.log("没选平台，不提示");
-                    return;
-                }
-                var version = $("#versions-multi-select .value-text").text();
-                platform = platform.toLowerCase();
-                version = version.toLowerCase();
-                if (platform && version && !version.includes(platform) && platform != 'harmony') {
-                    console.log("存在不一致情况");
-                    showtipsMessage("平台和影响版本不一致，请检查下！", "#F66666");
-                };
-            });
-            // logWork添加打卡选项下拉框
-            function addDropdownBeforeLogButton() {
-                // 查找"记录"按钮
-                const logButton = document.getElementById('log-work-submit');
-                // 检查下拉框是否已存在
-                const existingDropdown = document.getElementById('work-hours-dropdown');
-
-                // 只有当按钮存在且下拉框不存在时才创建
-                if (logButton && !existingDropdown) {
-                    // 创建下拉框
-                    const dropdown = document.createElement('select');
-                    dropdown.id = 'work-hours-dropdown';
-                    dropdown.className = 'aui-button';
-                    dropdown.style.marginRight = '10px';
-
-                    // 添加选项 - 替换为指定的类别
-                    const categories = ['海外','闪传', 'AI垂类', '非AI垂类', '美化', '美容', '拼图', '相机', '视频美化', '视频美容',  '证件照' ,'素材中心', '订阅', '商业化', '社区','其他'];
-
-
-                    // 添加一个默认空选项
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.text = '选择类别';
-                    defaultOption.disabled = true;
-                    defaultOption.selected = true;
-                    dropdown.appendChild(defaultOption);
-
-                    // 添加"全部"选项
-                    const allOption = document.createElement('option');
-                    allOption.value = 'all';
-                    allOption.text = '全部';
-                    dropdown.appendChild(allOption);
-
-                    // 添加类别选项
-                    categories.forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category;
-                        option.text = category;
-                        dropdown.appendChild(option);
-                    });
-
-                    // 将下拉框插入到按钮前面
-                    logButton.parentNode.insertBefore(dropdown, logButton);
-
-                    // 添加change事件监听器
-                    dropdown.addEventListener('change', function () {
-                        // 获取选中的值
-                        const selectedValue = this.value;
-
-
-                        // 更精确地定位当前工作记录对话框中的comment文本区域
-                        // 首先找到当前对话框，然后在其中查找textarea
-                        const dialogContainer = logButton.closest('.aui-dialog2, .jira-dialog');
-                        if (dialogContainer) {
-                            const commentTextarea = dialogContainer.querySelector('textarea.textarea.long-field.wiki-textfield#comment');
-                            if (commentTextarea) {
-                                // 获取当前光标位置
-                                const startPos = commentTextarea.selectionStart;
-                                const endPos = commentTextarea.selectionEnd;
-
-                                // 获取当前文本内容
-                                const currentText = commentTextarea.value;
-                                // 构建要插入的文本
-                                let insertedText;
-
-                                // 如果选择"全部"，则插入所有类别
-                                if (selectedValue === 'all') {
-                                    insertedText = "";
-                                    categories.forEach(category => {
-                                        insertedText += "【" + category + "】" + ": h\n";
-                                    });
-                                    // 移除最后一个换行符
-                                    insertedText = insertedText.trim();
-                                } else {
-                                    insertedText = "【" + selectedValue + "】" + ": h";
-                                }
-
-                                // 在光标位置插入选中的值
-                                const newText = currentText.substring(0, startPos) +
-                                    insertedText +
-                                    currentText.substring(endPos);
-
-                                // 更新文本区域的值
-                                commentTextarea.value = newText;
-
-                                // 设置光标位置在插入文本之后，-1可以定位到“h”之前
-                                const newCursorPos = startPos + insertedText.length - 1;
-                                commentTextarea.setSelectionRange(newCursorPos, newCursorPos);
-
-                                // 聚焦文本区域
-                                commentTextarea.focus();
-
-                                // 重置下拉框为默认选项
-                                this.selectedIndex = 0;
-                            }
-                        }
-                    });
-                }
-            }
-            // ... existing code ...
-            addDropdownBeforeLogButton();
-        }, refreshTime);
-
-
-
-    }
-
-    // 在输入框中填入分支
-    // 这里必须加上700ms的延时，否则get_branch尚未填写完成时就会调用该方法，导致填写之前存储的内容
-    async function fillInBranch(inputSelector) {
-        // await sleep(700);
-        var inputElement = $(inputSelector);
-        inputElement.val("").val(GM_getValue('branch_value'));
-    }
-
-    // 在文本区域中填入分支
-    async function fillInBranchTextarea(textareaSelector) {
-        // await sleep(700);
-        var textareaElement = $(textareaSelector);
-        textareaElement.val("").val(GM_getValue('branch_value'));
-    }
-
-    // 在指定节点后添加获取分支按钮
-    function add_get_branch_btn(targetElement) {
-        var branch_btn = $('<input type="button" class="aui-button" value="获取分支" id="get_branch_btn">');
-        var last_branch_btn = $('<input type="button" class="aui-button" value="上次分支" id="last_branch_btn">');
-        targetElement.append(branch_btn).append(last_branch_btn)
-    }
-
-    // 根据build号，请求接口获取分支
-    async function get_branch(platform, build_id) {
-        return new Promise((resolve, reject) => {
-            //console.log(platform+ "接收到的" + build_id)
-            var url = '';
-            var branch = '';
-            var result = '';
-
-            // 获取具有id为project-options的div元素
-            var projectOptionsDiv = document.getElementById('project-options');
-            if (projectOptionsDiv) {
-                // 获取data-suggestions属性的值
-                var dataSuggestionsValue = projectOptionsDiv.getAttribute('data-suggestions');
-                var jsonObject = JSON.parse(dataSuggestionsValue);
-                // 项目名
-                var project = jsonObject[0]['items'][0].label.trim();
-                var project_name = project.replace(/\s*\([^)]*\)\s*/, '').trim();
-            } else {
-                var project_name = $('#project-name-val').text().trim(); // 项目名
-            }
-
-            if (platform === 'iOS') {
-                url = 'https://omnibus.meitu-int.com/api/apps/' + appuid_ios[project_name] + '/builds/' + build_id;
-            } else if (platform === 'Android') {
-                url = 'https://omnibus.meitu-int.com/api/apps/' + appuid_android[project_name] + '/builds/' + build_id;
-            } else {
-                url = 'https://omnibus.meitu-int.com/api/apps/' + appuid_android[project_name] + '/builds/' + build_id;
-            }
-
-            GM_xmlhttpRequest({
-                url: url,
-                method: 'GET',
-                onload: function (res) {
-                    if (res.status === 200) {
-                        var r = '';
-                        if (platform === 'iOS') {
-                            r = 'refs/heads/(.*?)B';
-                        } else if (platform === 'Android') {
-                            r = 'refs/heads/(.*?)B';
-                        } else {
-                            r = 'refs/heads/(.*?)B';
-                        }
-
-                        branch = res.responseText.match(r)[1];
-                    } else {
-                        branch = ''
-                    }
-                    // branch的值存在$符时，设置为空
-                    // branch的值为空时，设置返回结果为提示语
-                    branch = branch.indexOf('$') != -1 ? '' : branch;
-
-                    result = branch == '' ? "未找到该包的分支，" + build_id : branch + '#' + build_id;
-                    if (result.indexOf("未找到") !== -1) {
-                        GM_setValue('branch_value', result);
-                        console.log(GM_getValue('branch_value'))
-                    } else {
-                        if (result.indexOf(build_id) !== -1) {
-                            GM_setValue('branch_value', result);
-                            console.log(GM_getValue('branch_value'))
-                        }
-                    }
-
-                    // 处理完成后 resolve
-                    resolve(GM_getValue('branch_value'));
-                },
-                onerror: function (err) {
-                    result = '接口请求失败，建议重新关闭开启脚本再试试';
-                    GM_setValue('branch_value', result);
-                    reject(err);
-                }
-            });
-        });
-    }
-
-    //在jira页面添加跳转到分支按钮
-    function addButtonJira() {
-        // 创建分支按钮添加
-        var span_create = $('<span class="search_span" id="search_span_create" style=""></span>')
-        // 添加图片
-        var search_image = "data:image/png;base64,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"
-        var img = document.createElement('img');
-        img.className = "myimg"
-        img.src = search_image;
-        span_create.append(img);
-        $("#customfield_10303-val").after(span_create);
-        // 解决分支按钮添加
-        var span_solved = $('<span class="search_span" id="search_span_solved"></span>')
-        var img2 = document.createElement('img');
-        img2.className = "myimg"
-        img2.src = search_image;
-        span_solved.append(img2);
-        $("#customfield_10304-val").after(span_solved);
-    }
-
-    // 正则表达式获取build号
-    function getBuildId(elementId) {
-        var create_build_content = document.getElementById(elementId).textContent.trim();
-        var reg = /\d{4,}/g;
-        var build_id_array = create_build_content.match(reg);
-        var build_id = '';
-        if (build_id_array == null || build_id_array.length == 0) {
-            console.log("未识别到 build 号");
+  },
+
+  // 多选下拉框填充（统一处理单值和多值）
+  fillMultiSelect(containerSelector, textareaSelector, suggestionsSelector, value, options = {}) {
+    const container = $(containerSelector);
+    const textarea = $(textareaSelector);
+
+    if (!textarea.length) return Promise.resolve(false);
+
+    return new Promise((resolve) => {
+      const config = {
+        singleMode: false,
+        maxRetries: 10,
+        retryDelay: 100,
+        selectDelay: 200,
+        inputDelay: 80,
+        ...options,
+      };
+
+      // 清空已选chips
+      container.find(".representation em, .representation .icon-close").each((_, el) => $(el).click());
+
+      const values = Array.isArray(value) ? value : [value];
+      const targetValues = config.singleMode ? [values[0]] : values;
+
+      if (config.singleMode && targetValues.length > 0) {
+        // 单值模式处理
+        const targetValue = targetValues[0];
+        textarea.val("").focus().val(targetValue).trigger("input").trigger("keyup");
+
+        setTimeout(() => {
+          const $items = $(suggestionsSelector).find("li a, li .aui-list-item");
+          const $hit = $items.filter((_, el) => $(el).text().trim() === targetValue).first();
+
+          if ($hit.length) {
+            $hit.click();
+          } else {
+            const e = $.Event("keydown", { which: 13, keyCode: 13 });
+            textarea.trigger(e);
+          }
+
+          textarea.trigger("change").trigger("blur");
+          resolve(true);
+        }, 120);
+        return;
+      }
+
+      // 多值模式处理
+      let currentIndex = 0;
+      const selectNext = () => {
+        if (currentIndex >= targetValues.length) {
+          setTimeout(() => {
+            textarea.trigger("change").trigger("blur");
+            resolve(true);
+          }, 100);
+          return;
+        }
+
+        const currentValue = targetValues[currentIndex];
+        textarea.val("").focus().val(currentValue).trigger("input").trigger("keyup");
+
+        setTimeout(() => {
+          const $items = $(suggestionsSelector).find("li a, li .aui-list-item");
+          const $hit = $items.filter((_, el) => $(el).text().trim() === currentValue).first();
+
+          if ($hit.length) {
+            $hit.click();
+            currentIndex++;
+            setTimeout(selectNext, config.selectDelay);
+          } else {
+            this.triggerMultipleEvents(textarea);
+            currentIndex++;
+            setTimeout(selectNext, 100);
+          }
+        }, config.inputDelay);
+      };
+
+      selectNext();
+    });
+  },
+
+  // 触发多种事件
+  triggerMultipleEvents(textarea) {
+    const enterEvent = $.Event("keydown", { which: 13, keyCode: 13 });
+    textarea.trigger(enterEvent);
+
+    setTimeout(() => {
+      const tabEvent = $.Event("keydown", { which: 9, keyCode: 9 });
+      textarea.trigger(tabEvent);
+    }, 50);
+
+    setTimeout(() => {
+      textarea.blur();
+    }, 100);
+  },
+
+  // 经办人字段填充（简化版）
+  fillAssignee(selector, value) {
+    return new Promise((resolve) => {
+      const assigneeInput = $(selector);
+      if (!assigneeInput.length) {
+        resolve(false);
+        return;
+      }
+
+      assigneeInput.val("").focus();
+
+      // 逐字符输入
+      let currentIndex = 0;
+      const typeCharacter = () => {
+        if (currentIndex < value.length) {
+          const currentValue = value.substring(0, currentIndex + 1);
+          assigneeInput.val(currentValue);
+
+          try {
+            const el = assigneeInput[0];
+            el && el.dispatchEvent(new Event("input", { bubbles: true }));
+          } catch (e) {}
+          assigneeInput.trigger("input").trigger("change");
+
+          currentIndex++;
+          setTimeout(typeCharacter, 50);
         } else {
-            build_id = build_id_array[0];
-            var reg_num = /\d{4,}/g;
-            build_id = build_id.match(reg_num)[0].replace('#', '');
+          setTimeout(() => {
+            this.selectAssigneeSuggestion(value, resolve);
+          }, 1300);
         }
-        return build_id
-    }
+      };
 
-    // 根据不同的项目，Bug平台拼接url
-    function getBaseUrl() {
-        var baseUrl = '';
-        var project_name = $('#project-name-val').text().trim(); // 项目名
-        var platform = $('#customfield_10301-val').text().trim(); //平台
-        // TODO：兼容不同的项目
-        switch (platform) {
-            case 'iOS':
-                baseUrl = 'https://omnibus.meitu-int.com/apps/' + project_ios_omnibus[project_name] + ':ios/build/number/'
-                break;
-            case 'Android':
-                baseUrl = 'https://omnibus.meitu-int.com/apps/' + project_android_omnibus[project_name] + ':android/build/number/'
-                break;
-            default:
-                baseUrl = 'https://omnibus.meitu-int.com/apps/' + project_android_omnibus[project_name] + ':android/build/number/'
-        }
-        return baseUrl;
-    }
+      setTimeout(typeCharacter, 100);
+    });
+  },
 
-    // 在创建Bug页面添加Bug模版（iOS、Android、Web）按钮
-    function addChangeSideButton() {
-        // 创建分支按钮添加
-        var btn_ios = $('<button class="ios aui-button" id="change_side_ios" type="button" style="">iOS</button>')
-        var btn_android = $('<button class="android aui-button" id="change_side_android" type="button" style="">Android</button>')
-        var btn_web = $('<button class="web aui-button" id="change_side_web" type="button" style="">Web</button>')
-        var btn_once_again = $('<button class="once-again aui-button" id="once-again" type="button" style="">再提一个</button>')
-        $(".jira-dialog-content").find(".form-footer").append(btn_ios).append(btn_android).append(btn_web).append(btn_once_again)
-    }
+  // 选择经办人建议项（简化版）
+  selectAssigneeSuggestion(value, resolve) {
+    const suggestions = $("#assignee-suggestions");
 
-    // 点击按钮更换Bug模版，如：iOS、Android、Web
-    function changeBugPlatform(platform) {
-        var project_name = $('#project-name-val').text().trim(); // 项目名
-        switch (project_name) {
-            case "美图秀秀":
-                if (platform == "iOS") {
-                    // document.getElementById('customfield_12903-1').checked = true
-                    document.getElementById('customfield_10301-2').checked = true
-                } else if (platform == "Android") {
-                    // document.getElementById('customfield_12903-1').checked = true
-                    document.getElementById('customfield_10301-1').checked = true
-                } else if (platform == "Web") {
-                    // document.getElementById('customfield_12903-1').checked = true
-                    document.getElementById('customfield_10301-3').checked = true
-                }
-                break;
-            case "美图秀秀Starii":
-                if (platform == "iOS") {
-                    document.getElementById('customfield_10301-2').checked = true
-                } else if (platform == "Android") {
-                    document.getElementById('customfield_10301-1').checked = true
-                } else if (platform == "Web") {
-                    document.getElementById('customfield_10301-3').checked = true
-                }
-                break;
-            default:
-                if (platform == "iOS") {
-                    document.getElementById('customfield_10301-2').checked = true
-                } else if (platform == "Android") {
-                    document.getElementById('customfield_10301-1').checked = true
-                } else if (platform == "Web") {
-                    document.getElementById('customfield_10301-3').checked = true
-                }
+    setTimeout(() => {
+      const suggestionItems = suggestions.find('[role="option"], li a, li .aui-list-item, .aui-list-item, li, a').filter(":visible");
+
+      if (suggestionItems.length === 0) {
+        this.setAssigneeFallback(value, resolve);
+        return;
+      }
+
+      let matchedItem = null;
+      let bestScore = 0;
+      let bestMatch = null;
+
+      suggestionItems.each((index, item) => {
+        const $item = $(item);
+        const text = $item.text().trim();
+        const score = this.calculateMatchScore(text, value);
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = $item;
         }
 
+        if (score === 100) {
+          matchedItem = $item;
+          return false;
+        }
+      });
 
-        // 获取当前的月份和日期
-        const date = new Date()
-        const today = date.getDate()
-        const curmonth = date.getMonth() + 1
-        // 获取大于且最接近当前日期的版本
-        let minNum = 99
-        let similarDate = ""
+      if (!matchedItem && bestMatch && bestScore >= 20) {
+        matchedItem = bestMatch;
+      } else if (!matchedItem && suggestionItems.length > 0) {
+        matchedItem = $(suggestionItems[0]);
+      }
 
-        // 获取 <optgroup> 元素
-        let optgroup = $('.aui-field-versionspicker').find('.multi-select-select').find('[label="未发布版本"]')[0]
-        // 获取 <option> 元素集合
-        let options = optgroup.getElementsByTagName("option");
-        for (let i = 0; i < options.length; i++) {
-            let option = options[i];
-            let text = option.textContent.trim();
-            if (text.toLowerCase().indexOf(platform.toLowerCase()) < 0) {
-                continue;
+      if (matchedItem) {
+        matchedItem.trigger("mousedown").trigger("mouseup").click();
+        setTimeout(() => {
+          resolve(true);
+        }, 500);
+      } else {
+        this.setAssigneeFallback(value, resolve);
+      }
+    }, 200);
+  },
+
+  // 计算匹配分数
+  calculateMatchScore(text, value) {
+    if (text === value) return 100;
+    if (text.startsWith(value)) return 80;
+    if (text.includes(value)) return 60;
+    if (text.toLowerCase().includes(value.toLowerCase())) return 40;
+
+    const cleanValue = value.replace(/[\s\-_]/g, "").toLowerCase();
+    const cleanText = text.replace(/[\s\-_]/g, "").toLowerCase();
+    return cleanText.includes(cleanValue) ? 20 : 0;
+  },
+
+  // 经办人字段兜底设置
+  setAssigneeFallback(value, resolve) {
+    try {
+      $.ajax({
+        url: "/rest/api/2/user/picker",
+        data: { query: value, maxResults: 20 },
+        type: "GET",
+        success: (data) => {
+          try {
+            const users = (data && (data.users || data.items || data)) || [];
+            if (users.length > 0) {
+              const pick = users.find((u) => (u.displayName || "").trim() === value) || users[0];
+              const display = (pick.displayName || pick.name || pick.key || pick.accountId || value).toString();
+              const idVal = (pick.name || pick.key || pick.accountId || display).toString();
+              const avatar = pick.avatarUrl || (pick.avatarUrls && (pick.avatarUrls["16x16"] || pick.avatarUrls.small));
+
+              const hidden = $('#assignee, input[name="assignee"], input#assignee');
+              if (hidden.length) hidden.val(idVal).trigger("change");
+
+              const assigneeInput = $("#assignee-field");
+              assigneeInput.val(display).trigger("change").trigger("blur");
+
+              const icon = $("#assignee-single-select .aui-ss-entity-icon");
+              if (avatar) icon.attr("src", avatar);
+              icon.attr("alt", display);
+
+              resolve(true);
+              return;
+            }
+          } catch (e) {
+            console.warn("解析用户选择器返回失败", e);
+          }
+
+          const assigneeInput = $("#assignee-field");
+          assigneeInput.val(value).trigger("change").trigger("blur");
+          resolve(true);
+        },
+        error: () => {
+          const assigneeInput = $("#assignee-field");
+          assigneeInput.val(value).trigger("change").trigger("blur");
+          resolve(true);
+        }
+      });
+    } catch (e) {
+      const assigneeInput = $("#assignee-field");
+      assigneeInput.val(value).trigger("change").trigger("blur");
+      resolve(true);
+    }
+  }
+};
+
+// ======== form-utils.js ========
+/**
+ * 表单工具集 - 简化版本
+ * 处理表单数据的收集和填充
+ */
+const FormUtils = {
+  // 安全获取元素值
+  safeGetValue(selector, defaultValue = "") {
+    try {
+      const element = $(selector);
+      if (element.length === 0) {
+        console.warn(`元素不存在: ${selector}`);
+        return defaultValue;
+      }
+
+      if (element.is('input[type="radio"]:checked') || element.is('input[type="checkbox"]:checked')) {
+        return element.attr("id") || element.val();
+      } else if (element.is("select")) {
+        return element.find("option:selected").val() || element.val();
+      } else if (element.is("input, textarea")) {
+        return element.val();
+      } else {
+        return element.text().trim();
+      }
+    } catch (error) {
+      console.error(`获取元素值失败: ${selector}`, error);
+      return defaultValue;
+    }
+  },
+
+  // 安全设置元素值
+  safeSetValue(selector, value, retryCount = 3) {
+    if (!value && value !== 0) return false;
+
+    try {
+      const element = $(selector);
+      if (element.length === 0) {
+        console.warn(`元素不存在: ${selector}`);
+        return false;
+      }
+
+      if (element.is('input[type="radio"]') || element.is('input[type="checkbox"]')) {
+        const targetElement = $(`input[id="${value}"], input[value="${value}"]`);
+        if (targetElement.length > 0) {
+          targetElement.prop("checked", true).trigger("change");
+          return true;
+        }
+      } else if (element.is("select")) {
+        element.val(value).trigger("change");
+        if (element.val() !== value) {
+          const option = element.find(`option:contains("${value}")`).first();
+          if (option.length > 0) {
+            element.val(option.val()).trigger("change");
+          }
+        }
+        return element.val() === value;
+      } else if (element.is("input, textarea")) {
+        element.val(value).trigger("input").trigger("change");
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error(`设置元素值失败: ${selector}`, error);
+      if (retryCount > 0) {
+        setTimeout(() => this.safeSetValue(selector, value, retryCount - 1), 100);
+      }
+      return false;
+    }
+  },
+
+  // 收集表单数据
+  collectFormData() {
+    const formConfig = ConfigManager.FORM_FIELD_CONFIG;
+    const formData = {};
+    let successCount = 0;
+    let totalCount = 0;
+
+    Object.entries(formConfig).forEach(([key, selector]) => {
+      totalCount++;
+      let value;
+
+      if (key === "platform") {
+        const platformElement = $(selector);
+        if (platformElement.length > 0) {
+          value = platformElement.attr("id");
+          console.log(`平台字段获取: ${value}`);
+        }
+      } else if (key === "branch") {
+        const branchElement = $(selector);
+        if (branchElement.length > 0) {
+          value = branchElement.val();
+          console.log(`分支字段获取: ${value}`);
+        }
+      } else if (key === "version") {
+        const chips = $("#versions-multi-select .representation .items .value-text");
+        if (chips.length > 0) {
+          value = $(chips[0]).text().trim();
+          console.log(`版本字段获取: ${value}`);
+        } else {
+          value = this.safeGetValue(selector);
+        }
+      } else if (key === "labels") {
+        const chips = $("#labels-multi-select .representation .items .value-text");
+        if (chips.length > 0) {
+          value = chips.map((i, el) => $(el).text().trim()).get();
+          console.log("标签字段获取:", value);
+        } else {
+          value = this.safeGetValue(selector);
+        }
+      } else if (key === "assignee") {
+        const assigneeInput = $(selector);
+        if (assigneeInput.length > 0 && assigneeInput.val().trim()) {
+          value = assigneeInput.val().trim();
+          console.log("经办人字段获取:", value);
+        } else {
+          const entityIcon = $("#assignee-single-select .aui-ss-entity-icon");
+          if (entityIcon.length > 0 && entityIcon.attr("alt")) {
+            value = entityIcon.attr("alt");
+            console.log("经办人字段从图标获取:", value);
+          } else {
+            value = this.safeGetValue(selector);
+          }
+        }
+      } else {
+        value = this.safeGetValue(selector);
+        if (value) {
+          console.log(`${key}字段获取: ${value}`);
+        }
+      }
+
+      if (value) {
+        formData[key] = value;
+        successCount++;
+      } else {
+        console.warn(`字段 ${key} (${selector}) 获取失败或为空`);
+      }
+    });
+
+    console.log(`表单数据收集完成: ${successCount}/${totalCount} 个字段成功`);
+    console.log("收集到的表单数据:", formData);
+    return formData;
+  },
+
+  // 填充表单数据
+  fillFormData(formData) {
+    if (!formData || typeof formData !== "object") {
+      Utils.common.showToast("没有可用的表单数据", "#f44336");
+      return;
+    }
+
+    const baseSelectors = ConfigManager.FORM_FIELD_CONFIG;
+    let successCount = 0;
+    let totalCount = 0;
+    const promises = [];
+    let deferredAssigneeValue = null;
+
+    const entries = Object.entries(formData);
+    entries.forEach(([key, value]) => {
+      if (value && baseSelectors[key]) {
+        totalCount++;
+
+        if (key === "assignee") {
+          deferredAssigneeValue = value;
+          return;
+        }
+
+        let fillPromise;
+
+        if (key === "platform") {
+          const selector = `input[id="${value}"]`;
+          fillPromise = Promise.resolve(FieldFillers.fillField(selector, value, 'radio'));
+        } else if (key === "branch") {
+          fillPromise = Promise.resolve(FieldFillers.fillField(baseSelectors[key], value, 'input'));
+        } else if (key === "version") {
+          fillPromise = FieldFillers.fillMultiSelect(
+            "#versions-multi-select",
+            baseSelectors[key],
+            "#versions-suggestions",
+            value,
+            { singleMode: true }
+          );
+        } else if (key === "labels") {
+          fillPromise = FieldFillers.fillMultiSelect(
+            "#labels-multi-select",
+            baseSelectors[key],
+            "#labels-suggestions",
+            value,
+            { singleMode: false }
+          );
+        } else {
+          fillPromise = Promise.resolve(this.safeSetValue(baseSelectors[key], value));
+        }
+
+        promises.push(
+          fillPromise.then((success) => {
+            if (success) {
+              successCount++;
             } else {
-                // console.log(text);//打印获取到的版本号
-                let startNum = text.lastIndexOf("(") !== -1 ? text.lastIndexOf("(") : text.lastIndexOf("（");
-                let endNum = text.lastIndexOf(")") !== -1 ? text.lastIndexOf(")") : text.lastIndexOf("）");
-                // theDateStr是形似「1109」的日期形式，下面拆分出月份和日期; theMonth形如「02」,theDate形如「18」
-                // theDateStr还有可能是「11.9」的形式，需要对有无小数点进行判断
-                // 2024-11-05-调整，theDateStr改为[11/5]的形式
-                let theDateStr = text.slice(startNum + 1, endNum)
-                console.log(theDateStr)
-                let theMonth = ""
-                let theDate = ""
-                if (theDateStr.includes('.')) {
-                    // 使用 split 方法分割小数点前后的数字
-                    let parts = theDateStr.split(".");
-                    // 获取小数点前面的数字
-                    theMonth = parts[0];
-                    // 获取小数点后面的数字
-                    theDate = parts[1];
-                } else if (theDateStr.includes('/')) {
-                    let parts = theDateStr.split("/");
-                    theMonth = parts[0];
-                    theDate = parts[1];
-                } else {
-                    theMonth = parseInt(theDateStr.slice(4, 6))// 2022-12-11调整，theDateStr变为20221109的形式，所以调整slice的区间；原本为（0，2）（2）
-                    theDate = parseInt(theDateStr.slice(6))
-                }
-                if (theMonth < curmonth && theMonth !== "1") {
-                    continue;
-                } else if (theMonth == curmonth) {
-                    if (theDate - today >= 0 && theDate - today < minNum) {
-                        similarDate = theDateStr
-                        minNum = theDate - today
-                    }
-                } else if (theMonth == curmonth + 1 || theMonth == curmonth - 11) {
-                    let monthDuration = getDuration()
-                    let daysToEnd = monthDuration - today
-                    if ((Number(theDate) + Number(daysToEnd)) < minNum) {
-                        similarDate = theDateStr
-                        minNum = Number(theDate) + Number(daysToEnd)
-                    }
-                }
+              console.warn(`字段 ${key} (${baseSelectors[key]}) 填充失败`);
             }
+            return success;
+          }).catch((error) => {
+            console.error(`字段 ${key} 填充出错:`, error);
+            return false;
+          })
+        );
+      }
+    });
 
-        }
-
-        // console.log(similarDate)
-        // 删掉「影响版本」文本框中的内容
-        let div = document.getElementsByClassName('representation')[0]
-        let emarr = div.getElementsByTagName('em')
-        for (let i = 0; i < emarr.length; i++) {
-            // 这里全部都点击的emmarr[0]，是因为第一个节点被删除掉之后，后面的素材会顶上来成为新的第0位节点，加个200ms延时，避免点击不到
-            sleep(200).then(() => {
-                emarr[0].click()
-            })
-        }
-
-        // 在「影响版本」文本框填入内容
-        for (let i = 0; i < options.length; i++) {
-            let option = options[i];
-            let text = option.textContent.trim();
-            // 如果a节点当中，存在目标日期字段，且平台与点击的一致，就把a节点的text填入到文本框中
-            if (text.indexOf(similarDate) > 0 && text.toLowerCase().indexOf(platform.toLowerCase()) > 0) {
-                $("#versions-textarea").val(text)
-                // 获取控件焦点
-                $("#versions-textarea").focus()
-                // 主动失去当前控件的焦点
-                $("#versions-textarea").blur()
-            }
-        }
-    }
-
-    // 获取当前月份有多少天
-    function getDuration() {
-        let dt = new Date()
-        var month = dt.getMonth()
-        dt.setMonth(dt.getMonth() + 1)
-        dt.setDate(0)
-        return dt.getDate()
-    }
-
-    // sleep方法，用于延迟一些操作
-    function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    // 当是CF域名时，才触发后续的操作，如果不是则不触发
-    // CF
-    // CF
-    // CF
-    if (location.href.indexOf('cf.meitu.com') > 0) {
-        // 获取ul元素
-        var menuBars = document.getElementsByClassName("ajs-menu-bar");
-        var menuBar = menuBars[0];
-
-        // 创建两个li元素
-        var li1 = document.createElement("li");
-        var li2 = document.createElement("li");
-        li1.className = "ajs-button normal"
-        li2.className = "ajs-button normal"
-
-        // 创建两个button元素
-        var button1 = document.createElement("button");
-        var button2 = document.createElement("button");
-
-        // 设置按钮文本
-        button1.textContent = "复制Android需求";
-        button2.textContent = "复制iOS需求";
-
-        // 设置按钮ID
-        button1.id = "Android"
-        button2.id = "iOS"
-
-        // 设置按钮Class
-        button1.className = "aui-button aui-button-subtle edit"
-        button2.className = "aui-button aui-button-subtle edit"
-
-        // 将button元素添加到li元素中
-        li1.appendChild(button1);
-        li2.appendChild(button2);
-
-        // 将li元素添加到ul元素中
-        menuBar.appendChild(li1);
-        menuBar.appendChild(li2);
-
-        // 将li元素放在menuBar的最前
-        menuBar.insertBefore(li2, menuBar.firstChild);
-        menuBar.insertBefore(li1, menuBar.firstChild);
-
-        getRequirementArray("Android");
-        getRequirementArray("iOS");
-    }
-
-
-    /**
-     * 为平台特定按钮添加点击事件监听器，根据表格中的复选框状态收集需求名称并复制到剪贴板。
-     * 
-     * @function getRequirementArray
-     * @param {string} platform - 平台标识符（"Android"或"iOS"），用于查找按钮元素
-     * @description 当指定平台按钮被点击时，此函数将：
-     *   1. 扫描需求表格中的已勾选项目
-     *   2. 将需求名称收集到特定平台的数组中
-     *   3. 根据特定规则处理"中间架构"需求：
-     *      - 排除包含"底层先行"的项目
-     *      - 根据平台特定文本将项目路由到适当的平台数组
-     *   4. 将收集的需求复制到剪贴板
-     * @requires getArrayByCheckedLi - 根据复选框状态将需求添加到数组的辅助函数
-     * @requires copyArrayToClipboard - 将数组复制到剪贴板的辅助函数
-     */
-    function getRequirementArray(platform) {
-        // 获取相应的按钮
-        var platformButton = document.getElementById(platform);
-        // 添加点击事件处理程序
-        platformButton.addEventListener("click", function (event) {
-            // 创建一个空数组，用于存储每个需求名称
-            var androidArray = [];
-            var iosArray = [];
-            // 记录每个需求所处的列数,用于获取打勾状态
-            var androidTd = findColumnIndex('Android') + 1;
-            var iosTd = findColumnIndex('iOS') + 1;
-            var cppTd = findColumnIndex('中间架构') + 1;
-
-            // 获取具有aria-live属性为"polite"的tbody元素
-            var politeTbodies = document.querySelectorAll('tbody[aria-live="polite"]');
-            politeTbodies.forEach(function (tbody) {
-                // 获取tbody下的所有tr元素
-                var rows = tbody.querySelectorAll('tr');
-                // 遍历tr
-                rows.forEach(function (row) {
-                    // 从tr中找到a元素，直接获取需求名称
-                    var anchorElement = row.querySelector('a');
-                    const secondTdText = anchorElement ? anchorElement.textContent.trim() : undefined;
-
-                    // Android有打勾的项目放入Android数组
-                    getArrayByCheckedLi(row, androidTd, secondTdText, androidArray)
-                    // iOS有打勾的项目放入iOS数组
-                    getArrayByCheckedLi(row, iosTd, secondTdText, iosArray)
-                    // 中间架构有打勾的项目放入双端数组
-                    let blackWord = '底层先行';
-                    // 需求名称中不含“底层先行”的可放入
-                    if (secondTdText && secondTdText.indexOf(blackWord) === -1) {
-                        let platformAndroid = "Android";
-                        let platformiOS = "iOS";
-                        // 不含Android含有iOS的，放入iOS数组
-                        if (secondTdText.indexOf(platformAndroid) === -1 && secondTdText.indexOf(platformiOS) !== -1) {
-                            getArrayByCheckedLi(row, cppTd, secondTdText, iosArray);
-                            // 不含iOS，含有Android的放入Android数组
-                        } else if (secondTdText.indexOf(platformAndroid) !== -1 && secondTdText.indexOf(platformiOS) === -1) {
-                            getArrayByCheckedLi(row, cppTd, secondTdText, androidArray);
-                        } else {
-                            // 其余的两个数组都放入
-                            getArrayByCheckedLi(row, cppTd, secondTdText, androidArray);
-                            getArrayByCheckedLi(row, cppTd, secondTdText, iosArray);
-                        }
-                    }
-
-                });
-            });
-            var buttonPlatform = event.target.id;
-            if (buttonPlatform === "Android") {
-                copyArrayToClipboard(androidArray);
-            } else if (buttonPlatform === "iOS") {
-                copyArrayToClipboard(iosArray);
-            }
+    Promise.all(promises).then(() => {
+      if (deferredAssigneeValue && baseSelectors["assignee"]) {
+        return FieldFillers.fillAssignee(baseSelectors["assignee"], deferredAssigneeValue).then((success) => {
+          if (success) {
+            successCount++;
+          } else {
+            console.warn(`字段 assignee (${baseSelectors["assignee"]}) 填充失败`);
+          }
+          return success;
+        }).catch((error) => {
+          console.error(`字段 assignee 填充出错:`, error);
+          return false;
         });
+      }
+      return true;
+    }).then(() => {
+      const message = `表单填充完成: ${successCount}/${totalCount} 个字段成功`;
+      Utils.common.showToast(
+        message,
+        successCount === totalCount ? "#4CAF50" : "#ff9800"
+      );
+      console.log(message, formData);
+    }).catch((error) => {
+      console.error("表单填充过程中出现错误:", error);
+      Utils.common.showToast("表单填充过程中出现错误", "#f44336");
+    });
+  }
+};
+
+// ======== version-utils.js ========
+/**
+ * 版本管理工具 - 精简版本
+ * 处理版本相关的逻辑
+ */
+const VersionUtils = {
+  getCurrentMonthDays() {
+    const dt = new Date();
+    dt.setMonth(dt.getMonth() + 1);
+    dt.setDate(0);
+    return dt.getDate();
+  },
+
+  parseDateFromVersion(versionText) {
+    const startNum = versionText.lastIndexOf("(") !== -1 ? versionText.lastIndexOf("(") : versionText.lastIndexOf("（");
+    const endNum = versionText.lastIndexOf(")") !== -1 ? versionText.lastIndexOf(")") : versionText.lastIndexOf("）");
+
+    const dateStr = versionText.slice(startNum + 1, endNum);
+    let month = "";
+    let date = "";
+
+    if (dateStr.includes(".")) {
+      const parts = dateStr.split(".");
+      month = parts[0];
+      date = parts[1];
+    } else if (dateStr.includes("/")) {
+      const parts = dateStr.split("/");
+      month = parts[0];
+      date = parts[1];
+    } else {
+      month = parseInt(dateStr.slice(4, 6));
+      date = parseInt(dateStr.slice(6));
     }
 
-    /**
-     * 查找表头中包含指定字符串的单元格位置
-     * @param {string} columnName - 要查找的列名
-     * @return {number} - 列的索引位置(从0开始)，如果未找到则返回-1
-     */
-    function findColumnIndex(columnName) {
-        // 获取所有表头单元格
-        const headerCells = document.querySelectorAll('th.confluenceTh');
+    return { month: String(month), date: String(date) };
+  },
 
-        // 遍历查找匹配的列
-        for (let i = 0; i < headerCells.length; i++) {
-            // 获取表头单元格中的内部div
-            const headerInner = headerCells[i].querySelector('.tablesorter-header-inner');
-            if (headerInner && headerInner.textContent.trim() === columnName) {
-                return i; // 返回索引位置（从0开始）
+  calculateDateDifference(month, date, currentMonth, currentDate) {
+    const targetMonth = parseInt(month);
+    const targetDate = parseInt(date);
+
+    if (targetMonth < currentMonth && targetMonth !== 1) {
+      return -1;
+    }
+
+    if (targetMonth === currentMonth) {
+      const diff = targetDate - currentDate;
+      return diff >= 0 ? diff : -1;
+    }
+
+    if (targetMonth === currentMonth + 1 || targetMonth === currentMonth - 11) {
+      const monthDuration = this.getCurrentMonthDays();
+      const daysToEnd = monthDuration - currentDate;
+      return targetDate + daysToEnd;
+    }
+
+    return -1;
+  },
+
+  getClosestVersionDate(platform) {
+    const date = new Date();
+    const today = date.getDate();
+    const currentMonth = date.getMonth() + 1;
+
+    let minDiff = 99;
+    let closestDate = "";
+
+    const optgroup = $(".aui-field-versionspicker")
+      .find(".multi-select-select")
+      .find('[label="未发布版本"]')[0];
+
+    if (!optgroup) {
+      console.warn("未找到版本选择器");
+      return "";
+    }
+
+    const options = optgroup.getElementsByTagName("option");
+
+    for (let i = 0; i < options.length; i++) {
+      const option = options[i];
+      const text = option.textContent.trim();
+
+      if (text.toLowerCase().indexOf(platform.toLowerCase()) < 0) {
+        continue;
+      }
+
+      try {
+        const { month, date } = this.parseDateFromVersion(text);
+        const diff = this.calculateDateDifference(month, date, currentMonth, today);
+
+        if (diff !== -1 && diff < minDiff) {
+          closestDate = text.slice(
+            text.lastIndexOf("(") !== -1 ? text.lastIndexOf("(") + 1 : text.lastIndexOf("（") + 1,
+            text.lastIndexOf(")") !== -1 ? text.lastIndexOf(")") : text.lastIndexOf("）")
+          );
+          minDiff = diff;
+        }
+      } catch (error) {
+        console.warn(`解析版本日期失败: ${text}`, error);
+      }
+    }
+
+    return closestDate;
+  },
+
+  clearSelectedVersions() {
+    const div = document.getElementsByClassName("representation")[0];
+    if (!div) return;
+
+    const emarr = div.getElementsByTagName("em");
+    for (let i = emarr.length - 1; i >= 0; i--) {
+      setTimeout(() => {
+        if (emarr[i]) emarr[i].click();
+      }, 200 * (emarr.length - i));
+    }
+  },
+
+  setVersionValue(platform, targetDate) {
+    const optgroup = $(".aui-field-versionspicker")
+      .find(".multi-select-select")
+      .find('[label="未发布版本"]')[0];
+
+    if (!optgroup) {
+      console.warn("未找到版本选择器的未发布版本组");
+      return;
+    }
+
+    const options = optgroup.getElementsByTagName("option");
+
+    for (let i = 0; i < options.length; i++) {
+      const option = options[i];
+      const text = option.textContent.trim();
+
+      if (text.indexOf(targetDate) > 0 && text.toLowerCase().indexOf(platform.toLowerCase()) > 0) {
+        // 使用FieldFillers的多选下拉框方法来选择版本
+        FieldFillers.fillMultiSelect(
+          "#versions-multi-select",           // 容器选择器
+          "#versions-textarea",              // 输入框选择器
+          "#versions-suggestions",           // 建议列表选择器
+          text,                              // 要选择的版本文本
+          { singleMode: true }               // 单值模式
+        ).then((success) => {
+          if (success) {
+            console.log(`已通过多选下拉框选择版本: ${text}`);
+          } else {
+            console.warn(`版本选择失败: ${text}`);
+            // 如果多选下拉框方法失败，尝试直接设置
+            $("#versions-textarea").val(text).trigger("input").trigger("change");
+          }
+        });
+
+        break;
+      }
+    }
+  },
+
+  autoSelectClosestVersion(platform) {
+    try {
+      this.clearSelectedVersions();
+
+      const closestDate = this.getClosestVersionDate(platform);
+
+      if (closestDate) {
+        setTimeout(() => {
+          this.setVersionValue(platform, closestDate);
+          console.log(`已自动选择最接近的${platform}版本: ${closestDate}`);
+        }, 500);
+      } else {
+        console.warn(`未找到合适的${platform}版本`);
+      }
+    } catch (error) {
+      console.error("自动选择版本失败:", error);
+    }
+  }
+};
+
+// ======== jira-module.js ========
+/**
+ * Jira模块核心逻辑 - 简化版本
+ * 处理Jira相关的主要功能
+ */
+const JiraModule = {
+  counter: 0,
+  timerId: null,
+  autoFillTimer: null,
+  syncStopped: false,  // 同步停止标志
+  lastInputContent: "",
+  countdownTimer: null,
+
+  init() {
+    if (!Utils.url.isDomain(ConfigManager.CONSTANTS.DOMAINS.JIRA)) {
+      console.error("❌ 不是Jira域名，退出初始化");
+      return;
+    }
+    console.log('[企业微信] JiraModule初始化完成，添加企业微信同步功能');
+    this.startMainLoop();
+  },
+
+  startMainLoop() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+
+    this.timerId = setInterval(() => {
+      this.checkAndAddElements();
+    }, ConfigManager.CONSTANTS.REFRESH_INTERVAL);
+  },
+
+  checkAndAddElements() {
+    const elements = this.getPageElements();
+
+    if (!elements.searchSpan) {
+      this.addJiraBranchNavigationButton();
+      Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
+    }
+
+    if (elements.createDialog) {
+      this.handleCreateDialog(elements);
+    }
+
+    if (elements.closeDialog || elements.reopenDialog) {
+      this.handleCloseReopenDialog();
+    }
+
+    if (elements.commentToolbar) {
+      this.handleCommentToolbar();
+    }
+
+    // 添加LogWork标签功能
+    this.addLogWorkDropdown();
+
+    // 添加企业微信同步功能（只在组件不存在时打印日志）
+    if (!document.getElementById("wechat-sync-container")) {
+      console.log('[企业微信] 正在检查是否需要添加UI组件...');
+      this.addWeChatSyncUI();
+    }
+
+    this.bindEvents();
+  },
+
+  getPageElements() {
+    const fieldIds = ConfigManager.CONSTANTS.JIRA_FIELD_IDS;
+    return {
+      searchSpan: Utils.dom.safeGetElement(fieldIds.SEARCH_SPAN),
+      changeSideButton: Utils.dom.safeGetElement(fieldIds.CHANGE_SIDE_BUTTON),
+      buildId: Utils.dom.safeGetElement(fieldIds.BUILD_ID),
+      stepText: Utils.dom.safeGetElement(fieldIds.STEP_TEXT),
+      createDialog: Utils.dom.safeGetElement(fieldIds.CREATE_DIALOG),
+      closeDialog: Utils.dom.safeGetElement(fieldIds.CLOSE_DIALOG),
+      reopenDialog: Utils.dom.safeGetElement(fieldIds.REOPEN_DIALOG),
+      commentToolbar: Utils.dom.safeGetElement(fieldIds.COMMENT_TOOLBAR),
+    };
+  },
+
+  addJiraBranchNavigationButton() {
+    if (typeof addButtonJira === "function") {
+      addButtonJira();
+    }
+  },
+
+  handleCreateDialog(elements) {
+    if (!elements.changeSideButton) {
+      Utils.button.addButtonsToContainer(
+        ".jira-dialog-content .form-footer",
+        [
+          { className: "ios aui-button", id: "change_side_ios", text: "iOS" },
+          { className: "android aui-button", id: "change_side_android", text: "Android" },
+          { className: "web aui-button", id: "change_side_web", text: "Web" },
+          { className: "once-again aui-button", id: "once-again", text: "再提一个" }
+        ]
+      );
+    }
+
+    if (elements.buildId) {
+      const branchSpan = Utils.button.addLabelAfter("#customfield_10303", "customfield_10304");
+      Utils.button.addBranchButtons(branchSpan);
+    }
+
+    if (elements.stepText) {
+      Utils.button.addLabelAfter("#customfield_10203", "customfield_10204", {
+        className: "aui-button",
+        text: "重置步骤",
+        id: "reset_step"
+      });
+    }
+
+    this.hideUIForStarii();
+    this.fillBuildIdAuto();
+  },
+
+  hideUIForStarii() {
+    ConfigManager.UI_HIDE_CONFIGS.forEach((config) => {
+      Utils.ui.hideIf(config.condition, config);
+    });
+  },
+
+  fillBuildIdAuto() {
+    const buildNum = $("#customfield_10303").val();
+
+    if (this.lastInputContent === buildNum) {
+      return;
+    }
+    this.lastInputContent = buildNum;
+
+    const isValidBuildId = /^\d{4,}$/.test(buildNum);
+
+    if (isValidBuildId) {
+      this.scheduleAutoFill(buildNum);
+    } else {
+      this.cancelAutoFill();
+    }
+  },
+
+  scheduleAutoFill(buildId) {
+    this.cancelAutoFill();
+    this.showAutoFillCountdown(3);
+
+    this.autoFillTimer = setTimeout(() => {
+      const currentContent = $("#customfield_10303").val();
+      if (currentContent === buildId && /^\d{4,}$/.test(currentContent)) {
+        if (typeof window.set_branch === "function") {
+          window.set_branch("get_branch_btn", "create-issue-dialog");
+        }
+      }
+      this.clearCountdown();
+    }, 3000);
+  },
+
+  cancelAutoFill() {
+    if (this.autoFillTimer) {
+      clearTimeout(this.autoFillTimer);
+      this.autoFillTimer = null;
+    }
+    this.clearCountdown();
+  },
+
+  showAutoFillCountdown(seconds) {
+    const $input = $("#customfield_10303");
+    const self = this;
+
+    $(".auto-fill-hint").remove();
+
+    const $hint = $(`
+      <div class="auto-fill-hint" style="
+        position: absolute;
+        background: #e3f2fd;
+        border: 1px solid #2196f3;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 12px;
+        color: #1976d2;
+        z-index: 1000;
+        margin-top: 2px;
+        white-space: nowrap;
+      ">
+        🔄 将在 <span class="countdown">${seconds}</span> 秒后自动获取分支
+        <span class="cancel-btn" style="margin-left: 8px; cursor: pointer; color: #f44336;">✕</span>
+      </div>
+    `);
+
+    $hint.find(".cancel-btn").click(function () {
+      self.cancelAutoFill();
+    });
+
+    $input.parent().css("position", "relative");
+    $input.after($hint);
+
+    let remainingSeconds = seconds;
+    this.countdownTimer = setInterval(() => {
+      remainingSeconds--;
+      $(".countdown").text(remainingSeconds);
+
+      if (remainingSeconds <= 0) {
+        this.clearCountdown();
+      }
+    }, 1000);
+  },
+
+  clearCountdown() {
+    if (this.countdownTimer) {
+      clearInterval(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+    $(".auto-fill-hint").fadeOut(200, function () {
+      $(this).remove();
+    });
+  },
+
+  handleCloseReopenDialog() {
+    const preTextButton = $('<input class="aui-button" id="close-text" type="button" value="上次填写"></input>');
+    const preTextBtn = Utils.dom.safeGetElement("close-text");
+    const branchSpanClose = $('<span id="close_text">输入id：</span>');
+    const inputTextClose = $('<input type="text" class="text medium-field" id="build_id_close">');
+
+    setTimeout(() => {
+      if (!preTextBtn) {
+        $(".jira-dialog-content .form-footer").append(branchSpanClose).append(inputTextClose);
+        Utils.button.addBranchButtons(".jira-dialog-content .form-footer");
+        $(".jira-dialog-content .form-footer").append(preTextButton);
+      }
+    }, 500);
+  },
+
+  handleCommentToolbar() {
+    const preTextSpan = $('<span id="pre_text">输入id：</span>');
+    const preTextSpanElement = Utils.dom.safeGetElement("pre_text");
+    const inputText = $('<input type="text" class="text medium-field" id="input_text">');
+
+    setTimeout(() => {
+      if (!preTextSpanElement && !Utils.dom.safeGetElement("workflow-transition-21-dialog")) {
+        const branchSpan = $("<span></span>");
+        branchSpan.append(preTextSpan).append(inputText);
+        Utils.button.addBranchButtons(branchSpan);
+        $(".security-level .current-level").after(branchSpan);
+      }
+    }, 500);
+  },
+
+  bindEvents() {
+    // 事件绑定逻辑简化
+  },
+
+  handleBranchButtonClick(event) {
+    setTimeout(() => {
+      let parentNode = event.target.parentNode;
+      while (parentNode != null) {
+        if (parentNode.hasAttribute("id")) {
+          break;
+        }
+        parentNode = parentNode.parentNode;
+      }
+
+      const parentId = parentNode ? parentNode.getAttribute("id") : null;
+      const selfId = event.target.id;
+
+      if (typeof window.set_branch === "function") {
+        window.set_branch(selfId, parentId);
+      }
+    }, 500);
+  },
+
+  handleResetStepClick() {
+    const defaultText = "[预置条件]\n\n[步骤]\n\n[结果]\n\n[期望]\n\n[备注机型]\n\n[BUG出现频次]\n\n\n";
+    const stepElement = Utils.dom.safeGetElement("customfield_10203");
+    if (stepElement) {
+      stepElement.value = defaultText;
+    }
+  },
+
+  handleSearchSpanClick(fieldId) {
+    if (typeof getBuildId === "function" && typeof getBaseUrl === "function") {
+      const buildId = getBuildId(fieldId);
+      Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
+      Utils.common.sleep(500).then(() => {
+        const targetUrl = getBaseUrl() + buildId;
+        window.open(targetUrl);
+      });
+    }
+  },
+
+  handlePreTextClick() {
+    const textArea = $(".jira-dialog-content #comment");
+
+    if (!textArea.length) {
+      console.warn("[上次填写] 未找到评论文本框");
+      return;
+    }
+
+    const savedText = Utils.storage.getValue("closeText", "");
+    textArea.val(savedText).focus();
+    console.log("[上次填写] 已填充上次保存的内容");
+  },
+
+  handleWorkflowSubmit() {
+    const submitButton = $("#issue-workflow-transition-submit");
+    const buttonText = submitButton.val()?.trim() || "";
+
+    if (buttonText !== "关闭问题") {
+      return;
+    }
+
+    const textArea = $(".jira-dialog-content #comment");
+    const content = textArea.val()?.trim() || "";
+
+    if (content) {
+      Utils.storage.setValue("closeText", content);
+      console.log("[关闭问题] 已保存评论内容");
+    }
+  },
+
+  /**
+   * 添加LogWork打卡标签下拉框
+   */
+  addLogWorkDropdown() {
+    // 查找"记录"按钮
+    const logButton = Utils.dom.safeGetElement("log-work-submit");
+
+    // 检查下拉框是否已存在
+    const existingDropdown = Utils.dom.safeGetElement("work-hours-dropdown");
+
+    // 只有当按钮存在且下拉框不存在时才创建
+    if (logButton && !existingDropdown) {
+      // 创建下拉框
+      const dropdown = document.createElement("select");
+      dropdown.id = "work-hours-dropdown";
+      dropdown.className = "aui-button";
+      dropdown.style.marginRight = "10px";
+
+      // 从配置中获取类别
+      const categories = ConfigManager.CONSTANTS.LOG_WORK_CATEGORIES;
+
+      // 添加一个默认空选项
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.text = "选择类别";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      dropdown.appendChild(defaultOption);
+
+      // 添加"全部"选项
+      const allOption = document.createElement("option");
+      allOption.value = "all";
+      allOption.text = "全部";
+      dropdown.appendChild(allOption);
+
+      // 添加类别选项
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.text = category;
+        dropdown.appendChild(option);
+      });
+
+      // 将下拉框插入到按钮前面
+      logButton.parentNode.insertBefore(dropdown, logButton);
+
+      // 添加change事件监听器
+      dropdown.addEventListener("change", function () {
+        // 获取选中的值
+        const selectedValue = this.value;
+
+        // 更精确地定位当前工作记录对话框中的comment文本区域
+        // 首先找到当前对话框，然后在其中查找textarea
+        const dialogContainer = logButton.closest(".aui-dialog2, .jira-dialog");
+        if (dialogContainer) {
+          const commentTextarea = dialogContainer.querySelector(
+            "textarea.textarea.long-field.wiki-textfield#comment"
+          );
+          if (commentTextarea) {
+            // 获取当前光标位置
+            const startPos = commentTextarea.selectionStart;
+            const endPos = commentTextarea.selectionEnd;
+
+            // 获取当前文本内容
+            const currentText = commentTextarea.value;
+            // 构建要插入的文本
+            let insertedText;
+
+            // 如果选择"全部"，则插入所有类别
+            if (selectedValue === "all") {
+              insertedText = "";
+              categories.forEach((category) => {
+                insertedText += "【" + category + "】" + ": h\n";
+              });
+              // 移除最后一个换行符
+              insertedText = insertedText.trim();
+            } else {
+              insertedText = "【" + selectedValue + "】" + ": h";
             }
-        }
 
-        // 未找到匹配列
-        console.log(`未找到包含"${columnName}"的列`);
-        return -1;
+            // 在光标位置插入选中的值
+            const newText =
+              currentText.substring(0, startPos) +
+              insertedText +
+              currentText.substring(endPos);
+
+            // 更新文本区域的值
+            commentTextarea.value = newText;
+
+            // 设置光标位置在插入文本之后，-1可以定位到"h"之前
+            const newCursorPos = startPos + insertedText.length - 1;
+            commentTextarea.setSelectionRange(newCursorPos, newCursorPos);
+
+            // 聚焦文本区域
+            commentTextarea.focus();
+
+            // 重置下拉框为默认选项
+            this.selectedIndex = 0;
+          }
+        }
+      });
+    }
+  },
+
+  /**
+   * 添加企业微信同步UI组件
+   */
+  addWeChatSyncUI() {
+    // 检查是否已经添加过
+    if (document.getElementById("wechat-sync-container")) {
+      return;
     }
 
+    console.log('[企业微信] 正在查找收藏按钮...');
 
-    // 获取tr元素中的第N个td元素，并检查其中的li元素是否为选中状态，选中的话则添加需求名字段到数组
-    function getArrayByCheckedLi(row, tdNum, requirementName, array) {
-        var tdElement = row.querySelector('td:nth-child(' + tdNum + ')');
-        var liElement = tdElement.querySelector('li.checked');
-        if (liElement) {
-            addToUniqueArray(array, requirementName)
-        }
+    // 查找"添加此过滤器到你的收藏过滤器中"按钮
+    const favoriteButton = document.querySelector('a.fav-link[original-title="添加此过滤器到你的收藏过滤器中"]');
+
+    console.log('[企业微信] 找到收藏按钮:', favoriteButton);
+
+    if (!favoriteButton) {
+      console.log('[企业微信] 未找到收藏按钮，可能不在过滤器页面');
+      return;
     }
 
+    console.log('[企业微信] 开始创建UI组件...');
 
-    // 往数组内添加不重复的元素
-    function addToUniqueArray(arr, element) {
-        if (arr.indexOf(element) === -1) {
-            arr.push(element);
+    // 创建容器
+    const container = document.createElement('div');
+    container.id = 'wechat-sync-container';
+    container.style.display = 'inline-block';
+    container.style.marginLeft = '20px';
+
+    // 创建输入框
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'wecom-filter-url-input';
+    input.placeholder = '输入Jira过滤器URL';
+    input.style.width = '400px';
+    input.style.padding = '5px 10px';
+    input.style.border = '1px solid #ccc';
+
+    // 创建按钮
+    const button = document.createElement('button');
+    button.id = 'wecom-sync-btn';
+    button.innerText = '创建智能文档';
+    button.style.marginLeft = '10px';
+    button.style.padding = '5px 15px';
+    button.style.backgroundColor = '#1976d2';
+    button.style.color = 'white';
+    button.style.border = 'none';
+    button.style.borderRadius = '3px';
+    button.style.cursor = 'pointer';
+
+    // 创建状态显示
+    const status = document.createElement('div');
+    status.id = 'wecom-sync-status';
+    status.style.marginTop = '10px';
+    status.style.padding = '8px';
+    status.style.fontSize = '13px';
+    status.style.display = 'none';
+
+    // 创建结果显示
+    const result = document.createElement('div');
+    result.id = 'wecom-sync-result';
+    result.style.marginTop = '10px';
+    result.style.padding = '8px';
+    result.style.fontSize = '13px';
+    result.style.display = 'none';
+
+    // 组装组件
+    container.appendChild(input);
+    container.appendChild(button);
+    container.appendChild(status);
+    container.appendChild(result);
+
+    // 插入到收藏按钮后面
+    favoriteButton.parentNode.insertBefore(container, favoriteButton.nextSibling);
+
+    console.log('[企业微信] UI组件已创建并插入页面');
+
+    // 绑定点击事件
+    this.bindWeChatSyncEvents();
+    console.log('[企业微信] 事件监听器已绑定');
+  },
+
+  /**
+   * 绑定企业微信同步事件
+   */
+  bindWeChatSyncEvents() {
+    const self = this;
+
+    document.getElementById('wecom-sync-btn').addEventListener('click', async function() {
+      var btn = document.getElementById('wecom-sync-btn');
+
+      // 如果正在同步，点击则停止
+      if (btn.innerText === '停止') {
+        self.syncStopped = true;
+        self.showSyncStatus('error', '正在停止同步...');
+        btn.disabled = true;
+        btn.innerText = '停止中...';
+        return;
+      }
+
+      // 重置停止标志
+      self.syncStopped = false;
+
+      const filterUrl = document.getElementById('wecom-filter-url-input').value;
+
+      if (!filterUrl) {
+        self.showSyncStatus('error', '请输入Jira过滤器URL');
+        return;
+      }
+
+      // 验证URL格式
+      if (filterUrl.indexOf('jira.meitu.com') === -1) {
+        self.showSyncStatus('error', 'URL格式不正确，请输入有效的Jira过滤器URL');
+        return;
+      }
+
+      // 设置按钮为停止状态
+      btn.innerText = '停止';
+      btn.style.backgroundColor = '#d32f2f';
+
+      try {
+        // 1. 爬取Bug信息
+        self.showSyncStatus('info', '正在爬取Jira Bug信息...');
+
+        var bugs = await JiraBugScraper.scrapeBugsFromFilter(
+          filterUrl,
+          function(progress) {
+            self.showSyncStatus('info', progress);
+          },
+          function() { return self.syncStopped; }  // 停止检查函数
+        );
+
+        if (self.syncStopped) {
+          throw new Error('用户取消同步');
         }
+
+        if (bugs.length === 0) {
+          throw new Error('未找到任何Bug');
+        }
+
+        self.showSyncStatus('success', '成功爬取 ' + bugs.length + ' 个Bug');
+
+        // 2. 创建企业微信文档
+        self.showSyncStatus('info', '正在创建企业微信智能表格...');
+
+        // 从过滤器URL中提取过滤器名称
+        var filterName = self._extractFilterName(filterUrl);
+        var docTitle = filterName + ' - Bug统计表';
+
+        var result = await WeChatWorkAPI.createSmartTableDoc(
+          docTitle,
+          bugs,
+          function() { return self.syncStopped; }  // 停止检查函数
+        );
+
+        if (self.syncStopped) {
+          throw new Error('用户取消同步');
+        }
+
+        // 显示成功结果
+        self.showSyncResult(result);
+        self.showSyncStatus('success', '同步完成！');
+
+      } catch (error) {
+        console.error('[企业微信同步] 错误:', error);
+
+        if (error.message === '用户取消同步') {
+          self.showSyncStatus('error', '已取消同步');
+        } else {
+          self.showSyncStatus('error', '同步失败: ' + error.message);
+        }
+      } finally {
+        // 恢复按钮
+        var btn = document.getElementById('wecom-sync-btn');
+        btn.disabled = false;
+        btn.innerText = '创建智能文档';
+        btn.style.backgroundColor = '#1976d2';
+        self.syncStopped = false;
+      }
+    });
+  },
+
+  /**
+   * 显示同步状态
+   */
+  showSyncStatus(type, message) {
+    var status = document.getElementById('wecom-sync-status');
+    status.innerText = message;
+    status.style.display = 'block';
+
+    // 根据类型设置样式
+    if (type === 'error') {
+      status.style.background = '#ffebee';
+      status.style.color = '#c62828';
+    } else if (type === 'success') {
+      status.style.background = '#e8f5e9';
+      status.style.color = '#2e7d32';
+    } else {
+      status.style.background = '#e3f2fd';
+      status.style.color = '#1565c0';
+    }
+  },
+
+  /**
+   * 显示同步结果（文档链接）
+   */
+  showSyncResult(result) {
+    var resultDiv = document.getElementById('wecom-sync-result');
+
+    var content = '';
+
+    if (result.web_url) {
+      content += '<strong>文档链接:</strong> <a href="' + result.web_url + '" target="_blank">' + result.web_url + '</a>';
     }
 
+    resultDiv.innerHTML = content;
+    resultDiv.style.display = 'block';
+  },
 
-    // 将数组转化为字符串进行拷贝
-    function copyArrayToClipboard(arr) {
-        // 将数组转换为字符串
-        var arrayString = arr.join('\n');  // 使用逗号和空格分隔数组元素
+  /**
+   * 从URL中提取过滤器名称
+   */
+  _extractFilterName(url) {
+    try {
+      var urlObj = new URL(url);
+      var searchParams = urlObj.searchParams;
 
-        // 创建一个新的textarea元素
-        var textarea = document.createElement('textarea');
+      // 尝试获取过滤器名称
+      var filterName = searchParams.get('filtername') ||
+                      searchParams.get('name') ||
+                      'Jira过滤器';
 
-        // 设置textarea的值为数组转换后的字符串
-        textarea.value = arrayString;
+      return decodeURIComponent(filterName);
+    } catch (error) {
+      return 'Jira过滤器';
+    }
+  }
+};
 
-        // 将textarea元素添加到DOM中
-        document.body.appendChild(textarea);
+// 切换Bug平台的函数
+window.changeBugPlatform = function changeBugPlatform(platform) {
+  var project_name = $("#project-name-val").text().trim(); // 项目名
+  switch (project_name) {
+    case "美图秀秀":
+      if (platform == "iOS") {
+        document.getElementById("customfield_10301-2").checked = true;
+      } else if (platform == "Android") {
+        document.getElementById("customfield_10301-1").checked = true;
+      } else if (platform == "Web") {
+        document.getElementById("customfield_10301-3").checked = true;
+      }
+      break;
+    case "美图秀秀Starii":
+      if (platform == "iOS") {
+        document.getElementById("customfield_10301-2").checked = true;
+      } else if (platform == "Android") {
+        document.getElementById("customfield_10301-1").checked = true;
+      } else if (platform == "Web") {
+        document.getElementById("customfield_10301-3").checked = true;
+      }
+      break;
+    default:
+      if (platform == "iOS") {
+        document.getElementById("customfield_10301-2").checked = true;
+      } else if (platform == "Android") {
+        document.getElementById("customfield_10301-1").checked = true;
+      } else if (platform == "Web") {
+        document.getElementById("customfield_10301-3").checked = true;
+      }
+  }
 
-        // 选中textarea中的文本
-        textarea.select();
+  // 使用版本管理工具类自动选择最接近的版本
+  VersionUtils.autoSelectClosestVersion(platform);
+};
+
+
+// ======== jira-bug-scraper.js ========
+/**
+ * Jira Bug信息爬虫模块
+ * 用于爬取Jira过滤器页面中的Bug信息
+ */
+
+const JiraBugScraper = {
+  // Jira自定义字段ID常量
+  DEVELOPER_FIELD_ID: 'customfield_10821', // 开发人员字段的ID
+  UNRESOLVED_STATUS: '未解决', // 未解决状态的默认值
+
+  /**
+   * 从Jira过滤器URL爬取所有Bug信息
+   * @param {string} filterUrl - Jira过滤器URL
+   * @param {Function} progressCallback - 进度回调函数
+   * @param {Function} shouldStopCallback - 停止检查函数（返回 true 表示应该停止）
+   * @returns {Promise<Array>} Bug信息数组
+   */
+  async scrapeBugsFromFilter(filterUrl, progressCallback, shouldStopCallback) {
+    console.log('[Jira爬虫] 开始爬取过滤器页面:', filterUrl);
+
+    try {
+      const bugs = [];
+      let currentPage = 1;
+      let currentUrl = filterUrl;
+
+      // 循环处理每一页
+      while (true) {
+        // 检查是否应该停止
+        if (shouldStopCallback && shouldStopCallback()) {
+          console.log('[Jira爬虫] 用户取消爬取');
+          throw new Error('用户取消');
+        }
+
+        if (progressCallback) {
+          progressCallback('正在处理第' + currentPage + '页...');
+        }
+
+        console.log('[Jira爬虫] 正在获取第' + currentPage + '页HTML:', currentUrl);
+
+        // 直接获取当前页的HTML
+        const html = await this._fetchPageHtml(currentUrl);
+
+        // 解析HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // 获取当前页的Bug列表
+        const bugLinks = this._getBugLinksFromDocument(doc);
+        console.log('[Jira爬虫] 第' + currentPage + '页发现' + bugLinks.length + '个Bug');
+
+        if (bugLinks.length === 0) {
+          console.warn('[Jira爬虫] 当前页没有找到Bug，可能已到最后一页');
+          break;
+        }
+
+        // 逐个处理每个Bug
+        for (let i = 0; i < bugLinks.length; i++) {
+          // 检查是否应该停止
+          if (shouldStopCallback && shouldStopCallback()) {
+            console.log('[Jira爬虫] 用户取消爬取');
+            throw new Error('用户取消');
+          }
+
+          if (progressCallback) {
+            progressCallback('正在处理第' + (i + 1) + '/' + bugLinks.length + '个Bug...');
+          }
+
+          try {
+            const bugInfo = await this._extractBugInfoFromHtml(bugLinks[i]);
+            bugs.push(bugInfo);
+            console.log('[Jira爬虫] 成功提取Bug: ' + bugInfo.key);
+          } catch (error) {
+            console.error('[Jira爬虫] 提取Bug失败:', error);
+            // 继续处理下一个Bug
+          }
+
+          // 短暂延迟避免请求过快
+          await this._sleep(300);
+        }
+
+        // 检查是否有下一页
+        const nextPageUrl = this._getNextPageUrl(doc);
+        if (!nextPageUrl) {
+          console.log('[Jira爬虫] 没有下一页了，爬取完成');
+          break;
+        }
+
+        currentUrl = nextPageUrl;
+        currentPage++;
+        await this._sleep(500);
+      }
+
+      console.log('[Jira爬虫] 爬取完成，共获取' + bugs.length + '个Bug');
+      return bugs;
+    } catch (error) {
+      console.error('[Jira爬虫] 爬取异常:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * 从DOM文档中获取Bug链接列表
+   * @private
+   * @param {Document} doc - DOM文档对象
+   * @returns {Array} Bug链接数组
+   */
+  _getBugLinksFromDocument(doc) {
+    console.log('[Jira爬虫] 正在查找Bug链接...');
+
+    // 尝试多个可能的选择器
+    const selectors = [
+      'td.issuekey a.issue-link',
+      '.issue-list tr.issuerow td.issuekey a',
+      '.results-issue-table tr.issuerow td.issuekey a',
+      'a[href*="/browse/"]'
+    ];
+
+    let links = [];
+    let usedSelector = '';
+
+    // 尝试每个选择器直到找到链接
+    for (const selector of selectors) {
+      const found = Array.from(doc.querySelectorAll(selector));
+      console.log('[Jira爬虫] 尝试选择器 "' + selector + '": 找到 ' + found.length + ' 个元素');
+
+      if (found.length > 0) {
+        links = found;
+        usedSelector = selector;
+        break;
+      }
+    }
+
+    if (links.length === 0) {
+      console.error('[Jira爬虫] 未找到任何Bug链接！');
+      return [];
+    }
+
+    console.log('[Jira爬虫] 使用选择器 "' + usedSelector + '" 找到 ' + links.length + ' 个候选链接');
+
+    // 验证：确保链接格式正确
+    const validLinks = links.filter(a => {
+      return a.href &&
+             a.href.includes('/browse/') &&
+             a.href.match(/\/browse\/[A-Z]+-\d+/);
+    });
+
+    console.log('[Jira爬虫] 验证后有效链接: ' + validLinks.length + ' 个');
+
+    if (validLinks.length !== links.length) {
+      console.warn('[Jira爬虫] 过滤掉 ' + (links.length - validLinks.length) + ' 个无效链接');
+    }
+
+    // 去重：使用 Map 按照 Bug key 去重（保留第一次出现的）
+    const uniqueLinksMap = new Map();
+    validLinks.forEach(a => {
+      const match = a.href.match(/\/browse\/([A-Z]+-\d+)/);
+      if (match) {
+        const bugKey = match[1];
+        if (!uniqueLinksMap.has(bugKey)) {
+          uniqueLinksMap.set(bugKey, a);
+        }
+      }
+    });
+
+    const uniqueLinks = Array.from(uniqueLinksMap.values());
+    console.log('[Jira爬虫] 去重后链接: ' + uniqueLinks.length + ' 个');
+
+    if (uniqueLinks.length !== validLinks.length) {
+      console.warn('[Jira爬虫] 过滤掉 ' + (validLinks.length - uniqueLinks.length) + ' 个重复链接');
+    }
+
+    return uniqueLinks;
+  },
+
+  /**
+   * 提取单个Bug的详细信息（从HTML）
+   * @private
+   * @param {HTMLAnchorElement} bugLink - Bug链接元素
+   * @returns {Promise<Object>} Bug信息
+   */
+  async _extractBugInfoFromHtml(bugLink) {
+    // 获取Bug链接和标题
+    const bugUrl = bugLink.href;
+    const bugKeyMatch = bugUrl.match(/\/browse\/([A-Z]+-\d+)/);
+    const bugKey = bugKeyMatch ? bugKeyMatch[1] : '';
+
+    console.log('[Jira爬虫] 正在获取Bug详情:', bugKey);
+
+    // 使用GM_xmlhttpRequest直接获取Bug详情页HTML
+    const html = await this._fetchPageHtml(bugUrl);
+
+    // 解析HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // 提取Bug信息
+    const bugInfo = this._parseBugDetails(doc, bugKey, bugUrl);
+
+    return bugInfo;
+  },
+
+  /**
+   * 获取下一页的URL
+   * @private
+   * @param {Document} doc - DOM文档对象
+   * @returns {string|null} 下一页的URL，如果没有则返回null
+   */
+  _getNextPageUrl(doc) {
+    // 查找下一页的链接
+    const nextButton = doc.querySelector('a[aria-label="Next"], .pagination-next, .next-page, a.next');
+
+    if (!nextButton) {
+      return null;
+    }
+
+    // 检查是否禁用
+    if (nextButton.hasAttribute('disabled') ||
+        nextButton.classList.contains('disabled') ||
+        nextButton.style.display === 'none') {
+      return null;
+    }
+
+    // 获取href
+    const nextUrl = nextButton.getAttribute('href');
+
+    if (!nextUrl) {
+      return null;
+    }
+
+    // 如果是相对路径，转换为绝对路径
+    if (nextUrl.startsWith('/')) {
+      return window.location.origin + nextUrl;
+    }
+
+    return nextUrl;
+  },
+
+  /**
+   * 获取页面HTML内容
+   * @private
+   * @param {string} url - 页面URL
+   * @returns {Promise<string>} HTML内容
+   */
+  _fetchPageHtml(url) {
+    return new Promise((resolve, reject) => {
+      GM_xmlhttpRequest({
+        method: 'GET',
+        url: url,
+        onload: (response) => {
+          resolve(response.responseText);
+        },
+        onerror: (error) => {
+          reject(new Error('获取页面失败: ' + error.status));
+        }
+      });
+    });
+  },
+
+  /**
+   * 解析Bug详情页面
+   * @private
+   * @param {Document} doc - 文档对象
+   * @param {string} bugKey - Bug编号
+   * @param {string} bugUrl - Bug链接
+   * @returns {Object} Bug信息
+   */
+  _parseBugDetails(doc, bugKey, bugUrl) {
+    const bugInfo = {
+      key: bugKey,
+      url: bugUrl,
+      created: '',
+      resolved: '',
+      found_time: '',
+      summary: '',
+      reporterAbbr: '',
+      reporterName: '',
+      developerAbbr: '',
+      developerName: '',
+      parseError: false // 标记解析是否成功
+    };
+
+    try {
+      // 创建时间 - 只取日期部分
+      const createdContainer = doc.getElementById('created-val');
+      if (createdContainer) {
+        const datetimeElem = createdContainer.querySelector('[datetime]');
+        if (datetimeElem) {
+          const datetime = datetimeElem.getAttribute('datetime');
+          bugInfo.created = datetime ? datetime.split('T')[0] : '';
+        }
+      }
+
+      // 解决时间 - 在 resolutiondate-val 节点下
+      const resolvedContainer = doc.getElementById('resolutiondate-val');
+      if (resolvedContainer) {
+        const timeMatch = resolvedContainer.textContent.match(/[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}/);
+        bugInfo.resolved = timeMatch ? timeMatch[0] : this.UNRESOLVED_STATUS;
+      }
+
+      // 发现时间 - 在 created-val 节点下的完整时间
+      if (createdContainer) {
+        const timeMatch = createdContainer.textContent.match(/[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}/);
+        bugInfo.found_time = timeMatch ? timeMatch[0] : '';
+      }
+
+      // Bug主题 - 提取 summary-val 的 h1 内容
+      const summaryContainer = doc.getElementById('summary-val');
+
+      if (summaryContainer) {
+        const h1Elem = summaryContainer.querySelector('h1');
+
+        // 如果 h1 不存在，尝试其他方式提取
+        if (h1Elem) {
+          bugInfo.summary = h1Elem.textContent.trim();
+        } else {
+          // summary-val 本身可能就是 h1 标签，直接获取文本
+          bugInfo.summary = summaryContainer.textContent.trim();
+        }
+      }
+
+      // 测试人员信息 - 从 reporter-val
+      const reporterContainer = doc.getElementById('reporter-val');
+      if (reporterContainer) {
+        const userHover = reporterContainer.querySelector('.user-hover');
+        if (userHover) {
+          // 提取缩写（rel 属性）
+          const rel = userHover.getAttribute('rel') || '';
+          if (rel) {
+            bugInfo.reporterAbbr = rel.includes('@') ? rel.split('@')[0] : rel;
+          }
+
+          // 提取显示名称
+          // 方式1: 从 data-user 属性
+          const dataUserAttr = reporterContainer.getAttribute('data-user');
+          if (dataUserAttr) {
+            const nameMatch = dataUserAttr.match(/"displayName":"([^"]*)"/);
+            if (nameMatch) {
+              bugInfo.reporterName = nameMatch[1];
+            }
+          }
+
+          // 方式2: 从文本内容（中文字符）
+          if (!bugInfo.reporterName) {
+            const chineseMatch = reporterContainer.textContent.match(/[一-龥]{2,4}/);
+            if (chineseMatch) {
+              bugInfo.reporterName = chineseMatch[0];
+            }
+          }
+        }
+      }
+
+      // 开发人员信息 - 从 customfield_10821（开发人员字段）
+      const devContainer = doc.querySelector('[id*="' + this.DEVELOPER_FIELD_ID + '"]');
+      if (devContainer) {
+        const userHover = devContainer.querySelector('.user-hover');
+        if (userHover) {
+          // 提取缩写（rel 属性）
+          const rel = userHover.getAttribute('rel') || '';
+          if (rel) {
+            bugInfo.developerAbbr = rel.includes('@') ? rel.split('@')[0] : rel;
+          }
+
+          // 提取显示名称
+          bugInfo.developerName = userHover.textContent.trim();
+        }
+      }
+
+      console.log('[Jira爬虫] Bug详情:', JSON.stringify(bugInfo, null, 2));
+    } catch (error) {
+      console.error('[Jira爬虫] 解析Bug详情异常:', error);
+      bugInfo.parseError = true; // 标记解析失败
+    }
+
+    return bugInfo;
+  },
+
+  /**
+   * 延迟函数
+   * @private
+   * @param {number} ms - 毫秒数
+   */
+  _sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+};
+
+
+// ======== wechat-work-api.js ========
+/**
+ * 企业微信文档API模块
+ * 处理与企业微信智能表格相关的API调用
+ * 完整实现：创建文档 → 删除默认字段 → 添加新字段 → 爬取Bug → 获取人员ID → 填写记录 → 删除临时字段
+ */
+
+const WeChatWorkAPI = {
+  /**
+   * 带重试的 API 请求
+   * @private
+   * @param {Function} requestFn - 返回 Promise 的请求函数
+   * @param {number} maxRetries - 最大重试次数（默认 3 次）
+   * @param {number} delay - 初始延迟时间（毫秒，默认 1000ms）
+   * @returns {Promise} 请求结果
+   */
+  async _requestWithRetry(requestFn, maxRetries = 3, delay = 1000) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await requestFn();
+      } catch (error) {
+        if (attempt === maxRetries) {
+          throw error;
+        }
+        console.log(`[企业微信] 第 ${attempt} 次请求失败，${delay}ms 后重试...`);
+        await this._sleep(delay);
+        delay *= 2; // 指数退避
+      }
+    }
+  },
+
+  /**
+   * 创建企业微信 API 请求（自动添加匿名模式和禁用缓存）
+   * @private
+   * @param {Object} options - GM_xmlhttpRequest 配置对象
+   * @returns {Promise} 请求结果
+   */
+  _makeRequest(options) {
+    return new Promise((resolve, reject) => {
+      // 自动添加 anonymous 和 nocache 参数
+      const requestOptions = {
+        ...options,
+        // 【关键修改】匿名模式，不带浏览器Cookie，防止鉴权冲突
+        anonymous: true,
+        // 禁用缓存
+        nocache: true
+      };
+
+      GM_xmlhttpRequest({
+        ...requestOptions,
+        onload: (response) => {
+          let result;
+          if (options.onload) {
+            result = options.onload(response);
+          }
+          // 返回 onload 的结果（如果存在），否则返回原始 response
+          resolve(result !== undefined ? result : response);
+        },
+        onerror: (error) => {
+          if (options.onerror) {
+            options.onerror(error);
+          }
+          reject(error);
+        },
+        ontimeout: () => {
+          if (options.ontimeout) {
+            options.ontimeout();
+          }
+          reject(new Error('请求超时'));
+        }
+      });
+    });
+  },
+
+  /**
+   * 获取access_token
+   * @returns {Promise<string>} access_token
+   */
+  async getAccessToken() {
+    const config = ConfigManager.WECHAT_WORK_API;
+
+    // 检查缓存
+    const cachedToken = localStorage.getItem(config.ACCESS_TOKEN_KEY);
+    const cachedExpire = localStorage.getItem(config.ACCESS_TOKEN_EXPIRE_KEY);
+
+    if (cachedToken && cachedExpire && Date.now() < parseInt(cachedExpire)) {
+      console.log('[企业微信] 使用缓存的 access_token');
+      return cachedToken;
+    }
+
+    console.log('[企业微信] =======================================');
+    console.log('[企业微信] 步骤 1/8: 获取 access_token');
+    console.log('[企业微信] =======================================');
+    console.log('[企业微信] 正在获取access_token...');
+
+    const url = config.GETTOKEN_URL + '?corpid=' + config.CORPID + '&corpsecret=' + config.CORPSECRET;
+    console.log('[企业微信] 请求URL:', url);
+
+    return this._makeRequest({
+      method: 'GET',
+      url: url,
+      onload: function(response) {
+        try {
+          console.log('[企业微信] 响应状态:', response.status);
+          console.log('[企业微信] 响应内容:', response.responseText);
+
+          const data = JSON.parse(response.responseText);
+
+          if (data.errcode === 0 && data.access_token) {
+            console.log('[企业微信] ✅ access_token获取成功');
+            console.log('[企业微信] Token:', data.access_token);
+            console.log('');
+
+            // 缓存 token（提前 5 分钟过期）
+            const expireTime = Date.now() + (config.TOKEN_EXPIRE_TIME - 300) * 1000;
+            localStorage.setItem(config.ACCESS_TOKEN_KEY, data.access_token);
+            localStorage.setItem(config.ACCESS_TOKEN_EXPIRE_KEY, expireTime.toString());
+          } else {
+            console.error('[企业微信] ❌ 获取access_token失败:', data.errmsg);
+            throw new Error('获取access_token失败: ' + data.errmsg);
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析access_token响应异常:', error);
+          throw error;
+        }
+      },
+      onerror: function(error) {
+        console.error('[企业微信] ❌ 获取access_token异常:', error);
+        throw error;
+      }
+    }).then(() => {
+      // 返回缓存的 token
+      return localStorage.getItem(config.ACCESS_TOKEN_KEY);
+    });
+  },
+
+  /**
+   * 创建企业微信智能表格文档并填充 Bug 数据
+   *
+   * @param {string} title - 文档标题
+   * @param {Array} bugs - Bug 信息数组（由 JiraBugScraper 爬取）
+   * @param {Function} shouldStopCallback - 停止检查函数（返回 true 表示应该停止）
+   * @returns {Promise<Object>} 返回文档信息，包含 docid 和 url
+   *
+   * @example
+   * const bugs = await JiraBugScraper.scrapeBugsFromFilter(jiraUrl);
+   * const result = await WeChatWorkAPI.createSmartTableDoc("测试文档", bugs);
+   * console.log(result.docid);  // 文档ID
+   * console.log(result.url);    // 文档链接
+   *
+   * @throws {Error} 当 API 调用失败时抛出错误
+   */
+  async createSmartTableDoc(title, bugs, shouldStopCallback) {
+    try {
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 开始创建智能文档并填充数据');
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 文档标题: ' + title);
+      console.log('[企业微信] Bug数量: ' + bugs.length);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤1: 获取 access_token
+      const accessToken = await this.getAccessToken();
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤2: 创建文档
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 2/9: 创建智能文档');
+      console.log('[企业微信] =======================================');
+      const docInfo = await this._createDoc(title, accessToken);
+      const docid = docInfo.docid;
+
+      // 等待文档创建完成
+      console.log('[企业微信] 等待 2 秒，确保文档创建完成...');
+      await this._sleep(2000);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤3: 设置文档权限
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 3/9: 设置文档权限');
+      console.log('[企业微信] =======================================');
+      await this._setDocAuth(docid, accessToken);
+
+      // 等待权限设置完成
+      console.log('[企业微信] 等待 2 秒，确保权限设置完成...');
+      await this._sleep(2000);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤4: 获取子表ID
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 4/9: 获取子表ID');
+      console.log('[企业微信] =======================================');
+      const sheetId = await this._getFirstSheetId(docid, accessToken);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤5: 删除默认字段
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 5/9: 删除默认字段');
+      console.log('[企业微信] =======================================');
+      const reservedFieldId = await this._deleteDefaultFields(docid, sheetId, accessToken);
+
+      // 等待字段删除完成
+      console.log('[企业微信] 等待 2 秒，确保字段删除完成...');
+      await this._sleep(2000);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤6: 添加自定义字段
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 6/9: 添加自定义字段');
+      console.log('[企业微信] =======================================');
+      await this._addCustomFields(docid, sheetId, accessToken);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤7: 获取并删除现有记录
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 7/9: 清理现有记录');
+      console.log('[企业微信] =======================================');
+      await this._clearExistingRecords(docid, sheetId, accessToken);
+
+      if (bugs.length === 0) {
+        console.log('[企业微信] ⚠️  没有找到 Bug，跳过记录添加');
+        return docInfo;
+      }
+
+      // 步骤8: 构建 Bug 记录（获取用户 ID）
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 8/9: 构建 Bug 记录（' + bugs.length + ' 个）');
+      console.log('[企业微信] =======================================');
+      const records = await this._buildBugRecords(bugs, shouldStopCallback);
+
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        throw new Error('用户取消');
+      }
+
+      // 步骤9: 添加记录到文档
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 步骤 9/9: 添加记录到文档');
+      console.log('[企业微信] =======================================');
+      await this._addRecords(docid, sheetId, accessToken, records);
+
+      // 删除临时保留的字段
+      if (reservedFieldId) {
+        console.log('[企业微信] =======================================');
+        console.log('[企业微信] 清理: 删除临时保留的字段');
+        console.log('[企业微信] =======================================');
+        await this._deleteReservedField(docid, sheetId, accessToken, reservedFieldId);
+      }
+
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] ✅ 所有步骤完成！');
+      console.log('[企业微信] =======================================');
+      console.log('[企业微信] 文档ID:', docid);
+      console.log('[企业微信] 文档链接:', docInfo.url);
+      console.log('[企业微信] Bug数量:', bugs.length);
+      console.log('');
+
+      return docInfo;
+    } catch (error) {
+      console.error('[企业微信] ❌ 创建文档异常:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * 创建文档
+   * @private
+   */
+  async _createDoc(title, accessToken) {
+    const config = ConfigManager.WECHAT_WORK_API;
+
+    const requestData = {
+      doc_type: 10,
+      doc_name: title
+    };
+
+    console.log('[企业微信] 请求数据:', JSON.stringify(requestData, null, 2));
+    const url = config.CREATE_DOC_URL + '?access_token=' + accessToken + '&debug=1';
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 30000,
+      onload: (response) => {
+        console.log('[企业微信] 响应状态:', response.status);
+        console.log('[企业微信] 响应内容:', response.responseText);
 
         try {
-            // 尝试执行复制操作
-            document.execCommand('copy');
-            console.log('数组已复制到剪贴板');
-        } catch (err) {
-            console.error('复制到剪贴板失败: ', err);
-        } finally {
-            // 移除textarea元素
-            document.body.removeChild(textarea);
-            // js提示复制成功
-            showCopySuccessMessage()
+          const result = JSON.parse(response.responseText);
+
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 文档创建成功');
+            console.log('[企业微信] docid:', result.docid);
+            console.log('');
+            return result;
+          } else {
+            console.error('[企业微信] ❌ 创建文档失败:', result.errmsg);
+            throw new Error('创建文档失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析JSON失败:', error);
+          throw error;
         }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 请求失败:', error);
+        throw error;
+      },
+      ontimeout: () => {
+        throw new Error('请求超时');
+      }
+    });
+  },
+
+  /**
+   * 删除默认字段（保留"文本"字段）
+   * @private
+   */
+  async _deleteDefaultFields(docid, sheetId, accessToken) {
+    const config = ConfigManager.WECHAT_WORK_API;
+
+    // 获取字段列表
+    console.log('[企业微信] 获取字段列表...');
+    const fieldsInfo = await this._getFieldsInfo(docid, sheetId, accessToken);
+
+    if (!fieldsInfo.allFields || fieldsInfo.allFields.length === 0) {
+      console.log('[企业微信] ⚠️  没有找到默认字段');
+      return null;
     }
 
-    /**
-     * 复制成功提示
-     */
-    function showCopySuccessMessage() {
-        // 创建一个提示框
-        var messageBox = document.createElement('div');
-        messageBox.textContent = '复制成功！';
-        messageBox.style.position = 'fixed';
-        messageBox.style.top = '50%';
-        messageBox.style.left = '50%';
-        messageBox.style.transform = 'translate(-50%, -50%)';
-        messageBox.style.padding = '10px';
-        messageBox.style.background = '#4CAF50';
-        messageBox.style.color = 'white';
-        messageBox.style.borderRadius = '5px';
-        messageBox.style.zIndex = '9999';
+    console.log('[企业微信] 现有字段数量:', fieldsInfo.allFields.length);
+    fieldsInfo.allFields.forEach(field => {
+      console.log(`  - ${field.field_title} [${field.field_id}]`);
+    });
 
-        // 将提示框添加到DOM中
-        document.body.appendChild(messageBox);
+    // 找到"文本"字段（临时保留）
+    const textField = fieldsInfo.allFields.find(f => f.field_title === '文本');
+    const reservedFieldId = textField ? textField.field_id : null;
 
-        // 2秒后移除提示框
-        setTimeout(function () {
-            document.body.removeChild(messageBox);
-        }, 2000);
+    if (reservedFieldId) {
+      console.log('[企业微信] 临时保留的字段ID:', reservedFieldId);
     }
 
-    function showtipsMessage(textContent, background) {
-        // 创建一个提示框
-        var messageBox = document.createElement('div');
-        messageBox.textContent = textContent;
-        messageBox.style.position = 'fixed';
-        messageBox.style.top = '50%';
-        messageBox.style.left = '50%';
-        messageBox.style.transform = 'translate(-50%, -50%)';
-        messageBox.style.padding = '10px';
-        messageBox.style.background = background;
-        messageBox.style.color = 'white';
-        messageBox.style.borderRadius = '5px';
-        messageBox.style.zIndex = '9999';
+    // 获取要删除的字段ID（除了"文本"字段）
+    const fieldIdsToDelete = fieldsInfo.allFields
+      .filter(f => f.field_title !== '文本')
+      .map(f => f.field_id);
 
-        // 将提示框添加到DOM中
-        document.body.appendChild(messageBox);
-
-        // 3秒后移除提示框
-        setTimeout(function () {
-            document.body.removeChild(messageBox);
-        }, 3000);
+    if (fieldIdsToDelete.length === 0) {
+      console.log('[企业微信] ⚠️  没有需要删除的字段');
+      return reservedFieldId;
     }
 
-    // Your code here...
+    console.log('[企业微信] 将要删除的字段IDs:', JSON.stringify(fieldIdsToDelete));
+
+    // 删除字段
+    const url = config.DELETE_FIELDS_URL + '?access_token=' + accessToken;
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId,
+      field_ids: fieldIdsToDelete
+    };
+
+    console.log('[企业微信] 删除字段请求:', JSON.stringify(requestData, null, 2));
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        console.log('[企业微信] 响应:', response.responseText);
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 字段删除成功');
+            console.log('');
+            return reservedFieldId;
+          } else {
+            console.error('[企业微信] ❌ 字段删除失败:', result.errmsg);
+            throw new Error('删除字段失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析响应失败:', error);
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 请求失败:', error);
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 添加自定义字段（9个字段）
+   * @private
+   */
+  async _addCustomFields(docid, sheetId, accessToken) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.ADD_FIELDS_URL + '?access_token=' + accessToken;
+
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId,
+      fields: [
+        {
+          field_title: "测试说明/漏测人员说明",
+          field_type: "FIELD_TYPE_TEXT"
+        },
+        {
+          field_title: "提前发现概率",
+          field_type: "FIELD_TYPE_SINGLE_SELECT",
+          property_single_select: {
+            options: [
+              {text: "高", style: 18},
+              {text: "中", style: 22},
+              {text: "低", style: 13}
+            ]
+          }
+        },
+        {
+          field_title: "测试回溯",
+          field_type: "FIELD_TYPE_TEXT"
+        },
+        {
+          field_title: "测试",
+          field_type: "FIELD_TYPE_USER",
+          property_user: {
+            is_multiple: true,
+            is_notified: false
+          }
+        },
+        {
+          field_title: "开发回溯",
+          field_type: "FIELD_TYPE_TEXT"
+        },
+        {
+          field_title: "开发",
+          field_type: "FIELD_TYPE_USER",
+          property_user: {
+            is_multiple: true,
+            is_notified: false
+          }
+        },
+        {
+          field_title: "Bug链接",
+          field_type: "FIELD_TYPE_URL",
+          property_url: {
+            type: "LINK_TYPE_PURE_TEXT"
+          }
+        },
+        {
+          field_title: "组别",
+          field_type: "FIELD_TYPE_SINGLE_SELECT",
+          property_single_select: {
+            options: [
+              {text: "美化", style: 12},
+              {text: "美容", style: 18},
+              {text: "拼图", style: 20},
+              {text: "机动", style: 7}
+            ]
+          }
+        },
+        {
+          field_title: "日期",
+          field_type: "FIELD_TYPE_SINGLE_SELECT",
+          property_single_select: {
+            options: [
+              {text: "周一", style: 12},
+              {text: "周二", style: 18},
+              {text: "周三", style: 20},
+              {text: "周四", style: 7}
+            ]
+          }
+        }
+      ]
+    };
+
+    console.log('[企业微信] 请求数据:', JSON.stringify(requestData, null, 2));
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        console.log('[企业微信] 响应:', response.responseText);
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 字段添加成功');
+            console.log('');
+            return result;
+          } else {
+            console.error('[企业微信] ❌ 字段添加失败:', result.errmsg);
+            throw new Error('添加字段失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析响应失败:', error);
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 请求失败:', error);
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 爬取Jira Bug信息并添加到文档
+   * @private
+   */
+  async _crawlAndAddBugs(docid, sheetId, accessToken, jiraUrl) {
+    // 爬取Bug列表
+    const bugKeys = await this._crawlJiraBugList(jiraUrl);
+    console.log('[企业微信] 找到 ' + bugKeys.length + ' 个Bug');
+
+    if (bugKeys.length === 0) {
+      console.log('[企业微信] ⚠️  没有找到Bug，跳过记录添加');
+      return;
+    }
+
+    // 处理每个Bug
+    const records = [];
+    for (let i = 0; i < bugKeys.length; i++) {
+      const key = bugKeys[i];
+      console.log(`[企业微信] =======================================`);
+      console.log(`[企业微信] 处理 Bug ${i + 1}/${bugKeys.length}: ${key}`);
+      console.log(`[企业微信] =======================================`);
+
+      // 爬取Bug详情
+      const bugDetail = await this._crawlBugDetail(key);
+      console.log('[企业微信] Bug详情:', JSON.stringify(bugDetail, null, 2));
+
+      // 获取测试人员ID
+      const reporterId = await this._getUserId(bugDetail.reporterAbbr, bugDetail.reporterName);
+      if (reporterId) {
+        console.log('[企业微信] 测试人员ID:', reporterId);
+      } else {
+        console.log('[企业微信] ⚠️  无法获取测试人员ID');
+      }
+
+      // 获取开发人员ID
+      const developerId = await this._getUserId(bugDetail.developerAbbr, bugDetail.developerName);
+      if (developerId) {
+        console.log('[企业微信] 开发人员ID:', developerId);
+      } else {
+        console.log('[企业微信] ⚠️  无法获取开发人员ID');
+      }
+
+      // 构建记录
+      const record = await this._buildRecord(bugDetail, reporterId, developerId);
+      records.push(record);
+    }
+
+    // 批量添加记录
+    await this._addRecords(docid, sheetId, accessToken, records);
+  },
+
+  /**
+   * 爬取Jira Bug列表
+   * @private
+   */
+  async _crawlJiraBugList(jiraUrl) {
+    console.log('[企业微信] 开始爬取Jira Bug列表...');
+    console.log('[企业微信] Jira URL:', jiraUrl);
+
+    return this._makeRequest({
+      method: 'GET',
+      url: jiraUrl,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+      },
+      timeout: 30000,
+      onload: (response) => {
+        try {
+          // 提取Bug编号
+          const bugKeys = response.responseText.match(/href="\/browse\/([A-Z]+-\d+)"/g);
+          if (bugKeys) {
+            const uniqueKeys = [...new Set(bugKeys.map(k => k.replace('href="/browse/', '')))];
+            console.log('[企业微信] ✅ 找到 ' + uniqueKeys.length + ' 个Bug');
+            return uniqueKeys;
+          } else {
+            console.log('[企业微信] ⚠️  未找到Bug');
+            return [];
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析Bug列表失败:', error);
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 爬取Bug列表失败:', error);
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 爬取单个Bug详情
+   * @private
+   */
+  async _crawlBugDetail(bugKey) {
+    const bugUrl = `https://jira.meitu.com/browse/${bugKey}`;
+    console.log('[企业微信] 爬取Bug详情:', bugUrl);
+
+    return this._makeRequest({
+      method: 'GET',
+      url: bugUrl,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+      },
+      timeout: 30000,
+      onload: (response) => {
+        try {
+          const html = response.responseText;
+
+          // 提取Bug信息
+          const detail = {
+            key: bugKey,
+            url: bugUrl,
+            created: this._extractField(html, 'created-val', 'datetime', true),
+            resolved: this._extractField(html, 'resolutiondate-val', null, false, '[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}'),
+            summary: this._extractText(html, 'summary-val', 'h1'),
+            reporterAbbr: this._extractUserAbbr(html, 'reporter-val'),
+            reporterName: this._extractUserName(html, 'reporter-val'),
+            developerAbbr: this._extractUserAbbrCustom(html, 'customfield_10821'),
+            developerName: this._extractUserNameCustom(html, 'customfield_10821')
+          };
+
+          return detail;
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析Bug详情失败:', error);
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 爬取Bug详情失败:', error);
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 提取字段值
+   * @private
+   */
+  _extractField(html, containerId, attr, isDate = false, datePattern = null) {
+    const regex = new RegExp(`id="${containerId}"[^>]*>([\\s\\S]*?)<\\/`, 'i');
+    const match = html.match(regex);
+
+    if (!match) return '';
+
+    let content = match[1];
+
+    if (attr) {
+      const attrRegex = new RegExp(`${attr}="([^"]*)"`);
+      const attrMatch = content.match(attrRegex);
+      if (attrMatch) {
+        let value = attrMatch[1];
+        if (isDate && value.includes('T')) {
+          value = value.split('T')[0];
+        }
+        return value;
+      }
+    }
+
+    if (datePattern) {
+      const patternRegex = new RegExp(datePattern);
+      const patternMatch = content.match(patternRegex);
+      if (patternMatch) {
+        return patternMatch[0];
+      }
+    }
+
+    return '';
+  },
+
+  /**
+   * 提取文本内容
+   * @private
+   */
+  _extractText(html, containerId, tag) {
+    const regex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?<${tag}[^>]*>([^<]*)<\\/${tag}>`, 'i');
+    const match = html.match(regex);
+    return match ? match[1].trim() : '';
+  },
+
+  /**
+   * 提取用户缩写（从reporter-val）
+   * @private
+   */
+  _extractUserAbbr(html, containerId) {
+    const regex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?rel="([^@"]*)@"`, 'i');
+    const match = html.match(regex);
+    return match ? match[1] : '';
+  },
+
+  /**
+   * 提取用户姓名（从reporter-val）
+   * @private
+   */
+  _extractUserName(html, containerId) {
+    // 尝试从data-user提取
+    const dataUserRegex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?data-user='[^']*"displayName":"([^"]*)"`, 'i');
+    let match = html.match(dataUserRegex);
+    if (match) return match[1];
+
+    // 从<a>标签文本提取
+    const linkRegex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?<a class="user-hover"[^>]*>([^<]*)<`, 'i');
+    match = html.match(linkRegex);
+    return match ? match[1].trim() : '';
+  },
+
+  /**
+   * 提取用户缩写（从customfield_10821）
+   * @private
+   */
+  _extractUserAbbrCustom(html, fieldClass) {
+    const regex = new RegExp(`class="${fieldClass}"[^>]*>[\\s\\S]*?rel="([^@"]*)@"`, 'i');
+    const match = html.match(regex);
+    return match ? match[1] : '';
+  },
+
+  /**
+   * 提取用户姓名（从customfield_10821）
+   * @private
+   */
+  _extractUserNameCustom(html, fieldClass) {
+    // 从user-hover标签文本提取
+    const spanRegex = new RegExp(`class="${fieldClass}"[^>]*>[\\s\\S]*?<span class="user-hover"[^>]*>([^<]*)<`, 'i');
+    let match = html.match(spanRegex);
+    if (match) return match[1].trim();
+
+    // 从<a>标签文本提取
+    const linkRegex = new RegExp(`class="${fieldClass}"[^>]*>[\\s\\S]*?<a class="user-hover"[^>]*>([^<]*)<`, 'i');
+    match = html.match(linkRegex);
+    return match ? match[1].trim() : '';
+  },
+
+  /**
+   * 获取用户ID
+   * @private
+   */
+  async _getUserId(abbr, name) {
+    if (!abbr || !name) return null;
+
+    // 检查是否包含test
+    if (abbr.toLowerCase().includes('test')) {
+      console.log('[企业微信] ⚠️  缩写包含test，跳过');
+      return null;
+    }
+
+    const apiUrl = `http://172.18.33.244/api/lints/hook/wxuser/${abbr}`;
+    console.log('[企业微信] 调用接口:', apiUrl);
+
+    return this._makeRequest({
+      method: 'GET',
+      url: apiUrl,
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          console.log('[企业微信] 接口响应:', response.responseText.substring(0, 500));
+          const data = JSON.parse(response.responseText);
+
+          // 查找匹配的用户
+          const user = data.find(u => u.name === name);
+          if (user && user.wx_user_id) {
+            console.log('[企业微信] ✅ 找到用户ID:', user.wx_user_id);
+            return user.wx_user_id;
+          } else {
+            console.log('[企业微信] ⚠️  未找到匹配的用户');
+            return null;
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析用户信息失败:', error);
+          return null;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 获取用户ID失败:', error);
+        return null;
+      }
+    });
+  },
+
+  /**
+   * 构建记录
+   * @private
+   */
+  async _buildRecord(bugDetail, reporterId, developerId) {
+    const record = {
+      values: {
+        "测试说明/漏测人员说明": [{type: "text", text: ""}],
+        "开发回溯": [{type: "text", text: "引入原因：\n解决方法：\n规避措施："}],
+        "Bug链接": [{type: "url", text: bugDetail.summary, link: bugDetail.url}],
+        "测试回溯": [{type: "text", text: `引入时间：\n发现时间：${bugDetail.resolved}\n解决时间：${bugDetail.resolved}`}]
+      }
+    };
+
+    // 如果有测试人员ID
+    if (reporterId) {
+      record.values["测试"] = [{type: "user", user_id: reporterId}];
+    }
+
+    // 如果有开发人员ID
+    if (developerId) {
+      record.values["开发"] = [{type: "user", user_id: developerId}];
+    }
+
+    // 添加组别
+    record.values["组别"] = [{type: "text", text: "美化"}];
+
+    return record;
+  },
+
+  /**
+   * 添加记录
+   * @private
+   */
+  async _addRecords(docid, sheetId, accessToken, records) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.ADD_RECORDS_URL + '?access_token=' + accessToken + '&debug=1';
+
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId,
+      key_type: "CELL_VALUE_KEY_TYPE_FIELD_TITLE",
+      records: records
+    };
+
+    console.log('[企业微信] 准备添加 ' + records.length + ' 条记录');
+    console.log('[企业微信] 请求数据:', JSON.stringify(requestData, null, 2));
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 30000,
+      onload: (response) => {
+        console.log('[企业微信] 响应:', response.responseText);
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 记录添加成功');
+            console.log('');
+            return result;
+          } else {
+            console.error('[企业微信] ❌ 记录添加失败:', result.errmsg);
+            throw new Error('添加记录失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析响应失败:', error);
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 请求失败:', error);
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 删除临时保留的字段
+   * @private
+   */
+  async _deleteReservedField(docid, sheetId, accessToken, fieldId) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.DELETE_FIELDS_URL + '?access_token=' + accessToken;
+
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId,
+      field_ids: [fieldId]
+    };
+
+    console.log('[企业微信] 删除临时字段:', fieldId);
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        console.log('[企业微信] 响应:', response.responseText);
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 临时字段删除成功');
+            console.log('');
+            return result;
+          } else {
+            console.error('[企业微信] ❌ 临时字段删除失败:', result.errmsg);
+            throw new Error('删除字段失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          console.error('[企业微信] ❌ 解析响应失败:', error);
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 请求失败:', error);
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 获取第一个子表的ID
+   * @private
+   */
+  async _getFirstSheetId(docid, accessToken) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.GET_SHEET_URL + '?access_token=' + accessToken + '&debug=1';
+
+    const requestData = {
+      docid: docid,
+      need_all_type_sheet: true
+    };
+
+    console.log('[企业微信] 获取子表列表...');
+    console.log('[企业微信] 请求URL:', url);
+    console.log('[企业微信] 请求参数:', JSON.stringify(requestData, null, 2));
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          console.log('[企业微信] 响应状态:', response.status);
+          console.log('[企业微信] 响应内容:', response.responseText);
+
+          const result = JSON.parse(response.responseText);
+
+          if (result.errcode === 0 && result.sheet_list && result.sheet_list.length > 0) {
+            const firstSheet = result.sheet_list[0];
+            console.log('[企业微信] ✅ 成功获取子表ID:', firstSheet.sheet_id, firstSheet.title);
+            return firstSheet.sheet_id;
+          } else {
+            if (result.errcode === 0 && (!result.sheet_list || result.sheet_list.length === 0)) {
+              console.error('[企业微信] ❌ 文档中没有子表');
+              throw new Error('该文档没有子表');
+            } else {
+              console.error('[企业微信] ❌ API报错:', result.errmsg);
+              throw new Error('API Error: ' + result.errmsg);
+            }
+          }
+        } catch (e) {
+          console.error('[企业微信] ❌ 解析JSON失败:', e);
+          console.error('[企业微信] 原始响应:', response.responseText);
+          throw new Error('服务器返回了非JSON格式数据');
+        }
+      },
+      onerror: (error) => {
+        console.error('[企业微信] ❌ 网络层错误:', error);
+        throw new Error('网络请求失败');
+      },
+      ontimeout: () => {
+        console.error('[企业微信] ❌ 请求超时');
+        throw new Error('请求超时');
+      }
+    });
+  },
+
+  /**
+   * 获取字段信息
+   * @private
+   */
+  async _getFieldsInfo(docid, sheetId, accessToken) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.GET_FIELDS_URL + '?access_token=' + accessToken;
+
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId
+    };
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            return {
+              allFields: result.fields || []
+            };
+          } else {
+            throw new Error('获取字段失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 设置文档权限
+   * @private
+   */
+  async _setDocAuth(docid, accessToken, userId = "15613") {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.MOD_DOC_MEMBER_URL + '?access_token=' + accessToken;
+
+    const requestData = {
+      docid: docid,
+      update_file_member_list: [{
+        type: 1,
+        auth: 7,
+        userid: userId
+      }]
+    };
+
+    console.log('[企业微信] =======================================');
+    console.log('[企业微信] 设置文档权限 - 请求详情');
+    console.log('[企业微信] =======================================');
+    console.log('[企业微信] API URL:', url);
+    console.log('[企业微信] docid:', docid);
+    console.log('[企业微信] userId:', userId);
+    console.log('[企业微信] 请求数据:', JSON.stringify(requestData, null, 2));
+    console.log('[企业微信] =======================================');
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+          console.log('[企业微信] 权限设置响应:', result);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 权限设置成功');
+            console.log('');
+            return result;
+          } else {
+            throw new Error('权限设置失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 延迟函数
+   * @private
+   */
+  _sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  },
+
+  /**
+   * 清理现有记录
+   * @private
+   */
+  async _clearExistingRecords(docid, sheetId, accessToken) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.ADD_RECORDS_URL.replace('add_records', 'get_records') + '?access_token=' + accessToken;
+
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId,
+      offset: 0,
+      limit: 100
+    };
+    // Note: API限制，最多返回100条记录。如果超过100条，需要实现分页逻辑
+
+    console.log('[企业微信] 获取现有记录...');
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+
+          if (result.errcode === 0) {
+            const recordIds = (result.records || []).map(r => r.record_id);
+            const total = result.total || 0;
+
+            console.log('[企业微信] 找到 ' + total + ' 条现有记录');
+
+            if (total > 0 && recordIds.length > 0) {
+              console.log('[企业微信] 正在删除现有记录...');
+              return this._deleteRecords(docid, sheetId, accessToken, recordIds);
+            } else {
+              console.log('[企业微信] 没有现有记录需要删除');
+              return;
+            }
+          } else {
+            throw new Error('获取记录失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 删除记录
+   * @private
+   */
+  async _deleteRecords(docid, sheetId, accessToken, recordIds) {
+    const config = ConfigManager.WECHAT_WORK_API;
+    const url = config.ADD_RECORDS_URL.replace('add_records', 'delete_records') + '?access_token=' + accessToken;
+
+    const requestData = {
+      docid: docid,
+      sheet_id: sheetId,
+      record_ids: recordIds
+    };
+
+    console.log('[企业微信] 删除 ' + recordIds.length + ' 条记录');
+
+    return this._makeRequest({
+      method: 'POST',
+      url: url,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(requestData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 记录删除成功');
+            console.log('[企业微信] 等待 2 秒...');
+            return this._sleep(2000);
+          } else {
+            throw new Error('删除记录失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        throw error;
+      }
+    });
+  },
+
+  /**
+   * 爬取 Jira Bug 信息
+   * @private
+   */
+  async _crawlJiraBugs(jiraUrl) {
+    console.log('[企业微信] 开始爬取 Jira Bug...');
+
+    // 使用 JiraBugScraper 爬取 Bug
+    const bugs = await JiraBugScraper.scrapeBugsFromFilter(jiraUrl, (progress) => {
+      console.log('[企业微信] ' + progress);
+    });
+
+    console.log('[企业微信] ✅ 爬取完成，共 ' + bugs.length + ' 个 Bug');
+    return bugs;
+  },
+
+  /**
+   * 构建 Bug 记录数组
+   * @private
+   */
+  async _buildBugRecords(bugs, shouldStopCallback) {
+    const records = [];
+    let failedLookups = 0;
+
+    for (let i = 0; i < bugs.length; i++) {
+      // 检查是否应该停止
+      if (shouldStopCallback && shouldStopCallback()) {
+        console.log('[企业微信] 用户取消构建记录');
+        throw new Error('用户取消');
+      }
+
+      const bug = bugs[i];
+      console.log(`[企业微信] 处理 Bug ${i + 1}/${bugs.length}: ${bug.key}`);
+
+      // 获取测试人员 ID
+      let reporterId = null;
+      if (bug.reporterAbbr && bug.reporterName) {
+        reporterId = await this._getUserId(bug.reporterAbbr, bug.reporterName);
+        if (reporterId) {
+          console.log('[企业微信] 测试人员ID:', reporterId);
+        } else {
+          console.log('[企业微信] ⚠️  无法获取测试人员ID');
+          failedLookups++;
+        }
+      }
+
+      // 获取开发人员 ID
+      let developerId = null;
+      if (bug.developerAbbr && bug.developerName) {
+        developerId = await this._getUserId(bug.developerAbbr, bug.developerName);
+        if (developerId) {
+          console.log('[企业微信] 开发人员ID:', developerId);
+        } else {
+          console.log('[企业微信] ⚠️  无法获取开发人员ID');
+          failedLookups++;
+        }
+      }
+
+      // 构建记录
+      const record = this._buildSingleRecord(bug, reporterId, developerId);
+      records.push(record);
+
+      // 短暂延迟避免请求过快
+      await this._sleep(300);
+    }
+
+    if (failedLookups > 0) {
+      console.warn('[企业微信] ⚠️  ' + failedLookups + ' 个用户ID查找失败');
+    }
+
+    return records;
+  },
+
+  /**
+   * 构建单条记录
+   * @private
+   */
+  _buildSingleRecord(bug, reporterId, developerId) {
+    const record = {
+      values: {
+        "测试说明/漏测人员说明": [{type: "text", text: ""}],
+        "开发回溯": [{type: "text", text: "引入原因：\n解决方法：\n规避措施："}],
+        "Bug链接": [{type: "url", text: bug.summary, link: bug.url}],
+        "测试回溯": [{type: "text", text: "引入时间：\n发现时间：" + bug.found_time + "\n解决时间：" + bug.resolved}]
+      }
+    };
+
+    // 添加测试人员
+    if (reporterId) {
+      record.values["测试"] = [{type: "user", user_id: reporterId}];
+    }
+
+    // 添加开发人员
+    if (developerId) {
+      record.values["开发"] = [{type: "user", user_id: developerId}];
+    }
+
+    return record;
+  }
+};
 
 
+// ======== event-manager.js ========
+/**
+ * 事件管理器 - 简化版本
+ * 处理全局事件的注册和管理
+ */
+const EventManager = {
+  boundEvents: new Set(),
+
+  bindEvent(selector, event, handler, context = "global") {
+    const eventKey = `${context}-${selector}-${event}`;
+
+    if (this.boundEvents.has(eventKey)) {
+      return;
+    }
+
+    try {
+      $(document).on(event, selector, handler);
+      this.boundEvents.add(eventKey);
+    } catch (error) {
+      console.error(`事件绑定失败: ${eventKey}`, error);
+    }
+  },
+
+  unbindContext(context) {
+    const toRemove = [];
+    this.boundEvents.forEach((eventKey) => {
+      if (eventKey.startsWith(`${context}-`)) {
+        toRemove.push(eventKey);
+      }
+    });
+    toRemove.forEach((key) => this.boundEvents.delete(key));
+  },
+
+  // 注册全局事件监听器
+  registerGlobalEvents() {
+    // 平台切换按钮
+    Utils.events.registerPlatformCapture(
+      "#change_side_android, .android",
+      "Android"
+    );
+    Utils.events.registerPlatformCapture("#change_side_ios, .ios", "iOS");
+    Utils.events.registerPlatformCapture("#change_side_web, .web", "Web");
+
+    // 获取分支按钮
+    Utils.events.addCaptureClick(
+      "#get_branch_btn, #last_branch_btn",
+      function (target) {
+        JiraModule.handleBranchButtonClick({ target: target });
+      }
+    );
+
+    // 重置步骤按钮
+    Utils.events.addCaptureClick("#reset_step", function () {
+      JiraModule.handleResetStepClick();
+    });
+
+    // 上次填写按钮
+    Utils.events.addCaptureClick("#close-text", function () {
+      JiraModule.handlePreTextClick();
+    });
+
+    // 工作流提交按钮
+    Utils.events.addCaptureClick(
+      "#issue-workflow-transition-submit",
+      function () {
+        JiraModule.handleWorkflowSubmit();
+      }
+    );
+
+    // 再提一个按钮
+    Utils.events.addCaptureClick("#once-again", function () {
+      console.log("[once-again] 再提一个按钮被点击");
+
+      const savedFormData = Utils.storage.getValue("bugFormData");
+
+      if (!savedFormData) {
+        Utils.common.showToast(
+          "没有找到可复用的表单数据，请先创建一个Bug",
+          "#f44336"
+        );
+        console.warn("[once-again] 没有找到保存的表单数据");
+        return;
+      }
+
+      try {
+        const formData = typeof savedFormData === "string" ? JSON.parse(savedFormData) : savedFormData;
+
+        setTimeout(() => {
+          FormUtils.fillFormData(formData);
+        }, 300);
+      } catch (error) {
+        console.error("[once-again] 解析表单数据失败:", error);
+        Utils.common.showToast("表单数据格式错误", "#f44336");
+      }
+    });
+
+    // 创建按钮
+    Utils.events.addCaptureClick("#create-issue-submit", function () {
+      console.log("[create-issue-submit] 创建按钮被点击，开始收集表单数据");
+
+      const formData = FormUtils.collectFormData();
+
+      if (formData && Object.keys(formData).length > 0) {
+        Utils.storage.setValue("bugFormData", formData);
+        console.log("表单数据已保存:", formData);
+      } else {
+        console.warn("没有收集到有效的表单数据");
+        Utils.common.showToast("未收集到表单数据", "#ff9800");
+      }
+    });
+  }
+};
+
+// ======== branch-utils.js ========
+/**
+ * 分支相关功能 - 简化版本
+ * 处理分支获取和填充逻辑
+ */
+
+// 获取分支名
+async function get_branch(platform, build_id) {
+  return new Promise((resolve, reject) => {
+    const project_name = Utils.ui.getProjectName();
+    const projectConfig = ConfigManager.getProjectConfig(project_name, platform);
+
+    if (!projectConfig) {
+      const result = `未找到项目配置: ${project_name}`;
+      GM_setValue("branch_value", result);
+      resolve(result);
+      return;
+    }
+
+    const url = `https://omnibus.meitu-int.com/api/apps/${projectConfig.uid}/builds/${build_id}`;
+
+    GM_xmlhttpRequest({
+      url: url,
+      method: "GET",
+      onload: function (res) {
+        if (res.status === 200) {
+          const regex = /refs\/heads\/(.*?)B/;
+          const match = res.responseText.match(regex);
+          const branch = match ? match[1] : "";
+          const result = branch.indexOf("$") !== -1 ? "" : `${branch}#${build_id}`;
+          const finalResult = branch === "" ? `未找到该包的分支，${build_id}` : result;
+
+          GM_setValue("branch_value", finalResult);
+          console.log(GM_getValue("branch_value"));
+          resolve(GM_getValue("branch_value"));
+        } else {
+          const result = `未找到该包的分支，${build_id}`;
+          GM_setValue("branch_value", result);
+          resolve(result);
+        }
+      },
+      onerror: function (err) {
+        const result = "接口请求失败，建议重新关闭开启脚本再试试";
+        GM_setValue("branch_value", result);
+        reject(err);
+      },
+    });
+  });
+}
+
+// 填入分支到输入框
+async function fillInBranch(selector) {
+  var element = $(selector);
+  element.val("").val(GM_getValue("branch_value"));
+}
+
+// 填入分支到文本区域
+async function fillInBranchTextarea(selector) {
+  return fillInBranch(selector);
+}
+
+// 全局set_branch函数
+window.set_branch = async function set_branch(selfId, parentId) {
+  if (selfId === "get_branch_btn") {
+    switch (parentId) {
+      case "create-issue-dialog":
+      case "qf-field-customfield_10303":
+        var $platform = $('input:radio[name="customfield_10301"]:checked');
+        var $buildId = $("#customfield_10303");
+
+        var id = $platform.attr("id");
+        var label = document.querySelector("label[for='" + id + "']");
+
+        try {
+          var platform = label.textContent;
+        } catch (error) {
+          GM_setValue("branch_value", "#请先选择Bug平台");
+          fillInBranch("#customfield_10303");
+          return;
+        }
+
+        var buildId = $buildId.val();
+        if (buildId === undefined || buildId === "" || buildId === null) {
+          GM_setValue("branch_value", "#请先填写Build号");
+          fillInBranch("#customfield_10303");
+          return;
+        }
+
+        await get_branch(platform, buildId);
+        await fillInBranch("#customfield_10303");
+        break;
+
+      case "issue-workflow-transition":
+      case "issue-comment-add":
+        var $platform = $("#customfield_10301-val");
+        var $buildId = parentId === "issue-workflow-transition" ? $("#build_id_close") : $("#input_text");
+
+        var platform = $platform.text().trim();
+        var buildId = $buildId.val();
+
+        await get_branch(platform, buildId);
+        await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+
+        Utils.common.sleep(500).then(() => {
+          $("#comment-wiki-edit textarea").focus();
+        });
+        break;
+
+      default:
+    }
+  } else if (selfId === "last_branch_btn") {
+    switch (parentId) {
+      case "create-issue-dialog":
+      case "qf-field-customfield_10303":
+        await fillInBranch("#customfield_10303");
+        break;
+
+      case "issue-workflow-transition":
+      case "issue-comment-add":
+        await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+        break;
+
+      default:
+    }
+  }
+};
+
+// ======== cf-module.js ========
+/**
+ * CF模块 - Confluence功能处理
+ * 处理cf.meitu.com域名下的功能
+ */
+
+// CF域名下的功能
+if (location.href.indexOf("cf.meitu.com") > 0) {
+  // 获取ul元素
+  var menuBars = document.getElementsByClassName("ajs-menu-bar");
+  var menuBar = menuBars[0];
+
+  // 创建两个li元素
+  var li1 = document.createElement("li");
+  var li2 = document.createElement("li");
+  li1.className = "ajs-button normal";
+  li2.className = "ajs-button normal";
+
+  // 创建两个button元素
+  var button1 = document.createElement("button");
+  var button2 = document.createElement("button");
+
+  // 设置按钮文本
+  button1.textContent = "复制Android需求";
+  button2.textContent = "复制iOS需求";
+
+  // 设置按钮ID
+  button1.id = "Android";
+  button2.id = "iOS";
+
+  // 设置按钮Class
+  button1.className = "aui-button aui-button-subtle edit";
+  button2.className = "aui-button aui-button-subtle edit";
+
+  // 将button元素添加到li元素中
+  li1.appendChild(button1);
+  li2.appendChild(button2);
+
+  // 将li元素添加到ul元素中
+  menuBar.appendChild(li1);
+  menuBar.appendChild(li2);
+
+  // 将li元素放在menuBar的最前
+  menuBar.insertBefore(li2, menuBar.firstChild);
+  menuBar.insertBefore(li1, menuBar.firstChild);
+
+  getRequirementArray("Android");
+  getRequirementArray("iOS");
+}
+
+/**
+ * 为平台特定按钮添加点击事件监听器
+ */
+function getRequirementArray(platform) {
+  var platformButton = document.getElementById(platform);
+  platformButton.addEventListener("click", function (event) {
+    var androidArray = [];
+    var iosArray = [];
+    var androidTd = findColumnIndex("Android") + 1;
+    var iosTd = findColumnIndex("iOS") + 1;
+    var cppTd = findColumnIndex("中间架构") + 1;
+
+    var politeTbodies = document.querySelectorAll('tbody[aria-live="polite"]');
+    politeTbodies.forEach(function (tbody) {
+      var rows = tbody.querySelectorAll("tr");
+      rows.forEach(function (row) {
+        var anchorElement = row.querySelector("a");
+        const secondTdText = anchorElement ? anchorElement.textContent.trim() : undefined;
+
+        getArrayByCheckedLi(row, androidTd, secondTdText, androidArray);
+        getArrayByCheckedLi(row, iosTd, secondTdText, iosArray);
+
+        let blackWord = "底层先行";
+        if (secondTdText && secondTdText.indexOf(blackWord) === -1) {
+          let platformAndroid = "Android";
+          let platformiOS = "iOS";
+
+          if (secondTdText.indexOf(platformAndroid) === -1 && secondTdText.indexOf(platformiOS) !== -1) {
+            getArrayByCheckedLi(row, cppTd, secondTdText, iosArray);
+          } else if (secondTdText.indexOf(platformAndroid) !== -1 && secondTdText.indexOf(platformiOS) === -1) {
+            getArrayByCheckedLi(row, cppTd, secondTdText, androidArray);
+          } else {
+            getArrayByCheckedLi(row, cppTd, secondTdText, androidArray);
+            getArrayByCheckedLi(row, cppTd, secondTdText, iosArray);
+          }
+        }
+      });
+    });
+
+    var buttonPlatform = event.target.id;
+    if (buttonPlatform === "Android") {
+      copyArrayToClipboard(androidArray);
+    } else if (buttonPlatform === "iOS") {
+      copyArrayToClipboard(iosArray);
+    }
+  });
+}
+
+/**
+ * 查找表头中包含指定字符串的单元格位置
+ */
+function findColumnIndex(columnName) {
+  const headerCells = document.querySelectorAll("th.confluenceTh");
+
+  for (let i = 0; i < headerCells.length; i++) {
+    const headerInner = headerCells[i].querySelector(".tablesorter-header-inner");
+    if (headerInner && headerInner.textContent.trim() === columnName) {
+      return i;
+    }
+  }
+
+  console.log(`未找到包含"${columnName}"的列`);
+  return -1;
+}
+
+/**
+ * 获取tr元素中的第N个td元素，并检查其中的li元素是否为选中状态
+ */
+function getArrayByCheckedLi(row, tdNum, requirementName, array) {
+  var tdElement = row.querySelector("td:nth-child(" + tdNum + ")");
+  var liElement = tdElement.querySelector("li.checked");
+  if (liElement) {
+    addToUniqueArray(array, requirementName);
+  }
+}
+
+/**
+ * 往数组内添加不重复的元素
+ */
+function addToUniqueArray(arr, element) {
+  if (arr.indexOf(element) === -1) {
+    arr.push(element);
+  }
+}
+
+/**
+ * 将数组转化为字符串进行拷贝
+ */
+function copyArrayToClipboard(arr) {
+  var arrayString = arr.join("\n");
+
+  var textarea = document.createElement("textarea");
+  textarea.value = arrayString;
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    document.execCommand("copy");
+    console.log("数组已复制到剪贴板");
+  } catch (err) {
+    console.error("复制到剪贴板失败: ", err);
+  } finally {
+    document.body.removeChild(textarea);
+    showCopySuccessMessage();
+  }
+}
+
+/**
+ * 复制成功提示
+ */
+function showCopySuccessMessage() {
+  var messageBox = document.createElement("div");
+  messageBox.textContent = "复制成功！";
+  messageBox.style.position = "fixed";
+  messageBox.style.top = "50%";
+  messageBox.style.left = "50%";
+  messageBox.style.transform = "translate(-50%, -50%)";
+  messageBox.style.padding = "10px";
+  messageBox.style.background = "#4CAF50";
+  messageBox.style.color = "white";
+  messageBox.style.borderRadius = "5px";
+  messageBox.style.zIndex = "9999";
+
+  document.body.appendChild(messageBox);
+
+  setTimeout(function () {
+    document.body.removeChild(messageBox);
+  }, 2000);
+}
+
+// ======== main.js ========
+/**
+ * 主入口文件
+ * 整合所有模块并初始化应用
+ */
+
+(function () {
+  "use strict";
+
+  // 初始化样式
+  StyleManager.injectStyles();
+
+  // 初始化Jira模块
+  JiraModule.init();
+
+  // 注册全局事件
+  EventManager.registerGlobalEvents();
+
+  // 注册搜索按钮事件
+  EventManager.bindEvent(
+    "#search_span_create",
+    "click",
+    () => {
+      JiraModule.handleSearchSpanClick("customfield_10303-val");
+    },
+    "jira"
+  );
+
+  EventManager.bindEvent(
+    "#search_span_solved",
+    "click",
+    () => {
+      JiraModule.handleSearchSpanClick("customfield_10304-val");
+    },
+    "jira"
+  );
+
+  console.log("开发版快查脚本已初始化");
 })();

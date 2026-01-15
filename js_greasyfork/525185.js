@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Full_Black_List
 // @namespace    Full_Black_List
-// @version      0.40.5
+// @version      0.45.0
 // @description  Supprime totalement les sujets des pseudo blacklistés depuis la blacklist JVC.
 // @author       Atlantis
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
@@ -13,6 +13,7 @@
 // @match        *://www.jeuxvideo.com/messages-prives/indesirables.php
 // @match        *://www.jeuxvideo.com/sso/blacklist.php
 // @match        *://www.jeuxvideo.com/login*
+// @run-at       document-end
 // @icon         https://images.emojiterra.com/microsoft/fluent-emoji/15.1/128px/1f6ab_color.png
 // @license      MIT
 // @grant        none
@@ -23,7 +24,7 @@
 
 // === SOMMAIRE RAPIDE DU SCRIPT ===
 // FONCTIONS RESEAU FETCH :
-//   [1] fonctionSynckBLForums() : blacklist.php => LocalStorage
+//   [1] fonctionSynchBLForums() : blacklist.php => LocalStorage
 //   [2] getBLListMP() : Check BlackList MP
 //   [2] deleteBlacklistMP() : BlackListForum => Strike BlackListForumMP
 //
@@ -38,18 +39,20 @@
 
 
 ///// FONTIONS RESEAU FETCH //////
-const forumPageGetH = '/forums/0-36-0-1-0-1-0-guerre-des-consoles.htm'
+async function fetchParseDom(url) {
+    const res = await fetch(url);
+    const html = await res.text();
+    return new DOMParser().parseFromString(html, 'text/html');
+}
 
 //1___FETCH___SYNCH__BL___(FETCH_FORUM_LIST_PAGE)_
 //PUSH — blacklist.php => LocStorage
-async function fonctionSynckBLForums() {
-    let response = await fetch('/sso/blacklist.php');
-    let htmlText = await response.text();
-    let docFetched = new DOMParser().parseFromString(htmlText, 'text/html');
-
+async function fonctionSynchBLForums() {
+    let docFetched = await fetchParseDom('/sso/blacklist.php');
     let pseudos = docFetched.querySelectorAll('#blacklist span');
+
     // /SSO/BLACKLIST.PHP => VERS_LOCAL_STORAGE
-    let pseudoList = [...pseudos].map(span => span.textContent.trim());
+    let pseudoList = [...pseudos].map(span => span.textContent.trim().toLowerCase());
     localStorage.setItem('fullblacklistJVC', JSON.stringify(pseudoList));
 }
 
@@ -61,11 +64,9 @@ let idListFetch = [];
 let hashListFetch = [];
 
 async function getBLListMP() {
-    let response = await fetch('/messages-prives/indesirables.php');
-    let htmlText = await response.text();
-    let docFetched = new DOMParser().parseFromString(htmlText, 'text/html');
-
+    let docFetched = await fetchParseDom('/messages-prives/indesirables.php');
     let listItems = docFetched.querySelectorAll('#blacklist .mp_delete_blacklist');
+
     //recupere pour chaque id
     listItems.forEach(user => {
         let idAlias = user.getAttribute('data-id');
@@ -120,10 +121,10 @@ if (location.href.includes('jeuxvideo.com/forums/0-') || location.href.includes(
     let listeLocalStorage = localStorage.getItem('fullblacklistJVC');
     // Si aucune blacklist locale, on synchronise depuis le serveur JVC et on recharge la page
     if (!listeLocalStorage) {
-      fonctionSynckBLForums().then(() => location.reload());
+      fonctionSynchBLForums().then(() => location.reload());
     } else {
-        // Recupere pseudos blacklistés en minuscules
-        const blacklistStorage = JSON.parse(listeLocalStorage).map(p => p.toLowerCase());
+        // Recupere pseudos blacklistés
+        const blacklistStorage = JSON.parse(listeLocalStorage);
         // Supprime sujet avec pseudo blacklisté (includes)
         document.querySelectorAll('.topic-author').forEach(authorEl => {
             const pseudo = authorEl.textContent.trim().toLowerCase();
@@ -154,7 +155,7 @@ if (location.href.includes('jeuxvideo.com/forums/0-')) {
 
 
     document.querySelector('.cust-btn-container #bl-refresh').addEventListener('click', async () => {
-        await fonctionSynckBLForums();
+        await fonctionSynchBLForums();
         alert('Filtrage des topics actualisés avec la blacklist JVC ✅');
         location.reload();
     });
@@ -165,6 +166,9 @@ if (location.href.includes('jeuxvideo.com/forums/0-')) {
 if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes('jeuxvideo.com/forums/42-') || location.href.includes('jeuxvideo.com/forums/message/')) {
 
     //Masquage_Message_avec_.msg-pseudo-blacklist
+    const style = document.createElement('style');
+    style.textContent = `.msg-pseudo-blacklist { display: none !important; } `;
+    document.head.appendChild(style);
     document.querySelectorAll('.msg-pseudo-blacklist').forEach(block => block.remove());
 
     //ajout dun event au bouton blacklist
@@ -172,11 +176,25 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
         btn.addEventListener('click', () => sessionStorage.setItem('fullblacklistJVCAwait', 'true'));
     });
 
+    //Masquage_Citations
+    function hidePseudoQuotes() {
+        const blacklistStorage = JSON.parse(localStorage.getItem("fullblacklistJVC") || "[]");
+        document.querySelectorAll(".blockquote-jv > p:first-of-type").forEach(p => {
+            const pseudoIRC = p.textContent.startsWith("[") && p.textContent.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
+            const pseudo = p.textContent.replace(/\s+/g, ' ').split(" a écrit")[0]?.split(" ")?.pop()?.trim()?.toLowerCase(); //FOFO
+            if (blacklistStorage.includes(pseudo) || blacklistStorage.includes(pseudoIRC)) {
+                p.closest(".blockquote-jv").hidden = true;
+            }
+        });
+    }
+    hidePseudoQuotes();
+
     // Mise à jour de la Blacklist du script APRES actualisation
     if (sessionStorage.getItem('fullblacklistJVCAwait') === 'true') {
-        fonctionSynckBLForums();
+        fonctionSynchBLForums().then(hidePseudoQuotes);
         sessionStorage.removeItem('fullblacklistJVCAwait');
     }
+
 }
 
 //7______________MASQUAGE____BLOC__MESSAGE_MP__(Message_MP)____
@@ -194,10 +212,10 @@ if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
     let listeLocalStorage = localStorage.getItem('fullblacklistJVC');
     // Si aucune blacklist locale, on synchronise depuis le serveur JVC et on recharge la page
     if (!listeLocalStorage) {
-        fonctionSynckBLForums().then(() => location.reload());
+        fonctionSynchBLForums().then(() => location.reload());
     } else {
         // Liste pseudos en minuscules
-        const blacklistStorage = JSON.parse(listeLocalStorage).map(p => p.toLowerCase());
+        const blacklistStorage = JSON.parse(listeLocalStorage);
         const messageBlocks = document.querySelectorAll('.bloc-message-forum')
         messageBlocks.forEach(block => {
             const pseudoBloc = block.querySelector('.bloc-pseudo-msg')?.textContent.trim().toLowerCase();
@@ -208,19 +226,19 @@ if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
 
     // [3] Appel black list MP => Synch Fofo
     let idAlias = sessionStorage.getItem('fullblacklistJVCidAlias');
-    if (idAlias) (async () => {
+    if (idAlias) {
+      (async () => {
         // Fetch recuperer hash preference forum
-        let response = await fetch(forumPageGetH);
-        let htmlText = await response.text();
-        let docFetched = new DOMParser().parseFromString(htmlText, 'text/html');
-
+        let docFetched = await fetchParseDom('/forums/0-36-0-1-0-1-0-guerre-des-consoles.htm');
         let hashValue = docFetched.querySelector('#ajax_hash_preference_user')?.value;
+
         // AjoutBL_Forum
         await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${idAlias}&action=add&ajax_hash=${hashValue}`);
-        await fonctionSynckBLForums();
+        await fonctionSynchBLForums();
         //Clean
         sessionStorage.removeItem('fullblacklistJVCidAlias'); // Supprime ID => Il vient d'etre traité.
-    })();
+      })();
+    }
 
 
     // [4] Cacher les messages déjà blacklistés
@@ -245,7 +263,7 @@ if (location.href.includes('jeuxvideo.com/messages-prives/indesirables.php')) {
 //9________________MISE_A_JOUR_PAGE_BLACK_LISTE__(Page_BlackList_Forums)____
 if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 
-    fonctionSynckBLForumsNoFetch(); // Liste Page vers LocalStorage (on est sur la page => PAS de fetch)
+    fonctionSynchBLForumsNoFetch(); // Liste Page vers LocalStorage (on est sur la page => PAS de fetch)
 
     let hashMPListed;
     // Suppression par pseudo
@@ -257,16 +275,16 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
                 hashMPListed = true;
             }
             deleteBlacklistMP(idAlias); // Supprime PSEUDO EN MP
-            fonctionSynckBLForumsNoFetch(); // Liste Page vers LocalStorage
+            fonctionSynchBLForumsNoFetch(); // Liste Page vers LocalStorage
         });
     });
 
 
-    async function fonctionSynckBLForumsNoFetch() { //lit les pseudo visible sur la page
+    async function fonctionSynchBLForumsNoFetch() { //lit les pseudo visible sur la page
         await new Promise(resolve => setTimeout(resolve, 1000)); //delais pour capturer la page à jour
 
         let pseudos = document.querySelectorAll('#blacklist span');
-        let pseudoList = [...pseudos].map(span => span.textContent.trim());
+        let pseudoList = [...pseudos].map(span => span.textContent.trim().toLowerCase());
         localStorage.setItem('fullblacklistJVC', JSON.stringify(pseudoList));
     }
 }
@@ -276,7 +294,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 
     //SUPPRESSION TOTALE BL LOT FOFO + MP
     async function deleteAllBlacklist() {
-        document.getElementById('bl-clear').textContent = 'Loading...';
+        document.querySelector('#bl-clear').textContent = 'Loading...';
         let listItems = document.querySelectorAll('#blacklist li');
 
         // Nettoyage de TOUT pseudo blacklistes
@@ -284,7 +302,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
         for (const liItem of listItems) {
             const idAlias = liItem.getAttribute('data-id-alias');
             await fetch(`/sso/ajax_delete_blacklist.php?id_alias_unblacklist=${idAlias}`);
-            document.getElementById('bl-clear').textContent = `Loading (${count})`;
+            document.querySelector('#bl-clear').textContent = `Loading (${count})`;
             count++;
         } 
 
@@ -292,7 +310,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
         let countMP = 1
         await getBLListMP(); // récupère sa propre liste depuis la messagerie
         await deleteBlacklistMPALL(() => { // supprime côté MP
-            document.getElementById('bl-clear').textContent = `Loading (OK) (MP : ${countMP})`;
+            document.querySelector('#bl-clear').textContent = `Loading (OK) (MP : ${countMP})`;
             countMP++;
         });
         window.location.reload();
@@ -300,33 +318,30 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 
 
     //IMPORTATION BLACKLIST fichier JSON
-    async function importBlacklist(bljson) {
-        const filejson = bljson.target.files[0];
-        if (!filejson) return;
+    async function importBlacklist(blJson) {
+        const fileJson = blJson.target.files[0];
+        if (!fileJson) return;
 
         let blacklistjson;
         try {
             // Lecture + parsing du fichier JSON
-            blacklistjson = JSON.parse(await filejson.text());
+            blacklistjson = JSON.parse(await fileJson.text());
         } catch {
             alert("Fichier JSON invalide.");
             return;
         }
 
-        document.getElementById('bl-import').textContent = 'Load...';
+        document.querySelector('#bl-import').textContent = 'Load...';
 
         // Récupération du hash AJAX
-        let response = await fetch(forumPageGetH);
-        let htmlText = await response.text();
-        let docFetched = new DOMParser().parseFromString(htmlText, 'text/html');
-
+        let docFetched = await fetchParseDom('/forums/0-36-0-1-0-1-0-guerre-des-consoles.htm');
         let hash = docFetched.querySelector('#ajax_hash_preference_user')?.value;
 
         // REQUÊTES D’AJOUT UN À UNE FOFO
         let count = 1;
         for (const obj of blacklistjson) {
             await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${obj.id}&action=add&ajax_hash=${hash}`);
-            document.getElementById('bl-import').textContent = `Load (${count})`;
+            document.querySelector('#bl-import').textContent = `Load (${count})`;
             count++;
         }
 
@@ -354,15 +369,15 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
     let container = document.querySelector('.layout__row.layout__content.layout__row--gutter.mb-5');
     container.insertAdjacentHTML('beforeend', `
         <ul>
-            <button id="bl-import" title="Importer BlackList depuis un Fichier" class="simpleButton" style="border-radius:6px;">
+            <button id="bl-import" title="Importer BlackList depuis un Fichier" class="btn btn-secondary" style="border-radius:6px;">
                 Importer
             </button>&nbsp;
-            <button id="bl-export" title="Exporter BlackList JVC en Fichier" class="simpleButton" style="border-radius:6px;">
+            <button id="bl-export" title="Exporter BlackList JVC en Fichier" class="btn btn-secondary" style="border-radius:6px;">
                 Exporter
             </button>
         </ul>
         <ul>
-            <button id="bl-clear" title="Vider toute la blacklist JVC + MP + Script" class="simpleButton" style="border-radius:6px; background-color:red;">
+            <button id="bl-clear" title="Vider toute la blacklist JVC + MP + Script" class="btn btn-danger" style="border-radius:6px;">
                 Vider BL Forum et MP
             </button>
         </ul>

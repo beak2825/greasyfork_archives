@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         虫虫钢琴铺面查看脚本
 // @namespace    TesterNaN.github.io
-// @version      1.8
+// @version      1.9
 // @description  虫虫钢琴铺面查看工具，可点击下载，全屏，打印等功能。
 // @author       TesterNaN
 // @license      GPLv3
@@ -107,18 +107,18 @@ function setJianpuMode(url,type) {
 function CrackMain(){
     const jp_icon = "https://s201.lzjoy.com/public/web_static/images/score_details/jianpu-icon.png";
     const wxp_icon = "https://s201.lzjoy.com/public/web_static/images/score_details/qupu-icon.png";
-    try{
-        var kj=document.getElementById("ai-score");
-    }catch(e){
-        alert("抱歉，您当前查看的谱面暂时无法读取");
+    var kj=document.getElementById("ai-score");
+    if(kj==null){
+        alert("抱歉，您当前查看的谱面暂时无法获取");
         return -1;
-    };
+    }
 
     var btn1=document.querySelector(".down.download");
     var btn2=document.getElementById("s_d_fullBtn");
     var btn3=document.querySelector(".print.Printing");
     var tojp=document.querySelector(".jianpu-btn");
     var downAudio=document.querySelector(".share.s_d_shareBtn")
+    var downCCMZ=document.querySelector(".like.Collection");
     setTimeout(function(){
         try{
             document.querySelector("#line-spectrum-box > div.ai > div").style.visibility="hidden";
@@ -147,7 +147,16 @@ function CrackMain(){
             document.querySelector("body > section").style="";
         }catch(e){}
         try{
+            document.querySelector("body > section > div.content-w > div:nth-child(3)").style.display="none";
+        }catch(e){}
+        try{
+            document.querySelector("body > section > div.content-w > div:nth-child(3)").style.display="none";
+        }catch(e){}
+        try{
             downAudio.childNodes[0].innerHTML = '<i class="down-icon"></i>下载音频'
+        }catch(e){}
+        try{
+            downCCMZ.childNodes[0].innerHTML = '<i class="down-icon"></i>解析MIDI'
         }catch(e){}
     }, 1000);
     btn1.addEventListener("click",function(){
@@ -179,6 +188,110 @@ function CrackMain(){
         });
         event.stopImmediatePropagation();
     },true);
+    downCCMZ.addEventListener("click",function(){
+        const url = new URL(document.querySelector("#ai-score").src);
+        const ccmzUrl = url.searchParams.get('url');
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-family: system-ui, -apple-system, sans-serif;
+        `;
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        `;
+
+        modal.innerHTML = `
+            <h3 style="margin: 0 0 15px 0; color: #333;">CCMZ文件链接</h3>
+            <div style="
+                background: #f5f5f5;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                word-break: break-all;
+                font-size: 14px;
+                color: #666;
+                line-height: 1.5;
+            ">
+                ${ccmzUrl}
+            </div>
+            <p style="color: #666; margin-bottom: 20px; font-size: 14px; line-height: 1.6;">
+                使用 <a href="https://github.com/TesterNaN/ccmz2mid" target="_blank" style="color: #4a90e2; font-weight: 500;">ccmz2mid</a> 程序将CCMZ文件转换为MIDI文件
+                <br>
+                或使用 <a href="https://testernan.github.io/ccmz2mid/?ccmz=${ccmzUrl}" target="_blank" style="color: #4a90e2; font-weight: 500;">ccmz2mid网页端</a> 在线转换
+            </p>
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button id="copyBtn" style="
+                    background: #4a90e2;
+                    color: white;
+                    border: none;
+                    padding: 10px 25px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 500;
+                    flex: 1;
+                ">复制链接</button>
+                <button id="closeBtn" style="
+                    background: #f5f5f5;
+                    color: #666;
+                    border: none;
+                    padding: 10px 25px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    flex: 1;
+                ">关闭</button>
+            </div>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        // 复制功能
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(ccmzUrl).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '已复制！';
+                btn.style.background = '#34a853';
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#4a90e2';
+                }, 2000);
+            });
+        });
+
+        // 关闭功能
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            overlay.remove();
+        });
+
+        // 点击背景关闭
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+        event.stopImmediatePropagation();
+    },true);
     try{
     tojp.addEventListener("click",function(){
         //卡顿一下是正常的
@@ -203,6 +316,10 @@ function CrackMain(){
 		//}
         //我搞了一下午都没能成功用油猴篡改掉这个函数
         //望有识之士能助我一臂之力，打败这个可恶的函数
+
+        //2026年1月10补充：
+        //我另外写了一个插件，现在能够屏蔽跳转了，但是由于脚本启动时机不同，没法将两段代码放在同个脚本
+        //如果想要原版/jianpu/的话，大抵需要自己安装
 
         //原本代码：
         //var str = window.location.pathname;

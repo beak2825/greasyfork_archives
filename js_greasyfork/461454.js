@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微博帖子一键收藏、屏蔽、新页面打开
 // @namespace    http://tampermonkey.net/
-// @version      20250827
+// @version      20260110
 // @description  在微博网页端，为每个帖子创建一个收藏和新页面打开按钮。
 // @author       Fat Cabbage
 // @license      MIT
@@ -86,12 +86,13 @@ class Selector {
     static {
         if (Domain.domain === Domain.WEIBO || Domain.domain === Domain.WEIBO_3W) {
             Selector.rootNodeClass = 'vue-recycle-scroller__item-wrapper';
-            Selector.rootNodeClass = 'Main_full';
+            // Selector.rootNodeClass = 'Main_full';
             Selector.postNodeFullClass = `Feed_wrap`;
-            Selector.buttonLocateSelector = 'div[class*="head_main"]';
+            Selector.buttonLocateSelector = 'header > div[class*="woo-box-flex"] > :nth-child(1)';
             Selector.userASector = `a[class*="head_name"]`;
             Selector.userTitleSector = `a[class*="head_name"] > span`;
-            Selector.timeASector = `a[class^="head-info_time"]`;
+            // Selector.timeASector = `a[class^="head-info_time"]`;
+            Selector.timeASector = `a[class^="_time_"]`;
             Selector.forwardNodeStartClass = 'retweet Feed_retweet'
             Selector.forwardNodeSelector = 'div.retweet[class*="Feed_retweet"]'
             Selector.likeButtonSelector = 'button[title="赞"]';
@@ -347,25 +348,30 @@ ${tagTmp}`;
 
 class Locate {
     static articleNode(node, type = 'default') {
-        let postList = node.querySelectorAll(`article[class*="Feed_wrap"]`);
-        if (postList.length > 0) {
-            return postList[0];
+        let headerNode = node.closest('div.vue-recycle-scroller__item-view');
+        if (headerNode) {
+            return headerNode;
         }
-        while (node != null) {
-            if (node.className == null) {
-                return null;
-            }
-            if (type === 'default') {
-                if (node.className.indexOf(Selector.postNodeFullClass) >= 0) {
-                    return node;
-                }
-            } else if (type === 'forward') {
-                if (node.className.indexOf(Selector.forwardNodeStartClass) >= 0) {
-                    return node;
-                }
-            }
-            node = node.parentNode;
-        }
+        console.log('else')
+        // let postList = node.querySelectorAll(`article[class*="woo-panel-main"]`);
+        // if (postList.length > 0) {
+        //     return postList[0];
+        // }
+        // while (node != null) {
+        //     if (node.className == null) {
+        //         return null;
+        //     }
+        //     if (type === 'default') {
+        //         if (node.className.indexOf(Selector.postNodeFullClass) >= 0) {
+        //             return node;
+        //         }
+        //     } else if (type === 'forward') {
+        //         if (node.className.indexOf(Selector.forwardNodeStartClass) >= 0) {
+        //             return node;
+        //         }
+        //     }
+        //     node = node.parentNode;
+        // }
         return null;
     }
 
@@ -376,6 +382,7 @@ class Locate {
 
 class BlogView {
     static getBlogID(articleNode) {
+        // console.log(articleNode)
         let timeA = articleNode.querySelector(Selector.timeASector);
         let url = timeA.href;
         let index = url.lastIndexOf('/');
@@ -424,8 +431,7 @@ class Button {
     static addBaseClass(node) {
         if (Button.buttonClassList == null) {
             let settingButton = document.querySelector(Selector.expandButtonSelector)
-            let classList = settingButton.classList
-            Button.buttonClassList = Array.from(classList).filter(className => className.startsWith('IconBox_'));
+            Button.buttonClassList = settingButton.classList;
         }
         for (let cl of Button.buttonClassList) {
             node.classList.add(cl);
@@ -1124,7 +1130,8 @@ function listenRootBlock() {
             }).observe(rootNode, {childList: true, subtree: true});
             onScrollFlag = true;
 
-            let postList = rootNode.querySelectorAll(`article[class*="Feed_wrap"]`);
+            let postList = rootNode.querySelectorAll(`div.vue-recycle-scroller__item-view`);
+            console.log(postList);
             postList.forEach(articleNode => {
                 if (!blockConfig.has(articleNode)) {
                     blockConfig.set(articleNode, {});
@@ -1157,7 +1164,6 @@ function listenRootBlock() {
                 placeButtons(articleNode)
             });
         }
-
     }, 500);
 }
 
@@ -1165,23 +1171,24 @@ function placeButtons(node) {
     if (node == null) {
         return;
     }
+    console.log('node', node)
     if (node.getAttribute('data_a656_value1') === 'true') {
         return;
+
     }
 
     node.setAttribute('data_a656_value1', true.toString());
-
     let favoriteButtonNode = Button.createFavorite();
     let openButton = Button.createOpen();
-    let blockButton = Button.createBlock();
 
+    let blockButton = Button.createBlock();
     let targetNode = node.querySelector(Selector.buttonLocateSelector);
 
     if (Domain.domain === Domain.WEIBO || Domain.domain === Domain.WEIBO_3W) {
-        targetNode.parentNode.insertBefore(favoriteButtonNode, targetNode.nextSibling);
-        targetNode.parentNode.insertBefore(openButton, targetNode.nextSibling);
+        targetNode.parentNode.insertBefore(favoriteButtonNode, targetNode);
+        targetNode.parentNode.insertBefore(openButton, targetNode);
         if (Domain.domain === Domain.WEIBO) {
-            targetNode.parentNode.insertBefore(blockButton, targetNode.nextSibling);
+            targetNode.parentNode.insertBefore(blockButton, targetNode);
         }
     } else if (Domain.domain === Domain.WEIBO_S) {
         let wrap = document.createElement('div');

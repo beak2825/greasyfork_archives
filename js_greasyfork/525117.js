@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         이미지 다운로더 + HR
-// @version         2.90.0.8.251231
+// @version         2.90.0.8.260108
 // @namespace       http://tampermonkey.net/
 // @description     Images can be extracted and batch downloaded from most websites. Especially for websites the right click fails or image can not save. Extra features: zip download / auto-enlarge image. See the script description at info page (suitable for chrome/firefox+tampermonkey)
 // @author          桃源隐叟-The hide oldman in taoyuan mountain, donghaerang
@@ -425,66 +425,78 @@ https://github.com/nodeca/pako/blob/master/LICENSE
         });
     }
 
-// === 다운로드 로직: 친구가 말한 조건 완벽 적용 ===
     function downloadUrlAsBlob(url, filename) {
         const processAndSave = (blob) => {
             const img = new Image();
             const objectUrl = URL.createObjectURL(blob);
 
             img.onload = function() {
-                // [조건 1] PNG 확장자는 변경 없이 즉시 다운로드
-                if (blob.type === 'image/png') {
+                const w = this.width;
+                const h = this.height;
+                // jpeg, jpg, webp 포맷 체크 (MIME 타입 기준)
+                const isTargetFormat = ['image/jpeg', 'image/webp'].includes(blob.type);
+
+                // 1. tving.com & 1280x720: 해상도 유지, .jpg 변환
+                if (url.includes("tving.com") && w === 1280 && h === 720) {
+                    resizeAndCropGeneric(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
+                    URL.revokeObjectURL(objectUrl);
+                    return;
+                }
+
+                // 2. Not tving.com & .png: 원본 유지 다운로드
+                if (!url.includes("tving.com") && blob.type === 'image/png') {
                     saveAs(blob, `${filename}.png`);
                     URL.revokeObjectURL(objectUrl);
                     return;
                 }
 
-                // 가로(w), 세로(h) 및 타겟 포맷 여부 확인
-                const isTargetFormat = ['image/jpeg', 'image/webp', 'image/jpg'].includes(blob.type);
-                const w = this.width;
-                const h = this.height;
-
+                // 3~8번 조건: .jpeg, .jpg, .webp 파일인 경우
                 if (isTargetFormat) {
-                    // [조건 2] 가로 > 세로 && (가로 > 2000 || 세로 > 3000) -> 2000x3000 리사이징 & 잘라내기
-                    if (w > h && (w > 2000 || h > 3000)) {
-                        resizeAndCropGeneric(this, 2000, 3000).then(processedBlob => {
-                            saveAs(processedBlob, `${filename}.jpg`);
-                        });
-                        URL.revokeObjectURL(objectUrl);
-                        return;
+                    if (w > h) { // 가로형 (Landscape)
+                        // 3. 가로 > 3840 또는 세로 > 2160: 3840x2160 축소 및 잘라내기
+                        if (w > 3840 || h > 2160) {
+                            resizeAndCropGeneric(this, 3840, 2160).then(b => saveAs(b, `${filename}.jpg`));
+                        } 
+                        // 4. 가로 < 1280 이고 세로 < 720: 1280x720 확대 및 잘라내기
+                        else if (w < 1280 && h < 720) {
+                            resizeAndCropGeneric(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
+                        } 
+                        // 5. 범위 내 가로형: 16:9 비율로 맞춤 (현재 가로 길이 기준)
+                        else {
+                            let targetH = Math.round(w / (16 / 9));
+                            resizeAndCropGeneric(this, w, targetH).then(b => saveAs(b, `${filename}.jpg`));
+                        }
+                    } else if (w < h) { // 세로형 (Portrait)
+                        // 6. 가로 > 2000 또는 세로 > 3000: 2000x3000 축소 및 잘라내기
+                        if (w > 2000 || h > 3000) {
+                            resizeAndCropGeneric(this, 2000, 3000).then(b => saveAs(b, `${filename}.jpg`));
+                        } 
+                        // 7. 가로 < 500 이고 세로 < 750: 500x750 확대 및 잘라내기
+                        else if (w < 500 && h < 750) {
+                            resizeAndCropGeneric(this, 500, 750).then(b => saveAs(b, `${filename}.jpg`));
+                        } 
+                        // 8. 범위 내 세로형: 2:3 비율로 맞춤 (현재 세로 길이 기준)
+                        else {
+                            let targetW = Math.round(h / (3 / 2));
+                            resizeAndCropGeneric(this, targetW, h).then(b => saveAs(b, `${filename}.jpg`));
+                        }
+                    } else {
+                        // 9. 정사각형 등 기타 조건: 변환 없이 그대로 (MIME 타입 확장자 추출)
+                        let ext = blob.type.split('/')[1].replace('jpeg', 'jpg');
+                        saveAs(blob, `${filename}.${ext}`);
                     }
-                    
-                    // [조건 3] 가로 < 세로 && (가로 < 500 || 세로 < 750) -> 500x750 확대 & 잘라내기
-                    if (w < h && (w < 500 || h < 750)) {
-                        resizeAndCropGeneric(this, 500, 750).then(processedBlob => {
-                            saveAs(processedBlob, `${filename}.jpg`);
-                        });
-                        URL.revokeObjectURL(objectUrl);
-                        return;
-                    }
-
-                    // [추가] WebP 파일을 JPG로 변환하여 저장
-                    if (blob.type === 'image/webp') {
-                        convertWebpToJpg(blob).then(jpgBlob => {
-                            saveAs(jpgBlob, `${filename}.jpg`);
-                        });
-                        URL.revokeObjectURL(objectUrl);
-                        return;
-                    }
+                } else {
+                    // 9. 규칙 외 이미지: 원본 해상도와 포맷 유지
+                    let ext = blob.type.split('/')[1].replace('jpeg', 'jpg') || 'jpg';
+                    saveAs(blob, `${filename}.${ext}`);
                 }
-
-                // [기타] 모든 조건에 해당하지 않으면 원본 저장 (jpeg는 jpg로 변경)
-                let extension = blob.type.split('/')[1] || 'jpg';
-                if (extension === 'jpeg') extension = 'jpg';
-                saveAs(blob, `${filename}.${extension}`);
                 URL.revokeObjectURL(objectUrl);
             };
 
             img.onerror = function() {
-                console.error("이미지 로드 실패, 원본 Blob 다운로드 시도:", url);
-                let extension = blob.type.split('/')[1] || 'jpg';
-                if (extension === 'jpeg') extension = 'jpg';
-                saveAs(blob, `${filename}.${extension}`);
+                // 로드 실패 시 안전하게 원본 다운로드
+                let ext = blob.type.split('/')[1].replace('jpeg', 'jpg') || 'jpg';
+                saveAs(blob, `${filename}.${ext}`);
                 URL.revokeObjectURL(objectUrl);
             };
 

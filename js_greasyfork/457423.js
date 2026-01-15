@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         极致净化百度文库页
 // @namespace    https://evgo2017.com/purify-page
-// @version      0.1
+// @version      0.1.3
 // @description  完美阅读体验，去除广告、推荐等一系列和阅读无关的内容
 // @author       evgo2017
 // @match        https://wenku.baidu.com/view/*
@@ -15,80 +15,60 @@
 (function() {
     'use strict';
 
-    const maxRetryCount = 5; // 最大重试次数
+    const maxRetryCount = 10; // 最大重试次数
 
-    // 移除区域
-    remove("上方 header", `.new-header`)
-    remove("左侧推荐文档集", `#app-left`)
-    remove("右侧开通 VIP、排行榜、原创作者招募", `#app-right`)
-    remove("阅读器右上角工具栏 - 阅读页换肤", `.top-bar-right`)
-    remove("右上角工具栏 - 阅读页换肤", `.menubar`)
-    remove("下方下载区域", `.tool-bar-wrap`)
-    remove("阅读器内 - 内容推荐", `.hx-warp`, { repeat: true });
-    remove("下方广告区域", `.hx-recom-wrapper`)
-    remove("开通 VIP ", `.pc-cashier-card`)
-    remove("下一篇", `.page-icon`)
-    remove("版权信息", `.copyright-wrap`)
-    remove("vip 弹出内容", `.vip-member-pop-content`)
-    remove("全屏按钮", `.full-screen-icon`)
-
-    setTimeout(() => {
-      // 最大化阅读区域，style 有被重新设置，所以延迟执行
-      const bodyDom = $(`#body`)
-      let currentDom = $(`.reader-wrap`)
-      while (currentDom !== bodyDom) {
-        currentDom.style.width = '100%'
-        currentDom.style.height = '100%'
-        currentDom = currentDom.parentElement
-      }
-    }, 1000)
-
-    addEventListener("展开全文 - 文字", `.read-all`, 'click', () => {
-       removeHexWarps()
-    })
-    addEventListener("展开全文 - 图标", `.arrow`, 'click', () => {
-       removeHexWarps()
-    })
-    function removeHexWarps() {
-        console.log('已点开展开全文')
+    switch (window.location.hostname) {
+      case 'wenku.baidu.com': {
+        console.log('匹配到 百度文库 页面')
+        remove("上方 header", `.new-header`, { isRemove: true })
+        remove("左侧推荐文档集", `#app-left`, { isRemove: true })
+        remove("右侧开通 VIP、排行榜、原创作者招募", `#app-right`, { isRemove: true })
+        remove("阅读器右上角工具栏 - 阅读页换肤", `.top-bar-right`, { isRemove: true })
+        remove("右上角工具栏 - 阅读页换肤", `.menubar`, { isRemove: true })
+        remove("下方下载区域", `.tool-bar-wrap`, { isRemove: true })
+        remove("阅读器内 - 内容推荐", `.hx-warp`, { isRemove: true, isRepeat: true });
+        remove("下方广告区域", `.hx-recom-wrapper`, { isRemove: true })
+        remove("开通 VIP ", `.pc-cashier-card`, { isRemove: true })
+        remove("下一篇", `.page-icon`, { isRemove: true })
+        remove("版权信息", `.copyright-wrap`, { isRemove: true })
+        remove("vip 弹出内容", `.vip-member-pop-content`, { isRemove: true })
+        remove("全屏按钮", `.full-screen-icon`, { isRemove: true })
+        remove('下一篇推荐', `.pcstep-foot-pagination`, { isRemove: true })
+        remove('文章推荐', `.contract-wrap`, { isRemove: true })
+        // 最大化阅读区域，style 有被重新设置，所以延迟执行
         setTimeout(() => {
-            var doms = document.querySelectorAll(`.hx-warp`)
-            console.log(doms)
-            for (let i = 0, len = doms.length; i < len; i++) {
-                doms[i].remove()
+            const bodyDom = $(`#body`)
+            let currentDom = $(`.reader-wrap`)
+            while (currentDom !== bodyDom) {
+              currentDom.style.width = '100%'
+              currentDom.style.height = '100%'
+              currentDom = currentDom.parentElement
             }
         }, 1000);
+        break
+      }
     }
 
     // Helper
-    function remove(label, selector, userOption = {}, count = 1) {
-       const option = Object.assign({ repeat: false, getDom: (dom) => dom, }, userOption)
-       const dom = option.getDom($(selector))
+    function remove(label, selector, option, count = 1) {
+       const dom = document.querySelector(selector)
        if (dom) {
-          dom.remove()
-          console.log(`${label}，%c已移除%c。（第 ${count} 次处理）`, "color: red; font-weight: bold", "color: black")
-          if (option.repeat) {
-            setTimeout(() => { remove(label, selector, option, count + 1) }, 1000)
+          option = Object.assign({ isClick: false, isRemove: false, isRepeat: false }, option)
+          if (option.isClick) {
+            dom.click()
+          } else if (option.isRemove) {
+            dom.remove()
+          } else {
+            dom.style.display = 'none'
           }
+          if (option.isRepeat && count <= maxRetryCount) {
+           setTimeout(() => { remove(label, selector, option, count + 1) }, 1000)
+          }
+          console.log(`${label}，%c已移除%c。（第 ${count} 次处理）`, "color: red; font-weight: bold", "color: black")
        } else {
-         if (count < maxRetryCount) {
+         if (count <= maxRetryCount) {
            console.log(`${label}，未找到。（第 ${count} 次处理）`)
            setTimeout(() => { remove(label, selector, option, count + 1) }, 1000)
-         } else {
-           console.log(`${label}，%c停止查找%c。（第 ${count} 次处理）`, "color: orange; font-weight: bold", "color: black")
-         }
-       }
-    }
-    function addEventListener(label, selector, event, callback = () => {}, userOption = {}, count = 1) {
-       const option = Object.assign({ getDom: (dom) => dom }, userOption)
-       const dom = option.getDom($(selector))
-       if (dom) {
-          dom.addEventListener(event, () => callback());
-          console.log(`${label}，%c已添加 ${event} 事件%c。（第 ${count} 次处理）`, "color: red; font-weight: bold", "color: black")
-       } else {
-         if (count < maxRetryCount) {
-           console.log(`${label}，未找到。（第 ${count} 次处理）`)
-           setTimeout(() => { addEventListener(label, selector, event, callback, option, count + 1) }, 1000)
          } else {
            console.log(`${label}，%c停止查找%c。（第 ${count} 次处理）`, "color: orange; font-weight: bold", "color: black")
          }

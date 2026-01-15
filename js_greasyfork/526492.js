@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Pestpac - Easy Quick Scheduler Buttons
-// @version     5.2.29
+// @version     5.2.30
 // @description Adds buttons to select technicians by area and dates up to 7 days from the latest selected date in the calendar in Pestpac
 // @match       https://app.pestpac.com/appointment/*
 // @author      Jamie Cruz
@@ -151,12 +151,15 @@
     window.onload = function() {
         var container = createButtonContainer();
 
+// Region Buttons
 addTechButton("VA Techs", "#262F6A", [ { start: 3, end: 8 } ], container, "1:1");
 addTechButton("MD Techs", "#262F6A", [ { start: 9, end: 19 } ], container, "1:2");
 addTechButton("Tide", "#262F6A", [ { start: 20, end: 23 } ], container, "4:1");
+
+// Skill Buttons
 addTechButton("VA ACT", "#0057E9", [ { start: 3, end: 6 }, { start: 8, end: 8 } ], container, "2:1");
 addTechButton("MD ACT", "#0057E9", [ { start: 9, end: 13 }, { start: 15, end: 15 } ], container, "2:2");
-addTechButton("VA TM", "#EF4255", [ { start: 4, end: 4 }, { start: 6, end: 6 }, { start: 8, end: 8 } ], container, "3:1");
+addTechButton("VA TM", "#EF4255", [ { start: 4, end: 5 }, { start: 8, end: 8 } ], container, "3:1");
 addTechButton("MD TM", "#EF4255", [ { start: 9, end: 11 } ], container, "3:2");
 
         addSelectButton("+7", "#1565C0");

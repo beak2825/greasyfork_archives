@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name               NedFox Auto KHR
 // @namespace          NedFoxAutoKHR
-// @version            5.2.3
+// @version            5.2.4
 // @description        Auto-Proceed Nedfox steps in the packing portal
 // @author             Kevin van der Bij
-// @license MIT
+// @license            MIT
 // @match              https://retailvista.net/bztrs/*
 // @match              file:///C:/Users/Kevin/OneDrive%20-%20Kampeerhal%20Roden%20B.V/Backoffice/Tampermonkey/*
 // @icon               https://www.kampeerhalroden.nl/media/e9/9d/08/1703346720/favicon.ico
@@ -14,6 +14,7 @@
 // @grant              GM_setValue
 // @grant              GM_getValue
 // @grant              window.focus
+// @grant              window.close
 // @connect            kampeerhalroden.nl
 // @require            https://update.greasyfork.org/scripts/383527/701631/Wait_for_key_elements.js
 // @downloadURL https://update.greasyfork.org/scripts/555697/NedFox%20Auto%20KHR.user.js
@@ -22,9 +23,7 @@
 
 /*
 ToDo:
-1. Repeat barcode / print all (singleline?) orders of product
-2. Refactor!
-3. Rethink/Look at list view, which order to select first (oldest or singleline)
+1. Refactor!
 */
 
 /* globals jQuery, $, waitForKeyElements */
@@ -45,38 +44,20 @@ ToDo:
 
     // Switch based on the current page location with regular expression testing
     switch(true){
-        case /bztrs\/packingportal\/Reservations\/Index\/.*/.test(path):
-            // Skips the second step and sets all products to collected, we do not need the 2nd step anymore because of the loaded product list in step 3
-            skipSecondStep();
+        case /bztrs\/packingportal\/CompleteReservations.*/.test(path):
+            onCompleteReservationStep();
             break;
 
         case /bztrs\/packingportal\/Parcels.*/.test(path):
-            // Click button to third step to finalize order processing when it is enabled
-            proceedStep("#ParcelsContainer > div > div:nth-child(4) > div > button:not(:disabled)");
-
-            // HACKY WORKAROUND to clear input after scan
-            document.querySelector("#verifyProduct").addEventListener("click", clearInput("#productBarcode"), false);
-
-            addProductList();
-            editReservationDetails();
-            createCommentBox();
-            clearAllParcelItems();
-            saveLastOpenReservation();
-            autoFillParcel();
+            onShipReservationStep();
             break;
 
-        case /bztrs\/packingportal\/CompleteReservations.*/.test(path):
-            completeReservation();
+        case /bztrs\/packingportal\/Reservations\/Index\/.*/.test(path):
+            onVerifyReservationStep();
             break;
 
         case /bztrs\/packingportal.*/.test(path):
-            addLastReservationButtons();
-            processOrderSelection();
-
-            // Select the barcode field in the first step
-            waitForKeyElements("#Productbarcode", (elements) => {
-                elements[0].focus();
-            });
+            onSelectReservationStep();
             break;
 
         case /\/C:\/Users\/Kevin\/OneDrive%20-%20Kampeerhal%20Roden%20B.V\/Backoffice\/Tampermonkey\/TestPages.*/.test(path):
@@ -85,7 +66,49 @@ ToDo:
             break;
     }
 
-    function completeReservation() {
+    // Step 1: called on the home page where the user has to select a reservation
+    function onSelectReservationStep() {
+        addLastReservationButtons();
+        processOrderSelection();
+
+        // Select the barcode field in the first step
+        waitForKeyElements("#Productbarcode", (elements) => {
+            elements[0].focus();
+        });
+    }
+
+    // Step 2: called on the second page where the user has to verify the products in the reservation
+    function onVerifyReservationStep() {
+        let reservationID = document.getElementById("ReservationId").value;
+        let productList = document.querySelector("#ReservationContainer > div > div.container.my-2 > div");
+
+        // Cache the product list for the next page in the packing process
+        localStorage.setItem("NKHR_productList_" + reservationID, productList.outerHTML);
+
+        // Skips the second step and sets all products to collected, we do not need the 2nd step anymore because of the loaded product list in step 3
+        skipSecondStep();
+    }
+
+    // Step 3: called on the third page where the user has to create the shipping parcel
+    function onShipReservationStep() {
+        // Click button to third step to finalize order processing when it is enabled
+        proceedStep("#ParcelsContainer > div > div:nth-child(4) > div > button:not(:disabled)");
+
+        // HACKY WORKAROUND to clear input after scan
+        document.querySelector("#verifyProduct").addEventListener("click", clearInput("#productBarcode"), false);
+
+        addProductList();
+        editReservationDetails();
+        createCommentBox();
+        clearAllParcelItems();
+        saveLastOpenReservation();
+        autoFillParcel();
+        
+        onScanProductForParcel();
+    }
+
+    // Step 4: called on the fourth page with the completion status of the reservation
+    function onCompleteReservationStep() {
         // Save current reservation as last completed.
         saveLastCompletedReservation();
 
@@ -236,6 +259,11 @@ ToDo:
 
             // Write the value to storage
             GM_setValue("NKHR_MassCompleteStatus", JSON.stringify(status))
+
+            // Close window if the reservation has been completed and is part of mass complete instance
+            if (completionSuccess) {
+                window.close();
+            }
         }
     }
 
@@ -328,19 +356,43 @@ ToDo:
 
         // remove check symbol from list
         Array.from($("#productList > div > div > table > tbody").children()).forEach(function(item){
-            item.children[4].remove();
+            //item.children[4].remove();
         });
 
     }
 
+    var barcodeInput = "";
+
+    function onScanProductForParcel() {
+        // Create observer that checks when the parcels container changes
+        let observer = new MutationObserver(() => {
+            let matchingProduct = Array.from(document.querySelector("#productList > div > div > table > tbody").children)
+                .find((element) => element.children[2].innerText == barcodeInput);
+
+            // Change the collected status of the scanned product in the product list
+            if (matchingProduct) {
+                matchingProduct.children[4].outerHTML = '<td><span class="text-success"><span class="material-icons">done</span></span></td>';
+            }
+        });
+
+        const observerOptions = {
+            childList: true,
+            subtree: true,
+        };
+
+        observer.observe(document.querySelector("#ParcelsContainer"), observerOptions);
+
+        // Track the barcode input element
+        waitForKeyElements("#productBarcode", (elements) => {
+            elements[0].addEventListener("input", (event) => {
+                barcodeInput = elements[0].value;
+                console.log(barcodeInput)
+            });
+        })
+    }
+
     // Skip second step, set product values correctly and instantly forward page.
     function skipSecondStep(){
-        let reservationID = document.getElementById("ReservationId").value;
-        let productList = document.querySelector("#ReservationContainer > div > div.container.my-2 > div");
-
-        // Cache the product list for the next page in the packing process
-        localStorage.setItem("NKHR_productList_" + reservationID, productList.outerHTML);
-
         // Replace button with enabled variant
         $("#ReservationContainer > div > div:nth-child(5) > div").html('<div class="col-3"><button type="submit" class="btn btn-primary " formaction="/bztrs/packingportal/Reservations/Update">Volgende&nbsp;<span class="material-icons">chevron_right</span></button></div>');
 
@@ -363,21 +415,27 @@ ToDo:
     function clearAllParcelItems(){
         // Get all delete buttons for parcel items and start iterating through them
         var removeButtons = document.querySelectorAll('#button-addon2');
-        removeButtons.forEach(function(button) {
-            // format the onclick event to usable data
-            var parcelInfo = button.onclick.toString().split('(').pop().split(')').shift().split(',')
 
-            // Get the amount and active controls for the parcel item
-            var amountControl = document.querySelector('#Items_' + parcelInfo[1] + '__Items_' + parcelInfo[2] + '__Amount');
-            var activeControl = document.querySelector('#Items_' + parcelInfo[1] + '__Items_' + parcelInfo[2] + '__Active');
+        if (removeButtons.length > 0) {
+            removeButtons.forEach(function(button) {
+                // format the onclick event to usable data
+                var parcelInfo = button.onclick.toString().split('(').pop().split(')').shift().split(',')
 
-            // Set the controls to 0 and active, this makes the update remove the parcel items
-            amountControl.value = 0;
-            activeControl.value = 'True';
-        });
+                // Get the amount and active controls for the parcel item
+                var amountControl = document.querySelector('#Items_' + parcelInfo[1] + '__Items_' + parcelInfo[2] + '__Amount');
+                var activeControl = document.querySelector('#Items_' + parcelInfo[1] + '__Items_' + parcelInfo[2] + '__Active');
 
-        // Call page original update function to apply changes
-        location.href = "javascript:void(update());";
+                // Set the controls to 0 and active, this makes the update remove the parcel items
+                amountControl.value = 0;
+                activeControl.value = 'True';
+            });
+
+            // Call page original update function to apply changes
+            location.href = "javascript:void(update());";
+            
+            // hopefully fix 0 issue
+            setTimeout(() => location.href = "javascript:void(update());", 500);
+        }
     }
 
     // Turn the ordernumber in the reservation details into a link that opens the order
@@ -534,7 +592,11 @@ ToDo:
         localStorage.setItem("NKHR_LastCompletedReservationDetails", JSON.stringify(reservationDetails));
     }
 
-    // ||| SHOPWARE INTEGRATION FUNCTIONS |||
+    /********************************************
+     *                                          *
+     *          SHOPWARE INTEGRATION            *
+     *                                          *
+     ********************************************/
 
     // This function initializes the shopware integration
     async function shopwareInitialize() {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Markdown and MFM for Twitter
 // @namespace    https://lit.link/toracatman
-// @version      2025-08-04
+// @version      2026-01-15
 // @description  Twitter の 本文で Markdown と MFM を 有効に します。
 // @author       トラネコマン
 // @match        https://x.com/*
@@ -15,7 +15,8 @@
 let cat = false; //猫機能
 let cat_ear_color = "#fff"; //猫耳の 色
 
-let css = `blockquote {
+let css = `
+blockquote {
     border-left: 4px solid #ccc;
     padding: 1em 0 1em 1em;
     color: #666;
@@ -415,7 +416,8 @@ ruby > rtc {
     100% {
         opacity: 1;
     }
-}`;
+}
+`;
 if (cat) {
     css += `
 .cat-ear {
@@ -497,13 +499,14 @@ div[data-testid^="UserAvatar-Container-"] a>div:nth-child(3),
 div[data-testid^="UserAvatar-Container-"] div[role="presentation"]>div:nth-child(2) div,
 div[data-testid^="UserAvatar-Container-"] div[role="presentation"]>div:nth-child(3) {
     background-color: rgba(0, 0, 0, 0) !important;
-}`;
+}
+`;
 }
 
 (() => {
     let style = document.createElement("style");
     style.textContent = css;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     setInterval(() => {
         let a = document.querySelectorAll('div[data-testid="tweetText"]');

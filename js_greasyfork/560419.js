@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name ЗГА CHERRY
 // @namespace https://forum.blackrussia.online
-// @version 1.0.0
+// @version 1.0.3
 // @description Костелло
 // @author Rasul_Costello
 // @match https://forum.blackrussia.online/threads/*
@@ -30,46 +30,27 @@ const buttons = [
 {
   title: 'Свой Ответ',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER][COLOR=rgb(255,0,255)]{{ greeting }},[/COLOR] уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER][COLOR=rgb(255,0,255)]{{ greeting }},[/COLOR] уважаемый {{ user.mention }}!<br><br>' +
     'Твой текст<br><br>' +
     '[/CENTER][/FONT][/SIZE]',
 },
 
 {
-  title: 'На рассмотрение (Nick)',
-  content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
-    'Ваш аккаунт будет разблокирован на 1 день для смены игрового NickName. ' +
-    'После того, как Вы смените NickName, Вам необходимо прикрепить скриншот статистики (c /time) в данную тему.' +
-    '[/CENTER][/FONT][/SIZE]',
-  prefix: PIN_PREFIX,
-  status: true,
-},
-
-{
   title: 'На рассмотрение',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Ваше обжалование взято на рассмотрение. Просьба не создавать подобных тем.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: PIN_PREFIX,
   status: true,
 },
-
 {
-  title: 'Ссылку на ВК',
-  content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
-    'Прикрепите ссылку на вашу страницу ВКонтакте.' +
-    '[/CENTER][/FONT][/SIZE]',
-  prefix: PIN_PREFIX,
-  status: true,
+title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩<span style="color:#00ff00;">НА РАССМОТРЕНИЕ</span>𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪'
 },
-
 {
   title: 'ГА',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Ваша жалоба передана Главному Администратору.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: GA_PREFIX,
@@ -79,19 +60,60 @@ const buttons = [
 {
   title: 'Спец адм',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Ваша жалоба передана Специальному Администратору.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: SA_PREFIX,
   status: true,
 },
+
 {
-title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩ОДОБРЕНИЯ𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪'
+  title: 'РМ/ЗРМ',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'Ваше обжалование будет передано Руководителю модераторов Forum/Discord на рассмотрение. Просьба не создавать подобных тем.' +
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: COMMAND_PREFIX,
+  status: true,
+},
+
+{
+  title: 'На рассмотрение (Nick)',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'Ваш аккаунт будет разблокирован на 1 день для смены игрового NickName. ' +
+    'После того, как Вы смените NickName, Вам необходимо прикрепить скриншот статистики (c /time) в данную тему.' +
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: PIN_PREFIX,
+  status: true,
+},
+
+{
+  title: 'Ссылку на ВК',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'Прикрепите ссылку на вашу страницу ВКонтакте.' +
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: PIN_PREFIX,
+  status: true,
+},
+
+{
+  title: 'Свяжитесь со мной в ВК',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'Свяжитесь со мной ВКонтакте, прикрепив ссылку на обжалование: https://vk.com/id565583297.' +
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: PIN_PREFIX,
+  status: true,
+},
+{
+title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩<span style="color:orange;">ОДОБРЕНИЯ</span>𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪'
 },
 {
   title: 'Снятие наказания',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Рассмотрев ваше обжалование, было принято решение о снятии наказания.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: ACCEPT_PREFIX,
@@ -101,8 +123,18 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Возврат',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Возврат произведён. Аккаунт разблокирован.' +
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: ACCEPT_PREFIX,
+  status: false,
+},
+
+{
+  title: 'Срок сокращен',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'Срок сокращен.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: ACCEPT_PREFIX,
   status: false,
@@ -111,19 +143,19 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Наказание снято, проведена беседа',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Ваше наказание снято, с администратором проведена необходимая работа.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: ACCEPT_PREFIX,
   status: false,
 },
 {
-title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩ОТКАЗЫ𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪'
+title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩<span style="color:red;">ОТКАЗЫ</span>𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪𓆪'
 },
 {
   title: 'Жб на теха',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Данный администратор является или являлся техническим специалистом, поэтому вам необходимо обратиться в раздел ' +
     '[URL=https://forum.blackrussia.online/forums/%D0%A1%D0%B5%D1%80%D0%B2%D0%B5%D1%80-%E2%84%969-cherry.1190/]' +
     '[COLOR=rgb(255,0,0)]«Жалобы на технических специалистов»[/COLOR][/URL].' +
@@ -135,7 +167,7 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Отказано',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'В данном обжаловании отказано.' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: UNACCEPT_PREFIX,
@@ -145,7 +177,7 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Связь с игроком (Долг)',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Если вы готовы возместить ущерб игроку, свяжитесь с игроком Nick для возврата имущества. ' +
     'После этого игрок должен оформить обжалование.' +
     '[/CENTER][/FONT][/SIZE]',
@@ -156,7 +188,7 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Док-ва из соц. сетей',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Доказательства из социальных сетей не принимаются. ' +
     'Загрузите их на другой хостинг (yapx, postimg, ibb, imgur).' +
     '[/CENTER][/FONT][/SIZE]',
@@ -167,7 +199,7 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Окно блокировки',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Прикрепите в новой жалобе окно блокировки игрового аккаунта при входе в игру.<br><br>' +
     '[SPOILER=Окно блокировки]' +
     '[URL=https://postimg.cc/sBVHvwJD]' +
@@ -182,7 +214,7 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Не по форме',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Ваше обжалование составлено не по форме. Пожалуйста, создайте новую тему, соблюдая форму подачи:<br>' +
     '[SPOILER=Форма]' +
     '1. Ваш Nick_Name:<br>' +
@@ -199,12 +231,34 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
 {
   title: 'Уже есть жалоба на рассмотрении',
   content:
-    '[SIZE=4][FONT=Times New Roman][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'У вас уже имеется подобная жалоба на рассмотрении. Просьба не создавать подобных тем, ' +
     'иначе ваш форумный аккаунт может быть ' +
     '[COLOR=rgb(255,0,0)][U]заблокирован[/U][/COLOR].' +
     '[/CENTER][/FONT][/SIZE]',
   prefix: UNACCEPT_PREFIX,
+  status: false,
+},
+
+{
+  title: 'Нет док-в',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'В жалобе отсутствуют доказательство о нарушении от администратора. ' +
+    'Создайте повторную жалобу и прикрепите доказательства. ' +
+    'Загрузите их на любой хостинг (yapx, postimg, ibb, imgur) и вставьте ссылку на фотографию' + 
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: UNACCEPT_PREFIX,
+  status: false,
+},
+
+{
+  title: 'Нет доступа к док-вам',
+  content:
+    '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
+    'Нет доступа к док-вам' +
+    '[/CENTER][/FONT][/SIZE]',
+  prefix: ACCEPT_PREFIX,
   status: false,
 },
 ]

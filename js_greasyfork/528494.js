@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         右键超链接快速打开新标签页（Common Right Click Tab）
 // @namespace    xiaohuohumax/userscripts/common-right-click-tab
-// @version      1.3.1
+// @version      1.4.0
 // @author       xiaohuohumax
 // @description  用户可以通过右键点击【普通链接、鼠标选中带链接的文字】等方式快速打开新标签页。效果类似于【Ctrl+左键】点击链接。
 // @license      MIT
@@ -489,7 +489,7 @@
     return returnValue;
   }
   const ID = "common-right-click-tab";
-  const VERSION = "1.3.1";
+  const VERSION = "1.4.0";
   const LAST_VERSION = 2;
   class Store {
     constructor() {
@@ -611,20 +611,23 @@
   const store = new Store();
   const view = new View(store);
   console.log(`${ID}(v${VERSION})`);
-  function tryGetUrl(element) {
+  function tryGetUrls(element) {
     var _a;
     const selection = (_a = window.getSelection()) == null ? void 0 : _a.toString();
     if (selection) {
       const urls = Array.from(getUrls(selection));
-      return urls.length > 0 ? urls[0] : null;
+      if (urls.length > 0) {
+        return urls;
+      }
     }
     const link = element.closest("a");
-    return (link == null ? void 0 : link.href) || null;
+    if (link && link.href) {
+      return [link.href];
+    }
   }
   document.addEventListener("contextmenu", (e) => {
-    var _a;
-    const href = (_a = tryGetUrl(e.target)) == null ? void 0 : _a.trim();
-    if (!href) {
+    const urls = tryGetUrls(e.target);
+    if (!urls) {
       return;
     }
     if (timer > CLEANED) {
@@ -632,7 +635,7 @@
       timer = CLEANED;
       if (store.trigger === "double") {
         e.preventDefault();
-        _GM_openInTab(href, { active: store.active });
+        urls.forEach((url) => _GM_openInTab(url, { active: store.active }));
       }
       return;
     }
@@ -642,7 +645,7 @@
     timer = setTimeout(() => {
       timer = CLEANED;
       if (store.trigger === "single") {
-        _GM_openInTab(href, { active: store.active });
+        urls.forEach((url) => _GM_openInTab(url, { active: store.active }));
       }
     }, THRESHOLD);
   });

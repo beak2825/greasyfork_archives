@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         E-commerce Panel Helper
 // @namespace    http://tampermonkey.net/
-// @version      0.84
+// @version      0.86
 // @description  Add a movable and dockable modal to e-commerce product editing panel
 // @author       Marcin
 // @match        https://butosklep.pl/panel/product.php?*
@@ -931,16 +931,6 @@
     ********************************************/
 
   function transformDescription(text, isShoe) {
-    if (!isShoe) {
-      return text;
-    }
-    const bIndex = text.indexOf("<b>");
-    const pIndex = text.indexOf("</p>");
-    if (bIndex !== -1 && !isNaN(bIndex)) {
-      return text.substring(0, bIndex);
-    } else if (pIndex !== -1 && !isNaN(pIndex)) {
-      return text.substring(0, pIndex);
-    }
     return text;
   }
 
@@ -1029,7 +1019,7 @@
         totalTranslate = translations[CONST_VARIABLES.LANG_ARRAY[langKey]];
       } else {
         totalTranslate =
-          "<p>" + translations[CONST_VARIABLES.LANG_ARRAY[langKey]] + lastPart;
+          "<p>" + translations[CONST_VARIABLES.LANG_ARRAY[langKey]] + lastPart + "</p>";
       }
 
       const htmlTabs = document.querySelectorAll(

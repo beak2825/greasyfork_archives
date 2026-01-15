@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         抖音优化
 // @namespace    https://github.com/WhiteSevs/TamperMonkeyScript
-// @version      2025.12.31.16
+// @version      2026.1.10
 // @author       WhiteSevs
 // @description  视频过滤，包括广告、直播或自定义规则，伪装登录、屏蔽登录弹窗、自定义清晰度选择、未登录解锁画质选择、禁止自动播放、自动进入全屏、双击进入全屏、屏蔽弹幕和礼物特效、手机模式、修复进度条拖拽、自定义视频和评论区背景色等
 // @license      GPL-3.0-only
@@ -11,8 +11,8 @@
 // @match        *://*.iesdouyin.com/*
 // @require      https://fastly.jsdelivr.net/gh/WhiteSevs/TamperMonkeyScript@86be74b83fca4fa47521cded28377b35e1d7d2ac/lib/CoverUMD/index.js
 // @require      https://fastly.jsdelivr.net/npm/@whitesev/utils@2.9.10/dist/index.umd.js
-// @require      https://fastly.jsdelivr.net/npm/@whitesev/domutils@1.8.8/dist/index.umd.js
-// @require      https://fastly.jsdelivr.net/npm/@whitesev/pops@3.1.3/dist/index.umd.js
+// @require      https://fastly.jsdelivr.net/npm/@whitesev/domutils@1.8.9/dist/index.umd.js
+// @require      https://fastly.jsdelivr.net/npm/@whitesev/pops@3.2.0/dist/index.umd.js
 // @require      https://fastly.jsdelivr.net/npm/qmsg@1.6.2/dist/index.umd.js
 // @connect      *
 // @connect      www.toutiao.com
@@ -1058,7 +1058,7 @@
           });
         }
         if (!menuDefaultConfig.size) {
-          log.warn(["请先配置键", config]);
+          log.warn("请先配置键", config);
           return;
         }
         if (config.type === "switch") {
@@ -1385,15 +1385,15 @@
     ) {
       this.$data.$panel = null;
       this.$data.panelContent = [];
-      let checkHasBottomVersionContentConfig =
+      const checkHasBottomVersionContentConfig =
         content.findIndex((it) => {
-          let isBottom = typeof it.isBottom === "function" ? it.isBottom() : Boolean(it.isBottom);
+          const isBottom = typeof it.isBottom === "function" ? it.isBottom() : Boolean(it.isBottom);
           return isBottom && it.id === "script-version";
         }) !== -1;
       if (!preventDefaultContentConfig && !checkHasBottomVersionContentConfig) {
         content.push(...PanelContent.getDefaultBottomContentConfig());
       }
-      let $panel = __pops__.panel({
+      const $panel = __pops__.panel({
         ...{
           title: {
             text: title,
@@ -1426,6 +1426,15 @@
           height: PanelUISize.setting.height,
           drag: true,
           only: true,
+          style: `
+        .pops-switch-shortcut-wrapper{
+          margin-right: 5px;
+          display: inline-flex;
+        }
+        .pops-switch-shortcut-wrapper:hover .pops-bottom-icon{
+          cursor: pointer;
+        }
+        `,
         },
         ...this.$data.panelConfig,
       });
@@ -1984,7 +1993,10 @@
     Element: {
       appendChild: _unsafeWindow.Element.prototype.appendChild,
     },
-    setTimeout: _unsafeWindow.setTimeout,
+    setTimeout: _unsafeWindow.setTimeout.bind(_unsafeWindow),
+    clearTimeout: _unsafeWindow.clearTimeout.bind(_unsafeWindow),
+    setInterval: _unsafeWindow.setInterval.bind(_unsafeWindow),
+    clearInterval: _unsafeWindow.clearInterval.bind(_unsafeWindow),
   });
   const addStyle = domUtils.addStyle.bind(domUtils);
   const $ = DOMUtils.selector.bind(DOMUtils);
@@ -3343,7 +3355,7 @@
         profileRankLabel: null,
       };
       Object.freeze(info);
-      function getUserInfo($el) {
+      const getUserInfo = function ($el) {
         const userInfoList = [];
         const reactInstance = utils.getReactInstance($el);
         const reactFiber = reactInstance?.reactFiber;
@@ -3361,8 +3373,8 @@
           userInfoList.push(reactFiber?.alternate?.return?.return?.memoizedProps?.userInfo.userInfo);
         }
         return userInfoList;
-      }
-      function setLogin($el) {
+      };
+      const setLogin = function ($el) {
         getUserInfo($el).forEach((userInfo) => {
           if (!userInfo.isLogin) {
             userInfo.info = info;
@@ -3370,7 +3382,7 @@
             userInfo.statusCode = 0;
           }
         });
-      }
+      };
       DouYinElement.watchFeedVideoListChange(setLogin);
       domUtils
         .waitNode("#root div[class*='-os']", WAIT_TIME)
@@ -3448,6 +3460,16 @@
         result = result.concat(this.watchLoginDialogToClose());
       }
       result = result.concat(this.watchCommentDialogToClose());
+      window.localStorage.removeItem("UNLOGIN_CLARITY_NEW");
+      window.localStorage.setItem("HasUserLogin", "1");
+      window.localStorage.setItem(
+        "has_login_show",
+        JSON.stringify({
+          count: 1,
+          lastTime: Date.now() - 1e3 * 60 * 60 * 12,
+          firstTime: Date.now() - 1e3 * 60 * 60 * 12,
+        })
+      );
       return result;
     },
     watchLoginDialogToClose() {
@@ -5704,6 +5726,9 @@
       Panel.execMenuOnce("dy-video-allowSelectTitleText", () => {
         return this.allowSelectTitleText();
       });
+      Panel.execMenuOnce("dy-video-playerCollectShowScroll", () => {
+        return this.playerCollectShowScroll();
+      });
       domUtils.onReady(() => {
         DouYinVideoPlayer.chooseQuality(Panel.getValue("chooseVideoDefinition"));
         Panel.execMenuOnce("dy-video-waitToRemovePauseDialog", () => {
@@ -5772,7 +5797,7 @@
             keyCode: 89,
             which: 89,
           });
-          document.dispatchEvent(keydownEvent);
+          document.body.dispatchEvent(keydownEvent);
           this.$flag.isWaitEnterFullScreen = false;
           log.success("成功自动进入网页全屏-快捷键");
         });
@@ -6695,6 +6720,16 @@
           listener.off();
         },
       ];
+    },
+    playerCollectShowScroll() {
+      log.info(`收藏夹显示滚动条`);
+      return addStyle(
+        `
+      [data-e2e="video-player-collect"] + div div:has(>.semi-radioGroup){
+        scrollbar-width: thin !important;
+      }
+    `
+      );
     },
   };
   const DouYinMessageFilter = {
@@ -7949,6 +7984,9 @@
       Panel.execMenuOnce("shieldLeftNavigator-tab-series", () => {
         return this.block_tab_series();
       });
+      Panel.execMenuOnce("shieldLeftNavigator-tab-microgame", () => {
+        return this.block_tab_microgame();
+      });
       Panel.execMenuOnce("shieldLeftNavigator-tab-ai-search", () => {
         return this.block_tab_ai_search();
       });
@@ -8026,6 +8064,10 @@
     block_tab_series() {
       log.info(`短剧`);
       return CommonUtil.addBlockCSS('[data-e2e="douyin-navigation"] > div > div > div > div:has(.tab-series)');
+    },
+    block_tab_microgame() {
+      log.info(`【屏蔽】小游戏`);
+      return CommonUtil.addBlockCSS('[data-e2e="douyin-navigation"] > div > div > div > div:has(.tab-microgame)');
     },
     block_panel_menu_setting() {
       log.info(`【屏蔽】设置`);
@@ -8179,7 +8221,7 @@
         const { status, option, key: isUsedKey } = await shortCut.enterShortcutKeys(key);
         loadingQmsg.close();
         if (status) {
-          log.success(["成功录入快捷键", option]);
+          log.success("成功录入快捷键", option);
           Qmsg.success("成功录入");
         } else {
           Qmsg.error(`快捷键 ${shortCut.translateKeyboardValueToButtonText(option)} 已被 ${isUsedKey} 占用`);
@@ -8360,7 +8402,8 @@
     description,
     afterAddToUListCallBack,
     disabled,
-    valueChangeCallBack
+    valueChangeCallBack,
+    shortCutOption
   ) {
     const result = {
       text,
@@ -8383,7 +8426,7 @@
           valueChangeCallBack(event, value);
         }
       },
-      afterAddToUListCallBack,
+      afterAddToUListCallBack: (...args) => {},
     };
     Reflect.set(result.attributes, ATTRIBUTE_KEY, key);
     Reflect.set(result.attributes, ATTRIBUTE_DEFAULT_VALUE, defaultValue);
@@ -8947,117 +8990,97 @@
       };
     }
   }
-  class RuleFilterView {
-    option;
-    $data = {
-      isFilteredData: [],
-    };
-    constructor(option) {
-      this.option = option;
-    }
-    showView() {
-      let $alert = __pops__.alert({
-        title: {
-          text: this.option.title,
-          position: "center",
-        },
-        content: {
-          text: `
-                <div class="filter-container"></div>
-                `,
-        },
-        btn: {
-          ok: {
-            text: "关闭",
-            type: "default",
-          },
-        },
-        drag: true,
-        mask: {
-          enable: true,
-        },
-        width: window.innerWidth > 500 ? "350px" : "80vw",
-        height: window.innerHeight > 500 ? "300px" : "70vh",
-        style: `
-            .filter-container{
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-            }
-            .filter-container button{
-                text-wrap: wrap;
-                padding: 8px;
-                height: auto;
-                text-align: left;
-            }
-            `,
-      });
-      let $filterContainer = $alert.$shadowRoot.querySelector(".filter-container");
-      let $fragment = document.createDocumentFragment();
-      this.option.filterOption.forEach((filterOption) => {
-        let $button = domUtils.createElement(
-          "button",
-          {
-            innerText: filterOption.name,
-          },
-          {
-            type: "button",
-          }
-        );
-        let execFilterAndCloseDialog = async () => {
-          this.$data.isFilteredData = [];
-          let allRuleInfo = await this.option.getAllRuleInfo();
-          allRuleInfo.forEach(async (ruleInfo) => {
-            let filterResult = await filterOption.filterCallBack(ruleInfo.data);
-            if (filterResult) {
-              domUtils.show(ruleInfo.$el, false);
-            } else {
-              domUtils.hide(ruleInfo.$el, false);
-              this.$data.isFilteredData.push(ruleInfo.data);
-            }
-          });
-          if (typeof this.option.execFilterCallBack === "function") {
-            await this.option.execFilterCallBack();
-          }
-          $alert.close();
-        };
-        domUtils.on($button, "click", async (event) => {
-          domUtils.preventEvent(event);
-          if (typeof filterOption.callback === "function") {
-            let result = await filterOption.callback(event, execFilterAndCloseDialog);
-            if (!result) {
-              return;
-            }
-          }
-          await execFilterAndCloseDialog();
-        });
-        $fragment.appendChild($button);
-      });
-      $filterContainer.appendChild($fragment);
-    }
-    getFilteredData() {
-      return this.$data.isFilteredData;
-    }
-  }
   class RuleView {
     option;
     constructor(option) {
       this.option = option;
     }
     async showView(filterCallBack) {
-      let $popsConfirm = __pops__.confirm({
+      const $popsConfirm = __pops__.confirm({
         title: {
           text: this.option.title,
           position: "center",
         },
         content: {
           text: `
-                    <div class="rule-view-container">
-                    </div>
-                    `,
+        <div class="rule-view-search-container">
+          <div class="pops-panel-select pops-user-select-none" data-mode="native" style="min-width: 50px;">
+            <select class="select-rule-status">
+            </select>
+          </div>
+          <div class="pops-panel-select pops-user-select-none" data-mode="native" style="min-width: 50px;">
+            <select class="select-rule-value">
+            </select>
+          </div>
+          <div class="pops-panel-input pops-user-select-none">
+            <div class="pops-panel-input_inner">
+                <input type="text" placeholder="">
+            </div>
+          </div>
+        </div>
+        <div class="rule-view-container"></div>
+        `,
           html: true,
         },
+        style: `
+      ${__pops__.config.cssText.panelCSS}
+
+      .rule-view-search-container{
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+      }
+      .rule-view-search-container .pops-panel-select{
+        min-width: 40px;
+        max-width: 60px;
+      }
+      .rule-view-search-container .pops-panel-select select{
+        width: 100%;
+        min-width: auto;
+      }
+      .rule-view-search-container .pops-panel-input{
+        width: 100%;
+      }
+      .rule-item{
+          display: flex;
+          align-items: center;
+          line-height: normal;
+          font-size: 16px;
+          padding: 4px 8px;
+          gap: 8px;
+      }
+      .rule-name{
+          flex: 1;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+      }
+      .rule-controls{
+          display: flex;
+          align-items: center;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          gap: 8px;
+          padding: 0px;
+      }
+      .rule-controls-enable{
+          
+      }
+      .rule-controls-edit{
+          
+      }
+      .rule-controls-delete{
+          
+      }
+      .rule-controls-edit,
+      .rule-controls-delete{
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+      }
+      `,
         btn: {
           merge: true,
           reverse: false,
@@ -9077,56 +9100,7 @@
             },
           },
           cancel: {
-            enable: this.option?.bottomControls?.filter?.enable || false,
-            type: "default",
-            text: "过滤",
-            callback: async (details, event) => {
-              if (typeof this.option?.bottomControls?.filter?.callback === "function") {
-                let result = await this.option.bottomControls.filter.callback();
-                if (typeof result === "boolean" && !result) {
-                  return;
-                }
-              }
-              let getAllRuleElement = () => {
-                return Array.from($popsConfirm.$shadowRoot.querySelectorAll(".rule-view-container .rule-item"));
-              };
-              let $button = event.target.closest(".pops-confirm-btn").querySelector(".pops-confirm-btn-cancel span");
-              if (domUtils.text($button).includes("取消")) {
-                let cancelFilterResult = await this.option?.bottomControls?.filter?.cancelFilterCallback?.({
-                  $button,
-                  getAllRuleElement,
-                });
-                if (typeof cancelFilterResult === "boolean" && !cancelFilterResult) {
-                  return;
-                }
-                getAllRuleElement().forEach(($el) => {
-                  domUtils.show($el, false);
-                });
-                domUtils.text($button, "过滤");
-              } else {
-                let ruleFilterView = new RuleFilterView({
-                  title: this.option.bottomControls?.filter?.title ?? "过滤规则",
-                  filterOption: this.option.bottomControls?.filter?.option || [],
-                  execFilterCallBack: async () => {
-                    domUtils.text($button, "取消过滤");
-                    await this.option.bottomControls?.filter?.execFilterCallBack?.();
-                    const isFilteredData = ruleFilterView.getFilteredData();
-                    if (isFilteredData.length) {
-                      domUtils.text($button, `取消过滤(${isFilteredData.length})`);
-                    }
-                  },
-                  getAllRuleInfo: () => {
-                    return getAllRuleElement().map(($el) => {
-                      return {
-                        data: this.parseRuleItemElement($el).data,
-                        $el,
-                      };
-                    });
-                  },
-                });
-                ruleFilterView.showView();
-              }
-            },
+            enable: false,
           },
           other: {
             enable: this.option?.bottomControls?.clear?.enable || true,
@@ -9179,72 +9153,126 @@
         },
         width: window.innerWidth > 500 ? "500px" : "88vw",
         height: window.innerHeight > 500 ? "500px" : "80vh",
-        style: `
-            ${__pops__.config.cssText.panelCSS}
-            
-            .rule-item{
-                display: flex;
-                align-items: center;
-                line-height: normal;
-                font-size: 16px;
-                padding: 4px 8px;
-                gap: 8px;
-            }
-            .rule-name{
-                flex: 1;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-            .rule-controls{
-                display: flex;
-                align-items: center;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                gap: 8px;
-                padding: 0px;
-            }
-            .rule-controls-enable{
-                
-            }
-            .rule-controls-edit{
-                
-            }
-            .rule-controls-delete{
-                
-            }
-            .rule-controls-edit,
-            .rule-controls-delete{
-                width: 16px;
-                height: 16px;
-                cursor: pointer;
-            }
-            `,
       });
-      let allData = await this.option.data();
-      let changeButtonText = false;
-      let isFilteredDataLength = 0;
-      for (let index = 0; index < allData.length; index++) {
-        let item = allData[index];
-        let $ruleItemList = await this.appendRuleItemElement($popsConfirm.$shadowRoot, item);
-        let isNotFilterFlag = true;
-        if (typeof filterCallBack === "function") {
-          isNotFilterFlag = filterCallBack(item);
-        } else if (typeof filterCallBack === "number" && !isNaN(filterCallBack)) {
-          isNotFilterFlag =
-            (await this.option.bottomControls?.filter?.option[filterCallBack]?.filterCallBack(item)) ?? isNotFilterFlag;
+      const $searchContainer = $popsConfirm.$shadowRoot.querySelector(".rule-view-search-container");
+      const $externalSelect = $searchContainer.querySelector(".pops-panel-select .select-rule-status");
+      const $ruleValueSelect = $searchContainer.querySelector(".pops-panel-select .select-rule-value");
+      const $searchInput = $searchContainer.querySelector(".pops-panel-input input");
+      let externalSelectInfo = null;
+      let ruleValueSelectInfo = null;
+      if (Array.isArray(this.option.bottomControls?.filter?.option)) {
+        domUtils.append(
+          $externalSelect,
+          this.option.bottomControls?.filter?.option.map((option) => {
+            const $option = domUtils.createElement("option", {
+              innerText: option.name,
+            });
+            Reflect.set($option, "data-value", option);
+            return $option;
+          })
+        );
+      }
+      if (Array.isArray(this.option.bottomControls?.filter?.inputOption)) {
+        domUtils.append(
+          $ruleValueSelect,
+          this.option.bottomControls?.filter?.inputOption.map((option) => {
+            const $option = domUtils.createElement("option", {
+              innerText: option.name,
+            });
+            Reflect.set($option, "data-value", option);
+            return $option;
+          })
+        );
+      }
+      domUtils.on($externalSelect, "change", async (evt) => {
+        const $isSelectedElement = $externalSelect[$externalSelect.selectedIndex];
+        const selectInfo = Reflect.get($isSelectedElement, "data-value");
+        if (typeof selectInfo?.selectedCallBack === "function") {
+          selectInfo.selectedCallBack(selectInfo);
         }
-        if (!isNotFilterFlag) {
-          changeButtonText = true;
-          domUtils.hide($ruleItemList, false);
-          isFilteredDataLength++;
+        externalSelectInfo = selectInfo;
+        await execFilter(false);
+      });
+      domUtils.on($ruleValueSelect, "change", async (evt) => {
+        const $isSelectedElement = $ruleValueSelect[$ruleValueSelect.selectedIndex];
+        const selectInfo = Reflect.get($isSelectedElement, "data-value");
+        if (typeof selectInfo?.selectedCallBack === "function") {
+          selectInfo.selectedCallBack(selectInfo);
+        }
+        ruleValueSelectInfo = selectInfo;
+        await execFilter(false);
+      });
+      domUtils.onInput(
+        $searchInput,
+        utils.debounce(async () => {
+          await execFilter(false);
+        })
+      );
+      const updateSelectData = () => {
+        const $externalSelected = $externalSelect[$externalSelect.selectedIndex];
+        externalSelectInfo = Reflect.get($externalSelected, "data-value");
+        const $ruleValueSelected = $ruleValueSelect[$ruleValueSelect.selectedIndex];
+        ruleValueSelectInfo = Reflect.get($ruleValueSelected, "data-value");
+      };
+      const execFilter = async (isUpdateSelectData) => {
+        this.clearContent($popsConfirm.$shadowRoot);
+        isUpdateSelectData && updateSelectData();
+        const allData = await this.option.data();
+        const filteredData = [];
+        const searchText = domUtils.val($searchInput);
+        for (let index = 0; index < allData.length; index++) {
+          const item = allData[index];
+          if (externalSelectInfo) {
+            const externalFilterResult = await externalSelectInfo?.filterCallBack?.(item);
+            if (typeof externalFilterResult === "boolean" && !externalFilterResult) {
+              continue;
+            }
+          }
+          if (ruleValueSelectInfo) {
+            let flag = true;
+            if (searchText === "") {
+              flag = true;
+            } else {
+              flag = false;
+            }
+            if (!flag) {
+              flag = await ruleValueSelectInfo?.filterCallBack?.(item, searchText);
+            }
+            if (!flag) {
+              continue;
+            }
+          }
+          filteredData.push(item);
+        }
+        await this.appendRuleItemElement($popsConfirm.$shadowRoot, filteredData);
+      };
+      if (typeof filterCallBack === "object" && filterCallBack != null) {
+        let externalIndex;
+        if (typeof filterCallBack.external === "number") {
+          externalIndex = filterCallBack.external;
+        } else {
+          externalIndex = Array.from($externalSelect.options).findIndex((option) => {
+            const data = Reflect.get(option, "data-value");
+            return data.value === filterCallBack.external;
+          });
+        }
+        if (externalIndex !== -1) {
+          $externalSelect.selectedIndex = externalIndex;
+        }
+        let ruleIndex;
+        if (typeof filterCallBack.rule === "number") {
+          ruleIndex = filterCallBack.rule;
+        } else {
+          ruleIndex = Array.from($ruleValueSelect.options).findIndex((option) => {
+            const data = Reflect.get(option, "data-value");
+            return data.value === filterCallBack.rule;
+          });
+        }
+        if (ruleIndex !== -1) {
+          $ruleValueSelect.selectedIndex = ruleIndex;
         }
       }
-      if (changeButtonText) {
-        let $button = $popsConfirm.$shadowRoot.querySelector(".pops-confirm-btn-cancel span");
-        domUtils.text($button, `取消过滤${isFilteredDataLength ? `(${isFilteredDataLength})` : ""}`);
-      }
+      await execFilter(true);
     }
     showEditView(isEdit, editData, $parentShadowRoot, $editRuleItemElement, updateDataCallBack, submitCallBack) {
       let dialogCloseCallBack = async (isSubmit) => {
@@ -9314,20 +9342,20 @@
       editView.showView();
     }
     parseViewElement($shadowRoot) {
-      let $container = $shadowRoot.querySelector(".rule-view-container");
-      let $deleteBtn = $shadowRoot.querySelector(".pops-confirm-btn button.pops-confirm-btn-other");
+      const $container = $shadowRoot.querySelector(".rule-view-container");
+      const $deleteBtn = $shadowRoot.querySelector(".pops-confirm-btn button.pops-confirm-btn-other");
       return {
         $container,
         $deleteBtn,
       };
     }
     parseRuleItemElement($ruleElement) {
-      let $enable = $ruleElement.querySelector(".rule-controls-enable");
-      let $enableSwitch = $enable.querySelector(".pops-panel-switch");
-      let $enableSwitchInput = $enable.querySelector(".pops-panel-switch__input");
-      let $enableSwitchCore = $enable.querySelector(".pops-panel-switch__core");
-      let $edit = $ruleElement.querySelector(".rule-controls-edit");
-      let $delete = $ruleElement.querySelector(".rule-controls-delete");
+      const $enable = $ruleElement.querySelector(".rule-controls-enable");
+      const $enableSwitch = $enable.querySelector(".pops-panel-switch");
+      const $enableSwitchInput = $enable.querySelector(".pops-panel-switch__input");
+      const $enableSwitchCore = $enable.querySelector(".pops-panel-switch__core");
+      const $edit = $ruleElement.querySelector(".rule-controls-edit");
+      const $delete = $ruleElement.querySelector(".rule-controls-delete");
       return {
         $enable,
         $enableSwitch,
@@ -9339,8 +9367,8 @@
       };
     }
     async createRuleItemElement(data, $shadowRoot) {
-      let name = await this.option.getDataItemName(data);
-      let $ruleItem = domUtils.createElement("div", {
+      const name = await this.option.getDataItemName(data);
+      const $ruleItem = domUtils.createElement("div", {
         className: "rule-item",
         innerHTML: `
 			<div class="rule-name">${name}</div>
@@ -9364,7 +9392,7 @@
 			`,
       });
       Reflect.set($ruleItem, "data-rule", data);
-      let switchCheckedClassName = "pops-panel-switch-is-checked";
+      const switchCheckedClassName = "pops-panel-switch-is-checked";
       const { $enable, $enableSwitch, $enableSwitchCore, $enableSwitchInput, $delete, $edit } =
         this.parseRuleItemElement($ruleItem);
       if (this.option.itemControls.enable.enable) {
@@ -9400,7 +9428,7 @@
       if (this.option.itemControls.delete.enable) {
         domUtils.on($delete, "click", (event) => {
           domUtils.preventEvent(event);
-          let $askDialog = __pops__.confirm({
+          const $askDialog = __pops__.confirm({
             title: {
               text: "提示",
               position: "center",
@@ -9443,27 +9471,27 @@
       return $ruleItem;
     }
     async appendRuleItemElement($shadowRoot, data) {
-      let { $container } = this.parseViewElement($shadowRoot);
-      let $ruleItem = [];
-      let iteratorData = Array.isArray(data) ? data : [data];
+      const { $container } = this.parseViewElement($shadowRoot);
+      const $ruleItem = [];
+      const iteratorData = Array.isArray(data) ? data : [data];
       for (let index = 0; index < iteratorData.length; index++) {
-        let item = iteratorData[index];
-        let $item = await this.createRuleItemElement(item, $shadowRoot);
-        $container.appendChild($item);
+        const item = iteratorData[index];
+        const $item = await this.createRuleItemElement(item, $shadowRoot);
         $ruleItem.push($item);
       }
+      domUtils.append($container, $ruleItem);
       await this.updateDeleteAllBtnText($shadowRoot);
       return $ruleItem;
     }
     async updateRuleContaienrElement($shadowRoot) {
       this.clearContent($shadowRoot);
       const { $container } = this.parseViewElement($shadowRoot);
-      let data = await this.option.data();
+      const data = await this.option.data();
       await this.appendRuleItemElement($shadowRoot, data);
       await this.updateDeleteAllBtnText($shadowRoot);
     }
     async updateRuleItemElement(data, $oldRuleItem, $shadowRoot) {
-      let $newRuleItem = await this.createRuleItemElement(data, $shadowRoot);
+      const $newRuleItem = await this.createRuleItemElement(data, $shadowRoot);
       $oldRuleItem.after($newRuleItem);
       $oldRuleItem.remove();
     }
@@ -10383,29 +10411,68 @@
             enable: true,
             option: [
               {
-                name: "过滤-已启用",
-                filterCallBack(data) {
-                  return data.enable;
+                name: "无",
+                value: "",
+                selectedCallBack(config) {
+                  Panel.setValue("dy-video-ui-rule-filter-option-external-index", config.value);
                 },
-                callback(event, closeDialog) {
-                  Panel.setValue("dy-video-ui-rule-filter-option-index", 0);
+                filterCallBack(data) {
                   return true;
                 },
               },
               {
-                name: "过滤-未启用",
+                name: "已启用",
+                value: "external-enabled",
+                selectedCallBack(config) {
+                  Panel.setValue("dy-video-ui-rule-filter-option-external-index", config.value);
+                },
+                filterCallBack(data) {
+                  return data.enable;
+                },
+              },
+              {
+                name: "未启用",
+                value: "external-notEnabled",
+                selectedCallBack(config) {
+                  Panel.setValue("dy-video-ui-rule-filter-option-external-index", config.value);
+                },
                 filterCallBack(data) {
                   return !data.enable;
                 },
-                callback(event, closeDialog) {
-                  Panel.setValue("dy-video-ui-rule-filter-option-index", 1);
-                  return true;
+              },
+            ],
+            inputOption: [
+              {
+                name: "规则名称",
+                value: "rule-name",
+                selectedCallBack(config) {
+                  Panel.setValue("dy-video-ui-rule-filter-option-rule-index", config.value);
+                },
+                filterCallBack(data, searchText) {
+                  return Boolean(data.name.match(searchText));
+                },
+              },
+              {
+                name: "属性值",
+                value: "rule-ruleValue",
+                selectedCallBack(config) {
+                  Panel.setValue("dy-video-ui-rule-filter-option-rule-index", config.value);
+                },
+                filterCallBack(data, searchText) {
+                  return Boolean(data.data.ruleValue.match(searchText));
+                },
+              },
+              {
+                name: "备注",
+                value: "rule-remarks",
+                selectedCallBack(config) {
+                  Panel.setValue("dy-video-ui-rule-filter-option-rule-index", config.value);
+                },
+                filterCallBack(data, searchText) {
+                  return Boolean(data.data.remarks.match(searchText));
                 },
               },
             ],
-            cancelFilterCallback(config) {
-              Panel.deleteValue("dy-video-ui-rule-filter-option-index");
-            },
           },
           clear: {
             enable: true,
@@ -10420,7 +10487,10 @@
     },
     showView() {
       const ruleView = this.getRuleViewInstance();
-      ruleView.showView(Panel.getValue("dy-video-ui-rule-filter-option-index"));
+      ruleView.showView({
+        external: Panel.getValue("dy-video-ui-rule-filter-option-external-index"),
+        rule: Panel.getValue("dy-video-ui-rule-filter-option-rule-index"),
+      });
     },
     getTemplateData() {
       return {
@@ -10449,6 +10519,9 @@
     init() {
       Panel.execMenuOnce("dy-recommend-pauseVideo", () => {
         return this.pauseVideo();
+      });
+      Panel.execMenuOnce("dy-recommend-disableVideoSatisfaction", () => {
+        this.disableVideoSatisfaction();
       });
       domUtils.onReady(() => {
         Panel.execMenuOnce("dy-recommend-automaticContinuousPlayback", () => {
@@ -10585,6 +10658,24 @@
         },
       ];
     },
+    disableVideoSatisfaction() {
+      log.info(`禁用视频满意评价`);
+      _unsafeWindow.localStorage.setItem("questionV1", String(Date.now() - 1e3 * 60 * 60));
+    },
+  };
+  const blockLeftNavigatorOther = {
+    init() {
+      Panel.execMenuOnce("shieldLeftNavigator-tab-follow-red-dot", () => {
+        return this.tabFollowRedHot();
+      });
+    },
+    tabFollowRedHot() {
+      log.info(`【屏蔽】左侧导航栏关注右边的小红点`);
+      return CommonUtil.addBlockCSS(
+        '[data-e2e="douyin-navigation"] > div > div > div .tab-follow a > div:has(svg):nth-child(3)',
+        '[data-e2e="douyin-navigation"] > div > div > div .tab-follow a > div:nth-child(3):not(:has(>div>*))'
+      );
+    },
   };
   const DouYin = {
     init() {
@@ -10608,6 +10699,7 @@
         this.removeMetaAppleItunesApp();
       });
       BlockLeftNavigator.init();
+      blockLeftNavigatorOther.init();
       BlockTopNavigator.init();
       BlockSearchFrame.init();
       Panel.execMenuOnce(
@@ -11470,6 +11562,7 @@
                     void 0,
                     "自动等待元素出现并关闭登录弹窗"
                   ),
+                  UISwitch("【屏蔽】左侧导航栏关注右边的小红点", "shieldLeftNavigator-tab-follow-red-dot", false),
                 ],
               },
             ],
@@ -11516,6 +11609,7 @@
                   UISwitch("【屏蔽】直播", "shieldLeftNavigator-tab-live", false),
                   UISwitch("【屏蔽】放映厅", "shieldLeftNavigator-tab-vs", false),
                   UISwitch("【屏蔽】短剧", "shieldLeftNavigator-tab-series", false),
+                  UISwitch("【屏蔽】小游戏", "shieldLeftNavigator-tab-microgame", false),
                 ],
               },
               {
@@ -11750,6 +11844,7 @@
                     "对video的object-fit属性进行覆盖"
                   ),
                   UISwitch("解除视频文案复制限制", "dy-video-allowSelectTitleText", false),
+                  UISwitch("收藏夹显示滚动条", "dy-video-playerCollectShowScroll", false),
                 ],
               },
               {
@@ -12946,6 +13041,7 @@
             void 0,
             "注意：请勿和推荐页面自带的<code>连播</code>功能同时使用"
           ),
+          UISwitch("禁用视频满意评价", "dy-recommend-disableVideoSatisfaction", false),
         ],
       },
     ],

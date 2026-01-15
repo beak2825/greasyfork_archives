@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Open2ch Kome UID Display
 // @namespace   https://greasyfork.org/ja/users/864059
-// @version     3.0.4
+// @version     3.0.5
 // @description Open2chのkomeチャットの発言にUIDを明示的に表示し、UIDごとに色を付けて表示します。
 // @author      七色の彩り
 // @match       https://*.open2ch.net/test/read.cgi/*
@@ -814,33 +814,32 @@
             // 画像がある場合、画像ロード前はスクロールしない
         } else {
             // 画像がない場合（外部拡張機能による後入れの可能性があるケース）
-
             // コメント内容を取得し、URLが含まれているかチェック
             const commentText = wrap.textContent || '';
             const hasUrl = /(http|https):\/\/[^\s]+/.test(commentText);
             const isTwitterUrl = /(twitter\.com|x\.com)/i.test(commentText);
 
             if (hasUrl && !isTwitterUrl) {
-                // 処理開始時の「底にいたか」を一時的にメモ
-                const wasScrolledToBottom = isScrolledToBottom;
+                // ★ 処理開始時の位置を記憶（ここが生命線です）
+                const wasAtBottom = isScrolledToBottom;
 
-                // 1. まず、テキストが表示された瞬間にスクロール
-                if (wasScrolledToBottom) {
-                    scrollToBottom(scrollElement, false); // スムーズ
-                }
+                if (wasAtBottom) {
+                    // (1) まずテキスト挿入直後にスクロール
+                    scrollToBottom(scrollElement, false);
 
-                // 2. PageExpand等の後入れ要素を想定して、時間差で「追い打ち」スクロール
-                window.requestAnimationFrame(() => {
+                    // (2) 500ms後：一段目の展開に合わせて補正
                     setTimeout(() => {
-                        // 最初に底にいたなら、画像が出てきた後でも強制的に底へ移動
-                        if (wasScrolledToBottom) {
-                            scrollToBottom(scrollElement, true); // 画像分は即時(true)で補正
-                        }
+                        scrollToBottom(scrollElement, true);
                     }, 500);
-                });
 
+                    // (3) 1500ms後：重い画像や遅れて出たサムネイル用に「念押し」
+                    // ここでは判定をせず、wasAtBottomがtrueなら強制的に飛ばします
+                    setTimeout(() => {
+                        scrollToBottom(scrollElement, true);
+                    }, 1500);
+                }
             } else {
-                // 通常コメントの場合
+                // 通常コメント
                 checkScrollPosition(scrollElement);
                 if (isScrolledToBottom) {
                     scrollToBottom(scrollElement, false);
@@ -1627,7 +1626,6 @@
             top: scrollElement.scrollHeight,
             behavior: isInstant ? 'auto' : 'smooth'
         });
-        isScrolledToBottom = true; // スクロールさせたのでフラグを立てる
     }
 
     function checkScrollPosition(scrollElement) {

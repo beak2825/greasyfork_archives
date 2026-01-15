@@ -2,7 +2,7 @@
 // @name         Highlight HR-Offboarding Tasks
 // @license      MIT
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Highlight rows that contain HR-Offboarding in Azure DevOps
 // @author       azure
 // @match        https://dev.azure.com/sourcecode-smartbilling/Smartbilling/_queries/query/*
@@ -26,14 +26,15 @@
             let hasHROffboarding = false;
 
             links.forEach(link => {
-                if (link.textContent.includes('HR-Offboarding')) {
+                if (link.textContent.includes('Off')) {
                     hasHROffboarding = true;
                 }
             });
 
-            if (!hasHROffboarding && row.textContent.includes('HR-Offboarding')) {
+            if (!hasHROffboarding && row.textContent.includes('Off')) {
                 hasHROffboarding = true;
             }
+            console.log(row.textContent);
 
             if (hasHROffboarding) {
                 row.style.backgroundColor = HIGHLIGHT_COLOR;

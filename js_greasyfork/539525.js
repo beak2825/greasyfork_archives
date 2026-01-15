@@ -3,7 +3,7 @@
 // @name:zh      Javdb 增强脚本
 // @name:en      Javdb Enhanced Script
 // @namespace    http://tampermonkey.net/
-// @version      2.6.0
+// @version      2.7.0
 // @icon         https://javdb.com/favicon-32x32.png
 // @description  增强 Javdb 浏览体验：热力图高亮、热度排序、隐藏低分、列表页管理“已看/想看”、点击抓取并预览大图。兼容自动翻页脚本。
 // @description:zh 增强 Javdb 浏览体验：热力图高亮、热度排序、隐藏低分、列表页管理“已看/想看”、点击抓取并预览大图。兼容自动翻页脚本。
@@ -36,6 +36,7 @@
         if (pageLang === 'zh' || pageLang === 'en') return pageLang;
         return (navigator.language || navigator.userLanguage || 'zh').toLowerCase().startsWith('zh') ? 'zh' : 'en';
     };
+
     const lang = getLang();
 
     const I18N = {
@@ -132,12 +133,9 @@
 
     const SETTINGS_KEY = 'JavdbEnhanced_Settings';
     const DEFAULT_NAVBAR_HEIGHT = 58;
-    const PREVIEW_MODAL_MIN_SCALE = 0.2;
-    const PREVIEW_MODAL_MAX_SCALE = 8;
     const PREVIEW_ICON_INACTIVE_OPACITY = 0.55;
     const MAX_CACHE_SIZE = 500;
     const ITEM_SELECTOR = '.movie-list .item, .is-user-page .column.is-one-quarter';
-
     const scoreRegexes = [
         /([\d.]+)\s*\/\s*5[^\d]*?(\d+)/,
         /([\d.]+)[^\d]+(\d+)/,
@@ -191,7 +189,6 @@
     const previewLimiter = createLimiter(PREVIEW_CONCURRENCY);
     let delegationInitialized = false;
     const hoverTimers = new WeakMap();
-
     const ICONS = {
         plus: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`,
         eye: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 10c-2.48 0-4.5-2.02-4.5-4.5S9.52 5.5 12 5.5s4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5zm0-7C10.62 7.5 9.5 8.62 9.5 10s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5S13.38 7.5 12 7.5z"/></svg>`,
@@ -200,7 +197,6 @@
         brokenImage: `<svg viewBox="0 0 24 24"><path fill="currentColor" d="M21 5v6.59l-2.29-2.3c-.39-.39-1.03-.39-1.42 0L14 12.59L10.71 9.3a.996.996 0 0 0-1.41 0L6 12.59L3 9.58V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2m-3 6.42l3 3.01V19c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2v-6.58l2.29 2.29c.39.39 1.02.39 1.41 0l3.3-3.3l3.29 3.29c.39.39 1.02.39 1.41 0z"/></svg>`,
         loading: `<svg viewBox="0 0 24 24"><path fill="currentColor" d="M18 15v4c0 .55-.45 1-1 1H5c-.55 0-1-.45-1-1V7c0-.55.45-1 1-1h3.02c.55 0 1-.45 1-1s-.45-1-1-1H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5c0-.55-.45-1-1-1s-1 .45-1 1m-2.5 3H6.52c-.42 0-.65-.48-.39-.81l1.74-2.23a.5.5 0 0 1 .78-.01l1.56 1.88l2.35-3.02c.2-.26.6-.26.79.01l2.55 3.39c.25.32.01.79-.4.79m3.8-9.11c.48-.77.75-1.67.69-2.66c-.13-2.15-1.84-3.97-3.97-4.2A4.5 4.5 0 0 0 11 6.5c0 2.49 2.01 4.5 4.49 4.5c.88 0 1.7-.26 2.39-.7l2.41 2.41c.39.39 1.03.39 1.42 0s.39-1.03 0-1.42zM15.5 9a2.5 2.5 0 0 1 0-5a2.5 2.5 0 0 1 0 5"/></svg>`
     };
-
     const STATUS_BUTTONS_TEMPLATE = `
         <div class="cover-status-buttons">
             <div class="cover-ui-wrapper">
@@ -241,13 +237,11 @@
             </div>
         </div>
     `;
-
     const PREVIEW_ICON_TEMPLATE = `
         <button type="button" class="csb-preview-icon-container" title="${T('previewClickToFetch')}" aria-label="${T('preview')}">
             ${ICONS.preview}
         </button>
     `;
-
     GM_addStyle(`
         @keyframes jdbe-flip { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         @keyframes jdbe-shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-3px, 0, 0); } 40%, 60% { transform: translate3d(3px, 0, 0); } }
@@ -309,10 +303,9 @@
         .state { display: none; }
         .csb-status-container.show-unmarked .state-unmarked, .csb-status-container.show-watched .state-watched, .csb-status-container.show-wanted .state-wanted { display: contents; }
         .cover-modal-base { display: flex; justify-content: center; align-items: center; position: absolute; z-index: 10; top: 0; left: 0; width: 100%; height: 100%; background: transparent; flex-direction: column; gap: 0.625rem; }
-        #preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; cursor: zoom-out; overflow: auto; }
-        #preview-modal-content { cursor: grab; text-align: center; }
-        #preview-modal-content.is-panning { cursor: grabbing; }
-        #preview-modal-content img { max-width: 95vw; max-height: 95vh; object-fit: contain; box-shadow: 0 8px 30px rgba(0,0,0,0.5); border-radius: 4px; transition: transform 0.2s ease-out; transform-origin: center center; }
+        #preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: flex-start; z-index: 9999; cursor: default; overflow: auto; padding: 0; overscroll-behavior: contain; }
+        #preview-modal-content { position: relative; margin: 2rem auto; outline: none; }
+        #preview-modal-content img { display: block; max-width: none; width: auto; height: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5); border-radius: 4px; }
         #sort-by-heat-btn-container { position: fixed; bottom: 1.7rem; right: 0; z-index: 9998; }
         #sort-by-heat-btn-container .button { width: 2.45rem; height: 1.7rem; font-size: 0.8rem; background-color: #fa6699; color: white; border: none; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .jdbe-modal { position: fixed; z-index: 10000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; }
@@ -507,7 +500,6 @@
         const closeModal = () => { modal.style.display = 'none'; };
         closeButton.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
         const controls = [
             { id: 'setting-highlight', key: 'highlight', label: T('highlightFeature'), type: 'checkbox' },
             { id: 'setting-sort', key: 'sort', label: T('sortFeature'), dependsOn: 'highlight', type: 'checkbox' },
@@ -521,7 +513,6 @@
             { id: 'setting-preview', key: 'enablePreview', label: T('previewFeature'), type: 'checkbox' },
             { id: 'setting-delegation', key: 'useEventDelegation', label: T('delegationFeature'), type: 'checkbox' }
         ];
-
         controls.forEach(c => {
             const wrapper = document.createElement('div');
             wrapper.className = 'jdbe-setting-row';
@@ -596,7 +587,6 @@
             });
             toast(T('resetDone'), 1500);
         });
-
         const updateUI = () => {
             controls.forEach(c => {
                 const input = document.getElementById(c.id);
@@ -686,7 +676,6 @@
 
     function gmRequest(options) {
         const isSameOrigin = options.url.startsWith('/') || options.url.includes(window.location.host);
-
         if (isSameOrigin) {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -827,66 +816,112 @@
         }
     }
 
+    // [v2.7.0] 仅保留 JavStore 逻辑，移除了 BlogJav 所有相关代码
     async function fetchPreviewImage(code) {
-        if (!settings.previewThirdPartyConsent) return { status: 'consent-required' };
-        const normalized = normalizeCode(code);
-        if (!normalized) return { status: 'no-data' };
-        if (previewCache.has(normalized)) return previewCache.get(normalized);
+        const normalized = code.trim().toUpperCase().replace(/\s+/g, '-').replace(/^FC2[-\s]PPV[-\s_](\d+)$/i, (_, num) => `FC2-PPV-${num}`);
+        // 缓存检查
+        if (typeof previewMemoryCache !== 'undefined' && previewMemoryCache.has(normalized)) {
+            return previewMemoryCache.get(normalized);
+        }
 
-        let resDoc;
+        let javStoreFailed = false;
+        let resDoc = null;
+        let detailUrl = '';
+        // --- 1. JavStore 搜索 ---
         try {
-            const res = await previewLimiter.run(() => gmRequest({ method: "GET", url: `https://javstore.net/search/${encodeURIComponent(normalized)}.html` }));
-            resDoc = new DOMParser().parseFromString(res.responseText, "text/html");
+            // 修正搜索 URL: /search?q=CODE
+            const searchUrl = `https://javstore.net/search?q=${encodeURIComponent(normalized)}`;
+            const res = await new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: searchUrl,
+                    onload: resolve,
+                    onerror: reject
+                });
+            });
+            if (res.status === 403 || res.status === 503 || res.responseText.includes('Just a moment')) {
+                console.warn("[JavDB] JavStore blocked.");
+                javStoreFailed = true;
+            } else {
+                resDoc = new DOMParser().parseFromString(res.responseText, "text/html");
+            }
         } catch (e) {
-            console.error(`JavDB Enhanced: search failed for ${normalized}`, e);
-            return { status: 'error' };
+            console.error("[JavDB] JavStore network error", e);
+            javStoreFailed = true;
         }
 
-        let searchResults = resDoc.querySelectorAll("#content_news li > a, div.item > a");
-        if (!searchResults.length) {
-            const result = { status: 'no-data' };
-            setPreviewCache(normalized, result);
+        // --- 2. JavStore 结果解析 (适配 Grid 布局) ---
+        if (!javStoreFailed && resDoc) {
+            const searchResults = Array.from(resDoc.querySelectorAll("div.grid > a, a.group, article h2 a"));
+            const regex = new RegExp(normalized.replace(/[-_ ]/g, '[-_ ]?'), 'i');
+
+            const foundLinkElement = searchResults.find(a => {
+                const titleEl = a.querySelector('h3');
+                const imgEl = a.querySelector('img');
+                const textContent = (titleEl?.textContent || imgEl?.alt || a.textContent || '').trim().toUpperCase();
+                return regex.test(textContent);
+            });
+
+            if (foundLinkElement) {
+                detailUrl = foundLinkElement.getAttribute('href');
+                if (detailUrl && detailUrl.startsWith('/')) {
+                    detailUrl = 'https://javstore.net' + detailUrl;
+                }
+            } else {
+                javStoreFailed = true;
+            }
+        }
+
+        // --- 3. JavStore 详情页抓取 ---
+        let targetUrl = '';
+        if (!javStoreFailed && detailUrl) {
+            try {
+                const res = await new Promise((resolve, reject) => {
+                    GM_xmlhttpRequest({ method: "GET", url: detailUrl, onload: resolve, onerror: reject });
+                });
+                const detailDoc = new DOMParser().parseFromString(res.responseText, "text/html");
+
+                const isCover = (url) => url.includes('pl.jpg') || url.includes('ps.jpg') || (url.includes('dmm.co.jp') && !url.includes('jp-'));
+                // 策略 A: _s.jpg
+                const specificMatch = detailDoc.querySelector(".prose a[href*='_s.jpg'], .entry-content a[href*='_s.jpg']");
+                if (specificMatch) targetUrl = specificMatch.href;
+
+                // 策略 B: CLICK HERE
+                if (!targetUrl) {
+                    const textMatch = Array.from(detailDoc.querySelectorAll(".prose a, .entry-content a"))
+                        .find(a => /CLICK HERE|Preview/i.test(a.innerText));
+                    if (textMatch) targetUrl = textMatch.href;
+                }
+
+                // 策略 C: 最大的非封面 JPG
+                if (!targetUrl) {
+                    const valid = Array.from(detailDoc.querySelectorAll(".prose a[href*='.jpg'], .entry-content a[href*='.jpg']"))
+                        .find(a => !isCover(a.href));
+                    if (valid) targetUrl = valid.href;
+                }
+            } catch (e) {
+                // Ignore
+            }
+        }
+
+        // --- 4. 结果返回 ---
+        if (targetUrl) {
+            const result = { status: 'success', img: targetUrl };
+            if (typeof previewMemoryCache !== 'undefined') previewMemoryCache.set(normalized, result);
             return result;
         }
 
-        const regex = new RegExp(normalized.replace(/[-_ ]/g, '[-_ ]?'), 'i');
-        const foundLink = Array.from(searchResults).find(a => {
-            const str = (a.title || a.textContent || '').toUpperCase();
-            const imgEl = a.querySelector("img");
-            return regex.test(str) && imgEl && /^https?:\/\//i.test(imgEl.src);
-        });
-        if (!foundLink) {
-            const result = { status: 'no-data' };
-            setPreviewCache(normalized, result);
-            return result;
-        }
-
-        try {
-            const res = await previewLimiter.run(() => gmRequest({ method: "GET", url: foundLink.href }));
-            resDoc = new DOMParser().parseFromString(res.responseText, "text/html");
-        } catch (e) {
-            console.error(`JavDB Enhanced: detail fetch failed ${foundLink.href}`, e);
-            return { status: 'error' };
-        }
-
-        const imgLink = resDoc.querySelector(".news > a, .screencap > a");
-        const potentialUrl = imgLink ? imgLink.href : '';
-
-        const safeUrlRegex = /^https?:\/\/[^\s/$.?#].[^\s]*\.(jpg|jpeg|png|webp)$/i;
-        if (potentialUrl && safeUrlRegex.test(potentialUrl)) {
-            const result = { status: 'success', img: potentialUrl };
-            setPreviewCache(normalized, result);
-            return result;
-        }
-
-        const result = { status: 'no-data' };
-        setPreviewCache(normalized, result);
-        return result;
+        // --- 5. 无结果 (不再回退) ---
+        console.log(`[JavDB] JavStore: No preview found for ${normalized}`);
+        const noData = { status: 'no-data' };
+        if (typeof previewMemoryCache !== 'undefined') previewMemoryCache.set(normalized, noData);
+        return noData;
     }
 
-
+    // [v2.7.1] 修改：移除缩放逻辑，改为原生滚动，并防止滚动穿透
     function showPreviewModal(imageUrl, triggerElement) {
         if (document.getElementById('preview-modal')) return;
+
         const modal = document.createElement('div');
         modal.id = 'preview-modal';
         modal.setAttribute('aria-modal', 'true');
@@ -900,49 +935,20 @@
         modal.appendChild(content);
 
         document.body.appendChild(modal);
+        // 关键：直接锁定 Body 滚动
         document.body.style.overflow = 'hidden';
 
-        let scale = 1, panX = 0, panY = 0;
-        let isPanning = false, startX = 0, startY = 0;
-        const updateTransform = () => {
-            content.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-        };
-
-        const onWheel = (e) => {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? -0.1 : 0.1;
-            const newScale = scale + delta * scale;
-            scale = Math.min(Math.max(PREVIEW_MODAL_MIN_SCALE, newScale), PREVIEW_MODAL_MAX_SCALE);
-            updateTransform();
-        };
-
-        const onMouseDown = (e) => {
-            e.preventDefault();
-            isPanning = true;
-            startX = e.clientX - panX;
-            startY = e.clientY - panY;
-            content.classList.add('is-panning');
-        };
-        const onMouseMove = (e) => {
-            if (!isPanning) return;
-            e.preventDefault();
-            panX = e.clientX - startX;
-            panY = e.clientY - startY;
-            updateTransform();
-        };
-        const onMouseUp = () => {
-            if (isPanning) {
-                isPanning = false;
-                content.classList.remove('is-panning');
-            }
-        };
+        // 移除所有复杂的 transform 逻辑
+        // 只处理关闭逻辑
         const closeModal = (e) => {
-            if (e && e.target !== modal) return;
+            // 如果点击的是图片本身，不关闭；只有点击遮罩层才关闭
+            if (e && e.target !== modal && e.target !== content) return;
+
             try { document.body.removeChild(modal); } catch (err) {}
             document.body.style.overflow = '';
             window.removeEventListener('keydown', closeOnEsc);
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseup', onMouseUp);
+            // 移除滚轮事件监听 (如果有的话)
+            modal.removeEventListener('wheel', preventBodyScroll);
             triggerElement?.focus();
         };
 
@@ -950,12 +956,38 @@
             if (e.key === 'Escape') closeModal({ target: modal });
         };
 
-        modal.addEventListener('wheel', onWheel, { passive: false });
-        content.addEventListener('mousedown', onMouseDown);
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', onMouseUp);
+        // 阻止滚动穿透的核心逻辑
+        const preventBodyScroll = (e) => {
+            const el = modal;
+            const scrollTop = el.scrollTop;
+            const scrollHeight = el.scrollHeight;
+            const height = el.clientHeight;
+            const delta = e.deltaY;
+            const isScrollingDown = delta > 0;
+            const isScrollingUp = delta < 0;
+
+            // 如果内容小于容器高度，直接禁止滚动
+            if (scrollHeight <= height) {
+                e.preventDefault();
+                return;
+            }
+
+            // 滚动到底部，且继续向下滚动 -> 阻止
+            if (isScrollingDown && (scrollHeight - height - scrollTop <= 1)) {
+                e.preventDefault();
+            }
+            // 滚动到顶部，且继续向上滚动 -> 阻止
+            else if (isScrollingUp && scrollTop <= 0) {
+                e.preventDefault();
+            }
+            // 其他情况允许模态框内部滚动
+        };
+
+        // 绑定事件
         modal.addEventListener('click', closeModal);
         window.addEventListener('keydown', closeOnEsc);
+        // 添加滚轮阻挡逻辑
+        modal.addEventListener('wheel', preventBodyScroll, { passive: false });
     }
 
     function parseStatusFromDoc(doc) {
@@ -1327,7 +1359,6 @@
         loadSettings();
         getCsrfToken();
         updateUIVisibility();
-
         const obs = new MutationObserver(muts => {
             const itemsToProcess = new Set();
             for (const mut of muts) {
@@ -1369,7 +1400,6 @@
     }
 
     GM_registerMenuCommand(T('settings'), openSettingsModal);
-
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', main);
     } else {

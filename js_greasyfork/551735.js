@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                ORANGE | Skript for me
 // @namespace           https://forum.blackrussia.online
-// @version             1.5.2
+// @version             1.5.3
 // @author              Dany_Forbs
 // @connection          https://vk.com/kwaazzi
 // @updateversion       Создан 06.10.2025
@@ -1319,6 +1319,22 @@
           '[CENTER][FONT=Verdana][SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br> [COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
           '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
           '[SIZE=4][COLOR=#FFA500]▪ Нарушитель будет наказан по пункту правил:[/COLOR][/SIZE][QUOTE][SIZE=4][COLOR=#FF0000]2.08.[/COLOR] [COLOR=#E5E5E5]Запрещена любая форма аморальных действий сексуального характера в сторону игроков | [COLOR=rgb(255, 0, 0)]Jail 30 минут / Warn.[/QUOTE][/COLOR]<br>' +
+          '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
+          '[SIZE=5][B][COLOR=#00AA00]✓ Одобрено ✓[/COLOR][/B][/SIZE]<br><br>' +
+          '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +
+          '[COLOR=#B8860B][I]С уважением, Главный Куратор Форума![/I][/COLOR][/FONT][/CENTER]',
+    prefix: ACCEPT_PREFIX,
+    status: false,
+},
+{
+    title: 'Слив фам склада',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid #D4AF37; font-family: UtromPressKachat; background: linear-gradient(to bottom, #D4AF37, #B8860B); color: #000000; font-weight: bold;',
+    content:
+          '[CENTER][FONT=Verdana][SIZE=4][COLOR=#FFD700]Доброго времени суток, уважаемый(-ая)[/COLOR]<br> [COLOR=#D4AF37]{{ user.mention }}[/COLOR].[/SIZE]<br><br>' +
+          '[img]https://i.postimg.cc/MTK8CnN1/2c4f6b93a412c9f4348290d4baabdaf9.png[/img]<br><br>' +
+          '[SIZE=4][COLOR=#FFA500]▪ Нарушитель будет наказан по пункту правил:[/COLOR][/SIZE][QUOTE][SIZE=4][COLOR=#FF0000]2.09.[/COLOR] [COLOR=#E5E5E5]Запрещено сливать склад фракции / семьи путем взятия большого количества ресурсов или превышая допустимый лимит, установленный лидером | [COLOR=rgb(255, 0, 0)]Ban 15 - 30 дней / PermBan[/QUOTE][/COLOR]<br>' +
+          '[COLOR=rgb(255, 0, 0)]Примечание:[/COLOR] в описании семьи должны быть указаны условия взаимодействия со складом. Если лидер семьи предоставил неограниченный доступ к складу и забыл снять его, администрация не несет ответственности за возможные последствия. Жалобы по данному пункту правил принимаются только от лидера семьи.<br>' +
+          '[COLOR=rgb(255, 0, 0)]Примечание:[/COLOR] исключение всех или части игроков из состава семьи без ведома лидера также считается сливом.<br><br>' +
           '[img]https://i.postimg.cc/Ghs1nw7X/bp.webp[/img]<br><br>' +
           '[SIZE=5][B][COLOR=#00AA00]✓ Одобрено ✓[/COLOR][/B][/SIZE]<br><br>' +
           '[COLOR=#D4AF37]Приятной игры на сервере [B][COLOR=ORANGE]ORANGE (05)[/COLOR][/B].[/COLOR]<br>' +

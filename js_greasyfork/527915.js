@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         极致净化页面
 // @namespace    https://evgo2017.com/purify-page
-// @version      0.1.1
+// @version      0.1.4
 // @description  完美阅读体验，去除广告、推荐等一系列和阅读无关的内容。CSDN、掘金、简书、博客园、知乎专栏、知乎问题、知乎问题、百度贴吧、百度经验、百度百科、百度知道集合。
 // @author       evgo2017
 // @match        https://juejin.cn/post/*
@@ -15,6 +15,7 @@
 // @match        https://baike.baidu.com/*
 // @match        https://zhidao.baidu.com/question/*
 // @match        https://tieba.baidu.com/p/*
+// @match        https://wenku.baidu.com/view/*
 // @match        https://v2ex.com/t/*
 // @match        https://post.smzdm.com/p/*
 // @match        https://blog.csdn.net/*/article/details/*
@@ -35,11 +36,14 @@
         console.log('匹配到 掘金 页面')
         remove("顶部导航条", `#juejin > div.view-container > div.main-header-box`)
         remove("右侧作者信息", `.author-block`)
+        remove("右侧精选内容", `.sidebar-block `)
+        remove("右侧广告", `.ad-container `)
         remove("下方相关推荐", `.recommended-area`)
         remove("回到顶部", `.suspension-panel`)
         remove("登录掘金领取礼包", `.bottom-login-guide`)
         remove("相关推荐", `#sidebar-container > div:nth-child(2) > div:nth-child(2)`)
         remove("精选内容", `#sidebar-container > div:nth-child(2) > div:nth-child(3)`)
+        remove("相关推荐", `#sidebar-container > div:nth-child(2) > div:nth-child(4))`)
         remove("找对属于你的技术圈子", `#sidebar-container > div.sidebar-block.wechat-sidebar-block.pure.wechat-ad`)
         break;
       }
@@ -56,6 +60,9 @@
         remove('下方广告', `#sub-frame-error`)
         remove('下方推荐', `#__next > div._21bLU4._3kbg6I > div > div._gp-ck > section:nth-child(5)`)
         remove('底部', `footer`)
+        remove('底部被以下专题收入，发现更多相似内容', `#__next > div._21bLU4._3kbg6I > div > div._gp-ck > div:nth-child(4)`)
+        remove('底部相关阅读', `#__next > div._21bLU4._3kbg6I > div > div._gp-ck > div:nth-child(5)`)
+        remove('底部友情链接', `#__next > div._21bLU4._3kbg6I > div > div._gp-ck > div:nth-child(6)`)
         break;
       }
       case 'www.cnblogs.com': {
@@ -68,7 +75,10 @@
       }
       case 'zhuanlan.zhihu.com': {
         console.log('匹配到 知乎专栏 页面')
+        remove('上方话题推荐', `header`)
         remove('顶部导航', `.ColumnPageHeader-Wrapper`)
+        remove('大家都在搜', `.HotSearchCard`)
+        remove('右侧导航', `.AdvertImg`, { isRepeat: true })
         remove('登录弹窗', `.Modal-closeButton`, { isClick: true })
         remove('登录即可查看超5亿专业优质内容', `.css-woosw9`)
         remove('底部推荐阅读', `.Recommendations-Main`)
@@ -78,6 +88,7 @@
         console.log('匹配到 知乎问题 页面')
         remove('上方话题推荐', `header`)
         remove('登录弹窗', `.Modal-closeButton`, { isClick: true })
+        remove('大家都在搜', `.HotSearchCard`)
         remove('右侧边栏', `.Question-sideColumn`)
         remove('登录即可查看超5亿专业优质内容', `.css-woosw9`)
         // 最大化阅读区域
@@ -122,6 +133,35 @@
         remove("下方相关搜索", `#J-related-search`)
         break
       }
+      case 'wenku.baidu.com': {
+        console.log('匹配到 百度文库 页面')
+        remove("上方 header", `.new-header`)
+        remove("左侧推荐文档集", `#app-left`)
+        remove("右侧开通 VIP、排行榜、原创作者招募", `#app-right`)
+        remove("阅读器右上角工具栏 - 阅读页换肤", `.top-bar-right`)
+        remove("右上角工具栏 - 阅读页换肤", `.menubar`)
+        remove("下方下载区域", `.tool-bar-wrap`)
+        remove("阅读器内 - 内容推荐", `.hx-warp`, { repeat: true });
+        remove("下方广告区域", `.hx-recom-wrapper`)
+        remove("开通 VIP ", `.pc-cashier-card`)
+        remove("下一篇", `.page-icon`)
+        remove("版权信息", `.copyright-wrap`)
+        remove("vip 弹出内容", `.vip-member-pop-content`)
+        remove("全屏按钮", `.full-screen-icon`)
+        remove('下一篇推荐', `.pcstep-foot-pagination`)
+        remove('文章推荐', `.contract-wrap`)
+        // 最大化阅读区域，style 有被重新设置，所以延迟执行
+        setTimeout(() => {
+            const bodyDom = $(`#body`)
+            let currentDom = $(`.reader-wrap`)
+            while (currentDom !== bodyDom) {
+              currentDom.style.width = '100%'
+              currentDom.style.height = '100%'
+              currentDom = currentDom.parentElement
+            }
+        }, 1000);
+        break
+      }
       case 'zhidao.baidu.com': {
         console.log('匹配到 百度知道 页面')
         remove("热议", `.question-number-text-chain`)
@@ -136,7 +176,19 @@
       case 'tieba.baidu.com': {
         console.log('匹配到 百度贴吧 页面')
         remove('登录弹窗', `#tiebaCustomPassLogin > div.tieba-login-wrapper > span`, { isClick: true, isRepeat: true })
+        remove('登录弹窗', `.custom-ad-container`)
         remove("右侧贴吧热议榜", `.topic_list_box`)
+
+        // 移除帖子之间的广告
+        Array.from(document.querySelector(`#j_p_postlist`).children).forEach(i => {
+            if (i.tagName == 'DIV' && i.classList.contains('l_post')) {
+                if (i.getAttribute('data-field') == "{}") {
+                  i.remove();
+                }
+            } else {
+                i.remove();
+            }
+        })
         break
       }
       default: {
@@ -145,12 +197,14 @@
             remove('顶部导航', `#toolbarBox`)
             remove('边栏', `.blog_container_aside`, { isRemove: true })
             remove('右方广告', `#recommendAdBox`)
+            remove('右方广告', `.gitcode-work-space`, { isRepeat: true })
             remove('右方广告', `#kp_box_530`)
             remove('右方分类专栏', `#recommend-right .kind_person`, { isRemove: true })
             remove('右方最新文章', `#asideArchive`)
             remove('下方推荐文章', `.recommend-box`, { isRemove: true, isRepeat: true })
             remove('新手引导、客服、举报、返回顶部', `.csdn-side-toolbar`, { isRemove: true })
             remove('觉得还不错？一键收藏', `.tool-active-list`, { isRemove: true })
+            remove('登录弹窗', `.passport-login-tip-container`)
             // 最大化阅读区域
             $(`#mainBox`).style.width = 'calc(100% - 320px)'
             const mainArea = $(`main`)
@@ -159,12 +213,18 @@
             // 加载更多代码
             Array.from(document.querySelectorAll(`.look-more-preCode`)).forEach(i => i.click())
             // 加载更多评论
-            lookMoreComment()
-            function lookMoreComment() {
+            const maxCount = 5
+            lookMoreComment(maxCount)
+            function lookMoreComment(count) {
               const dom =$('#lookGoodComment')
               if (dom != null && dom.style.display != 'none') {
-                $('.look-more-comment').click()
-                setTimeout(() => { lookMoreComment() }, 1000)
+                if (count < maxCount) { // 修复评论重复问题
+                  $('.look-more-comment').click()
+                }
+                if (count > 0) { // 避免评论过多，一直加载
+                  count--
+                  setTimeout(() => { lookMoreComment(count) }, 1000)
+                }
               } else {
                 Array.from(document.querySelectorAll(`.second-look-more`)).forEach(i => i.click())
               }

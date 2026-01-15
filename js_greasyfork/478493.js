@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          记录视频刷新历史(bilibili)
 // @namespace     https://greasyfork.org/zh-CN/users/1196880-ling2ling4
-// @version       1.1.8
+// @version       1.1.9
 // @author        Ling2Ling4
 // @description   记录每次刷新的视频, 可以方便的回溯之前错过的视频
 // @license MIT
@@ -929,7 +929,7 @@
               videoHist_info.size
             }px;height:${
               videoHist_info.size
-            }px;text-align:center;border-radius:${
+            }px;display:flex;justify-content: center;align-items:center;border-radius:${
               videoHist_info.size / 5
             }px;cursor:pointer;}\n    .vHistoryBtn:hover {background:${
               videoHist_info.hoverColor
