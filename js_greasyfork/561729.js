@@ -559,7 +559,7 @@
     class Nuker extends Module {
     constructor() {
         super("Nuker", "Misc", {
-            Radius: 1,
+            Radius: 5,
             "Chunk Interval": 1000
         });
         this.lastExecutionTime = 0;
@@ -734,7 +734,7 @@ class Fly extends Module {
     class Speed extends Module {
         constructor() {
             super("Speed", "Movement", {
-                Speed: 6
+                Speed: 7
             })
         }
         onRender() {

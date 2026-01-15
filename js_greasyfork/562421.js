@@ -194,21 +194,3 @@
     };
 })();
 
-// 防止掉线
-function refresh() {
-    var refreshTime = GM_getValue('refreshTime');
-    var now = Date.now();
-    // 5分钟刷新状态一次
-    if (now > refreshTime + 300000) {
-        GM_setValue('refreshTime', now);
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: location.href,
-            onload: function (r) {
-                console.log("refresh");
-            }
-        });
-    }
-}
-GM_setValue('refreshTime', Date.now());
-setInterval(refresh, 60000);

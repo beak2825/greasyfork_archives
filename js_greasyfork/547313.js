@@ -2,7 +2,7 @@
 // @name         Cookie Updater
 // @description  udemy cookies + organize courses
 // @namespace    https://greasyfork.org/users/1508709
-// @version      3.1.0
+// @version      3.1.4
 // @author       https://github.com/sitien173
 // @match        *://*.udemy.com/*
 // @grant        GM_setValue
@@ -10,7 +10,7 @@
 // @grant        GM_cookie
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
-// @connect      api-gateway.sitienbmt.workers.dev
+// @connect      cf-api-gateway.sitienbmt.workers.dev
 // @run-at       document-start
 // @source       https://github.com/sitien173/tampermonkey
 // @downloadURL https://update.greasyfork.org/scripts/547313/Cookie%20Updater.user.js
@@ -18,7 +18,7 @@
 // ==/UserScript==
 (function () {
   'use strict';
-  const workerUrl = 'https://api-gateway.sitienbmt.workers.dev/udemy';
+  const workerUrl = 'https://cf-api-gateway.sitienbmt.workers.dev/udemy/v2';
 
   // =====================================================
   // CONFIGURATION
@@ -28,6 +28,7 @@
     retryAttempts: 3,
     showUiButtons: true,
     showFolderOrganizer: true,
+    apiKey: 'ZDksovkGHYUqwK8k9hoDCKHSP2geS6WB',
   };
   let config = { ...DEFAULT_CONFIG };
   let folders = []; // Array of folder objects with courses
@@ -107,6 +108,7 @@
           'Content-Type': 'application/json',
           'X-License-Key': config.licenseKey,
           'X-Device-Id': getOrCreateDeviceId(),
+          'X-API-Key': config.apiKey,
         },
         data: body ? JSON.stringify(body) : null,
         onload: function (response) {
@@ -275,15 +277,15 @@
         const folder = folders.find((f) => f.id === folderId);
         if (folder) {
           if (!folder.courses) folder.courses = [];
-          // Check by course_id (slug) to avoid duplicates
+          // Check by udemy_course_id (slug) to avoid duplicates
           const exists = folder.courses.some(
-            (c) => c.course_id === courseInfo.id || c.id === courseInfo.id
+            (c) => c.udemy_course_id === courseInfo.id || c.id === courseInfo.id
           );
           if (!exists) {
             // Create course entry matching database schema
             const courseEntry = {
               id: generateUUID(), // folder_courses.id (junction table ID)
-              course_id: courseInfo.id, // The course slug
+              udemy_course_id: courseInfo.id, // The Udemy course slug
               folder_id: folderId,
               title: courseInfo.title,
               url: courseInfo.url,
@@ -318,12 +320,11 @@
 
   async function removeCourseFromFolderAPI(folderId, courseId) {
     if (!config.licenseKey) {
-      // Local mode - courseId can be either the junction table ID or course slug
       const folder = folders.find((f) => f.id === folderId);
       if (folder && folder.courses) {
         folder.courses = folder.courses.filter((c) => {
-          // Match against both id (junction) and course_id (slug)
-          return c.id !== courseId && c.course_id !== courseId && c.course_id !== String(courseId);
+          // Match against both id (junction) and udemy_course_id (slug)
+          return c.id !== courseId && c.udemy_course_id !== courseId && c.udemy_course_id !== String(courseId);
         });
         folder.course_count = folder.courses.length;
       }
@@ -346,7 +347,7 @@
       // Local mode
       const folder = folders.find((f) => f.id === folderId);
       if (folder && folder.courses) {
-        const course = folder.courses.find((c) => c.id === courseId || c.course_id === courseId);
+        const course = folder.courses.find((c) => c.id === courseId || c.udemy_course_id === courseId);
         if (course) {
           Object.assign(course, updates);
         }
@@ -378,8 +379,7 @@
     for (const folder of folders) {
       if (folder.courses) {
         for (const course of folder.courses) {
-          // course_id is the slug in new schema
-          if (course.course_id === courseSlug) {
+          if (course.udemy_course_id === courseSlug) {
             return true;
           }
         }
@@ -392,7 +392,6 @@
     const courseSlug = getCourseSlugFromUrl(lessonUrl);
     if (!courseSlug) return;
 
-    // Only save if course is in our folders
     if (!isCourseInFolders(courseSlug)) {
       console.log('Course not in folders, skipping lesson save:', courseSlug);
       return;
@@ -412,7 +411,7 @@
       for (const folder of folders) {
         if (folder.courses) {
           for (const course of folder.courses) {
-            if (course.course_id === courseSlug) {
+            if (course.udemy_course_id === courseSlug) {
               course.last_lesson_url = lessonUrl;
             }
           }
@@ -422,7 +421,7 @@
     }
 
     try {
-      await apiRequest('PUT', '/api/courses/progress', {
+      await apiRequest('POST', '/api/courses/save-progress', {
         course_id: courseSlug,
         last_lesson_url: lessonUrl,
       });
@@ -432,7 +431,7 @@
       for (const folder of folders) {
         if (folder.courses) {
           for (const course of folder.courses) {
-            if (course.course_id === courseSlug) {
+            if (course.udemy_course_id === courseSlug) {
               course.last_lesson_url = lessonUrl;
             }
           }
@@ -499,9 +498,9 @@
     // For local mode, check local storage
     if (!config.licenseKey) {
       const lessonProgress = GM_getValue('lessonProgress', {});
-      // course_id is the slug in new schema
-      if (lessonProgress[course.course_id]) {
-        return lessonProgress[course.course_id];
+      // udemy_course_id is the Udemy slug
+      if (lessonProgress[course.udemy_course_id]) {
+        return lessonProgress[course.udemy_course_id];
       }
     }
     return course.url || '#';
@@ -540,8 +539,11 @@
         return new Promise((resolve, reject) => {
           GM_xmlhttpRequest({
             method: 'GET',
+            headers: {
+              'X-API-Key': config.apiKey,
+            },
             url:
-              workerUrl + "/" +
+              workerUrl +
               '?key=' +
               encodeURIComponent(config.licenseKey) +
               '&device=' +
@@ -559,7 +561,6 @@
                     return;
                   }
                   if (Array.isArray(data)) {
-                    console.log(`Successfully fetched ${data.length} cookies from worker`);
                     resolve(data);
                   } else {
                     reject(new Error('Invalid response format'));
@@ -793,6 +794,17 @@
           showNotification('No cookies were fetched from worker.', 'warning');
         }
         return { success: false, message: 'No cookies fetched' };
+      }
+
+      const currentHost = window.location.host;
+      const domain = newCookies.find((cookie) => cookie.domain === currentHost);
+
+      if (!domain) {
+        console.log('No cookies found for domain: ' + currentHost);
+        if (!silentMode) {
+          showNotification('No cookies found for domain: ' + currentHost, 'warning');
+        }
+        return { success: false, message: 'No cookies found for domain' };
       }
 
       const currentUrl = window.location.href;
@@ -2913,25 +2925,6 @@
   }
 
   // =====================================================
-  // AUTO UPDATE
-  // =====================================================
-  function startAutoUpdate() {
-    const lastUpdate = GM_getValue('lastCookieUpdate', 0);
-    const now = Date.now();
-
-    const autoUpdateInterval = 4 * 60 * 60 * 1000; // 4 hours
-    if (now - lastUpdate > autoUpdateInterval) {
-      updateCookiesFromWorker(true);
-      GM_setValue('lastCookieUpdate', now);
-    }
-
-    setInterval(() => {
-      updateCookiesFromWorker(true);
-      GM_setValue('lastCookieUpdate', Date.now());
-    }, autoUpdateInterval);
-  }
-
-  // =====================================================
   // MENU COMMANDS
   // =====================================================
   function registerMenuCommands() {
@@ -2947,7 +2940,25 @@
   async function initialize() {
     loadConfig();
 
-    // Load folders from server or local cache
+    // Check if we're on the correct Udemy domain and redirect if needed
+    try {
+      const response = await apiRequest('GET', '/api/public/udemy-base-url');
+
+      if (response.udemyBaseUrl) {
+        const expectedUrl = new URL(response.udemyBaseUrl);
+        const currentHost = window.location.hostname;
+
+        if (expectedUrl.hostname !== currentHost) {
+          const newUrl = expectedUrl.origin + window.location.pathname + window.location.search + window.location.hash;
+          console.log(`[Cookie Updater] Redirecting from ${currentHost} to ${expectedUrl.hostname}`);
+          window.location.href = newUrl;
+          return;
+        }
+      }
+    } catch (error) {
+      console.warn('[Cookie Updater] Failed to check Udemy base URL:', error.message);
+    }
+
     if (config.licenseKey) {
       await syncFoldersFromServer();
     } else {
@@ -2961,7 +2972,6 @@
     }
 
     registerMenuCommands();
-    // startAutoUpdate();
   }
 
   function onDomReady() {

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         BusTimes Favourites
+// @name         bustimes.org - Favourites
 // @namespace    https://bustimes.org/
 // @version      1.9
 // @description  Favourite pages on bustimes.org to the homepage. Drag to reorder. Dark/light mode compatible.
 // @author       dylan
 // @match        https://bustimes.org/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/543869/BusTimes%20Favourites.user.js
-// @updateURL https://update.greasyfork.org/scripts/543869/BusTimes%20Favourites.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/543869/bustimesorg%20-%20Favourites.user.js
+// @updateURL https://update.greasyfork.org/scripts/543869/bustimesorg%20-%20Favourites.meta.js
 // ==/UserScript==
 
 (function () {

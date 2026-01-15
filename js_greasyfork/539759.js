@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Reg Plate Hover Preview
+// @name         bustimes.org - Reg Plate Hover Preview
 // @version      2
 // @namespace    https://bustimes.org/
 // @description  Show Bing image preview for reg plate in Flickr search link.
@@ -7,8 +7,8 @@
 // @match        https://transportthing.uk/*
 // @grant        GM_xmlhttpRequest
 // @connect      bing.com
-// @downloadURL https://update.greasyfork.org/scripts/539759/Reg%20Plate%20Hover%20Preview.user.js
-// @updateURL https://update.greasyfork.org/scripts/539759/Reg%20Plate%20Hover%20Preview.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/539759/bustimesorg%20-%20Reg%20Plate%20Hover%20Preview.user.js
+// @updateURL https://update.greasyfork.org/scripts/539759/bustimesorg%20-%20Reg%20Plate%20Hover%20Preview.meta.js
 // ==/UserScript==
 
 (function () {

@@ -5,7 +5,7 @@
 // @namespace            https://github.com/utags
 // @homepageURL          https://github.com/utags/userscripts#readme
 // @supportURL           https://github.com/utags/userscripts/issues
-// @version              0.8.2
+// @version              0.11.2
 // @description          Paste/drag/select images, batch upload to Imgur/Tikolu/MJJ.Today/Appinn; auto-copy Markdown/HTML/BBCode/link; site button integration with SPA observer; local history.
 // @description:zh-CN    通用图片上传与插入：支持粘贴/拖拽/选择，批量上传至 Imgur/Tikolu/MJJ.Today/Appinn；自动复制 Markdown/HTML/BBCode/链接；可为各站点插入按钮并适配 SPA；保存本地历史。
 // @description:zh-TW    通用圖片上傳與插入：支援貼上/拖曳/選擇，批次上傳至 Imgur/Tikolu/MJJ.Today/Appinn；自動複製 Markdown/HTML/BBCode/連結；可為各站點插入按鈕並適配 SPA；保存本地歷史。
@@ -22,7 +22,10 @@
 // @connect              api.imgur.com
 // @connect              tikolu.net
 // @connect              mjj.today
+// @connect              imgbb.com
 // @connect              h1.appinn.me
+// @connect              photo.lily.lat
+// @connect              i.111666.best
 // @grant                GM_registerMenuCommand
 // @grant                GM_info
 // @grant                GM.info
@@ -239,6 +242,10 @@
   function isTopFrame() {
     return win.self === win.top
   }
+  var DEFAULT_FORMAT = 'markdown'
+  var DEFAULT_HOST = 'mjj'
+  var DEFAULT_PROXY = 'wsrv.nl'
+  var ENABLE_MOCK_HOST = false
   var CONFIG = {
     localhost: {
       enabled: true,
@@ -285,8 +292,6 @@
       pasteEnabled: true,
       dragAndDropEnabled: true,
       format: 'markdown',
-      host: 'tikolu',
-      proxy: 'wsrv.nl',
       buttons: [
         {
           selector: '.comment-screenshot-control',
@@ -299,8 +304,6 @@
       pasteEnabled: true,
       dragAndDropEnabled: true,
       format: 'markdown',
-      host: 'tikolu',
-      proxy: 'wsrv.nl',
       buttons: [
         {
           selector:
@@ -315,8 +318,6 @@
       pasteEnabled: true,
       dragAndDropEnabled: true,
       format: 'markdown',
-      host: 'tikolu',
-      proxy: 'wsrv.nl',
       buttons: [
         {
           selector:
@@ -331,8 +332,6 @@
       pasteEnabled: true,
       dragAndDropEnabled: true,
       format: 'markdown',
-      host: 'tikolu',
-      proxy: 'wsrv.nl',
       buttons: [
         {
           selector:
@@ -362,8 +361,6 @@
       pasteEnabled: false,
       dragAndDropEnabled: false,
       format: 'markdown',
-      host: 'tikolu',
-      proxy: 'wsrv.nl',
     },
   }
   var I18N = {
@@ -379,8 +376,11 @@
       host_imgur: 'Imgur',
       host_tikolu: 'Tikolu',
       host_mjj: 'MJJ.Today',
+      host_imgbb: 'ImgBB',
       host_appinn: 'Appinn',
-      btn_select_images: 'Select Images',
+      host_photo_lily: 'Photo.Lily',
+      host_111666_best: '111666.best',
+      btn_select_images: 'Select images',
       progress_initial: 'Done 0/0',
       progress_done: 'Done {done}/{total}',
       hint_text:
@@ -428,6 +428,8 @@
       default_image_name: 'image',
       proxy_none: 'No proxy',
       proxy_wsrv_nl: 'wsrv.nl',
+      proxy_duckduckgo: 'DuckDuckGo',
+      proxy_wsrv_nl_duckduckgo: 'wsrv.nl -> DuckDuckGo',
       error_network: 'Network error',
       error_upload_failed: 'Upload failed',
       placeholder_uploading: 'Uploading "{name}"...',
@@ -445,7 +447,10 @@
       host_imgur: 'Imgur',
       host_tikolu: 'Tikolu',
       host_mjj: 'MJJ.Today',
+      host_imgbb: 'ImgBB',
       host_appinn: 'Appinn',
+      host_photo_lily: 'Photo.Lily',
+      host_111666_best: '111666.best',
       btn_select_images: '\u9009\u62E9\u56FE\u7247',
       progress_initial: '\u5B8C\u6210 0/0',
       progress_done: '\u5B8C\u6210 {done}/{total}',
@@ -496,6 +501,7 @@
       default_image_name: '\u56FE\u7247',
       proxy_none: '\u65E0\u4EE3\u7406',
       proxy_wsrv_nl: 'wsrv.nl',
+      proxy_duckduckgo: 'DuckDuckGo',
       error_network: '\u7F51\u7EDC\u9519\u8BEF',
       error_upload_failed: '\u4E0A\u4F20\u5931\u8D25',
       placeholder_uploading: '\u6B63\u5728\u4E0A\u4F20\u300C{name}\u300D...',
@@ -513,7 +519,10 @@
       host_imgur: 'Imgur',
       host_tikolu: 'Tikolu',
       host_mjj: 'MJJ.Today',
+      host_imgbb: 'ImgBB',
       host_appinn: 'Appinn',
+      host_photo_lily: 'Photo.Lily',
+      host_111666_best: '111666.best',
       btn_select_images: '\u9078\u64C7\u5716\u7247',
       progress_initial: '\u5B8C\u6210 0/0',
       progress_done: '\u5B8C\u6210 {done}/{total}',
@@ -564,11 +573,54 @@
       default_image_name: '\u5716\u7247',
       proxy_none: '\u4E0D\u4F7F\u7528\u4EE3\u7406',
       proxy_wsrv_nl: 'wsrv.nl',
+      proxy_duckduckgo: 'DuckDuckGo',
       error_network: '\u7DB2\u8DEF\u932F\u8AA4',
       error_upload_failed: '\u4E0A\u50B3\u5931\u6557',
       placeholder_uploading: '\u6B63\u5728\u4E0A\u50B3\u300C{name}\u300D...',
       placeholder_upload_failed: '\u4E0A\u50B3\u5931\u6557\uFF1A{name}',
     },
+  }
+  var IMGUR_CLIENT_IDS = [
+    '3107b9ef8b316f3',
+    '442b04f26eefc8a',
+    '59cfebe717c09e4',
+    '60605aad4a62882',
+    '6c65ab1d3f5452a',
+    '83e123737849aa9',
+    '9311f6be1c10160',
+    'c4a4a563f698595',
+    '81be04b9e4a08ce',
+  ]
+  var HISTORY_KEY = 'uiu_history'
+  var FORMAT_MAP_KEY = 'uiu_format_map'
+  var BTN_SETTINGS_MAP_KEY = 'uiu_site_btn_settings_map'
+  var HOST_MAP_KEY = 'uiu_host_map'
+  var PROXY_MAP_KEY = 'uiu_proxy_map'
+  var SITE_SETTINGS_MAP_KEY = 'uiu_site_settings_map'
+  var CUSTOM_FORMATS_KEY = 'uiu_custom_formats'
+  var ALLOWED_FORMATS = ['markdown', 'html', 'bbcode', 'link']
+  var ALLOWED_HOSTS = ENABLE_MOCK_HOST
+    ? [
+        'imgur',
+        'tikolu',
+        'mjj',
+        'imgbb',
+        'appinn',
+        'photo_lily',
+        '111666_best',
+        'mock',
+      ]
+    : ['imgur', 'tikolu', 'mjj', 'imgbb', 'appinn', 'photo_lily', '111666_best']
+  var ALLOWED_PROXIES = ['none', 'wsrv.nl', 'duckduckgo', 'wsrv.nl-duckduckgo']
+  var ALLOWED_BUTTON_POSITIONS = ['before', 'inside', 'after']
+  var DEFAULT_BUTTON_POSITION = 'after'
+  var APPINN_UPLOAD_ENDPOINT = 'https://h1.appinn.me/upload'
+  var APPINN_UPLOAD_PARAMS = {
+    authCode: 'appinn2',
+    serverCompress: false,
+    uploadChannel: 'telegram',
+    uploadNameType: 'default',
+    autoRetry: true,
   }
   function detectLanguage() {
     try {
@@ -597,59 +649,6 @@
         (_a = params == null ? void 0 : params[k]) != null ? _a : ''
       )
     })
-  }
-  var IMGUR_CLIENT_IDS = [
-    '3107b9ef8b316f3',
-    '442b04f26eefc8a',
-    '59cfebe717c09e4',
-    '60605aad4a62882',
-    '6c65ab1d3f5452a',
-    '83e123737849aa9',
-    '9311f6be1c10160',
-    'c4a4a563f698595',
-    '81be04b9e4a08ce',
-  ]
-  var HISTORY_KEY = 'uiu_history'
-  var FORMAT_MAP_KEY = 'uiu_format_map'
-  var BTN_SETTINGS_MAP_KEY = 'uiu_site_btn_settings_map'
-  var HOST_MAP_KEY = 'uiu_host_map'
-  var PROXY_MAP_KEY = 'uiu_proxy_map'
-  var SITE_SETTINGS_MAP_KEY = 'uiu_site_settings_map'
-  var CUSTOM_FORMATS_KEY = 'uiu_custom_formats'
-  var DEFAULT_FORMAT = 'markdown'
-  var DEFAULT_HOST = 'tikolu'
-  var DEFAULT_PROXY = 'wsrv.nl'
-  var ALLOWED_FORMATS = ['markdown', 'html', 'bbcode', 'link']
-  var ALLOWED_HOSTS = ['imgur', 'tikolu', 'mjj', 'appinn']
-  var ALLOWED_PROXIES = ['none', 'wsrv.nl']
-  var ALLOWED_BUTTON_POSITIONS = ['before', 'inside', 'after']
-  var DEFAULT_BUTTON_POSITION = 'after'
-  var APPINN_UPLOAD_ENDPOINT = 'https://h1.appinn.me/upload'
-  var APPINN_UPLOAD_PARAMS = {
-    authCode: 'appinn2',
-    serverCompress: false,
-    uploadChannel: 'telegram',
-    uploadNameType: 'default',
-    autoRetry: true,
-  }
-  async function migrateLegacyStorage() {
-    try {
-      const maybeMove = async (oldKey, newKey) => {
-        const newVal = await getValue(newKey)
-        const hasNew = newVal !== void 0
-        const oldVal = await getValue(oldKey)
-        const hasOld = oldVal !== void 0
-        if (!hasNew && hasOld) {
-          await setValue(newKey, oldVal)
-          try {
-            await deleteValue(oldKey)
-          } catch (e) {}
-        }
-      }
-      await maybeMove('iu_history', HISTORY_KEY)
-      await maybeMove('iu_format_map', FORMAT_MAP_KEY)
-      await maybeMove('iu_site_btn_settings_map', BTN_SETTINGS_MAP_KEY)
-    } catch (e) {}
   }
   function normalizeHost(h) {
     try {
@@ -736,8 +735,27 @@
   async function ensureAllowedFormat(fmt) {
     return ensureAllowedValue(fmt, await getAllowedFormats(), DEFAULT_FORMAT)
   }
+  async function migrateLegacyStorage() {
+    try {
+      const maybeMove = async (oldKey, newKey) => {
+        const newVal = await getValue(newKey)
+        const hasNew = newVal !== void 0
+        const oldVal = await getValue(oldKey)
+        const hasOld = oldVal !== void 0
+        if (!hasNew && hasOld) {
+          await setValue(newKey, oldVal)
+          try {
+            await deleteValue(oldKey)
+          } catch (e) {}
+        }
+      }
+      await maybeMove('iu_history', HISTORY_KEY)
+      await maybeMove('iu_format_map', FORMAT_MAP_KEY)
+      await maybeMove('iu_site_btn_settings_map', BTN_SETTINGS_MAP_KEY)
+    } catch (e) {}
+  }
   async function migrateToUnifiedSiteMap() {
-    var _a, _b, _c, _d, _e, _f
+    var _a, _b, _c, _d, _e, _f, _g
     try {
       const existing = await getValue(SITE_SETTINGS_MAP_KEY, void 0)
       const siteMap = existing && typeof existing === 'object' ? existing : {}
@@ -758,30 +776,30 @@
       for (const k of rawKeys) keys.add(normalizeHost(k))
       for (const key of keys) {
         if (!key) continue
-        const preset = (CONFIG == null ? void 0 : CONFIG[key]) || {}
+        const preset = ((_a = CONFIG) == null ? void 0 : _a[key]) || {}
         const s = siteMap[key] || {}
         if (s.format === void 0) {
-          const fmt = (_a = formatMap[key]) != null ? _a : preset.format
+          const fmt = (_b = formatMap[key]) != null ? _b : preset.format
           const normalizedFormat = await ensureAllowedFormat(fmt)
           if (normalizedFormat) s.format = normalizedFormat
         }
         if (s.host === void 0) {
-          const h = (_b = hostMap[key]) != null ? _b : preset.host
+          const h = (_c = hostMap[key]) != null ? _c : preset.host
           const normalizedHost = ensureAllowedValue(h, ALLOWED_HOSTS)
           if (normalizedHost) s.host = normalizedHost
         }
         if (s.proxy === void 0) {
-          const px = (_c = proxyMap[key]) != null ? _c : preset.proxy
+          const px = (_d = proxyMap[key]) != null ? _d : preset.proxy
           const resolved = ensureAllowedValue(px, ALLOWED_PROXIES)
           if (resolved && resolved !== 'none') s.proxy = resolved
         }
         if (s.buttons === void 0) {
           const raw =
-            (_f =
-              (_e = (_d = btnMap[key]) != null ? _d : preset.buttons) != null
-                ? _e
+            (_g =
+              (_f = (_e = btnMap[key]) != null ? _e : preset.buttons) != null
+                ? _f
                 : preset.button) != null
-              ? _f
+              ? _g
               : []
           const arr = Array.isArray(raw) ? raw : raw ? [raw] : []
           const list = arr
@@ -1039,7 +1057,7 @@
     list[index] = { selector, position: pos, text }
     await setSiteBtnSettingsList(list)
   }
-  var MAX_HISTORY = 50
+  var MAX_HISTORY = 200
   var createEl = (tag, attrs = {}, children = []) => {
     const el = document.createElement(tag)
     for (const [k, v] of Object.entries(attrs)) {
@@ -1049,6 +1067,111 @@
     }
     for (const c of children) el.append(c)
     return el
+  }
+  var requestOpenFilePicker = () => {
+    var _a
+    if (isTopFrame()) {
+      globalThis.dispatchEvent(new CustomEvent('uiu:request-open-file-picker'))
+    } else {
+      ;(_a = window.top) == null
+        ? void 0
+        : _a.postMessage({ type: 'uiu:request-open-file-picker' }, '*')
+    }
+  }
+  function applySingle(cfg) {
+    var _a, _b
+    if (!(cfg == null ? void 0 : cfg.selector)) return
+    let targets
+    try {
+      targets = document.querySelectorAll(cfg.selector)
+    } catch (e) {
+      return
+    }
+    if (!targets || targets.length === 0) return
+    const posRaw = (cfg.position || '').trim()
+    const pos =
+      posRaw === 'before' ? 'before' : posRaw === 'inside' ? 'inside' : 'after'
+    const content = (cfg.text || t('insert_image_button_default')).trim()
+    for (const t2 of Array.from(targets)) {
+      const target = t2
+      const exists =
+        pos === 'inside'
+          ? Boolean(target.querySelector('.uiu-insert-btn'))
+          : pos === 'before'
+            ? Boolean(
+                target.previousElementSibling &&
+                ((_a = target.previousElementSibling.classList) == null
+                  ? void 0
+                  : _a.contains('uiu-insert-btn'))
+              )
+            : Boolean(
+                target.nextElementSibling &&
+                ((_b = target.nextElementSibling.classList) == null
+                  ? void 0
+                  : _b.contains('uiu-insert-btn'))
+              )
+      if (exists) continue
+      let btn
+      try {
+        const range = document.createRange()
+        const ctx = document.createElement('div')
+        range.selectNodeContents(ctx)
+        const frag = range.createContextualFragment(content)
+        if (frag && frag.childElementCount === 1) {
+          btn = frag.firstElementChild
+        }
+      } catch (e) {}
+      if (btn) {
+        btn.classList.add('uiu-insert-btn')
+      } else {
+        btn = createEl('button', {
+          class: 'uiu-insert-btn uiu-default',
+          text: content,
+        })
+      }
+      btn.addEventListener('click', handleSiteButtonClick)
+      if (pos === 'before') {
+        target.before(btn)
+      } else if (pos === 'inside') {
+        target.append(btn)
+      } else {
+        target.after(btn)
+      }
+    }
+  }
+  async function applySiteButtons() {
+    const list = await getSiteBtnSettingsList()
+    for (const cfg of list) {
+      try {
+        applySingle(cfg)
+      } catch (e) {}
+    }
+  }
+  var siteBtnObserver
+  async function restartSiteButtonObserver() {
+    try {
+      if (siteBtnObserver) siteBtnObserver.disconnect()
+    } catch (e) {}
+    const list = await getSiteBtnSettingsList()
+    if (list.length === 0) {
+      siteBtnObserver = void 0
+      return
+    }
+    const checkAndInsertAll = () => {
+      for (const cfg of list) {
+        try {
+          applySingle(cfg)
+        } catch (e) {}
+      }
+    }
+    checkAndInsertAll()
+    siteBtnObserver = new MutationObserver(() => {
+      checkAndInsertAll()
+    })
+    siteBtnObserver.observe(document.body || document.documentElement, {
+      childList: true,
+      subtree: true,
+    })
   }
   var buildPositionOptions = (selectEl, selectedValue) => {
     if (!selectEl) return
@@ -1097,25 +1220,25 @@
       selectEl.append(opt)
     }
   }
+  var getProxyLabelKey = (val) =>
+    'proxy_'.concat(val.replaceAll('.', '_').replaceAll('-', '_'))
   var buildProxyOptions = (selectEl, selectedValue) => {
     if (!selectEl) return
     selectEl.textContent = ''
     const selected = selectedValue
       ? ensureAllowedValue(selectedValue, ALLOWED_PROXIES, DEFAULT_PROXY)
       : DEFAULT_PROXY
-    const proxyLabelKey = (val) =>
-      val === 'wsrv.nl' ? 'proxy_wsrv_nl' : 'proxy_none'
     for (const val of ALLOWED_PROXIES) {
       const opt = createEl('option', {
         value: val,
-        text: t(proxyLabelKey(val)),
+        text: t(getProxyLabelKey(val)),
       })
       if (val === selected) opt.selected = true
       selectEl.append(opt)
     }
   }
   var css =
-    '\n  #uiu-panel { position: fixed; right: 16px; bottom: 16px; z-index: 2147483647; width: 440px; max-height: calc(100vh - 32px); overflow: auto; background: #111827cc; color: #fff; backdrop-filter: blur(6px); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.25); font-family: system-ui, -apple-system, Segoe UI, Roboto; font-size: 13px; line-height: 1.5; }\n  #uiu-panel header { display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; font-weight: 600; font-size: 16px; background-color: unset; box-shadow: unset; transition: unset; }\n  #uiu-panel header .uiu-actions { display:flex; gap:8px; }\n  #uiu-panel header .uiu-actions button { font-size: 12px; }\n  /* Active styles for toggles when sections are open */\n  #uiu-panel header.uiu-show-history .uiu-actions .uiu-toggle-history { background:#2563eb; border-color:#1d4ed8; box-shadow: 0 0 0 1px #1d4ed8 inset; color:#fff; }\n  #uiu-panel header.uiu-show-settings .uiu-actions .uiu-toggle-settings { background:#2563eb; border-color:#1d4ed8; box-shadow: 0 0 0 1px #1d4ed8 inset; color:#fff; }\n  #uiu-panel .uiu-body { padding: 8px 12px; }\n  #uiu-panel .uiu-controls { display:flex; align-items:center; gap:8px; flex-wrap: wrap; }\n  #uiu-panel select, #uiu-panel button { font-size: 12px; padding: 6px 10px; border-radius: 6px; border: 1px solid #334155; background:#1f2937; color:#fff; }\n  #uiu-panel button.uiu-primary { background:#2563eb; border-color:#1d4ed8; }\n  #uiu-panel .uiu-list { margin-top:8px; max-height: 140px; overflow-y:auto; overflow-x:hidden; font-size: 12px; }\n  #uiu-panel .uiu-list .uiu-item { padding:6px 0; border-bottom: 1px dashed #334155; white-space: normal; word-break: break-word; overflow-wrap: anywhere; }\n  #uiu-panel .uiu-history { display:none; margin-top:12px; border-top: 2px solid #475569; padding-top: 8px; }\n  #uiu-panel header.uiu-show-history + .uiu-body .uiu-history { display:block; }\n  #uiu-panel .uiu-history .uiu-controls > span { font-size: 16px; font-weight: 600;}\n  #uiu-panel .uiu-history .uiu-list { max-height: 240px; }\n  #uiu-panel .uiu-history .uiu-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-bottom: 1px dashed #334155; }\n  #uiu-panel .uiu-history .uiu-row .uiu-ops { display:flex; gap:6px; }\n  #uiu-panel .uiu-history .uiu-row .uiu-name { display:block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n  #uiu-panel .uiu-hint { font-size: 11px; opacity:.85; margin-top:6px; }\n  /* Settings container toggling */\n  #uiu-panel .uiu-settings-container { display:none; margin-top:12px; border-top: 2px solid #475569; padding-top: 8px; }\n  #uiu-panel header.uiu-show-settings + .uiu-body .uiu-settings-container { display:block; }\n  #uiu-panel .uiu-settings .uiu-controls > span { font-size: 16px; font-weight: 600;}\n  #uiu-panel .uiu-settings .uiu-controls > .uiu-subtitle { font-size: 13px; font-weight: 600; }\n  #uiu-panel .uiu-settings .uiu-settings-list { margin-top:6px; max-height: 240px; overflow-y:auto; overflow-x:hidden; }\n  #uiu-panel .uiu-settings .uiu-settings-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-bottom: 1px dashed #334155; font-size: 12px; flex-wrap: nowrap; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-settings-item { flex:1; display:flex; align-items:center; gap:6px; min-width:0; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-settings-item input[type="text"] { flex:1; min-width:0; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-settings-item select { flex:0 0 auto; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-ops { display:flex; gap:6px; flex-shrink:0; white-space:nowrap; }\n  #uiu-drop { position: fixed; inset: 0; background: rgba(37,99,235,.12); border: 2px dashed #2563eb; display:none; align-items:center; justify-content:center; z-index: 999998; color:#2563eb; font-size: 18px; font-weight: 600; }\n  #uiu-drop.show { display:flex; }\n  .uiu-insert-btn { cursor:pointer; }\n  .uiu-insert-btn.uiu-default { font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #334155; background:#1f2937; color:#fff; cursor:pointer; }\n  /* Hover effects for all buttons */\n  #uiu-panel button { transition: background-color .12s ease, box-shadow .12s ease, transform .06s ease, opacity .12s ease, border-color .12s ease; }\n  #uiu-panel button:hover { background:#334155; border-color:#475569; box-shadow: 0 0 0 1px #475569 inset; transform: translateY(-0.5px); }\n  #uiu-panel button.uiu-primary:hover { background:#1d4ed8; border-color:#1e40af; }\n  #uiu-panel button:active { transform: translateY(0); }\n  /* Disabled style for proxy selector */\n  #uiu-panel select:disabled { opacity:.55; cursor:not-allowed; filter: grayscale(80%); background:#111827; color:#9ca3af; border-color:#475569; }\n  /* Custom Formats layout */\n  #uiu-panel .uiu-formats { margin-top:12px; border-top: 2px solid #475569; padding-top: 8px; }\n  #uiu-panel .uiu-formats .uiu-controls > span { font-size: 16px; font-weight: 600; }\n  #uiu-panel .uiu-formats .uiu-controls > .uiu-subtitle { font-size: 13px; font-weight: 600; }\n  #uiu-panel .uiu-formats .uiu-formats-list { margin-top:6px; max-height: 200px; overflow-y:auto; overflow-x:hidden; }\n  #uiu-panel .uiu-formats .uiu-formats-row { display:grid; grid-template-columns: 1fr 2fr 180px; align-items:center; gap:8px; padding:6px 0; border-bottom: 1px dashed #334155; }\n  #uiu-panel .uiu-formats .uiu-formats-row .uiu-ops { display:flex; gap:6px; justify-content:flex-end; }\n  #uiu-panel .uiu-formats .uiu-formats-row:not(.uiu-editing) .uiu-fmt-name, #uiu-panel .uiu-formats .uiu-formats-row:not(.uiu-editing) .uiu-fmt-template { display:block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n  #uiu-panel .uiu-formats .uiu-formats-row.uiu-editing .uiu-fmt-name, #uiu-panel .uiu-formats .uiu-formats-row.uiu-editing .uiu-fmt-template { overflow: visible; text-overflow: clip; white-space: normal; }\n  #uiu-panel .uiu-formats .uiu-form-add { display:grid; grid-template-columns: 1fr 2fr 180px; align-items:center; gap:8px; }\n  #uiu-panel .uiu-formats .uiu-formats-row input[type="text"] { width:100%; }\n  #uiu-panel .uiu-formats .uiu-form-add input[type="text"] { width:100%; }\n  #uiu-panel .uiu-formats .uiu-form-add button { justify-self: end; }\n  #uiu-panel .uiu-formats .uiu-formats-header { font-weight: 600; color:#e5e7eb; }\n  #uiu-panel .uiu-formats .uiu-form-add .uiu-fmt-name, #uiu-panel .uiu-formats .uiu-form-add .uiu-fmt-template { display:block; min-width:0; }\n  #uiu-panel .uiu-formats .uiu-format-example-row { padding-top:4px; border-bottom: none; }\n  #uiu-panel .uiu-formats .uiu-format-example-row .uiu-fmt-template { font-size:12px; color:#cbd5e1; white-space: normal; overflow: visible; text-overflow: clip; }\n  '
+    '\n  #uiu-panel { position: fixed; right: 16px; bottom: 16px; z-index: 2147483647; width: 440px; max-height: calc(100vh - 32px); overflow: auto; background: #111827cc; color: #fff; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.25); font-family: system-ui, -apple-system, Segoe UI, Roboto; font-size: 13px; line-height: 1.5; }\n  #uiu-panel header { display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; font-weight: 600; font-size: 16px; background-color: unset; box-shadow: unset; transition: unset; }\n  #uiu-panel header .uiu-actions { display:flex; gap:8px; }\n  #uiu-panel header .uiu-actions button { font-size: 12px; }\n  /* Active styles for toggles when sections are open */\n  #uiu-panel header.uiu-show-history .uiu-actions .uiu-toggle-history { background:#2563eb; border-color:#1d4ed8; box-shadow: 0 0 0 1px #1d4ed8 inset; color:#fff; }\n  #uiu-panel header.uiu-show-settings .uiu-actions .uiu-toggle-settings { background:#2563eb; border-color:#1d4ed8; box-shadow: 0 0 0 1px #1d4ed8 inset; color:#fff; }\n  #uiu-panel .uiu-body { padding: 8px 12px; }\n  #uiu-panel .uiu-controls { display:flex; align-items:center; gap:8px; flex-wrap: wrap; }\n  #uiu-panel select, #uiu-panel button { font-size: 12px; padding: 6px 10px; border-radius: 6px; border: 1px solid #334155; background:#1f2937; color:#fff; }\n  #uiu-panel button.uiu-primary { background:#2563eb; border-color:#1d4ed8; }\n  #uiu-panel .uiu-list { margin-top:8px; max-height: 140px; overflow-y:auto; overflow-x:hidden; font-size: 12px; }\n  #uiu-panel .uiu-list .uiu-item { padding:6px 0; border-bottom: 1px dashed #334155; white-space: normal; word-break: break-word; overflow-wrap: anywhere; }\n  #uiu-panel .uiu-list .uiu-log-item { padding: 6px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); transition: all .15s; white-space: normal; word-break: break-word; overflow-wrap: anywhere; }\n  #uiu-panel .uiu-list .uiu-log-item:hover { background: #334155; border-color: #475569; }\n  #uiu-panel .uiu-history { display:none; margin-top:12px; border-top: 2px solid #475569; padding-top: 8px; }\n  #uiu-panel header.uiu-show-history + .uiu-body .uiu-history { display:block; }\n  #uiu-panel .uiu-history .uiu-controls > span { font-size: 16px; font-weight: 600;}\n  #uiu-panel .uiu-history .uiu-list { max-height: 240px; }\n  #uiu-panel .uiu-history .uiu-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-bottom: 1px dashed #334155; }\n  #uiu-panel .uiu-history .uiu-row .uiu-ops { display:flex; gap:6px; }\n  #uiu-panel .uiu-history .uiu-row .uiu-name { display:block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n  #uiu-panel .uiu-hint { font-size: 11px; opacity:.85; margin-top:6px; }\n  /* Settings container toggling */\n  #uiu-panel .uiu-settings-container { display:none; margin-top:12px; border-top: 2px solid #475569; padding-top: 8px; }\n  #uiu-panel header.uiu-show-settings + .uiu-body .uiu-settings-container { display:block; }\n  #uiu-panel .uiu-settings .uiu-controls > span { font-size: 16px; font-weight: 600;}\n  #uiu-panel .uiu-settings .uiu-controls > .uiu-subtitle { font-size: 13px; font-weight: 600; }\n  #uiu-panel .uiu-settings .uiu-settings-list { margin-top:6px; max-height: 240px; overflow-y:auto; overflow-x:hidden; }\n  #uiu-panel .uiu-settings .uiu-settings-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-bottom: 1px dashed #334155; font-size: 12px; flex-wrap: nowrap; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-settings-item { flex:1; display:flex; align-items:center; gap:6px; min-width:0; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-settings-item input[type="text"] { flex:1; min-width:0; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-settings-item select { flex:0 0 auto; }\n  #uiu-panel .uiu-settings .uiu-settings-row .uiu-ops { display:flex; gap:6px; flex-shrink:0; white-space:nowrap; }\n  #uiu-drop { position: fixed; inset: 0; background: rgba(37,99,235,.12); border: 2px dashed #2563eb; display:none; align-items:center; justify-content:center; z-index: 999998; color:#2563eb; font-size: 18px; font-weight: 600; pointer-events:none; }\n  #uiu-drop.show { display:flex; }\n  .uiu-insert-btn { cursor:pointer; }\n  .uiu-insert-btn.uiu-default { font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #334155; background:#1f2937; color:#fff; cursor:pointer; }\n  /* Hover effects for all buttons */\n  #uiu-panel button { transition: background-color .12s ease, box-shadow .12s ease, transform .06s ease, opacity .12s ease, border-color .12s ease; }\n  #uiu-panel button:hover { background:#334155; border-color:#475569; box-shadow: 0 0 0 1px #475569 inset; transform: translateY(-0.5px); }\n  #uiu-panel button.uiu-primary:hover { background:#1d4ed8; border-color:#1e40af; }\n  #uiu-panel button:active { transform: translateY(0); }\n  /* Disabled style for proxy selector */\n  #uiu-panel select:disabled { opacity:.55; cursor:not-allowed; filter: grayscale(80%); background:#111827; color:#9ca3af; border-color:#475569; }\n  /* Custom Formats layout */\n  #uiu-panel .uiu-formats { margin-top:12px; border-top: 2px solid #475569; padding-top: 8px; }\n  #uiu-panel .uiu-formats .uiu-controls > span { font-size: 16px; font-weight: 600; }\n  #uiu-panel .uiu-formats .uiu-controls > .uiu-subtitle { font-size: 13px; font-weight: 600; }\n  #uiu-panel .uiu-formats .uiu-formats-list { margin-top:6px; max-height: 200px; overflow-y:auto; overflow-x:hidden; }\n  #uiu-panel .uiu-formats .uiu-formats-row { display:grid; grid-template-columns: 1fr 2fr 180px; align-items:center; gap:8px; padding:6px 0; border-bottom: 1px dashed #334155; }\n  #uiu-panel .uiu-formats .uiu-formats-row .uiu-ops { display:flex; gap:6px; justify-content:flex-end; }\n  #uiu-panel .uiu-formats .uiu-formats-row:not(.uiu-editing) .uiu-fmt-name, #uiu-panel .uiu-formats .uiu-formats-row:not(.uiu-editing) .uiu-fmt-template { display:block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n  #uiu-panel .uiu-formats .uiu-formats-row.uiu-editing .uiu-fmt-name, #uiu-panel .uiu-formats .uiu-formats-row.uiu-editing .uiu-fmt-template { overflow: visible; text-overflow: clip; white-space: normal; }\n  #uiu-panel .uiu-formats .uiu-form-add { display:grid; grid-template-columns: 1fr 2fr 180px; align-items:center; gap:8px; }\n  #uiu-panel .uiu-formats .uiu-formats-row input[type="text"] { width:100%; }\n  #uiu-panel .uiu-formats .uiu-form-add input[type="text"] { width:100%; }\n  #uiu-panel .uiu-formats .uiu-form-add button { justify-self: end; }\n  #uiu-panel .uiu-formats .uiu-formats-header { font-weight: 600; color:#e5e7eb; }\n  #uiu-panel .uiu-formats .uiu-form-add .uiu-fmt-name, #uiu-panel .uiu-formats .uiu-form-add .uiu-fmt-template { display:block; min-width:0; }\n  #uiu-panel .uiu-formats .uiu-format-example-row { padding-top:4px; border-bottom: none; }\n  #uiu-panel .uiu-formats .uiu-format-example-row .uiu-fmt-template { font-size:12px; color:#cbd5e1; white-space: normal; overflow: visible; text-overflow: clip; }\n  '
   GM_addStyle(css)
   async function loadHistory() {
     return (await getValue(HISTORY_KEY, [])) || []
@@ -1168,12 +1291,30 @@
   }
   async function applyProxy(url, providerKey) {
     try {
-      const px = await getProxy()
+      let px = await getProxy()
       if (px === 'none') return url
-      const provider = providerKey || (await getHost())
-      if (provider === 'imgur' || isImgurUrl(url)) return url
       if (px === 'wsrv.nl') {
-        return 'https://wsrv.nl/?url='.concat(encodeURIComponent(url))
+        const provider = providerKey || (await getHost())
+        if (
+          provider === 'imgur' ||
+          provider === '111666_best' ||
+          isImgurUrl(url)
+        ) {
+          px = 'wsrv.nl-duckduckgo'
+        } else {
+          return 'https://wsrv.nl/?url='.concat(encodeURIComponent(url))
+        }
+      }
+      if (px === 'duckduckgo') {
+        return 'https://external-content.duckduckgo.com/iu/?u='.concat(
+          encodeURIComponent(url)
+        )
+      }
+      if (px === 'wsrv.nl-duckduckgo') {
+        const ddgUrl = 'https://external-content.duckduckgo.com/iu/?u='.concat(
+          encodeURIComponent(url)
+        )
+        return 'https://wsrv.nl/?url='.concat(encodeURIComponent(ddgUrl))
       }
       return url
     } catch (e) {
@@ -1263,6 +1404,101 @@
     }
     throw new Error(t('error_upload_failed'))
   }
+  async function getImgbbAuthToken() {
+    const html = await gmRequest({ url: 'https://imgbb.com/upload' })
+    const m = /PF\.obj\.config\.auth_token\s*=\s*["']([A-Za-z\d]+)["']/.exec(
+      String(html || '')
+    )
+    if (!m || !m[1]) throw new Error(t('error_network'))
+    return m[1]
+  }
+  async function uploadToImgbb(file) {
+    var _a
+    if (Math.floor(file.size / 1e3) > 32e3) {
+      throw new Error('32mb limit')
+    }
+    const token = await getImgbbAuthToken()
+    const formData = new FormData()
+    formData.append('source', file)
+    formData.append('type', 'file')
+    formData.append('action', 'upload')
+    formData.append('timestamp', String(Date.now()))
+    formData.append('auth_token', token)
+    formData.append('expiration', '')
+    formData.append('nsfw', '0')
+    const data = await gmRequest({
+      method: 'POST',
+      url: 'https://imgbb.com/json',
+      data: formData,
+      responseType: 'json',
+    })
+    if (
+      (data == null ? void 0 : data.status_code) === 200 &&
+      ((_a = data == null ? void 0 : data.image) == null ? void 0 : _a.url)
+    ) {
+      return String(data.image.url)
+    }
+    throw new Error(t('error_upload_failed'))
+  }
+  async function uploadToPhotoLily(file) {
+    var _a
+    const formData = new FormData()
+    formData.append('file', file)
+    const data = await gmRequest({
+      method: 'POST',
+      url: 'https://photo.lily.lat/upload',
+      data: formData,
+      responseType: 'json',
+    })
+    if (Array.isArray(data) && ((_a = data[0]) == null ? void 0 : _a.src)) {
+      const src = String(data[0].src)
+      return /^https?:\/\//i.test(src)
+        ? src
+        : 'https://photo.lily.lat'.concat(src)
+    }
+    throw new Error(t('error_upload_failed'))
+  }
+  var HOST_111666_TOKENS = [
+    '6Fqz4pDz949bhzMOvUj2Ytgiy17ARsWz',
+    'FcyNm0KvmHx73qOcwbm0uZ89rXOQFuIT',
+    'yHF9Br2kXZqEC0sQR2hOSKlGv0A6hyMU',
+    'B56UgFSDhGeXpK1WSNBd6NakwuWHEmGP',
+    'qFxuIgXxCTOY0cj5VDiZPZW7uwPVbT7L',
+  ]
+  async function uploadTo111666Best(file) {
+    const tokens = [...HOST_111666_TOKENS]
+    for (let i = tokens.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[tokens[i], tokens[j]] = [tokens[j], tokens[i]]
+    }
+    let lastError
+    for (const token of tokens) {
+      const formData = new FormData()
+      formData.append('payload', file)
+      try {
+        const data = await gmRequest({
+          method: 'POST',
+          url: 'https://i.111666.best/image',
+          headers: { 'auth-token': token },
+          data: formData,
+          responseType: 'json',
+        })
+        if (
+          (data == null ? void 0 : data.ok) &&
+          (data == null ? void 0 : data.src)
+        ) {
+          const src = String(data.src)
+          return /^https?:\/\//i.test(src)
+            ? src
+            : 'https://i.111666.best'.concat(src)
+        }
+        lastError = new Error(t('error_upload_failed'))
+      } catch (error) {
+        lastError = error
+      }
+    }
+    throw lastError || new Error(t('error_upload_failed'))
+  }
   async function uploadToAppinn(file) {
     var _a
     if (Math.floor(file.size / 1e3) > 2e4) {
@@ -1349,12 +1585,29 @@
   }
   async function uploadImage(file) {
     const host = await getHost()
+    if (host === 'mock') {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1e3)
+      })
+      const samples = [
+        'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d',
+        'https://images.unsplash.com/photo-1518770660439-4636190af475',
+        'https://images.unsplash.com/photo-1513151233558-d860c5398176',
+        'https://images.unsplash.com/photo-1526045612212-70caf35c14df',
+      ]
+      const idx = Math.floor(Math.random() * samples.length)
+      return samples[idx]
+    }
     if (host === 'tikolu') return uploadToTikolu(file)
     if (host === 'mjj') return uploadToMjj(file)
+    if (host === 'imgbb') return uploadToImgbb(file)
     if (host === 'appinn') return uploadToAppinn(file)
+    if (host === 'photo_lily') return uploadToPhotoLily(file)
+    if (host === '111666_best') return uploadTo111666Best(file)
     return uploadToImgur(file)
   }
   var lastEditableEl
+  var lastEditableFrame
   function getDeepActiveElement() {
     let el = document.activeElement
     try {
@@ -1401,9 +1654,269 @@
       (el instanceof HTMLElement && el.isContentEditable)
     )
   }
+  function isOverEditableOrPanel(target) {
+    if (!(target instanceof Node)) return false
+    if (isInsideUIPanel(target)) return true
+    let el =
+      target instanceof Element
+        ? target
+        : target.parentNode instanceof Element
+          ? target.parentNode
+          : void 0
+    while (el) {
+      if (isEditable(el)) return true
+      el = el.parentElement || void 0
+    }
+    return false
+  }
+  function initPasteUpload(initialEnabled = true) {
+    let pasteHandler
+    const enablePaste = () => {
+      if (pasteHandler) return
+      pasteHandler = (event) => {
+        var _a, _b
+        const cd = event.clipboardData
+        if (!cd) return
+        const list = []
+        const seen = /* @__PURE__ */ new Set()
+        const addIfNew = (f) => {
+          const sig = ''
+            .concat(f.name, '|')
+            .concat(f.size, '|')
+            .concat(f.type, '|')
+            .concat(f.lastModified || 0)
+          if (!seen.has(sig)) {
+            seen.add(sig)
+            list.push(f)
+          }
+        }
+        const items = cd.items ? Array.from(cd.items) : []
+        for (const i of items) {
+          if (i && i.type && i.type.includes('image')) {
+            const f = (_a = i.getAsFile) == null ? void 0 : _a.call(i)
+            if (f) addIfNew(f)
+          }
+        }
+        const files = cd.files ? Array.from(cd.files) : []
+        for (const f of files) {
+          if (f && f.type && f.type.includes('image')) addIfNew(f)
+        }
+        if (list.length > 0) {
+          event.preventDefault()
+          event.stopPropagation()
+          const detail = { files: list }
+          if (isTopFrame()) {
+            globalThis.dispatchEvent(
+              new CustomEvent('iu:uploadFiles', { detail })
+            )
+          } else {
+            try {
+              ;(_b = globalThis.top) == null
+                ? void 0
+                : _b.postMessage(
+                    {
+                      type: 'iu:uploadFiles',
+                      detail,
+                    },
+                    '*'
+                  )
+            } catch (e) {}
+          }
+        }
+      }
+      document.addEventListener('paste', pasteHandler, true)
+    }
+    const disablePaste = () => {
+      if (!pasteHandler) return
+      document.removeEventListener('paste', pasteHandler, true)
+      pasteHandler = void 0
+    }
+    if (initialEnabled) enablePaste()
+    globalThis.addEventListener('beforeunload', () => {
+      disablePaste()
+    })
+    return { enable: enablePaste, disable: disablePaste }
+  }
+  function initDragAndDrop(initialEnabled = true) {
+    let drop
+    let dragoverHandler
+    let dragleaveHandler
+    let dropHandler
+    let lastDragoverVisible = false
+    let lastDragoverTarget
+    const enableDrag = () => {
+      if (!drop) {
+        drop = createEl('div', { id: 'uiu-drop', text: t('drop_overlay') })
+        if (drop) document.documentElement.append(drop)
+      }
+      if (!dragoverHandler) {
+        dragoverHandler = (event) => {
+          const dt = event.dataTransfer
+          const types = (dt == null ? void 0 : dt.types)
+            ? Array.from(dt.types)
+            : []
+          const hasFileType = types.includes('Files')
+          const hasFileItem = (dt == null ? void 0 : dt.items)
+            ? Array.from(dt.items).some((it) => it.kind === 'file')
+            : false
+          const firstTarget =
+            typeof event.composedPath === 'function'
+              ? event.composedPath()[0]
+              : event.target || void 0
+          if (firstTarget === lastDragoverTarget) {
+            if (lastDragoverVisible) {
+              event.preventDefault()
+            }
+            return
+          }
+          lastDragoverTarget = firstTarget
+          const allowedTarget = isOverEditableOrPanel(firstTarget)
+          const shouldShow = (hasFileType || hasFileItem) && allowedTarget
+          if (shouldShow) {
+            event.preventDefault()
+          }
+          if (shouldShow === lastDragoverVisible) return
+          lastDragoverVisible = shouldShow
+          if (shouldShow) {
+            if (drop) drop.classList.add('show')
+          } else if (drop) {
+            drop.classList.remove('show')
+          }
+        }
+        document.addEventListener('dragover', dragoverHandler)
+      }
+      if (!dragleaveHandler) {
+        dragleaveHandler = (event) => {
+          if (!drop) return
+          const target = event.target
+          if (target === document.documentElement || target === document.body) {
+            lastDragoverVisible = false
+            lastDragoverTarget = void 0
+            drop.classList.remove('show')
+          }
+        }
+        document.addEventListener('dragleave', dragleaveHandler)
+      }
+      if (!dropHandler) {
+        dropHandler = (event) => {
+          var _a, _b
+          lastDragoverVisible = false
+          lastDragoverTarget = void 0
+          if (drop) drop.classList.remove('show')
+          const firstTarget =
+            typeof event.composedPath === 'function'
+              ? event.composedPath()[0]
+              : event.target || void 0
+          const allowedTarget = isOverEditableOrPanel(firstTarget)
+          if (!allowedTarget) return
+          try {
+            let el =
+              firstTarget instanceof Element
+                ? firstTarget
+                : firstTarget instanceof Node && firstTarget.parentElement
+                  ? firstTarget.parentElement
+                  : void 0
+            while (el) {
+              if (isEditable(el)) {
+                lastEditableEl = el
+                lastEditableFrame = globalThis
+                break
+              }
+              el = el.parentElement || void 0
+            }
+            const files = (_a = event.dataTransfer) == null ? void 0 : _a.files
+            if (!(files == null ? void 0 : files.length)) return
+            const imgs = Array.from(files).filter((f) =>
+              f.type.includes('image')
+            )
+            if (imgs.length === 0) return
+            event.preventDefault()
+            event.stopPropagation()
+            const detail = { files: imgs }
+            if (isTopFrame()) {
+              globalThis.dispatchEvent(
+                new CustomEvent('iu:uploadFiles', { detail })
+              )
+            } else {
+              ;(_b = globalThis.top) == null
+                ? void 0
+                : _b.postMessage(
+                    {
+                      type: 'iu:uploadFiles',
+                      detail,
+                    },
+                    '*'
+                  )
+            }
+          } catch (e) {}
+        }
+        document.addEventListener('drop', dropHandler)
+      }
+    }
+    const disableDrag = () => {
+      if (dragoverHandler) {
+        document.removeEventListener('dragover', dragoverHandler)
+        dragoverHandler = void 0
+      }
+      if (dragleaveHandler) {
+        document.removeEventListener('dragleave', dragleaveHandler)
+        dragleaveHandler = void 0
+      }
+      if (dropHandler) {
+        document.removeEventListener('drop', dropHandler)
+        dropHandler = void 0
+      }
+      if (drop) {
+        try {
+          drop.remove()
+        } catch (e) {}
+        drop = void 0
+      }
+      lastDragoverVisible = false
+      lastDragoverTarget = void 0
+    }
+    if (initialEnabled) enableDrag()
+    globalThis.addEventListener('beforeunload', () => {
+      disableDrag()
+    })
+    return { enable: enableDrag, disable: disableDrag }
+  }
+  function findNearestEditableElement(from) {
+    let parent = from == null ? void 0 : from.parentElement
+    while (parent) {
+      const textarea = parent.querySelector('textarea')
+      if (textarea instanceof HTMLTextAreaElement) return textarea
+      const contentEditable = parent.querySelector(
+        '[contenteditable],[contenteditable="true"],[contenteditable="plaintext-only"]'
+      )
+      if (
+        contentEditable instanceof HTMLElement &&
+        contentEditable.isContentEditable
+      ) {
+        return contentEditable
+      }
+      const input = parent.querySelector('input')
+      if (input instanceof HTMLInputElement && isTextInput(input)) return input
+      parent = parent.parentElement
+    }
+    return void 0
+  }
+  function handleSiteButtonClick(event) {
+    event.preventDefault()
+    try {
+      lastEditableFrame = globalThis
+      const target = event.currentTarget
+      if (target instanceof HTMLElement) {
+        const nearest = findNearestEditableElement(target)
+        if (nearest) lastEditableEl = nearest
+      }
+      requestOpenFilePicker()
+    } catch (e) {}
+  }
   document.addEventListener(
     'focusin',
     (e) => {
+      var _a
       const deepTarget =
         getDeepActiveElement() ||
         (typeof e.composedPath === 'function' ? e.composedPath()[0] : e.target)
@@ -1413,10 +1926,50 @@
         !isInsideUIPanel(deepTarget)
       ) {
         lastEditableEl = deepTarget
+        lastEditableFrame = globalThis
+        try {
+          if (isTopFrame()) return
+          ;(_a = globalThis.top) == null
+            ? void 0
+            : _a.postMessage({ type: 'uiu:focus-editable' }, '*')
+        } catch (e2) {}
       }
     },
     true
   )
+  globalThis.addEventListener('message', (event) => {
+    var _a, _b, _c, _d, _e
+    const type = (_a = event.data) == null ? void 0 : _a.type
+    switch (type) {
+      case 'uiu:insert-placeholder': {
+        const ph = String(
+          ((_b = event.data) == null ? void 0 : _b.placeholder) || ''
+        )
+        if (ph) insertIntoFocused('\n'.concat(ph, '\n'))
+        break
+      }
+      case 'uiu:replace-placeholder': {
+        const ph = String(
+          ((_c = event.data) == null ? void 0 : _c.placeholder) || ''
+        )
+        const rep = String(
+          ((_d = event.data) == null ? void 0 : _d.replacement) || ''
+        )
+        const el = getActiveEditableTarget()
+        const ok = el ? replacePlaceholder(el, ph, rep) : false
+        if (!ok && rep) insertIntoFocused('\n'.concat(rep, '\n'))
+        break
+      }
+      case 'uiu:insert-text': {
+        const txt = String(((_e = event.data) == null ? void 0 : _e.text) || '')
+        if (txt) insertIntoFocused('\n'.concat(txt, '\n'))
+        break
+      }
+      default: {
+        break
+      }
+    }
+  })
   function insertIntoFocused(text) {
     var _a, _b
     let el = getDeepActiveElement()
@@ -1433,7 +1986,12 @@
         const end = (_b = el.selectionEnd) != null ? _b : el.value.length
         const v = el.value
         el.value = v.slice(0, start) + text + v.slice(end)
-        el.dispatchEvent(new Event('input', { bubbles: true }))
+        const bubbles = { bubbles: true }
+        el.dispatchEvent(new Event('input', bubbles))
+        el.dispatchEvent(new Event('change', bubbles))
+        el.dispatchEvent(new KeyboardEvent('keydown', bubbles))
+        el.dispatchEvent(new KeyboardEvent('keypress', bubbles))
+        el.dispatchEvent(new KeyboardEvent('keyup', bubbles))
         return true
       }
       if (el instanceof HTMLElement && el.isContentEditable) {
@@ -1459,6 +2017,29 @@
     } catch (e) {}
     insertIntoFocused('\n'.concat(text, '\n'))
   }
+  async function handleCopyClick(it) {
+    const fmt = await getFormat()
+    const proxied = await applyProxy(
+      it.link,
+      it.provider || (isImgurUrl(it.link) ? 'imgur' : 'other')
+    )
+    const out = await formatText(
+      proxied,
+      it.name || t('default_image_name'),
+      fmt
+    )
+    if (lastEditableFrame && lastEditableFrame !== globalThis) {
+      try {
+        GM_setClipboard(out)
+        lastEditableFrame.postMessage(
+          { type: 'uiu:insert-text', text: out },
+          '*'
+        )
+      } catch (e) {}
+    } else {
+      copyAndInsert(out)
+    }
+  }
   function getActiveEditableTarget() {
     let el = getDeepActiveElement()
     if (!isEditable(el) || isInsideUIPanel(el)) el = lastEditableEl
@@ -1475,12 +2056,18 @@
     if (!el || !placeholder) return false
     try {
       if (el instanceof HTMLTextAreaElement || isTextInput(el)) {
+        el.focus()
         const v = el.value
         const idx = v.indexOf(placeholder)
         if (idx !== -1) {
           el.value =
             v.slice(0, idx) + replacement + v.slice(idx + placeholder.length)
-          el.dispatchEvent(new Event('input', { bubbles: true }))
+          const bubbles = { bubbles: true }
+          el.dispatchEvent(new Event('input', bubbles))
+          el.dispatchEvent(new Event('change', bubbles))
+          el.dispatchEvent(new KeyboardEvent('keydown', bubbles))
+          el.dispatchEvent(new KeyboardEvent('keypress', bubbles))
+          el.dispatchEvent(new KeyboardEvent('keyup', bubbles))
           return true
         }
         return false
@@ -1565,25 +2152,10 @@
     buildHostOptions(hostSel, host)
     hostSel.addEventListener('change', async () => {
       await setHost(hostSel.value)
-      await updateProxyState()
     })
     const proxy = await getProxy()
     const proxySel = createEl('select')
     buildProxyOptions(proxySel, proxy)
-    async function updateProxyState() {
-      const currentHost = hostSel.value
-      if (currentHost === 'imgur') {
-        proxySel.value = 'none'
-        proxySel.disabled = true
-        await setProxy('none')
-        try {
-          await renderHistory()
-        } catch (e) {}
-      } else {
-        proxySel.disabled = false
-      }
-    }
-    await updateProxyState()
     proxySel.addEventListener('change', async () => {
       await setProxy(proxySel.value)
       try {
@@ -1649,8 +2221,6 @@
     } catch (e) {}
     pasteChk.addEventListener('change', async () => {
       await setPasteEnabled(Boolean(pasteChk.checked))
-      if (pasteChk.checked) enablePaste()
-      else disablePaste()
     })
     pasteLabel.append(pasteChk)
     pasteLabel.append(
@@ -1666,8 +2236,6 @@
     } catch (e) {}
     dragChk.addEventListener('change', async () => {
       await setDragAndDropEnabled(Boolean(dragChk.checked))
-      if (dragChk.checked) enableDrag()
-      else disableDrag()
     })
     dragLabel.append(dragChk)
     dragLabel.append(
@@ -1985,221 +2553,46 @@
       panel.style.display = 'block'
       document.documentElement.append(panel)
     }
-    function applySingle(cfg) {
-      var _a, _b
-      if (!(cfg == null ? void 0 : cfg.selector)) return
-      let targets
+    globalThis.addEventListener('uiu:request-open-file-picker', () => {
+      showPanel()
       try {
-        targets = document.querySelectorAll(cfg.selector)
-      } catch (e) {
-        return
-      }
-      if (!targets || targets.length === 0) return
-      const posRaw = (cfg.position || '').trim()
-      const pos =
-        posRaw === 'before'
-          ? 'before'
-          : posRaw === 'inside'
-            ? 'inside'
-            : 'after'
-      const content = (cfg.text || t('insert_image_button_default')).trim()
-      for (const t2 of Array.from(targets)) {
-        const target = t2
-        const exists =
-          pos === 'inside'
-            ? Boolean(target.querySelector('.uiu-insert-btn'))
-            : pos === 'before'
-              ? Boolean(
-                  target.previousElementSibling &&
-                  ((_a = target.previousElementSibling.classList) == null
-                    ? void 0
-                    : _a.contains('uiu-insert-btn'))
-                )
-              : Boolean(
-                  target.nextElementSibling &&
-                  ((_b = target.nextElementSibling.classList) == null
-                    ? void 0
-                    : _b.contains('uiu-insert-btn'))
-                )
-        if (exists) continue
-        let btn
-        try {
-          const range = document.createRange()
-          const ctx = document.createElement('div')
-          range.selectNodeContents(ctx)
-          const frag = range.createContextualFragment(content)
-          if (frag && frag.childElementCount === 1) {
-            btn = frag.firstElementChild
-          }
-        } catch (e) {}
-        if (btn) {
-          btn.classList.add('uiu-insert-btn')
-        } else {
-          btn = createEl('button', {
-            class: 'uiu-insert-btn uiu-default',
-            text: content,
-          })
-        }
-        btn.addEventListener('click', (event) => {
-          showPanel()
-          event.preventDefault()
-          try {
-            openFilePicker()
-          } catch (e) {}
-        })
-        if (pos === 'before') {
-          target.before(btn)
-        } else if (pos === 'inside') {
-          target.append(btn)
-        } else {
-          target.after(btn)
-        }
-      }
-    }
-    async function applySiteButtons() {
-      const list2 = await getSiteBtnSettingsList()
-      for (const cfg of list2) {
-        try {
-          applySingle(cfg)
-        } catch (e) {}
-      }
-    }
-    await applySiteButtons()
-    let siteBtnObserver
-    async function restartSiteButtonObserver() {
-      try {
-        if (siteBtnObserver) siteBtnObserver.disconnect()
+        openFilePicker()
       } catch (e) {}
-      const list2 = await getSiteBtnSettingsList()
-      if (list2.length === 0) {
-        siteBtnObserver = void 0
-        return
-      }
-      const checkAndInsertAll = () => {
-        for (const cfg of list2) {
+    })
+    globalThis.addEventListener('message', (event) => {
+      var _a, _b
+      const type = (_a = event.data) == null ? void 0 : _a.type
+      switch (type) {
+        case 'iu:uploadFiles': {
+          if (!isTopFrame()) break
           try {
-            applySingle(cfg)
+            lastEditableFrame = event.source
+            const detail = (_b = event.data) == null ? void 0 : _b.detail
+            globalThis.dispatchEvent(
+              new CustomEvent('iu:uploadFiles', { detail })
+            )
           } catch (e) {}
+          break
         }
-      }
-      checkAndInsertAll()
-      siteBtnObserver = new MutationObserver(() => {
-        checkAndInsertAll()
-      })
-      siteBtnObserver.observe(document.body || document.documentElement, {
-        childList: true,
-        subtree: true,
-      })
-    }
-    await restartSiteButtonObserver()
-    let drop
-    let pasteHandler
-    let dragoverHandler
-    let dragleaveHandler
-    let dropHandler
-    function enablePaste() {
-      if (pasteHandler) return
-      pasteHandler = (event) => {
-        var _a
-        const cd = event.clipboardData
-        if (!cd) return
-        const list2 = []
-        const seen = /* @__PURE__ */ new Set()
-        const addIfNew = (f) => {
-          const sig = ''
-            .concat(f.name, '|')
-            .concat(f.size, '|')
-            .concat(f.type, '|')
-            .concat(f.lastModified || 0)
-          if (!seen.has(sig)) {
-            seen.add(sig)
-            list2.push(f)
+        case 'uiu:request-open-file-picker': {
+          lastEditableFrame = event.source
+          globalThis.dispatchEvent(new CustomEvent(type))
+          break
+        }
+        case 'uiu:focus-editable': {
+          lastEditableFrame = event.source
+          break
+        }
+        case 'uiu:blur-editable': {
+          if (lastEditableFrame === event.source) {
           }
+          break
         }
-        const items = cd.items ? Array.from(cd.items) : []
-        for (const i of items) {
-          if (i && i.type && i.type.includes('image')) {
-            const f = (_a = i.getAsFile) == null ? void 0 : _a.call(i)
-            if (f) addIfNew(f)
-          }
-        }
-        const files = cd.files ? Array.from(cd.files) : []
-        for (const f of files) {
-          if (f && f.type && f.type.includes('image')) addIfNew(f)
-        }
-        if (list2.length > 0) {
-          event.preventDefault()
-          event.stopPropagation()
-          handleFiles(list2)
+        default: {
+          break
         }
       }
-      document.addEventListener('paste', pasteHandler, true)
-    }
-    function disablePaste() {
-      if (!pasteHandler) return
-      document.removeEventListener('paste', pasteHandler, true)
-      pasteHandler = void 0
-    }
-    function enableDrag() {
-      if (!drop) {
-        drop = createEl('div', { id: 'uiu-drop', text: t('drop_overlay') })
-        if (drop) document.body.append(drop)
-      }
-      if (!dragoverHandler) {
-        dragoverHandler = (e) => {
-          const dt = e.dataTransfer
-          const types = (dt == null ? void 0 : dt.types)
-            ? Array.from(dt.types)
-            : []
-          const hasFileType = types.includes('Files')
-          const hasFileItem = (dt == null ? void 0 : dt.items)
-            ? Array.from(dt.items).some((it) => it.kind === 'file')
-            : false
-          if (hasFileType || hasFileItem) {
-            if (drop) drop.classList.add('show')
-            e.preventDefault()
-          } else if (drop) drop.classList.remove('show')
-        }
-        document.addEventListener('dragover', dragoverHandler)
-      }
-      if (!dragleaveHandler) {
-        dragleaveHandler = () => {
-          if (drop) drop.classList.remove('show')
-        }
-        document.addEventListener('dragleave', dragleaveHandler)
-      }
-      if (!dropHandler) {
-        dropHandler = (event) => {
-          var _a
-          if (drop) drop.classList.remove('show')
-          event.preventDefault()
-          const files = (_a = event.dataTransfer) == null ? void 0 : _a.files
-          if (files == null ? void 0 : files.length)
-            handleFiles(Array.from(files))
-        }
-        document.addEventListener('drop', dropHandler)
-      }
-    }
-    function disableDrag() {
-      if (dragoverHandler) {
-        document.removeEventListener('dragover', dragoverHandler)
-        dragoverHandler = void 0
-      }
-      if (dragleaveHandler) {
-        document.removeEventListener('dragleave', dragleaveHandler)
-        dragleaveHandler = void 0
-      }
-      if (dropHandler) {
-        document.removeEventListener('drop', dropHandler)
-        dropHandler = void 0
-      }
-      if (drop) {
-        try {
-          drop.remove()
-        } catch (e) {}
-        drop = void 0
-      }
-    }
+    })
     const queue = []
     let running = 0
     let done = 0
@@ -2209,7 +2602,7 @@
       progressEl.textContent = tpl(t('progress_done'), { done, total })
     }
     function addLog(text) {
-      list.prepend(createEl('div', { class: 'item', text }))
+      list.prepend(createEl('div', { class: 'uiu-log-item', text }))
     }
     async function processQueue() {
       while (running < CONCURRENCY && queue.length > 0) {
@@ -2229,6 +2622,17 @@
               ''.concat(out)
             )
             if (!ok) copyAndInsert(out)
+          } else if (item.placeholder && item.targetFrame) {
+            try {
+              item.targetFrame.postMessage(
+                {
+                  type: 'uiu:replace-placeholder',
+                  placeholder: item.placeholder,
+                  replacement: ''.concat(out),
+                },
+                '*'
+              )
+            } catch (e) {}
           } else {
             copyAndInsert(out)
           }
@@ -2254,6 +2658,21 @@
             try {
               replacePlaceholder(item.targetEl, item.placeholder, failNote)
             } catch (e) {}
+          } else if (item.placeholder && item.targetFrame) {
+            const failNote = '<!-- '.concat(
+              tpl(t('placeholder_upload_failed'), { name: item.file.name }),
+              ' -->'
+            )
+            try {
+              item.targetFrame.postMessage(
+                {
+                  type: 'uiu:replace-placeholder',
+                  placeholder: item.placeholder,
+                  replacement: failNote,
+                },
+                '*'
+              )
+            } catch (e) {}
           }
           addLog(
             ''
@@ -2277,23 +2696,31 @@
       total += imgs.length
       updateProgress()
       const targetEl = getActiveEditableTarget()
+      const targetFrame =
+        lastEditableFrame && lastEditableFrame !== globalThis
+          ? lastEditableFrame
+          : void 0
       for (const file of imgs) {
         let placeholder
-        if (targetEl) {
+        if (targetEl && !targetFrame) {
           try {
             targetEl.focus()
           } catch (e) {}
           placeholder = createUploadPlaceholder(file.name)
           insertIntoFocused('\n'.concat(placeholder, '\n'))
+        } else if (targetFrame) {
+          placeholder = createUploadPlaceholder(file.name)
+          try {
+            targetFrame.postMessage(
+              { type: 'uiu:insert-placeholder', placeholder },
+              '*'
+            )
+          } catch (e) {}
         }
-        queue.push({ file, placeholder, targetEl })
+        queue.push({ file, placeholder, targetEl, targetFrame })
       }
       void processQueue()
     }
-    const pasteEnabled = await getPasteEnabled()
-    if (pasteEnabled) enablePaste()
-    const dragEnabled = await getDragAndDropEnabled()
-    if (dragEnabled) enableDrag()
     async function renderHistory() {
       history.textContent = ''
       const header2 = createEl('div', { class: 'uiu-controls' })
@@ -2310,6 +2737,16 @@
       })
       header2.append(clearBtn2)
       history.append(header2)
+      const hoverPreviewWrap = createEl('div', {
+        style:
+          'position:absolute;left:12px;top:8px;z-index:50;padding:4px;background:#020617;border:1px solid #475569;border-radius:8px;box-shadow:0 10px 40px rgba(15,23,42,.8);pointer-events:none;display:none;',
+      })
+      const hoverPreviewImg = createEl('img', {
+        style:
+          'max-width:256px;max-height:256px;object-fit:contain;display:block;border-radius:4px;',
+      })
+      hoverPreviewWrap.append(hoverPreviewImg)
+      body.append(hoverPreviewWrap)
       const listWrap = createEl('div', { class: 'uiu-list' })
       for (const it of historyItems) {
         const row = createEl('div', { class: 'uiu-row' })
@@ -2319,8 +2756,16 @@
         )
         const preview = createEl('img', {
           src: previewUrl,
+          loading: 'lazy',
           style:
-            'width:48px;height:48px;object-fit:cover;border-radius:4px;border:1px solid #334155;',
+            'width:72px;height:72px;object-fit:cover;border-radius:4px;border:1px solid #334155;',
+        })
+        preview.addEventListener('mouseenter', () => {
+          hoverPreviewImg.src = previewUrl
+          hoverPreviewWrap.style.display = 'block'
+        })
+        preview.addEventListener('mouseleave', () => {
+          hoverPreviewWrap.style.display = 'none'
         })
         row.append(preview)
         const info = createEl('div', {
@@ -2362,18 +2807,8 @@
         row.append(info)
         const ops = createEl('div', { class: 'uiu-ops' })
         const copyBtn = createEl('button', { text: t('btn_copy') })
-        copyBtn.addEventListener('click', async () => {
-          const fmt = await getFormat()
-          const proxied = await applyProxy(
-            it.link,
-            it.provider || (isImgurUrl(it.link) ? 'imgur' : 'other')
-          )
-          const out = await formatText(
-            proxied,
-            it.name || t('default_image_name'),
-            fmt
-          )
-          copyAndInsert(out)
+        copyBtn.addEventListener('click', () => {
+          void handleCopyClick(it)
         })
         const openBtn = createEl('button', { text: t('btn_open') })
         openBtn.addEventListener('click', async () => {
@@ -2437,25 +2872,68 @@
       await migrateToUnifiedSiteMap()
       await applyPresetConfig()
       const enabled = await getEnabled()
-      if (enabled && !document.querySelector('#uiu-panel')) {
-        const panelApi = await createPanel()
-        if (!panelApi) return
-        const { handleFiles } = panelApi
-        globalThis.addEventListener('iu:uploadFiles', (e) => {
-          var _a
-          const files = (_a = e.detail) == null ? void 0 : _a.files
-          if (files == null ? void 0 : files.length) handleFiles(files)
-        })
+      if (enabled) {
+        await restartSiteButtonObserver()
       }
-      registerMenu(
-        enabled ? t('menu_disable_site') : t('menu_enable_site'),
-        async () => {
-          await setEnabled(!enabled)
-          try {
-            location.reload()
-          } catch (e) {}
+      if (enabled) {
+        const dragEnabled = await getDragAndDropEnabled()
+        const pasteEnabled = await getPasteEnabled()
+        const dragControls = initDragAndDrop(dragEnabled)
+        const pasteControls = initPasteUpload(pasteEnabled)
+        void addValueChangeListener(
+          SITE_SETTINGS_MAP_KEY,
+          (name, oldValue, newValue, remote) => {
+            var _a, _b, _c, _d
+            const oldMap = oldValue || {}
+            const newMap = newValue || {}
+            const oldDrag =
+              ((_a = oldMap[SITE_KEY]) == null
+                ? void 0
+                : _a.dragAndDropEnabled) === true
+            const newDrag =
+              ((_b = newMap[SITE_KEY]) == null
+                ? void 0
+                : _b.dragAndDropEnabled) === true
+            if (oldDrag !== newDrag) {
+              if (newDrag) dragControls == null ? void 0 : dragControls.enable()
+              else dragControls == null ? void 0 : dragControls.disable()
+            }
+            const oldPaste =
+              ((_c = oldMap[SITE_KEY]) == null ? void 0 : _c.pasteEnabled) ===
+              true
+            const newPaste =
+              ((_d = newMap[SITE_KEY]) == null ? void 0 : _d.pasteEnabled) ===
+              true
+            if (oldPaste !== newPaste) {
+              if (newPaste)
+                pasteControls == null ? void 0 : pasteControls.enable()
+              else pasteControls == null ? void 0 : pasteControls.disable()
+            }
+          }
+        )
+      }
+      if (enabled && isTopFrame() && !document.querySelector('#uiu-panel')) {
+        const panelApi = await createPanel()
+        if (panelApi) {
+          const { handleFiles } = panelApi
+          globalThis.addEventListener('iu:uploadFiles', (e) => {
+            var _a
+            const files = (_a = e.detail) == null ? void 0 : _a.files
+            if (files == null ? void 0 : files.length) handleFiles(files)
+          })
         }
-      )
+      }
+      if (isTopFrame()) {
+        registerMenu(
+          enabled ? t('menu_disable_site') : t('menu_enable_site'),
+          async () => {
+            await setEnabled(!enabled)
+            try {
+              location.reload()
+            } catch (e) {}
+          }
+        )
+      }
     } catch (e) {}
   })()
 })()

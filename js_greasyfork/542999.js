@@ -1,21 +1,32 @@
 // ==UserScript==
 // @name         SLITHER.IO - DAMNBRUH.COM STANDALONE CHAT MOD (NOW TALK WITH OTHER GAMERS!)
 // @namespace    http://tampermonkey.net/
-// @version      16.0 - GIPHY GIF Fix
-// @description  Adds the 143X community chat with profiles, a working GIF search, admin tools, profanity filter, and Discord integration to Slither.io.
+// @version      16.2 - Universal + Slither Support
+// @description  Adds the 143X community chat with profiles, a working GIF search, admin tools, profanity filter, and Discord integration. Works on Slither.io, DamnBruh.com, and any website.
 // @author       dxxthly & waynesg
+
+// Slither.io
 // @match        http://slither.io/
 // @match        https://slither.io/
 // @match        http://slither.com/io
 // @match        https://slither.com/io
+
+// DamnBruh
 // @match        https://www.damnbruh.com
 // @match        https://www.damnbruh.com/*
 // @match        http://www.damnbruh.com/*
-// @grant        none
+
+// Any website
+// @match        *://*/*
+
+ // @grant        none
 // @icon         https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUNcRl2Rh40pZLhgffYGFDRLbYJ4qfMNwddQ&s
 // @downloadURL https://update.greasyfork.org/scripts/542999/SLITHERIO%20-%20DAMNBRUHCOM%20STANDALONE%20CHAT%20MOD%20%28NOW%20TALK%20WITH%20OTHER%20GAMERS%21%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/542999/SLITHERIO%20-%20DAMNBRUHCOM%20STANDALONE%20CHAT%20MOD%20%28NOW%20TALK%20WITH%20OTHER%20GAMERS%21%29.meta.js
 // ==/UserScript==
+
+
+
 
 (function() {
     'use strict';

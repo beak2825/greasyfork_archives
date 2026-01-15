@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         scroll-button
 // @namespace    https://github.com/livinginpurple
-// @version      20260107.12
+// @version      20260114.13
 // @description  scroll-button (Draggable, Auto-Fade, Bright-on-Stop)
 // @license      WTFPL
 // @author       livinginpurple
 // @include      *
+// @exclude      *://www.plurk.com/*
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/559207/scroll-button.user.js
 // @updateURL https://update.greasyfork.org/scripts/559207/scroll-button.meta.js
@@ -170,6 +171,13 @@
         const { height, target } = getScrollDetails(activeScroller);
         target.scrollTo({ top: btn.dataset.state === 'top' ? height : 0, behavior: 'smooth' });
         wakeUp();
+        btn.blur();
+    });
+
+    btn.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.code === 'Space') {
+            e.preventDefault();
+        }
     });
 
     btn.onmouseenter = () => wakeUp();

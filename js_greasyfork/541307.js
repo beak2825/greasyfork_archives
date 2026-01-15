@@ -3,7 +3,7 @@
 // @name:zh-CN   Fab Helper
 // @name:en      Fab Helper
 // @namespace    https://www.fab.com/
-// @version      3.5.1-20260112115354
+// @version      3.5.1-20260114031231
 // @description  Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新
 // @description:zh-CN  Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新
 // @description:en  Fab Helper Optimized - Reduced API requests, improved performance, enhanced stability, fixed rate limit refresh
@@ -94,6 +94,7 @@
     log_auto_resume_toggle: "429 auto resume function {0}.",
     log_auto_resume_start: "\u{1F504} 429 auto resume activated! Will refresh page in {0} seconds to attempt recovery...",
     log_auto_resume_detect: "\u{1F504} Detected 429 error, will auto refresh page in {0} seconds to attempt recovery...",
+    log_refresh_error: "Error during state synchronization:",
     // 调试日志消息
     debug_save_cursor: "Saving new recovery point: {0}",
     debug_prepare_hide: "Preparing to hide {0} cards, will use longer delay...",
@@ -344,6 +345,10 @@
     execute: "\u4E00\u952E\u5F00\u5237",
     executing: "\u6267\u884C\u4E2D...",
     stopExecute: "\u505C\u6B62",
+    hideDiscounted: "\u9690\u85CF\u6253\u6298",
+    showDiscounted: "\u663E\u793A\u6253\u6298",
+    hidePaid: "\u9690\u85CF\u4ED8\u8D39",
+    showPaid: "\u663E\u793A\u4ED8\u8D39",
     added: "\u5DF2\u5165\u5E93",
     failed: "\u5931\u8D25",
     todo: "\u5F85\u529E",
@@ -401,6 +406,7 @@
     log_auto_resume_toggle: "429\u540E\u81EA\u52A8\u6062\u590D\u529F\u80FD\u5DF2{0}\u3002",
     log_auto_resume_start: "\u{1F504} 429\u81EA\u52A8\u6062\u590D\u542F\u52A8\uFF01\u5C06\u5728{0}\u79D2\u540E\u5237\u65B0\u9875\u9762\u5C1D\u8BD5\u6062\u590D...",
     log_auto_resume_detect: "\u{1F504} \u68C0\u6D4B\u5230429\u9519\u8BEF\uFF0C\u5C06\u5728{0}\u79D2\u540E\u81EA\u52A8\u5237\u65B0\u9875\u9762\u5C1D\u8BD5\u6062\u590D...",
+    log_refresh_error: "\u72B6\u6001\u540C\u6B65\u8FC7\u7A0B\u4E2D\u51FA\u9519:",
     // 调试日志消息
     debug_save_cursor: "\u4FDD\u5B58\u65B0\u7684\u6062\u590D\u70B9: {0}",
     debug_prepare_hide: "\u51C6\u5907\u9690\u85CF {0} \u5F20\u5361\u7247\uFF0C\u5C06\u4F7F\u7528\u66F4\u957F\u7684\u5EF6\u8FDF...",
@@ -505,6 +511,7 @@
     setting_remember_position: "\u8BB0\u4F4F\u7011\u5E03\u6D41\u6D4F\u89C8\u4F4D\u7F6E",
     setting_auto_resume_429: "429\u540E\u81EA\u52A8\u6062\u590D\u5E76\u7EE7\u7EED",
     setting_hide_discounted: "\u9690\u85CF\u6253\u6298\u7684\u4ED8\u8D39\u5546\u54C1",
+    setting_hide_paid: "\u9690\u85CF\u6240\u6709\u4ED8\u8D39\u5546\u54C1",
     setting_debug_tooltip: "\u542F\u7528\u8BE6\u7EC6\u65E5\u5FD7\u8BB0\u5F55\uFF0C\u7528\u4E8E\u6392\u67E5\u95EE\u9898",
     // 状态文本
     status_enabled: "\u5F00\u542F",
@@ -702,10 +709,30 @@
       // Check for the temporary success popup (snackbar).
       snackbarText: ["\u4EA7\u54C1\u5DF2\u6DFB\u52A0\u81F3\u60A8\u7684\u5E93\u4E2D", "Product added to your library"]
     },
-    ACQUISITION_TEXT_SET: /* @__PURE__ */ new Set(["\u6DFB\u52A0\u5230\u6211\u7684\u5E93", "Add to my library"]),
+    ACQUISITION_TEXT_SET: /* @__PURE__ */ new Set([
+      "\u6DFB\u52A0\u5230\u6211\u7684\u5E93",
+      "Add to my library",
+      "\u52A0\u5165\u8D2D\u7269\u8F66",
+      "Add to cart",
+      "\u7ED3\u8D26",
+      "Checkout",
+      "\u7ACB\u5373\u83B7\u53D6",
+      "Get it",
+      "\u514D\u8D39\u83B7\u53D6",
+      "Get for free",
+      "\u5B8C\u6210\u8BA2\u5355",
+      "Complete order",
+      "\u7ACB\u5373\u8D2D\u4E70",
+      "Buy now",
+      "\u83B7\u53D6\u8D44\u6E90",
+      "Get asset",
+      "Place order",
+      "\u786E\u8BA4\u8BA2\u5355",
+      "\u4E0B\u5355"
+    ]),
     // Kept for backward compatibility with recon logic.
     SAVED_TEXT_SET: /* @__PURE__ */ new Set(["\u5DF2\u4FDD\u5B58\u5728\u6211\u7684\u5E93\u4E2D", "Saved in My Library", "\u5728\u6211\u7684\u5E93\u4E2D", "In My Library"]),
-    FREE_TEXT_SET: /* @__PURE__ */ new Set(["\u514D\u8D39", "Free", "\u8D77\u59CB\u4EF7\u683C \u514D\u8D39", "Starting at Free"]),
+    FREE_TEXT_SET: /* @__PURE__ */ new Set(["\u514D\u8D39", "Free", "Free*", "0.00", "\u8D77\u59CB\u4EF7\u683C \u514D\u8D39", "Starting at Free"]),
     // 添加一个实例ID，用于防止多实例运行
     INSTANCE_ID: "fab_instance_id_" + Math.random().toString(36).substring(2, 15),
     STATUS_CHECK_INTERVAL: 3e3
@@ -734,6 +761,8 @@
     // 新增：无商品可见时自动刷新（默认开启）
     hideDiscountedPaid: false,
     // 是否隐藏打折的付费商品
+    hidePaid: false,
+    // 是否隐藏所有付费商品
     debugMode: false,
     // 是否启用调试模式
     lang: "zh",
@@ -954,15 +983,18 @@
     // where a simple .click() is ignored by a framework's event handling.
     deepClick: /* @__PURE__ */ __name((element) => {
       if (!element) return;
+      try {
+        element.focus();
+      } catch (e) {
+      }
       setTimeout(() => {
         const pageWindow = typeof unsafeWindow !== "undefined" ? unsafeWindow : window;
         Utils.logger("info", `Performing deep click on element: <${element.tagName.toLowerCase()} class="${element.className}">`);
-        const pointerDownEvent = new PointerEvent("pointerdown", { view: pageWindow, bubbles: true, cancelable: true });
-        const mouseDownEvent = new MouseEvent("mousedown", { view: pageWindow, bubbles: true, cancelable: true });
-        const mouseUpEvent = new MouseEvent("mouseup", { view: pageWindow, bubbles: true, cancelable: true });
-        element.dispatchEvent(pointerDownEvent);
-        element.dispatchEvent(mouseDownEvent);
-        element.dispatchEvent(mouseUpEvent);
+        const eventOptions = { view: pageWindow, bubbles: true, cancelable: true, composed: true };
+        element.dispatchEvent(new PointerEvent("pointerdown", eventOptions));
+        element.dispatchEvent(new MouseEvent("mousedown", eventOptions));
+        element.dispatchEvent(new PointerEvent("pointerup", eventOptions));
+        element.dispatchEvent(new MouseEvent("mouseup", eventOptions));
         element.click();
       }, 50);
     }, "deepClick"),
@@ -979,6 +1011,7 @@
       });
       State.valueChangeListeners = [];
     }, "cleanup"),
+    // ... (existing helper methods) ...
     // 添加游标解码函数
     decodeCursor: /* @__PURE__ */ __name((cursor) => {
       if (!cursor) return Utils.getText("no_saved_position");
@@ -1046,7 +1079,77 @@
         return false;
       }
       return true;
-    }, "checkAuthentication")
+    }, "checkAuthentication"),
+    // 将所有空白字符（包括换行、多个空格）统一替换为单个空格
+    normalizeWhitespace: /* @__PURE__ */ __name((text) => {
+      if (!text) return "";
+      return text.replace(/\s+/g, " ").trim();
+    }, "normalizeWhitespace"),
+    // Broadened to find more clickable elements including inputs and divs/spans that look like buttons.
+    // Also traverses into same-origin iframes.
+    findAllButtonsWithShadow: /* @__PURE__ */ __name((root = document) => {
+      const interactables = [];
+      const visitedIframes = /* @__PURE__ */ new WeakSet();
+      const traverse = /* @__PURE__ */ __name((node) => {
+        if (!node) return;
+        if (node.nodeType === 1) {
+          if (node.shadowRoot) {
+            traverse(node.shadowRoot);
+          }
+          if (node.tagName === "IFRAME" && !visitedIframes.has(node)) {
+            visitedIframes.add(node);
+            try {
+              const iframeDoc = node.contentDocument || node.contentWindow?.document;
+              if (iframeDoc) {
+                Utils.logger("debug", `Traversing iframe: ${node.src || "(inline)"}`);
+                traverse(iframeDoc.body || iframeDoc);
+              }
+            } catch (e) {
+              Utils.logger("debug", `Cannot access cross-origin iframe: ${node.src}`);
+            }
+          }
+          const tagName = node.tagName;
+          const role = node.getAttribute && node.getAttribute("role");
+          const type = node.getAttribute && node.getAttribute("type");
+          const className = node.className && typeof node.className === "string" ? node.className : "";
+          if (tagName === "BUTTON") {
+            interactables.push(node);
+          } else if (tagName === "A" && (role === "button" || className.includes("btn") || className.includes("button"))) {
+            interactables.push(node);
+          } else if (tagName === "INPUT" && (type === "submit" || type === "button" || type === "reset")) {
+            interactables.push(node);
+          } else if (role === "button" || className.includes("payment-order-confirm__btn") || className.includes("place-order")) {
+            interactables.push(node);
+          }
+        }
+        let child = node.firstChild;
+        while (child) {
+          traverse(child);
+          child = child.nextSibling;
+        }
+      }, "traverse");
+      traverse(root);
+      if (root === document) {
+        try {
+          const allIframes = document.querySelectorAll("iframe");
+          allIframes.forEach((iframe) => {
+            if (!visitedIframes.has(iframe)) {
+              visitedIframes.add(iframe);
+              try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                if (iframeDoc) {
+                  Utils.logger("debug", `Top-level iframe search: ${iframe.src || "(inline)"}`);
+                  traverse(iframeDoc.body || iframeDoc);
+                }
+              } catch (e) {
+              }
+            }
+          });
+        } catch (e) {
+        }
+      }
+      return interactables;
+    }, "findAllButtonsWithShadow")
   };
 
   // src/modules/page-diagnostics.js
@@ -1437,6 +1540,7 @@
       State.autoResumeAfter429 = await GM_getValue(Config.DB_KEYS.AUTO_RESUME, false);
       State.autoRefreshEmptyPage = await GM_getValue(Config.DB_KEYS.AUTO_REFRESH_EMPTY, true);
       State.hideDiscountedPaid = await GM_getValue(Config.DB_KEYS.HIDE_DISCOUNTED, false);
+      State.hidePaid = await GM_getValue(Config.DB_KEYS.HIDE_PAID, false);
       State.debugMode = await GM_getValue("fab_helper_debug_mode", false);
       State.currentSortOption = await GM_getValue("fab_helper_sort_option", "title_desc");
       State.isExecuting = await GM_getValue(Config.DB_KEYS.IS_EXECUTING, false);
@@ -1463,6 +1567,8 @@
     // 保存无商品自动刷新设置
     saveHideDiscountedPref: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.HIDE_DISCOUNTED, State.hideDiscountedPaid), "saveHideDiscountedPref"),
     // 保存隐藏打折付费设置
+    saveHidePaidPref: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.HIDE_PAID, State.hidePaid), "saveHidePaidPref"),
+    // 保存隐藏所有付费设置
     saveExecutingState: /* @__PURE__ */ __name(() => GM_setValue(Config.DB_KEYS.IS_EXECUTING, State.isExecuting), "saveExecutingState"),
     // Save the execution state
     resetAllData: /* @__PURE__ */ __name(async () => {
@@ -1472,6 +1578,7 @@
         await GM_deleteValue(Config.DB_KEYS.FAILED);
         await GM_deleteValue(Config.DB_KEYS.LAST_CURSOR);
         await GM_deleteValue(Config.DB_KEYS.HIDE_DISCOUNTED);
+        await GM_deleteValue(Config.DB_KEYS.HIDE_PAID);
         State.db.todo = [];
         State.db.done = [];
         State.db.failed = [];
@@ -2239,7 +2346,17 @@
         clearInterval(this.pingInterval);
         this.pingInterval = null;
       }
-    }, "cleanup")
+    }, "cleanup"),
+    // 手动强制激活（用于用户手动开始任务时）
+    activate: /* @__PURE__ */ __name(async function() {
+      if (this.isActive) return;
+      this.isActive = true;
+      await this.registerAsActive();
+      Utils.logger("info", Utils.getText("log_instance_activated", Config.INSTANCE_ID));
+      if (!this.pingInterval) {
+        this.pingInterval = setInterval(() => this.ping(), 3e3);
+      }
+    }, "activate")
   };
 
   // src/modules/task-runner.js
@@ -2285,9 +2402,10 @@
     }, "isCardFinished"),
     // Check if a card represents a free item
     isFreeCard: /* @__PURE__ */ __name((card) => {
-      const cardText = card.textContent || "";
+      const rawText = card.textContent || "";
+      const cardText = Utils.normalizeWhitespace(rawText);
       const hasFreeKeyword = [...Config.FREE_TEXT_SET].some((freeWord) => cardText.includes(freeWord));
-      const has100PercentDiscount = cardText.includes("-100%");
+      const has100PercentDiscount = /-\s*100\s*%\s*(?:OFF|折扣)?/i.test(cardText);
       const priceMatches = cardText.match(/\$\s*(\d+(?:\.\d{2})?)/g);
       if (priceMatches) {
         const hasPositivePrice = priceMatches.some((priceStr) => {
@@ -2303,7 +2421,8 @@
     // Check if a card is a discounted paid item
     isDiscountedPaidCard: /* @__PURE__ */ __name((card) => {
       if (TaskRunner2.isFreeCard(card)) return false;
-      const cardText = card.textContent || "";
+      const rawText = card.textContent || "";
+      const cardText = Utils.normalizeWhitespace(rawText);
       const hasDiscountTag = /-\d+%/.test(cardText) || cardText.includes("% off") || cardText.includes("% Off");
       if (!hasDiscountTag) return false;
       const priceMatches = cardText.match(/\$\s*(\d+(?:\.\d{2})?)/g);
@@ -2332,8 +2451,12 @@
       }
       if (State.autoAddOnScroll) {
         Utils.logger("info", Utils.getText("log_auto_add_enabled"));
+        Utils.logger("debug", "\u542F\u52A8\u4EFB\u52A1\u524D\u6B63\u5728\u786E\u8BA4\u5F53\u524D\u9875\u9762\u5546\u54C1\u8BC6\u522B\u72B6\u6001...");
         TaskRunner2.checkVisibleCardsStatus().then(() => {
-          TaskRunner2.startExecution();
+          Utils.logger("debug", "\u6B63\u5728\u626B\u63CF\u5F53\u524D\u9875\u9762\u7B26\u5408\u6761\u4EF6\u7684\u5546\u54C1...");
+          TaskRunner2.scanAndAddTasks(document.querySelectorAll(Config.SELECTORS.card)).then(() => {
+            TaskRunner2.startExecution();
+          });
         });
         return;
       }
@@ -2407,6 +2530,9 @@
         return;
       }
       Utils.logger("info", Utils.getText("log_starting_execution", State.db.todo.length));
+      if (typeof InstanceManager !== "undefined" && InstanceManager.activate) {
+        InstanceManager.activate();
+      }
       State.isExecuting = true;
       Database.saveExecutingState();
       State.executionTotalTasks = State.db.todo.length;
@@ -2489,6 +2615,17 @@
       }
       if (UI4) UI4.update();
     }, "toggleHideDiscountedPaid"),
+    toggleHidePaid: /* @__PURE__ */ __name(async () => {
+      State.hidePaid = !State.hidePaid;
+      await Database.saveHidePaidPref();
+      TaskRunner2.runHideOrShow();
+      if (State.hidePaid) {
+        Utils.logger("info", "\u5DF2\u5F00\u542F\u9690\u85CF\u4ED8\u8D39\u5546\u54C1");
+      } else {
+        Utils.logger("info", "\u5DF2\u5173\u95ED\u9690\u85CF\u4ED8\u8D39\u5546\u54C1");
+      }
+      if (UI4) UI4.update();
+    }, "toggleHidePaid"),
     stop: /* @__PURE__ */ __name(() => {
       if (!State.isExecuting) return;
       State.isExecuting = false;
@@ -2552,7 +2689,7 @@
           const link = card.querySelector(Config.SELECTORS.cardLink);
           if (!link) return false;
           const url = link.href.split("?")[0];
-          return !Database.isDone(url) && !Database.isInTodo(url) && TaskRunner2.isFreeCard(card);
+          return !Database.isDone(url) && !Database.isTodo(url) && TaskRunner2.isFreeCard(card);
         }).map((card) => card.querySelector(Config.SELECTORS.cardLink)?.href.match(/listings\/([a-f0-9-]+)/)?.[1]).filter(Boolean));
         const uidsFromFailedList = new Set(State.db.failed.map((task) => task.uid));
         const allUidsToCheck = Array.from(/* @__PURE__ */ new Set([...uidsFromVisibleCards, ...uidsFromFailedList]));
@@ -2948,9 +3085,10 @@
                   logBuffer.push(`  \u6309\u94AE${i + 1}: "${btn.textContent.trim().substring(0, 40)}"`);
                 });
               }
-              const licenseButton = allVisibleButtons.find(
-                (btn) => btn.textContent.includes("\u9009\u62E9\u8BB8\u53EF") || btn.textContent.includes("Select license")
-              );
+              const licenseButton = allVisibleButtons.find((btn) => {
+                const text = Utils.normalizeWhitespace(btn.textContent);
+                return text.includes("\u9009\u62E9\u8BB8\u53EF") || text.includes("Select license") || btn.getAttribute("aria-haspopup") === "true" && TaskRunner2.isFreeCard(btn);
+              });
               if (licenseButton) {
                 logBuffer.push(`Multi-license item detected. Setting up observer for dropdown.`);
                 try {
@@ -3020,16 +3158,27 @@
                   });
                 }
                 let actionButton = freshButtons.find((btn) => {
-                  const text = btn.textContent.toLowerCase();
-                  return [...Config.ACQUISITION_TEXT_SET].some(
+                  const text = Utils.normalizeWhitespace(btn.textContent).toLowerCase();
+                  const isPopup = btn.getAttribute("aria-haspopup") === "true";
+                  const matchesKeyword = [...Config.ACQUISITION_TEXT_SET].some(
                     (keyword) => text.includes(keyword.toLowerCase())
                   );
+                  return !isPopup && matchesKeyword;
                 });
                 if (!actionButton) {
                   actionButton = freshButtons.find((btn) => {
-                    const text = btn.textContent;
+                    const text = Utils.normalizeWhitespace(btn.textContent).toLowerCase();
+                    return [...Config.ACQUISITION_TEXT_SET].some(
+                      (keyword) => text.includes(keyword.toLowerCase())
+                    );
+                  });
+                }
+                if (!actionButton) {
+                  actionButton = freshButtons.find((btn) => {
+                    const text = Utils.normalizeWhitespace(btn.textContent);
+                    const isPopup = btn.getAttribute("aria-haspopup") === "true";
                     const hasFreeText = [...Config.FREE_TEXT_SET].some((freeWord) => text.includes(freeWord));
-                    const hasDiscount = text.includes("-100%");
+                    const hasDiscount = /-\s*100\s*%\s*(?:OFF|折扣)?/i.test(text);
                     const hasPersonal = text.includes("\u4E2A\u4EBA") || text.includes("Personal");
                     return hasFreeText && hasDiscount && hasPersonal;
                   });
@@ -3047,24 +3196,48 @@
                   }
                 }
                 if (actionButton) {
-                  logBuffer.push(`Found add button, clicking it.`);
+                  logBuffer.push(`Found add button [${actionButton.textContent.trim().substring(0, 30)}], clicking it.`);
                   Utils.deepClick(actionButton);
                   try {
                     await new Promise((resolve, reject) => {
-                      const timeout = 25e3;
+                      const timeout = 6e4;
+                      const startTime2 = Date.now();
                       const interval = setInterval(() => {
                         const currentState = isItemOwned();
                         if (currentState.owned) {
-                          logBuffer.push(`Item became owned after clicking add button: ${currentState.reason}`);
+                          logBuffer.push(`Successfully owned (UI Match: ${currentState.reason})`);
                           success = true;
                           clearInterval(interval);
                           resolve();
+                          return;
+                        }
+                        const allButtonsWithShadow = Utils.findAllButtonsWithShadow();
+                        let checkoutBtn = allButtonsWithShadow.find(
+                          (btn) => btn.classList.contains("payment-order-confirm__btn")
+                        );
+                        if (!checkoutBtn) {
+                          checkoutBtn = allButtonsWithShadow.find((btn) => {
+                            const rect = btn.getBoundingClientRect();
+                            if (rect.width === 0 || rect.height === 0) return false;
+                            const text = Utils.normalizeWhitespace(btn.textContent).toLowerCase();
+                            if (text.includes("buy now") || text.includes("\u7ACB\u5373\u8D2D\u4E70")) return false;
+                            return text.includes("place order") || text.includes("\u4E0B\u5355") || text.includes("checkout") || text.includes("\u7ED3\u8D26") || text.includes("complete order") || text.includes("\u5B8C\u6210\u8BA2\u5355") || text.includes("confirm");
+                          });
+                        }
+                        if (checkoutBtn && !checkoutBtn.disabled) {
+                          const lastClickTime = parseInt(checkoutBtn.dataset.lastClickTime || "0");
+                          const now = Date.now();
+                          if (now - lastClickTime > 2e3) {
+                            logBuffer.push(`Found checkout/place order button [${checkoutBtn.textContent.trim()}], clicking it.`);
+                            checkoutBtn.dataset.lastClickTime = now.toString();
+                            Utils.deepClick(checkoutBtn);
+                          }
+                        }
+                        if (Date.now() - startTime2 > timeout) {
+                          clearInterval(interval);
+                          reject(new Error(`Timeout waiting for page to enter an 'owned' state. (UI might be stuck)`));
                         }
                       }, 500);
-                      setTimeout(() => {
-                        clearInterval(interval);
-                        reject(new Error(`Timeout waiting for page to enter an 'owned' state.`));
-                      }, timeout);
                     });
                   } catch (timeoutError) {
                     logBuffer.push(`Timeout waiting for ownership: ${timeoutError.message}`);
@@ -3133,7 +3306,8 @@
         }
         const isFinished = TaskRunner2.isCardFinished(card);
         const isDiscountedPaid = State.hideDiscountedPaid && TaskRunner2.isDiscountedPaidCard(card);
-        if (State.hideSaved && isFinished || isDiscountedPaid) {
+        const isPaidAndHidden = State.hidePaid && !TaskRunner2.isFreeCard(card);
+        if (State.hideSaved && isFinished || isDiscountedPaid || isPaidAndHidden) {
           cardsToHide.push(card);
           State.hiddenThisPageCount++;
           card.setAttribute("data-fab-processed", "true");
@@ -3174,10 +3348,11 @@
           }, batchDelay);
         }
       }
-      if (State.hideSaved || State.hideDiscountedPaid) {
+      if (State.hideSaved || State.hideDiscountedPaid || State.hidePaid) {
         const visibleCards = Array.from(cards).filter((card) => {
           if (State.hideSaved && TaskRunner2.isCardFinished(card)) return false;
           if (State.hideDiscountedPaid && TaskRunner2.isDiscountedPaidCard(card)) return false;
+          if (State.hidePaid && !TaskRunner2.isFreeCard(card)) return false;
           return true;
         });
         visibleCards.forEach((card) => {
@@ -3298,7 +3473,7 @@
         if (allItems.length === 0) {
           return;
         }
-        Utils.logger("info", Utils.getText("fab_dom_checking_status", allItems.length));
+        Utils.logger("debug", Utils.getText("fab_dom_checking_status", allItems.length));
         const uids = allItems.map((item) => item.uid);
         const statesData = await API.checkItemsOwnership(uids);
         const ownedUids = new Set(
@@ -3953,6 +4128,8 @@
             TaskRunner3.toggleAutoRefreshEmpty();
           } else if (stateKey === "hideDiscountedPaid") {
             TaskRunner3.toggleHideDiscountedPaid();
+          } else if (stateKey === "hidePaid") {
+            TaskRunner3.toggleHidePaid();
           }
           e.target.checked = State[stateKey];
         };
@@ -3972,6 +4149,8 @@
       settingsContent.appendChild(autoRefreshEmptySetting);
       const hideDiscountedPaidSetting = createSettingRow(Utils.getText("setting_hide_discounted"), "hideDiscountedPaid");
       settingsContent.appendChild(hideDiscountedPaidSetting);
+      const hidePaidSetting = createSettingRow(Utils.getText("setting_hide_paid"), "hidePaid");
+      settingsContent.appendChild(hidePaidSetting);
       const resetButton = document.createElement("button");
       resetButton.textContent = Utils.getText("clear_all_data");
       resetButton.style.cssText = "width: 100%; margin-top: 15px; background-color: var(--pink); color: white; padding: 10px; border-radius: var(--radius-m); border: none; cursor: pointer;";
@@ -4592,6 +4771,12 @@
     observer.observe(targetNode, { childList: true, subtree: true });
     Utils.logger("debug", `\u2705 Core DOM observer is now active on <${targetNode.tagName.toLowerCase()}>.`);
     TaskRunner2.runHideOrShow();
+    if (State.autoAddOnScroll) {
+      setTimeout(() => {
+        Utils.logger("debug", "\u9875\u9762\u52A0\u8F7D\u5B8C\u6210\uFF0C\u6B63\u5728\u6267\u884C\u521D\u59CB\u5546\u54C1\u626B\u63CF...");
+        TaskRunner2.scanAndAddTasks(document.querySelectorAll(Config.SELECTORS.card)).catch((error) => Utils.logger("error", `\u521D\u59CB\u626B\u63CF\u4EFB\u52A1\u5931\u8D25: ${error.message}`));
+      }, 3e3);
+    }
     setInterval(() => {
       if (!State.hideSaved) return;
       const cards = document.querySelectorAll(Config.SELECTORS.card);

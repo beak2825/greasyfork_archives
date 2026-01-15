@@ -2,7 +2,7 @@
 // @name         Scouts Membership System (UK) Tweaks
 // @description  Provide a few tweaks including a role compliance report to the Scouts Website
 // @namespace    http://tampermonkey.net/
-// @version      100000069
+// @version      100000072
 // @author       David Breakwell
 // @match        https://membership.scouts.org.uk/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=scouts.org.uk
@@ -16,8 +16,8 @@
 // @grant GM_getValue
 // @grant GM_getResourceURL
 // @run-at      document-idle
-// @require     http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @require     http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
+// @require     https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
+// @require     https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/gojs/3.0.17/go.js
 // @require     https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
 // @require     https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js
@@ -41,7 +41,7 @@
 // @updateURL https://update.greasyfork.org/scripts/536334/Scouts%20Membership%20System%20%28UK%29%20Tweaks.meta.js
 // ==/UserScript==
 //     https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js
-var code_version = "100000067";
+var code_version = "100000072";
 var learning_popup;
 var mem = [{}];
 var mems= [];
@@ -3720,7 +3720,7 @@ table.tabulator-print-table, tr, th, td {    border: solid;font-family: sans-ser
             data: datapass,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + JSON.parse(localStorage.getItem("authInfo")).idToken,
+              //  "Authorization": "Bearer " + JSON.parse(localStorage.getItem("authInfo")).idToken,
                 "Accept": "application/json, text/plain, */*"
             },
 
@@ -3962,7 +3962,7 @@ table.tabulator-print-table, tr, th, td {    border: solid;font-family: sans-ser
     }
 
     function  save_organogram() {
-        GM_setValue("orgmems", mems);
+     //   GM_setValue("orgmems", mems);
         $("#gmorgstatus")[0].innerHTML = "Hierarchy saved for instant recall";
     }
 
@@ -4350,8 +4350,9 @@ GM_addStyle (leaf_Css);
 GM_addStyle (tabulator_css );
 addButton("Role Report", report_onclick2, "","T");
 addButton("Clear Cookies", clear_cookies,"", "B");
-addButton("Organogram", show_organogram,"", "C");
-addButton("Map", show_map,"", "D");
+GM_setValue("orgmems", ""); // Clear any stored data following removal of org/map functions
+//addButton("Organogram", show_organogram,"", "C");
+//addButton("Map", show_map,"", "D");
 //   addButton("Map Groups", run_map,"", "D");
 
 document.getElementById("gmRunReport").onclick = report_onclick;

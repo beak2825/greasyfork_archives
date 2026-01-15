@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         YouTube List Stripper
-// @name:ja      YouTube List Stripper
+// @name:ja      YouTubeでプレイリストを外して開くやつ
 // @namespace    https://greasyfork.org/ja/users/1492018-sino087
 // @version      1.1.1
 // @description  Open YouTube videos from a playlist in a new tab without the playlist attributes
-// @description:ja プレイリストから動画を開くときに、プレイリストの属性を削除して新しいタブで開きます
+// @description:ja プレイリストから動画を開くときに、プレイリストの属性を外して新しいタブで開きます
 // @author       sino
 // @license      MIT
 // @icon         https://www.youtube.com/s/desktop/db7db827/img/favicon.ico

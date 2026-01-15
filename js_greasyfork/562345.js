@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Geopixels - Paint Brush Swap
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.5
 // @description  Cache and swap between custom brush patterns with a compact dropdown
 // @author       ariapokoteng
-// @match        https://geopixels.net/*
+// @match        *://geopixels.net/*
+// @match        *://*.geopixels.net/*
 // @grant        none
 // @run-at       document-end
 // @license      MIT
@@ -104,8 +105,9 @@
         const pattern = [];
         let minX = Infinity, maxX = -Infinity;
         let minY = Infinity, maxY = -Infinity;
+        let centerX = -1, centerY = -1;
 
-        // Collect all active cells and find bounds
+        // Collect all active cells and find bounds, also locate center marker
         cells.forEach(cell => {
             if (cell.dataset.active === 'true') {
                 const x = parseInt(cell.dataset.x);
@@ -115,6 +117,12 @@
                 maxX = Math.max(maxX, x);
                 minY = Math.min(minY, y);
                 maxY = Math.max(maxY, y);
+                
+                // Find center marker
+                if (cell.dataset.isCenter === 'true') {
+                    centerX = x;
+                    centerY = y;
+                }
             }
         });
 
@@ -125,17 +133,23 @@
 
         // Calculate brush size from grid bounds
         const brushSize = Math.max(maxX - minX + 1, maxY - minY + 1);
-        const centerX = Math.floor(brushSize / 2);
-        const centerY = Math.floor(brushSize / 2);
+        
+        // If center wasn't found (shouldn't happen), use grid center
+        if (centerX === -1 || centerY === -1) {
+            centerX = Math.floor(brushSize / 2);
+            centerY = Math.floor(brushSize / 2);
+        }
 
-        // Convert grid coordinates to relative coordinates
+        // Convert grid coordinates to relative coordinates, centered on the actual center pixel
         const relativePattern = pattern.map(p => ({
-            x: p.gridX - minX - centerX,
-            y: (p.gridY - minY - centerY) * -1 // Invert Y for consistency
+            x: p.gridX - centerX,
+            y: (p.gridY - centerY) * -1 // Invert Y for consistency
         }));
 
         if (DEBUG) console.log('Brush Swap: Captured brush from DOM', {
             brushSize,
+            centerX,
+            centerY,
             pattern: relativePattern,
             cellCount: pattern.length
         });
@@ -196,19 +210,19 @@
         const header = brushEditorPanel.querySelector('h2');
         if (!header) return;
 
-        // Create dropdown container
+        // Create dropdown container with Tailwind classes
         const dropdownContainer = document.createElement('div');
-        dropdownContainer.style.cssText = 'display: flex; gap: 8px; align-items: center; margin-bottom: 12px; padding: 0 6px;';
+        dropdownContainer.className = 'flex gap-2 items-center mb-3 px-1.5 dark:text-gray-300';
 
         // Create label
         const label = document.createElement('label');
         label.textContent = 'Grid Size:';
-        label.style.cssText = 'font-size: 12px; font-weight: 600; color: #666;';
+        label.className = 'text-xs font-semibold text-gray-700 dark:text-gray-300';
 
         // Create select
         const select = document.createElement('select');
         select.id = 'brush-swap-dimension-select';
-        select.style.cssText = 'padding: 4px 8px; font-size: 12px; border: 1px solid #ccc; border-radius: 3px; cursor: pointer;';
+        select.className = 'px-2 py-1 text-xs border rounded bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 cursor-pointer';
 
         const options = [
             { value: 1, label: '1×1' },
@@ -278,6 +292,10 @@
         // Scale cells to fit compact preview (8px max per cell)
         const cellSize = Math.max(4, Math.floor(32 / maxDim));
 
+        // Calculate center of the pattern bounds (not the grid size)
+        const patternCenterX = minX + Math.floor((maxX - minX) / 2);
+        const patternCenterY = minY + Math.floor((maxY - minY) / 2);
+
         // Build preview with full pattern bounds
         for (let y = minY; y <= maxY; y++) {
             for (let x = minX; x <= maxX; x++) {
@@ -287,7 +305,7 @@
                 cell.style.height = cellSize + 'px';
 
                 const isActive = activeCells.has(`${x},${y}`);
-                const isCenter = x === centerOffset && y === centerOffset;
+                const isCenter = x === patternCenterX && y === patternCenterY;
 
                 if (isActive) {
                     cell.classList.add('active');
@@ -320,7 +338,7 @@
 
         if (scriptState.brushes.length === 0) {
             const emptyMsg = document.createElement('div');
-            emptyMsg.className = 'brush-swap-empty';
+            emptyMsg.className = 'text-center text-gray-500 dark:text-gray-400 text-xs py-3 px-2';
             emptyMsg.textContent = 'No saved brushes';
             itemsContainer.appendChild(emptyMsg);
             return;
@@ -328,7 +346,7 @@
 
         scriptState.brushes.forEach(brush => {
             const item = document.createElement('div');
-            item.className = 'brush-swap-item';
+            item.className = 'flex items-center gap-2 p-1.5 border border-gray-200 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700';
             item.dataset.brushId = brush.id;
 
             // Preview grid
@@ -337,17 +355,17 @@
 
             // Name and controls
             const infoContainer = document.createElement('div');
-            infoContainer.className = 'brush-swap-info';
+            infoContainer.className = 'flex-1 flex flex-col gap-1';
 
             // Name display / edit
             const nameContainer = document.createElement('div');
-            nameContainer.className = 'brush-swap-name-container';
+            nameContainer.className = 'flex items-center gap-1 flex-1';
 
             if (scriptState.isRenaming === brush.id) {
                 // Rename input mode
                 const input = document.createElement('input');
                 input.type = 'text';
-                input.className = 'brush-swap-rename-input';
+                input.className = 'flex-1 px-1 py-0.5 text-xs border border-gray-500 dark:border-gray-400 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100';
                 input.value = brush.name;
                 input.maxLength = 30;
 
@@ -368,12 +386,12 @@
             } else {
                 // Normal name display with pencil icon
                 const nameSpan = document.createElement('span');
-                nameSpan.className = 'brush-swap-name';
+                nameSpan.className = 'flex-1 text-xs font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap overflow-hidden text-ellipsis';
                 nameSpan.textContent = brush.name;
                 nameContainer.appendChild(nameSpan);
 
                 const pencilBtn = document.createElement('button');
-                pencilBtn.className = 'brush-swap-pencil-btn';
+                pencilBtn.className = 'bg-none border-none cursor-pointer p-0 text-xs opacity-60 hover:opacity-100 transition-opacity flex-shrink-0';
                 pencilBtn.title = 'Rename brush';
                 pencilBtn.innerHTML = '✏️';
                 pencilBtn.addEventListener('click', (e) => {
@@ -388,10 +406,10 @@
 
             // Load and Delete buttons
             const buttonsContainer = document.createElement('div');
-            buttonsContainer.className = 'brush-swap-buttons';
+            buttonsContainer.className = 'flex gap-1 flex-shrink-0';
 
             const loadBtn = document.createElement('button');
-            loadBtn.className = 'brush-swap-load-btn';
+            loadBtn.className = 'px-1.5 py-0.5 text-xs border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer rounded transition-colors hover:bg-blue-50 dark:hover:bg-blue-900 hover:border-blue-400 dark:hover:border-blue-400';
             loadBtn.textContent = 'Load';
             loadBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -399,7 +417,7 @@
             });
 
             const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'brush-swap-delete-btn';
+            deleteBtn.className = 'px-1 py-0.5 text-xs bg-none border border-gray-300 dark:border-gray-500 opacity-60 hover:opacity-100 transition-opacity cursor-pointer rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-red-50 dark:hover:bg-red-900 hover:border-red-400 dark:hover:border-red-400';
             deleteBtn.title = 'Delete brush';
             deleteBtn.innerHTML = '✕';
             deleteBtn.addEventListener('click', (e) => {
@@ -440,31 +458,16 @@
         style.textContent = `
             /* Paintbrush icon button */
             #brush-swap-toggle {
-                background: #f0f0f0;
-                border: 1px solid #ccc;
-                cursor: pointer;
-                padding: 6px 10px;
-                font-size: 10px;
-                line-height: 1;
                 opacity: 0.85;
                 transition: all 0.2s ease;
-                margin-left: 8px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 3px;
-                font-weight: 600;
-                color: #333;
             }
 
             #brush-swap-toggle:hover {
                 opacity: 1;
-                background: #e0e0e0;
-                border-color: #999;
             }
 
             #brush-swap-toggle:active {
-                background: #d0d0d0;
+                opacity: 0.7;
             }
 
             /* Dropdown container */
@@ -472,10 +475,7 @@
                 position: absolute;
                 bottom: 100%;
                 right: 0;
-                background: white;
-                border: 1px solid #ccc;
                 border-radius: 4px;
-                box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
                 margin-bottom: 8px;
                 max-width: 300px;
                 max-height: 0;
@@ -498,29 +498,6 @@
                 gap: 4px;
                 padding: 8px;
                 min-width: 250px;
-            }
-
-            .brush-swap-empty {
-                text-align: center;
-                color: #999;
-                font-size: 12px;
-                padding: 12px 8px;
-            }
-
-            /* Individual brush item */
-            .brush-swap-item {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 6px;
-                border: 1px solid #eee;
-                border-radius: 3px;
-                background: #fafafa;
-                font-size: 12px;
-            }
-
-            .brush-swap-item:hover {
-                background: #f0f0f0;
             }
 
             /* Preview grid */
@@ -547,97 +524,13 @@
                 background: #ff6b6b;
             }
 
-            /* Info section */
-            .brush-swap-info {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
-
-            /* Name container */
-            .brush-swap-name-container {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                flex: 1;
-            }
-
-            .brush-swap-name {
-                flex: 1;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-weight: 500;
-            }
-
-            .brush-swap-pencil-btn {
-                background: none;
-                border: none;
-                cursor: pointer;
-                padding: 0;
-                font-size: 11px;
-                opacity: 0.6;
-                transition: opacity 0.2s ease;
-                flex-shrink: 0;
-            }
-
-            .brush-swap-pencil-btn:hover {
-                opacity: 1;
-            }
-
-            .brush-swap-rename-input {
-                flex: 1;
-                padding: 2px 4px;
-                font-size: 12px;
-                border: 1px solid #999;
-                border-radius: 2px;
-                font-family: inherit;
-            }
-
-            /* Buttons */
-            .brush-swap-buttons {
-                display: flex;
-                gap: 4px;
-                flex-shrink: 0;
-            }
-
-            .brush-swap-load-btn,
-            .brush-swap-delete-btn {
-                padding: 2px 6px;
-                font-size: 11px;
-                border: 1px solid #ccc;
-                background: white;
-                cursor: pointer;
-                border-radius: 2px;
-                transition: background 0.2s ease;
-            }
-
-            .brush-swap-load-btn:hover {
-                background: #e8f0ff;
-                border-color: #0066ff;
-            }
-
-            .brush-swap-delete-btn {
-                padding: 2px 4px;
-                opacity: 0.6;
-                transition: opacity 0.2s ease;
-            }
-
-            .brush-swap-delete-btn:hover {
-                opacity: 1;
-                background: #ffe8e8;
-                border-color: #ff6b6b;
-            }
-
             /* Scrollbar styling for dropdown */
             #brush-swap-dropdown::-webkit-scrollbar {
                 width: 6px;
             }
 
             #brush-swap-dropdown::-webkit-scrollbar-track {
-                background: #f1f1f1;
-                border-radius: 3px;
+                background: transparent;
             }
 
             #brush-swap-dropdown::-webkit-scrollbar-thumb {
@@ -647,6 +540,17 @@
 
             #brush-swap-dropdown::-webkit-scrollbar-thumb:hover {
                 background: #555;
+            }
+
+            /* Dark mode scrollbar */
+            @media (prefers-color-scheme: dark) {
+                #brush-swap-dropdown::-webkit-scrollbar-thumb {
+                    background: #555;
+                }
+
+                #brush-swap-dropdown::-webkit-scrollbar-thumb:hover {
+                    background: #777;
+                }
             }
         `;
         document.head.appendChild(style);
@@ -664,12 +568,12 @@
 
         // Create wrapper for button and dropdown
         const wrapper = document.createElement('div');
-        wrapper.style.position = 'relative';
-        wrapper.style.display = 'inline-block';
+        wrapper.className = 'relative inline-block';
 
         // Create toggle button (paintbrush icon)
         const toggleBtn = document.createElement('button');
         toggleBtn.id = 'brush-swap-toggle';
+        toggleBtn.className = 'bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 cursor-pointer px-2.5 py-1.5 text-xs leading-none font-semibold text-gray-800 dark:text-gray-200 ml-2 inline-flex items-center justify-center rounded hover:bg-gray-200 dark:hover:bg-gray-600 hover:border-gray-600 dark:hover:border-gray-500 active:bg-gray-300 dark:active:bg-gray-800';
         toggleBtn.title = 'Toggle saved brushes';
         toggleBtn.innerHTML = '<span style="font-size: 10px; font-weight: 600; display: flex; align-items: center; gap: 4px;">▲ brushes</span>';
         toggleBtn.addEventListener('click', (e) => {
@@ -680,6 +584,8 @@
         // Create dropdown container
         const dropdown = document.createElement('div');
         dropdown.id = 'brush-swap-dropdown';
+        dropdown.className = 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-lg';
+        
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'brush-swap-items';
         dropdown.appendChild(itemsContainer);

@@ -2,7 +2,7 @@
 // @license         MIT
 // @name            CleanURLs and SkipRedirects
 // @name:en         CleanURLs and SkipRedirects
-// @version         8.4
+// @version         9.0
 // @description     Supprime les paramètres de suivi des URLs et passe les redirections
 // @description:en  Removes tracking parameters from URLs and skips redirects
 // @author          LeDimiScript
@@ -372,6 +372,7 @@
       'pkey',
       'Platform',
       'platform',
+      'pli',
       'plkey',
       'pload',
       'plu',
@@ -918,6 +919,9 @@
 
         let finalURL = url.href;
         const newParams = new URLSearchParams();
+        if (!url.search || !url.search.includes('=')) {
+            return url;
+        }
 
         // 1. Parcourir tous les paramètres de l'URL
         for (const [key, value] of url.searchParams.entries()) {
@@ -1001,6 +1005,15 @@
         try {
             // Transforme les href en URL absolue
             const url = new URL(href, window.location.href);
+            // Corrige les redoublements successifs de segments
+            const segments = url.pathname.split("/").filter(Boolean);
+            const result = [];
+            for (const segment of segments) {
+                if (result[result.length - 1] !== segment) {
+                    result.push(segment);
+                }
+            }
+            url.pathname = "/" + result.join("/");
             // Nettoie l'URL
             let cleaned = cleanUrl(url);
             // Retourne l'URL nettoyée (toujours absolue)

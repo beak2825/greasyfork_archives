@@ -1,28 +1,34 @@
 // ==UserScript==
 // @name          Google Gemini Mod (Toolbar, Folders & Download)
 // @namespace     http://tampermonkey.net/
-// @version       0.0.11
+// @version       0.0.19
 // @description   Enhances Google Gemini with a configurable toolbar and sidebar folders to organize conversations.
 // @description[de] Verbessert Google Gemini mit einer konfigurierbaren Symbolleiste und Ordnern in der Seitenleiste, um Konversationen zu organisieren.
 // @author        Adromir
 // @license       MIT
 // @match         https://gemini.google.com/*
-// @icon          data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQoJPGRlZnM+DQoJCTwhLS0gRGllIE1hc2tlLCBkaWUgZGFzIFBsdXN6ZWljaGVuIGRlZmluaWVydCAtLT4NCgkJPG1hc2sgaWQ9InBsdXMtbWFzayI+DQoJCQk8IS0tIERlciB3ZWnDn2UgQmVyZWljaCBkZXIgTWFza2UgbMOkc3N0IGRpZSBkYXJ1bnRlciBsaWVnZW5kZW4gRm9ybWVuIHNpY2h0YmFyIC0tPg0KCQkJPHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IndoaXRlIi8+DQoJCQk8IS0tIERhcyBzY2h3YXJ6ZSBQbHVzemVpY2hlbiB3aXJkIGF1cyBkZW4gRm9ybWVuIGF1c2dlc2Nobml0dGVuIChqZXR6dCBrbGVpbmVyKSAtLT4NCgkJCTxwYXRoIGQ9Ik00NSwzNSBMNTUsMzUgTDU1LDQ1IEw2NSw0NSBMNjUsNTUgTDU1LDU1IEw1NSw2NSBMNDUsNjUgTDQ1LDU1IEwzNSw1NSBMMzUsNDUgTDQ1LDQ1IFoiIGZpbGw9ImJsYWNrIi8+DQoJCTwvbWFzaz4NCg0KCQk8IS0tIEZhcmJ2ZXJsw6R1ZmUgLS0+DQoJCTxsaW5lYXJHcmFkaWVudCBpZD0iYmx1ZUdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4NCgkJCTxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMwMDUyRDQ7Ii8+DQoJCQk8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2RkIxRkM7Ii8+DQoJCTwvbGluZWFyR3JhZGllbnQ+DQoJCTxsaW5lYXJHcmFkaWVudCBpZD0ieWVsbG93R3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPg0KCQkJPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0ZEQzgzMDsiLz4NCgkJCTxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6I0YzNzMzNTsiLz4NCgkJPC9saW5lYXJHcmFkaWVudD4NCgkJPGxpbmVhckdyYWRpZW50IGlkPSJyZWRHcmFkaWVudCIgeDE9IjAlIiB5MT0iMTAwJSIgeDI9IjEwMCUiIHkyPSIwJSI+DQoJCQk8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZjEyNzExOyIvPg0KCQkJPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZjVhZjE5OyIvPg0KCQk8L2xpbmVhckdyYWRpZW50Pg0KCQk8bGluZWFyR3JhZGllbnQgaWQ9ImdyZWVuR3JhZGllbnQiIHgxPSIxMDAlIiB5MT0iMTAwJSIgeDI9IjAlIiB5Mj0iMCUiPg0KCQkJPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzAwOTI0NTsiLz4NCgkJCTxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzhEQzYzRjsiLz4NCgkJPC9saW5lYXJHcmFkaWVudD4NCgk8L2RlZnM+DQoNCgk8IS0tIEVpbmUgR3J1cHBlIGbDvHIgZGllIGtvcnJla3RlbiBTdGVybmZvcm1lbiwgYXVmIGRpZSBkaWUgTWFza2UgYW5nZXdlbmRldCB3aXJkIC0tPg0KCTxnIG1hc2s9InVybCgjcGx1cy1tYXNrKSI+DQoJCTwhLS0gRGllIHZpZXIgUGZhZGUsIGRpZSBkaWUga29ycmVrdGUgU3Rlcm5mb3JtIGJpbGRlbiAtLT4NCgkJPHBhdGggZD0iTSA1MCAwIEMgNTAgMjUsIDI1IDUwLCAwIDUwIEwgNDUgNTAgTCA0NSA0NSBMIDUwIDQ1IEwgNTAgMCBaIiBmaWxsPSJ1cmwoI2JsdWVHcmFkaWVudCkiLz4NCgkJPHBhdGggZD0iTSA1MCAwIEMgNTAgMjUsIDc1IDUwLCAxMDAgNTAgTCA1NSA1MCBMIDU1IDQ1IEwgNTAgNDUgTCA1MCAwIFoiIGZpbGw9InVybCgjeWVsbG93R3JhZGllbnQpIi8+DQoJCTxwYXRoIGQ9Ik0gMTAwIDUwIEMgNzUgNTAsIDUwIDc1LCA1MCAxMDAgTCA1MCA1NSBMIDU1IDU1IEwgNTUgNTAgTCAxMDAgNTAgWiIgZmlsbD0idXJsKCNyZWRHcmFkaWVudCkiLz4NCgkJPHBhdGggZD0iTSAwIDUwIEMgMjUgNTAsIDUwIDc1LCA1MCAxMDAgTCA1MCA1NSBMIDQ1IDU1IEwgNDUgNTAgTCAwIDUwIFoiIGZpbGw9InVybCgjZ3JlZW5HcmFkaWVudCkiLz4NCgk8L2c+DQo8L3N2Zz4NCg==
-// @homepageURL   https://github.com/adromir/scripts/tree/main/userscripts/gemini-snippets
+// @icon          https://raw.githubusercontent.com/adromir/google-gemini-mod/refs/heads/main/icon.svg
 // @supportURL    https://github.com/adromir/scripts/issues
 // @grant         GM_addStyle
 // @grant         GM_setValue
 // @grant         GM_getValue
 // @grant         GM_deleteValue
+// @grant         GM_xmlhttpRequest
 // @grant         unsafeWindow
 // @require       https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js
 // @require       https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js
+// @require       https://cdn.jsdelivr.net/gh/adromir/scripts@ef4eeb9853f8d32d5cff2f37133fe8bddfb19972/userscripts/gemini-snippets/gemini_mod_styles.js#sha256-bXQDm5Zj7+t4jYaFvTGvx/jUgo08EQmLdHve9CIRVoQ=
+// @require       https://cdn.jsdelivr.net/gh/adromir/scripts@ef4eeb9853f8d32d5cff2f37133fe8bddfb19972/userscripts/gemini-snippets/gemini_mod_utils.js#sha256-fuVgPZwMZpc70L35bG2B9oVdzD7YYYnQQp3xyJ/C/IM=
+// @require       https://cdn.jsdelivr.net/gh/adromir/scripts@ef4eeb9853f8d32d5cff2f37133fe8bddfb19972/userscripts/gemini-snippets/gemini_mod_drive.js#sha256-Sf+ByWwt60J4l8gAbxP7jzBd004RVfvwpWhkeyWUcmg=
 // @downloadURL https://update.greasyfork.org/scripts/536192/Google%20Gemini%20Mod%20%28Toolbar%2C%20Folders%20%20Download%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/536192/Google%20Gemini%20Mod%20%28Toolbar%2C%20Folders%20%20Download%29.meta.js
 // ==/UserScript==
 
 (function () {
 	'use strict';
+
+	// Ensure Namespace exists
+	window.GeminiMod = window.GeminiMod || {};
 
 	// ===================================================================================
 	// I. CONFIGURATION SECTION
@@ -32,6 +38,8 @@
 	const STORAGE_KEY_TOOLBAR_ITEMS = "geminiModToolbarItems_v2";
 	const STORAGE_KEY_FOLDERS = 'gemini_folders';
 	const STORAGE_KEY_CONVO_FOLDERS = 'gemini_convo_folders';
+	const STORAGE_KEY_GDRIVE_TOKEN = 'gemini_gdrive_token';             // Kept for reference, used by Drive module
+	const STORAGE_KEY_GDRIVE_CLIENT_ID = 'gemini_gdrive_client_id';     // Kept for reference, used by Drive module
 
 	// --- Toolbar UI Labels ---
 	const SETTINGS_BUTTON_LABEL = "⚙️ Settings";
@@ -91,201 +99,13 @@
 	let conversationFolders = {};
 	const FOLDER_COLORS = ['#370000', '#0D3800', '#001B38', '#383200', '#380031', '#7DAC89', '#7A82AF', '#AC7D98', '#7AA7AF', '#9CA881'];
 
-
-	// --- Styles ---
-	const embeddedCSS = `
-		/* --- Toolbar Styles --- */
-		#gemini-snippet-toolbar-userscript {
-			position: fixed !important; top: 0 !important; left: 50% !important;
-			transform: translateX(-50%) !important;
-			width: auto !important; max-width: 80% !important;
-			padding: 10px 15px !important; z-index: 999998 !important; /* Below settings panel */
-			display: flex !important; flex-wrap: wrap !important;
-			gap: 8px !important; align-items: center !important; font-family: 'Roboto', 'Arial', sans-serif !important;
-			box-sizing: border-box !important; background-color: rgba(40, 42, 44, 0.95) !important;
-			border-radius: 0 0 16px 16px !important;
-			box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-		}
-		#gemini-snippet-toolbar-userscript button,
-		#gemini-snippet-toolbar-userscript select {
-			padding: 4px 10px !important; cursor: pointer !important; background-color: #202122 !important;
-			color: #e3e3e3 !important; border-radius: 16px !important; font-size: 13px !important;
-			font-family: inherit !important; font-weight: 500 !important; height: 28px !important;
-			box-sizing: border-box !important; vertical-align: middle !important;
-			transition: background-color 0.2s ease, transform 0.1s ease !important;
-			border: none !important; flex-shrink: 0;
-		}
-		#gemini-snippet-toolbar-userscript select {
-			padding-right: 25px !important; appearance: none !important;
-			background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%23e3e3e3" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') !important;
-			background-repeat: no-repeat !important; background-position: right 8px center !important; background-size: 12px 12px !important;
-		}
-		#gemini-snippet-toolbar-userscript option {
-			background-color: #2a2a2a !important; color: #e3e3e3 !important;
-			font-weight: normal !important; padding: 5px 10px !important;
-		}
-		#gemini-snippet-toolbar-userscript button:hover,
-		#gemini-snippet-toolbar-userscript select:hover { background-color: #4a4e51 !important; }
-		#gemini-snippet-toolbar-userscript button:active { background-color: #5f6368 !important; transform: scale(0.98) !important; }
-		.userscript-toolbar-spacer { margin-left: auto !important; }
-
-		/* --- Settings Panel & Modal Styles --- */
-		#gemini-mod-settings-overlay, #gemini-mod-type-modal-overlay {
-			display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-			background-color: rgba(0,0,0,0.6); z-index: 999999;
-		}
-		#gemini-mod-settings-panel, #gemini-mod-type-modal {
-			position: fixed; top: 50%; left: 50%;
-			transform: translate(-50%, -50%);
-			background-color: #282a2c; color: #e3e3e3; border-radius: 16px;
-			padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-			font-family: 'Roboto', 'Arial', sans-serif !important;
-		}
-		#gemini-mod-settings-panel {
-			width: 90vw; max-width: 800px; max-height: 80vh; overflow-y: auto;
-		}
-		#gemini-mod-type-modal {
-		    text-align: center;
-		}
-		#gemini-mod-type-modal h3 { margin-top: 0; }
-		#gemini-mod-type-modal button { margin: 0 10px; }
-		#gemini-mod-settings-panel h2 { margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px; }
-        #gemini-mod-settings-panel h3 { margin-top: 20px; border-bottom: 1px solid #444; padding-bottom: 8px; }
-		#gemini-mod-settings-panel label { display: block; margin: 10px 0 5px; font-weight: 500; }
-		#gemini-mod-settings-panel input[type="text"], #gemini-mod-settings-panel textarea {
-			width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #5f6368;
-			background-color: #202122; color: #e3e3e3; box-sizing: border-box;
-		}
-		#gemini-mod-settings-panel textarea { min-height: 80px; resize: vertical; }
-		#gemini-mod-settings-panel .item-group {
-			border: 1px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 10px;
-			display: flex; gap: 10px; align-items: flex-start;
-            cursor: grab;
-		}
-		#gemini-mod-settings-panel .item-content { flex-grow: 1; }
-		#gemini-mod-settings-panel .dropdown-options-container { margin-left: 20px; margin-top: 10px; }
-		#gemini-mod-settings-panel .option-item { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center; margin-bottom: 5px; }
-		#gemini-mod-settings-panel button {
-			 padding: 4px 10px !important; cursor: pointer !important; background-color: #3c4043 !important;
-			 color: #e3e3e3 !important; border-radius: 16px !important; font-size: 13px !important;
-			 border: none !important; transition: background-color 0.2s ease;
-		}
-		#gemini-mod-settings-panel button:hover { background-color: #4a4e51 !important; }
-		#gemini-mod-settings-panel .remove-btn, .dialog-btn-delete { background-color: #5c2b2b !important; color: white !important; }
-		#gemini-mod-settings-panel .remove-btn:hover, .dialog-btn-delete:hover { background-color: #7d3a3a !important; }
-		#gemini-mod-settings-panel .settings-actions {
-			margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;
-		}
-
-		/* --- Folder UI Styles --- */
-		#folder-ui-container { padding: 0 8px; }
-		#folder-container { padding-bottom: 8px; border-bottom: 1px solid var(--surface-3); }
-		.folder { margin-bottom: 5px; border-radius: 8px; overflow: hidden; }
-		.folder-header { display: flex; align-items: center; padding: 10px; cursor: pointer; background-color: var(--surface-2); position: relative; }
-		.folder-header:hover { background-color: var(--surface-3); }
-		
-        /* Folder Icon Styles */
-        .folder-icon-wrapper { margin-right: 10px; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
-        .folder-icon { width: 20px; height: 20px; transition: transform 0.2s ease; }
-        .folder.closed .icon-open { display: none; }
-        .folder:not(.closed) .icon-closed { display: none; }
-        
-		.folder-name { flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Roboto', Arial, sans-serif !important; font-weight: 500; }
-		.folder-controls { display: flex; align-items: center; margin-left: 5px; }
-		.folder-toggle-icon { transition: transform 0.2s; margin-right: 5px; font-size: 0.8em; opacity: 0.7; }
-		.folder.closed .folder-toggle-icon { transform: rotate(-90deg); }
-		.folder-options-btn { background: none; border: none; color: inherit; cursor: pointer; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-size: 1.2em; line-height: 1; }
-		.folder-options-btn:hover { background-color: rgba(255,255,255,0.1); }
-		
-        /* List View Styles for Content */
-		.folder-content { 
-            max-height: 500px; 
-            overflow-y: auto; 
-            transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; 
-            background-color: transparent; /* Transparent to let items stand out */
-            min-height: 10px; 
-            display: flex;
-            flex-direction: column;
-            gap: 4px; /* Gap between items */
-            padding: 4px 0;
-        }
-		.folder.closed .folder-content { max-height: 0; padding-top: 0; padding-bottom: 0; min-height: 0; overflow: hidden; }
-        
-        /* Style the conversation items within the folder to look like list items */
-        .folder-content .conversation-items-container {
-            background-color: var(--surface-1);
-            border-radius: 6px;
-            margin: 0 4px;
-            padding: 2px 0;
-            border: 1px solid var(--surface-4);
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-        }
-        .folder-content .conversation-items-container::before {
-            content: "•";
-            margin: 0 6px 0 10px;
-            color: var(--on-surface);
-            font-size: 1.2em;
-            line-height: 1;
-        }
-        .folder-content .conversation-items-container:hover {
-            background-color: var(--surface-2);
-            border-color: var(--surface-5);
-        }
-
-		#add-folder-btn { width: 100%; margin: 8px 0; padding: 10px; border: none; background-color: var(--primary-surface); color: var(--on-primary-surface); border-radius: 8px; cursor: pointer; font-weight: 500; }
-		#add-folder-btn:hover { opacity: 0.9; }
-		.conversation-items-container { cursor: grab; }
-		.folder-context-menu { position: absolute; z-index: 10000; background-color: #333333; border: 1px solid var(--surface-4); border-radius: 8px; padding: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: none; }
-		.folder-context-menu-item { padding: 8px 12px; cursor: pointer; border-radius: 4px; white-space: nowrap; font-family: 'Roboto', Arial, sans-serif !important; color: #FFFFFF; }
-		.folder-context-menu-item:hover { background-color: var(--surface-4); }
-		.folder-context-menu-item.delete { color: #DB4437; }
-        .sortable-ghost { opacity: 0.4; background: var(--primary-surface-hover); }
-        .item-group.sortable-ghost { background-color: #555 !important; }
-
-
-		/* --- Dialog & Color Picker Styles --- */
-		.custom-dialog-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(34, 34, 34, 0.75); z-index: 1000000; display: flex; align-items: center; justify-content: center; }
-		.custom-dialog-box { background-color: #333333; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; max-width: 400px; border: 1px solid var(--surface-4); }
-		.custom-dialog-box p, .custom-dialog-box h2 { margin: 0 0 20px; font-family: 'Roboto', Arial, sans-serif; color: #FFFFFF; }
-		.custom-dialog-btn { border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-weight: 500; margin: 0 10px; }
-		.dialog-btn-confirm { background-color: #8ab4f8; color: #202124; }
-		.dialog-btn-cancel { background-color: var(--surface-4); color: var(--on-surface); }
-		.custom-dialog-input { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid var(--surface-4); background-color: var(--surface-1); color: var(--on-surface); font-size: 16px; margin-bottom: 20px; }
-		.color-picker-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
-		.color-picker-dialog .color-swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; position: relative; }
-		.color-picker-dialog .color-swatch:hover { border: 2px solid var(--on-primary-surface); }
-		.color-picker-dialog .color-swatch.selected::after { content: ""; position: absolute; inset: 0; border: 3px solid #fff; border-radius: 50%; box-sizing: border-box; pointer-events: none; }
-	`;
-
-	// --- Core Functions ---
-
-	function injectCustomCSS() {
-		try {
-			GM_addStyle(embeddedCSS);
-		} catch (error) {
-			console.error("Gemini Mod Userscript: Failed to inject custom CSS:", error);
-			const style = document.createElement('style');
-			style.textContent = embeddedCSS;
-			document.head.appendChild(style);
-		}
-	}
-
-	function displayUserscriptMessage(message, isError = true) {
-		const prefix = "Gemini Mod Userscript: ";
-		if (isError) console.error(prefix + message);
-		else console.log(prefix + message);
-		alert(prefix + message);
-	}
-
-	function clearElement(element) {
-		if (element) {
-			while (element.firstChild) {
-				element.removeChild(element.firstChild);
-			}
-		}
-	}
+	// --- Core Aliases (Helpers) ---
+	const displayMessage = GeminiMod.utils.displayUserscriptMessage;
+	const clearEl = GeminiMod.utils.clearElement;
+	const showConfirm = GeminiMod.utils.showConfirmationDialog;
+	const showPrompt = GeminiMod.utils.showCustomPromptDialog;
+	const showColorPicker = GeminiMod.utils.showColorPickerDialog;
+	const injectCSS = GeminiMod.utils.injectCustomCSS;
 
 	// --- Text Insertion Logic ---
 
@@ -302,7 +122,7 @@
 	function insertSnippetText(textToInsert) {
 		const target = findTargetInputElement();
 		if (!target) {
-			displayUserscriptMessage("Could not find Gemini input field.");
+			displayMessage("Could not find Gemini input field.");
 			return;
 		}
 		target.focus();
@@ -395,7 +215,7 @@
 			rebuildToolbar();
 			toggleSettingsPanel(false);
 		} catch (e) {
-			displayUserscriptMessage("Failed to save settings. See console for details.");
+			displayMessage("Failed to save settings. See console for details.");
 			console.error("Gemini Mod: Error saving settings:", e);
 		}
 	}
@@ -405,6 +225,92 @@
 		await GM_setValue(STORAGE_KEY_CONVO_FOLDERS, conversationFolders);
 	}
 
+	// --- Setup Guide Modal ---
+
+
+	function showSetupGuide() {
+		const overlay = document.createElement('div');
+		overlay.className = 'custom-dialog-overlay';
+		overlay.id = 'setup-guide-overlay';
+
+		const dialogBox = document.createElement('div');
+		dialogBox.className = 'custom-dialog-box';
+		dialogBox.style.maxWidth = '600px';
+
+		const h3 = document.createElement('h3');
+		h3.textContent = 'Google Drive Sync Setup';
+		dialogBox.appendChild(h3);
+
+		const p1 = document.createElement('p');
+		p1.innerHTML = ''; // Clear just in case, though new element is empty
+		p1.appendChild(document.createTextNode('To sync explicitly via Google Drive, you need a '));
+		const b1 = document.createElement('b');
+		b1.textContent = 'Google Cloud Client ID';
+		p1.appendChild(b1);
+		p1.appendChild(document.createTextNode('. This is required because this script runs privately in your browser.'));
+		dialogBox.appendChild(p1);
+
+		const ol = document.createElement('ol');
+		const steps = [
+			{ html: false, text: 'Go to ', link: { href: 'https://console.cloud.google.com/apis/credentials', text: 'Google Cloud Console' } },
+			{ html: false, text: 'Create a new project (or use existing).' },
+			{ html: false, parts: [{ text: 'Enable the ' }, { tag: 'b', text: 'Google Drive API' }, { text: '.' }] },
+			{ html: false, text: 'Create Credentials -> OAuth client ID.' },
+			{ html: false, parts: [{ text: 'Application type: ' }, { tag: 'b', text: 'Web application' }, { text: '.' }] },
+			{ html: false, parts: [{ text: 'Add authorized origins: ' }, { tag: 'code', text: 'https://gemini.google.com' }] },
+			{ html: false, parts: [{ text: 'Copy the ' }, { tag: 'b', text: 'Client ID' }, { text: ' and paste it in the settings here.' }] }
+		];
+
+		const createStep = (step) => {
+			const li = document.createElement('li');
+			if (step.link) {
+				li.appendChild(document.createTextNode(step.text));
+				const a = document.createElement('a');
+				a.href = step.link.href;
+				a.target = '_blank';
+				a.textContent = step.link.text;
+				li.appendChild(a);
+				li.appendChild(document.createTextNode('.'));
+			} else if (step.parts) {
+				step.parts.forEach(part => {
+					if (part.tag) {
+						const tag = document.createElement(part.tag);
+						tag.textContent = part.text;
+						li.appendChild(tag);
+					} else {
+						li.appendChild(document.createTextNode(part.text));
+					}
+				});
+			} else {
+				li.textContent = step.text;
+			}
+			return li;
+		};
+
+		steps.forEach(step => ol.appendChild(createStep(step)));
+		dialogBox.appendChild(ol);
+
+		const p2 = document.createElement('p');
+		const i = document.createElement('i');
+		i.appendChild(document.createTextNode('Alternatively, use the '));
+		const b2 = document.createElement('b');
+		b2.textContent = 'File Backup';
+		i.appendChild(b2);
+		i.appendChild(document.createTextNode(' option below to save/restore manually without setup.'));
+		p2.appendChild(i);
+		dialogBox.appendChild(p2);
+
+
+		const closeBtn = document.createElement('button');
+		closeBtn.className = 'custom-dialog-btn dialog-btn-cancel';
+		closeBtn.textContent = 'Close';
+		closeBtn.onclick = () => overlay.remove();
+		closeBtn.style.marginTop = '20px';
+
+		dialogBox.appendChild(closeBtn);
+		overlay.appendChild(dialogBox);
+		document.body.appendChild(overlay);
+	}
 
 	// --- Toolbar Creation ---
 
@@ -412,7 +318,7 @@
 		const toolbarId = 'gemini-snippet-toolbar-userscript';
 		let toolbar = document.getElementById(toolbarId);
 		if (toolbar) {
-			clearElement(toolbar);
+			clearEl(toolbar);
 		} else {
 			toolbar = document.createElement('div');
 			toolbar.id = toolbarId;
@@ -452,7 +358,7 @@
 							const text = await navigator.clipboard.readText();
 							if (text) insertSnippetText(text);
 						} catch (err) {
-							displayUserscriptMessage('Failed to read clipboard: ' + err.message);
+							displayMessage('Failed to read clipboard: ' + err.message);
 						}
 					});
 				} else if (item.action === 'download') {
@@ -483,458 +389,49 @@
 	}
 
 
-	// --- Folder UI and Logic ---
+	// --- Settings Panel ---
 
-	function getIdentifierFromElement(el) {
-		if (!el) return null;
-		if (el.matches(FOLDER_CHAT_CONTAINER_SELECTOR)) {
-			el = el.querySelector(FOLDER_CHAT_ITEM_SELECTOR) || el;
-		}
-		const anchor = el.closest('a');
-		if (anchor) {
-			const href = anchor.getAttribute('href') || '';
-			const m = href.match(/\/conversation\/([A-Za-z0-9_-]+)/);
-			if (m) return m[1];
-		}
-		const jslog = el.getAttribute('jslog') || '';
-		let m = jslog.match(/"c_([A-Za-z0-9_-]+)"/);
-		if (!m) m = jslog.match(/c_([A-Za-z0-9_-]+)/);
-		if (m) return m[1];
-		const t = el.querySelector('.conversation-title');
-		if (t) return `title:${t.textContent.trim()}`;
-		console.warn('[Gemini Folders] Could not find ID for element:', el);
-		return null;
-	}
+	function toggleSettingsPanel(show = true) {
+		let overlay = document.getElementById('gemini-mod-settings-overlay');
+		let panel = document.getElementById('gemini-mod-settings-panel');
 
-	function renderFolders() {
-		const container = document.getElementById('folder-container');
-		if (!container) return;
-
-		// Move all conversation items back to the main list before clearing folders
-		// This prevents them from being deleted from the DOM
-		const chatListContainer = document.querySelector(FOLDER_CHAT_LIST_CONTAINER_SELECTOR);
-		if (chatListContainer) {
-			container.querySelectorAll(FOLDER_CHAT_CONTAINER_SELECTOR).forEach(item => {
-				chatListContainer.appendChild(item);
-			});
+		if (!overlay) {
+			createSettingsPanel();
+			overlay = document.getElementById('gemini-mod-settings-overlay');
+			panel = document.getElementById('gemini-mod-settings-panel');
 		}
 
-		clearElement(container);
-
-		folders.forEach(folder => {
-			const folderEl = document.createElement('div');
-			folderEl.className = 'folder';
-			folderEl.dataset.folderId = folder.id;
-			if (folder.isClosed) folderEl.classList.add('closed');
-
-			const headerEl = document.createElement('div');
-			headerEl.className = 'folder-header';
-			headerEl.addEventListener('click', (e) => {
-				if (!e.target.closest('.folder-options-btn')) toggleFolder(folder.id);
-			});
-
-			// Icon Wrapper
-			const iconWrapper = document.createElement('div');
-			iconWrapper.className = 'folder-icon-wrapper';
-
-			// SVG for Closed Folder
-			const iconClosed = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			iconClosed.setAttribute("viewBox", "0 0 24 24");
-			iconClosed.setAttribute("class", "folder-icon icon-closed");
-			iconClosed.innerHTML = `<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" fill="${folder.color}"/>`;
-
-			// SVG for Open Folder
-			const iconOpen = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			iconOpen.setAttribute("viewBox", "0 0 24 24");
-			iconOpen.setAttribute("class", "folder-icon icon-open");
-			iconOpen.innerHTML = `<path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" fill="${folder.color}"/>`;
-
-			iconWrapper.appendChild(iconClosed);
-			iconWrapper.appendChild(iconOpen);
-
-			const nameEl = document.createElement('span');
-			nameEl.className = 'folder-name';
-			nameEl.textContent = folder.name;
-
-			const controlsEl = document.createElement('div');
-			controlsEl.className = 'folder-controls';
-
-			const toggleIcon = document.createElement('span');
-			toggleIcon.className = 'folder-toggle-icon';
-			toggleIcon.textContent = '▼';
-
-			const optionsBtn = document.createElement('button');
-			optionsBtn.className = 'folder-options-btn';
-			optionsBtn.textContent = '⋮';
-			optionsBtn.addEventListener('click', (e) => showContextMenu(e, folder.id));
-
-			controlsEl.appendChild(toggleIcon);
-			controlsEl.appendChild(optionsBtn);
-
-			headerEl.appendChild(iconWrapper);
-			headerEl.appendChild(nameEl);
-			headerEl.appendChild(controlsEl);
-
-			const contentEl = document.createElement('div');
-			contentEl.className = 'folder-content';
-
-			folderEl.appendChild(headerEl);
-			folderEl.appendChild(contentEl);
-			container.appendChild(folderEl);
-		});
-
-		organizeConversations();
-		setupDragAndDrop();
-	}
-
-	function organizeConversations() {
-		const chatListContainer = document.querySelector(FOLDER_CHAT_LIST_CONTAINER_SELECTOR);
-		if (!chatListContainer) return;
-
-		const folderIds = new Set(folders.map(f => f.id));
-		let dataWasCorrected = false;
-
-		document.querySelectorAll('.folder-content ' + FOLDER_CHAT_CONTAINER_SELECTOR).forEach(item => {
-			const convoEl = item.querySelector(FOLDER_CHAT_ITEM_SELECTOR);
-			const identifier = getIdentifierFromElement(convoEl);
-			if (!identifier || !conversationFolders[identifier] || !folderIds.has(conversationFolders[identifier])) {
-				chatListContainer.appendChild(item);
-			}
-		});
-
-		Array.from(chatListContainer.children).forEach(itemToMove => {
-			const convoEl = itemToMove.querySelector(FOLDER_CHAT_ITEM_SELECTOR);
-			const identifier = getIdentifierFromElement(convoEl);
-			if (!identifier) return;
-
-			let folderId = conversationFolders[identifier];
-
-			if (folderId && !folderIds.has(folderId)) {
-				delete conversationFolders[identifier];
-				folderId = null;
-				dataWasCorrected = true;
-			}
-
-			if (folderId) {
-				const folderContent = document.querySelector(`.folder[data-folder-id="${folderId}"] .folder-content`);
-				if (folderContent && !folderContent.contains(itemToMove)) {
-					folderContent.appendChild(itemToMove);
-				}
-			}
-		});
-
-		if (dataWasCorrected) saveFolderConfiguration();
-	}
-
-	function createNewFolder() {
-		showCustomPromptDialog("Enter New Folder Name", "", "Create", (name) => {
-			if (name) {
-				const newFolder = { id: `folder_${Date.now()}`, name, color: '#808080', isClosed: false };
-				folders.push(newFolder);
-				saveFolderConfiguration().then(renderFolders);
-			}
-		});
-	}
-
-	function updateFolderHeader(folderId) {
-		const folder = folders.find(f => f.id === folderId);
-		const folderEl = document.querySelector(`.folder[data-folder-id="${folderId}"]`);
-		if (!folder || !folderEl) return;
-		folderEl.querySelector('.folder-name').textContent = folder.name;
-		// Update icon colors
-		folderEl.querySelectorAll('.folder-icon path').forEach(path => {
-			path.setAttribute('fill', folder.color);
-		});
-	}
-
-	function renameFolder(folderId) {
-		const folder = folders.find(f => f.id === folderId);
-		if (!folder) return;
-		showCustomPromptDialog("Rename Folder", folder.name, "Save", (newName) => {
-			if (newName && newName !== folder.name) {
-				folder.name = newName;
-				saveFolderConfiguration().then(() => updateFolderHeader(folderId));
-			}
-		});
-	}
-
-	async function deleteFolder(folderId) {
-		Object.keys(conversationFolders).forEach(id => {
-			if (conversationFolders[id] === folderId) delete conversationFolders[id];
-		});
-		folders = folders.filter(f => f.id !== folderId);
-		await saveFolderConfiguration();
-		renderFolders();
-	}
-
-	function toggleFolder(folderId) {
-		const folder = folders.find(f => f.id === folderId);
-		if (folder) {
-			folder.isClosed = !folder.isClosed;
-			const folderEl = document.querySelector(`.folder[data-folder-id="${folderId}"]`);
-			if (folderEl) folderEl.classList.toggle('closed');
-			saveFolderConfiguration();
+		if (show) {
+			populateSettingsPanel(panel);
+			overlay.style.display = 'block';
+		} else {
+			overlay.style.display = 'none';
 		}
 	}
 
-	// --- Context Menus & Dialogs ---
+	async function updateSettingsPanelDriveStatus() {
+		const statusText = document.getElementById('gdrive-status-text');
+		const connectBtn = document.getElementById('gdrive-connect-btn');
+		const saveBtn = document.getElementById('gdrive-save-btn');
+		const loadBtn = document.getElementById('gdrive-load-btn');
+		const backupContainer = document.getElementById('gdrive-backup-container');
 
-	function showContextMenu(event, folderId) {
-		event.preventDefault();
-		event.stopPropagation();
-		closeContextMenu();
-
-		const btn = event.currentTarget;
-		const rect = btn.getBoundingClientRect();
-
-		const menu = document.createElement('div');
-		menu.className = 'folder-context-menu';
-		menu.id = 'folder-context-menu-active';
-
-		const items = {
-			'Rename': () => renameFolder(folderId),
-			'Change Color': () => showColorPickerDialog(folderId),
-			'Delete Folder': () => showConfirmationDialog("Are you sure you want to delete this folder?", () => deleteFolder(folderId), "Delete", "dialog-btn-delete")
-		};
-
-		for (const [text, action] of Object.entries(items)) {
-			const itemEl = document.createElement('div');
-			itemEl.className = 'folder-context-menu-item';
-			if (text === 'Delete Folder') itemEl.classList.add('delete');
-			itemEl.textContent = text;
-			itemEl.onclick = (e) => {
-				e.stopPropagation();
-				closeContextMenu();
-				action(e);
-			};
-			menu.appendChild(itemEl);
-		}
-
-		document.body.appendChild(menu);
-		menu.style.display = 'block';
-		menu.style.top = `${rect.bottom + window.scrollY}px`;
-		menu.style.left = `${rect.right + window.scrollX - menu.offsetWidth}px`;
-		setTimeout(() => document.addEventListener('click', closeContextMenu, { once: true }), 0);
-	}
-
-	function closeContextMenu() {
-		const menu = document.getElementById('folder-context-menu-active');
-		if (menu) menu.remove();
-	}
-
-	function showColorPickerDialog(folderId) {
-		const folder = folders.find(f => f.id === folderId);
-		if (!folder) return;
-
-		const overlay = document.createElement('div');
-		overlay.className = 'custom-dialog-overlay';
-		const dialogBox = document.createElement('div');
-		dialogBox.className = 'custom-dialog-box color-picker-dialog';
-		const titleH2 = document.createElement('h2');
-		titleH2.textContent = 'Change Folder Color';
-		const grid = document.createElement('div');
-		grid.className = 'color-picker-grid';
-
-		let selectedColor = folder.color;
-
-		FOLDER_COLORS.forEach(color => {
-			const swatch = document.createElement('div');
-			swatch.className = 'color-swatch';
-			if (color.toLowerCase() === selectedColor.toLowerCase()) swatch.classList.add('selected');
-			swatch.style.backgroundColor = color;
-			swatch.onclick = () => {
-				selectedColor = color;
-				hexInput.value = color;
-				grid.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-				swatch.classList.add('selected');
-			};
-			grid.appendChild(swatch);
-		});
-
-		const hexInput = document.createElement('input');
-		hexInput.className = 'custom-dialog-input';
-		hexInput.type = 'text';
-		hexInput.placeholder = 'Or enter a hex value, e.g. #C0FFEE';
-		hexInput.value = selectedColor;
-
-		const btnYes = document.createElement('button');
-		btnYes.className = 'custom-dialog-btn dialog-btn-confirm';
-		btnYes.textContent = 'Save';
-		const btnNo = document.createElement('button');
-		btnNo.className = 'custom-dialog-btn dialog-btn-cancel';
-		btnNo.textContent = 'Cancel';
-
-		const btnReset = document.createElement('button');
-		btnReset.className = 'custom-dialog-btn';
-		btnReset.style.backgroundColor = '#5f6368';
-		btnReset.style.color = '#ffffff';
-		btnReset.textContent = 'Reset';
-
-		dialogBox.appendChild(titleH2);
-		dialogBox.appendChild(grid);
-		dialogBox.appendChild(hexInput);
-
-		const buttonContainer = document.createElement('div');
-		buttonContainer.style.display = 'flex';
-		buttonContainer.style.justifyContent = 'center';
-		buttonContainer.style.marginTop = '20px';
-
-		buttonContainer.appendChild(btnYes);
-		buttonContainer.appendChild(btnNo);
-		buttonContainer.appendChild(btnReset);
-
-		dialogBox.appendChild(buttonContainer);
-
-		overlay.appendChild(dialogBox);
-		document.body.appendChild(overlay);
-
-		btnYes.onclick = () => {
-			const newColor = hexInput.value.trim();
-			if (/^#[0-9A-F]{6}$/i.test(newColor)) {
-				folder.color = newColor;
-				saveFolderConfiguration().then(() => updateFolderHeader(folderId));
-				overlay.remove();
+		if (statusText && connectBtn) {
+			const token = await GeminiMod.drive.getGoogleDriveToken();
+			if (token) {
+				statusText.textContent = "Status: Connected ✅";
+				statusText.style.color = "#8ab4f8";
+				connectBtn.style.display = 'none';
+				backupContainer.style.display = 'block';
 			} else {
-				hexInput.style.border = "1px solid red";
-				hexInput.value = "Invalid Hex Code";
-				setTimeout(() => {
-					hexInput.style.border = "";
-					hexInput.value = selectedColor;
-				}, 2000);
+				statusText.textContent = "Status: Not Connected";
+				statusText.style.color = "#aaa";
+				connectBtn.style.display = 'inline-block';
+				backupContainer.style.display = 'none';
 			}
-		};
-		btnNo.onclick = () => { overlay.remove(); };
-		btnReset.onclick = () => {
-			selectedColor = '#808080';
-			hexInput.value = selectedColor;
-			grid.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-		};
-	}
-
-	function showConfirmationDialog(message, onConfirm, confirmText = "Confirm", confirmClass = "dialog-btn-confirm") {
-		const overlay = document.createElement('div');
-		overlay.className = 'custom-dialog-overlay';
-		const dialogBox = document.createElement('div');
-		dialogBox.className = 'custom-dialog-box';
-		const messageP = document.createElement('p');
-		messageP.textContent = message;
-		const btnYes = document.createElement('button');
-		btnYes.className = `custom-dialog-btn ${confirmClass}`;
-		btnYes.textContent = confirmText;
-		const btnNo = document.createElement('button');
-		btnNo.className = 'custom-dialog-btn dialog-btn-cancel';
-		btnNo.textContent = 'Cancel';
-		dialogBox.appendChild(messageP);
-		dialogBox.appendChild(btnYes);
-		dialogBox.appendChild(btnNo);
-		overlay.appendChild(dialogBox);
-		document.body.appendChild(overlay);
-		btnYes.onclick = () => { onConfirm(); overlay.remove(); };
-		btnNo.onclick = () => { overlay.remove(); };
-	}
-
-	function showCustomPromptDialog(title, defaultValue, confirmText, onConfirm) {
-		const overlay = document.createElement('div');
-		overlay.className = 'custom-dialog-overlay';
-		const dialogBox = document.createElement('div');
-		dialogBox.className = 'custom-dialog-box';
-		const titleH2 = document.createElement('h2');
-		titleH2.textContent = title;
-		const input = document.createElement('input');
-		input.className = 'custom-dialog-input';
-		input.type = 'text';
-		input.value = defaultValue;
-		const btnYes = document.createElement('button');
-		btnYes.className = 'custom-dialog-btn dialog-btn-confirm';
-		btnYes.textContent = confirmText;
-		const btnNo = document.createElement('button');
-		btnNo.className = 'custom-dialog-btn dialog-btn-cancel';
-		btnNo.textContent = 'Cancel';
-		dialogBox.appendChild(titleH2);
-		dialogBox.appendChild(input);
-		dialogBox.appendChild(btnYes);
-		dialogBox.appendChild(btnNo);
-		overlay.appendChild(dialogBox);
-		document.body.appendChild(overlay);
-		input.focus();
-		input.select();
-		btnYes.onclick = () => { onConfirm(input.value); overlay.remove(); };
-		btnNo.onclick = () => { overlay.remove(); };
-		input.onkeydown = (e) => { if (e.key === 'Enter') btnYes.click(); };
-	}
-
-	// --- Drag and Drop ---
-	function setupDragAndDrop() {
-		// For conversation folders
-		const chatListContainer = document.querySelector(FOLDER_CHAT_LIST_CONTAINER_SELECTOR);
-		if (chatListContainer) {
-			new Sortable(chatListContainer, {
-				group: 'shared',
-				animation: 150,
-				onEnd: rebuildAndSaveState,
-			});
-		}
-
-		document.querySelectorAll('.folder-content').forEach(folderContentEl => {
-			new Sortable(folderContentEl, {
-				group: 'shared',
-				animation: 150,
-				onEnd: rebuildAndSaveState,
-			});
-		});
-
-		// For toolbar items in settings
-		const toolbarItemsContainer = document.getElementById('toolbar-items-container');
-		if (toolbarItemsContainer) {
-			new Sortable(toolbarItemsContainer, {
-				animation: 150,
-				ghostClass: 'sortable-ghost',
-				// No onEnd needed as saving is manual via the "Save" button
-			});
 		}
 	}
 
-	function rebuildAndSaveState() {
-		const newConversationFolders = {};
-		document.querySelectorAll('.folder').forEach(folderEl => {
-			const folderId = folderEl.dataset.folderId;
-			folderEl.querySelectorAll(FOLDER_CHAT_CONTAINER_SELECTOR).forEach(item => {
-				const id = getIdentifierFromElement(item.querySelector(FOLDER_CHAT_ITEM_SELECTOR));
-				if (id) {
-					newConversationFolders[id] = folderId;
-				}
-			});
-		});
-		conversationFolders = newConversationFolders;
-		saveFolderConfiguration();
-	}
-
-	function initializeFolders() {
-		const injectionPoint = document.querySelector(FOLDER_INJECTION_POINT_SELECTOR);
-		if (!injectionPoint) return false;
-
-		if (document.getElementById('folder-ui-container')) {
-			organizeConversations();
-			return true;
-		}
-
-		const uiContainer = document.createElement('div');
-		uiContainer.id = 'folder-ui-container';
-		const addButton = document.createElement('button');
-		addButton.id = 'add-folder-btn';
-		addButton.textContent = '＋ New Folder';
-		addButton.onclick = createNewFolder;
-		const folderContainer = document.createElement('div');
-		folderContainer.id = 'folder-container';
-		uiContainer.appendChild(addButton);
-		uiContainer.appendChild(folderContainer);
-		injectionPoint.prepend(uiContainer);
-		renderFolders();
-		return true;
-	}
-
-
-	// --- Settings Panel UI ---
 	function createSettingsPanel() {
 		if (document.getElementById('gemini-mod-settings-overlay')) return;
 
@@ -947,660 +444,984 @@
 
 		panel.appendChild(document.createElement('h2')).textContent = 'Gemini Mod Settings';
 
-		// Toolbar Section
-		panel.appendChild(document.createElement('h3')).textContent = 'Toolbar Items';
-		const dragDropHint = document.createElement('p');
-		dragDropHint.textContent = 'The order of the items can be changed via Drag & Drop.';
-		dragDropHint.style.fontSize = '12px';
-		dragDropHint.style.color = '#aaa';
-		dragDropHint.style.margin = '-5px 0 10px 0';
-		panel.appendChild(dragDropHint);
+		// Create Container for Tabbed Layout
+		const container = document.createElement('div');
+		container.className = 'settings-container';
+
+		// --- SIDEBAR ---
+		const sidebar = document.createElement('div');
+		sidebar.className = 'settings-sidebar';
+
+		const tabs = [
+			{ id: 'tab-toolbar', label: '🛠️ Toolbar' },
+			{ id: 'tab-drive', label: '☁️ Google Drive' },
+			{ id: 'tab-reset', label: '⚠️ Danger Zone' }
+		];
+
+		tabs.forEach((tab, index) => {
+			const btn = document.createElement('button');
+			btn.className = 'tab-btn' + (index === 0 ? ' active' : '');
+			btn.textContent = tab.label;
+			btn.dataset.target = tab.id;
+			btn.onclick = () => {
+				document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+				document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+				btn.classList.add('active');
+				document.getElementById(tab.id).classList.add('active');
+			};
+			sidebar.appendChild(btn);
+		});
+
+		// Footer Buttons Container
+		const sidebarFooter = document.createElement('div');
+		sidebarFooter.style.marginTop = 'auto'; // Pushes to bottom
+		sidebarFooter.style.display = 'flex';
+		sidebarFooter.style.flexDirection = 'column';
+		sidebarFooter.style.gap = '10px';
+		sidebarFooter.style.width = '100%';
+
+		// Close Button
+		const closeButton = document.createElement('button');
+		closeButton.textContent = 'Close';
+		closeButton.className = 'custom-dialog-btn dialog-btn-cancel';
+		closeButton.style.width = '100%';
+		closeButton.style.boxSizing = 'border-box'; // Ensure padding handles correctly
+		closeButton.style.margin = '0'; // Override default class margin
+		closeButton.addEventListener('click', () => toggleSettingsPanel(false));
+		sidebarFooter.appendChild(closeButton);
+
+		// Save Button
+		const saveBtnClose = document.createElement('button');
+		saveBtnClose.textContent = 'Save & Close';
+		saveBtnClose.className = 'custom-dialog-btn dialog-btn-confirm';
+		saveBtnClose.style.width = '100%';
+		saveBtnClose.style.boxSizing = 'border-box';
+		saveBtnClose.style.margin = '0'; // Override default class margin
+		saveBtnClose.addEventListener('click', saveToolbarConfiguration); // Logic handles closing
+		sidebarFooter.appendChild(saveBtnClose);
+
+		sidebar.appendChild(sidebarFooter);
+
+		container.appendChild(sidebar);
+
+		// Content Area
+		const content = document.createElement('div');
+		content.className = 'settings-content';
+
+		// --- TAB 1: TOOLBAR ---
+		const tabToolbar = document.createElement('div');
+		tabToolbar.id = 'tab-toolbar';
+		tabToolbar.className = 'tab-pane active';
+
+		// Add Item Button
+		const addItemBtn = document.createElement('button');
+		addItemBtn.textContent = '+ Add New Item';
+		addItemBtn.className = 'custom-dialog-btn dialog-btn-confirm';
+		addItemBtn.style.marginBottom = '20px';
+		addItemBtn.addEventListener('click', showAddItemModal);
+		tabToolbar.appendChild(addItemBtn);
 
 		const itemsContainer = document.createElement('div');
 		itemsContainer.id = 'toolbar-items-container';
-		panel.appendChild(itemsContainer);
+		tabToolbar.appendChild(itemsContainer);
 
-		const addItemBtn = document.createElement('button');
-		addItemBtn.textContent = 'Add Toolbar Item';
-		addItemBtn.addEventListener('click', showToolbarItemTypeModal);
-		panel.appendChild(addItemBtn);
+		content.appendChild(tabToolbar);
 
-		// Folder Section
-		panel.appendChild(document.createElement('h3')).textContent = 'Reset Settings';
 
-		const resetContainer = document.createElement('div');
-		resetContainer.style.display = 'flex';
-		resetContainer.style.gap = '10px';
-		resetContainer.style.flexWrap = 'wrap';
+		// --- TAB 2: GOOGLE DRIVE ---
+		const tabDrive = document.createElement('div');
+		tabDrive.id = 'tab-drive';
+		tabDrive.className = 'tab-pane';
+
+		const driveHeader = document.createElement('h3');
+		driveHeader.textContent = 'Google Drive Sync';
+		driveHeader.style.marginTop = '0';
+
+		// Help Icon/Button
+		const helpBtn = document.createElement('button');
+		helpBtn.textContent = '📖'; // Book icon
+		helpBtn.title = "Show Setup Instructions";
+		helpBtn.style.marginLeft = '10px';
+		helpBtn.style.background = 'transparent';
+		helpBtn.style.border = '1px solid #5f6368';
+		helpBtn.onclick = showSetupGuide;
+		driveHeader.appendChild(helpBtn);
+
+		tabDrive.appendChild(driveHeader);
+
+		// Client ID Input
+		const clientIdLabel = document.createElement('label');
+		clientIdLabel.textContent = "Google Cloud Client ID:";
+		tabDrive.appendChild(clientIdLabel);
+
+		const clientIdContainer = document.createElement('div');
+		clientIdContainer.style.display = 'flex';
+		clientIdContainer.style.alignItems = 'center';
+		clientIdContainer.style.gap = '5px';
+
+		const clientIdInput = document.createElement('input');
+		clientIdInput.id = 'gdrive-client-id-input';
+		clientIdInput.type = 'password';
+		clientIdInput.placeholder = "Enter your OAuth 2.0 Client ID";
+		clientIdInput.style.flexGrow = '1';
+		clientIdInput.value = ""; // Will be populated
+
+		// Toggle Visibility
+		const toggleVisBtn = document.createElement('button');
+		toggleVisBtn.textContent = '👁️';
+		toggleVisBtn.title = "Toggle Visibility";
+		toggleVisBtn.onclick = () => {
+			clientIdInput.type = clientIdInput.type === 'password' ? 'text' : 'password';
+		};
+
+		// Help Link
+		const helpLink = document.createElement('a');
+		helpLink.href = "https://console.cloud.google.com/apis/credentials";
+		helpLink.target = "_blank";
+		helpLink.textContent = "❓ Get ID";
+		helpLink.className = 'help-link';
+
+		clientIdContainer.appendChild(clientIdInput);
+		clientIdContainer.appendChild(toggleVisBtn);
+		clientIdContainer.appendChild(helpLink);
+		tabDrive.appendChild(clientIdContainer);
+
+		const saveClientIdBtn = document.createElement('button');
+		saveClientIdBtn.textContent = "Save Client ID";
+		saveClientIdBtn.style.marginTop = "10px";
+		saveClientIdBtn.addEventListener('click', async () => {
+			const val = clientIdInput.value.trim();
+			if (val) {
+				await GM_setValue(STORAGE_KEY_GDRIVE_CLIENT_ID, val);
+				displayMessage("Client ID saved!", false);
+				updateSettingsPanelDriveStatus();
+			} else {
+				displayMessage("Please enter a Client ID.");
+			}
+		});
+		tabDrive.appendChild(saveClientIdBtn);
+
+		// Connection Status
+		const statusText = document.createElement('p');
+		statusText.id = 'gdrive-status-text';
+		statusText.textContent = "Status: Checking...";
+		statusText.style.marginTop = "20px";
+		statusText.style.fontWeight = "bold";
+		tabDrive.appendChild(statusText);
+
+		// Connect Button
+		const connectBtn = document.createElement('button');
+		connectBtn.id = 'gdrive-connect-btn';
+		connectBtn.textContent = "Connect Google Drive";
+		connectBtn.className = 'custom-dialog-btn dialog-btn-confirm';
+		connectBtn.style.display = 'none';
+		connectBtn.addEventListener('click', () => GeminiMod.drive.initiateGoogleDriveAuth());
+		tabDrive.appendChild(connectBtn);
+
+		// Backup Controls (Hidden until connected)
+		const backupContainer = document.createElement('div');
+		backupContainer.id = 'gdrive-backup-container';
+		backupContainer.style.display = 'none';
+		backupContainer.style.marginTop = '15px';
+		backupContainer.style.borderTop = '1px solid #444';
+		backupContainer.style.paddingTop = '15px';
+
+		const backupTitle = document.createElement('h4');
+		backupTitle.textContent = "Synchronization";
+		backupTitle.style.marginTop = '0';
+		backupContainer.appendChild(backupTitle);
+
+		const saveBtn = document.createElement('button');
+		saveBtn.id = 'gdrive-save-btn';
+		saveBtn.textContent = "☁️ Save to Drive";
+		saveBtn.className = 'custom-dialog-btn';
+		saveBtn.style.marginRight = '10px';
+		saveBtn.title = "Overwrite the backup file on Google Drive with current settings";
+		saveBtn.onclick = () => {
+			GeminiMod.drive.saveToDrive({
+				toolbarItems,
+				folders,
+				conversationFolders
+			});
+		};
+		backupContainer.appendChild(saveBtn);
+
+		const loadBtn = document.createElement('button');
+		loadBtn.id = 'gdrive-load-btn';
+		loadBtn.textContent = "☁️ Load from Drive";
+		loadBtn.className = 'custom-dialog-btn';
+		loadBtn.title = "Overwrite local settings with data from Google Drive";
+		loadBtn.onclick = () => {
+			GeminiMod.drive.loadFromDrive(async (data) => {
+				if (data && data.toolbarItems && data.folders) {
+					await GM_setValue(STORAGE_KEY_TOOLBAR_ITEMS, JSON.stringify(data.toolbarItems));
+					await GM_setValue(STORAGE_KEY_FOLDERS, data.folders);
+					await GM_setValue(STORAGE_KEY_CONVO_FOLDERS, data.conversationFolders || {});
+					displayMessage("Settings loaded from Drive! Reloading page...", false);
+					setTimeout(() => location.reload(), 1500);
+				} else {
+					displayMessage("Invalid file format downloaded from Drive.");
+				}
+			});
+		};
+		backupContainer.appendChild(loadBtn);
+
+		tabDrive.appendChild(backupContainer);
+
+		// --- Manual Backup Section ---
+		const manualBackupHeader = document.createElement('h3');
+		manualBackupHeader.textContent = 'Manual File Backup';
+		tabDrive.appendChild(manualBackupHeader);
+
+		const manualDesc = document.createElement('p');
+		manualDesc.textContent = "No setup required. Save your settings to a local file.";
+		manualDesc.style.fontSize = '0.9em';
+		manualDesc.style.color = '#aaa';
+		tabDrive.appendChild(manualDesc);
+
+		const exportBtn = document.createElement('button');
+		exportBtn.textContent = "⬇️ Export to File";
+		exportBtn.className = 'custom-dialog-btn';
+		exportBtn.style.marginRight = '10px';
+		exportBtn.onclick = () => GeminiMod.drive.exportSettingsToFile({
+			toolbarItems,
+			folders,
+			conversationFolders
+		});
+		tabDrive.appendChild(exportBtn);
+
+		const importInput = document.createElement('input');
+		importInput.type = 'file';
+		importInput.accept = '.json';
+		importInput.style.display = 'none';
+		importInput.onchange = (e) => {
+			if (e.target.files.length > 0) {
+				GeminiMod.drive.importSettingsFromFile(e.target.files[0], async (data) => {
+					await GM_setValue(STORAGE_KEY_TOOLBAR_ITEMS, JSON.stringify(data.toolbarItems));
+					await GM_setValue(STORAGE_KEY_FOLDERS, data.folders);
+					await GM_setValue(STORAGE_KEY_CONVO_FOLDERS, data.conversationFolders || {});
+					if (data.gdriveClientId) await GM_setValue(STORAGE_KEY_GDRIVE_CLIENT_ID, data.gdriveClientId);
+
+					displayMessage("Settings imported successfully! Reloading...", false);
+					setTimeout(() => location.reload(), 1500);
+				});
+			}
+		};
+
+		const importBtn = document.createElement('button');
+		importBtn.textContent = "⬆️ Import from File";
+		importBtn.className = 'custom-dialog-btn';
+		importBtn.onclick = () => importInput.click();
+		tabDrive.appendChild(importBtn);
+		tabDrive.appendChild(importInput);
+
+
+		content.appendChild(tabDrive);
+
+
+		// --- TAB 3: RESET ---
+		const tabReset = document.createElement('div');
+		tabReset.id = 'tab-reset';
+		tabReset.className = 'tab-pane';
+
+		tabReset.appendChild(document.createElement('h3')).textContent = 'Danger Zone';
 
 		const resetFoldersBtn = document.createElement('button');
-		resetFoldersBtn.textContent = 'Reset Folders';
-		resetFoldersBtn.className = 'remove-btn';
+		resetFoldersBtn.textContent = 'Reset Folders Only';
+		resetFoldersBtn.className = 'custom-dialog-btn dialog-btn-delete';
+		resetFoldersBtn.style.display = 'block';
+		resetFoldersBtn.style.marginBottom = '15px';
 		resetFoldersBtn.addEventListener('click', () => {
-			showConfirmationDialog('Are you sure you want to delete all folder data? This cannot be undone.', async () => {
+			showConfirm("Are you sure you want to delete all folders?", async () => {
 				await GM_deleteValue(STORAGE_KEY_FOLDERS);
 				await GM_deleteValue(STORAGE_KEY_CONVO_FOLDERS);
 				location.reload();
-			}, 'Reset', 'dialog-btn-delete');
+			}, "Delete Folders", "dialog-btn-delete");
 		});
+		tabReset.appendChild(resetFoldersBtn);
 
-		const resetEverythingBtn = document.createElement('button');
-		resetEverythingBtn.textContent = 'Reset Everything';
-		resetEverythingBtn.className = 'remove-btn';
-		resetEverythingBtn.addEventListener('click', () => {
-			showConfirmationDialog('Are you sure you want to delete ALL data (Folders, Toolbar, Settings)? This cannot be undone.', async () => {
-				await GM_deleteValue(STORAGE_KEY_FOLDERS);
-				await GM_deleteValue(STORAGE_KEY_CONVO_FOLDERS);
+		const resetAllBtn = document.createElement('button');
+		resetAllBtn.textContent = 'Reset EVERYTHING (Factory Reset)';
+		resetAllBtn.className = 'custom-dialog-btn dialog-btn-delete';
+		resetAllBtn.style.backgroundColor = '#cc2929'; // Redder
+		resetAllBtn.addEventListener('click', () => {
+			showConfirm("Are you sure? This will execute a full factory reset of the userscript, including Toolbar items, Folders, and Google Drive connection.", async () => {
 				await GM_deleteValue(STORAGE_KEY_TOOLBAR_ITEMS);
+				await GM_deleteValue(STORAGE_KEY_FOLDERS);
+				await GM_deleteValue(STORAGE_KEY_CONVO_FOLDERS);
+				await GM_deleteValue(STORAGE_KEY_GDRIVE_TOKEN);
+				await GM_deleteValue(STORAGE_KEY_GDRIVE_CLIENT_ID);
 				location.reload();
-			}, 'Reset Everything', 'dialog-btn-delete');
+			}, "FACTORY RESET", "dialog-btn-delete");
 		});
+		tabReset.appendChild(resetAllBtn);
 
-		resetContainer.appendChild(resetFoldersBtn);
-		resetContainer.appendChild(resetEverythingBtn);
-		panel.appendChild(resetContainer);
+		content.appendChild(tabReset);
 
-
-		const actionsDiv = document.createElement('div');
-		actionsDiv.className = 'settings-actions';
-		const saveBtn = document.createElement('button');
-		saveBtn.textContent = 'Save & Close';
-		saveBtn.addEventListener('click', saveToolbarConfiguration);
-		actionsDiv.appendChild(saveBtn);
-
-		const cancelBtn = document.createElement('button');
-		cancelBtn.textContent = 'Cancel';
-		cancelBtn.addEventListener('click', () => toggleSettingsPanel(false));
-		actionsDiv.appendChild(cancelBtn);
-		panel.appendChild(actionsDiv);
+		container.appendChild(content);
+		panel.appendChild(container);
 
 		document.body.appendChild(overlay);
+
+		// Initialize Sortable on the items container
+		new Sortable(itemsContainer, {
+			animation: 150,
+			handle: '.item-group',
+			ghostClass: 'sortable-ghost'
+		});
 	}
 
-	function showToolbarItemTypeModal() {
-		let modal = document.getElementById('gemini-mod-type-modal-overlay');
-		if (!modal) {
-			modal = document.createElement('div');
-			modal.id = 'gemini-mod-type-modal-overlay';
-			const modalContent = document.createElement('div');
-			modalContent.id = 'gemini-mod-type-modal';
-			const h3 = document.createElement('h3');
-			h3.textContent = 'Select Toolbar Item Type';
-			modalContent.appendChild(h3);
+	function populateSettingsPanel(panel) {
+		const container = panel.querySelector('#toolbar-items-container');
+		if (!container) return; // Should not happen
+		clearEl(container);
 
-			const btnButton = document.createElement('button');
-			btnButton.textContent = 'Button';
-			btnButton.addEventListener('click', () => {
-				addItemToPanel({ type: 'button' });
-				modal.style.display = 'none';
+		toolbarItems.forEach(item => addItemToPanel(container, item));
+
+		// Populate Client ID if exists
+		const clientIdInput = document.getElementById('gdrive-client-id-input');
+		if (clientIdInput) {
+			GeminiMod.drive.getGoogleDriveClientId().then(id => {
+				if (id) clientIdInput.value = id;
 			});
-
-			const btnDropdown = document.createElement('button');
-			btnDropdown.textContent = 'Dropdown';
-			btnDropdown.addEventListener('click', () => {
-				addItemToPanel({ type: 'dropdown' });
-				modal.style.display = 'none';
-			});
-
-			const btnAction = document.createElement('button');
-			btnAction.textContent = 'Predefined Action';
-			btnAction.addEventListener('click', () => {
-				showActionSelectionModal();
-				modal.style.display = 'none';
-			});
-
-			modalContent.appendChild(btnButton);
-			modalContent.appendChild(btnDropdown);
-			modalContent.appendChild(btnAction);
-			modal.appendChild(modalContent);
-			document.body.appendChild(modal);
 		}
-		modal.style.display = 'block';
+		// Update Status
+		updateSettingsPanelDriveStatus();
 	}
 
-	function showActionSelectionModal() {
-		const actions = [
-			{ action: 'paste', label: "📋 Paste", title: "Paste from Clipboard" },
-			{ action: 'copy', label: "📄 Copy", title: "Copy active canvas content" },
-			{ action: 'download', label: "💾 Download", title: "Download active canvas content" },
-			{ action: 'pdf', label: "📑 PDF", title: "Export active canvas content as PDF" }
-		];
-
-		// Simple prompt or small modal to pick action
-		// For simplicity, let's reuse the modal structure or create a quick one
-		let modal = document.getElementById('gemini-mod-action-modal-overlay');
-		if (!modal) {
-			modal = document.createElement('div');
-			modal.id = 'gemini-mod-action-modal-overlay';
-			modal.className = 'custom-dialog-overlay'; // Reuse class
-
-			const modalContent = document.createElement('div');
-			modalContent.className = 'custom-dialog-box';
-
-			const h3 = document.createElement('h3');
-			h3.textContent = 'Select Action';
-			modalContent.appendChild(h3);
-
-			actions.forEach(act => {
-				const btn = document.createElement('button');
-				btn.className = 'custom-dialog-btn';
-				btn.textContent = act.label;
-				btn.style.margin = '5px';
-				btn.addEventListener('click', () => {
-					addItemToPanel({ type: 'action', ...act });
-					modal.style.display = 'none';
-				});
-				modalContent.appendChild(btn);
-			});
-
-			const cancelBtn = document.createElement('button');
-			cancelBtn.className = 'custom-dialog-btn dialog-btn-cancel';
-			cancelBtn.textContent = 'Cancel';
-			cancelBtn.style.marginTop = '10px';
-			cancelBtn.addEventListener('click', () => modal.style.display = 'none');
-			modalContent.appendChild(cancelBtn);
-
-			modal.appendChild(modalContent);
-			document.body.appendChild(modal);
-		}
-		modal.style.display = 'flex';
-	}
-
-	function populateSettingsPanel() {
-		const container = document.getElementById('toolbar-items-container');
-		clearElement(container);
-		toolbarItems.forEach(item => addItemToPanel(item));
-	}
-
-	function addItemToPanel(item) {
-		const container = document.getElementById('toolbar-items-container');
+	function addItemToPanel(container, item) {
 		const group = document.createElement('div');
 		group.className = 'item-group';
 		group.dataset.type = item.type;
+		if (item.action) group.dataset.action = item.action;
+		if (item.title) group.dataset.title = item.title;
 
-		// Visibility Checkbox
-		const visibleLabel = document.createElement('label');
-		visibleLabel.style.display = 'flex';
-		visibleLabel.style.alignItems = 'center';
-		visibleLabel.style.marginBottom = '0';
-		visibleLabel.style.marginRight = '10px';
-		visibleLabel.style.cursor = 'pointer';
+		const visibleCheck = document.createElement('input');
+		visibleCheck.type = 'checkbox';
+		visibleCheck.className = 'visible-checkbox';
+		visibleCheck.checked = item.visible !== false;
+		visibleCheck.title = 'Show in toolbar';
+		group.appendChild(visibleCheck);
 
-		const visibleCheckbox = document.createElement('input');
-		visibleCheckbox.type = 'checkbox';
-		visibleCheckbox.className = 'visible-checkbox';
-		visibleCheckbox.checked = item.visible !== false;
-		visibleCheckbox.style.width = 'auto';
-		visibleCheckbox.style.marginRight = '5px';
-
-		visibleLabel.appendChild(visibleCheckbox);
-		visibleLabel.appendChild(document.createTextNode('Show'));
-		group.appendChild(visibleLabel);
-
-		// Item Content
 		const contentDiv = document.createElement('div');
 		contentDiv.className = 'item-content';
 
+		const typeLabel = document.createElement('strong');
+		typeLabel.textContent = item.type.toUpperCase() + (item.action ? ` (${item.action})` : '');
+		typeLabel.style.display = 'block';
+		typeLabel.style.marginBottom = '5px';
+		typeLabel.style.fontSize = '0.7em';
+		typeLabel.style.color = '#888';
+		contentDiv.appendChild(typeLabel);
+
+		// Dynamic fields based on type
 		if (item.type === 'button') {
-			const button = item || { label: '', text: '' };
-			const labelLabel = document.createElement('label');
-			labelLabel.textContent = 'Button Label';
-			contentDiv.appendChild(labelLabel);
-
-			const labelInput = document.createElement('input');
-			labelInput.type = 'text';
-			labelInput.className = 'label-input';
-			labelInput.value = button.label || '';
-			contentDiv.appendChild(labelInput);
-
-			const textLabel = document.createElement('label');
-			textLabel.textContent = 'Snippet Text';
-			contentDiv.appendChild(textLabel);
-
-			const textInput = document.createElement('textarea');
-			textInput.className = 'text-input';
-			textInput.value = button.text || '';
-			contentDiv.appendChild(textInput);
+			contentDiv.appendChild(createInputRow("Label:", item.label, "label-input"));
+			contentDiv.appendChild(createInputRow("Snippet:", item.text, "text-input", "textarea"));
 		} else if (item.type === 'dropdown') {
-			const dropdown = item || { placeholder: '', options: [] };
-			const placeholderLabel = document.createElement('label');
-			placeholderLabel.textContent = 'Dropdown Placeholder';
-			contentDiv.appendChild(placeholderLabel);
-
-			const placeholderInput = document.createElement('input');
-			placeholderInput.type = 'text';
-			placeholderInput.className = 'placeholder-input';
-			placeholderInput.value = dropdown.placeholder || '';
-			contentDiv.appendChild(placeholderInput);
-
+			contentDiv.appendChild(createInputRow("Placeholder:", item.placeholder, "placeholder-input"));
 			const optionsContainer = document.createElement('div');
 			optionsContainer.className = 'dropdown-options-container';
-			optionsContainer.appendChild(document.createElement('label')).textContent = 'Options';
+			optionsContainer.appendChild(document.createElement('h4')).textContent = "Options:";
+
+			item.options.forEach(opt => addOptionToContainer(optionsContainer, opt));
+
+			const addOptBtn = document.createElement('button');
+			addOptBtn.textContent = '+ Add Option';
+			addOptBtn.style.marginTop = '5px';
+			addOptBtn.addEventListener('click', () => addOptionToContainer(optionsContainer, { label: '', text: '' }));
+			optionsContainer.appendChild(addOptBtn);
 			contentDiv.appendChild(optionsContainer);
-
-			const addOptionBtn = document.createElement('button');
-			addOptionBtn.textContent = 'Add Option';
-			addOptionBtn.addEventListener('click', () => addOptionToDropdownPanel(optionsContainer));
-			contentDiv.appendChild(addOptionBtn);
-
-			if (dropdown.options && dropdown.options.length > 0) {
-				dropdown.options.forEach(opt => addOptionToDropdownPanel(optionsContainer, opt));
-			} else {
-				addOptionToDropdownPanel(optionsContainer);
-			}
 		} else if (item.type === 'action') {
-			group.dataset.action = item.action;
-			group.dataset.title = item.title;
-
-			const labelLabel = document.createElement('label');
-			labelLabel.textContent = `Action: ${item.action.toUpperCase()}`;
-			contentDiv.appendChild(labelLabel);
-
-			const labelInput = document.createElement('input');
-			labelInput.type = 'text';
-			labelInput.className = 'label-input';
-			labelInput.value = item.label || '';
-			contentDiv.appendChild(labelInput);
+			contentDiv.appendChild(createInputRow("Label:", item.label, "label-input"));
+			const descInfo = document.createElement('div');
+			descInfo.style.fontSize = '0.8em';
+			descInfo.style.color = '#aaa';
+			descInfo.textContent = "Functionality is built-in.";
+			contentDiv.appendChild(descInfo);
 		}
+
 		group.appendChild(contentDiv);
 
-		// Remove Button (Only for non-action items)
-		if (item.type !== 'action') {
-			const removeBtn = document.createElement('button');
-			removeBtn.className = 'remove-btn';
-			removeBtn.textContent = 'Remove';
-			removeBtn.addEventListener('click', () => {
-				group.remove();
-			});
-			group.appendChild(removeBtn);
-		}
+		// Delete Button
+		const deleteBtn = document.createElement('button');
+		deleteBtn.textContent = '🗑️';
+		deleteBtn.className = 'remove-btn';
+		deleteBtn.title = 'Remove Item';
+		deleteBtn.addEventListener('click', () => group.remove());
+		group.appendChild(deleteBtn);
 
 		container.appendChild(group);
 	}
 
-	function addOptionToDropdownPanel(container, option = { label: '', text: '' }) {
-		const item = document.createElement('div');
-		item.className = 'option-item';
+	function createInputRow(labelText, value, className, inputType = 'text') {
+		const wrapper = document.createElement('div');
+		wrapper.style.marginBottom = '5px';
+		const label = document.createElement('label');
+		label.textContent = labelText;
+		let input;
+		if (inputType === 'textarea') {
+			input = document.createElement('textarea');
+		} else {
+			input = document.createElement('input');
+			input.type = 'text';
+		}
+		input.value = value || '';
+		input.className = className;
+		wrapper.appendChild(label);
+		wrapper.appendChild(input);
+		return wrapper;
+	}
+
+	function addOptionToContainer(container, optionData) {
+		const row = document.createElement('div');
+		row.className = 'option-item';
 
 		const labelInput = document.createElement('input');
 		labelInput.type = 'text';
-		labelInput.className = 'label-input';
-		labelInput.placeholder = 'Option Label';
-		labelInput.value = option.label;
-		item.appendChild(labelInput);
+		labelInput.placeholder = 'Label';
+		labelInput.value = optionData.label;
+		labelInput.className = 'custom-dialog-input label-input';
+		labelInput.style.marginBottom = '0';
 
 		const textInput = document.createElement('textarea');
-		textInput.className = 'text-input';
 		textInput.placeholder = 'Snippet Text';
-		textInput.value = option.text;
-		item.appendChild(textInput);
+		textInput.value = optionData.text;
+		textInput.className = 'custom-dialog-input text-input';
+		textInput.style.marginBottom = '0';
+		textInput.style.minHeight = '40px';
 
-		const removeBtn = document.createElement('button');
-		removeBtn.className = 'remove-btn';
-		removeBtn.textContent = 'X';
-		removeBtn.addEventListener('click', () => item.remove());
-		item.appendChild(removeBtn);
 
-		container.appendChild(item);
+		const delBtn = document.createElement('button');
+		delBtn.textContent = 'x';
+		delBtn.className = 'remove-btn';
+		delBtn.addEventListener('click', () => row.remove());
+
+		row.appendChild(labelInput);
+		row.appendChild(textInput);
+		row.appendChild(delBtn);
+
+		// Insert before the "Add Option" button
+		container.insertBefore(row, container.lastElementChild);
+	}
+
+	function showAddItemModal() {
+		// reuse existing modal if possible or create simple one
+		const overlay = document.createElement('div');
+		overlay.className = 'custom-dialog-overlay';
+		overlay.id = 'gemini-mod-type-modal-overlay';
+
+		const modal = document.createElement('div');
+		modal.id = 'gemini-mod-type-modal';
+		modal.className = 'custom-dialog-box';
+
+		const h3 = document.createElement('h3');
+		h3.textContent = 'Select Item Type';
+		modal.appendChild(h3);
+
+		const createTypeBtn = (type, label) => {
+			const btn = document.createElement('button');
+			btn.textContent = label;
+			btn.className = 'custom-dialog-btn dialog-btn-confirm';
+			btn.addEventListener('click', () => {
+				let newItem;
+				if (type === 'button') newItem = { type: 'button', label: 'New Button', text: '' };
+				else if (type === 'dropdown') newItem = { type: 'dropdown', placeholder: 'Select...', options: [] };
+
+				const container = document.getElementById('toolbar-items-container');
+				addItemToPanel(container, newItem);
+				document.body.removeChild(overlay);
+			});
+			return btn;
+		};
+
+		modal.appendChild(createTypeBtn('button', 'Button'));
+		modal.appendChild(createTypeBtn('dropdown', 'Dropdown'));
+
+		const cancelBtn = document.createElement('button');
+		cancelBtn.textContent = 'Cancel';
+		cancelBtn.className = 'custom-dialog-btn dialog-btn-cancel';
+		cancelBtn.style.marginTop = '15px';
+		cancelBtn.addEventListener('click', () => document.body.removeChild(overlay));
+		modal.appendChild(cancelBtn);
+
+		overlay.appendChild(modal);
+		document.body.appendChild(overlay);
 	}
 
 
-	function toggleSettingsPanel(forceState) {
-		const overlay = document.getElementById('gemini-mod-settings-overlay');
-		if (!overlay) return;
-		const isVisible = overlay.style.display === 'block';
-		const show = typeof forceState === 'boolean' ? forceState : !isVisible;
+	// --- Folder Logic ---
 
-		if (show) {
-			populateSettingsPanel();
-			// This needs to be called after population to init Sortable
-			setupDragAndDrop();
-			overlay.style.display = 'block';
-		} else {
-			overlay.style.display = 'none';
+	function initializeFolders() {
+		const chatHistoryList = document.querySelector(FOLDER_INJECTION_POINT_SELECTOR);
+		if (!chatHistoryList) return false;
+
+		const foldersContainerId = 'folder-ui-container';
+		if (!document.getElementById(foldersContainerId)) {
+			const container = document.createElement('div');
+			container.id = foldersContainerId;
+			chatHistoryList.parentNode.insertBefore(container, chatHistoryList);
+			renderFolders();
 		}
+
+		// Observe chat list changes to identify new conversations
+		const observer = new MutationObserver(() => {
+			processConversationItems(chatHistoryList);
+		});
+		observer.observe(chatHistoryList, { childList: true, subtree: true });
+
+		// Initial process
+		processConversationItems(chatHistoryList);
+		return true;
 	}
 
+	function renderFolders() {
+		const container = document.getElementById('folder-ui-container');
+		if (!container) return;
 
-	// --- Download Logic ---
+		// Remove existing folder-container if exists to re-render
+		let folderWrapper = document.getElementById('folder-container');
+		if (folderWrapper) folderWrapper.remove();
 
-	function sanitizeBasename(baseName) {
-		if (typeof baseName !== 'string' || baseName.trim() === "") return "downloaded_document";
-		let sanitized = baseName.trim()
-			.replace(INVALID_FILENAME_CHARS_REGEX, '_')
-			.replace(/\s+/g, '_')
-			.replace(/__+/g, '_')
-			.replace(/^[_.-]+|[_.-]+$/g, '');
-		if (!sanitized || RESERVED_WINDOWS_NAMES_REGEX.test(sanitized)) {
-			sanitized = `_${sanitized || "file"}_`;
-		}
-		return sanitized || "downloaded_document";
-	}
+		folderWrapper = document.createElement('div');
+		folderWrapper.id = 'folder-container';
+		container.appendChild(folderWrapper);
 
-	function determineFilename(title) {
-		if (!title || typeof title !== 'string' || title.trim() === "") {
-			return `downloaded_document.${DEFAULT_DOWNLOAD_EXTENSION}`;
-		}
-		const match = title.trim().match(FILENAME_WITH_EXT_REGEX);
-		if (match) {
-			return `${sanitizeBasename(match[1])}.${match[2].toLowerCase()}`;
-		}
-		return `${sanitizeBasename(title)}.${DEFAULT_DOWNLOAD_EXTENSION}`;
-	}
+		folders.forEach(folder => {
+			folderWrapper.appendChild(createFolderElement(folder));
+		});
 
-	function triggerDownload(filename, content) {
-		try {
-			const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-			URL.revokeObjectURL(url);
-		} catch (error) {
-			displayUserscriptMessage(`Failed to download: ${error.message}`);
-		}
-	}
-
-	function waitForElement(selector, timeout = 3000) {
-		return new Promise((resolve, reject) => {
-			const element = document.querySelector(selector);
-			if (element) return resolve(element);
-
-			const observer = new MutationObserver((mutations) => {
-				const element = document.querySelector(selector);
-				if (element) {
-					resolve(element);
-					observer.disconnect();
+		const addBtn = document.createElement('button');
+		addBtn.id = 'add-folder-btn';
+		addBtn.textContent = '+ New Folder';
+		addBtn.addEventListener('click', () => {
+			showPrompt("New Folder Name:", "", async (name) => {
+				if (name) {
+					folders.push({ id: Date.now().toString(), name: name, color: FOLDER_COLORS[0], isOpen: true });
+					await saveFolderConfiguration();
+					renderFolders();
 				}
 			});
+		});
+		folderWrapper.appendChild(addBtn);
 
-			observer.observe(document.body, {
-				childList: true,
-				subtree: true
-			});
-
-			setTimeout(() => {
-				observer.disconnect();
-				reject(new Error(`Element ${selector} not found within ${timeout}ms`));
-			}, timeout);
+		// Initialize Sortable for folders
+		new Sortable(folderWrapper, {
+			animation: 150,
+			handle: '.folder-header',
+			onEnd: async () => {
+				const newOrder = [];
+				folderWrapper.querySelectorAll('.folder').forEach(el => {
+					const id = el.dataset.id;
+					const folder = folders.find(f => f.id === id);
+					if (folder) newOrder.push(folder);
+				});
+				folders = newOrder;
+				await saveFolderConfiguration();
+			}
 		});
 	}
 
-	async function handleGlobalCanvasDownload() {
-		// --- METHOD 1: Monaco Editor Direct Access (Preferred) ---
-		try {
-			if (typeof unsafeWindow !== 'undefined' && unsafeWindow.monaco) {
-				const editors = unsafeWindow.monaco.editor.getEditors();
-				// Find the editor that is currently visible/attached
-				const activeEditor = editors.find(e => {
-					const node = e.getContainerDomNode();
-					return document.body.contains(node) && node.offsetParent !== null;
-				});
+	function createFolderElement(folder) {
+		const folderDiv = document.createElement('div');
+		folderDiv.className = `folder ${folder.isOpen ? '' : 'closed'}`;
+		folderDiv.dataset.id = folder.id;
 
-				if (activeEditor) {
-					const model = activeEditor.getModel();
-					if (model) {
-						console.log("Gemini Mod: Found active Monaco editor.");
-						const content = model.getValue();
-						const titleEl = document.querySelector(GEMINI_CODE_CANVAS_TITLE_SELECTOR);
-						const title = titleEl ? titleEl.textContent : "code_snippet";
-						triggerDownload(determineFilename(title), content);
-						return;
-					}
+		const header = document.createElement('div');
+		header.className = 'folder-header';
+		header.style.borderLeft = `4px solid ${folder.color}`;
+
+		// Folder Icon (Open/Closed)
+		const iconWrapper = document.createElement('div');
+		iconWrapper.className = 'folder-icon-wrapper';
+
+		const createIcon = (isOpen, color) => {
+			const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+			svg.classList.add("folder-icon", isOpen ? "icon-open" : "icon-closed");
+			svg.setAttribute("viewBox", "0 0 24 24");
+			svg.setAttribute("fill", color);
+			const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+			path.setAttribute("d", isOpen
+				? "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+				: "M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z");
+			svg.appendChild(path);
+			return svg;
+		};
+
+		iconWrapper.appendChild(createIcon(true, folder.color));
+		iconWrapper.appendChild(createIcon(false, folder.color));
+		header.appendChild(iconWrapper);
+
+		const nameSpan = document.createElement('span');
+		nameSpan.className = 'folder-name';
+		nameSpan.textContent = folder.name;
+		header.appendChild(nameSpan);
+
+		const controls = document.createElement('div');
+		controls.className = 'folder-controls';
+
+		const settingsBtn = document.createElement('button');
+		settingsBtn.className = 'folder-options-btn';
+		settingsBtn.textContent = '⋮';
+		settingsBtn.title = "Folder Options";
+		settingsBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			showFolderContextMenu(e, folder);
+		});
+		controls.appendChild(settingsBtn);
+
+		const toggleIcon = document.createElement('span');
+		toggleIcon.className = 'folder-toggle-icon';
+		toggleIcon.textContent = '▼';
+		controls.appendChild(toggleIcon);
+
+		header.appendChild(controls);
+
+		header.addEventListener('click', () => {
+			folder.isOpen = !folder.isOpen;
+			folderDiv.classList.toggle('closed', !folder.isOpen);
+			saveFolderConfiguration();
+		});
+
+		folderDiv.appendChild(header);
+
+		const contentDiv = document.createElement('div');
+		contentDiv.className = 'folder-content';
+		// Populate content
+		const convoIds = Object.keys(conversationFolders).filter(k => conversationFolders[k] === folder.id);
+		// Note: Actual conversation DOM elements are moved here by processConversationItems logic
+		// We set a data attributes to help the processor know this is a drop target
+		contentDiv.dataset.folderId = folder.id;
+
+		folderDiv.appendChild(contentDiv);
+
+		// Initialize Sortable for dragging conversations INTO this folder
+		new Sortable(contentDiv, {
+			group: 'conversations', // Share group with main list if possible, or just other folders
+			animation: 150,
+			onAdd: async (evt) => {
+				const item = evt.item;
+				const convoId = getConversationId(item);
+				if (convoId) {
+					conversationFolders[convoId] = folder.id;
+					await saveFolderConfiguration();
 				}
 			}
-		} catch (e) {
-			console.warn("Gemini Mod: Monaco access failed", e);
+		});
+
+		return folderDiv;
+	}
+
+	function getConversationId(element) {
+		// Extract ID from Gemini's DOM. Needs to be robust.
+		// Usually in the link href or data-test-id
+		const link = element.querySelector('a');
+		if (link) {
+			const match = link.href.match(/\/app\/([a-zA-Z0-9]+)/);
+			if (match) return match[1];
 		}
+		return null;
+	}
 
-		// --- METHOD 2: Code Canvas "Share -> Copy" Automation (Fallback) ---
-		const codeTitleEl = document.querySelector(GEMINI_CODE_CANVAS_TITLE_SELECTOR);
+	function showFolderContextMenu(e, folder) {
+		const existingMenu = document.getElementById('folder-context-menu');
+		if (existingMenu) existingMenu.remove();
 
-		if (codeTitleEl) {
-			console.log("Gemini Mod: Code canvas detected. Using clipboard fallback.");
-			const panelEl = codeTitleEl.closest(GEMINI_CODE_CANVAS_PANEL_SELECTOR);
-			const shareButton = panelEl?.querySelector(GEMINI_CODE_CANVAS_SHARE_BUTTON_SELECTOR);
-			if (!shareButton) return displayUserscriptMessage("Could not find the 'Share' button in the code canvas.");
+		const menu = document.createElement('div');
+		menu.id = 'folder-context-menu';
+		menu.className = 'folder-context-menu';
 
-			shareButton.click();
+		const renameItem = document.createElement('div');
+		renameItem.className = 'folder-context-menu-item';
+		renameItem.textContent = '✏️ Rename';
+		renameItem.onclick = () => {
+			showPrompt("Rename Folder:", folder.name, async (newName) => {
+				folder.name = newName;
+				await saveFolderConfiguration();
+				renderFolders();
+			});
+			menu.remove();
+		};
+		menu.appendChild(renameItem);
 
-			try {
-				const copyButton = await waitForElement(GEMINI_CODE_CANVAS_COPY_BUTTON_SELECTOR, 2000);
-				copyButton.click();
+		const colorItem = document.createElement('div');
+		colorItem.className = 'folder-context-menu-item';
+		colorItem.textContent = '🎨 Change Color';
+		colorItem.onclick = () => {
+			showColorPicker(folder.color, async (newColor) => {
+				folder.color = newColor;
+				await saveFolderConfiguration();
+				renderFolders();
+			});
+			menu.remove();
+		};
+		menu.appendChild(colorItem);
 
-				// Wait a bit for clipboard write
-				setTimeout(async () => {
-					try {
-						const content = await navigator.clipboard.readText();
-						if (!content) return displayUserscriptMessage("Clipboard empty. Nothing to download.");
-						const filename = determineFilename(codeTitleEl.textContent);
-						triggerDownload(filename, content);
-					} catch (err) {
-						displayUserscriptMessage('Clipboard permission denied or failed to read.');
+		const deleteItem = document.createElement('div');
+		deleteItem.className = 'folder-context-menu-item delete';
+		deleteItem.textContent = '🗑️ Delete';
+		deleteItem.onclick = () => {
+			showConfirm(`Delete folder "${folder.name}"? Conversations will return to the main list.`, async () => {
+				folders = folders.filter(f => f.id !== folder.id);
+				// Remove folder assignments for convos in this folder
+				Object.keys(conversationFolders).forEach(k => {
+					if (conversationFolders[k] === folder.id) delete conversationFolders[k];
+				});
+				await saveFolderConfiguration();
+				renderFolders();
+				// Trigger reprocessing of lists to move items back
+				processConversationItems(document.querySelector(FOLDER_INJECTION_POINT_SELECTOR));
+			}, "Delete", "dialog-btn-delete");
+			menu.remove();
+		};
+		menu.appendChild(deleteItem);
+
+		document.body.appendChild(menu);
+		menu.style.display = 'block';
+		menu.style.left = e.pageX + 'px';
+		menu.style.top = e.pageY + 'px';
+
+		const closeMenu = () => {
+			menu.remove();
+			document.removeEventListener('click', closeMenu);
+		};
+		setTimeout(() => document.addEventListener('click', closeMenu), 0);
+	}
+
+	function processConversationItems(chatHistoryList) {
+		if (!chatHistoryList) return;
+
+		// 1. Identify Main Conversation Container (Gemini's list)
+		// Usually it's a specific container inside chatHistoryList
+		const mainList = chatHistoryList.querySelector(FOLDER_CHAT_LIST_CONTAINER_SELECTOR) || chatHistoryList;
+
+		// 2. Find all conversation items
+		const items = Array.from(document.querySelectorAll(FOLDER_CHAT_ITEM_SELECTOR)).filter(el => {
+			// Filter out items that are already inside our folders to update them if state changed,
+			// or items in the main list.
+			return listContains(chatHistoryList, el) || listContains(document.getElementById('folder-container'), el);
+		});
+
+		items.forEach(item => {
+			// Ensure it has the sortable class/structure
+			if (!item.parentNode.classList.contains('conversation-items-container')) {
+				// Wrap if necessary or apply class (Gemini structure varies)
+				// Note: Gemini usually has items directly in a container.
+				// We might need to make sure the ITEM itself is draggable.
+				item.classList.add('conversation-items-container'); // reuse class for styling
+			}
+
+			const convoId = getConversationId(item);
+			if (!convoId) return;
+
+			const assignedFolderId = conversationFolders[convoId];
+
+			if (assignedFolderId) {
+				// Should be in a folder
+				const folderContent = document.querySelector(`.folder-content[data-folder-id="${assignedFolderId}"]`);
+				if (folderContent && !folderContent.contains(item)) {
+					folderContent.appendChild(item);
+				}
+			} else {
+				// Should be in the main list
+				// This is tricky because Gemini renders this list dynamically.
+				// If we moved it out, we might need to move it back to a specific place or just 'unhide' it if we hid it.
+				// For now, appending to the main chat list container if found.
+				if (mainList && !mainList.contains(item)) {
+					// Try to place it back roughly where it belongs by date? Hard.
+					// Just append to top or bottom?
+					mainList.appendChild(item);
+				}
+			}
+		});
+
+		// 3. Ensure Main List is Sortable (so items can be dragged FROM it)
+		if (mainList && !mainList.classList.contains('gemini-mod-sortable-init')) {
+			mainList.classList.add('gemini-mod-sortable-init');
+			new Sortable(mainList, {
+				group: 'conversations',
+				animation: 150,
+				onAdd: async (evt) => {
+					// Item dragged BACK to main list
+					const item = evt.item;
+					const convoId = getConversationId(item);
+					if (convoId && conversationFolders[convoId]) {
+						delete conversationFolders[convoId];
+						await saveFolderConfiguration();
 					}
-				}, 300);
+				}
+			});
+		}
+	}
 
-			} catch (err) {
-				displayUserscriptMessage("Could not find 'Copy' button after sharing.");
+	function listContains(list, node) {
+		return list && list.contains(node);
+	}
+
+
+	// --- Core Actions (Download, PDF, Copy) ---
+	// kept as is, but ensuring they use displayUserscriptMessage via helper
+
+	function getCanvasContent() {
+		// More robust detection of the panel
+		const panels = document.querySelectorAll('code-immersive-panel, immersive-panel, .immersive-panel-container');
+
+		for (const panel of panels) {
+			// Helper to check a root (Light or Shadow)
+			const checkRoot = (root) => {
+				if (!root) return null;
+
+				const titleEl = root.querySelector('h2.title-text, .title, span[data-test-id="title"]');
+				const title = titleEl ? titleEl.textContent.trim() : "gemini_artifact";
+
+				// 1. Try Monaco Editor (Gemini Canvas Code)
+				// Monaco uses virtualized rendering, but usually puts lines in .view-lines.
+				// This selector tries to find the main content area of monaco.
+				const monacoEditor = root.querySelector('.monaco-editor');
+				if (monacoEditor) {
+					const viewLines = monacoEditor.querySelector('.view-lines');
+					if (viewLines) {
+						// innerText of view-lines usually preserves formatting reasonably well for copy
+						return { type: 'code', text: viewLines.innerText, title: title };
+					}
+				}
+
+				// 2. Try Standard Code Extraction (pre/code)
+				const codeBlock = root.querySelector('code, pre');
+				if (codeBlock) {
+					return { type: 'code', text: codeBlock.textContent, title: title };
+				}
+
+				// 3. Try Document Extraction (ProseMirror / ContentEditable)
+				// Use the constant if available in scope, ensuring we match the defined selectors
+				const editor = root.querySelector(GEMINI_DOC_CANVAS_EDITOR_SELECTOR) || root.querySelector('[contenteditable="true"]');
+				if (editor) {
+					const docTitle = title === "gemini_artifact" ? "GEMINI_DOCUMENT" : title;
+					return { type: 'text', text: editor.innerText, title: docTitle };
+				}
+				return null;
+			};
+
+			// Check Shadow DOM first (most likely for custom elements)
+			if (panel.shadowRoot) {
+				const shadowResult = checkRoot(panel.shadowRoot);
+				if (shadowResult) return shadowResult;
 			}
-			return;
+
+			// Check Light DOM
+			const lightResult = checkRoot(panel);
+			if (lightResult) return lightResult;
 		}
 
-		// --- METHOD 3: Fallback logic for Document/Immersive Canvases ---
-		const immersivePanel = document.querySelector(GEMINI_DOC_CANVAS_PANEL_SELECTOR);
-		const editorContent = immersivePanel?.querySelector(GEMINI_DOC_CANVAS_EDITOR_SELECTOR);
-
-		if (editorContent) {
-			console.log("Gemini Mod: Document canvas detected. Using direct extraction method.");
-			const content = editorContent.innerText;
-			if (!content || content.trim() === "") {
-				return displayUserscriptMessage("Document canvas is empty. Nothing to download.");
-			}
-
-			let title = "document_canvas";
-			// Query title from the panel (toolbar), not the editor content
-			const titleEl = immersivePanel.querySelector(GEMINI_DOC_CANVAS_TITLE_SELECTOR);
-			if (titleEl && titleEl.innerText.trim() !== "") {
-				title = titleEl.innerText.trim();
-			}
-
-			const filename = determineFilename(title);
-			triggerDownload(filename, content);
-			return; // Stop execution if successful
-		}
-
-		displayUserscriptMessage("No active or supported canvas found to download.");
+		return null;
 	}
 
 	async function handleCopy() {
-		// --- METHOD 1: Monaco Editor Direct Access ---
-		try {
-			if (typeof unsafeWindow !== 'undefined' && unsafeWindow.monaco) {
-				const editors = unsafeWindow.monaco.editor.getEditors();
-				const activeEditor = editors.find(e => {
-					const node = e.getContainerDomNode();
-					return document.body.contains(node) && node.offsetParent !== null;
-				});
-				if (activeEditor) {
-					const model = activeEditor.getModel();
-					if (model) {
-						const content = model.getValue();
-						await navigator.clipboard.writeText(content);
-						displayUserscriptMessage("Code copied to clipboard!", false);
-						return;
-					}
-				}
+		const content = getCanvasContent();
+		if (content) {
+			try {
+				await navigator.clipboard.writeText(content.text);
+				displayMessage("Content copied to clipboard!", false);
+			} catch (err) {
+				displayMessage("Failed to copy: " + err.message);
 			}
-		} catch (e) { console.warn("Gemini Mod: Monaco access failed for copy", e); }
-
-		// --- METHOD 2: Code Canvas "Share -> Copy" Automation ---
-		const codeTitleEl = document.querySelector(GEMINI_CODE_CANVAS_TITLE_SELECTOR);
-		if (codeTitleEl) {
-			const panelEl = codeTitleEl.closest(GEMINI_CODE_CANVAS_PANEL_SELECTOR);
-			const shareButton = panelEl?.querySelector(GEMINI_CODE_CANVAS_SHARE_BUTTON_SELECTOR);
-			if (shareButton) {
-				shareButton.click();
-				try {
-					const copyButton = await waitForElement(GEMINI_CODE_CANVAS_COPY_BUTTON_SELECTOR, 2000);
-					copyButton.click();
-					displayUserscriptMessage("Code copied to clipboard!", false);
-				} catch (err) {
-					displayUserscriptMessage("Could not find 'Copy' button.");
-				}
-				return;
-			}
+		} else {
+			displayMessage("No active canvas content found to copy.");
 		}
-
-		// --- METHOD 3: Document Canvas ---
-		const immersivePanel = document.querySelector(GEMINI_DOC_CANVAS_PANEL_SELECTOR);
-		const editorContent = immersivePanel?.querySelector(GEMINI_DOC_CANVAS_EDITOR_SELECTOR);
-		if (editorContent) {
-			const content = editorContent.innerText;
-			if (content) {
-				await navigator.clipboard.writeText(content);
-				displayUserscriptMessage("Document copied to clipboard!", false);
-				return;
-			}
-		}
-
-		// --- METHOD 4: Last Model Response (Fallback) ---
-		// Try to find the last model response in the chat
-		const modelResponses = document.querySelectorAll('.model-response-text'); // This selector might need adjustment based on Gemini's DOM
-		if (modelResponses.length > 0) {
-			const lastResponse = modelResponses[modelResponses.length - 1];
-			const text = lastResponse.innerText;
-			if (text) {
-				await navigator.clipboard.writeText(text);
-				displayUserscriptMessage("Last response copied to clipboard!", false);
-				return;
-			}
-		}
-
-		displayUserscriptMessage("No content found to copy.");
 	}
 
-	async function handlePDFExport() {
-		const { jsPDF } = window.jspdf;
-		if (!jsPDF) {
-			displayUserscriptMessage("jsPDF library not loaded.");
-			return;
-		}
+	function handleGlobalCanvasDownload() {
+		const content = getCanvasContent();
+		if (content) {
+			let filename = (content.title || "gemini_export").replace(INVALID_FILENAME_CHARS_REGEX, "_");
 
-		let content = "";
-		let title = "document";
-
-		// Reuse extraction logic (similar to download)
-		// --- METHOD 1: Monaco Editor ---
-		try {
-			if (typeof unsafeWindow !== 'undefined' && unsafeWindow.monaco) {
-				const editors = unsafeWindow.monaco.editor.getEditors();
-				const activeEditor = editors.find(e => {
-					const node = e.getContainerDomNode();
-					return document.body.contains(node) && node.offsetParent !== null;
-				});
-				if (activeEditor) {
-					const model = activeEditor.getModel();
-					if (model) {
-						content = model.getValue();
-						const titleEl = document.querySelector(GEMINI_CODE_CANVAS_TITLE_SELECTOR);
-						title = titleEl ? titleEl.textContent : "code_snippet";
-					}
-				}
+			// Only append extension if it doesn't look like a filename already
+			if (!FILENAME_WITH_EXT_REGEX.test(filename)) {
+				filename += "." + DEFAULT_DOWNLOAD_EXTENSION;
 			}
-		} catch (e) { console.warn("Gemini Mod: Monaco access failed", e); }
 
-		// --- METHOD 2: Document Canvas ---
+			downloadString(content.text, filename);
+		} else {
+			displayMessage("No active canvas content found to download.");
+		}
+	}
+
+	function downloadString(text, filename) {
+		const blob = new Blob([text], { type: 'text/plain' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = filename;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	}
+
+	function handlePDFExport() {
+		const content = getCanvasContent();
 		if (!content) {
-			const immersivePanel = document.querySelector(GEMINI_DOC_CANVAS_PANEL_SELECTOR);
-			const editorContent = immersivePanel?.querySelector(GEMINI_DOC_CANVAS_EDITOR_SELECTOR);
-			if (editorContent) {
-				content = editorContent.innerText;
-				const titleEl = immersivePanel.querySelector(GEMINI_DOC_CANVAS_TITLE_SELECTOR);
-				if (titleEl && titleEl.innerText.trim() !== "") {
-					title = titleEl.innerText.trim();
-				} else {
-					title = "document_canvas";
-				}
-			}
-		}
-
-		if (!content || content.trim() === "") {
-			displayUserscriptMessage("No active canvas content found to export.");
+			displayMessage("No content to export.");
 			return;
 		}
 
-		// --- Content Sanitization ---
-		// 1. Replace Tabs with 4 spaces (jsPDF calculation often ignores tabs)
-		content = content.replace(/\t/g, '    ');
-		// 2. Replace non-breaking spaces with normal spaces
-		content = content.replace(/\u00A0/g, ' ');
+		const { jsPDF } = window.jspdf;
+		const doc = new jsPDF();
 
-		try {
-			// User Request: Use fixed A4 format with pt units to ensure correct wrapping
-			const doc = new jsPDF({
-				unit: 'pt',
-				format: 'a4'
-			});
+		const margins = { top: 20, bottom: 20, left: 20, right: 20 };
+		const pageWidth = doc.internal.pageSize.getWidth();
+		const pageHeight = doc.internal.pageSize.getHeight();
+		const maxLineWidth = pageWidth - margins.left - margins.right;
 
-			// A4 Size in pt is approx 595.28 x 841.89
-			// We can use doc.internal.pageSize.getWidth() to be sure
-			const pageWidth = doc.internal.pageSize.getWidth();
-			const pageHeight = doc.internal.pageSize.getHeight();
+		doc.setFont("courier", "normal");
+		doc.setFontSize(10);
 
-			const margin = 40; // 40pt margin
-			const maxLineWidth = pageWidth - (margin * 2);
-			const lineHeight = 14; // pt line height for readability with courier
-			let cursorY = margin;
-
-			// Add Title
-			doc.setFontSize(14);
+		let y = margins.top;
+		if (content.title) {
 			doc.setFont("helvetica", "bold");
-			doc.text(title, margin, cursorY);
-			cursorY += 20;
-
-			// Add Content
+			doc.setFontSize(14);
+			doc.text(content.title, margins.left, y);
+			y += 10;
+			doc.setFont("courier", "normal");
 			doc.setFontSize(10);
-			doc.setFont("courier", "normal"); // Monospace for code/text
-
-			// Split text to fit width
-			const lines = doc.splitTextToSize(content, maxLineWidth);
-
-			lines.forEach(line => {
-				if (cursorY > pageHeight - margin) {
-					doc.addPage();
-					cursorY = margin;
-				}
-				doc.text(line, margin, cursorY);
-				cursorY += lineHeight;
-			});
-
-			// Force Download via Blob
-			const pdfBlob = doc.output('blob');
-			const blobUrl = URL.createObjectURL(pdfBlob);
-			const link = document.createElement('a');
-			link.href = blobUrl;
-			link.download = `${determineFilename(title).replace(/\.[^/.]+$/, "")}.pdf`;
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-			URL.revokeObjectURL(blobUrl);
-
-		} catch (err) {
-			console.error("Gemini Mod: PDF Generation Error", err);
-			displayUserscriptMessage("Failed to generate PDF: " + err.message);
 		}
+
+		const lines = doc.splitTextToSize(content.text, maxLineWidth);
+
+		lines.forEach(line => {
+			if (y + 10 > pageHeight - margins.bottom) {
+				doc.addPage();
+				y = margins.top;
+			}
+			doc.text(line, margins.left, y);
+			y += 5; // Line height
+		});
+
+		const filename = (content.title || "gemini_export").replace(INVALID_FILENAME_CHARS_REGEX, "_") + ".pdf";
+		doc.save(filename);
 	}
 
 
 	// --- Initialization ---
 
 	async function init() {
-		console.log("Gemini Mod Userscript: Initializing...");
-		injectCustomCSS();
+		console.log("Gemini Mod Userscript: Initializing (Modular Version)...");
+
+		// Inject Styles (Using Module)
+		injectCSS();
+
+		// Handle Drive Auth Callback (if this is a popup)
+		GeminiMod.drive.handleAuthCallback();
+
+		// Setup Drive Message Listener (for main window)
+		// Pass a callback to update UI if settings panel is open
+		GeminiMod.drive.setupAuthMessageListener(() => {
+			updateSettingsPanelDriveStatus();
+		});
+
+
 		await loadConfiguration();
+
 		setTimeout(() => {
 			try {
 				createToolbar();
@@ -1613,13 +1434,14 @@
 				}, 500);
 			} catch (e) {
 				console.error("Gemini Mod: Error during delayed initialization:", e);
-				displayUserscriptMessage("Error initializing toolbar. See console.");
+				displayMessage("Error initializing toolbar. See console.");
 			}
 		}, 1500);
 	}
 
+	// Run Init
 	if (document.readyState === 'loading') {
-		window.addEventListener('DOMContentLoaded', init);
+		document.addEventListener('DOMContentLoaded', init);
 	} else {
 		init();
 	}

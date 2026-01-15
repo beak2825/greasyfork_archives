@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI Chat to Microsoft Word, Markdown, Html, Pdf, Json, Txt
 // @namespace    https://greasyfork.org/
-// @version      2.7
-// @description  Export AI answers with multiple formats. Applied for ChatGPT, Gemini, Aistudio, Notebooklm, Grok, Claude, Mistral, Perplexity, Deepseek, Scienceos, Evidencehunt, Spacefrontiers.
+// @version      2.8
+// @description  Export AI answers with multiple formats. Applied for ChatGPT, Gemini, Aistudio, Notebooklm, Grok, Claude, Mistral, Perplexity, Deepseek, Kimi, Scienceos, Evidencehunt, Spacefrontiers.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -13,6 +13,7 @@
 // @match        https://chat.mistral.ai/*
 // @match        https://www.perplexity.ai/*
 // @match        https://chat.deepseek.com/*
+// @match        https://www.kimi.com/*
 // @match        https://app.scienceos.ai/*
 // @match        https://evidencehunt.com/*
 // @match        https://spacefrontiers.org/*
@@ -112,6 +113,14 @@
             attach_to: null,
             siteName: 'Deepseek',
             nameSelector: '.afa34042.e37a04e4.e0a1edb7'
+        },
+        kimi: {
+            domain: 'www.kimi.com',
+            user: '.user-content',
+            ai_response: '.markdown-container',
+            attach_to: null,
+            siteName: 'Kimi',
+            nameSelector: '.chat-header-content'
         },
         scienceos: {
             domain: 'app.scienceos.ai',

@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         RARGB Search - YIFY Movies
 // @namespace    https://greasyfork.org/en/users/670188-hacker09?sort=daily_installs
-// @version      9
+// @version      10
 // @description  Adds a button on YTS movie pages to search the movie title on RARGB.
 // @author       hacker09
-// @include      https://yts.lt/movies/*
-// @icon         https://yts.lt/assets/images/website/apple-touch-icon-180x180.png
+// @include      https://yts.*/movies/*
+// @icon         https://yts.*/assets/images/website/apple-touch-icon-180x180.png
 // @run-at       document-end
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/492396/RARGB%20Search%20-%20YIFY%20Movies.user.js

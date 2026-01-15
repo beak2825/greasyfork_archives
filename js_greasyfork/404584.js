@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        WME WazeMY
 // @namespace   https://www.github.com/junyian/
-// @version     2025.05.20.01
+// @version     2026.01.13.1
 // @author      junyianl <junyian@gmail.com>
 // @source      https://github.com/junyian/wme-wazemy
 // @license     MIT
@@ -17,6 +17,8 @@
 // @connect     t2.fgies.com
 // @connect     jalanow.com
 // @connect     llm.gov.my
+// @connect     venue-image.waze.com
+// @connect     generativelanguage.googleapis.com
 // @run-at      document-end
 // @description WME script for WazeMY editing moderation
 // @downloadURL https://update.greasyfork.org/scripts/404584/WME%20WazeMY.user.js
@@ -27,8 +29,8 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js!./src/style/main.less":
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/less-loader/dist/cjs.js!./src/style/main.less"
+(module, __webpack_exports__, __webpack_require__) {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   A: () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -90,10 +92,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.wazemySettings {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/css-loader/dist/runtime/api.js":
-/***/ ((module) => {
+/***/ "./node_modules/css-loader/dist/runtime/api.js"
+(module) {
 
 
 
@@ -181,10 +183,10 @@ module.exports = function (cssWithMappingToString) {
   return list;
 };
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/css-loader/dist/runtime/noSourceMaps.js":
-/***/ ((module) => {
+/***/ "./node_modules/css-loader/dist/runtime/noSourceMaps.js"
+(module) {
 
 
 
@@ -192,10 +194,10 @@ module.exports = function (i) {
   return i[1];
 };
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
-/***/ ((module) => {
+/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js"
+(module) {
 
 
 
@@ -282,10 +284,10 @@ module.exports = function (list, options) {
   };
 };
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/style-loader/dist/runtime/insertBySelector.js":
-/***/ ((module) => {
+/***/ "./node_modules/style-loader/dist/runtime/insertBySelector.js"
+(module) {
 
 
 
@@ -322,10 +324,10 @@ function insertBySelector(insert, style) {
 }
 module.exports = insertBySelector;
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/style-loader/dist/runtime/insertStyleElement.js":
-/***/ ((module) => {
+/***/ "./node_modules/style-loader/dist/runtime/insertStyleElement.js"
+(module) {
 
 
 
@@ -338,10 +340,10 @@ function insertStyleElement(options) {
 }
 module.exports = insertStyleElement;
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js":
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js"
+(module, __unused_webpack_exports, __webpack_require__) {
 
 
 
@@ -354,10 +356,10 @@ function setAttributesWithoutAttributes(styleElement) {
 }
 module.exports = setAttributesWithoutAttributes;
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/style-loader/dist/runtime/styleDomAPI.js":
-/***/ ((module) => {
+/***/ "./node_modules/style-loader/dist/runtime/styleDomAPI.js"
+(module) {
 
 
 
@@ -421,10 +423,10 @@ function domAPI(options) {
 }
 module.exports = domAPI;
 
-/***/ }),
+/***/ },
 
-/***/ "./node_modules/style-loader/dist/runtime/styleTagTransform.js":
-/***/ ((module) => {
+/***/ "./node_modules/style-loader/dist/runtime/styleTagTransform.js"
+(module) {
 
 
 
@@ -441,7 +443,7 @@ function styleTagTransform(css, styleElement) {
 }
 module.exports = styleTagTransform;
 
-/***/ })
+/***/ }
 
 /******/ 	});
 /************************************************************************/
@@ -591,7 +593,7 @@ class SettingsStorage {
      */
     updateSetting(key, value) {
         const settings = this.loadSettings() || {};
-        settings[key] = value;
+        settings[key] = { ...(settings[key] || {}), ...value };
         this.saveSettings(settings);
     }
     /**
@@ -624,8 +626,11 @@ SettingsStorage.instance = new SettingsStorage("WME_wazemySettings");
 
 
 class PluginTooltip {
-    constructor(sdk) {
-        this.sdk = sdk;
+    constructor() {
+        this.sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-tooltip",
+            scriptName: "WazeMY",
+        });
         this.initialize();
     }
     /**
@@ -701,10 +706,10 @@ class PluginTooltip {
     }
 }
 /**
-   * Shows the tooltip at the mouse position.
-   *
-   * @return {void} This function does not return anything.
-   */
+ * Shows the tooltip at the mouse position.
+ *
+ * @return {void} This function does not return anything.
+ */
 function showTooltip() {
     let output = "";
     let showTooltip = false;
@@ -717,27 +722,43 @@ function showTooltip() {
         const landmark = W.map.venueLayer.getFeatureBy("renderIntent", "highlight");
         const segment = W.map.segmentLayer.getFeatureBy("renderIntent", "highlight");
         if (landmark) {
-            const venue = sdk.DataModel.Venues.getById({ venueId: landmark.attributes.wazeFeature.id });
+            const venue = sdk.DataModel.Venues.getById({
+                venueId: landmark.attributes.wazeFeature.id,
+            });
             output = venue.name ? `<b>${venue.name}</b><br>` : "";
             output += `<i>[${venue.categories.join(", ")}]</i><br>`;
-            const venueAddress = sdk.DataModel.Venues.getAddress({ venueId: landmark.attributes.wazeFeature.id });
+            const venueAddress = sdk.DataModel.Venues.getAddress({
+                venueId: landmark.attributes.wazeFeature.id,
+            });
             output += venueAddress.houseNumber ? `${venueAddress.houseNumber}, ` : "";
-            output += venueAddress.street.name ? `${venueAddress.street.name}<br>` : "";
-            output += `${venueAddress.city.name}, ${venueAddress.state.name}<br>`;
+            output += venueAddress.street?.name
+                ? `${venueAddress.street.name}<br>`
+                : "";
+            if (venueAddress.city?.name && venueAddress.state?.name) {
+                output += `${venueAddress.city.name}, ${venueAddress.state.name}<br>`;
+            }
             output += `<b>Lock:</b> ${venue.lockRank + 1}`;
             showTooltip = true;
         }
         else if (segment) {
             const segmentId = segment.attributes.wazeFeature.id;
-            const segmentData = sdk.DataModel.Segments.getById({ segmentId: segmentId });
-            const address = sdk.DataModel.Segments.getAddress({ segmentId: segmentId });
-            output = address.street.name ? `<b>${address.street.name}</b><br>` : "";
+            const segmentData = sdk.DataModel.Segments.getById({
+                segmentId: segmentId,
+            });
+            const address = sdk.DataModel.Segments.getAddress({
+                segmentId: segmentId,
+            });
+            output = address.street?.name ? `<b>${address.street.name}</b><br>` : "";
             const altStreets = address.altStreets;
             for (let i = 0; i < altStreets.length; i++) {
-                const altStreetName = altStreets[i].street.name;
-                output += `Alt: ${altStreetName}<br>`;
+                const altStreetName = altStreets[i].street?.name;
+                if (altStreetName) {
+                    output += `Alt: ${altStreetName}<br>`;
+                }
             }
-            output += `${address.city.name}, ${address.state.name}<br>`;
+            if (address.city?.name && address.state?.name) {
+                output += `${address.city.name}, ${address.state.name}<br>`;
+            }
             output += `<b>ID:</b> ${segmentId}<br>`;
             if (segmentData.isTwoWay) {
                 output += `<b>Direction:</b> Two way<br>`;
@@ -757,33 +778,37 @@ function showTooltip() {
             positions = document
                 .querySelector(".wz-map-ol-control-span-mouse-position")
                 .innerHTML.split(" ");
-            let pixel = sdk.Map.getPixelFromLonLat({
-                lonLat: {
-                    lat: parseFloat(positions[0]),
-                    lon: parseFloat(positions[1]),
-                },
-            });
-            const tw = tooltipDiv.innerWidth();
-            const th = tooltipDiv.innerHeight();
-            let tooltipX = pixel.x + window.scrollX + 15;
-            let tooltipY = pixel.y + window.scrollY + 15;
-            // Handle cases where tooltip is too near the edge.
-            if (tooltipX + tw > W.map.$map.innerWidth()) {
-                tooltipX -= tw + 20; // 20 = scroll bar size
-                if (tooltipX < 0) {
-                    tooltipX = 0;
+            const lat = parseFloat(positions[0]);
+            const lon = parseFloat(positions[1]);
+            if (lat >= 0 && lon >= 0) {
+                let pixel = sdk.Map.getPixelFromLonLat({
+                    lonLat: {
+                        lat: parseFloat(positions[0]),
+                        lon: parseFloat(positions[1]),
+                    },
+                });
+                const tw = tooltipDiv.innerWidth();
+                const th = tooltipDiv.innerHeight();
+                let tooltipX = pixel.x + window.scrollX + 15;
+                let tooltipY = pixel.y + window.scrollY + 15;
+                // Handle cases where tooltip is too near the edge.
+                if (tooltipX + tw > W.map.$map.innerWidth()) {
+                    tooltipX -= tw + 20; // 20 = scroll bar size
+                    if (tooltipX < 0) {
+                        tooltipX = 0;
+                    }
                 }
-            }
-            if (tooltipY + th > W.map.$map.innerHeight()) {
-                tooltipY -= th + 20;
-                if (tooltipY < 0) {
-                    tooltipY = 0;
+                if (tooltipY + th > W.map.$map.innerHeight()) {
+                    tooltipY -= th + 20;
+                    if (tooltipY < 0) {
+                        tooltipY = 0;
+                    }
                 }
+                tooltipDiv.html(output);
+                tooltipDiv.css("top", `${tooltipY}px`);
+                tooltipDiv.css("left", `${tooltipX}px`);
+                tooltipDiv.css("visibility", "visible");
             }
-            tooltipDiv.html(output);
-            tooltipDiv.css("top", `${tooltipY}px`);
-            tooltipDiv.css("left", `${tooltipX}px`);
-            tooltipDiv.css("visibility", "visible");
         }
         else {
             tooltipDiv.css("visibility", "hidden");
@@ -793,8 +818,11 @@ function showTooltip() {
 
 ;// ./src/plugins/PluginCopyLatLon.ts
 class PluginCopyLatLon {
-    constructor(sdk) {
-        this.sdk = sdk;
+    constructor() {
+        this.sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-copylatlon",
+            scriptName: "WazeMY",
+        });
         this.initialize();
     }
     /**
@@ -1397,6 +1425,7 @@ class PluginKVMR {
 ;// ./src/plugins/PluginZoomPic.ts
 class PluginZoomPic {
     constructor() {
+        this.currentBlobUrl = null;
         this.initialize();
     }
     /**
@@ -1405,20 +1434,140 @@ class PluginZoomPic {
      * @return {void} This function does not return anything.
      */
     initialize() {
+        this.createPopupContainer();
+        this.setupPopupHandlers();
         $(document.body).on("click", () => {
             const img = $(".venue-image-dialog > wz-dialog-content > img");
             if (img.length > 0) {
                 const newImg = img[0];
-                const links = $(".venue-image-dialog > wz-dialog-header > a");
+                // Remove existing zoom links
+                const links = $(".venue-image-dialog > wz-dialog-header > #zoomPicLink");
                 for (let i = 0; i < links.length; i++) {
                     links[i].remove();
                 }
-                const newImgHTML = `<a href="${newImg.src.replace("thumbs/thumb700_", "")}" target="_blank">(+)</a>`;
-                $("wz-dialog-header").append(newImgHTML);
+                // Add clickable span that fetches and displays image in popup
+                const newImgHTML = `<span id="zoomPicLink" style="cursor:pointer; color:blue; text-decoration:underline;">(+)</span>`;
+                $(".venue-image-dialog > wz-dialog-header").append(newImgHTML);
+                $("#zoomPicLink").on("click", (e) => {
+                    e.stopPropagation();
+                    const fullSizeUrl = newImg.src.replace("thumbs/thumb700_", "");
+                    this.fetchAndDisplayImage(fullSizeUrl);
+                });
             }
-            // $("div.modal-dialog.venue-image-dialog");
         });
         console.log("[WazeMY] PluginZoomPic initialized.");
+    }
+    /**
+     * Create the popup container for displaying full-size images.
+     */
+    createPopupContainer() {
+        const popupHTML = `<div id="gmPopupContainerZoomPic" style="display:none; position:fixed; z-index:10001; background:#fff; border:2px solid #333; border-radius:5px; padding:5px; cursor:move; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+      <div style="text-align:right; margin-bottom:5px;">
+        <span id="zoomPicClose" style="cursor:pointer; font-weight:bold; padding:0 5px;">[X]</span>
+      </div>
+      <div id="zoomPicLoading" style="display:none; padding:20px; text-align:center;">Loading...</div>
+      <img id="zoomPicImage" style="max-width:90vw; max-height:85vh; display:block;">
+    </div>`;
+        document.body.insertAdjacentHTML("afterbegin", popupHTML);
+    }
+    /**
+     * Setup event handlers for popup close and drag functionality.
+     */
+    setupPopupHandlers() {
+        const popup = document.getElementById("gmPopupContainerZoomPic");
+        const closeBtn = document.getElementById("zoomPicClose");
+        // Close button handler
+        closeBtn?.addEventListener("click", () => {
+            this.closePopup();
+        });
+        // Close on Escape key
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && popup?.style.display === "block") {
+                this.closePopup();
+            }
+        });
+        // Drag functionality
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+        popup?.addEventListener("mousedown", (e) => {
+            const target = e.target;
+            // Don't drag if clicking on close button or image
+            if (target.id === "zoomPicClose" || target.id === "zoomPicImage")
+                return;
+            isDragging = true;
+            offsetX = e.clientX - popup.offsetLeft;
+            offsetY = e.clientY - popup.offsetTop;
+        });
+        document.addEventListener("mousemove", (e) => {
+            if (!isDragging || !popup)
+                return;
+            popup.style.left = e.clientX - offsetX + "px";
+            popup.style.top = e.clientY - offsetY + "px";
+        });
+        document.addEventListener("mouseup", () => {
+            isDragging = false;
+        });
+    }
+    /**
+     * Close the popup and cleanup blob URL.
+     */
+    closePopup() {
+        const popup = document.getElementById("gmPopupContainerZoomPic");
+        const imgEl = document.getElementById("zoomPicImage");
+        if (popup) {
+            popup.style.display = "none";
+        }
+        // Revoke blob URL to free memory
+        if (this.currentBlobUrl) {
+            URL.revokeObjectURL(this.currentBlobUrl);
+            this.currentBlobUrl = null;
+        }
+        if (imgEl) {
+            imgEl.src = "";
+        }
+    }
+    /**
+     * Fetch image via GM_xmlhttpRequest and display in popup.
+     */
+    fetchAndDisplayImage(url) {
+        const popup = document.getElementById("gmPopupContainerZoomPic");
+        const imgEl = document.getElementById("zoomPicImage");
+        const loadingEl = document.getElementById("zoomPicLoading");
+        if (!popup || !imgEl)
+            return;
+        // Show popup with loading indicator
+        popup.style.display = "block";
+        popup.style.left = "50px";
+        popup.style.top = "50px";
+        if (loadingEl)
+            loadingEl.style.display = "block";
+        imgEl.style.display = "none";
+        // Cleanup previous blob URL if exists
+        if (this.currentBlobUrl) {
+            URL.revokeObjectURL(this.currentBlobUrl);
+            this.currentBlobUrl = null;
+        }
+        GM_xmlhttpRequest({
+            method: "GET",
+            responseType: "blob",
+            url: url,
+            onload: (response) => {
+                if (loadingEl)
+                    loadingEl.style.display = "none";
+                imgEl.style.display = "block";
+                // Create blob URL - this works regardless of server MIME type
+                this.currentBlobUrl = URL.createObjectURL(response.response);
+                imgEl.src = this.currentBlobUrl;
+            },
+            onerror: () => {
+                if (loadingEl)
+                    loadingEl.style.display = "none";
+                imgEl.style.display = "block";
+                imgEl.alt = "Error loading image";
+                console.error("[WazeMY] PluginZoomPic: Error loading image from", url);
+            },
+        });
     }
     /**
      * Enable plugin.
@@ -1451,6 +1600,7 @@ class PluginZoomPic {
 
 class PluginPlaces {
     constructor() {
+        this.sidebarElements = null;
         this.tabHTML = `
     <div><h4>WazeMY Places</h4></div>
     <div id="wazemyPlaces">
@@ -1474,6 +1624,10 @@ class PluginPlaces {
       </div>
     </div>
   `;
+        this.sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-places",
+            scriptName: "WazeMY",
+        });
         this.initialize();
     }
     /**
@@ -1482,8 +1636,8 @@ class PluginPlaces {
      * @return {void} This function does not return anything.
      */
     initialize() {
-        const settingsHTML = `<input type="checkbox" id="wazemySettings_places_enable"/>
-      <label for="wazemySettings_places_enable">Enable Places</label>`;
+        const settingsHTML = `<div><input type="checkbox" id="wazemySettings_places_enable"/>
+      <label for="wazemySettings_places_enable">Enable Places</label></div>`;
         $("#wazemySettings_settings").append(settingsHTML);
         $("#wazemySettings_places_enable").on("change", () => {
             PluginManager.instance.updatePluginSettings("places", {
@@ -1506,242 +1660,251 @@ class PluginPlaces {
      * @return {void} This function does not return anything.
      */
     enable() {
-        const { tabLabel, tabPane } = W.userscripts.registerSidebarTab("wazemyplaces");
-        tabLabel.innerHTML = "WazeMY Places";
-        tabLabel.title = "WazeMY Places";
-        tabPane.innerHTML = this.tabHTML;
-        // Populate select options with polygons from KVMR.
-        const map = W.map.getLayersBy("uniqueName", "__KlangValley");
-        map[0].features.forEach((feature) => {
-            $("#wazemyPlaces_polygons").append($("<option>", {
-                value: feature.data.number,
-                text: feature.data.number,
-            }));
-        });
-        // Handle Scan button.
-        $("#wazemyPlaces_scan").on("click", async () => {
-            $("#wazemyPlaces_scanStatus").text("Scanning tiles.");
-            $("#wazemyPlaces_venues > tbody").empty();
+        this.sdk.Sidebar.registerScriptTab().then((sidebarResult) => {
+            this.sidebarElements = sidebarResult;
+            sidebarResult.tabLabel.innerHTML = "WazeMY Places";
+            sidebarResult.tabLabel.title = "WazeMY Places";
+            sidebarResult.tabPane.innerHTML = this.tabHTML;
+            // Populate select options with polygons from KVMR.
             const map = W.map.getLayersBy("uniqueName", "__KlangValley");
-            if (map.length === 0) {
-                console.log("[PluginPlaces] No KVMR layer found. Aborting scan.");
-                return false;
-            }
-            const mr = map[0].getFeaturesByAttribute("number", $("#wazemyPlaces_polygons option:selected")[0].innerText);
-            if (mr.length === 0) {
-                console.log("[PluginPlaces] No polygon found. Aborting scan.");
-                return false;
-            }
-            const feature = mr[0];
-            let bounds = feature.geometry.getBounds().clone();
-            bounds = bounds.transform(W.map.getProjectionObject(), "EPSG:4326");
-            const venues = await getAllVenues(bounds);
-            let purCount = 0;
-            let totalCount = 0;
-            venues.forEach((venue) => {
-                // Check venue against rules.
-                const status = evaluateVenue(venue);
-                const isPUR = checkPURstatus(venue);
-                if (status.priority > 0 || isPUR) {
-                    // Add venue to table.
-                    let lon = 0;
-                    let lat = 0;
-                    if (venue.geometry.type === "Polygon") {
-                        lon = venue.geometry.coordinates[0][0][0];
-                        lat = venue.geometry.coordinates[0][0][1];
-                    }
-                    else {
-                        lon = venue.geometry.coordinates[0];
-                        lat = venue.geometry.coordinates[1];
-                    }
-                    const row = $("<tr>");
-                    row.attr("id", `${lon}:${lat}:${venue.id}`);
-                    row.on("click", (e) => {
-                        const target = e.currentTarget.id.split(":"); // split to lon:lat:id
-                        const xy = OpenLayers.Layer.SphericalMercator.forwardMercator(parseFloat(target[0]), parseFloat(target[1]));
-                        W.map.setCenter(xy);
-                    });
-                    let purHTML = ``;
-                    if (isPUR) {
-                        purCount++;
-                        if (venue.approved === false) {
-                            purHTML = `<td align="center">N</td>`;
+            map[0].features.forEach((feature) => {
+                $("#wazemyPlaces_polygons").append($("<option>", {
+                    value: feature.data.number,
+                    text: feature.data.number,
+                }));
+            });
+            // Handle Scan button.
+            $("#wazemyPlaces_scan").on("click", async () => {
+                $("#wazemyPlaces_scanStatus").text("Scanning tiles.");
+                $("#wazemyPlaces_venues > tbody").empty();
+                const map = W.map.getLayersBy("uniqueName", "__KlangValley");
+                if (map.length === 0) {
+                    console.log("[PluginPlaces] No KVMR layer found. Aborting scan.");
+                    return false;
+                }
+                const mr = map[0].getFeaturesByAttribute("number", $("#wazemyPlaces_polygons option:selected")[0].innerText);
+                if (mr.length === 0) {
+                    console.log("[PluginPlaces] No polygon found. Aborting scan.");
+                    return false;
+                }
+                const feature = mr[0];
+                let bounds = feature.geometry.getBounds().clone();
+                bounds = bounds.transform(W.map.getProjectionObject(), "EPSG:4326");
+                const venues = await getAllVenues(bounds);
+                let purCount = 0;
+                let totalCount = 0;
+                venues.forEach((venue) => {
+                    // Check venue against rules.
+                    const status = evaluateVenue(venue);
+                    const isPUR = checkPURstatus(venue);
+                    if (status.priority > 0 || isPUR) {
+                        // Add venue to table.
+                        let lon = 0;
+                        let lat = 0;
+                        if (venue.geometry.type === "Polygon") {
+                            lon = venue.geometry.coordinates[0][0][0];
+                            lat = venue.geometry.coordinates[0][0][1];
                         }
-                        else if (venue.venueUpdateRequests[0].type === "REQUEST") {
-                            if (venue.venueUpdateRequests[0].subType === "FLAG") {
-                                purHTML = `<td align="center">F</td>`;
+                        else {
+                            lon = venue.geometry.coordinates[0];
+                            lat = venue.geometry.coordinates[1];
+                        }
+                        const row = $("<tr>");
+                        row.attr("id", `${lon}:${lat}:${venue.id}`);
+                        row.on("click", (e) => {
+                            const target = e.currentTarget.id.split(":"); // split to lon:lat:id
+                            const xy = OpenLayers.Layer.SphericalMercator.forwardMercator(parseFloat(target[0]), parseFloat(target[1]));
+                            W.map.setCenter(xy);
+                        });
+                        let purHTML = ``;
+                        if (isPUR) {
+                            purCount++;
+                            if (venue.approved === false) {
+                                purHTML = `<td align="center">N</td>`;
                             }
-                            else if (venue.venueUpdateRequests[0].subType === "UPDATE") {
-                                purHTML = `<td align="center">U</td>`;
+                            else if (venue.venueUpdateRequests[0].type === "REQUEST") {
+                                if (venue.venueUpdateRequests[0].subType === "FLAG") {
+                                    purHTML = `<td align="center">F</td>`;
+                                }
+                                else if (venue.venueUpdateRequests[0].subType === "UPDATE") {
+                                    purHTML = `<td align="center">U</td>`;
+                                }
+                                else if (venue.venueUpdateRequests[0].subType === "DELETE") {
+                                    purHTML = `<td align="center">D</td>`;
+                                }
+                                else {
+                                    purHTML = `<td align="center">+</td>`;
+                                }
                             }
-                            else if (venue.venueUpdateRequests[0].subType === "DELETE") {
-                                purHTML = `<td align="center">D</td>`;
+                            else if (venue.venueUpdateRequests[0].type === "IMAGE") {
+                                purHTML = `<td align="center">I</td>`;
                             }
                             else {
                                 purHTML = `<td align="center">+</td>`;
                             }
                         }
-                        else if (venue.venueUpdateRequests[0].type === "IMAGE") {
-                            purHTML = `<td align="center">I</td>`;
+                        else {
+                            purHTML = `<td></td>`;
+                        }
+                        row.append(purHTML);
+                        const levelHTML = `<td>${venue.lockRank ? venue.lockRank + 1 : 1}</td>`;
+                        row.append(levelHTML);
+                        const colHTML = `<td>${venue.name}</td>`;
+                        row.append(colHTML);
+                        const errorsHTML = `<td>${status.errors.join("\r\n")}</td>`;
+                        row.append(errorsHTML);
+                        $("#wazemyPlaces_venues > tbody").append(row);
+                        totalCount++;
+                    }
+                    $("#wazemyPlaces_purCount").text(`# PUR = ${purCount}`);
+                    $("#wazemyPlaces_totalCount").text(`# total = ${totalCount}`);
+                    $("#wazemyPlaces_scanStatus").text("");
+                    function evaluateVenue(venue) {
+                        let status = {
+                            priority: 0,
+                            errors: [],
+                        };
+                        // Rule #1
+                        if (typeof venue.name == "undefined") {
+                            if (!venue.categories.includes("RESIDENCE_HOME")) {
+                                status.priority = 3;
+                                status.errors.push("Missing name.");
+                            }
                         }
                         else {
-                            purHTML = `<td align="center">+</td>`;
+                            // Rule: Check name for all uppercase.
+                            if (venue.name === venue.name.toUpperCase()) {
+                                status.priority = 3;
+                                status.errors.push("Name is uppercase.");
+                            }
+                            // Rule: Check name for all lowercase.
+                            if (venue.name === venue.name.toLowerCase()) {
+                                status.priority = 3;
+                                status.errors.push("Name is lowercase.");
+                            }
                         }
-                    }
-                    else {
-                        purHTML = `<td></td>`;
-                    }
-                    row.append(purHTML);
-                    const levelHTML = `<td>${venue.lockRank ? venue.lockRank + 1 : 1}</td>`;
-                    row.append(levelHTML);
-                    const colHTML = `<td>${venue.name}</td>`;
-                    row.append(colHTML);
-                    const errorsHTML = `<td>${status.errors.join("\r\n")}</td>`;
-                    row.append(errorsHTML);
-                    $("#wazemyPlaces_venues > tbody").append(row);
-                    totalCount++;
-                }
-                $("#wazemyPlaces_purCount").text(`# PUR = ${purCount}`);
-                $("#wazemyPlaces_totalCount").text(`# total = ${totalCount}`);
-                $("#wazemyPlaces_scanStatus").text("");
-                function evaluateVenue(venue) {
-                    let status = {
-                        priority: 0,
-                        errors: [],
-                    };
-                    // Rule #1
-                    if (typeof venue.name == "undefined") {
-                        if (!venue.categories.includes("RESIDENCE_HOME")) {
+                        // Rule: Min lock is not set.
+                        if (venue.lockRank === 0) {
                             status.priority = 3;
-                            status.errors.push("Missing name.");
+                            status.errors.push("Min lock not set.");
                         }
-                    }
-                    else {
-                        // Rule: Check name for all uppercase.
-                        if (venue.name === venue.name.toUpperCase()) {
-                            status.priority = 3;
-                            status.errors.push("Name is uppercase.");
+                        // Rule: Phone number format.
+                        if (venue.phone) {
+                            if (/^[\d]{3}-[\d]{3} [\d]{4}$/.test(venue.phone) === false &&
+                                /^[\d]{3}-[\d]{4} [\d]{4}$/.test(venue.phone) === false &&
+                                /^[\d]{2}-[\d]{4} [\d]{4}$/.test(venue.phone) === false &&
+                                /^[\d]{2}-[\d]{3} [\d]{4}$/.test(venue.phone) === false &&
+                                /^[\d]{3}-[\d]{3} [\d]{3}$/.test(venue.phone) === false &&
+                                /^[\d]{1}-[\d]{3}-[\d]{2}-[\d]{4}$/.test(venue.phone) === false) {
+                                status.priority = 2;
+                                status.errors.push("Phone number format incorrect.");
+                            }
                         }
-                        // Rule: Check name for all lowercase.
-                        if (venue.name === venue.name.toLowerCase()) {
-                            status.priority = 3;
-                            status.errors.push("Name is lowercase.");
-                        }
-                    }
-                    // Rule: Min lock is not set.
-                    if (venue.lockRank === 0) {
-                        status.priority = 3;
-                        status.errors.push("Min lock not set.");
-                    }
-                    // Rule: Phone number format.
-                    if (venue.phone) {
-                        if (/^[\d]{3}-[\d]{3} [\d]{4}$/.test(venue.phone) === false &&
-                            /^[\d]{3}-[\d]{4} [\d]{4}$/.test(venue.phone) === false &&
-                            /^[\d]{2}-[\d]{4} [\d]{4}$/.test(venue.phone) === false &&
-                            /^[\d]{2}-[\d]{3} [\d]{4}$/.test(venue.phone) === false &&
-                            /^[\d]{3}-[\d]{3} [\d]{3}$/.test(venue.phone) === false &&
-                            /^[\d]{1}-[\d]{3}-[\d]{2}-[\d]{4}$/.test(venue.phone) === false) {
+                        // Rule: Category specific rank locks.
+                        if ((venue.categories.includes("CHARGING_STATION") &&
+                            venue.lockRank < 3) ||
+                            (venue.categories.includes("GAS_STATION") &&
+                                venue.lockRank < 3) ||
+                            (venue.categories.includes("AIRPORT") && venue.lockRank < 4) ||
+                            (venue.categories.includes("BUS_STATION") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("FERRY_PIER") && venue.lockRank < 2) ||
+                            (venue.categories.includes("JUNCTION_INTERCHANGE") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("REST_AREAS") && venue.lockRank < 2) ||
+                            (venue.categories.includes("SEAPORT_MARINA_HARBOR") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("TRAIN_STATION") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("TUNNEL") && venue.lockRank < 2) ||
+                            (venue.categories.includes("CITY_HALL") && venue.lockRank < 2) ||
+                            (venue.categories.includes("COLLEGE_UNIVERSITY") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("COURTHOUSE") && venue.lockRank < 2) ||
+                            (venue.categories.includes("DOCTOR_CLINIC") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("EMBASSY_CONSULATE") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("FIRE_DEPARTMENT") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("HOSPITAL_URGENT_CARE") &&
+                                venue.lockRank < 3) ||
+                            (venue.categories.includes("LIBRARY") && venue.lockRank < 2) ||
+                            (venue.categories.includes("MILITARY") && venue.lockRank < 3) ||
+                            (venue.categories.includes("POLICE_STATION") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("PRISON_CORRECTIONAL_FACILITY") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("RELIGIOUS_CENTER") &&
+                                venue.lockRank < 3) ||
+                            (venue.categories.includes("SCHOOL") && venue.lockRank < 2) ||
+                            (venue.categories.includes("BANK_FINANCIAL") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("SHOPPING_CENTER") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("MUSEUM") && venue.lockRank < 2) ||
+                            (venue.categories.includes("RACING_TRACK") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("STADIUM_ARENA") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("THEME_PARK") && venue.lockRank < 2) ||
+                            (venue.categories.includes("TOURIST_ATTRACTION_HISTORIC_SITE") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("ZOO_AQUARIUM") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("BEACH") && venue.lockRank < 2) ||
+                            (venue.categories.includes("GOLF_COURSE") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("PARK") && venue.lockRank < 2) ||
+                            (venue.categories.includes("FOREST_GROVE") &&
+                                venue.lockRank < 2) ||
+                            (venue.categories.includes("ISLAND") && venue.lockRank < 4) ||
+                            (venue.categories.includes("RIVER_STREAM") &&
+                                venue.lockRank < 3) ||
+                            (venue.categories.includes("SEA_LAKE_POOL") &&
+                                venue.lockRank < 5) ||
+                            (venue.categories.includes("CANAL") && venue.lockRank < 2) ||
+                            (venue.categories.includes("SWAMP_MARSH") && venue.lockRank < 2)) {
                             status.priority = 2;
-                            status.errors.push("Phone number format incorrect.");
+                            status.errors.push("Min lock incorrect.");
+                        }
+                        return status;
+                    }
+                    function checkPURstatus(venue) {
+                        if (venue.venueUpdateRequests?.length > 0) {
+                            return true;
+                        }
+                        else {
+                            return false;
                         }
                     }
-                    // Rule: Category specific rank locks.
-                    if ((venue.categories.includes("CHARGING_STATION") &&
-                        venue.lockRank < 3) ||
-                        (venue.categories.includes("GAS_STATION") && venue.lockRank < 3) ||
-                        (venue.categories.includes("AIRPORT") && venue.lockRank < 4) ||
-                        (venue.categories.includes("BUS_STATION") && venue.lockRank < 2) ||
-                        (venue.categories.includes("FERRY_PIER") && venue.lockRank < 2) ||
-                        (venue.categories.includes("JUNCTION_INTERCHANGE") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("REST_AREAS") && venue.lockRank < 2) ||
-                        (venue.categories.includes("SEAPORT_MARINA_HARBOR") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("TRAIN_STATION") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("TUNNEL") && venue.lockRank < 2) ||
-                        (venue.categories.includes("CITY_HALL") && venue.lockRank < 2) ||
-                        (venue.categories.includes("COLLEGE_UNIVERSITY") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("COURTHOUSE") && venue.lockRank < 2) ||
-                        (venue.categories.includes("DOCTOR_CLINIC") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("EMBASSY_CONSULATE") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("FIRE_DEPARTMENT") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("HOSPITAL_URGENT_CARE") &&
-                            venue.lockRank < 3) ||
-                        (venue.categories.includes("LIBRARY") && venue.lockRank < 2) ||
-                        (venue.categories.includes("MILITARY") && venue.lockRank < 3) ||
-                        (venue.categories.includes("POLICE_STATION") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("PRISON_CORRECTIONAL_FACILITY") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("RELIGIOUS_CENTER") &&
-                            venue.lockRank < 3) ||
-                        (venue.categories.includes("SCHOOL") && venue.lockRank < 2) ||
-                        (venue.categories.includes("BANK_FINANCIAL") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("SHOPPING_CENTER") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("MUSEUM") && venue.lockRank < 2) ||
-                        (venue.categories.includes("RACING_TRACK") && venue.lockRank < 2) ||
-                        (venue.categories.includes("STADIUM_ARENA") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("THEME_PARK") && venue.lockRank < 2) ||
-                        (venue.categories.includes("TOURIST_ATTRACTION_HISTORIC_SITE") &&
-                            venue.lockRank < 2) ||
-                        (venue.categories.includes("ZOO_AQUARIUM") && venue.lockRank < 2) ||
-                        (venue.categories.includes("BEACH") && venue.lockRank < 2) ||
-                        (venue.categories.includes("GOLF_COURSE") && venue.lockRank < 2) ||
-                        (venue.categories.includes("PARK") && venue.lockRank < 2) ||
-                        (venue.categories.includes("FOREST_GROVE") && venue.lockRank < 2) ||
-                        (venue.categories.includes("ISLAND") && venue.lockRank < 4) ||
-                        (venue.categories.includes("RIVER_STREAM") && venue.lockRank < 3) ||
-                        (venue.categories.includes("SEA_LAKE_POOL") &&
-                            venue.lockRank < 5) ||
-                        (venue.categories.includes("CANAL") && venue.lockRank < 2) ||
-                        (venue.categories.includes("SWAMP_MARSH") && venue.lockRank < 2)) {
-                        status.priority = 2;
-                        status.errors.push("Min lock incorrect.");
+                });
+                async function getAllVenues(bounds) {
+                    let venues = [];
+                    // console.log(bounds);
+                    const baseURL = "https://www.waze.com/row-Descartes/app/Features?language=en&v=2&cameras=true&mapComments=true&roadClosures=true&roadTypes=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C15%2C16%2C17%2C18%2C19%2C20%2C22&venueLevel=4&venueFilter=1%2C1%2C1%2C1&";
+                    let urls = [];
+                    const stepSize = 0.1;
+                    for (let left = bounds.left; left <= bounds.right; left += stepSize) {
+                        for (let bottom = bounds.bottom; bottom <= bounds.top; bottom += stepSize) {
+                            urls.push(`bbox=${left}%2C${bottom}%2C${left + stepSize > bounds.right ? bounds.right : left + stepSize}%2C${bottom + stepSize > bounds.top ? bounds.top : bottom + stepSize}`);
+                        }
                     }
-                    return status;
-                }
-                function checkPURstatus(venue) {
-                    if (venue.venueUpdateRequests?.length > 0) {
-                        return true;
+                    for (let i = 0; i < urls.length; i++) {
+                        // console.log(baseURL + urls[i]);
+                        $("#wazemyPlaces_scanStatus").text(`Scanning tile ${i + 1} of ${urls.length}.`);
+                        const result = await GM.xmlHttpRequest({
+                            method: "GET",
+                            responseType: "json",
+                            url: baseURL + urls[i],
+                        }).catch((e) => console.error(e));
+                        venues = venues.concat(result.response.venues.objects);
                     }
-                    else {
-                        return false;
-                    }
+                    return venues;
                 }
             });
-            async function getAllVenues(bounds) {
-                let venues = [];
-                // console.log(bounds);
-                const baseURL = "https://www.waze.com/row-Descartes/app/Features?language=en&v=2&cameras=true&mapComments=true&roadClosures=true&roadTypes=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C15%2C16%2C17%2C18%2C19%2C20%2C22&venueLevel=4&venueFilter=1%2C1%2C1%2C1&";
-                let urls = [];
-                const stepSize = 0.1;
-                for (let left = bounds.left; left <= bounds.right; left += stepSize) {
-                    for (let bottom = bounds.bottom; bottom <= bounds.top; bottom += stepSize) {
-                        urls.push(`bbox=${left}%2C${bottom}%2C${left + stepSize > bounds.right ? bounds.right : left + stepSize}%2C${bottom + stepSize > bounds.top ? bounds.top : bottom + stepSize}`);
-                    }
-                }
-                for (let i = 0; i < urls.length; i++) {
-                    // console.log(baseURL + urls[i]);
-                    $("#wazemyPlaces_scanStatus").text(`Scanning tile ${i + 1} of ${urls.length}.`);
-                    const result = await GM.xmlHttpRequest({
-                        method: "GET",
-                        responseType: "json",
-                        url: baseURL + urls[i],
-                    }).catch((e) => console.error(e));
-                    venues = venues.concat(result.response.venues.objects);
-                }
-                return venues;
-            }
+            console.log("[WazeMY] PluginPlaces enabled.");
         });
-        console.log("[WazeMY] PluginPlaces enabled.");
     }
     /**
      * Disable plugin.
@@ -1749,8 +1912,10 @@ class PluginPlaces {
      * @return {void} This function does not return anything.
      */
     disable() {
-        if ($("span[title='WazeMY Places']").length > 0) {
-            W.userscripts.removeSidebarTab("wazemyplaces");
+        if (this.sidebarElements) {
+            this.sidebarElements.tabLabel.remove();
+            this.sidebarElements.tabPane.remove();
+            this.sidebarElements = null;
         }
         console.log("[WazeMY] PluginPlaces disabled.");
     }
@@ -1770,6 +1935,270 @@ class PluginPlaces {
     }
 }
 
+;// ./src/plugins/PluginGemini.ts
+
+
+class PluginGemini {
+    /**
+     * Constructs a new instance of the PluginGemini class.
+     * Initializes the WME SDK with the specified script ID and name,
+     * and calls the initialize method to set up the plugin.
+     */
+    constructor() {
+        this.sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-gemini",
+            scriptName: "WazeMY",
+        });
+        this.initialize();
+    }
+    /**
+     * Initialize plugin.
+     *
+     * @return {void} This function does not return anything.
+     */
+    initialize() {
+        const settingsHTML = `
+      <div>
+        <input type="checkbox" id="wazemySettings_gemini_enable"/>
+        <label for="wazemySettings_gemini_enable">Enable Gemini integration</label>
+      </div>
+    `;
+        $("#wazemySettings_settings").append(settingsHTML);
+        $("#wazemySettings_gemini_enable").on("change", () => {
+            PluginManager.instance.updatePluginSettings("gemini", {
+                enable: $("#wazemySettings_gemini_enable").prop("checked"),
+            });
+        });
+        const geminiAPIKeySettings = `
+      <div>
+        <label for="wazemySettings_gemini_apiKey">API Key</label>
+        <input type="password" id="wazemySettings_gemini_apiKey" placeholder="Enter Gemini API Key"/>
+        <wz-button id="wazemySettings_gemini_saveApiKey" class="wazemySettingsButton" style="padding:3px">
+          Save
+        </wz-button>
+        <div style="font-size: 10px; margin-top: 5px;">
+          Get your API key from <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a>.
+        </div>
+      </div>
+    `;
+        $("#wazemySettings_gemini").append(geminiAPIKeySettings);
+        $("#wazemySettings_gemini_saveApiKey").on("click", () => {
+            PluginManager.instance.updatePluginSettings("gemini", {
+                geminiApiKey: $("#wazemySettings_gemini_apiKey").val(),
+            });
+        });
+        // Set settings according to last stored value.
+        const savedSettings = SettingsStorage.instance.getSetting("gemini");
+        if (savedSettings?.enable === true) {
+            $("#wazemySettings_gemini_enable").prop("checked", true);
+        }
+        else {
+            $("#wazemySettings_gemini_enable").prop("checked", false);
+        }
+        if (savedSettings?.geminiApiKey) {
+            $("#wazemySettings_gemini_apiKey").val(savedSettings.geminiApiKey);
+            this.geminiApiKey = savedSettings.geminiApiKey;
+        }
+        // let aiAnswer = this.getGeminiTextResponse("How AI does work?");
+        // console.log("[WazeMY] Gemini AI Answer:", aiAnswer);
+        this.initializeVenueUpdateRequestImageHelper();
+        console.log("[WazeMY] PluginGemini initialized.");
+    }
+    /**
+     * Enable plugin.
+     *
+     * @return {void} This function does not return anything.
+     */
+    enable() {
+        console.log("[WazeMY] PluginGemini enabled.");
+    }
+    /**
+     * Disable plugin.
+     *
+     * @return {void} This function does not return anything.
+     */
+    disable() {
+        console.log("[WazeMY] PluginGemini disabled.");
+    }
+    /**
+     * Updates the settings of the PluginGemini based on the provided settings object.
+     *
+     * @return {void} This function does not return anything.
+     */
+    updateSettings(settings) {
+        if (settings.enable) {
+            if (settings.enable === true) {
+                this.enable();
+            }
+            else {
+                this.disable();
+            }
+        }
+        console.log("[WazeMY] PluginGemini settings updated.");
+    }
+    /**
+     * Initialize the helper for venue update request image.
+     *
+     * @return {void} This function does not return anything.
+     */
+    initializeVenueUpdateRequestImageHelper() {
+        const onload_base64image = (response) => {
+            const base64data = btoa(response.responseText);
+            this.getGeminiPictureEvaluation(base64data).then((evaluation) => {
+                const jsonMatch = evaluation.match(/```json\n([\s\S]*?)\n```/);
+                let evaluationText;
+                if (jsonMatch && jsonMatch[1]) {
+                    evaluationText = JSON.parse(jsonMatch[1]);
+                }
+                else {
+                    evaluationText = JSON.parse(evaluation);
+                }
+                $("#gemini").replaceWith(`<div id='gemini' class="changes"><b>Gemini image evaluation: ${evaluationText.suggestion}</b><br><i>${evaluationText.reason}</i><br></div>`);
+                if (evaluationText.suggestion === "Reject") {
+                    $("#gemini").append(`<b>Violations:</b><ul>${evaluationText.violations.map((v) => `<li>${v}</li>`).join("")}</ul>`);
+                }
+            });
+        };
+        const evaluateImage = (displayAfterElement) => {
+            const imagePreview = $(".image-preview");
+            const geminiElement = $("#gemini");
+            if (imagePreview.length > 0 && geminiElement.length === 0) {
+                $(displayAfterElement).after("<div id='gemini' class='changes'><i>Gemini is evaluating...</i><br></div>");
+                if (imagePreview.length > 0) {
+                    const src = imagePreview.attr("src");
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url: src,
+                        responseType: "arraybuffer",
+                        onload: onload_base64image.bind(this),
+                    });
+                }
+            }
+        };
+        $(document.body).on("click", "", (_e) => {
+            evaluateImage("div.changes");
+        });
+    }
+    getGeminiTextResponse(context) {
+        return new Promise((resolve, reject) => {
+            if (!this.geminiApiKey) {
+                reject(new Error("Gemini API key is not set."));
+                return;
+            }
+            const model = "gemini-2.5-flash";
+            const message = {
+                contents: [{ parts: [{ text: context }] }],
+                generationConfig: { thinkingConfig: { thinkingBudget: 0 } },
+            };
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`,
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify(message),
+                onload: function (response) {
+                    try {
+                        const data = JSON.parse(response.responseText);
+                        // console.log(data["candidates"][0]["content"]["parts"][0]["text"]);
+                        resolve(data["candidates"][0]["content"]["parts"][0]["text"]);
+                    }
+                    catch (e) {
+                        console.error(new Error("Failed to parse response: " + e.message));
+                        reject(new Error(`Failed to parse Gemini response: ${e.message}`));
+                    }
+                },
+            });
+        });
+    }
+    getGeminiPictureEvaluation(base64ImageData) {
+        return new Promise((resolve, reject) => {
+            if (!this.geminiApiKey) {
+                reject(new Error("Gemini API key is not set."));
+                return;
+            }
+            const model = "gemini-2.5-flash";
+            const prompt = `You are an AI assistant specialized in Waze Map Editor (WME) venue image moderation.
+
+Your task is to evaluate an uploaded image of a Waze venue against Waze Map Editor's official guidelines for venue images. You will determine if the image should be 'Approved' or 'Rejected' and provide a clear, concise justification, along with specific guideline violations if rejected.
+
+I will provide you with an image for evaluation.
+
+Your output MUST be a JSON object, easily parseable by a Tampermonkey script. Do not include any other text or formatting outside of the JSON.
+
+\`\`\`json
+{
+  "suggestion": "Approve" | "Reject",
+  "reason": "Concise explanation for the decision (e.g., 'Image is clear, relevant, and follows all guidelines.' or 'Image is rejected due to blurriness and irrelevance.').",
+  "violations": [
+    // Array of specific guideline violation codes if decision is "Rejected".
+    // Use the following codes:
+    // "IRRELEVANT_IMAGE": Image does not show the venue or is of a random object.
+    // "LOW_QUALITY": Image is blurry, dark, pixelated, overexposed, or distorted.
+    // "INAPPROPRIATE_CONTENT": Contains nudity, violence, hate speech, etc.
+    // "PERSONAL_INFORMATION": Shows identifiable faces without consent, license plates, private addresses not part of the venue.
+    // "SCREENSHOT_OF_MAP": Image is a screenshot of Waze, Google Maps, or any other mapping application.
+    // "EXCESSIVE_TEXT_OR_OVERLAYS": Image has too much text, watermarks, promotional overlays, or graphic elements not inherent to the venue's physical signage.
+    // "COPYRIGHTED_MATERIAL": Image appears to be copyrighted without proper authorization (use with caution, AI inference only).
+    // "ORIENTATION_OR_CROPPING_ISSUE": Image is badly rotated or cropped, making the venue unclear.
+    // "DUPLICATE_IMAGE": Image is a clear duplicate of an existing venue image (requires contextual awareness, AI may struggle here).
+    // "OTHER_GENERAL_ISSUE": Any other issues not covered by specific codes.
+  ]
+}
+\`\`\`
+
+Waze Venue Image Guidelines to Consider:
+
+1.  **Relevance:** The image *must* clearly depict the venue/business itself (e.g., its entrance, sign, storefront). No random objects, people (unless part of a large crowd at an event, but generally avoided), or irrelevant scenery.
+2.  **Quality:** Images must be clear, well-lit, in focus, and not blurry, pixelated, overexposed, or excessively dark.
+3.  **Appropriateness:** No offensive, violent, sexually explicit, or hateful content.
+4.  **No Personal Information:** Avoid identifiable faces (especially children), license plates, or other sensitive personal data unless it's an unchangeable part of the venue's permanent signage.
+5.  **No Map Screenshots:** Do not approve images that are screenshots of Waze, Google Maps, or any other navigation/map application.
+6.  **Minimal Text/Overlays:** Avoid images with excessive text, watermarks, promotional overlays, or graphic elements that are not part of the venue's physical branding/signage. A clear logo on a sign is generally fine; a flyer overlay is not.
+7.  **Copyright:** Avoid copyrighted images without explicit permission (AI should err on the side of caution).
+8.  **Focus:** The primary subject of the image should be the venue.
+9.  **Orientation:** Landscape orientation is generally preferred for display, but a good quality portrait image of a tall building is acceptable if it clearly shows the venue. Poor rotation is a rejection reason.
+
+Decision Logic:
+
+* If the image adheres to all the above guidelines, set 'decision' to "Approved".
+* If the image violates one or more guidelines, set 'decision' to "Rejected" and list *all* applicable violation codes in the 'violations' array.`;
+            const message = {
+                contents: [
+                    {
+                        parts: [
+                            {
+                                inlineData: {
+                                    mimeType: "image/jpeg",
+                                    data: base64ImageData,
+                                },
+                            },
+                            {
+                                text: prompt,
+                            },
+                        ],
+                    },
+                ],
+            };
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.geminiApiKey}`,
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify(message),
+                onload: function (response) {
+                    try {
+                        const data = JSON.parse(response.responseText);
+                        // console.log(data["candidates"][0]["content"]["parts"][0]["text"]);
+                        resolve(data["candidates"][0]["content"]["parts"][0]["text"]);
+                    }
+                    catch (e) {
+                        console.log(new Error("Failed to parse response: " + e.message));
+                        reject(new Error(`Failed to parse Gemini response: ${e.message}`));
+                    }
+                },
+            });
+        });
+    }
+}
+
 ;// ./src/PluginFactory.ts
 
 
@@ -1777,13 +2206,14 @@ class PluginPlaces {
 
 
 
+
 class PluginFactory {
-    static createPlugin(pluginName, sdk) {
+    static createPlugin(pluginName) {
         switch (pluginName) {
             case "PluginTooltip":
-                return new PluginTooltip(sdk);
+                return new PluginTooltip();
             case "PluginCopyLatLon":
-                return new PluginCopyLatLon(sdk);
+                return new PluginCopyLatLon();
             case "PluginTrafficCameras":
                 return new PluginTrafficCameras();
             case "PluginKVMR":
@@ -1792,6 +2222,8 @@ class PluginFactory {
                 return new PluginZoomPic();
             case "PluginPlaces":
                 return new PluginPlaces();
+            case "PluginGemini":
+                return new PluginGemini();
             default:
                 throw new Error(`Unknown plugin: ${pluginName}`);
         }
@@ -1813,8 +2245,8 @@ class PluginManager {
      * @param {string} type - The type of plugin to create.
      * @return {void} This function does not return anything.
      */
-    addPlugin(key, type, sdk) {
-        const plugin = PluginFactory.createPlugin(type, sdk);
+    addPlugin(key, type) {
+        const plugin = PluginFactory.createPlugin(type);
         this.plugins[key] = plugin;
         const pluginSettings = this.settingsStorage.getSetting(key);
         if (pluginSettings) {
@@ -1874,12 +2306,10 @@ PluginManager.instance = new PluginManager(SettingsStorage.instance);
 ;// ./src/index.ts
 
 
-const updateMessage = `Port script to WME SDK.`;
+const updateMessage = `Version 2026.01.13.1: Fixed full-size image display for Place Update Requests (PURs) by fetching via blob URL and displaying in a modal popup.`;
 var sdk;
-async function src_main() {
-    console.log("[WazeMY] Script started");
-    unsafeWindow.SDK_INITIALIZED.then(initScript);
-}
+console.log("[WazeMY] Script started");
+unsafeWindow.SDK_INITIALIZED.then(initScript);
 function initScript() {
     if (!unsafeWindow.getWmeSdk) {
         throw new Error("WME SDK not available");
@@ -1890,40 +2320,54 @@ function initScript() {
     });
     sdk.Events.once({ eventName: "wme-ready" }).then(initializeWazeMY);
 }
-async function initializeWazeMY() {
+function initializeWazeMY() {
     console.log("[WazeMY] WME ready");
     sdk.Sidebar.registerScriptTab().then((sidebarResult) => {
         sidebarResult.tabLabel.innerHTML = "WazeMY";
         sidebarResult.tabLabel.title = "WazeMY";
-        sidebarResult.tabPane.innerHTML = `<div>
-        <h4>WazeMY</h4>
-        <b>${GM_info.script.version}</b>
+        sidebarResult.tabPane.innerHTML = `
+        <wz-section-header headline="WazeMY" size="section-header2" class="settings-header">
+          <wz-overline class="headline">WazeMY</wz-overline>
+        </wz-section-header>
+        <wz-overline class="headline">${GM_info.script.version}</wz-overline>
+        <div class="settings">
+          <div class="settings__form-group">
+            <fieldset class="wazemySettings">
+              <legend class="wazemySettingsLegend">
+                <wz-label>Settings</wz-label>
+              </legend>
+              <div id="wazemySettings_settings"></div>
+            </fieldset>
+          </div>
+          <div class="settings__form-group">
+            <fieldset class="wazemySettings">
+              <legend class="wazemySettingsLegend">
+                <wz-label>Shortcuts</wz-label>
+              </legend>
+              <div id="wazemySettings_shortcuts"></div>
+            </fieldset>
+          </div>
+          <div class="settings__form-group">
+            <fieldset class="wazemySettings">
+              <legend class="wazemySettingsLegend">
+                <wz-label>Gemini</wz-label>
+              </legend>
+              <div id="wazemySettings_gemini"></div>
+            </fieldset>
+          </div>
         </div>
-        <fieldset class="wazemySettings">
-        <legend class="wazemySettingsLegend">
-          <h6>Settings</h6></legend>
-        <div id="wazemySettings_settings"></div>
-        </fieldset>
-        <fieldset class="wazemySettings">
-        <legend class="wazemySettingsLegend">
-        <h6>Shortcuts</h6></legend>
-        <div id="wazemySettings_shortcuts">
-        </div>
-        </fieldset>`;
+      `;
         WazeWrap.Interface.ShowScriptUpdate("WME WazeMY", GM_info.script.version, updateMessage, "https://greasyfork.org/en/scripts/404584-wazemy", "javascript:alert('No forum available');");
         const pluginManager = PluginManager.instance;
-        pluginManager.addPlugin("copylatlon", "PluginCopyLatLon", sdk);
-        pluginManager.addPlugin("tooltip", "PluginTooltip", sdk);
-        pluginManager.addPlugin("trafcam", "PluginTrafficCameras", sdk);
-        pluginManager.addPlugin("kvmr", "PluginKVMR", sdk);
-        pluginManager.addPlugin("zoompic", "PluginZoomPic", sdk);
-        pluginManager.addPlugin("places", "PluginPlaces", sdk);
+        pluginManager.addPlugin("copylatlon", "PluginCopyLatLon");
+        pluginManager.addPlugin("tooltip", "PluginTooltip");
+        pluginManager.addPlugin("trafcam", "PluginTrafficCameras");
+        pluginManager.addPlugin("kvmr", "PluginKVMR");
+        pluginManager.addPlugin("zoompic", "PluginZoomPic");
+        pluginManager.addPlugin("places", "PluginPlaces");
+        pluginManager.addPlugin("gemini", "PluginGemini");
     });
 }
-src_main().catch((e) => {
-    console.log("WazeMY: Bootstrap");
-    console.log(e);
-});
 
 /******/ })()
 ;

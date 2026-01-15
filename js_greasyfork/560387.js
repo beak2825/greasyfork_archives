@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         AI Image Assistant V8.4 (Pinterest & Lexica & X)
+// @name         Ultimate Pinterest, Lexica & Twitter Image Assistant: One-Click HD Originals & Free AI 2x Sharpen
 // @namespace    http://tampermonkey.net/
-// @version      8.4
+// @version      8.6
 // @description  The Most Stable Version: One-Click Originals, AI 2x Sharpen, and Source Finder. Supports Pinterest, Lexica, and Twitter.
 // @author       Pi Xiao
 // @match        https://*.pinterest.com/*
@@ -11,8 +11,9 @@
 // @grant        GM_openInTab
 // @grant        GM_setClipboard
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/560387/AI%20Image%20Assistant%20V84%20%28Pinterest%20%20Lexica%20%20X%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/560387/AI%20Image%20Assistant%20V84%20%28Pinterest%20%20Lexica%20%20X%29.meta.js
+// @keywords Pinterest, Twitter, Lexica, HD, Download, Originals, AI Enhance, Color Palette
+// @downloadURL https://update.greasyfork.org/scripts/560387/Ultimate%20Pinterest%2C%20Lexica%20%20Twitter%20Image%20Assistant%3A%20One-Click%20HD%20Originals%20%20Free%20AI%202x%20Sharpen.user.js
+// @updateURL https://update.greasyfork.org/scripts/560387/Ultimate%20Pinterest%2C%20Lexica%20%20Twitter%20Image%20Assistant%3A%20One-Click%20HD%20Originals%20%20Free%20AI%202x%20Sharpen.meta.js
 // ==/UserScript==
 
 (function() {

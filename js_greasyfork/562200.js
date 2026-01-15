@@ -9,7 +9,7 @@
 // @author       SedapnyaTidur
 // @version      1.0.0
 // @license      MIT
-// @revision     1/12/2026, 6:16:10 PM
+// @revision     1/15/2026, 5:00:00 AM
 // @description  Hides virtual keyboard after pressing Enter key or clicking search button in search input field.
 // @downloadURL https://update.greasyfork.org/scripts/562200/%5BLemmy%5D%20Hides%20Virtual%20Keyboard%20On%20Search.user.js
 // @updateURL https://update.greasyfork.org/scripts/562200/%5BLemmy%5D%20Hides%20Virtual%20Keyboard%20On%20Search.meta.js
@@ -64,16 +64,14 @@
         hideKeyboard();
       }, { capture: false, signal: abortController.signal });
 
-      observer = new MutationObserver(mutations => {
-        for (const mutation of mutations) {
-          for (const node of mutation.addedNodes) {
-            if (node.tagName.toLowerCase() === 'svg' && node.classList.contains('spin')) {
-              hideKeyboard();
-              return;
-            }
+      observer = new MutationObserver(mutations => mutations.some(({addedNodes}) => {
+        for (const node of addedNodes) {
+          if (node.tagName.toLowerCase() === 'svg' && node.classList.contains('spin')) {
+            hideKeyboard();
+            return true;
           }
         }
-      });
+      }));
       observer.observe(button, { childList: true });
 
       if (button.firstChild?.tagName.toLowerCase() === 'svg' && button.firstChild.classList.contains('spin')) {
@@ -82,26 +80,24 @@
     }, 1000);
   };
 
-  new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node instanceof HTMLLinkElement && node.rel === 'canonical') {
-          window.clearInterval(searchInterval);
-          window.clearTimeout(searchTimeout);
-          searchInterval = searchTimeout = 0;
-          // The URL and canonical link changed when applying different filters.
-          // Thus, the previous listeners and observer must be stopped.
-          if (observer) {
-            abortController.abort();
-            observer.disconnect();
-            observer = null;
-          }
-          start(configs.find(({path}) => path.test(window.location.pathname)));
-          return;
+  new MutationObserver(mutations => mutations.some(({addedNodes}) => {
+    for (const node of addedNodes) {
+      if (node instanceof HTMLLinkElement && node.rel === 'canonical') {
+        window.clearInterval(searchInterval);
+        window.clearTimeout(searchTimeout);
+        searchInterval = searchTimeout = 0;
+        // The URL and canonical link changed when applying different filters.
+        // Thus, the previous listeners and observer must be stopped.
+        if (observer) {
+          abortController.abort();
+          observer.disconnect();
+          observer = null;
         }
+        start(configs.find(({path}) => path.test(window.location.pathname)));
+        return true;
       }
     }
-  }).observe(document.head, { childList: true });
+  })).observe(document.head, { childList: true });
 
   start(configs.find(({path}) => path.test(window.location.pathname)));
 

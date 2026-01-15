@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mkana+
 // @namespace    https://lit.link/toracatman
-// @version      2025-12-24
+// @version      2026-01-15
 // @description  パソコンや スマホで 表示できない フォントを 表示するために，フォントを 変更します。
 // @author       トラネコマン
 // @match        *://*/*
@@ -13,7 +13,7 @@
 // @updateURL https://update.greasyfork.org/scripts/524907/Mkana%2B.meta.js
 // ==/UserScript==
 
-var css = `
+let css = `
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Noto+Sans+KR&family=Noto+Serif+Hentaigana&display=swap');
 
 @font-face {
@@ -67,16 +67,15 @@ body {
 	font-family: "Mkana+", "MgenKana+", "Nishiki-teki-Braille", "Noto Color Emoji", "Noto Sans KR", "Noto Serif Hentaigana", "Jigmo", "Jigmo2", "Jigmo3", sans-serif;
 }
 `;
-var css2 = `
+let css2 = `
 * {
 	font-family: "Mkana+", "MgenKana+", "Nishiki-teki-Braille", "Noto Sans KR", "Noto Serif Hentaigana", "Jigmo", "Jigmo2", "Jigmo3", sans-serif !important;
 }
 `;
 
 (() => {
-    var style = document.createElement("style");
-    var text = css;
-    if (location.origin == "https://x.com") text += css2;
-    style.textContent = text;
+    if (location.origin == "https://x.com") css += css2;
+    let style = document.createElement("style");
+    style.textContent = css;
     document.body.appendChild(style);
 })();

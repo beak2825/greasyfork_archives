@@ -1,102 +1,49 @@
 // ==UserScript==
-// @name        Dark Reader
-// @description Toggle dark mode using an icon placed at the bottom left of your screen. Hotkey: Command + Shift + B
+// @name        Dimmer (Dark Reader)
+// @description Toggle dark mode using an icon placed at the bottom left of your screen. Hotkey: Command + Shift + B.
 // @author      Schimon Jehudah, Adv.
 // @namespace   i2p.schimon.dimmer
-// @homepageURL https://greasyfork.org/en/scripts/466058-dark-reader
-// @supportURL  https://greasyfork.org/en/scripts/466058-dark-reader/feedback
-// @copyright   2023, Schimon Jehudah (http://schimon.i2p)
+// @homepageURL https://greasyfork.org/scripts/466058-dark-reader
+// @supportURL  https://greasyfork.org/scripts/466058-dark-reader/feedback
+// @copyright   2023 - 2026, Schimon Jehudah (http://schimon.i2p)
 // @license     MIT; https://opensource.org/licenses/MIT
-// @icon        data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5SFPC90ZXh0Pjwvc3ZnPgo=
-// @match       *://*/*
+// @icon        data:image/svg+xml;base64,CiAgICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDEwMCAxMDAiPgogICAgICAgIDx0ZXh0IHk9Ii45ZW0iIGZvbnQtc2l6ZT0iOTAiPuKYrzwvdGV4dD4KICAgIDwvc3ZnPgogIA==
 // @exclude     devtools://*
-// @version     23.06.11
+// @match       file:///*
+// @match       *://*/*
+// @version     26.01.13
 // @require     https://unpkg.com/darkreader@4.9.58/darkreader.js
-// @noframes
 // @grant       GM.getValue
+// @grant       GM.registerMenuCommand
 // @grant       GM.setValue
-// @downloadURL https://update.greasyfork.org/scripts/466058/Dark%20Reader.user.js
-// @updateURL https://update.greasyfork.org/scripts/466058/Dark%20Reader.meta.js
+// @noframes
+// @downloadURL https://update.greasyfork.org/scripts/466058/Dimmer%20%28Dark%20Reader%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/466058/Dimmer%20%28Dark%20Reader%29.meta.js
 // ==/UserScript==
 
-/* TODO
+/*
+
+TODO
 
 Toggle color of button.
-btn.style.filter = 'hue-rotate(500deg)'
 See https://noscript.net/ or
-use a plain character '●'.
-btn.style.color = 'black' */
+use a plain character "●".
 
+NOTE
 
-if (document.doctype == null) { return; }
+https://greasyfork.org/en/scripts/390218-block
+https://ao.vern.cc/questions/3250790/making-a-div-that-covers-the-entire-page
+https://javascripttutorial.net/javascript-dom/javascript-page-load-events/
 
-//enable()
+*/
 
-const
-  namespace = 'i2p-schimon-dimmer',
-  btn = document.createElement(namespace);
+DarkReader.setFetchMethod(window.fetch); // https://eligrey.com/
 
-// create button
 (async function createButton() {
-  // create element
-  document.body.append(btn);
-  // set content
-  btn.textContent = '🔆';
-  btn.id = namespace;
-  btn.style.all = 'unset';
-  // set position
-  btn.style.position = 'fixed';
-  btn.style.bottom = 0;
-  btn.style.left = 0;
-  // set appearance
-  btn.style.marginTop = '100px';
-  btn.style.marginRight = '10px';
-  btn.style.minWidth = '50px';
-  btn.style.minHeight = '50px';
-  btn.style.fontSize = '20px';
-  btn.style.zIndex = 10000;
-  btn.style.opacity = 0.5;
-  //btn.style.transition = 'all .5s ease .5s';
-  btn.onmouseover = () => {
-    document
-      .getElementById(namespace)
-      .style.opacity = 0.9;
-  };
-  btn.onmouseout = () => {
-    document
-      .getElementById(namespace)
-      .style.opacity = 0.3;
-  };
-  // center character
-  btn.style.justifyContent = 'center';
-  btn.style.alignItems = 'center';
-  btn.style.display = 'flex';
-  // disable selection marks
-  btn.style.outline = 'none';
-  btn.style.userSelect = 'none';
-  btn.style.cursor = 'default';
-  // set button behaviour
-  btn.onclick = () => {
-  //btn.onclick = async () => {
-    try {
-      toggle();
-      //await toggle();
-    } catch (err) {
-      toggleByShape();
-      console.warn('No support for Greasemonkey API');
-      console.error(err);
-    }
-  };
-  try {
-    if (await GM.getValue('dimmer')) {
-      enable()
-    } else {
-      disable();
-    }
-  } catch (err) {
-    console.warn('No support for Greasemonkey API');
-    console.error(err);
+  if (await GM.getValue("dimmer")) {
+    enable();
   }
+  await GM.registerMenuCommand("Toggle dark mode", () => toggle(), "T");
 })();
 
 // set hotkey
@@ -108,23 +55,16 @@ document.onkeyup = function(e) {
   }
 };
 
-// toggle mode
+// TODO Toggle menu item 🔆 🔅 / ☀️ 🌕 / 🌤 🌥 / 🌕 🌙 / 💡 🕯 / ⚪ ⚫ / 🏳 🏴
 async function toggle() {
-  if (await GM.getValue('dimmer')) {
-    await GM.setValue('dimmer', false);
+  if (await GM.getValue("dimmer")) {
+    await GM.setValue("dimmer", false);
     disable();
+    notification("Dark color scheme is disabled.", "⚪");
   } else {
-    await GM.setValue('dimmer', true);
+    await GM.setValue("dimmer", true);
     enable();
-  }
-}
-
-// toggle mode
-function toggleByShape() {
-  if (btn.textContent == '🔆') {
-    enable()
-  } else {
-    disable();
+    notification("Dark color scheme is enabled.", "⚫");
   }
 }
 
@@ -134,19 +74,14 @@ function disable() {
     contrast: 90,
     sepia: 10
   });
-  btn.textContent = '🔆';
-  //return '🔆';
 }
 
 function enable() {
-  DarkReader.setFetchMethod(window.fetch); // https://eligrey.com/
   DarkReader.enable({
     brightness: 100,
     contrast: 90,
     sepia: 10
   });
-  btn.textContent = '🔅';
-  //return '🔅';
 }
 
 // Set mode temporarily per session or until storage is cleared
@@ -157,4 +92,23 @@ function getPreference(key) {
 
 function setPreference(key, value) {
   return window.localStorage.setItem(key, value);
+}
+
+function characterAsSvgDataUri(character) {
+  const svgString = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <text y=".9em" font-size="90">${character}</text>
+    </svg>
+  `;
+  const base64Svg = btoa(unescape(encodeURIComponent(svgString)));
+  return `data:image/svg+xml;base64,${base64Svg}`;
+}
+
+function notification(message, graphics) {
+  console.info("☯ Dimmer: " + message);
+  if (typeof GM !== "undefined" && typeof GM.notification === "function") {
+    GM.notification(message, "☯ Dimmer", characterAsSvgDataUri(graphics));
+  } else {
+    alert(message);
+  }
 }

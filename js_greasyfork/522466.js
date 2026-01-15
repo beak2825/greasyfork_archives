@@ -6,10 +6,10 @@
 // @icon                https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @author              ElectroKnight22
 // @namespace           electroknight22_youtube_better_theater_mode_namespace
-// @version             3.0.3
+// @version             3.2.3
 // @match               *://www.youtube.com/*
 // @match               *://www.youtube-nocookie.com/*
-// @require             https://update.greasyfork.org/scripts/549881/1731753/YouTube%20Helper%20API.js
+// @require             https://update.greasyfork.org/scripts/549881/1733676/YouTube%20Helper%20API.js
 // @noframes
 // @grant               GM.getValue
 // @grant               GM.setValue
@@ -37,8 +37,6 @@
 /*jshint esversion: 11 */
 /* global youtubeHelperApi */
 
-console.log('Better YouTube Theater Mode script init', 'is body ready?', document.readyState, document.body);
-
 (function () {
     'use strict';
 
@@ -51,38 +49,48 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
             width: 300, //px
         },
         DEFAULT_SETTINGS: {
-            setLowHeadmast: false,
+            setLowMasthead: false,
+            fullHeightVideo: false,
             get theaterChatWidth() {
                 return `${CONFIG.MIN_CHAT_SIZE.width}px`;
             },
         },
     };
 
-    const BROWSER_LANGUAGE = navigator.language ?? navigator.userLanguage;
-    const TRANSLATIONS = {
-        'en-US': {
-            moveHeadmastBelowVideoPlayer: 'Move Headmast Below Video Player',
-        },
-        'zh-TW': {
-            moveHeadmastBelowVideoPlayer: '將頁首橫幅移到影片播放器下方',
-        },
-        'zh-CN': {
-            moveHeadmastBelowVideoPlayer: '将页首横幅移动到视频播放器下方',
-        },
-        ja: {
-            moveHeadmastBelowVideoPlayer: 'ヘッドマストをビデオプレイヤーの下に移動',
-        },
-    };
+    const MENU_LABELS = (() => {
+        const browserLanguage = navigator.language ?? navigator.userLanguage;
+        const translations = {
+            moveMastheadBelowVideoPlayer: {
+                'en-US': 'Move Search Bar Below Video',
+                'zh-TW': '將搜尋列移動到影片下方',
+                'zh-CN': '将搜寻列移动到影片下方',
+                ja: '検索バーをビデオプレイヤーの下に移動',
+            },
+            fullHeightVideo: {
+                'en-US': 'Full Height Video',
+                'zh-TW': '延伸影片至視窗高度',
+                'zh-CN': '延伸视频至窗口高度',
+                ja: '動画をブラウザの高さに広げる',
+            },
+        };
 
-    function getPreferredLanguage() {
-        if (TRANSLATIONS[BROWSER_LANGUAGE]) return BROWSER_LANGUAGE;
-        if (BROWSER_LANGUAGE.startsWith('zh')) return 'zh-CN';
-        return 'en-US';
-    }
+        const getPreferredLanguage = () => {
+            if (['zh-TW', 'zh-HK'].includes(browserLanguage)) return 'zh-TW';
+            if (browserLanguage.startsWith('zh')) return 'zh-CN';
+            if (browserLanguage.startsWith('ja')) return 'ja';
+            return 'en-US';
+        };
 
-    function getLocalizedText() {
-        return TRANSLATIONS[getPreferredLanguage()] ?? TRANSLATIONS['en-US'];
-    }
+        return new Proxy(translations, {
+            get(target, property) {
+                const keyGroup = target[property];
+                if (!keyGroup) return `[${String(property)}]`;
+                const currentLanguage = getPreferredLanguage();
+                const fallbackLanguage = 'en-US';
+                return keyGroup[currentLanguage] ?? keyGroup[fallbackLanguage] ?? `[Missing: ${String(property)}]`;
+            },
+        });
+    })();
 
     const state = {
         userSettings: { ...CONFIG.DEFAULT_SETTINGS },
@@ -97,68 +105,266 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
         moviePlayer: null,
     };
 
-    const createGmApi = () => {
-        const isGmFallback = typeof GM === 'undefined' && typeof GM_info !== 'undefined';
-        if (isGmFallback) {
-            return {
-                registerMenuCommand: GM_registerMenuCommand,
-                unregisterMenuCommand: GM_unregisterMenuCommand,
-            };
-        }
-        return {
-            registerMenuCommand: (...args) => window.GM?.registerMenuCommand?.(...args),
-            unregisterMenuCommand: (...args) => window.GM?.unregisterMenuCommand?.(...args),
-        };
-    };
+    const GhostManager = {
+        observer: null,
+        globalObserver: null,
+        currentSource: null,
+        currentTarget: null,
+        registry: new WeakMap(),
 
-    const GM_API = createGmApi();
+        init() {
+            this.observer = new MutationObserver((mutations) => {
+                const isRelevant = mutations.some(
+                    (_mutation) =>
+                        _mutation.type === 'childList' ||
+                        _mutation.type === 'characterData' ||
+                        (_mutation.type === 'attributes' && _mutation.target === this.currentSource),
+                );
+                if (isRelevant) this.update();
+            });
+
+            this.globalObserver = new MutationObserver(() => {
+                if (this.update()) {
+                    this.globalObserver.disconnect();
+                    this.globalObserver = null;
+                }
+            });
+
+            if (!this.update()) {
+                this.globalObserver.observe(document.body, { childList: true, subtree: true });
+            }
+        },
+
+        safelyModifyDOM(action) {
+            this.observer?.disconnect();
+            try {
+                action();
+            } finally {
+                this.observeElements(this.currentSource, this.currentTarget);
+            }
+        },
+
+        isSourceReady(element) {
+            return element && element.offsetWidth > 0 && !!element.querySelector('button') && !!element.querySelector('yt-icon, svg, img');
+        },
+
+        _createBaseButton(referenceButton) {
+            const ghost = document.createElement('button');
+            ghost.classList.add('bt-ghost-clone');
+
+            const defaults = {
+                classes: [
+                    'yt-spec-button-shape-next',
+                    'yt-spec-button-shape-next--text',
+                    'yt-spec-button-shape-next--overlay',
+                    'yt-spec-button-shape-next--size-s',
+                ],
+                styles: { width: '32px', height: '32px' },
+            };
+
+            if (referenceButton) {
+                ghost.className = referenceButton.className + ' bt-ghost-clone';
+            } else {
+                ghost.classList.add(...defaults.classes);
+            }
+
+            if (referenceButton) {
+                const computed = window.getComputedStyle(referenceButton);
+                Object.assign(ghost.style, {
+                    margin: computed.margin,
+                    padding: computed.padding,
+                    width: computed.width,
+                    height: computed.height,
+                    minWidth: computed.minWidth,
+                    verticalAlign: 'top',
+                });
+            } else {
+                Object.assign(ghost.style, defaults.styles);
+            }
+
+            Object.assign(ghost.style, {
+                cursor: 'pointer',
+                border: 'none',
+                outline: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxSizing: 'border-box',
+                padding: '0 18px',
+                position: 'relative',
+            });
+
+            return ghost;
+        },
+
+        _appendIcon(ghost, original) {
+            const iconSource = original.querySelector('yt-icon, svg, img');
+            if (!iconSource) {
+                ghost.textContent = '🔔';
+                return;
+            }
+
+            const clonedIcon = iconSource.cloneNode(true);
+            clonedIcon.style.cssText =
+                'width: 24px !important; height: 24px !important; display: block; pointer-events: none; fill: currentColor; color: inherit;';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'yt-spec-button-shape-next__icon';
+            wrapper.style.pointerEvents = 'none';
+            wrapper.appendChild(clonedIcon);
+            ghost.appendChild(wrapper);
+        },
+
+        _appendRipple(ghost) {
+            const shape = document.createElement('yt-touch-feedback-shape');
+            shape.className = 'yt-spec-touch-feedback-shape yt-spec-touch-feedback-shape--overlay-touch-response';
+            shape.setAttribute('aria-hidden', 'true');
+
+            shape.appendChild(document.createElement('div')).className = 'yt-spec-touch-feedback-shape__stroke';
+            shape.appendChild(document.createElement('div')).className = 'yt-spec-touch-feedback-shape__fill';
+            ghost.appendChild(shape);
+        },
+
+        _appendBadge(ghost, original) {
+            const source = original.querySelector('.yt-spec-icon-badge-shape__badge');
+            const text = source?.textContent?.trim();
+
+            if (!text || window.getComputedStyle(source).display === 'none') return;
+
+            const badge = document.createElement('div');
+            badge.className = 'bt-ghost-badge';
+            badge.textContent = text;
+
+            const computed = window.getComputedStyle(source);
+
+            Object.assign(badge.style, {
+                position: 'absolute',
+                top: '2px',
+                right: '-2px',
+                backgroundColor: computed.backgroundColor,
+                color: computed.color,
+                fontSize: computed.fontSize,
+                fontWeight: computed.fontWeight,
+                lineHeight: computed.lineHeight,
+                fontFamily: computed.fontFamily,
+                minWidth: computed.minWidth,
+                height: computed.height,
+                padding: computed.padding,
+                borderRadius: computed.borderRadius,
+                border: computed.border,
+                pointerEvents: 'none',
+                zIndex: '10',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxSizing: 'border-box',
+            });
+            ghost.appendChild(badge);
+        },
+
+        syncGhost(original, container, targetIndex = 2) {
+            if (!this.isSourceReady(original)) return false;
+
+            let ghost = this.registry.get(original)?.find((_ghost) => _ghost.parentElement === container);
+
+            if (!ghost) {
+                const referenceButton = container.querySelector('button:not(.bt-ghost-clone)');
+
+                ghost = this._createBaseButton(referenceButton);
+                this._appendIcon(ghost, original);
+                this._appendRipple(ghost);
+
+                const clickTarget = original.querySelector('button') || original;
+                ghost.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clickTarget.click();
+                });
+
+                if (!this.registry.has(original)) this.registry.set(original, []);
+                this.registry.get(original).push(ghost);
+            }
+
+            const existingBadge = ghost.querySelector('.bt-ghost-badge');
+            if (existingBadge) existingBadge.remove();
+            this._appendBadge(ghost, original);
+
+            this.safelyModifyDOM(() => {
+                const children = Array.from(container.children);
+                const currentIndex = children.indexOf(ghost);
+
+                if (currentIndex === targetIndex) return;
+
+                const offset = currentIndex !== -1 && currentIndex < targetIndex ? 1 : 0;
+                const refNode = children[targetIndex + offset] || null;
+
+                container.insertBefore(ghost, refNode);
+            });
+
+            return true;
+        },
+
+        observeElements(source, target) {
+            this.currentSource = source || this.currentSource;
+            this.currentTarget = target || this.currentTarget;
+            if (!this.currentSource || !this.currentTarget) return;
+
+            this.observer.disconnect();
+            this.observer.observe(this.currentSource, { childList: true, subtree: true, characterData: true, attributes: true });
+            this.observer.observe(this.currentTarget, { childList: true });
+        },
+
+        update() {
+            const shouldHaveGhosts = state.userSettings.fullHeightVideo && state.userSettings.setLowMasthead;
+
+            if (shouldHaveGhosts) {
+                const notifBell = document.querySelector('ytd-notification-topbar-button-renderer');
+                const quickActions = document.querySelector('yt-player-quick-action-buttons');
+
+                if (notifBell && quickActions) {
+                    this.observeElements(notifBell, quickActions);
+                    return this.syncGhost(notifBell, quickActions, 2);
+                }
+
+                return false;
+            } else {
+                document.querySelectorAll('.bt-ghost-clone').forEach((el) => el.remove());
+                this.observer?.disconnect();
+                this.globalObserver?.disconnect();
+                this.currentSource = null;
+                this.currentTarget = null;
+                return true;
+            }
+        },
+    };
 
     const StyleManager = {
         styleDefinitions: {
-            staticDesktopStyle: {
-                id: 'betterTheater-staticDesktopStyle',
-                getRule: () => `
-                    .ytp-fullscreen-quick-actions {
-                        display: unset !important;
-                    }
-                    #show-hide-button.ytd-live-chat-frame {
-                        display: none !important;
-                    }
-                `,
-            },
-            staticDesktopOptimalStyle: {
-                id: 'betterTheater-staticDesktopOptimalStyle',
-                getRule: () => `
-                    ytd-comments:not([engagement-panel]) {
-                        display: none !important;
-                    }
-                    ytd-watch-flexy[is-two-columns_][is-four-three-to-sixteen-nine-video_]:not([full-bleed-player][full-bleed-no-max-width-columns]):not([fixed-panels]) #primary.ytd-watch-flexy {
-                        max-width: 100vw !important;
-                    }
-                    #clarify-box.ytd-watch-flexy, ytd-watch-flexy[show-expandable-metadata] ytd-watch-metadata.ytd-watch-flexy {
-                        margin-top: 0 !important;
-                    }
-                    #columns.ytd-watch-flexy {
-                        flex-direction: column !important;
-                    }
-                    #primary-inner.ytd-watch-flexy {
-                        display: flex !important;
-                    }
-                    #player.ytd-watch-flexy {
-                        max-width: var(--ytd-watch-flexy-max-player-width);
-                        min-width: var(--ytd-watch-flexy-max-player-width);
-                    }
-                    #below.ytd-watch-flexy {
-                        padding-left: 12px !important;
-                        height: 100% !important;
-                    }
-                    #secondary.ytd-watch-flexy {
-                        padding: var(--ytd-margin-6x) !important;
-                        height: 100% !important;
-                        min-width: 100vw !important;
-                        max-width: 100vw !important;
-                    }
-                `,
+            staticStyles: {
+                staticVideoPlayerFixStyle: {
+                    id: 'betterTheater-staticVideoPlayerFixStyle',
+                    getRule: () => `
+                        .html5-video-container { top: -1px !important; }
+                        #skip-navigation.ytd-masthead { left: -500px; }
+                    `,
+                },
+                chatRendererFixStyle: {
+                    id: 'betterTheater-staticChatRendererFixStyle',
+                    getRule: () => `ytd-live-chat-frame[theater-watch-while][rounded-container] {
+                        border-bottom: 0 !important;
+                        }
+                    `,
+                },
+                streamBackgroundImageFixStyle: {
+                    id: 'betterTheater-streamBackgroundImageFixStyle',
+                    getRule: () => `
+                        .ytp-offline-slate-background {
+                            background-size: contain !important;
+                            max-width: 100% !important;
+                            max-height: 100% !important;
+                        }
+                    `,
+                },
             },
             chatStyle: {
                 id: 'betterTheater-chatStyle',
@@ -175,20 +381,36 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                     #chat-container { z-index: 2021 !important; }
                 `,
             },
-            videoPlayerStyle: {
-                id: 'betterTheater-videoPlayerStyle',
-                getRule: () =>
-                    `ytd-watch-flexy[full-bleed-player] #full-bleed-container.ytd-watch-flexy {
-                        min-height: calc(100vh - var(--ytd-watch-flexy-masthead-height)) !important;
-                        max-height: calc(100vh - var(--ytd-watch-flexy-masthead-height)) !important;
-                    }`,
+            fullHeightPlayerStyle: {
+                id: 'betterTheater-fullHeightPlayerStyle',
+                getRule: () => {
+                    const viewportHeight = state.userSettings.setLowMasthead
+                        ? '100vh'
+                        : 'calc(100vh - var(--ytd-watch-flexy-masthead-height))';
+
+                    return `
+                        ytd-watch-flexy[full-bleed-player] #full-bleed-container.ytd-watch-flexy {
+                            min-height: ${viewportHeight} !important;
+                            max-height: ${viewportHeight} !important;
+                        }
+                        .ytp-fullscreen-quick-actions {
+                            display: unset !important;
+                        }
+                        #show-hide-button.ytd-live-chat-frame {
+                            display: none !important;
+                        }
+                        .ytp-delhi-modern .ytp-skip-ad-button {
+                            transform: translateY(-70px) !important;
+                        }
+                    `;
+                },
             },
-            headmastStyle: {
-                id: 'betterTheater-headmastStyle',
+            mastheadStyle: {
+                id: 'betterTheater-mastheadStyle',
                 getRule: () => `#masthead-container.ytd-app { max-width: calc(100% - ${state.chatWidth}px) !important; }`,
             },
-            lowHeadmastStyle: {
-                id: 'betterTheater-lowHeadmastStyle',
+            lowMastheadStyle: {
+                id: 'betterTheater-lowMastheadStyle',
                 getRule: () => `
                     #page-manager.ytd-app {
                         margin-top: 0 !important;
@@ -198,26 +420,15 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                     ytd-watch-flexy:not([full-bleed-player][full-bleed-no-max-width-columns]) #columns.ytd-watch-flexy {
                         margin-top: var(--ytd-toolbar-offset) !important;
                     }
-                    ytd-watch-flexy[full-bleed-player] #full-bleed-container.ytd-watch-flexy {
-                        max-height: 100vh !important;
-                    }
                     #masthead-container.ytd-app {
                         z-index: 599 !important;
                         top: ${state.moviePlayerHeight}px !important;
                         position: relative !important;
                     }
+                    tp-yt-iron-dropdown {
+                        top: calc(var(--ytd-masthead-height-accounting-for-hidden) / 2) !important;
+                    }
                 `,
-            },
-            videoPlayerFixStyle: {
-                id: 'betterTheater-videoPlayerFixStyle',
-                getRule: () => `
-                    .html5-video-container { top: -1px !important; }
-                    #skip-navigation.ytd-masthead { left: -500px; }
-                `,
-            },
-            chatRendererFixStyle: {
-                id: 'betterTheater-chatRendererFixStyle',
-                getRule: () => `ytd-live-chat-frame[theater-watch-while][rounded-container] { border-bottom: 0 !important; }`,
             },
             chatClampLimits: {
                 id: 'betterTheater-chatClampLimits',
@@ -259,15 +470,60 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                     return '';
                 },
             },
+            tuckRecommendationStyles: {
+                liveStyle: {
+                    id: 'betterTheater-tuckRecommendationStreamStyle',
+                    getRule: () => `
+                        #columns.style-scope.ytd-watch-flexy {
+                            flex-direction: column !important;
+                        }
+                        #secondary {
+                            width: auto !important;
+                            margin: 0 var(--ytd-watch-flexy-horizontal-page-margin) !important;
+                        }
+                        #teaser-carousel.ytd-watch-metadata {
+                            width: auto !important;
+                        }
+                    `,
+                },
+                vodStyle: {
+                    id: 'betterTheater-tuckRecommendationVodStyle',
+                    getRule: () => `
+                        #id.ytd-watch-metadata, #top-row.ytd-watch-metadata {
+                            width: calc(100vw
+                                - 2
+                                * var(--ytd-watch-flexy-horizontal-page-margin)
+                                - var(--ytd-watch-flexy-sidebar-width)
+                                - var(--ytd-watch-flexy-horizontal-page-margin))
+                            !important;
+                        }
+                        #secondary {
+                            transform: translateY(calc(var(--ytd-watch-flexy-top-padding) * 6)) !important;
+                        }
+                    `,
+                },
+                videoStyle: {
+                    id: 'betterTheater-tuckRecommendationVideoStyle',
+                    getRule: () => `
+                        #id.ytd-watch-metadata, #top-row.ytd-watch-metadata {
+                            width: calc(100vw - 2 * var(--ytd-watch-flexy-horizontal-page-margin)) !important;
+                        }
+                        #secondary {
+                            transform: translateY(calc(var(--ytd-watch-flexy-top-padding) * 6)) !important;
+                        }
+                    `,
+                },
+            },
         },
         apply(styleDef, isPersistent = false) {
             if (typeof styleDef.getRule !== 'function') return;
-            this.remove(styleDef); // Ensure no duplicates
+            this.remove(styleDef);
 
             const styleElement = document.createElement('style');
             styleElement.id = styleDef.id;
             styleElement.textContent = styleDef.getRule();
             document.head.appendChild(styleElement);
+            document.body.offsetHeight;
             state.activeStyles.set(styleDef.id, {
                 element: styleElement,
                 persistent: isPersistent,
@@ -277,6 +533,7 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
             const styleData = state.activeStyles.get(styleDef.id);
             if (styleData) {
                 styleData.element?.remove();
+                document.body.offsetHeight;
                 state.activeStyles.delete(styleDef.id);
             }
         },
@@ -363,24 +620,30 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
     };
     const MenuManager = {
         clear() {
-            while (state.menuItems.length) {
-                GM_API.unregisterMenuCommand(state.menuItems.pop());
-            }
+            while (state.menuItems.length) GM.unregisterMenuCommand(state.menuItems.pop());
         },
         refresh() {
             this.clear();
-            const LABEL = getLocalizedText();
             const shouldAutoClose = GM?.info?.scriptHandler === 'ScriptCat';
             const menuConfig = [
                 {
-                    label: () => `${state.userSettings.setLowHeadmast ? '✅' : '❌'} ${LABEL.moveHeadmastBelowVideoPlayer}`,
-                    id: 'toggleLowHeadmast',
+                    label: () => `${state.userSettings.setLowMasthead ? '✅' : '❌'} ${MENU_LABELS.moveMastheadBelowVideoPlayer}`,
+                    id: 'toggleLowMasthead',
                     action: () =>
-                        SettingsManager.update('setLowHeadmast', !state.userSettings.setLowHeadmast).then(() => App.updateAllStyles()),
+                        SettingsManager.update('setLowMasthead', !state.userSettings.setLowMasthead).then(() => App.updateAllStyles()),
+                },
+                {
+                    label: () => `${state.userSettings.fullHeightVideo ? '✅' : '❌'} ${MENU_LABELS.fullHeightVideo}`,
+                    id: 'toggleFullHeightVideo',
+                    action: () =>
+                        SettingsManager.update('fullHeightVideo', !state.userSettings.fullHeightVideo).then(() => {
+                            App.updateVideoStyle();
+                            GhostManager.update();
+                        }),
                 },
             ];
             menuConfig.forEach((item) => {
-                const commandId = GM_API.registerMenuCommand(
+                const commandId = GM.registerMenuCommand(
                     item.label(),
                     async () => {
                         await item.action();
@@ -429,23 +692,20 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                 });
             };
 
-            const _onPointerUp = (e) => {
-                handle.releasePointerCapture(e.pointerId);
+            const _onPointerUp = (event) => {
+                handle.releasePointerCapture(event.pointerId);
                 document.removeEventListener('pointermove', _onPointerMove);
                 document.removeEventListener('pointerup', _onPointerUp);
-                SettingsManager.update(
-                    'theaterChatWidth',
-                    api.page.watchFlexy.style.getPropertyValue('--bt-chat-width'),
-                );
+                SettingsManager.update('theaterChatWidth', api.page.watchFlexy.style.getPropertyValue('--bt-chat-width'));
             };
 
-            handle.addEventListener('pointerdown', (e) => {
-                if (e.pointerType === 'mouse' && e.button !== 0) return;
-                e.preventDefault();
+            handle.addEventListener('pointerdown', (event) => {
+                if (event.pointerType === 'mouse' && event.button !== 0) return;
+                event.preventDefault();
                 document.body.click(); // Deselect any text
-                startX = e.clientX;
+                startX = event.clientX;
                 startWidth = chat.getBoundingClientRect().width;
-                handle.setPointerCapture(e.pointerId);
+                handle.setPointerCapture(event.pointerId);
                 document.addEventListener('pointermove', _onPointerMove);
                 document.addEventListener('pointerup', _onPointerUp);
             });
@@ -471,68 +731,81 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
     const App = {
         init() {
             try {
-                if (!this.detectGreasemonkey()) throw new Error('Greasemonkey API not detected');
+                if (api.gmCapabilities.none) throw new Error('Greasemonkey API not detected');
                 Promise.all([SettingsManager.cleanupStorage(), SettingsManager.load()]).then(() => {
-                    StyleManager.apply(StyleManager.styleDefinitions.chatRendererFixStyle, true);
-                    StyleManager.apply(StyleManager.styleDefinitions.videoPlayerFixStyle, true);
-                    StyleManager.apply(StyleManager.styleDefinitions.staticDesktopStyle, true);
-                    StyleManager.apply(StyleManager.styleDefinitions.videoPlayerStyle, true);
-                    //StyleManager.apply(StyleManager.styleDefinitions.staticDesktopOptimalStyle, true);
+                    GhostManager.init();
+                    Object.values(StyleManager.styleDefinitions.staticStyles).forEach((style) => StyleManager.apply(style, true));
                     this._handlePageUpdate();
                     this.attachEventListeners();
                     MenuManager.refresh();
+                    GhostManager.update();
                 });
             } catch (error) {
                 console.error('Initialization failed.', error);
             }
         },
-        detectGreasemonkey() {
-            return typeof window.GM?.info !== 'undefined' || typeof GM_info !== 'undefined';
+        _shouldApplyChatStyle() {
+            const chatBox = api.chat.iFrame?.getBoundingClientRect();
+            const flexy = api.page.watchFlexy;
+            const isSecondaryVisible = flexy?.querySelector('#secondary')?.style.display !== 'none';
+            return api.player.isTheater && !api.player.isFullscreen && !api.chat.isCollapsed && chatBox?.width > 0 && isSecondaryVisible;
+        },
+        updateChatStyles() {
+            const styles = StyleManager.styleDefinitions;
+            const shouldStyle = this._shouldApplyChatStyle();
+            StyleManager.toggle(styles.chatStyle, shouldStyle);
+            StyleManager.toggle(styles.chatClampLimits, shouldStyle);
+
+            shouldStyle ? ChatInteractionManager.addChatWidthResizeHandle() : ChatInteractionManager.removeChatWidthResizeHandle();
+            this.updateMastheadStyle(shouldStyle);
+        },
+        updateMastheadStyle(isChatStyled) {
+            const styles = StyleManager.styleDefinitions;
+            const updateLowMastheadStyle = () => {
+                if (!DOM.moviePlayer) return;
+                const shouldApply =
+                    state.userSettings.setLowMasthead && api.player.isTheater && !api.player.isFullscreen && api.page.type === 'watch';
+                StyleManager.toggle(styles.lowMastheadStyle, shouldApply);
+            };
+
+            if (isChatStyled === undefined) isChatStyled = this._shouldApplyChatStyle();
+            updateLowMastheadStyle();
+
+            const shouldShrinkMasthead = isChatStyled && api.chat.iFrame?.getAttribute('theater-watch-while') === '';
+
+            state.chatWidth = api.chat.iFrame?.offsetWidth ?? 0;
+            StyleManager.toggle(styles.mastheadStyle, shouldShrinkMasthead);
+            DOM.moviePlayer?.setCenterCrop?.();
+        },
+        updateVideoStyle() {
+            const shouldApply = state.userSettings.fullHeightVideo;
+            StyleManager.toggle(StyleManager.styleDefinitions.fullHeightPlayerStyle, shouldApply);
+        },
+        updateRecommendationTuckStyle() {
+            const styles = StyleManager.styleDefinitions.tuckRecommendationStyles;
+            Object.values(styles).forEach(style => StyleManager.toggle(style, false));
+
+            if (!api.player.isTheater || api.player.isFullscreen || api.page.type !== 'watch') return;
+
+            const isVod = api.video.wasStreamedOrPremiered;
+            const canHaveChat = api.video.isLiveOrVodContent || isVod;
+            const isCollapsed = api.chat.isCollapsed;
+
+            if (!canHaveChat || (isVod && isCollapsed)) return StyleManager.toggle(styles.videoStyle, true);
+            if (!isCollapsed) return StyleManager.toggle(isVod ? styles.vodStyle : styles.liveStyle, true);
         },
         updateAllStyles() {
             try {
+                this.updateVideoStyle();
                 this.updateChatStyles();
-                DOM.moviePlayer?.setCenterCrop?.();
+                this.updateRecommendationTuckStyle();
+                GhostManager.update();
             } catch (error) {
                 console.error('Error updating styles.', error);
             }
         },
-        updateChatStyles() {
-            const chatBox = api.chat.iFrame?.getBoundingClientRect();
-            const flexy = api.page.watchFlexy;
-            const isSecondaryVisible = flexy?.querySelector('#secondary')?.style.display !== 'none';
-            const shouldApplyChatStyle =
-                api.player.isTheater &&
-                !api.player.isFullscreen &&
-                !api.chat.isCollapsed &&
-                chatBox?.width > 0 &&
-                isSecondaryVisible;
-
-            StyleManager.toggle(StyleManager.styleDefinitions.chatStyle, shouldApplyChatStyle);
-            StyleManager.toggle(StyleManager.styleDefinitions.chatClampLimits, shouldApplyChatStyle);
-
-            shouldApplyChatStyle ? ChatInteractionManager.addChatWidthResizeHandle() : ChatInteractionManager.removeChatWidthResizeHandle();
-            this.updateHeadmastStyle(shouldApplyChatStyle);
-        },
-        updateHeadmastStyle(isChatStyled) {
-            this.updateLowHeadmastStyle();
-
-            const shouldShrinkHeadmast = isChatStyled && api.chat.iFrame?.getAttribute('theater-watch-while') === '';
-
-            state.chatWidth = api.chat.iFrame?.offsetWidth ?? 0;
-            StyleManager.toggle(StyleManager.styleDefinitions.headmastStyle, shouldShrinkHeadmast);
-        },
-        updateLowHeadmastStyle() {
-            if (!DOM.moviePlayer) return;
-            const shouldApply =
-                state.userSettings.setLowHeadmast &&
-                api.player.isTheater &&
-                !api.player.isFullscreen &&
-                api.page.type === 'watch';
-            StyleManager.toggle(StyleManager.styleDefinitions.lowHeadmastStyle, shouldApply);
-        },
         updateMoviePlayerObserver() {
-            const newMoviePlayer = api.player.playerObject;
+            const newMoviePlayer = api.player.playerObject ?? document.querySelector('#movie_player');
             if (DOM.moviePlayer === newMoviePlayer) return;
             if (state.resizeObserver) {
                 if (DOM.moviePlayer) state.resizeObserver.unobserve(DOM.moviePlayer);
@@ -544,7 +817,6 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                     }
                 });
             }
-
             DOM.moviePlayer = newMoviePlayer;
             if (DOM.moviePlayer) state.resizeObserver.observe(DOM.moviePlayer);
         },
@@ -570,7 +842,6 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                 'yt-page-data-fetched': () => this._handlePageDataFetch(),
                 'yt-page-data-updated': () => this._handlePageUpdate(),
                 fullscreenchange: () => this._handleFullscreenChange(),
-                'yt-navigate-finish': () => this._handlePageUpdate(),
             };
 
             for (const [event, handler] of Object.entries(events)) {
@@ -580,10 +851,12 @@ console.log('Better YouTube Theater Mode script init', 'is body ready?', documen
                 });
             }
 
-            api.eventTarget.addEventListener(
-                'yt-helper-api-chat-state-updated',
-                this._handleChatStateUpdate.bind(this),
-            );
+            api.eventTarget.addEventListener('yt-helper-api-chat-state-updated', this._handleChatStateUpdate.bind(this));
+            api.eventTarget.addEventListener('yt-helper-api-ready', () => {
+                if (api.page.type === 'watch') {
+                    this._handlePageUpdate();
+                }
+            });
 
             let isResizeScheduled = false;
             window.addEventListener('resize', () => {

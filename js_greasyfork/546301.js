@@ -25,9 +25,9 @@
 // @grant        unsafeWindow
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.6
+// @version      1.0.9
 // @license      MIT
-// @revision     12/23/2025, 1:56:21 AM
+// @revision     1/15/2025, 5:00:00 AM
 // @description  Sort Lemmy posts, comments, communities & search. Reload the webpage after changing the sort type in menu to take effect. To make this script runnable, the CSP for the website must be disabled/modified/removed using an addon.
 // @downloadURL https://update.greasyfork.org/scripts/546301/%5BLemmy%5D%20Sort%20Posts%2C%20Comments%2C%20Communities%20%20Search.user.js
 // @updateURL https://update.greasyfork.org/scripts/546301/%5BLemmy%5D%20Sort%20Posts%2C%20Comments%2C%20Communities%20%20Search.meta.js
@@ -71,34 +71,31 @@
   //https://lemmy.world/comment/2421890?sort=New
 
   const window = unsafeWindow;
-  let { postsSortBy, commentsSortBy, communitiesSortBy, searchSortBy, reload, hideSettings } = GM_getValues({
+  let { postsSortBy, commentsSortBy, communitiesSortBy, searchSortBy, hideSettings } = GM_getValues({
     postsSortBy: defaults.posts,
     commentsSortBy: defaults.comments,
     communitiesSortBy: defaults.communities,
     searchSortBy: defaults.search,
-    reload: false,
     hideSettings: true
   });
 
   const configs = [{
     path: /^\/(?:$|c\/)/,
     defaultSort: defaults.posts,
-    sort: postsSortBy
+    sort: function() { return postsSortBy; }
   }, {
     path: /^\/(?:comment|post)\//,
     defaultSort: defaults.comments,
-    sort: commentsSortBy
+    sort: function() { return commentsSortBy; }
   }, {
     path: /^\/communities/,
     defaultSort: defaults.communities,
-    sort: communitiesSortBy
+    sort: function() { return communitiesSortBy; }
   }, {
     path: /^\/search/,
     defaultSort: defaults.search,
-    sort: searchSortBy
+    sort: function() { return searchSortBy; }
   }];
-
-  if (reload) GM_deleteValue('reload');
 
   const redirect = function() {
     const location = window.location;
@@ -106,25 +103,26 @@
     const href = location.href.replace(/([^=])\?+$/, '$1');
     const path = location.pathname;
     const search = location.search;
+    const reload = (window.performance?.getEntriesByType('navigation')[0]?.type === 'reload' || false);
 
     // May redirect to a different URL for the first visit.
     for (const config of configs) {
       if (config.path.test(path)) {
         if (!search) { //window.location.search is empty.
-          if (config.sort !== config.defaultSort) {
+          if (config.sort() !== config.defaultSort) {
             window.stop();
-            location.replace(href + `?sort=${config.sort}`);
+            location.replace(href + `?sort=${config.sort()}`);
             return true;
           }
         } else if (/[?&]sort=[^&]+/.test(search)) {
-          if (!reload && !search.includes(`sort=${config.sort}`)) {
+          if (!reload && !search.includes(`sort=${config.sort()}`)) {
             window.stop();
-            location.replace(href.replace(/(.)sort=[^&]+/, `$1sort=${config.sort}`));
+            location.replace(href.replace(/(.)sort=[^&]+/, `$1sort=${config.sort()}`));
             return true;
           }
         } else {
           window.stop();
-          location.replace(href + `&sort=${config.sort}`);
+          location.replace(href + `&sort=${config.sort()}`);
           return true;
         }
       }
@@ -133,11 +131,10 @@
   };
 
   if (redirect()) return;
-  window.addEventListener('beforeunload', () => GM_setValue('reload', true), false);
 
-  let attrObserver, currURL = window.location.href, first = true;
+  let attrObserver, currURL = window.location.href;
   let searchInterval, searchTimeout, scrollInterval = 0, scrollTimeout = 0, startInterval, startTimeout;
-  const maxScrollHistory = 20, scrolls = [];
+  const maxScrollHistory = 10, scrolls = [];
   let popstate = false, scrollIndex = 0, scrollAmountForPost = 0;
   const scrollTargets = [{
     path: /^\/$/,
@@ -176,12 +173,12 @@
   };
 
   // "inject-into page" is a must for this to work.
-  const pushState = window.History.prototype.pushState;
+  const pushState_ = window.History.prototype.pushState;
   window.History.prototype.pushState = function(state, unused, url) {
     saveScroll(window.location.href, window.scrollY);
     popstate = false;
 
-    const location = new URL(arguments[2], window.location.href);
+    const location = new URL(url, window.location.href);
     const href = location.href;
     const path = location.pathname;
     const search = location.search;
@@ -189,18 +186,18 @@
     for (const config of configs) {
       if (config.path.test(path)) {
         if (!search) { // Consume if window.location.search is empty.
-          if (config.sort !== config.defaultSort) {
-            arguments[2] = href + `?sort=${config.sort}`;
+          if (config.sort() !== config.defaultSort) {
+            arguments[2] = href + `?sort=${config.sort()}`;
           }
         } else if (!/[?&]sort=[^&]+/.test(search)) { // So that users can change to different sort types.
-          arguments[2] = href + `&sort=${config.sort}`;
+          arguments[2] = href + `&sort=${config.sort()}`;
         }
         // Avoid duplicate URLs in history when clicking the top-left icon/label.
-        if(arguments[2] === window.location.href && window.location.pathname === '/') return window.history.go(0);
+        if(url === window.location.href && window.location.pathname === '/') return window.history.go(0);
         break;
       }
     }
-    return pushState.apply(this, arguments);
+    return pushState_.apply(this, arguments);
   };
 
   // There is no back/forward button listeners, so this is the best we could do.
@@ -214,73 +211,76 @@
   }, true);
 
   // So many trash make the device runs like a snail.
-  const setItem = window.Object.getPrototypeOf(window.sessionStorage).setItem;
+  const setItem_ = window.Object.getPrototypeOf(window.sessionStorage).setItem;
   window.Object.getPrototypeOf(window.sessionStorage).setItem = function(keyName, keyValue) {
-    if(arguments[0].startsWith('scrollPosition')) return;
-    return setItem.apply(this, arguments);
+    if(keyName.startsWith('scrollPosition')) return;
+    return setItem_.apply(this, arguments);
   };
 
   // Took me like forever to fix this. Imagine from v1.0.1 to v1.0.6. Not perfect but good enough.
-  const scrollTo = window.scrollTo;
-  window.scrollTo = function(options) {
-    window.clearInterval(scrollInterval); // These two can't be called in reset() because the MutationObserver triggered a bit late.
+  const scrollTo_ = window.scrollTo;
+  window.scrollTo = function(xCoord_options, yCoord) {
+    window.clearInterval(scrollInterval); // These two can't be called in reset() because the MutationObserver is triggered a bit late.
     window.clearTimeout(scrollTimeout);
 
     if (!/^\/(?:$|c\/|post\/|communities|search|modlog|instances)/.test(window.location.pathname)) return;
     if (!popstate && window.location.pathname.startsWith('/post/')) return;
 
-    let query;
-    for (const object of scrollTargets) {
-      if (object.path.test(window.location.pathname)) {
-        query = object.query;
-        break;
-      }
-    }
+    const query = scrollTargets.find(({path}) => path.test(window.location.pathname))?.query;
     if (!query) return;
+
     scrollTimeout = window.setTimeout(() => {
       window.clearInterval(scrollInterval);
-    }, 30000);
-    scrollInterval = window.setInterval((query, args) => {
+    }, 60000);
+
+    scrollInterval = window.setInterval(args => {
       if (!document.body.querySelector(query)) return; // Wait until the page is completely ready/loaded.
       window.clearInterval(scrollInterval);
       window.clearTimeout(scrollTimeout);
       scrollInterval = scrollTimeout = 0;
-      args[0].top = getScroll(args[0].top);
-      scrollTo.apply(this, args);
-    }, 500, query, arguments);
+      if (typeof xCoord_options === 'object' && xCoord_options !== null) {
+        args[0].top = getScroll(xCoord_options.top);
+      } else {
+        args[1] = getScroll(yCoord);
+      }
+      scrollTo_.apply(this, args);
+    }, 500, arguments);
   };
 
   // Dirty trick to make the visited posts highlighted via a style a:visited.
   // I have this filter in my uBlock Origin:
   // *##:root a:visited:style(color: rgb(218,112,214) !important; font-weight: 900 !important;)
-  const changeLinks = function() {
+  const changeLinks = function(searchQuery, sort, defaultSort) {
     searchTimeout = window.setTimeout(() => {
       window.clearInterval(searchInterval);
-    }, 30000);
+    }, 60000);
 
     searchInterval = window.setInterval(() => {
-      const targets = document.body.querySelectorAll('a[href^="/post/"]');
-      if (targets.length < 6) return;
+      const anchors = document.body.querySelectorAll(searchQuery);
+      if (anchors.length < 6) return;
       window.clearInterval(searchInterval);
       window.clearTimeout(searchTimeout);
       searchInterval = searchTimeout = 0;
 
-      for (const anchor of targets) {
+      anchors.forEach((anchor, index) => {
         const href = anchor.href; // Complete URL.
         const search = href.replace(/^[^?]+/, '');
+
         if (!search) {
-          if (commentsSortBy !== defaults.comments) {
-            anchor.href = href + `?sort=${commentsSortBy}`;
+          if (sort !== defaultSort) {
+            anchor.href = href + `?sort=${sort}`;
           }
         } else if (!/[?&]sort=[^&]+/.test(search)) {
-          anchor.href = href + `&sort=${commentsSortBy}`;
+          anchor.href = href + `&sort=${sort}`;
         }
-        if (first) { // May get overriden by Lemmy.
-          first = false;
-          attrObserver = new MutationObserver(changeLinks);
+        if (index === 0) { // May get overriden by Lemmy.
+          attrObserver = new MutationObserver(() => {
+            attrObserver.disconnect();
+            changeLinks(searchQuery, sort, defaultSort);
+          });
           attrObserver.observe(anchor, { attributes: true });
         }
-      }
+      });
     }, 500);
   };
 
@@ -292,7 +292,6 @@
       attrObserver = undefined;
     }
     searchInterval = searchTimeout = 0;
-    first = true;
   };
 
   const start = function() {
@@ -304,24 +303,31 @@
       if (!document.head) return;
       window.clearInterval(startInterval);
       window.clearTimeout(startTimeout);
-      new MutationObserver(mutations => {
-        for (const mutation of mutations) {
-          for (const node of mutation.addedNodes) {
-            if (node instanceof HTMLLinkElement && node.rel === 'canonical' && window.location.href !== currURL) {
-              currURL = window.location.href;
-              reset();
-              if (/^\/(?:$|c\/|search)/.test(window.location.pathname)) changeLinks();
-              return;
+      new MutationObserver(mutations => mutations.some(({addedNodes}) => {
+        for (const node of addedNodes) {
+          if (node instanceof HTMLLinkElement && node.rel === 'canonical' && window.location.href !== currURL) {
+            currURL = window.location.href;
+            reset();
+            if (/^\/(?:$|c\/|search)/.test(window.location.pathname)) {
+              changeLinks('a[href^="/post/"]', commentsSortBy, defaults.comments);
+            } else if (window.location.pathname.startsWith('/communities')) {
+              changeLinks('a[href^="/c/"]', postsSortBy, defaults.posts);
             }
+            return true;
           }
         }
-      }).observe(document.head, { childList: true });
+      })).observe(document.head, { childList: true });
     }, 500);
+
+    // Change visited links for the first time or reload.
+    if (/^\/(?:$|c\/|search)/.test(window.location.pathname)) {
+      changeLinks('a[href^="/post/"]', commentsSortBy, defaults.comments);
+    } else if (window.location.pathname.startsWith('/communities')) {
+      changeLinks('a[href^="/c/"]', postsSortBy, defaults.posts);
+    }
   };
 
   start();
-  // Change visited links for the first time or reload.
-  if (/^\/(?:$|c\/|search)/.test(window.location.pathname)) changeLinks();
 
   const next = function(array, startIndex, sortBy) {
     for (let i = startIndex; i < array.length; ++i) {

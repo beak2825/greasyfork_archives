@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JIGS (Jigglymoose's Intelligent Gear Simulator)
 // @namespace    http://tampermonkey.net/
-// @version      30.171
+// @version      30.172
 // @description  Automates running multiple simulations on the MWI Combat Simulator with a dynamic, grouped UI and cost-analysis.
 // @author       Gemini & Jigglymoose
 // @license      MIT
@@ -29,7 +29,7 @@
 
     // --- END-CHECK ---
 
-    console.log("JIGS (Jigglymoose's Intelligent Gear Simulator) v30.17 Loaded");
+    console.log("JIGS (Jigglymoose's Intelligent Gear Simulator) v30.173 Loaded");
 
     // --- CONFIGURATION ---
     const MARKET_API_URL = 'https://www.milkywayidle.com/game_data/marketplace.json';
@@ -349,44 +349,47 @@ const queuePanel = document.createElement('div');
             return;
         }
 
-        const table = document.getElementById('batch-results-table');
-        const headers = Array.from(table.querySelectorAll('thead th'))
-            .filter(th => th.style.display !== 'none')
-            .map(th => ({
-                text: th.getAttribute('title').split(/\r?\n/)[0] || th.textContent,
-                key: th.dataset.sortKey
-            }));
+        // Define the columns explicitly to match the user's screenshot headers
+        const columns = [
+            { header: "Upgrade", key: "upgrade" },
+            { header: "Upgrade Cost", key: "cost" },
+            { header: "Time to Purchase", key: "timeToPurchase" },
+            { header: "DPS Change", key: "dps" },
+            { header: "% DPS Change", key: "percent" },
+            { header: "Gold per 0.01% DPS", key: "costPerDps" },
+            { header: "Profit Change", key: "profitChange" },
+            { header: "% Profit Change", key: "percentProfitChange" },
+            { header: "Gold per 0.01% Profit", key: "costPerProfit" },
+            { header: "Exp/Hr Change", key: "expChange" },
+            { header: "% Exp/Hr Change", key: "percentExpChange" },
+            { header: "Gold per 0.01% Exp/Hr", key: "costPerExp" },
+            { header: "EPH Change", key: "ephChange" },
+            { header: "% EPH Change", key: "percentEphChange" },
+            { header: "Gold per 0.01% EPH", key: "costPerEph" },
+            { header: "DPH Change", key: "dphChange" },
+            { header: "% DPH Change", key: "percentDphChange" }
+        ];
 
-        const headerRow = headers.map(h => `"${h.text.replace(/"/g, '""')}"`).join(',');
+        // Create Header Row
+        const headerRow = columns.map(c => `"${c.header}"`).join(',');
 
+        // Create Data Rows
         const rows = detailedResults.map(result => {
-            return headers.map(header => {
-                let value;
-                switch (header.key) {
-                    case 'upgrade':           value = result.upgrade; break;
-                    case 'cost':              value = result.cost; break;
-                    case 'timeToPurchase':    value = result.timeToPurchase; break;
-                    case 'dpsChange':         value = result.dps; break;
-                    case 'percentChange':     value = result.percent; break;
-                    case 'costPerDps':        value = result.costPerDps; break;
-                    case 'profitChange':      value = result.profitChange; break;
-                    case 'percentProfitChange':value = result.percentProfitChange; break;
-                    case 'costPerProfit':     value = result.costPerProfit; break;
-                    case 'expChange':         value = result.expChange; break;
-                    case 'percentExpChange':  value = result.percentExpChange; break;
-                    case 'costPerExp':        value = result.costPerExp; break;
-                    case 'ephChange':         value = result.ephChange; break;
-                    case 'percentEphChange':  value = result.percentEphChange; break;
-                    case 'costPerEph':        value = result.costPerEph; break;
-                    case 'dphChange':         value = result.dphChange; break;
-                    case 'percentDphChange':  value = result.percentDphChange; break;
-                    default:                  value = '';
-                }
+            return columns.map(col => {
+                let value = result[col.key];
 
-                if (value === null || value === undefined || value === "N/A" || !isFinite(value)) {
-                    value = '';
-                } else if (value === "Free") {
-                    value = 0;
+                if (col.key === 'upgrade') {
+                    // Always treat Upgrade Name as a string and prevent it from being cleared by numeric checks
+                    if (value === null || value === undefined) value = "";
+                } else {
+                    // Logic for numeric columns
+                    if (value === null || value === undefined || value === "N/A") {
+                        value = '';
+                    } else if (value === "Free") {
+                        value = 0;
+                    } else if (typeof value === 'number' && !isFinite(value)) {
+                        value = '';
+                    }
                 }
 
                 const valueStr = String(value);

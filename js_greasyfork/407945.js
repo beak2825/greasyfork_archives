@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Youtube 2020 improvements
-// @version      1.3.1
+// @version      1.3.2
 // @description  All Youtube improvements in one pack
 // @author       Burlaka.net
 // @match        *://*.youtube.com/*
@@ -36,6 +36,10 @@
 body.no-scroll #page-manager.ytd-app {margin-top:0}
 .viewed-opacity {opacity: 0.5}
 .sf-btn-name {display:none}
+#savefrom__yt_btn_premium {display:none !important}
+#savefrom__yt_notification {display:none !important}
+#savefrom__yt_btn button:last-child {display:none !important}
+
 
 /* change actions buttons */
 #actions.ytd-watch-metadata button[title='Поделиться'] .yt-spec-button-shape-next__button-text-content {display: none}

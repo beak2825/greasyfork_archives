@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         1337x - Steam Hover Preview 
 // @namespace    https://greasyfork.org/en/users/1340389-deonholo
-// @version      3.4.0
+// @version      3.5.2
 // @description  On-hover Steam thumbnail, description, Steam Ratings, user-defined tags (same as Steam store page), release date, and a direct "Open on Steam" link for 1337x game torrent titles
 // @icon         https://greasyfork.s3.us-east-2.amazonaws.com/x432yc9hx5t6o2gbe9ccr7k5l6u8
 // @author       DeonHolo
@@ -45,6 +45,79 @@
     const SHOW_DELAY = 0;
     const STORAGE_KEY = 'steamHoverCache_v1';
     const CONCURRENT_HIDDEN = 4; // Fetch 4 games at once when tab is hidden
+    const DEBUG_MODE = false; // Set to true for debugging
+
+    // Game detection - URL-based + uploader name detection
+    const isGameCategoryPage = /\/(Games|category-search\/[^\/]+\/Games)\//i.test(window.location.pathname);
+
+    // Known game uploaders/repackers
+    const GAME_UPLOADERS = [
+        'fitgirl', 'dodi', 'elamigos', 'kaoskrew', 'kaos', 'johncena141',
+        'masquerade', 'gnarly', 'cpasbien', 'rg mechanics', 'flt', 'codex',
+        'plaza', 'skidrow', 'razor1911', 'prophet', 'reloaded', 'hoodlum',
+        'darksiders', 'empress', 'tenoke', 'tinyiso', 'gog', 'igggamescom',
+        'igggames', 'ovagames', 'xatab', 'r.g. catalyst', 'decepticon',
+        'heroskeep', 'gamedrive', 'emadmoner'
+    ];
+
+    function isGameTorrent(link) {
+        // If we're on a Games category page, all torrents are games
+        if (isGameCategoryPage) return true;
+
+        const row = link.closest('tr');
+        if (!row) return false;
+
+        const titleText = link.textContent.toLowerCase();
+
+        // EXCLUSION: Skip if title contains software keywords
+        const softwareKeywords = [
+            'adobe', 'photoshop', 'illustrator', 'premiere', 'after effects', 'acrobat',
+            'microsoft', 'office', 'windows', 'visual studio', 'autocad', 'matlab',
+            'pdf', 'antivirus', 'vmware', 'virtualbox', 'driver', 'daemon tools',
+            'spotify', 'netflix', 'vlc', 'winrar', 'idm', 'internet download',
+            'fl studio', 'ableton', 'logic pro', 'cubase', 'pro tools',
+            'final cut', 'davinci', 'sony vegas', 'camtasia', 'obs studio',
+            'malwarebytes', 'avast', 'kaspersky', 'norton', 'bitdefender',
+            'ccleaner', 'teamviewer', 'anydesk', 'zoom', 'discord', 'slack',
+            'android', 'apk', 'mod apk', 'ipa', 'ios app'
+        ];
+        if (softwareKeywords.some(kw => titleText.includes(kw))) {
+            return false;
+        }
+
+        // EXCLUSION: Known software uploaders
+        const uploaderLink = row.querySelector('td a[href*="/user/"]');
+        const uploaderName = uploaderLink ? uploaderLink.textContent.trim().toLowerCase() : '';
+        const softwareUploaders = ['crackshash', 'appdoze', 'haxnode', 'softwarecave'];
+        if (softwareUploaders.some(u => uploaderName.includes(u))) {
+            return false;
+        }
+
+        // DETECTION: Check for game/PC icons
+        const nameCell = link.closest('td');
+        if (nameCell) {
+            const gameIcon = nameCell.querySelector('i.flaticon-games, i.flaticon-apps');
+            if (gameIcon) return true;
+        }
+
+        // DETECTION: Known game uploaders
+        if (uploaderLink && GAME_UPLOADERS.some(u => uploaderName.includes(u))) {
+            return true;
+        }
+
+        // DETECTION: Title contains repacker markers
+        const titleMarkers = ['fitgirl', 'dodi', 'elamigos', 'plaza', 'codex', 'skidrow', 'repack', 'gog'];
+        if (titleMarkers.some(m => titleText.includes(m))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Debug logger helper
+    function debugLog(...args) {
+        if (DEBUG_MODE) console.log('[Steam Hover]', ...args);
+    }
 
     // Flag to pause preloading when user is actively hovering
     let userHovering = false;
@@ -69,8 +142,8 @@
                 const now = Date.now();
                 let loaded = 0;
                 for (const [key, value] of Object.entries(parsed)) {
-                    // Only load if not expired
-                    if (value.ts && (now - value.ts) < CACHE_TTL) {
+                    // Only load if not expired AND has valid data (skip null entries!)
+                    if (value.data && value.ts && (now - value.ts) < CACHE_TTL) {
                         apiCache.set(key, value);
                         loaded++;
                     }
@@ -103,6 +176,13 @@
         }, 1000); // Debounce saves by 1 second
     }
 
+    // Expose cache clearing function to console
+    window.clearSteamHoverCache = function () {
+        apiCache.clear();
+        GM_setValue(STORAGE_KEY, '{}');
+        console.log('[Steam Hover] ✅ Cache cleared! Refresh the page to re-fetch all games.');
+    };
+
     // Concurrent fetch helper for hidden tab mode
     async function fetchBatch(names) {
         const promises = names.map(name =>
@@ -116,6 +196,9 @@
         const toFetch = [];
 
         for (const link of links) {
+            // Only preload game torrents
+            if (!isGameTorrent(link)) continue;
+
             const name = cleanName(link.textContent);
             if (name && !apiCache.has(name)) {
                 toFetch.push(name);
@@ -384,7 +467,8 @@
                     responseType: responseType,
                     timeout: timeout,
                     headers: {
-                        'Accept-Language': 'en-US,en;q=0.9'
+                        'Accept-Language': 'en-US,en;q=0.9',
+                        'Cookie': 'birthtime=0; mature_content=1; wants_mature_content=1; lastagecheckage=1-0-1990'
                     },
                     onload: (res) => {
                         if (res.status >= 200 && res.status < 300) {
@@ -427,12 +511,15 @@
     async function fetchSteamWithFallback(originalName) {
         const words = originalName.split(/\s+/);
 
-        // Try progressively shorter versions (full name, then remove 1 word, 2 words, etc.)
-        // Stop when we have at least 2 words remaining
-        for (let i = 0; i <= Math.min(words.length - 2, 3); i++) {
+        // Always try the full name first, then progressively shorter versions
+        // For single-word names, only try once. For multi-word, try up to 4 versions.
+        const maxAttempts = Math.min(words.length, 4);
+
+        for (let i = 0; i < maxAttempts; i++) {
             const tryName = words.slice(0, words.length - i).join(' ');
             if (tryName.length < 2) continue;
 
+            debugLog(`🔄 Fallback attempt ${i + 1}/${maxAttempts}: "${tryName}"`);
             const result = await fetchSteam(tryName);
             if (result) return result;
         }
@@ -441,9 +528,11 @@
     }
 
     async function fetchSteam(name) {
+        debugLog(`🔍 Searching for: "${name}"`);
         const now = Date.now();
         const hit = apiCache.get(name);
         if (hit && now - hit.ts < CACHE_TTL) {
+            debugLog(`📦 Cache hit for "${name}"`, hit.data ? '✓ has data' : '✗ cached as null');
             return hit.data;
         }
 
@@ -452,19 +541,25 @@
         // First: Search for the game
         try {
             const searchUrl = `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${encodeURIComponent(name)}`;
+            debugLog(`📡 Fetching search API:`, searchUrl);
             const searchRes = await gmFetch(searchUrl, 'json');
+            debugLog(`📥 Search response:`, searchRes ? `${searchRes.total || 0} results` : 'null/undefined');
             let result = searchRes?.items?.[0];
             if (searchRes?.items?.length > 1) {
                 const exactMatch = searchRes.items.find(item => item.name.toLowerCase() === name.toLowerCase());
                 if (exactMatch) {
+                    debugLog(`🎯 Found exact match: "${exactMatch.name}" (AppID: ${exactMatch.id})`);
                     result = exactMatch;
                 }
             }
             appId = result?.id;
             if (!appId) {
+                debugLog(`❌ No AppID found for "${name}"`);
                 throw new Error('No suitable AppID found in search results.');
             }
+            debugLog(`✓ Found AppID: ${appId} for "${result?.name}"`);
         } catch (err) {
+            debugLog(`❌ Steam search failed for "${name}":`, err.message);
             console.warn(`Steam search failed for "${name}":`, err.message);
             apiCache.set(name, { data: null, ts: now });
             pruneCache(apiCache);
@@ -477,14 +572,17 @@
         try {
             const detailsUrl = `https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us&l=en`;
             const reviewUrl = `https://store.steampowered.com/appreviews/${appId}?json=1&language=all&purchase_type=all&filter=summary`;
+            debugLog(`📡 Fetching details and reviews for AppID: ${appId}`);
 
             const [detailsRes, reviewRes] = await Promise.all([
-                gmFetch(detailsUrl, 'json').catch(() => null),
-                gmFetch(reviewUrl, 'json').catch(() => null)
+                gmFetch(detailsUrl, 'json').catch((e) => { debugLog(`❌ Details fetch error:`, e.message); return null; }),
+                gmFetch(reviewUrl, 'json').catch((e) => { debugLog(`❌ Reviews fetch error:`, e.message); return null; })
             ]);
 
+            debugLog(`📥 Details response:`, detailsRes ? (detailsRes[appId]?.success ? '✓ success' : '✗ failed') : 'null');
             if (detailsRes?.[appId]?.success) {
                 appData = detailsRes[appId].data;
+                debugLog(`✓ Got app data: "${appData.name}"`);
             } else {
                 throw new Error('Failed to fetch app details or API indicated failure.');
             }
@@ -497,8 +595,10 @@
                     percent: percent,
                     total: summary.total_reviews || 0
                 };
+                debugLog(`✓ Got reviews: ${reviewInfo.desc} (${reviewInfo.total} reviews)`);
             }
         } catch (err) {
+            debugLog(`❌ Details/reviews fetch failed for AppID ${appId}:`, err.message);
             console.warn(`Steam details/reviews fetch failed for AppID ${appId}:`, err.message);
             if (!appData) {
                 apiCache.set(name, { data: null, ts: now });
@@ -512,6 +612,7 @@
         if (appData) {
             try {
                 const storePageUrl = `https://store.steampowered.com/app/${appId}/`;
+                debugLog(`🏷️ Fetching tags from store page:`, storePageUrl);
                 const storeHtml = await gmFetch(storePageUrl, 'text');
                 if (storeHtml) {
                     const parser = new DOMParser();
@@ -521,8 +622,10 @@
                         .map(el => el.textContent.trim())
                         .filter(tag => tag && tag !== '+')
                         .slice(0, 5);
+                    debugLog(`✓ Found ${tags.length} tags:`, tags.join(', ') || '(none)');
                 }
             } catch (tagErr) {
+                debugLog(`⚠️ Tag scraping failed for AppID ${appId}:`, tagErr.message, '- using fallback genres');
                 console.warn(`[Steam Hover] Failed to fetch tags for AppID ${appId}:`, tagErr.message);
                 // Fallback to genres if tag scraping fails
                 tags = (appData.genres || []).map(g => g.description).slice(0, 5);
@@ -536,6 +639,7 @@
             releaseDate: appData.release_date?.date || null,
             storeUrl: `https://store.steampowered.com/app/${appId}/`
         };
+        debugLog(`✅ Successfully fetched Steam data for "${name}" -> "${data.name}"`);
         apiCache.set(name, { data: data, ts: now });
         pruneCache(apiCache);
         savePersistentCache(); // Save to storage for future sessions
@@ -652,6 +756,11 @@
             return;
         }
 
+        // Only show Steam info for game torrents
+        if (!isGameTorrent(targetLink)) {
+            return;
+        }
+
         if (currentHoveredLink && targetLink !== currentHoveredLink && tip.style.display === 'block') {
             tip.style.opacity = '0';
             tip.style.pointerEvents = 'none';
@@ -664,7 +773,9 @@
         currentHoveredLink = targetLink;
         userHovering = true;
         const rawName = targetLink.textContent;
+        debugLog(`👆 HOVER on: "${rawName}"`);
         let gameName = cleanName(rawName);
+        debugLog(`🧹 Cleaned name: "${gameName}"`);
 
         // Fallback: if cleanName returned null, use a basic cleaned version
         if (!gameName) {
@@ -702,6 +813,7 @@
 
             currentFetch = fetchSteamWithFallback(gameName);
             const data = await currentFetch;
+            debugLog(`📝 Hover fetch result for "${gameName}":`, data ? `✓ got data for "${data.name}"` : '✗ null');
             currentFetch = null;
 
             if (hoverId !== thisId || !currentHoveredLink || currentHoveredLink !== targetLink) {

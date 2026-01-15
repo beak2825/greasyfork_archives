@@ -2,7 +2,7 @@
 // @name         DeepSeek Anti-recall
 // @name:zh-CN   DeepSeek 防撤回脚本
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-30
+// @version      2026-01-15
 // @description  Prevent deepseek from recalling response and cache the recalled message locally
 // @description:zh-CN 防止DeepSeek撤回消息，被撤回的消息将保存在本地
 // @author       Franky T
@@ -149,19 +149,28 @@
                 let v = data.v[i];
                 // If TEMPLATE_RESPONSE detected in update of fragments, this must be a recall action!
                 if (v.p == "fragments" && v.v[0].type == TEMPLATE_RESPONSE) {
-                    this.recalled = true;
                     modified = true;
-
-                    // Save the recalled message fragments
-                    saveRecalledMessage(this.sessId, this.fields.response.message_id, this.fields.response.fragments);
+                    // let shit = v.v[0].content;
 
                     // Append a tip for recalled message
                     data.v[i] = {"v": [{"id": this.fields.response.fragments.length + 1, "type": "TIP", style: "WARNING", "content": getRecalledTipMessage(this.locale)}], "p": "fragments", "o": "APPEND"};
+                }
+
+                if (v.p == "status" && v.v == CONTENT_FILTER) {
+                    modified = true;
+
+                    // Turn the status to FINISHED since if we keep CONTENT_FILTER the thinking process will disappear
+                    data.v[i] = {"p": "status", "v": "FINISHED"};
                 }
             }
         }
 
         if (modified) {
+            this.recalled = true;
+
+            // Save the recalled message fragments
+            saveRecalledMessage(this.sessId, this.fields.response.message_id, this.fields.response.fragments);
+
             return JSON.stringify(data);
         }
 
@@ -412,7 +421,7 @@
                     originOnReadyStateChange.apply(this, arguments);
                 }
             }
-            console.log(this);
+
             return originXhrSend.apply(this, arguments);
         }
 

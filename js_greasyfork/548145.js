@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.6.0
+// @version      0.6.8
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -53,7 +53,6 @@
                 MAX_RETRIES: 3,
             },
             ERROR_RECOVERY: {
-                // Verified reliable strings from testing
                 RELOAD_BUTTON_LABELS: [
                     "Reload Page", "重新載入頁面", "ページを更新",
                     "Volver a cargar página", "Ricarica la pagina", "Seite neu laden",
@@ -68,7 +67,7 @@
                 KEY_INT_ACTION: 'fblwr_int_action',
                 INITIAL_DELAY: 300,
                 POLL_INTERVAL: 250,
-                MAX_ATTEMPTS: 20, // 5 seconds
+                MAX_ATTEMPTS: 20, 
             },
             TRANSPARENCY: {
                 SEE_ALL_BUTTONS: [
@@ -91,17 +90,13 @@
             LOGIN_STATE_MARKERS: {
                 LOGGED_OUT: [
                     { selector: 'form#login_form', reason: 'Primary login form element' },
-                    { selector: 'input[name="pass"]', reason: 'Password input field, tied to backend logic' },
-                    { selector: 'input[name="email"]', reason: 'Email/Phone input field, also tied to backend' },
-                    { selector: 'a[href*="/recover/initiate"]', reason: 'Forgot Account link, a core function' },
-                    { selector: 'a[href*="/login/"]', reason: 'Any link explicitly pointing to a login page' }
+                    { selector: 'input[name="pass"]', reason: 'Password input field' },
+                    { selector: 'a[href*="/recover/initiate"]', reason: 'Forgot Account link' },
+                    { selector: 'a[href*="/login/"]', reason: 'Login link' }
                 ],
                 LOGGED_IN: [
-                    { selector: 'input[type="search"]', reason: 'Search input field in the header' },
-                    { selector: 'a[href="/friends/"]', reason: 'Friends tab in main navigation' },
-                    { selector: 'a[href="/watch/?ref=tab"]', reason: 'Watch tab in main navigation' },
-                    { selector: 'a[href*="/groups/"]', reason: 'Groups tab in main navigation' },
-                    { selector: 'a[href*="/gaming/"]', reason: 'Gaming tab in main navigation' }
+                    { selector: 'input[type="search"]', reason: 'Search input field' },
+                    { selector: 'a[href="/friends/"]', reason: 'Friends tab' }
                 ]
             },
             SELECTORS: {
@@ -132,27 +127,31 @@
             },
             STRINGS: {
                 en: {
-                    notificationDeadlock: 'A login prompt was hidden, but the feed can no longer load new content.\n[Pro-Tip] To prevent the feed from locking, get used to opening links in a new tab (middle-click). Please reload to continue browsing.',
-                    notificationSettingsReload: 'Some settings have been updated. Please reload the page for them to take full effect.',
+                    // --- General ---
+                    notificationDeadlock: 'A login prompt was hidden, but the feed can no longer load new content.\nPlease reload to continue browsing.',
+                    notificationSettingsReload: 'Some settings updated. Please reload.',
                     resetSettings: 'Reset Settings',
-                    resetSettingsConfirm: 'Are you sure you want to reset all settings to their defaults? This action cannot be undone.',
-                    notificationSettingsReset: 'Settings have been reset to default. A page reload may be required.',
+                    resetSettingsConfirm: 'Reset all settings to default?',
+                    notificationSettingsReset: 'Settings reset.',
                     menuResetSettings: '🚨 Reset All Settings',
-                    autoOpenMediaInNewTab: 'Auto-open media in new tab (prevents deadlock)',
+                    autoOpenMediaInNewTab: 'Auto-open media in new tab',
                     showDeadlockNotification: 'Show deadlock notification',
-                    hideUselessElements: 'Hide useless UI elements (for guest)',
-                    hidePostStats: 'Hide post stats (Likes, Comments counts)',
-                    autoUnmuteEnabled: 'Automatically unmute videos',
-                    postNumberingEnabled: 'Display post order numbers on feed',
-                    expandContentEnabled: 'Auto-expand post content (See more)',
-                    errorRecoveryEnabled: 'Auto-reload on error page (Button detection)',
-                    transparencyButtonsEnabled: 'Show Page Transparency shortcuts (Bottom-Left)',
+                    hideUselessElements: 'Hide useless UI elements',
+                    hidePostStats: 'Hide post stats (Likes, Comments)',
+                    autoUnmuteEnabled: 'Auto unmute videos',
+                    setVolumeLabel: 'Auto-unmute volume',
+                    postNumberingEnabled: 'Display post numbers',
+                    expandContentEnabled: 'Auto-expand content',
+                    errorRecoveryEnabled: 'Auto-reload on error',
+                    transparencyButtonsEnabled: 'Show Page Transparency shortcuts',
+                    
+                    // --- ID Revealer ---
                     idRevealerEnabled: 'Enable ID Revealer (Click Title)',
-                    idRevealerTooltip: 'Click to reveal Profile ID & Info',
+                    idRevealerTooltip: 'Click to reveal ID & Info',
                     idRevealerLinkFormat: 'ID Link Format',
                     idFormatUserID: 'User ID URL (facebook.com/id)',
-                    idFormatClassic: 'Classic (profile.php?id=)',
-                    idFormatUsername: 'Username (Current URL)',
+                    idFormatClassic: 'Classic Profile URL (profile.php?id=)',
+                    idFormatUsername: 'Username URL (Current URL)',
                     id_copy_all: 'Copy All Info',
                     id_label_user: 'User ID',
                     id_label_page: 'Page ID',
@@ -161,7 +160,8 @@
                     profile_url_label: 'Profile URL',
                     copy_success_generic: '{label} Copied',
                     all_copied: 'All Info Copied',
-                    setVolumeLabel: 'Auto-unmute volume',
+
+                    // --- Search Bar ---
                     searchPlaceholder: 'Search...',
                     searchButton: 'Search',
                     searchGroupContextual: 'Search Current Page',
@@ -177,51 +177,57 @@
                     searchScopeGlobalPosts: 'Posts',
                     searchScopeEvents: 'Events',
                     searchScopeMarketplace: 'Marketplace',
-                    searchTooltipPosts: 'Search for posts within the current page (or all of Facebook if on the homepage).',
-                    searchTooltipPhotos: 'Search for photos within the current page.',
-                    searchTooltipVideos: 'Search for videos within the current page.',
-                    searchTooltipReels: 'Search all of Facebook for Reels using the current page\'s name as a keyword.',
-                    searchTooltipPages: 'Search all of Facebook for Pages, people, or organizations.',
-                    searchTooltipPeople: 'Search all of Facebook for personal profiles.',
-                    searchTooltipGroups: 'Search all of Facebook for groups.',
-                    searchTooltipGlobalPosts: 'Search all of Facebook for public posts.',
-                    searchTooltipGlobalVideos: 'Search all of Facebook for videos using the internal Watch search.',
-                    searchTooltipEvents: 'Search all of Facebook for events using the internal Events search.',
-                    searchTooltipMarketplace: 'Search all of Facebook Marketplace for item listings.',
-                    searchAllContextualTooltip: 'List all {scope} on this page using Google Search',
+                    searchTooltipPosts: 'Search current page posts',
+                    searchTooltipPhotos: 'Search photos',
+                    searchTooltipVideos: 'Search videos',
+                    searchTooltipReels: 'Search Reels',
+                    searchTooltipPages: 'Search Pages',
+                    searchTooltipPeople: 'Search People',
+                    searchTooltipGroups: 'Search Groups',
+                    searchTooltipGlobalPosts: 'Search Public Posts',
+                    searchTooltipGlobalVideos: 'Search Watch',
+                    searchTooltipEvents: 'Search Events',
+                    searchTooltipMarketplace: 'Search Marketplace',
+                    searchAllContextualTooltip: 'Search {scope} on this page',
                     navigateToContextual: 'Go to {scope} section',
-                    pinToolbar: 'Pin toolbar',
-                    unpinToolbar: 'Unpin toolbar',
-                    shortcutWatch: 'Go to Watch',
-                    shortcutEvents: 'Go to Events',
-                    shortcutMarketplace: 'Go to Marketplace',
+                    pinToolbar: 'Pin',
+                    unpinToolbar: 'Unpin',
+                    shortcutWatch: 'Watch',
+                    shortcutEvents: 'Events',
+                    shortcutMarketplace: 'Marketplace',
+
+                    // --- Settings Modal ---
                     settingsTitle: 'Settings',
                     saveAndClose: 'Save & Close',
                     menuSettings: '⚙️ Settings',
+                    settingsColumnGeneral: 'General',
+                    settingsColumnNavigation: 'Navigation',
+                    settingsColumnTools: 'Tools',
+
+                    // --- Navigation ---
                     keyboardNavEnabled: 'Enable keyboard navigation',
-                    keyNavNextPrimary: 'Next Post (Primary)',
-                    keyNavPrevPrimary: 'Previous Post (Primary)',
-                    keyNavNextSecondary: 'Next Post (Secondary)',
-                    keyNavPrevSecondary: 'Previous Post (Secondary)',
-                    floatingNavEnabled: 'Enable floating navigation buttons',
+                    keyNavNextPrimary: 'Next (J)',
+                    keyNavPrevPrimary: 'Prev (K)',
+                    keyNavNextSecondary: 'Next (Right)',
+                    keyNavPrevSecondary: 'Prev (Left)',
+                    floatingNavEnabled: 'Enable floating buttons',
                     floatingNavPrevTooltip: 'Previous Post',
                     floatingNavNextTooltip: 'Next Post',
-                    navigationScrollAlignment: 'Scroll alignment',
+                    navigationScrollAlignment: 'Alignment',
                     scrollAlignmentCenter: 'Center',
                     scrollAlignmentTop: 'Top',
-                    enableSmoothScrolling: 'Enable smooth scrolling',
-                    continuousNavInterval: 'Continuous navigation interval',
-                    wheelNavEnabled: 'Enable mouse wheel navigation',
-                    wheelNavModifier: 'Wheel navigation modifier key',
+                    enableSmoothScrolling: 'Smooth Scroll',
+                    continuousNavInterval: 'Nav Interval',
+                    wheelNavEnabled: 'Wheel Nav',
+                    wheelNavModifier: 'Modifier',
                     modifierAlt: 'Alt',
                     modifierCtrl: 'Ctrl',
                     modifierShift: 'Shift',
-                    modifierNone: 'None (replaces page scroll)',
-                    settingsColumnGeneral: 'General',
-                    settingsColumnNavigation: 'Navigation',
-                    settingsColumnTools: 'Post Tools',
-                    copier_enablePermalink: 'Enable Permalink Button',
-                    copier_enableCopyContent: 'Enable Copy Content Button',
+                    modifierNone: 'None',
+
+                    // --- Tools (Copier & AutoLoad) ---
+                    copier_enablePermalink: 'Enable Permalink Icon',
+                    copier_enableCopyContent: 'Enable Smart Copy Button',
                     copier_fetchPermalinkSmart: 'Permalink (Smart)',
                     copier_fetchPermalinkDirect: 'Permalink (Direct)',
                     copier_copyContent: 'Copy Post Content',
@@ -230,37 +236,61 @@
                     copier_processing: 'Processing...',
                     copier_successPermalink: '✅ Copied',
                     copier_failure: '❌ Failed',
-                    copier_notificationPermalinkCopied: 'Permalink copied to clipboard:\n{url}',
-                    copier_notificationErrorGeneric: 'Failed to fetch permalink.',
-                    copier_notificationErrorNoSourceUrl: 'Failed: Could not find a source URL.',
-                    copier_notificationErrorTimeout: 'Failed: Background fetch timed out.',
-                    copier_notificationContentNotFound: '❌ Content block not found.',
-                    copier_menu_useSmartLink: 'Auto-Fetch Permalinks (Smart Mode)',
-                    copier_menu_showButtonText: 'Show Button Text',
+                    copier_notificationPermalinkCopied: 'Permalink copied:\n{url}',
+                    copier_notificationErrorGeneric: 'Failed to fetch.',
+                    copier_notificationErrorNoSourceUrl: 'No source URL.',
+                    copier_notificationErrorTimeout: 'Fetch timed out.',
+                    copier_notificationContentNotFound: '❌ Content not found.',
+                    copier_menu_useSmartLink: 'Use Smart Link (Async)',
                     copier_menu_permalinkFormat: 'Permalink Format',
-                    copier_format_full: 'Full URL (with slug)',
-                    copier_format_username: 'Username + Post ID',
-                    copier_format_author_id: 'Author ID + Post ID (Most Reliable)',
-                    copier_format_shortest: 'Shortest (fb.com, less compatible)',
-                    tooltipAds: 'Go to Ad Library (About)',
-                    tooltipTransparency: 'Go to Page transparency',
-                    notificationReelSearchError: 'Cannot get current page name for Reel search.',
-                    copier_includeEmojis: 'Include emojis in copied text',
-                    // Auto Loader & Batch Copier
-                    autoLoader_batchSize: 'Batch Auto-Load Count',
-                    tooltipAutoLoadStart: 'Auto-Load Posts',
-                    tooltipAutoLoadStop: 'Stop Loading',
-                    tooltipBatchCopy: 'Batch Copy All Posts',
+                    copier_format_full: 'Full URL',
+                    copier_format_username: 'Username+ID',
+                    copier_format_author_id: 'AuthorID+ID',
+                    copier_format_shortest: 'Shortest',
+                    copier_includeEmojis: 'Include emojis',
+                    
+                    autoLoader_batchSize: 'Batch Count',
+                    tooltipAutoLoadStart: 'Auto-Load',
+                    tooltipAutoLoadStop: 'Stop',
+                    tooltipBatchCopy: 'Batch Copy',
+                    batchCopy_includeHeader: 'Include Header in Batch Copy',
                     autoLoad_status_loading: 'Loading... ({current}/{target})',
-                    autoLoad_status_retrying: 'Retrying... ({count}/{max})',
-                    autoLoad_status_success: 'Auto-load complete.',
-                    autoLoad_status_stopped: 'Stopped by user.',
-                    autoLoad_status_deadlock: 'Deadlock detected. Stopping.',
+                    autoLoad_status_retrying: 'Retrying...',
+                    autoLoad_status_success: 'Done.',
+                    autoLoad_status_stopped: 'Stopped.',
+                    autoLoad_status_deadlock: 'Deadlock.',
                     batchCopy_start: 'Processing {count} posts...',
-                    batchCopy_success: '✅ Copied {count} posts to clipboard.',
-                    batchCopy_empty: 'No posts to copy.',
+                    batchCopy_success: '✅ Copied {count} posts.',
+                    batchCopy_empty: 'No posts.',
+                    floatingNav_showAutoLoad: 'Show Auto-Load',
+                    floatingNav_showBatchCopy: 'Show Batch Copy',
+
+                    // --- Copy Metadata ---
+                    copy_includeMetadata: 'Include Metadata',
+                    copy_meta_url: 'Include Link (Top)',
+                    copy_meta_order: 'Include Order [#] (Batch Only)',
+                    copy_meta_author_name: 'Include Author',
+                    copy_meta_date: 'Include Date',
+                    copy_meta_stats: 'Include Stats (Master)',
+                    copy_meta_stats_total: 'Include Total Count (1.9K)',
+                    copy_meta_stats_detailed: 'Include Details (👍❤️)',
+                    copy_meta_link_preview: 'Include Link Preview',
+                    stats_label_like: 'Like',
+                    stats_label_comment: 'Comment',
+                    stats_label_share: 'Share',
+                    stats_label_reaction: 'Reactions',
+                    preview_label_title: 'Title',
+                    preview_label_source: 'Source',
+                    preview_label_desc: 'Desc',
+                    preview_label_link: 'Link',
+                    
+                    // --- Other Tooltips ---
+                    tooltipAds: 'Ads Library',
+                    tooltipTransparency: 'Transparency',
+                    notificationReelSearchError: 'Page name not found',
                 },
                 'zh-TW': {
+                    // --- 一般設定 ---
                     notificationDeadlock: '登入提示已隱藏，動態消息將無法載入新內容。\n【提示】為避免動態消息卡住，請養成用滑鼠中鍵在新分頁開啟連結的習慣。請重新整理頁面以繼續瀏覽。',
                     notificationSettingsReload: '部分設定已更新，請重新整理頁面以完全生效。',
                     resetSettings: '重設設定',
@@ -272,10 +302,13 @@
                     hideUselessElements: '隱藏對訪客無用的介面元素',
                     hidePostStats: '隱藏貼文統計數據 (讚數、留言數)',
                     autoUnmuteEnabled: '自動取消影片靜音',
+                    setVolumeLabel: '自動音量大小',
                     postNumberingEnabled: '在動態消息上顯示貼文順序',
                     expandContentEnabled: '自動展開貼文內容 (查看更多)',
                     errorRecoveryEnabled: '錯誤頁面自動恢復 (按鈕偵測)',
                     transparencyButtonsEnabled: '顯示粉絲專頁資訊透明度捷徑按鈕 (左下角)',
+                    
+                    // --- ID Revealer ---
                     idRevealerEnabled: '啟用 ID 顯示器 (點擊標題)',
                     idRevealerTooltip: '點擊以顯示 Profile ID 與資訊',
                     idRevealerLinkFormat: 'ID 連結格式',
@@ -290,7 +323,8 @@
                     profile_url_label: 'Profile URL',
                     copy_success_generic: '已複製 {label}',
                     all_copied: '全部資訊已複製',
-                    setVolumeLabel: '自動音量大小',
+
+                    // --- 搜尋工具列 ---
                     searchPlaceholder: '搜尋...',
                     searchButton: '搜尋',
                     searchGroupContextual: '搜尋當前頁面',
@@ -324,9 +358,16 @@
                     shortcutWatch: '前往 Watch 影片',
                     shortcutEvents: '前往 活動',
                     shortcutMarketplace: '前往 Marketplace 市集',
+
+                    // --- 設定視窗 ---
                     settingsTitle: '設定',
                     saveAndClose: '儲存並關閉',
                     menuSettings: '⚙️ 設定',
+                    settingsColumnGeneral: '一般設定',
+                    settingsColumnNavigation: '導覽設定',
+                    settingsColumnTools: '貼文工具',
+
+                    // --- 導覽功能 ---
                     keyboardNavEnabled: '啟用鍵盤導覽',
                     keyNavNextPrimary: '下一篇 (主要按鍵)',
                     keyNavPrevPrimary: '上一篇 (主要按鍵)',
@@ -346,11 +387,10 @@
                     modifierCtrl: 'Ctrl',
                     modifierShift: 'Shift',
                     modifierNone: '無 (取代頁面捲動)',
-                    settingsColumnGeneral: '一般設定',
-                    settingsColumnNavigation: '導覽設定',
-                    settingsColumnTools: '貼文工具',
-                    copier_enablePermalink: '啟用 永久連結按鈕',
-                    copier_enableCopyContent: '啟用 複製內容按鈕',
+
+                    // --- 複製與載入工具 ---
+                    copier_enablePermalink: '啟用 永久連結按鈕 (僅圖示)',
+                    copier_enableCopyContent: '啟用 複製內容按鈕 (智慧)',
                     copier_fetchPermalinkSmart: '永久連結 (智慧)',
                     copier_fetchPermalinkDirect: '永久連結 (直接)',
                     copier_copyContent: '複製貼文內容',
@@ -364,22 +404,19 @@
                     copier_notificationErrorNoSourceUrl: '失敗：找不到來源網址。',
                     copier_notificationErrorTimeout: '失敗：背景處理逾時。',
                     copier_notificationContentNotFound: '❌ 找不到內容區塊。',
-                    copier_menu_useSmartLink: '自動取得永久連結 (智慧模式)',
-                    copier_menu_showButtonText: '顯示按鈕文字',
+                    copier_menu_useSmartLink: '複製內容時使用智慧連結 (需等待)',
                     copier_menu_permalinkFormat: '永久連結格式',
                     copier_format_full: '完整網址 (含 Slug)',
                     copier_format_username: '使用者名稱 + 貼文 ID',
                     copier_format_author_id: '作者 ID + 貼文 ID (最可靠)',
                     copier_format_shortest: '最短連結 (fb.com, 相容性較差)',
-                    tooltipAds: '前往 廣告檔案庫 (關於)',
-                    tooltipTransparency: '查看 粉絲專頁資訊透明度',
-                    notificationReelSearchError: '無法取得目前頁面名稱以進行連續短片搜尋。',
                     copier_includeEmojis: '複製內容包含表情符號',
-                    // Auto Loader & Batch Copier
+                    
                     autoLoader_batchSize: '自動載入批次數量',
                     tooltipAutoLoadStart: '自動載入貼文',
                     tooltipAutoLoadStop: '停止載入',
                     tooltipBatchCopy: '批次複製所有貼文',
+                    batchCopy_includeHeader: '批次複製包含頁首資訊',
                     autoLoad_status_loading: '載入中... ({current}/{target})',
                     autoLoad_status_retrying: '重試中... ({count}/{max})',
                     autoLoad_status_success: '自動載入完成。',
@@ -388,8 +425,35 @@
                     batchCopy_start: '正在處理 {count} 篇貼文...',
                     batchCopy_success: '✅ 已複製 {count} 篇貼文。',
                     batchCopy_empty: '沒有貼文可複製。',
+                    floatingNav_showAutoLoad: '顯示 自動載入按鈕',
+                    floatingNav_showBatchCopy: '顯示 批次複製按鈕',
+
+                    // --- 複製中繼資料 ---
+                    copy_includeMetadata: '複製內容包含中繼資料',
+                    copy_meta_url: '包含貼文連結 (置頂)',
+                    copy_meta_order: '包含貼文順序 [#xx] (僅批次複製)',
+                    copy_meta_author_name: '包含發文者名稱',
+                    copy_meta_date: '包含發文時間',
+                    copy_meta_stats: '包含互動統計',
+                    copy_meta_stats_total: '包含總數 (1.9K 心情)',
+                    copy_meta_stats_detailed: '包含詳細心情 (👍❤️)',
+                    copy_meta_link_preview: '包含連結預覽資訊 (標題/來源/摘要)',
+                    stats_label_like: '讚',
+                    stats_label_comment: '留言',
+                    stats_label_share: '分享',
+                    stats_label_reaction: '心情',
+                    preview_label_title: '標題',
+                    preview_label_source: '來源',
+                    preview_label_desc: '摘要',
+                    preview_label_link: '連結',
+                    
+                    // --- 其他提示 ---
+                    tooltipAds: '前往 廣告檔案庫 (關於)',
+                    tooltipTransparency: '查看 粉絲專頁資訊透明度',
+                    notificationReelSearchError: '無法取得目前頁面名稱以進行連續短片搜尋。',
                 },
                 ja: {
+                    // --- 一般 ---
                     notificationDeadlock: 'ログインプロンプトが非表示になりましたが、フィードは新しいコンテンツを読み込めなくなりました。\n【ヒント】フィードがロックされないように、新しいタブでリンクを開く（中央クリック）習慣を付けてください。閲覧を続けるには、このページをリロードしてください。',
                     notificationSettingsReload: '一部の設定が更新されました。完全に有効にするには、ページをリロードしてください。',
                     resetSettings: '設定をリセット',
@@ -401,11 +465,14 @@
                     hideUselessElements: '不要なUI要素を非表示にする（ゲスト用）',
                     hidePostStats: '投稿の統計データを非表示 (いいね！、コメント数)',
                     autoUnmuteEnabled: '動画のミュートを自動解除',
+                    setVolumeLabel: '自動音量',
                     postNumberingEnabled: 'フィードに投稿順序番号を表示する',
                     expandContentEnabled: '投稿の内容を自動的に展開 (さらに表示)',
                     errorRecoveryEnabled: 'エラーページ自動回復 (ボタン検出)',
                     transparencyButtonsEnabled: 'ページの透明性ショートカットを表示 (左下)',
-                    idRevealerEnabled: 'ID表示を有効にする（タイトルをクリック）',
+                    
+                    // --- ID Revealer ---
+                    idRevealerEnabled: 'ID表示機能を有効にする（タイトルをクリック）',
                     idRevealerTooltip: 'クリックしてプロフィールIDと情報を表示',
                     idRevealerLinkFormat: 'IDリンク形式',
                     idFormatUserID: 'User ID形式 (facebook.com/id)',
@@ -419,7 +486,8 @@
                     profile_url_label: 'Profile URL',
                     copy_success_generic: '{label}をコピーしました',
                     all_copied: 'すべての情報をコピーしました',
-                    setVolumeLabel: '自動音量',
+
+                    // --- 検索バー ---
                     searchPlaceholder: '検索...',
                     searchButton: '検索',
                     searchGroupContextual: '現在のページを検索',
@@ -434,52 +502,58 @@
                     searchScopeGlobalVideos: '動画',
                     searchScopeGlobalPosts: '投稿',
                     searchScopeEvents: 'イベント',
-                    searchScopeMarketplace: 'マーケットプレイス',
-                    searchTooltipPosts: '現在のページの投稿を検索します（ホームページの場合はFacebook全体）。',
-                    searchTooltipPhotos: '現在のページの写真を検索します。',
-                    searchTooltipVideos: '現在のページの動画を検索します。',
-                    searchTooltipReels: '現在のページ名をキーワードとして、Facebook全体のリールを検索します。',
-                    searchTooltipPages: 'Facebook全体でページ、人物、または組織を検索します。',
-                    searchTooltipPeople: 'Facebook全体で個人のプロフィールを検索します。',
-                    searchTooltipGroups: 'Facebook全体でグループを検索します。',
-                    searchTooltipGlobalPosts: 'Facebook全体で公開投稿を検索します。',
-                    searchTooltipGlobalVideos: 'Facebook Watchの内部検索を使用して、すべての動画を検索します。',
-                    searchTooltipEvents: 'Facebookの内部検索を使用して、すべてのイベントを検索します。',
-                    searchTooltipMarketplace: 'Facebookマーケットプレイス全体で商品を検索します。',
-                    searchAllContextualTooltip: 'Google検索を使用して、このページのすべての{scope}を一覧表示します',
-                    navigateToContextual: '{scope}セクションに移動',
-                    pinToolbar: 'ツールバーを固定',
-                    unpinToolbar: 'ツールバーの固定を解除',
-                    shortcutWatch: 'Watchへ移動',
-                    shortcutEvents: 'イベントへ移動',
-                    shortcutMarketplace: 'マーケットプレイスへ移動',
+                    searchScopeMarketplace: 'マーケット',
+                    searchTooltipPosts: '現在のページの投稿を検索',
+                    searchTooltipPhotos: '写真を検索',
+                    searchTooltipVideos: '動画を検索',
+                    searchTooltipReels: 'リールを検索',
+                    searchTooltipPages: 'ページを検索',
+                    searchTooltipPeople: '人物を検索',
+                    searchTooltipGroups: 'グループを検索',
+                    searchTooltipGlobalPosts: '公開投稿を検索',
+                    searchTooltipGlobalVideos: 'Watchを検索',
+                    searchTooltipEvents: 'イベントを検索',
+                    searchTooltipMarketplace: 'マーケットプレイスを検索',
+                    searchAllContextualTooltip: 'このページの {scope} を検索',
+                    navigateToContextual: '{scope} へ移動',
+                    pinToolbar: '固定',
+                    unpinToolbar: '固定解除',
+                    shortcutWatch: 'Watchへ',
+                    shortcutEvents: 'イベントへ',
+                    shortcutMarketplace: 'マーケットへ',
+
+                    // --- 設定モーダル ---
                     settingsTitle: '設定',
                     saveAndClose: '保存して閉じる',
                     menuSettings: '⚙️ 設定',
+                    settingsColumnGeneral: '一般',
+                    settingsColumnNavigation: 'ナビ',
+                    settingsColumnTools: 'ツール',
+
+                    // --- ナビゲーション ---
                     keyboardNavEnabled: 'キーボードナビゲーションを有効にする',
-                    keyNavNextPrimary: '次の投稿 (プライマリ)',
-                    keyNavPrevPrimary: '前の投稿 (プライマリ)',
-                    keyNavNextSecondary: '次の投稿 (セカンダリ)',
-                    keyNavPrevSecondary: '前の投稿 (セカンダリ)',
-                    floatingNavEnabled: 'フローティングナビゲーションボタンを有効にする',
+                    keyNavNextPrimary: '次の投稿 (J)',
+                    keyNavPrevPrimary: '前の投稿 (K)',
+                    keyNavNextSecondary: '次の投稿 (→)',
+                    keyNavPrevSecondary: '前の投稿 (←)',
+                    floatingNavEnabled: 'フローティングボタンを有効にする',
                     floatingNavPrevTooltip: '前の投稿',
                     floatingNavNextTooltip: '次の投稿',
                     navigationScrollAlignment: 'スクロール位置',
                     scrollAlignmentCenter: '中央',
                     scrollAlignmentTop: '上部',
-                    enableSmoothScrolling: 'スムーズスクロールを有効にする',
-                    continuousNavInterval: '連続ナビゲーションの間隔',
-                    wheelNavEnabled: 'マウスホイールナビゲーションを有効にする',
-                    wheelNavModifier: 'ホイールナビゲーションの修飾キー',
+                    enableSmoothScrolling: 'スムーズスクロール',
+                    continuousNavInterval: '連続間隔',
+                    wheelNavEnabled: 'ホイールナビ',
+                    wheelNavModifier: '修飾キー',
                     modifierAlt: 'Alt',
                     modifierCtrl: 'Ctrl',
                     modifierShift: 'Shift',
-                    modifierNone: 'なし (ページのスクロールを置き換える)',
-                    settingsColumnGeneral: '一般設定',
-                    settingsColumnNavigation: 'ナビゲーション設定',
-                    settingsColumnTools: '投稿ツール',
-                    copier_enablePermalink: '固定リンクボタンを有効にする',
-                    copier_enableCopyContent: '内容コピーボタンを有効にする',
+                    modifierNone: 'なし',
+
+                    // --- ツール (コピー & 自動読み込み) ---
+                    copier_enablePermalink: '固定リンクボタンを有効にする (アイコンのみ)',
+                    copier_enableCopyContent: '内容コピーボタンを有効にする (スマート)',
                     copier_fetchPermalinkSmart: '固定リンク (スマート)',
                     copier_fetchPermalinkDirect: '固定リンク (直接)',
                     copier_copyContent: '投稿内容をコピー',
@@ -490,25 +564,22 @@
                     copier_failure: '❌ 失敗',
                     copier_notificationPermalinkCopied: '固定リンクをクリップボードにコピーしました：\n{url}',
                     copier_notificationErrorGeneric: '固定リンクの取得に失敗しました。',
-                    copier_notificationErrorNoSourceUrl: '失敗：ソースURLが見つかりませんでした。',
-                    copier_notificationErrorTimeout: '失敗：バックグラウンドでの取得がタイムアウトしました。',
+                    copier_notificationErrorNoSourceUrl: '失敗：ソースURLが見つかりません。',
+                    copier_notificationErrorTimeout: '失敗：取得タイムアウト。',
                     copier_notificationContentNotFound: '❌ コンテンツが見つかりませんでした。',
-                    copier_menu_useSmartLink: '固定リンクを自動取得 (スマートモード)',
-                    copier_menu_showButtonText: 'ボタンテキストを表示',
+                    copier_menu_useSmartLink: 'コンテンツコピー時にスマートリンクを使用 (待機あり)',
                     copier_menu_permalinkFormat: '固定リンク形式',
-                    copier_format_full: '完全なURL (スラグ付き)',
-                    copier_format_username: 'ユーザー名 + 投稿ID',
-                    copier_format_author_id: '作成者ID + 投稿ID (最も信頼性が高い)',
-                    copier_format_shortest: '最短リンク (fb.com, 互換性低)',
-                    tooltipAds: '広告ライブラリへ (情報)',
-                    tooltipTransparency: 'ページの透明性を表示',
-                    notificationReelSearchError: 'リール検索のための現在のページ名を取得できません。',
-                    copier_includeEmojis: 'コピーしたテキストに絵文字を含める',
-                    // Auto Loader & Batch Copier
+                    copier_format_full: '完全なURL',
+                    copier_format_username: 'ユーザー名+ID',
+                    copier_format_author_id: '作者ID+ID (推奨)',
+                    copier_format_shortest: '短縮 (fb.com)',
+                    copier_includeEmojis: '絵文字を含める',
+                    
                     autoLoader_batchSize: '自動読み込みバッチ数',
                     tooltipAutoLoadStart: '投稿を自動読み込み',
                     tooltipAutoLoadStop: '読み込み停止',
                     tooltipBatchCopy: '全投稿を一括コピー',
+                    batchCopy_includeHeader: '一括コピーにヘッダーを含める',
                     autoLoad_status_loading: '読み込み中... ({current}/{target})',
                     autoLoad_status_retrying: '再試行中... ({count}/{max})',
                     autoLoad_status_success: '自動読み込み完了。',
@@ -517,6 +588,32 @@
                     batchCopy_start: '{count} 件の投稿を処理中...',
                     batchCopy_success: '✅ {count} 件の投稿をコピーしました。',
                     batchCopy_empty: 'コピーする投稿がありません。',
+                    floatingNav_showAutoLoad: '自動読み込みボタンを表示',
+                    floatingNav_showBatchCopy: '一括コピーボタンを表示',
+
+                    // --- メタデータコピー ---
+                    copy_includeMetadata: 'メタデータを含める (作成者、日付、リンク...)',
+                    copy_meta_url: '投稿リンクを含める (上部)',
+                    copy_meta_order: '投稿順序 [#xx] を含める (一括コピーのみ)',
+                    copy_meta_author_name: '作成者名を含める',
+                    copy_meta_date: '日付/時間を含める',
+                    copy_meta_stats: 'インタラクション統計を含める',
+                    copy_meta_stats_total: '合計リアクション数を含める',
+                    copy_meta_stats_detailed: '詳細なリアクションを含める',
+                    copy_meta_link_preview: 'リンクプレビュー情報を含める',
+                    stats_label_like: 'いいね',
+                    stats_label_comment: 'コメント',
+                    stats_label_share: 'シェア',
+                    stats_label_reaction: 'リアクション',
+                    preview_label_title: 'タイトル',
+                    preview_label_source: 'ソース',
+                    preview_label_desc: '概要',
+                    preview_label_link: 'リンク',
+                    
+                    // --- その他 ---
+                    tooltipAds: '広告ライブラリ',
+                    tooltipTransparency: 'ページの透明性',
+                    notificationReelSearchError: 'ページ名が見つかりません。',
                 },
             },
         },
@@ -645,6 +742,8 @@
                         { key: 'keyNavNextSecondary', type: 'text', defaultValue: 'ArrowRight', labelKey: 'keyNavNextSecondary', group: 'navigation' },
                         { key: 'keyNavPrevSecondary', type: 'text', defaultValue: 'ArrowLeft', labelKey: 'keyNavPrevSecondary', group: 'navigation' },
                         { key: 'floatingNavEnabled', type: 'boolean', defaultValue: true, labelKey: 'floatingNavEnabled', group: 'navigation', instant: true },
+                        { key: 'floatingNav_showAutoLoad', type: 'boolean', defaultValue: true, labelKey: 'floatingNav_showAutoLoad', group: 'navigation', instant: true },
+                        { key: 'floatingNav_showBatchCopy', type: 'boolean', defaultValue: true, labelKey: 'floatingNav_showBatchCopy', group: 'navigation', instant: true },
                         { key: 'autoLoadBatchSize', type: 'range', defaultValue: 20, labelKey: 'autoLoader_batchSize', options: { min: 10, max: 100, step: 5, unit: '' }, group: 'navigation' },
                         { key: 'wheelNavEnabled', type: 'boolean', defaultValue: true, labelKey: 'wheelNavEnabled', group: 'navigation' },
                         { key: 'wheelNavModifier', type: 'select', defaultValue: 'shiftKey', labelKey: 'wheelNavModifier', options: [ { value: 'altKey', labelKey: 'modifierAlt' }, { value: 'ctrlKey', labelKey: 'modifierCtrl' }, { value: 'shiftKey', labelKey: 'modifierShift' }, { value: 'none', labelKey: 'modifierNone' } ], group: 'navigation' },
@@ -657,7 +756,16 @@
                         { key: 'enableCopyContentButton', type: 'boolean', defaultValue: true, labelKey: 'copier_enableCopyContent', group: 'tools', instant: true },
                         { key: 'copier_includeEmojis', type: 'boolean', defaultValue: true, labelKey: 'copier_includeEmojis', group: 'tools', instant: true },
                         { key: 'copier_useSmartLink', type: 'boolean', defaultValue: true, labelKey: 'copier_menu_useSmartLink', group: 'tools', instant: true },
-                        { key: 'copier_showButtonText', type: 'boolean', defaultValue: false, labelKey: 'copier_menu_showButtonText', group: 'tools', instant: true },
+                        { key: 'batchCopy_includeHeader', type: 'boolean', defaultValue: true, labelKey: 'batchCopy_includeHeader', group: 'tools' },
+                        { key: 'copy_includeMetadata', type: 'boolean', defaultValue: true, labelKey: 'copy_includeMetadata', group: 'tools', instant: true },
+                        { key: 'copy_meta_url', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_url', group: 'tools' },
+                        { key: 'copy_meta_order', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_order', group: 'tools' },
+                        { key: 'copy_meta_author_name', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_author_name', group: 'tools' },
+                        { key: 'copy_meta_date', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_date', group: 'tools' },
+                        { key: 'copy_meta_stats', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_stats', group: 'tools' },
+                        { key: 'copy_meta_stats_total', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_stats_total', group: 'tools' },
+                        { key: 'copy_meta_stats_detailed', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_stats_detailed', group: 'tools' },
+                        { key: 'copy_meta_link_preview', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_link_preview', group: 'tools' },
                         {
                             key: 'copier_permalinkFormat', type: 'select', defaultValue: 'author_id', labelKey: 'copier_menu_permalinkFormat',
                             options: [
@@ -708,12 +816,20 @@
                         case 'permalinkCopierEnabled':
                         case 'enableCopyContentButton':
                         case 'copier_useSmartLink':
-                        case 'copier_showButtonText':
+                        case 'copier_includeEmojis':
+                        case 'copy_includeMetadata':
                             // Always re-evaluate buttons if any tool setting changes
                             if (PHT) PHT.reEvaluateAllButtons();
                             break;
                         case 'floatingNavEnabled':
                             if (newValue) FN.init(this.app); else FN.deinit();
+                            break;
+                        case 'floatingNav_showAutoLoad':
+                        case 'floatingNav_showBatchCopy':
+                            if (FN && this.app.state.settings.floatingNavEnabled) {
+                                FN.deinit();
+                                FN.init(this.app);
+                            }
                             break;
                         case 'hidePostStats':
                             SI.updateStatsBarVisibility(newValue);
@@ -823,6 +939,21 @@
                     if (def.key === 'copier_permalinkFormat') wrapper.dataset.controls = 'permalinkCopierEnabled';
                     if (def.key === 'idRevealerLinkFormat') wrapper.dataset.controls = 'idRevealerEnabled';
                     if (def.key === 'autoLoadBatchSize') wrapper.dataset.controls = 'floatingNavEnabled';
+                    
+                    if (['copy_meta_url', 'copy_meta_order', 'copy_meta_author_name', 'copy_meta_date', 'copy_meta_stats', 'copy_meta_link_preview'].includes(def.key)) {
+                        wrapper.dataset.controls = 'copy_includeMetadata';
+                        wrapper.style.paddingLeft = '15px'; // Indent
+                        wrapper.style.fontSize = '0.9em';
+                    }
+                    if (['copy_meta_stats_total', 'copy_meta_stats_detailed'].includes(def.key)) {
+                        wrapper.dataset.controls = 'copy_meta_stats';
+                        wrapper.style.paddingLeft = '30px'; // Double Indent
+                        wrapper.style.fontSize = '0.85em';
+                    }
+                    if (['floatingNav_showAutoLoad', 'floatingNav_showBatchCopy'].includes(def.key)) {
+                        wrapper.dataset.controls = 'floatingNavEnabled';
+                        wrapper.style.paddingLeft = '15px';
+                    }
 
                     return wrapper;
                 },
@@ -833,12 +964,24 @@
                         permalinkCopierEnabled: container.querySelector('#setting-permalinkCopierEnabled'),
                         idRevealerEnabled: container.querySelector('#setting-idRevealerEnabled'),
                         floatingNavEnabled: container.querySelector('#setting-floatingNavEnabled'),
+                        copy_includeMetadata: container.querySelector('#setting-copy_includeMetadata'),
+                        copy_meta_stats: container.querySelector('#setting-copy_meta_stats'),
                     };
                     const toggleGroup = (controller, isEnabled) => {
                         container.querySelectorAll(`[data-controls="${controller.id.substring(8)}"]`).forEach(control => {
+                            // Don't hide completely to preserve layout, just disable
                             control.style.opacity = isEnabled ? '1' : '0.5';
                             const input = control.querySelector('input, select');
-                            if (input) input.disabled = !isEnabled;
+                            if (input) {
+                                input.disabled = !isEnabled;
+                                // Recursively handle nested dependencies (e.g. stats children)
+                                const nestedController = controllers[input.id.substring(8)];
+                                if (nestedController && !isEnabled) {
+                                    toggleGroup(nestedController, false);
+                                } else if (nestedController && isEnabled) {
+                                    toggleGroup(nestedController, input.checked);
+                                }
+                            }
                         });
                     };
                     const updateAll = () => Object.values(controllers).forEach(c => c && toggleGroup(c, c.checked));
@@ -1267,6 +1410,7 @@
 
                 async copyAllPosts() {
                     const T = this.app.state.T;
+                    const settings = this.app.state.settings;
                     const posts = this.app.modules.postNavigatorCore.getSortedPosts();
                     if (posts.length === 0) {
                         this.app.modules.toastNotifier.show(T.batchCopy_empty, 'failure');
@@ -1278,64 +1422,55 @@
                     // Small delay to let UI update
                     await this.app.utils.delay(50);
 
-                    let resultText = '';
+                    const PHT = this.app.modules.postHeaderTools;
+                    let bodyText = '';
                     let successCount = 0;
+                    
+                    const BATCH_SEPARATOR = '\n\n═══════════════════════════════════════════════════════════════\n\n';
 
-                    posts.forEach((post, index) => {
-                        const text = this.getPostText(post);
-                        const postNum = index + 1;
-                        const header = `=== Post #${postNum} ===`;
-                        const content = text || '[No Text Content]';
-                        const separator = '\n\n-----------------------------------\n\n';
+                    // Batch processing loop
+                    for (const post of posts) {
+                        const text = await PHT.extractPostMetadata(post, {
+                            forceRawLink: true, 
+                            includeOrder: settings.copy_meta_order,
+                            isBatch: true
+                        });
+                        
+                        if (text) {
+                            bodyText += text + BATCH_SEPARATOR;
+                            successCount++;
+                        }
+                    }
 
-                        resultText += `${header}\n${content}${separator}`;
-                        if (text) successCount++;
-                    });
+                    // --- Generate Header ---
+                    let finalText = bodyText;
+                    
+                    if (settings.batchCopy_includeHeader) {
+                        const cleanUrl = window.location.origin + window.location.pathname;
+                        const pageTitle = document.title.replace(/ \| Facebook$/, '').replace(/^\(\d+\) /, '');
+                        const now = new Date().toLocaleString(navigator.language, { hour12: false });
+                        
+                        const header = 
+`═══════════════════════════════════════════════════════════════
+【 BATCH EXPORT SUMMARY 】
+Source: ${pageTitle}
+URL:    ${cleanUrl}
+Time:   ${now}
+Count:  ${successCount} Posts
+═══════════════════════════════════════════════════════════════
+
+`;
+                        finalText = header + bodyText;
+                    }
 
                     try {
-                        await GM_setClipboard(resultText);
+                        await GM_setClipboard(finalText);
                         this.app.modules.toastNotifier.show(T.batchCopy_success.replace('{count}', successCount), 'success');
                     } catch (err) {
                         console.error(err);
-                        this.app.modules.toastNotifier.show('Copy Failed', 'failure');
+                        this.app.modules.toastNotifier.show(T.copier_failure, 'failure');
                     }
                 },
-
-                getPostText(postEl) {
-                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
-                    const contentContainer = postEl.querySelector(C_TOOLS.CONTENT_BODY);
-                    if (!contentContainer) return null;
-
-                    const clone = contentContainer.cloneNode(true);
-                    
-                    // Replace emoji images with alt text
-                    const images = clone.querySelectorAll('img[src*="emoji"][alt], img[alt]');
-                    images.forEach(img => {
-                        const alt = img.getAttribute('alt');
-                        if (alt) img.replaceWith(document.createTextNode(alt));
-                    });
-
-                    // Topology extraction
-                    const rawBlocks = clone.querySelectorAll(C_TOOLS.TEXT_BLOCKS);
-                    const leafBlocks = Array.from(rawBlocks).filter(el => {
-                        return el.querySelectorAll(C_TOOLS.TEXT_BLOCKS).length === 0 && el.innerText.trim().length > 0;
-                    });
-
-                    if (leafBlocks.length === 0) return clone.innerText.trim();
-
-                    let finalString = leafBlocks[0].innerText.trim();
-                    for (let i = 1; i < leafBlocks.length; i++) {
-                        const prevBlock = leafBlocks[i-1];
-                        const currBlock = leafBlocks[i];
-                        const currText = currBlock.innerText.trim();
-                        
-                        const isSibling = currBlock.parentElement === prevBlock.parentElement;
-                        const separator = isSibling ? '\n' : '\n\n';
-                        
-                        finalString += separator + currText; 
-                    }
-                    return finalString;
-                }
             },
 
             errorRecovery: {
@@ -2480,6 +2615,7 @@
                     if (!this.app.state.settings.floatingNavEnabled) return; 
                     const T = this.app.state.T; 
                     const U = this.app.utils; 
+                    const settings = this.app.state.settings;
                     // Dynamic reference
                     const getCore = () => this.app.modules.postNavigatorCore; 
                     const getLoader = () => this.app.modules.contentAutoLoader;
@@ -2498,32 +2634,41 @@
                     nextButton.addEventListener('mouseleave', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
                     
                     document.body.addEventListener('mouseup', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
+                    this.container.append(prevButton, nextButton);
 
                     // --- Tools Separator ---
-                    const separator = U.createStyledElement('div', { height: '4px' });
+                    if (settings.floatingNav_showAutoLoad || settings.floatingNav_showBatchCopy) {
+                        const separator = U.createStyledElement('div', { height: '4px' });
+                        this.container.appendChild(separator);
+                    }
 
                     // --- Auto-Load Button ---
-                    this.btnAutoLoad = U.createStyledElement('button', {}, { title: T.tooltipAutoLoadStart });
-                    // Default Icon: Arrow Down
-                    this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
-                    this.btnAutoLoad.addEventListener('click', () => {
-                        const loader = getLoader();
-                        if (loader) {
-                            if (loader.state.isRunning) loader.stop('autoLoad_status_stopped');
-                            else loader.start();
-                        }
-                    });
+                    if (settings.floatingNav_showAutoLoad) {
+                        this.btnAutoLoad = U.createStyledElement('button', {}, { title: T.tooltipAutoLoadStart });
+                        // Default Icon: Arrow Down
+                        this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
+                        this.btnAutoLoad.addEventListener('click', () => {
+                            const loader = getLoader();
+                            if (loader) {
+                                if (loader.state.isRunning) loader.stop('autoLoad_status_stopped');
+                                else loader.start();
+                            }
+                        });
+                        this.container.appendChild(this.btnAutoLoad);
+                    }
 
                     // --- Batch Copy Button ---
-                    const btnBatchCopy = U.createStyledElement('button', {}, { title: T.tooltipBatchCopy });
-                    // Icon: Clipboard
-                    btnBatchCopy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`;
-                    btnBatchCopy.addEventListener('click', () => {
-                         const loader = getLoader();
-                         if (loader) loader.copyAllPosts();
-                    });
+                    if (settings.floatingNav_showBatchCopy) {
+                        const btnBatchCopy = U.createStyledElement('button', {}, { title: T.tooltipBatchCopy });
+                        // Icon: Clipboard
+                        btnBatchCopy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`;
+                        btnBatchCopy.addEventListener('click', () => {
+                             const loader = getLoader();
+                             if (loader) loader.copyAllPosts();
+                        });
+                        this.container.appendChild(btnBatchCopy);
+                    }
                     
-                    this.container.append(prevButton, nextButton, separator, this.btnAutoLoad, btnBatchCopy); 
                     document.body.appendChild(this.container); 
                     this.updateVisibility(); 
                     window.addEventListener('historyChange', this.updateVisibility.bind(this)); 
@@ -2633,7 +2778,6 @@
                 init(app) {
                     if (!this.app) this.app = app;
                     if (this.observer) return;
-                    console.log(`${this.app.config.LOG_PREFIX} [Tools] Module initialized.`);
                     this.startObserver();
                 },
 
@@ -2645,12 +2789,10 @@
                     this.cleanupButtons();
                 },
 
-                // --- Feature 1: Permalink Copier Logic ---
+                // --- Feature 1: Permalink Copier Logic (Standalone) ---
                 async handlePermalinkClick(event, button) {
                     if (this.isProcessingClick) return;
-                    // Stop event propagation immediately to prevent FB from intercepting
-                    event.preventDefault(); 
-                    event.stopPropagation();
+                    event.preventDefault(); event.stopPropagation();
                     
                     const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
                     const postEl = button.closest(`[data-${C_TOOLS.PROCESSED_MARKER}]`);
@@ -2664,7 +2806,6 @@
 
                     const iconWrapper = button.querySelector('.gm-icon-wrapper');
                     if (iconWrapper) iconWrapper.innerHTML = this.icons.processing;
-                    if (settings.copier_showButtonText) button.querySelector('span:last-child').textContent = T.copier_processing;
 
                     try {
                         const contentType = this.determinePostContentType(postEl);
@@ -2695,17 +2836,14 @@
                     }
                 },
 
-                // --- Feature 2: Smart Content Copier Logic (v0.1.5 Topology Fix + v0.1.6 Emoji) ---
+                // --- Feature 2: Smart Copy Content Logic ---
                 async handleCopyContentClick(event, button) {
                     if (this.isProcessingClick) return;
-                    event.preventDefault(); 
-                    event.stopPropagation();
+                    event.preventDefault(); event.stopPropagation();
                     
                     const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
                     const postEl = button.closest(this.app.config.SELECTORS.GLOBAL.POST_CONTAINER);
-                    const contentContainer = postEl ? postEl.querySelector(C_TOOLS.CONTENT_BODY) : null;
                     const T = this.app.state.T;
-                    const settings = this.app.state.settings;
 
                     this.isProcessingClick = true;
                     button.style.pointerEvents = 'none';
@@ -2714,57 +2852,17 @@
                     const iconWrapper = button.querySelector('.gm-icon-wrapper');
                     if (iconWrapper) iconWrapper.innerHTML = this.icons.processing;
 
-                    if (!contentContainer) {
-                        this.app.modules.toastNotifier.show(T.copier_notificationContentNotFound, 'failure');
-                        await this.animateButtonFeedback(button, 'failure', originalContent);
-                        this.isProcessingClick = false;
-                        return;
-                    }
-
                     try {
-                        // Check for expand button ("See more")
-                        const expandKeywords = this.app.config.TEXT_EXPANDER.TARGETS;
-                        const expandBtn = Array.from(contentContainer.querySelectorAll(C_TOOLS.EXPAND_BTN))
-                            .find(btn => expandKeywords.some(kw => btn.textContent.trim().includes(kw)) && btn.offsetParent !== null);
-
-                        if (expandBtn) {
-                            await new Promise((resolve) => {
-                                let resolved = false;
-                                const timeoutId = setTimeout(() => { if (!resolved) { resolved = true; resolve(); } }, 2500);
-                                const observer = new MutationObserver(() => {
-                                    if (!resolved) {
-                                        clearTimeout(timeoutId); resolved = true; observer.disconnect();
-                                        setTimeout(resolve, 150);
-                                    }
-                                });
-                                observer.observe(contentContainer, { childList: true, subtree: true });
-                                expandBtn.click();
-                            });
-                        }
-
-                        // Prepare target container (Clone if emojis enabled)
-                        let targetContainer = contentContainer;
-                        if (settings.copier_includeEmojis) {
-                            targetContainer = contentContainer.cloneNode(true);
-                            // Replace emoji images with their alt text
-                            const images = targetContainer.querySelectorAll('img[src*="emoji"][alt], img[alt]');
-                            images.forEach(img => {
-                                const src = img.getAttribute('src') || '';
-                                const alt = img.getAttribute('alt');
-                                // Prioritize images that look like emojis (src contains emoji.php or similar)
-                                // or generally any inline image with alt text in the text body
-                                if (alt && (src.includes('emoji') || img.className.includes('emoji') || src.includes('fbcdn.net'))) {
-                                    img.replaceWith(document.createTextNode(alt));
-                                }
-                            });
-                        }
-
-                        // Extract text using Sibling Node Topology
-                        const text = this.extractTextByTopology(targetContainer);
-                        GM_setClipboard(text);
+                        const text = await this.extractPostMetadata(postEl, { includeOrder: false });
                         
-                        this.app.modules.toastNotifier.show(T.copier_copyContentSuccess, 'success');
-                        await this.animateButtonFeedback(button, 'success', originalContent);
+                        if (text) {
+                            GM_setClipboard(text);
+                            this.app.modules.toastNotifier.show(T.copier_copyContentSuccess, 'success');
+                            await this.animateButtonFeedback(button, 'success', originalContent);
+                        } else {
+                            this.app.modules.toastNotifier.show(T.copier_notificationContentNotFound, 'failure');
+                            await this.animateButtonFeedback(button, 'failure', originalContent);
+                        }
                     } catch (error) {
                         console.error(`${this.app.config.LOG_PREFIX} [Tools] Copy Content Error:`, error);
                         this.app.modules.toastNotifier.show(T.copier_copyContentFailed, 'failure');
@@ -2774,12 +2872,359 @@
                     }
                 },
 
-                // Extracts text based on DOM structure (Parent grouping)
+                // --- Core Text Extraction Logic (Metadata + Topology) ---
+                async extractPostMetadata(postEl, options = {}) {
+                    if (!postEl) return null;
+                    const settings = this.app.state.settings;
+                    const T = this.app.state.T;
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+                    
+                    // Define separator based on mode (Batch vs Single)
+                    // Batch mode uses a lighter separator to avoid confusion with the main post delimiter
+                    const SECTION_SEPARATOR = options.isBatch ? '\n---\n' : '\n-----------------------------------\n';
+
+                    const contentContainer = postEl.querySelector(C_TOOLS.CONTENT_BODY);
+
+                    // 1. Expand Content
+                    const expandKeywords = this.app.config.TEXT_EXPANDER.TARGETS;
+                    if (contentContainer) {
+                        const expandBtn = Array.from(contentContainer.querySelectorAll(C_TOOLS.EXPAND_BTN))
+                            .find(btn => expandKeywords.some(kw => btn.textContent.trim().includes(kw)) && btn.offsetParent !== null);
+                        if (expandBtn) {
+                            await new Promise((resolve) => {
+                                expandBtn.click();
+                                setTimeout(resolve, 150);
+                            });
+                        }
+                    }
+
+                    // 2. Prepare Metadata Parts
+                    const parts = [];
+
+                    // --- Post Link (Top) ---
+                    if (settings.copy_includeMetadata && settings.copy_meta_url) {
+                        let linkUrl = null;
+                        
+                        if (!options.forceRawLink && settings.copier_useSmartLink) {
+                            const contentType = this.determinePostContentType(postEl);
+                            if (contentType === 'standard') {
+                                const result = await this.fetchPermalinkInBackground(postEl);
+                                if (result && result.url) linkUrl = result.url;
+                            }
+                        }
+                        
+                        if (!linkUrl) {
+                            const direct = this.getPermalinkDirectlyFromElement(postEl);
+                            linkUrl = direct.url;
+                        }
+                        
+                        if (linkUrl) parts.push(linkUrl + '\n');
+                    }
+
+                    // --- Post Order [#xx] & Author ---
+                    if (settings.copy_includeMetadata) {
+                        let headerLine = '';
+                        
+                        if (options.includeOrder) {
+                            const order = postEl.getAttribute('aria-posinset');
+                            if (order) headerLine += `[#${order}] `;
+                        }
+
+                        if (settings.copy_meta_author_name) {
+                            const authorEl = postEl.querySelector('div[data-ad-rendering-role="profile_name"] h2 strong a, div[data-ad-rendering-role="profile_name"] h2 a');
+                            if (authorEl) headerLine += authorEl.textContent.trim();
+                        }
+                        
+                        if (headerLine) parts.push(headerLine);
+                    }
+
+                    // --- Date & Stats ---
+                    if (settings.copy_includeMetadata) {
+                        let infoLine = '';
+                        
+                        // Date
+                        if (settings.copy_meta_date) {
+                            const timeLink = this.findTimestampLink(postEl);
+                            let dateText = '';
+                            if (timeLink) {
+                                dateText = timeLink.getAttribute('aria-label');
+                                if (!dateText) dateText = timeLink.textContent.trim();
+                                if (dateText && dateText.length > 30 && !/\d/.test(dateText)) dateText = '';
+                            }
+                            if (dateText) infoLine += dateText;
+                        }
+
+                        // Stats Logic (Fix for JP/ZH Units & Labels)
+                        if (settings.copy_meta_stats) {
+                            const stats = [];
+                            const toolbar = postEl.querySelector('[role="toolbar"]');
+                            
+                            if (toolbar) {
+                                const directContainer = toolbar.parentElement;
+                                const footerArea = toolbar.closest('div[role="article"] > div > div > div > div > div') || directContainer;
+                                
+                                // Regex Components
+                                const unitGroup = '[KkMm萬億万\\u842c\\u5104\\u4e07]';
+                                const numberPatternStr = `[\\d,.]+\\s*(${unitGroup})?(?:人)?`;
+                                const numberRegex = new RegExp(numberPatternStr);
+
+                                // --- 1. Total Reactions ---
+                                let totalReactionText = '';
+                                const reactionKeywords = ['All reactions:', '所有心情：', 'すべてのリアクション:', 'All reactions'];
+
+                                const findTotalByLabel = (container) => {
+                                    if (!container) return null;
+                                    const candidates = Array.from(container.children);
+                                    const label = candidates.find(el => reactionKeywords.some(kw => el.textContent.includes(kw)));
+                                    if (label && label.nextElementSibling) {
+                                        return label.nextElementSibling.textContent.trim();
+                                    }
+                                    return null;
+                                };
+
+                                totalReactionText = findTotalByLabel(directContainer) || findTotalByLabel(footerArea);
+
+                                if (!totalReactionText && footerArea) {
+                                    const reactionIcon = footerArea.querySelector('[aria-label*="reaction"], [aria-label*="心情"], [aria-label*="リアクション"]');
+                                    if (reactionIcon && !reactionIcon.closest('div[role="article"] div[role="article"]')) {
+                                        const containerText = reactionIcon.closest('div')?.textContent || '';
+                                        const m = containerText.match(numberRegex); 
+                                        if (m) totalReactionText = m[0].replace(/\s+|人/g, '');
+                                    }
+                                }
+
+                                // --- 2. Detailed Reactions ---
+                                const detailedStats = [];
+                                if (settings.copy_meta_stats_detailed && footerArea) {
+                                    const reactionButtons = footerArea.querySelectorAll('[aria-label]');
+                                    
+                                    // Fixed Regex for Japanese Full Labels (Strict 7 types)
+                                    const reactionTerms = [
+                                        // English / Chinese
+                                        'Like', 'Love', 'Care', 'Haha', 'Wow', 'Sad', 'Angry',
+                                        '讚', '大心', '加油', '哈', '哇', '嗚', '怒',
+                                        // Japanese (Strict match as verified)
+                                        '超いいね！', 'いいね！', '大切だね', 
+                                        'うけるね', 'すごいね', '悲しいね', 'ひどいね'
+                                    ];
+                                    
+                                    const reactionRegex = new RegExp(`(${reactionTerms.join('|')})[:：]\\s*(${numberPatternStr})`, 'i');
+                                    
+                                    const emojiMap = {
+                                        // English & Traditional Chinese
+                                        'like': '👍', '讚': '👍',
+                                        'love': '❤️', '大心': '❤️',
+                                        'care': '🫂', '加油': '🫂',
+                                        'haha': '😆', '哈': '😆',
+                                        'wow': '😮', '哇': '😮',
+                                        'sad': '😢', '嗚': '😢',
+                                        'angry': '😡', '怒': '😡',
+                                        
+                                        // Japanese (Exact 7 types)
+                                        'いいね！': '👍',
+                                        '超いいね！': '❤️',
+                                        '大切だね': '🫂',
+                                        'うけるね': '😆',
+                                        'すごいね': '😮',
+                                        '悲しいね': '😢',
+                                        'ひどいね': '😡'
+                                    };
+
+                                    reactionButtons.forEach(btn => {
+                                        const label = btn.getAttribute('aria-label');
+                                        if (!label) return;
+                                        
+                                        const match = label.match(reactionRegex);
+                                        if (match) {
+                                            const type = match[1]; 
+                                            const count = match[2].replace(/\s+|人/g, ''); 
+                                            
+                                            // Direct lookup first, then lowercase check
+                                            let emoji = emojiMap[type] || emojiMap[type.toLowerCase()];
+                                            
+                                            if (emoji) {
+                                                detailedStats.push(`${emoji} ${count}`);
+                                            }
+                                        }
+                                    });
+                                }
+
+                                if (totalReactionText && settings.copy_meta_stats_total) {
+                                    let rStr = `${totalReactionText} ${T.stats_label_reaction}`;
+                                    if (detailedStats.length > 0) rStr += ` (${detailedStats.join(' | ')})`;
+                                    stats.push(rStr);
+                                } else if (detailedStats.length > 0) {
+                                    stats.push(detailedStats.join(' | '));
+                                }
+
+                                // --- 3. Comments & Shares ---
+                                if (footerArea) {
+                                    const icons = Array.from(footerArea.querySelectorAll('i[data-visualcompletion="css-img"]'));
+                                    let commentCount = '';
+                                    let shareCount = '';
+
+                                    const extractCountFromIcon = (icon) => {
+                                        let current = icon.parentElement;
+                                        for (let i = 0; i < 4; i++) {
+                                            if (!current) break;
+                                            const text = current.textContent.trim();
+                                            if (text && new RegExp(`^${numberPatternStr}$`).test(text)) {
+                                                return text.replace(/\s+|人/g, '');
+                                            }
+                                            const m = text.match(numberRegex);
+                                            if (m) {
+                                                return m[0].replace(/\s+|人/g, '');
+                                            }
+                                            const numberSpan = current.querySelector('span:not(:has(*))');
+                                            if (numberSpan) {
+                                                const spanText = numberSpan.textContent.trim();
+                                                const mSpan = spanText.match(numberRegex);
+                                                if (mSpan) return mSpan[0].replace(/\s+|人/g, '');
+                                            }
+                                            current = current.parentElement;
+                                        }
+                                        return null;
+                                    };
+
+                                    for (const icon of icons) {
+                                        const bgPos = icon.style.backgroundPosition; 
+                                        if (!bgPos) continue;
+                                        const match = bgPos.match(/0px\s+(-?\d+)px/);
+                                        if (!match) continue;
+                                        const yPos = parseInt(match[1], 10);
+
+                                        if (Math.abs(yPos - (-1037)) < 5 && !commentCount) {
+                                            commentCount = extractCountFromIcon(icon);
+                                        } else if (Math.abs(yPos - (-1054)) < 5 && !shareCount) {
+                                            shareCount = extractCountFromIcon(icon);
+                                        }
+                                    }
+
+                                    if (!commentCount || !shareCount) {
+                                        const footerButtons = Array.from(footerArea.querySelectorAll('[role="button"]'));
+                                        for (const btn of footerButtons) {
+                                            if (btn.closest('div[role="article"] div[role="article"]')) continue;
+                                            if (btn.hasAttribute('aria-label') && /Like|Love|讚|怒|いいね/.test(btn.getAttribute('aria-label'))) continue;
+                                            
+                                            const txt = btn.textContent.trim();
+                                            if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) {
+                                                if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
+                                                else if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
+                                            }
+                                        }
+                                    }
+
+                                    if (commentCount) stats.push(`💬 ${commentCount}`);
+                                    if (shareCount) stats.push(`↗️ ${shareCount}`);
+                                }
+                            }
+
+                            if (stats.length > 0) {
+                                infoLine += (infoLine ? ' • ' : '') + stats.join(' | ');
+                            }
+                        }
+                        
+                        if (infoLine) parts.push(infoLine);
+                    }
+
+                    if (parts.length > 0) parts.push(SECTION_SEPARATOR);
+
+                    // 3. Post Content (Topology Extraction)
+                    if (contentContainer) {
+                        let targetContainer = contentContainer;
+                        if (settings.copier_includeEmojis) {
+                            targetContainer = contentContainer.cloneNode(true);
+                            const images = targetContainer.querySelectorAll('img[src*="emoji"][alt], img[alt]');
+                            images.forEach(img => {
+                                const src = img.getAttribute('src') || '';
+                                const alt = img.getAttribute('alt');
+                                if (alt && (src.includes('emoji') || img.className.includes('emoji') || src.includes('fbcdn.net'))) {
+                                    img.replaceWith(document.createTextNode(alt));
+                                }
+                            });
+                        }
+                        const bodyText = this.extractTextByTopology(targetContainer);
+                        if (bodyText) parts.push(bodyText);
+                    } else {
+                        parts.push('[No Text Content]');
+                    }
+
+                    // --- 4. Link Preview ---
+                    if (settings.copy_includeMetadata && settings.copy_meta_link_preview) {
+                        const previewLinks = Array.from(postEl.querySelectorAll('a[role="link"][target="_blank"]'));
+                        const previewLink = previewLinks.find(a => 
+                            a.querySelector('[data-ad-rendering-role="title"]') && 
+                            !a.closest(C_TOOLS.CONTENT_BODY)
+                        );
+
+                        if (previewLink) {
+                            parts.push(SECTION_SEPARATOR); // Use dynamic separator
+                            const title = previewLink.querySelector('[data-ad-rendering-role="title"]')?.textContent.trim();
+                            const meta = previewLink.querySelector('[data-ad-rendering-role="meta"]')?.textContent.trim();
+                            const desc = previewLink.querySelector('[data-ad-rendering-role="description"]')?.textContent.trim();
+                            const href = previewLink.href;
+
+                            if (title) parts.push(`➤ ${T.preview_label_title}: ${title}`);
+                            if (meta) parts.push(`➤ ${T.preview_label_source}: ${meta}`);
+                            if (desc) parts.push(`➤ ${T.preview_label_desc}: ${desc}`);
+                            
+                            let cleanHref = href;
+                            try {
+                                const urlObj = new URL(href);
+                                if (urlObj.hostname.includes('facebook.com') && urlObj.searchParams.has('u')) {
+                                    cleanHref = decodeURIComponent(urlObj.searchParams.get('u'));
+                                }
+                            } catch(e) {}
+                            parts.push(`➤ ${T.preview_label_link}: ${cleanHref}`);
+                        }
+                    }
+
+                    return parts.join('\n');
+                },
+
                 extractTextByTopology(container) {
                     const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
-                    const rawBlocks = container.querySelectorAll(C_TOOLS.TEXT_BLOCKS);
                     
-                    // Filter: Only leaf nodes (most nested div[dir="auto"])
+                    // Feature Detection: Background Image Post
+                    // Detect specific style pattern: background-image present + centered text usually
+                    const hasBgImage = container.querySelector('div[style*="background-image"]');
+                    
+                    if (hasBgImage) {
+                        // Strategy: Get all potential text blocks, then deduplicate content.
+                        // Background posts often render text twice: once for visual, once for a11y (aria-hidden).
+                        // We cannot rely on 'x6s0dn4' class, so we use content equality check.
+                        
+                        const candidates = Array.from(container.querySelectorAll('div[dir="auto"], div[style*="text-align: center"]'));
+                        // Filter for leaf-ish nodes that actually contain text
+                        const textBlocks = candidates.filter(el => {
+                            // Must have text
+                            if (!el.innerText.trim()) return false;
+                            // Must not contain other block candidates (ensure it's a leaf node)
+                            return !el.querySelector('div[dir="auto"]');
+                        });
+
+                        const uniqueText = [];
+                        const seenContent = new Set();
+
+                        for (const block of textBlocks) {
+                            const text = block.innerText.trim();
+                            if (!text) continue;
+                            if (seenContent.has(text)) continue; // Skip duplicates
+                            
+                            seenContent.add(text);
+                            uniqueText.push(text);
+                        }
+
+                        if (uniqueText.length > 0) {
+                            return uniqueText.join('\n');
+                        }
+                        
+                        // Fallback
+                        return container.innerText.trim();
+                    }
+
+                    // Standard Topology Extraction (for normal posts)
+                    const rawBlocks = container.querySelectorAll(C_TOOLS.TEXT_BLOCKS);
                     const leafBlocks = Array.from(rawBlocks).filter(el => {
                         return el.querySelectorAll(C_TOOLS.TEXT_BLOCKS).length === 0 && el.innerText.trim().length > 0;
                     });
@@ -2792,9 +3237,6 @@
                         const currBlock = leafBlocks[i];
                         const currText = currBlock.innerText.trim();
                         
-                        // Core Logic: 
-                        // Same parent = compact list = \n
-                        // Different parent = paragraph separation = \n\n
                         const isSibling = currBlock.parentElement === prevBlock.parentElement;
                         const separator = isSibling ? '\n' : '\n\n';
                         
@@ -2809,10 +3251,6 @@
                     const settings = this.app.state.settings;
                     const iconWrapper = button.querySelector('.gm-icon-wrapper');
                     if (iconWrapper) iconWrapper.innerHTML = status === 'success' ? this.icons.success : this.icons.failure;
-
-                    if (settings.copier_showButtonText && button.dataset.action === 'permalink') {
-                        button.querySelector('span:last-child').textContent = status === 'success' ? T.copier_successPermalink : T.copier_failure;
-                    }
                     
                     button.style.backgroundColor = status === 'success' ? 'var(--positive-background)' : 'var(--negative-background)';
                     await this.app.utils.delay(1200);
@@ -2893,28 +3331,27 @@
                     const wrapper = this.app.utils.createStyledElement('div', { display: 'flex', alignItems: 'center' }, { className: 'gm-tools-wrapper' });
                     if (isDialog) wrapper.style.marginRight = '16px';
 
-                    // 1. Copy Content Button (Left)
+                    // 1. Copy Content Button (Left) - Now Smart
                     if (settings.enableCopyContentButton) {
                         const copyBtn = this.createButton('copy-content', this.icons.copy, this.app.state.T.copier_copyContent);
                         wrapper.appendChild(copyBtn);
                     }
 
-                    // 2. Permalink Button (Right)
+                    // 2. Permalink Button (Right) - Icon Only
                     if (settings.permalinkCopierEnabled) {
                         const contentType = this.determinePostContentType(postEl);
                         const isSmart = settings.copier_useSmartLink && contentType === 'standard';
                         const icon = isSmart ? this.icons.smart : this.icons.direct;
                         const title = isSmart ? this.app.state.T.copier_fetchPermalinkSmart : this.app.state.T.copier_fetchPermalinkDirect;
-                        const permalinkBtn = this.createButton('permalink', icon, title, settings.copier_showButtonText);
+                        const permalinkBtn = this.createButton('permalink', icon, title);
                         wrapper.appendChild(permalinkBtn);
                     }
 
                     insertionPoint.appendChild(wrapper);
                 },
-                createButton(action, svgIcon, title, showText = false) {
+                createButton(action, svgIcon, title) {
                     const C = this.app.config.SELECTORS.POST_TOOLS;
                     
-                    // Direct binding to avoid propagation issues
                     const clickHandler = (e) => {
                         if (action === 'permalink') {
                             this.handlePermalinkClick(e, e.currentTarget);
@@ -2927,19 +3364,14 @@
                         cursor: 'pointer', backgroundColor: 'transparent', color: 'var(--secondary-text)',
                         lineHeight: '1', marginLeft: '8px', border: '1px solid var(--media-inner-border)',
                         transition: 'all 0.15s ease-out', userSelect: 'none',
-                        ...(showText 
-                            ? { padding: '4px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center' } 
-                            : { width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }
-                        )
+                        width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }, {
                         className: C.BUTTON_CLASS,
                         role: 'button',
                         tabIndex: 0,
                         title: title,
                         'data-action': action,
-                        innerHTML: showText
-                            ? `<span class="gm-icon-wrapper">${svgIcon}</span><span style="margin-left: 5px; font-weight: 500; font-size: 13px;">${title}</span>`
-                            : `<span class="gm-icon-wrapper">${svgIcon}</span>`,
+                        innerHTML: `<span class="gm-icon-wrapper">${svgIcon}</span>`,
                         on: {
                             click: clickHandler,
                             mouseover: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'var(--hover-overlay)'; },
@@ -3130,7 +3562,6 @@
                             if (moduleName === 'transparencyActions' && !this.state.settings.transparencyButtonsEnabled) continue;
                             if (moduleName === 'idRevealer' && !this.state.settings.idRevealerEnabled) continue;
                             if (moduleName === 'contentExpander' && !this.state.settings.expandContentEnabled) continue;
-                            // postHeaderTools handles its own checks inside
                             module.init(this);
                         } catch (error) {
                             console.error(`${this.config.LOG_PREFIX} Failed to initialize module '${moduleName}':`, error);

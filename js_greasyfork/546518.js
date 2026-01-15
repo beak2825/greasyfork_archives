@@ -1,30 +1,33 @@
 // ==UserScript==
 // @name         F95Zone Ultimate Enhancer
-// @version      4.2.0
-// @icon         https://external-content.duckduckgo.com/iu/?u=https://f95zone.to/data/avatars/l/1963/1963870.jpg?1744969685
-// @namespace    https://f95zone.to/threads/f95zone-latest.250836/
-// @homepage     https://f95zone.to/threads/f95zone-latest.250836/
-// @homepageURL  https://f95zone.to/threads/f95zone-latest.250836/
-// @supportURL   https://f95zone.to/threads/forum-latest.250836/
-// @author       X Death (creator and maintainer)
-// @author       Edexal (enhancements)
-// @match        https://f95zone.to/sam/latest_alpha/*
-// @match        https://f95zone.to/threads/*
-// @match        https://f95zone.to/masked/*
+// @version      4.3.23
+// @description  All-in-one F95Zone beast: thread highlighting, custom tags & colors, wide layout, auto-refresh latest, masked-link bypass, image fix, notifs & more
+// @author       X Death
+// @contributor  Edexal (GM storage, change listener & summarize UI element)
+// @match        *://f95zone.to/*
+// @match        *://buzzheavier.com/*
+// @match        *://trashbytes.net/dl/*
+// @match        *://gofile.io/d/*
+// @icon         https://f95zone.to/data/avatars/l/1963/1963870.jpg
 // @grant        GM.setValue
-// @grant        GM.getValues
+// @grant        GM.getValue
+// @grant        GM_openInTab
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
+// @grant        GM_xmlhttpRequest
+// @grant        unsafeWindow
 // @run-at       document-idle
 // @license      GPL-3.0-or-later
-// @description  All-in-one powerhouse for F95Zone: Advanced thread highlighting & overlays, customizable tags/colors, wide layouts, auto latest refresh + notifications, seamless masked link skipping (direct on-click zap to hosts), image retry fixes, and more!
+// @homepageURL  https://f95zone.to/threads/f95zone-latest.250836/
+// @supportURL   https://f95zone.to/threads/f95zone-latest.250836/
+// @source       https://github.com/Zenix-Al/f95-zone-highlighter
+// @namespace https://f95zone.to/threads/f95zone-latest.250836/
 // @downloadURL https://update.greasyfork.org/scripts/546518/F95Zone%20Ultimate%20Enhancer.user.js
 // @updateURL https://update.greasyfork.org/scripts/546518/F95Zone%20Ultimate%20Enhancer.meta.js
 // ==/UserScript==
 // ------------------------------------------------------------
-// Built on 2026-01-07 11:21:35 UTC — AUTO-GENERATED, edit from /src and rebuild
+// Built on 2026-01-14 14:20:49 UTC — AUTO-GENERATED, edit from /src and rebuild
 // ------------------------------------------------------------
-
 (() => {
   // src/constants.js
   var debug = false;
@@ -37,12 +40,17 @@
     threadSettingsRendered: false,
     isThread: false,
     isLatest: false,
+    isDownloadPage: false,
+    isDirectDownloadPage: false,
     isImgRetryInjected: false,
+    isF95Zone: false,
     firstLoad: true,
     isMaskedLink: false,
     isMaskedLinkApplied: false,
     isProcessingTiles: false,
-    isCrossTabSyncInitialized: false
+    isCrossTabSyncInitialized: false,
+    isDirectDownloadHijackApplied: false,
+    isDirectDownloadmsgHandlerApplied: false
   };
   var defaultColors = {
     completed: "#388e3c",
@@ -79,7 +87,8 @@
     imgRetry: false,
     skipMaskedLink: true,
     collapseSignature: false,
-    threadOverlayToggle: true
+    threadOverlayToggle: true,
+    directDownloadLinks: true
   };
   var defaultLatestSettings = {
     autoRefresh: false,
@@ -87,18 +96,7 @@
     minVersion: 0.5,
     wideLatest: false,
     denseLatestGrid: false,
-    latestOverlayToggle: true,
-    // ── new horny addition ──
-    goldenFreshGlow: true,
-    // main toggle
-    goldenMaxViews: 5e3,
-    // threshold
-    goldenMaxAgeMinutes: 60,
-    // strict <1h or relax to 120/180 later
-    goldenMaxBleedPx: 6,
-    // keep it tight
-    goldenMinOpacity: 0.15
-    // so it never fully disappears
+    latestOverlayToggle: true
   };
   var metrics = {
     retried: 0,
@@ -111,6 +109,7 @@
   };
   var defaultGlobalSettings = {
     configVisibility: true,
+    closeNotifOnClick: true,
     enableCrossTabSync: false
   };
   var config = {
@@ -124,7 +123,9 @@
     configVisibility: true,
     minVersion: 0.5,
     latestSettings: [],
-    metrics
+    metrics,
+    savedNotifID: null,
+    processingDownload: false
   };
   var STATUS = Object.freeze({
     PREFERRED: "preferred",
@@ -139,19 +140,120 @@
     threadSettings: true,
     latestSettings: true
   };
+  var supportedHosts = [
+    "buzzheavier.com",
+    //"pixeldrain.com", // disabled because not working
+    "gofile.io"
+    //'mega.nz',
+    //'anonfiles.com',
+  ];
+  var typeDownload = [
+    {
+      id: "buzzheavier.com",
+      type: "iframe"
+    },
+    {
+      id: "gofile.io",
+      type: "normal"
+    }
+  ];
+  var supportedDirectDownload = [
+    {
+      id: "buzzheavier.com",
+      host: "trashbytes.net",
+      pathStartsWith: "/dl/",
+      btn: 'a[hx-get*="/download"]',
+      directDownloadLink: /https:\/\/trashbytes\.net\/dl\/[\w-]+(?:\?.+)?/
+    },
+    {
+      id: "gofile.io",
+      host: "gofile.io"
+    }
+    // disabled because not working
+    //{
+    //  id: "pixeldrain.com",
+    //  host: "pixeldrain.com",
+    //  pathStartsWith: "/f/",
+    //  btn: 'a[href*="/d/"]',
+    //  directDownloadLink: /https:\/\/pixeldrain\.com\/d\/[\w-]+(?:\?.+)?/,
+    //},
+    //other hosts can be added here
+  ];
+  var cache = /* @__PURE__ */ new Map();
+  var colorState = {
+    PENDING: { color: "#FFA500" },
+    SUCCESS: { color: "#4CAF50" },
+    FAILED: { color: "#F44336" }
+  };
+  var timeoutMS = 8e3;
+  var helpMessages = [
+    "type /help if you're lost, or just moan really loud",
+    "pro tip: don't nut before reading this",
+    "i like futa. there, i said it. your turn",
+    "this script runs on pure hornyposting energy",
+    "close this modal or i'm gonna start describing my strap game",
+    "404: chill not found",
+    "if you're reading this you're already too deep",
+    "send feet pics to continue",
+    "bro just edge to the config screen like a normal person",
+    "my safe word is 'more'",
+    "tag your mom in the next notification",
+    "error 69: too much horni detected",
+    "i'm not saying step on me but\u2026 step on me",
+    "this message will self-destruct after you cum",
+    "futa supremacy 2026",
+    "why are you still reading? go touch grass\u2026 or yourself",
+    "config so clean it deserves to get railed",
+    "what's that boring vanilla tags?",
+    "you need more futa in your life",
+    "if you can read this, you're not horny enough",
+    "stay hydrated, stay horny",
+    //actual helpful one
+    "hover over options text to see detailed settings",
+    "overlay colors can be customized in the color settings section",
+    "direct download links are available in thread view for supported hosts",
+    "not all links are masked",
+    "enable cross-tab sync to keep settings consistent across tabs(experimental)",
+    "auto-refresh in latest view is just clicking the website own feature",
+    "latest notification require auto-refresh enabled",
+    "you can add tags to preferred/excluded as much as you want"
+  ];
+
+  // src/utils/debugOutput.js
+  function debugLog(feature, msg, obj = {}) {
+    if (!debug) return;
+    console.groupCollapsed(`[${feature}] ${msg}`);
+    console.log(msg);
+    if (Object.keys(obj).length > 0) {
+      console.log(obj);
+    }
+    console.groupEnd();
+  }
 
   // src/storage/save.js
-  async function saveConfigKeys(data) {
-    const promises = Object.entries(data).map(([key, value]) => GM.setValue(key, value));
+  async function saveConfigKeys(updates, replace = false) {
+    const promises = [];
+    for (const [key, value] of Object.entries(updates)) {
+      if (replace) {
+        promises.push(GM.setValue(key, value));
+      } else if (Array.isArray(value)) {
+        let current = await GM.getValue(key, []) || [];
+        const toAdd = Array.isArray(value) ? value : [value];
+        const newList = [...current, ...toAdd.filter((x) => !current.includes(x))];
+        promises.push(GM.setValue(key, newList));
+      } else {
+        promises.push(GM.setValue(key, value));
+      }
+    }
     await Promise.all(promises);
-    if (debug) console.log("Config saved (keys)", data);
+    debugLog("saveConfigKeys", `Config updated: ${JSON.stringify(updates)}`);
   }
   async function loadData() {
     let parsed = {};
     try {
       parsed = await GM.getValues(Object.keys(config)) ?? {};
     } catch (e) {
-      debug && console.warn("loadData error:", e);
+      debugLog("loadData", `Error loading data: ${e}`);
       parsed = {};
     }
     const mergeWithDefault = (saved, defaultObj) => {
@@ -181,12 +283,14 @@
           minVersion: parsed.minVersion
         }
       },
-      metrics: mergeWithDefault(parsed.metrics, metrics)
+      metrics: mergeWithDefault(parsed.metrics, metrics),
+      savedNotifID: parsed.savedNotifID || null,
+      processingDownload: parsed.processingDownload || false
     };
     if (!result.latestSettings.minVersion && result.latestSettings.minVersion !== 0) {
       result.latestSettings.minVersion = 0.5;
     }
-    debug && console.log("loadData result:", result);
+    debugLog("loadData", `loadData result:`, result);
     return result;
   }
 
@@ -220,15 +324,15 @@
     });
     if (migrated || needsSave) {
       saveConfigKeys({ latestSettings: config.latestSettings });
-      debug && console.log("Latest settings migrated successfully");
+      debugLog("migrateLatestSettings", "Latest settings migrated successfully");
     }
   }
 
   // src/template/ui.html?raw
-  var ui_default = '<div id="toast-container"></div>\r\n\r\n<div class="modal-content">\r\n  <h2 style="text-align: center">CONFIG</h2>\r\n\r\n  <!-- General -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>General</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="global-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- Latest page settings -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Latest page settings</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="latest-settings-warning"></div>\r\n        <div id="latest-settings-container"></div>\r\n        <div id="overlay-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- Thread settings -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Thread settings</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="thread-settings-container"></div>\r\n        <div id="thread-overlay-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- TAGS -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Tags</summary>\r\n\r\n      <div class="settings-wrapper">\r\n        <div id="tag-error-notif" class="modal-error-notif"></div>\r\n        <div id="tags-container">\r\n          <div id="search-container">\r\n            <input type="text" id="tags-search" placeholder="Search tags..." autocomplete="off" />\r\n            <ul id="search-results"></ul>\r\n            <div id="preffered-tags-list"></div>\r\n            <div id="excluded-tags-list"></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- COLORS -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Color</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="color-error-notif" class="modal-error-notif"></div>\r\n\r\n        <div id="color-container"></div>\r\n      </div>\r\n      <div class="centered-item">\r\n        <button id="reset-color" class="modal-btn">Reset color</button>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n\r\n  <!-- Close -->\r\n  <div class="centered-item">\r\n    <button id="close-modal" class="modal-btn">\u{1F5D9} Close</button>\r\n  </div>\r\n</div>\r\n';
+  var ui_default = '<div class="modal-content">\r\n  <h2 style="text-align: center">CONFIG</h2>\r\n\r\n  <!-- General -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>General</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="global-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- Latest page settings -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Latest page settings</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="latest-settings-warning"></div>\r\n        <div id="latest-settings-container"></div>\r\n        <div id="overlay-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- Thread settings -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Thread settings</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="thread-settings-container"></div>\r\n        <div id="thread-overlay-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- TAGS -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Tags</summary>\r\n\r\n      <div class="settings-wrapper">\r\n        <div id="tag-error-notif" class="modal-error-notif"></div>\r\n        <div id="tags-container">\r\n          <div id="search-container">\r\n            <input type="text" id="tags-search" placeholder="Search tags..." autocomplete="off" />\r\n            <ul id="search-results"></ul>\r\n            <div id="preffered-tags-list"></div>\r\n            <div id="excluded-tags-list"></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- COLORS -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Color</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="color-error-notif" class="modal-error-notif"></div>\r\n\r\n        <div id="color-container"></div>\r\n      </div>\r\n      <div class="centered-item">\r\n        <button id="reset-color" class="modal-btn">Reset color</button>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <div class="modal-footer-hint">\r\n    <span class="hint-text">Hover over options text to see detailed settings</span>\r\n  </div>\r\n  <!-- Close -->\r\n  <div class="centered-item">\r\n    <button id="close-modal" class="modal-btn">\u{1F5D9} Close</button>\r\n  </div>\r\n</div>\r\n';
 
   // src/template/css.css?raw
-  var css_default = ':root {\r\n  --completed-color: #388e3c;\r\n  --onhold-color: #1976d2;\r\n  --abandoned-color: #c9a300;\r\n  --highVersion-color: #2e7d32;\r\n  --invalidVersion-color: #a38400;\r\n  --tileInfo-color: #9398a0;\r\n  --tileHeader-color: #d9d9d9;\r\n  --preferred-color: #7b1fa2;\r\n  --preferred-text-color: #ffffff;\r\n  --excluded-color: #b71c1c;\r\n  --excluded-text-color: #ffffff;\r\n  --neutral-color: #37383a;\r\n  --neutral-text-color: #9398a0;\r\n\r\n  \r\n  --preferred-shadow: 0 0 2px 1px white;\r\n  --excluded-shadow: 0 0 2px 1px white;\r\n}\r\n.modal-error-notif {\r\n  display: none; \r\n  background-color: #ffe5e5; \r\n  color: #b00020; \r\n  border: 1px solid #b00020;\r\n  padding: 12px 16px;\r\n  border-radius: 6px;\r\n  margin-bottom: 12px;\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n.preferred {\r\n  background-color: var(--preferred-color);\r\n  font-weight: bold;\r\n  color: var(--preferred-text-color);\r\n}\r\n.preffered-shadow {\r\n  box-shadow: var(--preferred-shadow);\r\n}\r\n.excluded {\r\n  background-color: var(--excluded-color);\r\n  font-weight: bold;\r\n  color: var(--excluded-text-color);\r\n}\r\n.excluded-shadow {\r\n  box-shadow: var(--excluded-shadow);\r\n}\r\n.neutral {\r\n  background-color: var(--neutral-color);\r\n  font-weight: bold;\r\n  color: var(--neutral-text-color);\r\n}\r\n.custom-overlay-reason {\r\n  position: absolute;\r\n  top: 4px;\r\n  left: 4px;\r\n  background: rgba(0, 0, 0, 0.7);\r\n  color: white;\r\n  padding: 2px 6px;\r\n  font-size: 12px;\r\n  border-radius: 4px;\r\n  z-index: 2;\r\n  pointer-events: none;\r\n}\r\n.centered-item {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  padding: 10px;\r\n}\r\n.settings-wrapper {\r\n  padding: 10px;\r\n  color: #ccc;\r\n  font-size: 14px;\r\n  line-height: 1.6;\r\n}\r\ndiv#latest-page_items-wrap_inner\r\n  div.resource-tile\r\n  a.resource-tile_link\r\n  div.resource-tile_info\r\n  div.resource-tile_info-meta {\r\n  color: var(--tileInfo-color);\r\n  font-weight: 600;\r\n}\r\n\r\ndiv#latest-page_items-wrap_inner div.resource-tile a.resource-tile_link {\r\n  color: var(--tileHeader-color);\r\n}\r\n.tag-btn {\r\n  border: none;\r\n  padding: 5px;\r\n  margin: 0 2px;\r\n  cursor: pointer;\r\n  font-size: 14px;\r\n  color: white;\r\n  font-weight: bold;\r\n  transition: background-color 0.2s ease;\r\n}\r\n\r\n.tag-btn.excluded {\r\n  background-color: var(--excluded-color);\r\n  color: var(--excludedText-color);\r\n}\r\n\r\n.tag-btn.preferred {\r\n  background-color: var(--preferred-color);\r\n  color: var(--preferredText-color);\r\n}\r\n\r\n.tag-btn:hover {\r\n  filter: brightness(1.1);\r\n}\r\n#toast-container {\r\n  position: fixed;\r\n  top: 20px;\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  z-index: 10000; \r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  pointer-events: none;\r\n}\r\n\r\n.toast {\r\n  padding: 10px;\r\n  background-color: #333;\r\n  color: #fff;\r\n  border-radius: 8px;\r\n  opacity: 0;\r\n  transform: translateY(-10px);\r\n  transition:\r\n    opacity 0.3s ease,\r\n    transform 0.3s ease;\r\n}\r\n\r\n.toast.show {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n}\r\n\r\n#tag-config-modal {\r\n  display: none;\r\n  position: fixed;\r\n  z-index: 9999;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n#preffered-tags-list {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 6px;\r\n  margin-top: 8px;\r\n}\r\n\r\n\r\n.preferred-tag-item {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  background-color: var(--preferred-color);\r\n  color: var(--preferredText-color);\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n}\r\n\r\n.preferred-tag-item span {\r\n  margin-right: 6px;\r\n  margin-left: 6px;\r\n}\r\n\r\n.preferred-tag-remove {\r\n  background-color: #c15858;\r\n  color: #fff;\r\n  border: none;\r\n  border-top-right-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  font-weight: bold;\r\n  font-size: 12px;\r\n}\r\n\r\n\r\n.tag-actions {\r\n  display: flex;\r\n  gap: 5px;\r\n}\r\n#excluded-tags-list {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 6px;\r\n  margin-top: 8px;\r\n}\r\n#search-container {\r\n  position: relative;\r\n  display: inline-block;\r\n  min-height: 250px;\r\n  width: 100%;\r\n}\r\n\r\n.excluded-tag-item {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  background-color: var(--excluded-color);\r\n  color: var(--excludedText-color);\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n}\r\n\r\n.excluded-tag-item span {\r\n  margin-right: 6px;\r\n}\r\n\r\n.excluded-tag-remove {\r\n  background-color: #c15858;\r\n  color: #fff;\r\n  border: none;\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  border-top-right-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n  font-size: 12px;\r\n  font-weight: bold;\r\n}\r\n\r\n\r\n#search-results li {\r\n  padding: 6px 8px;\r\n  cursor: pointer;\r\n  color: #fff;\r\n  background-color: #222;\r\n\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n}\r\n\r\n#search-results li:hover {\r\n  background-color: #333; \r\n}\r\n#tags-search {\r\n  background-color: #222;\r\n  color: #fff;\r\n  border: 1px solid #555;\r\n  border-radius: 4px;\r\n  padding: 6px 8px;\r\n  width: 100%;\r\n}\r\n\r\n#tags-search:focus {\r\n  outline: none;\r\n  border: 1px solid #c15858;\r\n}\r\n#search-results {\r\n  position: absolute;\r\n  left: 0;\r\n  right: 0;\r\n  max-height: 200px;\r\n  overflow-y: auto;\r\n  background-color: #222; \r\n  border: 1px solid #555; \r\n  border-radius: 4px;\r\n  margin: 2px 0 0 0; \r\n  padding: 0;\r\n  list-style: none;\r\n  display: none;\r\n  z-index: 1000;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); \r\n}\r\n\r\n#tag-config-modal input,\r\n#tag-config-modal textarea,\r\n#tag-config-modal select {\r\n  background-color: #222;\r\n  color: #fff;\r\n  border: 1px solid #555;\r\n  border-radius: 4px;\r\n}\r\n#tag-config-modal input:focus,\r\n#tag-config-modal textarea:focus,\r\n#tag-config-modal select:focus {\r\n  outline: none;\r\n  border: 1px solid #c15858;\r\n}\r\n\r\n\r\n#tag-config-modal input[type="checkbox"],\r\n#tag-config-modal input[type="radio"] {\r\n  accent-color: #c15858;\r\n  background-color: #222;\r\n  border: 1px solid #555;\r\n}\r\n#tag-config-modal .config-color-input {\r\n  border: 2px solid #3f4043;\r\n  border-radius: 5px;\r\n  padding: 2px;\r\n  width: 40px;\r\n  height: 28px;\r\n  cursor: pointer;\r\n  background-color: #181a1d;\r\n}\r\n\r\n#tag-config-modal .config-color-input::-webkit-color-swatch-wrapper {\r\n  padding: 0;\r\n}\r\n\r\n#tag-config-modal .config-color-input::-webkit-color-swatch {\r\n  border-radius: 4px;\r\n  border: none;\r\n}\r\n\r\n.modal-btn {\r\n  background-color: #893839;\r\n  color: white;\r\n  border: 2px solid #893839;\r\n  border-radius: 6px;\r\n  padding: 8px 16px;\r\n  font-weight: 600;\r\n  font-size: 14px;\r\n  cursor: pointer;\r\n  transition:\r\n    background-color 0.3s ease,\r\n    border-color 0.3s ease;\r\n  box-shadow: 0 4px 8px rgba(137, 56, 56, 0.5);\r\n}\r\n\r\n.modal-btn:hover {\r\n  background-color: #b94f4f;\r\n  border-color: #b94f4f;\r\n}\r\n\r\n.modal-btn:active {\r\n  background-color: #6e2b2b;\r\n  border-color: #6e2b2b;\r\n  box-shadow: none;\r\n}\r\n.config-row {\r\n  display: flex;\r\n  align-items: center; \r\n  gap: 12px;\r\n  margin: 8px 0;\r\n  line-height: 1.4;\r\n  user-select: none;\r\n}\r\n\r\n\r\n.config-row label {\r\n  flex: 0 0 180px; \r\n  text-align: left;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  white-space: nowrap; \r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n\r\n.config-row input[type="checkbox"] {\r\n  flex-shrink: 0;\r\n  width: 18px;\r\n  height: 18px;\r\n  margin: 0;\r\n  cursor: pointer;\r\n  accent-color: #6e42d6; \r\n}\r\n\r\n.config-row:hover {\r\n  background: rgba(110, 66, 214, 0.05);\r\n}\r\n\r\n#tag-config-button {\r\n  position: fixed;\r\n  bottom: 20px;\r\n  right: 20px;\r\n  left: 20px;\r\n  padding: 8px 12px;\r\n  font-size: 20px;\r\n  z-index: 7;\r\n  cursor: pointer;\r\n  border: 2px inset #461616;\r\n  background: #cc3131;\r\n  color: white;\r\n  border-radius: 8px;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\r\n  max-width: 70px;\r\n  width: auto;\r\n  opacity: 0.75;\r\n  transition:\r\n    opacity 1s ease,\r\n    transform 0.5s ease;\r\n}\r\n\r\n#tag-config-button:hover {\r\n  opacity: 1;\r\n}\r\n\r\n#tag-config-button:active {\r\n  transform: scale(0.9);\r\n}\r\n\r\n\r\n#tag-config-button.hidden {\r\n  opacity: 0;\r\n  pointer-events: auto; \r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n#tag-config-button.hidden:hover {\r\n  opacity: 0.75; \r\n}\r\n\r\n\r\n.blink-hide {\r\n  animation: blink-hidden 0.4s ease-in-out 3;\r\n}\r\n\r\n#tag-config-modal .modal-content {\r\n  background: black;\r\n  border-radius: 10px;\r\n  min-width: 300px;\r\n  max-height: 80vh;\r\n  overflow-y: scroll; \r\n  background: #191b1e;\r\n  max-width: 400px;\r\n  margin: 100px auto;\r\n}\r\n\r\n#tag-config-modal.show {\r\n  display: flex;\r\n}\r\n\r\n.config-list-details {\r\n  overflow: hidden;\r\n  transition:\r\n    border-width 1s,\r\n    max-height 1s ease;\r\n  max-height: 40px;\r\n}\r\n\r\n.config-list-details[open] {\r\n  border-width: 2px;\r\n  max-height: 1300px;\r\n}\r\n.thick-line {\r\n  border: none;\r\n  height: 1px;\r\n  background-color: #3f4043;\r\n}\r\n.config-list-details summary {\r\n  text-align: center;\r\n  background: #353535;\r\n  border-radius: 8px;\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n  cursor: pointer;\r\n}\r\n\r\n.config-tag-item {\r\n  margin-left: 5px;\r\n  cursor: pointer;\r\n}\r\n\r\n.modal-settings-spacing {\r\n  padding: 10px;\r\n}\r\n.no-max-width {\r\n  max-width: none !important; \r\n}\r\n.config-label:hover {\r\n  text-decoration: underline;\r\n  text-decoration-style: dotted;\r\n}\r\n\r\n\r\n.img-retry-toast {\r\n  position: fixed;\r\n  top: 20px;\r\n  right: 20px;\r\n  background: rgba(0, 0, 0, 0.85);\r\n  color: #fff;\r\n  padding: 10px 15px;\r\n  border-radius: 8px;\r\n  font-family: sans-serif;\r\n  font-size: 13px;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  z-index: 99999;\r\n  pointer-events: none;\r\n}\r\n\r\n\r\n.img-retry-toast .img-retry-spinner {\r\n  border: 2px solid #fff;\r\n  border-top: 2px solid transparent;\r\n  border-radius: 50%;\r\n  width: 14px;\r\n  height: 14px;\r\n  display: inline-block;\r\n  animation: img-retry-spin 1s linear infinite;\r\n}\r\n\r\n\r\n@keyframes img-retry-spin {\r\n  0% {\r\n    transform: rotate(0deg);\r\n  }\r\n  100% {\r\n    transform: rotate(360deg);\r\n  }\r\n}\r\n\r\n\r\n.img-retry-toast .img-retry-stats {\r\n  margin-left: 10px;\r\n  opacity: 0.8;\r\n}\r\n\r\nhtml.latest-wide .p-body-inner {\r\n  max-width: none !important;\r\n}\r\n\r\nhtml.latest-wide main#latest-page_main-wrap {\r\n  width: 100% !important;\r\n  max-width: none !important;\r\n}\r\n.hide-notices ul.notices.notices--block.js-notices {\r\n  display: none !important;\r\n}\r\n\r\n.header-scroll .uix_headerContainer {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n.header-scroll.header-hidden .uix_headerContainer {\r\n  transform: translateY(-100%);\r\n}\r\n\r\n\r\n.thread-scroll-hide .p-navSticky {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n\r\n.thread-scroll-hide .p-navSticky.is-sticky {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n.thread-scroll-hide.thread-header-hidden .p-navSticky.is-sticky {\r\n  transform: translateY(-100%);\r\n}\r\n\r\n.config-header {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  margin: 14px 0 10px;\r\n  padding: 6px 0;\r\n\r\n  font-size: 0.95em;\r\n  font-weight: 600;\r\n  text-align: center;\r\n\r\n  color: #b0b3b8; \r\n  letter-spacing: 0.04em;\r\n  text-transform: uppercase;\r\n\r\n  user-select: none;\r\n}\r\n\r\n\r\nhtml.latest-wide main#latest-page_main-wrap {\r\n  width: 100% !important;\r\n  max-width: none !important;\r\n}\r\n\r\n\r\nhtml.latest-dense .grid-normal {\r\n  grid-template-columns: repeat(\r\n    auto-fill,\r\n    minmax(260px, 1fr)\r\n  ) !important; \r\n  gap: 20px !important; \r\n}\r\n\r\n\r\nhtml.latest-dense .structItem.structItem--latest {\r\n  max-width: none !important;\r\n  width: 100% !important;\r\n}\r\n\r\n\r\nhtml.latest-dense .structItem-cell.structItem-cell--main {\r\n  padding: 12px !important; \r\n}\r\n\r\nhtml.latest-signature-collapsed aside.message-signature {\r\n  max-height: 0 !important;\r\n  overflow: hidden !important;\r\n\r\n  padding-top: 0 !important;\r\n  padding-bottom: 0 !important;\r\n  margin-top: 0 !important;\r\n  border-top: none !important;\r\n\r\n  opacity: 0;\r\n  transition:\r\n    max-height 0.25s ease,\r\n    opacity 0.2s ease;\r\n}\r\n\r\n\r\nhtml.latest-signature-collapsed aside.message-signature.latest-signature-expanded {\r\n  max-height: 300px !important;\r\n  overflow-y: auto !important;\r\n\r\n  padding-top: 10px !important;\r\n  padding-bottom: 10px !important;\r\n  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;\r\n\r\n  opacity: 1;\r\n}\r\n\r\n\r\n.latest-signature-toggle {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  width: 100%;\r\n  margin: 6px 0 12px;\r\n  padding: 6px 0;\r\n\r\n  border: none;\r\n  border-radius: 0;\r\n  background: transparent;\r\n\r\n  font-size: 1.2rem;\r\n  color: #ec5555;\r\n  cursor: pointer;\r\n\r\n  position: relative;\r\n}\r\n\r\n\r\n.latest-signature-toggle::before,\r\n.latest-signature-toggle::after {\r\n  content: "";\r\n  flex: 1;\r\n  height: 1px;\r\n  background: rgba(255, 255, 255, 0.12);\r\n  margin: 0 10px;\r\n}\r\n\r\n.latest-signature-toggle span {\r\n  white-space: nowrap;\r\n}\r\n\r\n\r\n@media (max-width: 480px) {\r\n  html.latest-signature-collapsed .latest-signature-toggle {\r\n    display: none;\r\n  }\r\n}\r\n@keyframes blink-hidden {\r\n  0% {\r\n    opacity: 1;\r\n  }\r\n  50% {\r\n    opacity: 0;\r\n  }\r\n  100% {\r\n    opacity: 1;\r\n  }\r\n}\r\n';
+  var css_default = ':root {\r\n  --completed-color: #388e3c;\r\n  --onhold-color: #1976d2;\r\n  --abandoned-color: #c9a300;\r\n  --highVersion-color: #2e7d32;\r\n  --invalidVersion-color: #a38400;\r\n  --tileInfo-color: #9398a0;\r\n  --tileHeader-color: #d9d9d9;\r\n  --preferred-color: #7b1fa2;\r\n  --preferred-text-color: #ffffff;\r\n  --excluded-color: #b71c1c;\r\n  --excluded-text-color: #ffffff;\r\n  --neutral-color: #37383a;\r\n  --neutral-text-color: #9398a0;\r\n\r\n  \r\n  --preferred-shadow: 0 0 2px 1px white;\r\n  --excluded-shadow: 0 0 2px 1px white;\r\n}\r\n.modal-error-notif {\r\n  display: none; \r\n  background-color: #ffe5e5; \r\n  color: #b00020; \r\n  border: 1px solid #b00020;\r\n  padding: 12px 16px;\r\n  border-radius: 6px;\r\n  margin-bottom: 12px;\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n.preferred {\r\n  background-color: var(--preferred-color);\r\n  font-weight: bold;\r\n  color: var(--preferred-text-color);\r\n}\r\n.preffered-shadow {\r\n  box-shadow: var(--preferred-shadow);\r\n}\r\n.excluded {\r\n  background-color: var(--excluded-color);\r\n  font-weight: bold;\r\n  color: var(--excluded-text-color);\r\n}\r\n.excluded-shadow {\r\n  box-shadow: var(--excluded-shadow);\r\n}\r\n.neutral {\r\n  background-color: var(--neutral-color);\r\n  font-weight: bold;\r\n  color: var(--neutral-text-color);\r\n}\r\n.custom-overlay-reason {\r\n  position: absolute;\r\n  top: 4px;\r\n  left: 4px;\r\n  background: rgba(0, 0, 0, 0.7);\r\n  color: white;\r\n  padding: 2px 6px;\r\n  font-size: 12px;\r\n  border-radius: 4px;\r\n  z-index: 2;\r\n  pointer-events: none;\r\n}\r\n.centered-item {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  padding: 10px;\r\n}\r\n.settings-wrapper {\r\n  padding: 10px;\r\n  color: #ccc;\r\n  font-size: 14px;\r\n  line-height: 1.6;\r\n}\r\ndiv#latest-page_items-wrap_inner\r\n  div.resource-tile\r\n  a.resource-tile_link\r\n  div.resource-tile_info\r\n  div.resource-tile_info-meta {\r\n  color: var(--tileInfo-color);\r\n  font-weight: 600;\r\n}\r\n\r\ndiv#latest-page_items-wrap_inner div.resource-tile a.resource-tile_link {\r\n  color: var(--tileHeader-color);\r\n}\r\n.tag-btn {\r\n  border: none;\r\n  padding: 5px;\r\n  margin: 0 2px;\r\n  cursor: pointer;\r\n  font-size: 14px;\r\n  color: white;\r\n  font-weight: bold;\r\n  transition: background-color 0.2s ease;\r\n}\r\n\r\n.tag-btn.excluded {\r\n  background-color: var(--excluded-color);\r\n  color: var(--excludedText-color);\r\n}\r\n\r\n.tag-btn.preferred {\r\n  background-color: var(--preferred-color);\r\n  color: var(--preferredText-color);\r\n}\r\n\r\n.tag-btn:hover {\r\n  filter: brightness(1.1);\r\n}\r\n#toast-container {\r\n  position: fixed;\r\n  top: 20px;\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  z-index: 10000; \r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  pointer-events: none;\r\n}\r\n\r\n.toast {\r\n  padding: 10px;\r\n  background-color: #333;\r\n  color: #fff;\r\n  border-radius: 8px;\r\n  opacity: 0;\r\n  transform: translateY(-10px);\r\n  transition:\r\n    opacity 0.3s ease,\r\n    transform 0.3s ease;\r\n}\r\n\r\n.toast.show {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n}\r\n\r\n#tag-config-modal {\r\n  display: none;\r\n  position: fixed;\r\n  z-index: 9999;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n#preffered-tags-list {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 6px;\r\n  margin-top: 8px;\r\n}\r\n\r\n\r\n.preferred-tag-item {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  background-color: var(--preferred-color);\r\n  color: var(--preferredText-color);\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n}\r\n\r\n.preferred-tag-item span {\r\n  margin-right: 6px;\r\n  margin-left: 6px;\r\n}\r\n\r\n.preferred-tag-remove {\r\n  background-color: #c15858;\r\n  color: #fff;\r\n  border: none;\r\n  border-top-right-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  font-weight: bold;\r\n  font-size: 12px;\r\n}\r\n\r\n\r\n.tag-actions {\r\n  display: flex;\r\n  gap: 5px;\r\n}\r\n#excluded-tags-list {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 6px;\r\n  margin-top: 8px;\r\n}\r\n#search-container {\r\n  position: relative;\r\n  display: inline-block;\r\n  min-height: 250px;\r\n  width: 100%;\r\n}\r\n\r\n.excluded-tag-item {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  background-color: var(--excluded-color);\r\n  color: var(--excludedText-color);\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n}\r\n\r\n.excluded-tag-item span {\r\n  margin-right: 6px;\r\n}\r\n\r\n.excluded-tag-remove {\r\n  background-color: #c15858;\r\n  color: #fff;\r\n  border: none;\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  border-top-right-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n  font-size: 12px;\r\n  font-weight: bold;\r\n}\r\n\r\n\r\n#search-results li {\r\n  padding: 6px 8px;\r\n  cursor: pointer;\r\n  color: #fff;\r\n  background-color: #222;\r\n\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n}\r\n\r\n#search-results li:hover {\r\n  background-color: #333; \r\n}\r\n#tags-search {\r\n  background-color: #222;\r\n  color: #fff;\r\n  border: 1px solid #555;\r\n  border-radius: 4px;\r\n  padding: 6px 8px;\r\n  width: 100%;\r\n}\r\n\r\n#tags-search:focus {\r\n  outline: none;\r\n  border: 1px solid #c15858;\r\n}\r\n#search-results {\r\n  position: absolute;\r\n  left: 0;\r\n  right: 0;\r\n  max-height: 200px;\r\n  overflow-y: auto;\r\n  background-color: #222; \r\n  border: 1px solid #555; \r\n  border-radius: 4px;\r\n  margin: 2px 0 0 0; \r\n  padding: 0;\r\n  list-style: none;\r\n  display: none;\r\n  z-index: 1000;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); \r\n}\r\n\r\n#tag-config-modal input,\r\n#tag-config-modal textarea,\r\n#tag-config-modal select {\r\n  background-color: #222;\r\n  color: #fff;\r\n  border: 1px solid #555;\r\n  border-radius: 4px;\r\n}\r\n#tag-config-modal input:focus,\r\n#tag-config-modal textarea:focus,\r\n#tag-config-modal select:focus {\r\n  outline: none;\r\n  border: 1px solid #c15858;\r\n}\r\n\r\n\r\n#tag-config-modal input[type="checkbox"],\r\n#tag-config-modal input[type="radio"] {\r\n  accent-color: #c15858;\r\n  background-color: #222;\r\n  border: 1px solid #555;\r\n}\r\n#tag-config-modal .config-color-input {\r\n  border: 2px solid #3f4043;\r\n  border-radius: 5px;\r\n  padding: 2px;\r\n  width: 40px;\r\n  height: 28px;\r\n  cursor: pointer;\r\n  background-color: #181a1d;\r\n}\r\n\r\n#tag-config-modal .config-color-input::-webkit-color-swatch-wrapper {\r\n  padding: 0;\r\n}\r\n\r\n#tag-config-modal .config-color-input::-webkit-color-swatch {\r\n  border-radius: 4px;\r\n  border: none;\r\n}\r\n\r\n.modal-btn {\r\n  background-color: #893839;\r\n  color: white;\r\n  border: 2px solid #893839;\r\n  border-radius: 6px;\r\n  padding: 8px 16px;\r\n  font-weight: 600;\r\n  font-size: 14px;\r\n  cursor: pointer;\r\n  transition:\r\n    background-color 0.3s ease,\r\n    border-color 0.3s ease;\r\n  box-shadow: 0 4px 8px rgba(137, 56, 56, 0.5);\r\n}\r\n\r\n.modal-btn:hover {\r\n  background-color: #b94f4f;\r\n  border-color: #b94f4f;\r\n}\r\n\r\n.modal-btn:active {\r\n  background-color: #6e2b2b;\r\n  border-color: #6e2b2b;\r\n  box-shadow: none;\r\n}\r\n.config-row {\r\n  display: flex;\r\n  align-items: center; \r\n  gap: 12px;\r\n  margin: 8px 0;\r\n  line-height: 1.4;\r\n  user-select: none;\r\n}\r\n\r\n\r\n.config-row label {\r\n  flex: 0 0 180px; \r\n  text-align: left;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  white-space: nowrap; \r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n\r\n.config-row input[type="checkbox"] {\r\n  flex-shrink: 0;\r\n  width: 18px;\r\n  height: 18px;\r\n  margin: 0;\r\n  cursor: pointer;\r\n  accent-color: #6e42d6; \r\n}\r\n\r\n.config-row:hover {\r\n  background: rgba(110, 66, 214, 0.05);\r\n}\r\n\r\n#tag-config-button {\r\n  position: fixed;\r\n  bottom: 20px;\r\n  right: 20px;\r\n  left: 20px;\r\n  padding: 8px 12px;\r\n  font-size: 20px;\r\n  z-index: 7;\r\n  cursor: pointer;\r\n  border: 2px inset #461616;\r\n  background: #cc3131;\r\n  color: white;\r\n  border-radius: 8px;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\r\n  max-width: 70px;\r\n  width: auto;\r\n  opacity: 0.75;\r\n  transition:\r\n    opacity 1s ease,\r\n    transform 0.5s ease;\r\n}\r\n\r\n#tag-config-button:hover {\r\n  opacity: 1;\r\n}\r\n\r\n#tag-config-button:active {\r\n  transform: scale(0.9);\r\n}\r\n\r\n\r\n#tag-config-button.hidden {\r\n  opacity: 0;\r\n  pointer-events: auto; \r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n#tag-config-button.hidden:hover {\r\n  opacity: 0.75; \r\n}\r\n\r\n\r\n.blink-hide {\r\n  animation: blink-hidden 0.4s ease-in-out 3;\r\n}\r\n\r\n#tag-config-modal .modal-content {\r\n  background: black;\r\n  border-radius: 10px;\r\n  min-width: 300px;\r\n  max-height: 80vh;\r\n  overflow-y: scroll; \r\n  background: #191b1e;\r\n  max-width: 400px;\r\n  margin: 100px auto;\r\n}\r\n\r\n#tag-config-modal.show {\r\n  display: flex;\r\n}\r\n\r\n.config-list-details {\r\n  overflow: hidden;\r\n  transition:\r\n    border-width 1s,\r\n    max-height 1s ease;\r\n  max-height: 40px;\r\n}\r\n\r\n.config-list-details[open] {\r\n  border-width: 2px;\r\n  max-height: 1300px;\r\n}\r\n.thick-line {\r\n  border: none;\r\n  height: 1px;\r\n  background-color: #3f4043;\r\n}\r\n.config-list-details summary {\r\n  text-align: center;\r\n  background: #353535;\r\n  border-radius: 8px;\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n  cursor: pointer;\r\n}\r\n\r\n.config-tag-item {\r\n  margin-left: 5px;\r\n  cursor: pointer;\r\n}\r\n\r\n.modal-settings-spacing {\r\n  padding: 10px;\r\n}\r\n.no-max-width {\r\n  max-width: none !important; \r\n}\r\n.config-label:hover {\r\n  text-decoration: underline;\r\n  text-decoration-style: dotted;\r\n}\r\n\r\n\r\n.img-retry-toast {\r\n  position: fixed;\r\n  top: 20px;\r\n  right: 20px;\r\n  background: rgba(0, 0, 0, 0.85);\r\n  color: #fff;\r\n  padding: 10px 15px;\r\n  border-radius: 8px;\r\n  font-family: sans-serif;\r\n  font-size: 13px;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  z-index: 99999;\r\n  pointer-events: none;\r\n}\r\n\r\n\r\n.img-retry-toast .img-retry-spinner {\r\n  border: 2px solid #fff;\r\n  border-top: 2px solid transparent;\r\n  border-radius: 50%;\r\n  width: 14px;\r\n  height: 14px;\r\n  display: inline-block;\r\n  animation: img-retry-spin 1s linear infinite;\r\n}\r\n\r\n\r\n@keyframes img-retry-spin {\r\n  0% {\r\n    transform: rotate(0deg);\r\n  }\r\n  100% {\r\n    transform: rotate(360deg);\r\n  }\r\n}\r\n\r\n\r\n.img-retry-toast .img-retry-stats {\r\n  margin-left: 10px;\r\n  opacity: 0.8;\r\n}\r\n\r\n\r\n.p-body-inner {\r\n  max-width: 1220px; \r\n  padding-left: 20px;\r\n  padding-right: 20px;\r\n  padding-bottom: 20px;\r\n  padding-top: 20px;\r\n  transition:\r\n    padding-left 0.5s ease,\r\n    padding-right 0.5s ease,\r\n    max-width 0.6s ease;\r\n}\r\n\r\nhtml.latest-wide .p-body-inner {\r\n  padding-left: 0;\r\n  padding-right: 0;\r\n  max-width: none;\r\n}\r\n\r\n\r\nmain#latest-page_main-wrap {\r\n  width: 100%;\r\n  max-width: 1400px;\r\n  margin: 0 auto;\r\n  \r\n  transition: max-width 0.7s ease-out;\r\n  will-change: max-width;\r\n}\r\n\r\nhtml.latest-wide main#latest-page_main-wrap {\r\n  \r\n  max-width: 1430px; \r\n}\r\n\r\n\r\n@media (prefers-reduced-motion: reduce) {\r\n  main#latest-page_main-wrap,\r\n  .p-body-pageContent,\r\n  .structItemContainer {\r\n    transition: none !important;\r\n  }\r\n}\r\n\r\n\r\n.p-body-pageContent,\r\n.structItemContainer {\r\n  \r\n  transition:\r\n    opacity 0.5s ease,\r\n    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);\r\n  opacity: 1;\r\n  transform: scale(1);\r\n}\r\n\r\nhtml.latest-wide .p-body-pageContent,\r\nhtml.latest-wide .structItemContainer {\r\n  \r\n  transform: scale(1.01); \r\n}\r\n\r\n\r\n.hide-notices ul.notices.notices--block.js-notices {\r\n  display: none !important;\r\n}\r\n\r\n\r\n\r\n@media (prefers-reduced-motion: reduce) {\r\n  ul.notices.notices--block.js-notices {\r\n    transition: none !important;\r\n  }\r\n}\r\n.header-scroll .uix_headerContainer {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n.header-scroll.header-hidden .uix_headerContainer {\r\n  transform: translateY(-100%);\r\n}\r\n\r\n\r\n.thread-scroll-hide .p-navSticky {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n\r\n.thread-scroll-hide .p-navSticky.is-sticky {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n.thread-scroll-hide.thread-header-hidden .p-navSticky.is-sticky {\r\n  transform: translateY(-100%);\r\n}\r\n\r\n.config-header {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  margin: 14px 0 10px;\r\n  padding: 6px 0;\r\n\r\n  font-size: 0.95em;\r\n  font-weight: 600;\r\n  text-align: center;\r\n\r\n  color: #b0b3b8; \r\n  letter-spacing: 0.04em;\r\n  text-transform: uppercase;\r\n\r\n  user-select: none;\r\n}\r\n\r\n\r\n.grid-normal {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr)); \r\n  gap: 20px; \r\n  \r\n  will-change: gap;\r\n  transition:\r\n    grid-template-columns 0.5s ease,\r\n    gap 0.5s ease;\r\n}\r\n\r\n\r\n.structItem.structItem--latest {\r\n  width: 100%;\r\n  max-width: 33.333%; \r\n  transition:\r\n    max-width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),\r\n     width 0.45s ease-out;\r\n  box-sizing: border-box;\r\n  \r\n  will-change: max-width;\r\n}\r\n\r\n\r\nhtml.latest-dense .structItem.structItem--latest {\r\n  max-width: 260px; \r\n}\r\n\r\n\r\nhtml.latest-dense .grid-normal {\r\n  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;\r\n  gap: 10px !important;\r\n}\r\n\r\n\r\nhtml.latest-dense .structItem.structItem--latest {\r\n  max-width: none !important; \r\n  width: 100% !important;\r\n}\r\n\r\n\r\nhtml.latest-dense .structItem-cell.structItem-cell--main {\r\n  padding: 12px !important;\r\n}\r\n\r\n\r\nhtml.latest-signature-collapsed aside.message-signature {\r\n  max-height: 0 !important;\r\n  overflow: hidden !important;\r\n\r\n  padding-top: 0 !important;\r\n  padding-bottom: 0 !important;\r\n  margin-top: 0 !important;\r\n  border-top: none !important;\r\n\r\n  opacity: 0;\r\n  transition:\r\n    max-height 0.25s ease,\r\n    opacity 0.2s ease;\r\n}\r\n\r\n\r\nhtml.latest-signature-collapsed aside.message-signature.latest-signature-expanded {\r\n  max-height: 300px !important;\r\n  overflow-y: auto !important;\r\n\r\n  padding-top: 10px !important;\r\n  padding-bottom: 10px !important;\r\n  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;\r\n\r\n  opacity: 1;\r\n}\r\n\r\n\r\n.latest-signature-toggle {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  width: 100%;\r\n  margin: 6px 0 12px;\r\n  padding: 6px 0;\r\n\r\n  border: none;\r\n  border-radius: 0;\r\n  background: transparent;\r\n\r\n  font-size: 1.2rem;\r\n  color: #ec5555;\r\n  cursor: pointer;\r\n\r\n  position: relative;\r\n}\r\n\r\n\r\n.latest-signature-toggle::before,\r\n.latest-signature-toggle::after {\r\n  content: "";\r\n  flex: 1;\r\n  height: 1px;\r\n  background: rgba(255, 255, 255, 0.12);\r\n  margin: 0 10px;\r\n}\r\n\r\n.latest-signature-toggle span {\r\n  white-space: nowrap;\r\n}\r\n\r\n\r\n@media (max-width: 480px) {\r\n  html.latest-signature-collapsed .latest-signature-toggle {\r\n    display: none;\r\n  }\r\n}\r\n@keyframes blink-hidden {\r\n  0% {\r\n    opacity: 1;\r\n  }\r\n  50% {\r\n    opacity: 0;\r\n  }\r\n  100% {\r\n    opacity: 1;\r\n  }\r\n}\r\n\r\n.js-notice {\r\n  position: relative; \r\n  padding-right: 36px; \r\n}\r\n\r\n.js-notice-dismiss-btn {\r\n  position: absolute;\r\n  top: 50%;\r\n  right: 8px; \r\n  transform: translateY(-50%); \r\n\r\n  width: 24px;\r\n  height: 24px;\r\n  border-radius: 50%;\r\n  background: #ec5555;\r\n  color: white;\r\n  font-size: 18px;\r\n  font-weight: bold;\r\n  line-height: 1;\r\n  text-align: center;\r\n  border: none;\r\n  cursor: pointer;\r\n\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  transition: all 0.2s ease;\r\n}\r\n\r\n.js-notice-dismiss-btn:hover {\r\n  background: #d43e3e; \r\n  transform: translateY(-50%) scale(1.1);\r\n}\r\n\r\n.js-notice-dismiss-btn:active {\r\n  transform: translateY(-50%) scale(0.95);\r\n}\r\n.modal-footer-hint {\r\n  position: absolute;\r\n  bottom: 12px; \r\n  left: 0;\r\n  right: 0;\r\n  text-align: center;\r\n  padding: 8px 16px;\r\n  font-size: 13px;\r\n  color: #ffffff;\r\n  opacity: 0.7;\r\n  pointer-events: none; \r\n  user-select: none;\r\n  transition: opacity 0.2s ease;\r\n}\r\n\r\n.modal-footer-hint:hover {\r\n  opacity: 1;\r\n  color: #ec5555; \r\n}\r\n\r\n.hint-text {\r\n  background: rgba(0, 0, 0, 0.4); \r\n  padding: 4px 12px;\r\n  border-radius: 12px;\r\n  backdrop-filter: blur(4px); \r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);\r\n}\r\n';
 
   // src/cores/safety.js
   function checkTags() {
@@ -271,6 +375,94 @@
     }
   }
 
+  // src/helper/download/autoRetryDownload.js
+  function autoRetryDownload(maxRetries = 99, host = "") {
+    let retries = 0;
+    let success = false;
+    const originalUrl = location.href;
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.tagName === "A" && (node.hasAttribute("download") || node.href?.startsWith("blob:") || node.href?.includes(".zip") || node.href?.includes(".rar"))) {
+            debugLog("autoRetryDownload", `Detected download link on attempt ${retries + 1}`);
+            success = true;
+            observer.disconnect();
+            return;
+          }
+          if (node.classList?.contains("progress") || node.textContent?.toLowerCase().includes("downloading")) {
+            debugLog("autoRetryDownload", `Detected progress UI on attempt ${retries + 1}`);
+            success = true;
+            observer.disconnect();
+            return;
+          }
+        }
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    const tryLoad = () => {
+      if (success || retries >= maxRetries) {
+        observer.disconnect();
+        if (success) debugLog("autoRetryDownload", `Download started after ${retries} retries`);
+        else debugLog("autoRetryDownload", `Gave up after ${maxRetries} retries`);
+        return;
+      }
+      retries++;
+      debugLog("autoRetryDownload", `Attempt ${retries}/${maxRetries} \u2014 ${originalUrl}`);
+      GM_xmlhttpRequest({
+        method: "HEAD",
+        url: originalUrl,
+        timeout: 1e4,
+        // don't hang forever
+        onload: (response) => {
+          const status = response.status;
+          debugLog("autoRetryDownload", `[HEAD] Status: ${status}`);
+          if (status >= 200 && status < 300) {
+            debugLog(
+              "autoRetryDownload",
+              `[HEAD] Server says OK \u2014 waiting for actual download trigger...`
+            );
+          } else {
+            debugLog(
+              "autoRetryDownload",
+              `[HEAD] Bad status ${status} \u2014 reloading page to retry download`
+            );
+            location.reload();
+          }
+        },
+        onerror: () => {
+          debugLog("autoRetryDownload", "[HEAD] Request error \u2014 reloading page to retry download");
+          location.reload();
+        },
+        ontimeout: () => {
+          debugLog("autoRetryDownload", "[HEAD] Timeout \u2014 reloading page to retry download");
+          location.reload();
+        }
+      });
+    };
+    tryLoad();
+    setTimeout(() => {
+      if (!success && retries < maxRetries) {
+        debugLog("autoRetryDownload", "Timeout waiting for download signal \u2014 forcing retry");
+        location.reload();
+      }
+    }, 6e4);
+  }
+  function getMatchingDirectDownloadConfig() {
+    return supportedDirectDownload.find(
+      (conf) => location.hostname.includes(conf.host) && location.pathname.startsWith(conf.pathStartsWith)
+    );
+  }
+  function executeAutoRetry(host) {
+    if (host) {
+      debugLog(
+        "autoRetryDownload",
+        `[${host} Auto-Retry] Activated! Let's keep that download pounding...`
+      );
+      autoRetryDownload(8, host);
+    }
+  }
+
   // src/utils/waitFor.js
   function waitFor(conditionFn, interval = 50, timeout = 2e3) {
     return new Promise((resolve, reject) => {
@@ -289,14 +481,23 @@
   }
   function detectPage() {
     const path = location.pathname;
-    if (!window.location.hostname === "f95zone.to") return;
+    if (window.location.hostname.includes("f95zone.to")) {
+      state.isF95Zone = true;
+    }
     if (path.startsWith("/threads")) {
       state.isThread = true;
     } else if (path.startsWith("/sam/latest_alpha")) {
       state.isLatest = true;
     } else if (path.startsWith("/masked")) {
       state.isMaskedLink = true;
+    } else {
+      state.isDownloadPage = supportedHosts.find((host) => location.hostname.includes(host));
+      state.isDirectDownloadPage = getMatchingDirectDownloadConfig() !== void 0;
     }
+    debugLog(
+      "PageDetect",
+      `isF95Zone: ${state.isF95Zone}, isThread: ${state.isThread}, isLatest: ${state.isLatest}, isMaskedLink: ${state.isMaskedLink}, isDownloadPage: ${state.isDownloadPage}, isDirectDownloadPage: ${state.isDirectDownloadPage}`
+    );
   }
   function waitForBody(callback) {
     if (document.body) {
@@ -312,14 +513,14 @@
     const selector = document.querySelector(".selectize-input.items.not-full");
     const dropdown = document.querySelector(".selectize-dropdown.single.filter-tags-select");
     if (!selector || !dropdown) {
-      if (debug) console.log("updateTags: failed to find selector/dropdown");
+      debugLog("Tag Update", "Failed to find selector or dropdown elements");
       return;
     }
     selector.click();
     try {
       await waitFor(() => dropdown.querySelectorAll(".option").length > 0, 50, 3e3);
     } catch (err) {
-      if (debug) console.log("updateTags: timeout waiting for options", err);
+      debugLog("Tag Update", `"Timeout waiting for options", ${err}`);
       return;
     }
     const options = [...dropdown.querySelectorAll(".option")];
@@ -332,12 +533,427 @@
     ));
     if (arraysAreDifferent) {
       config.tags = newTags;
-      saveConfigKeys({ tags: config.tags });
-      if (debug) console.log("updateTags: tags updated", newTags);
+      await GM.setValue("tags", config.tags);
+      debugLog("Tag Update", `Tags updated: ${JSON.stringify(newTags)}`);
+    }
+    const validTagIds = new Set(newTags.map((t) => t.id));
+    const pruneIds = (list) => Array.isArray(list) ? list.filter((id) => validTagIds.has(id)) : list;
+    const newPreferred = pruneIds(config.preferredTags);
+    const newExcluded = pruneIds(config.excludedTags);
+    const changed = newPreferred.length !== config.preferredTags.length || newExcluded.length !== config.excludedTags.length;
+    if (changed) {
+      config.preferredTags = newPreferred;
+      config.excludedTags = newExcluded;
+      saveConfigKeys({
+        preferredTags: newPreferred,
+        excludedTags: newExcluded
+      });
     }
     checkTags();
     state.tagsUpdated = true;
-    if (debug) console.log("updateTags: finished");
+    debugLog("Tag Update", "Finished updating tags");
+  }
+
+  // src/helper/download/fileHostHelper.js
+  function handleDownload(host) {
+    if (window.top === window.self) return;
+    if (config.threadSettings.directDownloadLinks === false) return;
+    const hostInfo = supportedDirectDownload.find((h) => h.id === host);
+    if (!hostInfo) return;
+    const btnEl = hostInfo.btn;
+    const dlLink = hostInfo.directDownloadLink;
+    let exec = () => {
+    };
+    if (host === "buzzheavier.com") {
+      exec = async () => {
+        await handleBuzzshare(btnEl, dlLink);
+      };
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", exec);
+    } else {
+      exec();
+    }
+  }
+  async function handleBuzzshare(btnEl, dlLink) {
+    function failedDownload() {
+      window.parent.postMessage(
+        {
+          op: "FAILED",
+          src: window.location.href,
+          dest: null
+        },
+        "*"
+      );
+    }
+    const btn = document.querySelector(btnEl);
+    if (!btn) {
+      failedDownload();
+      return;
+    }
+    const endpoint = window.location.origin + btn.getAttribute("hx-get");
+    try {
+      const res = await fetch(endpoint, {
+        headers: {
+          "HX-Request": "true",
+          "HX-Current-URL": window.location.href
+        }
+      });
+      const text = await res.text();
+      const match = text.match(dlLink);
+      const header = res.headers.get("HX-Redirect");
+      let dest = match ? match[0] : header && header.includes("trashbytes.net") ? header : null;
+      if (!dest && res.url.includes("trashbytes.net")) dest = res.url;
+      if (dest) {
+        window.parent.postMessage(
+          {
+            op: "BH_RESOLVED",
+            src: window.location.href,
+            dest: dest.replace(/&amp;/g, "&")
+          },
+          "*"
+        );
+      }
+      if (document.body.innerText.includes("This file could not be found.")) {
+        failedDownload();
+        return;
+      }
+    } catch (e) {
+      console.error("[BH-Resolver] Fetch failed", e);
+    }
+  }
+
+  // src/helper/download/gofile.js
+  async function processGofileDownload() {
+    if (!config.threadSettings.directDownloadLinks || !config.processingDownload) return;
+    const AUTO_CLOSE_DELAY = 6e3;
+    const waitForContentReady = (timeout = 2e4) => {
+      return new Promise((resolve, reject) => {
+        const start = Date.now();
+        const check = () => {
+          const loading = document.querySelector("#filemanager_loading");
+          const itemsList = document.querySelector("#filemanager_itemslist");
+          const isReady = (!loading || getComputedStyle(loading).display === "none") && itemsList && itemsList.children.length > 0;
+          if (isReady) {
+            debugLog("GofileDownloader", "Content ready \u2014 itemsList has kids now \u{1F525}");
+            resolve(true);
+            return;
+          }
+          if (Date.now() - start > timeout) {
+            reject(new Error("Timeout waiting for actual content to render \u{1F624}"));
+            return;
+          }
+          setTimeout(check, 400);
+        };
+        check();
+      });
+    };
+    try {
+      debugLog("GofileDownloader", "Starting goFile auto-download process...");
+      debugLog("GofileDownloader", "Waiting for loading spinner to fuck off...");
+      await waitForContentReady();
+      await new Promise((r) => setTimeout(r, 600));
+      const alertEl = document.querySelector("#filemanager_alert");
+      if (alertEl && getComputedStyle(alertEl).display !== "none") {
+        debugLog("GofileDownloader", "Alert visible \u2014 file/folder taken down or restricted");
+        alert("This shit got removed or blocked");
+        await saveConfigKeys({ processingDownload: false });
+        return;
+      }
+      const itemsList = document.querySelector("#filemanager_itemslist");
+      if (!itemsList) {
+        throw new Error("No #filemanager_itemslist found \u2014 page layout changed?");
+      }
+      const itemElements = itemsList.querySelectorAll("[data-item-id]");
+      debugLog("GofileDownloader", `Found ${itemElements.length} item(s) with data-item-id`);
+      if (itemElements.length === 0) {
+        debugLog("GofileDownloader", "No downloadable items found ");
+        await saveConfigKeys({ processingDownload: false });
+        return;
+      }
+      if (itemElements.length > 1) {
+        debugLog("GofileDownloader", "Multiple files detected \u2014 skipping auto-download for now");
+        debugLog("GofileDownloader", "\u2192 Future plan: batch download or picker UI");
+        await saveConfigKeys({ processingDownload: false });
+        alert("Multiple files detected \u2014 download manually for now.");
+        return;
+      }
+      const contentId = itemElements[0].getAttribute("data-item-id");
+      if (!contentId) {
+        throw new Error("data-item-id exists but is empty wtf");
+      }
+      debugLog("GofileDownloader", `Single file locked in: contentId = ${contentId}`);
+      if (typeof unsafeWindow.downloadContent !== "function") {
+        debugLog("GofileDownloader", "downloadContent is not a function \u2014 site updated?");
+        alert("Can't find downloadContent \u2014 page probably changed.");
+        await saveConfigKeys({ processingDownload: false });
+        return;
+      }
+      debugLog("GofileDownloader", "Calling downloadContent()... hold tight");
+      unsafeWindow.downloadContent(contentId);
+      setTimeout(async () => {
+        await saveConfigKeys({ processingDownload: false });
+        debugLog("GofileDownloader", "Download triggered \u2014 resetting processing flag");
+        try {
+          debugLog("GofileDownloader", "Trying to auto-close tab... bye bitch");
+          window.close();
+        } catch (e) {
+          console.warn("Close blocked (normal if last tab or not script-opened)", e);
+          const msg = document.createElement("div");
+          msg.innerHTML = `
+          <div style="
+            position: fixed; bottom: 20px; right: 20px; 
+            background: #ec5555; color: white; 
+            padding: 16px 24px; border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); 
+            z-index: 99999; font-weight: bold; font-size: 16px;
+          ">
+            Download started! You can close this tab now 
+          </div>
+        `;
+          document.body.appendChild(msg.firstElementChild);
+        }
+      }, AUTO_CLOSE_DELAY);
+    } catch (err) {
+      debugLog("GofileDownloader", `Crashed hard: ${err.message}`);
+      alert("Downloader died: " + err.message);
+      await saveConfigKeys({ processingDownload: false });
+    }
+  }
+
+  // src/helper/iframe.js
+  function injectFrame(url, options = {}) {
+    const {
+      visible = false,
+      // set true for debugging
+      sandbox = "allow-scripts allow-same-origin allow-forms allow-downloads allow-popups",
+      removeAfter = 3e4,
+      // ms, auto-remove to not leak memory
+      onLoad = null,
+      onDownloadStart = null
+      // optional callback when we detect download started
+    } = options;
+    const frame = document.createElement("iframe");
+    Object.assign(frame.style, {
+      position: "absolute",
+      left: "-9999px",
+      top: "-9999px",
+      width: "1px",
+      height: "1px",
+      opacity: 0,
+      pointerEvents: "none",
+      border: "none",
+      display: visible ? "block" : "none",
+      visibility: visible ? "visible" : "hidden"
+    });
+    frame.setAttribute(
+      "sandbox",
+      sandbox || "allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-modals"
+    );
+    frame.referrerPolicy = "no-referrer-when-downgrade";
+    frame.src = url;
+    frame.onload = () => {
+      debugLog("injectFrame", `Iframe loaded: ${url}`);
+      if (onLoad) onLoad(frame);
+      setTimeout(() => {
+        try {
+          const innerDoc = frame.contentDocument || frame.contentWindow?.document;
+          if (innerDoc?.body?.innerHTML?.includes("download") || innerDoc?.querySelector("a[download]")) {
+            debugLog("injectFrame", "Detected download UI inside frame");
+            if (onDownloadStart) onDownloadStart();
+          }
+        } catch (e) {
+        }
+      }, 1500);
+    };
+    document.body.appendChild(frame);
+    if (removeAfter > 0) {
+      setTimeout(() => {
+        if (frame.parentNode) {
+          frame.parentNode.removeChild(frame);
+          debugLog("injectFrame", `Auto-removed iframe after ${removeAfter}ms`);
+        }
+      }, removeAfter);
+    }
+    return frame;
+  }
+
+  // src/helper/download/openInNewTabHelper.js
+  function openInNewTabHelper(url) {
+    GM_openInTab(url, {
+      active: false,
+      // try to keep in background
+      insert: true,
+      // put at end of tab bar
+      setParent: true
+      // sometimes helps referrer
+    });
+  }
+
+  // src/helper/download/hijackDownloadLink.js
+  function isSupportedDownloadLink(urlString) {
+    if (!urlString) return false;
+    let url;
+    try {
+      url = new URL(urlString);
+    } catch (err) {
+      debugLog("HijackDownloadLink", `Invalid URL: ${urlString} - ${err}`);
+      return false;
+    }
+    const linkHost = url.hostname.toLowerCase();
+    if (linkHost.includes("f95zone.to")) return false;
+    if (supportedHosts.some((h) => linkHost.includes(h) || linkHost.endsWith("." + h))) {
+      return true;
+    }
+    if (supportedDirectDownload.some(
+      (cfg) => linkHost.includes(cfg.host) || linkHost.endsWith("." + cfg.host)
+    )) {
+      return true;
+    }
+    return false;
+  }
+  function getSupportedLinkType(urlString) {
+    if (!urlString) return null;
+    let url;
+    try {
+      url = new URL(urlString);
+    } catch {
+      return null;
+    }
+    const linkHost = url.hostname.toLowerCase();
+    if (supportedHosts.some((h) => linkHost.includes(h) || linkHost.endsWith("." + h))) {
+      if (typeDownload.find((t) => t.id === linkHost)?.type === "iframe") {
+        return "iframe";
+      }
+      return "normal";
+    }
+    if (supportedDirectDownload.some(
+      (cfg) => linkHost.includes(cfg.host) || linkHost.endsWith("." + cfg.host)
+    )) {
+      return "direct";
+    }
+    return null;
+  }
+  var clickHandlerDD = null;
+  function hicjackLink() {
+    if (state.isDirectDownloadHijackApplied) return;
+    state.isDirectDownloadHijackApplied = true;
+    function handler(e) {
+      const el = e.target.closest("a[href]");
+      if (!el) return;
+      const url = el.href.trim();
+      if (!isSupportedDownloadLink(url)) return;
+      debugLog("HijackDownloadLink", `Hijacking download link: ${url}`);
+      e.preventDefault();
+      const type = getSupportedLinkType(url);
+      if (type == "iframe") {
+        el.dataset.state = "pending";
+        el.style.color = colorState.PENDING.color;
+        const frame = injectFrame(url);
+        const timer = setTimeout(() => {
+          if (el.dataset.state !== "resolved") {
+            el.dataset.state = "";
+            el.style.color = colorState.FAILED.color;
+            if (frame) frame.remove();
+            cache.delete(url);
+            window.open(url, "_blank");
+          }
+        }, timeoutMS);
+        cache.set(url, { el, frame, timer });
+      } else if (type == "direct") {
+        showToast("Direct download started...");
+        injectFrame(url, { onSuccess: () => showToast("Direct download initiated.") });
+        setTimeout(() => {
+          showToast("if download not started, open link in new tab.");
+          showToast("Feedback appreciated to improve accuracy.");
+        }, 8e3);
+      } else if (type == "normal") {
+        showToast("Processing download in new tab...");
+        showToast("you'll alered if download starts or fails");
+        saveConfigKeys({ processingDownload: true });
+        setInterval(() => {
+          saveConfigKeys({ processingDownload: false });
+        }, 1e4);
+        openInNewTabHelper(url);
+      }
+    }
+    clickHandlerDD = handler;
+    document.addEventListener("click", clickHandlerDD, true);
+  }
+  function disableHijackLink() {
+    if (!state.isDirectDownloadHijackApplied) return;
+    if (clickHandlerDD) {
+      document.removeEventListener("click", clickHandlerDD, true);
+      clickHandlerDD = null;
+    }
+    state.isDirectDownloadHijackApplied = false;
+  }
+  function toggleDirectDownloadHijack() {
+    if (config.threadSettings.directDownloadLinks) {
+      hicjackLink();
+    } else {
+      disableHijackLink();
+    }
+  }
+
+  // src/helper/download/msgHandler.js
+  var clickHandlerDDME = null;
+  function handleMsgEvent() {
+    if (state.isMsgEventHandlerApplied) return;
+    state.isMsgEventHandlerApplied = true;
+    function handler({ data }) {
+      if (!data) return;
+      if (data.op === "FAILED") {
+        const { src: src2 } = data;
+        const ctx2 = cache.get(src2);
+        if (!ctx2) return;
+        clearTimeout(ctx2.timer);
+        Object.assign(ctx2.el.style, {
+          color: colorState.FAILED.color,
+          fontWeight: "bold",
+          textDecoration: "none"
+        });
+        showToast("Download failed or file not found, open in new tab.");
+        window.open(src2, "_blank");
+        if (ctx2.frame) ctx2.frame.remove();
+        cache.delete(src2);
+        return;
+      }
+      if (data.op !== "BH_RESOLVED") return;
+      const { src, dest } = data;
+      const ctx = cache.get(src);
+      if (!ctx) return;
+      clearTimeout(ctx.timer);
+      ctx.el.dataset.state = "resolved";
+      if (dest) ctx.el.href = dest;
+      Object.assign(ctx.el.style, {
+        color: colorState.SUCCESS.color,
+        fontWeight: "bold",
+        textDecoration: "none"
+      });
+      if (ctx.frame) ctx.frame.remove();
+      cache.delete(src);
+      if (dest) {
+        showToast("Direct download started...");
+        injectFrame(dest, { onSuccess: () => showToast("Direct download initiated.") });
+      }
+    }
+    clickHandlerDDME = handler;
+    window.addEventListener("message", clickHandlerDDME);
+  }
+  function disableMsgEventHandler() {
+    if (!state.isMsgEventHandlerApplied) return;
+    if (clickHandlerDDME) {
+      window.removeEventListener("message", clickHandlerDDME);
+    }
+    state.isMsgEventHandlerApplied = false;
+  }
+  function toggleMsgEventHandler() {
+    if (config.threadSettings.directDownloadLinks) {
+      handleMsgEvent();
+    } else {
+      disableMsgEventHandler();
+    }
   }
 
   // src/helper/maskedLinkSkipper.js
@@ -415,6 +1031,7 @@
       const path = new URL(href).pathname;
       e.preventDefault();
       e.stopImmediatePropagation();
+      showToast("Resolving masked link...");
       link.style.color = "#ffff00";
       const xhr = new XMLHttpRequest();
       xhr.open("POST", "https://f95zone.to" + path, true);
@@ -427,6 +1044,7 @@
             try {
               const data = JSON.parse(xhr.responseText);
               if (data.status === "ok" && data.msg) {
+                showToast("Masked link resolved.");
                 targetUrl = data.msg;
                 link.href = targetUrl;
                 link.style.color = "#00ff00";
@@ -437,7 +1055,23 @@
           } else {
             link.style.color = "";
           }
-          window.open(targetUrl, "_blank");
+          if (config.threadSettings.directDownloadLinks && isSupportedDownloadLink(targetUrl)) {
+            const type = getSupportedLinkType(targetUrl);
+            if (type === "iframe") {
+              injectFrame(targetUrl);
+            } else if (type === "direct") {
+              showToast("Direct download started...");
+              injectFrame(targetUrl, { onSuccess: () => showToast("Direct download initiated.") });
+            } else if (type === "normal") {
+              saveConfigKeys({ processingDownload: true });
+              showToast("Processing download in new tab...");
+              showToast("you'll alered if download starts or fails");
+              openInNewTabHelper(targetUrl);
+            }
+          } else {
+            showToast("resolving failed, opening link...");
+            window.open(targetUrl, "_blank");
+          }
         }
       };
       xhr.send("xhr=1&download=1");
@@ -463,6 +1097,99 @@
     } else {
       disableHijackMaskedLink();
     }
+  }
+
+  // src/helper/notificationCloser.js
+  function initNoticeDismissal() {
+    if (!config.globalSettings.closeNotifOnClick) return;
+    const notices = document.querySelectorAll(".js-notice");
+    notices.forEach((notice) => {
+      const id = notice.getAttribute("data-notice-id");
+      if (!id) return;
+      if (config.savedNotifID === parseInt(id)) {
+        collapseNotice(notice);
+        return;
+      }
+      const closeBtn = document.createElement("button");
+      closeBtn.innerText = "\xD7";
+      closeBtn.className = "js-notice-dismiss-btn";
+      notice.appendChild(closeBtn);
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const id2 = notice.getAttribute("data-notice-id");
+        if (id2) {
+          saveConfigKeys({ savedNotifID: parseInt(id2) });
+        }
+        collapseNotice(notice);
+      });
+    });
+    debugLog("initNoticeDismissal", "Dismissal feature initialized");
+  }
+  function removeNoticeDismissal() {
+    document.querySelectorAll(".js-notice-dismiss-btn").forEach((btn) => btn.remove());
+    const notices = document.querySelectorAll(".js-notice");
+    notices.forEach((notice) => {
+      expandNotice(notice);
+    });
+    debugLog("removeNoticeDismissal", "Dismissal feature turned off \u2014 close buttons removed");
+  }
+  function toggleNoticeDismissal() {
+    if (config.globalSettings.closeNotifOnClick) {
+      initNoticeDismissal();
+    } else {
+      removeNoticeDismissal();
+    }
+  }
+  function collapseNotice(notice) {
+    if (!notice) return;
+    if (notice.dataset._collapsed === "1") return;
+    const style = window.getComputedStyle(notice);
+    const height = notice.scrollHeight;
+    const paddingTop = style.paddingTop;
+    const paddingBottom = style.paddingBottom;
+    const marginBottom = style.marginBottom;
+    notice.style.boxSizing = "border-box";
+    notice.style.maxHeight = height + "px";
+    notice.style.paddingTop = paddingTop;
+    notice.style.paddingBottom = paddingBottom;
+    notice.style.marginBottom = marginBottom;
+    notice.style.overflow = "hidden";
+    notice.style.transition = "opacity 0.4s ease-out, max-height 0.45s ease-out, padding 0.4s ease-out, margin 0.4s ease-out";
+    notice.offsetHeight;
+    notice.style.opacity = "0";
+    notice.style.maxHeight = "0";
+    notice.style.paddingTop = "0";
+    notice.style.paddingBottom = "0";
+    notice.style.marginBottom = "0";
+    notice.dataset._collapsed = "1";
+    const onEnd = (e) => {
+      if (e.target !== notice) return;
+      notice.style.display = "none";
+      notice.style.removeProperty("max-height");
+      notice.style.removeProperty("overflow");
+      notice.style.removeProperty("transition");
+      notice.style.removeProperty("padding-top");
+      notice.style.removeProperty("padding-bottom");
+      notice.style.removeProperty("margin-bottom");
+      notice.style.removeProperty("opacity");
+      delete notice.dataset._collapsed;
+      notice.removeEventListener("transitionend", onEnd);
+    };
+    notice.addEventListener("transitionend", onEnd);
+  }
+  function expandNotice(notice) {
+    if (!notice) return;
+    notice.style.removeProperty("display");
+    notice.style.display = "";
+    notice.style.removeProperty("max-height");
+    notice.style.removeProperty("overflow");
+    notice.style.removeProperty("transition");
+    notice.style.removeProperty("padding-top");
+    notice.style.removeProperty("padding-bottom");
+    notice.style.removeProperty("margin-bottom");
+    notice.style.removeProperty("opacity");
+    delete notice.dataset._collapsed;
+    notice.style.display = "block";
   }
 
   // src/helper/handleTextColor.js
@@ -558,11 +1285,17 @@
     const isValidKeyword = ["full", "final"].some(
       (valid) => versionText.toLowerCase().includes(valid)
     );
-    debug && console.log(versionText, versionNumber, match, isValidKeyword);
+    debugLog(
+      "Tile Processing",
+      `Version Text: ${versionText}, Version Number: ${versionNumber}, Match: ${match}, Is Valid Keyword: ${isValidKeyword}`
+    );
     const labelText = getLabelText(tile);
     const matchedTag = processTag(tile, config.preferredTags);
     const excludedTag = processTag(tile, config.excludedTags);
-    debug && console.log(labelText, matchedTag, excludedTag);
+    debugLog(
+      "Tile Processing",
+      `Label Text: ${labelText}, Matched Tag: ${matchedTag}, Excluded Tag: ${excludedTag}`
+    );
     if (excludedTag && config.overlaySettings.excluded) {
       isOverlayApplied = addOverlayLabel(tile, excludedTag, isOverlayApplied);
       colors.push(config.color.excluded);
@@ -643,9 +1376,9 @@
   }
   function processTag(tile, tags) {
     const tagIds = (tile.getAttribute("data-tags") || "").split(",").map((id) => parseInt(id.trim(), 10)).filter(Number.isFinite);
-    debug && console.log(tagIds);
+    debugLog("Tile Processing", `Tag IDs: ${tagIds}`);
     const matchedId = tagIds.find((id) => tags.some((tag) => tag === id));
-    debug && console.log(matchedId);
+    debugLog("Tile Processing", `Matched Tag ID: ${matchedId}`);
     if (!matchedId) return false;
     const matchedTag = config.tags.find((tag) => tag.id == matchedId);
     return matchedTag ? matchedTag.name : false;
@@ -696,7 +1429,7 @@
   }
   function resetAllTiles() {
     if (config.latestSettings.latestOverlayToggle || !state.isLatest) return;
-    debug && console.log("Resetting all tiles on Latest Updates page");
+    debugLog("Tile Processing", "Resetting all tiles on Latest Updates page");
     const tiles = document.getElementsByClassName("resource-tile");
     if (!tiles.length) return;
     for (let i = 0; i < tiles.length; i++) {
@@ -788,7 +1521,7 @@
         tag.classList.remove(cls);
       });
     });
-    console.log("Thread tag overlay disabled \u2014 tags back to vanilla");
+    debugLog("disableThreadTagOverlay", "Thread tag overlay disabled \u2014 tags back to vanilla");
   }
   function signatureCollapse() {
     if (!state.isThread) return;
@@ -800,7 +1533,7 @@
       return;
     }
     document.querySelectorAll("aside.message-signature").forEach((sig) => {
-      debug && console.log("Processing signature collapse", sig);
+      debugLog("Processing signature collapse", sig);
       if (sig.dataset.latestProcessed) return;
       sig.dataset.latestProcessed = "1";
       const btn = document.createElement("button");
@@ -840,7 +1573,7 @@
     processAllTiles(true);
   }, 100);
   var queuedProcessThreadTags = createQueuedTask(() => {
-    if (!state.isThread || !config.threadSettings.threadOverlayToggle) return;
+    if (!state.isThread) return;
     toggleThreadTagOverlay();
   }, 100);
   var queuedUpdateLatestUI = createQueuedTask(() => updateLatestUI());
@@ -860,12 +1593,12 @@
     if (key && config.color[key] !== void 0) {
       const varName = `--${key}-color`;
       document.documentElement.style.setProperty(varName, config.color[key]);
-      debug && console.log(varName, config.color[key]);
+      debugLog("updateColorStyle", `Updated color for key: ${key} to ${config.color[key]}`);
     } else {
       for (const [k, value] of Object.entries(config.color)) {
         const varName = `--${k}-color`;
         document.documentElement.style.setProperty(varName, value);
-        debug && console.log(varName, value);
+        debugLog("updateColorStyle", `Updated color for key: ${k} to ${value}`);
       }
     }
     const preferredShadow = config.threadSettings.preferredShadow ? "0 0 2px 1px white" : "none";
@@ -1487,11 +2220,24 @@
     skipMaskedLink: {
       type: "toggle",
       text: "Skip masked link page",
-      tooltip: "Automatically bypass the masked link intermediary page when accessing masked links",
+      tooltip: "Automatically bypass the masked link intermediary page when accessing masked links \n support with direct download features",
       config: "threadSettings.skipMaskedLink",
       effects: {
         custom: () => toggleHijackMaskedLink(),
         toast: (v) => `Skip Masked Link ${v ? "enabled" : "disabled"}`
+      }
+    },
+    directDownloadLinks: {
+      type: "toggle",
+      text: "Direct Download Links",
+      tooltip: "Enable direct download links for supported file hosts \n works independently outside of masked links",
+      config: "threadSettings.directDownloadLinks",
+      effects: {
+        custom: () => {
+          toggleDirectDownloadHijack();
+          toggleMsgEventHandler();
+        },
+        toast: (v) => `Direct Download Links ${v ? "enabled" : "disabled"}`
       }
     },
     isWide: {
@@ -1655,6 +2401,18 @@
         toast: (v) => `Configuration menu ${v ? "shown" : "hidden"}`
       }
     },
+    noticeDismissal: {
+      type: "toggle",
+      text: "Enable notification dismissal",
+      tooltip: "Allow closing notifications by clicking a close button",
+      config: "globalSettings.closeNotifOnClick",
+      effects: {
+        custom: () => {
+          toggleNoticeDismissal();
+        },
+        toast: (v) => `Notification dismissal ${v ? "enabled" : "disabled"}`
+      }
+    },
     enableCrossTabSync: {
       type: "toggle",
       text: "Sync settings across tabs",
@@ -1759,7 +2517,7 @@
       onRemove: (index, tag) => {
         config.preferredTags.splice(index, 1);
         showToast(`${tag.name} removed from preferred`);
-        saveConfigKeys({ preferredTags: config.preferredTags });
+        saveConfigKeys({ preferredTags: config.preferredTags }, true);
         queuedProcessAllTilesReset();
         queuedProcessThreadTags();
       }
@@ -1774,7 +2532,7 @@
       onRemove: (index, tag) => {
         config.excludedTags.splice(index, 1);
         showToast(`${tag.name} removed from exclusion`);
-        saveConfigKeys({ excludedTags: config.excludedTags });
+        saveConfigKeys({ excludedTags: config.excludedTags }, true);
         queuedProcessAllTilesReset();
         queuedProcessThreadTags();
       }
@@ -1816,9 +2574,11 @@
   }
   function setByPath(obj, path, value) {
     const keys = path.split(".");
+    const firstKey = keys[0];
     const last = keys.pop();
     const target = keys.reduce((o, k) => o[k], obj);
     target[last] = value;
+    return firstKey;
   }
 
   // src/renderer/createInput.js
@@ -1879,8 +2639,10 @@
     }
     input.addEventListener("change", () => {
       const newValue = meta.type === "toggle" ? input.checked : input.value;
-      setByPath(config, meta.config, newValue);
-      saveConfigKeys(config);
+      const keyName = setByPath(config, meta.config, newValue);
+      saveConfigKeys({
+        [keyName]: config[keyName]
+      });
       applyEffects(meta, newValue);
     });
     row.appendChild(label);
@@ -1891,9 +2653,9 @@
   // src/renderer/settingsSection.js
   function renderSettingsSection(containerId, metaMap) {
     const container = document.getElementById(containerId);
-    debug && console.log("Rendering settings section:", containerId, metaMap);
+    debugLog("SettingsSection", `Rendering settings section: ${containerId}`);
     if (!container) {
-      debug && console.warn("Container not found:", containerId);
+      debugLog("SettingsSection", `Container not found: ${containerId}`);
       return;
     }
     container.innerHTML = "";
@@ -2022,13 +2784,17 @@
     }
   }
   async function initLatestPage() {
+    if (config.latestSettings.denseLatestGrid) toggleDenseLatestGrid();
+    if (config.latestSettings.wideLatest) toggleWideLatestPage();
     try {
       await waitFor(() => document.getElementById("latest-page_items-wrap"));
-      if (config.latestSettings.wideLatest) toggleWideLatestPage();
       watchAndUpdateTiles();
-      if (config.latestSettings.denseLatestGrid) toggleDenseLatestGrid();
-      processAllTiles();
-      handleWebClick();
+      if (config.latestSettings.latestOverlayToggle) {
+        processAllTiles();
+      }
+      if (config.latestSettings.autoRefresh || config.latestSettings.webNotif) {
+        handleWebClick();
+      }
     } catch {
       console.warn("Observer container not found on latest page");
     }
@@ -2039,10 +2805,32 @@
     if (config.threadSettings.imgRetry) injectImageRepair();
     if (config.threadSettings.collapseSignature) signatureCollapse();
     if (config.threadSettings.skipMaskedLink) hijackMaskedLinks();
+    if (config.threadSettings.directDownloadLinks) {
+      debugLog("Init", "Direct download links enabled");
+      hicjackLink();
+      handleMsgEvent();
+    }
+  }
+  function initDownloadPage() {
+    if (state.isDownloadPage === "buzzheavier.com") {
+      handleDownload("buzzheavier.com");
+    } else if (state.isDownloadPage === "gofile.io") {
+      processGofileDownload();
+    }
   }
   function initPageState() {
     if (state.isLatest) initLatestPage();
     if (state.isThread) initThreadPage();
+    if (state.isDownloadPage) {
+      debugLog("Init", `Download page detected: ${state.isDownloadPage}`);
+      initDownloadPage();
+    }
+    if (state.isDirectDownloadPage) {
+      executeAutoRetry(state.isDirectDownloadPage.host);
+    }
+    if (state.isF95Zone) {
+      initNoticeDismissal();
+    }
   }
 
   // src/ui/modal.js
@@ -2077,6 +2865,7 @@
   }
   function openModal() {
     initModalUi();
+    changeHelpMsg();
     document.getElementById("tag-config-modal").style.display = "block";
   }
   function closeModal() {
@@ -2117,6 +2906,25 @@
       button.classList.remove("hidden", "blink-hide", "hover-reveal");
     }
   }
+  var helpMsgInterval = null;
+  function changeHelpMsg() {
+    function getRandomStupidHelpMsg() {
+      const randomIndex = Math.floor(Math.random() * helpMessages.length);
+      return helpMessages[randomIndex];
+    }
+    const msg = getRandomStupidHelpMsg();
+    debugLog("getRandomStupidHelpMsg", `Selected help message: ${msg}`);
+    const hintSpan = document.querySelector(".modal-footer-hint  .hint-text");
+    if (hintSpan) {
+      hintSpan.textContent = msg;
+    }
+    if (!helpMsgInterval) {
+      helpMsgInterval = setInterval(() => {
+        const el = document.querySelector(".modal-footer-hint .hint-text");
+        if (el) el.textContent = getRandomStupidHelpMsg();
+      }, 12e3);
+    }
+  }
 
   // src/main.js
   waitForBody(async () => {
@@ -2127,9 +2935,11 @@
       if (config.threadSettings.skipMaskedLink) skipMaskedPage();
       return;
     }
-    initUI();
-    updateButtonVisibility();
-    toggleCrossTabSync(config.globalSettings.enableCrossTabSync);
+    if (state.isF95Zone) {
+      initUI();
+      updateButtonVisibility();
+      toggleCrossTabSync(config.globalSettings.enableCrossTabSync);
+    }
     initPageState();
   });
 })();

@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         linux.do player helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.2
 // @description  观影助手
 // @match        *://linux.do/*
 // @match        *://idcflare.com/*
+// @match        https://*.bing.com
+// @match        https://*.bing.com/chrome/newtab
 // @grant        GM_addStyle
 // @require      https://unpkg.com/jquery@3.7.1/dist/jquery.js
 // @require      https://cdn.tailwindcss.com

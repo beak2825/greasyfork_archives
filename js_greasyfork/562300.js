@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Facebook Mobile - Hide suggested posts
 // @namespace    http://tampermonkey.net/
-// @version      4
-// @description  Hide reels, follow/join suggestions, and suggested friends from Facebook mobile
+// @version      2
+// @description  Hide reels, follow/join/sponsored posts, and suggested friends from the main newsfeed.
 // @author       fejjj
 // @match        https://m.facebook.com/*
 // @match        https://www.facebook.com/*
@@ -16,64 +16,114 @@
 (function() {
     'use strict';
 
+    // Function to check if we should filter on current page
+    function shouldFilter() {
+        const path = window.location.pathname;
+        return !path.includes('/watch') && !path.includes('/reel');
+    }
+
     // ===== FILTER SETTINGS - Change these to true/false to enable/disable filters =====
     const FILTERS = {
         hideReels: true,
         hideJoin: true,
         hideFollow: true,
         hideSponsored: true,
-        hidePeopleYouMayKnow: true
+        hidePeopleYouMayKnow: true,
+        hideSponsoredReels: true
     };
     // ==================================================================================
 
-    function hidePost(element, reason) {
+    function hidePost(element, reason, noPlaceholder = false) {
         if (element.dataset.hidden) return;
-        
+
         element.dataset.hidden = 'true';
-        
-        // Create placeholder message - tap to unhide
+
+        // If noPlaceholder is true, just hide the element without showing a placeholder
+        if (noPlaceholder) {
+            element.style.display = 'none';
+            return;
+        }
+
+        // Check if this is a sponsored post (cannot be unhidden)
+        const isSponsored = reason === 'Sponsored';
+
+        // Create placeholder message - tap to unhide (except sponsored)
         const placeholder = document.createElement('div');
         placeholder.style.cssText = `
             background-color: #3a3b3c;
             color: #b0b3b8;
             padding: 2px 6px;
-            margin: 0;
+            margin: 1px 0;
             border-radius: 3px;
             font-size: 10px;
             text-align: center;
-            cursor: pointer;
+            ${isSponsored ? '' : 'cursor: pointer;'}
             position: relative;
             z-index: 9999;
-            pointer-events: auto;
+            ${isSponsored ? '' : 'pointer-events: auto;'}
         `;
-        placeholder.textContent = `Hidden: ${reason} (tap to show)`;
-        
-        // Add click handler to unhide
-        placeholder.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Remove placeholder and show post
-            placeholder.remove();
-            element.style.display = '';
-            element.dataset.hidden = 'false';
-        });
-        
+        placeholder.textContent = isSponsored
+            ? `Hidden: ${reason} (change filter settings to show)`
+            : `Hidden: ${reason} (tap to show)`;
+
+        // Add click handler to unhide (only for non-sponsored)
+        if (!isSponsored) {
+            placeholder.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Remove placeholder and show post
+                placeholder.remove();
+                element.style.display = '';
+                element.dataset.hidden = 'false';
+            });
+        }
+
         // Hide original content and insert placeholder
         element.style.display = 'none';
         element.parentNode.insertBefore(placeholder, element);
     }
 
+    // Helper function to count div depth from post to element
+    function getDivDepth(element, container) {
+        let depth = 0;
+        let current = element;
+        while (current && current !== container) {
+            if (current.tagName === 'DIV') depth++;
+            current = current.parentElement;
+        }
+        return depth;
+    }
+
     function checkPost(post) {
+        // On /watch or /reel pages, only filter sponsored content
+        if (!shouldFilter()) {
+            if (FILTERS.hideSponsoredReels) {
+                const sponsoredSpans = post.querySelectorAll('span[class^="f"]');
+                for (const span of sponsoredSpans) {
+                    if (span.textContent.includes('Sponsored')) {
+                        hidePost(post, 'Sponsored', true); // true = no placeholder
+                        return;
+                    }
+                }
+            }
+            return;
+        }
+        
         // Skip if already hidden
         if (post.dataset.hidden) return;
+
+        const MAX_DEPTH = 8;
 
         // Check for Reels: <span class="f1">󲀠</span> (Reels icon)
         if (FILTERS.hideReels) {
             const reelsSpans = post.querySelectorAll('span.f1');
             for (const span of reelsSpans) {
                 if (span.textContent.includes('󲀠')) {
-                    hidePost(post, 'Reels');
-                    return;
+                    const depth = getDivDepth(span, post);
+                    if (depth <= MAX_DEPTH) {
+                        hidePost(post, 'Reels');
+                        return;
+                    }
                 }
             }
         }
@@ -83,11 +133,14 @@
             const joinSpans = post.querySelectorAll('span.f2');
             for (const span of joinSpans) {
                 if (span.textContent.trim() === 'Join') {
-                    // Try to find the group name from <span class="f2 a">
-                    const nameSpan = post.querySelector('span.f2.a');
-                    const name = nameSpan ? nameSpan.textContent.trim() : '';
-                    hidePost(post, name ? `Join - ${name}` : 'Join');
-                    return;
+                    const depth = getDivDepth(span, post);
+                    if (depth <= MAX_DEPTH) {
+                        // Try to find the group name from <span class="f2 a">
+                        const nameSpan = post.querySelector('span.f2.a');
+                        const name = nameSpan ? nameSpan.textContent.trim() : '';
+                        hidePost(post, name ? `Join - ${name}` : 'Join');
+                        return;
+                    }
                 }
             }
         }
@@ -97,11 +150,14 @@
             const followSpans = post.querySelectorAll('span.f2');
             for (const span of followSpans) {
                 if (span.textContent.trim() === 'Follow') {
-                    // Try to find the page/profile name from <span class="f2 a">
-                    const nameSpan = post.querySelector('span.f2.a');
-                    const name = nameSpan ? nameSpan.textContent.trim() : '';
-                    hidePost(post, name ? `Follow - ${name}` : 'Follow');
-                    return;
+                    const depth = getDivDepth(span, post);
+                    if (depth <= MAX_DEPTH) {
+                        // Try to find the page/profile name from <span class="f2 a">
+                        const nameSpan = post.querySelector('span.f2.a');
+                        const name = nameSpan ? nameSpan.textContent.trim() : '';
+                        hidePost(post, name ? `Follow - ${name}` : 'Follow');
+                        return;
+                    }
                 }
             }
         }

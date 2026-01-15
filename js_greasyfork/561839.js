@@ -1,14 +1,64 @@
 // ==UserScript==
-// @name         SEO Analyser Pro - 1.5
+// @name         SEO Analyzer Pro
 // @namespace    http://tampermonkey.net/
-// @version      1.5
-// @description  Comprehensive SEO analysis tool with floating window
+// @version      1.7.0
+// @description  Comprehensive SEO analysis tool with floating window and persistent filters
 // @author       jotsaru0
 // @match        *://*/*
-// @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561839/SEO%20Analyser%20Pro%20-%2015.user.js
-// @updateURL https://update.greasyfork.org/scripts/561839/SEO%20Analyser%20Pro%20-%2015.meta.js
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @downloadURL https://update.greasyfork.org/scripts/561839/SEO%20Analyzer%20Pro.user.js
+// @updateURL https://update.greasyfork.org/scripts/561839/SEO%20Analyzer%20Pro.meta.js
 // ==/UserScript==
+
+/*
+ * ============================================================================
+ * SEO ANALYZER PRO v1.7.0
+ * ============================================================================
+ *
+ * FEATURES:
+ * --------
+ * ✓ Meta Tag Analysis (Title, Description, OG Tags, Twitter Cards)
+ * ✓ Header Hierarchy Analysis (H1-H6)
+ * ✓ Image Analysis (Alt tags, Types, Statistics)
+ * ✓ Link Analysis (Internal, External, NoFollow, Anchors)
+ * ✓ Schema Markup Detection (JSON-LD, Microdata, RDFa)
+ * ✓ Interactive Filtering (Max 3 selections per tab)
+ * ✓ Persistent Filter Memory (NEW - Saves across sessions)
+ * ✓ Clickable Links (Open in new tab)
+ * ✓ SERP Preview
+ * ✓ Word Count
+ * ✓ Keyboard Shortcut (Ctrl+M)
+ *
+ * USAGE:
+ * ------
+ * - Press Ctrl+M to toggle the SEO Analyzer window
+ * - Click on stat cards/table rows to filter content (max 3 selections)
+ * - All links are clickable and open in new tabs
+ * - Filter selections are automatically saved and restored
+ *
+ * CHANGELOG:
+ * ----------
+ * v1.7.0 (2025-01-15)
+ *   - NEW: Persistent filter memory - selections saved across browser sessions
+ *   - NEW: Filters automatically restore when reopening the tool
+ *   - Enhanced: Improved stability and error handling for storage
+ *   - Fixed: Filter restoration now works correctly on first load
+ *
+ * v1.6.0 (2025-01-14)
+ *   - Added Tampermonkey memory preferences (GM_setValue/GM_getValue)
+ *   - Filter selections persist across sessions
+ *   - Improved filtering logic for images and links
+ *   - Added clickable links with hover effects
+ *
+ * v1.5.0 (2025-01-13)
+ *   - Added interactive filtering for all tabs
+ *   - Maximum 3 selections per tab
+ *   - Selection counter with visual feedback
+ *   - Schema tab with expandable code blocks
+ *
+ * ============================================================================
+ */
 
 (function() {
     'use strict';
@@ -29,6 +79,29 @@
         links: []
     };
 
+    // Load saved preferences
+    function loadPreferences() {
+        try {
+            const saved = GM_getValue('seoAnalyzerFilters', null);
+            if (saved) {
+                selectedFilters = JSON.parse(saved);
+                console.log('SEO Analyzer: Loaded saved filters', selectedFilters);
+            }
+        } catch (e) {
+            console.error('SEO Analyzer: Failed to load preferences', e);
+        }
+    }
+
+    // Save preferences
+    function savePreferences() {
+        try {
+            GM_setValue('seoAnalyzerFilters', JSON.stringify(selectedFilters));
+            console.log('SEO Analyzer: Saved filters', selectedFilters);
+        } catch (e) {
+            console.error('SEO Analyzer: Failed to save preferences', e);
+        }
+    }
+
     function toggleWindow() {
         if (!floatingWindow) {
             createFloatingWindow();
@@ -36,12 +109,7 @@
         isVisible = !isVisible;
         floatingWindow.style.display = isVisible ? 'flex' : 'none';
         if (isVisible) {
-            // Reset filters when opening
-            selectedFilters = {
-                headers: [],
-                images: [],
-                links: []
-            };
+            loadPreferences();
             analyzePageSEO();
         }
     }
@@ -51,7 +119,7 @@
         floatingWindow.id = 'seo-analyzer-window';
         floatingWindow.innerHTML = `
             <div class="seo-header">
-                <h2>SEO Analyzer</h2>
+                <h2>SEO Analyzer Pro v1.7</h2>
                 <button class="close-btn" id="close-seo">×</button>
             </div>
             <div class="seo-tabs">
@@ -343,6 +411,11 @@
                 margin-bottom: 6px;
                 font-size: 13px;
                 word-break: break-all;
+                transition: all 0.3s;
+            }
+
+            .link-item.hidden {
+                display: none;
             }
 
             .link-item.broken {
@@ -495,20 +568,6 @@
             .header-row.selected {
                 background: #eff6ff;
                 font-weight: 600;
-            }
-
-            .link-item {
-                padding: 8px 12px;
-                background: #f9fafb;
-                border-radius: 4px;
-                margin-bottom: 6px;
-                font-size: 13px;
-                word-break: break-all;
-                transition: all 0.3s;
-            }
-
-            .link-item.hidden {
-                display: none;
             }
 
             .clickable-link {
@@ -731,6 +790,15 @@
                 filterHeaders(level, this);
             });
         });
+
+        // Restore saved selections
+        selectedFilters.headers.forEach(level => {
+            const row = document.querySelector(`.header-row[data-header-level="${level}"]`);
+            if (row) {
+                row.classList.add('selected');
+            }
+        });
+        updateHeaderDisplay();
     }
 
     function filterHeaders(level, row) {
@@ -747,6 +815,7 @@
             row.classList.add('selected');
         }
 
+        savePreferences();
         updateHeaderDisplay();
     }
 
@@ -862,6 +931,15 @@
                 filterImages(type, this);
             });
         });
+
+        // Restore saved selections
+        selectedFilters.images.forEach(filter => {
+            const card = document.querySelector(`[data-image-filter="${filter}"]`);
+            if (card) {
+                card.classList.add('selected');
+            }
+        });
+        updateImageDisplay();
     }
 
     function filterImages(type, card) {
@@ -878,6 +956,7 @@
             card.classList.add('selected');
         }
 
+        savePreferences();
         updateImageDisplay();
     }
 
@@ -901,7 +980,6 @@
             if (count === 0) {
                 shouldShow = true;
             } else {
-                // Check if any selected filter matches either the type or alt status
                 for (const filter of selectedFilters.images) {
                     if (filter === imageType || filter === altStatus) {
                         shouldShow = true;
@@ -994,7 +1072,6 @@
             </div>
         `;
 
-        // Store link data for filtering
         window.linkData = {
             all: links,
             internal: internal,
@@ -1004,13 +1081,21 @@
             noanchor: noAnchor
         };
 
-        // Add click handlers for link filtering
         document.querySelectorAll('[data-link-filter]').forEach(card => {
             card.addEventListener('click', function() {
                 const type = this.dataset.linkFilter;
                 filterLinks(type, this);
             });
         });
+
+        // Restore saved selections
+        selectedFilters.links.forEach(filter => {
+            const card = document.querySelector(`[data-link-filter="${filter}"]`);
+            if (card) {
+                card.classList.add('selected');
+            }
+        });
+        updateLinkDisplay();
     }
 
     function filterLinks(type, card) {
@@ -1027,6 +1112,7 @@
             card.classList.add('selected');
         }
 
+        savePreferences();
         updateLinkDisplay();
     }
 
@@ -1043,18 +1129,15 @@
 
         if (!window.linkData) return;
 
-        // Get all links that match selected filters
         let filteredLinks = new Set();
 
         if (count === 0) {
-            // Show all links
             document.querySelectorAll('.link-list .filterable-section').forEach(item => {
                 item.classList.remove('hidden');
             });
             return;
         }
 
-        // Collect links matching any selected filter
         selectedFilters.links.forEach(filter => {
             if (window.linkData[filter]) {
                 window.linkData[filter].forEach(link => {
@@ -1063,7 +1146,6 @@
             }
         });
 
-        // Show/hide links based on filter
         document.querySelectorAll('.link-list .filterable-section').forEach(item => {
             const link = item.querySelector('a');
             if (link && filteredLinks.has(link.href)) {
@@ -1077,7 +1159,6 @@
     function analyzeSchemaTab() {
         const schemas = [];
 
-        // Find JSON-LD schemas
         const jsonLdScripts = document.querySelectorAll('script[type="application/ld+json"]');
         jsonLdScripts.forEach((script, index) => {
             try {
@@ -1097,7 +1178,6 @@
             }
         });
 
-        // Find Microdata schemas
         const microdataItems = document.querySelectorAll('[itemscope]');
         if (microdataItems.length > 0) {
             const microdataTypes = [...new Set(Array.from(microdataItems).map(item => {
@@ -1113,7 +1193,6 @@
             });
         }
 
-        // Find RDFa schemas
         const rdfaItems = document.querySelectorAll('[vocab], [typeof]');
         if (rdfaItems.length > 0) {
             const rdfaTypes = [...new Set(Array.from(rdfaItems).map(item => {
@@ -1192,7 +1271,6 @@
 
         document.getElementById('tab-schema').innerHTML = schemaHTML;
 
-        // Add click handlers for expanding/collapsing schemas
         document.querySelectorAll('.schema-block').forEach(block => {
             block.addEventListener('click', function() {
                 const index = this.dataset.schemaIndex;

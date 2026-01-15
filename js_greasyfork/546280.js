@@ -12,9 +12,9 @@
 // @grant        GM_unregisterMenuCommand
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.3
+// @version      1.0.6
 // @license      MIT
-// @revision     1/11/2026, 1:54:27 PM
+// @revision     1/15/2026, 5:00:00 AM
 // @description  Switch to several provided colors & styles to customise the comment lines. Either reload the page or sort the comments to take effect.
 // @downloadURL https://update.greasyfork.org/scripts/546280/%5BLemmy%5D%20Comment%20Line%20Styles.user.js
 // @updateURL https://update.greasyfork.org/scripts/546280/%5BLemmy%5D%20Comment%20Line%20Styles.meta.js
@@ -30,12 +30,15 @@
   const colors = [{
     name: 'Original',
     len: 7,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.25rem !important;
     } .custom-margin-left-double {
       margin-left: 0.5rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(172,83,83,0.5) !important;
     } .custom-style-2 {
@@ -54,12 +57,15 @@
   }, {
     name: 'Bright Original',
     len: 7,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.25rem !important;
     } .custom-margin-left-double {
       margin-left: 0.5rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(172,83,83,0.8) !important;
     } .custom-style-2 {
@@ -78,12 +84,15 @@
   }, {
     name: 'Gapped Original',
     len: 7,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.5rem !important;
     } .custom-margin-left-double {
       margin-left: 1.0rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(172,83,83,0.5) !important;
     } .custom-style-2 {
@@ -102,12 +111,15 @@
   }, {
     name: 'Bright & Gapped Original',
     len: 7,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.5rem !important;
     } .custom-margin-left-double {
       margin-left: 1.0rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(172,83,83,0.8) !important;
     } .custom-style-2 {
@@ -126,12 +138,15 @@
   }, {
     name: 'Colorful',
     len: 8,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.35rem !important;
     } .custom-margin-left-double {
       margin-left: 0.7rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(82,215,247,0.5) !important;
     } .custom-style-2 {
@@ -152,15 +167,18 @@
   }, {
     name: 'Polka Dots',
     len: 5,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.35rem !important;
     } .custom-margin-left-double {
       margin-left: 0.7rem !important;
     } .custom-style {
-      border-left: 4px dotted rgb(200,200,200) !important;
-      border-top: 4px dotted rgb(200,200,200) !important;
+      border-left: 4px dotted var(--light-text) !important;
+      border-top: 4px dotted var(--light-text) !important;
       border-radius: 1.0rem !important;
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       background: rgba(84,12,182,0.3) !important;
     } .custom-style-2 {
@@ -175,12 +193,15 @@
   }, {
     name: 'Blue & Red',
     len: 2,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.35rem !important;
     } .custom-margin-left-double {
       margin-left: 0.7rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(30,144,255,0.4) !important;
     } .custom-style-2 {
@@ -189,12 +210,15 @@
   }, {
     name: 'Blue & Yellow',
     len: 2,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.35rem !important;
     } .custom-margin-left-double {
       margin-left: 0.7rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgba(83,142,172,0.7) !important;
     } .custom-style-2 {
@@ -203,12 +227,15 @@
   }, {
     name: 'Dark & Light Greys',
     len: 2,
-    css: `.custom-margin-left {
+    css: `:root, body {
+      --dark-text: rgb(0,0,0);
+      --light-text: rgb(200,200,200);
+    } .custom-margin-left {
       margin-left: 0.35rem !important;
     } .custom-margin-left-double {
       margin-left: 0.7rem !important;
     } .custom-style {
-      color: rgb(200,200,200) !important;
+      color: var(--light-text) !important;
     } .custom-style-1 {
       border-left: 2px solid rgb(80,80,80) !important;
     } .custom-style-2 {
@@ -249,17 +276,19 @@
     .custom-pt   { padding-top: 0.5rem !important; }`;
 
   const target = ':scope > div#root > div > main > div > div > div > div > :last-child:not([class])';
-  let observer, searchInterval = 0, searchTimeout = 0, styleId;
+  let observer, running = false, searchInterval = 0, searchTimeout = 0, styleId;
   let { color, length, style, hideSettings } = GM_getValues({ color: colors[0].name, length: colors[0].len, style: styles[0], hideSettings: true });
 
 
-  const stylize4 = function(node,    recurseCount = 0) {
-    node.removeAttribute('style');
-    node.classList.remove('border-top', 'ms-1');
+  const stylize4 = function(ul,    recurseCount = 0) {
+    ul.removeAttribute('style');
+    ul.classList.remove('border-top', 'ms-1');
 
-    for (const li of node.children) {
+    ul.childNodes.forEach(li => {
+      if (li.nodeType !== Node.ELEMENT_NODE) return;
       if (recurseCount === 0) li.classList.add('custom-mt')
-      for (const element of li.children) {
+      li.childNodes.forEach(element => {
+        if (element.nodeType !== Node.ELEMENT_NODE) return;
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'ul') {
           stylize4(element, recurseCount + 1);
@@ -270,12 +299,12 @@
           element.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) element.classList.add('custom-margin-left');
           if (recurseCount > 1) li.classList.add('custom-margin-left');
-          const parent = element.firstChild;
+          const parent = element.firstElementChild;
           parent.classList.remove('ms-2');
-          const secChild = parent.querySelector(':scope > :nth-child(2)');
-          if (!secChild) continue; // Comment is hidden/collapsed.
-          secChild.querySelector(':scope > :first-child > :last-child')?.classList.add('custom-mb0');
-          const lastChild = parent.lastChild;
+          const secChild = parent.firstElementChild?.nextElementSibling;
+          if (!secChild) return; // Comment is hidden/collapsed.
+          secChild.firstElementChild?.lastElementChild?.classList.add('custom-mb0');
+          const lastChild = parent.lastElementChild;
           lastChild.classList.remove('mt-1');
           if (lastChild.childElementCount === 0) {
             secChild.classList.add('custom-pb');
@@ -288,36 +317,35 @@
           element.classList.add('custom-style-' + (((recurseCount + 1) % length) + 1));
           element.classList.add('custom-margin-left-double');
         }
-      }
-    }
+      });
+    });
   };
 
-  const stylize3 = function(node,    recurseCount = 0) {
-    node.removeAttribute('style');
-    node.classList.remove('border-top', 'ms-1');
+  const stylize3 = function(ul,    recurseCount = 0) {
+    ul.removeAttribute('style');
+    ul.classList.remove('border-top', 'ms-1');
 
-    const children = node.children;
-    const len = children.length;
-    for (let i = 0; i < len; ++i) {
-      const li = children[i];
+    ul.childNodes.forEach(li => {
+      if (li.nodeType !== Node.ELEMENT_NODE) return;
       const liChildCount = li.childElementCount;
       li.classList.add('custom-mt');
       li.classList.add('custom-style');
       li.classList.add('custom-style-' + ((recurseCount % length) + 1));
       if (recurseCount !== 0) li.classList.add('custom-margin-left');
-      for (const element of li.children) {
+      li.childNodes.forEach(element => {
+        if (element.nodeType !== Node.ELEMENT_NODE) return;
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'ul') {
           stylize3(element, recurseCount + 1);
         } else if (tagName === 'article') {
           element.classList.remove('border-top', 'mark', 'py-2');
           element.classList.add('custom-plr');
-          const parent = element.firstChild;
+          const parent = element.firstElementChild;
           parent.classList.remove('ms-2');
-          const secChild = parent.querySelector(':scope > :nth-child(2)');
-          if (!secChild) continue; // Comment is hidden/collapsed.
-          secChild.querySelector(':scope > :first-child > :last-child')?.classList.add('custom-mb0');
-          const lastChild = parent.lastChild;
+          const secChild = parent.firstElementChild?.nextElementSibling;
+          if (!secChild) return; // Comment is hidden/collapsed.
+          secChild.firstElementChild?.lastElementChild?.classList.add('custom-mb0');
+          const lastChild = parent.lastElementChild;
           lastChild.classList.remove('mt-1');
           if (lastChild.childElementCount === 0) {
             if (liChildCount === 1) secChild.classList.add('custom-pb');
@@ -331,17 +359,19 @@
           element.classList.add('custom-style-' + (((recurseCount + 1) % length) + 1));
           element.classList.add('custom-margin-left');
         }
-      }
-    }
+      });
+    });
   };
 
   // node must be a ul element (HTMLUListElement).
-  const stylize2 = function(node,    recurseCount = 0) {
-    node.removeAttribute('style');
-    node.classList.remove('border-top', 'ms-1'); // margin-left: 0.25rem
+  const stylize2 = function(ul,    recurseCount = 0) {
+    ul.removeAttribute('style');
+    ul.classList.remove('border-top', 'ms-1'); // margin-left: 0.25rem
 
-    for (const li of node.children) {
-      for (const element of li.children) {
+    ul.childNodes.forEach(li => {
+      if (li.nodeType !== Node.ELEMENT_NODE) return;
+      li.childNodes.forEach(element => {
+        if (element.nodeType !== Node.ELEMENT_NODE) return;
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'ul') {
           element.classList.add('custom-style');
@@ -351,17 +381,17 @@
         } else if (tagName === 'article') {
           element.classList.remove('border-top', 'mark', 'py-2'); // padding-top: 0.5rem; padding-bottom: 0.5rem
           //element.classList.add('custom-pt');
-          const parent = element.firstChild;
+          const parent = element.firstElementChild;
           parent.classList.remove('ms-2'); // margin-left: 0.5rem
           parent.firstChild.classList.add('custom-pbrt');
-          const secChild = parent.querySelector(':scope > :nth-child(2)');
-          if (!secChild) continue; // Comment is hidden/collapsed.
+          const secChild = parent.firstElementChild?.nextElementSibling;
+          if (!secChild) return; // Comment is hidden/collapsed.
           secChild.classList.add('custom-p');
           secChild.classList.add('custom-style');
           secChild.classList.add('custom-style-' + ((recurseCount % length) + 1));
           if (recurseCount !== 0) secChild.classList.add('custom-margin-left');
-          secChild.querySelector(':scope > :first-child > :last-child')?.classList.add('custom-mb0');
-          const lastChild = parent.lastChild;
+          secChild.firstElementChild?.lastElementChild?.classList.add('custom-mb0');
+          const lastChild = parent.lastElementChild;
           lastChild.classList.remove('mt-1'); // margin-top: 0.25rem
           lastChild.classList.add('custom-style');
           lastChild.classList.add('custom-style-' + ((recurseCount % length) + 1));
@@ -374,16 +404,18 @@
           element.classList.add('custom-style-' + (((recurseCount + 1) % length) + 1));
           element.classList.add('custom-margin-left-double');
         }
-      }
-    }
+      });
+    });
   };
 
-  const stylize1 = function(node,    recurseCount = 0) {
-    node.removeAttribute('style');
-    node.classList.remove('border-top', 'ms-1');
+  const stylize1 = function(ul,    recurseCount = 0) {
+    ul.removeAttribute('style');
+    ul.classList.remove('border-top', 'ms-1');
 
-    for (const li of node.children) {
-      for (const element of li.children) {
+    ul.childNodes.forEach(li => {
+      if (li.nodeType !== Node.ELEMENT_NODE) return;
+      li.childNodes.forEach(element => {
+        if (element.nodeType !== Node.ELEMENT_NODE) return;
         const tagName = element.tagName.toLowerCase();
         if (tagName === 'ul') {
           element.classList.add('custom-style');
@@ -397,12 +429,12 @@
           } else {
             element.classList.add('custom-plr');
           }
-          const parent = element.firstChild;
+          const parent = element.firstElementChild;
           parent.classList.remove('ms-2');
-          const secChild = parent.querySelector(':scope > :nth-child(2)');
-          if (!secChild) continue; // Comment is hidden/collapsed.
-          secChild.querySelector(':scope > :first-child > :last-child')?.classList.add('custom-mb0');
-          const lastChild = parent.lastChild;
+          const secChild = parent.firstElementChild?.nextElementSibling;
+          if (!secChild) return; // Comment is hidden/collapsed.
+          secChild.firstElementChild?.lastElementChild?.classList.add('custom-mb0');
+          const lastChild = parent.lastElementChild;
           lastChild.classList.remove('mt-1');
           if (lastChild.childElementCount === 0) {
             secChild.classList.add('custom-pb');
@@ -415,8 +447,8 @@
           element.classList.add('custom-style-' + ((recurseCount % length) + 1));
           element.classList.add('custom-margin-left');
         }
-      }
-    }
+      });
+    });
   };
 
   const stylize = function(node) {
@@ -429,31 +461,35 @@
   };
 
   const run = function() {
-    searchTimeout = window.setTimeout(() => window.clearInterval(searchInterval), 10000);
+    running = true;
+
+    searchTimeout = window.setTimeout(() => {
+      window.clearInterval(searchInterval);
+      running = false;
+    }, 10000);
 
     searchInterval = window.setInterval(() => {
-      if (!document.body) return;
       const targetParent = document.body.querySelector(target);
       if (!targetParent) return;
 
       window.clearInterval(searchInterval);
       window.clearTimeout(searchTimeout);
       searchInterval = searchTimeout = 0;
+      running = false;
 
       if (targetParent.childElementCount === 0) return;
 
-      observer = new MutationObserver(mutations => {
-        for (const mutation of mutations) {
-          for (const node of mutation.addedNodes) {
-            if (node instanceof HTMLUListElement || node instanceof HTMLLIElement) {
-              stylize(targetParent.lastChild);
-            }
+      observer = new MutationObserver(mutations => mutations.some(({addedNodes}) => {
+        for (const node of addedNodes) {
+          if (node instanceof HTMLUListElement || node instanceof HTMLLIElement) {
+            stylize(targetParent.lastElementChild);
+            return true;
           }
         }
-      });
+      }));
       observer.observe(targetParent, { childList: true, subtree: true });
 
-      stylize(targetParent.lastChild);
+      stylize(targetParent.lastElementChild);
     }, 100);
   };
 
@@ -471,7 +507,12 @@
   const addColorsStyle = function() {
     const style = document.createElement('style');
     style.id = (styleId || (styleId = random(2)));
-    style.textContent = colors.find(({name}) => name === color).css;
+    let css = colors.find(({name}) => name === color).css;
+    const backgroundColor = window.getComputedStyle(document.body).backgroundColor;
+    // rgb(255, 255, 255)
+    // color: var(--light-text) !important;
+    if (!/^rgb\(.., .., ..\)$/.test(backgroundColor)) css = css.replace(/var\(--light-([^)]+)\)/gm, 'var(--dark-$1)');
+    style.textContent = css;
     document.head.appendChild(style);
   };
 
@@ -489,9 +530,11 @@
     addColorsStyle();
 
     new MutationObserver(mutations => {
+      if (running && /^\/(?:comment|post)\//.test(window.location.pathname)) return;
       window.clearInterval(searchInterval);
       window.clearTimeout(searchTimeout);
       searchInterval = searchTimeout = 0;
+      running = false;
       if (observer) {
         observer.disconnect();
         observer = undefined;

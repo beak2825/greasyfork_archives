@@ -1,23 +1,221 @@
 // ==UserScript==
-// @name         Discord Quest Auto-Complete
+// @name         Discord Quest Auto-Completer
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Auto-complete Discord quests with one click
 // @author       manolo_kat
-// @license      MIT
 // @match        https://discord.com/*
 // @match        https://*.discord.com/*
-// @grant        none
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @run-at       document-end
-// @supportURL   https://github.com/Manolo-Kat/Discord_Quest_Auto-Complete/issues
-// @downloadURL https://update.greasyfork.org/scripts/562155/Discord%20Quest%20Auto-Complete.user.js
-// @updateURL https://update.greasyfork.org/scripts/562155/Discord%20Quest%20Auto-Complete.meta.js
+// @supportURL   https://github.com/Manolo-Kat/TamperMonkeyScripts/issues
+// @downloadURL https://update.greasyfork.org/scripts/562155/Discord%20Quest%20Auto-Completer.user.js
+// @updateURL https://update.greasyfork.org/scripts/562155/Discord%20Quest%20Auto-Completer.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Wait for Discord to fully load
+    // Settings
+    let buttonPosition = GM_getValue('buttonPosition', 'top-right');
+
+    // Create settings menu
+    const createSettingsMenu = () => {
+        const menu = document.createElement('div');
+        menu.id = 'quest-settings-menu';
+        menu.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: #2f3136;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            color: white;
+            font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: none;
+        `;
+
+        menu.innerHTML = `
+            <h3 style="margin: 0 0 15px 0; color: #fff;">Quest Auto-Complete Settings</h3>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Button Position:</label>
+                <select id="position-select" style="width: 100%; padding: 8px; border-radius: 4px; background: #40444b; color: white; border: none;">
+                    <option value="top-right" ${buttonPosition === 'top-right' ? 'selected' : ''}>Top Right</option>
+                    <option value="top-left" ${buttonPosition === 'top-left' ? 'selected' : ''}>Top Left</option>
+                    <option value="bottom-right" ${buttonPosition === 'bottom-right' ? 'selected' : ''}>Bottom Right</option>
+                    <option value="bottom-left" ${buttonPosition === 'bottom-left' ? 'selected' : ''}>Bottom Left</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="save-settings" style="flex: 1; padding: 10px; background: #5865F2; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Save</button>
+                <button id="cancel-settings" style="flex: 1; padding: 10px; background: #4f545c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
+            </div>
+        `;
+
+        document.body.appendChild(menu);
+
+        document.getElementById('save-settings').onclick = () => {
+            const newPosition = document.getElementById('position-select').value;
+            GM_setValue('buttonPosition', newPosition);
+            buttonPosition = newPosition;
+            menu.style.display = 'none';
+            
+            // Recreate button with new position
+            const btn = document.getElementById('quest-auto-complete-btn');
+            if (btn) btn.remove();
+            const settingsBtn = document.getElementById('quest-settings-btn');
+            if (settingsBtn) settingsBtn.remove();
+            createButtons();
+            
+            showNotification('Settings saved!');
+        };
+
+        document.getElementById('cancel-settings').onclick = () => {
+            menu.style.display = 'none';
+        };
+
+        return menu;
+    };
+
+    const showNotification = (message) => {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10001;
+            background: #43b581;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    };
+
+    const getButtonPosition = () => {
+        const positions = {
+            'top-right': 'top: 80px; right: 20px;',
+            'top-left': 'top: 80px; left: 20px;',
+            'bottom-right': 'bottom: 20px; right: 20px;',
+            'bottom-left': 'bottom: 20px; left: 20px;'
+        };
+        return positions[buttonPosition];
+    };
+
+    const getSettingsButtonPosition = () => {
+        const positions = {
+            'top-right': 'top: 140px; right: 20px;',
+            'top-left': 'top: 140px; left: 20px;',
+            'bottom-right': 'bottom: 80px; right: 20px;',
+            'bottom-left': 'bottom: 80px; left: 20px;'
+        };
+        return positions[buttonPosition];
+    };
+
+    const createButtons = () => {
+        // Remove existing buttons
+        const existingBtn = document.getElementById('quest-auto-complete-btn');
+        const existingSettingsBtn = document.getElementById('quest-settings-btn');
+        if (existingBtn) existingBtn.remove();
+        if (existingSettingsBtn) existingSettingsBtn.remove();
+
+        // Create main button
+        const button = document.createElement('button');
+        button.id = 'quest-auto-complete-btn';
+        button.textContent = 'Start Completing Quests';
+        button.style.cssText = `
+            position: fixed;
+            ${getButtonPosition()}
+            z-index: 9999;
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(88, 101, 242, 0.3);
+            transition: all 0.2s ease;
+            font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        `;
+
+        // Create settings button
+        const settingsButton = document.createElement('button');
+        settingsButton.id = 'quest-settings-btn';
+        settingsButton.textContent = '⚙️';
+        settingsButton.style.cssText = `
+            position: fixed;
+            ${getSettingsButtonPosition()}
+            z-index: 9999;
+            background-color: #4f545c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        `;
+
+        // Hover effects for main button
+        button.onmouseenter = () => {
+            if (!button.disabled) {
+                button.style.backgroundColor = '#4752C4';
+                button.style.transform = 'translateY(-1px)';
+                button.style.boxShadow = '0 4px 12px rgba(88, 101, 242, 0.4)';
+            }
+        };
+
+        button.onmouseleave = () => {
+            if (!button.disabled) {
+                button.style.backgroundColor = '#5865F2';
+                button.style.transform = 'translateY(0)';
+                button.style.boxShadow = '0 2px 10px rgba(88, 101, 242, 0.3)';
+            }
+        };
+
+        // Hover effects for settings button
+        settingsButton.onmouseenter = () => {
+            settingsButton.style.backgroundColor = '#5865F2';
+            settingsButton.style.transform = 'translateY(-1px)';
+        };
+
+        settingsButton.onmouseleave = () => {
+            settingsButton.style.backgroundColor = '#4f545c';
+            settingsButton.style.transform = 'translateY(0)';
+        };
+
+        // Click handler for main button
+        button.onclick = () => {
+            button.disabled = true;
+            button.textContent = 'Processing...';
+            button.style.backgroundColor = '#4752C4';
+            runQuestAutomation(button);
+        };
+
+        // Click handler for settings button
+        settingsButton.onclick = () => {
+            const menu = document.getElementById('quest-settings-menu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        };
+
+        document.body.appendChild(button);
+        document.body.appendChild(settingsButton);
+    };
+
+    // Initialize
+    const settingsMenu = createSettingsMenu();
+    
     const waitForElement = (selector, callback, interval = 100, timeout = 10000) => {
         const startTime = Date.now();
         const timer = setInterval(() => {
@@ -27,81 +225,12 @@
                 callback(element);
             } else if (Date.now() - startTime > timeout) {
                 clearInterval(timer);
-                console.log('Element not found:', selector);
             }
         }, interval);
     };
 
-    // Function to inject the button
-    const injectButton = () => {
-        // Check if we're on the quests page
-        const checkQuestsPage = () => {
-            // Look for quest-related elements
-            const isQuestsPage = window.location.href.includes('/quests') ||
-                                 document.querySelector('[class*="quest"]') ||
-                                 document.querySelector('[aria-label*="Quest"]');
-
-            return isQuestsPage;
-        };
-
-        const createButton = () => {
-            // Remove existing button if any
-            const existingButton = document.getElementById('quest-auto-complete-btn');
-            if (existingButton) {
-                existingButton.remove();
-            }
-
-            // Create button
-            const button = document.createElement('button');
-            button.id = 'quest-auto-complete-btn';
-            button.textContent = 'Start Completing Quests';
-            button.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                z-index: 9999;
-                background-color: #5865F2;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                padding: 12px 24px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                box-shadow: 0 2px 10px rgba(88, 101, 242, 0.3);
-                transition: all 0.2s ease;
-                font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            `;
-
-            // Hover effect
-            button.onmouseenter = () => {
-                button.style.backgroundColor = '#4752C4';
-                button.style.transform = 'translateY(-1px)';
-                button.style.boxShadow = '0 4px 12px rgba(88, 101, 242, 0.4)';
-            };
-
-            button.onmouseleave = () => {
-                button.style.backgroundColor = '#5865F2';
-                button.style.transform = 'translateY(0)';
-                button.style.boxShadow = '0 2px 10px rgba(88, 101, 242, 0.3)';
-            };
-
-            // Click handler
-            button.onclick = () => {
-                button.disabled = true;
-                button.textContent = 'Processing...';
-                button.style.backgroundColor = '#4752C4';
-
-                runQuestAutomation();
-            };
-
-            document.body.appendChild(button);
-        };
-
-        // Check if on quests page and create button
-        if (checkQuestsPage()) {
-            createButton();
-        }
+    const injectButtons = () => {
+        createButtons();
 
         // Watch for navigation changes
         let lastUrl = location.href;
@@ -109,12 +238,7 @@
             const url = location.href;
             if (url !== lastUrl) {
                 lastUrl = url;
-                if (checkQuestsPage()) {
-                    setTimeout(createButton, 1000);
-                } else {
-                    const btn = document.getElementById('quest-auto-complete-btn');
-                    if (btn) btn.remove();
-                }
+                setTimeout(createButtons, 1000);
             }
         }).observe(document, { subtree: true, childList: true });
     };
@@ -470,7 +594,7 @@
                     activeFakeGames.clear();
 
                     log("Script execution finished. All resources cleaned up.", 'success');
-
+                    
                     // Update button
                     const btn = document.getElementById('quest-auto-complete-btn');
                     if (btn) {
@@ -508,10 +632,10 @@
     // Initialize when page loads
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(injectButton, 2000);
+            setTimeout(injectButtons, 2000);
         });
     } else {
-        setTimeout(injectButton, 2000);
+        setTimeout(injectButtons, 2000);
     }
 
 })();

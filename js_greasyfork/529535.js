@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi Wiki 终极增强套件
 // @namespace    https://tampermonkey.net/
-// @version      3.1.2.4
+// @version      3.1.2.5
 // @description  集成Wiki按钮、关联按钮、封面上传、批量关联、批量分集编辑、内容快捷填充、单行本快捷创建、编辑预览功能
 // @author       Bios (improved Claude & Gemini)
 // @include      /^https?:\/\/(bgm|bangumi|chii)\.tv\/(subject|character|person|new_subject)\/.*/
@@ -2180,7 +2180,7 @@
 
         <div id="tab-text" class="tab-panel active">
           <textarea id="custom_ids" class="enhancer-textarea"
-            placeholder="输入ID/网址/名称（支持多种格式：bgm_id=xx、数字、网址、文本，支持除空格外各类符号分隔）"></textarea>
+            placeholder="输入ID/网址/名称（支持多种格式：bgm_id=xx、数字、网址、文本，支持除空格外的各种分隔符）"></textarea>
         </div>
 
         <div id="tab-range" class="tab-panel">
@@ -2583,15 +2583,15 @@
                                 "ARPG", "RPG", "JRPG", "CRPG", "DRPG", "SRPG", "MMORPG",
                                 "FPS", "TPS", "Rail Shooter", "Arena Shooter", "STG", "Fly", "Horror",
                                 "RTS", "RTT", "TBS", "4X", "Strategy", "SLG", "MOBA",
-                                "DBG", "CCG", "TCG", "Roguelike", "Roguelite", "VN", "Interactive Fiction", "TAB", "BoardGame", "TRPG",
-                                "SIM", "LifeSim", "CityBuilder", "Sandbox", "Survival", "PUZ", "Rhythm", "MUG", "FTG", "RAC", "EDU", "GameEngine",
+                                "DBG", "CCG", "TCG", "Roguelike", "Roguelite", "VN", "Interactive Fiction", "TAB", "Board Game", "TRPG",
+                                "SIM", "Life sim", "City Building", "Base Building", "Sandbox", "Survival", "PUZ", "Rhythm", "MUG", "FTG", "RAC", "EDU", "Game Engine",
 
                                 "动作", "动作冒险", "冒险", "文字冒险", "平台跳跃", "跑酷",
                                 "动作角色扮演", "角色扮演", "日式角色扮演", "美式角色扮演", "地下城角色扮演", "战略角色扮演", "大型多人在线角色扮演",
                                 "第一人称射击", "第三人称射击", "轨道射击", "竞技场射击", "弹幕射击", "飞行模拟", "恐怖",
                                 "即时战略", "即时战术", "回合制策略", "4X策略", "策略", "策略模拟", "多人在线战术竞技",
                                 "牌组构建", "收集式卡牌", "集换式卡牌", "类Rogue", "轻度类Rogue", "视觉小说", "互动小说", "桌面游戏", "桌面角色扮演",
-                                "模拟", "人生模拟", "城市建造", "沙盒", "生存", "解谜", "节奏", "音乐", "格斗", "竞速", "教育", "游戏引擎"
+                                "模拟", "生活模拟", "城市建造", "基地建造", "沙盒", "生存", "解谜", "节奏", "音乐", "格斗", "竞速", "教育", "游戏引擎"
                             ],
                             mode: "replace",
                             display: "horizontal"
@@ -2599,7 +2599,7 @@
                         "游戏引擎": {
                             "options": [
                                 "Unity Engine", "Unreal Engine", "Godot Engine", "Source Engine", "Source 2 Engine",
-                                "RPG Maker Engine", "GameMaker Studio", "CryEngine", "Frostbite Engine", "Cocos2d-x Engine",
+                                "RPGMaker Engine", "GameMaker Studio", "CryEngine", "Frostbite Engine", "Cocos2d-x Engine",
                                 "Ren'Py Engine", "Cocos Engine", "PyGame", "GDevelop Engine", "Electron Container",
                                 "Red Engine", "RAGE", "Anvil Engine", "Snowdrop Engine", "IW Engine",
                                 "Creation Engine", "DECIMA Engine", "Avalanche Engine", "Id Tech Engine",

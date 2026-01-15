@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Bustimes and Transportthing Detailed View Enforcer
+// @name         bustimes.org - Detailed View Enforcer
 // @namespace    http://tampermonkey.net/
 // @version      1.1
 // @description  Automatically adds ?detailed=1 or &detailed=1 to bustimes.org and transportthing.uk pages
 // @match        *://*.bustimes.org/*
 // @match        *://*.transportthing.uk/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/534962/Bustimes%20and%20Transportthing%20Detailed%20View%20Enforcer.user.js
-// @updateURL https://update.greasyfork.org/scripts/534962/Bustimes%20and%20Transportthing%20Detailed%20View%20Enforcer.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/534962/bustimesorg%20-%20Detailed%20View%20Enforcer.user.js
+// @updateURL https://update.greasyfork.org/scripts/534962/bustimesorg%20-%20Detailed%20View%20Enforcer.meta.js
 // ==/UserScript==
 
 (function() {

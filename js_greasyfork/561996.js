@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Territory War Helper
 // @namespace    https://torn.com/
-// @version      01.11.2026.23.52
-// @description  Territory war helper: Seats, Score, TIMER, Projected end score, Current pace, Seat requirements, and Defenders "hold to guarantee". Correctly binds to the ACTIVE WAR TILE by matching the territory (terrName) to avoid pulling wrong score/timer/seats from other wars.
+// @version      01.13.2026.19.15
+// @description  Territory war helper: Seats, Score, TIMER, Projected end score, Current pace, Seat requirements, and Defenders "hold to guarantee". Binds to ACTIVE WAR TILE using warId so score/timer/seats never come from the wrong war.
 // @author       KillerCleat [2842410]
 // @match        https://www.torn.com/factions.php*
 // @grant        none
@@ -12,12 +12,15 @@
 
 /*
 NOTES & REQUIREMENTS
-Version: 01.11.2026.23.52
+Version: 01.13.2026.19.15
 Author: KillerCleat [2842410]
 
-Fix in this version:
-- Seat counts are now mapped using tile text (defending/assaulting) + left/right order
-  instead of relying on enemy-count/your-count classes (which are inconsistent).
+UPDATE:
+- FIX: Always binds to the ACTIVE WAR tile (LI) using warId from the URL hash.
+  This prevents pulling score/timer/seats from other wars in the list (the "stuck at 500k" issue).
+- Seat counts are read ONLY from the active war tile, then mapped using the tile text:
+  "defending" => LEFT=defenders RIGHT=attackers
+  "assaulting" => LEFT=attackers RIGHT=defenders
 */
 
 (function () {
@@ -41,21 +44,17 @@ Fix in this version:
   function $(sel, root = document) {
     return root.querySelector(sel);
   }
-
   function $all(sel, root = document) {
     return Array.from(root.querySelectorAll(sel));
   }
-
   function toIntSafe(str) {
     const n = parseInt(String(str).replace(/[^\d-]/g, ""), 10);
     return Number.isFinite(n) ? n : 0;
   }
-
   function fmtNum(n) {
     const x = Math.round(n);
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
@@ -67,7 +66,6 @@ Fix in this version:
     const hh = Math.floor((s % 86400) / 3600);
     const mm = Math.floor((s % 3600) / 60);
     const ss = s % 60;
-
     const pad2 = (v) => String(v).padStart(2, "0");
     return `${pad2(dd)}:${pad2(hh)}:${pad2(mm)}:${pad2(ss)}`;
   }
@@ -83,14 +81,9 @@ Fix in this version:
     return dd * 86400 + hh * 3600 + mm * 60 + ss;
   }
 
-  // Walk up until predicate matches
-  function closestUp(node, predicate, maxSteps = 30) {
-    let cur = node;
-    for (let i = 0; i < maxSteps && cur; i++) {
-      if (predicate(cur)) return cur;
-      cur = cur.parentElement;
-    }
-    return null;
+  function getActiveWarId() {
+    const m = String(location.hash || "").match(/\/war\/(\d+)/);
+    return m ? m[1] : null;
   }
 
   // =========================
@@ -102,6 +95,7 @@ Fix in this version:
 
     const title = $(".faction-war-info .raid-title", info) || info;
     const text = title ? title.textContent : info.textContent;
+
     const isAssaulting = /is\s+assaulting/i.test(text);
     const isDefending = /is\s+defending/i.test(text);
 
@@ -119,6 +113,8 @@ Fix in this version:
     const terrLink = $('.faction-war-info a[href*="/city.php#terrName="]');
     const territory = terrLink ? terrLink.textContent.trim() : "";
 
+    // "X is assaulting TERR held by Y"  => attacker = first link, defender = second link
+    // "X is defending TERR assaulted by Y" => defender = first link, attacker = second link
     let attackerId = 0, defenderId = 0, attackerName = "", defenderName = "";
     if (isAssaulting) {
       attackerId = firstId; attackerName = firstName;
@@ -144,36 +140,35 @@ Fix in this version:
   }
 
   // =========================
-  // FIND THE CORRECT WAR TILE
+  // FIND THE CORRECT WAR TILE (FIXED)
   // =========================
-  function findActiveWarTileByTerritory(territory) {
-    if (!territory) return null;
+  function findActiveWarTileByWarId(warId) {
+    if (!warId) return null;
 
-    const terrLinks = $all('a[href*="/city.php#terrName="]').filter(a => a.textContent.trim() === territory);
-    if (!terrLinks.length) return null;
+    // Find the link that targets this war in the list tiles, then grab its LI.
+    // Example: <a href="/factions.php?step=profile&ID=9524#/war/44383"></a>
+    const a = document.querySelector(`a[href*="#/war/${warId}"]`);
+    if (!a) return null;
 
-    for (const a of terrLinks) {
-      const tile = closestUp(a, (el) => {
-        return !!el.querySelector?.(".faction-progress-wrap .score")
-          && !!el.querySelector?.(".faction-progress-wrap .timer")
-          && !!el.querySelector?.(".member-count .count");
-      }, 40);
+    const li = a.closest("li");
+    if (!li) return null;
 
-      if (tile) return tile;
-    }
+    // Validate it contains the expected elements (score/timer/counts) for safety.
+    const ok = !!li.querySelector(".faction-progress-wrap .score")
+      && !!li.querySelector(".faction-progress-wrap .timer")
+      && !!li.querySelector(".member-count .count");
 
-    return null;
+    return ok ? li : null;
   }
 
   // =========================
-  // FIXED: SCORE/TIMER/SEATS FROM TILE
+  // SCORE/TIMER/SEATS FROM *ACTIVE LI TILE*
   // =========================
   function parseScoreTimerCountsFromTile(tile) {
     if (!tile) return null;
 
     const scoreEl = $(".faction-progress-wrap .score", tile);
     const timerEl = $(".faction-progress-wrap .timer", tile);
-
     if (!scoreEl || !timerEl) return null;
 
     const rawScore = scoreEl.textContent.trim(); // "198,246 / 250,000"
@@ -185,15 +180,14 @@ Fix in this version:
     if (secondsLeft === null) return null;
 
     // IMPORTANT:
-    // Read the two seat counts in order (LEFT then RIGHT).
+    // Read ONLY the two seat counts inside this LI.
     const counts = $all(".member-count .count", tile).map(e => toIntSafe(e.textContent));
     const leftCount = Number.isFinite(counts[0]) ? counts[0] : 0;
     const rightCount = Number.isFinite(counts[1]) ? counts[1] : 0;
 
     // Decide which side is defending vs assaulting using tile text.
-    // Example tile strings:
-    // - "HT defending LAA from Inglorious Basterds" => LEFT = defenders, RIGHT = attackers
-    // - "Violent Resolution assaulting MAA held ..." => LEFT = attackers, RIGHT = defenders
+    // "HT defending LAA from ..." => LEFT=defenders, RIGHT=attackers
+    // "Violent Resolution assaulting MAA ..." => LEFT=attackers, RIGHT=defenders
     const tileText = tile.textContent.toLowerCase();
 
     let attackers = 0;
@@ -206,7 +200,7 @@ Fix in this version:
       attackers = leftCount;
       defenders = rightCount;
     } else {
-      // Fallback if Torn changes words: keep old assumption but still stable left/right
+      // Fallback: stable left/right
       attackers = leftCount;
       defenders = rightCount;
     }
@@ -215,12 +209,11 @@ Fix in this version:
   }
 
   // =========================
-  // TOTAL SEATS FROM OPEN WAR TABLE
+  // TOTAL SEATS FROM OPEN WAR TABLE (OPTIONAL)
   // =========================
   function parseTotalSeatsFromOpenWarTable() {
     const warTable = $(".faction-war .members-list");
     if (!warTable) return null;
-
     const rows = $all(":scope > li", warTable);
     const seatRows = rows.filter((li) => !!$(".id.left", li));
     const total = seatRows.length;
@@ -301,20 +294,17 @@ Fix in this version:
   }
 
   // =========================
-  // RENDER BOX
+  // RENDER HELPERS
   // =========================
   function row(html) {
     return `<div class="row">${html}</div>`;
   }
-
   function section(lines) {
     return `<div class="section">${lines.map((t) => row(t)).join("\n")}</div>`;
   }
-
   function getOrCreateBox(infoEl) {
     let box = document.getElementById(BOX_ID);
     if (box) return box;
-
     box = document.createElement("div");
     box.id = BOX_ID;
     infoEl.insertAdjacentElement("afterend", box);
@@ -322,19 +312,21 @@ Fix in this version:
   }
 
   // =========================
-  // CORE MATH / LINES
+  // CORE MATH / RENDER
   // =========================
   function computeAndRender() {
     const header = parseWarHeaderInfo();
     if (!header) return;
 
-    const tile = findActiveWarTileByTerritory(header.territory);
+    const warId = getActiveWarId();
+    const tile = findActiveWarTileByWarId(warId);
     const tileData = parseScoreTimerCountsFromTile(tile);
-
     if (!tileData) return;
 
     const totalSeatsFromTable = parseTotalSeatsFromOpenWarTable();
-    const totalSeats = totalSeatsFromTable !== null ? totalSeatsFromTable : (tileData.attackers + tileData.defenders);
+    const totalSeats = totalSeatsFromTable !== null
+      ? totalSeatsFromTable
+      : (tileData.attackers + tileData.defenders);
 
     const attackersSeats = tileData.attackers;
     const defendersSeats = tileData.defenders;
@@ -494,7 +486,7 @@ Fix in this version:
   }
 
   // =========================
-  // BOOT
+  // TICK / BOOT
   // =========================
   function tick() {
     try {

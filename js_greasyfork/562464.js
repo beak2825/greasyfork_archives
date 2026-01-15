@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ECTScript
 // @namespace    https://github.com/OnlyMaxi/ECTScript
-// @version      9
+// @version      10.0.0
 // @description  for free ECTS click here!
 // @match        https://tuwel.tuwien.ac.at/course/view.php?id=*
 // @match        https://tuwel.tuwien.ac.at/mod/scorm/view.php?id=*

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr duel round analysis
 // @namespace    http://tampermonkey.net/
-// @version      0.2.1
+// @version      0.3.0
 // @description  Analyse duel round data on a map
 // @author       irrational
 // @match        https://www.geoguessr.com/*
@@ -15,6 +15,8 @@
 // @resource     openlayersCSS https://cdn.jsdelivr.net/npm/ol@10.7.0/ol.css
 // @resource     countries https://cdn.jsdelivr.net/npm/world-countries@5.1.0/countries.json
 // @grant        GM_getResourceText
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @downloadURL https://update.greasyfork.org/scripts/561250/Geoguessr%20duel%20round%20analysis.user.js
 // @updateURL https://update.greasyfork.org/scripts/561250/Geoguessr%20duel%20round%20analysis.meta.js
 // ==/UserScript==
@@ -35,6 +37,7 @@ const SHOW_SELECT_ID = '__userscript_show_select';
 const LINES_INPUT_ID = '__userscript_lines_input';
 const LINES_LABEL_ID = '__userscript_lines_label';
 const LINECOLOUR_SELECT_ID = '__userscript_linecolour_select';
+const KEEP_INPUT_ID = '__userscript_keep_input';
 
 
 let map = null;
@@ -45,6 +48,7 @@ const selectDraw = new ol.interaction.Draw({source: selectSource, type: 'Polygon
 let allRounds = [];
 let activeRounds = [];
 let activeRoundIndexes = [];
+let roundsToDuels = [];
 let chart = null;
 let locIndex = null;
 let guessIndex = null;
@@ -89,8 +93,19 @@ const makeSelect = (options, id = null, preset = null) => {
     return select;
 };
 
-const flag = (cc) =>
-    String.fromCodePoint(...cc.toUpperCase().split('').map(char => 127397 + char.charCodeAt()));
+const makeCheckbox = (text, checkboxId, labelId = null) => {
+    const div = document.createElement('div');
+    const checkbox = makeStyledElement('input', {verticalAlign: 'middle', margin: '0 1ex 0 0'});
+    checkbox.type = 'checkbox';
+    checkbox.id = checkboxId;
+    div.append(checkbox);
+    const label = makeStyledElement('label', {verticalAlign: 'middle'});
+    label.id = labelId;
+    label.htmlFor = checkboxId;
+    label.innerHTML = text;
+    div.append(label);
+    return [div, checkbox, label];
+};
 
 const radiusToExtent = (lon, lat, radius) => {
     const degPerMetre = 360/(2*Math.PI * 6371000);
@@ -192,7 +207,7 @@ const openMap = (userId) => {
     const countryList = JSON.parse(GM_getResourceText('countries'));
     countryList.sort((a, b) => a.name.common < b.name.common ? -1 : 1);
     const countrySelect = makeSelect(countryList.map((country) => [country.cca2.toLowerCase(),
-                                                                   `${flag(country.cca2)} ${country.name.common}`]));
+                                                                   `${country.flag} ${country.name.common}`]));
     countrySelect.id = COUNTRY_SELECT_ID;
     countrySelect.style.display = 'none';
     controlsContainer.append(countrySelect);
@@ -202,17 +217,8 @@ const openMap = (userId) => {
                                   SHOW_SELECT_ID);
     controlsContainer.append(showSelect);
 
-    const checkboxDiv = document.createElement('div');
-    const linesCheckbox = makeStyledElement('input', {verticalAlign: 'middle', margin: '0 1ex 0 0'});
-    linesCheckbox.type = 'checkbox';
-    linesCheckbox.id = LINES_INPUT_ID;
-    checkboxDiv.append(linesCheckbox);
-    const linesLabel = makeStyledElement('label', {verticalAlign: 'middle'});
-    linesLabel.id = LINES_LABEL_ID;
-    linesLabel.htmlFor = LINES_INPUT_ID;
-    linesLabel.innerHTML = 'Inspect corresponding locations';
-    checkboxDiv.append(linesLabel);
-    controlsContainer.append(checkboxDiv);
+    const [linesDiv, linesCheckbox, linesLabel] = makeCheckbox('Inspect', LINES_INPUT_ID, LINES_LABEL_ID);
+    controlsContainer.append(linesDiv);
 
     const lineColourSelect = makeSelect([['score', 'Colour by score'],
                                          ['damage', 'Colour by damage (before multipliers)'],
@@ -221,19 +227,23 @@ const openMap = (userId) => {
     lineColourSelect.style.display = 'none';
     controlsContainer.append(lineColourSelect);
 
+    const [keepDiv, keepCheckbox] = makeCheckbox('Keep these settings for next time', KEEP_INPUT_ID);
+    controlsContainer.append(keepDiv);
+
     const chartContainer = makeStyledElement('div', {
         position: 'absolute',
         right: '2vh',
         bottom: 'calc(17px + 2vh)',
         width: '50vh',
-        height: '25vh',
         padding: '1vh',
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         borderRadius: '1vh',
         zIndex: 9999
     });
     const chartCanvas = document.createElement('canvas');
+    const countsDiv = makeStyledElement('div', {color: 'white', textAlign: 'right'});
     chartContainer.append(chartCanvas);
+    chartContainer.append(countsDiv);
 
     const olStyleSheet = document.createElement('style');
     let styles = GM_getResourceText('openlayersCSS');
@@ -256,7 +266,10 @@ const openMap = (userId) => {
 
     for (const control of [fromDateInput, toDateInput, gameModeSelect]) {
         control.addEventListener('change', () => {
-            fetchRounds(userId).then(makeHeatLayer);
+            fetchRounds(userId).then(() => {
+                makeHeatLayer();
+                updateCounts(countsDiv);
+            });
         });
     }
     selectSelect.addEventListener('change', () => {
@@ -270,6 +283,7 @@ const openMap = (userId) => {
             filterSelect.querySelector("option[value='country']").disabled = false;
         }
         makeHeatLayer();
+        updateCounts(countsDiv);
     });
     filterSelect.addEventListener('change', () => {
         countrySelect.style.display = filterSelect.value == 'country' ? null : 'none';
@@ -285,9 +299,13 @@ const openMap = (userId) => {
             chart.update();
         }
         makeHeatLayer();
+        updateCounts(countsDiv);
     });
 
-    countrySelect.addEventListener('change', () => makeHeatLayer());
+    countrySelect.addEventListener('change', () => {
+        makeHeatLayer();
+        updateCounts(countsDiv);
+    });
 
     showSelect.addEventListener('change', () => {
         linesLabel.innerHTML = `Inspect corresponding ${showSelect.value == 'guesses' ? 'locations' : 'guesses'}`;
@@ -299,6 +317,13 @@ const openMap = (userId) => {
         if (! linesCheckbox.checked) pairsSource.clear();
     });
 
+    for (const control of [fromDateInput, toDateInput, gameModeSelect, selectSelect, filterSelect,
+                           countrySelect, showSelect, linesCheckbox, lineColourSelect, keepCheckbox])
+    {
+        control.addEventListener('change', () => {
+            GM_setValue('controls', keepCheckbox.checked ? getControls() : null);
+        });
+    }
 
     /* ===== OpenLayers ===== */
 
@@ -334,7 +359,10 @@ const openMap = (userId) => {
          }));
         selectSource.clear();
     });
-    selectDraw.on('drawend', (event) => makeHeatLayer(event.feature));
+    selectDraw.on('drawend', (event) => {
+        makeHeatLayer(event.feature);
+        updateCounts(countsDiv);
+    });
 
     map.on('pointermove', drawPairs);
 
@@ -362,8 +390,28 @@ const openMap = (userId) => {
 
     /* ===== Initialise ===== */
 
-    map.addInteraction(selectDraw);
-    fetchRounds(userId).then(makeHeatLayer);
+    const controls = GM_getValue('controls');
+    if (controls) {
+        fromDateInput.value = controls.fromDate;
+        toDateInput.value = controls.toDate;
+        gameModeSelect.value = controls.gameMode;
+        selectSelect.value = controls.select;
+        filterSelect.value = controls.filter;
+        countrySelect.value = controls.country;
+        showSelect.value = controls.show;
+        linesCheckbox.checked = controls.lines;
+        lineColourSelect.value = controls.linecolour;
+        keepCheckbox.checked = controls.keep;
+    }
+    linesLabel.innerHTML = `Inspect corresponding ${showSelect.value == 'guesses' ? 'locations' : 'guesses'}`;
+    if (filterSelect.value == 'polygon') map.addInteraction(selectDraw);
+    if (filterSelect.value == 'country') countrySelect.style.display = null;
+    if (linesCheckbox.checked) lineColourSelect.style.display = null;
+
+    fetchRounds(userId).then(() => {
+        makeHeatLayer();
+        updateCounts(countsDiv);
+    });
 };
 
 const getControls = () => {
@@ -376,7 +424,8 @@ const getControls = () => {
         country: document.getElementById(COUNTRY_SELECT_ID).value,
         show: document.getElementById(SHOW_SELECT_ID).value,
         lines: document.getElementById(LINES_INPUT_ID).checked,
-        linecolour: document.getElementById(LINECOLOUR_SELECT_ID).value
+        linecolour: document.getElementById(LINECOLOUR_SELECT_ID).value,
+        keep: document.getElementById(KEEP_INPUT_ID).checked
     };
 };
 
@@ -387,13 +436,16 @@ const fetchRounds = async (userId) => {
     const index = roundsStore.index('timeGameModeIndex');
 
     const controls = getControls();
-    const bounds = IDBKeyRange.bound([controls.gameMode, new Date(controls.fromDate)],
-                                     [controls.gameMode, new Date(controls.toDate)]);
+    const bounds = IDBKeyRange.bound([controls.gameMode, new Date(controls.fromDate + "T00:00:00")],
+                                     [controls.gameMode, new Date(controls.toDate + "T23:59:59")]);
     const duels = await fetchResult(index.getAll(bounds));
 
     allRounds = [];
-    for (const duel of duels) {
-        allRounds.push(...duel.rounds.filter((round) => round.ourGuess));
+    roundsToDuels = [];
+    for (let i = 0; i < duels.length; ++i) {
+        const filteredRounds = duels[i].rounds.filter((round) => round.ourGuess);
+        allRounds.push(...filteredRounds);
+        roundsToDuels.push(...new Array(filteredRounds.length).fill(i));
     }
     guessIndex = new KDBush(allRounds.length);
     locIndex = new KDBush(allRounds.length);
@@ -513,6 +565,12 @@ const drawPairs = (event) => {
             pairsSource.addFeature(pairLine);
         }
     }
+};
+
+const updateCounts = (element) => {
+    const uniqueDuels = new Set();
+    activeRoundIndexes.forEach((idx) => uniqueDuels.add(roundsToDuels[idx]));
+    element.innerHTML = `Selected ${activeRounds.length} rounds from ${uniqueDuels.size} duels.`;
 };
 
 const run = async (mutations) => {

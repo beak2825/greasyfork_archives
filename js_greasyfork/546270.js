@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Bustimes.org Theme Builder
+// @name         bustimes.org - Theme Builder
 // @namespace    https://bustimes.org/
 // @version      1.4
 // @description  Create custom themes for bustimes.org
 // @author       petabyte
 // @match        https://bustimes.org/*
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/546270/Bustimesorg%20Theme%20Builder.user.js
-// @updateURL https://update.greasyfork.org/scripts/546270/Bustimesorg%20Theme%20Builder.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/546270/bustimesorg%20-%20Theme%20Builder.user.js
+// @updateURL https://update.greasyfork.org/scripts/546270/bustimesorg%20-%20Theme%20Builder.meta.js
 // ==/UserScript==
 
 (function() {

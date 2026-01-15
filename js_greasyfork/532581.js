@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Fix Cardiff Bus Route Colours
+// @name         bustimes.org - Fix Cardiff Bus Route Colours
 // @match        *://bustimes.org/operators/cardiff-bus*
 // @match        *://bustimes.org/search?q=cardiff+bus*
 // @grant        none
 // @description  Fixes Cardiff bus colours on bustimes.org by applying the colours from cardiffbus.com/services
-// @version 0.0.1.20251228125806
+// @version 0.0.1.20260114010923
 // @namespace https://greasyfork.org/users/938630
-// @downloadURL https://update.greasyfork.org/scripts/532581/Fix%20Cardiff%20Bus%20Route%20Colours.user.js
-// @updateURL https://update.greasyfork.org/scripts/532581/Fix%20Cardiff%20Bus%20Route%20Colours.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/532581/bustimesorg%20-%20Fix%20Cardiff%20Bus%20Route%20Colours.user.js
+// @updateURL https://update.greasyfork.org/scripts/532581/bustimesorg%20-%20Fix%20Cardiff%20Bus%20Route%20Colours.meta.js
 // ==/UserScript==
 
 

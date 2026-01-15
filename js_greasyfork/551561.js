@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Pixeldrain DL Bypass
 // @namespace       https://greasyfork.org/users/821661
-// @version         1.5.7bb
+// @version         1.5.8
 // @description     Adds direct-download buttons and links for Pixeldrain files using an alternate proxy — inspired by 'Pixeldrain Download Bypass' by hhoneeyy and MegaLime0
 // @author          hdyzen
 // @match           https://pixeldrain.com/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 const CONFIG = {
-    defaultBypassURL: "pd-pass.fdyzen.workers.dev",
+    defaultBypassURL: "pd-pass.hdyzen.xyz",
     customBypassURL: GM_getValue("custom_proxy", ""),
     jDownloaderURL: "http://127.0.0.1:9666/flash/addcnl",
 
@@ -30,11 +30,6 @@ const CONFIG = {
             label: "Direct download",
             state: false,
         },
-        // showMediaWithPoxy: {
-        //     label: "Load media files with proxy",
-        //     state: false,
-        //     effect: registerMediaProxy,
-        // },
         bypassVideoLogged: {
             label: "Bypass video logged restriction",
             state: true,
@@ -499,21 +494,6 @@ function registerCommands() {
             unsafeWindow.location.reload();
         });
     }
-}
-function registerMediaProxy() {
-    CONFIG.ON_ELEMENTS['video[src^="/api/file"], audio[src^="/api/file"], img[src^="/api/file"]'] = (node) => {
-        if (CONFIG.COMMANDS.showMediaWithPoxy.state) {
-            const src = node.getAttribute("src");
-            node.setAttribute("src", src.replace("/api/file", `https://${selectedProxy}`));
-        }
-    };
-
-    CONFIG.ON_ELEMENTS["div[style*='/api/file']"] = (node) => {
-        if (CONFIG.COMMANDS.showMediaWithPoxy.state) {
-            const style = node.getAttribute("style");
-            node.setAttribute("style", style.replaceAll("/api/file", `https://${selectedProxy}`));
-        }
-    };
 }
 
 function modAllowPlayer() {

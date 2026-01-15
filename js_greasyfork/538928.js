@@ -5,7 +5,7 @@
 // @match       https://www.cuberealm.io/*
 // @run-at      document-start
 // @grant       none
-// @version     1.2.5
+// @version     1.2.6
 // @author      Thibb1
 // @description Cuberealm extender Kb+, adds helpful features like Zoom and friend/enemy list
 // @license     GPL
@@ -50,8 +50,8 @@ Object.defineProperties(Object.prototype, {
                 );
                 break;
               case Events.Message:
-                args[1] = handleMessage(args[1]);
-                if (args[1] == "") args[0] = Events.Disable;
+                args[2] = handleMessage(args[2]);
+                if (args[2] == "") args[0] = Events.Disable;
                 break;
               case Events.SendMessage:
                 const send = args[1];
@@ -122,6 +122,11 @@ const Events = {
   SendMessage: 34,
   TabValues: 44,
   Disable: 99999
+}
+
+const MessageFrom = {
+  Server: 0,
+  Player: 1
 }
 
 const defaultSettings = {
@@ -316,9 +321,9 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-function sendMessage(message, color) {
+function sendMessage(message, color, from = MessageFrom.Server) {
   const text = (color ? color.convert() : "") + message;
-  window.__eventEmitter.emit(Events.Message, text);
+  window.__eventEmitter.emit(Events.Message, from, text);
 }
 
 function sendChatMessage(message) {

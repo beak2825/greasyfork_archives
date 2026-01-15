@@ -1,13 +1,19 @@
 // ==UserScript==
-// @name         Amazon Reviewer Trust Badge (Quality Check & Fake Detector)
-// @name:ja      Amazonレビュー信頼度判定バッジ (サクラ識別 & 品質チェック)
+// @name         Amazonレビュー信頼度判定 & 無限スクロール (サクラ識別/品質チェック)
+// @name:ja      Amazonレビュー信頼度判定 & 無限スクロール (サクラ識別/品質チェック)
+// @name:en      Amazon Reviewer Trust Badge & Infinite Scroll (Quality Check)
 // @namespace    https://github.com/koyasi777/amazon-review-trust-badge
-// @version      1.6.4
-// @description  Visualizes the reliability of Amazon reviewers based on their review history. Detects suspicious behavior, bias, and low-quality reviews with a detailed trust score badge.
-// @description:ja Amazonのレビュアーの投稿履歴を分析し、信頼度を視覚化します。サクラやバイアス、低品質なレビューを検出し、S〜Dのランクでバッジ表示。詳細レポートで評価の偏りや文字数、写真投稿率などを確認できます。
+// @version      1.6.8
+// @description  Amazonのレビュアー投稿履歴を分析し、信頼度をS〜Dランクで視覚化（サクラ/やらせ/バイアス検出＆詳細レポート）。信頼度フィルタリング機能や、レビュー一覧の無限スクロール化も提供します。
+// @description:ja  Amazonのレビュアー投稿履歴を分析し、信頼度をS〜Dランクで視覚化（サクラ/やらせ/バイアス検出＆詳細レポート）。信頼度フィルタリング機能や、レビュー一覧の無限スクロール化も提供します。
+// @description:en Visualizes the reliability of Amazon reviewers (detects suspicious behavior/bias) and enables infinite scrolling for review pages.
 // @author       koyasi777
 // @license      MIT
 // @match        https://www.amazon.co.jp/*
+// @exclude      https://www.amazon.co.jp/gp/cart/*
+// @exclude      https://www.amazon.co.jp/gp/buy/*
+// @exclude      https://www.amazon.co.jp/ap/*
+// @exclude      https://www.amazon.co.jp/gp/help/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.co.jp
 // @supportURL   https://github.com/koyasi777/amazon-review-trust-badge/issues
 // @connect      amazon.co.jp
@@ -18,9 +24,10 @@
 // @grant        GM.listValues
 // @grant        GM.deleteValue
 // @grant        GM.registerMenuCommand
-// @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561755/Amazon%20Reviewer%20Trust%20Badge%20%28Quality%20Check%20%20Fake%20Detector%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561755/Amazon%20Reviewer%20Trust%20Badge%20%28Quality%20Check%20%20Fake%20Detector%29.meta.js
+// @run-at       document-idle
+// @noframes
+// @downloadURL https://update.greasyfork.org/scripts/561755/Amazon%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E4%BF%A1%E9%A0%BC%E5%BA%A6%E5%88%A4%E5%AE%9A%20%20%E7%84%A1%E9%99%90%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%20%28%E3%82%B5%E3%82%AF%E3%83%A9%E8%AD%98%E5%88%A5%E5%93%81%E8%B3%AA%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561755/Amazon%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E4%BF%A1%E9%A0%BC%E5%BA%A6%E5%88%A4%E5%AE%9A%20%20%E7%84%A1%E9%99%90%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%20%28%E3%82%B5%E3%82%AF%E3%83%A9%E8%AD%98%E5%88%A5%E5%93%81%E8%B3%AA%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -31,13 +38,14 @@
     // =============================================================================
     const CONFIG = {
         APP_NAME: 'TrustBadge',
-        VERSION: '1.5.0',
+        VERSION: '1.6.8',
         CACHE: { PREFIX: 'tr4:', TTL_SUCCESS: 604800000, TTL_FAIL: 86400000 },
         NETWORK: {
-            MIN_INTERVAL: 2500,
-            JITTER: 1500,
+            MIN_INTERVAL: 1500,
+            JITTER: 1000,
             TIMEOUT: 15000,
-            LOCK_DURATION: 15 * 60 * 1000
+            LOCK_DURATION: 15 * 60 * 1000,
+            MAX_CONCURRENT: 2
         },
         SCORING: {
             BASE: 50,
@@ -110,20 +118,23 @@
     // =============================================================================
     class NetworkManager {
         static queue = [];
-        static processing = false;
+        static activeCount = 0; // 現在実行中のリクエスト数
         static circuitOpen = false;
 
         static async fetch(url, priority = false) {
             if (this.circuitOpen) throw new Error('CIRCUIT_OPEN: Emergency Lock');
+
+            // ロックチェック
             const lockUntil = await GM.getValue('emergency_lock', 0);
             if (Date.now() < lockUntil) {
                 this.circuitOpen = true;
                 throw new Error(`Locked until ${new Date(lockUntil).toLocaleTimeString()}`);
             }
+
             return new Promise((resolve, reject) => {
                 const item = { url, resolve, reject };
                 if (priority) {
-                    this.queue.unshift(item);
+                    this.queue.unshift(item); // 優先キュー
                 } else {
                     this.queue.push(item);
                 }
@@ -131,14 +142,29 @@
             });
         }
 
-        static async processQueue() {
-            if (this.processing || this.queue.length === 0) return;
-            this.processing = true;
+        static processQueue() {
+            if (this.circuitOpen) return;
+
+            // 定義された最大並列数(MAX_CONCURRENT)に達するまでワーカーを起動
+            while (this.queue.length > 0 && this.activeCount < CONFIG.NETWORK.MAX_CONCURRENT) {
+                this._runWorker();
+            }
+        }
+
+        static async _runWorker() {
+            if (this.queue.length === 0) return;
+
+            this.activeCount++;
             const { url, resolve, reject } = this.queue.shift();
+
             try {
+                // 並列処理では「一律待機」ではなく「ワーカーごとのランダム待機」でアクセスを分散させる
+                // これにより機械的なアクセスパターンを回避する
                 const wait = CONFIG.NETWORK.MIN_INTERVAL + Math.random() * CONFIG.NETWORK.JITTER;
                 await new Promise(r => setTimeout(r, wait));
+
                 const responseText = await this._execRequest(url);
+
                 if (this._detectRobot(responseText)) {
                     await this._triggerCircuitBreaker();
                     throw new Error('ROBOT_DETECTED');
@@ -147,8 +173,9 @@
             } catch (e) {
                 reject(e);
             } finally {
-                this.processing = false;
-                if (this.queue.length > 0) this.processQueue();
+                this.activeCount--;
+                // 完了後、次のタスクがあれば即座に取り掛かる
+                this.processQueue();
             }
         }
 
@@ -172,10 +199,13 @@
         }
 
         static async _triggerCircuitBreaker() {
+            if (this.circuitOpen) return;
             console.error('⚠️ AMAZON ROBOT DETECTED: Opening Circuit Breaker.');
             this.circuitOpen = true;
             const lockUntil = Date.now() + CONFIG.NETWORK.LOCK_DURATION;
             await GM.setValue('emergency_lock', lockUntil);
+
+            // 待機中のキューを全て破棄して即時停止
             this.queue.forEach(q => q.reject(new Error('CIRCUIT_OPEN_ABORT')));
             this.queue = [];
         }
@@ -567,6 +597,17 @@
         }
 
         static syncFilter() {
+            // UIを挿入するターゲット（ソートオプションバー）が存在しないページ（個別レビュー画面など）では
+            // フィルタリングを強制的に解除し、何も隠さないようにする。
+            // これにより「スイッチがないのに勝手に消える」現象を防ぐ。
+            if (!document.getElementById('cm_cr-view_opt_sort_filter')) {
+                const targets = document.querySelectorAll('#cm_cr-review_list, #amz-scroll-review-archive, #amz-scroll-internal-list');
+                targets.forEach(listContainer => {
+                    listContainer.classList.remove('tb-filter-s', 'tb-filter-a', 'tb-filter-b', 'tb-filter-c');
+                });
+                return;
+            }
+
             const targets = document.querySelectorAll('#cm_cr-review_list, #amz-scroll-review-archive, #amz-scroll-internal-list');
             const cls = `tb-filter-${this.currentGrade}`;
             let needsUpdate = false;
@@ -912,6 +953,21 @@
                 badge.title = 'クリックで詳細レポートを表示';
 
                 const tags = this.translateTags(d.sc.why);
+
+                // ▼ Context Tag Injection ▼
+                let ctxConf = null;
+                if (context.isVine) ctxConf = CONFIG.TEXT.CONTEXT.VINE;
+                else if (!context.isVP) ctxConf = CONFIG.TEXT.CONTEXT.NON;
+
+                if (ctxConf) {
+                    tags.unshift({
+                        key: 'CTX',
+                        label: ctxConf.label,
+                        desc: ctxConf.desc,
+                        style: `background:${ctxConf.color};border-color:${ctxConf.border};color:${ctxConf.text}`
+                    });
+                }
+
                 algoContainer.innerHTML = tags.map(t =>
                     `<span class="tb-tag-inline" style="${t.style}" title="${t.label}">${t.label}</span>`
                 ).join('');

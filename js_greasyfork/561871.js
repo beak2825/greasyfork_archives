@@ -1,81 +1,92 @@
 // ==UserScript==
-// @name         Claude Project Bulk Delete (v4)
+// @name         Claude Project Bulk Delete (v7)
 // @namespace    http://tampermonkey.net/
-// @version      4
-// @description  Add checkboxes to select multiple conversations in Claude Projects for bulk deletion
+// @version      7
+// @description  Add checkboxes to select multiple conversations in Claude Projects for bulk deletion - Drag the button to move, click to toggle
 // @author       Solomon
 // @match        https://claude.ai/project/*
 // @icon         https://claude.ai/favicon.ico
 // @grant        GM_addStyle
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v4%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v4%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v7%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v7%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    console.log('🗑️ Claude Project Bulk Delete v4 loading...');
+    console.log('🗑️ Claude Project Bulk Delete v7 loading...');
 
     // ═══════════════════════════════════════════════════════════════════════════
     // 🎨 STYLES
     // ═══════════════════════════════════════════════════════════════════════════
 
     GM_addStyle(`
-        /* FAB Container */
+        /* ═══════════════════════════════════════════════════════════════════════
+           FAB Container
+           ═══════════════════════════════════════════════════════════════════════ */
         #cpbd-fab {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 20px;
+            right: 20px;
             z-index: 999999;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
             align-items: flex-end;
+            touch-action: none;
         }
 
-        /* Main Toggle Button */
+        /* Main Toggle Button - v7: DRAGGABLE */
         #cpbd-toggle-btn {
-            width: 56px;
-            height: 56px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: #dc2626 !important;
-            border: 3px solid white !important;
+            border: 2px solid white !important;
             color: white !important;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
+            font-size: 18px;
+            cursor: grab;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s ease, background 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            user-select: none;
         }
 
         #cpbd-toggle-btn:hover {
-            transform: scale(1.08);
+            transform: scale(1.05);
         }
 
         #cpbd-toggle-btn.active {
             background: #16a34a !important;
         }
 
+        #cpbd-toggle-btn.dragging {
+            cursor: grabbing;
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.35);
+        }
+
         /* Counter Badge */
         #cpbd-counter {
             position: absolute;
-            top: -6px;
-            right: -6px;
+            top: -4px;
+            right: -4px;
             background: #fbbf24;
             color: #000;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
-            min-width: 22px;
-            height: 22px;
-            border-radius: 11px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 0 5px;
+            padding: 0 4px;
+            pointer-events: none;
         }
 
         #cpbd-counter.visible {
@@ -86,7 +97,7 @@
         #cpbd-actions {
             display: none;
             flex-direction: column;
-            gap: 8px;
+            gap: 5px;
             align-items: flex-end;
         }
 
@@ -96,17 +107,17 @@
 
         /* Action Buttons */
         .cpbd-action-btn {
-            padding: 10px 16px;
-            border-radius: 20px;
+            padding: 6px 10px;
+            border-radius: 14px;
             border: none;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
             transition: all 0.15s ease;
         }
 
@@ -131,17 +142,17 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
-           CHECKBOX STYLING - Each conversation gets one
+           CHECKBOX STYLING
            ═══════════════════════════════════════════════════════════════════════ */
 
         .cpbd-cb-wrapper {
             position: absolute !important;
-            left: -32px !important;
+            left: -28px !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
             z-index: 1000 !important;
-            width: 24px !important;
-            height: 24px !important;
+            width: 20px !important;
+            height: 20px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -150,37 +161,33 @@
             pointer-events: none;
         }
 
-        /* Show checkboxes when bulk mode active */
         body.cpbd-active .cpbd-cb-wrapper {
             opacity: 1 !important;
             pointer-events: auto !important;
         }
 
         .cpbd-cb {
-            width: 20px !important;
-            height: 20px !important;
+            width: 16px !important;
+            height: 16px !important;
             cursor: pointer !important;
             accent-color: #dc2626 !important;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* Make conversation rows relative for checkbox positioning */
         .cpbd-conv-row {
             position: relative !important;
             margin-left: 0 !important;
             transition: all 0.2s ease;
         }
 
-        /* Add left padding when bulk mode active */
         body.cpbd-active .cpbd-conv-row {
-            margin-left: 32px !important;
+            margin-left: 28px !important;
         }
 
-        /* Highlight selected rows */
         .cpbd-conv-row.cpbd-sel {
             background: rgba(220, 38, 38, 0.1) !important;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
@@ -203,37 +210,37 @@
 
         #cpbd-modal {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 380px;
+            border-radius: 10px;
+            padding: 18px;
+            max-width: 320px;
             width: 90%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
         #cpbd-modal h3 {
-            margin: 0 0 12px 0;
+            margin: 0 0 10px 0;
             color: #dc2626;
-            font-size: 18px;
+            font-size: 15px;
         }
 
         #cpbd-modal p {
-            margin: 0 0 20px 0;
+            margin: 0 0 16px 0;
             color: #555;
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.4;
         }
 
         #cpbd-modal-btns {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: flex-end;
         }
 
         #cpbd-modal-btns button {
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 8px 14px;
+            border-radius: 5px;
             border: none;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
         }
@@ -255,13 +262,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 24px 32px;
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            padding: 18px 24px;
+            border-radius: 10px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
             z-index: 99999999;
             display: none;
             text-align: center;
-            min-width: 250px;
+            min-width: 200px;
         }
 
         #cpbd-progress.show {
@@ -269,13 +276,13 @@
         }
 
         #cpbd-progress-text {
-            margin-bottom: 12px;
-            font-size: 14px;
+            margin-bottom: 10px;
+            font-size: 12px;
             color: #333;
         }
 
         #cpbd-progress-bar {
-            height: 6px;
+            height: 5px;
             background: #e5e7eb;
             border-radius: 3px;
             overflow: hidden;
@@ -309,7 +316,7 @@
 
     const state = {
         active: false,
-        selected: new Map() // id -> {title, row}
+        selected: new Map()
     };
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -336,40 +343,31 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🔍 FIND EACH CONVERSATION ROW
+    // 🔍 FIND CONVERSATIONS
     // ═══════════════════════════════════════════════════════════════════════════
 
     function findConversations() {
         const results = [];
-        
-        // Find all links that go to /chat/
         const links = document.querySelectorAll('a[href^="/chat/"]');
-        
+
         links.forEach(link => {
             const href = link.getAttribute('href');
             const match = href.match(/^\/chat\/([a-f0-9-]+)/);
             if (!match) return;
-            
+
             const id = match[1];
             const title = link.textContent?.trim() || 'Untitled';
-            
-            // Find the parent container that represents the whole row
-            // Look for the element that contains both the title and "Last message X ago"
+
             let row = link.parentElement;
-            
-            // Go up to find a container that has the full conversation info
             for (let i = 0; i < 6 && row; i++) {
-                // Check if this element contains "Last message"
-                if (row.textContent?.includes('Last message') && 
+                if (row.textContent?.includes('Last message') &&
                     row.textContent?.includes('ago')) {
                     break;
                 }
                 row = row.parentElement;
             }
-            
-            // Make sure we found a valid row and haven't gone too far
+
             if (row && row !== document.body && !row.matches('main, [class*="flex-col"]')) {
-                // Check if we already have this ID
                 if (!results.some(r => r.id === id)) {
                     results.push({ id, title, row, link });
                 }
@@ -390,9 +388,9 @@
         fab.id = 'cpbd-fab';
         fab.innerHTML = `
             <div id="cpbd-actions">
-                <button id="cpbd-delete-btn" class="cpbd-action-btn" disabled>🗑️ Delete (0)</button>
-                <button id="cpbd-select-all-btn" class="cpbd-action-btn">☑️ Select All</button>
-                <button id="cpbd-clear-btn" class="cpbd-action-btn">✖️ Clear</button>
+                <button id="cpbd-delete-btn" class="cpbd-action-btn" disabled>🗑️ (0)</button>
+                <button id="cpbd-select-all-btn" class="cpbd-action-btn">☑️ All</button>
+                <button id="cpbd-clear-btn" class="cpbd-action-btn">✖️</button>
             </div>
             <button id="cpbd-toggle-btn">🗑️<span id="cpbd-counter">0</span></button>
         `;
@@ -404,8 +402,8 @@
         overlay.innerHTML = `
             <div id="cpbd-modal">
                 <h3>⚠️ Confirm Delete</h3>
-                <p>Delete <strong id="cpbd-del-count">0</strong> conversation(s)?<br><br>
-                <span style="color:#dc2626">This cannot be undone!</span></p>
+                <p>Delete <strong id="cpbd-del-count">0</strong> conversation(s)?<br>
+                <span style="color:#dc2626;font-size:12px">This cannot be undone!</span></p>
                 <div id="cpbd-modal-btns">
                     <button id="cpbd-btn-cancel">Cancel</button>
                     <button id="cpbd-btn-confirm">🗑️ Delete</button>
@@ -423,14 +421,101 @@
         `;
         document.body.appendChild(prog);
 
-        // Events
-        document.getElementById('cpbd-toggle-btn').onclick = toggle;
+        // Action button events
         document.getElementById('cpbd-delete-btn').onclick = showModal;
         document.getElementById('cpbd-select-all-btn').onclick = selectAll;
         document.getElementById('cpbd-clear-btn').onclick = clearSel;
         document.getElementById('cpbd-btn-cancel').onclick = hideModal;
         document.getElementById('cpbd-btn-confirm').onclick = doDelete;
         overlay.onclick = e => { if (e.target === overlay) hideModal(); };
+
+        // ═══════════════════════════════════════════════════════════════════════
+        // v7: DRAG + CLICK on same button
+        // Click = toggle mode, Drag = move FAB
+        // ═══════════════════════════════════════════════════════════════════════
+
+        const toggleBtn = document.getElementById('cpbd-toggle-btn');
+        let isDragging = false;
+        let hasMoved = false;
+        let startX = 0;
+        let startY = 0;
+        let offsetX = 0;
+        let offsetY = 0;
+        const DRAG_THRESHOLD = 5; // pixels before considered a drag
+
+        toggleBtn.addEventListener('mousedown', startDrag);
+        toggleBtn.addEventListener('touchstart', startDrag, { passive: false });
+
+        function startDrag(e) {
+            e.preventDefault();
+
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+            startX = clientX;
+            startY = clientY;
+            hasMoved = false;
+            isDragging = true;
+
+            const rect = fab.getBoundingClientRect();
+            offsetX = clientX - rect.left;
+            offsetY = clientY - rect.top;
+
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchmove', onDrag, { passive: false });
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+            // Check if moved past threshold
+            const dx = Math.abs(clientX - startX);
+            const dy = Math.abs(clientY - startY);
+
+            if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
+                hasMoved = true;
+                toggleBtn.classList.add('dragging');
+            }
+
+            if (hasMoved) {
+                e.preventDefault();
+
+                let newX = clientX - offsetX;
+                let newY = clientY - offsetY;
+
+                // Keep within viewport bounds
+                const maxX = window.innerWidth - fab.offsetWidth - 5;
+                const maxY = window.innerHeight - fab.offsetHeight - 5;
+
+                newX = Math.max(5, Math.min(newX, maxX));
+                newY = Math.max(5, Math.min(newY, maxY));
+
+                fab.style.left = newX + 'px';
+                fab.style.top = newY + 'px';
+                fab.style.right = 'auto';
+                fab.style.bottom = 'auto';
+            }
+        }
+
+        function stopDrag(e) {
+            isDragging = false;
+            toggleBtn.classList.remove('dragging');
+
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchmove', onDrag);
+            document.removeEventListener('touchend', stopDrag);
+
+            // If didn't move much, treat as click
+            if (!hasMoved) {
+                toggle();
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -453,26 +538,23 @@
 
     function addCheckboxes() {
         const convs = findConversations();
-        
+
         convs.forEach(conv => {
-            // Skip if already has checkbox
             if (conv.row.classList.contains('cpbd-conv-row')) return;
-            
+
             conv.row.classList.add('cpbd-conv-row');
-            
-            // Create checkbox wrapper
+
             const wrapper = document.createElement('div');
             wrapper.className = 'cpbd-cb-wrapper';
-            
+
             const cb = document.createElement('input');
             cb.type = 'checkbox';
             cb.className = 'cpbd-cb';
             cb.dataset.convId = conv.id;
             cb.dataset.convTitle = conv.title;
-            
-            // Prevent click from navigating
+
             cb.onclick = e => e.stopPropagation();
-            
+
             cb.onchange = () => {
                 if (cb.checked) {
                     state.selected.set(conv.id, { title: conv.title, row: conv.row });
@@ -483,7 +565,7 @@
                 }
                 updateCount();
             };
-            
+
             wrapper.appendChild(cb);
             conv.row.insertBefore(wrapper, conv.row.firstChild);
         });
@@ -501,9 +583,9 @@
         const counter = document.getElementById('cpbd-counter');
         counter.textContent = n;
         counter.classList.toggle('visible', n > 0);
-        
+
         const btn = document.getElementById('cpbd-delete-btn');
-        btn.textContent = `🗑️ Delete (${n})`;
+        btn.textContent = `🗑️ (${n})`;
         btn.disabled = n === 0;
     }
 
@@ -541,27 +623,26 @@
 
     async function doDelete() {
         hideModal();
-        
+
         const items = Array.from(state.selected.entries());
         const total = items.length;
         let done = 0;
-        
+
         const prog = document.getElementById('cpbd-progress');
         const txt = document.getElementById('cpbd-progress-text');
         const fill = document.getElementById('cpbd-progress-fill');
-        
+
         prog.classList.add('show');
-        
+
         for (const [id, data] of items) {
-            txt.textContent = `Deleting ${done + 1} of ${total}...`;
+            txt.textContent = `${done + 1}/${total}`;
             fill.style.width = `${((done + 1) / total) * 100}%`;
-            
+
             const ok = await deleteConv(id);
             if (ok) {
                 done++;
                 state.selected.delete(id);
-                
-                // Animate out
+
                 if (data.row) {
                     data.row.style.transition = 'all 0.25s ease';
                     data.row.style.opacity = '0';
@@ -569,14 +650,14 @@
                     setTimeout(() => data.row.remove(), 250);
                 }
             }
-            
+
             await new Promise(r => setTimeout(r, 350));
         }
-        
+
         prog.classList.remove('show');
         fill.style.width = '0%';
         updateCount();
-        
+
         console.log(`✅ Deleted ${done}/${total} conversations`);
     }
 
@@ -600,14 +681,13 @@
         if (!location.pathname.startsWith('/project/')) {
             return;
         }
-        
-        console.log('🗑️ v4 init...');
+
+        console.log('🗑️ v7 init...');
         createUI();
         observe();
         console.log('✅ Ready!');
     }
 
-    // Wait for page to fully load
     setTimeout(init, 1500);
 
 })();

@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         MZ Colorized Skills (Mobile Version)
 // @namespace    http://tampermonkey.net/
-// @version      0.12
+// @version      0.13
 // @description  Colorize Managerzone players skills valid for mobile versions
 // @author       xente
 // @contributor  vanjoge (https://greasyfork.org/es/users/220102-vanjoge)
 // @match        https://www.managerzone.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=managerzone.com
+// @icon         https://statsxente.com/MZ1/View/Images/main_icon.png
 // @grant        GM_xmlhttpRequest
 // @license      GNU
 // @downloadURL https://update.greasyfork.org/scripts/536714/MZ%20Colorized%20Skills%20%28Mobile%20Version%29.user.js

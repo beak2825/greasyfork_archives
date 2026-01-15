@@ -8,7 +8,7 @@
 // @match       https://x.com/*
 // @match       https://mobile.x.com/*
 // @run-at      document-start
-// @version     209
+// @version     210
 // @downloadURL https://update.greasyfork.org/scripts/557621/Control%20Panel%20for%20Twitter.user.js
 // @updateURL https://update.greasyfork.org/scripts/557621/Control%20Panel%20for%20Twitter.meta.js
 // ==/UserScript==
@@ -2381,6 +2381,10 @@ function isOnNotificationsPage() {
   return currentPath.startsWith('/notifications')
 }
 
+function isOnPremiumSignupPage() {
+  return currentPath.startsWith('/i/premium_sign_up')
+}
+
 function isOnProfilePage() {
   let profilePathUsername = currentPath.match(URL_PROFILE_RE)?.[1]
   if (!profilePathUsername) return false
@@ -3889,6 +3893,7 @@ function checkReactNativeStylesheet() {
 }
 
 let History_push
+let History_replace
 
 function patchHistory() {
   let props = getTopLevelProps()
@@ -3897,14 +3902,11 @@ function patchHistory() {
   if (!props.history.push) return warn('history.push not found')
   if (props.history.push.patched) return
   History_push = props.history.push
+  History_replace = props.history.replace
   props.history.push = function (...args) {
     if (config.enabled && args[0] != null) {
       if (config.hideVerifiedNotificationsTab && typeof args[0] == 'object' && typeof args[0].pathname == 'string') {
-        if (args[0].pathname == '/notifications/verified') {
-          log('Redirecting /notifications/verified to /notifications')
-          args[0].pathname = '/notifications'
-        }
-        else if (args[0].pathname.endsWith('/verified_followers')) {
+        if (args[0].pathname.endsWith('/verified_followers')) {
           log('Redirecting /verified_followers to /followers')
           args[0].pathname = args[0].pathname.replace(/verified_followers$/, 'followers')
         }
@@ -4038,6 +4040,9 @@ const configureCss = (() => {
         'body.Settings a[href="/settings/monetization"]',
         'body.Settings a[href="/settings/manage_subscriptions"]',
       )
+      if (desktop) {
+        hideCssSelectors.push(`${Selectors.PRIMARY_NAV_DESKTOP} a[href$="/creators/studio"]`)
+      }
     }
     if (config.hideEditImage) {
       hideCssSelectors.push(
@@ -4101,11 +4106,11 @@ const configureCss = (() => {
         // "Subscriber" indicator in replies from subscribers
         '[data-testid="tweet"] [data-testid="icon-subscriber"]',
         // Subscriptions tab link in Following/Follows
-        `body.ProfileFollows.Subscriptions ${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav div[role="tablist"] > div:last-child > [role="tab"]`,
+        `.SubscriptionsTab > [role="tab"]`,
       )
       // Subscriptions tab in Following/Follows
       cssRules.push(`
-        body.ProfileFollows.Subscriptions ${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav div[role="tablist"] > div:last-child {
+        .SubscriptionsTab {
           flex: 0;
           /* New layout has margin-right on tabs */
           margin-right: 0;
@@ -4170,8 +4175,6 @@ const configureCss = (() => {
         '.PremiumUpsell',
         // Premium menu item
         `${menuRole} a[href^="/i/premium_sign_up"]`,
-        // In new More dialog
-        `${Selectors.MORE_DIALOG} a:is([href^="/i/premium"], [href^="/i/verified"])`,
         // Analytics menu item
         `${menuRole} a[href="/i/account_analytics"]`,
         // "Highlight on your profile" on your tweets
@@ -4199,6 +4202,10 @@ const configureCss = (() => {
         // Upsell on the Likes tab in your own profile
         `body.OwnProfile ${Selectors.PRIMARY_COLUMN} nav + div:has(a[href^="/i/premium"])`,
       )
+      if (desktop && config.tweakNewLayout) {
+        // In new More dialog
+        hideCssSelectors.push(`${Selectors.MORE_DIALOG} a:is([href^="/i/premium"], [href^="/i/verified"])`)
+      }
       // Hide Highlights and Articles tabs in your own profile if you don't have Premium
       let profileTabsList = `body.OwnProfile:not(.PremiumProfile) ${Selectors.PRIMARY_COLUMN} nav div[role="tablist"]`
       let upsellTabLinks = 'a:is([href$="/highlights"], [href$="/articles"], [href$="/highlights?mx=1"], [href$="/articles?mx=1"])'
@@ -4215,14 +4222,12 @@ const configureCss = (() => {
     }
     if (config.hideVerifiedNotificationsTab) {
       cssRules.push(`
-        body.Notifications ${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav div[role="tablist"] > div:nth-child(2),
-        body.ProfileFollows ${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav div[role="tablist"] > div:nth-child(1) {
+        .VerifiedFollowersTab {
           flex: 0;
           /* New layout has margin-right on tabs */
           margin-right: 0;
         }
-        body.Notifications ${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav div[role="tablist"] > div:nth-child(2) > [role="tab"],
-        body.ProfileFollows ${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav div[role="tablist"] > div:nth-child(1) > [role="tab"] {
+        .VerifiedFollowersTab > [role="tab"] {
           display: none;
         }
       `)
@@ -4572,7 +4577,7 @@ const configureCss = (() => {
           `body.Explore ${Selectors.TIMELINE}`,
         )
       }
-      if (config.hideAdsNav) {
+      if (config.hideAdsNav && config.tweakNewLayout) {
         // In new More dialog
         hideCssSelectors.push(`${Selectors.MORE_DIALOG} a:is([href*="ads.twitter.com"], [href*="ads.x.com"])`)
       }
@@ -4585,32 +4590,34 @@ const configureCss = (() => {
       if (config.hideGrokNav) {
         hideCssSelectors.push(
           `${Selectors.PRIMARY_NAV_DESKTOP} a[href$="/i/grok"]`,
-          // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href$="/i/grok"]`,
           // Grok drawer
           'div[data-testid="GrokDrawer"]',
         )
+        if (config.tweakNewLayout) {
+          // In new More dialog
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href$="/i/grok"]`)
+        }
       }
       if (config.hideJobsNav) {
-        hideCssSelectors.push(
-          `${Selectors.PRIMARY_NAV_DESKTOP} a[href="/jobs"]`,
+        hideCssSelectors.push(`${Selectors.PRIMARY_NAV_DESKTOP} a[href="/jobs"]`)
+        if (config.tweakNewLayout) {
           // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href="/jobs"]`,
-        )
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href="/jobs"]`)
+        }
       }
       if (config.hideListsNav) {
-        hideCssSelectors.push(
-          `${Selectors.PRIMARY_NAV_DESKTOP} a[href$="/lists"]`,
+        hideCssSelectors.push(`${Selectors.PRIMARY_NAV_DESKTOP} a[href$="/lists"]`)
+        if (config.tweakNewLayout) {
           // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href$="/lists"]`,
-        )
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href$="/lists"]`)
+        }
       }
       if (config.hideSpacesNav) {
-        hideCssSelectors.push(
-          `${menuRole} a[href="/i/spaces/start"]`,
+        hideCssSelectors.push(`${menuRole} a[href="/i/spaces/start"]`)
+        if (config.tweakNewLayout) {
           // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href="/i/spaces/start"]`,
-        )
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href="/i/spaces/start"]`)
+        }
       }
       if (config.hideTwitterBlueUpsells) {
         hideCssSelectors.push(
@@ -4673,25 +4680,25 @@ const configureCss = (() => {
         // When configured, hide Explore only when the sidebar is showing, or
         // when on a page full-width content is enabled on.
         let bodySelector = `${config.hideExploreNavWithSidebar ? `body.Sidebar${config.fullWidthContent ? `:not(${FULL_WIDTH_BODY_PSEUDO})` : ''} ` : ''}`
-        hideCssSelectors.push(
-          `${bodySelector}${Selectors.PRIMARY_NAV_DESKTOP} a[href="/explore"]`,
+        hideCssSelectors.push(`${bodySelector}${Selectors.PRIMARY_NAV_DESKTOP} a[href="/explore"]`)
+        if (config.tweakNewLayout) {
           // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href="/explore"]`,
-        )
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href="/explore"]`)
+        }
       }
       if (config.hideBookmarksNav) {
-        hideCssSelectors.push(
-          `${Selectors.PRIMARY_NAV_DESKTOP} a[href="/i/bookmarks"]`,
+        hideCssSelectors.push(`${Selectors.PRIMARY_NAV_DESKTOP} a[href="/i/bookmarks"]`)
+        if (config.tweakNewLayout) {
           // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href="/i/bookmarks"]`,
-        )
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href="/i/bookmarks"]`)
+        }
       }
       if (config.hideCommunitiesNav) {
-        hideCssSelectors.push(
-          `${Selectors.PRIMARY_NAV_DESKTOP} a[href$="/communities"]`,
+        hideCssSelectors.push(`${Selectors.PRIMARY_NAV_DESKTOP} a[href$="/communities"]`)
+        if (config.tweakNewLayout) {
           // In new More dialog
-          `${Selectors.MORE_DIALOG} a[href$="/communities"]`,
-        )
+          hideCssSelectors.push(`${Selectors.MORE_DIALOG} a[href$="/communities"]`)
+        }
       }
       if (config.hideMessagesDrawer) {
         cssRules.push(`div:is([data-testid="DMDrawer"], [data-testid="chat-drawer-root"]) { visibility: hidden; }`)
@@ -5326,6 +5333,13 @@ function getVerifiedProps($svg) {
  */
 function handlePopup($popup) {
   let result = {tookAction: false, onPopupClosed: null}
+
+  // Automatically close the Premium sign up popup
+  if (desktop && config.hideTwitterBlueUpsells && location.pathname === '/i/premium_sign_up') {
+    tweakPremiumSignUpPage()
+    result.tookAction = true
+    return result
+  }
 
   // Automatically close any sheet dialog which contains a Premium link
   if (desktop && config.hideTwitterBlueUpsells &&
@@ -6181,6 +6195,10 @@ function onTitleChange(title) {
     if (mobile && (URL_MEDIA_RE.test(location.pathname) || URL_MEDIAVIEWER_RE.test(location.pathname))) {
       log('viewing media on mobile')
     }
+    // On mobile, the Premium sign up page sets an empty title
+    else if (mobile && location.pathname == '/i/premium_sign_up') {
+      log('viewing Premium sign up page on mobile')
+    }
     // On desktop, the root Settings page sets an empty title when the sidebar
     // is hidden.
     else if (desktop && location.pathname == '/settings' && currentPath != '/settings') {
@@ -6231,7 +6249,12 @@ function onTitleChange(title) {
     currentPath == ModalPaths.COMPOSE_TWEET
   )
 
-  if (newPage == currentPage) {
+  let hasDesktopInitialModalBeenClosed = desktop && (
+    // Premium sign up dialog closed
+    currentPath == '/i/premium_sign_up' && location.pathname == '/home'
+  )
+
+  if (newPage == currentPage && !hasDesktopInitialModalBeenClosed) {
     log(`ignoring duplicate title change`)
     // Navigation within the Compose Tweet modal triggers duplcate title changes
     if (isDesktopComposeTweetModalOpen) {
@@ -6345,7 +6368,6 @@ function processCurrentPage() {
   if (!isOnProfilePage()) {
     $body.classList.remove('OwnProfile', 'PremiumProfile')
   }
-  $body.classList.toggle('ProfileFollows', isOnFollowListPage())
   if (!isOnFollowListPage()) {
     $body.classList.remove('Subscriptions')
   }
@@ -6429,6 +6451,9 @@ function processCurrentPage() {
   }
   else if (isOnDisplaySettingsPage() || isOnAccessibilitySettingsPage()) {
     tweakDisplaySettingsPage()
+  }
+  else if (isOnPremiumSignupPage()) {
+    tweakPremiumSignUpPage()
   }
 
   // On mobile, these are pages instead of modals
@@ -6888,32 +6913,32 @@ async function tweakFocusedTweet($focusedTweet, options) {
 }
 
 async function tweakFollowListPage() {
-  // These tabs are dynamic as "Followers you know" only appears when applicable
-  let $tabs = await getElement(`${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav`, {
-    name: 'Following tabs',
-    stopIf: pageIsNot(currentPage),
-  })
-  if (!$tabs) return
-
-  let $subscriptionsTabLink = $tabs.querySelector('div[role="tablist"] a[href$="/subscriptions"]')
-  if ($subscriptionsTabLink) {
-    $body.classList.add('Subscriptions')
-  }
-
-  if (config.hideVerifiedNotificationsTab) {
-    let isVerifiedTabSelected = Boolean($tabs.querySelector('div[role="tablist"] > div:nth-child(1) > [role="tab"][aria-selected="true"]'))
-    if (isVerifiedTabSelected) {
-      log('switching to Following tab')
-      let $followingTab = /** @type {HTMLAnchorElement} */ (
-        $tabs.querySelector(`div[role="tablist"] > div:nth-last-child(${$subscriptionsTabLink ? 3 : 2}) > [role="tab"]`)
-      )
-      $followingTab?.click()
-    }
+  // Fallback for direct navigation
+  if (config.hideVerifiedNotificationsTab && currentPath.endsWith('/verified_followers')) {
+    History_replace?.(currentPath.replace(/verified_followers$/, 'followers'))
+    return
   }
 
   if (config.twitterBlueChecks != 'ignore') {
     observeTimeline(currentPage, {
       classifyTweets: false,
+    })
+  }
+
+  let $followListTabs = await getElement(`${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav`, {
+    name: 'Follow list tabs',
+    stopIf: () => !isOnFollowListPage(),
+  })
+  if ($followListTabs) {
+    let $tabsContainer = $followListTabs.parentElement
+    // Tabs <nav> will be replaced when dynamic tabs load
+    observeElement($tabsContainer, () => {
+      $tabsContainer.querySelector('div:has(> a[href$="/verified_followers"])')?.classList?.add('VerifiedFollowersTab')
+      $tabsContainer.querySelector('div:has(> a[href$="/subscriptions"])')?.classList?.add('SubscriptionsTab')
+    }, {
+      name: 'Follow list tabs container',
+      observers: pageObservers,
+      leading: true,
     })
   }
 }
@@ -7328,26 +7353,22 @@ async function tweakTimelineTabs($timelineTabs) {
 }
 
 function tweakNotificationsPage() {
-  let $navigationTabs = document.querySelector(`${mobile ? Selectors.MOBILE_TIMELINE_HEADER : Selectors.PRIMARY_COLUMN} nav`)
-  if ($navigationTabs != null) {
-    if (config.hideVerifiedNotificationsTab) {
-      let isVerifiedTabSelected = Boolean($navigationTabs.querySelector('div[role="tablist"] > div:nth-child(2) > [role="tab"][aria-selected="true"]'))
-      if (isVerifiedTabSelected) {
-        log('switching to All tab')
-        let $allTab = /** @type {HTMLAnchorElement} */ (
-          $navigationTabs.querySelector('div[role="tablist"] > div:nth-child(1) > [role="tab"]')
-        )
-        $allTab?.click()
-      }
-    }
-  } else {
-    warn('could not find Notifications tabs')
-  }
-
   observeTimeline(currentPage, {
     isTabbed: true,
     tabbedTimelineContainerSelector: 'div[data-testid="primaryColumn"] > div > div:last-child',
   })
+}
+
+async function tweakPremiumSignUpPage() {
+  if (!config.hideTwitterBlueUpsells) return
+  let $closeButton = await getElement('[data-testid="app-bar-close"]', {
+    name: 'Premium sign up close button',
+    stopIf: () => location.pathname != '/i/premium_sign_up',
+  })
+  if ($closeButton) {
+    log('Closing Premium sign up page')
+    $closeButton.click()
+  }
 }
 
 async function tweakProfilePage() {

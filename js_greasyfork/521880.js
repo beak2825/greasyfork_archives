@@ -2,12 +2,14 @@
 // @name           Ziggo GO - Skip Ads
 // @name:nl        Ziggo GO - Reclame overslaan
 // @namespace      http://tampermonkey.net/
-// @version        1.2.1
+// @version        1.2.2
 // @description    Automatically skip ads on Ziggo GO by skipping directly to the end of each ad break.
 // @description:nl Spoel automatisch de reclames door op Ziggo GO naar het einde van de reclame.
 // @author         JxxIT
 // @license        MIT
 // @match          *://*.ziggogo.tv/*
+// @match          https://www.ziggogo.tv/*
+// @match          http://www.ziggogo.tv/*
 // @icon           https://www.google.com/s2/favicons?sz=64&domain=ziggogo.tv
 // @grant          none
 // @downloadURL https://update.greasyfork.org/scripts/521880/Ziggo%20GO%20-%20Skip%20Ads.user.js

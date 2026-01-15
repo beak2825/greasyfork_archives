@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Discogs - Sort by Total Price in Marketplace
 // @namespace    https://greasyfork.org/en/scripts/461485
-// @version      2.0
+// @version      2.1
 // @description  Sort by the italicized 'total' price on a Discogs release page instead of pre-shipping price
 // @author       Jon Uleis (@MovingToTheSun)
 // @match        https://www.discogs.com/*sell*/*
@@ -24,7 +24,9 @@
   // /sell/ page logic
   if (isSellPage) {
     function tableSort() {
-      const priceSort = document.querySelector(".price_header .sortable_link_selected");
+      const priceSort = document.querySelector(
+        ".price_header .sortable_link_selected"
+      );
       if (!priceSort) return;
 
       const ascending = priceSort.title.includes("ascending");
@@ -36,7 +38,7 @@
         return ascending ? priceA - priceB : priceB - priceA;
       });
 
-      rows.forEach((row) => row.parentNode.appendChild(row));
+      rows.forEach(row => row.parentNode.appendChild(row));
 
       const headerText = document.querySelector(".price_header .link-text");
       if (headerText) {
@@ -45,7 +47,8 @@
     }
 
     function getRowPrice(row, ascending) {
-      const price = row.querySelector(".converted_price") || row.querySelector(".price");
+      const price =
+        row.querySelector(".converted_price") || row.querySelector(".price");
       const hasAddToCart = row.querySelector(".item_add_to_cart .button");
       const weight = hasAddToCart || !ascending ? 0 : UNAVAILABLE_PRICE;
       return parseFloat(price.textContent.replace(/[^0-9]/g, "")) + weight;
@@ -53,11 +56,11 @@
 
     const pjaxContainer = document.querySelector("#pjax_container");
     if (pjaxContainer) {
-      const observer = new MutationObserver((mutationsList) => {
+      const observer = new MutationObserver(mutationsList => {
         for (let mutation of mutationsList) {
           if (mutation.type === "childList" && mutation.addedNodes.length) {
             const hasTableNodes = Array.from(mutation.addedNodes).some(
-              (node) => node.nodeName === "TBODY" || node.nodeName === "TABLE"
+              node => node.nodeName === "TBODY" || node.nodeName === "TABLE"
             );
             if (hasTableNodes) {
               tableSort();
@@ -77,7 +80,7 @@
       const sortDropdowns = document.querySelectorAll("select.brand-select");
       for (const dropdown of sortDropdowns) {
         const hasPrice = Array.from(dropdown.options).some(
-          (opt) => opt.text === "Price Lowest" || opt.text === "Price Highest"
+          opt => opt.text === "Price Lowest" || opt.text === "Price Highest"
         );
         if (hasPrice) {
           const selectedText = dropdown.options[dropdown.selectedIndex]?.text;
@@ -107,7 +110,14 @@
         return;
       }
 
-      const allItemElements = Array.from(document.querySelectorAll("[data-itemid]"));
+      let allItemElements = Array.from(
+        document.querySelectorAll('[data-test="list-item-desktop"]')
+      ).filter(el => el.offsetWidth > 0 && el.offsetHeight > 0);
+      if (allItemElements.length === 0) {
+        allItemElements = Array.from(
+          document.querySelectorAll("[data-itemid]")
+        );
+      }
       if (allItemElements.length === 0) {
         if (observer && rootContainer) {
           observer.observe(rootContainer, { subtree: true, childList: true });
@@ -125,7 +135,11 @@
         return;
       }
 
-      const itemContainers = buildItemContainers(allItemElements, commonParent, sortOrder);
+      const itemContainers = buildItemContainers(
+        allItemElements,
+        commonParent,
+        sortOrder
+      );
       if (itemContainers.length < 2) {
         if (observer && rootContainer) {
           observer.observe(rootContainer, { subtree: true, childList: true });
@@ -139,7 +153,7 @@
       });
 
       try {
-        itemContainers.forEach((item) => {
+        itemContainers.forEach(item => {
           if (item.container.parentElement === commonParent) {
             commonParent.appendChild(item.container);
           }
@@ -168,7 +182,7 @@
         parent = parent.parentElement;
         if (!parent) break;
 
-        const containsAll = elements.every((item) => parent.contains(item));
+        const containsAll = elements.every(item => parent.contains(item));
         if (containsAll && parent.children.length >= elements.length) {
           return parent;
         }
@@ -197,17 +211,21 @@
     }
 
     function getItemPrice(itemElement, sortOrder) {
-      const totalPriceEl = itemElement.querySelector("p.italic");
-      const hasTotalPrice = totalPriceEl && /total/.test(totalPriceEl.textContent);
+      const italicEls = itemElement.querySelectorAll(".italic");
+      const totalPriceEl = Array.from(italicEls).find(el =>
+        /total/.test(el.textContent)
+      );
       const isUnavailable = /unavailable in/i.test(itemElement.textContent);
 
       let priceText = null;
 
-      if (hasTotalPrice) {
+      if (totalPriceEl) {
         priceText = totalPriceEl.textContent;
       } else {
-        const italicEl = itemElement.querySelector("p.italic");
-        if (italicEl && /[\d,]+\.?\d*/.test(italicEl.textContent)) {
+        const italicEl = Array.from(italicEls).find(el =>
+          /[\d,]+\.?\d*/.test(el.textContent)
+        );
+        if (italicEl) {
           priceText = italicEl.textContent;
         } else {
           const boldElements = itemElement.querySelectorAll(".font-bold");
@@ -225,7 +243,9 @@
       }
 
       const priceMatch = priceText.match(/([\d,]+\.?\d*)/);
-      const price = priceMatch ? parseFloat(priceMatch[1].replace(/,/g, "")) : UNAVAILABLE_PRICE;
+      const price = priceMatch
+        ? parseFloat(priceMatch[1].replace(/,/g, ""))
+        : UNAVAILABLE_PRICE;
 
       if (isUnavailable && sortOrder === "asc") {
         return UNAVAILABLE_PRICE;
@@ -235,10 +255,15 @@
     }
 
     function updateHeaderText() {
-      const priceHeaderButton = document.querySelector(".col-start-4.justify-self-end button");
-      if (priceHeaderButton && priceHeaderButton.textContent.trim() === "Price") {
+      const priceHeaderButton = document.querySelector(
+        ".justify-self-end button"
+      );
+      if (priceHeaderButton) {
         for (const node of priceHeaderButton.childNodes) {
-          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === "Price") {
+          if (
+            node.nodeType === Node.TEXT_NODE &&
+            node.textContent.trim() === "Price"
+          ) {
             node.textContent = "Total Price";
             break;
           }
@@ -247,23 +272,34 @@
     }
 
     let sortTimeout;
-    function debouncedSort() {
-      clearTimeout(sortTimeout);
-      sortTimeout = setTimeout(shopSort, 500);
-    }
+    function debouncedSort(mutations) {
+      const isItemMutation = mutations.some(mutation => {
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (
+              node.matches?.(
+                '[data-test="list-item-desktop"], [data-itemid]'
+              ) ||
+              node.querySelector?.(
+                '[data-test="list-item-desktop"], [data-itemid]'
+              )
+            ) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      if (!isItemMutation) return;
 
-    setTimeout(shopSort, 1000);
+      clearTimeout(sortTimeout);
+      sortTimeout = setTimeout(shopSort, 100);
+    }
 
     rootContainer = document.querySelector("#root");
     if (rootContainer) {
       observer = new MutationObserver(debouncedSort);
       observer.observe(rootContainer, { subtree: true, childList: true });
     }
-
-    document.addEventListener("change", (e) => {
-      if (e.target.tagName === "SELECT" && e.target.classList.contains("brand-select")) {
-        debouncedSort();
-      }
-    });
   }
 })();

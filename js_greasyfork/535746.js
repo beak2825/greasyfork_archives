@@ -12,7 +12,7 @@
 // @description:zh-TW 通殺大部分網站，可以解除禁止復制、剪切、選擇文本、右鍵菜單的限制。
 // @description:ja    サイトのほとんどを殺すために渡し、あなたは、コピー切り取り、テキスト、右クリックメニューを選択することは禁止の制限を解除することができます
 // @author            yyy.
-// @version           1.0.2
+// @version           1.0.3
 // @license           LGPLv3
 // @match             *://*/*
 // @grant             GM_registerMenuCommand
@@ -403,19 +403,19 @@
             -khtml-user-select:text!important;
           }
 
-          /* 悬浮窗样式 - 紧凑版 + 赞赏码居中 */
+          /* 悬浮窗样式 - 紧凑版 + 赞赏码居中（白色背景版） */
           #rml-popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 500px; /* 缩紧宽度，减少留白 */
-            min-height: 400px; /* 降低最小高度，更紧凑 */
+            width: 480px; /* 略微缩窄，减少留白 */
+            min-height: 320px; /* 再降低最小高度，减少整体高度 */
             padding: 0;
-            background-color: #000;
-            border: 1px solid #0d1117;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.16);
             z-index: 9999;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             user-select: none;
@@ -425,7 +425,7 @@
             backdrop-filter: blur(10px);
             touch-action: none;
             overflow: hidden;
-            color: #e6e6ef;
+            color: #222222;
             transition: box-shadow 0.2s, height 0.3s ease;
           }
 
@@ -457,8 +457,8 @@
             align-items: center;
             gap: 8px;
             padding: 10px 16px; /* 缩紧头部内边距 */
-            border-bottom: 1px solid #0d1117;
-            background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+            border-bottom: 1px solid #e0e0e0;
+            background: #ffffff; /* 去掉渐变，减小色差 */
             min-height: 44px; /* 降低头部高度 */
             box-sizing: border-box;
           }
@@ -508,24 +508,24 @@
           }
 
           #rml-popup .content-wrapper::-webkit-scrollbar-thumb {
-            background: #555;
+            background: #c1c1c1;
             border-radius: 3px;
           }
 
           #rml-popup .content-wrapper::-webkit-scrollbar-track {
-            background: #0d1117;
+            background: #f5f5f5;
           }
 
           .card-title {
             font-size: 14px; /* 缩小标题字体 */
             font-weight: bold;
             margin: 0 0 6px; /* 缩紧标题下边距 */
-            color: #e6e6ef;
+            color: #111111;
           }
 
           .card-description {
             font-size: 12px; /* 缩小描述字体 */
-            color: #999;
+            color: #555555;
             margin-bottom: 8px; /* 缩紧描述下边距 */
             line-height: 1.3; /* 缩小行高 */
           }
@@ -534,23 +534,23 @@
             display: inline-block;
             font-size: 10px;
             border-radius: 4px;
-            background-color: #0d1117;
+            background-color: #f5f5f5;
             padding: 2px 6px; /* 缩紧标签内边距 */
             margin-bottom: 6px; /* 缩紧标签下边距 */
-            color: #dcdcdc;
-            border: 1px solid #333;
+            color: #555555;
+            border: 1px solid #e0e0e0;
           }
 
           .code-editor {
-            background-color: #0d1117;
-            color: #dcdcdc;
+            background-color: #f8f8f8;
+            color: #222222;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", monospace;
             font-size: 11px; /* 缩小编辑器字体 */
             line-height: 1.4; /* 缩小行高 */
             border-radius: 4px;
             padding: 8px; /* 缩紧编辑器内边距 */
             overflow: auto;
-            border: 1px solid #333;
+            border: 1px solid #e0e0e0;
             margin-bottom: 8px; /* 缩紧编辑器下边距 */
           }
 
@@ -584,8 +584,8 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            border: 1px solid #333;
-            border-radius: 4px;
+            border: none; /* 去掉边框，保持纯净的赞赏码样式 */
+            border-radius: 0;
             margin: 0 auto 3px; /* 水平居中，缩紧与文字间距 */
             display: block;
           }
@@ -599,15 +599,36 @@
           /* 状态面板 - 紧凑布局 */
           .status-panel {
             flex: 1;
-            min-height: 320px; /* 紧凑最小高度 */
+            min-height: 260px; /* 再降低最小高度，减少垂直空白 */
           }
 
-          /* 设置面板 - 紧凑布局 */
+          /* 设置面板 - 紧凑布局 + 底部功能区域 */
           .settings-panel {
             flex: 1;
-            border-left: 1px solid #0d1117;
-            padding-left: 16px; /* 缩紧左侧内边距 */
-            min-height: 320px; /* 紧凑最小高度 */
+            border-left: 1px solid #e0e0e0;
+            padding-left: 14px; /* 略微收紧左侧内边距 */
+            min-height: 260px; /* 再降低最小高度，减少垂直空白 */
+            display: flex;
+            flex-direction: column;
+          }
+
+          .settings-panel-main {
+            flex: 0 0 auto;
+          }
+
+          .features-footer {
+            margin-top: auto;
+            text-align: left;
+          }
+
+          .features-footer-title {
+            font-size: 12px;
+            color: #333333;
+            margin-bottom: 4px;
+          }
+
+          .features-footer .code-editor {
+            margin-bottom: 0;
           }
         `);
     }
@@ -686,65 +707,67 @@
               <div class="card-tag">运行中</div>
               <div class="card-description">
                 <div style="margin-bottom: 6px;">
-                  <strong style="color: #e6e6ef;">📌 当前模式：</strong>
+                  <strong style="color: #333333;">📌 当前模式：</strong>
                   <span style="color: #28c941; font-weight: 600;">${modeLabel}</span>
                 </div>
                 <div style="margin-bottom: 6px;">
-                  <strong style="color: #e6e6ef;">✅ 已处理事件：</strong>
+                  <strong style="color: #333333;">✅ 已处理事件：</strong>
                   <div class="code-editor" style="height: auto; min-height: 40px; margin-top: 4px;">
                     ${processedEventsText}
-                  </div>
-                </div>
-                <div>
-                  <strong style="color: #e6e6ef;">🧩 实现的功能</strong>
-                  <div class="code-editor" style="height: auto; min-height: 40px; margin-top: 4px;">
-                    ${featuresText}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 右侧设置面板（紧凑版） -->
+          <!-- 右侧设置面板（紧凑版，功能放到底部右侧） -->
           <div class="settings-panel">
-            <div class="card-title">站点设置</div>
-            <div style="margin-bottom: 10px;">
-              <div class="card-description" style="margin-bottom: 4px; font-size: 11px;">当前域名模式：</div>
-              <div style="display:flex; gap:6px; align-items:center; margin-bottom: 6px;">
-                <select id="siteModeSelect" style="flex:1; padding:5px 8px; background:#0d1117; color:#dcdcdc; border:1px solid #333; border-radius:4px; font-size: 11px; cursor: pointer;">
-                  <option value="standard">标准模式</option>
-                  <option value="light">轻量模式</option>
-                  <option value="friendly">友好模式</option>
-                  <option value="disabled">禁用</option>
-                </select>
-                <button id="saveModeBtn" style="padding:5px 8px; background:#28c941; border:none; border-radius:4px; color:#fff; cursor:pointer; font-size: 11px; font-weight: 500; white-space: nowrap;">保存</button>
+            <div class="settings-panel-main">
+              <div class="card-title">站点设置</div>
+              <div style="margin-bottom: 10px;">
+                <div class="card-description" style="margin-bottom: 4px; font-size: 11px;">当前域名模式：</div>
+                <div style="display:flex; gap:6px; align-items:center; margin-bottom: 6px;">
+                  <select id="siteModeSelect" style="flex:1; padding:5px 8px; background:#ffffff; color:#333333; border:1px solid #d0d0d0; border-radius:4px; font-size: 11px; cursor: pointer;">
+                    <option value="standard">标准模式</option>
+                    <option value="light">轻量模式</option>
+                    <option value="friendly">友好模式</option>
+                    <option value="disabled">禁用</option>
+                  </select>
+                  <button id="saveModeBtn" style="padding:5px 8px; background:#28c941; border:none; border-radius:4px; color:#fff; cursor:pointer; font-size: 11px; font-weight: 500; white-space: nowrap;">保存</button>
+                </div>
+              </div>
+              <div class="card-title" style="margin-top: 10px; margin-bottom: 6px;">排除设置</div>
+              <div>
+                <div class="card-description" style="margin-bottom: 4px; font-size: 11px;">已排除域名（每行一个）:</div>
+                <textarea id="excludeDomains"
+                    class="code-editor"
+                    style="width: 100%;
+                           height: 80px; /* 缩紧文本框高度 */
+                           padding: 8px;
+                           margin-bottom: 6px;
+                           resize: vertical;
+                           font-size: 10px;"
+                    placeholder="输入要排除的域名，每行一个"
+                    spellcheck="false">${lists.exclude_list().join('\n')}</textarea>
+                <button id="saveExcludeList"
+                    style="padding:5px 8px;
+                           background: #28c941;
+                           border: none;
+                           border-radius: 4px;
+                           color: #fff;
+                           cursor: pointer;
+                           font-size: 11px;
+                           font-weight: 500;
+                           width: 100%;">
+                    保存排除列表
+                </button>
               </div>
             </div>
-            <div class="card-title" style="margin-top: 10px; margin-bottom: 6px;">排除设置</div>
-            <div>
-              <div class="card-description" style="margin-bottom: 4px; font-size: 11px;">已排除域名（每行一个）:</div>
-              <textarea id="excludeDomains"
-                  class="code-editor"
-                  style="width: 100%;
-                         height: 80px; /* 缩紧文本框高度 */
-                         padding: 8px;
-                         margin-bottom: 6px;
-                         resize: vertical;
-                         font-size: 10px;"
-                  placeholder="输入要排除的域名，每行一个"
-                  spellcheck="false">${lists.exclude_list().join('\n')}</textarea>
-              <button id="saveExcludeList"
-                  style="padding:5px 8px;
-                         background: #28c941;
-                         border: none;
-                         border-radius: 4px;
-                         color: #fff;
-                         cursor: pointer;
-                         font-size: 11px;
-                         font-weight: 500;
-                         width: 100%;">
-                  保存排除列表
-              </button>
+            <div class="features-footer">
+              <div class="features-footer-title">🧩 实现的功能</div>
+              <div class="code-editor" style="height: auto; min-height: 36px; margin-top: 4px;">
+                ${featuresText}
+              </div>
             </div>
           </div>
         </div>

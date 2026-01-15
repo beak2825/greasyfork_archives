@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Auto Reload on Stake.com - CodeStats edition
-// @description  Automatically claims 10 minute reloads on Stake.com by sequentially clicking VIP Reward → Claim Reload → Return to Rewards. The script starts after a short page-load delay, mimics human behavior with user customizable random delays, occasional skipped cycles, and subtle mouse/scroll movements. WANT MORE STAKE BONUS CODE AUTO-CLAIM TOOLS? GO TO https://codestats.gg
-// @author       CHUBB
+// @description  Automatically claims 10 minute reloads on Stake.com by sequentially clicking VIP Reward → Claim Reload → Return to Rewards. The script starts after a short page-load delay, mimics human behavior with user customizable random delays, occasional skipped cycles, and subtle mouse/scroll movements. WANT MORE STAKE BONUS CODE AUTO-CLAIM TOOLS? GO TO https://codestats.gg/autoclaimer
+// @author       CHUBB/TobyStrings
 // @namespace    https://codestats.gg
-// @version      1.1.3
+// @version      2.0.0
 // @match        https://stake.com/*
 // @match        https://stake.us/*
 // @match        https://stake.ac/*
@@ -24,472 +24,753 @@
 // @match        https://stake1021.com/*
 // @match        https://stake1022.com/*
 // @match        https://stake.br/*
-// @exclude      https://stake.com/settings/offers*
-// @exclude      https://stake.us/settings/offers*
-// @exclude      https://stake.ac/settings/offers*
-// @exclude      https://stake.games/settings/offers*
-// @exclude      https://stake.bet/settings/offers*
-// @exclude      https://stake.pet/settings/offers*
-// @exclude      https://stake.mba/settings/offers*
-// @exclude      https://stake.jp/settings/offers*
-// @exclude      https://stake.bz/settings/offers*
-// @exclude      https://stake.ceo/settings/offers*
-// @exclude      https://stake.krd/settings/offers*
-// @exclude      https://staketr.com/settings/offers*
-// @exclude      https://stake1001.com/settings/offers*
-// @exclude      https://stake1002.com/settings/offers*
-// @exclude      https://stake1003.com/settings/offers*
-// @exclude      https://stake1004.com/settings/offers*
-// @exclude      https://stake1005.com/settings/offers*
-// @exclude      https://stake1021.com/settings/offers*
-// @exclude      https://stake1022.com/settings/offers*
-// @exclude      https://stake.br/settings/offers*
-// @run-at       document-idle
-// @license      MIT
-// @connect      stake.com
-// @connect      stake.us
-// @connect      stake.ac
-// @connect      stake.games
-// @connect      stake.bet
-// @connect      stake.pet
-// @connect      stake.mba
-// @connect      stake.jp
-// @connect      stake.bz
-// @connect      stake.ceo
-// @connect      stake.krd
-// @connect      staketr.com
-// @connect      stake1001.com
-// @connect      stake1002.com
-// @connect      stake1003.com
-// @connect      stake1004.com
-// @connect      stake1005.com
-// @connect      stake1021.com
-// @connect      stake1022.com
-// @connect      stake.br
-// @grant        GM_setValue
+// @exclude      https://stake.com/settings/*
+// @exclude      https://stake.us/settings/*
+// @exclude      https://stake.ac/settings/*
+// @exclude      https://stake.games/settings/*
+// @exclude      https://stake.bet/settings/*
+// @exclude      https://stake.pet/settings/*
+// @exclude      https://stake.mba/settings/*
+// @exclude      https://stake.jp/settings/*
+// @exclude      https://stake.bz/settings/*
+// @exclude      https://stake.ceo/settings/*
+// @exclude      https://stake.krd/settings/*
+// @exclude      https://staketr.com/settings/*
+// @exclude      https://stake1001.com/settings/*
+// @exclude      https://stake1002.com/settings/*
+// @exclude      https://stake1003.com/settings/*
+// @exclude      https://stake1004.com/settings/*
+// @exclude      https://stake1005.com/settings/*
+// @exclude      https://stake1021.com/settings/*
+// @exclude      https://stake1022.com/settings/*
+// @exclude      https://stake.br/settings/*
 // @grant        GM_getValue
+// @grant        GM_setValue
+// @run-at       document-start
+// @noframes
 // @downloadURL https://update.greasyfork.org/scripts/546623/Auto%20Reload%20on%20Stakecom%20-%20CodeStats%20edition.user.js
 // @updateURL https://update.greasyfork.org/scripts/546623/Auto%20Reload%20on%20Stakecom%20-%20CodeStats%20edition.meta.js
 // ==/UserScript==
 
-// ===== CONFIGURATION SYSTEM =====
-const defaultConfig = {
-    minMinutes: 10,
-    maxMinutes: 12,
-    enabled: true,
-};
+(function () {
+  'use strict';
 
-let config = { ...defaultConfig };
-let currentTimeout = null;
-let currentTimer = null;
+  // ===== CONFIGURATION =====
+  const MIN_MINUTES = 10;
+  const MAX_MINUTES = 11;
+  const STEP_TIMEOUT_MS = 30000;
+  const MAX_RETRIES = 3;
+  const RELOAD_COOLDOWN_MS = 15000;
 
-function loadConfig() {
-    try {
-        const saved = GM_getValue("autoReloadConfig", null);
-        if (saved) {
-            config = { ...defaultConfig, ...saved };
-        }
-    } catch (e) {
-        console.log("Could not load config, using defaults");
-    }
-}
+  // Dynamic target URL for all Stake mirrors
+  const TARGET_URL = `${window.location.origin}/?tab=rewards&modal=vip`;
 
-// Update input fields when config is loaded
-function updateInputFieldsFromConfig() {
-    const minHours = Math.floor(config.minMinutes / 60);
-    const minMins = config.minMinutes % 60;
-    const maxHours = Math.floor(config.maxMinutes / 60);
-    const maxMins = config.maxMinutes % 60;
+  // ===== STATE MANAGEMENT =====
+  let cycleInProgress = false; // Prevent concurrent cycles
+  let cycleScheduled = false; // Track if cycle is scheduled
+  let lastDelay = null; // Store last delay for persistence
+  let reloadClaims = 0; // Track successful claims
+  let firstClaimMade = false; // Track if first claim has been made
+  let currentTimeout = null;
+  let currentTimer = null;
+  let config = {
+      minMinutes: MIN_MINUTES,
+      maxMinutes: MAX_MINUTES,
+      enabled: true,
+  };
 
-    const minHoursInput = document.getElementById("minHours");
-    const minMinutesInput = document.getElementById("minMinutes");
-    const maxHoursInput = document.getElementById("maxHours");
-    const maxMinutesInput = document.getElementById("maxMinutes");
+  // Session storage keys for self-healing
+  const STATE_KEY_LAST_RELOAD = 'codestats:lastReloadAt';
+  const STATE_KEY_RETRY_COUNT = 'codestats:retryCount';
 
-    if (minHoursInput) minHoursInput.value = minHours;
-    if (minMinutesInput) minMinutesInput.value = minMins;
-    if (maxHoursInput) maxHoursInput.value = maxHours;
-    if (maxMinutesInput) maxMinutesInput.value = maxMins;
-}
+  function loadConfig() {
+      try {
+          const saved = GM_getValue("autoReloadConfig", null);
+          if (saved) {
+              config.enabled = saved.enabled !== undefined ? saved.enabled : true;
+          }
+          reloadClaims = parseInt(GM_getValue("reloadClaims", "0"));
+          
+          // Initialize firstClaimMade based on whether we have previous claims
+          // If we have any previous claims, assume first claim was already made
+          firstClaimMade = reloadClaims > 0;
+      } catch (e) {
+          console.log("Could not load config, using defaults");
+      }
+  }
 
-function saveConfig() {
-    try {
-        GM_setValue("autoReloadConfig", config);
-    } catch (e) {
-        console.log("Could not save config");
-    }
-}
+  function saveConfig() {
+      try {
+          const toSave = { enabled: config.enabled };
+          GM_setValue("autoReloadConfig", toSave);
+          GM_setValue("reloadClaims", reloadClaims.toString());
+          
+          // Update firstClaimMade status based on current claims count
+          firstClaimMade = reloadClaims > 0;
+      } catch (e) {
+          console.log("Could not save config");
+      }
+  }
 
-// ===== HUD SETUP =====
+  function saveTimingState() {
+      try {
+          GM_setValue("codestats_lastClaim", Date.now());
+          if (lastDelay) {
+              GM_setValue("codestats_nextClaimDelay", lastDelay);
+          }
+      } catch (e) {
+          console.log("Could not save timing state:", e);
+      }
+  }
 
-function setupHUD() {
-    let hud = document.createElement("div");
-    hud.id = "autoReloadHUD";
-    hud.style.cssText = `
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        width: 600px;
-        max-height: 300px;
-        overflow-y: auto;
-        font-size: 12px;
-        background: rgba(0,0,0,0.8);
-        color: #0f0;
-        padding: 10px;
-        border-radius: 8px;
-        font-family: monospace;
-        z-index: 999999;
-        border: 1px solid #0f0;
-    `;
+  function loadTimingState() {
+      try {
+          const lastClaim = parseInt(GM_getValue("codestats_lastClaim", "0"));
+          const nextDelay = parseInt(GM_getValue("codestats_nextClaimDelay", "0"));
 
-    hud.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <b><a href="https://codestats.gg" target="_blank" rel="noopener noreferrer" style="color: #0f0; text-decoration: underline;">CodeStats.gg</a> Stake Reload Bot v1.1.3</b>
-            <button id="minimizeBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">−</button>
-        </div>
-        <div id="mainContent">
-            <div style="margin: 8px 0; padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px;">
-                <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
-                    <button id="goToVip" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🏆 VIP</button>
-                    <button id="toggleBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">${config.enabled ? "PAUSE" : "START"}</button>
-                    <span>Status: <span id="statusText">${config.enabled ? "RUNNING" : "PAUSED"}</span></span>
-                </div>
-                <div style="margin-bottom: 8px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 2px;">Min Time:</label>
-                            <div style="display: flex; gap: 5px; align-items: center;">
-                                <input type="number" id="minHours" value="${Math.floor(config.minMinutes / 60)}" min="0" max="23" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                                <span style="color: #0f0;">h</span>
-                                <input type="number" id="minMinutes" value="${config.minMinutes % 60}" min="0" max="59" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                                <span style="color: #0f0;">m</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 2px;">Max Time:</label>
-                            <div style="display: flex; gap: 5px; align-items: center;">
-                                <input type="number" id="maxHours" value="${Math.floor(config.maxMinutes / 60)}" min="0" max="23" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                                <span style="color: #0f0;">h</span>
-                                <input type="number" id="maxMinutes" value="${config.maxMinutes % 60}" min="0" max="59" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                                <span style="color: #0f0;">m</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button id="applySettings" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">Apply Settings</button>
-            </div>
-            <div id="hudLog" style="max-height: 80px; overflow-y: auto;"></div>
-            <div id="hudTimer" style="font-weight: bold; color: #ff0;"></div>
-        </div>
-    `;
+          if (lastClaim > 0 && nextDelay > 0) {
+              const elapsed = Date.now() - lastClaim;
+              const remaining = nextDelay - elapsed;
 
-    document.body.appendChild(hud);
+              if (remaining > 0) {
+                  logHUD(
+                      `Resuming with ${Math.floor(remaining / 1000)}s remaining from previous cycle`,
+                  );
+                  return remaining;
+              }
+          }
+      } catch (e) {
+          console.log("Could not load timing state:", e);
+      }
+      return null;
+  }
 
-    // Setup event listeners
-    document.getElementById("toggleBtn").addEventListener("click", toggleBot);
-    document
-        .getElementById("minimizeBtn")
-        .addEventListener("click", toggleMinimize);
-    document
-        .getElementById("applySettings")
-        .addEventListener("click", applySettings);
+  function getRetryCount() {
+      return parseInt(sessionStorage.getItem(STATE_KEY_RETRY_COUNT) || '0', 10);
+  }
 
-    document.getElementById("goToVip").addEventListener("click", function () {
-        window.location.href = `${window.location.origin}/?tab=rewards&modal=vip`;
-    });
+  function incrementRetryCount() {
+      const count = getRetryCount() + 1;
+      sessionStorage.setItem(STATE_KEY_RETRY_COUNT, String(count));
+      return count;
+  }
 
-    // Update input fields with loaded config values
-    updateInputFieldsFromConfig();
-}
+  function resetRetryCount() {
+      sessionStorage.setItem(STATE_KEY_RETRY_COUNT, '0');
+  }
 
-function toggleBot() {
-    config.enabled = !config.enabled;
-    const btn = document.getElementById("toggleBtn");
-    const status = document.getElementById("statusText");
+  function shouldHardReset() {
+      return getRetryCount() >= MAX_RETRIES;
+  }
 
-    btn.textContent = config.enabled ? "PAUSE" : "START";
-    status.textContent = config.enabled ? "RUNNING" : "PAUSED";
+  // ===== LOGGER =====
+  const log = (...args) => console.log('[CodeStats]', ...args);
+  const warn = (...args) => console.warn('[CodeStats]', ...args);
+  const error = (...args) => console.error('[CodeStats]', ...args);
 
-    saveConfig();
+  function logHUD(msg) {
+      const logEl = document.getElementById("hudLog");
+      if (!logEl) return;
 
-    if (config.enabled) {
-        logHUD("Bot resumed");
-        startCycle();
-    } else {
-        logHUD("Bot paused");
-        if (currentTimeout) {
-            clearTimeout(currentTimeout);
-            currentTimeout = null;
-        }
-        if (currentTimer) {
-            clearInterval(currentTimer);
-            currentTimer = null;
-        }
-        document.getElementById("hudTimer").textContent = "Bot paused";
-    }
-}
+      const line = document.createElement("div");
+      line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      line.style.padding = "2px 0";
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+  }
 
-function toggleMinimize() {
-    const mainContent = document.getElementById("mainContent");
-    const minimizeBtn = document.getElementById("minimizeBtn");
-    const hud = document.getElementById("autoReloadHUD");
+  function updateTimer(ms) {
+      const el = document.getElementById("hudTimer");
+      if (!el) return;
 
-    if (mainContent.style.display === "none") {
-        // Restore to original size
-        mainContent.style.display = "block";
-        hud.style.width = "600px";
-        hud.style.maxHeight = "300px";
-        minimizeBtn.textContent = "−";
-    } else {
-        // Minimize
-        mainContent.style.display = "none";
-        hud.style.width = "350px";
-        hud.style.maxHeight = "50px";
-        minimizeBtn.textContent = "+";
-    }
-}
+      const sec = Math.floor(ms / 1000);
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      el.textContent = `Next claim in: ${m}m ${s}s`;
+  }
 
-function applySettings() {
-    const minHours = parseInt(document.getElementById("minHours").value);
-    const minMins = parseInt(document.getElementById("minMinutes").value);
-    const maxHours = parseInt(document.getElementById("maxHours").value);
-    const maxMins = parseInt(document.getElementById("maxMinutes").value);
+  function setSpinnerState(state, message, retryInfo = '') {
+      const statusText = document.getElementById("statusText");
+      if (!statusText) return;
 
-    const newMin = minHours * 60 + minMins;
-    const newMax = maxHours * 60 + maxMins;
+      statusText.textContent = message;
+  }
 
-    // Always save the current input values to make them persistent
-    config.minMinutes = newMin;
-    config.maxMinutes = newMax;
-    saveConfig();
+  // ===== DOM UTILITIES =====
+  function waitFor(selector, { timeout = STEP_TIMEOUT_MS, mustBeEnabled = true, context = document } = {}) {
+      return new Promise((resolve, reject) => {
+          const t0 = Date.now();
 
-    // Update input fields with saved values
-    updateInputFieldsFromConfig();
+          const check = () => {
+              const el = context.querySelector(selector);
+              if (!el) return null;
+              if (mustBeEnabled && ('disabled' in el) && el.disabled) return null;
+              return el;
+          };
 
-    if (
-        newMin >= 1 &&
-        newMax >= 1 &&
-        newMin <= 1440 &&
-        newMax <= 1440 &&
-        newMin <= newMax
-    ) {
-        const minText =
-            minHours > 0 ? `${minHours}h ${minMins}m` : `${minMins}m`;
-        const maxText =
-            maxHours > 0 ? `${maxHours}h ${maxMins}m` : `${maxMins}m`;
-        logHUD(`Settings updated: ${minText}-${maxText}`);
+          const first = check();
+          if (first) {
+              log('✅ found:', selector);
+              return resolve(first);
+          }
 
-        // Restart cycle if enabled to apply new settings immediately
-        if (config.enabled) {
-            if (currentTimeout) {
-                clearTimeout(currentTimeout);
-                currentTimeout = null;
-            }
-            if (currentTimer) {
-                clearInterval(currentTimer);
-                currentTimer = null;
-            }
-            startCycle();
-        }
-    } else {
-        logHUD(
-            "Invalid settings: min must be ≤ max, both between 1 minute and 24 hours",
-        );
-    }
-}
-setupHUD();
+          const obs = new MutationObserver(() => {
+              const found = check();
+              if (found) {
+                  obs.disconnect();
+                  log('✅ found (obs):', selector);
+                  resolve(found);
+              } else if (Date.now() - t0 > timeout) {
+                  obs.disconnect();
+                  reject(new Error(`timeout: ${selector}`));
+              }
+          });
 
-function logHUD(msg) {
-    let log = document.getElementById("hudLog");
-    if (log) {
-        let line = document.createElement("div");
-        line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-        log.appendChild(line); // add new line at the bottom
-        while (log.childNodes.length > 3) log.removeChild(log.firstChild); // trim from top
-        log.scrollTop = log.scrollHeight; // auto-scroll to bottom
-    }
-    console.log(msg);
-}
+          obs.observe(context, { childList: true, subtree: true });
+          setTimeout(() => {
+              obs.disconnect();
+              reject(new Error(`timeout: ${selector}`));
+          }, timeout + 50);
+      });
+  }
 
-function updateTimer(ms) {
-    let el = document.getElementById("hudTimer");
-    if (!el) return;
-    let sec = Math.floor(ms / 1000);
-    let m = Math.floor(sec / 60);
-    let s = sec % 60;
-    el.textContent = `Next attempt in ${m}m ${s}s`;
-}
+  async function waitForAny(selectors, opts) {
+      const promises = selectors.map((sel) =>
+          waitFor(sel, opts).then((el) => ({ el, sel })).catch(() => null)
+      );
 
-// ===== CLICK FUNCTION =====
-async function orderedClick(selector, retries = 5, interval = 3000) {
-    for (let i = 0; i < retries; i++) {
-        const el = document.querySelector(selector);
-        if (el) {
-            const delay = Math.floor(Math.random() * 2000) + 1000;
-            await wait(delay);
-            el.click();
-            logHUD(`Clicked: ${selector} (after ${delay}ms)`);
-            return true;
-        }
-        await wait(interval);
-    }
-    logHUD(`FAILED: ${selector}`);
-    return false;
-}
+      const results = await Promise.all(promises);
+      const winner = results.find(result => result !== null);
 
-// Update input fields when config changes
-updateInputFieldsFromConfig();
+      if (winner) {
+          return winner;
+      }
+      throw new Error(`None of the selectors found: ${selectors.join(', ')}`);
+  }
 
-// ===== CLAIM FUNCTION =====
-async function claimReload() {
-    try {
-        simulateMouseMove();
+  async function clickIfExists(selector, label, context = document) {
+      const el = context.querySelector(selector);
+      if (el && !el.disabled) {
+          log('🖱️ click:', label || selector);
+          el.click();
+          await new Promise(resolve => setTimeout(resolve, 500));
+          return true;
+      }
+      return false;
+  }
 
-        // Less clicks with latest Stake update.
-        // await orderedClick('button[data-testid="progress-tab"]');
-        // await orderedClick('button[data-testid="rewards-tab"]');
-        await orderedClick('button[data-testid="vip-reward-claim-reload"]');
+  // ===== NAVIGATION STRATEGIES =====
+  async function tryNavigationStrategy(strategyName, attempt) {
+      log(`🔄 Trying navigation strategy: ${strategyName} (attempt ${attempt})`);
 
-        // The MONEY button
-        const claimSuccess = await orderedClick(
-            'button[data-testid="claim-reload"]',
-        );
+      switch (strategyName) {
+          case 'direct_url':
+              setSpinnerState('RUNNING', 'direct navigation…', `attempt ${attempt}/${MAX_RETRIES}`);
+              window.location.href = TARGET_URL;
+              return true;
 
-        if (claimSuccess) {
-            // If we successfully clicked claim, we *must* try to wrap up
-            const finalStep = await orderedClick(
-                'button[data-testid="return-to-rewards"]',
-            );
-            if (!finalStep) {
-                logHUD(
-                    "Claimed reload but couldn't return → reloading page...",
-                );
-                window.location.href = `${window.location.origin}/?tab=progress&modal=vip`;
-                return false; // Signal that page is reloading
-            }
-        }
+          case 'dropdown_vip':
+              setSpinnerState('RUNNING', 'menu navigation…', `attempt ${attempt}/${MAX_RETRIES}`);
 
-        simulateMouseMove();
-        logHUD("Finished reload attempt.");
-        return true; // Signal success
-    } catch (error) {
-        logHUD(`Error during claim: ${error.message}`);
-        console.error("claimReload error:", error);
-        return true; // Still return true to continue the cycle
-    }
-}
+              await clickIfExists('button[data-testid="user-dropdown-toggle"][aria-expanded="true"]', 'close-dropdown');
+              await new Promise(resolve => setTimeout(resolve, 500));
 
-// ===== CYCLE FUNCTION =====
-function startCycle() {
-    if (!config.enabled) {
-        logHUD("Bot is paused - timer not started");
-        return;
-    }
+              await clickIfExists('button[data-testid="user-dropdown-toggle"]', 'open-dropdown');
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              await clickIfExists('button[data-analytics="global-userMenu-vip-item"]', 'vip-item');
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              return true;
 
-    // Clear any existing timers to prevent duplicates
-    if (currentTimer) {
-        clearInterval(currentTimer);
-        currentTimer = null;
-    }
-    if (currentTimeout) {
-        clearTimeout(currentTimeout);
-        currentTimeout = null;
-    }
+          case 'rewards_tab':
+              setSpinnerState('RUNNING', 'rewards tab…', `attempt ${attempt}/${MAX_RETRIES}`);
+              await clickIfExists('button[data-testid="rewards-tab"]', 'rewards-tab');
+              await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const min = config.minMinutes * 60 * 1000;
-    const max = config.maxMinutes * 60 * 1000;
-    const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+              await clickIfExists('button[data-testid="user-dropdown-toggle"]', 'open-dropdown');
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              await clickIfExists('button[data-analytics="global-userMenu-vip-item"]', 'vip-item');
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              return true;
 
-    let endTime = Date.now() + delay;
+          case 'hard_reset':
+              setSpinnerState('RUNNING', 'hard reset…', 'final attempt');
+              window.location.reload();
+              return true;
 
-    // Update timer display immediately
-    updateTimer(delay);
+          default:
+              return false;
+      }
+  }
 
-    currentTimer = setInterval(() => {
-        let remaining = endTime - Date.now();
-        if (remaining <= 0) {
-            clearInterval(currentTimer);
-            currentTimer = null;
-            return;
-        }
-        updateTimer(remaining);
-    }, 1000);
+  async function healAndNavigate() {
+      const retryCount = incrementRetryCount();
 
-    const minHours = Math.floor(config.minMinutes / 60);
-    const minMins = config.minMinutes % 60;
-    const maxHours = Math.floor(config.maxMinutes / 60);
-    const maxMins = config.maxMinutes % 60;
+      if (shouldHardReset()) {
+          log('🚨 Max retries reached, performing hard reset');
+          resetRetryCount();
+          await tryNavigationStrategy('hard_reset', retryCount);
+          return;
+      }
 
-    const minText = minHours > 0 ? `${minHours}h ${minMins}m` : `${minMins}m`;
-    const maxText = maxHours > 0 ? `${maxHours}h ${maxMins}m` : `${maxMins}m`;
+      const strategies = ['direct_url', 'dropdown_vip', 'rewards_tab'];
+      const strategy = strategies[retryCount - 1] || strategies[0];
 
-    logHUD(
-        `Next attempt scheduled in ${(delay / 60000).toFixed(2)} minutes (${minText}-${maxText})`,
-    );
+      await tryNavigationStrategy(strategy, retryCount);
+  }
 
-    currentTimeout = setTimeout(async () => {
-        currentTimeout = null;
-        try {
-            const shouldContinue = await claimReload();
-            // Only start next cycle if we didn't trigger a page reload
-            if (shouldContinue !== false) {
-                startCycle();
-            }
-        } catch (error) {
-            logHUD(`Cycle error: ${error.message} - restarting cycle...`);
-            console.error("startCycle error:", error);
-            // Always restart the cycle even on error
-            startCycle();
-        }
-    }, delay);
-}
+  function isOnVIPPage() {
+      try {
+          const url = new URL(window.location.href);
+          const tab = url.searchParams.get('tab');
+          const modal = url.searchParams.get('modal');
 
-// ===== UTILITIES =====
-function simulateMouseMove() {
-    const simElm = document.documentElement;
-    const simMouseMove = new Event("mousemove", { bubbles: true });
-    simElm.dispatchEvent(simMouseMove);
-}
+          const urlMatch = (tab === 'rewards' && modal === 'vip') ||
+                          (tab === 'reload' && modal === 'vip');
 
-function wait(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
+          const visualMatch = document.querySelector(
+              'button[data-analytics="global-userMenu-vip-item"][aria-current="true"], ' +
+              '[data-testid*="vip"], ' +
+              '[class*="vip" i]'
+          );
 
-// ===== INITIAL RUN =====
-(function firstRun() {
-    loadConfig();
+          return urlMatch || !!visualMatch;
+      } catch {
+          return false;
+      }
+  }
 
-    // Small delay to ensure DOM is ready before updating input fields
-    setTimeout(() => {
-        updateInputFieldsFromConfig();
-    }, 100);
+  async function performClaimSequence() {
+      setSpinnerState('RUNNING', 'checking claims…');
+      logHUD('Checking for available reload claims…');
 
-    const firstDelay = Math.floor(Math.random() * 5000) + 5000;
-    const minHours = Math.floor(config.minMinutes / 60);
-    const minMins = config.minMinutes % 60;
-    const maxHours = Math.floor(config.maxMinutes / 60);
-    const maxMins = config.maxMinutes % 60;
+      let claimedAnything = false;
 
-    const minText = minHours > 0 ? `${minHours}h ${minMins}m` : `${minMins}m`;
-    const maxText = maxHours > 0 ? `${maxHours}h ${maxMins}m` : `${maxMins}m`;
+      try {
+          const reloadSel = [
+              'button[data-testid="vip-reward-claim-reload"][data-analytics="vip-reward-claim-reload"]',
+              'button[data-testid="vip-reward-claim-reload"]',
+              'button[data-analytics="vip-reward-claim-reload"]',
+              '[data-testid*="reload"][data-analytics*="reload"]',
+              '[data-testid*="reload"][data-analytics*="claim"]',
+          ];
 
-    logHUD(`Bot loaded - Settings: ${minText}-${maxText}`);
-    logHUD(`First attempt in ${(firstDelay / 1000).toFixed(1)}s`);
+          const { el: vipBtn } = await waitForAny(reloadSel, { timeout: 10000 });
+          if (vipBtn && !vipBtn.disabled) {
+              setSpinnerState('RUNNING', 'opening reload…');
+              logHUD('Clicking VIP reward claim reload button…');
+              vipBtn.click();
+              await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+      } catch (err) {
+          log('ℹ️ VIP reload button not found');
+      }
 
-    setTimeout(async () => {
-        try {
-            const shouldContinue = await claimReload();
-            // Only start cycle if we didn't trigger a page reload
-            if (shouldContinue !== false) {
-                startCycle();
-            }
-        } catch (error) {
-            logHUD(
-                `First run error: ${error.message} - starting cycle anyway...`,
-            );
-            console.error("firstRun error:", error);
-            // Start cycle even if first claim failed
-            startCycle();
-        }
-    }, firstDelay);
+      try {
+          const claimSel = [
+              'button[data-testid="claim-reload"][data-analytics="claim-reload"]',
+              'button[data-testid="claim-reload"]',
+              'button[data-analytics="claim-reload"]',
+              '[data-testid*="reload"][data-analytics*="claim"]',
+          ];
+
+          const { el: reloadBtn } = await waitForAny(claimSel, { timeout: 15000 });
+          if (reloadBtn && !reloadBtn.disabled) {
+              setSpinnerState('RUNNING', 'claiming reload…');
+              logHUD('Claiming reload bonus…');
+              reloadBtn.click();
+              claimedAnything = true;
+              log('🪙 Reload claimed');
+              await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+      } catch (err) {
+          log('ℹ️ No reload claim available or already claimed');
+      }
+
+      if (claimedAnything) {
+          try {
+              const returnSel = [
+                  'button[data-testid="return-to-rewards"]',
+                  'button[data-testid="return-to-rewards"][data-analytics="return-to-rewards"]',
+              ];
+
+              const { el: returnBtn } = await waitForAny(returnSel, { timeout: 5000 });
+              if (returnBtn) {
+                  logHUD('Returning to rewards…');
+                  returnBtn.click();
+                  await new Promise(resolve => setTimeout(resolve, 1000));
+              }
+          } catch (err) {
+              log('ℹ️ Return button not found, may be auto-closed');
+          }
+
+          reloadClaims++;
+          saveConfig();
+          logHUD(`Reload claimed successfully! Total claims: ${reloadClaims}`);
+          document.getElementById("claimCounter").textContent = reloadClaims;
+      }
+
+      return claimedAnything;
+  }
+
+  function safeNavigateToTarget(reason) {
+      const now = Date.now();
+      const last = parseInt(sessionStorage.getItem(STATE_KEY_LAST_RELOAD) || '0', 10);
+      if (now - last < RELOAD_COOLDOWN_MS) {
+          warn('reload blocked (cooldown). reason =', reason);
+          return;
+      }
+      sessionStorage.setItem(STATE_KEY_LAST_RELOAD, String(now));
+      window.location.href = TARGET_URL;
+  }
+
+  function simulateMouseMove() {
+      const simElm = document.body || document.documentElement;
+      if (!simElm) return;
+      const simMouseMove = new Event("mousemove", { bubbles: true });
+      simElm.dispatchEvent(simMouseMove);
+  }
+
+  function wait(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // ===== HUD SETUP =====
+  function setupHUD() {
+      const existingHud = document.getElementById("autoReloadHUD");
+      if (existingHud) {
+          existingHud.remove();
+      }
+
+      const hud = document.createElement("div");
+      hud.id = "autoReloadHUD";
+      hud.style.cssText = `
+          position: fixed;
+          bottom: 10px;
+          right: 10px;
+          width: 650px;
+          max-height: 250px;
+          overflow-y: auto;
+          font-size: 12px;
+          background: rgba(0,0,0,0.8);
+          color: #0f0;
+          padding: 10px;
+          border-radius: 8px;
+          font-family: monospace;
+          z-index: 2147483647;
+          border: 1px solid #0f0;
+      `;
+
+      hud.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+              <b><a href="https://codestats.gg" target="_blank" rel="noopener noreferrer" style="color: #0f0; text-decoration: underline;">CodeStats.gg</a> Stake Reload Bot v2.0.0</b>
+              <button id="minimizeBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">−</button>
+          </div>
+          <div id="mainContent">
+              <div style="margin: 8px 0; padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px;">
+                  <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
+                      <button id="goToVip" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🏆 VIP</button>
+                      <button id="toggleBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">${config.enabled ? "PAUSE" : "START"}</button>
+                      <span>Status: <span id="statusText">${config.enabled ? "RUNNING" : "PAUSED"}</span></span>
+                  </div>
+                  <div style="font-size: 11px; color: #aaa; display: flex; justify-content: space-between; align-items: center;">
+                      <span>Settings: ${MIN_MINUTES}-${MAX_MINUTES} min (configure in script)</span>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                          <span>Claims: <strong id="claimCounter">${reloadClaims}</strong></span>
+                          <button id="resetBtn" style="padding: 2px 6px; background: #f00; color: #fff; border: none; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold;">RESET</button>
+                      </div>
+                  </div>
+                  <div id="retryInfo" style="font-size: 10px; color: #666; margin-top: 4px;"></div>
+              </div>
+              <div id="hudLog" style="max-height: 80px; overflow-y: auto;"></div>
+              <div id="hudTimer" style="font-weight: bold; color: #ff0;"></div>
+          </div>
+      `;
+
+      document.body.appendChild(hud);
+
+      document.getElementById("toggleBtn").addEventListener("click", toggleBot);
+      document.getElementById("minimizeBtn").addEventListener("click", toggleMinimize);
+      document.getElementById("goToVip").addEventListener("click", function () {
+          window.location.href = TARGET_URL;
+      });
+      document.getElementById("resetBtn").addEventListener("click", function () {
+          reloadClaims = 0;
+          saveConfig();
+          document.getElementById("claimCounter").textContent = "0";
+          logHUD("Claims counter reset to 0");
+      });
+  }
+
+  function toggleBot() {
+      config.enabled = !config.enabled;
+      const btn = document.getElementById("toggleBtn");
+      const status = document.getElementById("statusText");
+
+      btn.textContent = config.enabled ? "PAUSE" : "START";
+      status.textContent = config.enabled ? "RUNNING" : "PAUSED";
+
+      saveConfig();
+
+      if (config.enabled) {
+          logHUD("Bot resumed");
+          cycleInProgress = false;
+          cycleScheduled = false;
+          startCycle();
+      } else {
+          logHUD("Bot paused");
+          if (currentTimeout) {
+              clearTimeout(currentTimeout);
+              currentTimeout = null;
+          }
+          if (currentTimer) {
+              clearInterval(currentTimer);
+              currentTimer = null;
+          }
+          cycleInProgress = false;
+          cycleScheduled = false;
+          document.getElementById("hudTimer").textContent = "Bot paused";
+      }
+  }
+
+  function toggleMinimize() {
+      const mainContent = document.getElementById("mainContent");
+      const minimizeBtn = document.getElementById("minimizeBtn");
+      const hud = document.getElementById("autoReloadHUD");
+
+      if (mainContent.style.display === "none") {
+          mainContent.style.display = "block";
+          hud.style.width = "650px";
+          hud.style.maxHeight = "250px";
+          minimizeBtn.textContent = "−";
+      } else {
+          mainContent.style.display = "none";
+          hud.style.width = "350px";
+          hud.style.maxHeight = "50px";
+          minimizeBtn.textContent = "+";
+      }
+  }
+
+  function updateRetryDisplay() {
+      const retryCount = getRetryCount();
+      const retryInfo = document.getElementById("retryInfo");
+      if (retryInfo && retryCount > 0) {
+          retryInfo.textContent = `Self-healing retry ${retryCount}/${MAX_RETRIES}`;
+      } else if (retryInfo) {
+          retryInfo.textContent = '';
+      }
+  }
+
+  // ===== MAIN RUN LOOP =====
+  async function run() {
+      updateRetryDisplay();
+
+      if (!isOnVIPPage()) {
+          log('🔧 Not on VIP page, initiating self-healing');
+          logHUD('Navigating to VIP page…');
+          await healAndNavigate();
+          return;
+      }
+
+      if (getRetryCount() > 0) {
+          log('✅ Self-healing successful, resetting retry count');
+          resetRetryCount();
+      }
+
+      const success = await performClaimSequence();
+
+      if (success && !firstClaimMade) {
+          // Mark first claim as made after successful first claim
+          firstClaimMade = true;
+          logHUD("First reload claim successful! Now using configured intervals...");
+          log('✅ First claim made - switching to normal timing');
+      }
+
+      if (success) {
+          setSpinnerState('RUNNING', 'success • waiting for next cycle', '');
+          log('✅ Claim sequence completed successfully');
+      } else {
+          setSpinnerState('RUNNING', 'no claims • waiting for next cycle', '');
+          log('ℹ️ No claims available at this time');
+      }
+  }
+
+  function startCycle() {
+      if (!config.enabled) {
+          logHUD("Bot is paused - timer not started");
+          return;
+      }
+
+      if (cycleInProgress) {
+          logHUD("Warning: Cycle already in progress, skipping duplicate start");
+          return;
+      }
+
+      if (cycleScheduled) {
+          logHUD("Warning: Cycle already scheduled, skipping duplicate");
+          return;
+      }
+
+      cycleInProgress = true;
+      cycleScheduled = true;
+
+      if (currentTimer) {
+          clearInterval(currentTimer);
+          currentTimer = null;
+      }
+      if (currentTimeout) {
+          clearTimeout(currentTimeout);
+          currentTimeout = null;
+      }
+
+      // Use 2-minute intervals until first claim is made
+      let min, max;
+      if (!firstClaimMade) {
+          // Use 2 minutes for until first claim
+          min = 2 * 60 * 1000;
+          max = 2 * 60 * 1000;
+          logHUD("Checking for first claim every 2 minutes...");
+      } else {
+          // Use normal 10-11 minute intervals after first claim
+          min = config.minMinutes * 60 * 1000;
+          max = config.maxMinutes * 60 * 1000;
+      }
+      
+      const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+
+      lastDelay = delay;
+      let endTime = Date.now() + delay;
+
+      updateTimer(delay);
+
+      currentTimer = setInterval(() => {
+          let remaining = endTime - Date.now();
+          if (remaining <= 0) {
+              clearInterval(currentTimer);
+              currentTimer = null;
+              return;
+          }
+          updateTimer(remaining);
+      }, 1000);
+
+      logHUD(`Next attempt scheduled in ${(delay / 60000).toFixed(2)} minutes`);
+
+      currentTimeout = setTimeout(async () => {
+          currentTimeout = null;
+          cycleInProgress = false;
+
+          try {
+              await run();
+              saveTimingState();
+
+              if (config.enabled) {
+                  cycleScheduled = false;
+                  startCycle();
+              }
+          } catch (error) {
+              logHUD(`Cycle error: ${error.message} - restarting...`);
+              console.error("startCycle error:", error);
+              saveTimingState();
+              cycleScheduled = false;
+              setTimeout(() => {
+                  cycleScheduled = false;
+                  startCycle();
+              }, 5000);
+          }
+      }, delay);
+  }
+
+  // ===== BOOTSTRAP =====
+  function ensureHUD() {
+      if (document.body) {
+          setupHUD();
+      } else {
+          requestAnimationFrame(ensureHUD);
+      }
+  }
+
+  const kick = () => {
+      try {
+          run();
+      } catch (e) {
+          error('🚨 Critical error:', e);
+          logHUD('Critical error - initiating self-healing…');
+
+          setTimeout(() => {
+              healAndNavigate();
+          }, 3000);
+      }
+  };
+
+  loadConfig();
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(() => {
+          ensureHUD();
+          kick();
+      }, 1000);
+  } else {
+      document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+              ensureHUD();
+              kick();
+          }, 1000);
+      });
+  }
+
+  window.addEventListener('load', () => setTimeout(kick, 1500));
+
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+      const url = location.href;
+      if (url !== lastUrl) {
+          lastUrl = url;
+          setTimeout(kick, 500);
+      }
+  }).observe(document, { subtree: true, childList: true });
+
+  const minText = `${MIN_MINUTES}m`;
+  const maxText = `${MAX_MINUTES}m`;
+  logHUD(`Bot loaded - Settings: ${minText}-${maxText}`);
+
+  const remaining = loadTimingState();
+
+  if (remaining) {
+      logHUD(`Resuming claim in ${(remaining / 1000).toFixed(1)}s...`);
+
+      setTimeout(async () => {
+          try {
+              await run();
+              if (config.enabled) {
+                  startCycle();
+              }
+          } catch (error) {
+              logHUD(`First run error: ${error.message} - starting anyway...`);
+              console.error("firstRun error:", error);
+              setTimeout(() => {
+                  cycleScheduled = false;
+                  startCycle();
+              }, 2000);
+          }
+      }, remaining);
+  } else {
+      const firstDelay = Math.floor(Math.random() * 5000) + 5000;
+      logHUD(`First attempt in ${(firstDelay / 1000).toFixed(1)}s`);
+
+      setTimeout(async () => {
+          try {
+              await run();
+              if (config.enabled) {
+                  startCycle();
+              }
+          } catch (error) {
+              logHUD(`First run error: ${error.message} - starting anyway...`);
+              console.error("firstRun error:", error);
+              setTimeout(() => {
+                  cycleScheduled = false;
+                  startCycle();
+              }, 2000);
+          }
+      }, firstDelay);
+  }
+
 })();

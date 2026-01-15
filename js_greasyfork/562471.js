@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FitGirl Alt CSS + Animations
 // @namespace    FitGirl css
-// @version      1.2
+// @version      1.3
 // @description  Modern theme with animations injected via userscript
 // @match        https://fitgirl-repacks.site/*
 // @run-at       document-start
@@ -47,7 +47,11 @@
     --shadow: 0 10px 30px rgba(0,0,0,.08);
   }
 }
-
+.malcode {
+    border-radius: 3px;
+    padding: 3px;
+    background-color: #334a56ed;
+}
 html, body {
   background: var(--bg);
   color: var(--text);
@@ -431,7 +435,7 @@ img.size-full, img.size-large, .wp-post-image, .post-thumbnail img {
 .entry-content p a img {
 width:300px;
     margin: 1px;
-    border-radius: 3px; 
+    border-radius: 3px;
 }
 /*ul > li:nth-child(2) span{
 outline: 3px solid #00d4ff !important;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google MyActivity Keyword Cleaner
 // @namespace    http://tampermonkey.net/
-// @version      1.4.20260113.1000
+// @version      1.5.20260114.0930
 // @description  Clean Google MyActivity history based on keywords.
 // @author       You
 // @match        https://myactivity.google.com/*
@@ -40,7 +40,8 @@
             stopped: '已停止',
             running: '清理中... 已删除: ',
             errorTooMany: '🚫 连续错误过多，已紧急停止。请检查验证码或页面。',
-            deleteTriggers: ['删除', 'Delete', 'Remove']  // Robust keywords for button detection
+            deleteTriggers: ['删除', 'Delete', 'Remove'], // Robust keywords for button detection
+            excludeKeywords: ['下载', '导出', '保存', 'Download', 'Export', 'Save']
         },
         en: {
             title: 'Cleaner Config',
@@ -60,7 +61,8 @@
             stopped: 'Stopped',
             running: 'Running... Deleted: ',
             errorTooMany: '🚫 Too many consecutive errors. Auto-stopped. Check captcha.',
-            deleteTriggers: ['Delete', 'Remove', '删除']
+            deleteTriggers: ['Delete', 'Remove', '删除'],
+            excludeKeywords: ['Download', 'Export', 'Save', '下载', '导出']
         }
     };
 
@@ -368,10 +370,8 @@
     async function processLoop(keyword) {
         if (!isRunning) return false;
 
-        const lowerTriggers = [
-            ...TRANSLATIONS[LANG].deleteTriggers,
-            "remove", "dismiss", "x", "关闭", "移除", "取消", "dismiss activity"
-        ].map(t => t.toLowerCase());
+        const triggers = TRANSLATIONS[LANG].deleteTriggers;
+        const exclusions = TRANSLATIONS[LANG].excludeKeywords;
 
         const normalize = (str) => (str || "").toLowerCase().trim().replace(/：/g, ':');
         const searchKeyword = normalize(keyword);
@@ -381,21 +381,43 @@
 
         const targetButtons = allPotential.filter(btn => {
             const label = normalize(btn.getAttribute('aria-label'));
-            const isDeleteBtn = lowerTriggers.some(t => label.includes(t));
-            if (!isDeleteBtn) return false;
 
+            // Step 1: Broad "Is this a deletion/dismiss button?" check
+            // Strict match for single char "x" to avoid matching "Export" etc.
+            const isTriggerMatch = triggers.some(t => label.includes(normalize(t))) ||
+                label === 'x' ||
+                label.includes('dismiss') ||
+                label.includes('关闭') ||
+                label.includes('移除');
+
+            if (!isTriggerMatch) return false;
+
+            // Step 2: Anti-Download/Export Exclusion
+            const textContent = normalize(btn.textContent);
+            const title = normalize(btn.title);
+            if (exclusions.some(ex => label.includes(normalize(ex)) || textContent.includes(normalize(ex)) || title.includes(normalize(ex)))) {
+                return false;
+            }
+
+            // Exclude <a> tags that look like downloads
+            if (btn.tagName === 'A') {
+                if (btn.hasAttribute('download')) return false;
+                const href = btn.getAttribute('href') || "";
+                if (href.startsWith('data:') || href.startsWith('blob:')) return false;
+            }
+
+            // Step 3: Contextual Keyword Match
             // Check 1: In button's label
             if (label.includes(searchKeyword)) return true;
 
-            // Check 2: In button's visible text or title (Using textContent for speed)
-            if (normalize(btn.textContent).includes(searchKeyword)) return true;
-            if (normalize(btn.title).includes(searchKeyword)) return true;
+            // Check 2: In button's visible text or title
+            if (textContent.includes(searchKeyword)) return true;
+            if (title.includes(searchKeyword)) return true;
 
-            // Check 3: Deep ancestor scan (15 levels, optimized with textContent)
+            // Check 3: Deep ancestor scan (15 levels)
             let current = btn.parentElement;
             for (let i = 0; i < 15; i++) {
                 if (!current || current.tagName === 'BODY' || current.tagName === 'HTML') break;
-                // textContent is 10-100x faster than innerText as it doesn't trigger layout
                 const text = normalize(current.textContent);
                 if (text.includes(searchKeyword) && text.length < 5000) return true;
                 current = current.parentElement;

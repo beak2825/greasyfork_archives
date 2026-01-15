@@ -2,7 +2,7 @@
 // @name         FF Scouter V2 xentac edition
 // @namespace    Violentmonkey Scripts
 // @match        https://www.torn.com/*
-// @version      2.71xentac2
+// @version      2.72xentac1
 // @author       rDacted, Weav3r, xentac
 // @description  Shows the expected Fair Fight score against targets and faction war status
 // @grant        GM_xmlhttpRequest
@@ -18,7 +18,7 @@
 // @updateURL https://update.greasyfork.org/scripts/536235/FF%20Scouter%20V2%20xentac%20edition.meta.js
 // ==/UserScript==
 
-const FF_VERSION = "2.71xentac2";
+const FF_VERSION = "2.72xentac1";
 const API_INTERVAL = 30000;
 const FF_TARGET_STALENESS = 24 * 60 * 60 * 1000; // Refresh the target list every day
 const TARGET_KEY = "ffscouterv2-targets";
@@ -891,10 +891,6 @@ if (!singleton) {
                     expiry: expiry,
                     player_id: result.player_id,
                   };
-                  rD_setValue(
-                    "ffscouterv2-" + result.player_id,
-                    JSON.stringify(cacheObj),
-                  );
                   cachedObjs.push(cacheObj);
                 } else {
                   let cacheObj = {
@@ -905,10 +901,6 @@ if (!singleton) {
                     bs_estimate_human: result.bs_estimate_human,
                     player_id: result.player_id,
                   };
-                  rD_setValue(
-                    "ffscouterv2-" + result.player_id,
-                    JSON.stringify(cacheObj),
-                  );
                   cachedObjs.push(cacheObj);
                 }
               }
@@ -2316,7 +2308,7 @@ if (!singleton) {
     }
 
     checkKeyButton = document.createElement("button");
-    checkKeyButton.textContent = "Verify API Key";
+    checkKeyButton.textContent = "Verify";
     checkKeyButton.className =
       "ff-settings-button ff-settings-button-large torn-btn btn-big";
 

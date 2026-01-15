@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Lemmy Custom Navbar Links
+// @name         Lemmy Custom Navbar Links with Scroll to Top
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @author       https://lemmy.world/u/0485919158191
-// @description  Adds a customizable sticky navbar with quick links on Lemmy instances, including dynamic "My Posts" and "My Comments" for the logged-in user
+// @version      1.6
+// @author       https://lemmy.world/u/0485919158191 (original) + modifications
+// @description  Adds a customizable sticky navbar with quick links on Lemmy instances, including dynamic "My Posts" and "My Comments" for the logged-in user. Also adds a "Scroll to Top" button in the navbar.
 // @match        https://lemmy.world/*
 // @match        https://*.lemmy.world/*
 // @match        https://sh.itjust.works/*
@@ -13,14 +13,14 @@
 // @match        https://*/*                  // Broad match, but we check inside if it's Lemmy
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/468871/Lemmy%20Custom%20Navbar%20Links.user.js
-// @updateURL https://update.greasyfork.org/scripts/468871/Lemmy%20Custom%20Navbar%20Links.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/468871/Lemmy%20Custom%20Navbar%20Links%20with%20Scroll%20to%20Top.user.js
+// @updateURL https://update.greasyfork.org/scripts/468871/Lemmy%20Custom%20Navbar%20Links%20with%20Scroll%20to%20Top.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    // Reliable Lemmy detection
+    // Lemmy detection
     function isLemmyPage() {
         return document.body.classList.contains('lemmy') ||
                document.querySelector('nav.navbar') !== null ||
@@ -48,7 +48,7 @@
         return 'https://' + window.location.hostname + path;
     }
 
-    // Configuration: easy to modify links
+    // Configuration: easy to modify links (added Scroll to Top as a special item)
     const customLinks = [
         username ? { title: 'My Posts',     url: `/u/${username}?view=Posts&sort=New&page=1`,          color: '#00C853' } : null,
         username ? { title: 'My Comments',  url: `/u/${username}?view=Comments&sort=New&page=1`,        color: '#00C853' } : null,
@@ -57,6 +57,8 @@
         { title: 'Outside',         url: '/c/outside',                                             color: '#F1641E' },
         { separator: true },
         { title: 'Plugins',      url: '/c/plugins@sh.itjust.works',                          color: '#000000' },
+        { separator: true },
+        { title: 'Scroll to top ↑', action: 'scrollToTop', color: '#007bff' }
     ].filter(item => item !== null); // Remove null entries if not logged in
 
     // Create navbar
@@ -84,7 +86,49 @@
             sep.style.color = '#999';
             sep.style.margin = '0 8px';
             navbar.appendChild(sep);
+        } else if (item.action === 'scrollToTop') {
+            // Create button for Scroll to Top
+            const btn = document.createElement('button');
+            btn.textContent = item.title;
+            btn.title = 'Back to top';
+
+            Object.assign(btn.style, {
+                color: item.color || '#007bff',
+                background: 'transparent',
+                border: 'none',
+                fontWeight: '500',
+                margin: '0 10px',
+                cursor: 'pointer',
+                transition: 'opacity 0.2s, transform 0.2s',
+                fontSize: '16px',  // Slightly larger for arrow
+                padding: '0',
+                opacity: 1,  // Default visible; comment out if using show/hide
+            });
+
+            btn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Show button only after scrolling
+            btn.style.opacity = '0';
+            btn.style.visibility = 'hidden';
+            btn.style.transition = 'all 0.3s ease';
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    btn.style.opacity = '1';
+                    btn.style.visibility = 'visible';
+                } else {
+                    btn.style.opacity = '0';
+                    btn.style.visibility = 'hidden';
+                }
+            });
+
+            navbar.appendChild(btn);
         } else {
+            // Regular link
             const link = document.createElement('a');
             link.textContent = item.title;
             link.href = item.url.startsWith('http') ? item.url : buildUrl(item.url);
@@ -98,22 +142,9 @@
                 transition: 'opacity 0.2s'
             });
 
-            link.addEventListener('mouseenter', () => link.style.opacity = '0.7');
-            link.addEventListener('mouseleave', () => link.style.opacity = '1');
-
             navbar.appendChild(link);
         }
     });
-
-    // Optional: hide "My Posts/Comments" if not logged in
-    if (!username) {
-        const info = document.createElement('span');
-        info.textContent = '(Log in to see My Posts/Comments)';
-        info.style.color = '#666';
-        info.style.fontStyle = 'italic';
-        info.style.marginLeft = '20px';
-        navbar.appendChild(info);
-    }
 
     // Insert navbar at the very top
     function insertNavbar() {
@@ -122,10 +153,14 @@
         }
     }
 
-    // Run after DOM is ready (in case navbar elements load late)
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', insertNavbar);
-    } else {
+    // Run after DOM is ready
+    function init() {
         insertNavbar();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 })();

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Remove Bitmoji from Snapchat Web Home Screen
+// @name         web.snapchat.com - Remove Bitmoji from Snapchat Web Home Screen
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Removes your Bitmoji div from Snapchat Web
 // @author       petabyte
 // @match        *://*.snapchat.com/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/537859/Remove%20Bitmoji%20from%20Snapchat%20Web%20Home%20Screen.user.js
-// @updateURL https://update.greasyfork.org/scripts/537859/Remove%20Bitmoji%20from%20Snapchat%20Web%20Home%20Screen.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/537859/websnapchatcom%20-%20Remove%20Bitmoji%20from%20Snapchat%20Web%20Home%20Screen.user.js
+// @updateURL https://update.greasyfork.org/scripts/537859/websnapchatcom%20-%20Remove%20Bitmoji%20from%20Snapchat%20Web%20Home%20Screen.meta.js
 // ==/UserScript==
 
 (function() {

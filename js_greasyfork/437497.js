@@ -4,7 +4,7 @@
 // @match        https://www.wanikani.com/*
 // @match        http://www.wanikani.com/*
 // @description  A userscript for wanikani that transforms everything related to on'yomi into katakana.
-// @version      2.4.3
+// @version      2.5.0
 // @run-at       document-end
 // @grant        none
 // @license      GPL v3.0
@@ -14,6 +14,12 @@
 // @downloadURL https://update.greasyfork.org/scripts/437497/WaniKani%20Katakana%20For%20On%27yomi.user.js
 // @updateURL https://update.greasyfork.org/scripts/437497/WaniKani%20Katakana%20For%20On%27yomi.meta.js
 // ==/UserScript==
+
+
+// Declare global scoped variable we are using to prevent warning.
+/* global Stimulus */
+
+
 (function() {
     //'use strict';
     /*
@@ -23,9 +29,8 @@
     var hiraToKata = {"め": "メ", "む": "ム", "ゃ": "ャ", "も": "モ", "ゅ": "ュ", "や": "ヤ", "ょ": "ョ", "ゆ": "ユ", "ら": "ラ", "よ": "ヨ", "る": "ル", "り": "リ", "ろ": "ロ", "れ": "レ", "わ": "ワ", "ん": "ン", "を": "ヲ", "あ": "ア", "い": "イ", "う": "ウ", "え": "エ", "か": "カ", "お": "オ", "き": "キ", "が": "ガ", "く": "ク", "ぎ": "ギ", "け": "ケ", "ぐ": "グ", "こ": "コ", "げ": "ゲ", "さ": "サ", "ご": "ゴ", "し": "シ", "ざ": "ザ", "す": "ス", "じ": "ジ", "せ": "セ", "ず": "ズ", "そ": "ソ", "ぜ": "ゼ", "た": "タ", "ぞ": "ゾ", "ち": "チ", "だ": "ダ", "っ": "ッ", "ぢ": "ヂ", "づ": "ヅ", "つ": "ツ", "で": "デ", "て": "テ", "ど": "ド", "と": "ト", "に": "ニ", "な": "ナ", "ね": "ネ", "ぬ": "ヌ", "は": "ハ", "の": "ノ", "ぱ": "パ", "ば": "バ", "び": "ビ", "ひ": "ヒ", "ふ": "フ", "ぴ": "ピ", "ぷ": "プ", "ぶ": "ブ", "べ": "ベ", "へ": "ヘ", "ほ": "ホ", "ぺ": "ペ", "ぽ": "ポ", "ぼ": "ボ", "み": "ミ", "ま": "マ"};
     var kataToHira = {"メ": "め", "ム": "む", "ャ": "ゃ", "モ": "も", "ュ": "ゅ", "ヤ": "や", "ョ": "ょ", "ユ": "ゆ", "ラ": "ら", "ヨ": "よ", "ル": "る", "リ": "り", "ロ": "ろ", "レ": "れ", "ワ": "わ", "ン": "ん", "ヲ": "を", "ア": "あ", "イ": "い", "ウ": "う", "エ": "え", "カ": "か", "オ": "お", "キ": "き", "ガ": "が", "ク": "く", "ギ": "ぎ", "ケ": "け", "グ": "ぐ", "コ": "こ", "ゲ": "げ", "サ": "さ", "ゴ": "ご", "シ": "し", "ザ": "ざ", "ス": "す", "ジ": "じ", "セ": "せ", "ズ": "ず", "ソ": "そ", "ゼ": "ぜ", "タ": "た", "ゾ": "ぞ", "チ": "ち", "ダ": "だ", "ッ": "っ", "ヂ": "ぢ", "ヅ": "づ", "ツ": "つ", "デ": "で", "テ": "て", "ド": "ど", "ト": "と", "ニ": "に", "ナ": "な", "ネ": "ね", "ヌ": "ぬ", "ハ": "は", "ノ": "の", "パ": "ぱ", "バ": "ば", "ビ": "び", "ヒ": "ひ", "フ": "ふ", "ピ": "ぴ", "プ": "ぷ", "ブ": "ぶ", "ベ": "べ", "ヘ": "へ", "ホ": "ほ", "ペ": "ぺ", "ポ": "ぽ", "ボ": "ぼ", "ミ": "み", "マ": "ま"};
 
-    /* global Stimulus */
-    function newPageLoaded(pageLoadEvent) {
 
+    function newPageLoaded(pageLoadEvent) {
         var uri;
         if (pageLoadEvent) {
             uri = pageLoadEvent.target.baseURI;
@@ -146,6 +151,19 @@
                 replaceInItemInfo(document.getElementById("reading"));
             }
         }
+        else if (/kanji\//.test(uri)) { // individual kanji page
+            console.log('onyomi kanji page');
+            var reading;
+            if (pageLoadEvent) {
+                reading = pageLoadEvent.detail.newBody.querySelector('#section-reading .subject-readings__reading-items');
+            } else {
+                reading = document.querySelector('#section-reading .subject-readings__reading-items');
+            }
+            if (reading.innerText == 'None') { // not sure if this case exists in real data, but it might.
+                return;
+            }
+            reading.innerText = convertToKata(reading.innerText);
+        }
     } // main function end
 
     document.addEventListener('turbo:before-render', newPageLoaded);
@@ -174,54 +192,6 @@
     function replaceAt(s, n, t)
     {
         return s.substring(0, n) + t + s.substring(n + 1);
-    }
-
-    function observeDOM() {
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-            eventListenerSupported = window.addEventListener;
-        return function(obj, callback){
-            if( MutationObserver ) {
-                // define a new observer
-                var obs = new MutationObserver(function(mutations, observer) {
-                    if( mutations[0].addedNodes.length ) {
-                        callback();
-                    }
-                });
-                // have the observer observe foo for changes in children
-                if (obj) {
-                    obs.observe( obj, {childList:true, subtree:true, attributes:false });
-                } else {
-                    console.trace('Unable to observe changes in DOM for katakana madness');
-                }
-            }
-            else if( eventListenerSupported ) {
-                obj.addEventListener('DOMNodeInserted', callback, false);
-                obj.addEventListener('DOMNodeRemoved', callback, false);
-            }
-        };
-    }
-
-    function observeDOMForAttributes() {
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-            eventListenerSupported = window.addEventListener;
-        return function(obj, callback){
-            if( MutationObserver ) {
-                // define a new observer
-                var obs = new MutationObserver(function(mutations, observer) {
-                    callback();
-                });
-                // have the observer observe foo for changes in children
-                if (obj) {
-                    obs.observe( obj, {childList:true, subtree:true, attributes:true });
-                } else {
-                    console.trace('Unable to observe changes in DOM for katakana madness');
-                }
-            }
-            else if( eventListenerSupported ) {
-                obj.addEventListener('DOMNodeInserted', callback, false);
-                obj.addEventListener('DOMNodeRemoved', callback, false);
-            }
-        };
     }
     newPageLoaded();
 })();

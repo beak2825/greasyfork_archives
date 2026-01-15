@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HAPUS TAWARAN
 // @namespace    https://www.facebook.com/behesty7
-// @version      2.1
+// @version      2.5
 // @description  RELIST
 // @author       BEHESTY
 // @match        https://www.facebook.com/marketplace/selling/relist_items/?is_routable_dialog=*
@@ -83,8 +83,8 @@
         for (let i = 1; i <= maxTries; i++) {
             if (!running) return [];
 
-            const btns = [...document.querySelectorAll('div[aria-label="Hapus & Tawarkan Ulang"]')]
-                .filter(b => b.offsetHeight > 0);
+            const btns = [...document.querySelectorAll('div[role="button"][aria-label="Hapus & tawarkan ulang"]')]
+                        .filter(b => b.offsetHeight > 0);
 
             if (btns.length) {
                 log(`✅ Menemukan ${btns.length} tombol Hapus Tawaran...`);

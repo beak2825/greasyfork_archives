@@ -3,7 +3,7 @@
 // @description  Displays the number of volunteer days for parkrun finishers on results pages, for celebration purposes (and let's not make assumptions about ratios)
 // @author       Pete Johns (@johnsyweb)
 // @grant        none
-// @homepage     https://johnsy.com/tampermonkey-parkrun/
+// @homepage     https://www.johnsy.com/tampermonkey-parkrun/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=parkrun.com.au
 // @license      MIT
 // @match        *://www.parkrun.ca/*/results/*
@@ -31,10 +31,12 @@
 // @run-at       document-end
 // @supportURL   https://github.com/johnsyweb/tampermonkey-parkrun/issues/
 // @tag          parkrun
-// @version      1.0.64
+// @version      1.0.68
 // @downloadURL https://update.greasyfork.org/scripts/534159/parkrun%20Volunteer%20Days%20Display.user.js
 // @updateURL https://update.greasyfork.org/scripts/534159/parkrun%20Volunteer%20Days%20Display.meta.js
 // ==/UserScript==
+// DO NOT EDIT - generated from src/ by scripts/build-scripts.js
+// Built: 2026-01-14T04:30:23.032Z
 
 (function () {
   'use strict';
@@ -45,19 +47,18 @@
   function showVolunteerDays() {
     document
       .querySelectorAll('tr[data-vols] > td.Results-table-td.Results-table-td--name > div.detailed')
-      .forEach((div) => {
-        const volDays = div.closest('tr').getAttribute('data-vols');
-
+      .forEach(function (div) {
+        var volDays = div.closest('tr').getAttribute('data-vols');
         if (volDays && parseInt(volDays) > 0) {
-          const spacer = document.createElement('span');
+          var spacer = document.createElement('span');
           spacer.classList.add('spacer');
           spacer.textContent = ' | ';
-
-          const volSpan = document.createElement('span');
-          volSpan.textContent = `${volDays} volunteer day${volDays === '1' ? '' : 's'}`;
+          var volSpan = document.createElement('span');
+          volSpan.textContent = ''
+            .concat(volDays, ' volunteer day')
+            .concat(volDays === '1' ? '' : 's');
           volSpan.classList.add('volunteer-days');
-
-          const firstElement = div.firstElementChild;
+          var firstElement = div.firstElementChild;
           if (firstElement) {
             firstElement.insertAdjacentElement('afterend', spacer);
             spacer.insertAdjacentElement('afterend', volSpan);
@@ -72,7 +73,7 @@
    * Waits for the page to fully load before adding volunteer information
    */
   function init() {
-    const firstRow = document.querySelector('tr[data-vols]');
+    var firstRow = document.querySelector('tr[data-vols]');
     if (firstRow) {
       showVolunteerDays();
       addVolunteerDaysSort();
@@ -85,11 +86,11 @@
    * Adds sort options for volunteer days and wires up sorting behaviour
    */
   function addVolunteerDaysSort() {
-    const firstRow = document.querySelector('tr[data-vols]');
+    var firstRow = document.querySelector('tr[data-vols]');
     if (!firstRow) return;
-    const tbody = firstRow.closest('tbody');
+    var tbody = firstRow.closest('tbody');
     // Try to find an existing sort <select>
-    const sortSelect = document.querySelector(
+    var sortSelect = document.querySelector(
       'select[name="sort"], .Results-sort select, select.Results-sort, .Results-controls select'
     );
 
@@ -97,28 +98,35 @@
     function sortByVolunteerDays(direction) {
       if (!tbody) return;
       // Include all rows in tbody; treat missing data-vols as 0
-      const rows = Array.from(tbody.querySelectorAll('tr'));
+      var rows = Array.from(tbody.querySelectorAll('tr'));
 
       // Keep original order index to ensure stable sort for ties
-      const indexed = rows.map((row, index) => ({ row, index }));
-
-      indexed.sort((a, b) => {
-        const av = parseInt(a.row.getAttribute('data-vols') || '0', 10);
-        const bv = parseInt(b.row.getAttribute('data-vols') || '0', 10);
+      var indexed = rows.map(function (row, index) {
+        return {
+          row: row,
+          index: index,
+        };
+      });
+      indexed.sort(function (a, b) {
+        var av = parseInt(a.row.getAttribute('data-vols') || '0', 10);
+        var bv = parseInt(b.row.getAttribute('data-vols') || '0', 10);
         if (av === bv) return a.index - b.index;
         return direction === 'asc' ? av - bv : bv - av;
       });
 
       // Re-append sorted finisher rows; other rows remain in place
-      indexed.forEach(({ row }) => tbody.appendChild(row));
+      indexed.forEach(function (_ref) {
+        var row = _ref.row;
+        return tbody.appendChild(row);
+      });
     }
 
     // If there's an existing select, augment it
     if (sortSelect) {
       // Add options if not already present
       if (!sortSelect.querySelector('option[value="vols-asc"]')) {
-        const optAsc = new Option('Sort by Volunteer days ▲', 'vols-asc');
-        const optDesc = new Option('Sort by Volunteer days ▼', 'vols-desc');
+        var optAsc = new Option('Sort by Volunteer days ▲', 'vols-asc');
+        var optDesc = new Option('Sort by Volunteer days ▼', 'vols-desc');
         sortSelect.appendChild(optAsc);
         sortSelect.appendChild(optDesc);
       }
@@ -128,8 +136,8 @@
         // Capture phase listener to prevent native handlers when using our custom options
         sortSelect.addEventListener(
           'change',
-          (e) => {
-            const value = e.target.value || '';
+          function (e) {
+            var value = e.target.value || '';
             if (value === 'vols-asc' || value === 'vols-desc') {
               if (e.cancelable) e.preventDefault();
               if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
@@ -140,8 +148,8 @@
           true
         );
         // Bubble phase listener (fallback) if capture was bypassed
-        sortSelect.addEventListener('change', (e) => {
-          const value = e.target.value || '';
+        sortSelect.addEventListener('change', function (e) {
+          var value = e.target.value || '';
           if (value === 'vols-asc') {
             sortByVolunteerDays('asc');
           } else if (value === 'vols-desc') {
@@ -152,6 +160,5 @@
       }
     }
   }
-
   init();
 })();

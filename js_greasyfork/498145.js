@@ -6,13 +6,13 @@
 // @icon                https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @author              ElectroKnight22
 // @namespace           electroknight22_youtube_hd_namespace
-// @version             2025.11.20.4
+// @version             2026.01.14
 // @match               *://www.youtube.com/*
 // @match               *://m.youtube.com/*
 // @match               *://www.youtube-nocookie.com/*
 // @exclude             *://www.youtube.com/live_chat*
-// @require             https://update.greasyfork.org/scripts/549881/1698202/YouTube%20Helper%20API.js
-// @grant               GM.getValue
+// @require             https://update.greasyfork.org/scripts/549881/1733676/YouTube%20Helper%20API.js
+// @grant               GM.getValuez
 // @grant               GM.setValue
 // @grant               GM.deleteValue
 // @grant               GM.listValues
@@ -27,18 +27,20 @@
 // @description:zh-TW   自動切換到你預先設定的畫質。會優先使用Premium位元率。
 // @description:zh-CN   自动切换到你预先设定的画質。会优先使用Premium比特率。
 // @description:ja      自動的に設定した画質に替わります。Premiumのビットレートを優先的に選択します。
-// @homepage            https://greasyfork.org/scripts/498145-youtube-hd-premium
 // @downloadURL https://update.greasyfork.org/scripts/498145/YouTube%20HD%20Premium.user.js
 // @updateURL https://update.greasyfork.org/scripts/498145/YouTube%20HD%20Premium.meta.js
 // ==/UserScript==
 
 /*jshint esversion: 11 */
+/* global youtubeHelperApi */
 
 (function () {
     'use strict';
 
-    const api = globalThis.youtubeHelperApi;
+    const api = youtubeHelperApi;
     if (!api) return console.error('Helper API not found. Likely incompatible script manager or extension settings.');
+
+    api.debug.enabled = true;
 
     const STORAGE_KEY = 'YTHD_settings';
     const DEFAULT_SETTINGS = {

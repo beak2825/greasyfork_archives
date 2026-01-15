@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Broken Trailer Search - YIFY Movies
 // @namespace    https://greasyfork.org/en/users/670188-hacker09?sort=daily_installs
-// @version      3
+// @version      4
 // @description  Clicking on the YouTube Trailer embedded video will search for the movie title and year on Google if the video is broken.
 // @author       hacker09
-// @include      https://yts.lt/movies/*
-// @icon         https://yts.lt/assets/images/website/apple-touch-icon-180x180.png
+// @include      https://yts.*/movies/*
+// @icon         https://yts.*/assets/images/website/apple-touch-icon-180x180.png
 // @run-at       document-end
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/494457/Broken%20Trailer%20Search%20-%20YIFY%20Movies.user.js

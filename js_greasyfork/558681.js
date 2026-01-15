@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN: Travel Sync
 // @namespace    dekleinekobini.travel-sync
-// @version      1.1.0
+// @version      1.1.1
 // @author       DeKleineKobini [2114440]
 // @description  Send travel data to YATA and Prometheus.
 // @license      MIT
@@ -20,23 +20,62 @@
 (function () {
   'use strict';
 
-  var _GM_info = (() => typeof GM_info != "undefined" ? GM_info : void 0)();
-  var _GM_xmlhttpRequest = (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
-  var _unsafeWindow = (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
+  class FetchError extends Error {
+    status;
+    statusText;
+    responseText;
+    code;
+    constructor(message, status, statusText, responseText, code) {
+      super(message), this.name = "FetchError", this.status = status, this.statusText = statusText, this.responseText = responseText, this.code = code;
+    }
+  }
   function fetchGM(url, options) {
     const method = options?.method || "GET";
     return new Promise((resolve, reject) => {
-      _GM_xmlhttpRequest({
+      GM_xmlhttpRequest({
         method,
         url,
         headers: options?.headers,
         data: options?.body,
         onload: (response) => {
-          response.status === 200 ? resolve(JSON.parse(response.responseText)) : reject(new Error(`Request failed with status: ${response.status} - ${response.statusText}`));
+          if (response.status === 200)
+            try {
+              resolve(JSON.parse(response.responseText));
+            } catch {
+              reject(
+                new FetchError(
+                  "Response isn't in a supported format!",
+                  response.status,
+                  response.statusText,
+                  response.responseText,
+                  "INVALID_RESPONSE_FORMAT"
+                )
+              );
+            }
+          else
+            reject(
+              new FetchError(
+                `Failed with status ${response.status}.`,
+                response.status,
+                response.statusText,
+                response.responseText,
+                `HTTP_STATUS_${response.status}`
+              )
+            );
         },
-        onerror: (response) => reject(new Error(`Request failed with status: ${response.status} - ${response.statusText} or error: ${response.error}`)),
-        ontimeout: () => reject(new Error("Request timed out")),
-        onabort: () => reject(new Error("Request aborted"))
+        onerror: (response) => {
+          reject(
+            new FetchError(
+              `Unexpected error ${response.status}.`,
+              response.status,
+              response.statusText,
+              response.responseText,
+              `HTTP_STATUS_${response.status}`
+            )
+          );
+        },
+        ontimeout: () => reject(new FetchError("Request timed out.", null, null, null, "REQUEST_TIMED_OUT")),
+        onabort: () => reject(new FetchError("Request timed out.", null, null, null, "REQUEST_ABORTED"))
       });
     });
   }
@@ -49,6 +88,7 @@
     if (sid !== "travelData") return;
     const step = params.get("step");
     if (step !== "shop") return;
+    if (!document.hasFocus()) return;
     let json = {};
     try {
       json = await response.clone().json();
@@ -77,7 +117,7 @@
     nextUpdate = Date.now() + 3e4;
     const data = {
       client: "Travel Sync",
-      version: _GM_info.script.version,
+      version: GM_info.script.version,
       author_name: "DeKleineKobini",
       author_id: 2114440,
       country: country.trim().slice(0, 3).toLowerCase(),
@@ -88,8 +128,8 @@
   }
   (() => {
     if (document.body.dataset.abroad !== "true") return;
-    const oldFetch = _unsafeWindow.fetch;
-    _unsafeWindow.fetch = function() {
+    const oldFetch = unsafeWindow.fetch;
+    unsafeWindow.fetch = function() {
       return new Promise((resolve, reject) => {
         oldFetch.apply(this, arguments).then(async (response) => {
           void onFetchIntercept(response);

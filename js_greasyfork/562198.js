@@ -9,7 +9,7 @@
 // @description  Notify of similar articles over your preferred wiki.
 // @tag          wiki
 // @run-at       document-start
-// @version      26.01
+// @version      26.01.13
 // @grant        GM.getValue
 // @grant        GM.notification
 // @grant        GM.registerMenuCommand
@@ -126,7 +126,7 @@ function changeProvider() {
     GM.xmlHttpRequest({
       method: "GET",
       url: uri,
-      synchronous: true,
+      synchronous: false,
       //onprogress: messageWait(),
       onload: function(response) {
         let responseData = response;

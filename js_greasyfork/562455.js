@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Show daily trip number in mosaic tiles on Transit Tracker daily stats
+// @name         transittracker.net - Show trip number in mosaic tiles on daily stats
 // @namespace    https://transittracker.net/
 // @version      1.0.0
 // @description  Inserts each cell's data-count inside the mosaic boxes on daily-stats.
 // @match        https://transittracker.net/*/daily-stats*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562455/Show%20daily%20trip%20number%20in%20mosaic%20tiles%20on%20Transit%20Tracker%20daily%20stats.user.js
-// @updateURL https://update.greasyfork.org/scripts/562455/Show%20daily%20trip%20number%20in%20mosaic%20tiles%20on%20Transit%20Tracker%20daily%20stats.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562455/transittrackernet%20-%20Show%20trip%20number%20in%20mosaic%20tiles%20on%20daily%20stats.user.js
+// @updateURL https://update.greasyfork.org/scripts/562455/transittrackernet%20-%20Show%20trip%20number%20in%20mosaic%20tiles%20on%20daily%20stats.meta.js
 // ==/UserScript==
 
 (() => {

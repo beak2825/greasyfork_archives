@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Bring Back YouTube Red Progress Bar
+// @name         youtube.com - Bring Back Red Progress Bar
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Change YouTube progress bar and scrubber colour to red
 // @author       You
 // @match        *://*.youtube.com/*
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/537651/Bring%20Back%20YouTube%20Red%20Progress%20Bar.user.js
-// @updateURL https://update.greasyfork.org/scripts/537651/Bring%20Back%20YouTube%20Red%20Progress%20Bar.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/537651/youtubecom%20-%20Bring%20Back%20Red%20Progress%20Bar.user.js
+// @updateURL https://update.greasyfork.org/scripts/537651/youtubecom%20-%20Bring%20Back%20Red%20Progress%20Bar.meta.js
 // ==/UserScript==
 
 (function() {

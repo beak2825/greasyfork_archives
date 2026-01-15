@@ -3,7 +3,7 @@
 // @description  The "Wilson index" in parkrun is the highest consecutive event number completed, starting from #1. This script calculates and displays a parkrunner's Wilson index on their results page.
 // @author       Pete Johns (@johnsyweb)
 // @grant        none
-// @homepage     https://johnsy.com/tampermonkey-parkrun/
+// @homepage     https://www.johnsy.com/tampermonkey-parkrun/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=parkrun.com.au
 // @license      MIT
 // @match        *://www.parkrun.ca/parkrunner/*/all/
@@ -32,10 +32,267 @@
 // @run-at       document-end
 // @supportURL   https://github.com/johnsyweb/tampermonkey-parkrun/issues/
 // @tag          parkrun
-// @version      1.0.64
+// @version      1.0.68
 // @downloadURL https://update.greasyfork.org/scripts/534160/parkrun%20Wilson%20index%20display.user.js
 // @updateURL https://update.greasyfork.org/scripts/534160/parkrun%20Wilson%20index%20display.meta.js
 // ==/UserScript==
+// DO NOT EDIT - generated from src/ by scripts/build-scripts.js
+// Built: 2026-01-14T04:30:23.032Z
+
+function _regenerator() {
+  /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e,
+    t,
+    r = 'function' == typeof Symbol ? Symbol : {},
+    n = r.iterator || '@@iterator',
+    o = r.toStringTag || '@@toStringTag';
+  function i(r, n, o, i) {
+    var c = n && n.prototype instanceof Generator ? n : Generator,
+      u = Object.create(c.prototype);
+    return (
+      _regeneratorDefine2(
+        u,
+        '_invoke',
+        (function (r, n, o) {
+          var i,
+            c,
+            u,
+            f = 0,
+            p = o || [],
+            y = !1,
+            G = {
+              p: 0,
+              n: 0,
+              v: e,
+              a: d,
+              f: d.bind(e, 4),
+              d: function d(t, r) {
+                return ((i = t), (c = 0), (u = e), (G.n = r), a);
+              },
+            };
+          function d(r, n) {
+            for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) {
+              var o,
+                i = p[t],
+                d = G.p,
+                l = i[2];
+              r > 3
+                ? (o = l === n) && ((u = i[(c = i[4]) ? 5 : ((c = 3), 3)]), (i[4] = i[5] = e))
+                : i[0] <= d &&
+                  ((o = r < 2 && d < i[1])
+                    ? ((c = 0), (G.v = n), (G.n = i[1]))
+                    : d < l &&
+                      (o = r < 3 || i[0] > n || n > l) &&
+                      ((i[4] = r), (i[5] = n), (G.n = l), (c = 0)));
+            }
+            if (o || r > 1) return a;
+            throw ((y = !0), n);
+          }
+          return function (o, p, l) {
+            if (f > 1) throw TypeError('Generator is already running');
+            for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y; ) {
+              i || (c ? (c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : (G.n = u)) : (G.v = u));
+              try {
+                if (((f = 2), i)) {
+                  if ((c || (o = 'next'), (t = i[o]))) {
+                    if (!(t = t.call(i, u))) throw TypeError('iterator result is not an object');
+                    if (!t.done) return t;
+                    ((u = t.value), c < 2 && (c = 0));
+                  } else
+                    (1 === c && (t = i.return) && t.call(i),
+                      c < 2 &&
+                        ((u = TypeError("The iterator does not provide a '" + o + "' method")),
+                        (c = 1)));
+                  i = e;
+                } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break;
+              } catch (t) {
+                ((i = e), (c = 1), (u = t));
+              } finally {
+                f = 1;
+              }
+            }
+            return { value: t, done: y };
+          };
+        })(r, o, i),
+        !0
+      ),
+      u
+    );
+  }
+  var a = {};
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+  t = Object.getPrototypeOf;
+  var c = [][n]
+      ? t(t([][n]()))
+      : (_regeneratorDefine2((t = {}), n, function () {
+          return this;
+        }),
+        t),
+    u = (GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c));
+  function f(e) {
+    return (
+      Object.setPrototypeOf
+        ? Object.setPrototypeOf(e, GeneratorFunctionPrototype)
+        : ((e.__proto__ = GeneratorFunctionPrototype),
+          _regeneratorDefine2(e, o, 'GeneratorFunction')),
+      (e.prototype = Object.create(u)),
+      e
+    );
+  }
+  return (
+    (GeneratorFunction.prototype = GeneratorFunctionPrototype),
+    _regeneratorDefine2(u, 'constructor', GeneratorFunctionPrototype),
+    _regeneratorDefine2(GeneratorFunctionPrototype, 'constructor', GeneratorFunction),
+    (GeneratorFunction.displayName = 'GeneratorFunction'),
+    _regeneratorDefine2(GeneratorFunctionPrototype, o, 'GeneratorFunction'),
+    _regeneratorDefine2(u),
+    _regeneratorDefine2(u, o, 'Generator'),
+    _regeneratorDefine2(u, n, function () {
+      return this;
+    }),
+    _regeneratorDefine2(u, 'toString', function () {
+      return '[object Generator]';
+    }),
+    (_regenerator = function _regenerator() {
+      return { w: i, m: f };
+    })()
+  );
+}
+function _regeneratorDefine2(e, r, n, t) {
+  var i = Object.defineProperty;
+  try {
+    i({}, '', {});
+  } catch (e) {
+    i = 0;
+  }
+  ((_regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) {
+    function o(r, n) {
+      _regeneratorDefine2(e, r, function (e) {
+        return this._invoke(r, n, e);
+      });
+    }
+    r
+      ? i
+        ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t })
+        : (e[r] = n)
+      : (o('next', 0), o('throw', 1), o('return', 2));
+  }),
+    _regeneratorDefine2(e, r, n, t));
+}
+function asyncGeneratorStep(n, t, e, r, o, a, c) {
+  try {
+    var i = n[a](c),
+      u = i.value;
+  } catch (n) {
+    return void e(n);
+  }
+  i.done ? t(u) : Promise.resolve(u).then(r, o);
+}
+function _asyncToGenerator(n) {
+  return function () {
+    var t = this,
+      e = arguments;
+    return new Promise(function (r, o) {
+      var a = n.apply(t, e);
+      function _next(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, 'next', n);
+      }
+      function _throw(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, 'throw', n);
+      }
+      _next(void 0);
+    });
+  };
+}
+function _toConsumableArray(r) {
+  return (
+    _arrayWithoutHoles(r) ||
+    _iterableToArray(r) ||
+    _unsupportedIterableToArray(r) ||
+    _nonIterableSpread()
+  );
+}
+function _nonIterableSpread() {
+  throw new TypeError(
+    'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+  );
+}
+function _iterableToArray(r) {
+  if (('undefined' != typeof Symbol && null != r[Symbol.iterator]) || null != r['@@iterator'])
+    return Array.from(r);
+}
+function _arrayWithoutHoles(r) {
+  if (Array.isArray(r)) return _arrayLikeToArray(r);
+}
+function _createForOfIteratorHelper(r, e) {
+  var t = ('undefined' != typeof Symbol && r[Symbol.iterator]) || r['@@iterator'];
+  if (!t) {
+    if (
+      Array.isArray(r) ||
+      (t = _unsupportedIterableToArray(r)) ||
+      (e && r && 'number' == typeof r.length)
+    ) {
+      t && (r = t);
+      var _n = 0,
+        F = function F() {};
+      return {
+        s: F,
+        n: function n() {
+          return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] };
+        },
+        e: function e(r) {
+          throw r;
+        },
+        f: F,
+      };
+    }
+    throw new TypeError(
+      'Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+    );
+  }
+  var o,
+    a = !0,
+    u = !1;
+  return {
+    s: function s() {
+      t = t.call(r);
+    },
+    n: function n() {
+      var r = t.next();
+      return ((a = r.done), r);
+    },
+    e: function e(r) {
+      ((u = !0), (o = r));
+    },
+    f: function f() {
+      try {
+        a || null == t.return || t.return();
+      } finally {
+        if (u) throw o;
+      }
+    },
+  };
+}
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ('string' == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return (
+      'Object' === t && r.constructor && (t = r.constructor.name),
+      'Map' === t || 'Set' === t
+        ? Array.from(r)
+        : 'Arguments' === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+          ? _arrayLikeToArray(r, a)
+          : void 0
+    );
+  }
+}
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
 
 (function () {
   'use strict';
@@ -46,33 +303,40 @@
    * @param {number} [columnCount=7] - Required number of columns
    * @returns {HTMLTableElement|null} The matching table or null if not found
    */
-  function findResultsTable(document, columnCount = 7) {
-    const tables = document.querySelectorAll('[id="results"]');
-    let matchingTable = null;
-    for (const table of tables) {
-      const firstRow = table.querySelector('tr');
-
-      if (firstRow) {
-        const columns = firstRow.querySelectorAll('th, td').length;
-        if (columns === columnCount) {
-          matchingTable = table;
-          break;
+  function findResultsTable(document) {
+    var columnCount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 7;
+    var tables = document.querySelectorAll('[id="results"]');
+    var matchingTable = null;
+    var _iterator = _createForOfIteratorHelper(tables),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done; ) {
+        var table = _step.value;
+        var firstRow = table.querySelector('tr');
+        if (firstRow) {
+          var columns = firstRow.querySelectorAll('th, td').length;
+          if (columns === columnCount) {
+            matchingTable = table;
+            break;
+          }
         }
       }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
     }
-
     return matchingTable;
   }
-
   function extractEventDetails(table) {
-    const rows = Array.from(table.querySelectorAll('tbody > tr'));
-    return rows.reverse().map((row) => {
-      const eventName = row.querySelector('td:nth-child(1)').textContent.trim();
-      const eventDate = row.querySelector('td:nth-child(2)').textContent.trim();
-      const eventNumber = row.querySelector('td:nth-child(3)').textContent.trim();
+    var rows = Array.from(table.querySelectorAll('tbody > tr'));
+    return rows.reverse().map(function (row) {
+      var eventName = row.querySelector('td:nth-child(1)').textContent.trim();
+      var eventDate = row.querySelector('td:nth-child(2)').textContent.trim();
+      var eventNumber = row.querySelector('td:nth-child(3)').textContent.trim();
       return {
-        eventName,
-        eventDate,
+        eventName: eventName,
+        eventDate: eventDate,
         eventNumber: parseInt(eventNumber, 10),
       };
     });
@@ -87,36 +351,52 @@
    * @returns {number} The calculated Wilson index.
    */
   function calculateWilsonIndex(events) {
-    let wilsonIndex = 0;
-
-    const eventNumbers = events.map((e) => e.eventNumber).sort((a, b) => a - b);
-
-    for (const eventNumber of eventNumbers) {
-      if (eventNumber >= wilsonIndex + 2) {
-        break;
-      } else if (eventNumber === wilsonIndex + 1) {
-        wilsonIndex++;
+    var wilsonIndex = 0;
+    var eventNumbers = events
+      .map(function (e) {
+        return e.eventNumber;
+      })
+      .sort(function (a, b) {
+        return a - b;
+      });
+    var _iterator2 = _createForOfIteratorHelper(eventNumbers),
+      _step2;
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done; ) {
+        var eventNumber = _step2.value;
+        if (eventNumber >= wilsonIndex + 2) {
+          break;
+        } else if (eventNumber === wilsonIndex + 1) {
+          wilsonIndex++;
+        }
       }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
     }
     return wilsonIndex;
   }
-
   function calculateWilsonIndexOverTime(events) {
-    const wilsonIndices = [];
-
-    for (let i = 0; i < events.length; i++) {
-      const subset = events.slice(0, i + 1);
-      const parkruns = i + 1;
-      const event = `${events[i].eventName} # ${events[i].eventNumber} on ${events[i].eventDate}`;
-      const wilsonIndex = calculateWilsonIndex(subset);
-      wilsonIndices.push({ parkruns, event, wilsonIndex });
+    var wilsonIndices = [];
+    for (var i = 0; i < events.length; i++) {
+      var subset = events.slice(0, i + 1);
+      var parkruns = i + 1;
+      var event = ''
+        .concat(events[i].eventName, ' # ')
+        .concat(events[i].eventNumber, ' on ')
+        .concat(events[i].eventDate);
+      var wilsonIndex = calculateWilsonIndex(subset);
+      wilsonIndices.push({
+        parkruns: parkruns,
+        event: event,
+        wilsonIndex: wilsonIndex,
+      });
     }
-
     return wilsonIndices;
   }
-
   function getResponsiveConfig() {
-    const mobileConfig = {
+    var mobileConfig = {
       isMobile: true,
       spacing: {
         small: '10px',
@@ -163,8 +443,7 @@
         },
       },
     };
-
-    const desktopConfig = {
+    var desktopConfig = {
       isMobile: false,
       spacing: {
         small: '20px',
@@ -211,39 +490,39 @@
         },
       },
     };
-
-    const isMobile = window.innerWidth < 768;
+    var isMobile = window.innerWidth < 768;
     return isMobile ? mobileConfig : desktopConfig;
   }
-
   function createWilsonGraph(indices, container, athleteInfo) {
-    const responsive = getResponsiveConfig();
-    const chartContainer = document.createElement('div');
+    var responsive = getResponsiveConfig();
+    var chartContainer = document.createElement('div');
     chartContainer.style.width = '100%';
     chartContainer.style.maxWidth = '100%';
     chartContainer.style.height = responsive.chart.height;
     chartContainer.style.position = 'relative';
     chartContainer.style.boxSizing = 'border-box';
     chartContainer.style.overflow = 'hidden';
-
-    const canvas = document.createElement('canvas');
+    var canvas = document.createElement('canvas');
     chartContainer.appendChild(canvas);
     container.appendChild(chartContainer);
-
-    const ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     // eslint-disable-next-line no-undef
-    const chart = new Chart(ctx, {
+    var chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: indices.map((i) => i.parkruns),
+        labels: indices.map(function (i) {
+          return i.parkruns;
+        }),
         datasets: [
           {
             label: athleteInfo,
-            data: indices.map((i) => ({
-              x: i.parkruns,
-              y: i.wilsonIndex,
-              event: i.event,
-            })),
+            data: indices.map(function (i) {
+              return {
+                x: i.parkruns,
+                y: i.wilsonIndex,
+                event: i.event,
+              };
+            }),
             borderColor: getDatasetColor(0),
             backgroundColor: '#2b223d',
           },
@@ -267,7 +546,16 @@
                 size: responsive.chart.fonts.axisTicks,
               },
             },
-            suggestedMax: Math.ceil(Math.max(...indices.map((i) => i.wilsonIndex)) * 1.1), // Add 10% padding
+            suggestedMax: Math.ceil(
+              Math.max.apply(
+                Math,
+                _toConsumableArray(
+                  indices.map(function (i) {
+                    return i.wilsonIndex;
+                  })
+                )
+              ) * 1.1
+            ), // Add 10% padding
           },
           x: {
             title: {
@@ -303,9 +591,9 @@
           },
           tooltip: {
             callbacks: {
-              label: function (context) {
-                const point = context.raw;
-                return [`Wilson Index: ${point.y}`, `Event: ${point.event}`];
+              label: function label(context) {
+                var point = context.raw;
+                return ['Wilson Index: '.concat(point.y), 'Event: '.concat(point.event)];
               },
             },
             titleFont: {
@@ -318,7 +606,6 @@
         },
       },
     });
-
     return chart;
   }
 
@@ -329,80 +616,152 @@
    * @param {number} [cacheTtlMs=3600000] - Cache TTL in milliseconds (default: 1 hour)
    * @returns {Promise<string>} - The fetched text content
    */
-  async function fetchWithCache(uri, cacheKey, cacheTtlMs = 60 * 60 * 1000) {
-    const cached = sessionStorage.getItem(cacheKey);
-
-    if (cached) {
-      const { data, timestamp } = JSON.parse(cached);
-      const isFresh = Date.now() - timestamp < cacheTtlMs;
-      if (isFresh) {
-        return data;
-      }
-    }
-    return fetch(uri)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-        }
-        return response.text();
-      })
-      .then((text) => {
-        sessionStorage.setItem(
-          cacheKey,
-          JSON.stringify({
-            data: text,
-            timestamp: Date.now(),
-          })
-        );
-        return text;
-      })
-      .catch((error) => {
-        console.error(`Error fetching ${uri}:`, error);
-        if (cached) {
-          console.warn('Using stale cached data after fetch failure');
-          return JSON.parse(cached).data;
-        }
-        throw error;
-      });
+  function fetchWithCache(_x, _x2) {
+    return _fetchWithCache.apply(this, arguments);
   }
-
-  async function fetchFriendResults(athleteId) {
-    const cacheKey = `parkrunner_${athleteId}_all`;
-    const uri = `${window.location.origin}/parkrunner/${athleteId}/all/`;
-    const text = await fetchWithCache(uri, cacheKey);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, 'text/html');
-    const table = findResultsTable(doc);
-    if (!table) {
-      console.error('Friend results table not found');
-      return null;
-    }
-    const h2Element = doc.querySelector('h2');
-    if (!h2Element) {
-      console.error('Friend H2 element not found');
-      return null;
-    }
-    const friendInfo = extractAthleteInfo(h2Element);
-    if (!friendInfo) {
-      console.error('Could not extract friend athlete info');
-      return null;
-    }
-    const friendEvents = extractEventDetails(table);
-    const friendIndices = calculateWilsonIndexOverTime(friendEvents);
-    return { friendIndices, friendInfo };
+  function _fetchWithCache() {
+    _fetchWithCache = _asyncToGenerator(
+      /*#__PURE__*/ _regenerator().m(function _callee3(uri, cacheKey) {
+        var cacheTtlMs,
+          cached,
+          _JSON$parse,
+          data,
+          timestamp,
+          isFresh,
+          _args3 = arguments;
+        return _regenerator().w(function (_context3) {
+          while (1)
+            switch (_context3.n) {
+              case 0:
+                cacheTtlMs =
+                  _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 60 * 60 * 1000;
+                cached = sessionStorage.getItem(cacheKey);
+                if (!cached) {
+                  _context3.n = 1;
+                  break;
+                }
+                ((_JSON$parse = JSON.parse(cached)),
+                  (data = _JSON$parse.data),
+                  (timestamp = _JSON$parse.timestamp));
+                isFresh = Date.now() - timestamp < cacheTtlMs;
+                if (!isFresh) {
+                  _context3.n = 1;
+                  break;
+                }
+                return _context3.a(2, data);
+              case 1:
+                return _context3.a(
+                  2,
+                  fetch(uri)
+                    .then(function (response) {
+                      if (!response.ok) {
+                        throw new Error(
+                          'Failed to fetch: '
+                            .concat(response.status, ' ')
+                            .concat(response.statusText)
+                        );
+                      }
+                      return response.text();
+                    })
+                    .then(function (text) {
+                      sessionStorage.setItem(
+                        cacheKey,
+                        JSON.stringify({
+                          data: text,
+                          timestamp: Date.now(),
+                        })
+                      );
+                      return text;
+                    })
+                    .catch(function (error) {
+                      console.error('Error fetching '.concat(uri, ':'), error);
+                      if (cached) {
+                        console.warn('Using stale cached data after fetch failure');
+                        return JSON.parse(cached).data;
+                      }
+                      throw error;
+                    })
+                );
+            }
+        }, _callee3);
+      })
+    );
+    return _fetchWithCache.apply(this, arguments);
   }
-
+  function fetchFriendResults(_x3) {
+    return _fetchFriendResults.apply(this, arguments);
+  }
+  function _fetchFriendResults() {
+    _fetchFriendResults = _asyncToGenerator(
+      /*#__PURE__*/ _regenerator().m(function _callee4(athleteId) {
+        var cacheKey,
+          uri,
+          text,
+          parser,
+          doc,
+          table,
+          h2Element,
+          friendInfo,
+          friendEvents,
+          friendIndices;
+        return _regenerator().w(function (_context4) {
+          while (1)
+            switch (_context4.n) {
+              case 0:
+                cacheKey = 'parkrunner_'.concat(athleteId, '_all');
+                uri = ''.concat(window.location.origin, '/parkrunner/').concat(athleteId, '/all/');
+                _context4.n = 1;
+                return fetchWithCache(uri, cacheKey);
+              case 1:
+                text = _context4.v;
+                parser = new DOMParser();
+                doc = parser.parseFromString(text, 'text/html');
+                table = findResultsTable(doc);
+                if (table) {
+                  _context4.n = 2;
+                  break;
+                }
+                console.error('Friend results table not found');
+                return _context4.a(2, null);
+              case 2:
+                h2Element = doc.querySelector('h2');
+                if (h2Element) {
+                  _context4.n = 3;
+                  break;
+                }
+                console.error('Friend H2 element not found');
+                return _context4.a(2, null);
+              case 3:
+                friendInfo = extractAthleteInfo(h2Element);
+                if (friendInfo) {
+                  _context4.n = 4;
+                  break;
+                }
+                console.error('Could not extract friend athlete info');
+                return _context4.a(2, null);
+              case 4:
+                friendEvents = extractEventDetails(table);
+                friendIndices = calculateWilsonIndexOverTime(friendEvents);
+                return _context4.a(2, {
+                  friendIndices: friendIndices,
+                  friendInfo: friendInfo,
+                });
+            }
+        }, _callee4);
+      })
+    );
+    return _fetchFriendResults.apply(this, arguments);
+  }
   function createComparisonUI(container, onCompare) {
-    const responsive = getResponsiveConfig();
-    const form = document.createElement('form');
+    var responsive = getResponsiveConfig();
+    var form = document.createElement('form');
     form.style.marginBottom = responsive.form.marginBottom;
     form.style.textAlign = 'center';
     form.style.display = responsive.form.layout.display;
     form.style.flexDirection = responsive.form.layout.flexDirection;
     form.style.gap = responsive.form.layout.gap;
     form.style.alignItems = responsive.form.layout.alignItems;
-
-    const input = document.createElement('input');
+    var input = document.createElement('input');
     input.style.width = responsive.form.input.width;
     input.style.maxWidth = responsive.form.input.maxWidth;
     input.type = 'text';
@@ -414,8 +773,7 @@
     input.style.backgroundColor = '#2b223d';
     input.style.color = '#ffa300';
     input.style.fontSize = responsive.typography.input;
-
-    const button = document.createElement('button');
+    var button = document.createElement('button');
     button.textContent = 'Compare';
     button.style.padding = responsive.form.button.padding;
     button.style.width = responsive.form.button.width;
@@ -427,68 +785,111 @@
     button.style.cursor = 'pointer';
     button.style.fontSize = responsive.typography.button;
     button.style.fontWeight = 'bold';
-
     form.appendChild(input);
     form.appendChild(button);
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const athleteId = input.value.trim().replace(/^[aA]/, '');
-      if (!athleteId) return;
-
-      button.disabled = true;
-      button.textContent = 'Loading...';
-
-      try {
-        const { friendIndices, friendInfo } = await fetchFriendResults(athleteId);
-        onCompare(friendIndices, friendInfo);
-      } catch (error) {
-        console.error("Failed to fetch friend's results:", error);
-        alert("Failed to fetch friend's results. Please check the ID and try again.");
-      } finally {
-        button.disabled = false;
-        button.textContent = 'Compare';
-      }
-    });
-
+    form.addEventListener(
+      'submit',
+      /*#__PURE__*/ (function () {
+        var _ref = _asyncToGenerator(
+          /*#__PURE__*/ _regenerator().m(function _callee(e) {
+            var athleteId, _yield$fetchFriendRes, friendIndices, friendInfo, _t;
+            return _regenerator().w(
+              function (_context) {
+                while (1)
+                  switch ((_context.p = _context.n)) {
+                    case 0:
+                      e.preventDefault();
+                      athleteId = input.value.trim().replace(/^[aA]/, '');
+                      if (athleteId) {
+                        _context.n = 1;
+                        break;
+                      }
+                      return _context.a(2);
+                    case 1:
+                      button.disabled = true;
+                      button.textContent = 'Loading...';
+                      _context.p = 2;
+                      _context.n = 3;
+                      return fetchFriendResults(athleteId);
+                    case 3:
+                      _yield$fetchFriendRes = _context.v;
+                      friendIndices = _yield$fetchFriendRes.friendIndices;
+                      friendInfo = _yield$fetchFriendRes.friendInfo;
+                      onCompare(friendIndices, friendInfo);
+                      _context.n = 5;
+                      break;
+                    case 4:
+                      _context.p = 4;
+                      _t = _context.v;
+                      console.error("Failed to fetch friend's results:", _t);
+                      alert("Failed to fetch friend's results. Please check the ID and try again.");
+                    case 5:
+                      _context.p = 5;
+                      button.disabled = false;
+                      button.textContent = 'Compare';
+                      return _context.f(5);
+                    case 6:
+                      return _context.a(2);
+                  }
+              },
+              _callee,
+              null,
+              [[2, 4, 5, 6]]
+            );
+          })
+        );
+        return function (_x4) {
+          return _ref.apply(this, arguments);
+        };
+      })()
+    );
     container.insertBefore(form, container.firstChild);
   }
-
   function updateChart(chart, friendIndices, friendInfo) {
-    const datasetIndex = chart.data.datasets.length;
-    const friendDataset = {
+    var datasetIndex = chart.data.datasets.length;
+    var friendDataset = {
       label: friendInfo,
-      data: friendIndices.map((i) => ({
-        x: i.parkruns,
-        y: i.wilsonIndex,
-        event: i.event,
-      })),
+      data: friendIndices.map(function (i) {
+        return {
+          x: i.parkruns,
+          y: i.wilsonIndex,
+          event: i.event,
+        };
+      }),
       borderColor: getDatasetColor(datasetIndex),
       backgroundColor: '#2b223d',
     };
-
     chart.data.datasets.push(friendDataset);
     chart.update();
-
-    const maxParkruns = Math.max(
-      ...chart.data.datasets.flatMap((dataset) => dataset.data.map((d) => d.x))
+    var maxParkruns = Math.max.apply(
+      Math,
+      _toConsumableArray(
+        chart.data.datasets.flatMap(function (dataset) {
+          return dataset.data.map(function (d) {
+            return d.x;
+          });
+        })
+      )
     );
-    const maxWilsonIndex = Math.max(
-      ...chart.data.datasets.flatMap((dataset) => dataset.data.map((d) => d.y))
+    var maxWilsonIndex = Math.max.apply(
+      Math,
+      _toConsumableArray(
+        chart.data.datasets.flatMap(function (dataset) {
+          return dataset.data.map(function (d) {
+            return d.y;
+          });
+        })
+      )
     );
-
     chart.options.scales.x.suggestedMax = Math.ceil(maxParkruns * 1.1);
     chart.options.scales.y.suggestedMax = Math.ceil(maxWilsonIndex * 1.1);
-
     chart.update();
   }
-
   function extractAthleteInfo(h2Element) {
     return h2Element.textContent.trim();
   }
-
   function getDatasetColor(index) {
-    const colors = [
+    var colors = [
       '#FFA300',
       '#90EE90',
       '#FF69B4',
@@ -502,66 +903,74 @@
     ];
     return colors[index % colors.length];
   }
-
   function displayWilsonIndex() {
-    const table = findResultsTable(document);
+    var table = findResultsTable(document);
     if (!table) {
       console.error('Results table not found');
       return;
     }
-
-    const h2Element = document.querySelector('h2');
+    var h2Element = document.querySelector('h2');
     if (!h2Element) {
       console.error('H2 element not found');
       return;
     }
-
-    const athleteInfo = extractAthleteInfo(h2Element);
+    var athleteInfo = extractAthleteInfo(h2Element);
     if (!athleteInfo) {
       console.error('Could not extract athlete info');
       return;
     }
-
-    const eventDetails = extractEventDetails(table);
-    const wilsonIndex = calculateWilsonIndex(eventDetails);
-    const wilsonIndices = calculateWilsonIndexOverTime(eventDetails);
-
+    var eventDetails = extractEventDetails(table);
+    var wilsonIndex = calculateWilsonIndex(eventDetails);
+    var wilsonIndices = calculateWilsonIndexOverTime(eventDetails);
     if (h2Element) {
-      const responsive = getResponsiveConfig();
-      const container = document.createElement('div');
+      var responsive = getResponsiveConfig();
+      var container = document.createElement('div');
       container.id = 'w-index-display';
       container.style.width = '100%';
       container.style.maxWidth = '800px';
-      container.style.margin = `${responsive.container.marginTop} auto`;
+      container.style.margin = ''.concat(responsive.container.marginTop, ' auto');
       container.style.backgroundColor = '#2b223d';
       container.style.padding = responsive.container.padding;
       container.style.borderRadius = '5px';
-
-      const wilsonElement = document.createElement('div');
-      wilsonElement.textContent = `Wilson index: ${wilsonIndex}`;
+      var wilsonElement = document.createElement('div');
+      wilsonElement.textContent = 'Wilson index: '.concat(wilsonIndex);
       wilsonElement.style.fontSize = responsive.typography.wilsonIndex;
       wilsonElement.style.color = '#ffa300';
       wilsonElement.style.fontWeight = 'bold';
       wilsonElement.style.marginBottom = responsive.spacing.small;
       wilsonElement.style.textAlign = 'center';
       container.appendChild(wilsonElement);
-
-      const chartInstance = createWilsonGraph(wilsonIndices, container, athleteInfo);
-
-      createComparisonUI(container, async (friendIndices, friendInfo) => {
-        updateChart(chartInstance, friendIndices, friendInfo);
-      });
-
+      var chartInstance = createWilsonGraph(wilsonIndices, container, athleteInfo);
+      createComparisonUI(
+        container,
+        /*#__PURE__*/ (function () {
+          var _ref2 = _asyncToGenerator(
+            /*#__PURE__*/ _regenerator().m(function _callee2(friendIndices, friendInfo) {
+              return _regenerator().w(function (_context2) {
+                while (1)
+                  switch (_context2.n) {
+                    case 0:
+                      updateChart(chartInstance, friendIndices, friendInfo);
+                    case 1:
+                      return _context2.a(2);
+                  }
+              }, _callee2);
+            })
+          );
+          return function (_x5, _x6) {
+            return _ref2.apply(this, arguments);
+          };
+        })()
+      );
       h2Element.parentNode.insertBefore(container, h2Element.nextSibling);
     }
   }
-
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-      calculateWilsonIndex,
-      calculateWilsonIndexOverTime,
-      extractEventDetails,
-      findResultsTable,
+      calculateWilsonIndex: calculateWilsonIndex,
+      calculateWilsonIndexOverTime: calculateWilsonIndexOverTime,
+      extractEventDetails: extractEventDetails,
+      findResultsTable: findResultsTable,
     };
   } else {
     displayWilsonIndex();

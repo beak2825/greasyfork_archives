@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Angular Route Switcher
 // @namespace    https://github.com/junyou1998/angular-route-switcher
-// @version      1.4.1
+// @version      1.4.3
 // @description      Automatically detects Angular routes and provides a floating UI to switch between them. Works only in Dev Mode (requires window.ng).
 // @description:zh-TW 自動偵測 Angular 路由並提供浮動介面進行切換。僅適用於開發模式 (需要 window.ng)。
 // @author       junyou
 // @match        http://localhost:*/*
 // @match        http://127.0.0.1:*/*
 // @grant        none
-// @icon         https://cdn.jsdelivr.net/gh/junyou1998/angular-route-switcher@main/icon.webp
+// @icon         https://cdn.jsdelivr.net/gh/junyou1998/angular-route-switcher@main/icon.png
 // @license      MIT
 // @homepageURL  https://github.com/junyou1998/angular-route-switcher
 // @supportURL   https://github.com/junyou1998/angular-route-switcher/issues
@@ -565,21 +565,13 @@
         document.addEventListener("touchend", dragEnd);
 
         // --- Minimize Logic ---
-        minimizeBtn.addEventListener("mousedown", (e) => {
-            e.stopPropagation(); // Prevent drag start
-            toggleMinimize();
+        // Prevent drag from starting on the minimize button
+        minimizeBtn.addEventListener("mousedown", (e) => e.stopPropagation());
+        minimizeBtn.addEventListener("touchstart", (e) => e.stopPropagation(), {
+            passive: true,
         });
 
-        // Prevent click propogation on minimize btn for touch
-        minimizeBtn.addEventListener("touchstart", (e) => {
-            e.stopPropagation();
-        });
-
-        minimizeBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
-
-        // Remove mousedown/touchstart listeners above and use simple click
+        // Handle click
         minimizeBtn.onclick = (e) => {
             e.stopPropagation();
             toggleMinimize();

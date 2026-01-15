@@ -2,7 +2,7 @@
 // @name         Oculta el botón 'Preguntar' de youtube.
 // @name:en      Hide the YouTube 'Ask' button.
 // @namespace    https://greasyfork.org/es/users/1354104-eterve-nallo
-// @version      1.1
+// @version      2.0
 // @description  Oculta el botón de "Preguntame" de la interfaz de youtube.
 // @description:en   Hide the "Ask" button from the YouTube interface.
 // @author       Dektsuki
@@ -32,32 +32,70 @@
     `);
 
     function hideAskButton() {
-        const btn = document.querySelector("#top-level-buttons-computed > yt-button-view-model:nth-child(3) > button-view-model > button");
-        if (!btn) return;
+        const btnWrapper = document.querySelector("#top-level-buttons-computed > yt-button-view-model:nth-child(3)");
+        if (!btnWrapper) return false;
 
-        //Se Busca el path del ícono
+        // Evitar aplicar el paso final más de una vez en este botón
+        if (btnWrapper.dataset.finalStyleApplied === "true") return false;
+
+        const btn = btnWrapper.querySelector("button-view-model > button");
+        if (!btn) return false;
+
+        let found = false;
+
+        // Chequeo por icono
         const pathNode = btn.querySelector("svg path");
         const pathValue = pathNode?.getAttribute("d") || "";
-
         if (pathValue === knownPath) {
-            btn.style.display = "none"; // Ocultar por coincidencia del ícono
+            btn.style.display = "none";
+            found = true;
+        } else {
+            // Chequeo por texto como respaldo
+            const textNode = btn.querySelector(".yt-spec-button-shape-next__button-text-content");
+            const text = textNode?.innerText?.trim().toLowerCase() || "";
+            const possible = ["ask", "preguntar", "pregunta"];
+            if (possible.includes(text)) {
+                btn.style.display = "none";
+                found = true;
+            } else {
+                btn.style.display = "";
+                return false;
+            }
+        }
+
+        // Paso final: solo si encontramos el botón y no se aplicó antes a este botón
+        if (found) {
+            btnWrapper.setAttribute("style", "margin: 0px !important;");
+            btnWrapper.dataset.finalStyleApplied = "true"; // Marcamos que ya se aplicó
+        }
+
+        return found;
+    }
+
+    function waitForContainerAndObserve() {
+        const container = document.querySelector("#above-the-fold");
+        if (!container) {
+            setTimeout(waitForContainerAndObserve, 300);
             return;
         }
 
-        // Respaldo basado en texto (por si cambia el ícono)
-        const textNode = btn.querySelector(".yt-spec-button-shape-next__button-text-content");
-        const text = textNode?.innerText?.trim().toLowerCase() || "";
-        const possible = ["ask", "preguntar", "pregunta"];
+        // Reintentos limitados
+        let attempts = 0;
+        const maxAttempts = 5;
+        const retryInterval = 400;
 
-        if (possible.includes(text)) {
-            btn.style.display = "none";
-        } else {
-            btn.style.display = ""; // No tocar si no coincide
-        }
+        const retryTimer = setInterval(() => {
+            const success = hideAskButton();
+            attempts++;
+            if (success || attempts >= maxAttempts) {
+                clearInterval(retryTimer);
+            }
+        }, retryInterval);
+
+        // Observar cambios en el contenedor
+        const observer = new MutationObserver(hideAskButton);
+        observer.observe(container, { childList: true, subtree: true });
     }
 
-    const observer = new MutationObserver(hideAskButton);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    hideAskButton();
+    waitForContainerAndObserve();
 })();

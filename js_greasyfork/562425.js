@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Blood Bag Reminder
 // @namespace    bloodbag.reminder
-// @version      4.0.1
-// @description  Show a blood-bag icon when Life is full, and if there's enough medical cooldown to fill 3 bags.
+// @version      4.0.2
+// @description  Show a blood-bag icon when Life above 90%, and if there's enough medical cooldown to fill 3 bags.
 // @author       ButtChew [3840391], Mr_Bob[479620]
 // @license      MIT
 // @match        https://*.torn.com/*
@@ -283,40 +283,38 @@
 			};
 	}
 
-	function updateFullLifeIcon() {
-		const statusUl = document.querySelector(CONFIG.statusIconsSelector);
-		if (!statusUl) return;
 
-		const existing = document.getElementById(CONFIG.fullLifeIconId);
-		const life = getLife();
+    function updateFullLifeIcon() {
+        const statusUl = document.querySelector(CONFIG.statusIconsSelector);
+        if (!statusUl) return;
+        const existing = document.getElementById(CONFIG.fullLifeIconId);
+        const life = getLife();
+        const med = getMedicalCooldownInfo();
+        const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
+        const hasEnoughMedSpace = !med || med.freeMs >= THREE_HOURS_MS;
 
-		const med = getMedicalCooldownInfo();
-		const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
-		const hasEnoughMedSpace = !med || med.freeMs >= THREE_HOURS_MS;
+        const shouldShow = !!life && life.pct > 90 && hasEnoughMedSpace;
 
+        if (shouldShow) {
+            let label = `Life: ${formatNum(life.current)} / ${formatNum(life.max)} (${life.pct}%)`;
+            if (med) {
+                const freeHrs = Math.floor(med.freeMs / 3600000);
+                const freeMin = Math.floor((med.freeMs % 3600000) / 60000);
+                label += ` - Cooldown space: ${freeHrs}h ${freeMin}m`;
+            } else {
+                label += ` - No medical cooldown`;
+            }
+            if (existing) {
+                updateIconTooltip(existing, label);
+                return;
+            }
+            const li = buildBloodBagIcon(label);
+            statusUl.appendChild(li);
+        } else if (existing) {
+            existing.remove();
+        }
+    }
 
-		const shouldShow = !!life && life.pct === 100 &&  hasEnoughMedSpace;
-
-		if (shouldShow) {
-			let label = `Full Life: ${formatNum(life.current)} / ${formatNum(life.max)}`;
-			if (med) {
-				const freeHrs = Math.floor(med.freeMs / 3600000);
-				const freeMin = Math.floor((med.freeMs % 3600000) / 60000);
-				label += ` - Cooldown space: ${freeHrs}h ${freeMin}m`;
-			} else {
-				label += ` - No medical cooldown`;
-			}
-
-			if (existing) {
-				updateIconTooltip(existing, label);
-				return;
-			}
-			const li = buildBloodBagIcon(label);
-			statusUl.appendChild(li);
-		} else if (existing) {
-			existing.remove();
-		}
-	}
 
 	function buildBloodBagIcon(tooltipText) {
 		const li = document.createElement('li');

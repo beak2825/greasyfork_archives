@@ -14,7 +14,7 @@
 // @description:ko Twitter/X에서 마지막 읽기 위치를 추적하고 동기화합니다. 수동 및 자동 옵션 포함. 새로운 게시물을 확인하면서 현재 위치를 잃지 않도록 이상적입니다. 트윗 ID를 사용하여 정확한 위치 지정을 하고, 리포스트를 지원합니다。
 // @icon https://x.com/favicon.ico
 // @namespace http://tampermonkey.net/
-// @version 2026.1.7
+// @version 2026.1.14
 // @author Copiis
 // @license MIT
 // @match https://x.com/*
@@ -899,79 +899,75 @@
     }
 
     async function markTopVisiblePost(save = true) {
-        if (!window.location.href.includes("/home")) {
-            console.log("⏹️ Speicherung übersprungen: Nicht auf der Home-Seite.");
-            return;
-        }
-        if (isSearching || isFallbackSearching) {
-            console.log("⏹️ markTopVisiblePost übersprungen: Suche oder Fallback-Suche läuft.");
-            return;
-        }
-        const topPost = getTopVisiblePost();
-        if (!topPost) {
-            console.log("❌ Kein sichtbarer Beitrag.");
-            return;
-        }
-        const postTweetId = getPostTweetId(topPost);
-        const postTimestamp = getPostTimestamp(topPost);
-        const postAuthorHandler = getPostAuthorHandler(topPost);
-        const isRepost = isPostRepost(topPost);
-        if (postTweetId && postAuthorHandler && postTimestamp) {
-            const account = await getCurrentUserHandle();
-            const newPost = {
-                tweetId: postTweetId,
-                timestamp: postTimestamp,
-                authorHandler: postAuthorHandler,
-                isRepost,
-                account
-            };
-            let shouldUpdate = true;
-            if (lastReadPost && lastReadPost.timestamp && save && !isRepost) {
-                const currentTime = new Date(lastReadPost.timestamp).getTime();
-                const newTime = new Date(postTimestamp).getTime();
-                const currentId = BigInt(lastReadPost.tweetId);
-                const newId = BigInt(postTweetId);
-                if (newTime <= currentTime && newId <= currentId) {
-                    shouldUpdate = false;
-                    console.log("⏹️ Leseposition nicht aktualisiert: Neuer Post ist älter oder gleich alt:", newPost);
-                }
+    if (!window.location.href.includes("/home")) {
+        console.log("⏹️ Speicherung übersprungen: Nicht auf der Home-Seite.");
+        return;
+    }
+    if (isSearching || isFallbackSearching) {
+        console.log("⏹️ markTopVisiblePost übersprungen: Suche oder Fallback-Suche läuft.");
+        return;
+    }
+    const topPost = getTopVisiblePost();
+    if (!topPost) {
+        console.log("❌ Kein sichtbarer Beitrag.");
+        return;
+    }
+    const postTweetId = getPostTweetId(topPost);
+    const postTimestamp = getPostTimestamp(topPost);
+    const postAuthorHandler = getPostAuthorHandler(topPost);
+    const isRepost = isPostRepost(topPost);
+    if (postTweetId && postAuthorHandler && postTimestamp) {
+        const account = await getCurrentUserHandle();
+        const newPost = {
+            tweetId: postTweetId,
+            timestamp: postTimestamp,
+            authorHandler: postAuthorHandler,
+            isRepost,
+            account
+        };
+        let shouldUpdate = true;
+        if (lastReadPost && lastReadPost.timestamp && save) {
+            const currentTime = new Date(lastReadPost.timestamp).getTime();
+            const newTime = new Date(postTimestamp).getTime();
+            const currentId = BigInt(lastReadPost.tweetId);
+            const newId = BigInt(postTweetId);
+            if (newTime <= currentTime && newId <= currentId) {
+                shouldUpdate = false;
+                console.log("⏹️ Leseposition nicht aktualisiert: Neuer Post ist älter oder gleich alt:", newPost);
             }
-            if (isRepost && save && isScriptActivated && !isSearching && !isFallbackSearching && !lastReadPost.found) {
-                console.log("🟢 Repost als Leseposition erkannt, speichere unabhängig vom Zeitstempel:", newPost);
-                shouldUpdate = true;
-            }
-            if (lastReadPost && lastReadPost.tweetId && lastReadPost.authorHandler) {
-                const lastReadElement = Array.from(document.querySelectorAll("article")).find(post => {
-                    const tweetId = getPostTweetId(post);
-                    const author = getPostAuthorHandler(post);
-                    return tweetId === lastReadPost.tweetId && author === lastReadPost.authorHandler;
-                });
-                if (lastReadElement && lastReadElement !== lastHighlightedPost) {
-                    if (lastHighlightedPost) {
-                        lastHighlightedPost.style.boxShadow = "none";
-                    }
-                    lastReadElement.style.boxShadow = "0 0 20px 10px rgba(246, 146, 25, 0.9)";
-                    lastHighlightedPost = lastReadElement;
-                    console.log("🟠 Glühender Rand auf aktuelle Leseposition gesetzt:", lastReadPost);
-                }
-            } else if (shouldUpdate) {
-                if (lastHighlightedPost && lastHighlightedPost !== topPost) {
+        }
+        if (lastReadPost && lastReadPost.tweetId && lastReadPost.authorHandler) {
+            const lastReadElement = Array.from(document.querySelectorAll("article")).find(post => {
+                const tweetId = getPostTweetId(post);
+                const author = getPostAuthorHandler(post);
+                return tweetId === lastReadPost.tweetId && author === lastReadPost.authorHandler;
+            });
+            if (lastReadElement && lastReadElement !== lastHighlightedPost) {
+                if (lastHighlightedPost) {
                     lastHighlightedPost.style.boxShadow = "none";
                 }
-                topPost.style.boxShadow = "0 0 20px 10px rgba(246, 146, 25, 0.9)";
-                lastHighlightedPost = topPost;
+                lastReadElement.style.boxShadow = "0 0 20px 10px rgba(246, 146, 25, 0.9)";
+                lastHighlightedPost = lastReadElement;
+                console.log("🟠 Glühender Rand auf aktuelle Leseposition gesetzt:", lastReadPost);
             }
-            if (shouldUpdate && save && isScriptActivated) {
-                lastReadPost = newPost;
-                currentPost = newPost;
-                console.log("💾 Neue Leseposition gesetzt:", lastReadPost);
-                await saveLastReadPost(lastReadPost);
-                updateHighlightedPost();
+        } else if (shouldUpdate) {
+            if (lastHighlightedPost && lastHighlightedPost !== topPost) {
+                lastHighlightedPost.style.boxShadow = "none";
             }
-        } else {
-            console.log("⚠️ Keine gültige Tweet-ID, Autoren-Handle oder Timestamp gefunden für Beitrag:", topPost);
+            topPost.style.boxShadow = "0 0 20px 10px rgba(246, 146, 25, 0.9)";
+            lastHighlightedPost = topPost;
         }
+        if (shouldUpdate && save && isScriptActivated) {
+            lastReadPost = newPost;
+            currentPost = newPost;
+            console.log("💾 Neue Leseposition gesetzt:", lastReadPost);
+            await saveLastReadPost(lastReadPost);
+            updateHighlightedPost();
+        }
+    } else {
+        console.log("⚠️ Keine gültige Tweet-ID, Autoren-Handle oder Timestamp gefunden für Beitrag:", topPost);
     }
+}
 
     function waitForNewPosts(callback) {
     const timelineContainer = document.querySelector('div[data-testid="primaryColumn"]') || document.body;

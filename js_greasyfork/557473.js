@@ -1,306 +1,292 @@
 // ==UserScript==
-// @name         Gemini Fast/Thinking Toggle
+// @name         Gemini Sexy 3-Way Power Switcher
 // @namespace    http://gemini.google.com/
-// @version      1.1
-// @description  Replaces the Gemini model dropdown with a quick toggle slider, styled for Dark Mode
+// @version      3.5
+// @description  Sexy & modern model switcher
 // @author       owhs
 // @match        https://gemini.google.com/*
+// @grant        GM_addStyle
+// @run-at       document-idle
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
-// @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/557473/Gemini%20FastThinking%20Toggle.user.js
-// @updateURL https://update.greasyfork.org/scripts/557473/Gemini%20FastThinking%20Toggle.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557473/Gemini%20Sexy%203-Way%20Power%20Switcher.user.js
+// @updateURL https://update.greasyfork.org/scripts/557473/Gemini%20Sexy%203-Way%20Power%20Switcher.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // --- Configuration ---
-    const SELECTORS = {
-        container: '.model-picker-container',
-        triggerButton: 'div[data-test-id="bard-mode-menu-button"] button',
-        triggerLabel: '.input-area-switch-label span',
-        menuOverlay: '.cdk-overlay-container',
-        optionFast: 'button[data-test-id="bard-mode-option-fast"]',
-        optionThinking: 'button[data-test-id^="bard-mode-option-thinking"]'
+    // ==========================================
+    //              CONFIGURATION
+    // ==========================================
+
+    const PREFERRED_MODEL = 'pro';
+    const ENABLE_AUTO_DEFAULT = true;
+
+    const MODES = {
+        'fast': { label: 'Fast', icon: '⚡', color: '#00D1FF', testId: 'bard-mode-option-fast', keywords: ['fast'] },
+        'thinking': { label: 'Thinking', icon: '🧠', color: '#7000FF', testId: 'bard-mode-option-thinking', keywords: ['thinking', 'reasoning'] },
+        'pro': { label: 'Pro', icon: '💎', color: '#FFAB00', testId: 'bard-mode-option-pro', keywords: ['pro', 'advanced'] }
     };
 
-    // Using the specific colors provided in the prompt for a perfect match
-    const STYLES = `
-        /* HIDE the original overlay menu so it doesn't flash when switching */
-        .cdk-overlay-container .gds-mode-switch-menu {
+    const SELECTORS = {
+        triggerBtn: 'div[data-test-id="bard-mode-menu-button"]',
+        originalLabel: '.input-area-switch-label',
+        menuOverlay: '.cdk-overlay-container'
+    };
+
+    // ==========================================
+    //            THE STYLING ENGINE
+    // ==========================================
+
+    const ITEM_WIDTH = 90; // Pixels. Hard coded to prevent squashing.
+
+    const CSS = `
+        /* 1. HIDE MENU FLASHES */
+        .cdk-overlay-pane:has(.gds-mode-switch-menu),
+        .cdk-overlay-container:has(.gds-mode-switch-menu) {
             opacity: 0 !important;
             pointer-events: none !important;
+            visibility: hidden !important;
         }
 
-        .gemini-toggle-wrapper {
-            display: flex;
-            align-items: center;
-            margin-left: 12px;
-            font-family: "Google Sans", sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-
-            /* Pill styling to match the "Canvas" or "Visual Layout" chips */
-            background-color: #1e1f20; /* --bard-color-skeleton-loader-background-1 */
-            border: 1px solid #37393b; /* --bard-color-neutral-90 */
-            border-radius: 100px;
-            padding: 4px 12px;
-            height: 32px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-
-        .gemini-toggle-wrapper:hover {
-            border-color: #5c5f5e; /* --bard-color-bot-logo-border-default */
-            background-color: #2a2a2a; /* Slightly lighter on hover */
-        }
-
-        /* Hide the original button */
-        .model-picker-container button.input-area-switch {
+        /* 2. HIDE ORIGINAL COMPONENT */
+        bard-mode-switcher {
             display: none !important;
         }
 
-        .gt-switch {
+        /* 3. SEXY SEGMENTED CONTROL */
+        #gemini-sexy-wrapper {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px;
+            background: rgba(240, 244, 249, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-right: 16px;
+            vertical-align: middle;
+            font-family: "Google Sans", "Product Sans", Roboto, Helvetica, Arial, sans-serif !important;
+            /* CRITICAL FIX: Prevent container from being squashed by flex parent */
+            flex-shrink: 0;
+            min-width: fit-content;
+        }
+
+        body.dark-theme #gemini-sexy-wrapper,
+        [data-theme="dark"] #gemini-sexy-wrapper {
+            background: rgba(30, 31, 32, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .sexy-control {
+            display: flex;
             position: relative;
-            display: inline-block;
-            width: 32px;
-            height: 18px;
-            margin: 0 10px;
+            /* Explicit width = 3 items * 90px */
+            width: ${ITEM_WIDTH * 3}px;
         }
 
-        .gt-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        /* The Slider Background */
-        .gt-slider {
+        .sexy-slider {
             position: absolute;
-            cursor: pointer;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #444746; /* Inactive Grey */
-            -webkit-transition: .3s;
-            transition: .3s;
-            border-radius: 34px;
+            height: 100%;
+            width: ${ITEM_WIDTH}px;
+            border-radius: 20px;
+            transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
         }
 
-        /* The Knob */
-        .gt-slider:before {
-            position: absolute;
-            content: "";
-            height: 12px;
-            width: 12px;
-            left: 3px;
-            bottom: 3px;
-            background-color: #e3e3e3; /* --bard-color-on-new-conversation-button */
-            -webkit-transition: .3s;
-            transition: .3s;
-            border-radius: 50%;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
+        /* Fixed Pixel Transforms */
+        [data-selected="fast"] .sexy-slider { transform: translateX(0px); background: #00D1FF; box-shadow: 0 0 15px rgba(0, 209, 255, 0.3); }
+        [data-selected="thinking"] .sexy-slider { transform: translateX(${ITEM_WIDTH}px); background: #7000FF; box-shadow: 0 0 15px rgba(112, 0, 255, 0.3); }
+        [data-selected="pro"] .sexy-slider { transform: translateX(${ITEM_WIDTH * 2}px); background: #FFAB00; box-shadow: 0 0 15px rgba(255, 171, 0, 0.3); }
 
-        /* Active State (Thinking) */
-        input:checked + .gt-slider {
-            background-color: #a8c7fa; /* --bard-color-share-link (Google Blue/Lilac) */
-        }
+        .sexy-item {
+            position: relative;
+            z-index: 2;
+            /* CRITICAL FIX: Force width, disable shrinking */
+            width: ${ITEM_WIDTH}px;
+            min-width: ${ITEM_WIDTH}px;
+            flex: 0 0 ${ITEM_WIDTH}px;
 
-        input:checked + .gt-slider:before {
-            -webkit-transform: translateX(14px);
-            -ms-transform: translateX(14px);
-            transform: translateX(14px);
-            background-color: #0e0e0f; /* --bard-color-neutral-96 (Dark text on light bg) */
-        }
-
-        /* Focus rings for accessibility */
-        input:focus + .gt-slider {
-            box-shadow: 0 0 0 2px rgba(168, 199, 250, 0.3);
-        }
-
-        /* Labels */
-        .gt-label {
+            height: 28px;
+            user-select:none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             cursor: pointer;
-            user-select: none;
-            color: #80868b; /* --bard-color-sentence-words-color (Inactive text) */
-            transition: color 0.2s;
-            letter-spacing: 0.2px;
-        }
-
-        .gt-label.active {
-            color: #e3e3e3; /* --bard-color-get-app-banner-text (Active White/Grey) */
+            font-size: 13px;
             font-weight: 500;
+            letter-spacing: 0.2px;
+            color: #444746;
+            transition: color 0.3s ease;
+            border-radius: 20px;
+            white-space: nowrap;
         }
 
-        /* Sparkle/Icon placeholder for Thinking (Optional visual flare) */
-        .gt-label.active.thinking-label {
-            background: linear-gradient(90deg, #4285f4, #9b72cb); /* Brand gradient */
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
+        body.dark-theme .sexy-item,
+        [data-theme="dark"] .sexy-item { color: #c4c7c5; }
+
+        .sexy-item.active {
+            color: #FFFFFF !important;
+            font-weight: 600;
+        }
+
+        .sexy-icon {
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sexy-label {
+            line-height: 1;
+        }
+
+        .sexy-item:not(.active):hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        body.dark-theme .sexy-item:not(.active):hover {
+            background: rgba(255,255,255,0.05);
         }
     `;
 
-    // --- Utilities ---
+    GM_addStyle(CSS);
 
-    function addStyles() {
-        const style = document.createElement('style');
-        style.textContent = STYLES;
-        document.head.appendChild(style);
-    }
+    // ==========================================
+    //               THE ENGINE
+    // ==========================================
 
-    function waitForElement(selector, root = document) {
+    let hasAutoSwitched = false;
+
+    function waitForElement(selector) {
         return new Promise(resolve => {
-            if (root.querySelector(selector)) {
-                return resolve(root.querySelector(selector));
-            }
-            const observer = new MutationObserver(mutations => {
-                if (root.querySelector(selector)) {
-                    observer.disconnect();
-                    resolve(root.querySelector(selector));
-                }
+            const el = document.querySelector(selector);
+            if (el) return resolve(el);
+            const observer = new MutationObserver(() => {
+                const target = document.querySelector(selector);
+                if (target) { observer.disconnect(); resolve(target); }
             });
-            observer.observe(root, { childList: true, subtree: true });
+            observer.observe(document.body, { childList: true, subtree: true });
         });
     }
 
-    // --- Core Logic ---
-
-    async function performSwitch(targetMode) {
-        const triggerBtn = document.querySelector(SELECTORS.triggerButton);
-        if (!triggerBtn) return;
-
-        triggerBtn.click(); // Opens the menu (now hidden by CSS)
-
-        const overlayContainer = await waitForElement(SELECTORS.menuOverlay, document.body);
-        const selector = targetMode === 'thinking' ? SELECTORS.optionThinking : SELECTORS.optionFast;
-        const targetOption = await waitForElement(selector, overlayContainer);
-
-        if (targetOption) {
-            targetOption.click();
-            console.log(`Gemini Toggle: Switched to ${targetMode}`);
-        } else {
-            // Cleanup if something goes wrong
-            triggerBtn.click();
+    function getCurrentModeFromUI() {
+        const labelEl = document.querySelector(SELECTORS.originalLabel);
+        if (!labelEl) return null;
+        const text = labelEl.innerText.toLowerCase();
+        for (const [key, config] of Object.entries(MODES)) {
+            if (config.keywords.some(k => text.includes(k))) return key;
         }
+        return 'fast';
     }
 
-    function createToggleUI(container) {
-        if (container.querySelector('.gemini-toggle-wrapper')) return;
+    async function performSwitch(targetModeKey) {
+        const trigger = document.querySelector(SELECTORS.triggerBtn);
+        if (!trigger) return;
 
+        trigger.click();
+        await waitForElement(SELECTORS.menuOverlay);
+        const targetTestId = MODES[targetModeKey].testId;
+
+        let attempts = 0;
+        const interval = setInterval(() => {
+            const btn = document.querySelector(`button[data-test-id="${targetTestId}"]`);
+            if (btn) {
+                btn.click();
+                clearInterval(interval);
+                setTimeout(() => document.body.click(), 50);
+            } else if (++attempts > 30) {
+                clearInterval(interval);
+                document.body.click();
+            }
+        }, 30);
+    }
+
+    function createSexyUI(initialMode) {
         const wrapper = document.createElement('div');
-        wrapper.className = 'gemini-toggle-wrapper';
+        wrapper.id = 'gemini-sexy-wrapper';
+        const control = document.createElement('div');
+        control.className = 'sexy-control';
+        control.dataset.selected = initialMode;
 
-        const labelFast = document.createElement('span');
-        labelFast.className = 'gt-label';
-        labelFast.textContent = 'Fast';
+        const slider = document.createElement('div');
+        slider.className = 'sexy-slider';
+        control.appendChild(slider);
 
-        const labelSwitch = document.createElement('label');
-        labelSwitch.className = 'gt-switch';
+        Object.keys(MODES).forEach(modeKey => {
+            const mode = MODES[modeKey];
+            const item = document.createElement('div');
+            item.className = `sexy-item ${modeKey === initialMode ? 'active' : ''}`;
 
-        const input = document.createElement('input');
-        input.type = 'checkbox';
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'sexy-icon';
+            iconSpan.textContent = mode.icon;
 
-        const slider = document.createElement('span');
-        slider.className = 'gt-slider';
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'sexy-label';
+            labelSpan.textContent = mode.label;
 
-        const labelThink = document.createElement('span');
-        labelThink.className = 'gt-label thinking-label'; // Added class for gradient text
-        labelThink.textContent = 'Thinking';
-        labelThink.textContent = 'Thinking';
+            item.appendChild(iconSpan);
+            item.appendChild(labelSpan);
 
-        labelSwitch.appendChild(input);
-        labelSwitch.appendChild(slider);
-
-        wrapper.appendChild(labelFast);
-        wrapper.appendChild(labelSwitch);
-        wrapper.appendChild(labelThink);
-
-        // State Sync
-        const currentLabel = container.querySelector(SELECTORS.triggerLabel);
-        let isThinking = false;
-        if (currentLabel) {
-            const text = currentLabel.innerText.toLowerCase();
-            if (text.includes('thinking')) isThinking = true;
-        }
-
-        input.checked = isThinking;
-        updateLabelStyles(isThinking, labelFast, labelThink);
-
-        // Listeners
-        input.addEventListener('change', (e) => {
-            const newStateIsThinking = e.target.checked;
-            updateLabelStyles(newStateIsThinking, labelFast, labelThink);
-            performSwitch(newStateIsThinking ? 'thinking' : 'fast');
+            item.onclick = async (e) => {
+                e.preventDefault(); e.stopPropagation();
+                if (control.dataset.selected === modeKey) return;
+                control.dataset.selected = modeKey;
+                control.querySelectorAll('.sexy-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                await performSwitch(modeKey);
+            };
+            control.appendChild(item);
         });
-
-        labelFast.addEventListener('click', () => {
-            if(input.checked) {
-                input.checked = false;
-                input.dispatchEvent(new Event('change'));
-            }
-        });
-
-        labelThink.addEventListener('click', () => {
-            if(!input.checked) {
-                input.checked = true;
-                input.dispatchEvent(new Event('change'));
-            }
-        });
-
-        // External Change Observer
-        const obs = new MutationObserver(() => {
-            const freshLabel = container.querySelector(SELECTORS.triggerLabel);
-            if(freshLabel) {
-                const text = freshLabel.innerText.toLowerCase();
-                const domIsThinking = text.includes('thinking');
-                if (domIsThinking !== input.checked) {
-                    input.checked = domIsThinking;
-                    updateLabelStyles(domIsThinking, labelFast, labelThink);
-                }
-            }
-        });
-
-        const labelEl = container.querySelector('.logo-pill-label-container') || container;
-        obs.observe(labelEl, { subtree: true, characterData: true, childList: true });
-
-        // Insert
-        const switcher = container.querySelector('bard-mode-switcher');
-        if (switcher) {
-            switcher.appendChild(wrapper);
-        } else {
-            container.appendChild(wrapper);
-        }
+        wrapper.appendChild(control);
+        return wrapper;
     }
-
-    function updateLabelStyles(isThinking, labelFast, labelThink) {
-        if (isThinking) {
-            labelThink.classList.add('active');
-            labelFast.classList.remove('active');
-        } else {
-            labelFast.classList.add('active');
-            labelThink.classList.remove('active');
-        }
-    }
-
-    // --- Init ---
 
     function init() {
-        addStyles();
-        const observer = new MutationObserver((mutations) => {
-            const container = document.querySelector(SELECTORS.container);
-            if (container) {
-                if (!container.querySelector('.gemini-toggle-wrapper')) {
-                    createToggleUI(container);
+        const observer = new MutationObserver(() => {
+            const triggerBtn = document.querySelector(SELECTORS.triggerBtn);
+            const wrapper = document.getElementById('gemini-sexy-wrapper');
+
+            if (triggerBtn && !wrapper) {
+                const switcher = triggerBtn.closest('bard-mode-switcher');
+                if (switcher && switcher.parentElement) {
+                    const parent = switcher.parentElement;
+                    const currentMode = getCurrentModeFromUI() || 'fast';
+                    const sexyUI = createSexyUI(currentMode);
+                    parent.insertBefore(sexyUI, parent.firstChild);
+
+                    if (ENABLE_AUTO_DEFAULT && PREFERRED_MODEL && !hasAutoSwitched) {
+                        hasAutoSwitched = true;
+                        setTimeout(() => {
+                            if (getCurrentModeFromUI() !== PREFERRED_MODEL) {
+                                const target = sexyUI.querySelectorAll('.sexy-item')[Object.keys(MODES).indexOf(PREFERRED_MODEL)];
+                                if (target) target.click();
+                            }
+                        }, 500);
+                    }
+                }
+            }
+
+            if (wrapper) {
+                const currentRealMode = getCurrentModeFromUI();
+                const control = wrapper.querySelector('.sexy-control');
+                if (currentRealMode && control.dataset.selected !== currentRealMode) {
+                    control.dataset.selected = currentRealMode;
+                    control.querySelectorAll('.sexy-item').forEach((item, idx) => {
+                         item.classList.toggle('active', Object.keys(MODES)[idx] === currentRealMode);
+                    });
                 }
             }
         });
+
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
     init();
-
 })();

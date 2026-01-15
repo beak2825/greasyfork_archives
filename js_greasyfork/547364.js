@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         GeoGuessr High Level Ranks
 // @namespace    https://example.com/
-// @version      2.0.1
+// @version      2.1.1
 // @description  Replace 1500+ levels with special ranks
 // @icon         https://i.imgur.com/wHQjX4m.png
 // @license      MIT
-// @match        https://www.geoguessr.com/
+// @match        https://www.geoguessr.com/*
 // @grant        none
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/547364/GeoGuessr%20High%20Level%20Ranks.user.js
@@ -44,6 +44,80 @@
   let cachedMyId = null;
   let scheduled = null;
   let busy = false;
+
+    // ---- Small fix: keep spectator badge same displayed height and preserve aspect ratio ----
+(function keepBadgeHeight() {
+  const SELECTOR = 'img.post-guess-player-spectator_badgeImage__6UwJi';
+
+  // store original displayed height (once)
+  function storeOriginalHeight(img) {
+    if (!img || img.dataset.gg_orig_display_height) return;
+    try {
+      const rect = img.getBoundingClientRect();
+      const h = Math.round(rect && rect.height ? rect.height : img.clientHeight || 36);
+      img.dataset.gg_orig_display_height = String(h);
+    } catch (e) { img.dataset.gg_orig_display_height = '36'; }
+  }
+
+  // apply sizing so width auto-scales and ratio preserved
+  function applyFixedSizing(img) {
+    if (!img) return;
+    const orig = Number(img.dataset.gg_orig_display_height) || (img.clientHeight || 36);
+    img.style.height = orig + 'px';
+    img.style.maxHeight = orig + 'px';
+    img.style.width = 'auto';
+    img.style.objectFit = 'contain';
+    // prevent flex shrinking if inside flex container
+    img.style.flex = '0 0 auto';
+  }
+
+  // initialize existing images
+  try {
+    document.querySelectorAll(SELECTOR).forEach(img => {
+      storeOriginalHeight(img);
+      // if already replaced by your script mark, ensure sizing now
+      if (img.dataset.gg_replaced) applyFixedSizing(img);
+    });
+  } catch (e) {}
+
+  // observe additions and src/srcset changes
+  const mo = new MutationObserver(mutations => {
+    for (const m of mutations) {
+      if (m.type === 'childList' && m.addedNodes.length) {
+        m.addedNodes.forEach(node => {
+          if (node.nodeType !== 1) return;
+          // direct image node
+          if (node.matches && node.matches(SELECTOR)) {
+            storeOriginalHeight(node);
+            if (node.dataset.gg_replaced) applyFixedSizing(node);
+          }
+          // or nested images
+          try {
+            node.querySelectorAll && node.querySelectorAll(SELECTOR).forEach(img => {
+              storeOriginalHeight(img);
+              if (img.dataset.gg_replaced) applyFixedSizing(img);
+            });
+          } catch (e) {}
+        });
+      }
+      if (m.type === 'attributes' && (m.attributeName === 'src' || m.attributeName === 'srcset')) {
+        const target = m.target;
+        if (target && target.matches && target.matches(SELECTOR)) {
+          // ensure we remembered original height
+          storeOriginalHeight(target);
+          // tiny delay so browser can update source; then enforce the sizing
+          setTimeout(() => applyFixedSizing(target), 8);
+        }
+      }
+    }
+  });
+
+  mo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'srcset'] });
+
+  // also expose a manual helper (optional) you can call from console:
+  window.__gg_fixBadgeNow = () => document.querySelectorAll(SELECTOR).forEach(img => { storeOriginalHeight(img); applyFixedSizing(img); });
+})();
+
 
   // --- network helpers ---
   async function fetchJson(path) {
@@ -1130,10 +1204,10 @@ applyOrRemoveTop100(pos);
   }
 
   // scheduling/observers (compact)
-  function schedule(delay=200){ if (scheduled) clearTimeout(scheduled); scheduled = setTimeout(()=>{ scheduled=null; updateOnce(); }, delay); }
+  function schedule(delay=0){ if (scheduled) clearTimeout(scheduled); scheduled = setTimeout(()=>{ scheduled=null; updateOnce(); }, delay); }
   (function(){ const wrap=(m)=>{ const orig=history[m]; history[m]=function(){ const rv=orig.apply(this,arguments); window.dispatchEvent(new Event('gg-route-change')); return rv; }; }; wrap('pushState'); wrap('replaceState'); window.addEventListener('popstate', ()=>window.dispatchEvent(new Event('gg-route-change'))); window.addEventListener('gg-route-change', ()=>{ schedule(150); }); })();
-  const mo = new MutationObserver((mutations)=>{ for (const m of mutations) { if (m.type==='childList' && (m.addedNodes.length||m.removedNodes.length)) { schedule(120); break; } if (m.type==='attributes' && (m.attributeName==='src'||m.attributeName==='srcset'||m.attributeName==='class')) { schedule(160); break; } } });
-  function start(){ if(document.body) mo.observe(document.body,{ childList:true, subtree:true, attributes:true }); window.addEventListener('resize', ()=>schedule(350)); window.addEventListener('scroll', ()=>schedule(450), { passive:true }); schedule(700); }
+  const mo = new MutationObserver((mutations)=>{ for (const m of mutations) { if (m.type==='childList' && (m.addedNodes.length||m.removedNodes.length)) { schedule(20); break; } if (m.type==='attributes' && (m.attributeName==='src'||m.attributeName==='srcset'||m.attributeName==='class')) { schedule(160); break; } } });
+  function start(){ if(document.body) mo.observe(document.body,{ childList:true, subtree:true, attributes:true }); window.addEventListener('resize', ()=>schedule(50)); window.addEventListener('scroll', ()=>schedule(50), { passive:true }); schedule(70); }
   if (document.readyState==='loading') window.addEventListener('DOMContentLoaded', start, { once:true }); else start();
   window.addEventListener('beforeunload', ()=>{ try{ mo.disconnect(); } catch(e){} });
 

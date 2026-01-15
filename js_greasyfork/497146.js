@@ -3,9 +3,9 @@
 // @name:zh-CN         Z-Library 增强脚本
 // @name:en            Z-Library UI Enhance
 // @namespace          out
-// @version            2025.10.20
-// @description        Z-Library 页面功能改善
-// @description:zh-CN  Z-Library 页面功能改善
+// @version            2026.1.13
+// @description        改善 Zlibray 页面功能的油猴脚本
+// @description:zh-CN  给 Z-Library 一个更友好的使用体验
 // @description:en     give Z-Library  a more user friendly experience
 // @author             blue-bird
 // @match              https://*.z-library.sk/*
@@ -22,6 +22,9 @@
 // @match              https://*.1lib.sk/s/*
 // @match              https://*.1lib.sk/users/downloads
 // @match              https://*.1lib.sk/users/zrecommended*
+// @match              https://*.z-lib.gd/*
+// @match              https://*.z-lib.gl/*
+// @match              https://*.z-library.mn/* 
 // @run-at             document-end
 // @icon               https://www.google.com/s2/favicons?sz=64&domain=1lib.sk
 // @grant              GM_xmlhttpRequest
@@ -308,6 +311,10 @@
             // 检查元素的this.downloaded属性
             if ((this.downloaded || ZLibrary.checkIsDownloaded(this.id, this.isbn)) && !this.markButton && this.id !== get_bookId()) {
                 // 如果this.downloaded为true，则隐藏该元素
+                // check is z-carousel elemet <z-carousel  
+                if ($(this).parent().parent().prop('tagName') === 'Z-CAROUSEL') {
+                    return
+                }
                 $(this).parent().parent().remove()
             }
         });
@@ -333,17 +340,31 @@
             }
             return null;
         }
+
         // 获取当前 div 的 Fiber 节点
-        const currentFiber = getReactFiber(document.querySelector("#zrecommended_container > div.RecommendationBlock__Masonry-sc-17b7mdr-0.hJpyTs"));
+        const currentFiber = getReactFiber(document.querySelector("[class*='RecommendationBlock__Masonry']"));
         const parentFiber = currentFiber.return;
         const grandparentFiber = parentFiber.return;
         let stateNode = grandparentFiber.memoizedState;
 
         let booklist = stateNode.memoizedState;
 
-        const filteredBookList = booklist.filter(function (book) {
-            return !ZLibrary.checkIsDownloaded(book.id, book.isbn);
-        });
+        // hook dispatch
+        const originalDispatch = stateNode.queue.dispatch
+
+        stateNode.queue.dispatch = function (booklist) {
+            console.debug("hook dispatch")
+            console.debug(booklist)
+            const filteredBookList = booklist.filter(function (book) {
+                return !ZLibrary.checkIsDownloaded(book.id, book.isbn);
+            });
+            console.debug("filteredBookList", filteredBookList)
+            originalDispatch.call(this, filteredBookList)
+        }
+        // check have update
+        if (filteredBookList.length === booklist.length) {
+            return
+        }
 
         stateNode.queue.dispatch(filteredBookList)
     }
@@ -873,10 +894,11 @@
                     }
                 })
             });
+            if (enable_collapse_same_isbn) {
+                collapser();
+            }
         })
-        if(enable_collapse_same_isbn){
-            collapser();
-        }
+
 
     }
 
@@ -1019,7 +1041,10 @@
 
 
     function RecommendPageExec() {
-        setInterval(checkDownloadedStatusInRecommend, 1000);
+        waitForEl("[class*='RecommendationBlock__Masonry']", function () {
+            checkDownloadedStatusInRecommend();
+        })
+
         customElements.whenDefined('z-cover').then(() => {
             const bookMap = new Map();
             // 重写 fetch

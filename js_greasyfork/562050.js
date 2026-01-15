@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Cookie Clicker Bot
 // @namespace    https://github.com/SmartCookie/Optimizer
-// @version      2.0
-// @description  Omniscient Bot V2: Perfect Simulation-Based Optimization, Auto-Stock Trading, Garden Auto-Planting, Pantheon Management, and Advanced Combo Stacking.
+// @version      2.1
+// @description  Omniscient Bot V2.1: Perfect Simulation-Based Optimization, Auto-Stock Trading, Garden Auto-Planting, Pantheon Management, and Advanced Combo Stacking.
 // @author       OptimizerBot
 // @match        https://orteil.dashnet.org/cookieclicker/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=dashnet.org
@@ -24,7 +24,7 @@
     }, 1000);
 
     function startBot() {
-        console.log("Cookie Bot V2.0 (Omniscient) Started");
+        console.log("Cookie Bot V2.1 (Omniscient) Started");
 
         // --- 1. GameBridge ---
         const GameBridge = {
@@ -149,7 +149,9 @@
             reportOutcome: (id, expected, actual) => {
                 if (expected <= 0) return;
                 let factor = actual / expected;
+                // V5 Noise Filter:
                 if (factor <= 0 || factor > 50) return;
+
                 const oldW = Learning.weights[id] || 1.0;
                 const newW = oldW + Learning.learningRate * (factor - oldW);
                 Learning.weights[id] = newW;
@@ -171,17 +173,39 @@
                 const buffs = GameBridge.getBuffs();
                 let hasFrenzy = false;
                 let hasClickFrenzy = false;
+                let hasBuildingSpecial = false;
 
                 for (let i in buffs) {
                     if (buffs[i].name === 'Frenzy') hasFrenzy = true;
                     if (buffs[i].name === 'Click frenzy') hasClickFrenzy = true;
+                    if (buffs[i].type && buffs[i].type.name === 'building buff') hasBuildingSpecial = true;
                 }
 
-                if (hasFrenzy && !hasClickFrenzy) {
-                    const cost = 10 + (maxMagic * 0.6);
+                const cost = 10 + (maxMagic * 0.6);
+
+                // 1. DUAL CAST Logic (if we have a sugar lump and a huge combo potential)
+                // Note: Logic placeholder, requires detailed lump handling
+                if (hasFrenzy && hasBuildingSpecial && !hasClickFrenzy) {
                     if (currentMagic >= cost) {
-                        Overlay.log("Grimoire: Casting FtHoF");
+                        Overlay.log("Grimoire: High Potential Combo! Casting FtHoF.");
                         GameBridge.castSpell('hand of fate');
+                    }
+                }
+                // 2. STANDARD COMBO
+                else if (hasFrenzy && !hasClickFrenzy && currentMagic >= cost) {
+                    // Only cast if we have excess mana or full bar? No, fish for combos
+                    Overlay.log("Grimoire: Casting FtHoF (Fishing for Combo)");
+                    GameBridge.castSpell('hand of fate');
+                }
+
+                // 3. MANA RECOVERY (Spam cheap spells to regenerate mana faster if implemented or just burn excess)
+                // Actually, max magic is better for regeneration rate, so we don't spam unless we are close to cap to prevent waste?
+                // Logic: If currentMagic >= maxMagic - 1, cast Haggler's Charm
+                if (currentMagic >= maxMagic - 1) {
+                    // Check if Haggler's Charm is affordable (it's cheap)
+                    if (currentMagic >= (10 + maxMagic * 0.1)) {
+                        GameBridge.castSpell('haggler\'s charm');
+                        // Overlay.log("Grimoire: Magic full, cycling Haggler's Charm."); // Spammy log
                     }
                 }
             }
@@ -205,17 +229,26 @@
                     GodzamokManager.executeSell();
                 } else if (!shouldSell && GodzamokManager.isActive) {
                     GodzamokManager.isActive = false;
+                    console.log("[Godzamok] Recovery Mode.");
                 }
             },
             executeSell: () => {
                 Overlay.log("Godzamok: Selling for Click Power!");
                 const objects = GameBridge.getObjects();
+                const cps = GameBridge.getCps();
+
                 for (let id in objects) {
                     const obj = objects[id];
-                    if (GodzamokManager.sacrificeTargetNames.includes(obj.name)) {
-                        const keep = 100;
+                    // Contribution check logic
+                    // If < 1% contribution, sell.
+                    const contribution = (obj.storedTotalCps * Game.globalCpsMult) / (cps || 1);
+
+                    if (GodzamokManager.sacrificeTargetNames.includes(obj.name) || contribution < 0.01) {
+                        const keep = 10; // Keep 10 for safety
                         const toSell = obj.amount - keep;
-                        if (toSell > 0) GameBridge.sellBuilding(obj.id, toSell);
+                        if (toSell > 0 && obj.name !== 'Wizard tower') {
+                            GameBridge.sellBuilding(obj.id, toSell);
+                        }
                     }
                 }
                 GodzamokManager.isActive = true;
@@ -224,26 +257,32 @@
 
         // Dragon
         const DragonManager = {
+            AURAS: { BreathOfMilk: 0, EarthShatterer: 5, RadiantAppetite: 15, Dragonflight: 9 },
             _currentAura: null,
             tick: () => {
                 if (!GameBridge.isReady()) return;
                 const level = GameBridge.getDragonLevel();
-                if (level < 15) return;
+                if (level < 5) return;
+
                 const buffs = GameBridge.getBuffs();
                 let hasClickFrenzy = false;
                 for (let i in buffs) if (buffs[i].name === 'Click frenzy') hasClickFrenzy = true;
 
                 if (hasClickFrenzy) {
-                    if (DragonManager._currentAura !== 5) {
-                        GameBridge.setDragonAura(0, 5); // Earth Shatterer
-                        DragonManager._currentAura = 5;
-                        Overlay.log("Dragon: Swapped to Earth Shatterer");
+                    if (level >= 15 && DragonManager._currentAura !== DragonManager.AURAS.EarthShatterer) {
+                        GameBridge.setDragonAura(0, DragonManager.AURAS.EarthShatterer);
+                        DragonManager._currentAura = DragonManager.AURAS.EarthShatterer;
+                        Overlay.log("Dragon: Swapped to Earth Shatterer (Combo Mode)");
                     }
                 } else {
-                    if (DragonManager._currentAura !== 15) {
-                        GameBridge.setDragonAura(0, 15); // Radiant Appetite
-                        DragonManager._currentAura = 15;
-                        Overlay.log("Dragon: Swapped to Radiant Appetite");
+                    if (level >= 15 && DragonManager._currentAura !== DragonManager.AURAS.RadiantAppetite) {
+                        GameBridge.setDragonAura(0, DragonManager.AURAS.RadiantAppetite);
+                        DragonManager._currentAura = DragonManager.AURAS.RadiantAppetite;
+                        Overlay.log("Dragon: Swapped to Radiant Appetite (Growth Mode)");
+                    } else if (level >= 10 && level < 15 && DragonManager._currentAura !== DragonManager.AURAS.BreathOfMilk) {
+                        GameBridge.setDragonAura(0, DragonManager.AURAS.BreathOfMilk);
+                        DragonManager._currentAura = DragonManager.AURAS.BreathOfMilk;
+                        Overlay.log("Dragon: Swapped to Breath of Milk (Growth Mode)");
                     }
                 }
             }
@@ -262,6 +301,9 @@
             tick: () => {
                 const garden = GameBridge.getGarden();
                 if (!garden) return;
+                if (garden.nextSoil < Date.now()) {
+                    if (garden.plants['whiskerbloom'].unlocked) garden.nextSoil = Date.now() + 1000 * 60 * 10;
+                }
                 for (let y = 0; y < 6; y++) {
                     for (let x = 0; x < 6; x++) {
                         const tile = garden.plot[y][x];
@@ -269,11 +311,20 @@
                             const plantData = garden.plantsById[tile[0] - 1];
                             if (tile[1] >= plantData.mature) {
                                 GameBridge.harvestPlant(y, x);
-                                Overlay.log(`Garden: Harvested ${plantData.name}`);
+                                Overlay.log(`Garden: Harvested mature ${plantData.name}`);
                             }
                         } else {
                             const whiskerbloom = garden.plants['whiskerbloom'];
+                            const thumbcorn = garden.plants['thumbcorn'];
+                            const cronerice = garden.plants['cronerice'];
+                            const baker = garden.plants['bakersWheat'];
+                            const clover = garden.plants['goldenClover'];
+
                             if (whiskerbloom && whiskerbloom.unlocked) GameBridge.plantSeed(whiskerbloom.id, y, x);
+                            else if (cronerice && cronerice.unlocked) GameBridge.plantSeed(cronerice.id, y, x);
+                            else if (thumbcorn && thumbcorn.unlocked) GameBridge.plantSeed(thumbcorn.id, y, x);
+                            else if (clover && clover.unlocked) GameBridge.plantSeed(clover.id, y, x);
+                            else if (baker && baker.unlocked) GameBridge.plantSeed(baker.id, y, x);
                         }
                     }
                 }
@@ -282,19 +333,43 @@
 
         // Stock Market
         const StockManager = {
+            history: {},
             tick: () => {
                 const market = GameBridge.getStocks();
                 if (!market) return;
+
+                // Broker Hiring
+                if (market.brokers < market.maxBrokers && GameBridge.getCookies() > GameBridge.getCps() * 86400) {
+                    if (GameBridge.getCookies() > market.getBrokerPrice()) market.buyBroker();
+                }
+
                 market.goodsById.forEach(good => {
                     const price = good.val;
+                    const id = good.id;
                     const maxStock = market.getGoodMaxStock(good);
-                    if (price < 7 && good.stock < maxStock) {
-                        market.buyGood(good.id, maxStock - good.stock);
-                        Overlay.log(`Stocks: Buying ${good.name} at $${price.toFixed(2)}`);
+
+                    if (!StockManager.history[id]) StockManager.history[id] = [];
+                    StockManager.history[id].push(price);
+                    if (StockManager.history[id].length > 10) StockManager.history[id].shift();
+                    const prices = StockManager.history[id];
+                    const isRising = prices.length > 2 && prices[prices.length - 1] > prices[prices.length - 2];
+                    const isDropping = prices.length > 2 && prices[prices.length - 1] < prices[prices.length - 2];
+
+                    // BUY logic
+                    const buyThreshold = 10 + market.officeLevel * 5;
+                    if (good.stock < maxStock) {
+                        if (price < 5 || (price < buyThreshold && isRising)) {
+                            market.buyGood(good.id, maxStock - good.stock);
+                            Overlay.log(`Stocks: Buying ${good.name} at $${price.toFixed(2)}`);
+                        }
                     }
-                    if (price > 90 && good.stock > 0) {
-                        market.sellGood(good.id, good.stock);
-                        Overlay.log(`Stocks: Selling ${good.name} at $${price.toFixed(2)}`);
+                    // SELL logic
+                    const sellThreshold = 60 + market.officeLevel * 10;
+                    if (good.stock > 0) {
+                        if (price > 100 || (price > sellThreshold && isDropping)) {
+                            market.sellGood(good.id, good.stock);
+                            Overlay.log(`Stocks: Selling ${good.name} at $${price.toFixed(2)}`);
+                        }
                     }
                 });
             }
@@ -304,7 +379,7 @@
         const PantheonManager = {
             tick: () => {
                 const pantheon = GameBridge.getPantheon();
-                if (!pantheon || pantheon.swaps <= 0) return;
+                if (!pantheon || !pantheon.spirits || pantheon.swaps <= 0) return;
                 const spirits = { godzamok: 0, mokalsium: 2, muridal: 4 };
                 if (pantheon.slot[0] !== spirits.godzamok) {
                     pantheon.dragSpirit(pantheon.spirits['godzamok'], 0);
@@ -356,12 +431,19 @@
                         return;
                     }
                 }
-                if (lumps >= 100) {
-                    const farm = Game.Objects['Farm'];
-                    if (farm && farm.level < 10) {
-                        Overlay.log("Lumps: Expanding Garden");
-                        GameBridge.levelUp(farm.id);
-                    }
+                if (lumps < 100) return; // Save for Sugar Baking
+
+                const farm = Game.Objects['Farm'];
+                if (farm && farm.level < 10) {
+                    Overlay.log("Lumps: Expanding Garden");
+                    GameBridge.levelUp(farm.id);
+                    return;
+                }
+                const bank = Game.Objects['Bank'];
+                if (bank && bank.level < 10) {
+                    Overlay.log("Lumps: Upgrading Bank (Stock Storage)");
+                    GameBridge.levelUp(bank.id);
+                    return;
                 }
             }
         };
@@ -387,8 +469,14 @@
                 }
                 const chipsOwned = GameBridge.getHeavenlyChips();
                 const prestigeNow = Game.HowMuchPrestige(Game.cookiesReset + Game.cookiesEarned) - Game.HowMuchPrestige(Game.cookiesReset);
+
                 if (chipsOwned === 0) {
-                    if (prestigeNow >= AscensionManager.targets.firstRun) GameBridge.ascend();
+                    if (prestigeNow >= AscensionManager.targets.firstRun) {
+                        Overlay.log("Ascension: First Run Target Reached!");
+                        GameBridge.ascend();
+                    }
+                } else if (chipsOwned < 1000000) {
+                    if (prestigeNow > (chipsOwned * 0.1)) GameBridge.ascend();
                 } else {
                     if (prestigeNow > (chipsOwned * 0.5)) GameBridge.ascend();
                 }
@@ -421,23 +509,39 @@
                 const candidates = [];
                 const cps = GameBridge.getCps();
                 const bank = GameBridge.getCookies();
+
                 GameBridge.getObjects().forEach(obj => {
                     if (obj.locked) return;
                     const deltaCps = Optimizer.simulateGain('building', obj.id);
                     const price = obj.price;
                     const tta = Math.max(0, (price - bank) / (cps || 1));
                     let payback = price / deltaCps;
+
+                    // Achievement Milestone Bias (V3 Expert)
                     const qty = obj.amount;
-                    if (qty < 100 && (qty % 50) >= 45) payback *= 0.5;
-                    else if (qty >= 100 && (qty % 50) >= 48) payback *= 0.7;
+                    const nextMilestone = Math.ceil((qty + 1) / 50) * 50;
+                    const distance = nextMilestone - qty;
+                    if (distance <= 5) {
+                        payback *= (0.4 + (distance * 0.1));
+                    }
+
                     candidates.push({ type: 'building', id: obj.id, name: obj.name, price: price, tta: tta, score: payback + tta });
                 });
+
                 GameBridge.getUpgrades().forEach(upg => {
                     if (upg.locked) return;
                     const deltaCps = Optimizer.simulateGain('upgrade', upg.id);
                     const price = upg.basePrice;
                     const tta = Math.max(0, (price - bank) / (cps || 1));
-                    const payback = price / deltaCps;
+                    let payback = price / deltaCps;
+
+                    // Kitten & Synergy Prioritization (V3 Expert)
+                    if (upg.name.includes('Kitten')) {
+                        payback *= 0.05;
+                    } else if (upg.name.includes('synergy') || upg.name.includes('Synergy')) {
+                        payback *= 0.8;
+                    }
+
                     candidates.push({ type: 'upgrade', id: upg.id, name: upg.name, price: price, tta: tta, score: payback + tta });
                 });
                 candidates.sort((a, b) => a.score - b.score);
@@ -499,7 +603,7 @@
                 div.id = 'cookie-bot-overlay';
                 div.innerHTML = `
                     <div id="bot-header">
-                        <strong>Omniscient V2.0</strong>
+                        <strong>Omniscient V2.1</strong>
                         <div>
                             <button id="bot-min-btn" class="bot-btn">_</button>
                             <button id="bot-stop-btn" class="bot-btn stop">STOP</button>

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WaniKani Stats
 // @namespace    http://tampermonkey.net/
-// @version      0.13.0
+// @version      0.14
 // @description  Add stats info to WaniKani
 // @author       Jigen
 // @match        https://www.wanikani.com/*
@@ -11049,7 +11049,7 @@ var Tooltip = BaseTooltip.extend("tooltip", {
 const useChangelogStore = /* @__PURE__ */ defineStore(
   "changelog",
   () => {
-    const currentVersion = ref(0.13), lastLoadedVersion = ref(0), log2 = ref([
+    const currentVersion = ref(0.14), lastLoadedVersion = ref(0), log2 = ref([
       {
         changes: ["Fixed Levels Progression Tab"],
         version: 0.11
@@ -11057,6 +11057,10 @@ const useChangelogStore = /* @__PURE__ */ defineStore(
       {
         changes: ["Fixed Item Details Tab Only Going To Level 8"],
         version: 0.13
+      },
+      {
+        changes: ["Item Details info popup's header now links to items WK page, from the "],
+        version: 0.14
       }
     ]), showLog = ref(false), showSince = ref(0);
     function checkLog() {
@@ -28480,7 +28484,9 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const formatDate = (date) => {
       return format(parseISO(date), "MM/dd/yyyy");
-    }, indexStore = useIndexStore(), op = ref(), toggle2 = (event) => {
+    }, indexStore = useIndexStore(), linkUrl = (item) => {
+      return item.object.toLowerCase() == "radical" ? `https://www.wanikani.com/radicals/${item.data.slug.replace(" ", "-")}` : `https://www.wanikani.com/${item.object.toLowerCase()}/${item.data.slug}`;
+    }, op = ref(), toggle2 = (event) => {
       op.value.toggle(event);
     };
     onMounted(() => {
@@ -28515,18 +28521,33 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
           class: "poItem"
         }, {
           default: withCtx(() => {
-            var _a2, _b;
+            var _a2;
             return [
               createBaseVNode("div", _hoisted_3$4, [
                 createBaseVNode("div", _hoisted_4$3, [
                   createBaseVNode("div", _hoisted_5$3, [
-                    _ctx.item.object == "radical" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-                      _ctx.item.data.characters == null ? (openBlock(), createBlock(unref(script$a), {
-                        key: 0,
-                        class: "slug",
-                        src: (_a2 = _ctx.item.data.character_images) == null ? void 0 : _a2.filter((o2) => o2.content_type == "image/svg+xml")[0].url
-                      }, null, 8, ["src"])) : (openBlock(), createElementBlock("span", _hoisted_6$3, toDisplayString(_ctx.item.data.characters), 1))
-                    ], 64)) : (openBlock(), createElementBlock("span", _hoisted_7$3, toDisplayString(_ctx.item.data.slug), 1)),
+                    createVNode(unref(script$i), {
+                      as: "a",
+                      class: "characters",
+                      variant: "link",
+                      href: linkUrl(_ctx.item),
+                      target: "_blank",
+                      rel: "noopener"
+                    }, {
+                      default: withCtx(() => {
+                        var _a3;
+                        return [
+                          _ctx.item.object == "radical" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+                            _ctx.item.data.characters == null ? (openBlock(), createBlock(unref(script$a), {
+                              key: 0,
+                              class: "slug",
+                              src: (_a3 = _ctx.item.data.character_images) == null ? void 0 : _a3.filter((o2) => o2.content_type == "image/svg+xml")[0].url
+                            }, null, 8, ["src"])) : (openBlock(), createElementBlock("span", _hoisted_6$3, toDisplayString(_ctx.item.data.characters), 1))
+                          ], 64)) : (openBlock(), createElementBlock("span", _hoisted_7$3, toDisplayString(_ctx.item.data.slug), 1))
+                        ];
+                      }),
+                      _: 1
+                    }, 8, ["href"]),
                     _cache[0] || (_cache[0] = createBaseVNode("br", null, null, -1))
                   ])
                 ]),
@@ -28557,7 +28578,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                     createBaseVNode("span", null, "Reading")
                   ], -1)),
                   createBaseVNode("div", _hoisted_15, [
-                    createBaseVNode("span", null, toDisplayString((_b = _ctx.item.data.readings) == null ? void 0 : _b.map((m2) => m2.reading).join(", ")), 1)
+                    createBaseVNode("span", null, toDisplayString((_a2 = _ctx.item.data.readings) == null ? void 0 : _a2.map((m2) => m2.reading).join(", ")), 1)
                   ])
                 ])) : createCommentVNode("", true),
                 _ctx.item.object == "kanji" || _ctx.item.object == "vocabulary" ? (openBlock(), createElementBlock("div", _hoisted_16, [
@@ -28617,7 +28638,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ItemDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-34dfa321"]]);
+const ItemDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-085e6cc8"]]);
 const _hoisted_1$3 = { class: "row" };
 const _hoisted_2$3 = { class: "col" };
 const _hoisted_3$3 = { class: "level" };
@@ -41569,10 +41590,12 @@ const scriptUrl = "https://update.greasyfork.org/scripts/501980/1426289/Wanikani
     ];
     wkof.turbo.add_typical_page_listener(callback, urls);
     wkof.turbo.on.common.dashboard(() => {
-      const indexStore = useIndexStore();
-      indexStore.dashboardLoaded = false;
-      addMenuItem();
-      indexStore.dashboardLoaded = true;
+      nextTick(() => {
+        const indexStore = useIndexStore();
+        indexStore.dashboardLoaded = false;
+        addMenuItem();
+        indexStore.dashboardLoaded = true;
+      });
     });
   });
 };
@@ -41706,7 +41729,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-58a52f79"]]);
+const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-1b0608ed"]]);
 const MyPreset = definePreset(index, {
   //Your customizations, see the following sections for examples
   primitive: {
@@ -41740,6 +41763,17 @@ const addStatsDiv = () => {
     spotBefore.before(newSpot);
   }
 };
+function addChangelogDiv() {
+  const newSpot = document.createElement("div");
+  const spotBefore = document.getElementsByClassName("dashboard__content")[0];
+  newSpot.id = "statsChangelog";
+  newSpot.classList.add("hidden");
+  if (spotBefore == null) {
+    console.log("Could not find dashboard__content");
+  } else {
+    spotBefore.before(newSpot);
+  }
+}
 pinia.use(src_default);
 app.use(pinia);
 app.directive("tooltip", Tooltip);
@@ -41753,9 +41787,9 @@ app.use(PrimeVue, {
 });
 {
   addStatsDiv();
+  addChangelogDiv();
   app.mount("#divStats");
 }
-
 
     // Create our shared stylesheet:
 const sheet = new CSSStyleSheet();
@@ -42492,75 +42526,84 @@ label.v.center {
 }
 .header .buttons .p-button[data-v-020d16d8] {
   border: none;
-}.container[data-v-34dfa321] {
+}.container[data-v-085e6cc8] {
   width: 75vw;
 }
-.item[data-v-34dfa321] {
+.item[data-v-085e6cc8] {
   border: 1px solid gray;
   border-radius: 5px;
   min-width: 35px;
   margin: 2px;
   padding: 5px;
 }
-.item .slug[data-v-34dfa321] {
+.item .slug[data-v-085e6cc8] {
   margin: 5px;
   font-size: 1rem;
   margin: 0;
 }
-.item.apprentice[data-v-34dfa321], .item.guru[data-v-34dfa321], .item.master[data-v-34dfa321], .item.enlightened[data-v-34dfa321], .item.burned[data-v-34dfa321], .item.locked[data-v-34dfa321], .item.initiate[data-v-34dfa321] {
+.item.apprentice[data-v-085e6cc8], .item.guru[data-v-085e6cc8], .item.master[data-v-085e6cc8], .item.enlightened[data-v-085e6cc8], .item.burned[data-v-085e6cc8], .item.locked[data-v-085e6cc8], .item.initiate[data-v-085e6cc8] {
   color: white;
 }
-.item.apprentice[data-v-34dfa321] {
+.item.apprentice[data-v-085e6cc8] {
   background-color: var(--color-srs-progress-apprentice);
 }
-.item.apprentice[data-v-34dfa321]:hover {
+.item.apprentice[data-v-085e6cc8]:hover {
   background-color: var(--color-srs-progress-apprentice);
 }
-.item.guru[data-v-34dfa321] {
+.item.guru[data-v-085e6cc8] {
   background-color: var(--color-srs-progress-guru);
 }
-.item.guru[data-v-34dfa321]:hover {
+.item.guru[data-v-085e6cc8]:hover {
   background-color: var(--color-srs-progress-guru);
 }
-.item.master[data-v-34dfa321] {
+.item.master[data-v-085e6cc8] {
   background-color: var(--color-srs-progress-master);
 }
-.item.master[data-v-34dfa321]:hover {
+.item.master[data-v-085e6cc8]:hover {
   background-color: var(--color-srs-progress-master);
 }
-.item.enlightened[data-v-34dfa321] {
+.item.enlightened[data-v-085e6cc8] {
   background-color: var(--color-srs-progress-enlightened);
 }
-.item.enlightened[data-v-34dfa321]:hover {
+.item.enlightened[data-v-085e6cc8]:hover {
   background-color: var(--color-srs-progress-enlightened);
 }
-.item.burned[data-v-34dfa321] {
+.item.burned[data-v-085e6cc8] {
   background-color: #fbc042;
 }
-.item.burned[data-v-34dfa321]:hover {
+.item.burned[data-v-085e6cc8]:hover {
   background-color: #fbc042;
 }
-.item.locked[data-v-34dfa321] {
+.item.locked[data-v-085e6cc8] {
   background-color: black;
 }
-.item.locked[data-v-34dfa321]:hover {
+.item.locked[data-v-085e6cc8]:hover {
   background-color: black;
 }
-.item.initiate[data-v-34dfa321] {
+.item.initiate[data-v-085e6cc8] {
   background-color: gray;
 }
-.item.initiate[data-v-34dfa321]:hover {
+.item.initiate[data-v-085e6cc8]:hover {
   background-color: gray;
 }
-.poItem .slug[data-v-34dfa321] {
+.poItem .slug[data-v-085e6cc8] {
   font-size: 3rem;
 }
-.poItem .slug[data-v-34dfa321] img {
+.poItem .slug[data-v-085e6cc8] img {
   width: 35px;
 }
-.itemDetails .item[data-v-34dfa321] img {
+.itemDetails .item[data-v-085e6cc8] img {
   width: 15px;
   filter: invert(100%);
+}
+.characters[data-v-085e6cc8] {
+  font-size: 4rem;
+  color: black;
+  text-decoration: none;
+}
+.characters[data-v-085e6cc8]:hover .p-button-label {
+  text-decoration: none;
+  color: black;
 }.level[data-v-da0d2054],
 .type[data-v-da0d2054] {
   font-weight: bold;
@@ -42586,6 +42629,20 @@ label.v.center {
 }
 .header[data-v-2f795aa6] {
   font-weight: bold;
+}#statsChangelog .p-message {
+  background: deeppink;
+  color: white;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+#statsChangelog .p-message .hidden {
+  display: none;
+}
+#statsChangelog .p-message-close-button {
+  position: relative;
+  top: -40px;
+  right: -25px;
 }
 `)
 

@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        PUP Survey Helper
 // @namespace   Violentmonkey Scripts
-// @match       https://survey.pup.edu.ph/apps/ofes/survey/*
+// @match       https://survey.pup.edu.ph/apps/evaluation/survey/*
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_registerMenuCommand
-// @version     3.0
+// @version     4.0
 // @author      intMeinVoid
 // @icon        https://www.pup.edu.ph/about/images/PUPLogo.png
 // @description Adds a button to help fill out PUP faculty evaluation surveys with organic randomization
@@ -214,19 +214,10 @@
           questionNames.forEach((qName, index) => {
             const scoreToSet = scoreDistribution[index];
 
-            // PUP Selector Logic: ID is usually q{questionNum}{score}
             // Extract the question number from the name (e.g. "q15" -> "15")
-            const qNum = qName.replace("q", "");
-
-            // Try ID selector first (Fastest)
-            let targetRadio = document.getElementById(`q${qNum}${scoreToSet}`);
-
-            // Fallback: Query by name and value if ID fails
-            if (!targetRadio) {
-              targetRadio = document.querySelector(
-                `input[name="${qName}"][value="${scoreToSet}"]`,
-              );
-            }
+            const targetRadio = document.querySelector(
+              `input[name="${qName}"][value="${scoreToSet}"]`,
+            );
 
             if (targetRadio) {
               targetRadio.checked = true;

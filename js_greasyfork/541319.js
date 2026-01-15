@@ -7,6 +7,7 @@
 // @match        *://pan.quark.cn/*
 // @match        *://drive.uc.cn/*
 // @match        *://cloud.189.cn/*
+// @match        *://pan.baidu.com/*
 // @grant        unsafeWindow
 // @run-at       document-end
 // @license      MIT

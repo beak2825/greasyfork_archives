@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      7.0
-// @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
+// @version      7.1
+// @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt, Character.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -36,6 +36,7 @@
 // @match        https://www.openevidence.com/*
 // @match        https://www.pathway.md/*
 // @match        https://math-gpt.org/*
+// @match        https://character.ai/*
 // @grant        GM_addStyle
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/545883/AI%20Conversation%20Navigator.user.js
@@ -212,7 +213,7 @@
         },
         scienceos: {
             domain: 'app.scienceos.ai',
-            includePath: 'app.scienceos.ai/chat/c/',
+            includePath: 'app.scienceos.ai/chat/',
             promptSelector: 'div[data-prompt]',
             shiftTarget: 'div[data-strategy]'
         },
@@ -268,6 +269,12 @@
             includePath: 'math-gpt.org/chat/',
             promptSelector: '.w-full.flex.items-end.flex-col.pb-8.relative',
             shiftTarget: '.overflow-x-hidden, .px-2.flex.flex-col.gap-1'
+        },
+        character: {
+            domain: 'character.ai',
+            includePath: 'character.ai/chat/',
+            promptSelector: '.w-full .bg-surface-elevation-3.opacity-90',
+            shiftTarget: '#__next, #chat-header-background'
         }
     };
 

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn - IM Popup + Repeating Sound (Settings Panel Options)
 // @namespace    https://www.torn.com/
-// @version      01.05.2026.20.35
-// @description  Full-screen popup when Torn IM unread count increases. Optional repeating sound every 30 seconds until popup is closed. Settings live in Torn Chat Settings panel.
+// @version      01.13.2026.20.55
+// @description  Full-screen popup when Torn IM unread count increases (FOCUSED TAB ONLY). Optional repeating sound every 30 seconds until popup is closed. Settings live in Torn Chat Settings panel.
 // @author       KillerCleat [2842410]
 // @match        https://www.torn.com/*
 // @run-at       document-end
@@ -15,9 +15,15 @@
 NOTES & REQUIREMENTS
 - Author: KillerCleat [2842410]
 - Version format: MM.DD.YYYY.HH.MM
+
+COMPLIANCE UPDATE (FOCUSED TAB ONLY):
+- This script will NOT monitor DOM changes, read unread counts, or trigger alerts when the Torn tab is unfocused/hidden.
+- When you return to the Torn tab, it will resync and (if unread count increased while away) alert ONCE while focused.
+
+Behavior:
 - Watches the IM/chat unread badge count on the chat list button.
-- When unread count increases, shows a full-screen popup overlay.
-- Optional repeating sound every 30 seconds while popup is open.
+- When unread count increases (while focused), shows a full-screen popup overlay.
+- Optional repeating sound every 30 seconds while popup is open (while focused).
 - Settings injected into Torn Chat Settings panel:
   1) Alert Mode: Disabled / Popup only / Popup + sound
   2) Sound choice (your links) + TTS options
@@ -60,15 +66,20 @@ NOTES & REQUIREMENTS
   }
 
   // -----------------------------
+  // Focus gating helpers
+  // -----------------------------
+  function isTabFocused() {
+    // Both checks help across browsers
+    return document.visibilityState === "visible" && document.hasFocus();
+  }
+
+  // -----------------------------
   // Sound library
   // -----------------------------
-  // These mp3 URLs are the "mp3 DOWNLOAD" links on the NotificationSounds pages. :contentReference[oaicite:1]{index=1}
   const SOUND_LIBRARY = [
-    // Built-in Text To Speech options (no external download needed)
     { id: "tts_new_message", label: "TTS: New message (spoken)", type: "tts" },
     { id: "tts_incoming", label: "TTS: Incoming message (spoken)", type: "tts_incoming" },
 
-    // Your provided NotificationSounds links (mp3 download endpoints)
     {
       id: "message_girl_voice",
       label: "Message (girl voice)",
@@ -143,7 +154,6 @@ NOTES & REQUIREMENTS
     } catch (e) {}
     lastAudio = null;
 
-    // Cancel any speaking
     try {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
@@ -154,7 +164,6 @@ NOTES & REQUIREMENTS
   function speak(text) {
     if (!("speechSynthesis" in window)) return;
 
-    // Cancel any queued speech so it speaks immediately
     window.speechSynthesis.cancel();
 
     const u = new SpeechSynthesisUtterance(text);
@@ -166,6 +175,9 @@ NOTES & REQUIREMENTS
   }
 
   function playAlertSound() {
+    // Do not play sounds if not focused
+    if (!isTabFocused()) return;
+
     const sound = findSoundById(getSoundId());
 
     if (sound.type === "tts") {
@@ -177,12 +189,11 @@ NOTES & REQUIREMENTS
       return;
     }
 
-    // mp3
     try {
       stopSound();
       const a = new Audio(sound.url);
       a.preload = "auto";
-      a.volume = 1.0; // max allowed for HTMLAudio
+      a.volume = 1.0;
       lastAudio = a;
       const p = a.play();
       if (p && typeof p.catch === "function") p.catch(() => {});
@@ -197,8 +208,9 @@ NOTES & REQUIREMENTS
   const POPUP_ID = "kc-im-alert-popup-overlay";
   let popupOpen = false;
   let repeatTimer = null;
-  let lastSeenCount = 0; // current baseline
-  let lastTriggeredCount = 0; // last count we alerted on
+
+  let lastSeenCount = 0;      // last count observed (while focused)
+  let lastTriggeredCount = 0; // last count acknowledged/baselined (while focused)
 
   function lockScroll(lock) {
     if (lock) {
@@ -224,6 +236,9 @@ NOTES & REQUIREMENTS
   }
 
   function showPopup(count, isTest) {
+    // Only show popup while focused (compliance)
+    if (!isTabFocused()) return;
+
     removePopup();
 
     const overlay = document.createElement("div");
@@ -250,7 +265,6 @@ NOTES & REQUIREMENTS
 
     overlay.querySelector(".kc-im-alert-btn-close").addEventListener("click", () => {
       removePopup();
-      // We consider the popup "acknowledged" only when closed
       lastTriggeredCount = count;
     });
 
@@ -264,7 +278,9 @@ NOTES & REQUIREMENTS
 
     playAlertSound();
     repeatTimer = setInterval(() => {
+      // Repeat only while popup open AND focused
       if (!popupOpen) return;
+      if (!isTabFocused()) return;
       playAlertSound();
     }, 30000);
   }
@@ -273,6 +289,8 @@ NOTES & REQUIREMENTS
   // Styles
   // -----------------------------
   function injectStyles() {
+    if (document.getElementById("kc-im-alert-styles")) return;
+
     const css = `
       #${POPUP_ID} {
         position: fixed;
@@ -367,7 +385,7 @@ NOTES & REQUIREMENTS
   }
 
   // -----------------------------
-  // IM count watcher
+  // IM count watcher (FOCUSED ONLY)
   // -----------------------------
   function readUnreadCount() {
     const p = document.querySelector(".chat-list-button__message-count___egnZ8 p");
@@ -380,7 +398,6 @@ NOTES & REQUIREMENTS
   function onNewCount(count) {
     if (count <= 0) return;
 
-    // Trigger only when count increases beyond lastTriggeredCount
     if (count <= lastTriggeredCount) return;
 
     const mode = getMode();
@@ -394,20 +411,31 @@ NOTES & REQUIREMENTS
     if (mode === "popup_sound") {
       startRepeatingSound();
     }
-
-    // Do NOT set lastTriggeredCount here; we set it when popup closes,
-    // so you won't miss anything while it's open.
+    // lastTriggeredCount is set when popup closes
   }
 
-  function startWatcher() {
-    lastSeenCount = readUnreadCount();
-    lastTriggeredCount = lastSeenCount;
+  let countObserver = null;
 
-    const obs = new MutationObserver(() => {
+  function disconnectCountWatcher() {
+    if (countObserver) {
+      try { countObserver.disconnect(); } catch (e) {}
+      countObserver = null;
+    }
+  }
+
+  function connectCountWatcher() {
+    // Only connect when focused
+    if (!isTabFocused()) return;
+
+    disconnectCountWatcher();
+
+    countObserver = new MutationObserver(() => {
+      // Do not react if focus is lost mid-stream
+      if (!isTabFocused()) return;
+
       const c = readUnreadCount();
 
       if (popupOpen) {
-        // If more messages arrive while popup open, update displayed number and play once
         if (c > lastSeenCount) {
           lastSeenCount = c;
           const el = document.querySelector(`#${POPUP_ID} .kc-im-alert-count`);
@@ -425,16 +453,37 @@ NOTES & REQUIREMENTS
         onNewCount(c);
       } else {
         lastSeenCount = c;
-        // Also keep triggered baseline in sync when user reads messages and count drops
         if (c < lastTriggeredCount) lastTriggeredCount = c;
       }
     });
 
-    obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+    countObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+
+  function resyncCountsOnFocus() {
+    if (!isTabFocused()) return;
+
+    const c = readUnreadCount();
+
+    // First focus after init, just baseline
+    if (lastSeenCount === 0 && lastTriggeredCount === 0) {
+      lastSeenCount = c;
+      lastTriggeredCount = c;
+      return;
+    }
+
+    // If count increased while we were away, alert once now (focused)
+    if (c > lastTriggeredCount) {
+      lastSeenCount = c;
+      onNewCount(c);
+    } else {
+      lastSeenCount = c;
+      if (c < lastTriggeredCount) lastTriggeredCount = c;
+    }
   }
 
   // -----------------------------
-  // Settings panel injection
+  // Settings panel injection (FOCUSED ONLY)
   // -----------------------------
   function makeOption(label, value) {
     const opt = document.createElement("option");
@@ -459,7 +508,6 @@ NOTES & REQUIREMENTS
     header.style.marginBottom = "6px";
     header.textContent = "IM Alert (KillerCleat)";
 
-    // Mode
     const rowMode = document.createElement("div");
     rowMode.className = "kc-im-settings-row";
     rowMode.appendChild(Object.assign(document.createElement("div"), { className: "kc-im-settings-label", textContent: "Alert Mode" }));
@@ -474,7 +522,6 @@ NOTES & REQUIREMENTS
     modeCtl.appendChild(modeSel);
     rowMode.appendChild(modeCtl);
 
-    // Sound select
     const rowSound = document.createElement("div");
     rowSound.className = "kc-im-settings-row";
     rowSound.appendChild(Object.assign(document.createElement("div"), { className: "kc-im-settings-label", textContent: "Alert Sound" }));
@@ -487,7 +534,6 @@ NOTES & REQUIREMENTS
     soundCtl.appendChild(soundSel);
     rowSound.appendChild(soundCtl);
 
-    // TTS text (only applies to TTS mode, but harmless always)
     const rowTTS = document.createElement("div");
     rowTTS.className = "kc-im-settings-row";
     rowTTS.appendChild(Object.assign(document.createElement("div"), { className: "kc-im-settings-label", textContent: "TTS Text" }));
@@ -501,7 +547,6 @@ NOTES & REQUIREMENTS
     ttsCtl.appendChild(ttsInput);
     rowTTS.appendChild(ttsCtl);
 
-    // Test button: SHOW POPUP + SOUND
     const rowTest = document.createElement("div");
     rowTest.className = "kc-im-settings-row";
     rowTest.appendChild(Object.assign(document.createElement("div"), { className: "kc-im-settings-label", textContent: "Test" }));
@@ -514,7 +559,6 @@ NOTES & REQUIREMENTS
       if (getMode() === "popup_sound") {
         startRepeatingSound();
       } else {
-        // even if popup-only, still let the test play once so you know sound works
         playAlertSound();
       }
     });
@@ -533,11 +577,57 @@ NOTES & REQUIREMENTS
     return true;
   }
 
-  function startSettingsInjector() {
-    const tryInject = () => injectSettingsIntoChatPanel();
+  let settingsObserver = null;
+
+  function disconnectSettingsInjector() {
+    if (settingsObserver) {
+      try { settingsObserver.disconnect(); } catch (e) {}
+      settingsObserver = null;
+    }
+  }
+
+  function connectSettingsInjector() {
+    if (!isTabFocused()) return;
+
+    disconnectSettingsInjector();
+
+    const tryInject = () => {
+      if (!isTabFocused()) return;
+      injectSettingsIntoChatPanel();
+    };
+
     tryInject();
-    const obs = new MutationObserver(() => tryInject());
-    obs.observe(document.body, { childList: true, subtree: true });
+
+    settingsObserver = new MutationObserver(() => tryInject());
+    settingsObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // -----------------------------
+  // Focus handlers (COMPLIANCE CORE)
+  // -----------------------------
+  function onFocusGained() {
+    // Reconnect watchers while focused
+    resyncCountsOnFocus();
+    connectCountWatcher();
+    connectSettingsInjector();
+
+    // If popup is open, re-enable repeating (it is focus-gated anyway)
+    if (popupOpen && getMode() === "popup_sound") {
+      startRepeatingSound();
+    }
+  }
+
+  function onFocusLost() {
+    // HARD STOP: no monitoring, no sounds, no background activity
+    disconnectCountWatcher();
+    disconnectSettingsInjector();
+
+    // Stop repeating sounds immediately
+    if (repeatTimer) {
+      clearInterval(repeatTimer);
+      repeatTimer = null;
+    }
+    stopSound();
   }
 
   // -----------------------------
@@ -549,8 +639,26 @@ NOTES & REQUIREMENTS
     if (!localStorage.getItem(LS_KEY_TTS_TEXT)) setSetting(LS_KEY_TTS_TEXT, DEFAULTS.ttsText);
 
     injectStyles();
-    startWatcher();
-    startSettingsInjector();
+
+    // Initialize baselines while focused (if not focused, we wait)
+    if (isTabFocused()) {
+      lastSeenCount = readUnreadCount();
+      lastTriggeredCount = lastSeenCount;
+      connectCountWatcher();
+      connectSettingsInjector();
+    }
+
+    // Focus/visibility compliance hooks
+    window.addEventListener("focus", onFocusGained);
+    window.addEventListener("blur", onFocusLost);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && document.hasFocus()) {
+        onFocusGained();
+      } else {
+        onFocusLost();
+      }
+    });
   }
 
   init();

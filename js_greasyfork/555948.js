@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CunyCrypt
-// @version      0.9.17
+// @version      0.9.18
 // @description  End-to-end encryption for Discord messages and files, but less obvious
 // @author       redcat (forked from NotTrueFalse)
 // @match        https://discord.com/*
@@ -1085,10 +1085,13 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
     });
 
     function restore_localstorage() {
+    return new Promise((resolve) => {
         if (window.localStorage) {
-            setTimeout(restore_localstorage, 100);
-            return log("waiting to restore localstorage...");
+            log("waiting to restore localstorage...");
+            setTimeout(() => resolve(restore_localstorage()), 100);
+            return;
         }
+
         function getLocalStoragePropertyDescriptor() {
             const iframe = document.createElement('iframe');
             document.head.append(iframe);
@@ -1096,14 +1099,21 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
             iframe.remove();
             return pd;
         }
+
         Object.defineProperty(window, 'cunnycryptlocalstorage', getLocalStoragePropertyDescriptor());
+
         if (!cunnycryptlocalstorage) {
-            setTimeout(restore_localstorage, 100);
-            return log("waiting to restore localstorage...");
+            log("waiting to restore localstorage...");
+            setTimeout(() => resolve(restore_localstorage()), 100);
+            return;
         }
-        log("restored localstorage")
-    }
-    restore_localstorage();
+        resolve();
+    });
+}
+
+restore_localstorage().then(() => {
+    log("restored localstorage");
+});
 
     function save_peers(peers) {
         cunnycryptlocalstorage.setItem("discrypt-peers", JSON.stringify(peers));

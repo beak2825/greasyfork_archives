@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         RGT Repo Tweaks
 // @namespace    https://retrogametalk.com/
-// @version      0.4
-// @description  Combina: menu By Genre (A–Z opcional) + filtro sempre visível com Genre, No Hacks e ajustes de header
+// @version      0.6
+// @description  Various tweaks for RGT Repo
 // @match        https://retrogametalk.com/*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562012/RGT%20Repo%20Tweaks.user.js
@@ -376,10 +376,11 @@
         const searchbar = options?.querySelector('.searchbar');
         if (!options || !searchbar) return;
 
-        searchbar.style.width = '50%';
+        //searchbar.style.width = '50%';
 
         options.style.textAlign = 'inherit';
 
+        /*
         let filterForm = document.querySelector('form#filter.search-filter');
 
         if (!filterForm) {
@@ -389,7 +390,15 @@
             options.insertBefore(filterForm, searchbar);
             ensureGenreSelect(filterForm);
         }
+        */
 
+        // 🔥 Remove qualquer filtro nativo existente
+        document.querySelectorAll('form#filter.search-filter').forEach(f => f.remove());
+
+        // 🔥 Sempre cria o SEU filtro
+        let filterForm = createFilterForm();
+        options.insertBefore(filterForm, searchbar);
+        adjustFilterByPage(filterForm);
         // --- ADICIONAR O BOTÃO DE CLEAR FILTERS ---
         if (!document.getElementById('clear-filters')) {
             const clearBtn = document.createElement('button');
@@ -421,34 +430,36 @@
         }
 
         // --- BOTÃO RANDOM GAME ---
-if (!document.getElementById('random-game')) {
-    const randomBtn = document.createElement('button');
-    randomBtn.id = 'random-game';
-    randomBtn.type = 'button';
-    randomBtn.className = 'button-icons';
-    randomBtn.textContent = '🎲';
-    randomBtn.title = 'Random Game by filters';
+        if (!document.getElementById('random-game')) {
+            const randomBtn = document.createElement('button');
+            randomBtn.id = 'random-game';
+            randomBtn.type = 'button';
+            randomBtn.className = 'button-icons';
+            randomBtn.textContent = '🎲';
+            randomBtn.title = 'Random Game by filters';
 
-    randomBtn.style.fontSize = '1.3em';
-    randomBtn.style.height = '35px';
-    randomBtn.style.marginLeft = '0.4em';
-    randomBtn.style.marginRight = '0';
+            randomBtn.style.fontSize = '1.3em';
+            randomBtn.style.height = '35px';
+            randomBtn.style.marginLeft = '0.4em';
+            randomBtn.style.marginRight = '0';
 
-    const sortDiv = document.querySelector('.sort');
-    const clearBtn = document.getElementById('clear-filters');
+            const sortDiv = document.querySelector('.sort');
+            const clearBtn = document.getElementById('clear-filters');
 
-    if (sortDiv && clearBtn) {
-        sortDiv.parentNode.insertBefore(randomBtn, sortDiv);
-    }
+            if (sortDiv && clearBtn) {
+                sortDiv.parentNode.insertBefore(randomBtn, sortDiv);
+            }
 
-    randomBtn.addEventListener('click', runRandomGame);
-}
+            randomBtn.addEventListener('click', runRandomGame);
+        }
 
 
         const desc = filterForm.querySelector('.home-loop-description');
         if (desc) desc.remove();
 
-        filterForm.style.width = '85%';
+        //filterForm.style.width = '85%';
+        filterForm.style.width = 'auto';
+
         filterForm.style.margin = '0';
 
         // Ajusta o padding do input search-field
@@ -495,6 +506,9 @@ if (!document.getElementById('random-game')) {
 
     const style = document.createElement('style');
     style.textContent = `
+
+
+
 /* Botão X */
 .button-icons.x-follow-icon {
     margin: 0 !important;
@@ -553,6 +567,95 @@ padding: 0px 5px;
     width: 26px;
 }
 
+/* ================================
+   SEARCHBAR + BUTTONS RESPONSIVE
+   ================================ */
+
+.options {
+    display: flex !important;
+    align-items: center;
+    flex-wrap: wrap;              /* permite quebrar linha */
+    gap: 0.5em;
+}
+
+/* SEARCHBAR ocupa o máximo possível */
+.options > .searchbar {
+    flex: 1 1 0 !important;     /* ocupa apenas o espaço restante */
+    min-width: 200px;           /* limite mínimo */
+}
+
+/* input da busca */
+.searchbar .search-field {
+    width: 100%;
+    min-width: 180px;
+}
+
+/* BOTÕES (Clear, Random, Sort) */
+#clear-filters,
+#random-game,
+.options > .sort {
+    flex: 0 0 auto;               /* nunca quebram individualmente */
+    white-space: nowrap;
+}
+
+#sort-form {
+    display: inline-flex !important;
+    align-items: center;
+    margin: 0 !important;
+}
+
+/* 🔽 Quando a tela ficar pequena */
+@media (max-width: 900px) {
+    .options {
+        align-items: stretch;
+    }
+
+    /* 🔥 garante que TODOS permaneçam na mesma linha */
+    .options > * {
+        max-width: 100%;
+    }
+}
+
+/* 🔽 Telas muito pequenas */
+@media (max-width: 600px) {
+    .options {
+        gap: 0.4em;
+    }
+
+    #clear-filters,
+    #random-game {
+        height: 34px;
+        font-size: 1.2em;
+    }
+}
+
+/* ================================
+   SORT INLINE FIX (OBRIGATÓRIO)
+   ================================ */
+
+/* Garante que o sort fique inline com os botões */
+#sort-form {
+    display: inline-flex !important;
+    align-items: center;
+    flex: 0 0 auto;
+    margin: 0 !important;
+}
+
+/* Remove qualquer quebra interna */
+#sort-form * {
+    white-space: nowrap;
+}
+
+
+/* ===== DISABLED FILTER VISUAL ===== */
+.filter-dropdown:disabled,
+.filter-checkbox:disabled,
+.filter-dropdown[disabled],
+.filter-checkbox[disabled] {
+    opacity: 0.45;
+    filter: grayscale(100%);
+    cursor: not-allowed;
+}
 `;
     document.head.appendChild(style);
 
@@ -635,28 +738,55 @@ padding: 0px 5px;
     // --- NOVO: Monta query e envia ao clicar no botão ---
     function buildQuery(form) {
         const params = new URLSearchParams();
+        const path = window.location.pathname;
 
+        const isSpecialPage =
+              path.startsWith('/repo/translations') ||
+              path.startsWith('/repo/romhacks');
+
+        // filtros normais
         ['genre', 'language', 'region'].forEach(id => {
             const el = form.querySelector(`#${id}`);
             if (el && el.value) params.append(el.name, el.value);
         });
 
+        // nohacks
         const checkbox = form.querySelector('input[name="nohacks"]');
-        if (checkbox && checkbox.checked) params.append(checkbox.name, checkbox.value);
+        if (checkbox && checkbox.checked) {
+            params.append(checkbox.name, checkbox.value);
+        }
 
+        // search
         const searchInput = document.querySelector('.searchbar input[name="s"]');
         const sValue = searchInput ? searchInput.value.trim() : '';
         if (sValue) params.append('s', sValue);
 
-        // ⚡ Novo: adiciona sorted
-        const sortedInput = document.querySelector('input[name="sorted"]:checked') || document.querySelector('input[name="sorted"]');
-        if (sortedInput && sortedInput.value) params.append('sorted', sortedInput.value);
+        // sorted
+        const sortedInput =
+              document.querySelector('input[name="sorted"]:checked') ||
+              document.querySelector('input[name="sorted"]');
+        if (sortedInput && sortedInput.value) {
+            params.append('sorted', sortedInput.value);
+        }
 
+        // ===============================
+        // PLATFORM (REGRA NOVA)
+        // ===============================
         const platformSelect = form.querySelector('#platform');
-        const platformPath = platformSelect && platformSelect.value ? platformSelect.value + '/' : '';
+        let base = '';
+
+        if (platformSelect && platformSelect.value) {
+            if (isSpecialPage) {
+                // 🔥 vira query
+                params.append('platform', platformSelect.value);
+            } else {
+                // 🔥 vira path
+                base = platformSelect.value + '/';
+            }
+        }
 
         return {
-            base: platformPath,
+            base,
             query: params.toString()
         };
     }
@@ -665,18 +795,31 @@ padding: 0px 5px;
 
 
 
+
     function setupSearchButton() {
-        const searchButton = document.querySelector('.searchbar button[type="submit"], .searchbar input[type="submit"]');
+        const searchButton =
+              document.querySelector('.searchbar button[type="submit"], .searchbar input[type="submit"]');
         const filterForm = document.querySelector('form#filter');
         if (!searchButton || !filterForm) return;
 
         searchButton.addEventListener('click', e => {
             e.preventDefault();
+
             const { base, query } = buildQuery(filterForm);
-            const url = '/repo/' + base + (query ? '?' + query : '');
+
+            // 🔥 USA A ACTION DO FORM
+            let action = filterForm.action.replace(/\/+$/, '');
+
+            const url =
+                  action +
+                  '/' +
+                  base +
+                  (query ? '?' + query : '');
+
             window.location.href = url;
         });
     }
+
 
 
 
@@ -785,9 +928,102 @@ padding: 0px 5px;
     }
 
 
+    function adjustFilterByPage(filterForm) {
+        const path = window.location.pathname;
+
+        const nativeSearchInput = document.querySelector(
+            'form.search-form input.search-field[type="search"]'
+        );
+        const selects = filterForm.querySelectorAll('select.filter-dropdown');
+        const noHacksCheckbox = filterForm.querySelector('input[name="nohacks"]');
+
+        // 🔎 form de busca NATIVO (lupa)
+        const searchForm = document.querySelector('form.search-form');
+
+        // =====================================================
+        // RESET PADRÃO
+        // =====================================================
+        filterForm.action = 'https://retrogametalk.com/repo/';
+
+        if (searchForm) {
+            searchForm.action = 'https://retrogametalk.com/repo/';
+        }
+
+        if (nativeSearchInput) {
+            nativeSearchInput.name = 's';
+            nativeSearchInput.placeholder = 'Search';
+        }
+
+        selects.forEach(sel => {
+            sel.disabled = false;
+        });
+
+        if (noHacksCheckbox) {
+            noHacksCheckbox.disabled = false;
+        }
+
+        // =====================================================
+        // TRANSLATIONS
+        // =====================================================
+        if (path.startsWith('/repo/translations')) {
+            filterForm.action = 'https://retrogametalk.com/repo/translations/';
+
+            if (searchForm) {
+                searchForm.action = 'https://retrogametalk.com/repo/translations/';
+            }
+
+            if (nativeSearchInput) {
+                nativeSearchInput.name = 'search';
+                nativeSearchInput.placeholder = 'Search Translations';
+            }
+
+            selects.forEach(sel => {
+                const allowed = sel.id === 'language' || sel.id === 'platform';
+                sel.disabled = !allowed;
+                if (!allowed) sel.value = '';
+            });
+
+            if (noHacksCheckbox) {
+                noHacksCheckbox.checked = false;
+                noHacksCheckbox.disabled = true;
+            }
+
+            return;
+        }
+
+        // =====================================================
+        // ROMHACKS
+        // =====================================================
+        if (path.startsWith('/repo/romhacks/')) {
+            filterForm.action = 'https://retrogametalk.com/repo/romhacks/';
+
+            if (searchForm) {
+                searchForm.action = 'https://retrogametalk.com/repo/romhacks/';
+            }
+
+            if (nativeSearchInput) {
+                nativeSearchInput.name = 'search';
+                nativeSearchInput.placeholder = 'Search Romhacks';
+            }
+
+            selects.forEach(sel => {
+                const allowed = sel.id === 'platform';
+                sel.disabled = !allowed;
+                if (!allowed) sel.value = '';
+            });
+
+            if (noHacksCheckbox) {
+                noHacksCheckbox.checked = false;
+                noHacksCheckbox.disabled = true;
+            }
+
+            return;
+        }
+    }
 
 
-        /* =====================================================
+
+    /* =====================================================
        1️⃣ MÉTODO PRINCIPAL (BOTÃO 🎲)
        ===================================================== */
     async function runRandomGame() {
@@ -796,160 +1032,160 @@ padding: 0px 5px;
            2️⃣ MÉTODOS AUXILIARES
            =============================== */
 
-    function buildFetchUrl() {
-        const form = document.querySelector('form#filter');
-        if (!form) return null;
+        function buildFetchUrl() {
+            const form = document.querySelector('form#filter');
+            if (!form) return null;
 
-        const params = new URLSearchParams();
+            const params = new URLSearchParams();
 
-        ['genre', 'language', 'region'].forEach(id => {
-            const el = form.querySelector(`#${id}`);
-            if (el && el.value) params.append(el.name, el.value);
-        });
+            ['genre', 'language', 'region'].forEach(id => {
+                const el = form.querySelector(`#${id}`);
+                if (el && el.value) params.append(el.name, el.value);
+            });
 
-        const nohacks = form.querySelector('input[name="nohacks"]');
-        if (nohacks && nohacks.checked) params.append('nohacks', 'true');
+            const nohacks = form.querySelector('input[name="nohacks"]');
+            if (nohacks && nohacks.checked) params.append('nohacks', 'true');
 
-        const searchInput = document.querySelector('.searchbar input[name="s"]');
-        if (searchInput && searchInput.value.trim()) {
-            params.append('s', searchInput.value.trim());
+            const searchInput = document.querySelector('.searchbar input[name="s"]');
+            if (searchInput && searchInput.value.trim()) {
+                params.append('s', searchInput.value.trim());
+            }
+
+            const sorted =
+                  document.querySelector('input[name="sorted"]:checked') ||
+                  document.querySelector('input[name="sorted"]');
+
+            if (sorted && sorted.value) params.append('sorted', sorted.value);
+
+            const platform = form.querySelector('#platform')?.value || '';
+
+            const basePath =
+                  '/repo/' +
+                  (platform ? platform + '/' : '');
+
+            return location.origin + basePath + (params.toString() ? '?' + params.toString() : '');
         }
 
-        const sorted =
-            document.querySelector('input[name="sorted"]:checked') ||
-            document.querySelector('input[name="sorted"]');
-
-        if (sorted && sorted.value) params.append('sorted', sorted.value);
-
-        const platform = form.querySelector('#platform')?.value || '';
-
-        const basePath =
-            '/repo/' +
-            (platform ? platform + '/' : '');
-
-        return location.origin + basePath + (params.toString() ? '?' + params.toString() : '');
-    }
-
-    function parseHtml(html) {
-        return new DOMParser().parseFromString(html, 'text/html');
-    }
-
-    function extractGameUrls(doc) {
-        const urls = new Set();
-
-        doc.querySelectorAll('.game-container').forEach(container => {
-            const link =
-                container.querySelector('a.cover-link') ||
-                container.querySelector('.game-title')?.closest('a');
-
-            if (link?.href) urls.add(link.href);
-        });
-
-        return [...urls];
-    }
-
-function getTotalPages(doc) {
-    const nav = doc.querySelector('nav.navigation.pagination');
-    if (!nav) return 1;
-
-    let maxPage = 1;
-
-    nav.querySelectorAll('.page-numbers').forEach(el => {
-        const match = el.textContent.match(/\d+/);
-        if (match) {
-            const num = parseInt(match[0], 10);
-            if (num > maxPage) maxPage = num;
+        function parseHtml(html) {
+            return new DOMParser().parseFromString(html, 'text/html');
         }
-    });
 
-    return maxPage;
-}
+        function extractGameUrls(doc) {
+            const urls = new Set();
+
+            doc.querySelectorAll('.game-container').forEach(container => {
+                const link =
+                      container.querySelector('a.cover-link') ||
+                      container.querySelector('.game-title')?.closest('a');
+
+                if (link?.href) urls.add(link.href);
+            });
+
+            return [...urls];
+        }
+
+        function getTotalPages(doc) {
+            const nav = doc.querySelector('nav.navigation.pagination');
+            if (!nav) return 1;
+
+            let maxPage = 1;
+
+            nav.querySelectorAll('.page-numbers').forEach(el => {
+                const match = el.textContent.match(/\d+/);
+                if (match) {
+                    const num = parseInt(match[0], 10);
+                    if (num > maxPage) maxPage = num;
+                }
+            });
+
+            return maxPage;
+        }
 
 
-    function buildPageUrl(baseUrl, pageNumber) {
-        if (pageNumber === 1) return baseUrl;
+        function buildPageUrl(baseUrl, pageNumber) {
+            if (pageNumber === 1) return baseUrl;
 
-        const url = new URL(baseUrl);
+            const url = new URL(baseUrl);
 
-        // garante que o path termina com /
-        let path = url.pathname;
-        if (!path.endsWith('/')) path += '/';
+            // garante que o path termina com /
+            let path = url.pathname;
+            if (!path.endsWith('/')) path += '/';
 
-        path += `page/${pageNumber}/`;
-        url.pathname = path;
+            path += `page/${pageNumber}/`;
+            url.pathname = path;
 
-        return url.toString();
-    }
+            return url.toString();
+        }
 
         /* ===============================
            3️⃣ LÓGICA PRINCIPAL
            =============================== */
 
-    const baseUrl = buildFetchUrl();
-    if (!baseUrl) return;
+        const baseUrl = buildFetchUrl();
+        if (!baseUrl) return;
 
-    console.log('FIRST FETCH:', baseUrl);
+        console.log('FIRST FETCH:', baseUrl);
 
-    const firstRes = await fetch(baseUrl, { credentials: 'same-origin' });
-    const firstHtml = await firstRes.text();
-    const firstDoc = parseHtml(firstHtml);
+        const firstRes = await fetch(baseUrl, { credentials: 'same-origin' });
+        const firstHtml = await firstRes.text();
+        const firstDoc = parseHtml(firstHtml);
 
-    const totalPages = getTotalPages(firstDoc);
-    console.log('TOTAL PAGES:', totalPages);
+        const totalPages = getTotalPages(firstDoc);
+        console.log('TOTAL PAGES:', totalPages);
 
-    let finalDoc = firstDoc;
-    let chosenPage = 1;
+        let finalDoc = firstDoc;
+        let chosenPage = 1;
 
-    if (totalPages > 1) {
-        chosenPage = Math.floor(Math.random() * totalPages) + 1;
+        if (totalPages > 1) {
+            chosenPage = Math.floor(Math.random() * totalPages) + 1;
 
-        if (chosenPage !== 1) {
-            const pageUrl = buildPageUrl(baseUrl, chosenPage);
-            console.log('SECOND FETCH (RANDOM PAGE):', pageUrl);
+            if (chosenPage !== 1) {
+                const pageUrl = buildPageUrl(baseUrl, chosenPage);
+                console.log('SECOND FETCH (RANDOM PAGE):', pageUrl);
 
-            const res = await fetch(pageUrl, { credentials: 'same-origin' });
-            const html = await res.text();
-            finalDoc = parseHtml(html);
+                const res = await fetch(pageUrl, { credentials: 'same-origin' });
+                const html = await res.text();
+                finalDoc = parseHtml(html);
+            }
         }
-    }
 
-    const gameUrls = extractGameUrls(finalDoc);
+        const gameUrls = extractGameUrls(finalDoc);
 
-    console.log('CHOSEN PAGE:', chosenPage);
-    console.log('GAME URLS:', gameUrls);
-    console.log('TOTAL GAMES:', gameUrls.length);
+        console.log('CHOSEN PAGE:', chosenPage);
+        console.log('GAME URLS:', gameUrls);
+        console.log('TOTAL GAMES:', gameUrls.length);
 
-if (gameUrls.length > 0) {
-    const randomIndex = Math.floor(Math.random() * gameUrls.length);
-    let randomGame = gameUrls[randomIndex];
+        if (gameUrls.length > 0) {
+            const randomIndex = Math.floor(Math.random() * gameUrls.length);
+            let randomGame = gameUrls[randomIndex];
 
-    // 🔹 reaproveita os filtros usados no fetch
-    const baseQuery = new URL(baseUrl).search;
+            // 🔹 reaproveita os filtros usados no fetch
+            const baseQuery = new URL(baseUrl).search;
 
-    if (baseQuery) {
-        randomGame += (randomGame.includes('?') ? '&' : '?') + baseQuery.slice(1);
-    }
+            if (baseQuery) {
+                randomGame += (randomGame.includes('?') ? '&' : '?') + baseQuery.slice(1);
+            }
 
-    // 🔹 verifica se plataforma NÃO foi selecionada
-    const platformSelected =
-        document.querySelector('#platform')?.value || '';
+            // 🔹 verifica se plataforma NÃO foi selecionada
+            const platformSelected =
+                  document.querySelector('#platform')?.value || '';
 
-    if (!platformSelected) {
-        randomGame +=
-            (randomGame.includes('?') ? '&' : '?') +
-            'ignore_platform=true';
-    }
+            if (!platformSelected) {
+                randomGame +=
+                    (randomGame.includes('?') ? '&' : '?') +
+                    'ignore_platform=true';
+            }
 
-    console.log('🎲 Random game WITH FILTERS:', randomGame);
+            console.log('🎲 Random game WITH FILTERS:', randomGame);
 
-    window.location.href = randomGame;
-    return randomGame;
-}
- else {
-    alert('No games found with the selected filters.');
-    console.warn('No games found with the selected filters.');
-    return null;
-}
+            window.location.href = randomGame;
+            return randomGame;
+        }
+        else {
+            alert('No games found with the selected filters.');
+            console.warn('No games found with the selected filters.');
+            return null;
+        }
 
     }
     // Observa DOM
@@ -967,24 +1203,32 @@ if (gameUrls.length > 0) {
         const params = new URLSearchParams(window.location.search);
         const ignorePlatform = params.get('ignore_platform') === 'true';
 
-    const platformSelect = document.querySelector('#platform');
+        const platformSelect = document.querySelector('#platform');
 
-    if (platformSelect) {
-        if (ignorePlatform) {
-            platformSelect.value = '';
-        } else {
-            let platform = params.get('platform') || null;
+        if (platformSelect) {
+            if (ignorePlatform) {
+                platformSelect.value = '';
+            } else {
+                let platform = params.get('platform') || null;
 
-            if (!platform) {
-                const match = window.location.pathname.match(/^\/repo\/([^\/]+)(\/|$)/);
-                if (match && !match[1].startsWith('page')) {
-                    platform = match[1];
+                if (!platform) {
+                    const match = window.location.pathname.match(/^\/repo\/([^\/]+)(\/|$)/);
+                    if (match && !match[1].startsWith('page')) {
+                        platform = match[1];
+                    }
+                }
+
+                if (platform) {
+                    const exists = [...platformSelect.options].some(
+                        opt => opt.value === platform
+                    );
+
+                    platformSelect.value = exists ? platform : '';
+                } else {
+                    platformSelect.value = '';
                 }
             }
-
-            platformSelect.value = platform || '';
         }
-    }
 
         // Outros selects
         ['genre', 'language', 'region'].forEach(id => {

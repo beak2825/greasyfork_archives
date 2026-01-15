@@ -4,7 +4,7 @@
 // @namespace    https://spotubedl.com/
 // @supportURL   https://spotubedl.com/
 // @homepageURL  https://spotubedl.com/
-// @version      1.3
+// @version      1.5
 // @author       afkarxyz
 // @match        *://open.spotify.com/*
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGJjN2QiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMyAxN2EzIDMgMCAxIDAgNiAwYTMgMyAwIDAgMCAtNiAwIiAvPjxwYXRoIGQ9Ik05IDE3di0xM2gxMHY4IiAvPjxwYXRoIGQ9Ik05IDhoMTAiIC8+PHBhdGggZD0iTTE5IDE2djYiIC8+PHBhdGggZD0iTTIyIDE5bC0zIDNsLTMgLTMiIC8+PC9zdmc+
@@ -150,6 +150,25 @@ style.innerText = `
 	transform: translateY(-50%) translateX(0);
 }
 
+[data-testid='action-bar-row'] .spotubedl-btn.artist-page .spotubedl-tooltip {
+	left: calc(100% + 12px) !important;
+	right: auto !important;
+	transform: translateY(-50%) translateX(-10px) !important;
+}
+
+[data-testid='action-bar-row'] .spotubedl-btn.artist-page .spotubedl-tooltip::before {
+	left: -4px !important;
+	right: auto !important;
+	border-left: 1px solid rgba(0, 188, 125, 0.3) !important;
+	border-bottom: 1px solid rgba(0, 188, 125, 0.3) !important;
+	border-right: none !important;
+	border-top: none !important;
+}
+
+[data-testid='action-bar-row'] .spotubedl-btn.artist-page:hover .spotubedl-tooltip {
+	transform: translateY(-50%) translateX(0) !important;
+}
+
 `;
 
 document.body.appendChild(style);
@@ -169,21 +188,21 @@ function addButtonsToTracks() {
 			button.onclick = async function (e) {
 				e.preventDefault();
 				e.stopPropagation();
-				
+
 				let trackUrl = null;
-				
+
 				const trackLink = track.querySelector('a[href*="/track/"]');
 				if (trackLink && trackLink.href) {
 					trackUrl = trackLink.href;
 				}
-				
+
 				if (!trackUrl) {
 					const uri = track.getAttribute('data-uri') || track.getAttribute('data-spotify-uri');
 					if (uri) {
 						trackUrl = 'https://open.' + uri.replace(':', '.com/').replace(':', '/');
 					}
 				}
-				
+
 				if (!trackUrl) {
 					const allLinks = track.querySelectorAll('a[href]');
 					for (const link of allLinks) {
@@ -193,12 +212,12 @@ function addButtonsToTracks() {
 						}
 					}
 				}
-				
+
 				if (trackUrl) {
 					download(trackUrl);
 					return;
 				}
-				
+
 				const btn = track.querySelector('[data-testid="more-button"]');
 				if (btn) {
 					btn.click();
@@ -223,18 +242,31 @@ function addButtonToActionBar() {
 	const actionBarRow = document.querySelector('[data-testid="action-bar-row"]:last-of-type');
 
 	if (actionBarRow && !actionBarRow.hasButton) {
-		const isPlaylist = window.location.href.includes('/playlist/');
-		const isAlbum = window.location.href.includes('/album/');
-		const isTrack = window.location.href.includes('/track/');
+		const currentUrl = window.location.href;
 		
-		const tooltipText = isPlaylist ? 'Download Playlist' : isAlbum ? 'Download Album' : isTrack ? 'Download Track' : 'Download Track';
+		let tooltipText = 'Download Track';
+		let pageClass = '';
+
+		if (/\/artist\/[a-zA-Z0-9]+/.test(currentUrl)) {
+			tooltipText = 'View Artist';
+			pageClass = 'artist-page';
+		} else if (/\/playlist\/[a-zA-Z0-9]+/.test(currentUrl)) {
+			tooltipText = 'Download Playlist';
+			pageClass = 'playlist-page';
+		} else if (/\/album\/[a-zA-Z0-9]+/.test(currentUrl)) {
+			tooltipText = 'Download Album';
+			pageClass = 'album-page';
+		} else if (/\/track\/[a-zA-Z0-9]+/.test(currentUrl)) {
+			tooltipText = 'Download Track';
+			pageClass = 'track-page';
+		}
 
 		const button = addButton(actionBarRow, tooltipText);
-		
-		if (isTrack) {
-			button.classList.add('track-page');
+
+		if (pageClass) {
+			button.classList.add(pageClass);
 		}
-		
+
 		button.onclick = function () {
 			download(window.location.href);
 		}
@@ -245,6 +277,7 @@ function download(link) {
 	const trackMatch = link.match(/spotify\.com\/track\/([a-zA-Z0-9]+)/);
 	const albumMatch = link.match(/spotify\.com\/album\/([a-zA-Z0-9]+)/);
 	const playlistMatch = link.match(/spotify\.com\/playlist\/([a-zA-Z0-9]+)/);
+	const artistMatch = link.match(/spotify\.com\/artist\/([a-zA-Z0-9]+)/);
 
 	let targetUrl = BASE_URL;
 
@@ -254,6 +287,8 @@ function download(link) {
 		targetUrl = `${BASE_URL}/userscript/album/${albumMatch[1]}`;
 	} else if (playlistMatch) {
 		targetUrl = `${BASE_URL}/userscript/playlist/${playlistMatch[1]}`;
+	} else if (artistMatch) {
+		targetUrl = `${BASE_URL}/userscript/artist/${artistMatch[1]}`;
 	} else {
 		targetUrl = `${BASE_URL}/?link=${encodeURIComponent(link)}`;
 	}

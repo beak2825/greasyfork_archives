@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TwitterImg Downloader
 // @namespace    TypeNANA
-// @version      0.16
+// @version      0.17
 // @description  Add download button to Twitter image, and click to download the original image named by format.
 // @author       HY
 // @include      *://twitter.com/*
@@ -74,8 +74,9 @@
     }
 
     const setEditMargin = function (v) {
-        var vClass = v[0].parentElement.parentElement.className;
-        let vCss = `[class="` + vClass + `"] {margin-right: 35px !important;}`;
+        let classList = v[0].parentElement.parentElement.classList;
+        let vClass = "." + classList[0] + " ." + classList[classList.length-1];
+        let vCss = vClass + " { margin-right: 35px !important; }";
 
         const style = document.createElement('style');
         style.textContent = vCss;

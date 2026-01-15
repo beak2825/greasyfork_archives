@@ -4,7 +4,7 @@
 // @description 支援將 ChatGPT/Gemini/Grok/Claude 對話匯出至 MD/JSON/HTML，並內建快捷指令工具箱。
 // @description:en Export ChatGPT/Gemini/Grok/Claude chats to MD/JSON/HTML and use quick prompt templates.
 // @namespace   happy-toolman
-// @version     2026-01-07.002
+// @version     2026-01-14.001
 // @author      快樂工具人 (Haoming Lu)
 // @icon        https://raw.githubusercontent.com/luhaoming/userscripts/main/assets/logo.png
 // @match       *://chatgpt.com/*
@@ -29,7 +29,7 @@
 (function() {
 'use strict';
 
-const VERSION = '2026-01-07.002';
+const VERSION = '2026-01-14.001';
 
 // Trusted Types Policy
 let trustedPolicy = null;
@@ -554,13 +554,38 @@ function createUI() {
   const menu = document.createElement('div');
   menu.className = 'aitk-menu';
 
+  // ----------- [新增] 低調的頂部資訊列 -----------
+  const header = el('div');
+  // 設定樣式：左右分散對齊、字體縮小、淺灰色
+  header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:6px 12px 2px 12px;font-size:10px;color:#aaa;border-bottom:1px solid #f5f5f5;';
+
+  // 左邊：顯示版本號 (低調確認是否有更新)
+  const verInfo = el('span', '', 'v' + VERSION);
+  
+  // 右邊：小小的 (?)
+  const helpLink = el('a', '', '(?)');
+  helpLink.href = 'https://greasyfork.org/zh-TW/scripts/561579';
+  helpLink.target = '_blank'; // 開新分頁
+  helpLink.title = '前往 GreasyFork 首頁 / 檢查更新'; // 滑鼠停更留時顯示提示
+  // 讓它看起來不像連結，而像個圖示
+  helpLink.style.cssText = 'text-decoration:none;color:#aaa;cursor:pointer;font-weight:bold;transition:color .2s;';
+  
+  // 滑鼠移過去變深色
+  helpLink.onmouseover = () => helpLink.style.color = '#666';
+  helpLink.onmouseout = () => helpLink.style.color = '#aaa';
+
+  header.appendChild(verInfo);
+  header.appendChild(helpLink);
+  menu.appendChild(header);
+  // ----------- [新增] 結束 -----------
+
   // Helper function to create elements
-  const el = (tag, className, text) => {
+  function el(tag, className, text) {
     const e = document.createElement(tag);
     if (className) e.className = className;
     if (text) e.textContent = text;
     return e;
-  };
+  }
 
   // Export section
   const exportSection = el('div', 'aitk-menu-section', i18n.t('menu.export'));

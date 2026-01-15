@@ -2,7 +2,7 @@
 // @name            Open in Murglar
 // @name:ru         Открыть в Murglar
 // @namespace       http://tampermonkey.net/
-// @version         1.2
+// @version         1.3
 // @description     Adds a button to open the current page (if supported) in Murglar.
 // @description:ru  Добавляет кнопку для открытия текущей страницы (если она поддерживается) в Murglar.
 // @author          badmannersteam
@@ -20,6 +20,11 @@
 // @match           *://www.deezer.com/*
 // @match           *://deezer.com/*
 // @match           *://zvuk.com/*
+// @match           *://youtube.com/*
+// @match           *://www.youtube.com/*
+// @match           *://m.youtube.com/*
+// @match           *://music.youtube.com/*
+// @match           *://youtu.be/*
 // @grant           none
 // @license         MIT
 // @downloadURL https://update.greasyfork.org/scripts/547150/Open%20in%20Murglar.user.js
@@ -50,6 +55,7 @@ const icon = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20v
     const soundcloud = [/.*/];
     const deezer = [/^.*\/artist\/.*/, /^.*\/album\/.*/, /^.*\/playlist\/.*/, /^.*\/track\/.*/];
     const zvuk = [/^\/track\//, /^\/release\//, /^\/playlist\//, /^\/artist\//];
+    const youtube = [/^\/watch/, /^\/podcast\//, /^\/album\//, /^\/playlist/, /^\/browse\//, /^\/channel\//];
 
     const patternsByHost = {
         'vk.com': vk,
@@ -69,7 +75,13 @@ const icon = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20v
         'deezer.com': deezer,
         'www.deezer.com': deezer,
 
-        'zvuk.com': zvuk
+        'zvuk.com': zvuk,
+
+        'youtube.com': youtube,
+        'www.youtube.com': youtube,
+        'm.youtube.com': youtube,
+        'music.youtube.com': youtube,
+        'youtu.be': youtube
     };
 
     function shouldDisplayButton() {
@@ -84,7 +96,7 @@ const icon = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20v
     Object.assign(openButton.style, {
         position: 'fixed',
         top: '20px',
-        right: '120px',
+        right: '250px',
         zIndex: '9999',
         width: '36px',
         height: '36px',

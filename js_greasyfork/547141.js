@@ -2,7 +2,7 @@
 // @name        YouTube Localhost Ad-Free Player
 // @namespace   Violentmonkey Scripts
 // @match       *://www.youtube.com/*
-// @version     1.4.4
+// @version     1.4.5
 // @author      CyrilSLi
 // @description Play YouTube videos ad-free using an iframe embed served from localhost
 // @license     MIT
@@ -13,13 +13,17 @@
 if (window.top !== window.self) {
     return;
 }
+const liveURLFormat = window.location.pathname.match(/(\/live\/)([0-9A-Za-z\-_]{11})/);
+if (liveURLFormat) {
+    window.location.href = `https://www.youtube.com/watch?v=${liveURLFormat[2]}`;
+}
 
 const frameId = "userscriptLocalhostFrame";
 const embedURL = "https://www.youtube-nocookie.com/embed/%v?playlist=%p&autoplay=1&start=%start&enablejsapi=1";
 const frameSrc = "http://localhost:8823?url=%url&paused=%paused";
 const containerIds = ["#player-container-inner", "#full-bleed-container", ".ytdMiniplayerPlayerContainerHost"];
 const runFreq = 200;
-const htmlVersion = "// @version 1.4.4".replace("// @version ", "").trim(); // Automatically replaced during build
+const htmlVersion = "// @version 1.4.5".replace("// @version ", "").trim(); // Automatically replaced during build
 
 const urlParams = new URLSearchParams(window.location.search);
 let firstRunResume = parseInt((urlParams.get("t") || urlParams.get("start"))?.replace("s", "")) || 0;

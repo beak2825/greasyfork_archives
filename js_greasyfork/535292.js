@@ -2,7 +2,7 @@
 // @name         FF Scouter V2
 // @namespace    Violentmonkey Scripts
 // @match        https://www.torn.com/*
-// @version      2.70
+// @version      2.71
 // @author       rDacted, Weav3r, xentac
 // @description  Shows the expected Fair Fight score against targets and faction war status
 // @grant        GM_xmlhttpRequest
@@ -18,7 +18,7 @@
 // @updateURL https://update.greasyfork.org/scripts/535292/FF%20Scouter%20V2.meta.js
 // ==/UserScript==
 
-const FF_VERSION = "2.70";
+const FF_VERSION = "2.71";
 const API_INTERVAL = 30000;
 const FF_TARGET_STALENESS = 24 * 60 * 60 * 1000; // Refresh the target list every day
 const TARGET_KEY = "ffscouterv2-targets";
@@ -175,6 +175,14 @@ if (!singleton) {
                 background-color: var(--ff-bg-color);
                 border: 1px solid var(--ff-border-color);
                 border-radius: 5px;
+            }
+
+            .ff-settings-accordion summary {
+                cursor: pointer;
+            }
+
+            .ff-settings-accordion div.ff-settings-body {
+              margin-top: 10px;
             }
 
             .ff-settings-header {
@@ -878,10 +886,6 @@ if (!singleton) {
                     expiry: expiry,
                     player_id: result.player_id,
                   };
-                  rD_setValue(
-                    "ffscouterv2-" + result.player_id,
-                    JSON.stringify(cacheObj),
-                  );
                   cachedObjs.push(cacheObj);
                 } else {
                   let cacheObj = {
@@ -892,10 +896,6 @@ if (!singleton) {
                     bs_estimate_human: result.bs_estimate_human,
                     player_id: result.player_id,
                   };
-                  rD_setValue(
-                    "ffscouterv2-" + result.player_id,
-                    JSON.stringify(cacheObj),
-                  );
                   cachedObjs.push(cacheObj);
                 }
               }
@@ -2217,6 +2217,7 @@ if (!singleton) {
 
     // Create main content div
     const content = document.createElement("div");
+    content.className = "ff-settings-body";
 
     // API Key Explanation
     const apiExplanation = document.createElement("div");

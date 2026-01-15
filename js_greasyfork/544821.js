@@ -3,7 +3,7 @@
 // @namespace   bluearchive-torment
 // @match       https://bluearchive-torment.netlify.app/*
 // @grant       none
-// @version     1.4
+// @version     1.5
 // @author      u/aisjsjdjdjskwkw
 // @license     MIT
 // @description Translate BA Torment to English
@@ -13,23 +13,46 @@
 
 // Full strings to replace
 const strings = {
+	"데이터를 불러오는 중...": "Loading data...",
 	"로딩 중...": "Loading...",
 
 	// Sidebar
-	"블루 아카이브 파티 찾기": "Blue Archive Team Finder",
+	"블루 아카이브 총력전/대결전 도우미": "Blue Archive TA/GA Utility",
 	"메뉴": "Menu",
 	"홈": "Home",
+	"파티 찾기 & 요약": "Team Search & Raid Summary",
+	"통계": "Statistics",
 	"영상 분석": "Video Analysis",
 	"계산기": "Calculator",
 	"점수 계산기": "Score Calculator",
 
 	// Home
+	"시즌별 파티 정보와 요약을 볼 수 있어요.": "View teams and summaries for each raid season",
+	"전체 총력전 추이와 캐릭터별 통계를 볼 수 있어요.": "View total assault and student usage statistics",
+	"Youtube에 올라온 클리어 영상들이에요.": "View clear videos uploaded to YouTube",
+	"아로나에게 궁금한 것을 물어보세요!": "Ask Arona anything you're curious about!",
+	"총력전, 대결전, 종합전술시험 점수를 계산할 수 있어요.": "Calculate scores for TA/GA and JFD",
+	"총력전/대결전 데이터는": "TA/GA data sourced from",
+	"인게임 데이터는": "Game data sourced from",
+	"에서 가져왔어요.": "",
+
+	// Party
 	"파티 찾기": "Search",
-	"파티 Filter": "Team Filters",
-	"필터 Reset": "Reset Filters",
+	"파티 Filter": "Team Filter",
+	"필터 프리셋": "Filter Preset",
+	"현재 필터를 복사하거나, 저장된 프리셋을 붙여넣어 불러올 수 있습니다.": "Copy the current filter or paste a saved preset to load it",
+	"복사": "Copy",
+	"다운로드": "Download",
+	"불러오기": "Import",
 	"점수": "Score",
-	"파티 수": "Number of teams",
+	"전체": "Any",
+	" 범위": " Filter",
+	"초기화": "Reset",
+	"적용": "Apply",
 	"파티": " Teams",
+	"점수 이동": "Score Search",
+	"점수로 이동": "Go to score",
+	"이동": "Go",
 	"포함할 ": "Include",
 	"내 캐릭터": " Students",
 	"캐릭터를 선택하세요": "Select a student",
@@ -53,9 +76,7 @@ const strings = {
 	"요약": "Summary (Torment)",
 	"요약 (루나틱)": "Summary (Lunatic)",
 	"영상 분석 페이지로 이동": "Go to Video Analysis",
-	"Platinum 클리어 비율": "Platinum Clears",
-	"Platinum 컷": "Platinum Cutoffs",
-	"파란색은 총력전 점수, 주황색은 현재 속성 점수예요.": "(GA only) Blue is the total score, orange is the selected armour type's score",
+	"클리어": "Clears",
 	"등": (e) => { e.after(e.previousSibling); return "#" },
 	"필수 보유 학생": "Human Rights",
 	"70% 이상의 플래티넘 유저가 본인 캐릭터를 사용했어요. 없으면 클리어나 경쟁이 힘들 수 있어요.": "Over 70% of platinum clears owned these students. Without them, clearing or speedrunning may be difficult.",
@@ -77,10 +98,44 @@ const strings = {
 	"사용률 (%)": "Usage (%)",
 	"캐릭터 성장 통계": "Student Investment Statistics",
 
+	// Statistics
+	"전용무기 4성 + LUNATIC 난이도 이후의 통계에요.": "These statistics are from after the release of UE4 and Lunatic.",
+
+	"캐릭터 상세 분석": "Detailed Student Statistics",
+	"학생을 선택하세요": "Select a student",
+	"분석할 캐릭터를 선택해주세요.": "Select a student to view statistics",
+	"종합": "Overall Rank",
+	"STRIKER": "Striker Rank",
+	"SPECIAL": "Special Rank",
+	"내": "",
+	"사용": "Uses",
+	"조력자": "Borrowed",
+	"시너지 TOP 3": "Top 3 Synergies",
+	"성급 분포": "Star Distribution",
+	" 기준": (e) => { e.after(e.previousSibling); return "Usage in " },
+	"공격타입/보스별 사용 현황": "Usage",
+	"폭발": "Red",
+	"관통": "Yellow",
+	"신비": "Blue",
+	"진동": "Purple",
+	"LUNATIC": "Lunatic",
+	"사용수: ": "Uses: ",
+	"사용률: ": "Usage: ",
+	"사용수:": "Uses:",
+	"클리어수:": "Clears:",
+	"사용률:": "Usage:",
+
+	"LUNATIC 클리어 수": "Lunatic Clears",
+	"클리어 수": "Clears",
+	" : ": ": ",
+
+	"STRIKER 사용률 TOP 5": "Top 5 Most Used Strikers",
+	"SPECIAL 사용률 TOP 5": "Top 5 Most Used Specials",
+	"조력자 사용률 TOP 3": "Top 3 Most Borrowed",
+
 	// Video Analysis
 	"검색 결과: 총 ": "Search Results: ",
 	"개": " videos",
-	"전체": "All Raids",
 	"분석 큐 상태": "Analysis Queue",
 	"영상 분석은 AI로 1차 처리된 다음 수동으로 2차 확인을 하고 있어요.": "Video analysis is first done by AI then manually verified.",
 	"실패": "Failed",
@@ -168,7 +223,7 @@ const words = [
 	[/In (\d+)/, "Top $1"],
 	[/(\d)PT(\+?)/, "$1T$2"],
 
-	[/(\d+)개 이상의 총력전 영상이 준비되어 있어요./, "Over $1 Total Assault battle videos are available."],
+	[/(\d+)개 이상의 총력전 영상이 준비되어 있어요./, "Over $1 videos are available."],
 
 	["5★ 무기0", "5★"],
 	["5★ 무기", "UE"],
@@ -451,20 +506,27 @@ const words = [
 // DOM transformations
 // [css selector]: (e: Element) => {}
 const transforms = {
-	// Home/Search: Score filters
+	// Party/Search: Filter buttons
+	"button[title='필터 프리셋']": (e) => e.title = "Filter Preset",
+	"button[title='필터 초기화']": (e) => e.title = "Reset Filters",
+
+	// Party/Search: Score filters
 	"input[placeholder='최소'": (e) => e.placeholder = "Minimum",
 	"input[placeholder='최대'": (e) => e.placeholder = "Maximum",
 
-	// Home/Search: Student search boxes
+	// Party/Search: Score search
+	"input[placeholder='점수 입력']": (e) => e.placeholder = "Enter score",
+
+	// Party/Search: Student search boxes
 	"input[placeholder='검색...']": (e) => (e.placeholder = "Search...") && transliteratify(e),
 
-	// Home/Search: make search results display limit text fit
+	// Party/Search: make search results display limit text fit
 	".w-23": (e) => e.style.width = "calc(var(--spacing)*26)",
 
-	// Home/Summary/Student Investment Statistics: Student search box
+	// Party/Summary/Student Investment Statistics: Student search box
 	"input[placeholder='학생 검색...']": (e) => (e.placeholder = "Search...") && transliteratify(e),
 
-	// Home/Summary/Student Investment Statistics: translate investments
+	// Party/Summary/Student Investment Statistics: translate investments
 	"span[class^='font-medium text-sm ']": (e) => new MutationObserver(() => {
 		const [stars, text, ue] = e.childNodes
 		if (ue.textContent === "0") {
@@ -477,6 +539,10 @@ const transforms = {
 			if (text.textContent !== "UE") text.textContent = "UE"
 		}
 	}).observe(e, { characterData: true, subtree: true }),
+
+	// Statistics: Lunatic Clears tooltip label
+	// This particular label wants special treatment
+	"p.recharts-tooltip-label": (e) => new MutationObserver(() => translate(e)).observe(e, { characterData: true, subtree: true }),
 
 	// Video Analysis: YouTube Search button
 	"a[title='YouTube에서 검색']": (e) => e.title = "Search on YouTube",
@@ -574,10 +640,10 @@ function translateTree(root) {
 }
 
 function translate(text) {
-	if (text.parentElement.tagName === "SCRIPT") return
+	if (text.parentElement?.tagName === "SCRIPT") return
 
 	// Ignore announcement banner
-	if (text.parentElement.closest("div[role=alert]")) return
+	if (text.parentElement?.closest?.("div[role=alert]")) return
 
 	let content = text.textContent
 	const translation = strings[content]

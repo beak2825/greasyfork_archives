@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sofascore Chances
 // @namespace    https://greasyfork.org/users/21515
-// @version      0.1.3
+// @version      0.2.0
 // @description  Replace betting odds with chances calculated by the odds
 // @author       CennoxX
 // @homepage     https://twitter.com/CennoxX
@@ -19,11 +19,20 @@
     var getChance = (odds, all) => Math.round((1 / odds) / all * 100 ) + " %";
     var getNodeValue = (node) => Number(node.innerHTML);
     setInterval(()=>{
-        [...document.querySelectorAll(".odds-card, .d_flex.gap_sm:nth-child(2)")].forEach(i=>{
-            var homeNode = i.querySelector("div:nth-child(1) > div > .textStyle_display\\.micro");
-            var tieNode = i.querySelector("div:nth-child(2) > div > .textStyle_display\\.micro");
-            var awayNode = i.querySelector("div:nth-child(3) > div > .textStyle_display\\.micro");
-            if (!homeNode || !tieNode || !awayNode || homeNode.innerHTML.includes("%")) return;
+        var result = [];
+        var selector = "span.textStyle_display\\.micro";
+        document.querySelectorAll(selector).forEach(span => {
+            for (var el = span.parentElement; el; el = el.parentElement) {
+                var matches = el.querySelectorAll(selector);
+                if (matches.length == 3) {
+                    result.push([...matches]);
+                    break;
+                }
+            }
+        });
+        result.forEach(i=>{
+            const [homeNode, tieNode, awayNode] = i;
+            if (homeNode.innerHTML.includes("%")) return;
             var home = getNodeValue(homeNode);
             var tie = getNodeValue(tieNode);
             var away = getNodeValue(awayNode);

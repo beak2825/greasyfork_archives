@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Preview Trip Details on bustimes.org
+// @name         bustimes.org - Hover to Preview Trip Details
 // @namespace    https://bustimes.org/
 // @version      1.0
 // @description  Preview trip information by hovering over block links on the detailed view of bustimes.org timetables
 // @match        https://bustimes.org/services/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/544292/Preview%20Trip%20Details%20on%20bustimesorg.user.js
-// @updateURL https://update.greasyfork.org/scripts/544292/Preview%20Trip%20Details%20on%20bustimesorg.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/544292/bustimesorg%20-%20Hover%20to%20Preview%20Trip%20Details.user.js
+// @updateURL https://update.greasyfork.org/scripts/544292/bustimesorg%20-%20Hover%20to%20Preview%20Trip%20Details.meta.js
 // ==/UserScript==
 
 (function () {

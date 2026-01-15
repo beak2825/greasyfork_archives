@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Market - Auto-Scraper
 // @namespace    http://tampermonkey.net/
-// @version      1.9
+// @version      1.9.2025-01-14
 // @match        *://www.torn.com/page.php?sid=ItemMarket*
 // @grant        none
 // @license      no licence, private https://greasyfork.org/en/scripts/561439
