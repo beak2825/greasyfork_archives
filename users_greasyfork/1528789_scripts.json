@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553183,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T08:43:07.000Z",
+    "code_updated_at": "2025-10-20T08:43:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528789,
+        "name": "Fakir Shah",
+        "created_at": "2025-10-20T08:40:13.000Z",
+        "url": "https://greasyfork.org/users/1528789-fakir-shah"
+      }
+    ],
+    "name": "YouTube Bulk Playlist Adder",
+    "description": "Bulk add videos to YouTube playlist from URL list",
+    "url": "https://greasyfork.org/scripts/553183-youtube-bulk-playlist-adder",
+    "code_url": "https://update.greasyfork.org/scripts/553183/YouTube%20Bulk%20Playlist%20Adder.user.js",
+    "code_size": 7073,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

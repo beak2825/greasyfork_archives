@@ -1,8 +1,8 @@
 [
   {
     "id": 557678,
-    "daily_installs": 0,
-    "total_installs": 13,
+    "daily_installs": 1,
+    "total_installs": 16,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -28,6 +28,72 @@
     "code_size": 51803,
     "license": "MIT License",
     "version": "1.0.2-beta-build1764699797247",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553119,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-19T15:40:02.000Z",
+    "code_updated_at": "2025-10-19T15:40:02.000Z",
+    "namespace": "https://github.com/MakotoArai-CN/2048-ai-solver",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 987711,
+        "name": "MakotoArai-CN",
+        "created_at": "2022-11-25T10:01:29.000Z",
+        "url": "https://greasyfork.org/users/987711-makotoarai-cn"
+      }
+    ],
+    "name": "2048 AI Solver",
+    "description": "使用 WebAssembly 加速的 2048 AI求解器，支持合成丘丘王",
+    "url": "https://greasyfork.org/scripts/553119-2048-ai-solver",
+    "code_url": "https://update.greasyfork.org/scripts/553119/2048%20AI%20Solver.user.js",
+    "code_size": 27258,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552026,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T08:30:21.000Z",
+    "code_updated_at": "2025-12-02T15:16:36.000Z",
+    "namespace": "https://github.com/MakotoArai-CN/mikumiku-share",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 987711,
+        "name": "MakotoArai-CN",
+        "created_at": "2022-11-25T10:01:29.000Z",
+        "url": "https://greasyfork.org/users/987711-makotoarai-cn"
+      }
+    ],
+    "name": "MikuMiku-share - 链接转为二维码",
+    "description": "把鼠标可以点击的链接转为二维码。",
+    "url": "https://greasyfork.org/scripts/552026-mikumiku-share-%E9%93%BE%E6%8E%A5%E8%BD%AC%E4%B8%BA%E4%BA%8C%E7%BB%B4%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/552026/MikuMiku-share%20-%20%E9%93%BE%E6%8E%A5%E8%BD%AC%E4%B8%BA%E4%BA%8C%E7%BB%B4%E7%A0%81.user.js",
+    "code_size": 210122,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.3.0",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"

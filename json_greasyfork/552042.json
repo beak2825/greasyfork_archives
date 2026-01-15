@@ -1,0 +1,59 @@
+{
+  "id": 552042,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-09T12:35:16.000Z",
+  "code_updated_at": "2025-10-09T12:35:16.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1524446,
+      "name": "Bently21",
+      "created_at": "2025-10-09T12:29:52.000Z",
+      "url": "https://greasyfork.org/users/1524446-bently21",
+      "scripts": [
+        {
+          "id": 552042,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-09T12:35:16.000Z",
+          "code_updated_at": "2025-10-09T12:35:16.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Restore Muscle Memory",
+          "description": "Removes the MiniPlayer Button from youtube's right click menu on a video",
+          "url": "https://greasyfork.org/scripts/552042-restore-muscle-memory",
+          "code_url": "https://update.greasyfork.org/scripts/552042/Restore%20Muscle%20Memory.user.js",
+          "code_size": 830,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Restore Muscle Memory",
+  "description": "Removes the MiniPlayer Button from youtube's right click menu on a video",
+  "url": "https://greasyfork.org/scripts/552042-restore-muscle-memory",
+  "code_url": "https://update.greasyfork.org/scripts/552042/Restore%20Muscle%20Memory.user.js",
+  "code_size": 830,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

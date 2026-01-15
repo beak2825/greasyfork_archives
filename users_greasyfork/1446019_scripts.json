@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552220,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T03:41:15.000Z",
+    "code_updated_at": "2025-10-11T05:28:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446019,
+        "name": "dami16z",
+        "created_at": "2025-03-15T13:01:54.000Z",
+        "url": "https://greasyfork.org/users/1446019-dami16z"
+      }
+    ],
+    "name": "通用整页高清截图（增强版 - 修复 oklch）",
+    "description": "为任意网页生成\"整页截图\"按钮；自动识别主滚动容器并滚动触发懒加载，高清渲染导出 PNG；支持跨域图片与本地 file:// 截图；兼容 SPA 路由变更；修复 oklch/oklab 等现代颜色问题。",
+    "url": "https://greasyfork.org/scripts/552220-%E9%80%9A%E7%94%A8%E6%95%B4%E9%A1%B5%E9%AB%98%E6%B8%85%E6%88%AA%E5%9B%BE-%E5%A2%9E%E5%BC%BA%E7%89%88-%E4%BF%AE%E5%A4%8D-oklch",
+    "code_url": "https://update.greasyfork.org/scripts/552220/%E9%80%9A%E7%94%A8%E6%95%B4%E9%A1%B5%E9%AB%98%E6%B8%85%E6%88%AA%E5%9B%BE%EF%BC%88%E5%A2%9E%E5%BC%BA%E7%89%88%20-%20%E4%BF%AE%E5%A4%8D%20oklch%EF%BC%89.user.js",
+    "code_size": 19178,
+    "license": "MIT License",
+    "version": "2.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

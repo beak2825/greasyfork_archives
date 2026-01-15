@@ -1,0 +1,33 @@
+{
+  "id": 554150,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-29T22:09:38.000Z",
+  "code_updated_at": "2025-12-23T14:21:43.000Z",
+  "namespace": "https://github.com/nate-kean/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521635,
+      "name": "James River Data Team",
+      "created_at": "2025-10-02T14:59:09.000Z",
+      "url": "https://greasyfork.org/users/1521635-james-river-data-team"
+    }
+  ],
+  "name": "Assign Interaction: warn for calls/texts if number not present",
+  "description": "Warn if you try to assign certain interactions on a profile that doesn't have a phone number.",
+  "url": "https://greasyfork.org/scripts/554150-assign-interaction-warn-for-calls-texts-if-number-not-present",
+  "code_url": "https://update.greasyfork.org/scripts/554150/Assign%20Interaction%3A%20warn%20for%20callstexts%20if%20number%20not%20present.user.js",
+  "code_size": 2985,
+  "license": "MIT License",
+  "version": "20251223",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

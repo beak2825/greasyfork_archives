@@ -1,0 +1,59 @@
+{
+  "id": 557785,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-03T12:08:00.000Z",
+  "code_updated_at": "2025-12-06T11:37:49.000Z",
+  "namespace": "https://space.bilibili.com/12309490",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 698000,
+      "name": "WinTP",
+      "created_at": "2020-10-24T15:31:17.000Z",
+      "url": "https://greasyfork.org/users/698000-wintp",
+      "scripts": [
+        {
+          "id": 557785,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-03T12:08:00.000Z",
+          "code_updated_at": "2025-12-06T11:37:49.000Z",
+          "namespace": "https://space.bilibili.com/12309490",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站直播快捷键增强",
+          "description": "允许你使用一系列快捷键进行简单的直播交互",
+          "url": "https://greasyfork.org/scripts/557785-b%E7%AB%99%E7%9B%B4%E6%92%AD%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/557785/B%E7%AB%99%E7%9B%B4%E6%92%AD%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 2600,
+          "license": "MIT License",
+          "version": "0.3.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站直播快捷键增强",
+  "description": "允许你使用一系列快捷键进行简单的直播交互",
+  "url": "https://greasyfork.org/scripts/557785-b%E7%AB%99%E7%9B%B4%E6%92%AD%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/557785/B%E7%AB%99%E7%9B%B4%E6%92%AD%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 2600,
+  "license": "MIT License",
+  "version": "0.3.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

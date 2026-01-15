@@ -1,0 +1,59 @@
+{
+  "id": 555204,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-11-08T16:26:53.000Z",
+  "code_updated_at": "2025-12-28T07:41:00.000Z",
+  "namespace": "https://stu.ityxb.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1384990,
+      "name": "helloyangy",
+      "created_at": "2024-10-23T09:19:17.000Z",
+      "url": "https://greasyfork.org/users/1384990-helloyangy",
+      "scripts": [
+        {
+          "id": 555204,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-11-08T16:26:53.000Z",
+          "code_updated_at": "2025-12-28T07:41:00.000Z",
+          "namespace": "https://stu.ityxb.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "传智教育答题脚本",
+          "description": "多源一致性+置信度、题目指纹增强、失败诊断面板；默认自动填入（可在配置中切换为仅提示）",
+          "url": "https://greasyfork.org/scripts/555204-%E4%BC%A0%E6%99%BA%E6%95%99%E8%82%B2%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/555204/%E4%BC%A0%E6%99%BA%E6%95%99%E8%82%B2%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 97415,
+          "license": "MIT License",
+          "version": "14.1-20251228",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "传智教育答题脚本",
+  "description": "多源一致性+置信度、题目指纹增强、失败诊断面板；默认自动填入（可在配置中切换为仅提示）",
+  "url": "https://greasyfork.org/scripts/555204-%E4%BC%A0%E6%99%BA%E6%95%99%E8%82%B2%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/555204/%E4%BC%A0%E6%99%BA%E6%95%99%E8%82%B2%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 97415,
+  "license": "MIT License",
+  "version": "14.1-20251228",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

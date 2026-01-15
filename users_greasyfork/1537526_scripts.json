@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555766,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T23:35:24.000Z",
+    "code_updated_at": "2025-11-14T00:05:42.000Z",
+    "namespace": "https://greasyfork.org/en/users/1537526-nugg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537526,
+        "name": "Nugg",
+        "created_at": "2025-11-13T22:25:51.000Z",
+        "url": "https://greasyfork.org/users/1537526-nugg"
+      }
+    ],
+    "name": "Nugg's SpeedRacer",
+    "description": "Racing script for Torn PDA. Helps you easily see the best race to join.",
+    "url": "https://greasyfork.org/scripts/555766-nugg-s-speedracer",
+    "code_url": "https://update.greasyfork.org/scripts/555766/Nugg%27s%20SpeedRacer.user.js",
+    "code_size": 5824,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

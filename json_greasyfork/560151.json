@@ -1,0 +1,59 @@
+{
+  "id": 560151,
+  "daily_installs": 1,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-25T05:12:28.000Z",
+  "code_updated_at": "2025-12-25T05:12:27.000Z",
+  "namespace": "chatgpt-antilag-turnprune-hardened-safe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1552231,
+      "name": "SydeWeiz GT",
+      "created_at": "2025-12-25T05:04:32.000Z",
+      "url": "https://greasyfork.org/users/1552231-sydeweiz-gt",
+      "scripts": [
+        {
+          "id": 560151,
+          "daily_installs": 1,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-25T05:12:28.000Z",
+          "code_updated_at": "2025-12-25T05:12:27.000Z",
+          "namespace": "chatgpt-antilag-turnprune-hardened-safe",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT Anti-Lag Safe Turn Pruner (Hardened + UI Protected)",
+          "description": "It functions as a anti-lag for slow computers that lag if the conversation gets too long.",
+          "url": "https://greasyfork.org/scripts/560151-chatgpt-anti-lag-safe-turn-pruner-hardened-ui-protected",
+          "code_url": "https://update.greasyfork.org/scripts/560151/ChatGPT%20Anti-Lag%20Safe%20Turn%20Pruner%20%28Hardened%20%2B%20UI%20Protected%29.user.js",
+          "code_size": 4816,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT Anti-Lag Safe Turn Pruner (Hardened + UI Protected)",
+  "description": "It functions as a anti-lag for slow computers that lag if the conversation gets too long.",
+  "url": "https://greasyfork.org/scripts/560151-chatgpt-anti-lag-safe-turn-pruner-hardened-ui-protected",
+  "code_url": "https://update.greasyfork.org/scripts/560151/ChatGPT%20Anti-Lag%20Safe%20Turn%20Pruner%20%28Hardened%20%2B%20UI%20Protected%29.user.js",
+  "code_size": 4816,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555656,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T20:17:53.000Z",
+    "code_updated_at": "2025-11-13T11:45:01.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 962705,
+        "name": "rrreddd",
+        "created_at": "2022-09-23T13:34:01.000Z",
+        "url": "https://greasyfork.org/users/962705-rrreddd"
+      }
+    ],
+    "name": "Bonk.io Perma Kick/Ban List",
+    "description": "Perma kick/ban list stored in cookies with auto enforcement and chat-based UI",
+    "url": "https://greasyfork.org/scripts/555656-bonk-io-perma-kick-ban-list",
+    "code_url": "https://update.greasyfork.org/scripts/555656/Bonkio%20Perma%20KickBan%20List.user.js",
+    "code_size": 23027,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

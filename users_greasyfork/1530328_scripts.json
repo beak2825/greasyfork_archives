@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553594,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-24T19:23:28.000Z",
+    "code_updated_at": "2025-10-24T19:23:28.000Z",
+    "namespace": "felixhummel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530328,
+        "name": "felixhummel",
+        "created_at": "2025-10-24T19:20:49.000Z",
+        "url": "https://greasyfork.org/users/1530328-felixhummel"
+      }
+    ],
+    "name": "Clean GitHub URLs",
+    "description": "Remove tab parameters from GitHub URLs",
+    "url": "https://greasyfork.org/scripts/553594-clean-github-urls",
+    "code_url": "https://update.greasyfork.org/scripts/553594/Clean%20GitHub%20URLs.user.js",
+    "code_size": 516,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

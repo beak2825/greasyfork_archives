@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557011,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-26T16:39:47.000Z",
+    "code_updated_at": "2025-11-27T04:15:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1541929,
+        "name": "NaBCberry",
+        "created_at": "2025-11-26T16:30:46.000Z",
+        "url": "https://greasyfork.org/users/1541929-nabcberry"
+      }
+    ],
+    "name": "SYSU在线教学平台助手",
+    "description": "中山大学在线教育平台心理线上课等课程自动跳转。等待页面加载完成后，首先点击播放按钮，检查目标值（播放进度），然后点击下一个视频按钮。若检测到“发表论坛帖子”则直接跳转到下一个活动",
+    "url": "https://greasyfork.org/scripts/557011-sysu%E5%9C%A8%E7%BA%BF%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/557011/SYSU%E5%9C%A8%E7%BA%BF%E6%95%99%E5%AD%A6%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4170,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

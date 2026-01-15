@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552881,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T07:41:35.000Z",
+    "code_updated_at": "2025-10-17T07:41:35.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1386658-openscript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1320727,
+        "name": "袁家乐",
+        "created_at": "2024-06-19T17:43:25.000Z",
+        "url": "https://greasyfork.org/users/1320727-%E8%A2%81%E5%AE%B6%E4%B9%90"
+      }
+    ],
+    "name": "好医生-视频与考试",
+    "description": "好医生课程视频倍速与跳过，考试自动答题。",
+    "url": "https://greasyfork.org/scripts/552881-%E5%A5%BD%E5%8C%BB%E7%94%9F-%E8%A7%86%E9%A2%91%E4%B8%8E%E8%80%83%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/552881/%E5%A5%BD%E5%8C%BB%E7%94%9F-%E8%A7%86%E9%A2%91%E4%B8%8E%E8%80%83%E8%AF%95.user.js",
+    "code_size": 20547,
+    "license": "MIT License",
+    "version": "1.6.4-20250927",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

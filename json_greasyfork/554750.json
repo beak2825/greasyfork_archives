@@ -1,0 +1,33 @@
+{
+  "id": 554750,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-04T14:26:02.000Z",
+  "code_updated_at": "2025-11-04T14:26:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 934123,
+      "name": "Akingeneye Benjamin",
+      "created_at": "2022-07-09T18:25:30.000Z",
+      "url": "https://greasyfork.org/users/934123-akingeneye-benjamin"
+    }
+  ],
+  "name": "YouTube Comments on side bar",
+  "description": "Swap positions and sizes of secondary div and comments section",
+  "url": "https://greasyfork.org/scripts/554750-youtube-comments-on-side-bar",
+  "code_url": "https://update.greasyfork.org/scripts/554750/YouTube%20Comments%20on%20side%20bar.user.js",
+  "code_size": 5707,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

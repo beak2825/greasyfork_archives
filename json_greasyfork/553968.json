@@ -1,0 +1,34 @@
+{
+  "id": 553968,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-28T14:13:17.000Z",
+  "code_updated_at": "2025-10-28T14:13:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "Hokej - Finsko (Tabulka zápasů)",
+  "description": "Rozklikne zápasy, vynechá zadané soutěže a vytvoří oddělené tabulky pro každou soutěž s LIVE odkazy",
+  "url": "https://greasyfork.org/scripts/553968-hokej-finsko-tabulka-z%C3%A1pas%C5%AF",
+  "code_url": "https://update.greasyfork.org/scripts/553968/Hokej%20-%20Finsko%20%28Tabulka%20z%C3%A1pas%C5%AF%29.user.js",
+  "code_size": 5405,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

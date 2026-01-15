@@ -93,8 +93,8 @@
         },
         {
           "id": 528706,
-          "daily_installs": 1,
-          "total_installs": 129,
+          "daily_installs": 0,
+          "total_installs": 131,
           "fan_score": "31.0",
           "good_ratings": 2,
           "ok_ratings": 1,
@@ -141,8 +141,8 @@
         },
         {
           "id": 541408,
-          "daily_installs": 0,
-          "total_installs": 20,
+          "daily_installs": 1,
+          "total_installs": 21,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
@@ -286,7 +286,7 @@
         {
           "id": 557427,
           "daily_installs": 0,
-          "total_installs": 4,
+          "total_installs": 5,
           "fan_score": "20.7",
           "good_ratings": 1,
           "ok_ratings": 0,

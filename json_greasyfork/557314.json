@@ -1,0 +1,59 @@
+{
+  "id": 557314,
+  "daily_installs": 1,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-29T11:51:10.000Z",
+  "code_updated_at": "2025-11-29T19:20:58.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542817,
+      "name": "coolbois g",
+      "created_at": "2025-11-29T11:20:18.000Z",
+      "url": "https://greasyfork.org/users/1542817-coolbois-g",
+      "scripts": [
+        {
+          "id": 557314,
+          "daily_installs": 1,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-29T11:51:10.000Z",
+          "code_updated_at": "2025-11-29T19:20:58.000Z",
+          "namespace": "",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Shockwave Player for Modern Browsers",
+          "description": "Play Shockwave content in modern browsers",
+          "url": "https://greasyfork.org/scripts/557314-shockwave-player-for-modern-browsers",
+          "code_url": "https://update.greasyfork.org/scripts/557314/Shockwave%20Player%20for%20Modern%20Browsers.user.js",
+          "code_size": 18122,
+          "license": null,
+          "version": "1.00-openbg",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Shockwave Player for Modern Browsers",
+  "description": "Play Shockwave content in modern browsers",
+  "url": "https://greasyfork.org/scripts/557314-shockwave-player-for-modern-browsers",
+  "code_url": "https://update.greasyfork.org/scripts/557314/Shockwave%20Player%20for%20Modern%20Browsers.user.js",
+  "code_size": 18122,
+  "license": null,
+  "version": "1.00-openbg",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

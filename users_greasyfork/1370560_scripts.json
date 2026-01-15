@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553877,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-27T17:10:46.000Z",
+    "code_updated_at": "2025-10-27T17:10:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1370560,
+        "name": "Dinis Madeira",
+        "created_at": "2024-09-20T10:28:51.000Z",
+        "url": "https://greasyfork.org/users/1370560-dinis-madeira"
+      }
+    ],
+    "name": "Snyk Auto SSO",
+    "description": "Automatically trigger SSO login",
+    "url": "https://greasyfork.org/scripts/553877-snyk-auto-sso",
+    "code_url": "https://update.greasyfork.org/scripts/553877/Snyk%20Auto%20SSO.user.js",
+    "code_size": 1650,
+    "license": "MIT License",
+    "version": "2025-05-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553238,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T20:12:52.000Z",
+    "code_updated_at": "2025-10-20T20:12:51.000Z",
+    "namespace": "https://WildPinkRice.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528981,
+        "name": "Wildpink Rice",
+        "created_at": "2025-10-20T18:20:28.000Z",
+        "url": "https://greasyfork.org/users/1528981-wildpink-rice"
+      }
+    ],
+    "name": "ChatGPT Chat Cloner",
+    "description": "Converts ChatGPT chat into copyable text.",
+    "url": "https://greasyfork.org/scripts/553238-chatgpt-chat-cloner",
+    "code_url": "https://update.greasyfork.org/scripts/553238/ChatGPT%20Chat%20Cloner.user.js",
+    "code_size": 9611,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

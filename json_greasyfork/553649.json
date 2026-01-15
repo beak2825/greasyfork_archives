@@ -1,0 +1,34 @@
+{
+  "id": 553649,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-25T11:24:47.000Z",
+  "code_updated_at": "2025-11-02T14:41:09.000Z",
+  "namespace": "Dsuttz Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469353,
+      "name": "Dsuttz",
+      "created_at": "2025-05-12T20:40:53.000Z",
+      "url": "https://greasyfork.org/users/1469353-dsuttz",
+      "scripts": []
+    }
+  ],
+  "name": "DSS: Torn Chain Timeout Monitor",
+  "description": "Monitor faction chain timeout with visual alerts reading directly from page. Only active on chains >=10",
+  "url": "https://greasyfork.org/scripts/553649-dss-torn-chain-timeout-monitor",
+  "code_url": "https://update.greasyfork.org/scripts/553649/DSS%3A%20Torn%20Chain%20Timeout%20Monitor.user.js",
+  "code_size": 18446,
+  "license": null,
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

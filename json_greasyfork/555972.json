@@ -1,0 +1,59 @@
+{
+  "id": 555972,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-16T03:32:07.000Z",
+  "code_updated_at": "2025-11-16T04:17:01.000Z",
+  "namespace": "https://greasyfork.org/users/1536646",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1536646,
+      "name": "ztxdcyy",
+      "created_at": "2025-11-11T09:51:00.000Z",
+      "url": "https://greasyfork.org/users/1536646-ztxdcyy",
+      "scripts": [
+        {
+          "id": 555972,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-16T03:32:07.000Z",
+          "code_updated_at": "2025-11-16T04:17:01.000Z",
+          "namespace": "https://greasyfork.org/users/1536646",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "simplify zhihu better",
+          "description": "A cleaner Zhihu reading script based on “simplify zhihu”: hides headers, sidebars, login popups and centers the article content for better reading.",
+          "url": "https://greasyfork.org/scripts/555972-simplify-zhihu-better",
+          "code_url": "https://update.greasyfork.org/scripts/555972/simplify%20zhihu%20better.user.js",
+          "code_size": 2603,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "simplify zhihu better",
+  "description": "A cleaner Zhihu reading script based on “simplify zhihu”: hides headers, sidebars, login popups and centers the article content for better reading.",
+  "url": "https://greasyfork.org/scripts/555972-simplify-zhihu-better",
+  "code_url": "https://update.greasyfork.org/scripts/555972/simplify%20zhihu%20better.user.js",
+  "code_size": 2603,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

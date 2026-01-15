@@ -1,0 +1,59 @@
+{
+  "id": 551964,
+  "daily_installs": 1,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-08T17:14:11.000Z",
+  "code_updated_at": "2025-12-02T09:44:56.000Z",
+  "namespace": "https://github.com/Gholts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 808058,
+      "name": "Gholts",
+      "created_at": "2021-08-24T07:45:31.000Z",
+      "url": "https://greasyfork.org/users/808058-gholts",
+      "scripts": [
+        {
+          "id": 551964,
+          "daily_installs": 1,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-08T17:14:11.000Z",
+          "code_updated_at": "2025-12-02T09:44:56.000Z",
+          "namespace": "https://github.com/Gholts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Feed Finder",
+          "description": "Detect the feed of the current website to facilitate subscription of RSS content.",
+          "url": "https://greasyfork.org/scripts/551964-feed-finder",
+          "code_url": "https://update.greasyfork.org/scripts/551964/Feed%20Finder.user.js",
+          "code_size": 27530,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "13.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Feed Finder",
+  "description": "Detect the feed of the current website to facilitate subscription of RSS content.",
+  "url": "https://greasyfork.org/scripts/551964-feed-finder",
+  "code_url": "https://update.greasyfork.org/scripts/551964/Feed%20Finder.user.js",
+  "code_size": 27530,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "13.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

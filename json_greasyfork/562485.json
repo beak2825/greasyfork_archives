@@ -1,0 +1,34 @@
+{
+  "id": 562485,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-13T05:12:22.000Z",
+  "code_updated_at": "2026-01-13T05:12:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1558815,
+      "name": "vzzz",
+      "created_at": "2026-01-10T19:23:45.000Z",
+      "url": "https://greasyfork.org/users/1558815-vzzz",
+      "scripts": []
+    }
+  ],
+  "name": "思齐钓鱼任务",
+  "description": "显示部分任务能完成的次数",
+  "url": "https://greasyfork.org/scripts/562485-%E6%80%9D%E9%BD%90%E9%92%93%E9%B1%BC%E4%BB%BB%E5%8A%A1",
+  "code_url": "https://update.greasyfork.org/scripts/562485/%E6%80%9D%E9%BD%90%E9%92%93%E9%B1%BC%E4%BB%BB%E5%8A%A1.user.js",
+  "code_size": 2988,
+  "license": "GPL-3.0 License",
+  "version": "2025-12-06",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

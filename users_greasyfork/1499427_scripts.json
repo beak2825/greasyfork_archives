@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555942,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-15T16:32:25.000Z",
+    "code_updated_at": "2025-11-16T04:54:58.000Z",
+    "namespace": "https://github.com/qixing-jk/github-codewiki-jumper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499427,
+        "name": "qixing-jk",
+        "created_at": "2025-07-29T09:34:56.000Z",
+        "url": "https://greasyfork.org/users/1499427-qixing-jk"
+      }
+    ],
+    "name": "github-codewiki-jumper",
+    "description": "One click jump from GitHub to CodeWiki, DeepWiki and Zread",
+    "url": "https://greasyfork.org/scripts/555942-github-codewiki-jumper",
+    "code_url": "https://update.greasyfork.org/scripts/555942/github-codewiki-jumper.user.js",
+    "code_size": 15420,
+    "license": null,
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

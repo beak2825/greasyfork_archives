@@ -1,0 +1,59 @@
+{
+  "id": 558183,
+  "daily_installs": 1,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-07T03:28:27.000Z",
+  "code_updated_at": "2025-12-07T03:28:27.000Z",
+  "namespace": "youtube",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1545421,
+      "name": "steven_ahfu",
+      "created_at": "2025-12-07T03:21:44.000Z",
+      "url": "https://greasyfork.org/users/1545421-steven-ahfu",
+      "scripts": [
+        {
+          "id": 558183,
+          "daily_installs": 1,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-07T03:28:27.000Z",
+          "code_updated_at": "2025-12-07T03:28:27.000Z",
+          "namespace": "youtube",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Global YouTube Embed Referrer Workaround",
+          "description": "Rewrite YouTube embeds on third-party sites to use an alternative front-end (invidious) so Google never sees the embed requests.",
+          "url": "https://greasyfork.org/scripts/558183-global-youtube-embed-referrer-workaround",
+          "code_url": "https://update.greasyfork.org/scripts/558183/Global%20YouTube%20Embed%20Referrer%20Workaround.user.js",
+          "code_size": 4858,
+          "license": "GNU GPLv3",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Global YouTube Embed Referrer Workaround",
+  "description": "Rewrite YouTube embeds on third-party sites to use an alternative front-end (invidious) so Google never sees the embed requests.",
+  "url": "https://greasyfork.org/scripts/558183-global-youtube-embed-referrer-workaround",
+  "code_url": "https://update.greasyfork.org/scripts/558183/Global%20YouTube%20Embed%20Referrer%20Workaround.user.js",
+  "code_size": 4858,
+  "license": "GNU GPLv3",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

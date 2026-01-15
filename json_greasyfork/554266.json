@@ -1,0 +1,33 @@
+{
+  "id": 554266,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T04:49:05.000Z",
+  "code_updated_at": "2025-11-11T17:04:48.000Z",
+  "namespace": "https://www.g8hh.com.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1437344,
+      "name": "gityx",
+      "created_at": "2025-02-20T02:51:30.000Z",
+      "url": "https://greasyfork.org/users/1437344-gityx"
+    }
+  ],
+  "name": "Galactic Tycoons 简中汉化脚本",
+  "description": "网页游戏 Galactic Tycoons (https://galactictycoons.com/) 的简体中文汉化脚本。Simplified Chinese i18n script for web game Galactic Tycoons.",
+  "url": "https://greasyfork.org/scripts/554266-galactic-tycoons-%E7%AE%80%E4%B8%AD%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/554266/Galactic%20Tycoons%20%E7%AE%80%E4%B8%AD%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 154566,
+  "license": "MIT License",
+  "version": "0.0.42",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

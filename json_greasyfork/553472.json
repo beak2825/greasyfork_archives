@@ -1,0 +1,59 @@
+{
+  "id": 553472,
+  "daily_installs": 7,
+  "total_installs": 92,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-23T12:27:14.000Z",
+  "code_updated_at": "2026-01-14T09:30:04.000Z",
+  "namespace": "https://greasyfork.org/users/1291639",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291639,
+      "name": "アンジルベールディミトリ",
+      "created_at": "2024-04-22T08:38:08.000Z",
+      "url": "https://greasyfork.org/users/1291639-%E3%82%A2%E3%83%B3%E3%82%B8%E3%83%AB%E3%83%99%E3%83%BC%E3%83%AB%E3%83%87%E3%82%A3%E3%83%9F%E3%83%88%E3%83%AA",
+      "scripts": [
+        {
+          "id": 553472,
+          "daily_installs": 7,
+          "total_installs": 92,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-23T12:27:14.000Z",
+          "code_updated_at": "2026-01-14T09:30:04.000Z",
+          "namespace": "https://greasyfork.org/users/1291639",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CleanURLs and SkipRedirects",
+          "description": "Supprime les paramètres de suivi des URLs et passe les redirections",
+          "url": "https://greasyfork.org/scripts/553472-cleanurls-and-skipredirects",
+          "code_url": "https://update.greasyfork.org/scripts/553472/CleanURLs%20and%20SkipRedirects.user.js",
+          "code_size": 33861,
+          "license": "MIT License",
+          "version": "9.0",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CleanURLs and SkipRedirects",
+  "description": "Supprime les paramètres de suivi des URLs et passe les redirections",
+  "url": "https://greasyfork.org/scripts/553472-cleanurls-and-skipredirects",
+  "code_url": "https://update.greasyfork.org/scripts/553472/CleanURLs%20and%20SkipRedirects.user.js",
+  "code_size": 33861,
+  "license": "MIT License",
+  "version": "9.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 553577,
+  "daily_installs": 1,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-24T13:58:32.000Z",
+  "code_updated_at": "2025-10-24T13:58:32.000Z",
+  "namespace": "https://www.startpage.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530243,
+      "name": "ezn24",
+      "created_at": "2025-10-24T13:49:02.000Z",
+      "url": "https://greasyfork.org/users/1530243-ezn24"
+    }
+  ],
+  "name": "Startpage Remove Ads or Sponsored content",
+  "description": "Removes ad units and sponsored cards from Startpage",
+  "url": "https://greasyfork.org/scripts/553577-startpage-remove-ads-or-sponsored-content",
+  "code_url": "https://update.greasyfork.org/scripts/553577/Startpage%20Remove%20Ads%20or%20Sponsored%20content.user.js",
+  "code_size": 3658,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

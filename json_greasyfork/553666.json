@@ -1,0 +1,33 @@
+{
+  "id": 553666,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-25T14:22:04.000Z",
+  "code_updated_at": "2025-11-02T15:32:21.000Z",
+  "namespace": "https://www.torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521133,
+      "name": "Chris Rotheram",
+      "created_at": "2025-09-30T20:37:25.000Z",
+      "url": "https://greasyfork.org/users/1521133-chris-rotheram"
+    }
+  ],
+  "name": "Torn Item Market - BUY ALL",
+  "description": "Adds a compact BUY ALL button for Torn item market. Desktop flow unchanged, mobile flow handled separately.",
+  "url": "https://greasyfork.org/scripts/553666-torn-item-market-buy-all",
+  "code_url": "https://update.greasyfork.org/scripts/553666/Torn%20Item%20Market%20-%20BUY%20ALL.user.js",
+  "code_size": 7866,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

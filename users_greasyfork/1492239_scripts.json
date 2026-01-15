@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555920,
+    "daily_installs": 1,
+    "total_installs": 70,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-15T12:01:00.000Z",
+    "code_updated_at": "2025-12-15T13:48:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1492239,
+        "name": "大魔王bug",
+        "created_at": "2025-07-06T14:36:58.000Z",
+        "url": "https://greasyfork.org/users/1492239-%E5%A4%A7%E9%AD%94%E7%8E%8Bbug"
+      }
+    ],
+    "name": "大魔王视频助手<移动版>",
+    "description": "悬浮播放器、横竖屏识别、拖拽记忆、自动接管、倍速播放、手势控制、M3U8广告过滤、诊断工具。",
+    "url": "https://greasyfork.org/scripts/555920-%E5%A4%A7%E9%AD%94%E7%8E%8B%E8%A7%86%E9%A2%91%E5%8A%A9%E6%89%8B-%E7%A7%BB%E5%8A%A8%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/555920/%E5%A4%A7%E9%AD%94%E7%8E%8B%E8%A7%86%E9%A2%91%E5%8A%A9%E6%89%8B%3C%E7%A7%BB%E5%8A%A8%E7%89%88%3E.user.js",
+    "code_size": 279533,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

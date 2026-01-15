@@ -1,0 +1,68 @@
+[
+  {
+    "id": 554561,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T20:50:27.000Z",
+    "code_updated_at": "2025-11-02T21:53:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1181494,
+        "name": "Step ᨆ",
+        "created_at": "2023-09-26T16:14:17.000Z",
+        "url": "https://greasyfork.org/users/1181494-step-%E1%A8%86"
+      }
+    ],
+    "name": "LZT style 2019",
+    "description": "LZT back style 2019",
+    "url": "https://greasyfork.org/scripts/554561-lzt-style-2019",
+    "code_url": "https://update.greasyfork.org/scripts/554561/LZT%20style%202019.user.js",
+    "code_size": 11072,
+    "license": "LZT",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554364,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-01T00:53:26.000Z",
+    "code_updated_at": "2025-11-01T00:53:26.000Z",
+    "namespace": "https://lolz.live/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1181494,
+        "name": "Step ᨆ",
+        "created_at": "2023-09-26T16:14:17.000Z",
+        "url": "https://greasyfork.org/users/1181494-step-%E1%A8%86"
+      }
+    ],
+    "name": "Lolz.live SVG Recolor + underline (global brightness + alpha control)",
+    "description": "Всё управляется двумя параметрами: hoverBrightness (яркость) и hoverAlpha (прозрачность). Меняешь числа — адаптируются SVG, текст, фон, подсветка и подфорумы.",
+    "url": "https://greasyfork.org/scripts/554364-lolz-live-svg-recolor-underline-global-brightness-alpha-control",
+    "code_url": "https://update.greasyfork.org/scripts/554364/Lolzlive%20SVG%20Recolor%20%2B%20underline%20%28global%20brightness%20%2B%20alpha%20control%29.user.js",
+    "code_size": 5691,
+    "license": null,
+    "version": "4.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

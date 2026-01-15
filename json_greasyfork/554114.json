@@ -1,0 +1,34 @@
+{
+  "id": 554114,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-29T15:50:31.000Z",
+  "code_updated_at": "2025-12-30T21:36:25.000Z",
+  "namespace": "PTTchathelper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532021,
+      "name": "sebhal92",
+      "created_at": "2025-10-29T15:39:15.000Z",
+      "url": "https://greasyfork.org/users/1532021-sebhal92",
+      "scripts": []
+    }
+  ],
+  "name": "UNIT3D chatbox - polishtorrent.top edition",
+  "description": "PTT chat helper",
+  "url": "https://greasyfork.org/scripts/554114-unit3d-chatbox-polishtorrent-top-edition",
+  "code_url": "https://update.greasyfork.org/scripts/554114/UNIT3D%20chatbox%20-%20polishtorrenttop%20edition.user.js",
+  "code_size": 37976,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

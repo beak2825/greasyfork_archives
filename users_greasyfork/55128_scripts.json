@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552591,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-14T19:47:29.000Z",
+    "code_updated_at": "2025-10-15T09:48:05.000Z",
+    "namespace": "FIX",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 55128,
+        "name": "raletag",
+        "created_at": "2016-07-16T09:12:44.000Z",
+        "url": "https://greasyfork.org/users/55128-raletag"
+      }
+    ],
+    "name": "Product code in cart on 21vek.by",
+    "description": "Restoration of the product code in cart on 21vek.by",
+    "url": "https://greasyfork.org/scripts/552591-product-code-in-cart-on-21vek-by",
+    "code_url": "https://update.greasyfork.org/scripts/552591/Product%20code%20in%20cart%20on%2021vekby.user.js",
+    "code_size": 2456,
+    "license": "CC BY-NC-SA 4.0",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

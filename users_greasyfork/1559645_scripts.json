@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562454,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T21:43:00.000Z",
+    "code_updated_at": "2026-01-13T11:12:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1559645,
+        "name": "Айтишник",
+        "created_at": "2026-01-12T21:40:28.000Z",
+        "url": "https://greasyfork.org/users/1559645-%D0%B0%D0%B9%D1%82%D0%B8%D1%88%D0%BD%D0%B8%D0%BA"
+      }
+    ],
+    "name": "CRM Calls Tracker",
+    "description": "Дополнение к ЦРМ в виде статистики + мотивационные уведомления",
+    "url": "https://greasyfork.org/scripts/562454-crm-calls-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/562454/CRM%20Calls%20Tracker.user.js",
+    "code_size": 27369,
+    "license": "MIT License",
+    "version": "9",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

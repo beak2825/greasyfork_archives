@@ -1,5 +1,38 @@
 [
   {
+    "id": 561395,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T14:34:43.000Z",
+    "code_updated_at": "2026-01-07T03:11:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1351429,
+        "name": "21zys",
+        "created_at": "2024-08-14T03:20:55.000Z",
+        "url": "https://greasyfork.org/users/1351429-21zys"
+      }
+    ],
+    "name": "沐锦 API 价格统计工具",
+    "description": "主页设置折扣，Dialog详情页自动识别货币。所有价格保留4位小数并向上取整(Ceil)，支持点击复制。",
+    "url": "https://greasyfork.org/scripts/561395-%E6%B2%90%E9%94%A6-api-%E4%BB%B7%E6%A0%BC%E7%BB%9F%E8%AE%A1%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/561395/%E6%B2%90%E9%94%A6%20API%20%E4%BB%B7%E6%A0%BC%E7%BB%9F%E8%AE%A1%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 18142,
+    "license": null,
+    "version": "2.6.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 559885,
     "daily_installs": 0,
     "total_installs": 9,

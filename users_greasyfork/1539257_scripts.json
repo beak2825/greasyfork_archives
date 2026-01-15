@@ -33,9 +33,42 @@
     "visibility": "public"
   },
   {
+    "id": 558694,
+    "daily_installs": 2,
+    "total_installs": 167,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T05:32:40.000Z",
+    "code_updated_at": "2025-12-12T05:32:40.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539257,
+        "name": "TAUÃ B. KLOCH LEITE",
+        "created_at": "2025-11-19T03:28:34.000Z",
+        "url": "https://greasyfork.org/users/1539257-tau%C3%A3-b-kloch-leite"
+      }
+    ],
+    "name": "Universal Auto-Clicker & Bypass | AdFly + Shorteners | Time Warp",
+    "description": "Intelligent Auto-Clicker tool that navigates through shorteners and accelerates countdown timers automatically. It is not a link resolver: it clicks and navigates for you!",
+    "url": "https://greasyfork.org/scripts/558694-universal-auto-clicker-bypass-adfly-shorteners-time-warp",
+    "code_url": "https://update.greasyfork.org/scripts/558694/Universal%20Auto-Clicker%20%20Bypass%20%7C%20AdFly%20%2B%20Shorteners%20%7C%20Time%20Warp.user.js",
+    "code_size": 107792,
+    "license": null,
+    "version": "1.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 557800,
-    "daily_installs": 11,
-    "total_installs": 758,
+    "daily_installs": 16,
+    "total_installs": 819,
     "fan_score": "34.2",
     "good_ratings": 2,
     "ok_ratings": 0,
@@ -67,8 +100,8 @@
   },
   {
     "id": 557579,
-    "daily_installs": 38,
-    "total_installs": 2072,
+    "daily_installs": 50,
+    "total_installs": 2247,
     "fan_score": "64.6",
     "good_ratings": 7,
     "ok_ratings": 0,
@@ -160,6 +193,72 @@
     "code_size": 14938,
     "license": "GNU General Public License v3.0 only",
     "version": "3.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557114,
+    "daily_installs": 1,
+    "total_installs": 176,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T16:31:52.000Z",
+    "code_updated_at": "2025-11-27T16:31:52.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539257,
+        "name": "TAUÃ B. KLOCH LEITE",
+        "created_at": "2025-11-19T03:28:34.000Z",
+        "url": "https://greasyfork.org/users/1539257-tau%C3%A3-b-kloch-leite"
+      }
+    ],
+    "name": "Ultimate Anti-Adblock Killer PRO",
+    "description": "The definitive tool: Aggressive neutralization, Anti-Adblock Killer, Persistent Zapper, AND MORE.",
+    "url": "https://greasyfork.org/scripts/557114-ultimate-anti-adblock-killer-pro",
+    "code_url": "https://update.greasyfork.org/scripts/557114/Ultimate%20Anti-Adblock%20Killer%20PRO.user.js",
+    "code_size": 47272,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556237,
+    "daily_installs": 5,
+    "total_installs": 334,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T04:19:00.000Z",
+    "code_updated_at": "2025-11-26T23:30:00.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1539257,
+        "name": "TAUÃ B. KLOCH LEITE",
+        "created_at": "2025-11-19T03:28:34.000Z",
+        "url": "https://greasyfork.org/users/1539257-tau%C3%A3-b-kloch-leite"
+      }
+    ],
+    "name": "Ultimate Anti-Adblock Killer (v10.13.1)",
+    "description": "The definitive tool: Aggressive neutralization, Anti-Adblock Killer, Persistent Zapper, Paywall protection, Cookie/Consent Blocker, Anti-Popup/New Tab.",
+    "url": "https://greasyfork.org/scripts/556237-ultimate-anti-adblock-killer-v10-13-1",
+    "code_url": "https://update.greasyfork.org/scripts/556237/Ultimate%20Anti-Adblock%20Killer%20%28v10131%29.user.js",
+    "code_size": 41255,
+    "license": "GNU General Public License v3.0 only",
+    "version": "10.13.1",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

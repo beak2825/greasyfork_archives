@@ -1,7 +1,7 @@
 {
   "id": 562107,
   "daily_installs": 0,
-  "total_installs": 0,
+  "total_installs": 1,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -70,7 +70,7 @@
         {
           "id": 562107,
           "daily_installs": 0,
-          "total_installs": 0,
+          "total_installs": 1,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
@@ -88,6 +88,30 @@
           "code_size": 8575,
           "license": "MIT License",
           "version": "1.3",
+          "locale": "tr",
+          "deleted": false
+        },
+        {
+          "id": 562525,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-13T12:32:14.000Z",
+          "code_updated_at": "2026-01-13T12:36:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Otomatik Gelişim Raporu",
+          "description": "Tablodaki radio butonları için hızlı seçim butonları ekler",
+          "url": "https://greasyfork.org/scripts/562525-otomatik-geli%C5%9Fim-raporu",
+          "code_url": "https://update.greasyfork.org/scripts/562525/Otomatik%20Geli%C5%9Fim%20Raporu.user.js",
+          "code_size": 6930,
+          "license": "MIT License",
+          "version": "1.2",
           "locale": "tr",
           "deleted": false
         }

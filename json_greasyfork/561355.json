@@ -1,0 +1,33 @@
+{
+  "id": 561355,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T09:02:49.000Z",
+  "code_updated_at": "2026-01-04T09:03:38.000Z",
+  "namespace": "icu.bjfu.pjpx",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 832986,
+      "name": "74 开发组",
+      "created_at": "2021-11-06T20:03:09.000Z",
+      "url": "https://greasyfork.org/users/832986-74-%E5%BC%80%E5%8F%91%E7%BB%84"
+    }
+  ],
+  "name": "新・北林评教",
+  "description": "为北京林业大学 newjwxt 自动填写学生评教。",
+  "url": "https://greasyfork.org/scripts/561355-%E6%96%B0-%E5%8C%97%E6%9E%97%E8%AF%84%E6%95%99",
+  "code_url": "https://update.greasyfork.org/scripts/561355/%E6%96%B0%E3%83%BB%E5%8C%97%E6%9E%97%E8%AF%84%E6%95%99.user.js",
+  "code_size": 1176,
+  "license": "Public Domain",
+  "version": "ver2.0.0-2026-01-03",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

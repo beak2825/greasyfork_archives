@@ -1,0 +1,34 @@
+{
+  "id": 552125,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-10T07:39:19.000Z",
+  "code_updated_at": "2025-11-04T15:47:00.000Z",
+  "namespace": "https://github.com/LongMan98/personal-script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 63501,
+      "name": "LongMan98",
+      "created_at": "2016-09-01T14:27:40.000Z",
+      "url": "https://greasyfork.org/users/63501-longman98",
+      "scripts": []
+    }
+  ],
+  "name": "OPGG英雄中文诙谐名搜索",
+  "description": "为OP.GG游戏模式页面添加英雄中文诙谐名搜索功能",
+  "url": "https://greasyfork.org/scripts/552125-opgg%E8%8B%B1%E9%9B%84%E4%B8%AD%E6%96%87%E8%AF%99%E8%B0%90%E5%90%8D%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/552125/OPGG%E8%8B%B1%E9%9B%84%E4%B8%AD%E6%96%87%E8%AF%99%E8%B0%90%E5%90%8D%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 53419,
+  "license": "MIT License",
+  "version": "2025.11.04",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

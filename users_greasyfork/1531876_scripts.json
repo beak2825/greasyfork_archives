@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554067,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T08:33:52.000Z",
+    "code_updated_at": "2025-10-29T08:39:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1531876,
+        "name": "lyccccy",
+        "created_at": "2025-10-29T08:10:06.000Z",
+        "url": "https://greasyfork.org/users/1531876-lyccccy"
+      }
+    ],
+    "name": "uooc自动ai答题",
+    "description": "使用deepseek模型，用于深圳大学uooc自动答题，首次使用需要提供deepseek api。理论上所有openai类型的api都能通过本脚本使用，后续将进行更新",
+    "url": "https://greasyfork.org/scripts/554067-uooc%E8%87%AA%E5%8A%A8ai%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/554067/uooc%E8%87%AA%E5%8A%A8ai%E7%AD%94%E9%A2%98.user.js",
+    "code_size": 5604,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 554737,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-04T10:39:44.000Z",
+  "code_updated_at": "2025-11-04T10:39:44.000Z",
+  "namespace": "PlanetXX2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1393469,
+      "name": "jovan shelomo",
+      "created_at": "2024-11-09T15:12:16.000Z",
+      "url": "https://greasyfork.org/users/1393469-jovan-shelomo"
+    }
+  ],
+  "name": "Fix white cursor in docs",
+  "description": "Fix the annoying white cursor in Google Docs",
+  "url": "https://greasyfork.org/scripts/554737-fix-white-cursor-in-docs",
+  "code_url": "https://update.greasyfork.org/scripts/554737/Fix%20white%20cursor%20in%20docs.user.js",
+  "code_size": 1077,
+  "license": "MIT License",
+  "version": "2025-11-04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

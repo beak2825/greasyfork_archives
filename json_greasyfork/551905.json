@@ -1,0 +1,34 @@
+{
+  "id": 551905,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-08T04:42:04.000Z",
+  "code_updated_at": "2025-10-08T04:42:03.000Z",
+  "namespace": "https://myanonamouse.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1523531,
+      "name": "LaylaReads",
+      "created_at": "2025-10-08T04:24:20.000Z",
+      "url": "https://greasyfork.org/users/1523531-laylareads",
+      "scripts": []
+    }
+  ],
+  "name": "MAM Clean Split Search (Static Menus, Anti-Sticky, Transparent Header)",
+  "description": "Split search row from current #tss; kills sticky/fixed menu; no header image or blur; theme-aware; stays in sync.",
+  "url": "https://greasyfork.org/scripts/551905-mam-clean-split-search-static-menus-anti-sticky-transparent-header",
+  "code_url": "https://update.greasyfork.org/scripts/551905/MAM%20Clean%20Split%20Search%20%28Static%20Menus%2C%20Anti-Sticky%2C%20Transparent%20Header%29.user.js",
+  "code_size": 9475,
+  "license": "MIT License",
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

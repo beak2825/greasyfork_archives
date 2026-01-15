@@ -1,0 +1,33 @@
+{
+  "id": 554978,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-06T11:54:29.000Z",
+  "code_updated_at": "2025-12-15T15:28:48.000Z",
+  "namespace": "https://github.com/stevessr/bug-v3",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051229,
+      "name": "stevessr",
+      "created_at": "2023-04-01T03:04:14.000Z",
+      "url": "https://greasyfork.org/users/1051229-stevessr"
+    }
+  ],
+  "name": "Discourse 话题预览按钮 (Topic Preview Button) - 侧边栏 & JSON版",
+  "description": "为 Discourse 话题列表添加预览按钮与快捷回复功能，支持侧边栏无感停靠与 JSON 预览，支持最小化到侧边悬浮球，支持下拉切换模式",
+  "url": "https://greasyfork.org/scripts/554978-discourse-%E8%AF%9D%E9%A2%98%E9%A2%84%E8%A7%88%E6%8C%89%E9%92%AE-topic-preview-button-%E4%BE%A7%E8%BE%B9%E6%A0%8F-json%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/554978/Discourse%20%E8%AF%9D%E9%A2%98%E9%A2%84%E8%A7%88%E6%8C%89%E9%92%AE%20%28Topic%20Preview%20Button%29%20-%20%E4%BE%A7%E8%BE%B9%E6%A0%8F%20%20JSON%E7%89%88.user.js",
+  "code_size": 19977,
+  "license": "MIT License",
+  "version": "1.6.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

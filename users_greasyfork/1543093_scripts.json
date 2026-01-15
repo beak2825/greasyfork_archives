@@ -1,7 +1,7 @@
 [
   {
     "id": 561848,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 1,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -35,7 +35,7 @@
   {
     "id": 561016,
     "daily_installs": 0,
-    "total_installs": 0,
+    "total_installs": 1,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

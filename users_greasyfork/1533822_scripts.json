@@ -1,0 +1,68 @@
+[
+  {
+    "id": 554960,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T09:38:27.000Z",
+    "code_updated_at": "2025-11-06T09:38:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533822,
+        "name": "maltese53",
+        "created_at": "2025-11-04T02:37:49.000Z",
+        "url": "https://greasyfork.org/users/1533822-maltese53"
+      }
+    ],
+    "name": "Gemini 定位器",
+    "description": "為 Gemini 的每個回應新增錨點，並建立可折疊的原生風格導覽面板。採用更可靠的頁面 ID 隔離錨點，並修正了滾動功能。新增錨點名稱唯一性檢查。",
+    "url": "https://greasyfork.org/scripts/554960-gemini-%E5%AE%9A%E4%BD%8D%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/554960/Gemini%20%E5%AE%9A%E4%BD%8D%E5%99%A8.user.js",
+    "code_size": 25007,
+    "license": "9code.ai, or feel free to use as long as you credit me",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554693,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-04T03:25:51.000Z",
+    "code_updated_at": "2025-11-04T03:25:51.000Z",
+    "namespace": "https://www.openrice.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533822,
+        "name": "maltese53",
+        "created_at": "2025-11-04T02:37:49.000Z",
+        "url": "https://greasyfork.org/users/1533822-maltese53"
+      }
+    ],
+    "name": "OpenRice Advanced Filter",
+    "description": "希望幫到大家揾到一D，野食出品好過Marketing嘅餐廳。",
+    "url": "https://greasyfork.org/scripts/554693-openrice-advanced-filter",
+    "code_url": "https://update.greasyfork.org/scripts/554693/OpenRice%20Advanced%20Filter.user.js",
+    "code_size": 18256,
+    "license": "9code.ai",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

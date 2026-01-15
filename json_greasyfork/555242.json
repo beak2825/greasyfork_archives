@@ -1,0 +1,59 @@
+{
+  "id": 555242,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T22:20:28.000Z",
+  "code_updated_at": "2025-11-08T22:25:07.000Z",
+  "namespace": "ch4xm.github.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535754,
+      "name": "Ch4xm",
+      "created_at": "2025-11-08T22:13:07.000Z",
+      "url": "https://greasyfork.org/users/1535754-ch4xm",
+      "scripts": [
+        {
+          "id": 555242,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-08T22:20:28.000Z",
+          "code_updated_at": "2025-11-08T22:25:07.000Z",
+          "namespace": "ch4xm.github.io",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Kanji",
+          "description": "Pretty basic Renshuu.org script to hide the kanji from the terms view page until the \"Show\" button is pressed, so you can read the definition without being spoiled on how the kanji looks. Only works in \"basic\" terms view, since the others show the kanji in the mnemonic and radical sections and I'm too lazy to hide those.",
+          "url": "https://greasyfork.org/scripts/555242-hide-kanji",
+          "code_url": "https://update.greasyfork.org/scripts/555242/Hide%20Kanji.user.js",
+          "code_size": 3688,
+          "license": null,
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Kanji",
+  "description": "Pretty basic Renshuu.org script to hide the kanji from the terms view page until the \"Show\" button is pressed, so you can read the definition without being spoiled on how the kanji looks. Only works in \"basic\" terms view, since the others show the kanji in the mnemonic and radical sections and I'm too lazy to hide those.",
+  "url": "https://greasyfork.org/scripts/555242-hide-kanji",
+  "code_url": "https://update.greasyfork.org/scripts/555242/Hide%20Kanji.user.js",
+  "code_size": 3688,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

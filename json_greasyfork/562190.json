@@ -1,0 +1,59 @@
+{
+  "id": 562190,
+  "daily_installs": 1,
+  "total_installs": 13,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2026-01-11T06:05:15.000Z",
+  "code_updated_at": "2026-01-11T06:05:15.000Z",
+  "namespace": "krunker.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1289585,
+      "name": "KillaWare",
+      "created_at": "2024-04-17T18:35:05.000Z",
+      "url": "https://greasyfork.org/users/1289585-killaware",
+      "scripts": [
+        {
+          "id": 562190,
+          "daily_installs": 1,
+          "total_installs": 13,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2026-01-11T06:05:15.000Z",
+          "code_updated_at": "2026-01-11T06:05:15.000Z",
+          "namespace": "krunker.io",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "KillaWare Premium V3",
+          "description": "The BEST undetected Krunker.io cheat! INCLUDES RAGE HACKS!!",
+          "url": "https://greasyfork.org/scripts/562190-killaware-premium-v3",
+          "code_url": "https://update.greasyfork.org/scripts/562190/KillaWare%20Premium%20V3.user.js",
+          "code_size": 6140,
+          "license": "MIT License",
+          "version": "3.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "KillaWare Premium V3",
+  "description": "The BEST undetected Krunker.io cheat! INCLUDES RAGE HACKS!!",
+  "url": "https://greasyfork.org/scripts/562190-killaware-premium-v3",
+  "code_url": "https://update.greasyfork.org/scripts/562190/KillaWare%20Premium%20V3.user.js",
+  "code_size": 6140,
+  "license": "MIT License",
+  "version": "3.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

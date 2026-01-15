@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555970,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-16T03:11:15.000Z",
+    "code_updated_at": "2025-11-16T03:11:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1538283,
+        "name": "jack1234567",
+        "created_at": "2025-11-16T03:06:08.000Z",
+        "url": "https://greasyfork.org/users/1538283-jack1234567"
+      }
+    ],
+    "name": "Destiny Kick Volume",
+    "description": "Custom volume for Kick iframe on destiny.gg",
+    "url": "https://greasyfork.org/scripts/555970-destiny-kick-volume",
+    "code_url": "https://update.greasyfork.org/scripts/555970/Destiny%20Kick%20Volume.user.js",
+    "code_size": 12935,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

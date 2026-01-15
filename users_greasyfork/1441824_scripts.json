@@ -33,6 +33,39 @@
     "visibility": "public"
   },
   {
+    "id": 556621,
+    "daily_installs": 1,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T02:42:21.000Z",
+    "code_updated_at": "2025-11-30T06:45:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441824,
+        "name": "Bong MM",
+        "created_at": "2025-03-03T10:00:43.000Z",
+        "url": "https://greasyfork.org/users/1441824-bong-mm"
+      }
+    ],
+    "name": "[银河奶牛]隐藏强化垃圾物品",
+    "description": "在仓库中以及选取强化物品时，隐藏垃圾物品",
+    "url": "https://greasyfork.org/scripts/556621-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E9%9A%90%E8%97%8F%E5%BC%BA%E5%8C%96%E5%9E%83%E5%9C%BE%E7%89%A9%E5%93%81",
+    "code_url": "https://update.greasyfork.org/scripts/556621/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%E9%9A%90%E8%97%8F%E5%BC%BA%E5%8C%96%E5%9E%83%E5%9C%BE%E7%89%A9%E5%93%81.user.js",
+    "code_size": 29642,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 556253,
     "daily_installs": 0,
     "total_installs": 3,
@@ -63,6 +96,105 @@
     "version": "1.6.2",
     "locale": "ja",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555100,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-07T11:07:38.000Z",
+    "code_updated_at": "2025-11-07T11:07:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441824,
+        "name": "Bong MM",
+        "created_at": "2025-03-03T10:00:43.000Z",
+        "url": "https://greasyfork.org/users/1441824-bong-mm"
+      }
+    ],
+    "name": "手机端消息发送按钮（油猴）",
+    "description": "手机上显示大按钮，点击发送固定消息提示",
+    "url": "https://greasyfork.org/scripts/555100-%E6%89%8B%E6%9C%BA%E7%AB%AF%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%8C%89%E9%92%AE-%E6%B2%B9%E7%8C%B4",
+    "code_url": "https://update.greasyfork.org/scripts/555100/%E6%89%8B%E6%9C%BA%E7%AB%AF%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%8C%89%E9%92%AE%EF%BC%88%E6%B2%B9%E7%8C%B4%EF%BC%89.user.js",
+    "code_size": 4384,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555095,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-07T10:19:37.000Z",
+    "code_updated_at": "2025-11-07T10:19:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441824,
+        "name": "Bong MM",
+        "created_at": "2025-03-03T10:00:43.000Z",
+        "url": "https://greasyfork.org/users/1441824-bong-mm"
+      }
+    ],
+    "name": "MWITools",
+    "description": "Tools for MilkyWayIdle. Shows total action time. Shows market prices. Shows action number quick inputs. Shows how many actions are needed to reach certain skill level. Shows skill exp percentages. Shows total networth. Shows combat summary. Shows combat maps index. Shows item level on item icons. Shows how many ability books are needed to reach certain level. Shows market equipment filters.",
+    "url": "https://greasyfork.org/scripts/555095-mwitools",
+    "code_url": "https://update.greasyfork.org/scripts/555095/MWITools.user.js",
+    "code_size": 494765,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "24.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553378,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T13:57:55.000Z",
+    "code_updated_at": "2025-12-17T12:00:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441824,
+        "name": "Bong MM",
+        "created_at": "2025-03-03T10:00:43.000Z",
+        "url": "https://greasyfork.org/users/1441824-bong-mm"
+      }
+    ],
+    "name": "[银河奶牛]自动填充强化数据",
+    "description": "从本地自动填充强化数据",
+    "url": "https://greasyfork.org/scripts/553378-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%BC%BA%E5%8C%96%E6%95%B0%E6%8D%AE",
+    "code_url": "https://update.greasyfork.org/scripts/553378/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%BC%BA%E5%8C%96%E6%95%B0%E6%8D%AE.user.js",
+    "code_size": 60022,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

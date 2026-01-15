@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556654,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-23T10:00:18.000Z",
+    "code_updated_at": "2025-11-23T10:12:45.000Z",
+    "namespace": "https://github.com/caffetsong/legado-fast-page",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1540355,
+        "name": "yufeng li",
+        "created_at": "2025-11-22T07:22:12.000Z",
+        "url": "https://greasyfork.org/users/1540355-yufeng-li"
+      }
+    ],
+    "name": "开源阅读(Legado)预加载",
+    "description": "通过预加载，加快开源阅读(Legado)Web服务的翻页速度。",
+    "url": "https://greasyfork.org/scripts/556654-%E5%BC%80%E6%BA%90%E9%98%85%E8%AF%BB-legado-%E9%A2%84%E5%8A%A0%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/556654/%E5%BC%80%E6%BA%90%E9%98%85%E8%AF%BB%28Legado%29%E9%A2%84%E5%8A%A0%E8%BD%BD.user.js",
+    "code_size": 8259,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

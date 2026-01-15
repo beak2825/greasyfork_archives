@@ -1,0 +1,34 @@
+{
+  "id": 555477,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-11T03:39:44.000Z",
+  "code_updated_at": "2025-11-11T03:39:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 27891,
+      "name": "scruffy1000",
+      "created_at": "2016-01-20T17:00:32.000Z",
+      "url": "https://greasyfork.org/users/27891-scruffy1000",
+      "scripts": []
+    }
+  ],
+  "name": "Plunder Enhancer",
+  "description": "Adds how much extra earned from plunder mugs",
+  "url": "https://greasyfork.org/scripts/555477-plunder-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/555477/Plunder%20Enhancer.user.js",
+  "code_size": 1995,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

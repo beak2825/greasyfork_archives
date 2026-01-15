@@ -1,0 +1,59 @@
+{
+  "id": 562714,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-15T04:41:53.000Z",
+  "code_updated_at": "2026-01-15T04:41:53.000Z",
+  "namespace": "https://courseresource.zhihuishu.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1560504,
+      "name": "caibucai",
+      "created_at": "2026-01-15T04:38:42.000Z",
+      "url": "https://greasyfork.org/users/1560504-caibucai",
+      "scripts": [
+        {
+          "id": 562714,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-15T04:41:53.000Z",
+          "code_updated_at": "2026-01-15T04:41:53.000Z",
+          "namespace": "https://courseresource.zhihuishu.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浙江省高校教师培训-刷网课",
+          "description": "1.引入2秒容错阈值解决1秒误差重播问题 2.支持1-16倍速 3.随机答题 4.顺序步进跳转",
+          "url": "https://greasyfork.org/scripts/562714-%E6%B5%99%E6%B1%9F%E7%9C%81%E9%AB%98%E6%A0%A1%E6%95%99%E5%B8%88%E5%9F%B9%E8%AE%AD-%E5%88%B7%E7%BD%91%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/562714/%E6%B5%99%E6%B1%9F%E7%9C%81%E9%AB%98%E6%A0%A1%E6%95%99%E5%B8%88%E5%9F%B9%E8%AE%AD-%E5%88%B7%E7%BD%91%E8%AF%BE.user.js",
+          "code_size": 8187,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "浙江省高校教师培训-刷网课",
+  "description": "1.引入2秒容错阈值解决1秒误差重播问题 2.支持1-16倍速 3.随机答题 4.顺序步进跳转",
+  "url": "https://greasyfork.org/scripts/562714-%E6%B5%99%E6%B1%9F%E7%9C%81%E9%AB%98%E6%A0%A1%E6%95%99%E5%B8%88%E5%9F%B9%E8%AE%AD-%E5%88%B7%E7%BD%91%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/562714/%E6%B5%99%E6%B1%9F%E7%9C%81%E9%AB%98%E6%A0%A1%E6%95%99%E5%B8%88%E5%9F%B9%E8%AE%AD-%E5%88%B7%E7%BD%91%E8%AF%BE.user.js",
+  "code_size": 8187,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

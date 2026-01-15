@@ -2,7 +2,7 @@
   {
     "id": 557462,
     "daily_installs": 0,
-    "total_installs": 5,
+    "total_installs": 6,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -28,6 +28,72 @@
     "code_size": 87989,
     "license": "MIT; http://opensource.org/licenses/MIT",
     "version": "8.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554680,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T22:10:36.000Z",
+    "code_updated_at": "2025-11-04T04:29:17.000Z",
+    "namespace": "rfindley",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 651159,
+        "name": "Paul Rouleau",
+        "created_at": "2020-06-25T16:25:14.000Z",
+        "url": "https://greasyfork.org/users/651159-paul-rouleau"
+      }
+    ],
+    "name": "Wanikani Open Framework - Menu module - test",
+    "description": "Menu module for Wanikani Open Framework",
+    "url": "https://greasyfork.org/scripts/554680-wanikani-open-framework-menu-module-test",
+    "code_url": "https://update.greasyfork.org/scripts/554680/1689026/Wanikani%20Open%20Framework%20-%20Menu%20module%20-%20test.js",
+    "code_size": 14639,
+    "license": "MIT; http://opensource.org/licenses/MIT",
+    "version": "1.0.33",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554663,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T18:59:32.000Z",
+    "code_updated_at": "2025-11-18T18:53:02.000Z",
+    "namespace": "Wanikani prouleau",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 651159,
+        "name": "Paul Rouleau",
+        "created_at": "2020-06-25T16:25:14.000Z",
+        "url": "https://greasyfork.org/users/651159-paul-rouleau"
+      }
+    ],
+    "name": "Wanikani Old School Stage Breakdown",
+    "description": "Detailed breakdown of srs stages with old dashboard UI",
+    "url": "https://greasyfork.org/scripts/554663-wanikani-old-school-stage-breakdown",
+    "code_url": "https://update.greasyfork.org/scripts/554663/Wanikani%20Old%20School%20Stage%20Breakdown.user.js",
+    "code_size": 79247,
+    "license": "MIT; http://opensource.org/licenses/MIT",
+    "version": "1.1.1",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

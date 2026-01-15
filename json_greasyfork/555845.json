@@ -1,0 +1,59 @@
+{
+  "id": 555845,
+  "daily_installs": 1,
+  "total_installs": 83,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-14T14:18:27.000Z",
+  "code_updated_at": "2025-11-14T14:18:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537821,
+      "name": "scout_tf2",
+      "created_at": "2025-11-14T14:13:27.000Z",
+      "url": "https://greasyfork.org/users/1537821-scout-tf2",
+      "scripts": [
+        {
+          "id": 555845,
+          "daily_installs": 1,
+          "total_installs": 83,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-14T14:18:27.000Z",
+          "code_updated_at": "2025-11-14T14:18:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mega Menu Ultra XXL 3.0",
+          "description": "Ultimate Mega Menu: websites, games, school, fun, themes, tools, network info, plus extra features! Draggable + shrinkable + mega features",
+          "url": "https://greasyfork.org/scripts/555845-mega-menu-ultra-xxl-3-0",
+          "code_url": "https://update.greasyfork.org/scripts/555845/Mega%20Menu%20Ultra%20XXL%2030.user.js",
+          "code_size": 14891,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mega Menu Ultra XXL 3.0",
+  "description": "Ultimate Mega Menu: websites, games, school, fun, themes, tools, network info, plus extra features! Draggable + shrinkable + mega features",
+  "url": "https://greasyfork.org/scripts/555845-mega-menu-ultra-xxl-3-0",
+  "code_url": "https://update.greasyfork.org/scripts/555845/Mega%20Menu%20Ultra%20XXL%2030.user.js",
+  "code_size": 14891,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

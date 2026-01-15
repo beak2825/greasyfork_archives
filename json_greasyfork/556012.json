@@ -1,0 +1,34 @@
+{
+  "id": 556012,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-16T13:29:12.000Z",
+  "code_updated_at": "2025-12-02T09:41:30.000Z",
+  "namespace": "https://greasyfork.org/de/users/1516523-martink",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516523,
+      "name": "martink",
+      "created_at": "2025-09-18T09:31:20.000Z",
+      "url": "https://greasyfork.org/users/1516523-martink",
+      "scripts": []
+    }
+  ],
+  "name": "enhanced artikel-log",
+  "description": "Parsed und visualisiert Log-Tabellen mit Diff-Ansicht, Highlighting und Filter-Dropdowns für Wer und Aktion",
+  "url": "https://greasyfork.org/scripts/556012-enhanced-artikel-log",
+  "code_url": "https://update.greasyfork.org/scripts/556012/enhanced%20artikel-log.user.js",
+  "code_size": 25543,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

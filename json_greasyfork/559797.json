@@ -1,0 +1,59 @@
+{
+  "id": 559797,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-22T09:36:40.000Z",
+  "code_updated_at": "2025-12-22T09:36:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1551002,
+      "name": "藤椒鸡蛋饼",
+      "created_at": "2025-12-22T09:16:51.000Z",
+      "url": "https://greasyfork.org/users/1551002-%E8%97%A4%E6%A4%92%E9%B8%A1%E8%9B%8B%E9%A5%BC",
+      "scripts": [
+        {
+          "id": 559797,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-22T09:36:40.000Z",
+          "code_updated_at": "2025-12-22T09:36:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆包网页性能优化脚本v1.2",
+          "description": "豆包网页版专属轻量化优化工具，聚焦滚动卡顿与渲染延迟，不干扰原生功能",
+          "url": "https://greasyfork.org/scripts/559797-%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv1-2",
+          "code_url": "https://update.greasyfork.org/scripts/559797/%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv12.user.js",
+          "code_size": 4910,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆包网页性能优化脚本v1.2",
+  "description": "豆包网页版专属轻量化优化工具，聚焦滚动卡顿与渲染延迟，不干扰原生功能",
+  "url": "https://greasyfork.org/scripts/559797-%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv1-2",
+  "code_url": "https://update.greasyfork.org/scripts/559797/%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv12.user.js",
+  "code_size": 4910,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554498,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T09:44:09.000Z",
+    "code_updated_at": "2025-12-03T15:09:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533245,
+        "name": "Павел Семенов",
+        "created_at": "2025-11-02T09:17:12.000Z",
+        "url": "https://greasyfork.org/users/1533245-%D0%BF%D0%B0%D0%B2%D0%B5%D0%BB-%D1%81%D0%B5%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2"
+      }
+    ],
+    "name": "Kinozal TV Ratings on Top hands and New movies Pages",
+    "description": "Adds ratings (IMDb, Kinopoisk, Kinozal, Rotten Tomatoes), content type, and country flags to cards on kinozal.tv and its mirrors with dynamic edge detection for hover cards.",
+    "url": "https://greasyfork.org/scripts/554498-kinozal-tv-ratings-on-top-hands-and-new-movies-pages",
+    "code_url": "https://update.greasyfork.org/scripts/554498/Kinozal%20TV%20Ratings%20on%20Top%20hands%20and%20New%20movies%20Pages.user.js",
+    "code_size": 23035,
+    "license": "MIT License",
+    "version": "1.6.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

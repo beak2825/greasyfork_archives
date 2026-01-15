@@ -1,0 +1,68 @@
+[
+  {
+    "id": 554590,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T03:08:11.000Z",
+    "code_updated_at": "2025-11-03T11:11:35.000Z",
+    "namespace": "https://orbitar.space/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439639,
+        "name": "Aivean2",
+        "created_at": "2025-02-25T04:40:16.000Z",
+        "url": "https://greasyfork.org/users/1439639-aivean2"
+      }
+    ],
+    "name": "Orbitar.space-Comment-Replay",
+    "description": "Реплей комментариев с фильтрами, хоткеями и слайд-шоу (картинки/видео) + петля, автоскрытие панели, пресеты (3 стандартных + неограниченные пользовательские), автоматическая адаптация к теме сайта",
+    "url": "https://greasyfork.org/scripts/554590-orbitar-space-comment-replay",
+    "code_url": "https://update.greasyfork.org/scripts/554590/Orbitarspace-Comment-Replay.user.js",
+    "code_size": 168094,
+    "license": "MIT License",
+    "version": "0.9.12",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554580,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T22:51:19.000Z",
+    "code_updated_at": "2025-11-02T22:51:19.000Z",
+    "namespace": "https://orbitar.space/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439639,
+        "name": "Aivean2",
+        "created_at": "2025-02-25T04:40:16.000Z",
+        "url": "https://greasyfork.org/users/1439639-aivean2"
+      }
+    ],
+    "name": "Orbitar.space Comment Replay — Slideshow+Media (full + presets/loop)",
+    "description": "Реплей комментариев с фильтрами, хоткеями и слайд-шоу (картинки/видео) + петля, автоскрытие панели, пресеты (3 стандартных + неограниченные пользовательские), автоматическая адаптация к теме сайта",
+    "url": "https://greasyfork.org/scripts/554580-orbitar-space-comment-replay-slideshow-media-full-presets-loop",
+    "code_url": "https://update.greasyfork.org/scripts/554580/Orbitarspace%20Comment%20Replay%20%E2%80%94%20Slideshow%2BMedia%20%28full%20%2B%20presetsloop%29.user.js",
+    "code_size": 148885,
+    "license": "MIT License",
+    "version": "0.9.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

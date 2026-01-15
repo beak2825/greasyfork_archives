@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557864,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T06:55:31.000Z",
+    "code_updated_at": "2025-12-04T18:56:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 732887,
+        "name": "Tokisaki-Galaxy",
+        "created_at": "2021-01-30T16:11:48.000Z",
+        "url": "https://greasyfork.org/users/732887-tokisaki-galaxy"
+      }
+    ],
+    "name": "AI Studio Chat Exporter (Markdown & Code Block Support)",
+    "description": "Export AI Studio chat history. 1. i18n support (CN/EN/DE/RU/JA). 2. Draggable button. 3. Auto system prompt detection. 4. Perfect Markdown formatting.",
+    "url": "https://greasyfork.org/scripts/557864-ai-studio-chat-exporter-markdown-code-block-support",
+    "code_url": "https://update.greasyfork.org/scripts/557864/AI%20Studio%20Chat%20Exporter%20%28Markdown%20%20Code%20Block%20Support%29.user.js",
+    "code_size": 12838,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

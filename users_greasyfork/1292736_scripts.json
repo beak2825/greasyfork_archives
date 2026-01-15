@@ -1,33 +1,33 @@
 [
   {
     "id": 561703,
-    "daily_installs": 0,
-    "total_installs": 0,
+    "daily_installs": 3,
+    "total_installs": 3,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2026-01-07T09:01:37.000Z",
-    "code_updated_at": "2026-01-07T09:02:31.000Z",
-    "namespace": "http://tampermonkey.net/",
-    "support_url": null,
+    "code_updated_at": "2026-01-14T08:03:50.000Z",
+    "namespace": "happy-toolman-guard",
+    "support_url": "https://github.com/luhaoming/userscripts/issues",
     "contribution_url": null,
     "contribution_amount": null,
     "users": [
       {
         "id": 1292736,
-        "name": "Lu Haoming (大叔愛說笑)",
+        "name": "Lu Haoming (快樂工具人)",
         "created_at": "2024-04-25T00:48:59.000Z",
-        "url": "https://greasyfork.org/users/1292736-lu-haoming-%E5%A4%A7%E5%8F%94%E6%84%9B%E8%AA%AA%E7%AC%91"
+        "url": "https://greasyfork.org/users/1292736-lu-haoming-%E5%BF%AB%E6%A8%82%E5%B7%A5%E5%85%B7%E4%BA%BA"
       }
     ],
     "name": "快樂工具人: 正式區防呆小幫手",
     "description": "在畫面醒目的顯示目前的工作區，在正式區執行刪除操作時會多做一次確認，支援自訂網域與匯入匯出設定",
     "url": "https://greasyfork.org/scripts/561703-%E5%BF%AB%E6%A8%82%E5%B7%A5%E5%85%B7%E4%BA%BA-%E6%AD%A3%E5%BC%8F%E5%8D%80%E9%98%B2%E5%91%86%E5%B0%8F%E5%B9%AB%E6%89%8B",
     "code_url": "https://update.greasyfork.org/scripts/561703/%E5%BF%AB%E6%A8%82%E5%B7%A5%E5%85%B7%E4%BA%BA%3A%20%E6%AD%A3%E5%BC%8F%E5%8D%80%E9%98%B2%E5%91%86%E5%B0%8F%E5%B9%AB%E6%89%8B.user.js",
-    "code_size": 4289,
+    "code_size": 6250,
     "license": null,
-    "version": "2026-01-07.002",
+    "version": "2026-01-14.001",
     "locale": "zh-TW",
     "deleted": false,
     "visibility": "public"

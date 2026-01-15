@@ -1,7 +1,7 @@
 {
   "id": 557538,
-  "daily_installs": 0,
-  "total_installs": 20,
+  "daily_installs": 1,
+  "total_installs": 23,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1335395,
       "name": "71256988",
       "created_at": "2024-07-17T13:19:55.000Z",
-      "url": "https://greasyfork.org/users/1335395-71256988",
-      "scripts": [
-        {
-          "id": 557538,
-          "daily_installs": 0,
-          "total_installs": 20,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-01T14:17:37.000Z",
-          "code_updated_at": "2025-12-01T14:17:37.000Z",
-          "namespace": "https://greasyfork.org/users/1335395",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Stop YouTube autoplay",
-          "description": "Temporary vibe-coded solution to YouTube's autoplay anti-feature because the extensions broke.",
-          "url": "https://greasyfork.org/scripts/557538-stop-youtube-autoplay",
-          "code_url": "https://update.greasyfork.org/scripts/557538/Stop%20YouTube%20autoplay.user.js",
-          "code_size": 1766,
-          "license": null,
-          "version": "1.0",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1335395-71256988"
     }
   ],
   "name": "Stop YouTube autoplay",

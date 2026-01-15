@@ -1,0 +1,59 @@
+{
+  "id": 556391,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T13:12:52.000Z",
+  "code_updated_at": "2025-12-02T08:36:57.000Z",
+  "namespace": "はじっこゆーれー",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1539772,
+      "name": "hajikko-yure",
+      "created_at": "2025-11-20T13:05:44.000Z",
+      "url": "https://greasyfork.org/users/1539772-hajikko-yure",
+      "scripts": [
+        {
+          "id": 556391,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T13:12:52.000Z",
+          "code_updated_at": "2025-12-02T08:36:57.000Z",
+          "namespace": "はじっこゆーれー",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube LiveChat handle-id to username",
+          "description": "YouTubeライブチャットでハンドルIDをユーザー名に戻すなどなど",
+          "url": "https://greasyfork.org/scripts/556391-youtube-livechat-handle-id-to-username",
+          "code_url": "https://update.greasyfork.org/scripts/556391/YouTube%20LiveChat%20handle-id%20to%20username.user.js",
+          "code_size": 11265,
+          "license": "MIT License",
+          "version": "1.9",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube LiveChat handle-id to username",
+  "description": "YouTubeライブチャットでハンドルIDをユーザー名に戻すなどなど",
+  "url": "https://greasyfork.org/scripts/556391-youtube-livechat-handle-id-to-username",
+  "code_url": "https://update.greasyfork.org/scripts/556391/YouTube%20LiveChat%20handle-id%20to%20username.user.js",
+  "code_size": 11265,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

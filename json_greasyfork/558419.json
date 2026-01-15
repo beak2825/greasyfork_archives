@@ -1,0 +1,33 @@
+{
+  "id": 558419,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-09T14:19:10.000Z",
+  "code_updated_at": "2025-12-09T14:19:10.000Z",
+  "namespace": "https://nssc.cc/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1129783,
+      "name": "Crazy uncle",
+      "created_at": "2023-07-18T09:29:14.000Z",
+      "url": "https://greasyfork.org/users/1129783-crazy-uncle"
+    }
+  ],
+  "name": "抖音视频页侧边栏批量复制视频URL",
+  "description": "在抖音视频页右侧列表给每个视频加勾选框。修复全选在短剧/合集模式下的失效问题。修复URL重复拼接域名的问题。",
+  "url": "https://greasyfork.org/scripts/558419-%E6%8A%96%E9%9F%B3%E8%A7%86%E9%A2%91%E9%A1%B5%E4%BE%A7%E8%BE%B9%E6%A0%8F%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E8%A7%86%E9%A2%91url",
+  "code_url": "https://update.greasyfork.org/scripts/558419/%E6%8A%96%E9%9F%B3%E8%A7%86%E9%A2%91%E9%A1%B5%E4%BE%A7%E8%BE%B9%E6%A0%8F%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E8%A7%86%E9%A2%91URL.user.js",
+  "code_size": 9079,
+  "license": null,
+  "version": "0.7.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

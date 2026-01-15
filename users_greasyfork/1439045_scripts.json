@@ -31,5 +31,71 @@
     "locale": "es",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 554162,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T03:11:13.000Z",
+    "code_updated_at": "2025-10-30T03:11:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439045,
+        "name": "Juan Fernando4",
+        "created_at": "2025-02-23T22:10:21.000Z",
+        "url": "https://greasyfork.org/users/1439045-juan-fernando4"
+      }
+    ],
+    "name": "YouTube Red Matrix Background",
+    "description": "Cambia el fondo de YouTube a un estilo Matrix rojo animado sobre negro",
+    "url": "https://greasyfork.org/scripts/554162-youtube-red-matrix-background",
+    "code_url": "https://update.greasyfork.org/scripts/554162/YouTube%20Red%20Matrix%20Background.user.js",
+    "code_size": 2253,
+    "license": null,
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554027,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T00:14:17.000Z",
+    "code_updated_at": "2025-10-29T00:14:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439045,
+        "name": "Juan Fernando4",
+        "created_at": "2025-02-23T22:10:21.000Z",
+        "url": "https://greasyfork.org/users/1439045-juan-fernando4"
+      }
+    ],
+    "name": "Drawaria - Panel negro y rojo + imagen fija",
+    "description": "Panel compacto y estilizado para cargar, mover y fijar imagen sobre el lienzo en Drawaria.online para calcar fácilmente sin estorbar al dibujar.",
+    "url": "https://greasyfork.org/scripts/554027-drawaria-panel-negro-y-rojo-imagen-fija",
+    "code_url": "https://update.greasyfork.org/scripts/554027/Drawaria%20-%20Panel%20negro%20y%20rojo%20%2B%20imagen%20fija.user.js",
+    "code_size": 5280,
+    "license": null,
+    "version": "1.4",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

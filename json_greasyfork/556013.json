@@ -1,0 +1,34 @@
+{
+  "id": 556013,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-16T13:29:28.000Z",
+  "code_updated_at": "2025-11-16T13:29:28.000Z",
+  "namespace": "https://greasyfork.org/users/1527993",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527993,
+      "name": "ForeverPWA",
+      "created_at": "2025-10-18T01:54:14.000Z",
+      "url": "https://greasyfork.org/users/1527993-foreverpwa",
+      "scripts": []
+    }
+  ],
+  "name": "Markdown Image Renderer for Gemini,ChatGPT",
+  "description": "Gemini,ChatGPTのチャットでMarkdown画像を表示します。画像クリックで単一のサブウィンドウに表示（上書き）します。",
+  "url": "https://greasyfork.org/scripts/556013-markdown-image-renderer-for-gemini-chatgpt",
+  "code_url": "https://update.greasyfork.org/scripts/556013/Markdown%20Image%20Renderer%20for%20Gemini%2CChatGPT.user.js",
+  "code_size": 6068,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

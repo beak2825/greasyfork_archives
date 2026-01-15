@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553613,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T00:46:41.000Z",
+    "code_updated_at": "2025-10-25T00:46:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530372,
+        "name": "Xenthio",
+        "created_at": "2025-10-25T00:42:29.000Z",
+        "url": "https://greasyfork.org/users/1530372-xenthio"
+      }
+    ],
+    "name": "Attempt to Hide Safari Toolbar on chatreplay.stream",
+    "description": "Tries to hide the Safari toolbar on page load by scrolling slightly.",
+    "url": "https://greasyfork.org/scripts/553613-attempt-to-hide-safari-toolbar-on-chatreplay-stream",
+    "code_url": "https://update.greasyfork.org/scripts/553613/Attempt%20to%20Hide%20Safari%20Toolbar%20on%20chatreplaystream.user.js",
+    "code_size": 669,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553612,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T00:45:57.000Z",
+    "code_updated_at": "2025-10-25T00:45:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530372,
+        "name": "Xenthio",
+        "created_at": "2025-10-25T00:42:29.000Z",
+        "url": "https://greasyfork.org/users/1530372-xenthio"
+      }
+    ],
+    "name": "ChatReplay.stream Fullscreen Landscape on iPhone",
+    "description": "Adds a meta tag to make chatreplay.stream utilize the full screen in landscape mode on iPhones with a notch.",
+    "url": "https://greasyfork.org/scripts/553612-chatreplay-stream-fullscreen-landscape-on-iphone",
+    "code_url": "https://update.greasyfork.org/scripts/553612/ChatReplaystream%20Fullscreen%20Landscape%20on%20iPhone.user.js",
+    "code_size": 968,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

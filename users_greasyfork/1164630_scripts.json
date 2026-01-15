@@ -2,7 +2,7 @@
   {
     "id": 557062,
     "daily_installs": 0,
-    "total_installs": 5,
+    "total_installs": 6,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 553086,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-19T10:19:45.000Z",
+    "code_updated_at": "2025-12-16T17:26:31.000Z",
+    "namespace": "http://fiverr.com/web_coder_nsd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1164630,
+        "name": "NoushadBug",
+        "created_at": "2023-09-02T06:47:35.000Z",
+        "url": "https://greasyfork.org/users/1164630-noushadbug"
+      }
+    ],
+    "name": "Upwork Job Analyzer & Cover Letter Generator",
+    "description": "AI-powered job analysis to detect red flags and haram content",
+    "url": "https://greasyfork.org/scripts/553086-upwork-job-analyzer-cover-letter-generator",
+    "code_url": "https://update.greasyfork.org/scripts/553086/Upwork%20Job%20Analyzer%20%20Cover%20Letter%20Generator.user.js",
+    "code_size": 67356,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552158,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T13:47:54.000Z",
+    "code_updated_at": "2025-10-10T20:47:53.000Z",
+    "namespace": "http://fiverr.com/web_coder_nsd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1164630,
+        "name": "NoushadBug",
+        "created_at": "2023-09-02T06:47:35.000Z",
+        "url": "https://greasyfork.org/users/1164630-noushadbug"
+      }
+    ],
+    "name": "DeepSeek Conversation Search",
+    "description": "Search and click DeepSeek conversations by URL parameter with loading delay",
+    "url": "https://greasyfork.org/scripts/552158-deepseek-conversation-search",
+    "code_url": "https://update.greasyfork.org/scripts/552158/DeepSeek%20Conversation%20Search.user.js",
+    "code_size": 3759,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

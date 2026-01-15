@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554315,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T13:13:04.000Z",
+    "code_updated_at": "2025-10-31T13:13:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 850781,
+        "name": "DashSAG",
+        "created_at": "2021-12-09T10:14:50.000Z",
+        "url": "https://greasyfork.org/users/850781-dashsag"
+      }
+    ],
+    "name": "NexusPHP 批量多页下载 (泛站适配)",
+    "description": "[V2.1 泛站适配] 在 NexusPHP 架构站点的种子列表页添加控制面板，允许指定页码范围，后台抓取所有范围内的种子并建立下载队列，最后统一、安全、带延迟地批量下载。",
+    "url": "https://greasyfork.org/scripts/554315-nexusphp-%E6%89%B9%E9%87%8F%E5%A4%9A%E9%A1%B5%E4%B8%8B%E8%BD%BD-%E6%B3%9B%E7%AB%99%E9%80%82%E9%85%8D",
+    "code_url": "https://update.greasyfork.org/scripts/554315/NexusPHP%20%E6%89%B9%E9%87%8F%E5%A4%9A%E9%A1%B5%E4%B8%8B%E8%BD%BD%20%28%E6%B3%9B%E7%AB%99%E9%80%82%E9%85%8D%29.user.js",
+    "code_size": 14275,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

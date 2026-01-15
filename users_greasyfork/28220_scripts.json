@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554822,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T02:12:52.000Z",
+    "code_updated_at": "2025-11-05T02:36:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28220,
+        "name": "happmaoo",
+        "created_at": "2016-01-24T04:14:31.000Z",
+        "url": "https://greasyfork.org/users/28220-happmaoo"
+      }
+    ],
+    "name": "cctv手机版",
+    "description": "cctv电脑版适配手机版",
+    "url": "https://greasyfork.org/scripts/554822-cctv%E6%89%8B%E6%9C%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/554822/cctv%E6%89%8B%E6%9C%BA%E7%89%88.user.js",
+    "code_size": 2208,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

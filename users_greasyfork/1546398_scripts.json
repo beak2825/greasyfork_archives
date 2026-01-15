@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558542,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T19:02:22.000Z",
+    "code_updated_at": "2025-12-10T19:35:35.000Z",
+    "namespace": "https://jovialbadger.co.uk/",
+    "support_url": "https://github.com/JovialBadger/Kindle-Book-List-Exporter/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546398,
+        "name": "JovialBadger",
+        "created_at": "2025-12-09T22:46:36.000Z",
+        "url": "https://greasyfork.org/users/1546398-jovialbadger"
+      }
+    ],
+    "name": "Kindle Book List Parser & Exporter",
+    "description": "Parse Kindle book list pages, track read status (only fully read), detect gaps in export list, and export results to CSV.",
+    "url": "https://greasyfork.org/scripts/558542-kindle-book-list-parser-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/558542/Kindle%20Book%20List%20Parser%20%20Exporter.user.js",
+    "code_size": 10473,
+    "license": "GNU GPL V3",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

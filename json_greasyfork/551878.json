@@ -1,0 +1,33 @@
+{
+  "id": 551878,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-07T16:57:47.000Z",
+  "code_updated_at": "2025-10-08T16:27:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088100,
+      "name": "YouTubeDrawaria",
+      "created_at": "2023-05-31T23:20:20.000Z",
+      "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+    }
+  ],
+  "name": "Drawaria JSAB Long Live the New Fresh Boss",
+  "description": "Full Conversion to Just Shapes & Beats (JSAB) style: Cyan Cube, trail particles, rhythm-based continuous Bullet Hell boss fight (OPEN MAP, Dynamic Boss). Boss now moves and Dash has directional impulse!",
+  "url": "https://greasyfork.org/scripts/551878-drawaria-jsab-long-live-the-new-fresh-boss",
+  "code_url": "https://update.greasyfork.org/scripts/551878/Drawaria%20JSAB%20Long%20Live%20the%20New%20Fresh%20Boss.user.js",
+  "code_size": 47187,
+  "license": "MIT License",
+  "version": "7.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552973,
+    "daily_installs": 1,
+    "total_installs": 1212,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T07:17:07.000Z",
+    "code_updated_at": "2025-11-14T10:25:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230915,
+        "name": "alienzy",
+        "created_at": "2023-12-09T07:30:42.000Z",
+        "url": "https://greasyfork.org/users/1230915-alienzy"
+      }
+    ],
+    "name": "全网VIP视频免费破解去广告-alienzy自用版",
+    "description": "全网VIP视频免费破解去广告，适配PC+移动，全网VIP视频解析：爱奇艺、腾讯、优酷、bilibili等视频免费解析！鼠标左键拖拽，支持本页解析和跳转解析！🔥真4K高清🔥脚本长期维护更新，完全免费，无广告，仅限学习交流！",
+    "url": "https://greasyfork.org/scripts/552973-%E5%85%A8%E7%BD%91vip%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-alienzy%E8%87%AA%E7%94%A8%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/552973/%E5%85%A8%E7%BD%91VIP%E8%A7%86%E9%A2%91%E5%85%8D%E8%B4%B9%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A-alienzy%E8%87%AA%E7%94%A8%E7%89%88.user.js",
+    "code_size": 35666,
+    "license": "GPL License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

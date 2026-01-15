@@ -1,0 +1,101 @@
+[
+  {
+    "id": 556993,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-26T14:02:46.000Z",
+    "code_updated_at": "2025-11-26T14:02:46.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479260,
+        "name": "Юрий SirMeow",
+        "created_at": "2025-06-05T10:44:26.000Z",
+        "url": "https://greasyfork.org/users/1479260-%D1%8E%D1%80%D0%B8%D0%B9-sirmeow"
+      }
+    ],
+    "name": "Penza | Скрипт для кураторов администрации",
+    "description": "Скрипт для кураторов администрации сервера Penza",
+    "url": "https://greasyfork.org/scripts/556993-penza-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/556993/Penza%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D0%B8.user.js",
+    "code_size": 66540,
+    "license": "none",
+    "version": "1.0.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555850,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T15:13:46.000Z",
+    "code_updated_at": "2025-11-22T14:24:58.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479260,
+        "name": "Юрий SirMeow",
+        "created_at": "2025-06-05T10:44:26.000Z",
+        "url": "https://greasyfork.org/users/1479260-%D1%8E%D1%80%D0%B8%D0%B9-sirmeow"
+      }
+    ],
+    "name": "Penza | Скрипт для руководства сервера",
+    "description": "Скрипт для руко сервера Penza",
+    "url": "https://greasyfork.org/scripts/555850-penza-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/555850/Penza%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0.user.js",
+    "code_size": 180065,
+    "license": "none",
+    "version": "1.0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554078,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T09:39:45.000Z",
+    "code_updated_at": "2025-12-26T14:17:51.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479260,
+        "name": "Юрий SirMeow",
+        "created_at": "2025-06-05T10:44:26.000Z",
+        "url": "https://greasyfork.org/users/1479260-%D1%8E%D1%80%D0%B8%D0%B9-sirmeow"
+      }
+    ],
+    "name": "Penza | Скрипт для ЗГС/ГС ГОСС",
+    "description": "Скрипт для руковоства ГОСС сервера Penza",
+    "url": "https://greasyfork.org/scripts/554078-penza-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B3%D1%81-%D0%B3%D1%81-%D0%B3%D0%BE%D1%81%D1%81",
+    "code_url": "https://update.greasyfork.org/scripts/554078/Penza%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%97%D0%93%D0%A1%D0%93%D0%A1%20%D0%93%D0%9E%D0%A1%D0%A1.user.js",
+    "code_size": 60278,
+    "license": "none",
+    "version": "1.0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

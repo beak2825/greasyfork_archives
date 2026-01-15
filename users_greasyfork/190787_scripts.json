@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554607,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T06:20:55.000Z",
+    "code_updated_at": "2025-11-03T06:25:14.000Z",
+    "namespace": "http://jarvisdong.cc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 190787,
+        "name": "Jar D",
+        "created_at": "2018-06-12T16:02:52.000Z",
+        "url": "https://greasyfork.org/users/190787-jar-d"
+      }
+    ],
+    "name": "swagger添加复制url和名称按钮",
+    "description": "复制 Swagger UI 页面的 API 路径和名称",
+    "url": "https://greasyfork.org/scripts/554607-swagger%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6url%E5%92%8C%E5%90%8D%E7%A7%B0%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/554607/swagger%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6url%E5%92%8C%E5%90%8D%E7%A7%B0%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 5423,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

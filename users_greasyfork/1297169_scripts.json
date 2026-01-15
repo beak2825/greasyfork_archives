@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555240,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T20:58:15.000Z",
+    "code_updated_at": "2025-11-13T16:15:22.000Z",
+    "namespace": "leeSalami.lss",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297169,
+        "name": "Manute1337",
+        "created_at": "2024-05-05T09:33:10.000Z",
+        "url": "https://greasyfork.org/users/1297169-manute1337"
+      }
+    ],
+    "name": "API-Speicher",
+    "description": "Erlaubt die Speicherung und Wiederverwendung von API-Daten des Leitstellenspiels",
+    "url": "https://greasyfork.org/scripts/555240-api-speicher",
+    "code_url": "https://update.greasyfork.org/scripts/555240/API-Speicher.user.js",
+    "code_size": 12954,
+    "license": "All Rights Reserved",
+    "version": "0.9.4.2",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

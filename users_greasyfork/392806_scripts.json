@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554006,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T18:21:19.000Z",
+    "code_updated_at": "2025-10-28T18:21:19.000Z",
+    "namespace": "dart/youtube/ni-drc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 392806,
+        "name": "Ronaldo Veiga",
+        "created_at": "2019-10-28T13:06:08.000Z",
+        "url": "https://greasyfork.org/users/392806-ronaldo-veiga"
+      }
+    ],
+    "name": "DART - YouTube NOT INTERESTED in 1-Click",
+    "description": "Displays two icons on the middle-right side of each YouTube card (Home page): “Not interested” and “Don’t recommend channel.” Executes the action in a single click (opens the card menu, waits, and clicks the target item). Keeps YouTube’s default flow (does not auto-remove or auto-confirm).",
+    "url": "https://greasyfork.org/scripts/554006-dart-youtube-not-interested-in-1-click",
+    "code_url": "https://update.greasyfork.org/scripts/554006/DART%20-%20YouTube%20NOT%20INTERESTED%20in%201-Click.user.js",
+    "code_size": 9450,
+    "license": "MIT License",
+    "version": "2025-10-28",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

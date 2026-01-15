@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553894,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-27T20:33:18.000Z",
+    "code_updated_at": "2025-10-27T20:33:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439067,
+        "name": "Schwtz",
+        "created_at": "2025-02-24T01:57:16.000Z",
+        "url": "https://greasyfork.org/users/1439067-schwtz"
+      }
+    ],
+    "name": "RYM Rating Remover",
+    "description": "Removes the total ratings from the release page and charts. It does not removes ratings from friends",
+    "url": "https://greasyfork.org/scripts/553894-rym-rating-remover",
+    "code_url": "https://update.greasyfork.org/scripts/553894/RYM%20Rating%20Remover.user.js",
+    "code_size": 741,
+    "license": "MIT License",
+    "version": "2025-10-27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

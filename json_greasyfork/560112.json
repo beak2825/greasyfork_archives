@@ -17,7 +17,33 @@
       "id": 1552101,
       "name": "Howard Berger",
       "created_at": "2025-12-24T16:54:59.000Z",
-      "url": "https://greasyfork.org/users/1552101-howard-berger"
+      "url": "https://greasyfork.org/users/1552101-howard-berger",
+      "scripts": [
+        {
+          "id": 560112,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-24T17:04:06.000Z",
+          "code_updated_at": "2025-12-24T17:04:06.000Z",
+          "namespace": "https://greasyfork.org/users/1552101",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Falke products",
+          "description": "Remove duplicate product entries from product listings",
+          "url": "https://greasyfork.org/scripts/560112-falke-products",
+          "code_url": "https://update.greasyfork.org/scripts/560112/Falke%20products.user.js",
+          "code_size": 1789,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "Falke products",

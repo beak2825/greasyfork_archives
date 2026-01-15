@@ -1,0 +1,33 @@
+{
+  "id": 557662,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T15:19:45.000Z",
+  "code_updated_at": "2025-12-02T15:19:45.000Z",
+  "namespace": "https://torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476871,
+      "name": "aquagloop",
+      "created_at": "2025-05-30T17:19:46.000Z",
+      "url": "https://greasyfork.org/users/1476871-aquagloop"
+    }
+  ],
+  "name": "Recruiter 3000",
+  "description": "working 9 to 5",
+  "url": "https://greasyfork.org/scripts/557662-recruiter-3000",
+  "code_url": "https://update.greasyfork.org/scripts/557662/Recruiter%203000.user.js",
+  "code_size": 11585,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 556932,
+  "daily_installs": 5,
+  "total_installs": 160,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-26T02:40:28.000Z",
+  "code_updated_at": "2025-11-26T02:47:30.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1541661,
+      "name": "TianbaWang",
+      "created_at": "2025-11-26T02:34:58.000Z",
+      "url": "https://greasyfork.org/users/1541661-tianbawang",
+      "scripts": [
+        {
+          "id": 556932,
+          "daily_installs": 5,
+          "total_installs": 160,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-26T02:40:28.000Z",
+          "code_updated_at": "2025-11-26T02:47:30.000Z",
+          "namespace": "none",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fuck-Yudao 1.0",
+          "description": "屏蔽芋道官方文档登录校验",
+          "url": "https://greasyfork.org/scripts/556932-yudao-1-0",
+          "code_url": "https://update.greasyfork.org/scripts/556932/Fuck-Yudao%2010.user.js",
+          "code_size": 4664,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fuck-Yudao 1.0",
+  "description": "屏蔽芋道官方文档登录校验",
+  "url": "https://greasyfork.org/scripts/556932-yudao-1-0",
+  "code_url": "https://update.greasyfork.org/scripts/556932/Fuck-Yudao%2010.user.js",
+  "code_size": 4664,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 552362,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-12T11:31:34.000Z",
+    "code_updated_at": "2025-10-12T11:33:23.000Z",
+    "namespace": "https://greasyfork.org/users/1237813-abc0922001",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1237813,
+        "name": "abc0922001",
+        "created_at": "2023-12-22T14:32:36.000Z",
+        "url": "https://greasyfork.org/users/1237813-abc0922001"
+      }
+    ],
+    "name": "解鎖圖片右鍵與選取（全站版，可 per-domain 關閉）",
+    "description": "解除各站 IMG 的 oncontextmenu/onmousedown/onselectstart/ondragstart 等攔截，恢復右鍵、選取、拖曳；支援 per-domain 開關與 file://。",
+    "url": "https://greasyfork.org/scripts/552362-%E8%A7%A3%E9%8E%96%E5%9C%96%E7%89%87%E5%8F%B3%E9%8D%B5%E8%88%87%E9%81%B8%E5%8F%96-%E5%85%A8%E7%AB%99%E7%89%88-%E5%8F%AF-per-domain-%E9%97%9C%E9%96%89",
+    "code_url": "https://update.greasyfork.org/scripts/552362/%E8%A7%A3%E9%8E%96%E5%9C%96%E7%89%87%E5%8F%B3%E9%8D%B5%E8%88%87%E9%81%B8%E5%8F%96%EF%BC%88%E5%85%A8%E7%AB%99%E7%89%88%EF%BC%8C%E5%8F%AF%20per-domain%20%E9%97%9C%E9%96%89%EF%BC%89.user.js",
+    "code_size": 3702,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

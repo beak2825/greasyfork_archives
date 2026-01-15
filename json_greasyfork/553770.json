@@ -1,0 +1,59 @@
+{
+  "id": 553770,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-26T14:59:34.000Z",
+  "code_updated_at": "2025-10-26T15:01:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530925,
+      "name": "darkselia",
+      "created_at": "2025-10-26T14:53:54.000Z",
+      "url": "https://greasyfork.org/users/1530925-darkselia",
+      "scripts": [
+        {
+          "id": 553770,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-26T14:59:34.000Z",
+          "code_updated_at": "2025-10-26T15:01:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VkvideoCustomizableRewindVideo",
+          "description": "Changes the video rewind speed in VK videos. When you press the \"right arrow\" and \"left arrow\" keys, it changes from 10 to 5 seconds. When you press the \"<\" and \">\" keys, it changes to 0.1 seconds.",
+          "url": "https://greasyfork.org/scripts/553770-vkvideocustomizablerewindvideo",
+          "code_url": "https://update.greasyfork.org/scripts/553770/VkvideoCustomizableRewindVideo.user.js",
+          "code_size": 2390,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VkvideoCustomizableRewindVideo",
+  "description": "Changes the video rewind speed in VK videos. When you press the \"right arrow\" and \"left arrow\" keys, it changes from 10 to 5 seconds. When you press the \"<\" and \">\" keys, it changes to 0.1 seconds.",
+  "url": "https://greasyfork.org/scripts/553770-vkvideocustomizablerewindvideo",
+  "code_url": "https://update.greasyfork.org/scripts/553770/VkvideoCustomizableRewindVideo.user.js",
+  "code_size": 2390,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

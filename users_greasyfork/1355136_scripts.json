@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551899,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-08T00:17:02.000Z",
+    "code_updated_at": "2025-12-31T14:02:55.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1355136,
+        "name": "LDP924",
+        "created_at": "2024-08-20T15:12:55.000Z",
+        "url": "https://greasyfork.org/users/1355136-ldp924"
+      }
+    ],
+    "name": "AcgnX UTC 时间转换",
+    "description": "自动将时间转换为本地时区",
+    "url": "https://greasyfork.org/scripts/551899-acgnx-utc-%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/551899/AcgnX%20UTC%20%E6%97%B6%E9%97%B4%E8%BD%AC%E6%8D%A2.user.js",
+    "code_size": 3310,
+    "license": "MIT License",
+    "version": "7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 559813,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-22T12:01:07.000Z",
+  "code_updated_at": "2025-12-22T12:04:27.000Z",
+  "namespace": "https://agent.minimax.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 991990,
+      "name": "陳秉昊",
+      "created_at": "2022-12-03T18:30:58.000Z",
+      "url": "https://greasyfork.org/users/991990-%E9%99%B3%E7%A7%89%E6%98%8A",
+      "scripts": [
+        {
+          "id": 559813,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-22T12:01:07.000Z",
+          "code_updated_at": "2025-12-22T12:04:27.000Z",
+          "namespace": "https://agent.minimax.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MiniMax Dialogue Exporter",
+          "description": "匯出 MiniMax Agent 對話內容為 Markdown 格式，包括對話、Task 和 Thinking",
+          "url": "https://greasyfork.org/scripts/559813-minimax-dialogue-exporter",
+          "code_url": "https://update.greasyfork.org/scripts/559813/MiniMax%20Dialogue%20Exporter.user.js",
+          "code_size": 29373,
+          "license": "MIT License",
+          "version": "3.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MiniMax Dialogue Exporter",
+  "description": "匯出 MiniMax Agent 對話內容為 Markdown 格式，包括對話、Task 和 Thinking",
+  "url": "https://greasyfork.org/scripts/559813-minimax-dialogue-exporter",
+  "code_url": "https://update.greasyfork.org/scripts/559813/MiniMax%20Dialogue%20Exporter.user.js",
+  "code_size": 29373,
+  "license": "MIT License",
+  "version": "3.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

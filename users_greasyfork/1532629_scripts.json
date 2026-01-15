@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554321,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T13:54:50.000Z",
+    "code_updated_at": "2025-11-01T16:14:37.000Z",
+    "namespace": "[https://www.torn.com/](https://www.torn.com/)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1532629,
+        "name": "Kuppel",
+        "created_at": "2025-10-31T13:29:27.000Z",
+        "url": "https://greasyfork.org/users/1532629-kuppel"
+      }
+    ],
+    "name": "Torn — Larger Chain Timer + Random Lvl 1 Finder (Ctrl+Click) v1.5",
+    "description": "Enlarges the chain timer and lets you Ctrl+Click it to find a random Level 1 target. Menu options: profile vs attack loader, new tab vs same tab.",
+    "url": "https://greasyfork.org/scripts/554321-torn-larger-chain-timer-random-lvl-1-finder-ctrl-click-v1-5",
+    "code_url": "https://update.greasyfork.org/scripts/554321/Torn%20%E2%80%94%20Larger%20Chain%20Timer%20%2B%20Random%20Lvl%201%20Finder%20%28Ctrl%2BClick%29%20v15.user.js",
+    "code_size": 17300,
+    "license": "GNU GPLv3",
+    "version": "1.62",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 555352,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-09T20:59:50.000Z",
+  "code_updated_at": "2025-11-10T10:25:31.000Z",
+  "namespace": "_fork_",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1536065,
+      "name": "FUN_",
+      "created_at": "2025-11-09T18:40:23.000Z",
+      "url": "https://greasyfork.org/users/1536065-fun",
+      "scripts": []
+    }
+  ],
+  "name": "Gebäudebauer / Save Version",
+  "description": "Ermöglicht das spezifische Bauen von Gebäuden",
+  "url": "https://greasyfork.org/scripts/555352-geb%C3%A4udebauer-save-version",
+  "code_url": "https://update.greasyfork.org/scripts/555352/Geb%C3%A4udebauer%20%20Save%20Version.user.js",
+  "code_size": 13576,
+  "license": "All Rights Reserved",
+  "version": "1.0.2",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

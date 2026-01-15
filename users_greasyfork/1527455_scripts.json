@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552806,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T14:27:15.000Z",
+    "code_updated_at": "2025-10-16T14:27:15.000Z",
+    "namespace": "https://github.com/bharker75",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527455,
+        "name": "bharker75",
+        "created_at": "2025-10-16T14:09:59.000Z",
+        "url": "https://greasyfork.org/users/1527455-bharker75"
+      }
+    ],
+    "name": "GAIA prevent waypoint click flyTo behavior",
+    "description": "Stop fly to behavior when a waypoint is clicked",
+    "url": "https://greasyfork.org/scripts/552806-gaia-prevent-waypoint-click-flyto-behavior",
+    "code_url": "https://update.greasyfork.org/scripts/552806/GAIA%20prevent%20waypoint%20click%20flyTo%20behavior.user.js",
+    "code_size": 1377,
+    "license": "MIT License",
+    "version": "2025-10-16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

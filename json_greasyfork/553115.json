@@ -1,0 +1,33 @@
+{
+  "id": 553115,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T15:10:03.000Z",
+  "code_updated_at": "2025-11-13T04:19:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513779,
+      "name": "hu sheire",
+      "created_at": "2025-09-11T02:29:47.000Z",
+      "url": "https://greasyfork.org/users/1513779-hu-sheire"
+    }
+  ],
+  "name": "industry Checker",
+  "description": "Add check links to shop names on GoodsFox website",
+  "url": "https://greasyfork.org/scripts/553115-industry-checker",
+  "code_url": "https://update.greasyfork.org/scripts/553115/industry%20Checker.user.js",
+  "code_size": 4365,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

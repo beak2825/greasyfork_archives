@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553046,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T21:28:07.000Z",
+    "code_updated_at": "2025-10-18T21:36:56.000Z",
+    "namespace": "https://presinfo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528290,
+        "name": "SHYSHLOV VLADYSLAV",
+        "created_at": "2025-10-18T18:40:36.000Z",
+        "url": "https://greasyfork.org/users/1528290-shyshlov-vladyslav"
+      }
+    ],
+    "name": "ChatGPT Auto Cleaner — v2.6 (navigation synced with KEEP_LAST)",
+    "description": "Навигация и элементы управления остаются только у последних сообщений (связано с KEEP_LAST)",
+    "url": "https://greasyfork.org/scripts/553046-chatgpt-auto-cleaner-v2-6-navigation-synced-with-keep-last",
+    "code_url": "https://update.greasyfork.org/scripts/553046/ChatGPT%20Auto%20Cleaner%20%E2%80%94%20v26%20%28navigation%20synced%20with%20KEEP_LAST%29.user.js",
+    "code_size": 5309,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

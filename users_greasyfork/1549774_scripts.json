@@ -1,5 +1,38 @@
 [
   {
+    "id": 559591,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T10:05:02.000Z",
+    "code_updated_at": "2025-12-20T10:05:02.000Z",
+    "namespace": "https://greasyfork.org/users/your-name",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549774,
+        "name": "Hunter Tustin",
+        "created_at": "2025-12-18T21:19:12.000Z",
+        "url": "https://greasyfork.org/users/1549774-hunter-tustin"
+      }
+    ],
+    "name": "Mobile Custom Overlay Cursor (iOS-style)",
+    "description": "Upload a custom cursor image and use it as a full overlay cursor (mouse + touch) with Mac/Windows size presets, angle control, hotspot calibration, and a draggable, collapsible iPadOS-style settings panel.",
+    "url": "https://greasyfork.org/scripts/559591-mobile-custom-overlay-cursor-ios-style",
+    "code_url": "https://update.greasyfork.org/scripts/559591/Mobile%20Custom%20Overlay%20Cursor%20%28iOS-style%29.user.js",
+    "code_size": 24056,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 559554,
     "daily_installs": 0,
     "total_installs": 1,
@@ -132,6 +165,39 @@
     "visibility": "public"
   },
   {
+    "id": 559476,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T07:59:39.000Z",
+    "code_updated_at": "2025-12-19T07:59:39.000Z",
+    "namespace": "https://greasyfork.org/en/users/000000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549774,
+        "name": "Hunter Tustin",
+        "created_at": "2025-12-18T21:19:12.000Z",
+        "url": "https://greasyfork.org/users/1549774-hunter-tustin"
+      }
+    ],
+    "name": "Windows 7 Style Overlay Cursor (iPad + Desktop)",
+    "description": "Windows 7-style cursor overlay that follows your finger/mouse exactly. Works on iPadOS Safari + desktop browsers.",
+    "url": "https://greasyfork.org/scripts/559476-windows-7-style-overlay-cursor-ipad-desktop",
+    "code_url": "https://update.greasyfork.org/scripts/559476/Windows%207%20Style%20Overlay%20Cursor%20%28iPad%20%2B%20Desktop%29.user.js",
+    "code_size": 2810,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 559421,
     "daily_installs": 0,
     "total_installs": 2,
@@ -191,6 +257,39 @@
     "url": "https://greasyfork.org/scripts/559418-macro-menu-right-shift-r-toggle",
     "code_url": "https://update.greasyfork.org/scripts/559418/Macro%20Menu%20%28Right%20Shift%20%2B%20R%20Toggle%29.user.js",
     "code_size": 2604,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559415,
+    "daily_installs": 4,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T21:19:52.000Z",
+    "code_updated_at": "2025-12-18T21:19:52.000Z",
+    "namespace": "bloxd-smooth-120fps",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549774,
+        "name": "Hunter Tustin",
+        "created_at": "2025-12-18T21:19:12.000Z",
+        "url": "https://greasyfork.org/users/1549774-hunter-tustin"
+      }
+    ],
+    "name": "Bloxd.io Smoothness Booster + Fake 120 FPS",
+    "description": "Makes Bloxd.io feel smoother and replaces the top-left FPS text with a fake 120 FPS display.",
+    "url": "https://greasyfork.org/scripts/559415-bloxd-io-smoothness-booster-fake-120-fps",
+    "code_url": "https://update.greasyfork.org/scripts/559415/Bloxdio%20Smoothness%20Booster%20%2B%20Fake%20120%20FPS.user.js",
+    "code_size": 2324,
     "license": null,
     "version": "1.0",
     "locale": "en",

@@ -2,7 +2,7 @@
   {
     "id": 560516,
     "daily_installs": 1,
-    "total_installs": 25,
+    "total_installs": 26,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -34,8 +34,8 @@
   },
   {
     "id": 560438,
-    "daily_installs": 1,
-    "total_installs": 45,
+    "daily_installs": 0,
+    "total_installs": 46,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -95,6 +95,105 @@
     "license": "MIT License",
     "version": "1.4.2",
     "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556051,
+    "daily_installs": 1,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-17T04:18:46.000Z",
+    "code_updated_at": "2025-11-17T04:34:01.000Z",
+    "namespace": "https://chatgpt.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1534823,
+        "name": "Anns Dean",
+        "created_at": "2025-11-06T14:45:06.000Z",
+        "url": "https://greasyfork.org/users/1534823-anns-dean"
+      }
+    ],
+    "name": "ChatGPT-Team-Checkout",
+    "description": "在 ChatGPT 主页面一键生成并复制团队支付链接",
+    "url": "https://greasyfork.org/scripts/556051-chatgpt-team-checkout",
+    "code_url": "https://update.greasyfork.org/scripts/556051/ChatGPT-Team-Checkout.user.js",
+    "code_size": 5727,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555394,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T07:02:42.000Z",
+    "code_updated_at": "2026-01-12T06:21:28.000Z",
+    "namespace": "https://chatgpt.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1534823,
+        "name": "Anns Dean",
+        "created_at": "2025-11-06T14:45:06.000Z",
+        "url": "https://greasyfork.org/users/1534823-anns-dean"
+      }
+    ],
+    "name": "ChatGPT-Workspace-Helper",
+    "description": "ChatGPT Workspace 管理一体化面板",
+    "url": "https://greasyfork.org/scripts/555394-chatgpt-workspace-helper",
+    "code_url": "https://update.greasyfork.org/scripts/555394/ChatGPT-Workspace-Helper.user.js",
+    "code_size": 72203,
+    "license": "MIT License",
+    "version": "1.9.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554996,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T14:46:37.000Z",
+    "code_updated_at": "2025-11-20T12:30:23.000Z",
+    "namespace": "qiusheng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1534823,
+        "name": "Anns Dean",
+        "created_at": "2025-11-06T14:45:06.000Z",
+        "url": "https://greasyfork.org/users/1534823-anns-dean"
+      }
+    ],
+    "name": "ChatGPT-Exporter",
+    "description": "导出当前/全部与ChatGPT的聊天记录（JSON 或 Markdown）",
+    "url": "https://greasyfork.org/scripts/554996-chatgpt-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/554996/ChatGPT-Exporter.user.js",
+    "code_size": 33571,
+    "license": "MIT License",
+    "version": "2.2.0",
+    "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
   }

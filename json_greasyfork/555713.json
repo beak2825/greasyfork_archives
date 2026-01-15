@@ -1,0 +1,59 @@
+{
+  "id": 555713,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-13T12:27:54.000Z",
+  "code_updated_at": "2025-11-13T12:27:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537403,
+      "name": "Tomoya_Aki",
+      "created_at": "2025-11-13T12:19:35.000Z",
+      "url": "https://greasyfork.org/users/1537403-tomoya-aki",
+      "scripts": [
+        {
+          "id": 555713,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-13T12:27:54.000Z",
+          "code_updated_at": "2025-11-13T12:27:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆包深色模式 + 宽屏聊天开关（输入框同步 + 表格优化）",
+          "description": "深色模式 + 宽屏聊天开关，输入框同步变宽，表格在深色模式下增强对比度，刷新记忆状态",
+          "url": "https://greasyfork.org/scripts/555713-%E8%B1%86%E5%8C%85%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F-%E5%AE%BD%E5%B1%8F%E8%81%8A%E5%A4%A9%E5%BC%80%E5%85%B3-%E8%BE%93%E5%85%A5%E6%A1%86%E5%90%8C%E6%AD%A5-%E8%A1%A8%E6%A0%BC%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/555713/%E8%B1%86%E5%8C%85%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%20%2B%20%E5%AE%BD%E5%B1%8F%E8%81%8A%E5%A4%A9%E5%BC%80%E5%85%B3%EF%BC%88%E8%BE%93%E5%85%A5%E6%A1%86%E5%90%8C%E6%AD%A5%20%2B%20%E8%A1%A8%E6%A0%BC%E4%BC%98%E5%8C%96%EF%BC%89.user.js",
+          "code_size": 5182,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆包深色模式 + 宽屏聊天开关（输入框同步 + 表格优化）",
+  "description": "深色模式 + 宽屏聊天开关，输入框同步变宽，表格在深色模式下增强对比度，刷新记忆状态",
+  "url": "https://greasyfork.org/scripts/555713-%E8%B1%86%E5%8C%85%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F-%E5%AE%BD%E5%B1%8F%E8%81%8A%E5%A4%A9%E5%BC%80%E5%85%B3-%E8%BE%93%E5%85%A5%E6%A1%86%E5%90%8C%E6%AD%A5-%E8%A1%A8%E6%A0%BC%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/555713/%E8%B1%86%E5%8C%85%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%20%2B%20%E5%AE%BD%E5%B1%8F%E8%81%8A%E5%A4%A9%E5%BC%80%E5%85%B3%EF%BC%88%E8%BE%93%E5%85%A5%E6%A1%86%E5%90%8C%E6%AD%A5%20%2B%20%E8%A1%A8%E6%A0%BC%E4%BC%98%E5%8C%96%EF%BC%89.user.js",
+  "code_size": 5182,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

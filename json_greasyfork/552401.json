@@ -1,0 +1,59 @@
+{
+  "id": 552401,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-12T16:28:30.000Z",
+  "code_updated_at": "2025-10-12T16:28:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1525681,
+      "name": "edge-runner913",
+      "created_at": "2025-10-12T16:26:42.000Z",
+      "url": "https://greasyfork.org/users/1525681-edge-runner913",
+      "scripts": [
+        {
+          "id": 552401,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-12T16:28:30.000Z",
+          "code_updated_at": "2025-10-12T16:28:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NTHU elearn/eeclass 跳過首頁",
+          "description": "幫助國立清華大學學生適應學校那勾使的兩個NTHU學習系統網頁 (自用，沒有多智能，謹慎使用)",
+          "url": "https://greasyfork.org/scripts/552401-nthu-elearn-eeclass-%E8%B7%B3%E9%81%8E%E9%A6%96%E9%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/552401/NTHU%20elearneeclass%20%E8%B7%B3%E9%81%8E%E9%A6%96%E9%A0%81.user.js",
+          "code_size": 3045,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2025-10-07",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NTHU elearn/eeclass 跳過首頁",
+  "description": "幫助國立清華大學學生適應學校那勾使的兩個NTHU學習系統網頁 (自用，沒有多智能，謹慎使用)",
+  "url": "https://greasyfork.org/scripts/552401-nthu-elearn-eeclass-%E8%B7%B3%E9%81%8E%E9%A6%96%E9%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/552401/NTHU%20elearneeclass%20%E8%B7%B3%E9%81%8E%E9%A6%96%E9%A0%81.user.js",
+  "code_size": 3045,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2025-10-07",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 562194,
+    "daily_installs": 2,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T06:50:08.000Z",
+    "code_updated_at": "2026-01-11T06:50:08.000Z",
+    "namespace": "https://greasyfork.org/users/huojian1888888",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558961,
+        "name": "huojian1888888",
+        "created_at": "2026-01-11T06:29:59.000Z",
+        "url": "https://greasyfork.org/users/1558961-huojian1888888"
+      }
+    ],
+    "name": "🎧📹 MediaSniffer Pro - 常驻媒体探测器",
+    "description": "常驻按钮，点击探测当前页面所有音频、视频及m3u8资源（支持跨iframe嵌入媒体检测），支持自动复制（成功率极高）+失败时手动fallback、下载（直链+自动带Referer+以页面title命名）、m3u8合并命令复制、音频/视频/m3u8自动图标区分、暗色模式、搜索、拖动面板、按发现顺序排序",
+    "url": "https://greasyfork.org/scripts/562194-mediasniffer-pro-%E5%B8%B8%E9%A9%BB%E5%AA%92%E4%BD%93%E6%8E%A2%E6%B5%8B%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/562194/%F0%9F%8E%A7%F0%9F%93%B9%20MediaSniffer%20Pro%20-%20%E5%B8%B8%E9%A9%BB%E5%AA%92%E4%BD%93%E6%8E%A2%E6%B5%8B%E5%99%A8.user.js",
+    "code_size": 19094,
+    "license": "MIT License",
+    "version": "1.17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 562192,
+    "daily_installs": 1,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T06:45:45.000Z",
+    "code_updated_at": "2026-01-11T06:51:54.000Z",
+    "namespace": "https://greasyfork.org/users/huojian1888888",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558961,
+        "name": "huojian1888888",
+        "created_at": "2026-01-11T06:29:59.000Z",
+        "url": "https://greasyfork.org/users/1558961-huojian1888888"
+      }
+    ],
+    "name": "iKuuu 账户管理助手",
+    "description": "右上角账户管理 + 自动登录/签到 + 多账户循环 + 点击切换自动填充",
+    "url": "https://greasyfork.org/scripts/562192-ikuuu-%E8%B4%A6%E6%88%B7%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/562192/iKuuu%20%E8%B4%A6%E6%88%B7%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 35703,
+    "license": "MIT License",
+    "version": "7.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

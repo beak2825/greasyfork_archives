@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552485,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-13T14:54:49.000Z",
+    "code_updated_at": "2025-10-13T14:54:49.000Z",
+    "namespace": "waino.moyu.material",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1316635,
+        "name": "Moson",
+        "created_at": "2024-06-12T08:54:45.000Z",
+        "url": "https://greasyfork.org/users/1316635-moson"
+      }
+    ],
+    "name": "Linux.do 摸鱼伪装器",
+    "description": "伪装标题（默认“abc”）；Logo隐藏；按钮/菜单切换；标题栏透明度",
+    "url": "https://greasyfork.org/scripts/552485-linux-do-%E6%91%B8%E9%B1%BC%E4%BC%AA%E8%A3%85%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/552485/Linuxdo%20%E6%91%B8%E9%B1%BC%E4%BC%AA%E8%A3%85%E5%99%A8.user.js",
+    "code_size": 9283,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

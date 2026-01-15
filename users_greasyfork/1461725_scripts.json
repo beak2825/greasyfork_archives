@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554609,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T06:29:19.000Z",
+    "code_updated_at": "2025-11-03T06:40:51.000Z",
+    "namespace": "https://greasyfork.org/en/users/1461725-scriptninja",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461725,
+        "name": "ScriptNinja",
+        "created_at": "2025-04-24T14:14:50.000Z",
+        "url": "https://greasyfork.org/users/1461725-scriptninja"
+      }
+    ],
+    "name": "Enable Copy Paste and Right Click",
+    "description": "This script forcefully removes all JavaScript restrictions to enable text selection, copy-paste (Ctrl+C, Ctrl+V), and right-click (context menu) on restrictive websites.",
+    "url": "https://greasyfork.org/scripts/554609-enable-copy-paste-and-right-click",
+    "code_url": "https://update.greasyfork.org/scripts/554609/Enable%20Copy%20Paste%20and%20Right%20Click.user.js",
+    "code_size": 3153,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

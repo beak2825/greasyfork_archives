@@ -1,0 +1,59 @@
+{
+  "id": 552544,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-14T09:10:25.000Z",
+  "code_updated_at": "2025-10-14T09:10:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1246971,
+      "name": "sooyaa",
+      "created_at": "2024-01-12T13:31:52.000Z",
+      "url": "https://greasyfork.org/users/1246971-sooyaa",
+      "scripts": [
+        {
+          "id": 552544,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-14T09:10:25.000Z",
+          "code_updated_at": "2025-10-14T09:10:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Framer汉化插件(pro)",
+          "description": "将Framer网页版翻译成中文，方便使用。",
+          "url": "https://greasyfork.org/scripts/552544-framer%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6-pro",
+          "code_url": "https://update.greasyfork.org/scripts/552544/Framer%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6%28pro%29.user.js",
+          "code_size": 20615,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Framer汉化插件(pro)",
+  "description": "将Framer网页版翻译成中文，方便使用。",
+  "url": "https://greasyfork.org/scripts/552544-framer%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6-pro",
+  "code_url": "https://update.greasyfork.org/scripts/552544/Framer%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6%28pro%29.user.js",
+  "code_size": 20615,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

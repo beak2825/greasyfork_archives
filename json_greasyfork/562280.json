@@ -1,0 +1,59 @@
+{
+  "id": 562280,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-11T16:07:10.000Z",
+  "code_updated_at": "2026-01-11T16:27:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497573,
+      "name": "Tark Lee",
+      "created_at": "2025-07-23T08:32:59.000Z",
+      "url": "https://greasyfork.org/users/1497573-tark-lee",
+      "scripts": [
+        {
+          "id": 554450,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-01T20:24:58.000Z",
+          "code_updated_at": "2025-11-01T20:24:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LiblibAI 数据提取器增强版与批量上传",
+          "description": "提取页面用户信息与生成API数据，支持折叠显示和恢复按钮，右侧伸缩面板，复制功能，并整合批量图片上传生成器",
+          "url": "https://greasyfork.org/scripts/554450-liblibai-%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96%E5%99%A8%E5%A2%9E%E5%BC%BA%E7%89%88%E4%B8%8E%E6%89%B9%E9%87%8F%E4%B8%8A%E4%BC%A0",
+          "code_url": "https://update.greasyfork.org/scripts/554450/LiblibAI%20%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96%E5%99%A8%E5%A2%9E%E5%BC%BA%E7%89%88%E4%B8%8E%E6%89%B9%E9%87%8F%E4%B8%8A%E4%BC%A0.user.js",
+          "code_size": 68693,
+          "license": null,
+          "version": "3.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站Wiki搜索增强工具",
+  "description": "为B站Wiki添加可配置的搜索功能，支持三种操作模式",
+  "url": "https://greasyfork.org/scripts/562280-b%E7%AB%99wiki%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/562280/B%E7%AB%99Wiki%E6%90%9C%E7%B4%A2%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 38073,
+  "license": null,
+  "version": "3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

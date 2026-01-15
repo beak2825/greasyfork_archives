@@ -1,0 +1,101 @@
+[
+  {
+    "id": 554614,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T07:46:49.000Z",
+    "code_updated_at": "2025-11-03T07:46:49.000Z",
+    "namespace": "https://lolz.live/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "Moderation MultiTool by unblock",
+    "description": "В модалке удаления: вкладки (Стандартные / Оффтоп), клоны нативных кнопок, автозаполнение обоих полей, чекбокс уведомления всегда включён. Без панелей, без MutationObserver/interval..",
+    "url": "https://greasyfork.org/scripts/554614-moderation-multitool-by-unblock",
+    "code_url": "https://update.greasyfork.org/scripts/554614/Moderation%20MultiTool%20by%20unblock.user.js",
+    "code_size": 11669,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553384,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T15:12:06.000Z",
+    "code_updated_at": "2026-01-13T23:41:15.000Z",
+    "namespace": "LZTContestsInfo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "LZT Contests Info (Firefox)",
+    "description": "Информация о розыгрышах в профиле LZT с кэшем на 10 минут, с обходом CSP (Firefox)",
+    "url": "https://greasyfork.org/scripts/553384-lzt-contests-info-firefox",
+    "code_url": "https://update.greasyfork.org/scripts/553384/LZT%20Contests%20Info%20%28Firefox%29.user.js",
+    "code_size": 16478,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553339,
+    "daily_installs": 1,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T01:53:54.000Z",
+    "code_updated_at": "2026-01-13T23:41:40.000Z",
+    "namespace": "LZTContestsInfo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "LZT Contests Info",
+    "description": "Информация о розыгрышах в профиле LZT с кэшем на 10 минут",
+    "url": "https://greasyfork.org/scripts/553339-lzt-contests-info",
+    "code_url": "https://update.greasyfork.org/scripts/553339/LZT%20Contests%20Info.user.js",
+    "code_size": 14214,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

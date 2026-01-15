@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562653,
+    "daily_installs": 2,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T15:12:58.000Z",
+    "code_updated_at": "2026-01-14T15:12:58.000Z",
+    "namespace": "https://github.com/anonymous/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 128018,
+        "name": "DemoJameson",
+        "created_at": "2017-05-29T20:26:34.000Z",
+        "url": "https://greasyfork.org/users/128018-demojameson"
+      }
+    ],
+    "name": "豆瓣影视添加影巢对应链接",
+    "description": "豆瓣影视添加影巢对应链接，在IMDb ID下方",
+    "url": "https://greasyfork.org/scripts/562653-%E8%B1%86%E7%93%A3%E5%BD%B1%E8%A7%86%E6%B7%BB%E5%8A%A0%E5%BD%B1%E5%B7%A2%E5%AF%B9%E5%BA%94%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/562653/%E8%B1%86%E7%93%A3%E5%BD%B1%E8%A7%86%E6%B7%BB%E5%8A%A0%E5%BD%B1%E5%B7%A2%E5%AF%B9%E5%BA%94%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 8602,
+    "license": "MIT License",
+    "version": "0.9.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

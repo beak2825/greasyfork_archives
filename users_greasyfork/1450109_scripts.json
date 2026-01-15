@@ -132,9 +132,42 @@
     "visibility": "public"
   },
   {
+    "id": 560009,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T23:17:27.000Z",
+    "code_updated_at": "2025-12-23T23:17:27.000Z",
+    "namespace": "https://github.com/Aiuanyu/GeminiChat2MD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "GitHub PR to Markdown",
+    "description": "Downloads a GitHub pull request conversation as a Markdown file.",
+    "url": "https://greasyfork.org/scripts/560009-github-pr-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/560009/GitHub%20PR%20to%20Markdown.user.js",
+    "code_size": 10675,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 560006,
     "daily_installs": 0,
-    "total_installs": 2,
+    "total_installs": 3,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -167,7 +200,7 @@
   {
     "id": 560007,
     "daily_installs": 1,
-    "total_installs": 8,
+    "total_installs": 10,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

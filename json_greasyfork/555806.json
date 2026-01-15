@@ -1,0 +1,59 @@
+{
+  "id": 555806,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-14T06:30:08.000Z",
+  "code_updated_at": "2025-11-14T06:30:08.000Z",
+  "namespace": "https://github.com/lanzeweie",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537611,
+      "name": "lanzeweie",
+      "created_at": "2025-11-14T04:43:59.000Z",
+      "url": "https://greasyfork.org/users/1537611-lanzeweie",
+      "scripts": [
+        {
+          "id": 555806,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-14T06:30:08.000Z",
+          "code_updated_at": "2025-11-14T06:30:08.000Z",
+          "namespace": "https://github.com/lanzeweie",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "我真的没有切屏！",
+          "description": "我真的没有切屏！！！采用多重策略，从内核层面阻止浏览器将失焦或隐藏状态暴露给网站。尽最大可能伪造一直在窗口的假象",
+          "url": "https://greasyfork.org/scripts/555806-%E6%88%91%E7%9C%9F%E7%9A%84%E6%B2%A1%E6%9C%89%E5%88%87%E5%B1%8F",
+          "code_url": "https://update.greasyfork.org/scripts/555806/%E6%88%91%E7%9C%9F%E7%9A%84%E6%B2%A1%E6%9C%89%E5%88%87%E5%B1%8F%EF%BC%81.user.js",
+          "code_size": 19765,
+          "license": "MIT License",
+          "version": "0.82",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "我真的没有切屏！",
+  "description": "我真的没有切屏！！！采用多重策略，从内核层面阻止浏览器将失焦或隐藏状态暴露给网站。尽最大可能伪造一直在窗口的假象",
+  "url": "https://greasyfork.org/scripts/555806-%E6%88%91%E7%9C%9F%E7%9A%84%E6%B2%A1%E6%9C%89%E5%88%87%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/555806/%E6%88%91%E7%9C%9F%E7%9A%84%E6%B2%A1%E6%9C%89%E5%88%87%E5%B1%8F%EF%BC%81.user.js",
+  "code_size": 19765,
+  "license": "MIT License",
+  "version": "0.82",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

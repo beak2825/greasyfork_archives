@@ -1,0 +1,59 @@
+{
+  "id": 554868,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-05T10:06:36.000Z",
+  "code_updated_at": "2025-11-05T10:06:36.000Z",
+  "namespace": "https://feedly.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1534340,
+      "name": "Lucian NEAG",
+      "created_at": "2025-11-05T09:39:03.000Z",
+      "url": "https://greasyfork.org/users/1534340-lucian-neag",
+      "scripts": [
+        {
+          "id": 554868,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-05T10:06:36.000Z",
+          "code_updated_at": "2025-11-05T10:06:36.000Z",
+          "namespace": "https://feedly.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fix YouTube embeds in Feedly (Firefox preemptive patch)",
+          "description": "Fix broken YouTube video embeds in Feedly for Firefox by adding referrerpolicy before iframe creation.",
+          "url": "https://greasyfork.org/scripts/554868-fix-youtube-embeds-in-feedly-firefox-preemptive-patch",
+          "code_url": "https://update.greasyfork.org/scripts/554868/Fix%20YouTube%20embeds%20in%20Feedly%20%28Firefox%20preemptive%20patch%29.user.js",
+          "code_size": 2255,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fix YouTube embeds in Feedly (Firefox preemptive patch)",
+  "description": "Fix broken YouTube video embeds in Feedly for Firefox by adding referrerpolicy before iframe creation.",
+  "url": "https://greasyfork.org/scripts/554868-fix-youtube-embeds-in-feedly-firefox-preemptive-patch",
+  "code_url": "https://update.greasyfork.org/scripts/554868/Fix%20YouTube%20embeds%20in%20Feedly%20%28Firefox%20preemptive%20patch%29.user.js",
+  "code_size": 2255,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

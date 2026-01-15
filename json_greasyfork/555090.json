@@ -1,0 +1,59 @@
+{
+  "id": 555090,
+  "daily_installs": 2,
+  "total_installs": 83,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T09:05:42.000Z",
+  "code_updated_at": "2026-01-12T07:50:41.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 838745,
+      "name": "shawlj",
+      "created_at": "2021-11-15T03:07:42.000Z",
+      "url": "https://greasyfork.org/users/838745-shawlj",
+      "scripts": [
+        {
+          "id": 555090,
+          "daily_installs": 2,
+          "total_installs": 83,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-07T09:05:42.000Z",
+          "code_updated_at": "2026-01-12T07:50:41.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微博图片批量下载",
+          "description": "本程序适用于新版微博，提供支持微博首页、转发微博、用户微博、精选实时微博、搜索微博页图片下载",
+          "url": "https://greasyfork.org/scripts/555090-%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/555090/%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 10149,
+          "license": "MIT License",
+          "version": "1.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微博图片批量下载",
+  "description": "本程序适用于新版微博，提供支持微博首页、转发微博、用户微博、精选实时微博、搜索微博页图片下载",
+  "url": "https://greasyfork.org/scripts/555090-%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/555090/%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 10149,
+  "license": "MIT License",
+  "version": "1.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

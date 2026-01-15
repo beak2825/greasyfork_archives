@@ -1,0 +1,34 @@
+{
+  "id": 555058,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T02:23:44.000Z",
+  "code_updated_at": "2025-11-07T02:23:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1019668,
+      "name": "uhpueirt",
+      "created_at": "2023-01-31T22:36:15.000Z",
+      "url": "https://greasyfork.org/users/1019668-uhpueirt",
+      "scripts": []
+    }
+  ],
+  "name": "OfferUp - Hide Sponsored Results",
+  "description": "Filter out sponsored/ad results from OfferUp search results",
+  "url": "https://greasyfork.org/scripts/555058-offerup-hide-sponsored-results",
+  "code_url": "https://update.greasyfork.org/scripts/555058/OfferUp%20-%20Hide%20Sponsored%20Results.user.js",
+  "code_size": 3248,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

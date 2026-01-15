@@ -1,0 +1,59 @@
+{
+  "id": 552144,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-10T12:09:00.000Z",
+  "code_updated_at": "2025-10-10T12:09:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1524814,
+      "name": "Arabi Ahmed",
+      "created_at": "2025-10-10T12:07:05.000Z",
+      "url": "https://greasyfork.org/users/1524814-arabi-ahmed",
+      "scripts": [
+        {
+          "id": 552144,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-10T12:09:00.000Z",
+          "code_updated_at": "2025-10-10T12:09:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gaku Neon Glassed - Surviv.io Client",
+          "description": "Feature-rich surviv.io client with neon-glass aesthetic, gameplay enhancements, and integrated Spotify music player",
+          "url": "https://greasyfork.org/scripts/552144-gaku-neon-glassed-surviv-io-client",
+          "code_url": "https://update.greasyfork.org/scripts/552144/Gaku%20Neon%20Glassed%20-%20Survivio%20Client.user.js",
+          "code_size": 254550,
+          "license": null,
+          "version": "2.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gaku Neon Glassed - Surviv.io Client",
+  "description": "Feature-rich surviv.io client with neon-glass aesthetic, gameplay enhancements, and integrated Spotify music player",
+  "url": "https://greasyfork.org/scripts/552144-gaku-neon-glassed-surviv-io-client",
+  "code_url": "https://update.greasyfork.org/scripts/552144/Gaku%20Neon%20Glassed%20-%20Survivio%20Client.user.js",
+  "code_size": 254550,
+  "license": null,
+  "version": "2.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

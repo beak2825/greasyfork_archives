@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552272,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T12:15:26.000Z",
+    "code_updated_at": "2025-10-22T13:50:01.000Z",
+    "namespace": "gdcytube",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1525184,
+        "name": "giantcarrot",
+        "created_at": "2025-10-11T11:35:02.000Z",
+        "url": "https://greasyfork.org/users/1525184-giantcarrot"
+      }
+    ],
+    "name": "Google Drive Video Player for CyTube",
+    "description": "Play Google Drive videos on CyTube",
+    "url": "https://greasyfork.org/scripts/552272-google-drive-video-player-for-cytube",
+    "code_url": "https://update.greasyfork.org/scripts/552272/Google%20Drive%20Video%20Player%20for%20CyTube.user.js",
+    "code_size": 8206,
+    "license": "MIT License",
+    "version": "1.7.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552867,
+    "daily_installs": 2,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T04:49:50.000Z",
+    "code_updated_at": "2025-10-17T04:49:50.000Z",
+    "namespace": "https://greasyfork.org/users/1512314",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512314,
+        "name": "user81829132",
+        "created_at": "2025-09-06T05:29:45.000Z",
+        "url": "https://greasyfork.org/users/1512314-user81829132"
+      }
+    ],
+    "name": "Bypass CliffsNotes Premium",
+    "description": "Removes premium paywall popups, blur effects, and overlays on CliffsNotes study notes and documents, allowing full access to previews without subscription.",
+    "url": "https://greasyfork.org/scripts/552867-bypass-cliffsnotes-premium",
+    "code_url": "https://update.greasyfork.org/scripts/552867/Bypass%20CliffsNotes%20Premium.user.js",
+    "code_size": 4118,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

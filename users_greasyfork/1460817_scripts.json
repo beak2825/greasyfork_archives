@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562513,
+    "daily_installs": 3,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T09:02:22.000Z",
+    "code_updated_at": "2026-01-13T09:02:22.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460817,
+        "name": "Боян Петров",
+        "created_at": "2025-04-22T06:24:06.000Z",
+        "url": "https://greasyfork.org/users/1460817-%D0%B1%D0%BE%D1%8F%D0%BD-%D0%BF%D0%B5%D1%82%D1%80%D0%BE%D0%B2"
+      }
+    ],
+    "name": "Enable Copy Paste Everywhere",
+    "description": "Force enable copy, paste, cut, select text, and right-click on all websites",
+    "url": "https://greasyfork.org/scripts/562513-enable-copy-paste-everywhere",
+    "code_url": "https://update.greasyfork.org/scripts/562513/Enable%20Copy%20Paste%20Everywhere.user.js",
+    "code_size": 1836,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

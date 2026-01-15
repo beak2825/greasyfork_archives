@@ -396,6 +396,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 559228,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T12:15:20.000Z",
+    "code_updated_at": "2025-12-19T00:41:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530985,
+        "name": "Ke1",
+        "created_at": "2025-10-26T19:53:30.000Z",
+        "url": "https://greasyfork.org/users/1530985-ke1"
+      }
+    ],
+    "name": "🧭 Compass Route Runner",
+    "description": "Fires custom Compass routes with infinite loops. Optimized for speed using fast retry-logic.",
+    "url": "https://greasyfork.org/scripts/559228-compass-route-runner",
+    "code_url": "https://update.greasyfork.org/scripts/559228/%F0%9F%A7%AD%20Compass%20Route%20Runner.user.js",
+    "code_size": 34436,
+    "license": null,
+    "version": "4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 558997,
     "daily_installs": 0,
     "total_installs": 4,
@@ -528,6 +561,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 557438,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T16:41:45.000Z",
+    "code_updated_at": "2025-11-30T16:41:45.000Z",
+    "namespace": "Popmundo.KobeTracker.Dynamic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530985,
+        "name": "Ke1",
+        "created_at": "2025-10-26T19:53:30.000Z",
+        "url": "https://greasyfork.org/users/1530985-ke1"
+      }
+    ],
+    "name": "💘 Kobe Sutra Position Checker",
+    "description": "Alerts if today's Kobe Sutra position is new or already known, using Character Trivia.",
+    "url": "https://greasyfork.org/scripts/557438-kobe-sutra-position-checker",
+    "code_url": "https://update.greasyfork.org/scripts/557438/%F0%9F%92%98%20Kobe%20Sutra%20Position%20Checker.user.js",
+    "code_size": 6038,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 557413,
     "daily_installs": 0,
     "total_installs": 1,
@@ -556,6 +622,39 @@
     "code_size": 33667,
     "license": null,
     "version": "3.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557228,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T12:58:35.000Z",
+    "code_updated_at": "2025-12-14T10:56:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530985,
+        "name": "Ke1",
+        "created_at": "2025-10-26T19:53:30.000Z",
+        "url": "https://greasyfork.org/users/1530985-ke1"
+      }
+    ],
+    "name": "🧭 Compass Route Runner (Dark Edition) - Persistent UI",
+    "description": "Fires custom Compass routes with persistent UI - Minimal recreation",
+    "url": "https://greasyfork.org/scripts/557228-compass-route-runner-dark-edition-persistent-ui",
+    "code_url": "https://update.greasyfork.org/scripts/557228/%F0%9F%A7%AD%20Compass%20Route%20Runner%20%28Dark%20Edition%29%20-%20Persistent%20UI.user.js",
+    "code_size": 25831,
+    "license": null,
+    "version": "3.2.2",
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
@@ -624,6 +723,6 @@
     "version": "5.7",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

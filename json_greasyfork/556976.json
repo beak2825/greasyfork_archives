@@ -1,0 +1,59 @@
+{
+  "id": 556976,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-26T11:38:39.000Z",
+  "code_updated_at": "2025-11-30T07:18:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1541815,
+      "name": "XIANG MAI",
+      "created_at": "2025-11-26T11:26:54.000Z",
+      "url": "https://greasyfork.org/users/1541815-xiang-mai",
+      "scripts": [
+        {
+          "id": 556976,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-26T11:38:39.000Z",
+          "code_updated_at": "2025-11-30T07:18:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Abceed Web 翻译助手",
+          "description": "自动翻译 abceed 网页中的英文例句。定制：只有在日文解释出现时才翻译，并插入到日文解释上方。",
+          "url": "https://greasyfork.org/scripts/556976-abceed-web-%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/556976/Abceed%20Web%20%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 21796,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Abceed Web 翻译助手",
+  "description": "自动翻译 abceed 网页中的英文例句。定制：只有在日文解释出现时才翻译，并插入到日文解释上方。",
+  "url": "https://greasyfork.org/scripts/556976-abceed-web-%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/556976/Abceed%20Web%20%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 21796,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

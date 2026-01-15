@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554188,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T08:53:33.000Z",
+    "code_updated_at": "2025-10-30T08:53:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1532215,
+        "name": "Ofe1",
+        "created_at": "2025-10-30T08:49:39.000Z",
+        "url": "https://greasyfork.org/users/1532215-ofe1"
+      }
+    ],
+    "name": "隐藏ivx预览水印",
+    "description": "在ivx项目页面上隐藏特定位置的图片元素",
+    "url": "https://greasyfork.org/scripts/554188-%E9%9A%90%E8%97%8Fivx%E9%A2%84%E8%A7%88%E6%B0%B4%E5%8D%B0",
+    "code_url": "https://update.greasyfork.org/scripts/554188/%E9%9A%90%E8%97%8Fivx%E9%A2%84%E8%A7%88%E6%B0%B4%E5%8D%B0.user.js",
+    "code_size": 2600,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

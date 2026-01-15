@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552731,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T00:17:00.000Z",
+    "code_updated_at": "2025-10-16T00:16:59.000Z",
+    "namespace": "https://github.com/31415926535x/CollegeProjectBackup/tree/master/ZhengfangClassScheduleToICS",
+    "support_url": "https://github.com/31415926535x/CollegeProjectBackup/blob/master/ZhengfangClassScheduleToICS/Readme.md",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527188,
+        "name": "ZackLiuzeyu",
+        "created_at": "2025-10-16T00:08:18.000Z",
+        "url": "https://greasyfork.org/users/1527188-zackliuzeyu"
+      }
+    ],
+    "name": "WMU新版正方教务系统导出课程表",
+    "description": "通过对新版正方教务系统的课表页面的解析，实现导出一个适用于大部分ics日历的文件，理论使用于所有使用新版正方教务系统（可对 ``include`` 进行一定的修改以适用不同的学校的链接）",
+    "url": "https://greasyfork.org/scripts/552731-wmu%E6%96%B0%E7%89%88%E6%AD%A3%E6%96%B9%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%AF%BC%E5%87%BA%E8%AF%BE%E7%A8%8B%E8%A1%A8",
+    "code_url": "https://update.greasyfork.org/scripts/552731/WMU%E6%96%B0%E7%89%88%E6%AD%A3%E6%96%B9%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%AF%BC%E5%87%BA%E8%AF%BE%E7%A8%8B%E8%A1%A8.user.js",
+    "code_size": 26100,
+    "license": "MIT License",
+    "version": "4.1.2-fix",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

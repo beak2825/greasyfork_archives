@@ -1,0 +1,59 @@
+{
+  "id": 557301,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-29T07:51:34.000Z",
+  "code_updated_at": "2025-11-29T07:51:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 878465,
+      "name": "POTATOO",
+      "created_at": "2022-02-20T02:40:39.000Z",
+      "url": "https://greasyfork.org/users/878465-potatoo",
+      "scripts": [
+        {
+          "id": 551956,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-08T15:15:32.000Z",
+          "code_updated_at": "2025-10-15T15:05:27.000Z",
+          "namespace": "https://github.com/yourname",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube 移除會員專屬與會員優先影片",
+          "description": "自動在 /videos 頁面移除 YouTube 頻道中的會員專屬或會員優先（搶先看）影片，支援YouTube SPA架構（不需手動重整）。包含空白格、空content或Members only / Early access徽章影片。",
+          "url": "https://greasyfork.org/scripts/551956-youtube-%E7%A7%BB%E9%99%A4%E6%9C%83%E5%93%A1%E5%B0%88%E5%B1%AC%E8%88%87%E6%9C%83%E5%93%A1%E5%84%AA%E5%85%88%E5%BD%B1%E7%89%87",
+          "code_url": "https://update.greasyfork.org/scripts/551956/YouTube%20%E7%A7%BB%E9%99%A4%E6%9C%83%E5%93%A1%E5%B0%88%E5%B1%AC%E8%88%87%E6%9C%83%E5%93%A1%E5%84%AA%E5%85%88%E5%BD%B1%E7%89%87.user.js",
+          "code_size": 3032,
+          "license": "MIT License",
+          "version": "4.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Monster-Siren 音樂下載器",
+  "description": "自動取得專輯名稱 + 曲名 + sourceUrl，支援 SSR 與 API 動態載入",
+  "url": "https://greasyfork.org/scripts/557301-monster-siren-%E9%9F%B3%E6%A8%82%E4%B8%8B%E8%BC%89%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/557301/Monster-Siren%20%E9%9F%B3%E6%A8%82%E4%B8%8B%E8%BC%89%E5%99%A8.user.js",
+  "code_size": 7966,
+  "license": "MIT License",
+  "version": "5.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

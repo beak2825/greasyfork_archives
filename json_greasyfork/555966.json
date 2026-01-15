@@ -1,0 +1,59 @@
+{
+  "id": 555966,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-16T01:55:24.000Z",
+  "code_updated_at": "2025-11-16T01:55:24.000Z",
+  "namespace": "https://re146.dev/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1538257,
+      "name": "Chef-Keriyo",
+      "created_at": "2025-11-16T00:26:09.000Z",
+      "url": "https://greasyfork.org/users/1538257-chef-keriyo",
+      "scripts": [
+        {
+          "id": 555966,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-16T01:55:24.000Z",
+          "code_updated_at": "2025-11-16T01:55:24.000Z",
+          "namespace": "https://re146.dev/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Factorio Free Mods Downloader",
+          "description": "Redirects unauthorized download buttons on mods.factorio.com to re146.dev.",
+          "url": "https://greasyfork.org/scripts/555966-factorio-free-mods-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/555966/Factorio%20Free%20Mods%20Downloader.user.js",
+          "code_size": 2360,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Factorio Free Mods Downloader",
+  "description": "Redirects unauthorized download buttons on mods.factorio.com to re146.dev.",
+  "url": "https://greasyfork.org/scripts/555966-factorio-free-mods-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/555966/Factorio%20Free%20Mods%20Downloader.user.js",
+  "code_size": 2360,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

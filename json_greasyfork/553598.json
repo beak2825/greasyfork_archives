@@ -1,0 +1,34 @@
+{
+  "id": 553598,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-24T20:16:24.000Z",
+  "code_updated_at": "2025-10-24T20:23:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530336,
+      "name": "Revbo",
+      "created_at": "2025-10-24T20:14:23.000Z",
+      "url": "https://greasyfork.org/users/1530336-revbo",
+      "scripts": []
+    }
+  ],
+  "name": "Merlin Token Extractor",
+  "description": "Extract Bearer token from Merlin API requests",
+  "url": "https://greasyfork.org/scripts/553598-merlin-token-extractor",
+  "code_url": "https://update.greasyfork.org/scripts/553598/Merlin%20Token%20Extractor.user.js",
+  "code_size": 1936,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

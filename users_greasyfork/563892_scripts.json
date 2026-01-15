@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555546,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-11T19:08:49.000Z",
+    "code_updated_at": "2025-11-11T19:10:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 563892,
+        "name": "Aar318",
+        "created_at": "2020-05-16T19:30:24.000Z",
+        "url": "https://greasyfork.org/users/563892-aar318"
+      }
+    ],
+    "name": "Aar318's Twitch Chat Translator",
+    "description": "Translate Twitch chat messages to English",
+    "url": "https://greasyfork.org/scripts/555546-aar318-s-twitch-chat-translator",
+    "code_url": "https://update.greasyfork.org/scripts/555546/Aar318%27s%20Twitch%20Chat%20Translator.user.js",
+    "code_size": 8815,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

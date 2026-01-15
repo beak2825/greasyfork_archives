@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552222,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T03:58:49.000Z",
+    "code_updated_at": "2025-10-13T05:02:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1152292,
+        "name": "DostGit",
+        "created_at": "2023-08-16T00:22:14.000Z",
+        "url": "https://greasyfork.org/users/1152292-dostgit"
+      }
+    ],
+    "name": "知乎推荐页标签屏蔽器 (Zhihu Tag Blocker)",
+    "description": "以往都是根据标题关键词屏蔽, 效果不好, 经实验, 通过标签来屏蔽, 效果显著, 使用体验大大提升.",
+    "url": "https://greasyfork.org/scripts/552222-%E7%9F%A5%E4%B9%8E%E6%8E%A8%E8%8D%90%E9%A1%B5%E6%A0%87%E7%AD%BE%E5%B1%8F%E8%94%BD%E5%99%A8-zhihu-tag-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/552222/%E7%9F%A5%E4%B9%8E%E6%8E%A8%E8%8D%90%E9%A1%B5%E6%A0%87%E7%AD%BE%E5%B1%8F%E8%94%BD%E5%99%A8%20%28Zhihu%20Tag%20Blocker%29.user.js",
+    "code_size": 23817,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

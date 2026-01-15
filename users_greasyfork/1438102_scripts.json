@@ -1,5 +1,71 @@
 [
   {
+    "id": 562668,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T17:52:39.000Z",
+    "code_updated_at": "2026-01-14T17:52:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438102,
+        "name": "systoned",
+        "created_at": "2025-02-21T10:50:30.000Z",
+        "url": "https://greasyfork.org/users/1438102-systoned"
+      }
+    ],
+    "name": "OC Role Display + Weights",
+    "description": "CPR requirement status indicators + weight percentages from tornprobability.com API",
+    "url": "https://greasyfork.org/scripts/562668-oc-role-display-weights",
+    "code_url": "https://update.greasyfork.org/scripts/562668/OC%20Role%20Display%20%2B%20Weights.user.js",
+    "code_size": 11767,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562469,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T01:25:03.000Z",
+    "code_updated_at": "2026-01-13T01:30:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438102,
+        "name": "systoned",
+        "created_at": "2025-02-21T10:50:30.000Z",
+        "url": "https://greasyfork.org/users/1438102-systoned"
+      }
+    ],
+    "name": "Torn Profile Stats Dashboard",
+    "description": "Display personal stats dashboard on Torn profiles",
+    "url": "https://greasyfork.org/scripts/562469-torn-profile-stats-dashboard",
+    "code_url": "https://update.greasyfork.org/scripts/562469/Torn%20Profile%20Stats%20Dashboard.user.js",
+    "code_size": 11376,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 560551,
     "daily_installs": 0,
     "total_installs": 0,
@@ -64,5 +130,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 553306,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-21T18:01:12.000Z",
+    "code_updated_at": "2025-10-21T18:01:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438102,
+        "name": "systoned",
+        "created_at": "2025-02-21T10:50:30.000Z",
+        "url": "https://greasyfork.org/users/1438102-systoned"
+      }
+    ],
+    "name": "Torn — Weapon bonus on new line",
+    "description": "Adds weapon bonus (e.g. Revitalize 10%) on its own line beneath the weapon name in listings.",
+    "url": "https://greasyfork.org/scripts/553306-torn-weapon-bonus-on-new-line",
+    "code_url": "https://update.greasyfork.org/scripts/553306/Torn%20%E2%80%94%20Weapon%20bonus%20on%20new%20line.user.js",
+    "code_size": 2690,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553092,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-19T12:15:47.000Z",
+    "code_updated_at": "2025-10-19T12:15:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438102,
+        "name": "systoned",
+        "created_at": "2025-02-21T10:50:30.000Z",
+        "url": "https://greasyfork.org/users/1438102-systoned"
+      }
+    ],
+    "name": "Torn City - Faction Members Status Checker (Split Sections & Toggle)",
+    "description": "Retrieve all faction members and display them in sections (Hospital, Travelling, and Okay), sorted by remaining hospital time. The display toggles on each button press.",
+    "url": "https://greasyfork.org/scripts/553092-torn-city-faction-members-status-checker-split-sections-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/553092/Torn%20City%20-%20Faction%20Members%20Status%20Checker%20%28Split%20Sections%20%20Toggle%29.user.js",
+    "code_size": 9012,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

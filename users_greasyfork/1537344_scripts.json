@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555722,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T14:26:58.000Z",
+    "code_updated_at": "2025-11-20T01:32:33.000Z",
+    "namespace": "https://greasyfork.org/users/1537344",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537344,
+        "name": "luluzzy",
+        "created_at": "2025-11-13T09:22:51.000Z",
+        "url": "https://greasyfork.org/users/1537344-luluzzy"
+      }
+    ],
+    "name": "DGUT Ulearning Tool",
+    "description": "一个适用于新版本DGUT U学院的脚本，支持自动播放视频，调整倍速，并从官方API获取章节测验答案。",
+    "url": "https://greasyfork.org/scripts/555722-dgut-ulearning-tool",
+    "code_url": "https://update.greasyfork.org/scripts/555722/DGUT%20Ulearning%20Tool.user.js",
+    "code_size": 10386,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

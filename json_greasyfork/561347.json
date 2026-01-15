@@ -1,7 +1,7 @@
 {
   "id": 561347,
-  "daily_installs": 1,
-  "total_installs": 5,
+  "daily_installs": 0,
+  "total_installs": 6,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -17,7 +17,33 @@
       "id": 1555851,
       "name": "Xianghui Shen",
       "created_at": "2026-01-04T07:28:25.000Z",
-      "url": "https://greasyfork.org/users/1555851-xianghui-shen"
+      "url": "https://greasyfork.org/users/1555851-xianghui-shen",
+      "scripts": [
+        {
+          "id": 561347,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-04T07:34:33.000Z",
+          "code_updated_at": "2026-01-04T07:34:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页音量增强器 (Volume Master) - 快捷键版",
+          "description": "按住 Alt + 上下箭头调节当前网页音量（支持 0-800%），按 Alt + R 重置。不遮挡页面，仅在调节时显示提示。",
+          "url": "https://greasyfork.org/scripts/561347-%E7%BD%91%E9%A1%B5%E9%9F%B3%E9%87%8F%E5%A2%9E%E5%BC%BA%E5%99%A8-volume-master-%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/561347/%E7%BD%91%E9%A1%B5%E9%9F%B3%E9%87%8F%E5%A2%9E%E5%BC%BA%E5%99%A8%20%28Volume%20Master%29%20-%20%E5%BF%AB%E6%8D%B7%E9%94%AE%E7%89%88.user.js",
+          "code_size": 4326,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "网页音量增强器 (Volume Master) - 快捷键版",

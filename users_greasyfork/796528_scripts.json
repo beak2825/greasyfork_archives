@@ -64,5 +64,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 554842,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T05:40:24.000Z",
+    "code_updated_at": "2025-11-05T05:40:24.000Z",
+    "namespace": "http://yuyehk.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 796528,
+        "name": "yuyehk",
+        "created_at": "2021-07-23T15:20:49.000Z",
+        "url": "https://greasyfork.org/users/796528-yuyehk"
+      }
+    ],
+    "name": "uid查询-内部",
+    "description": "智能数据可视触发脚本 —— 自动识别页面关键信息节点，在动态渲染环境中精准注入交互式操作按钮。点击后，系统将实时请求后端服务接口，自动判定数据状态并以可视化方式展示结果。支持跨域访问、SSL 异常容忍及异步响应处理，为前端信息查询与验证流程带来极致的交互体验。",
+    "url": "https://greasyfork.org/scripts/554842-uid%E6%9F%A5%E8%AF%A2-%E5%86%85%E9%83%A8",
+    "code_url": "https://update.greasyfork.org/scripts/554842/uid%E6%9F%A5%E8%AF%A2-%E5%86%85%E9%83%A8.user.js",
+    "code_size": 6456,
+    "license": "Private; All rights reserved.",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554385,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-01T07:19:33.000Z",
+    "code_updated_at": "2025-11-01T07:19:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 796528,
+        "name": "yuyehk",
+        "created_at": "2021-07-23T15:20:49.000Z",
+        "url": "https://greasyfork.org/users/796528-yuyehk"
+      }
+    ],
+    "name": "知乎专栏文章点赞过滤器-yuyehk",
+    "description": "动态过滤知乎专栏中点赞数小于100的文章，支持开始/停止切换，优化UI体验",
+    "url": "https://greasyfork.org/scripts/554385-%E7%9F%A5%E4%B9%8E%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E7%82%B9%E8%B5%9E%E8%BF%87%E6%BB%A4%E5%99%A8-yuyehk",
+    "code_url": "https://update.greasyfork.org/scripts/554385/%E7%9F%A5%E4%B9%8E%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E7%82%B9%E8%B5%9E%E8%BF%87%E6%BB%A4%E5%99%A8-yuyehk.user.js",
+    "code_size": 29495,
+    "license": "GNU GPLv3",
+    "version": "2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

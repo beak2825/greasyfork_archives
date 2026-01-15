@@ -1,13 +1,13 @@
 {
   "id": 560695,
-  "daily_installs": 4,
-  "total_installs": 27,
+  "daily_installs": 7,
+  "total_installs": 48,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
   "bad_ratings": 0,
   "created_at": "2025-12-30T03:03:35.000Z",
-  "code_updated_at": "2026-01-09T10:43:44.000Z",
+  "code_updated_at": "2026-01-13T05:18:15.000Z",
   "namespace": "https://spotubedl.com/",
   "support_url": "https://spotubedl.com/",
   "contribution_url": null,
@@ -21,7 +21,7 @@
       "scripts": [
         {
           "id": 516246,
-          "daily_installs": 1,
+          "daily_installs": 0,
           "total_installs": 57,
           "fan_score": "5.0",
           "good_ratings": 0,
@@ -46,7 +46,7 @@
         {
           "id": 517948,
           "daily_installs": 0,
-          "total_installs": 48,
+          "total_installs": 49,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
@@ -166,7 +166,7 @@
         {
           "id": 520209,
           "daily_installs": 0,
-          "total_installs": 39,
+          "total_installs": 40,
           "fan_score": "34.2",
           "good_ratings": 2,
           "ok_ratings": 0,
@@ -310,7 +310,7 @@
         {
           "id": 523157,
           "daily_installs": 1,
-          "total_installs": 669,
+          "total_installs": 671,
           "fan_score": "25.0",
           "good_ratings": 4,
           "ok_ratings": 0,
@@ -334,7 +334,7 @@
         {
           "id": 527945,
           "daily_installs": 2,
-          "total_installs": 461,
+          "total_installs": 465,
           "fan_score": "43.4",
           "good_ratings": 8,
           "ok_ratings": 0,
@@ -574,7 +574,7 @@
         {
           "id": 544894,
           "daily_installs": 0,
-          "total_installs": 32,
+          "total_installs": 33,
           "fan_score": "20.7",
           "good_ratings": 1,
           "ok_ratings": 0,
@@ -597,14 +597,14 @@
         },
         {
           "id": 560695,
-          "daily_installs": 4,
-          "total_installs": 27,
+          "daily_installs": 7,
+          "total_installs": 48,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
           "bad_ratings": 0,
           "created_at": "2025-12-30T03:03:35.000Z",
-          "code_updated_at": "2026-01-09T10:43:44.000Z",
+          "code_updated_at": "2026-01-13T05:18:15.000Z",
           "namespace": "https://spotubedl.com/",
           "support_url": "https://spotubedl.com/",
           "contribution_url": null,
@@ -613,9 +613,9 @@
           "description": "Download Spotify Tracks, Albums, Playlists as MP3/OGG/Opus with High Quality.",
           "url": "https://greasyfork.org/scripts/560695-spotubedl-awesome-spotify-downloader",
           "code_url": "https://update.greasyfork.org/scripts/560695/SpotubeDL%20-%20Awesome%20Spotify%20Downloader.user.js",
-          "code_size": 7711,
+          "code_size": 9366,
           "license": null,
-          "version": "1.2",
+          "version": "1.5",
           "locale": "en",
           "deleted": false
         }
@@ -626,9 +626,9 @@
   "description": "Download Spotify Tracks, Albums, Playlists as MP3/OGG/Opus with High Quality.",
   "url": "https://greasyfork.org/scripts/560695-spotubedl-awesome-spotify-downloader",
   "code_url": "https://update.greasyfork.org/scripts/560695/SpotubeDL%20-%20Awesome%20Spotify%20Downloader.user.js",
-  "code_size": 7711,
+  "code_size": 9366,
   "license": null,
-  "version": "1.2",
+  "version": "1.5",
   "locale": "en",
   "deleted": false,
   "visibility": "public"

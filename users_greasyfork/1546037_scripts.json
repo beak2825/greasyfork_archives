@@ -30,6 +30,39 @@
     "version": "49.0",
     "locale": "it",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558348,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T19:02:14.000Z",
+    "code_updated_at": "2025-12-16T17:22:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546037,
+        "name": "nicolagalassi",
+        "created_at": "2025-12-08T19:00:17.000Z",
+        "url": "https://greasyfork.org/users/1546037-nicolagalassi"
+      }
+    ],
+    "name": "ColFood Bot V38: Manual Override",
+    "description": "Autopilot Disattivabile, Gestione \"Torna Indietro\", Loot History",
+    "url": "https://greasyfork.org/scripts/558348-colfood-bot-v38-manual-override",
+    "code_url": "https://update.greasyfork.org/scripts/558348/ColFood%20Bot%20V38%3A%20Manual%20Override.user.js",
+    "code_size": 19945,
+    "license": null,
+    "version": "38.0",
+    "locale": "it",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

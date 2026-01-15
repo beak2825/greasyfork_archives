@@ -1,0 +1,33 @@
+{
+  "id": 553247,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-20T23:48:17.000Z",
+  "code_updated_at": "2025-12-19T04:29:26.000Z",
+  "namespace": "http://violentmonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1498992,
+      "name": "happyglue",
+      "created_at": "2025-07-28T01:21:00.000Z",
+      "url": "https://greasyfork.org/users/1498992-happyglue"
+    }
+  ],
+  "name": "Babel Audio happyglue's QoL",
+  "description": "Audio QA Team: Hotkeys, UI enhancements, Bug fixes, etc.",
+  "url": "https://greasyfork.org/scripts/553247-babel-audio-happyglue-s-qol",
+  "code_url": "https://update.greasyfork.org/scripts/553247/Babel%20Audio%20happyglue%27s%20QoL.user.js",
+  "code_size": 141123,
+  "license": null,
+  "version": "1.15.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 558594,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-11T07:07:55.000Z",
+  "code_updated_at": "2025-12-11T07:10:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1546826,
+      "name": "LantoZheng",
+      "created_at": "2025-12-11T07:01:36.000Z",
+      "url": "https://greasyfork.org/users/1546826-lantozheng"
+    }
+  ],
+  "name": "Form Save&Refill(Document Uploader) / 通用表单助手 (大文件加强版)",
+  "description": "利用 IndexedDB 支持大文件(图片/PDF)的保存与恢复。支持导出包含文件的 JSON 备份。",
+  "url": "https://greasyfork.org/scripts/558594-form-save-refill-document-uploader-%E9%80%9A%E7%94%A8%E8%A1%A8%E5%8D%95%E5%8A%A9%E6%89%8B-%E5%A4%A7%E6%96%87%E4%BB%B6%E5%8A%A0%E5%BC%BA%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/558594/Form%20SaveRefill%28Document%20Uploader%29%20%20%E9%80%9A%E7%94%A8%E8%A1%A8%E5%8D%95%E5%8A%A9%E6%89%8B%20%28%E5%A4%A7%E6%96%87%E4%BB%B6%E5%8A%A0%E5%BC%BA%E7%89%88%29.user.js",
+  "code_size": 12253,
+  "license": "MIT License",
+  "version": "4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

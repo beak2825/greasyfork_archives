@@ -1,0 +1,59 @@
+{
+  "id": 553873,
+  "daily_installs": 0,
+  "total_installs": 94,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-10-27T15:49:25.000Z",
+  "code_updated_at": "2025-11-13T14:13:15.000Z",
+  "namespace": "https://github.com/baianjo/Douyin-Smart-Feed-Assistant",
+  "support_url": "mailto:1987892914@qq.com",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1531265,
+      "name": "baianjo",
+      "created_at": "2025-10-27T14:33:44.000Z",
+      "url": "https://greasyfork.org/users/1531265-baianjo",
+      "scripts": [
+        {
+          "id": 553873,
+          "daily_installs": 0,
+          "total_installs": 94,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-10-27T15:49:25.000Z",
+          "code_updated_at": "2025-11-13T14:13:15.000Z",
+          "namespace": "https://github.com/baianjo/Douyin-Smart-Feed-Assistant",
+          "support_url": "mailto:1987892914@qq.com",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "抖音推荐影响器 (Smart Feed Assistant)",
+          "description": "通过AI智能分析内容，优化你的信息流体验",
+          "url": "https://greasyfork.org/scripts/553873-%E6%8A%96%E9%9F%B3%E6%8E%A8%E8%8D%90%E5%BD%B1%E5%93%8D%E5%99%A8-smart-feed-assistant",
+          "code_url": "https://update.greasyfork.org/scripts/553873/%E6%8A%96%E9%9F%B3%E6%8E%A8%E8%8D%90%E5%BD%B1%E5%93%8D%E5%99%A8%20%28Smart%20Feed%20Assistant%29.user.js",
+          "code_size": 152553,
+          "license": "MIT License",
+          "version": "2.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "抖音推荐影响器 (Smart Feed Assistant)",
+  "description": "通过AI智能分析内容，优化你的信息流体验",
+  "url": "https://greasyfork.org/scripts/553873-%E6%8A%96%E9%9F%B3%E6%8E%A8%E8%8D%90%E5%BD%B1%E5%93%8D%E5%99%A8-smart-feed-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/553873/%E6%8A%96%E9%9F%B3%E6%8E%A8%E8%8D%90%E5%BD%B1%E5%93%8D%E5%99%A8%20%28Smart%20Feed%20Assistant%29.user.js",
+  "code_size": 152553,
+  "license": "MIT License",
+  "version": "2.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

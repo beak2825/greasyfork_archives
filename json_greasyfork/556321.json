@@ -1,0 +1,34 @@
+{
+  "id": 556321,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-19T17:59:35.000Z",
+  "code_updated_at": "2026-01-04T14:01:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1539516,
+      "name": "Naama5445",
+      "created_at": "2025-11-19T17:53:02.000Z",
+      "url": "https://greasyfork.org/users/1539516-naama5445",
+      "scripts": []
+    }
+  ],
+  "name": "Autowołajka na discord",
+  "description": "Auto wołajka na discorda na herosów i tytanów + widget",
+  "url": "https://greasyfork.org/scripts/556321-autowo%C5%82ajka-na-discord",
+  "code_url": "https://update.greasyfork.org/scripts/556321/Autowo%C5%82ajka%20na%20discord.user.js",
+  "code_size": 8543,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

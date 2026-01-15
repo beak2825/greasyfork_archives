@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562565,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T19:04:04.000Z",
+    "code_updated_at": "2026-01-13T19:04:04.000Z",
+    "namespace": "https://github.com/NunoFilipe93/amazon-subtitle-downloader",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1559998,
+        "name": "Nuno Costa",
+        "created_at": "2026-01-13T18:54:41.000Z",
+        "url": "https://greasyfork.org/users/1559998-nuno-costa"
+      }
+    ],
+    "name": "Amazon Prime Video - Subtitle Downloader",
+    "description": "Download subtitles from Amazon Prime Video (TTML2 + SRT conversion)",
+    "url": "https://greasyfork.org/scripts/562565-amazon-prime-video-subtitle-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/562565/Amazon%20Prime%20Video%20-%20Subtitle%20Downloader.user.js",
+    "code_size": 19311,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

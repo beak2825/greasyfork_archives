@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555171,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T06:31:15.000Z",
+    "code_updated_at": "2025-11-08T06:31:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 74736,
+        "name": "yaochao",
+        "created_at": "2016-10-20T10:25:01.000Z",
+        "url": "https://greasyfork.org/users/74736-yaochao"
+      }
+    ],
+    "name": "B站直播网页模式全屏-去除底部礼物栏",
+    "description": "净化直播主界面，让直播回归纯净模式",
+    "url": "https://greasyfork.org/scripts/555171-b%E7%AB%99%E7%9B%B4%E6%92%AD%E7%BD%91%E9%A1%B5%E6%A8%A1%E5%BC%8F%E5%85%A8%E5%B1%8F-%E5%8E%BB%E9%99%A4%E5%BA%95%E9%83%A8%E7%A4%BC%E7%89%A9%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/555171/B%E7%AB%99%E7%9B%B4%E6%92%AD%E7%BD%91%E9%A1%B5%E6%A8%A1%E5%BC%8F%E5%85%A8%E5%B1%8F-%E5%8E%BB%E9%99%A4%E5%BA%95%E9%83%A8%E7%A4%BC%E7%89%A9%E6%A0%8F.user.js",
+    "code_size": 1040,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

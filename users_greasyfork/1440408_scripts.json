@@ -30,6 +30,105 @@
     "version": "1.0.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 559338,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T11:14:02.000Z",
+    "code_updated_at": "2025-12-18T11:14:01.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "WME Closest Segments",
+    "description": "Tìm tên đường gần nhất của venue (Place) đang được chọn",
+    "url": "https://greasyfork.org/scripts/559338-wme-closest-segments",
+    "code_url": "https://update.greasyfork.org/scripts/559338/WME%20Closest%20Segments.user.js",
+    "code_size": 46092,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559302,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-18T03:42:05.000Z",
+    "code_updated_at": "2025-12-24T02:41:04.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "WME Workflow Engine Alpha",
+    "description": "Xây dựng và chạy các chuỗi tác vụ tự động hóa (workflows) tùy chỉnh trong WME. Tự động điều hướng từ file Excel/CSV/GG Sheets và thực thi các hành động được điều chỉnh sẵn bằng WME SDK.",
+    "url": "https://greasyfork.org/scripts/559302-wme-workflow-engine-alpha",
+    "code_url": "https://update.greasyfork.org/scripts/559302/WME%20Workflow%20Engine%20Alpha.user.js",
+    "code_size": 131779,
+    "license": null,
+    "version": "2.1.22",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553362,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T10:08:08.000Z",
+    "code_updated_at": "2025-10-31T12:30:28.000Z",
+    "namespace": "https://greasyfork.org/users/1440408",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "WME Editor Heatmap",
+    "description": "High-performance heatmap for WME, optimized for massive datasets using Geohashing, Spatial Indexing, and Stream Processing.",
+    "url": "https://greasyfork.org/scripts/553362-wme-editor-heatmap",
+    "code_url": "https://update.greasyfork.org/scripts/553362/WME%20Editor%20Heatmap.user.js",
+    "code_size": 21835,
+    "license": null,
+    "version": "v2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

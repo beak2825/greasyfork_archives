@@ -1,0 +1,34 @@
+{
+  "id": 552999,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-18T12:10:09.000Z",
+  "code_updated_at": "2025-10-18T12:31:33.000Z",
+  "namespace": "https://example.local/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1528184,
+      "name": "Khalil-Mensouri",
+      "created_at": "2025-10-18T11:59:59.000Z",
+      "url": "https://greasyfork.org/users/1528184-khalil-mensouri",
+      "scripts": []
+    }
+  ],
+  "name": "SimpCity & JPG6 — Wiwrutck Redirect Blocker",
+  "description": "Block wiwrutck.com redirects and injected scripts/popups on simpcity/jpg6 sites.",
+  "url": "https://greasyfork.org/scripts/552999-simpcity-jpg6-wiwrutck-redirect-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/552999/SimpCity%20%20JPG6%20%E2%80%94%20Wiwrutck%20Redirect%20Blocker.user.js",
+  "code_size": 3000,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

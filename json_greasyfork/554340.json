@@ -1,0 +1,59 @@
+{
+  "id": 554340,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T17:04:57.000Z",
+  "code_updated_at": "2026-01-04T12:46:38.000Z",
+  "namespace": "https://github.com/ZeyFoxOFF/userscript-soundcloud",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532622,
+      "name": "ZeyFox",
+      "created_at": "2025-10-31T13:14:48.000Z",
+      "url": "https://greasyfork.org/users/1532622-zeyfox",
+      "scripts": [
+        {
+          "id": 554340,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-31T17:04:57.000Z",
+          "code_updated_at": "2026-01-04T12:46:38.000Z",
+          "namespace": "https://github.com/ZeyFoxOFF/userscript-soundcloud",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide SoundCloud Visual Ads",
+          "description": "Hide visual ads for soundcloud",
+          "url": "https://greasyfork.org/scripts/554340-hide-soundcloud-visual-ads",
+          "code_url": "https://update.greasyfork.org/scripts/554340/Hide%20SoundCloud%20Visual%20Ads.user.js",
+          "code_size": 1396,
+          "license": "MIT License",
+          "version": "1.0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide SoundCloud Visual Ads",
+  "description": "Hide visual ads for soundcloud",
+  "url": "https://greasyfork.org/scripts/554340-hide-soundcloud-visual-ads",
+  "code_url": "https://update.greasyfork.org/scripts/554340/Hide%20SoundCloud%20Visual%20Ads.user.js",
+  "code_size": 1396,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

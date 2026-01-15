@@ -1,0 +1,59 @@
+{
+  "id": 551895,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-07T22:44:10.000Z",
+  "code_updated_at": "2025-10-23T17:38:43.000Z",
+  "namespace": "https://github.com/jaykeny/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1523478,
+      "name": "JayKeny",
+      "created_at": "2025-10-07T22:36:41.000Z",
+      "url": "https://greasyfork.org/users/1523478-jaykeny",
+      "scripts": [
+        {
+          "id": 551895,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-07T22:44:10.000Z",
+          "code_updated_at": "2025-10-23T17:38:43.000Z",
+          "namespace": "https://github.com/jaykeny/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tidy Tube",
+          "description": "A lightweight script to declutter YouTube by hiding videos for members and videos under a certain view count.",
+          "url": "https://greasyfork.org/scripts/551895-tidy-tube",
+          "code_url": "https://update.greasyfork.org/scripts/551895/Tidy%20Tube.user.js",
+          "code_size": 8131,
+          "license": null,
+          "version": "1.4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tidy Tube",
+  "description": "A lightweight script to declutter YouTube by hiding videos for members and videos under a certain view count.",
+  "url": "https://greasyfork.org/scripts/551895-tidy-tube",
+  "code_url": "https://update.greasyfork.org/scripts/551895/Tidy%20Tube.user.js",
+  "code_size": 8131,
+  "license": null,
+  "version": "1.4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

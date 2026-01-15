@@ -1,0 +1,34 @@
+{
+  "id": 552810,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-16T15:16:11.000Z",
+  "code_updated_at": "2025-10-26T09:40:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527481,
+      "name": "Kacper Kopko",
+      "created_at": "2025-10-16T15:10:09.000Z",
+      "url": "https://greasyfork.org/users/1527481-kacper-kopko",
+      "scripts": []
+    }
+  ],
+  "name": "Strava Club Activity - filtr lokalizacji (Gdynia/Sopot/Gdańsk)",
+  "description": "Pokazuje tylko aktywności z Gdyni, Sopotu, Gdańska na stronie feedu klubu Strava",
+  "url": "https://greasyfork.org/scripts/552810-strava-club-activity-filtr-lokalizacji-gdynia-sopot-gda%C5%84sk",
+  "code_url": "https://update.greasyfork.org/scripts/552810/Strava%20Club%20Activity%20-%20filtr%20lokalizacji%20%28GdyniaSopotGda%C5%84sk%29.user.js",
+  "code_size": 4509,
+  "license": "MIT License",
+  "version": "3.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 557063,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-27T07:49:39.000Z",
+  "code_updated_at": "2025-11-27T16:25:13.000Z",
+  "namespace": "https://shuiyuan.sjtu.edu.cn/vibe-shuiyuan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1542087,
+      "name": "UsernameCodeRookie",
+      "created_at": "2025-11-27T07:28:20.000Z",
+      "url": "https://greasyfork.org/users/1542087-usernamecoderookie",
+      "scripts": [
+        {
+          "id": 557063,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-27T07:49:39.000Z",
+          "code_updated_at": "2025-11-27T16:25:13.000Z",
+          "namespace": "https://shuiyuan.sjtu.edu.cn/vibe-shuiyuan",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Vibe 水源 - AI 内容生成增强",
+          "description": "为水源论坛添加 AI 内容生成功能",
+          "url": "https://greasyfork.org/scripts/557063-vibe-%E6%B0%B4%E6%BA%90-ai-%E5%86%85%E5%AE%B9%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/557063/Vibe%20%E6%B0%B4%E6%BA%90%20-%20AI%20%E5%86%85%E5%AE%B9%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 85656,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Vibe 水源 - AI 内容生成增强",
+  "description": "为水源论坛添加 AI 内容生成功能",
+  "url": "https://greasyfork.org/scripts/557063-vibe-%E6%B0%B4%E6%BA%90-ai-%E5%86%85%E5%AE%B9%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/557063/Vibe%20%E6%B0%B4%E6%BA%90%20-%20AI%20%E5%86%85%E5%AE%B9%E7%94%9F%E6%88%90%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 85656,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

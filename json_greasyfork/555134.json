@@ -1,0 +1,59 @@
+{
+  "id": 555134,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T19:35:23.000Z",
+  "code_updated_at": "2025-11-07T19:35:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535393,
+      "name": "Laid-backCamper",
+      "created_at": "2025-11-07T19:26:08.000Z",
+      "url": "https://greasyfork.org/users/1535393-laid-backcamper",
+      "scripts": [
+        {
+          "id": 555134,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-07T19:35:23.000Z",
+          "code_updated_at": "2025-11-07T19:35:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RealTimeTrains — RRQ toggle simple",
+          "description": "Add a toggle button to hide, highlight, or show \"runs as required\" trains on realtimetrains.co.uk",
+          "url": "https://greasyfork.org/scripts/555134-realtimetrains-rrq-toggle-simple",
+          "code_url": "https://update.greasyfork.org/scripts/555134/RealTimeTrains%20%E2%80%94%20RRQ%20toggle%20simple.user.js",
+          "code_size": 3019,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RealTimeTrains — RRQ toggle simple",
+  "description": "Add a toggle button to hide, highlight, or show \"runs as required\" trains on realtimetrains.co.uk",
+  "url": "https://greasyfork.org/scripts/555134-realtimetrains-rrq-toggle-simple",
+  "code_url": "https://update.greasyfork.org/scripts/555134/RealTimeTrains%20%E2%80%94%20RRQ%20toggle%20simple.user.js",
+  "code_size": 3019,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

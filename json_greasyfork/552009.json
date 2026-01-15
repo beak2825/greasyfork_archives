@@ -1,0 +1,34 @@
+{
+  "id": 552009,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-09T05:02:30.000Z",
+  "code_updated_at": "2025-10-31T07:38:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1023408,
+      "name": "likundeli10",
+      "created_at": "2023-02-08T03:13:10.000Z",
+      "url": "https://greasyfork.org/users/1023408-likundeli10",
+      "scripts": []
+    }
+  ],
+  "name": "直播折扣券",
+  "description": "coupou function",
+  "url": "https://greasyfork.org/scripts/552009-%E7%9B%B4%E6%92%AD%E6%8A%98%E6%89%A3%E5%88%B8",
+  "code_url": "https://update.greasyfork.org/scripts/552009/%E7%9B%B4%E6%92%AD%E6%8A%98%E6%89%A3%E5%88%B8.user.js",
+  "code_size": 4734,
+  "license": null,
+  "version": "2025-10-31",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 552876,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-17T06:21:41.000Z",
+  "code_updated_at": "2025-10-17T06:21:41.000Z",
+  "namespace": "https://greasyfork.org/users/1527667",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527667,
+      "name": "censori",
+      "created_at": "2025-10-17T06:20:17.000Z",
+      "url": "https://greasyfork.org/users/1527667-censori"
+    }
+  ],
+  "name": "AbortSignal.timeout Polyfill",
+  "description": "adds a function",
+  "url": "https://greasyfork.org/scripts/552876-abortsignal-timeout-polyfill",
+  "code_url": "https://update.greasyfork.org/scripts/552876/AbortSignaltimeout%20Polyfill.user.js",
+  "code_size": 319,
+  "license": null,
+  "version": "0.0.1.20251017062141",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,5 +1,104 @@
 [
   {
+    "id": 558459,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T01:27:11.000Z",
+    "code_updated_at": "2025-12-16T11:38:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542285,
+        "name": "murahito130",
+        "created_at": "2025-11-27T17:57:20.000Z",
+        "url": "https://greasyfork.org/users/1542285-murahito130"
+      }
+    ],
+    "name": "CCFOLIA Board Exporter",
+    "description": "ココフォリアの盤面をUI非表示で高解像度保存するツール。GIF/APNG/WebP対応。",
+    "url": "https://greasyfork.org/scripts/558459-ccfolia-board-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/558459/CCFOLIA%20Board%20Exporter.user.js",
+    "code_size": 58787,
+    "license": "MIT License",
+    "version": "3.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557822,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T21:08:45.000Z",
+    "code_updated_at": "2025-12-25T19:18:39.000Z",
+    "namespace": "https://greasyfork.org/users/1542285-murahito130/discord-html-exporter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542285,
+        "name": "murahito130",
+        "created_at": "2025-11-27T17:57:20.000Z",
+        "url": "https://greasyfork.org/users/1542285-murahito130"
+      }
+    ],
+    "name": "Discord HTML Exporter (Fixed 2025 + Quality Config)",
+    "description": "Discordのサーバー、カテゴリ、スレッド、フォーラムをメッセージ履歴からディープスキャンし、画像・PDF・投票(Polls)・転送・コンポーネントを含めた完全なHTMLファイルとしてエクスポートします。API v10完全準拠。WebP品質設定機能付き。",
+    "url": "https://greasyfork.org/scripts/557822-discord-html-exporter-fixed-2025-quality-config",
+    "code_url": "https://update.greasyfork.org/scripts/557822/Discord%20HTML%20Exporter%20%28Fixed%202025%20%2B%20Quality%20Config%29.user.js",
+    "code_size": 165865,
+    "license": "MIT License",
+    "version": "4.0.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557240,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T15:55:49.000Z",
+    "code_updated_at": "2025-11-28T15:55:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542285,
+        "name": "murahito130",
+        "created_at": "2025-11-27T17:57:20.000Z",
+        "url": "https://greasyfork.org/users/1542285-murahito130"
+      }
+    ],
+    "name": "CCFOLIA Snippet Tool",
+    "description": "ココフォリア用スニペットツール。ルーム別保存、AND検索、全方位リサイズ対応。",
+    "url": "https://greasyfork.org/scripts/557240-ccfolia-snippet-tool",
+    "code_url": "https://update.greasyfork.org/scripts/557240/CCFOLIA%20Snippet%20Tool.user.js",
+    "code_size": 37029,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 557134,
     "daily_installs": 0,
     "total_installs": 1,
@@ -66,6 +165,39 @@
     "visibility": "public"
   },
   {
+    "id": 557125,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T18:10:02.000Z",
+    "code_updated_at": "2025-11-27T18:10:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542285,
+        "name": "murahito130",
+        "created_at": "2025-11-27T17:57:20.000Z",
+        "url": "https://greasyfork.org/users/1542285-murahito130"
+      }
+    ],
+    "name": "CCFOLIA Timer Resize & Auto Position",
+    "description": "ココフォリアのタイマーをリサイズ可能にし、初期位置をBGMの下に自動調整します",
+    "url": "https://greasyfork.org/scripts/557125-ccfolia-timer-resize-auto-position",
+    "code_url": "https://update.greasyfork.org/scripts/557125/CCFOLIA%20Timer%20Resize%20%20Auto%20Position.user.js",
+    "code_size": 12073,
+    "license": "MIT License",
+    "version": "5.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 557123,
     "daily_installs": 0,
     "total_installs": 1,
@@ -94,6 +226,39 @@
     "code_size": 8313,
     "license": "MIT License",
     "version": "2.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557122,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T18:02:16.000Z",
+    "code_updated_at": "2025-12-10T15:38:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542285,
+        "name": "murahito130",
+        "created_at": "2025-11-27T17:57:20.000Z",
+        "url": "https://greasyfork.org/users/1542285-murahito130"
+      }
+    ],
+    "name": "YouTube Volume Normalizer",
+    "description": "YouTubeの音量を基準値(-14 LUFS)に統一し、ISO 226:2023準拠のラウドネス補正を行います。",
+    "url": "https://greasyfork.org/scripts/557122-youtube-volume-normalizer",
+    "code_url": "https://update.greasyfork.org/scripts/557122/YouTube%20Volume%20Normalizer.user.js",
+    "code_size": 56725,
+    "license": "MIT License",
+    "version": "6.6",
     "locale": "ja",
     "deleted": false,
     "visibility": "public"

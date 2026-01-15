@@ -1,0 +1,33 @@
+{
+  "id": 554592,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-03T03:19:12.000Z",
+  "code_updated_at": "2025-11-03T03:19:11.000Z",
+  "namespace": "http://instagram.com/WaterDustLab",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 713682,
+      "name": "insta/@WaterDustLab",
+      "created_at": "2020-12-06T11:10:00.000Z",
+      "url": "https://greasyfork.org/users/713682-insta-waterdustlab"
+    }
+  ],
+  "name": "📚 The GOD MODE Ultimate Research Superpanel for Scholars, Hackers & Knowledge Addicts",
+  "description": "GOD MODE Instantly unlock academic papers, PDFs, and DOIs from everywhere — LibGen, Sci-Hub, Unpaywall, Semantic Scholar, Crossref, and more — directly inside any webpage.",
+  "url": "https://greasyfork.org/scripts/554592-the-god-mode-ultimate-research-superpanel-for-scholars-hackers-knowledge-addicts",
+  "code_url": "https://update.greasyfork.org/scripts/554592/%F0%9F%93%9A%20The%20GOD%20MODE%20Ultimate%20Research%20Superpanel%20for%20Scholars%2C%20Hackers%20%20Knowledge%20Addicts.user.js",
+  "code_size": 30488,
+  "license": "MIT License",
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

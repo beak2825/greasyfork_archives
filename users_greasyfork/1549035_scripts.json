@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559174,
+    "daily_installs": 1,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T04:01:11.000Z",
+    "code_updated_at": "2025-12-17T04:01:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549035,
+        "name": "Daksh Biyani (Victoriasch)",
+        "created_at": "2025-12-17T03:59:32.000Z",
+        "url": "https://greasyfork.org/users/1549035-daksh-biyani-victoriasch"
+      }
+    ],
+    "name": "Ultima Client v2.1 - Polished Edition",
+    "description": "Ultimate bloxd.io client with polished UI - HUD, Crosshair, Performance, UI Enhancements",
+    "url": "https://greasyfork.org/scripts/559174-ultima-client-v2-1-polished-edition",
+    "code_url": "https://update.greasyfork.org/scripts/559174/Ultima%20Client%20v21%20-%20Polished%20Edition.user.js",
+    "code_size": 88067,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

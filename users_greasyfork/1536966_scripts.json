@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555594,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T08:05:17.000Z",
+    "code_updated_at": "2025-11-12T08:05:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536966,
+        "name": "Tukumi J",
+        "created_at": "2025-11-12T07:54:52.000Z",
+        "url": "https://greasyfork.org/users/1536966-tukumi-j"
+      }
+    ],
+    "name": "ScoreBoard - 扣分计分器",
+    "description": "悬浮小窗扣分器：自定义扣分项、记录模式、Excel 导入导出、拖拽缩放、最小化悬浮球、全局黑名单 / 白名单（跨站共享）、UI 缩放与字体优化等。",
+    "url": "https://greasyfork.org/scripts/555594-scoreboard-%E6%89%A3%E5%88%86%E8%AE%A1%E5%88%86%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/555594/ScoreBoard%20-%20%E6%89%A3%E5%88%86%E8%AE%A1%E5%88%86%E5%99%A8.user.js",
+    "code_size": 55511,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

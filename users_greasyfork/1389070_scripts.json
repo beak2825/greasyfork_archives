@@ -67,7 +67,7 @@
   },
   {
     "id": 561719,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 5,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -100,8 +100,8 @@
   },
   {
     "id": 561718,
-    "daily_installs": 0,
-    "total_installs": 0,
+    "daily_installs": 1,
+    "total_installs": 1,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -165,9 +165,42 @@
     "visibility": "public"
   },
   {
+    "id": 560984,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T22:00:37.000Z",
+    "code_updated_at": "2025-12-31T22:00:37.000Z",
+    "namespace": "YouTube",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "YouTube ＰＯＰ—ＵＰSKIP（Ready to shop?）ＡＬＬADS",
+    "description": "形式化验证的弹窗拦截器 - 基于几何检测，无硬编码正则",
+    "url": "https://greasyfork.org/scripts/560984-youtube-%EF%BD%90%EF%BD%8F%EF%BD%90-%EF%BD%95%EF%BD%90skip-ready-to-shop-%EF%BD%81%EF%BD%8C%EF%BD%8Cads",
+    "code_url": "https://update.greasyfork.org/scripts/560984/YouTube%20%EF%BC%B0%EF%BC%AF%EF%BC%B0%E2%80%94%EF%BC%B5%EF%BC%B0SKIP%EF%BC%88Ready%20to%20shop%EF%BC%89%EF%BC%A1%EF%BC%AC%EF%BC%ACADS.user.js",
+    "code_size": 26123,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "0.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 560976,
     "daily_installs": 0,
-    "total_installs": 5,
+    "total_installs": 6,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -232,8 +265,8 @@
   },
   {
     "id": 560972,
-    "daily_installs": 4,
-    "total_installs": 14,
+    "daily_installs": 1,
+    "total_installs": 15,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -260,6 +293,72 @@
     "license": "Creative Commons Attribution 4.0 International",
     "version": "20260101",
     "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560970,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T17:51:32.000Z",
+    "code_updated_at": "2025-12-31T17:51:32.000Z",
+    "namespace": "?",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "YouTube HOME - Kill Shorts & Posts (dynamic, fast)",
+    "description": "Hide Shorts shelves + community/posts on YouTube Home. Robust for dynamic loading.",
+    "url": "https://greasyfork.org/scripts/560970-youtube-home-kill-shorts-posts-dynamic-fast",
+    "code_url": "https://update.greasyfork.org/scripts/560970/YouTube%20HOME%20-%20Kill%20Shorts%20%20Posts%20%28dynamic%2C%20fast%29.user.js",
+    "code_size": 6691,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "3.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560903,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T06:33:25.000Z",
+    "code_updated_at": "2025-12-31T06:33:25.000Z",
+    "namespace": "https://github.com/spatial-audio-verified",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389070,
+        "name": "Mei In",
+        "created_at": "2024-10-31T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1389070-mei-in"
+      }
+    ],
+    "name": "YouTube 360° Spatial Audio (Physical Modeling + Late Reverb + Lite + Minimize)",
+    "description": "严格M/S + Image Source早反(ITD) + Late Reverb网络(无零延迟环) + Lite仅早反 + crossfade旁路 + SPA自愈 + 最小化按钮（修复触控端UI无法点击）+ 预设参数重调",
+    "url": "https://greasyfork.org/scripts/560903-youtube-360-spatial-audio-physical-modeling-late-reverb-lite-minimize",
+    "code_url": "https://update.greasyfork.org/scripts/560903/YouTube%20360%C2%B0%20Spatial%20Audio%20%28Physical%20Modeling%20%2B%20Late%20Reverb%20%2B%20Lite%20%2B%20Minimize%29.user.js",
+    "code_size": 41678,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "4.2.7",
+    "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
   },
@@ -332,7 +431,7 @@
   {
     "id": 560845,
     "daily_installs": 0,
-    "total_installs": 7,
+    "total_installs": 8,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

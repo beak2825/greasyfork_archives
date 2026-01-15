@@ -1,7 +1,7 @@
 {
   "id": 561869,
-  "daily_installs": 3,
-  "total_installs": 14,
+  "daily_installs": 1,
+  "total_installs": 20,
   "fan_score": "20.7",
   "good_ratings": 1,
   "ok_ratings": 0,
@@ -15,14 +15,14 @@
   "users": [
     {
       "id": 726285,
-      "name": "Jeffrey0117-JS俠",
+      "name": "Phone “Jeffrey” Dr.",
       "created_at": "2021-01-11T16:45:00.000Z",
-      "url": "https://greasyfork.org/users/726285-jeffrey0117-js%E4%BF%A0",
+      "url": "https://greasyfork.org/users/726285-phone-jeffrey-dr",
       "scripts": [
         {
           "id": 420023,
           "daily_installs": 1,
-          "total_installs": 5154,
+          "total_installs": 5155,
           "fan_score": "62.3",
           "good_ratings": 10,
           "ok_ratings": 0,
@@ -70,7 +70,7 @@
         {
           "id": 430733,
           "daily_installs": 0,
-          "total_installs": 1217,
+          "total_installs": 1218,
           "fan_score": "51.0",
           "good_ratings": 4,
           "ok_ratings": 0,
@@ -213,8 +213,8 @@
         },
         {
           "id": 476803,
-          "daily_installs": 4,
-          "total_installs": 3351,
+          "daily_installs": 11,
+          "total_installs": 3388,
           "fan_score": "58.4",
           "good_ratings": 10,
           "ok_ratings": 5,
@@ -357,8 +357,8 @@
         },
         {
           "id": 549490,
-          "daily_installs": 1,
-          "total_installs": 17,
+          "daily_installs": 0,
+          "total_installs": 18,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
@@ -453,8 +453,8 @@
         },
         {
           "id": 561869,
-          "daily_installs": 3,
-          "total_installs": 14,
+          "daily_installs": 1,
+          "total_installs": 20,
           "fan_score": "20.7",
           "good_ratings": 1,
           "ok_ratings": 0,

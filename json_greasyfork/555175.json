@@ -1,0 +1,33 @@
+{
+  "id": 555175,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T07:06:18.000Z",
+  "code_updated_at": "2025-11-08T07:06:18.000Z",
+  "namespace": "swervelord.dev/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479805,
+      "name": "wervelord",
+      "created_at": "2025-06-06T10:57:59.000Z",
+      "url": "https://greasyfork.org/users/1479805-wervelord"
+    }
+  ],
+  "name": "Torn Hosp Timers on Faction Page",
+  "description": "Show hospital timers on war page with custom font",
+  "url": "https://greasyfork.org/scripts/555175-torn-hosp-timers-on-faction-page",
+  "code_url": "https://update.greasyfork.org/scripts/555175/Torn%20Hosp%20Timers%20on%20Faction%20Page.user.js",
+  "code_size": 14800,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

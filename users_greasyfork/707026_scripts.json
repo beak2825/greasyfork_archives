@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562683,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T21:49:57.000Z",
+    "code_updated_at": "2026-01-14T21:56:05.000Z",
+    "namespace": "videoplayer-firefox-embeds",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 707026,
+        "name": "Sh4rkill3r ARG",
+        "created_at": "2020-11-20T00:25:51.000Z",
+        "url": "https://greasyfork.org/users/707026-sh4rkill3r-arg"
+      }
+    ],
+    "name": "VideoPlayer Firefox fix for Chrome embeds",
+    "description": "Replaces chrome-extension://opmeopcambhfimffbomjgemehjkbbmji/ prefix in iframes with your chosen base",
+    "url": "https://greasyfork.org/scripts/562683-videoplayer-firefox-fix-for-chrome-embeds",
+    "code_url": "https://update.greasyfork.org/scripts/562683/VideoPlayer%20Firefox%20fix%20for%20Chrome%20embeds.user.js",
+    "code_size": 2098,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

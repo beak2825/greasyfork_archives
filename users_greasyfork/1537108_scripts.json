@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555709,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T12:14:48.000Z",
+    "code_updated_at": "2025-11-15T08:16:29.000Z",
+    "namespace": "https://blog.wynn.moe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537108,
+        "name": "Crepveant",
+        "created_at": "2025-11-12T15:08:01.000Z",
+        "url": "https://greasyfork.org/users/1537108-crepveant"
+      }
+    ],
+    "name": "New Oriental TestGTS TOEFL Toolbox",
+    "description": "适用于新东方TestGTS平台TOEFL模考的工具",
+    "url": "https://greasyfork.org/scripts/555709-new-oriental-testgts-toefl-toolbox",
+    "code_url": "https://update.greasyfork.org/scripts/555709/New%20Oriental%20TestGTS%20TOEFL%20Toolbox.user.js",
+    "code_size": 16285,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

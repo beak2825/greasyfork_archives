@@ -30,6 +30,6 @@
     "version": "v1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "public"
   }
 ]

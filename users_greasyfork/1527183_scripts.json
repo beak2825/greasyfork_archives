@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552729,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-15T23:23:16.000Z",
+    "code_updated_at": "2025-10-15T23:23:16.000Z",
+    "namespace": "https://greasyfork.org/users/1527183",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527183,
+        "name": "ScarrleTRain",
+        "created_at": "2025-10-15T23:13:22.000Z",
+        "url": "https://greasyfork.org/users/1527183-scarrletrain"
+      }
+    ],
+    "name": "GoComics Arrow Key Control",
+    "description": "Use arrow keys to go back and forth on comics on GoComics",
+    "url": "https://greasyfork.org/scripts/552729-gocomics-arrow-key-control",
+    "code_url": "https://update.greasyfork.org/scripts/552729/GoComics%20Arrow%20Key%20Control.user.js",
+    "code_size": 1100,
+    "license": "The Unlicense",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

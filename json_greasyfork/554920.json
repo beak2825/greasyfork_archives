@@ -1,0 +1,59 @@
+{
+  "id": 554920,
+  "daily_installs": 1,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-06T00:23:37.000Z",
+  "code_updated_at": "2025-11-06T00:23:37.000Z",
+  "namespace": "https://example.local/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1534567,
+      "name": "JKat2",
+      "created_at": "2025-11-06T00:20:10.000Z",
+      "url": "https://greasyfork.org/users/1534567-jkat2",
+      "scripts": [
+        {
+          "id": 554920,
+          "daily_installs": 1,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-06T00:23:37.000Z",
+          "code_updated_at": "2025-11-06T00:23:37.000Z",
+          "namespace": "https://example.local/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PikPak → Motrix Download (Floating Button + RPC Settings + Directory Structure)",
+          "description": "Send multiple PikPak links to Motrix (aria2) with folder structure preserved. Includes floating draggable button, in-page RPC configuration panel, selection tools, and sorting options.",
+          "url": "https://greasyfork.org/scripts/554920-pikpak-motrix-download-floating-button-rpc-settings-directory-structure",
+          "code_url": "https://update.greasyfork.org/scripts/554920/PikPak%20%E2%86%92%20Motrix%20Download%20%28Floating%20Button%20%2B%20RPC%20Settings%20%2B%20Directory%20Structure%29.user.js",
+          "code_size": 10989,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PikPak → Motrix Download (Floating Button + RPC Settings + Directory Structure)",
+  "description": "Send multiple PikPak links to Motrix (aria2) with folder structure preserved. Includes floating draggable button, in-page RPC configuration panel, selection tools, and sorting options.",
+  "url": "https://greasyfork.org/scripts/554920-pikpak-motrix-download-floating-button-rpc-settings-directory-structure",
+  "code_url": "https://update.greasyfork.org/scripts/554920/PikPak%20%E2%86%92%20Motrix%20Download%20%28Floating%20Button%20%2B%20RPC%20Settings%20%2B%20Directory%20Structure%29.user.js",
+  "code_size": 10989,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

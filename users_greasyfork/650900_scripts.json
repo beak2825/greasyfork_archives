@@ -1,0 +1,68 @@
+[
+  {
+    "id": 552802,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T13:53:13.000Z",
+    "code_updated_at": "2025-10-16T13:53:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 650900,
+        "name": "PRO-2684",
+        "created_at": "2020-06-25T07:52:09.000Z",
+        "url": "https://greasyfork.org/users/650900-pro-2684"
+      }
+    ],
+    "name": "Open in Current",
+    "description": "Always open pages in the current window, instead of creating a popup.",
+    "url": "https://greasyfork.org/scripts/552802-open-in-current",
+    "code_url": "https://update.greasyfork.org/scripts/552802/Open%20in%20Current.user.js",
+    "code_size": 1722,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552801,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T13:51:03.000Z",
+    "code_updated_at": "2026-01-15T05:30:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 650900,
+        "name": "PRO-2684",
+        "created_at": "2020-06-25T07:52:09.000Z",
+        "url": "https://greasyfork.org/users/650900-pro-2684"
+      }
+    ],
+    "name": "UCAS Helper",
+    "description": "A helper script for UCAS online systems.",
+    "url": "https://greasyfork.org/scripts/552801-ucas-helper",
+    "code_url": "https://update.greasyfork.org/scripts/552801/UCAS%20Helper.user.js",
+    "code_size": 28419,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

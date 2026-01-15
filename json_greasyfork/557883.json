@@ -1,0 +1,33 @@
+{
+  "id": 557883,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-04T09:35:53.000Z",
+  "code_updated_at": "2025-12-08T02:04:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1544075,
+      "name": "Logan Bell",
+      "created_at": "2025-12-03T05:20:52.000Z",
+      "url": "https://greasyfork.org/users/1544075-logan-bell"
+    }
+  ],
+  "name": "Neopets 'Quick Stock' Pricer",
+  "description": "Checks item prices in the Quick Stock table against ItemDB market value, injecting a \"Market Price\" column, and displaying a total value in the final header row.",
+  "url": "https://greasyfork.org/scripts/557883-neopets-quick-stock-pricer",
+  "code_url": "https://update.greasyfork.org/scripts/557883/Neopets%20%27Quick%20Stock%27%20Pricer.user.js",
+  "code_size": 9869,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

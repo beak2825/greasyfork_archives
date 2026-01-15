@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554831,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T03:25:07.000Z",
+    "code_updated_at": "2025-11-07T09:49:53.000Z",
+    "namespace": "example.twitter.enhanced",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 146368,
+        "name": "Devol",
+        "created_at": "2017-08-04T04:55:29.000Z",
+        "url": "https://greasyfork.org/users/146368-devol"
+      }
+    ],
+    "name": "推特搜索助手-Twitter Search Assistant Enhanced",
+    "description": "推特搜索助手（描述不变）",
+    "url": "https://greasyfork.org/scripts/554831-%E6%8E%A8%E7%89%B9%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B-twitter-search-assistant-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/554831/%E6%8E%A8%E7%89%B9%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B-Twitter%20Search%20Assistant%20Enhanced.user.js",
+    "code_size": 15516,
+    "license": "MIT License",
+    "version": "2.25",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

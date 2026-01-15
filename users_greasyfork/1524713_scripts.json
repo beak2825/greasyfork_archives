@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552124,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T07:29:57.000Z",
+    "code_updated_at": "2025-10-10T08:09:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1524713,
+        "name": "太田陽道",
+        "created_at": "2025-10-10T07:26:47.000Z",
+        "url": "https://greasyfork.org/users/1524713-%E5%A4%AA%E7%94%B0%E9%99%BD%E9%81%93"
+      }
+    ],
+    "name": "時間割改善スクリプト",
+    "description": "大学の履修時間割ページにシラバスへのリンクを動的に追加します。初回にURL設定が必要です。",
+    "url": "https://greasyfork.org/scripts/552124-%E6%99%82%E9%96%93%E5%89%B2%E6%94%B9%E5%96%84%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/552124/%E6%99%82%E9%96%93%E5%89%B2%E6%94%B9%E5%96%84%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88.user.js",
+    "code_size": 5903,
+    "license": null,
+    "version": "4.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

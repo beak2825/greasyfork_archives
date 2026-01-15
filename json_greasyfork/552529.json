@@ -1,0 +1,59 @@
+{
+  "id": 552529,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-14T04:25:24.000Z",
+  "code_updated_at": "2025-10-14T04:33:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 716429,
+      "name": "啊超吖",
+      "created_at": "2020-12-13T19:54:52.000Z",
+      "url": "https://greasyfork.org/users/716429-%E5%95%8A%E8%B6%85%E5%90%96",
+      "scripts": [
+        {
+          "id": 552529,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-14T04:25:24.000Z",
+          "code_updated_at": "2025-10-14T04:33:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站硬核会员答题辅助(可配置API版)",
+          "description": "B站硬核会员答题辅助 - 支持多API配置和模型选择",
+          "url": "https://greasyfork.org/scripts/552529-b%E7%AB%99%E7%A1%AC%E6%A0%B8%E4%BC%9A%E5%91%98%E7%AD%94%E9%A2%98%E8%BE%85%E5%8A%A9-%E5%8F%AF%E9%85%8D%E7%BD%AEapi%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/552529/B%E7%AB%99%E7%A1%AC%E6%A0%B8%E4%BC%9A%E5%91%98%E7%AD%94%E9%A2%98%E8%BE%85%E5%8A%A9%28%E5%8F%AF%E9%85%8D%E7%BD%AEAPI%E7%89%88%29.user.js",
+          "code_size": 34230,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2025.10.14.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站硬核会员答题辅助(可配置API版)",
+  "description": "B站硬核会员答题辅助 - 支持多API配置和模型选择",
+  "url": "https://greasyfork.org/scripts/552529-b%E7%AB%99%E7%A1%AC%E6%A0%B8%E4%BC%9A%E5%91%98%E7%AD%94%E9%A2%98%E8%BE%85%E5%8A%A9-%E5%8F%AF%E9%85%8D%E7%BD%AEapi%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/552529/B%E7%AB%99%E7%A1%AC%E6%A0%B8%E4%BC%9A%E5%91%98%E7%AD%94%E9%A2%98%E8%BE%85%E5%8A%A9%28%E5%8F%AF%E9%85%8D%E7%BD%AEAPI%E7%89%88%29.user.js",
+  "code_size": 34230,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2025.10.14.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

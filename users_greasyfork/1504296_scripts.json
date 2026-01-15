@@ -1,0 +1,134 @@
+[
+  {
+    "id": 560440,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T17:41:08.000Z",
+    "code_updated_at": "2025-12-27T17:41:08.000Z",
+    "namespace": "https://upandclear.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504296,
+        "name": "YayOrNay",
+        "created_at": "2025-08-12T21:16:40.000Z",
+        "url": "https://greasyfork.org/users/1504296-yayornay"
+      }
+    ],
+    "name": "YggTorrent • Téléchargement massif de .torrent",
+    "description": "Repère tous les liens engine/download_torrent?id=xxxx sur la page et les télécharge en série avec limite de débit. Fallback possible via ouverture d’onglets.",
+    "url": "https://greasyfork.org/scripts/560440-yggtorrent-t%C3%A9l%C3%A9chargement-massif-de-torrent",
+    "code_url": "https://update.greasyfork.org/scripts/560440/YggTorrent%20%E2%80%A2%20T%C3%A9l%C3%A9chargement%20massif%20de%20torrent.user.js",
+    "code_size": 10015,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553413,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T21:28:46.000Z",
+    "code_updated_at": "2025-10-22T21:28:46.000Z",
+    "namespace": "http://www.hurelle.fr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504296,
+        "name": "YayOrNay",
+        "created_at": "2025-08-12T21:16:40.000Z",
+        "url": "https://greasyfork.org/users/1504296-yayornay"
+      }
+    ],
+    "name": "NinjaSherlock 2025",
+    "description": "Provides useful links to search engines and similar websites based on the page that you're viewing or the search that you're performing.",
+    "url": "https://greasyfork.org/scripts/553413-ninjasherlock-2025",
+    "code_url": "https://update.greasyfork.org/scripts/553413/NinjaSherlock%202025.user.js",
+    "code_size": 91862,
+    "license": null,
+    "version": "1.9.9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 553412,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T21:26:58.000Z",
+    "code_updated_at": "2025-10-22T21:26:57.000Z",
+    "namespace": "http://www.hurelle.fr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504296,
+        "name": "YayOrNay",
+        "created_at": "2025-08-12T21:16:40.000Z",
+        "url": "https://greasyfork.org/users/1504296-yayornay"
+      }
+    ],
+    "name": "NinjaSherlock 2017",
+    "description": "Provides useful links to search engines and similar websites based on the page that you're viewing or the search that you're performing.",
+    "url": "https://greasyfork.org/scripts/553412-ninjasherlock-2017",
+    "code_url": "https://update.greasyfork.org/scripts/553412/NinjaSherlock%202017.user.js",
+    "code_size": 91878,
+    "license": "MIT License",
+    "version": "1.9.9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553410,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T21:07:47.000Z",
+    "code_updated_at": "2025-10-22T21:07:47.000Z",
+    "namespace": "http://www.code-poet.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504296,
+        "name": "YayOrNay",
+        "created_at": "2025-08-12T21:16:40.000Z",
+        "url": "https://greasyfork.org/users/1504296-yayornay"
+      }
+    ],
+    "name": "Try This Search On",
+    "description": "Provides useful links to search engines and similar websites based on the page that you're viewing or the search that you're performing.",
+    "url": "https://greasyfork.org/scripts/553410-try-this-search-on",
+    "code_url": "https://update.greasyfork.org/scripts/553410/Try%20This%20Search%20On.user.js",
+    "code_size": 60551,
+    "license": null,
+    "version": "1.9.9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

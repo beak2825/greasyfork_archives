@@ -1,0 +1,101 @@
+[
+  {
+    "id": 555780,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T01:52:26.000Z",
+    "code_updated_at": "2025-11-14T03:11:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528038,
+        "name": "W Lover",
+        "created_at": "2025-10-18T05:06:12.000Z",
+        "url": "https://greasyfork.org/users/1528038-w-lover"
+      }
+    ],
+    "name": "Augment自动注册-私人域名",
+    "description": "Augment注册流程完全自动化 - 一键开始，全程自动（新增：域名均衡分布算法 + 菜单折叠功能）",
+    "url": "https://greasyfork.org/scripts/555780-augment%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C-%E7%A7%81%E4%BA%BA%E5%9F%9F%E5%90%8D",
+    "code_url": "https://update.greasyfork.org/scripts/555780/Augment%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C-%E7%A7%81%E4%BA%BA%E5%9F%9F%E5%90%8D.user.js",
+    "code_size": 156426,
+    "license": null,
+    "version": "2.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554265,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T04:45:20.000Z",
+    "code_updated_at": "2025-11-12T04:51:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528038,
+        "name": "W Lover",
+        "created_at": "2025-10-18T05:06:12.000Z",
+        "url": "https://greasyfork.org/users/1528038-w-lover"
+      }
+    ],
+    "name": "Augment自动注册",
+    "description": "Augment注册流程完全自动化 - 一键开始，全程自动（集成Duck.com隐私邮箱API）",
+    "url": "https://greasyfork.org/scripts/554265-augment%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C",
+    "code_url": "https://update.greasyfork.org/scripts/554265/Augment%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C.user.js",
+    "code_size": 166096,
+    "license": null,
+    "version": "2.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554045,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T06:58:32.000Z",
+    "code_updated_at": "2025-10-30T17:24:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528038,
+        "name": "W Lover",
+        "created_at": "2025-10-18T05:06:12.000Z",
+        "url": "https://greasyfork.org/users/1528038-w-lover"
+      }
+    ],
+    "name": "Stripe Checkout 智能填表助手 Pro",
+    "description": "强大的Stripe填表工具：卡头管理、Augment自动注册、Session Cookie提取、信息预设、历史记录",
+    "url": "https://greasyfork.org/scripts/554045-stripe-checkout-%E6%99%BA%E8%83%BD%E5%A1%AB%E8%A1%A8%E5%8A%A9%E6%89%8B-pro",
+    "code_url": "https://update.greasyfork.org/scripts/554045/Stripe%20Checkout%20%E6%99%BA%E8%83%BD%E5%A1%AB%E8%A1%A8%E5%8A%A9%E6%89%8B%20Pro.user.js",
+    "code_size": 156990,
+    "license": null,
+    "version": "2.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

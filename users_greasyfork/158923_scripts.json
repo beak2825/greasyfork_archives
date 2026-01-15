@@ -1,5 +1,38 @@
 [
   {
+    "id": 559630,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T18:31:15.000Z",
+    "code_updated_at": "2025-12-20T18:31:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158923,
+        "name": "STELLAR STELS",
+        "created_at": "2017-11-12T09:07:32.000Z",
+        "url": "https://greasyfork.org/users/158923-stellar-stels"
+      }
+    ],
+    "name": "Image OCR Helper",
+    "description": "OCR text from images using Tesseract.js",
+    "url": "https://greasyfork.org/scripts/559630-image-ocr-helper",
+    "code_url": "https://update.greasyfork.org/scripts/559630/Image%20OCR%20Helper.user.js",
+    "code_size": 1245,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 559583,
     "daily_installs": 0,
     "total_installs": 6,
@@ -35,7 +68,7 @@
   {
     "id": 558269,
     "daily_installs": 1,
-    "total_installs": 19,
+    "total_installs": 21,
     "fan_score": "0.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -61,6 +94,105 @@
     "code_size": 12657,
     "license": null,
     "version": "5.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557944,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T19:59:09.000Z",
+    "code_updated_at": "2025-12-04T19:59:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158923,
+        "name": "STELLAR STELS",
+        "created_at": "2017-11-12T09:07:32.000Z",
+        "url": "https://greasyfork.org/users/158923-stellar-stels"
+      }
+    ],
+    "name": "Universal Captcha Cleaner",
+    "description": "Automatically clears all site data after any captcha is solved on the page (reCAPTCHA v2/v3, hCaptcha, invisible) without breaking site load",
+    "url": "https://greasyfork.org/scripts/557944-universal-captcha-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/557944/Universal%20Captcha%20Cleaner.user.js",
+    "code_size": 2640,
+    "license": null,
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555647,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T17:36:38.000Z",
+    "code_updated_at": "2025-11-12T17:36:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158923,
+        "name": "STELLAR STELS",
+        "created_at": "2017-11-12T09:07:32.000Z",
+        "url": "https://greasyfork.org/users/158923-stellar-stels"
+      }
+    ],
+    "name": "Brave DNS Auto Clear",
+    "description": "Очищает DNS Brave при обновлении страницы или закрытии вкладки",
+    "url": "https://greasyfork.org/scripts/555647-brave-dns-auto-clear",
+    "code_url": "https://update.greasyfork.org/scripts/555647/Brave%20DNS%20Auto%20Clear.user.js",
+    "code_size": 799,
+    "license": null,
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554905,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T17:22:53.000Z",
+    "code_updated_at": "2025-11-05T17:22:53.000Z",
+    "namespace": "recaptcha-auto-reset",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158923,
+        "name": "STELLAR STELS",
+        "created_at": "2017-11-12T09:07:32.000Z",
+        "url": "https://greasyfork.org/users/158923-stellar-stels"
+      }
+    ],
+    "name": "reCAPTCHA Auto Reset on Fail",
+    "description": "Авто-перезагрузка рекапчи при неправильном решении",
+    "url": "https://greasyfork.org/scripts/554905-recaptcha-auto-reset-on-fail",
+    "code_url": "https://update.greasyfork.org/scripts/554905/reCAPTCHA%20Auto%20Reset%20on%20Fail.user.js",
+    "code_size": 1530,
+    "license": null,
+    "version": "1.1",
     "locale": "ru",
     "deleted": false,
     "visibility": "public"

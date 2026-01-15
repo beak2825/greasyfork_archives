@@ -1,0 +1,59 @@
+{
+  "id": 554208,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T12:59:31.000Z",
+  "code_updated_at": "2025-11-21T01:01:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532294,
+      "name": "Yuuki醬汁",
+      "created_at": "2025-10-30T12:54:44.000Z",
+      "url": "https://greasyfork.org/users/1532294-yuuki%E9%86%AC%E6%B1%81",
+      "scripts": [
+        {
+          "id": 554208,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-30T12:59:31.000Z",
+          "code_updated_at": "2025-11-21T01:01:55.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "sorceryntax3戰鬥顯示",
+          "description": "將sorceryntax3戰鬥過程圖像化顯示，新增掉落物記錄和傷害統計功能",
+          "url": "https://greasyfork.org/scripts/554208-sorceryntax3%E6%88%B0%E9%AC%A5%E9%A1%AF%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/554208/sorceryntax3%E6%88%B0%E9%AC%A5%E9%A1%AF%E7%A4%BA.user.js",
+          "code_size": 46143,
+          "license": "MIT License",
+          "version": "1.6.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "sorceryntax3戰鬥顯示",
+  "description": "將sorceryntax3戰鬥過程圖像化顯示，新增掉落物記錄和傷害統計功能",
+  "url": "https://greasyfork.org/scripts/554208-sorceryntax3%E6%88%B0%E9%AC%A5%E9%A1%AF%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/554208/sorceryntax3%E6%88%B0%E9%AC%A5%E9%A1%AF%E7%A4%BA.user.js",
+  "code_size": 46143,
+  "license": "MIT License",
+  "version": "1.6.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

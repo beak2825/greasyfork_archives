@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560399,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T10:18:32.000Z",
+    "code_updated_at": "2025-12-27T10:18:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1553082,
+        "name": "patrick329",
+        "created_at": "2025-12-27T09:33:33.000Z",
+        "url": "https://greasyfork.org/users/1553082-patrick329"
+      }
+    ],
+    "name": "💥 学习通终极自动化套装｜🎯 一站式解决所有学习难题｜🚀 从入门到精通的智能陪伴｜⚡ 持续进化AI系统",
+    "description": "不断进化的AI系统，越用越懂你。完整的售后服务体系，技术团队随时待命，让自动学习成为新常态。",
+    "url": "https://greasyfork.org/scripts/560399-%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%BB%88%E6%9E%81%E8%87%AA%E5%8A%A8%E5%8C%96%E5%A5%97%E8%A3%85-%E4%B8%80%E7%AB%99%E5%BC%8F%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E5%AD%A6%E4%B9%A0%E9%9A%BE%E9%A2%98-%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A%E7%9A%84%E6%99%BA%E8%83%BD%E9%99%AA%E4%BC%B4-%E6%8C%81%E7%BB%AD%E8%BF%9B%E5%8C%96ai%E7%B3%BB%E7%BB%9F",
+    "code_url": "https://update.greasyfork.org/scripts/560399/%F0%9F%92%A5%20%E5%AD%A6%E4%B9%A0%E9%80%9A%E7%BB%88%E6%9E%81%E8%87%AA%E5%8A%A8%E5%8C%96%E5%A5%97%E8%A3%85%EF%BD%9C%F0%9F%8E%AF%20%E4%B8%80%E7%AB%99%E5%BC%8F%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E5%AD%A6%E4%B9%A0%E9%9A%BE%E9%A2%98%EF%BD%9C%F0%9F%9A%80%20%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9A%E7%9A%84%E6%99%BA%E8%83%BD%E9%99%AA%E4%BC%B4%EF%BD%9C%E2%9A%A1%20%E6%8C%81%E7%BB%AD%E8%BF%9B%E5%8C%96AI%E7%B3%BB%E7%BB%9F.user.js",
+    "code_size": 282928,
+    "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+    "version": "1.6.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

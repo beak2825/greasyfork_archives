@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552903,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T12:39:03.000Z",
+    "code_updated_at": "2025-10-18T15:06:23.000Z",
+    "namespace": "https://www.ccw.site/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1517020,
+        "name": "skydog221",
+        "created_at": "2025-09-19T14:48:21.000Z",
+        "url": "https://greasyfork.org/users/1517020-skydog221"
+      }
+    ],
+    "name": "CCW 游玩时间美化 | CCW Better Play Time",
+    "description": "美化作品评论区的游玩时间显示-共创世界 | @多bug的啸天犬",
+    "url": "https://greasyfork.org/scripts/552903-ccw-%E6%B8%B8%E7%8E%A9%E6%97%B6%E9%97%B4%E7%BE%8E%E5%8C%96-ccw-better-play-time",
+    "code_url": "https://update.greasyfork.org/scripts/552903/CCW%20%E6%B8%B8%E7%8E%A9%E6%97%B6%E9%97%B4%E7%BE%8E%E5%8C%96%20%7C%20CCW%20Better%20Play%20Time.user.js",
+    "code_size": 884,
+    "license": null,
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

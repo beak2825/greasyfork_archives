@@ -30,6 +30,72 @@
     "version": "22.7",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553358,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T08:50:32.000Z",
+    "code_updated_at": "2025-10-22T09:31:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1367924,
+        "name": "AAA_ikun",
+        "created_at": "2024-09-15T10:19:27.000Z",
+        "url": "https://greasyfork.org/users/1367924-aaa-ikun"
+      }
+    ],
+    "name": "CDK 福利领取提醒",
+    "description": "CDK 福利领取提醒功能，支持倒计时和自动跳转",
+    "url": "https://greasyfork.org/scripts/553358-cdk-%E7%A6%8F%E5%88%A9%E9%A2%86%E5%8F%96%E6%8F%90%E9%86%92",
+    "code_url": "https://update.greasyfork.org/scripts/553358/CDK%20%E7%A6%8F%E5%88%A9%E9%A2%86%E5%8F%96%E6%8F%90%E9%86%92.user.js",
+    "code_size": 27370,
+    "license": "MIT License",
+    "version": "1.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552734,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T01:01:39.000Z",
+    "code_updated_at": "2025-10-16T01:01:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1367924,
+        "name": "AAA_ikun",
+        "created_at": "2024-09-15T10:19:27.000Z",
+        "url": "https://greasyfork.org/users/1367924-aaa-ikun"
+      }
+    ],
+    "name": "IDCFlare 论坛自动阅读器",
+    "description": "自动阅读IDCFlare论坛话题，支持自定义浏览速度和话题数量，支持控制面板展开/收缩，记录已阅读话题避免重复，支持跳过前面几篇话题，智能识别短话题并立即跳转",
+    "url": "https://greasyfork.org/scripts/552734-idcflare-%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/552734/IDCFlare%20%E8%AE%BA%E5%9D%9B%E8%87%AA%E5%8A%A8%E9%98%85%E8%AF%BB%E5%99%A8.user.js",
+    "code_size": 24988,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

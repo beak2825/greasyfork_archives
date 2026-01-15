@@ -1,8 +1,41 @@
 [
   {
+    "id": 562641,
+    "daily_installs": 2,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T12:06:17.000Z",
+    "code_updated_at": "2026-01-14T23:50:56.000Z",
+    "namespace": "grimsnecrosis.torn.web.travel.allcountries",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558112,
+        "name": "Adriel Lorenzo",
+        "created_at": "2026-01-09T06:11:43.000Z",
+        "url": "https://greasyfork.org/users/1558112-adriel-lorenzo"
+      }
+    ],
+    "name": "Torn Web Travel: All Countries Stock + Profit",
+    "description": "WEB (Tampermonkey/Violentmonkey): Shows abroad stock across all countries (YATA export) with profit using Torn itemmarket average_price. Filter by country, sort (incl profit). Highlights top 10 rows if YATA data is stale (>5 minutes). (Updated column removed.)",
+    "url": "https://greasyfork.org/scripts/562641-torn-web-travel-all-countries-stock-profit",
+    "code_url": "https://update.greasyfork.org/scripts/562641/Torn%20Web%20Travel%3A%20All%20Countries%20Stock%20%2B%20Profit.user.js",
+    "code_size": 26515,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 561937,
-    "daily_installs": 4,
-    "total_installs": 10,
+    "daily_installs": 3,
+    "total_installs": 27,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -16,9 +49,9 @@
     "users": [
       {
         "id": 1558112,
-        "name": "Grimsnecrosis",
+        "name": "Adriel Lorenzo",
         "created_at": "2026-01-09T06:11:43.000Z",
-        "url": "https://greasyfork.org/users/1558112-grimsnecrosis"
+        "url": "https://greasyfork.org/users/1558112-adriel-lorenzo"
       }
     ],
     "name": "Travel Profit for TornPDA",

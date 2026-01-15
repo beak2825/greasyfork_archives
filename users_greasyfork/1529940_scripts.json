@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553491,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-23T14:53:55.000Z",
+    "code_updated_at": "2025-10-23T14:53:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529940,
+        "name": "Sephiroth1s",
+        "created_at": "2025-10-23T14:42:53.000Z",
+        "url": "https://greasyfork.org/users/1529940-sephiroth1s"
+      }
+    ],
+    "name": "电子发烧友网 - 展开全文 + 隐藏按钮 + 回到顶部",
+    "description": "移除 .simditor-body.clearfix 的 height 限制，隐藏“阅读全文”按钮，并添加“回到顶部”按钮",
+    "url": "https://greasyfork.org/scripts/553491-%E7%94%B5%E5%AD%90%E5%8F%91%E7%83%A7%E5%8F%8B%E7%BD%91-%E5%B1%95%E5%BC%80%E5%85%A8%E6%96%87-%E9%9A%90%E8%97%8F%E6%8C%89%E9%92%AE-%E5%9B%9E%E5%88%B0%E9%A1%B6%E9%83%A8",
+    "code_url": "https://update.greasyfork.org/scripts/553491/%E7%94%B5%E5%AD%90%E5%8F%91%E7%83%A7%E5%8F%8B%E7%BD%91%20-%20%E5%B1%95%E5%BC%80%E5%85%A8%E6%96%87%20%2B%20%E9%9A%90%E8%97%8F%E6%8C%89%E9%92%AE%20%2B%20%E5%9B%9E%E5%88%B0%E9%A1%B6%E9%83%A8.user.js",
+    "code_size": 2956,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

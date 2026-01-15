@@ -1,0 +1,68 @@
+[
+  {
+    "id": 555008,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T16:00:42.000Z",
+    "code_updated_at": "2025-11-06T16:00:42.000Z",
+    "namespace": "https://rsload.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 291950,
+        "name": "suifengtec",
+        "created_at": "2019-04-14T03:13:42.000Z",
+        "url": "https://greasyfork.org/users/291950-suifengtec"
+      }
+    ],
+    "name": "rsload 下载助手",
+    "description": "rsload 下载助手!",
+    "url": "https://greasyfork.org/scripts/555008-rsload-%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/555008/rsload%20%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 702,
+    "license": "GPL V3",
+    "version": "2025-11-06",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555005,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T15:45:08.000Z",
+    "code_updated_at": "2025-11-06T15:45:08.000Z",
+    "namespace": "http://fixti.ru/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 291950,
+        "name": "suifengtec",
+        "created_at": "2019-04-14T03:13:42.000Z",
+        "url": "https://greasyfork.org/users/291950-suifengtec"
+      }
+    ],
+    "name": "fixti.ru 助手",
+    "description": "它能让你免去打对号，再点按钮的这种麻烦，打开页面即可直接下载，从而节约时间.",
+    "url": "https://greasyfork.org/scripts/555005-fixti-ru-%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/555005/fixtiru%20%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 670,
+    "license": "GPL V3",
+    "version": "2025-11-06",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -69,8 +69,8 @@
         },
         {
           "id": 503052,
-          "daily_installs": 1,
-          "total_installs": 150,
+          "daily_installs": 0,
+          "total_installs": 151,
           "fan_score": "20.7",
           "good_ratings": 1,
           "ok_ratings": 0,
@@ -165,8 +165,8 @@
         },
         {
           "id": 558568,
-          "daily_installs": 0,
-          "total_installs": 17,
+          "daily_installs": 1,
+          "total_installs": 21,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,

@@ -1,0 +1,59 @@
+{
+  "id": 560400,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-27T10:32:38.000Z",
+  "code_updated_at": "2025-12-27T10:32:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 615333,
+      "name": "3CP4Truning",
+      "created_at": "2020-06-20T15:45:31.000Z",
+      "url": "https://greasyfork.org/users/615333-3cp4truning",
+      "scripts": [
+        {
+          "id": 560400,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-27T10:32:38.000Z",
+          "code_updated_at": "2025-12-27T10:32:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AcFun 时间显示",
+          "description": "将acfun评论区时间、文章、视频的发布时间展示为完整的北京时间",
+          "url": "https://greasyfork.org/scripts/560400-acfun-%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/560400/AcFun%20%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA.user.js",
+          "code_size": 10956,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AcFun 时间显示",
+  "description": "将acfun评论区时间、文章、视频的发布时间展示为完整的北京时间",
+  "url": "https://greasyfork.org/scripts/560400-acfun-%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/560400/AcFun%20%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA.user.js",
+  "code_size": 10956,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554839,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T05:00:16.000Z",
+    "code_updated_at": "2025-11-05T05:00:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742676,
+        "name": "Lucky Starlight",
+        "created_at": "2021-03-02T05:45:46.000Z",
+        "url": "https://greasyfork.org/users/742676-lucky-starlight"
+      }
+    ],
+    "name": "Nuke Marketplace Idiots",
+    "description": "stop you from seeing assholes on the SL marketplace",
+    "url": "https://greasyfork.org/scripts/554839-nuke-marketplace-idiots",
+    "code_url": "https://update.greasyfork.org/scripts/554839/Nuke%20Marketplace%20Idiots.user.js",
+    "code_size": 998,
+    "license": null,
+    "version": "2025-11-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

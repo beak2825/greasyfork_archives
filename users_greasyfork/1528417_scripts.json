@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553075,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-19T07:25:55.000Z",
+    "code_updated_at": "2025-11-13T16:05:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528417,
+        "name": "bluelightgit",
+        "created_at": "2025-10-19T06:28:24.000Z",
+        "url": "https://greasyfork.org/users/1528417-bluelightgit"
+      }
+    ],
+    "name": "百合会论坛阅读增强",
+    "description": "为百合会论坛提供漫画/小说的沉浸式阅读体验，支持多种阅读模式、暗色模式、Material Design风格",
+    "url": "https://greasyfork.org/scripts/553075-%E7%99%BE%E5%90%88%E4%BC%9A%E8%AE%BA%E5%9D%9B%E9%98%85%E8%AF%BB%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/553075/%E7%99%BE%E5%90%88%E4%BC%9A%E8%AE%BA%E5%9D%9B%E9%98%85%E8%AF%BB%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 162870,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

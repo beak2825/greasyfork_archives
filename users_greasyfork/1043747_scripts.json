@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555446,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T19:36:49.000Z",
+    "code_updated_at": "2025-11-10T19:36:49.000Z",
+    "namespace": "12centuries",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043747,
+        "name": "12centuries",
+        "created_at": "2023-03-17T15:48:51.000Z",
+        "url": "https://greasyfork.org/users/1043747-12centuries"
+      }
+    ],
+    "name": "Fix ChatGPT not loading in multiple tabs (due to Performance.measure Error)",
+    "description": "Fixes ChatGPT failing to load when you open several tabs. Some sessions crash because of bad `Performance.measure` calls used for analytics. This script safely overrides `Performance.measure`, skipping invalid calls so the site loads normally while leaving your experience unchanged. Fully commented; questions and feedback welcome.",
+    "url": "https://greasyfork.org/scripts/555446-fix-chatgpt-not-loading-in-multiple-tabs-due-to-performance-measure-error",
+    "code_url": "https://update.greasyfork.org/scripts/555446/Fix%20ChatGPT%20not%20loading%20in%20multiple%20tabs%20%28due%20to%20Performancemeasure%20Error%29.user.js",
+    "code_size": 1985,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 560273,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T03:56:36.000Z",
+    "code_updated_at": "2026-01-14T01:01:05.000Z",
+    "namespace": "https://greasyfork.org/es/users/1354104-eterve-nallo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1354104,
+        "name": "Eterve Nallo",
+        "created_at": "2024-08-18T16:56:44.000Z",
+        "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+      }
+    ],
+    "name": "Oculta el botón 'Preguntar' de youtube.",
+    "description": "Oculta el botón de \"Preguntame\" de la interfaz de youtube.",
+    "url": "https://greasyfork.org/scripts/560273-oculta-el-bot%C3%B3n-preguntar-de-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/560273/Oculta%20el%20bot%C3%B3n%20%27Preguntar%27%20de%20youtube.user.js",
+    "code_size": 3866,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553636,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T08:11:57.000Z",
+    "code_updated_at": "2025-10-25T08:11:57.000Z",
+    "namespace": "https://greasyfork.org/en/users/933798",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1354104,
+        "name": "Eterve Nallo",
+        "created_at": "2024-08-18T16:56:44.000Z",
+        "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+      }
+    ],
+    "name": "Action Buttons Fix (My Personalization)",
+    "description": "Fixes watch action buttons issue with third-party YT tools, stable with MutationObserver.",
+    "url": "https://greasyfork.org/scripts/553636-action-buttons-fix-my-personalization",
+    "code_url": "https://update.greasyfork.org/scripts/553636/Action%20Buttons%20Fix%20%28My%20Personalization%29.user.js",
+    "code_size": 4122,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560954,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T15:23:45.000Z",
+    "code_updated_at": "2025-12-31T15:23:45.000Z",
+    "namespace": "DFs Torn Mug & Profit Analyzer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "Torn Mug & Profit Analyzer",
+    "description": "Mug profit analysis with v2 Market API and Weav3r Bazaar scraping. Optimized for Greasemonkey/Tampermonkey.",
+    "url": "https://greasyfork.org/scripts/560954-torn-mug-profit-analyzer",
+    "code_url": "https://update.greasyfork.org/scripts/560954/Torn%20Mug%20%20Profit%20Analyzer.user.js",
+    "code_size": 9368,
+    "license": "MIT License",
+    "version": "5.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

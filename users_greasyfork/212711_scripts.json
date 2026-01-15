@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556842,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T05:43:49.000Z",
+    "code_updated_at": "2025-11-25T08:11:53.000Z",
+    "namespace": "https://hollen9.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 212711,
+        "name": "hollen9",
+        "created_at": "2018-09-13T13:51:54.000Z",
+        "url": "https://greasyfork.org/users/212711-hollen9"
+      }
+    ],
+    "name": "ChinaCCP X Auto Block / Fast Block",
+    "description": "Fast block button on X profile + bulk blocking helper for list pages.",
+    "url": "https://greasyfork.org/scripts/556842-chinaccp-x-auto-block-fast-block",
+    "code_url": "https://update.greasyfork.org/scripts/556842/ChinaCCP%20X%20Auto%20Block%20%20Fast%20Block.user.js",
+    "code_size": 65357,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

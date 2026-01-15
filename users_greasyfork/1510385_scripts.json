@@ -1,7 +1,7 @@
 [
   {
     "id": 561658,
-    "daily_installs": 2,
+    "daily_installs": 0,
     "total_installs": 4,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -31,5 +31,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 561278,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-03T20:16:11.000Z",
+    "code_updated_at": "2026-01-03T20:16:11.000Z",
+    "namespace": "https://www.steamgriddb.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510385,
+        "name": "Okagame",
+        "created_at": "2025-08-31T00:12:16.000Z",
+        "url": "https://greasyfork.org/users/1510385-okagame"
+      }
+    ],
+    "name": "SGDB Follow Users",
+    "description": "Client-side follow system for SteamGridDB user profiles.",
+    "url": "https://greasyfork.org/scripts/561278-sgdb-follow-users",
+    "code_url": "https://update.greasyfork.org/scripts/561278/SGDB%20Follow%20Users.user.js",
+    "code_size": 23652,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558968,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-15T03:52:26.000Z",
+    "code_updated_at": "2025-12-26T22:32:12.000Z",
+    "namespace": "https://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510385,
+        "name": "Okagame",
+        "created_at": "2025-08-31T00:12:16.000Z",
+        "url": "https://greasyfork.org/users/1510385-okagame"
+      }
+    ],
+    "name": "📷💨Steam universal image gallery🖼️",
+    "description": "🖼️ Scans any Steam page for images and shows them in a live, organized gallery 📂 for easy preview 👀 and download 📥",
+    "url": "https://greasyfork.org/scripts/558968-steam-universal-image-gallery",
+    "code_url": "https://update.greasyfork.org/scripts/558968/%F0%9F%93%B7%F0%9F%92%A8Steam%20universal%20image%20gallery%F0%9F%96%BC%EF%B8%8F.user.js",
+    "code_size": 23299,
+    "license": "MIT License",
+    "version": "9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555355,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T21:09:48.000Z",
+    "code_updated_at": "2025-11-10T17:08:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510385,
+        "name": "Okagame",
+        "created_at": "2025-08-31T00:12:16.000Z",
+        "url": "https://greasyfork.org/users/1510385-okagame"
+      }
+    ],
+    "name": "DeepSeek Tool - Chat Exporter",
+    "description": "Export DeepSeek conversations to text files. Requires DeepSeek Toolkit Core.",
+    "url": "https://greasyfork.org/scripts/555355-deepseek-tool-chat-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/555355/DeepSeek%20Tool%20-%20Chat%20Exporter.user.js",
+    "code_size": 8314,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555353,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T21:01:16.000Z",
+    "code_updated_at": "2025-11-10T00:06:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510385,
+        "name": "Okagame",
+        "created_at": "2025-08-31T00:12:16.000Z",
+        "url": "https://greasyfork.org/users/1510385-okagame"
+      }
+    ],
+    "name": "DeepSeek Toolkit - Core",
+    "description": "Core framework for DeepSeek chat enhancements. Provides plugin API, wide chat view, and anti-recall protection.",
+    "url": "https://greasyfork.org/scripts/555353-deepseek-toolkit-core",
+    "code_url": "https://update.greasyfork.org/scripts/555353/1692504/DeepSeek%20Toolkit%20-%20Core.js",
+    "code_size": 29446,
+    "license": "MIT License",
+    "version": "7.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553797,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T21:08:05.000Z",
+    "code_updated_at": "2025-10-26T21:08:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530992,
+        "name": "CyberERROR",
+        "created_at": "2025-10-26T20:56:40.000Z",
+        "url": "https://greasyfork.org/users/1530992-cybererror"
+      }
+    ],
+    "name": "VK \"Не интересно\" — Быстрая кнопка",
+    "description": "Добавляет кнопку-крестик рядом с меню поста для быстрого доступа к функции \"Не интересно\"",
+    "url": "https://greasyfork.org/scripts/553797-vk-%D0%BD%D0%B5-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE-%D0%B1%D1%8B%D1%81%D1%82%D1%80%D0%B0%D1%8F-%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/553797/VK%20%22%D0%9D%D0%B5%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D0%BD%D0%BE%22%20%E2%80%94%20%D0%91%D1%8B%D1%81%D1%82%D1%80%D0%B0%D1%8F%20%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B0.user.js",
+    "code_size": 5787,
+    "license": null,
+    "version": "2.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

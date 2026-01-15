@@ -1,0 +1,59 @@
+{
+  "id": 557682,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-02T19:08:37.000Z",
+  "code_updated_at": "2025-12-02T19:09:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1210148,
+      "name": "octavianthe gamer",
+      "created_at": "2023-11-03T18:00:07.000Z",
+      "url": "https://greasyfork.org/users/1210148-octavianthe-gamer",
+      "scripts": [
+        {
+          "id": 557682,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-02T19:08:37.000Z",
+          "code_updated_at": "2025-12-02T19:09:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Seneca Destroyer Lite",
+          "description": "Simplified Version",
+          "url": "https://greasyfork.org/scripts/557682-seneca-destroyer-lite",
+          "code_url": "https://update.greasyfork.org/scripts/557682/Seneca%20Destroyer%20Lite.user.js",
+          "code_size": 72522,
+          "license": "MIT License",
+          "version": "11.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Seneca Destroyer Lite",
+  "description": "Simplified Version",
+  "url": "https://greasyfork.org/scripts/557682-seneca-destroyer-lite",
+  "code_url": "https://update.greasyfork.org/scripts/557682/Seneca%20Destroyer%20Lite.user.js",
+  "code_size": 72522,
+  "license": "MIT License",
+  "version": "11.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

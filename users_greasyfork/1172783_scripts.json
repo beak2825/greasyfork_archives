@@ -1,5 +1,71 @@
 [
   {
+    "id": 558247,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T18:08:16.000Z",
+    "code_updated_at": "2026-01-15T02:48:41.000Z",
+    "namespace": "https://lit.link/toracatman",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172783,
+        "name": "トラネコマン",
+        "created_at": "2023-09-14T08:54:57.000Z",
+        "url": "https://greasyfork.org/users/1172783-%E3%83%88%E3%83%A9%E3%83%8D%E3%82%B3%E3%83%9E%E3%83%B3"
+      }
+    ],
+    "name": "現代アイヌ語翻訳用語集の表記変換",
+    "description": "現代アイヌ語翻訳用語集の 表記を 変換します。",
+    "url": "https://greasyfork.org/scripts/558247-%E7%8F%BE%E4%BB%A3%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E7%BF%BB%E8%A8%B3%E7%94%A8%E8%AA%9E%E9%9B%86%E3%81%AE%E8%A1%A8%E8%A8%98%E5%A4%89%E6%8F%9B",
+    "code_url": "https://update.greasyfork.org/scripts/558247/%E7%8F%BE%E4%BB%A3%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E7%BF%BB%E8%A8%B3%E7%94%A8%E8%AA%9E%E9%9B%86%E3%81%AE%E8%A1%A8%E8%A8%98%E5%A4%89%E6%8F%9B.user.js",
+    "code_size": 26908,
+    "license": "MIT License",
+    "version": "2026-01-15",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558243,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-07T17:25:32.000Z",
+    "code_updated_at": "2026-01-15T02:46:36.000Z",
+    "namespace": "https://lit.link/toracatman",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172783,
+        "name": "トラネコマン",
+        "created_at": "2023-09-14T08:54:57.000Z",
+        "url": "https://greasyfork.org/users/1172783-%E3%83%88%E3%83%A9%E3%83%8D%E3%82%B3%E3%83%9E%E3%83%B3"
+      }
+    ],
+    "name": "アイヌ語鵡川方言の表記変換",
+    "description": "アイヌ語鵡川方言の 表記を 変換します。",
+    "url": "https://greasyfork.org/scripts/558243-%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E9%B5%A1%E5%B7%9D%E6%96%B9%E8%A8%80%E3%81%AE%E8%A1%A8%E8%A8%98%E5%A4%89%E6%8F%9B",
+    "code_url": "https://update.greasyfork.org/scripts/558243/%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E9%B5%A1%E5%B7%9D%E6%96%B9%E8%A8%80%E3%81%AE%E8%A1%A8%E8%A8%98%E5%A4%89%E6%8F%9B.user.js",
+    "code_size": 19408,
+    "license": "MIT License",
+    "version": "2026-01-15",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 557904,
     "daily_installs": 0,
     "total_installs": 0,

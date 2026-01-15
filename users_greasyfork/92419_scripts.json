@@ -68,7 +68,7 @@
   {
     "id": 559458,
     "daily_installs": 0,
-    "total_installs": 6,
+    "total_installs": 7,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -233,7 +233,7 @@
   {
     "id": 558911,
     "daily_installs": 0,
-    "total_installs": 12,
+    "total_installs": 13,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -262,6 +262,39 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 558895,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T10:43:38.000Z",
+    "code_updated_at": "2025-12-16T12:01:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 92419,
+        "name": "南有樛木",
+        "created_at": "2017-01-05T16:09:06.000Z",
+        "url": "https://greasyfork.org/users/92419-%E5%8D%97%E6%9C%89%E6%A8%9B%E6%9C%A8"
+      }
+    ],
+    "name": "OMNI GitHub",
+    "description": "集成了GitHub知识库剪报、阅读模式、新闻速递。新增：全局字体设置（包含苹果字体预设）、字体阴影控制。支持面板拖拽排序。",
+    "url": "https://greasyfork.org/scripts/558895-omni-github",
+    "code_url": "https://update.greasyfork.org/scripts/558895/OMNI%20GitHub.user.js",
+    "code_size": 45100,
+    "license": null,
+    "version": "7.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
   },
   {
     "id": 558859,
@@ -295,6 +328,39 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 558709,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T09:10:06.000Z",
+    "code_updated_at": "2025-12-19T07:54:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 92419,
+        "name": "南有樛木",
+        "created_at": "2017-01-05T16:09:06.000Z",
+        "url": "https://greasyfork.org/users/92419-%E5%8D%97%E6%9C%89%E6%A8%9B%E6%9C%A8"
+      }
+    ],
+    "name": "EnLight",
+    "description": "英语阅读三合一：1. 双指触屏快速开启翻译 2. 智能单词高亮 3. 点击查词 (精准触控版) 4. 沉浸式双语翻译 (智能缓存+多引擎点选切换+单指左滑操作) 5. 配置导出修复。",
+    "url": "https://greasyfork.org/scripts/558709-enlight",
+    "code_url": "https://update.greasyfork.org/scripts/558709/EnLight.user.js",
+    "code_size": 64264,
+    "license": null,
+    "version": "1.23",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   },
   {
     "id": 558136,
@@ -393,6 +459,39 @@
     "version": "3.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554836,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T04:03:26.000Z",
+    "code_updated_at": "2025-12-20T23:12:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 92419,
+        "name": "南有樛木",
+        "created_at": "2017-01-05T16:09:06.000Z",
+        "url": "https://greasyfork.org/users/92419-%E5%8D%97%E6%9C%89%E6%A8%9B%E6%9C%A8"
+      }
+    ],
+    "name": "AI 划词助手",
+    "description": "移动端优化：1.选中文本预览区固定顶部；2.原生级顶部抽屉(支持手势实时上推拖拽关闭)；3.悬浮球常驻：下滚隐藏/上滚显示，选中强制显示；4.支持自定义OpenAI接口。",
+    "url": "https://greasyfork.org/scripts/554836-ai-%E5%88%92%E8%AF%8D%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/554836/AI%20%E5%88%92%E8%AF%8D%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 33914,
+    "license": "MIT License",
+    "version": "3.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

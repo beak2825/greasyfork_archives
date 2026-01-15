@@ -1,0 +1,33 @@
+{
+  "id": 553611,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-25T00:44:42.000Z",
+  "code_updated_at": "2025-10-25T00:44:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530372,
+      "name": "Xenthio",
+      "created_at": "2025-10-25T00:42:29.000Z",
+      "url": "https://greasyfork.org/users/1530372-xenthio"
+    }
+  ],
+  "name": "ChatReplay.stream YouTube Progress Saver (v11.0 - The Listener)",
+  "description": "The definitive version. Passively listens for the YouTube iframe's postMessage events to save and restore progress, bypassing the site's custom controller.",
+  "url": "https://greasyfork.org/scripts/553611-chatreplay-stream-youtube-progress-saver-v11-0-the-listener",
+  "code_url": "https://update.greasyfork.org/scripts/553611/ChatReplaystream%20YouTube%20Progress%20Saver%20%28v110%20-%20The%20Listener%29.user.js",
+  "code_size": 3188,
+  "license": null,
+  "version": "11.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

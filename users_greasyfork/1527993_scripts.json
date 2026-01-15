@@ -33,6 +33,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 558739,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T14:52:05.000Z",
+    "code_updated_at": "2025-12-12T23:32:02.000Z",
+    "namespace": "https://rentry.co/3hb6piip/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527993,
+        "name": "ForeverPWA",
+        "created_at": "2025-10-18T01:54:14.000Z",
+        "url": "https://greasyfork.org/users/1527993-foreverpwa"
+      }
+    ],
+    "name": "Multi AI URL Auto Decoder",
+    "description": "安全で爆速なURLデコード - ストリーミング対応＋最終確定処理",
+    "url": "https://greasyfork.org/scripts/558739-multi-ai-url-auto-decoder",
+    "code_url": "https://update.greasyfork.org/scripts/558739/Multi%20AI%20URL%20Auto%20Decoder.user.js",
+    "code_size": 6200,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 558625,
     "daily_installs": 0,
     "total_installs": 0,
@@ -161,6 +194,138 @@
     "license": "MIT License",
     "version": "6.0.2",
     "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556013,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-16T13:29:28.000Z",
+    "code_updated_at": "2025-11-16T13:29:28.000Z",
+    "namespace": "https://greasyfork.org/users/1527993",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527993,
+        "name": "ForeverPWA",
+        "created_at": "2025-10-18T01:54:14.000Z",
+        "url": "https://greasyfork.org/users/1527993-foreverpwa"
+      }
+    ],
+    "name": "Markdown Image Renderer for Gemini,ChatGPT",
+    "description": "Gemini,ChatGPTのチャットでMarkdown画像を表示します。画像クリックで単一のサブウィンドウに表示（上書き）します。",
+    "url": "https://greasyfork.org/scripts/556013-markdown-image-renderer-for-gemini-chatgpt",
+    "code_url": "https://update.greasyfork.org/scripts/556013/Markdown%20Image%20Renderer%20for%20Gemini%2CChatGPT.user.js",
+    "code_size": 6068,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555209,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T16:51:50.000Z",
+    "code_updated_at": "2025-11-23T00:29:09.000Z",
+    "namespace": "https://rentry.co/x9fw82o3",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527993,
+        "name": "ForeverPWA",
+        "created_at": "2025-10-18T01:54:14.000Z",
+        "url": "https://greasyfork.org/users/1527993-foreverpwa"
+      }
+    ],
+    "name": "AI Studio to VOICEVOX (v5.3.1 安定版)",
+    "description": "AI Studioの回答をVOICEVOXで自動読み上げ (画像URLの読み上げバグを完全修正)",
+    "url": "https://greasyfork.org/scripts/555209-ai-studio-to-voicevox-v5-3-1-%E5%AE%89%E5%AE%9A%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/555209/AI%20Studio%20to%20VOICEVOX%20%28v531%20%E5%AE%89%E5%AE%9A%E7%89%88%29.user.js",
+    "code_size": 23221,
+    "license": "MIT License",
+    "version": "5.3.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553022,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T16:21:13.000Z",
+    "code_updated_at": "2025-10-18T18:11:38.000Z",
+    "namespace": "https://greasyfork.org/ja/scripts/553022",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527993,
+        "name": "ForeverPWA",
+        "created_at": "2025-10-18T01:54:14.000Z",
+        "url": "https://greasyfork.org/users/1527993-foreverpwa"
+      }
+    ],
+    "name": "Markdown Image Renderer for Google AI Studio",
+    "description": "AI StudioでMarkdown画像が表示できるようになります",
+    "url": "https://greasyfork.org/scripts/553022-markdown-image-renderer-for-google-ai-studio",
+    "code_url": "https://update.greasyfork.org/scripts/553022/Markdown%20Image%20Renderer%20for%20Google%20AI%20Studio.user.js",
+    "code_size": 5068,
+    "license": "MIT License",
+    "version": "4.5",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552956,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T02:08:14.000Z",
+    "code_updated_at": "2025-10-18T02:08:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527993,
+        "name": "ForeverPWA",
+        "created_at": "2025-10-18T01:54:14.000Z",
+        "url": "https://greasyfork.org/users/1527993-foreverpwa"
+      }
+    ],
+    "name": "Markdown Image Renderer for Google AI Studio (v4)",
+    "description": "AI Studioのプロンプト画面でMarkdown形式の画像リンクを実際の画像として表示します。",
+    "url": "https://greasyfork.org/scripts/552956-markdown-image-renderer-for-google-ai-studio-v4",
+    "code_url": "https://update.greasyfork.org/scripts/552956/Markdown%20Image%20Renderer%20for%20Google%20AI%20Studio%20%28v4%29.user.js",
+    "code_size": 4354,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "ja",
     "deleted": false,
     "visibility": "unknown"
   }

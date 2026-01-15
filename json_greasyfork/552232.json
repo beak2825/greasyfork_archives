@@ -1,0 +1,33 @@
+{
+  "id": 552232,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-11T07:44:16.000Z",
+  "code_updated_at": "2025-10-11T10:26:09.000Z",
+  "namespace": "https://greasyfork.org/users/1388863",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1388863,
+      "name": "Pros Ros",
+      "created_at": "2024-10-31T01:41:30.000Z",
+      "url": "https://greasyfork.org/users/1388863-pros-ros"
+    }
+  ],
+  "name": "Autotrading (Sell) Kontinen K53",
+  "description": "Auto buy",
+  "url": "https://greasyfork.org/scripts/552232-autotrading-sell-kontinen-k53",
+  "code_url": "https://update.greasyfork.org/scripts/552232/Autotrading%20%28Sell%29%20Kontinen%20K53.user.js",
+  "code_size": 23608,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

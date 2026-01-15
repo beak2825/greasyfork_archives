@@ -1,0 +1,34 @@
+{
+  "id": 555062,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T02:53:19.000Z",
+  "code_updated_at": "2025-11-07T05:14:14.000Z",
+  "namespace": "tc-daytrade-helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1534940,
+      "name": "maxwell rose",
+      "created_at": "2025-11-07T02:48:10.000Z",
+      "url": "https://greasyfork.org/users/1534940-maxwell-rose",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Stock Daytrade Helper • Safe-Boot+ (profit tools + polished dropdown)",
+  "description": "Minimal stable overlay: API key modal, stock dropdown (SYM — Name + reload), holdings table, fee-aware profit tools with per-stock targets.",
+  "url": "https://greasyfork.org/scripts/555062-torn-stock-daytrade-helper-safe-boot-profit-tools-polished-dropdown",
+  "code_url": "https://update.greasyfork.org/scripts/555062/Torn%20Stock%20Daytrade%20Helper%20%E2%80%A2%20Safe-Boot%2B%20%28profit%20tools%20%2B%20polished%20dropdown%29.user.js",
+  "code_size": 18063,
+  "license": null,
+  "version": "1.7.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

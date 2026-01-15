@@ -1,0 +1,101 @@
+[
+  {
+    "id": 553090,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-19T11:23:36.000Z",
+    "code_updated_at": "2025-10-19T11:23:35.000Z",
+    "namespace": "https://github.com/Khalil-Mensouri",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528184,
+        "name": "Khalil-Mensouri",
+        "created_at": "2025-10-18T11:59:59.000Z",
+        "url": "https://greasyfork.org/users/1528184-khalil-mensouri"
+      }
+    ],
+    "name": "Universal iOS Userscript — Aggressive Ad & Popup Blocker (Userscripts/Tampermonkey friendly)",
+    "description": "Aggressive userscript that hides common ad containers, removes ad iframes/scripts, blocks popup-redirectors and click-redirectors. Designed for use with iOS Userscripts or Tampermonkey (Safari). Use with caution: aggressive rules may break some sites. See runtime API at window.__uAd for tweaks/whitelisting.",
+    "url": "https://greasyfork.org/scripts/553090-universal-ios-userscript-aggressive-ad-popup-blocker-userscripts-tampermonkey-friendly",
+    "code_url": "https://update.greasyfork.org/scripts/553090/Universal%20iOS%20Userscript%20%E2%80%94%20Aggressive%20Ad%20%20Popup%20Blocker%20%28UserscriptsTampermonkey%20friendly%29.user.js",
+    "code_size": 11884,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553002,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T12:35:22.000Z",
+    "code_updated_at": "2025-10-19T11:16:06.000Z",
+    "namespace": "https://greasyfork.org/users/Khalil-Mensouri",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528184,
+        "name": "Khalil-Mensouri",
+        "created_at": "2025-10-18T11:59:59.000Z",
+        "url": "https://greasyfork.org/users/1528184-khalil-mensouri"
+      }
+    ],
+    "name": "SimpBlocker — Robust Redirect & Global Ad Blocker (v4.1)",
+    "description": "Blocks popup-redirect domains (wiwrutck, amxvtyhhyciw, ojsgudgre, amxv*, reddrecit, etc.), sanitizes embeds, protects attachments/viewers, and optionally applies broad ad/hide-rules site-wide (GLOBAL_BLOCK). Targets sklnk redirect paths and common embed injections.",
+    "url": "https://greasyfork.org/scripts/553002-simpblocker-robust-redirect-global-ad-blocker-v4-1",
+    "code_url": "https://update.greasyfork.org/scripts/553002/SimpBlocker%20%E2%80%94%20Robust%20Redirect%20%20Global%20Ad%20Blocker%20%28v41%29.user.js",
+    "code_size": 14097,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552999,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T12:10:09.000Z",
+    "code_updated_at": "2025-10-18T12:31:33.000Z",
+    "namespace": "https://example.local/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528184,
+        "name": "Khalil-Mensouri",
+        "created_at": "2025-10-18T11:59:59.000Z",
+        "url": "https://greasyfork.org/users/1528184-khalil-mensouri"
+      }
+    ],
+    "name": "SimpCity & JPG6 — Wiwrutck Redirect Blocker",
+    "description": "Block wiwrutck.com redirects and injected scripts/popups on simpcity/jpg6 sites.",
+    "url": "https://greasyfork.org/scripts/552999-simpcity-jpg6-wiwrutck-redirect-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/552999/SimpCity%20%20JPG6%20%E2%80%94%20Wiwrutck%20Redirect%20Blocker.user.js",
+    "code_size": 3000,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

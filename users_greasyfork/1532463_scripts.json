@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554278,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T06:46:53.000Z",
+    "code_updated_at": "2025-12-04T19:55:27.000Z",
+    "namespace": "http://axtech.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1532463,
+        "name": "綾坂こと（Ayasaka-Koto）",
+        "created_at": "2025-10-31T04:29:22.000Z",
+        "url": "https://greasyfork.org/users/1532463-%E7%B6%BE%E5%9D%82%E3%81%93%E3%81%A8-ayasaka-koto"
+      }
+    ],
+    "name": "AtCoder JavaScript Tester",
+    "description": "AtCoderでJavaScript・TypeScriptコードをテスト実行するためのユーザースクリプト",
+    "url": "https://greasyfork.org/scripts/554278-atcoder-javascript-tester",
+    "code_url": "https://update.greasyfork.org/scripts/554278/AtCoder%20JavaScript%20Tester.user.js",
+    "code_size": 34121,
+    "license": null,
+    "version": "0.6.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

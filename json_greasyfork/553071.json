@@ -1,0 +1,33 @@
+{
+  "id": 553071,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T05:43:29.000Z",
+  "code_updated_at": "2025-10-19T05:43:29.000Z",
+  "namespace": "https://github.com/PenguinCabinet",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1288947,
+      "name": "PenguinCabinet",
+      "created_at": "2024-04-16T09:04:16.000Z",
+      "url": "https://greasyfork.org/users/1288947-penguincabinet"
+    }
+  ],
+  "name": "Do you really want to Google it?",
+  "description": "Display confirmation when searching on Google.",
+  "url": "https://greasyfork.org/scripts/553071-do-you-really-want-to-google-it",
+  "code_url": "https://update.greasyfork.org/scripts/553071/Do%20you%20really%20want%20to%20Google%20it.user.js",
+  "code_size": 991,
+  "license": "MIT License",
+  "version": "v0.0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

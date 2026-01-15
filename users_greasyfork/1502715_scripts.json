@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 554696,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-04T04:16:22.000Z",
+    "code_updated_at": "2025-11-11T08:57:00.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1502715",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502715,
+        "name": "SGSwdzgr",
+        "created_at": "2025-08-08T05:01:53.000Z",
+        "url": "https://greasyfork.org/users/1502715-sgswdzgr"
+      }
+    ],
+    "name": "国服英雄榜坐骑收藏",
+    "description": "在魔兽世界国服英雄榜页面展示类似于MCL插件的坐骑收藏面板",
+    "url": "https://greasyfork.org/scripts/554696-%E5%9B%BD%E6%9C%8D%E8%8B%B1%E9%9B%84%E6%A6%9C%E5%9D%90%E9%AA%91%E6%94%B6%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/554696/%E5%9B%BD%E6%9C%8D%E8%8B%B1%E9%9B%84%E6%A6%9C%E5%9D%90%E9%AA%91%E6%94%B6%E8%97%8F.user.js",
+    "code_size": 14176,
+    "license": "MIT License",
+    "version": "1.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

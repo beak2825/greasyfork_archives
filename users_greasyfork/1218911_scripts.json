@@ -1,5 +1,38 @@
 [
   {
+    "id": 562603,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T05:34:19.000Z",
+    "code_updated_at": "2026-01-14T05:34:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218911,
+        "name": "Zero Array",
+        "created_at": "2023-11-17T03:50:59.000Z",
+        "url": "https://greasyfork.org/users/1218911-zero-array"
+      }
+    ],
+    "name": "云汇通自动登录",
+    "description": "强制聚焦输入框，循环监测直至填充成功，修复2FA不自动填入的问题",
+    "url": "https://greasyfork.org/scripts/562603-%E4%BA%91%E6%B1%87%E9%80%9A%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/562603/%E4%BA%91%E6%B1%87%E9%80%9A%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 6004,
+    "license": "I",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 562174,
     "daily_installs": 1,
     "total_installs": 1,
@@ -29,6 +62,39 @@
     "license": "MIT License",
     "version": "9.9.10",
     "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 557847,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-04T02:51:18.000Z",
+    "code_updated_at": "2025-12-04T02:56:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218911,
+        "name": "Zero Array",
+        "created_at": "2023-11-17T03:50:59.000Z",
+        "url": "https://greasyfork.org/users/1218911-zero-array"
+      }
+    ],
+    "name": "ChatGPT 账单管理/取消续订（独立版）",
+    "description": "利用 GM_xmlhttpRequest 突破 CORS 限制，支持全网手动管理账号",
+    "url": "https://greasyfork.org/scripts/557847-chatgpt-%E8%B4%A6%E5%8D%95%E7%AE%A1%E7%90%86-%E5%8F%96%E6%B6%88%E7%BB%AD%E8%AE%A2-%E7%8B%AC%E7%AB%8B%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/557847/ChatGPT%20%E8%B4%A6%E5%8D%95%E7%AE%A1%E7%90%86%E5%8F%96%E6%B6%88%E7%BB%AD%E8%AE%A2%EF%BC%88%E7%8B%AC%E7%AB%8B%E7%89%88%EF%BC%89.user.js",
+    "code_size": 20841,
+    "license": "MIT License",
+    "version": "5.3",
+    "locale": "ja",
     "deleted": false,
     "visibility": "unlisted"
   },
@@ -129,6 +195,39 @@
     "version": "3.1",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554399,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-01T09:31:07.000Z",
+    "code_updated_at": "2025-12-07T08:27:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218911,
+        "name": "Zero Array",
+        "created_at": "2023-11-17T03:50:59.000Z",
+        "url": "https://greasyfork.org/users/1218911-zero-array"
+      }
+    ],
+    "name": "ChatGPT 对话记录导出/页面宽屏展示",
+    "description": "在任意网页检测 ChatGPT 特征，提供对话导出及宽屏显示模式。",
+    "url": "https://greasyfork.org/scripts/554399-chatgpt-%E5%AF%B9%E8%AF%9D%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA-%E9%A1%B5%E9%9D%A2%E5%AE%BD%E5%B1%8F%E5%B1%95%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/554399/ChatGPT%20%E5%AF%B9%E8%AF%9D%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA%E9%A1%B5%E9%9D%A2%E5%AE%BD%E5%B1%8F%E5%B1%95%E7%A4%BA.user.js",
+    "code_size": 19328,
+    "license": "V：ChatGPT4V",
+    "version": "6.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

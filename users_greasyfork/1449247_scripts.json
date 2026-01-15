@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553641,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T08:51:48.000Z",
+    "code_updated_at": "2025-11-19T14:24:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1449247,
+        "name": "代kjhj89",
+        "created_at": "2025-03-23T09:50:15.000Z",
+        "url": "https://greasyfork.org/users/1449247-%E4%BB%A3kjhj89"
+      }
+    ],
+    "name": "上海开放大学视频自动播放静音助手",
+    "description": "上海开放大学学习平台专用，自动播放课程视频并默认静音，提升学习效率，客服V：wkwk796",
+    "url": "https://greasyfork.org/scripts/553641-%E4%B8%8A%E6%B5%B7%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E9%9D%99%E9%9F%B3%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/553641/%E4%B8%8A%E6%B5%B7%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E9%9D%99%E9%9F%B3%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 35712,
+    "license": "MIT License",
+    "version": "1.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

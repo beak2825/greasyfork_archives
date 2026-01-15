@@ -1,0 +1,59 @@
+{
+  "id": 555313,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-09T15:49:17.000Z",
+  "code_updated_at": "2025-11-09T16:43:23.000Z",
+  "namespace": "https://greasyfork.org/ru/scripts/555313-mail-ru-title-yyyy-mm-dd",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535975,
+      "name": "SPASIBOKVN",
+      "created_at": "2025-11-09T13:12:18.000Z",
+      "url": "https://greasyfork.org/users/1535975-spasibokvn",
+      "scripts": [
+        {
+          "id": 555313,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-09T15:49:17.000Z",
+          "code_updated_at": "2025-11-09T16:43:23.000Z",
+          "namespace": "https://greasyfork.org/ru/scripts/555313-mail-ru-title-yyyy-mm-dd",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MAIL.RU TITLE YYYY-MM-DD",
+          "description": "Изменяет title страницы почты mail ru на основе элемента темы письма и адресата c добавлением времени в верхнем регистре. Заголовок закладки вкладки",
+          "url": "https://greasyfork.org/scripts/555313-mail-ru-title-yyyy-mm-dd",
+          "code_url": "https://update.greasyfork.org/scripts/555313/MAILRU%20TITLE%20YYYY-MM-DD.user.js",
+          "code_size": 13682,
+          "license": "GNU GPLv3",
+          "version": "2.1",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MAIL.RU TITLE YYYY-MM-DD",
+  "description": "Изменяет title страницы почты mail ru на основе элемента темы письма и адресата c добавлением времени в верхнем регистре. Заголовок закладки вкладки",
+  "url": "https://greasyfork.org/scripts/555313-mail-ru-title-yyyy-mm-dd",
+  "code_url": "https://update.greasyfork.org/scripts/555313/MAILRU%20TITLE%20YYYY-MM-DD.user.js",
+  "code_size": 13682,
+  "license": "GNU GPLv3",
+  "version": "2.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560603,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T06:00:56.000Z",
+    "code_updated_at": "2025-12-29T06:00:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1553700,
+        "name": "정명훈 3",
+        "created_at": "2025-12-29T05:57:30.000Z",
+        "url": "https://greasyfork.org/users/1553700-%EC%A0%95%EB%AA%85%ED%9B%88-3"
+      }
+    ],
+    "name": "ArcaLive Video Autoplay Killer",
+    "description": "아카라이브 본문 동영상 프리로딩 및 자동재생 방지, 클릭 시 로딩 및 뮤트 자동 해제, 화면 상 가장 많이 보이는 영상만 방향키로 n초 탐색",
+    "url": "https://greasyfork.org/scripts/560603-arcalive-video-autoplay-killer",
+    "code_url": "https://update.greasyfork.org/scripts/560603/ArcaLive%20Video%20Autoplay%20Killer.user.js",
+    "code_size": 5428,
+    "license": null,
+    "version": "2.1.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553283,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-21T11:47:52.000Z",
+    "code_updated_at": "2025-10-30T11:55:59.000Z",
+    "namespace": "jiaoling.tools.gpt.tree",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1211909,
+        "name": "amazing-fish",
+        "created_at": "2023-11-06T07:39:24.000Z",
+        "url": "https://greasyfork.org/users/1211909-amazing-fish"
+      }
+    ],
+    "name": "GPT Branch Tree Navigator (Preview + Jump)",
+    "description": "树状分支 + 预览 + 一键跳转；支持隐藏与悬浮按钮恢复；快捷键 Alt+T；/ 聚焦搜索、Esc 关闭；拖拽移动面板；渐进式渲染；Markdown 预览；防抖监听；修复：当前分支已渲染却被误判为“未在该分支”。",
+    "url": "https://greasyfork.org/scripts/553283-gpt-branch-tree-navigator-preview-jump",
+    "code_url": "https://update.greasyfork.org/scripts/553283/GPT%20Branch%20Tree%20Navigator%20%28Preview%20%2B%20Jump%29.user.js",
+    "code_size": 52715,
+    "license": null,
+    "version": "1.6.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

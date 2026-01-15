@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554572,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T22:05:50.000Z",
+    "code_updated_at": "2025-11-03T22:57:15.000Z",
+    "namespace": "https://greasyfork.org/ru/users/1252274-julia1233",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1252274,
+        "name": "Julia1233",
+        "created_at": "2024-01-23T17:16:35.000Z",
+        "url": "https://greasyfork.org/users/1252274-julia1233"
+      }
+    ],
+    "name": "Starblast Game Recorder",
+    "description": "Recording + replay via WebSocket simulation with user data protection",
+    "url": "https://greasyfork.org/scripts/554572-starblast-game-recorder",
+    "code_url": "https://update.greasyfork.org/scripts/554572/Starblast%20Game%20Recorder.user.js",
+    "code_size": 38448,
+    "license": "GPL-3.0-or-later; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.8.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

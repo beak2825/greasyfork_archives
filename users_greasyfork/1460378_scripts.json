@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552721,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-15T21:58:54.000Z",
+    "code_updated_at": "2025-10-15T21:58:54.000Z",
+    "namespace": "https://github.com/NBKelly/jinteki-translation-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460378,
+        "name": "NBKelly",
+        "created_at": "2025-04-21T06:10:12.000Z",
+        "url": "https://greasyfork.org/users/1460378-nbkelly"
+      }
+    ],
+    "name": "Translation Helper",
+    "description": "Make translating stuff via i18n easier for the user",
+    "url": "https://greasyfork.org/scripts/552721-translation-helper",
+    "code_url": "https://update.greasyfork.org/scripts/552721/Translation%20Helper.user.js",
+    "code_size": 6224,
+    "license": "Apache 2.0",
+    "version": "2025-10-15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

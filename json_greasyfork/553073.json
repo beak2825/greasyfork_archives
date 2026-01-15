@@ -1,0 +1,33 @@
+{
+  "id": 553073,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T06:39:55.000Z",
+  "code_updated_at": "2025-11-30T07:42:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/MasuRii/wtr-lab-novel-image-generator/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433142,
+      "name": "MasuRiii",
+      "created_at": "2025-02-09T04:15:39.000Z",
+      "url": "https://greasyfork.org/users/1433142-masuriii"
+    }
+  ],
+  "name": "WTR LAB Novel Image Generator",
+  "description": "A powerful userscript to enhance web novel reading on WTR-LAB.COM. Select text to generate AI-powered images using multiple providers (Pollinations, AI Horde, Google Imagen, OpenAI). Features Gemini-enhanced prompts, 100+ art styles, a modern UI, history, and robust configuration options. Built with Webpack for modularity and maintainability.",
+  "url": "https://greasyfork.org/scripts/553073-wtr-lab-novel-image-generator",
+  "code_url": "https://update.greasyfork.org/scripts/553073/WTR%20LAB%20Novel%20Image%20Generator.user.js",
+  "code_size": 362130,
+  "license": "MIT License",
+  "version": "6.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 562365,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-12T08:44:36.000Z",
+  "code_updated_at": "2026-01-12T20:45:00.000Z",
+  "namespace": "http://github.com/你的GitHub用户名",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1559425,
+      "name": "KANNAK1",
+      "created_at": "2026-01-12T08:31:35.000Z",
+      "url": "https://greasyfork.org/users/1559425-kannak1",
+      "scripts": [
+        {
+          "id": 562365,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-12T08:44:36.000Z",
+          "code_updated_at": "2026-01-12T20:45:00.000Z",
+          "namespace": "http://github.com/你的GitHub用户名",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "全自动抢课助手-合肥工业大学专用版",
+          "description": "全自动抢课脚本，支持【全校选课】TAB页自动查找课程ID，自动监控、自动点击。解脱双手，无需F12。",
+          "url": "https://greasyfork.org/scripts/562365-%E5%85%A8%E8%87%AA%E5%8A%A8%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%90%88%E8%82%A5%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%E4%B8%93%E7%94%A8%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/562365/%E5%85%A8%E8%87%AA%E5%8A%A8%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%90%88%E8%82%A5%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%E4%B8%93%E7%94%A8%E7%89%88.user.js",
+          "code_size": 18005,
+          "license": "MIT License",
+          "version": "7.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "全自动抢课助手-合肥工业大学专用版",
+  "description": "全自动抢课脚本，支持【全校选课】TAB页自动查找课程ID，自动监控、自动点击。解脱双手，无需F12。",
+  "url": "https://greasyfork.org/scripts/562365-%E5%85%A8%E8%87%AA%E5%8A%A8%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%90%88%E8%82%A5%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%E4%B8%93%E7%94%A8%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/562365/%E5%85%A8%E8%87%AA%E5%8A%A8%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%90%88%E8%82%A5%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%E4%B8%93%E7%94%A8%E7%89%88.user.js",
+  "code_size": 18005,
+  "license": "MIT License",
+  "version": "7.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

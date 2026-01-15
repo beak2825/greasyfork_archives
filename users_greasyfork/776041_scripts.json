@@ -1,14 +1,14 @@
 [
   {
     "id": 560387,
-    "daily_installs": 1,
-    "total_installs": 26,
+    "daily_installs": 3,
+    "total_installs": 32,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2025-12-27T07:39:35.000Z",
-    "code_updated_at": "2026-01-05T14:01:32.000Z",
+    "code_updated_at": "2026-01-14T05:44:07.000Z",
     "namespace": "http://tampermonkey.net/",
     "support_url": null,
     "contribution_url": null,
@@ -21,13 +21,13 @@
         "url": "https://greasyfork.org/users/776041-%E5%80%92%E8%90%A8%E9%98%BF%E6%96%AF%E9%A1%BF"
       }
     ],
-    "name": "AI Image Assistant V8.4 (Pinterest & Lexica & X)",
+    "name": "Ultimate Pinterest, Lexica & Twitter Image Assistant: One-Click HD Originals & Free AI 2x Sharpen",
     "description": "The Most Stable Version: One-Click Originals, AI 2x Sharpen, and Source Finder. Supports Pinterest, Lexica, and Twitter.",
-    "url": "https://greasyfork.org/scripts/560387-ai-image-assistant-v8-4-pinterest-lexica-x",
-    "code_url": "https://update.greasyfork.org/scripts/560387/AI%20Image%20Assistant%20V84%20%28Pinterest%20%20Lexica%20%20X%29.user.js",
-    "code_size": 10811,
+    "url": "https://greasyfork.org/scripts/560387-ultimate-pinterest-lexica-twitter-image-assistant-one-click-hd-originals-free-ai-2x-sharpen",
+    "code_url": "https://update.greasyfork.org/scripts/560387/Ultimate%20Pinterest%2C%20Lexica%20%20Twitter%20Image%20Assistant%3A%20One-Click%20HD%20Originals%20%20Free%20AI%202x%20Sharpen.user.js",
+    "code_size": 10952,
     "license": "MIT License",
-    "version": "8.4",
+    "version": "8.6",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

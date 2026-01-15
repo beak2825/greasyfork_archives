@@ -1,0 +1,33 @@
+{
+  "id": 554538,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-02T16:26:24.000Z",
+  "code_updated_at": "2025-11-26T15:06:11.000Z",
+  "namespace": "https://greasyfork.org/users/1397928",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1397928,
+      "name": "The-Yog-Sothoth",
+      "created_at": "2024-11-17T08:13:53.000Z",
+      "url": "https://greasyfork.org/users/1397928-the-yog-sothoth"
+    }
+  ],
+  "name": "Pixiv图片牌堆生成器 (Fix MasterImg & Hover UI)",
+  "description": "清洗JSON对象存储结构。缓存链接时抓取来源和标题，导出纯净JSON。优化了性能和UI交互（悬停触发、双列导出）。",
+  "url": "https://greasyfork.org/scripts/554538-pixiv%E5%9B%BE%E7%89%87%E7%89%8C%E5%A0%86%E7%94%9F%E6%88%90%E5%99%A8-fix-masterimg-hover-ui",
+  "code_url": "https://update.greasyfork.org/scripts/554538/Pixiv%E5%9B%BE%E7%89%87%E7%89%8C%E5%A0%86%E7%94%9F%E6%88%90%E5%99%A8%20%28Fix%20MasterImg%20%20Hover%20UI%29.user.js",
+  "code_size": 24094,
+  "license": "MIT License",
+  "version": "1.41",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

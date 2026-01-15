@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552829,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T19:33:12.000Z",
+    "code_updated_at": "2025-10-16T19:33:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527539,
+        "name": "Scooper54",
+        "created_at": "2025-10-16T19:21:51.000Z",
+        "url": "https://greasyfork.org/users/1527539-scooper54"
+      }
+    ],
+    "name": "1click trade bank - Life Down Ding",
+    "description": "Adds a 1-click \"Bank\" button to Torn.com trades to instantly deposit all your on-hand cash. Also plays a soft ding sound when your life bar decreases, alerting you if attacked mid-trade.",
+    "url": "https://greasyfork.org/scripts/552829-1click-trade-bank-life-down-ding",
+    "code_url": "https://update.greasyfork.org/scripts/552829/1click%20trade%20bank%20-%20Life%20Down%20Ding.user.js",
+    "code_size": 6330,
+    "license": "MIT License",
+    "version": "2025-03-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

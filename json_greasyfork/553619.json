@@ -1,0 +1,33 @@
+{
+  "id": 553619,
+  "daily_installs": 3,
+  "total_installs": 81,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-25T03:00:51.000Z",
+  "code_updated_at": "2026-01-06T12:38:30.000Z",
+  "namespace": "https://example.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530406,
+      "name": "chatxxsc_t",
+      "created_at": "2025-10-25T02:53:39.000Z",
+      "url": "https://greasyfork.org/users/1530406-chatxxsc-t"
+    }
+  ],
+  "name": "自动移除水印工具（搞定设计、创客贴、比格设计、爱设计、易企秀、标小智、标智客等）",
+  "description": "自动移除在线设计平台的水印，",
+  "url": "https://greasyfork.org/scripts/553619-%E8%87%AA%E5%8A%A8%E7%A7%BB%E9%99%A4%E6%B0%B4%E5%8D%B0%E5%B7%A5%E5%85%B7-%E6%90%9E%E5%AE%9A%E8%AE%BE%E8%AE%A1-%E5%88%9B%E5%AE%A2%E8%B4%B4-%E6%AF%94%E6%A0%BC%E8%AE%BE%E8%AE%A1-%E7%88%B1%E8%AE%BE%E8%AE%A1-%E6%98%93%E4%BC%81%E7%A7%80-%E6%A0%87%E5%B0%8F%E6%99%BA-%E6%A0%87%E6%99%BA%E5%AE%A2%E7%AD%89",
+  "code_url": "https://update.greasyfork.org/scripts/553619/%E8%87%AA%E5%8A%A8%E7%A7%BB%E9%99%A4%E6%B0%B4%E5%8D%B0%E5%B7%A5%E5%85%B7%EF%BC%88%E6%90%9E%E5%AE%9A%E8%AE%BE%E8%AE%A1%E3%80%81%E5%88%9B%E5%AE%A2%E8%B4%B4%E3%80%81%E6%AF%94%E6%A0%BC%E8%AE%BE%E8%AE%A1%E3%80%81%E7%88%B1%E8%AE%BE%E8%AE%A1%E3%80%81%E6%98%93%E4%BC%81%E7%A7%80%E3%80%81%E6%A0%87%E5%B0%8F%E6%99%BA%E3%80%81%E6%A0%87%E6%99%BA%E5%AE%A2%E7%AD%89%EF%BC%89.user.js",
+  "code_size": 4871,
+  "license": "MIT License",
+  "version": "2.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

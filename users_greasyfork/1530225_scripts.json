@@ -1,0 +1,134 @@
+[
+  {
+    "id": 554200,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T11:48:06.000Z",
+    "code_updated_at": "2025-10-30T12:17:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530225,
+        "name": "VovKer-gl",
+        "created_at": "2025-10-24T12:35:27.000Z",
+        "url": "https://greasyfork.org/users/1530225-vovker-gl"
+      }
+    ],
+    "name": "Sportlogiq: Replay Control",
+    "description": "Hold hotkeys to scrub forward/backward, release to auto-jump back to the start point.",
+    "url": "https://greasyfork.org/scripts/554200-sportlogiq-replay-control",
+    "code_url": "https://update.greasyfork.org/scripts/554200/Sportlogiq%3A%20Replay%20Control.user.js",
+    "code_size": 13145,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554199,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T11:39:58.000Z",
+    "code_updated_at": "2025-10-30T12:15:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530225,
+        "name": "VovKer-gl",
+        "created_at": "2025-10-24T12:35:27.000Z",
+        "url": "https://greasyfork.org/users/1530225-vovker-gl"
+      }
+    ],
+    "name": "Sportlogiq: Frame Fixer",
+    "description": "Adds buttons to fix event frames by +/- 1F.",
+    "url": "https://greasyfork.org/scripts/554199-sportlogiq-frame-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/554199/Sportlogiq%3A%20Frame%20Fixer.user.js",
+    "code_size": 8059,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554192,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T09:30:25.000Z",
+    "code_updated_at": "2025-11-07T20:36:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530225,
+        "name": "VovKer-gl",
+        "created_at": "2025-10-24T12:35:27.000Z",
+        "url": "https://greasyfork.org/users/1530225-vovker-gl"
+      }
+    ],
+    "name": "Sportlogiq: Frame Conflict Detector",
+    "description": "Detects and displays frame conflicts and assist links in the event list.",
+    "url": "https://greasyfork.org/scripts/554192-sportlogiq-frame-conflict-detector",
+    "code_url": "https://update.greasyfork.org/scripts/554192/Sportlogiq%3A%20Frame%20Conflict%20Detector.user.js",
+    "code_size": 12224,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 554189,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T09:11:45.000Z",
+    "code_updated_at": "2025-10-30T12:08:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530225,
+        "name": "VovKer-gl",
+        "created_at": "2025-10-24T12:35:27.000Z",
+        "url": "https://greasyfork.org/users/1530225-vovker-gl"
+      }
+    ],
+    "name": "Sportlogiq: Video Scrubber",
+    "description": "Керуйте відео на Sportlogiq за допомогою колеса миші та бічних кнопок.",
+    "url": "https://greasyfork.org/scripts/554189-sportlogiq-video-scrubber",
+    "code_url": "https://update.greasyfork.org/scripts/554189/Sportlogiq%3A%20Video%20Scrubber.user.js",
+    "code_size": 5951,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

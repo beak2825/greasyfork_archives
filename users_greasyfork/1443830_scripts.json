@@ -30,6 +30,72 @@
     "version": "2025-12-19",
     "locale": "ko",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553145,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T01:47:19.000Z",
+    "code_updated_at": "2025-10-20T01:47:19.000Z",
+    "namespace": "https://lms.korea.ac.kr/lms_term_surveys",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443830,
+        "name": "explainpark101",
+        "created_at": "2025-03-09T07:30:26.000Z",
+        "url": "https://greasyfork.org/users/1443830-explainpark101"
+      }
+    ],
+    "name": "KU LMS 설문조사 스킵",
+    "description": "고려대학교 LMS 학기중간 설문조사 페이지 스킵",
+    "url": "https://greasyfork.org/scripts/553145-ku-lms-%EC%84%A4%EB%AC%B8%EC%A1%B0%EC%82%AC-%EC%8A%A4%ED%82%B5",
+    "code_url": "https://update.greasyfork.org/scripts/553145/KU%20LMS%20%EC%84%A4%EB%AC%B8%EC%A1%B0%EC%82%AC%20%EC%8A%A4%ED%82%B5.user.js",
+    "code_size": 893,
+    "license": "none",
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552230,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T07:09:49.000Z",
+    "code_updated_at": "2025-10-11T07:12:49.000Z",
+    "namespace": "https://github.com/explnprk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443830,
+        "name": "explainpark101",
+        "created_at": "2025-03-09T07:30:26.000Z",
+        "url": "https://greasyfork.org/users/1443830-explainpark101"
+      }
+    ],
+    "name": "Erase youtube share url tracker",
+    "description": "erase share url tracker",
+    "url": "https://greasyfork.org/scripts/552230-erase-youtube-share-url-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/552230/Erase%20youtube%20share%20url%20tracker.user.js",
+    "code_size": 1169,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

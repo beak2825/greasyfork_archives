@@ -1,0 +1,101 @@
+[
+  {
+    "id": 555648,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T17:38:59.000Z",
+    "code_updated_at": "2025-11-12T17:50:41.000Z",
+    "namespace": "https://greasyfork.org/users/1018640",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018640,
+        "name": "douglaskraft",
+        "created_at": "2023-01-29T22:56:13.000Z",
+        "url": "https://greasyfork.org/users/1018640-douglaskraft"
+      }
+    ],
+    "name": "Transfer List - Calculadora Automática FINAL",
+    "description": "Calcula Rating, REC, TI, Sell Bank e Lucro. Prioriza o último TI observado para projeções e deduz salários e taxas para um lucro líquido.",
+    "url": "https://greasyfork.org/scripts/555648-transfer-list-calculadora-autom%C3%A1tica-final",
+    "code_url": "https://update.greasyfork.org/scripts/555648/Transfer%20List%20-%20Calculadora%20Autom%C3%A1tica%20FINAL.user.js",
+    "code_size": 28581,
+    "license": null,
+    "version": "2.4.4",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552607,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-14T23:05:11.000Z",
+    "code_updated_at": "2025-10-15T20:14:34.000Z",
+    "namespace": "https://greasyfork.org/users/1018640",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018640,
+        "name": "douglaskraft",
+        "created_at": "2023-01-29T22:56:13.000Z",
+        "url": "https://greasyfork.org/users/1018640-douglaskraft"
+      }
+    ],
+    "name": "TM - Buscador de Jogadores da Liga + NT",
+    "description": "Na página da liga, busca jogadores com R5, com filtros e marca jogadores da lista de observação NT.",
+    "url": "https://greasyfork.org/scripts/552607-tm-buscador-de-jogadores-da-liga-nt",
+    "code_url": "https://update.greasyfork.org/scripts/552607/TM%20-%20Buscador%20de%20Jogadores%20da%20Liga%20%2B%20NT.user.js",
+    "code_size": 22866,
+    "license": null,
+    "version": "3.6 - Adicionada marcação de jogadores da NT Shortlist",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552606,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-14T22:59:46.000Z",
+    "code_updated_at": "2025-10-14T22:59:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1018640,
+        "name": "douglaskraft",
+        "created_at": "2023-01-29T22:56:13.000Z",
+        "url": "https://greasyfork.org/users/1018640-douglaskraft"
+      }
+    ],
+    "name": "Trophy Manager - R5 + Filtro + Status + NT",
+    "description": "Carrega dados de 15 temporadas, filtra jogadores por país, calcula o R5, cria lista de melhores por idade, marca jogadores NT e times inativos/banidos.",
+    "url": "https://greasyfork.org/scripts/552606-trophy-manager-r5-filtro-status-nt",
+    "code_url": "https://update.greasyfork.org/scripts/552606/Trophy%20Manager%20-%20R5%20%2B%20Filtro%20%2B%20Status%20%2B%20NT.user.js",
+    "code_size": 29159,
+    "license": null,
+    "version": "16.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

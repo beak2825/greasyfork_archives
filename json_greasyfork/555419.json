@@ -1,0 +1,59 @@
+{
+  "id": 555419,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-10T13:33:44.000Z",
+  "code_updated_at": "2025-11-10T13:33:44.000Z",
+  "namespace": "https://greasyfork.org/users/1536350",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1536350,
+      "name": "Azqual",
+      "created_at": "2025-11-10T13:29:23.000Z",
+      "url": "https://greasyfork.org/users/1536350-azqual",
+      "scripts": [
+        {
+          "id": 555419,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-10T13:33:44.000Z",
+          "code_updated_at": "2025-11-10T13:33:44.000Z",
+          "namespace": "https://greasyfork.org/users/1536350",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度新版多平台搜索助手（知乎/小红书/B站/微博/抖音/贴吧）",
+          "description": "在百度新版搜索框旁添加多个常用平台搜索按钮，一键跨平台搜索相同关键词",
+          "url": "https://greasyfork.org/scripts/555419-%E7%99%BE%E5%BA%A6%E6%96%B0%E7%89%88%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B-%E7%9F%A5%E4%B9%8E-%E5%B0%8F%E7%BA%A2%E4%B9%A6-b%E7%AB%99-%E5%BE%AE%E5%8D%9A-%E6%8A%96%E9%9F%B3-%E8%B4%B4%E5%90%A7",
+          "code_url": "https://update.greasyfork.org/scripts/555419/%E7%99%BE%E5%BA%A6%E6%96%B0%E7%89%88%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B%EF%BC%88%E7%9F%A5%E4%B9%8E%E5%B0%8F%E7%BA%A2%E4%B9%A6B%E7%AB%99%E5%BE%AE%E5%8D%9A%E6%8A%96%E9%9F%B3%E8%B4%B4%E5%90%A7%EF%BC%89.user.js",
+          "code_size": 4041,
+          "license": "MI",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度新版多平台搜索助手（知乎/小红书/B站/微博/抖音/贴吧）",
+  "description": "在百度新版搜索框旁添加多个常用平台搜索按钮，一键跨平台搜索相同关键词",
+  "url": "https://greasyfork.org/scripts/555419-%E7%99%BE%E5%BA%A6%E6%96%B0%E7%89%88%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B-%E7%9F%A5%E4%B9%8E-%E5%B0%8F%E7%BA%A2%E4%B9%A6-b%E7%AB%99-%E5%BE%AE%E5%8D%9A-%E6%8A%96%E9%9F%B3-%E8%B4%B4%E5%90%A7",
+  "code_url": "https://update.greasyfork.org/scripts/555419/%E7%99%BE%E5%BA%A6%E6%96%B0%E7%89%88%E5%A4%9A%E5%B9%B3%E5%8F%B0%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B%EF%BC%88%E7%9F%A5%E4%B9%8E%E5%B0%8F%E7%BA%A2%E4%B9%A6B%E7%AB%99%E5%BE%AE%E5%8D%9A%E6%8A%96%E9%9F%B3%E8%B4%B4%E5%90%A7%EF%BC%89.user.js",
+  "code_size": 4041,
+  "license": "MI",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

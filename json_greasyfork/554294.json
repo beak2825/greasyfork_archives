@@ -1,0 +1,33 @@
+{
+  "id": 554294,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T09:33:56.000Z",
+  "code_updated_at": "2025-10-31T09:33:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532536,
+      "name": "Yanni Weng",
+      "created_at": "2025-10-31T09:01:43.000Z",
+      "url": "https://greasyfork.org/users/1532536-yanni-weng"
+    }
+  ],
+  "name": "Product Category",
+  "description": "Add check links to GoodsFox items that open YDCMS search in a popup",
+  "url": "https://greasyfork.org/scripts/554294-product-category",
+  "code_url": "https://update.greasyfork.org/scripts/554294/Product%20Category.user.js",
+  "code_size": 2845,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

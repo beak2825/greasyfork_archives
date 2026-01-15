@@ -1,0 +1,59 @@
+{
+  "id": 552532,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-14T05:20:35.000Z",
+  "code_updated_at": "2025-10-14T05:20:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/your-repo/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1526359,
+      "name": "lstyhfxy",
+      "created_at": "2025-10-14T05:06:58.000Z",
+      "url": "https://greasyfork.org/users/1526359-lstyhfxy",
+      "scripts": [
+        {
+          "id": 552532,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-14T05:20:35.000Z",
+          "code_updated_at": "2025-10-14T05:20:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/your-repo/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度网盘链接补全工具",
+          "description": "智能识别并补全百度网盘链接，支持选中文本提示和自动填写提取码",
+          "url": "https://greasyfork.org/scripts/552532-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E8%A1%A5%E5%85%A8%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/552532/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E8%A1%A5%E5%85%A8%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 51200,
+          "license": "MIT License",
+          "version": "2.4.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度网盘链接补全工具",
+  "description": "智能识别并补全百度网盘链接，支持选中文本提示和自动填写提取码",
+  "url": "https://greasyfork.org/scripts/552532-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E8%A1%A5%E5%85%A8%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/552532/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%93%BE%E6%8E%A5%E8%A1%A5%E5%85%A8%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 51200,
+  "license": "MIT License",
+  "version": "2.4.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

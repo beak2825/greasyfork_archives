@@ -1,0 +1,101 @@
+[
+  {
+    "id": 555572,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T02:54:45.000Z",
+    "code_updated_at": "2025-11-12T06:22:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1249678,
+        "name": "leonecho",
+        "created_at": "2024-01-18T04:28:39.000Z",
+        "url": "https://greasyfork.org/users/1249678-leonecho"
+      }
+    ],
+    "name": "LeetCode url清理",
+    "description": "Removes query strings from LeetCode problem description pages. (移除 LeetCode 题目描述页面的查询参数)",
+    "url": "https://greasyfork.org/scripts/555572-leetcode-url%E6%B8%85%E7%90%86",
+    "code_url": "https://update.greasyfork.org/scripts/555572/LeetCode%20url%E6%B8%85%E7%90%86.user.js",
+    "code_size": 4834,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554724,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-04T09:04:09.000Z",
+    "code_updated_at": "2025-11-12T13:36:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1249678,
+        "name": "leonecho",
+        "created_at": "2024-01-18T04:28:39.000Z",
+        "url": "https://greasyfork.org/users/1249678-leonecho"
+      }
+    ],
+    "name": "Steam 添加 SteamDB Link",
+    "description": "在Steam游戏商店页面添加SteamDB链接",
+    "url": "https://greasyfork.org/scripts/554724-steam-%E6%B7%BB%E5%8A%A0-steamdb-link",
+    "code_url": "https://update.greasyfork.org/scripts/554724/Steam%20%E6%B7%BB%E5%8A%A0%20SteamDB%20Link.user.js",
+    "code_size": 3404,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554279,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T06:49:29.000Z",
+    "code_updated_at": "2025-10-31T06:54:19.000Z",
+    "namespace": "https://greasyfork.org/users/1249678",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1249678,
+        "name": "leonecho",
+        "created_at": "2024-01-18T04:28:39.000Z",
+        "url": "https://greasyfork.org/users/1249678-leonecho"
+      }
+    ],
+    "name": "LeetCode 复制标题与题目",
+    "description": "复制 Markdown 格式的题目",
+    "url": "https://greasyfork.org/scripts/554279-leetcode-%E5%A4%8D%E5%88%B6%E6%A0%87%E9%A2%98%E4%B8%8E%E9%A2%98%E7%9B%AE",
+    "code_url": "https://update.greasyfork.org/scripts/554279/LeetCode%20%E5%A4%8D%E5%88%B6%E6%A0%87%E9%A2%98%E4%B8%8E%E9%A2%98%E7%9B%AE.user.js",
+    "code_size": 9192,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 554491,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-02T07:19:40.000Z",
+  "code_updated_at": "2025-11-02T07:19:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527707,
+      "name": "Dean Harper",
+      "created_at": "2025-10-17T08:03:45.000Z",
+      "url": "https://greasyfork.org/users/1527707-dean-harper",
+      "scripts": []
+    }
+  ],
+  "name": "Winbet OMAGA",
+  "description": "Променя дати, стойности и ID-та в историята на залозите в winbet.bg (фиксирани последни 10 цифри 8456732224)",
+  "url": "https://greasyfork.org/scripts/554491-winbet-omaga",
+  "code_url": "https://update.greasyfork.org/scripts/554491/Winbet%20OMAGA.user.js",
+  "code_size": 10344,
+  "license": null,
+  "version": "1.4",
+  "locale": "bg",
+  "deleted": false,
+  "visibility": "public"
+}

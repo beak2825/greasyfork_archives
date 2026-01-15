@@ -1,0 +1,59 @@
+{
+  "id": 562439,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-12T17:33:11.000Z",
+  "code_updated_at": "2026-01-12T17:42:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1559601,
+      "name": "氚-Tritium",
+      "created_at": "2026-01-12T17:28:33.000Z",
+      "url": "https://greasyfork.org/users/1559601-%E6%B0%9A-tritium",
+      "scripts": [
+        {
+          "id": 562439,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-12T17:33:11.000Z",
+          "code_updated_at": "2026-01-12T17:42:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "鲸落量子网页总结",
+          "description": "自动调用AI总结网页内容，采用量子控制中心UI风格，移动端优化",
+          "url": "https://greasyfork.org/scripts/562439-%E9%B2%B8%E8%90%BD%E9%87%8F%E5%AD%90%E7%BD%91%E9%A1%B5%E6%80%BB%E7%BB%93",
+          "code_url": "https://update.greasyfork.org/scripts/562439/%E9%B2%B8%E8%90%BD%E9%87%8F%E5%AD%90%E7%BD%91%E9%A1%B5%E6%80%BB%E7%BB%93.user.js",
+          "code_size": 26997,
+          "license": "MIT License",
+          "version": "0.3.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "鲸落量子网页总结",
+  "description": "自动调用AI总结网页内容，采用量子控制中心UI风格，移动端优化",
+  "url": "https://greasyfork.org/scripts/562439-%E9%B2%B8%E8%90%BD%E9%87%8F%E5%AD%90%E7%BD%91%E9%A1%B5%E6%80%BB%E7%BB%93",
+  "code_url": "https://update.greasyfork.org/scripts/562439/%E9%B2%B8%E8%90%BD%E9%87%8F%E5%AD%90%E7%BD%91%E9%A1%B5%E6%80%BB%E7%BB%93.user.js",
+  "code_size": 26997,
+  "license": "MIT License",
+  "version": "0.3.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

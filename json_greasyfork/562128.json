@@ -1,6 +1,6 @@
 {
   "id": 562128,
-  "daily_installs": 1,
+  "daily_installs": 0,
   "total_installs": 1,
   "fan_score": "5.0",
   "good_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1558782,
       "name": "willxuu",
       "created_at": "2026-01-10T17:14:50.000Z",
-      "url": "https://greasyfork.org/users/1558782-willxuu",
-      "scripts": [
-        {
-          "id": 562128,
-          "daily_installs": 1,
-          "total_installs": 1,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2026-01-10T17:40:26.000Z",
-          "code_updated_at": "2026-01-10T17:40:26.000Z",
-          "namespace": "https://github.com/Johnson1602/tampermonkey-scripts",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Add Analytics Nav Item for X",
-          "description": "Adds an Analytics nav item below Premium in the X.com sidebar",
-          "url": "https://greasyfork.org/scripts/562128-add-analytics-nav-item-for-x",
-          "code_url": "https://update.greasyfork.org/scripts/562128/Add%20Analytics%20Nav%20Item%20for%20X.user.js",
-          "code_size": 4426,
-          "license": "MIT License",
-          "version": "0.0.2",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1558782-willxuu"
     }
   ],
   "name": "Add Analytics Nav Item for X",

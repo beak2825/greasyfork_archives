@@ -1,0 +1,59 @@
+{
+  "id": 554359,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T23:41:38.000Z",
+  "code_updated_at": "2025-11-01T00:01:19.000Z",
+  "namespace": "https://github.com/elijahr/github-review-shortcut",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532756,
+      "name": "elijahr",
+      "created_at": "2025-10-31T23:38:37.000Z",
+      "url": "https://greasyfork.org/users/1532756-elijahr",
+      "scripts": [
+        {
+          "id": 554359,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-31T23:41:38.000Z",
+          "code_updated_at": "2025-11-01T00:01:19.000Z",
+          "namespace": "https://github.com/elijahr/github-review-shortcut",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GitHub PR review keyboard shortcut",
+          "description": "Mark file as \"viewed\" on GitHub PR UI when hovering and pressing 'Escape' key, or unmark with Shift+Escape",
+          "url": "https://greasyfork.org/scripts/554359-github-pr-review-keyboard-shortcut",
+          "code_url": "https://update.greasyfork.org/scripts/554359/GitHub%20PR%20review%20keyboard%20shortcut.user.js",
+          "code_size": 3300,
+          "license": "MIT License",
+          "version": "0.7.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GitHub PR review keyboard shortcut",
+  "description": "Mark file as \"viewed\" on GitHub PR UI when hovering and pressing 'Escape' key, or unmark with Shift+Escape",
+  "url": "https://greasyfork.org/scripts/554359-github-pr-review-keyboard-shortcut",
+  "code_url": "https://update.greasyfork.org/scripts/554359/GitHub%20PR%20review%20keyboard%20shortcut.user.js",
+  "code_size": 3300,
+  "license": "MIT License",
+  "version": "0.7.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

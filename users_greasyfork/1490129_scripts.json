@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562330,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T03:13:47.000Z",
+    "code_updated_at": "2026-01-12T07:01:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490129,
+        "name": "0xff",
+        "created_at": "2025-06-30T01:49:22.000Z",
+        "url": "https://greasyfork.org/users/1490129-0xff"
+      }
+    ],
+    "name": "LeetCode|力扣 题单多功能目录插件",
+    "description": "自动生成题单目录+一键跳转+自动标记已做题目+自动跳转到上一次浏览位置",
+    "url": "https://greasyfork.org/scripts/562330-leetcode-%E5%8A%9B%E6%89%A3-%E9%A2%98%E5%8D%95%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%9B%AE%E5%BD%95%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/562330/LeetCode%7C%E5%8A%9B%E6%89%A3%20%E9%A2%98%E5%8D%95%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%9B%AE%E5%BD%95%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 10607,
+    "license": "MIT License",
+    "version": "2026-01-12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

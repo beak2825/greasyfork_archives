@@ -1,0 +1,68 @@
+[
+  {
+    "id": 562663,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T16:39:54.000Z",
+    "code_updated_at": "2026-01-14T16:39:54.000Z",
+    "namespace": "shiftgeist",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438639,
+        "name": "shiftgeist",
+        "created_at": "2025-02-22T13:11:29.000Z",
+        "url": "https://greasyfork.org/users/1438639-shiftgeist"
+      }
+    ],
+    "name": "Copy specs",
+    "description": "Shows button to copy specs of food with tab seperation",
+    "url": "https://greasyfork.org/scripts/562663-copy-specs",
+    "code_url": "https://update.greasyfork.org/scripts/562663/Copy%20specs.user.js",
+    "code_size": 1709,
+    "license": "GNU GPLv3",
+    "version": "202601141",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554196,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T11:07:30.000Z",
+    "code_updated_at": "2025-11-05T11:07:52.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438639,
+        "name": "shiftgeist",
+        "created_at": "2025-02-22T13:11:29.000Z",
+        "url": "https://greasyfork.org/users/1438639-shiftgeist"
+      }
+    ],
+    "name": "semsportal.com",
+    "description": "Custom dark theme styling for GoodWe SEMS Portal",
+    "url": "https://greasyfork.org/scripts/554196-semsportal-com",
+    "code_url": "https://update.greasyfork.org/scripts/554196/semsportalcom.user.css",
+    "code_size": 10058,
+    "license": "MIT License",
+    "version": "202511051",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553690,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T20:38:48.000Z",
+    "code_updated_at": "2025-10-25T20:38:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530678,
+        "name": "Cold Extremely",
+        "created_at": "2025-10-25T20:24:13.000Z",
+        "url": "https://greasyfork.org/users/1530678-cold-extremely"
+      }
+    ],
+    "name": "禁止知乎滚动锚定",
+    "description": "禁止知乎回答评论滚动锚定导致错位",
+    "url": "https://greasyfork.org/scripts/553690-%E7%A6%81%E6%AD%A2%E7%9F%A5%E4%B9%8E%E6%BB%9A%E5%8A%A8%E9%94%9A%E5%AE%9A",
+    "code_url": "https://update.greasyfork.org/scripts/553690/%E7%A6%81%E6%AD%A2%E7%9F%A5%E4%B9%8E%E6%BB%9A%E5%8A%A8%E9%94%9A%E5%AE%9A.user.js",
+    "code_size": 861,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

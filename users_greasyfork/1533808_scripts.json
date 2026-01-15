@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554703,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-04T05:12:10.000Z",
+    "code_updated_at": "2025-12-04T05:15:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533808,
+        "name": "laurenceputra",
+        "created_at": "2025-11-04T01:23:58.000Z",
+        "url": "https://greasyfork.org/users/1533808-laurenceputra"
+      }
+    ],
+    "name": "HeyMax SubCaps Viewer",
+    "description": "Monitor network requests and display SubCaps calculations for UOB cards on HeyMax",
+    "url": "https://greasyfork.org/scripts/554703-heymax-subcaps-viewer",
+    "code_url": "https://update.greasyfork.org/scripts/554703/HeyMax%20SubCaps%20Viewer.user.js",
+    "code_size": 53886,
+    "license": "MIT License",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

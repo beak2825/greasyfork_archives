@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553560,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-24T09:24:25.000Z",
+    "code_updated_at": "2025-10-24T09:24:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 674238,
+        "name": "Aizen232503",
+        "created_at": "2020-08-07T14:18:49.000Z",
+        "url": "https://greasyfork.org/users/674238-aizen232503"
+      }
+    ],
+    "name": "FF14充值 - 解除仅能为本账号充值的限制",
+    "description": "解除盛趣更新充值系统后加入的充值账号限制（事实上只是禁用了输入框）",
+    "url": "https://greasyfork.org/scripts/553560-ff14%E5%85%85%E5%80%BC-%E8%A7%A3%E9%99%A4%E4%BB%85%E8%83%BD%E4%B8%BA%E6%9C%AC%E8%B4%A6%E5%8F%B7%E5%85%85%E5%80%BC%E7%9A%84%E9%99%90%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/553560/FF14%E5%85%85%E5%80%BC%20-%20%E8%A7%A3%E9%99%A4%E4%BB%85%E8%83%BD%E4%B8%BA%E6%9C%AC%E8%B4%A6%E5%8F%B7%E5%85%85%E5%80%BC%E7%9A%84%E9%99%90%E5%88%B6.user.js",
+    "code_size": 694,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

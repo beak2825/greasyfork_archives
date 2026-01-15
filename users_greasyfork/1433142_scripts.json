@@ -31,5 +31,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555556,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-11T22:20:36.000Z",
+    "code_updated_at": "2025-11-30T06:39:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/MasuRii/wtr-lab-novel-reviewer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433142,
+        "name": "MasuRiii",
+        "created_at": "2025-02-09T04:15:39.000Z",
+        "url": "https://greasyfork.org/users/1433142-masuriii"
+      }
+    ],
+    "name": "WTR-Lab Novel Reviewer",
+    "description": "Analyzes novels on wtr-lab.com using Gemini AI to provide comprehensive assessments including character development, plot structure, world-building, themes & messages, and writing style.",
+    "url": "https://greasyfork.org/scripts/555556-wtr-lab-novel-reviewer",
+    "code_url": "https://update.greasyfork.org/scripts/555556/WTR-Lab%20Novel%20Reviewer.user.js",
+    "code_size": 112548,
+    "license": "MIT License",
+    "version": "1.8.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553324,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-21T23:53:06.000Z",
+    "code_updated_at": "2025-10-21T23:53:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433142,
+        "name": "MasuRiii",
+        "created_at": "2025-02-09T04:15:39.000Z",
+        "url": "https://greasyfork.org/users/1433142-masuriii"
+      }
+    ],
+    "name": "NovelUpdates Tag Filter & Sorter",
+    "description": "Filters and sorts NovelUpdates series finder results by tag count.",
+    "url": "https://greasyfork.org/scripts/553324-novelupdates-tag-filter-sorter",
+    "code_url": "https://update.greasyfork.org/scripts/553324/NovelUpdates%20Tag%20Filter%20%20Sorter.user.js",
+    "code_size": 7987,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553165,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T06:03:24.000Z",
+    "code_updated_at": "2025-10-30T11:55:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433142,
+        "name": "MasuRiii",
+        "created_at": "2025-02-09T04:15:39.000Z",
+        "url": "https://greasyfork.org/users/1433142-masuriii"
+      }
+    ],
+    "name": "WTR Lab Uncensor",
+    "description": "Replaces censored words with their uncensored counterparts on wtr-lab.com for a better reading experience, without breaking site functionality.",
+    "url": "https://greasyfork.org/scripts/553165-wtr-lab-uncensor",
+    "code_url": "https://update.greasyfork.org/scripts/553165/WTR%20Lab%20Uncensor.user.js",
+    "code_size": 17632,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552944,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T23:14:42.000Z",
+    "code_updated_at": "2025-11-06T14:11:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/MasuRii/wtr-lab-enhancer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433142,
+        "name": "MasuRiii",
+        "created_at": "2025-02-09T04:15:39.000Z",
+        "url": "https://greasyfork.org/users/1433142-masuriii"
+      }
+    ],
+    "name": "WTR-Lab Reader & UI Enhancer",
+    "description": "Enhance your WTR-Lab reading experience with customizable reader width, navigation panel controls, and font styling options. Create the perfect reading environment on wtr-lab.com with this powerful userscript.",
+    "url": "https://greasyfork.org/scripts/552944-wtr-lab-reader-ui-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/552944/WTR-Lab%20Reader%20%20UI%20Enhancer.user.js",
+    "code_size": 94139,
+    "license": "MIT License",
+    "version": "3.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552131,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T09:23:51.000Z",
+    "code_updated_at": "2025-10-28T04:20:42.000Z",
+    "namespace": "https://greasyfork.org/en/users/1433142-masuriii",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433142,
+        "name": "MasuRiii",
+        "created_at": "2025-02-09T04:15:39.000Z",
+        "url": "https://greasyfork.org/users/1433142-masuriii"
+      }
+    ],
+    "name": "WTR-Lab Library Auto-Sorter by Progress",
+    "description": "Automatically loads all items and sorts your WTR-Lab library by reading progress. Sort order and logging are configurable in the menu.",
+    "url": "https://greasyfork.org/scripts/552131-wtr-lab-library-auto-sorter-by-progress",
+    "code_url": "https://update.greasyfork.org/scripts/552131/WTR-Lab%20Library%20Auto-Sorter%20by%20Progress.user.js",
+    "code_size": 7054,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552121,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T07:14:24.000Z",
+    "code_updated_at": "2025-10-30T06:35:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433142,
+        "name": "MasuRiii",
+        "created_at": "2025-02-09T04:15:39.000Z",
+        "url": "https://greasyfork.org/users/1433142-masuriii"
+      }
+    ],
+    "name": "WTR-Lab Auto Scroller",
+    "description": "Adds dual-mode auto-scrolling (Constant Speed or Dynamic WPM) to the WTR-Lab reader for a hands-free reading experience.",
+    "url": "https://greasyfork.org/scripts/552121-wtr-lab-auto-scroller",
+    "code_url": "https://update.greasyfork.org/scripts/552121/WTR-Lab%20Auto%20Scroller.user.js",
+    "code_size": 30048,
+    "license": "MIT License",
+    "version": "5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

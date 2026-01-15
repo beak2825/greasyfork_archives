@@ -30,6 +30,72 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555672,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T01:34:36.000Z",
+    "code_updated_at": "2025-12-30T05:25:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 946464,
+        "name": "bean0283",
+        "created_at": "2022-08-15T01:58:20.000Z",
+        "url": "https://greasyfork.org/users/946464-bean0283"
+      }
+    ],
+    "name": "OA表格增强工具（序号列+自定义每页数量）",
+    "description": "OA表格添加序号列+自定义每页数量，集成控制面板",
+    "url": "https://greasyfork.org/scripts/555672-oa%E8%A1%A8%E6%A0%BC%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7-%E5%BA%8F%E5%8F%B7%E5%88%97-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%AF%8F%E9%A1%B5%E6%95%B0%E9%87%8F",
+    "code_url": "https://update.greasyfork.org/scripts/555672/OA%E8%A1%A8%E6%A0%BC%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%EF%BC%88%E5%BA%8F%E5%8F%B7%E5%88%97%2B%E8%87%AA%E5%AE%9A%E4%B9%89%E6%AF%8F%E9%A1%B5%E6%95%B0%E9%87%8F%EF%BC%89.user.js",
+    "code_size": 14196,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555590,
+    "daily_installs": 1,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T07:32:43.000Z",
+    "code_updated_at": "2025-11-12T07:32:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 946464,
+        "name": "bean0283",
+        "created_at": "2022-08-15T01:58:20.000Z",
+        "url": "https://greasyfork.org/users/946464-bean0283"
+      }
+    ],
+    "name": "杭州新干线继续教育自动过验证+自动连播",
+    "description": "显示课程进度百分比+渐进式进度条",
+    "url": "https://greasyfork.org/scripts/555590-%E6%9D%AD%E5%B7%9E%E6%96%B0%E5%B9%B2%E7%BA%BF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E8%BF%87%E9%AA%8C%E8%AF%81-%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD",
+    "code_url": "https://update.greasyfork.org/scripts/555590/%E6%9D%AD%E5%B7%9E%E6%96%B0%E5%B9%B2%E7%BA%BF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E8%BF%87%E9%AA%8C%E8%AF%81%2B%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD.user.js",
+    "code_size": 34740,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

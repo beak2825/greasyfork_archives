@@ -1,0 +1,34 @@
+{
+  "id": 555938,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-15T15:48:31.000Z",
+  "code_updated_at": "2025-11-15T15:48:31.000Z",
+  "namespace": "https://greasyfork.org/users/1501974",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1501974,
+      "name": "OwlMight",
+      "created_at": "2025-08-05T22:13:20.000Z",
+      "url": "https://greasyfork.org/users/1501974-owlmight",
+      "scripts": []
+    }
+  ],
+  "name": "OGLight-Bot-Sid",
+  "description": "OGLight script for OGame",
+  "url": "https://greasyfork.org/scripts/555938-oglight-bot-sid",
+  "code_url": "https://update.greasyfork.org/scripts/555938/OGLight-Bot-Sid.user.js",
+  "code_size": 803871,
+  "license": "MIT License",
+  "version": "5.3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

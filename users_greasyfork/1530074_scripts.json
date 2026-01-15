@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553539,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-24T05:52:59.000Z",
+    "code_updated_at": "2025-10-24T06:19:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530074,
+        "name": "九曲青石",
+        "created_at": "2025-10-24T03:07:40.000Z",
+        "url": "https://greasyfork.org/users/1530074-%E4%B9%9D%E6%9B%B2%E9%9D%92%E7%9F%B3"
+      }
+    ],
+    "name": "Storage 复制工具",
+    "description": "在任何网页上复制和粘贴 localStorage 和 sessionStorage",
+    "url": "https://greasyfork.org/scripts/553539-storage-%E5%A4%8D%E5%88%B6%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/553539/Storage%20%E5%A4%8D%E5%88%B6%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 17538,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

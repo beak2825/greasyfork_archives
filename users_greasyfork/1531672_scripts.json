@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553987,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T16:10:47.000Z",
+    "code_updated_at": "2025-10-28T16:10:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1531672,
+        "name": "Guilherme Nobrega",
+        "created_at": "2025-10-28T16:09:13.000Z",
+        "url": "https://greasyfork.org/users/1531672-guilherme-nobrega"
+      }
+    ],
+    "name": "AContinuar - Sequência de cliques Ctrl+Alt+A",
+    "description": "Simula hover, clica em botões e confirma no modal ao pressionar Ctrl+Alt+A.",
+    "url": "https://greasyfork.org/scripts/553987-acontinuar-sequ%C3%AAncia-de-cliques-ctrl-alt-a",
+    "code_url": "https://update.greasyfork.org/scripts/553987/AContinuar%20-%20Sequ%C3%AAncia%20de%20cliques%20Ctrl%2BAlt%2BA.user.js",
+    "code_size": 4426,
+    "license": "MIT License",
+    "version": "2.5",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553986,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T16:10:07.000Z",
+    "code_updated_at": "2025-10-28T16:10:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1531672,
+        "name": "Guilherme Nobrega",
+        "created_at": "2025-10-28T16:09:13.000Z",
+        "url": "https://greasyfork.org/users/1531672-guilherme-nobrega"
+      }
+    ],
+    "name": "AInspec - Sequência de cliques Ctrl+Alt+S",
+    "description": "Ao pressionar Ctrl+Alt+S, clicar na aba de Inspeção",
+    "url": "https://greasyfork.org/scripts/553986-ainspec-sequ%C3%AAncia-de-cliques-ctrl-alt-s",
+    "code_url": "https://update.greasyfork.org/scripts/553986/AInspec%20-%20Sequ%C3%AAncia%20de%20cliques%20Ctrl%2BAlt%2BS.user.js",
+    "code_size": 1645,
+    "license": "MIT License",
+    "version": "2.5",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

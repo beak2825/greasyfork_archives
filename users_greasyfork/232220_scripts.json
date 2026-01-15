@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552386,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-12T14:56:18.000Z",
+    "code_updated_at": "2025-11-16T14:09:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 232220,
+        "name": "Prof_Bum",
+        "created_at": "2018-12-12T21:04:32.000Z",
+        "url": "https://greasyfork.org/users/232220-prof-bum"
+      }
+    ],
+    "name": "Auto-gpt4o",
+    "description": "Automatically force GPT-4o, even if switched back to GPT-5",
+    "url": "https://greasyfork.org/scripts/552386-auto-gpt4o",
+    "code_url": "https://update.greasyfork.org/scripts/552386/Auto-gpt4o.user.js",
+    "code_size": 6659,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555631,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T14:26:18.000Z",
+    "code_updated_at": "2025-11-12T14:26:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537016,
+        "name": "NMNMCC",
+        "created_at": "2025-11-12T10:43:59.000Z",
+        "url": "https://greasyfork.org/users/1537016-nmnmcc"
+      }
+    ],
+    "name": "Enable Copy-Paste",
+    "description": "Force-enables copy, paste, context menu, and keyboard shortcuts by monkey-patching and piercing Shadow DOM.",
+    "url": "https://greasyfork.org/scripts/555631-enable-copy-paste",
+    "code_url": "https://update.greasyfork.org/scripts/555631/Enable%20Copy-Paste.user.js",
+    "code_size": 3809,
+    "license": "GNU Lesser General Public License v2.1 only",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

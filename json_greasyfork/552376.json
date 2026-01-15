@@ -1,0 +1,59 @@
+{
+  "id": 552376,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-12T13:49:40.000Z",
+  "code_updated_at": "2025-10-12T13:49:40.000Z",
+  "namespace": "https://github.com/UsadaYu/Tampermonkey",
+  "support_url": "https://github.com/UsadaYu/Tampermonkey/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1525616,
+      "name": "UsadaYu",
+      "created_at": "2025-10-12T13:47:32.000Z",
+      "url": "https://greasyfork.org/users/1525616-usadayu",
+      "scripts": [
+        {
+          "id": 552376,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-12T13:49:40.000Z",
+          "code_updated_at": "2025-10-12T13:49:40.000Z",
+          "namespace": "https://github.com/UsadaYu/Tampermonkey",
+          "support_url": "https://github.com/UsadaYu/Tampermonkey/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fix flac.music.hi.cn Links",
+          "description": "Fixes the issue where `download`/`copy` links on flac.music.hi.cn fail for songs with single quotes in their names.",
+          "url": "https://greasyfork.org/scripts/552376-fix-flac-music-hi-cn-links",
+          "code_url": "https://update.greasyfork.org/scripts/552376/Fix%20flacmusichicn%20Links.user.js",
+          "code_size": 2927,
+          "license": "MIT License",
+          "version": "0.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fix flac.music.hi.cn Links",
+  "description": "Fixes the issue where `download`/`copy` links on flac.music.hi.cn fail for songs with single quotes in their names.",
+  "url": "https://greasyfork.org/scripts/552376-fix-flac-music-hi-cn-links",
+  "code_url": "https://update.greasyfork.org/scripts/552376/Fix%20flacmusichicn%20Links.user.js",
+  "code_size": 2927,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557229,
+    "daily_installs": 3,
+    "total_installs": 99,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-28T13:03:58.000Z",
+    "code_updated_at": "2025-11-28T13:08:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542522,
+        "name": "梅芜",
+        "created_at": "2025-11-28T12:56:44.000Z",
+        "url": "https://greasyfork.org/users/1542522-%E6%A2%85%E8%8A%9C"
+      }
+    ],
+    "name": "Twitter/X 无损媒体快捷下载",
+    "description": "单击图片放大，双击图片点赞并下载；额外新增独立下载按钮。自动获取最高画质图片/视频下载。文件名包含完整的秒级时间戳和图片序号，确保唯一性。",
+    "url": "https://greasyfork.org/scripts/557229-twitter-x-%E6%97%A0%E6%8D%9F%E5%AA%92%E4%BD%93%E5%BF%AB%E6%8D%B7%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/557229/TwitterX%20%E6%97%A0%E6%8D%9F%E5%AA%92%E4%BD%93%E5%BF%AB%E6%8D%B7%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 24626,
+    "license": "MIT License",
+    "version": "3.5.10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

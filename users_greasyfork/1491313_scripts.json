@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552894,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T10:00:40.000Z",
+    "code_updated_at": "2025-10-17T10:02:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491313,
+        "name": "Mane Falah",
+        "created_at": "2025-07-03T13:06:09.000Z",
+        "url": "https://greasyfork.org/users/1491313-mane-falah"
+      }
+    ],
+    "name": "Redirect DuckDuckGo to Brave Search",
+    "description": "Redirects DuckDuckGo searches to Brave Search",
+    "url": "https://greasyfork.org/scripts/552894-redirect-duckduckgo-to-brave-search",
+    "code_url": "https://update.greasyfork.org/scripts/552894/Redirect%20DuckDuckGo%20to%20Brave%20Search.user.js",
+    "code_size": 765,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

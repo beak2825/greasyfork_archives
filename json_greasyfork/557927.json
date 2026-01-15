@@ -1,0 +1,59 @@
+{
+  "id": 557927,
+  "daily_installs": 8,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-04T17:17:19.000Z",
+  "code_updated_at": "2025-12-13T15:33:31.000Z",
+  "namespace": "https://github.com/kuilei98/ai-conversation-sidebar",
+  "support_url": "https://github.com/kuilei98/ai-conversation-sidebar/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 890143,
+      "name": "kuilei98",
+      "created_at": "2022-03-21T03:55:37.000Z",
+      "url": "https://greasyfork.org/users/890143-kuilei98",
+      "scripts": [
+        {
+          "id": 557927,
+          "daily_installs": 8,
+          "total_installs": 40,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-04T17:17:19.000Z",
+          "code_updated_at": "2025-12-13T15:33:31.000Z",
+          "namespace": "https://github.com/kuilei98/ai-conversation-sidebar",
+          "support_url": "https://github.com/kuilei98/ai-conversation-sidebar/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AI 导航栏(Gemini & ChatGPT & DeepSeek)",
+          "description": "🚀 三合一 AI 侧边导航栏。支持 Gemini、ChatGPT、DeepSeek。提供长对话索引、极速跳转与本地收藏功能。",
+          "url": "https://greasyfork.org/scripts/557927-ai-%E5%AF%BC%E8%88%AA%E6%A0%8F-gemini-chatgpt-deepseek",
+          "code_url": "https://update.greasyfork.org/scripts/557927/AI%20%E5%AF%BC%E8%88%AA%E6%A0%8F%28Gemini%20%20ChatGPT%20%20DeepSeek%29.user.js",
+          "code_size": 27458,
+          "license": "MIT License",
+          "version": "2.0.0.1213",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AI 导航栏(Gemini & ChatGPT & DeepSeek)",
+  "description": "🚀 三合一 AI 侧边导航栏。支持 Gemini、ChatGPT、DeepSeek。提供长对话索引、极速跳转与本地收藏功能。",
+  "url": "https://greasyfork.org/scripts/557927-ai-%E5%AF%BC%E8%88%AA%E6%A0%8F-gemini-chatgpt-deepseek",
+  "code_url": "https://update.greasyfork.org/scripts/557927/AI%20%E5%AF%BC%E8%88%AA%E6%A0%8F%28Gemini%20%20ChatGPT%20%20DeepSeek%29.user.js",
+  "code_size": 27458,
+  "license": "MIT License",
+  "version": "2.0.0.1213",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

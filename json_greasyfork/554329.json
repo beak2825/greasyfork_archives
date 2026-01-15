@@ -1,0 +1,33 @@
+{
+  "id": 554329,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T15:07:00.000Z",
+  "code_updated_at": "2025-10-31T15:07:00.000Z",
+  "namespace": "gmaps-embed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257453,
+      "name": "fuwawascoco",
+      "created_at": "2024-02-04T19:42:55.000Z",
+      "url": "https://greasyfork.org/users/1257453-fuwawascoco"
+    }
+  ],
+  "name": "Google Maps – One-Click Embed Extractor",
+  "description": "Click a floating button → get the clean <iframe> embed code or just the src in the clipboard.",
+  "url": "https://greasyfork.org/scripts/554329-google-maps-one-click-embed-extractor",
+  "code_url": "https://update.greasyfork.org/scripts/554329/Google%20Maps%20%E2%80%93%20One-Click%20Embed%20Extractor.user.js",
+  "code_size": 7018,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

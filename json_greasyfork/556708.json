@@ -1,0 +1,59 @@
+{
+  "id": 556708,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-23T19:25:41.000Z",
+  "code_updated_at": "2025-11-23T19:28:29.000Z",
+  "namespace": "https://greasyfork.org/ja/scripts/556708-youtube-fullscreen-chat-hider",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497494,
+      "name": "Daito_Amemiya",
+      "created_at": "2025-07-23T03:34:04.000Z",
+      "url": "https://greasyfork.org/users/1497494-daito-amemiya",
+      "scripts": [
+        {
+          "id": 556708,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-23T19:25:41.000Z",
+          "code_updated_at": "2025-11-23T19:28:29.000Z",
+          "namespace": "https://greasyfork.org/ja/scripts/556708-youtube-fullscreen-chat-hider",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Fullscreen Chat Hider",
+          "description": "YouTubeの全画面表示時に、チャットのデータ取得機能を維持したままチャット領域を完全に非表示にし、動画領域を画面いっぱいに拡大します。",
+          "url": "https://greasyfork.org/scripts/556708-youtube-fullscreen-chat-hider",
+          "code_url": "https://update.greasyfork.org/scripts/556708/YouTube%20Fullscreen%20Chat%20Hider.user.js",
+          "code_size": 2299,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Fullscreen Chat Hider",
+  "description": "YouTubeの全画面表示時に、チャットのデータ取得機能を維持したままチャット領域を完全に非表示にし、動画領域を画面いっぱいに拡大します。",
+  "url": "https://greasyfork.org/scripts/556708-youtube-fullscreen-chat-hider",
+  "code_url": "https://update.greasyfork.org/scripts/556708/YouTube%20Fullscreen%20Chat%20Hider.user.js",
+  "code_size": 2299,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

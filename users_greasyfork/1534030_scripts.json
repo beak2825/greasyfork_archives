@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554749,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-04T13:49:29.000Z",
+    "code_updated_at": "2025-11-04T13:49:28.000Z",
+    "namespace": "https://flatpay-group.slack.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1534030,
+        "name": "Aur del",
+        "created_at": "2025-11-04T13:48:27.000Z",
+        "url": "https://greasyfork.org/users/1534030-aur-del"
+      }
+    ],
+    "name": "Slack Select & Export (Qui/Quand/Sujet/Lien) v1.2",
+    "description": "Bouton \"Sélectionner\" + export XLSX avec colonnes Qui ? / Quand ? / Sujet / Lien Slack",
+    "url": "https://greasyfork.org/scripts/554749-slack-select-export-qui-quand-sujet-lien-v1-2",
+    "code_url": "https://update.greasyfork.org/scripts/554749/Slack%20Select%20%20Export%20%28QuiQuandSujetLien%29%20v12.user.js",
+    "code_size": 13678,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

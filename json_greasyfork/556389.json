@@ -1,0 +1,33 @@
+{
+  "id": 556389,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-20T12:55:28.000Z",
+  "code_updated_at": "2025-11-20T12:55:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1538676,
+      "name": "Ej Dan Castillo",
+      "created_at": "2025-11-17T08:03:29.000Z",
+      "url": "https://greasyfork.org/users/1538676-ej-dan-castillo"
+    }
+  ],
+  "name": "Sparx Solve (Gemini v1beta) - v14.56 (Custom Alert & Apple-Notes Style + Floating Cards)",
+  "description": "Adds a History UI, fixes layout shifts when toggling panels, Apple-Notes-like visual improvements, animations, tilted floating cards for API & History, and a custom non-blocking alert system. Waits for SUCCESS mutation to log Bookwork Code and the correct answer from the HTML.",
+  "url": "https://greasyfork.org/scripts/556389-sparx-solve-gemini-v1beta-v14-56-custom-alert-apple-notes-style-floating-cards",
+  "code_url": "https://update.greasyfork.org/scripts/556389/Sparx%20Solve%20%28Gemini%20v1beta%29%20-%20v1456%20%28Custom%20Alert%20%20Apple-Notes%20Style%20%2B%20Floating%20Cards%29.user.js",
+  "code_size": 48651,
+  "license": null,
+  "version": "14.56",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 555215,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T17:52:37.000Z",
+  "code_updated_at": "2025-11-08T19:01:41.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535709,
+      "name": "Richard-Rogalski",
+      "created_at": "2025-11-08T17:16:55.000Z",
+      "url": "https://greasyfork.org/users/1535709-richard-rogalski",
+      "scripts": [
+        {
+          "id": 555215,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-08T17:52:37.000Z",
+          "code_updated_at": "2025-11-08T19:01:41.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Quizlet TTS Audio Keybind",
+          "description": "Keybind to trigger Quizlet's sound button for flashcards.",
+          "url": "https://greasyfork.org/scripts/555215-quizlet-tts-audio-keybind",
+          "code_url": "https://update.greasyfork.org/scripts/555215/Quizlet%20TTS%20Audio%20Keybind.user.js",
+          "code_size": 6542,
+          "license": "BSD Zero Clause License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Quizlet TTS Audio Keybind",
+  "description": "Keybind to trigger Quizlet's sound button for flashcards.",
+  "url": "https://greasyfork.org/scripts/555215-quizlet-tts-audio-keybind",
+  "code_url": "https://update.greasyfork.org/scripts/555215/Quizlet%20TTS%20Audio%20Keybind.user.js",
+  "code_size": 6542,
+  "license": "BSD Zero Clause License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558574,
+    "daily_installs": 1,
+    "total_installs": 73,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T03:23:46.000Z",
+    "code_updated_at": "2025-12-15T02:08:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503107,
+        "name": "刘亦非",
+        "created_at": "2025-08-09T08:35:28.000Z",
+        "url": "https://greasyfork.org/users/1503107-%E5%88%98%E4%BA%A6%E9%9D%9E"
+      }
+    ],
+    "name": "百度贴吧去除广告最新版2.0",
+    "description": "屏蔽百度贴吧列表，详情页广告，屏蔽掉一些无用的元素",
+    "url": "https://greasyfork.org/scripts/558574-%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%8E%BB%E9%99%A4%E5%B9%BF%E5%91%8A%E6%9C%80%E6%96%B0%E7%89%882-0",
+    "code_url": "https://update.greasyfork.org/scripts/558574/%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E5%8E%BB%E9%99%A4%E5%B9%BF%E5%91%8A%E6%9C%80%E6%96%B0%E7%89%8820.user.js",
+    "code_size": 2552,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 554671,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-03T21:05:06.000Z",
+  "code_updated_at": "2025-11-05T09:18:08.000Z",
+  "namespace": "https://greasyfork.org/de/users/1516523-martink",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516523,
+      "name": "martink",
+      "created_at": "2025-09-18T09:31:20.000Z",
+      "url": "https://greasyfork.org/users/1516523-martink",
+      "scripts": []
+    }
+  ],
+  "name": "ff-text-select",
+  "description": "Firefox-Markierungsstil für Chrome: Unterstriche als Wortgrenzen, kein trailing Whitespace, \\y-Pattern-Grenzen ignoriert.",
+  "url": "https://greasyfork.org/scripts/554671-ff-text-select",
+  "code_url": "https://update.greasyfork.org/scripts/554671/ff-text-select.user.js",
+  "code_size": 11041,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -30,6 +30,39 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554885,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T14:57:28.000Z",
+    "code_updated_at": "2025-11-05T14:57:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495201,
+        "name": "jeremy.s",
+        "created_at": "2025-07-15T16:09:57.000Z",
+        "url": "https://greasyfork.org/users/1495201-jeremy-s"
+      }
+    ],
+    "name": "Add Button for generating Functional Tests in Story from Epic",
+    "description": "Add a button to Jira Epic tickets to generate Functional tests in Story via an n8n workflow.",
+    "url": "https://greasyfork.org/scripts/554885-add-button-for-generating-functional-tests-in-story-from-epic",
+    "code_url": "https://update.greasyfork.org/scripts/554885/Add%20Button%20for%20generating%20Functional%20Tests%20in%20Story%20from%20Epic.user.js",
+    "code_size": 5542,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

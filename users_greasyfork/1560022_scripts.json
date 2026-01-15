@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562575,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T21:17:36.000Z",
+    "code_updated_at": "2026-01-13T21:17:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560022,
+        "name": "Yashaswini",
+        "created_at": "2026-01-13T21:14:33.000Z",
+        "url": "https://greasyfork.org/users/1560022-yashaswini"
+      }
+    ],
+    "name": "Default CR Templates",
+    "description": "Adds pre written CR template",
+    "url": "https://greasyfork.org/scripts/562575-default-cr-templates",
+    "code_url": "https://update.greasyfork.org/scripts/562575/Default%20CR%20Templates.user.js",
+    "code_size": 10107,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

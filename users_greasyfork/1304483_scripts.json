@@ -33,6 +33,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 557494,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-01T06:25:55.000Z",
+    "code_updated_at": "2025-12-27T06:21:08.000Z",
+    "namespace": "https://greasyfork.org/users/1304483",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304483,
+        "name": "yymydyy",
+        "created_at": "2024-05-20T08:26:21.000Z",
+        "url": "https://greasyfork.org/users/1304483-yymydyy"
+      }
+    ],
+    "name": "GT Flight Calculator",
+    "description": "Calculate best power",
+    "url": "https://greasyfork.org/scripts/557494-gt-flight-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/557494/GT%20Flight%20Calculator.user.js",
+    "code_size": 46059,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 556770,
     "daily_installs": 0,
     "total_installs": 0,
@@ -61,6 +94,138 @@
     "code_size": 30432,
     "license": "MIT License",
     "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555632,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T14:27:57.000Z",
+    "code_updated_at": "2025-12-04T04:34:01.000Z",
+    "namespace": "https://greasyfork.org/users/1304483",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304483,
+        "name": "yymydyy",
+        "created_at": "2024-05-20T08:26:21.000Z",
+        "url": "https://greasyfork.org/users/1304483-yymydyy"
+      }
+    ],
+    "name": "GT Material Price Inserter",
+    "description": "监控页面变化，在指定位置插入 material_price 信息",
+    "url": "https://greasyfork.org/scripts/555632-gt-material-price-inserter",
+    "code_url": "https://update.greasyfork.org/scripts/555632/GT%20Material%20Price%20Inserter.user.js",
+    "code_size": 29294,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555611,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T11:47:55.000Z",
+    "code_updated_at": "2025-12-13T06:28:05.000Z",
+    "namespace": "https://greasyfork.org/users/1304483",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304483,
+        "name": "yymydyy",
+        "created_at": "2024-05-20T08:26:21.000Z",
+        "url": "https://greasyfork.org/users/1304483-yymydyy"
+      }
+    ],
+    "name": "GT API get",
+    "description": "get mp per minute",
+    "url": "https://greasyfork.org/scripts/555611-gt-api-get",
+    "code_url": "https://update.greasyfork.org/scripts/555611/GT%20API%20get.user.js",
+    "code_size": 4266,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554876,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T12:22:34.000Z",
+    "code_updated_at": "2025-11-05T12:22:34.000Z",
+    "namespace": "https://greasyfork.org/users/1304483",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304483,
+        "name": "yymydyy",
+        "created_at": "2024-05-20T08:26:21.000Z",
+        "url": "https://greasyfork.org/users/1304483-yymydyy"
+      }
+    ],
+    "name": "FMP NT Club Seacher",
+    "description": "Search player in club",
+    "url": "https://greasyfork.org/scripts/554876-fmp-nt-club-seacher",
+    "code_url": "https://update.greasyfork.org/scripts/554876/FMP%20NT%20Club%20Seacher.user.js",
+    "code_size": 2005,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554875,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T12:21:18.000Z",
+    "code_updated_at": "2025-11-05T12:21:18.000Z",
+    "namespace": "https://greasyfork.org/users/1304483",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1304483,
+        "name": "yymydyy",
+        "created_at": "2024-05-20T08:26:21.000Z",
+        "url": "https://greasyfork.org/users/1304483-yymydyy"
+      }
+    ],
+    "name": "FMP short show in bar",
+    "description": "Show short in bar",
+    "url": "https://greasyfork.org/scripts/554875-fmp-short-show-in-bar",
+    "code_url": "https://update.greasyfork.org/scripts/554875/FMP%20short%20show%20in%20bar.user.js",
+    "code_size": 1084,
+    "license": "MIT License",
+    "version": "0.1",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unknown"

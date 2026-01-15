@@ -133,8 +133,8 @@
   },
   {
     "id": 556924,
-    "daily_installs": 0,
-    "total_installs": 27,
+    "daily_installs": 1,
+    "total_installs": 31,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -163,5 +163,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555520,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-11T13:02:26.000Z",
+    "code_updated_at": "2025-11-11T13:02:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453768,
+        "name": "sentientmilk",
+        "created_at": "2025-04-04T02:23:09.000Z",
+        "url": "https://greasyfork.org/users/1453768-sentientmilk"
+      }
+    ],
+    "name": "Disable EdibleTools' colorful additions to the Guild Members table",
+    "description": "For Lurpa",
+    "url": "https://greasyfork.org/scripts/555520-disable-edibletools-colorful-additions-to-the-guild-members-table",
+    "code_url": "https://update.greasyfork.org/scripts/555520/Disable%20EdibleTools%27%20colorful%20additions%20to%20the%20Guild%20Members%20table.user.js",
+    "code_size": 556,
+    "license": "MIT License",
+    "version": "2025-11-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

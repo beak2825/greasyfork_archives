@@ -1,0 +1,68 @@
+[
+  {
+    "id": 555156,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T02:13:46.000Z",
+    "code_updated_at": "2025-11-08T02:13:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496225,
+        "name": "ObenK",
+        "created_at": "2025-07-19T03:28:36.000Z",
+        "url": "https://greasyfork.org/users/1496225-obenk"
+      }
+    ],
+    "name": "Folo - Remove AI Dialog",
+    "description": "Remove the right-side AI dialog from Folo interface",
+    "url": "https://greasyfork.org/scripts/555156-folo-remove-ai-dialog",
+    "code_url": "https://update.greasyfork.org/scripts/555156/Folo%20-%20Remove%20AI%20Dialog.user.js",
+    "code_size": 5708,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552680,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-15T13:13:27.000Z",
+    "code_updated_at": "2025-10-15T13:13:27.000Z",
+    "namespace": "http://feedly.colorful.list.view",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496225,
+        "name": "ObenK",
+        "created_at": "2025-07-19T03:28:36.000Z",
+        "url": "https://greasyfork.org/users/1496225-obenk"
+      }
+    ],
+    "name": "Feedly Colorful Listview - Morandi Edition",
+    "description": "Colorizes items headers based on their source with Morandi colors",
+    "url": "https://greasyfork.org/scripts/552680-feedly-colorful-listview-morandi-edition",
+    "code_url": "https://update.greasyfork.org/scripts/552680/Feedly%20Colorful%20Listview%20-%20Morandi%20Edition.user.js",
+    "code_size": 4571,
+    "license": "MIT License",
+    "version": "0.13.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

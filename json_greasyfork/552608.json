@@ -1,0 +1,33 @@
+{
+  "id": 552608,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-14T23:56:03.000Z",
+  "code_updated_at": "2025-10-14T23:56:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1524783,
+      "name": "YeongChan Lee",
+      "created_at": "2025-10-10T10:44:57.000Z",
+      "url": "https://greasyfork.org/users/1524783-yeongchan-lee"
+    }
+  ],
+  "name": "Rummikub Chrome Update Remover",
+  "description": "Remove the overlay so you can play the game on other browsers like FireFox",
+  "url": "https://greasyfork.org/scripts/552608-rummikub-chrome-update-remover",
+  "code_url": "https://update.greasyfork.org/scripts/552608/Rummikub%20Chrome%20Update%20Remover.user.js",
+  "code_size": 711,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 557272,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-28T22:51:06.000Z",
+  "code_updated_at": "2025-12-01T12:06:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497921,
+      "name": "*ace*",
+      "created_at": "2025-07-24T12:05:00.000Z",
+      "url": "https://greasyfork.org/users/1497921-ace"
+    }
+  ],
+  "name": "To-Do List",
+  "description": "To-Do list con modifica task, drag & drop, priorità, notifiche e temi",
+  "url": "https://greasyfork.org/scripts/557272-to-do-list",
+  "code_url": "https://update.greasyfork.org/scripts/557272/To-Do%20List.user.js",
+  "code_size": 26281,
+  "license": null,
+  "version": "0.4",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

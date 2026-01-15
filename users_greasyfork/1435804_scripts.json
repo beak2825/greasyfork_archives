@@ -30,6 +30,72 @@
     "version": "1.0.2",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552993,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T11:21:24.000Z",
+    "code_updated_at": "2025-10-18T11:21:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435804,
+        "name": "Brian Evans",
+        "created_at": "2025-02-16T20:17:48.000Z",
+        "url": "https://greasyfork.org/users/1435804-brian-evans"
+      }
+    ],
+    "name": "Glitchey: Attack new window",
+    "description": "Open attack links in new window on faction war page",
+    "url": "https://greasyfork.org/scripts/552993-glitchey-attack-new-window",
+    "code_url": "https://update.greasyfork.org/scripts/552993/Glitchey%3A%20Attack%20new%20window.user.js",
+    "code_size": 1401,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552253,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T11:00:20.000Z",
+    "code_updated_at": "2025-10-11T11:14:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435804,
+        "name": "Brian Evans",
+        "created_at": "2025-02-16T20:17:48.000Z",
+        "url": "https://greasyfork.org/users/1435804-brian-evans"
+      }
+    ],
+    "name": "Torn Market Item Locker v2",
+    "description": "Add lockable quantity controls to market items (replaces checkbox content, addListing only)",
+    "url": "https://greasyfork.org/scripts/552253-torn-market-item-locker-v2",
+    "code_url": "https://update.greasyfork.org/scripts/552253/Torn%20Market%20Item%20Locker%20v2.user.js",
+    "code_size": 12485,
+    "license": null,
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

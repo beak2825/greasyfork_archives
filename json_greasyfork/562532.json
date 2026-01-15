@@ -1,0 +1,34 @@
+{
+  "id": 562532,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-13T13:50:07.000Z",
+  "code_updated_at": "2026-01-13T13:50:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1348614,
+      "name": "R4Derd",
+      "created_at": "2024-08-09T18:36:12.000Z",
+      "url": "https://greasyfork.org/users/1348614-r4derd",
+      "scripts": []
+    }
+  ],
+  "name": "Solidgate Subscription Pause Helper",
+  "description": "Calculates pause interval, offers a 3-column date selection grid, and auto-copies on selection.",
+  "url": "https://greasyfork.org/scripts/562532-solidgate-subscription-pause-helper",
+  "code_url": "https://update.greasyfork.org/scripts/562532/Solidgate%20Subscription%20Pause%20Helper.user.js",
+  "code_size": 9953,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

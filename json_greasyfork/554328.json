@@ -1,0 +1,59 @@
+{
+  "id": 554328,
+  "daily_installs": 1,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T14:47:17.000Z",
+  "code_updated_at": "2025-10-31T15:23:08.000Z",
+  "namespace": "https://tonyliu.uk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532652,
+      "name": "tonyliuzj",
+      "created_at": "2025-10-31T14:23:26.000Z",
+      "url": "https://greasyfork.org/users/1532652-tonyliuzj",
+      "scripts": [
+        {
+          "id": 554328,
+          "daily_installs": 1,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-31T14:47:17.000Z",
+          "code_updated_at": "2025-10-31T15:23:08.000Z",
+          "namespace": "https://tonyliu.uk",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CSGO Trader Extension Addon - Inventory Value with Sticker Price Sum",
+          "description": "Total inventory value with applyied sticker price, adds an inline stickers sum and combined total next to “Total Inventory Value:”, need to work with CSGO Trader Browser Extension.",
+          "url": "https://greasyfork.org/scripts/554328-csgo-trader-extension-addon-inventory-value-with-sticker-price-sum",
+          "code_url": "https://update.greasyfork.org/scripts/554328/CSGO%20Trader%20Extension%20Addon%20-%20Inventory%20Value%20with%20Sticker%20Price%20Sum.user.js",
+          "code_size": 4916,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CSGO Trader Extension Addon - Inventory Value with Sticker Price Sum",
+  "description": "Total inventory value with applyied sticker price, adds an inline stickers sum and combined total next to “Total Inventory Value:”, need to work with CSGO Trader Browser Extension.",
+  "url": "https://greasyfork.org/scripts/554328-csgo-trader-extension-addon-inventory-value-with-sticker-price-sum",
+  "code_url": "https://update.greasyfork.org/scripts/554328/CSGO%20Trader%20Extension%20Addon%20-%20Inventory%20Value%20with%20Sticker%20Price%20Sum.user.js",
+  "code_size": 4916,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

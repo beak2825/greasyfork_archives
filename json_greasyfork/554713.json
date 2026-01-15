@@ -1,0 +1,59 @@
+{
+  "id": 554713,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-04T06:48:35.000Z",
+  "code_updated_at": "2025-11-12T11:04:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533878,
+      "name": "fdsf33",
+      "created_at": "2025-11-04T06:30:26.000Z",
+      "url": "https://greasyfork.org/users/1533878-fdsf33",
+      "scripts": [
+        {
+          "id": 554713,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-04T06:48:35.000Z",
+          "code_updated_at": "2025-11-12T11:04:22.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🔥 学习通全自动AI助手｜🚀 极速刷课+自动答题｜🎯 全任务点一键完成｜🤖 智能作业答题｜💥 一键启动｜所有题目全覆盖",
+          "description": "基于ChatGPT5镜像服务，所有题目均可作答。自动完成视频进度、章节测试与作业，无需手动操作，高效省时，适合长期挂机使用。",
+          "url": "https://greasyfork.org/scripts/554713-%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%87%AA%E5%8A%A8ai%E5%8A%A9%E6%89%8B-%E6%9E%81%E9%80%9F%E5%88%B7%E8%AF%BE-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E5%85%A8%E4%BB%BB%E5%8A%A1%E7%82%B9%E4%B8%80%E9%94%AE%E5%AE%8C%E6%88%90-%E6%99%BA%E8%83%BD%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98-%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8-%E6%89%80%E6%9C%89%E9%A2%98%E7%9B%AE%E5%85%A8%E8%A6%86%E7%9B%96",
+          "code_url": "https://update.greasyfork.org/scripts/554713/%F0%9F%94%A5%20%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%87%AA%E5%8A%A8AI%E5%8A%A9%E6%89%8B%EF%BD%9C%F0%9F%9A%80%20%E6%9E%81%E9%80%9F%E5%88%B7%E8%AF%BE%2B%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%EF%BD%9C%F0%9F%8E%AF%20%E5%85%A8%E4%BB%BB%E5%8A%A1%E7%82%B9%E4%B8%80%E9%94%AE%E5%AE%8C%E6%88%90%EF%BD%9C%F0%9F%A4%96%20%E6%99%BA%E8%83%BD%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98%EF%BD%9C%F0%9F%92%A5%20%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%EF%BD%9C%E6%89%80%E6%9C%89%E9%A2%98%E7%9B%AE%E5%85%A8%E8%A6%86%E7%9B%96.user.js",
+          "code_size": 230196,
+          "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+          "version": "1.8.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🔥 学习通全自动AI助手｜🚀 极速刷课+自动答题｜🎯 全任务点一键完成｜🤖 智能作业答题｜💥 一键启动｜所有题目全覆盖",
+  "description": "基于ChatGPT5镜像服务，所有题目均可作答。自动完成视频进度、章节测试与作业，无需手动操作，高效省时，适合长期挂机使用。",
+  "url": "https://greasyfork.org/scripts/554713-%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%87%AA%E5%8A%A8ai%E5%8A%A9%E6%89%8B-%E6%9E%81%E9%80%9F%E5%88%B7%E8%AF%BE-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E5%85%A8%E4%BB%BB%E5%8A%A1%E7%82%B9%E4%B8%80%E9%94%AE%E5%AE%8C%E6%88%90-%E6%99%BA%E8%83%BD%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98-%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8-%E6%89%80%E6%9C%89%E9%A2%98%E7%9B%AE%E5%85%A8%E8%A6%86%E7%9B%96",
+  "code_url": "https://update.greasyfork.org/scripts/554713/%F0%9F%94%A5%20%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%87%AA%E5%8A%A8AI%E5%8A%A9%E6%89%8B%EF%BD%9C%F0%9F%9A%80%20%E6%9E%81%E9%80%9F%E5%88%B7%E8%AF%BE%2B%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%EF%BD%9C%F0%9F%8E%AF%20%E5%85%A8%E4%BB%BB%E5%8A%A1%E7%82%B9%E4%B8%80%E9%94%AE%E5%AE%8C%E6%88%90%EF%BD%9C%F0%9F%A4%96%20%E6%99%BA%E8%83%BD%E4%BD%9C%E4%B8%9A%E7%AD%94%E9%A2%98%EF%BD%9C%F0%9F%92%A5%20%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8%EF%BD%9C%E6%89%80%E6%9C%89%E9%A2%98%E7%9B%AE%E5%85%A8%E8%A6%86%E7%9B%96.user.js",
+  "code_size": 230196,
+  "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+  "version": "1.8.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

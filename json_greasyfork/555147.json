@@ -1,0 +1,59 @@
+{
+  "id": 555147,
+  "daily_installs": 1,
+  "total_installs": 237,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T23:42:51.000Z",
+  "code_updated_at": "2025-11-07T23:59:23.000Z",
+  "namespace": "https://github.com/Warrior-dev0",
+  "support_url": "https://t.me/Xiaomi_EU_Ports",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535414,
+      "name": "WarriOr-dev0",
+      "created_at": "2025-11-07T23:36:46.000Z",
+      "url": "https://greasyfork.org/users/1535414-warrior-dev0",
+      "scripts": [
+        {
+          "id": 555147,
+          "daily_installs": 1,
+          "total_installs": 237,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-07T23:42:51.000Z",
+          "code_updated_at": "2025-11-07T23:59:23.000Z",
+          "namespace": "https://github.com/Warrior-dev0",
+          "support_url": "https://t.me/Xiaomi_EU_Ports",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FileCR Premium",
+          "description": "Unlocks FileCR Premium",
+          "url": "https://greasyfork.org/scripts/555147-filecr-premium",
+          "code_url": "https://update.greasyfork.org/scripts/555147/FileCR%20Premium.user.js",
+          "code_size": 4321,
+          "license": "The Unlicense",
+          "version": "0.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FileCR Premium",
+  "description": "Unlocks FileCR Premium",
+  "url": "https://greasyfork.org/scripts/555147-filecr-premium",
+  "code_url": "https://update.greasyfork.org/scripts/555147/FileCR%20Premium.user.js",
+  "code_size": 4321,
+  "license": "The Unlicense",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

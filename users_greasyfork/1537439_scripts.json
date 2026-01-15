@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555721,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T14:19:16.000Z",
+    "code_updated_at": "2025-11-13T14:19:16.000Z",
+    "namespace": "https://monlycee.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537439,
+        "name": "Jules Legros",
+        "created_at": "2025-11-13T14:14:22.000Z",
+        "url": "https://greasyfork.org/users/1537439-jules-legros"
+      }
+    ],
+    "name": "Monlycee SPA Patch",
+    "description": "Patch ENT",
+    "url": "https://greasyfork.org/scripts/555721-monlycee-spa-patch",
+    "code_url": "https://update.greasyfork.org/scripts/555721/Monlycee%20SPA%20Patch.user.js",
+    "code_size": 4405,
+    "license": null,
+    "version": "1.6",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

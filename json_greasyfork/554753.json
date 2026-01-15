@@ -1,0 +1,33 @@
+{
+  "id": 554753,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-04T14:47:33.000Z",
+  "code_updated_at": "2025-11-04T14:47:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088100,
+      "name": "YouTubeDrawaria",
+      "created_at": "2023-05-31T23:20:20.000Z",
+      "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+    }
+  ],
+  "name": "🎄 Drawaria.online Christmas Effects Mod Menu 🎅",
+  "description": "Añade efectos de nieve, música y decoraciones navideñas a Drawaria.online con un menú de mod.",
+  "url": "https://greasyfork.org/scripts/554753-drawaria-online-christmas-effects-mod-menu",
+  "code_url": "https://update.greasyfork.org/scripts/554753/%F0%9F%8E%84%20Drawariaonline%20Christmas%20Effects%20Mod%20Menu%20%F0%9F%8E%85.user.js",
+  "code_size": 17922,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

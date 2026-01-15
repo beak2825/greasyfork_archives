@@ -1,0 +1,59 @@
+{
+  "id": 552098,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-10T01:48:14.000Z",
+  "code_updated_at": "2025-10-10T01:48:13.000Z",
+  "namespace": "https://google.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286345,
+      "name": "ssen L",
+      "created_at": "2024-04-10T08:29:05.000Z",
+      "url": "https://greasyfork.org/users/1286345-ssen-l",
+      "scripts": [
+        {
+          "id": 552098,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-10T01:48:14.000Z",
+          "code_updated_at": "2025-10-10T01:48:13.000Z",
+          "namespace": "https://google.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🚀网盘分享与搜索神器——资源分享者必备的工具箱！",
+          "description": "支持一键去除阿里云盘、夸克网盘以及百度网盘的引流广告文字，支持自定义要去除的文本（字符），支持一键搜索你想要找的资源，支持复制和清空，支持拖拽移动位置，支持边缘自动隐藏",
+          "url": "https://greasyfork.org/scripts/552098-%E7%BD%91%E7%9B%98%E5%88%86%E4%BA%AB%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8-%E8%B5%84%E6%BA%90%E5%88%86%E4%BA%AB%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84%E5%B7%A5%E5%85%B7%E7%AE%B1",
+          "code_url": "https://update.greasyfork.org/scripts/552098/%F0%9F%9A%80%E7%BD%91%E7%9B%98%E5%88%86%E4%BA%AB%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8%E2%80%94%E2%80%94%E8%B5%84%E6%BA%90%E5%88%86%E4%BA%AB%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84%E5%B7%A5%E5%85%B7%E7%AE%B1%EF%BC%81.user.js",
+          "code_size": 11743,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🚀网盘分享与搜索神器——资源分享者必备的工具箱！",
+  "description": "支持一键去除阿里云盘、夸克网盘以及百度网盘的引流广告文字，支持自定义要去除的文本（字符），支持一键搜索你想要找的资源，支持复制和清空，支持拖拽移动位置，支持边缘自动隐藏",
+  "url": "https://greasyfork.org/scripts/552098-%E7%BD%91%E7%9B%98%E5%88%86%E4%BA%AB%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8-%E8%B5%84%E6%BA%90%E5%88%86%E4%BA%AB%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84%E5%B7%A5%E5%85%B7%E7%AE%B1",
+  "code_url": "https://update.greasyfork.org/scripts/552098/%F0%9F%9A%80%E7%BD%91%E7%9B%98%E5%88%86%E4%BA%AB%E4%B8%8E%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8%E2%80%94%E2%80%94%E8%B5%84%E6%BA%90%E5%88%86%E4%BA%AB%E8%80%85%E5%BF%85%E5%A4%87%E7%9A%84%E5%B7%A5%E5%85%B7%E7%AE%B1%EF%BC%81.user.js",
+  "code_size": 11743,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

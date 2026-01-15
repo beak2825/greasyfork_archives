@@ -1,0 +1,33 @@
+{
+  "id": 556074,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-17T09:22:18.000Z",
+  "code_updated_at": "2025-11-18T07:13:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1412379,
+      "name": "Vesper | ShinyDeagle",
+      "created_at": "2024-12-18T05:23:12.000Z",
+      "url": "https://greasyfork.org/users/1412379-vesper-shinydeagle"
+    }
+  ],
+  "name": "AWBW Essentials - Beta 0.1.3",
+  "description": "[Client Side] Adds some general Essentials in the game.",
+  "url": "https://greasyfork.org/scripts/556074-awbw-essentials-beta-0-1-3",
+  "code_url": "https://update.greasyfork.org/scripts/556074/AWBW%20Essentials%20-%20Beta%20013.user.js",
+  "code_size": 211179,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

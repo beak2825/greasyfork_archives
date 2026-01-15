@@ -1,0 +1,59 @@
+{
+  "id": 552904,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-17T13:00:45.000Z",
+  "code_updated_at": "2025-10-17T13:11:36.000Z",
+  "namespace": "sap-auto-agree",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527824,
+      "name": "Mostafa Naghizadeh",
+      "created_at": "2025-10-17T12:58:46.000Z",
+      "url": "https://greasyfork.org/users/1527824-mostafa-naghizadeh",
+      "scripts": [
+        {
+          "id": 552904,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-17T13:00:45.000Z",
+          "code_updated_at": "2025-10-17T13:11:36.000Z",
+          "namespace": "sap-auto-agree",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SAP Help Disclaimer Auto-Agree - No Blank Tab",
+          "description": "Auto-accepts SAP Help disclaimer, double-decodes link, prevents about:blank tab",
+          "url": "https://greasyfork.org/scripts/552904-sap-help-disclaimer-auto-agree-no-blank-tab",
+          "code_url": "https://update.greasyfork.org/scripts/552904/SAP%20Help%20Disclaimer%20Auto-Agree%20-%20No%20Blank%20Tab.user.js",
+          "code_size": 1831,
+          "license": null,
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SAP Help Disclaimer Auto-Agree - No Blank Tab",
+  "description": "Auto-accepts SAP Help disclaimer, double-decodes link, prevents about:blank tab",
+  "url": "https://greasyfork.org/scripts/552904-sap-help-disclaimer-auto-agree-no-blank-tab",
+  "code_url": "https://update.greasyfork.org/scripts/552904/SAP%20Help%20Disclaimer%20Auto-Agree%20-%20No%20Blank%20Tab.user.js",
+  "code_size": 1831,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 552003,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-09T03:19:01.000Z",
+  "code_updated_at": "2025-10-10T15:08:52.000Z",
+  "namespace": "Tampermonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514704,
+      "name": "Fel",
+      "created_at": "2025-09-13T21:11:18.000Z",
+      "url": "https://greasyfork.org/users/1514704-fel",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Chat Timezones - Test Branch",
+  "description": "Show timezone next to names - With validation feedback & help modal",
+  "url": "https://greasyfork.org/scripts/552003-torn-chat-timezones-test-branch",
+  "code_url": "https://update.greasyfork.org/scripts/552003/Torn%20Chat%20Timezones%20-%20Test%20Branch.user.js",
+  "code_size": 88045,
+  "license": null,
+  "version": "3.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

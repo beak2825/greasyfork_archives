@@ -1,0 +1,33 @@
+{
+  "id": 551987,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-08T23:37:45.000Z",
+  "code_updated_at": "2025-10-08T23:37:45.000Z",
+  "namespace": "vanilla-js-enhanced-fixed",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 720378,
+      "name": "Qunbo Zhou",
+      "created_at": "2020-12-24T05:01:59.000Z",
+      "url": "https://greasyfork.org/users/720378-qunbo-zhou"
+    }
+  ],
+  "name": "ChatGPT Question Sidebar Navigation",
+  "description": "A lightweight, feature-rich question sidebar for ChatGPT with resizing, dark mode, hover-previews, pinning, and state persistence.",
+  "url": "https://greasyfork.org/scripts/551987-chatgpt-question-sidebar-navigation",
+  "code_url": "https://update.greasyfork.org/scripts/551987/ChatGPT%20Question%20Sidebar%20Navigation.user.js",
+  "code_size": 19863,
+  "license": "MIT License",
+  "version": "2.3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

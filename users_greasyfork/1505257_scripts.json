@@ -33,6 +33,39 @@
     "visibility": "unknown"
   },
   {
+    "id": 558571,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-11T02:28:08.000Z",
+    "code_updated_at": "2025-12-14T17:47:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505257,
+        "name": "wujinjun",
+        "created_at": "2025-08-15T10:12:09.000Z",
+        "url": "https://greasyfork.org/users/1505257-wujinjun"
+      }
+    ],
+    "name": "XJTLU utalk 不要欢迎视频",
+    "description": "如果你被首页的动图/视频吓到了，或者它们占用大量CPU/GPU，欢迎你来到这里 (支持直接跳转个人中心/最后正常链接，或替换为低资源的 favicon 占位图)",
+    "url": "https://greasyfork.org/scripts/558571-xjtlu-utalk-%E4%B8%8D%E8%A6%81%E6%AC%A2%E8%BF%8E%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/558571/XJTLU%20utalk%20%E4%B8%8D%E8%A6%81%E6%AC%A2%E8%BF%8E%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 8152,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 556294,
     "daily_installs": 0,
     "total_installs": 1,
@@ -62,6 +95,39 @@
     "license": "MIT License",
     "version": "1.0",
     "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554689,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-04T02:30:24.000Z",
+    "code_updated_at": "2025-11-20T06:13:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505257,
+        "name": "wujinjun",
+        "created_at": "2025-08-15T10:12:09.000Z",
+        "url": "https://greasyfork.org/users/1505257-wujinjun"
+      }
+    ],
+    "name": "XJTLU AMS Sign-in Code 优化",
+    "description": "出现 \"Sign-in Code\" 输入框时，自动聚焦到输入框，输入小写字母自动转为大写，按Enter提交",
+    "url": "https://greasyfork.org/scripts/554689-xjtlu-ams-sign-in-code-%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/554689/XJTLU%20AMS%20Sign-in%20Code%20%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 5523,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
   }

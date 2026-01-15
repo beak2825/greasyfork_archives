@@ -1,5 +1,38 @@
 [
   {
+    "id": 562376,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T10:15:00.000Z",
+    "code_updated_at": "2026-01-12T10:15:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 198060,
+        "name": "Zhanhui Zhang",
+        "created_at": "2018-07-24T05:10:26.000Z",
+        "url": "https://greasyfork.org/users/198060-zhanhui-zhang"
+      }
+    ],
+    "name": "FDA PDF Downloader",
+    "description": "一键下载FDA药物审评报告中的所有PDF文件",
+    "url": "https://greasyfork.org/scripts/562376-fda-pdf-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/562376/FDA%20PDF%20Downloader.user.js",
+    "code_size": 10352,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 560920,
     "daily_installs": 0,
     "total_installs": 1,
@@ -30,6 +63,6 @@
     "version": "1.0",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

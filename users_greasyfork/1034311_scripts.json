@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 553679,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T17:21:21.000Z",
+    "code_updated_at": "2025-10-25T17:21:21.000Z",
+    "namespace": "https://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034311,
+        "name": "Streampunk",
+        "created_at": "2023-02-28T13:15:09.000Z",
+        "url": "https://greasyfork.org/users/1034311-streampunk"
+      }
+    ],
+    "name": "Telegram Web K(A) Post Enlarger",
+    "description": "Increases minimum width of messages/posts in Telegram Web K and Telegram Web A",
+    "url": "https://greasyfork.org/scripts/553679-telegram-web-k-a-post-enlarger",
+    "code_url": "https://update.greasyfork.org/scripts/553679/Telegram%20Web%20K%28A%29%20Post%20Enlarger.user.js",
+    "code_size": 5287,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553668,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T14:30:27.000Z",
+    "code_updated_at": "2025-10-25T14:30:27.000Z",
+    "namespace": "https://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034311,
+        "name": "Streampunk",
+        "created_at": "2023-02-28T13:15:09.000Z",
+        "url": "https://greasyfork.org/users/1034311-streampunk"
+      }
+    ],
+    "name": "Telegram t.me → t.me/s/ Redirector",
+    "description": "Automatically and Safely redirects from t.me/* to t.me/s/*, prevents infinite reloads",
+    "url": "https://greasyfork.org/scripts/553668-telegram-t-me-t-me-s-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/553668/Telegram%20tme%20%E2%86%92%20tmes%20Redirector.user.js",
+    "code_size": 3353,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553661,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T13:41:15.000Z",
+    "code_updated_at": "2025-10-25T13:41:14.000Z",
+    "namespace": "https://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034311,
+        "name": "Streampunk",
+        "created_at": "2023-02-28T13:15:09.000Z",
+        "url": "https://greasyfork.org/users/1034311-streampunk"
+      }
+    ],
+    "name": "ALTCHA Captcha Autoclick",
+    "description": "Automatically clicks the ALTCHA checkbox when detected it on any page",
+    "url": "https://greasyfork.org/scripts/553661-altcha-captcha-autoclick",
+    "code_url": "https://update.greasyfork.org/scripts/553661/ALTCHA%20Captcha%20Autoclick.user.js",
+    "code_size": 2676,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552310,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T21:12:20.000Z",
+    "code_updated_at": "2025-10-11T21:12:20.000Z",
+    "namespace": "https://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034311,
+        "name": "Streampunk",
+        "created_at": "2023-02-28T13:15:09.000Z",
+        "url": "https://greasyfork.org/users/1034311-streampunk"
+      }
+    ],
+    "name": "Telegram Background Changer",
+    "description": "Replaces the default Telegram background with a custom solid color or wallpaper when not logged in",
+    "url": "https://greasyfork.org/scripts/552310-telegram-background-changer",
+    "code_url": "https://update.greasyfork.org/scripts/552310/Telegram%20Background%20Changer.user.js",
+    "code_size": 7646,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

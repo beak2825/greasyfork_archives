@@ -1,0 +1,34 @@
+{
+  "id": 552723,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-15T22:09:49.000Z",
+  "code_updated_at": "2025-10-16T03:58:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1526756,
+      "name": "the17thcolossus",
+      "created_at": "2025-10-15T00:19:36.000Z",
+      "url": "https://greasyfork.org/users/1526756-the17thcolossus",
+      "scripts": []
+    }
+  ],
+  "name": "Button to assist bookmarking FF.net works on AO3",
+  "description": "Adds a button to submit FanFiction.net works to AO3 external works page",
+  "url": "https://greasyfork.org/scripts/552723-button-to-assist-bookmarking-ff-net-works-on-ao3",
+  "code_url": "https://update.greasyfork.org/scripts/552723/Button%20to%20assist%20bookmarking%20FFnet%20works%20on%20AO3.user.js",
+  "code_size": 3494,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

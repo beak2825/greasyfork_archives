@@ -1,5 +1,104 @@
 [
   {
+    "id": 562589,
+    "daily_installs": 2,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T01:16:27.000Z",
+    "code_updated_at": "2026-01-14T01:16:27.000Z",
+    "namespace": "ig-clean",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 938630,
+        "name": "petabyte",
+        "created_at": "2022-07-23T12:50:30.000Z",
+        "url": "https://greasyfork.org/users/938630-petabyte"
+      }
+    ],
+    "name": "instagram.com - Decluttering Instagram",
+    "description": "Strips back web functionality of Instagram by removing stories/posts from home, removes Explore/Reels from sidebar and redirects all reels links to post links.",
+    "url": "https://greasyfork.org/scripts/562589-instagram-com-decluttering-instagram",
+    "code_url": "https://update.greasyfork.org/scripts/562589/instagramcom%20-%20Decluttering%20Instagram.user.js",
+    "code_size": 7766,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 562455,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T21:48:30.000Z",
+    "code_updated_at": "2026-01-14T01:14:32.000Z",
+    "namespace": "https://transittracker.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 938630,
+        "name": "petabyte",
+        "created_at": "2022-07-23T12:50:30.000Z",
+        "url": "https://greasyfork.org/users/938630-petabyte"
+      }
+    ],
+    "name": "transittracker.net - Show trip number in mosaic tiles on daily stats",
+    "description": "Inserts each cell's data-count inside the mosaic boxes on daily-stats.",
+    "url": "https://greasyfork.org/scripts/562455-transittracker-net-show-trip-number-in-mosaic-tiles-on-daily-stats",
+    "code_url": "https://update.greasyfork.org/scripts/562455/transittrackernet%20-%20Show%20trip%20number%20in%20mosaic%20tiles%20on%20daily%20stats.user.js",
+    "code_size": 3749,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 562307,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T00:13:04.000Z",
+    "code_updated_at": "2026-01-14T01:14:07.000Z",
+    "namespace": "https://example.com/bustimes-remove-calendar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 938630,
+        "name": "petabyte",
+        "created_at": "2022-07-23T12:50:30.000Z",
+        "url": "https://greasyfork.org/users/938630-petabyte"
+      }
+    ],
+    "name": "bustimes.org - Remove Calendar Row from timetables",
+    "description": "Permanently removes the \"Calendar\" row from timetables on bustimes.org",
+    "url": "https://greasyfork.org/scripts/562307-bustimes-org-remove-calendar-row-from-timetables",
+    "code_url": "https://update.greasyfork.org/scripts/562307/bustimesorg%20-%20Remove%20Calendar%20Row%20from%20timetables.user.js",
+    "code_size": 1012,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 558839,
     "daily_installs": 0,
     "total_installs": 1,
@@ -30,6 +129,6 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

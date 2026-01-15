@@ -1,0 +1,34 @@
+{
+  "id": 553860,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-27T13:17:22.000Z",
+  "code_updated_at": "2025-10-27T13:17:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510796,
+      "name": "자막",
+      "created_at": "2025-09-01T09:55:39.000Z",
+      "url": "https://greasyfork.org/users/1510796-%EC%9E%90%EB%A7%89",
+      "scripts": []
+    }
+  ],
+  "name": "Weflab 후원 내역 Google Sheets 연동",
+  "description": "Tampermonkey 메뉴를 통해 URL을 설정하고, weflab 페이지의 룰렛 내역을 Google Sheets에 실시간으로 업데이트합니다.",
+  "url": "https://greasyfork.org/scripts/553860-weflab-%ED%9B%84%EC%9B%90-%EB%82%B4%EC%97%AD-google-sheets-%EC%97%B0%EB%8F%99",
+  "code_url": "https://update.greasyfork.org/scripts/553860/Weflab%20%ED%9B%84%EC%9B%90%20%EB%82%B4%EC%97%AD%20Google%20Sheets%20%EC%97%B0%EB%8F%99.user.js",
+  "code_size": 7088,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

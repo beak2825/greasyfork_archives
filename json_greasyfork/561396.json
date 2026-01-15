@@ -1,0 +1,59 @@
+{
+  "id": 561396,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T14:50:28.000Z",
+  "code_updated_at": "2026-01-04T15:00:00.000Z",
+  "namespace": "https://onlinesequencer.net/members/70888",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556034,
+      "name": "ewrruewc",
+      "created_at": "2026-01-04T14:22:38.000Z",
+      "url": "https://greasyfork.org/users/1556034-ewrruewc",
+      "scripts": [
+        {
+          "id": 561396,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-04T14:50:28.000Z",
+          "code_updated_at": "2026-01-04T15:00:00.000Z",
+          "namespace": "https://onlinesequencer.net/members/70888",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OnlineSequencer Buttons",
+          "description": "Adds more buttons to the dropdown",
+          "url": "https://greasyfork.org/scripts/561396-onlinesequencer-buttons",
+          "code_url": "https://update.greasyfork.org/scripts/561396/OnlineSequencer%20Buttons.user.js",
+          "code_size": 2544,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OnlineSequencer Buttons",
+  "description": "Adds more buttons to the dropdown",
+  "url": "https://greasyfork.org/scripts/561396-onlinesequencer-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/561396/OnlineSequencer%20Buttons.user.js",
+  "code_size": 2544,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561182,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T22:35:51.000Z",
+    "code_updated_at": "2026-01-05T03:25:31.000Z",
+    "namespace": "https://github.com/Jarvie8176/misskey-instance-filter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 857763,
+        "name": "J.K.",
+        "created_at": "2021-12-26T07:01:58.000Z",
+        "url": "https://greasyfork.org/users/857763-j-k"
+      }
+    ],
+    "name": "Misskey Timeline Instance Filter",
+    "description": "Filter Misskey global timeline by instances",
+    "url": "https://greasyfork.org/scripts/561182-misskey-timeline-instance-filter",
+    "code_url": "https://update.greasyfork.org/scripts/561182/Misskey%20Timeline%20Instance%20Filter.user.js",
+    "code_size": 23845,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

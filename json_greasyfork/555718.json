@@ -1,0 +1,34 @@
+{
+  "id": 555718,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-13T13:24:51.000Z",
+  "code_updated_at": "2025-12-03T02:44:13.000Z",
+  "namespace": "https://www.sooplive.co.kr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537422,
+      "name": "Pale Ale",
+      "created_at": "2025-11-13T13:16:26.000Z",
+      "url": "https://greasyfork.org/users/1537422-pale-ale",
+      "scripts": []
+    }
+  ],
+  "name": "Soop Recap 대시보드",
+  "description": "Soop  통계 페이지의 대시보드 UI를 개선하고 차트 시각화를 향상시킵니다",
+  "url": "https://greasyfork.org/scripts/555718-soop-recap-%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C",
+  "code_url": "https://update.greasyfork.org/scripts/555718/Soop%20Recap%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C.user.js",
+  "code_size": 121289,
+  "license": "MIT License",
+  "version": "0.1.4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

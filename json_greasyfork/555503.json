@@ -1,0 +1,59 @@
+{
+  "id": 555503,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-11T09:34:42.000Z",
+  "code_updated_at": "2025-12-21T15:05:45.000Z",
+  "namespace": "https://github.com/firesahc/deepseek-question-list",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1413620,
+      "name": "firesahc",
+      "created_at": "2024-12-21T05:11:51.000Z",
+      "url": "https://greasyfork.org/users/1413620-firesahc",
+      "scripts": [
+        {
+          "id": 555503,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-11T09:34:42.000Z",
+          "code_updated_at": "2025-12-21T15:05:45.000Z",
+          "namespace": "https://github.com/firesahc/deepseek-question-list",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "deepseek-question-list",
+          "description": "展示网页版deepseek当前对话的所有提问",
+          "url": "https://greasyfork.org/scripts/555503-deepseek-question-list",
+          "code_url": "https://update.greasyfork.org/scripts/555503/deepseek-question-list.user.js",
+          "code_size": 16606,
+          "license": "MIT License",
+          "version": "1.7.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "deepseek-question-list",
+  "description": "展示网页版deepseek当前对话的所有提问",
+  "url": "https://greasyfork.org/scripts/555503-deepseek-question-list",
+  "code_url": "https://update.greasyfork.org/scripts/555503/deepseek-question-list.user.js",
+  "code_size": 16606,
+  "license": "MIT License",
+  "version": "1.7.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

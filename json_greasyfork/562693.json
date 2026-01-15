@@ -1,0 +1,59 @@
+{
+  "id": 562693,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-15T00:37:21.000Z",
+  "code_updated_at": "2026-01-15T01:09:13.000Z",
+  "namespace": "CVC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1560441,
+      "name": "Soulfate24",
+      "created_at": "2026-01-15T00:29:59.000Z",
+      "url": "https://greasyfork.org/users/1560441-soulfate24",
+      "scripts": [
+        {
+          "id": 562693,
+          "daily_installs": 1,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-15T00:37:21.000Z",
+          "code_updated_at": "2026-01-15T01:09:13.000Z",
+          "namespace": "CVC",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🔊 Cristal Volume Control",
+          "description": "Take full control of volume. Boost up to 200%, sync across tabs, and never lose your settings.",
+          "url": "https://greasyfork.org/scripts/562693-cristal-volume-control",
+          "code_url": "https://update.greasyfork.org/scripts/562693/%F0%9F%94%8A%20Cristal%20Volume%20Control.user.js",
+          "code_size": 8884,
+          "license": "MIT License",
+          "version": "3.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🔊 Cristal Volume Control",
+  "description": "Take full control of volume. Boost up to 200%, sync across tabs, and never lose your settings.",
+  "url": "https://greasyfork.org/scripts/562693-cristal-volume-control",
+  "code_url": "https://update.greasyfork.org/scripts/562693/%F0%9F%94%8A%20Cristal%20Volume%20Control.user.js",
+  "code_size": 8884,
+  "license": "MIT License",
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -7,7 +7,7 @@
   "ok_ratings": 0,
   "bad_ratings": 0,
   "created_at": "2026-01-10T05:06:21.000Z",
-  "code_updated_at": "2026-01-11T03:44:30.000Z",
+  "code_updated_at": "2026-01-12T06:48:46.000Z",
   "namespace": "srsbsns",
   "support_url": null,
   "contribution_url": null,
@@ -21,13 +21,13 @@
       "scripts": []
     }
   ],
-  "name": "Item Market Best Price Helper",
-  "description": "Auto-fill prices $1 below market lowest on Item Market",
-  "url": "https://greasyfork.org/scripts/562062-item-market-best-price-helper",
-  "code_url": "https://update.greasyfork.org/scripts/562062/Item%20Market%20Best%20Price%20Helper.user.js",
-  "code_size": 12322,
+  "name": "Item Market Selling Helper",
+  "description": "Auto-fill prices $1 below market lowest on Item Market with MV% indicator",
+  "url": "https://greasyfork.org/scripts/562062-item-market-selling-helper",
+  "code_url": "https://update.greasyfork.org/scripts/562062/Item%20Market%20Selling%20Helper.user.js",
+  "code_size": 15910,
   "license": "MIT License",
-  "version": "1.1",
+  "version": "1.9",
   "locale": "en",
   "deleted": false,
   "visibility": "public"

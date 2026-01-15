@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554350,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T21:19:30.000Z",
+    "code_updated_at": "2025-10-31T21:19:30.000Z",
+    "namespace": "Bad MDFK",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1532741,
+        "name": "McAbadBoy",
+        "created_at": "2025-10-31T21:15:53.000Z",
+        "url": "https://greasyfork.org/users/1532741-mcabadboy"
+      }
+    ],
+    "name": "SpeedApp Chat Auto-Reload",
+    "description": "Auto reincarcare pagina si monitorizare scriere",
+    "url": "https://greasyfork.org/scripts/554350-speedapp-chat-auto-reload",
+    "code_url": "https://update.greasyfork.org/scripts/554350/SpeedApp%20Chat%20Auto-Reload.user.js",
+    "code_size": 6701,
+    "license": null,
+    "version": "1.0",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

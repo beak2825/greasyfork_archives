@@ -1,14 +1,47 @@
 [
   {
-    "id": 558078,
+    "id": 558806,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-13T09:28:21.000Z",
+    "code_updated_at": "2025-12-13T09:28:21.000Z",
+    "namespace": "https://moyu-idle.com/notepad",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173945,
+        "name": "yika kia",
+        "created_at": "2018-03-08T14:09:07.000Z",
+        "url": "https://greasyfork.org/users/173945-yika-kia"
+      }
+    ],
+    "name": "猫猫放置-备忘录",
+    "description": "好记性不如烂笔头，记一下发展目标和TODO",
+    "url": "https://greasyfork.org/scripts/558806-%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE-%E5%A4%87%E5%BF%98%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/558806/%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE-%E5%A4%87%E5%BF%98%E5%BD%95.user.js",
+    "code_size": 7221,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558408,
     "daily_installs": 0,
     "total_installs": 0,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
     "bad_ratings": 0,
-    "created_at": "2025-12-06T06:14:09.000Z",
-    "code_updated_at": "2025-12-08T11:08:32.000Z",
+    "created_at": "2025-12-09T11:36:32.000Z",
+    "code_updated_at": "2026-01-14T07:28:09.000Z",
     "namespace": "http://tampermonkey.net/",
     "support_url": null,
     "contribution_url": null,
@@ -21,13 +54,79 @@
         "url": "https://greasyfork.org/users/173945-yika-kia"
       }
     ],
-    "name": "摸鱼放置妙妙小工具_v0.39",
-    "description": "火龙果妙妙小工具,日利计算，每日利润计算，仓库价格统计，菜单栏技能信息",
-    "url": "https://greasyfork.org/scripts/558078-%E6%91%B8%E9%B1%BC%E6%94%BE%E7%BD%AE%E5%A6%99%E5%A6%99%E5%B0%8F%E5%B7%A5%E5%85%B7-v0-39",
-    "code_url": "https://update.greasyfork.org/scripts/558078/%E6%91%B8%E9%B1%BC%E6%94%BE%E7%BD%AE%E5%A6%99%E5%A6%99%E5%B0%8F%E5%B7%A5%E5%85%B7_v039.user.js",
-    "code_size": 233240,
+    "name": "摸鱼放置强化模拟器_1.63",
+    "description": "支持搜索选择物品的强化模拟器",
+    "url": "https://greasyfork.org/scripts/558408-%E6%91%B8%E9%B1%BC%E6%94%BE%E7%BD%AE%E5%BC%BA%E5%8C%96%E6%A8%A1%E6%8B%9F%E5%99%A8-1-63",
+    "code_url": "https://update.greasyfork.org/scripts/558408/%E6%91%B8%E9%B1%BC%E6%94%BE%E7%BD%AE%E5%BC%BA%E5%8C%96%E6%A8%A1%E6%8B%9F%E5%99%A8_163.user.js",
+    "code_size": 65248,
     "license": "MIT License",
-    "version": "0.39",
+    "version": "1.63",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558308,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T10:56:43.000Z",
+    "code_updated_at": "2026-01-14T07:35:27.000Z",
+    "namespace": "https://greasyfork.org/users/397156",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173945,
+        "name": "yika kia",
+        "created_at": "2018-03-08T14:09:07.000Z",
+        "url": "https://greasyfork.org/users/173945-yika-kia"
+      }
+    ],
+    "name": "猫猫放置强化助手",
+    "description": "通过原型链拦截实现功能的强化自动化工具。",
+    "url": "https://greasyfork.org/scripts/558308-%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE%E5%BC%BA%E5%8C%96%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/558308/%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE%E5%BC%BA%E5%8C%96%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 45804,
+    "license": "MIT License",
+    "version": "v5.2.5.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558078,
+    "daily_installs": 1,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-06T06:14:09.000Z",
+    "code_updated_at": "2026-01-14T08:03:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173945,
+        "name": "yika kia",
+        "created_at": "2018-03-08T14:09:07.000Z",
+        "url": "https://greasyfork.org/users/173945-yika-kia"
+      }
+    ],
+    "name": "摸鱼放置妙妙小工具_v0.42.3",
+    "description": "火龙果妙妙小工具,日利计算，每日利润计算，仓库价格统计，菜单栏技能信息",
+    "url": "https://greasyfork.org/scripts/558078-%E6%91%B8%E9%B1%BC%E6%94%BE%E7%BD%AE%E5%A6%99%E5%A6%99%E5%B0%8F%E5%B7%A5%E5%85%B7-v0-42-3",
+    "code_url": "https://update.greasyfork.org/scripts/558078/%E6%91%B8%E9%B1%BC%E6%94%BE%E7%BD%AE%E5%A6%99%E5%A6%99%E5%B0%8F%E5%B7%A5%E5%85%B7_v0423.user.js",
+    "code_size": 155523,
+    "license": "MIT License",
+    "version": "0.42.3",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
@@ -63,6 +162,6 @@
     "version": "0.2.12",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

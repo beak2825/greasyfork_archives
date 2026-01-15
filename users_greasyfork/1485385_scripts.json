@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558942,
+    "daily_installs": 6,
+    "total_installs": 93,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T20:52:30.000Z",
+    "code_updated_at": "2025-12-14T20:52:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485385,
+        "name": "Youkies",
+        "created_at": "2025-06-18T15:09:55.000Z",
+        "url": "https://greasyfork.org/users/1485385-youkies"
+      }
+    ],
+    "name": "Gemini 效率增强助手",
+    "description": "Gemini 网页版增强工具：支持 Markdown 批量导出/复制、对话收藏功能、代码块高亮优化、列表序号修复及沉浸式 Canvas 模式支持。集成对话侧边栏目录与元素审查工具。",
+    "url": "https://greasyfork.org/scripts/558942-gemini-%E6%95%88%E7%8E%87%E5%A2%9E%E5%BC%BA%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/558942/Gemini%20%E6%95%88%E7%8E%87%E5%A2%9E%E5%BC%BA%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 47261,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

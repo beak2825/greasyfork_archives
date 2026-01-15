@@ -1,0 +1,59 @@
+{
+  "id": 554088,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-29T11:42:32.000Z",
+  "code_updated_at": "2025-10-29T11:43:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434356,
+      "name": "suppper",
+      "created_at": "2025-02-12T14:59:39.000Z",
+      "url": "https://greasyfork.org/users/1434356-suppper",
+      "scripts": [
+        {
+          "id": 554088,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-29T11:42:32.000Z",
+          "code_updated_at": "2025-10-29T11:43:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wheelsage Dark Mode 深色模式 (Uniform Background)",
+          "description": "Enable dark mode for Wheelsage, uniform background color and protect images & navigation bar",
+          "url": "https://greasyfork.org/scripts/554088-wheelsage-dark-mode-%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F-uniform-background",
+          "code_url": "https://update.greasyfork.org/scripts/554088/Wheelsage%20Dark%20Mode%20%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%20%28Uniform%20Background%29.user.js",
+          "code_size": 6565,
+          "license": "MIT License",
+          "version": "1.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wheelsage Dark Mode 深色模式 (Uniform Background)",
+  "description": "Enable dark mode for Wheelsage, uniform background color and protect images & navigation bar",
+  "url": "https://greasyfork.org/scripts/554088-wheelsage-dark-mode-%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F-uniform-background",
+  "code_url": "https://update.greasyfork.org/scripts/554088/Wheelsage%20Dark%20Mode%20%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%20%28Uniform%20Background%29.user.js",
+  "code_size": 6565,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

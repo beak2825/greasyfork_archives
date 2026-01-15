@@ -17,33 +17,7 @@
       "id": 1526333,
       "name": "lavonzux",
       "created_at": "2025-10-14T03:25:04.000Z",
-      "url": "https://greasyfork.org/users/1526333-lavonzux",
-      "scripts": [
-        {
-          "id": 558405,
-          "daily_installs": 0,
-          "total_installs": 0,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-09T09:38:56.000Z",
-          "code_updated_at": "2025-12-09T09:38:56.000Z",
-          "namespace": "https://github.com/lavonzux/BetterAzureDevOps",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "BetterAzureDevOps",
-          "description": "在Azure Dev Ops 工項頁面增加工具箱，改善頁面整體 UX。",
-          "url": "https://greasyfork.org/scripts/558405-betterazuredevops",
-          "code_url": "https://update.greasyfork.org/scripts/558405/BetterAzureDevOps.user.js",
-          "code_size": 35765,
-          "license": "Apache License 2.0",
-          "version": "1.0.0-beta",
-          "locale": "zh-CN",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1526333-lavonzux"
     }
   ],
   "name": "BetterAzureDevOps",

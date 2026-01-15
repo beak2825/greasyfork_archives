@@ -1,0 +1,59 @@
+{
+  "id": 553520,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-23T23:50:19.000Z",
+  "code_updated_at": "2025-10-26T16:28:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530021,
+      "name": "Abigael Tremblay",
+      "created_at": "2025-10-23T23:39:28.000Z",
+      "url": "https://greasyfork.org/users/1530021-abigael-tremblay",
+      "scripts": [
+        {
+          "id": 553520,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-23T23:50:19.000Z",
+          "code_updated_at": "2025-10-26T16:28:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Accessibility Blue Sky",
+          "description": "Makes Blue Sky's view significantly larger for ease of use, as well as larger icons while in threaded view.",
+          "url": "https://greasyfork.org/scripts/553520-accessibility-blue-sky",
+          "code_url": "https://update.greasyfork.org/scripts/553520/Accessibility%20Blue%20Sky.user.js",
+          "code_size": 9285,
+          "license": "MIT License",
+          "version": "2025-10-26.12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Accessibility Blue Sky",
+  "description": "Makes Blue Sky's view significantly larger for ease of use, as well as larger icons while in threaded view.",
+  "url": "https://greasyfork.org/scripts/553520-accessibility-blue-sky",
+  "code_url": "https://update.greasyfork.org/scripts/553520/Accessibility%20Blue%20Sky.user.js",
+  "code_size": 9285,
+  "license": "MIT License",
+  "version": "2025-10-26.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559256,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-17T17:32:29.000Z",
+    "code_updated_at": "2026-01-07T18:24:10.000Z",
+    "namespace": "https://greasyfork.org/users/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 700344,
+        "name": "blue-bird1",
+        "created_at": "2020-11-01T18:41:02.000Z",
+        "url": "https://greasyfork.org/users/700344-blue-bird1"
+      }
+    ],
+    "name": "KeyLol SteamPY 价格及总价显示",
+    "description": "在Keylol帖子显示Steam游戏的SteamPY CDKey价格，并计算每个引用块内的总价",
+    "url": "https://greasyfork.org/scripts/559256-keylol-steampy-%E4%BB%B7%E6%A0%BC%E5%8F%8A%E6%80%BB%E4%BB%B7%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/559256/KeyLol%20SteamPY%20%E4%BB%B7%E6%A0%BC%E5%8F%8A%E6%80%BB%E4%BB%B7%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 27493,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552069,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T16:31:34.000Z",
+    "code_updated_at": "2025-12-30T18:42:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 700344,
+        "name": "blue-bird1",
+        "created_at": "2020-11-01T18:41:02.000Z",
+        "url": "https://greasyfork.org/users/700344-blue-bird1"
+      }
+    ],
+    "name": "B站番剧显示BGM评分",
+    "description": "在B站番剧页面显示动漫和BGM评分,播放页面添加BGM评分",
+    "url": "https://greasyfork.org/scripts/552069-b%E7%AB%99%E7%95%AA%E5%89%A7%E6%98%BE%E7%A4%BAbgm%E8%AF%84%E5%88%86",
+    "code_url": "https://update.greasyfork.org/scripts/552069/B%E7%AB%99%E7%95%AA%E5%89%A7%E6%98%BE%E7%A4%BABGM%E8%AF%84%E5%88%86.user.js",
+    "code_size": 21036,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

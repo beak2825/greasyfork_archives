@@ -1,0 +1,101 @@
+[
+  {
+    "id": 556044,
+    "daily_installs": 1,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-17T00:25:25.000Z",
+    "code_updated_at": "2025-11-17T00:25:25.000Z",
+    "namespace": "http://instagram.com/WaterDustLab",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713682,
+        "name": "insta/@WaterDustLab",
+        "created_at": "2020-12-06T11:10:00.000Z",
+        "url": "https://greasyfork.org/users/713682-insta-waterdustlab"
+      }
+    ],
+    "name": "ChatGPT UI Hider + 100% Width (V9.4 - Dbl Click)",
+    "description": "Hides UI on Double Right-Click, 100% width, AND moves \"go to end\" button.",
+    "url": "https://greasyfork.org/scripts/556044-chatgpt-ui-hider-100-width-v9-4-dbl-click",
+    "code_url": "https://update.greasyfork.org/scripts/556044/ChatGPT%20UI%20Hider%20%2B%20100%25%20Width%20%28V94%20-%20Dbl%20Click%29.user.js",
+    "code_size": 3891,
+    "license": null,
+    "version": "9.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 556043,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-17T00:18:34.000Z",
+    "code_updated_at": "2025-11-17T00:18:34.000Z",
+    "namespace": "http://instagram.com/WaterDustLab",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713682,
+        "name": "insta/@WaterDustLab",
+        "created_at": "2020-12-06T11:10:00.000Z",
+        "url": "https://greasyfork.org/users/713682-insta-waterdustlab"
+      }
+    ],
+    "name": "Gemini UI Hider + 100% Width (V8.4 - Dbl Click)",
+    "description": "Hides UI on Double Right-Click, 100% width for ALL content, AND moves \"go to end\" button.",
+    "url": "https://greasyfork.org/scripts/556043-gemini-ui-hider-100-width-v8-4-dbl-click",
+    "code_url": "https://update.greasyfork.org/scripts/556043/Gemini%20UI%20Hider%20%2B%20100%25%20Width%20%28V84%20-%20Dbl%20Click%29.user.js",
+    "code_size": 3915,
+    "license": null,
+    "version": "8.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554681,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T22:36:37.000Z",
+    "code_updated_at": "2025-11-03T22:36:37.000Z",
+    "namespace": "http://instagram.com/waterdustlab",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713682,
+        "name": "insta/@WaterDustLab",
+        "created_at": "2020-12-06T11:10:00.000Z",
+        "url": "https://greasyfork.org/users/713682-insta-waterdustlab"
+      }
+    ],
+    "name": "FASTEST 2025 Google Translate",
+    "description": "Super-fast Google Translate with instant SPA/AJAX support, no hiding",
+    "url": "https://greasyfork.org/scripts/554681-fastest-2025-google-translate",
+    "code_url": "https://update.greasyfork.org/scripts/554681/FASTEST%202025%20Google%20Translate.user.js",
+    "code_size": 2938,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

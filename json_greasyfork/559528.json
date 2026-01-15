@@ -1,0 +1,59 @@
+{
+  "id": 559528,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-19T17:31:02.000Z",
+  "code_updated_at": "2025-12-19T17:31:02.000Z",
+  "namespace": "AutoBypass",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550053,
+      "name": "Waise V",
+      "created_at": "2025-12-19T17:29:18.000Z",
+      "url": "https://greasyfork.org/users/1550053-waise-v",
+      "scripts": [
+        {
+          "id": 559528,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-19T17:31:02.000Z",
+          "code_updated_at": "2025-12-19T17:31:02.000Z",
+          "namespace": "AutoBypass",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fast Xtglinks AutoClicker (Combined)",
+          "description": "Auto Redirect For Xtglinks (Combined Logic, No Backticks)",
+          "url": "https://greasyfork.org/scripts/559528-fast-xtglinks-autoclicker-combined",
+          "code_url": "https://update.greasyfork.org/scripts/559528/Fast%20Xtglinks%20AutoClicker%20%28Combined%29.user.js",
+          "code_size": 1235,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.4",
+          "locale": "de",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fast Xtglinks AutoClicker (Combined)",
+  "description": "Auto Redirect For Xtglinks (Combined Logic, No Backticks)",
+  "url": "https://greasyfork.org/scripts/559528-fast-xtglinks-autoclicker-combined",
+  "code_url": "https://update.greasyfork.org/scripts/559528/Fast%20Xtglinks%20AutoClicker%20%28Combined%29.user.js",
+  "code_size": 1235,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.4",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -2,7 +2,7 @@
   {
     "id": 561596,
     "daily_installs": 0,
-    "total_installs": 7,
+    "total_installs": 8,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -33,9 +33,42 @@
     "visibility": "public"
   },
   {
+    "id": 560047,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T06:15:37.000Z",
+    "code_updated_at": "2025-12-24T06:15:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549383,
+        "name": "Gmai Pang",
+        "created_at": "2025-12-17T23:48:57.000Z",
+        "url": "https://greasyfork.org/users/1549383-gmai-pang"
+      }
+    ],
+    "name": "Qwen 快捷发送（Ctrl+Enter）",
+    "description": "在 qianwen.com 按 Ctrl+Enter 或 Cmd+Enter 自动点击发送按钮",
+    "url": "https://greasyfork.org/scripts/560047-qwen-%E5%BF%AB%E6%8D%B7%E5%8F%91%E9%80%81-ctrl-enter",
+    "code_url": "https://update.greasyfork.org/scripts/560047/Qwen%20%E5%BF%AB%E6%8D%B7%E5%8F%91%E9%80%81%EF%BC%88Ctrl%2BEnter%EF%BC%89.user.js",
+    "code_size": 1583,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 560026,
     "daily_installs": 0,
-    "total_installs": 5,
+    "total_installs": 6,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

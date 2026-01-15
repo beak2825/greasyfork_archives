@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553789,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T19:56:06.000Z",
+    "code_updated_at": "2025-11-03T15:46:24.000Z",
+    "namespace": "https://greasyfork.org/users/1530986",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530986,
+        "name": "君羽尘尘",
+        "created_at": "2025-10-26T19:54:00.000Z",
+        "url": "https://greasyfork.org/users/1530986-%E5%90%9B%E7%BE%BD%E5%B0%98%E5%B0%98"
+      }
+    ],
+    "name": "解锁华医网视频拖动限制",
+    "description": "使用此脚本可以解除华医网不允许拖动视频播放进度条的限制，会弹窗显示视频观看时长不足，请重新观看是正常现象，第二天再考试即可。",
+    "url": "https://greasyfork.org/scripts/553789-%E8%A7%A3%E9%94%81%E5%8D%8E%E5%8C%BB%E7%BD%91%E8%A7%86%E9%A2%91%E6%8B%96%E5%8A%A8%E9%99%90%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/553789/%E8%A7%A3%E9%94%81%E5%8D%8E%E5%8C%BB%E7%BD%91%E8%A7%86%E9%A2%91%E6%8B%96%E5%8A%A8%E9%99%90%E5%88%B6.user.js",
+    "code_size": 3621,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

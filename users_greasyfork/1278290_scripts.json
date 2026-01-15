@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552658,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-15T09:17:51.000Z",
+    "code_updated_at": "2026-01-12T09:28:04.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/552658",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278290,
+        "name": "Corlius",
+        "created_at": "2024-03-23T08:13:47.000Z",
+        "url": "https://greasyfork.org/users/1278290-corlius"
+      }
+    ],
+    "name": "在 Zread 中打开",
+    "description": "在GitHub仓库页面添加按钮，快速跳转到Zread AI阅读器",
+    "url": "https://greasyfork.org/scripts/552658-%E5%9C%A8-zread-%E4%B8%AD%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/552658/%E5%9C%A8%20Zread%20%E4%B8%AD%E6%89%93%E5%BC%80.user.js",
+    "code_size": 4556,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

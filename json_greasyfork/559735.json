@@ -1,0 +1,59 @@
+{
+  "id": 559735,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-21T18:33:24.000Z",
+  "code_updated_at": "2025-12-21T19:29:39.000Z",
+  "namespace": "AutoBypass",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1550047,
+      "name": "lostworld991",
+      "created_at": "2025-12-19T17:19:48.000Z",
+      "url": "https://greasyfork.org/users/1550047-lostworld991",
+      "scripts": [
+        {
+          "id": 559735,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-21T18:33:24.000Z",
+          "code_updated_at": "2025-12-21T19:29:39.000Z",
+          "namespace": "AutoBypass",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "All Shorteners Instant Bypass",
+          "description": "Instantly bypass supported shorteners",
+          "url": "https://greasyfork.org/scripts/559735-all-shorteners-instant-bypass",
+          "code_url": "https://update.greasyfork.org/scripts/559735/All%20Shorteners%20Instant%20Bypass.user.js",
+          "code_size": 2316,
+          "license": "GNU General Public License v3.0 only",
+          "version": "3.0.71",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "All Shorteners Instant Bypass",
+  "description": "Instantly bypass supported shorteners",
+  "url": "https://greasyfork.org/scripts/559735-all-shorteners-instant-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/559735/All%20Shorteners%20Instant%20Bypass.user.js",
+  "code_size": 2316,
+  "license": "GNU General Public License v3.0 only",
+  "version": "3.0.71",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

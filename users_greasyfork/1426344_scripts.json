@@ -1,0 +1,68 @@
+[
+  {
+    "id": 552318,
+    "daily_installs": 2,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-12T00:07:28.000Z",
+    "code_updated_at": "2025-12-10T23:14:25.000Z",
+    "namespace": "https://github.com/tukarsdev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426344,
+        "name": "tukars",
+        "created_at": "2025-01-23T04:51:00.000Z",
+        "url": "https://greasyfork.org/users/1426344-tukars"
+      }
+    ],
+    "name": "YouTube \"Interruptions\" Popup Remover",
+    "description": "Automatically removes the \"Experiencing interruptions?\" popup on YouTube.",
+    "url": "https://greasyfork.org/scripts/552318-youtube-interruptions-popup-remover",
+    "code_url": "https://update.greasyfork.org/scripts/552318/YouTube%20%22Interruptions%22%20Popup%20Remover.user.js",
+    "code_size": 2587,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552301,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T20:04:38.000Z",
+    "code_updated_at": "2025-10-13T00:36:44.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426344,
+        "name": "tukars",
+        "created_at": "2025-01-23T04:51:00.000Z",
+        "url": "https://greasyfork.org/users/1426344-tukars"
+      }
+    ],
+    "name": "Observe",
+    "description": "Observe and wait for elements",
+    "url": "https://greasyfork.org/scripts/552301-observe",
+    "code_url": "https://update.greasyfork.org/scripts/552301/1676523/Observe.js",
+    "code_size": 3665,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

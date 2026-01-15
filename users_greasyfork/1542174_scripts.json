@@ -167,7 +167,7 @@
   {
     "id": 557278,
     "daily_installs": 0,
-    "total_installs": 76,
+    "total_installs": 77,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -228,6 +228,6 @@
     "version": "2.0",
     "locale": "ja",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 555864,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T17:20:36.000Z",
+    "code_updated_at": "2025-11-14T18:05:50.000Z",
+    "namespace": "https://codymkw.nekoweb.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4625,
+        "name": "CodyMKW",
+        "created_at": "2014-08-21T16:40:41.000Z",
+        "url": "https://greasyfork.org/users/4625-codymkw"
+      }
+    ],
+    "name": "Google Search Enhancer",
+    "description": "Adds a collapsible Google Enhancer panel with optional AI result filter, new tab option, and saved links with better star placement and popup UI.",
+    "url": "https://greasyfork.org/scripts/555864-google-search-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/555864/Google%20Search%20Enhancer.user.js",
+    "code_size": 11050,
+    "license": "MIT License",
+    "version": "4.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555863,
+    "daily_installs": 1,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T17:19:28.000Z",
+    "code_updated_at": "2026-01-05T20:08:13.000Z",
+    "namespace": "https://codymkw.nekoweb.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4625,
+        "name": "CodyMKW",
+        "created_at": "2014-08-21T16:40:41.000Z",
+        "url": "https://greasyfork.org/users/4625-codymkw"
+      }
+    ],
+    "name": "Hashtag Bundler for X/Twitter and Bluesky (Unified)",
+    "description": "Supercharge your hashtag workflow with a sleek, professional floating panel.",
+    "url": "https://greasyfork.org/scripts/555863-hashtag-bundler-for-x-twitter-and-bluesky-unified",
+    "code_url": "https://update.greasyfork.org/scripts/555863/Hashtag%20Bundler%20for%20XTwitter%20and%20Bluesky%20%28Unified%29.user.js",
+    "code_size": 20095,
+    "license": "MIT License",
+    "version": "2.8.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

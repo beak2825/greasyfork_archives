@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553486,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-23T14:25:01.000Z",
+    "code_updated_at": "2025-10-23T14:25:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529936,
+        "name": "Buck Cheesy",
+        "created_at": "2025-10-23T14:19:10.000Z",
+        "url": "https://greasyfork.org/users/1529936-buck-cheesy"
+      }
+    ],
+    "name": "Roblox Visual Robux Display (Abbreviated Format)",
+    "description": "Cosmetic-only Robux display editor with automatic Roblox-style abbreviations (K, M, +). Press \"=\" or \"M\" to toggle.",
+    "url": "https://greasyfork.org/scripts/553486-roblox-visual-robux-display-abbreviated-format",
+    "code_url": "https://update.greasyfork.org/scripts/553486/Roblox%20Visual%20Robux%20Display%20%28Abbreviated%20Format%29.user.js",
+    "code_size": 4160,
+    "license": "MIT License",
+    "version": "3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

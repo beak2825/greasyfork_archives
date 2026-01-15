@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552238,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T09:11:20.000Z",
+    "code_updated_at": "2025-10-11T09:11:19.000Z",
+    "namespace": "https://github.com/your-github-username/chaoxing-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1525111,
+        "name": "VA12138",
+        "created_at": "2025-10-11T09:06:42.000Z",
+        "url": "https://greasyfork.org/users/1525111-va12138"
+      }
+    ],
+    "name": "学习通视频自动播放助手滁院专属，小出生福利嗷嗷嗷，（仅悬浮视频版，后续解题。。。有时间再说）",
+    "description": "自动播放学习通视频、自动切换章节，悬浮窗实时显示进度、章节和预计总时长，适配所有学习通课程。",
+    "url": "https://greasyfork.org/scripts/552238-%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E5%8A%A9%E6%89%8B%E6%BB%81%E9%99%A2%E4%B8%93%E5%B1%9E-%E5%B0%8F%E5%87%BA%E7%94%9F%E7%A6%8F%E5%88%A9%E5%97%B7%E5%97%B7%E5%97%B7-%E4%BB%85%E6%82%AC%E6%B5%AE%E8%A7%86%E9%A2%91%E7%89%88-%E5%90%8E%E7%BB%AD%E8%A7%A3%E9%A2%98-%E6%9C%89%E6%97%B6%E9%97%B4%E5%86%8D%E8%AF%B4",
+    "code_url": "https://update.greasyfork.org/scripts/552238/%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E5%8A%A9%E6%89%8B%E6%BB%81%E9%99%A2%E4%B8%93%E5%B1%9E%EF%BC%8C%E5%B0%8F%E5%87%BA%E7%94%9F%E7%A6%8F%E5%88%A9%E5%97%B7%E5%97%B7%E5%97%B7%EF%BC%8C%EF%BC%88%E4%BB%85%E6%82%AC%E6%B5%AE%E8%A7%86%E9%A2%91%E7%89%88%EF%BC%8C%E5%90%8E%E7%BB%AD%E8%A7%A3%E9%A2%98%E3%80%82%E3%80%82%E3%80%82%E6%9C%89%E6%97%B6%E9%97%B4%E5%86%8D%E8%AF%B4%EF%BC%89.user.js",
+    "code_size": 19000,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

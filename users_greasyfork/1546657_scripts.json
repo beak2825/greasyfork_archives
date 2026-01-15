@@ -1,0 +1,35 @@
+[
+  {
+    "id": 558523,
+    "daily_installs": 1,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T15:07:50.000Z",
+    "code_updated_at": "2025-12-13T15:25:39.000Z",
+    "namespace": "t.me/TAhhhc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1546657,
+        "name": "TAhhhc",
+        "created_at": "2025-12-10T14:57:59.000Z",
+        "url": "https://greasyfork.org/users/1546657-tahhhc"
+      }
+    ],
+    "name": "屏蔽 Kemono 顶部菜单和烦人的横幅",
+    "description": "屏蔽kemono导致两行变一行登录后突出的顶部菜单，还有蓝色的告知（加上了coomer",
+    "url": "https://greasyfork.org/scripts/558523-%E5%B1%8F%E8%94%BD-kemono-%E9%A1%B6%E9%83%A8%E8%8F%9C%E5%8D%95%E5%92%8C%E7%83%A6%E4%BA%BA%E7%9A%84%E6%A8%AA%E5%B9%85",
+    "code_url": "https://update.greasyfork.org/scripts/558523/%E5%B1%8F%E8%94%BD%20Kemono%20%E9%A1%B6%E9%83%A8%E8%8F%9C%E5%8D%95%E5%92%8C%E7%83%A6%E4%BA%BA%E7%9A%84%E6%A8%AA%E5%B9%85.user.js",
+    "code_size": 925,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

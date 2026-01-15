@@ -1,0 +1,33 @@
+{
+  "id": 558155,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-06T21:12:13.000Z",
+  "code_updated_at": "2025-12-09T06:28:26.000Z",
+  "namespace": "https://github.com/Cartier",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1181494,
+      "name": "Step ᨆ",
+      "created_at": "2023-09-26T16:14:17.000Z",
+      "url": "https://greasyfork.org/users/1181494-step-%E1%A8%86"
+    }
+  ],
+  "name": "New Year's vibe for lolz.live",
+  "description": "New Year's snowy background with animation, sound effects, video background and interactive garland",
+  "url": "https://greasyfork.org/scripts/558155-new-year-s-vibe-for-lolz-live",
+  "code_url": "https://update.greasyfork.org/scripts/558155/New%20Year%27s%20vibe%20for%20lolzlive.user.js",
+  "code_size": 123100,
+  "license": "MIT License",
+  "version": "2.22",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

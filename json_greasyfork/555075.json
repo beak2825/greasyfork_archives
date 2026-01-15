@@ -1,0 +1,59 @@
+{
+  "id": 555075,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T06:41:15.000Z",
+  "code_updated_at": "2025-11-11T02:53:17.000Z",
+  "namespace": "https://greasyfork.org/users/324739",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 324739,
+      "name": "Zhang Stuart",
+      "created_at": "2019-08-09T08:25:32.000Z",
+      "url": "https://greasyfork.org/users/324739-zhang-stuart",
+      "scripts": [
+        {
+          "id": 555075,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-07T06:41:15.000Z",
+          "code_updated_at": "2025-11-11T02:53:17.000Z",
+          "namespace": "https://greasyfork.org/users/324739",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kimi宽度优化",
+          "description": "Kimi 对话界面优化宽度，包括答复结果与聊天输入框。",
+          "url": "https://greasyfork.org/scripts/555075-kimi%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/555075/Kimi%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 1658,
+          "license": "GPL-3.0 License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kimi宽度优化",
+  "description": "Kimi 对话界面优化宽度，包括答复结果与聊天输入框。",
+  "url": "https://greasyfork.org/scripts/555075-kimi%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/555075/Kimi%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 1658,
+  "license": "GPL-3.0 License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553718,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T02:36:33.000Z",
+    "code_updated_at": "2025-10-26T03:16:36.000Z",
+    "namespace": "auto.reels.dir.toggle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 675988,
+        "name": "Thoreau24",
+        "created_at": "2020-08-13T21:46:30.000Z",
+        "url": "https://greasyfork.org/users/675988-thoreau24"
+      }
+    ],
+    "name": "AutoReels — autoplay Facebook Reels",
+    "description": "Autoplay Facebook reels with direction toggle, pause/resume/stop, progress, scan counter",
+    "url": "https://greasyfork.org/scripts/553718-autoreels-autoplay-facebook-reels",
+    "code_url": "https://update.greasyfork.org/scripts/553718/AutoReels%20%E2%80%94%20autoplay%20Facebook%20Reels.user.js",
+    "code_size": 63828,
+    "license": "MIT License",
+    "version": "1.8.41.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

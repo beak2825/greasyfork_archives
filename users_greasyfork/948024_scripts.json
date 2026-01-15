@@ -1,0 +1,68 @@
+[
+  {
+    "id": 555275,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T06:52:43.000Z",
+    "code_updated_at": "2025-11-09T06:52:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 948024,
+        "name": "yeayee",
+        "created_at": "2022-08-19T03:02:53.000Z",
+        "url": "https://greasyfork.org/users/948024-yeayee"
+      }
+    ],
+    "name": "聪明钱保存表格为TXT",
+    "description": "将页面表格保存为TXT文件",
+    "url": "https://greasyfork.org/scripts/555275-%E8%81%AA%E6%98%8E%E9%92%B1%E4%BF%9D%E5%AD%98%E8%A1%A8%E6%A0%BC%E4%B8%BAtxt",
+    "code_url": "https://update.greasyfork.org/scripts/555275/%E8%81%AA%E6%98%8E%E9%92%B1%E4%BF%9D%E5%AD%98%E8%A1%A8%E6%A0%BC%E4%B8%BATXT.user.js",
+    "code_size": 1697,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552807,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T14:41:07.000Z",
+    "code_updated_at": "2025-10-17T00:23:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 948024,
+        "name": "yeayee",
+        "created_at": "2022-08-19T03:02:53.000Z",
+        "url": "https://greasyfork.org/users/948024-yeayee"
+      }
+    ],
+    "name": "Alpha 数据保存器（微信Civilpy）",
+    "description": "自动点击标签，用户确认后复制页面内容，结构化为 TSV 并保存为 TXT",
+    "url": "https://greasyfork.org/scripts/552807-alpha-%E6%95%B0%E6%8D%AE%E4%BF%9D%E5%AD%98%E5%99%A8-%E5%BE%AE%E4%BF%A1civilpy",
+    "code_url": "https://update.greasyfork.org/scripts/552807/Alpha%20%E6%95%B0%E6%8D%AE%E4%BF%9D%E5%AD%98%E5%99%A8%EF%BC%88%E5%BE%AE%E4%BF%A1Civilpy%EF%BC%89.user.js",
+    "code_size": 4882,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

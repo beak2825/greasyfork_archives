@@ -1,0 +1,59 @@
+{
+  "id": 553528,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-24T01:46:33.000Z",
+  "code_updated_at": "2025-10-30T06:57:06.000Z",
+  "namespace": "https://yangtaoer.com.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530047,
+      "name": "yi young",
+      "created_at": "2025-10-24T01:42:10.000Z",
+      "url": "https://greasyfork.org/users/1530047-yi-young",
+      "scripts": [
+        {
+          "id": 553528,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-24T01:46:33.000Z",
+          "code_updated_at": "2025-10-30T06:57:06.000Z",
+          "namespace": "https://yangtaoer.com.cn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "iTalent 在线考试自动答题助手",
+          "description": "点击上传题库粘贴JSON即可上传，高亮答案保留，显示检测率和解析率，支持窗口最小化和拖动吸附",
+          "url": "https://greasyfork.org/scripts/553528-italent-%E5%9C%A8%E7%BA%BF%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/553528/iTalent%20%E5%9C%A8%E7%BA%BF%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 12302,
+          "license": "MIT License",
+          "version": "3.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "iTalent 在线考试自动答题助手",
+  "description": "点击上传题库粘贴JSON即可上传，高亮答案保留，显示检测率和解析率，支持窗口最小化和拖动吸附",
+  "url": "https://greasyfork.org/scripts/553528-italent-%E5%9C%A8%E7%BA%BF%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/553528/iTalent%20%E5%9C%A8%E7%BA%BF%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 12302,
+  "license": "MIT License",
+  "version": "3.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

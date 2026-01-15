@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562608,
+    "daily_installs": 4,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T06:04:43.000Z",
+    "code_updated_at": "2026-01-14T06:04:43.000Z",
+    "namespace": "https://greasyfork.org/users/1377790",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377790,
+        "name": "没有好姓氏了没有好名字了",
+        "created_at": "2024-10-07T09:37:08.000Z",
+        "url": "https://greasyfork.org/users/1377790-%E6%B2%A1%E6%9C%89%E5%A5%BD%E5%A7%93%E6%B0%8F%E4%BA%86%E6%B2%A1%E6%9C%89%E5%A5%BD%E5%90%8D%E5%AD%97%E4%BA%86"
+      }
+    ],
+    "name": "ChatGPT 对话导出助手（每日自动备份 / JSON+Markdown）",
+    "description": "支持团队/个人空间，一键导出所有对话为单个 JSON 与 Markdown，并支持每日自动备份的用户脚本。",
+    "url": "https://greasyfork.org/scripts/562608-chatgpt-%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B-%E6%AF%8F%E6%97%A5%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD-json-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/562608/ChatGPT%20%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B%EF%BC%88%E6%AF%8F%E6%97%A5%E8%87%AA%E5%8A%A8%E5%A4%87%E4%BB%BD%20%20JSON%2BMarkdown%EF%BC%89.user.js",
+    "code_size": 30703,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

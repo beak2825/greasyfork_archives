@@ -1,0 +1,33 @@
+{
+  "id": 561295,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-03T22:44:53.000Z",
+  "code_updated_at": "2026-01-04T00:29:58.000Z",
+  "namespace": "https://greasyfork.org/users/seting-max",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555733,
+      "name": "seting-max",
+      "created_at": "2026-01-03T22:35:36.000Z",
+      "url": "https://greasyfork.org/users/1555733-seting-max"
+    }
+  ],
+  "name": "WebView错误页面美化",
+  "description": "只拦截真正的Android WebView错误页面，不干扰任何正常页面",
+  "url": "https://greasyfork.org/scripts/561295-webview%E9%94%99%E8%AF%AF%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/561295/WebView%E9%94%99%E8%AF%AF%E9%A1%B5%E9%9D%A2%E7%BE%8E%E5%8C%96.user.js",
+  "code_size": 18354,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

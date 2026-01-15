@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553340,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T02:17:24.000Z",
+    "code_updated_at": "2025-10-22T02:17:24.000Z",
+    "namespace": "https://google.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1526399,
+        "name": "Triệt Lông Nách",
+        "created_at": "2025-10-14T06:23:45.000Z",
+        "url": "https://greasyfork.org/users/1526399-tri%E1%BB%87t-l%C3%B4ng-n%C3%A1ch"
+      }
+    ],
+    "name": "Triet Long Nach Gia Bao Nhieu",
+    "description": "Triệt lông nách giá bao nhiêu",
+    "url": "https://greasyfork.org/scripts/553340-triet-long-nach-gia-bao-nhieu",
+    "code_url": "https://update.greasyfork.org/scripts/553340/Triet%20Long%20Nach%20Gia%20Bao%20Nhieu.user.js",
+    "code_size": 766,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

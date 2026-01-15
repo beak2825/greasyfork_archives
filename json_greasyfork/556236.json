@@ -1,0 +1,59 @@
+{
+  "id": 556236,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-19T03:50:23.000Z",
+  "code_updated_at": "2025-11-19T03:59:25.000Z",
+  "namespace": "https://github.com/cnfeat/google-arts-calendar",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 791422,
+      "name": "cnfeat CN",
+      "created_at": "2021-07-08T01:49:21.000Z",
+      "url": "https://greasyfork.org/users/791422-cnfeat-cn",
+      "scripts": [
+        {
+          "id": 556236,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-19T03:50:23.000Z",
+          "code_updated_at": "2025-11-19T03:59:25.000Z",
+          "namespace": "https://github.com/cnfeat/google-arts-calendar",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google 艺文日历",
+          "description": "左边是单向历的治愈系智慧金句，右边是 Google 艺术与文化今日精选。让你在同一屏幕下完成每日的艺术熏陶与思维提升。设置成首页，每天 3 秒钟，完成艺术和思想的双重充电！",
+          "url": "https://greasyfork.org/scripts/556236-google-%E8%89%BA%E6%96%87%E6%97%A5%E5%8E%86",
+          "code_url": "https://update.greasyfork.org/scripts/556236/Google%20%E8%89%BA%E6%96%87%E6%97%A5%E5%8E%86.user.js",
+          "code_size": 7121,
+          "license": null,
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google 艺文日历",
+  "description": "左边是单向历的治愈系智慧金句，右边是 Google 艺术与文化今日精选。让你在同一屏幕下完成每日的艺术熏陶与思维提升。设置成首页，每天 3 秒钟，完成艺术和思想的双重充电！",
+  "url": "https://greasyfork.org/scripts/556236-google-%E8%89%BA%E6%96%87%E6%97%A5%E5%8E%86",
+  "code_url": "https://update.greasyfork.org/scripts/556236/Google%20%E8%89%BA%E6%96%87%E6%97%A5%E5%8E%86.user.js",
+  "code_size": 7121,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

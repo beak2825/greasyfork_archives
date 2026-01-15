@@ -1,0 +1,34 @@
+{
+  "id": 555852,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-14T15:56:20.000Z",
+  "code_updated_at": "2025-11-14T15:56:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535718,
+      "name": "torresds",
+      "created_at": "2025-11-08T18:02:35.000Z",
+      "url": "https://greasyfork.org/users/1535718-torresds",
+      "scripts": []
+    }
+  ],
+  "name": "Moodle UFJF Unlock",
+  "description": "Remove restrições de copy/paste e teclado em quizzes Moodle da UFJF e adiciona um botão para copiar o texto da questão",
+  "url": "https://greasyfork.org/scripts/555852-moodle-ufjf-unlock",
+  "code_url": "https://update.greasyfork.org/scripts/555852/Moodle%20UFJF%20Unlock.user.js",
+  "code_size": 4363,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 555887,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-15T04:12:29.000Z",
+  "code_updated_at": "2025-11-29T21:10:46.000Z",
+  "namespace": "https://torn.report/userscripts/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1353220,
+      "name": "DEAD EDITZZ (D3AD3DiTZz)",
+      "created_at": "2024-08-17T07:44:53.000Z",
+      "url": "https://greasyfork.org/users/1353220-dead-editzz-d3ad3ditzz",
+      "scripts": []
+    }
+  ],
+  "name": "Weapon & Armor UIDs — Armory + Items (Owner Lookup)",
+  "description": "Crawl armory pages and show owner name (from Google Sheet WebApp) beside items.",
+  "url": "https://greasyfork.org/scripts/555887-weapon-armor-uids-armory-items-owner-lookup",
+  "code_url": "https://update.greasyfork.org/scripts/555887/Weapon%20%20Armor%20UIDs%20%E2%80%94%20Armory%20%2B%20Items%20%28Owner%20Lookup%29.user.js",
+  "code_size": 26546,
+  "license": "GNU GPLv3",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

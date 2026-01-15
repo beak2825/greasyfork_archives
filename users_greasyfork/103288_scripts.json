@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555568,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T01:12:26.000Z",
+    "code_updated_at": "2025-11-12T01:13:57.000Z",
+    "namespace": "https://greasyfork.org/users/801480",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 103288,
+        "name": "gpseaver",
+        "created_at": "2017-02-17T08:37:09.000Z",
+        "url": "https://greasyfork.org/users/103288-gpseaver"
+      }
+    ],
+    "name": "虎扑黑名单 WebDAV定时双向同步",
+    "description": "虎扑黑名单，隐藏拉黑的帖子，并支持WebDAV定时双向同步",
+    "url": "https://greasyfork.org/scripts/555568-%E8%99%8E%E6%89%91%E9%BB%91%E5%90%8D%E5%8D%95-webdav%E5%AE%9A%E6%97%B6%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5",
+    "code_url": "https://update.greasyfork.org/scripts/555568/%E8%99%8E%E6%89%91%E9%BB%91%E5%90%8D%E5%8D%95%20WebDAV%E5%AE%9A%E6%97%B6%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5.user.js",
+    "code_size": 20196,
+    "license": "MIT License",
+    "version": "1.7.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

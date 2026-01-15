@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559691,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T09:55:35.000Z",
+    "code_updated_at": "2025-12-22T08:03:23.000Z",
+    "namespace": "finally.torn.rwchain",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735181,
+        "name": "finally",
+        "created_at": "2021-02-06T16:15:21.000Z",
+        "url": "https://greasyfork.org/users/735181-finally"
+      }
+    ],
+    "name": "RW Chain Tracker",
+    "description": "Adds chain tracker for opponent chain",
+    "url": "https://greasyfork.org/scripts/559691-rw-chain-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/559691/RW%20Chain%20Tracker.user.js",
+    "code_size": 8043,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555741,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T17:47:45.000Z",
+    "code_updated_at": "2025-11-17T08:42:06.000Z",
+    "namespace": "finally.torn.oc-payout-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735181,
+        "name": "finally",
+        "created_at": "2021-02-06T16:15:21.000Z",
+        "url": "https://greasyfork.org/users/735181-finally"
+      }
+    ],
+    "name": "OC Payout Helper",
+    "description": "Automatically sets Payout Cut depending on OC payout",
+    "url": "https://greasyfork.org/scripts/555741-oc-payout-helper",
+    "code_url": "https://update.greasyfork.org/scripts/555741/OC%20Payout%20Helper.user.js",
+    "code_size": 2334,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

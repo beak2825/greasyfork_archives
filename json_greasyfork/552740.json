@@ -1,0 +1,34 @@
+{
+  "id": 552740,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-16T03:16:46.000Z",
+  "code_updated_at": "2025-10-17T22:17:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513330,
+      "name": "Марк Котов",
+      "created_at": "2025-09-09T13:37:05.000Z",
+      "url": "https://greasyfork.org/users/1513330-%D0%BC%D0%B0%D1%80%D0%BA-%D0%BA%D0%BE%D1%82%D0%BE%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "GameObserver + Start Capture + Viewer",
+  "description": "GameObserver с включаемым автобоем (F1) и просмотром состояния (F2)",
+  "url": "https://greasyfork.org/scripts/552740-gameobserver-start-capture-viewer",
+  "code_url": "https://update.greasyfork.org/scripts/552740/GameObserver%20%2B%20Start%20Capture%20%2B%20Viewer.user.js",
+  "code_size": 19255,
+  "license": "MIT License",
+  "version": "2.0.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

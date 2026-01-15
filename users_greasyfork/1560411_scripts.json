@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562681,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T21:12:34.000Z",
+    "code_updated_at": "2026-01-14T21:12:34.000Z",
+    "namespace": "v4.5 @frankomio @ dart-base.de",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560411,
+        "name": "frankomio",
+        "created_at": "2026-01-14T20:55:59.000Z",
+        "url": "https://greasyfork.org/users/1560411-frankomio"
+      }
+    ],
+    "name": "Autodarts Chat Macro – Overlay Panel v4.5",
+    "description": "An Overlay for adding up to 15 new predefined Texts to chat per Hotkey or Mouse",
+    "url": "https://greasyfork.org/scripts/562681-autodarts-chat-macro-overlay-panel-v4-5",
+    "code_url": "https://update.greasyfork.org/scripts/562681/Autodarts%20Chat%20Macro%20%E2%80%93%20Overlay%20Panel%20v45.user.js",
+    "code_size": 27841,
+    "license": null,
+    "version": "4.5",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559080,
+    "daily_installs": 4,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-16T06:28:30.000Z",
+    "code_updated_at": "2025-12-16T06:44:43.000Z",
+    "namespace": "https://github.com/SmashPhoenix272",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417333,
+        "name": "fernweh",
+        "created_at": "2024-12-29T18:19:23.000Z",
+        "url": "https://greasyfork.org/users/1417333-fernweh"
+      }
+    ],
+    "name": "番茄小说网页版免费阅读（稳定版）",
+    "description": "番茄小说免费网页阅读（更换API + 修复缺字 + 解除复制限制）",
+    "url": "https://greasyfork.org/scripts/559080-%E7%95%AA%E8%8C%84%E5%B0%8F%E8%AF%B4%E7%BD%91%E9%A1%B5%E7%89%88%E5%85%8D%E8%B4%B9%E9%98%85%E8%AF%BB-%E7%A8%B3%E5%AE%9A%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559080/%E7%95%AA%E8%8C%84%E5%B0%8F%E8%AF%B4%E7%BD%91%E9%A1%B5%E7%89%88%E5%85%8D%E8%B4%B9%E9%98%85%E8%AF%BB%EF%BC%88%E7%A8%B3%E5%AE%9A%E7%89%88%EF%BC%89.user.js",
+    "code_size": 6014,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

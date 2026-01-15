@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562543,
+    "daily_installs": 15,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T14:57:45.000Z",
+    "code_updated_at": "2026-01-13T14:57:45.000Z",
+    "namespace": "https://irylisvps.vercel.app",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1559924,
+        "name": "Duc Anh Trinh",
+        "created_at": "2026-01-13T14:55:35.000Z",
+        "url": "https://greasyfork.org/users/1559924-duc-anh-trinh"
+      }
+    ],
+    "name": "Duolingo DuoHacker",
+    "description": "Best Free Duolingo Hack with XP Farming, Gems Farming, Streaks Farming, even Free Supers are here!",
+    "url": "https://greasyfork.org/scripts/562543-duolingo-duohacker",
+    "code_url": "https://update.greasyfork.org/scripts/562543/Duolingo%20DuoHacker.user.js",
+    "code_size": 293227,
+    "license": "MIT License",
+    "version": "2.8.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

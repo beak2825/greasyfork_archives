@@ -1,0 +1,33 @@
+{
+  "id": 554611,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-03T06:32:56.000Z",
+  "code_updated_at": "2025-12-01T01:53:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532531,
+      "name": "EnixCoda",
+      "created_at": "2025-10-31T08:35:26.000Z",
+      "url": "https://greasyfork.org/users/1532531-enixcoda"
+    }
+  ],
+  "name": "Copy Jira Link",
+  "description": "Jira should have supported this!",
+  "url": "https://greasyfork.org/scripts/554611-copy-jira-link",
+  "code_url": "https://update.greasyfork.org/scripts/554611/Copy%20Jira%20Link.user.js",
+  "code_size": 5197,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

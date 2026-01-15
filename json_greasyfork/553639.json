@@ -1,0 +1,59 @@
+{
+  "id": 553639,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-25T08:32:13.000Z",
+  "code_updated_at": "2025-10-25T20:32:29.000Z",
+  "namespace": "https://github.com/KDH-KDHKDH",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1306820,
+      "name": "KDH-KDHKDH",
+      "created_at": "2024-05-25T09:04:02.000Z",
+      "url": "https://greasyfork.org/users/1306820-kdh-kdhkdh",
+      "scripts": [
+        {
+          "id": 553639,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-25T08:32:13.000Z",
+          "code_updated_at": "2025-10-25T20:32:29.000Z",
+          "namespace": "https://github.com/KDH-KDHKDH",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili 直播P2P禁用补丁",
+          "description": "于document-start阶段禁用WebRTC P2P功能，通过锁定API防止B站直播产生巨额的后台上传流量。",
+          "url": "https://greasyfork.org/scripts/553639-bilibili-%E7%9B%B4%E6%92%ADp2p%E7%A6%81%E7%94%A8%E8%A1%A5%E4%B8%81",
+          "code_url": "https://update.greasyfork.org/scripts/553639/Bilibili%20%E7%9B%B4%E6%92%ADP2P%E7%A6%81%E7%94%A8%E8%A1%A5%E4%B8%81.user.js",
+          "code_size": 2642,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili 直播P2P禁用补丁",
+  "description": "于document-start阶段禁用WebRTC P2P功能，通过锁定API防止B站直播产生巨额的后台上传流量。",
+  "url": "https://greasyfork.org/scripts/553639-bilibili-%E7%9B%B4%E6%92%ADp2p%E7%A6%81%E7%94%A8%E8%A1%A5%E4%B8%81",
+  "code_url": "https://update.greasyfork.org/scripts/553639/Bilibili%20%E7%9B%B4%E6%92%ADP2P%E7%A6%81%E7%94%A8%E8%A1%A5%E4%B8%81.user.js",
+  "code_size": 2642,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

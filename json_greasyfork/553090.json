@@ -1,0 +1,34 @@
+{
+  "id": 553090,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T11:23:36.000Z",
+  "code_updated_at": "2025-10-19T11:23:35.000Z",
+  "namespace": "https://github.com/Khalil-Mensouri",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1528184,
+      "name": "Khalil-Mensouri",
+      "created_at": "2025-10-18T11:59:59.000Z",
+      "url": "https://greasyfork.org/users/1528184-khalil-mensouri",
+      "scripts": []
+    }
+  ],
+  "name": "Universal iOS Userscript — Aggressive Ad & Popup Blocker (Userscripts/Tampermonkey friendly)",
+  "description": "Aggressive userscript that hides common ad containers, removes ad iframes/scripts, blocks popup-redirectors and click-redirectors. Designed for use with iOS Userscripts or Tampermonkey (Safari). Use with caution: aggressive rules may break some sites. See runtime API at window.__uAd for tweaks/whitelisting.",
+  "url": "https://greasyfork.org/scripts/553090-universal-ios-userscript-aggressive-ad-popup-blocker-userscripts-tampermonkey-friendly",
+  "code_url": "https://update.greasyfork.org/scripts/553090/Universal%20iOS%20Userscript%20%E2%80%94%20Aggressive%20Ad%20%20Popup%20Blocker%20%28UserscriptsTampermonkey%20friendly%29.user.js",
+  "code_size": 11884,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

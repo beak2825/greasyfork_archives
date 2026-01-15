@@ -1,0 +1,59 @@
+{
+  "id": 553211,
+  "daily_installs": 1,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-20T13:54:50.000Z",
+  "code_updated_at": "2025-10-21T10:08:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1528894,
+      "name": "leyfung",
+      "created_at": "2025-10-20T13:43:42.000Z",
+      "url": "https://greasyfork.org/users/1528894-leyfung",
+      "scripts": [
+        {
+          "id": 553211,
+          "daily_installs": 1,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-20T13:54:50.000Z",
+          "code_updated_at": "2025-10-21T10:08:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小鹅通自动点击加载更多 (高效版)",
+          "description": "通过 async/await 循环，一次点击即可自动、快速地点击“加载更多”按钮，直到所有内容加载完毕。",
+          "url": "https://greasyfork.org/scripts/553211-%E5%B0%8F%E9%B9%85%E9%80%9A%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A-%E9%AB%98%E6%95%88%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/553211/%E5%B0%8F%E9%B9%85%E9%80%9A%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A%20%28%E9%AB%98%E6%95%88%E7%89%88%29.user.js",
+          "code_size": 5318,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小鹅通自动点击加载更多 (高效版)",
+  "description": "通过 async/await 循环，一次点击即可自动、快速地点击“加载更多”按钮，直到所有内容加载完毕。",
+  "url": "https://greasyfork.org/scripts/553211-%E5%B0%8F%E9%B9%85%E9%80%9A%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A-%E9%AB%98%E6%95%88%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/553211/%E5%B0%8F%E9%B9%85%E9%80%9A%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%8A%A0%E8%BD%BD%E6%9B%B4%E5%A4%9A%20%28%E9%AB%98%E6%95%88%E7%89%88%29.user.js",
+  "code_size": 5318,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553273,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-21T08:13:25.000Z",
+    "code_updated_at": "2025-10-21T08:13:25.000Z",
+    "namespace": "https://labsafetest.uestc.edu.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528906,
+        "name": "zankzeke",
+        "created_at": "2025-10-20T14:12:02.000Z",
+        "url": "https://greasyfork.org/users/1528906-zankzeke"
+      }
+    ],
+    "name": "UESTC 实验室安全知识·随机阅读",
+    "description": "自动随机浏览实验室安全文章，带可视化控制面板",
+    "url": "https://greasyfork.org/scripts/553273-uestc-%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%AE%89%E5%85%A8%E7%9F%A5%E8%AF%86-%E9%9A%8F%E6%9C%BA%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/553273/UESTC%20%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%AE%89%E5%85%A8%E7%9F%A5%E8%AF%86%C2%B7%E9%9A%8F%E6%9C%BA%E9%98%85%E8%AF%BB.user.js",
+    "code_size": 7707,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

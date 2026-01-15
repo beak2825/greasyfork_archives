@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562698,
+    "daily_installs": 3,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T02:03:24.000Z",
+    "code_updated_at": "2026-01-15T05:39:35.000Z",
+    "namespace": "YT_Sort_Archangel1C",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560457,
+        "name": "Johnny Mclain",
+        "created_at": "2026-01-15T02:00:31.000Z",
+        "url": "https://greasyfork.org/users/1560457-johnny-mclain"
+      }
+    ],
+    "name": "Youtube 2026: Auto-sort search results by upload date (sort videos by upload date)",
+    "description": "Rewrites the URL of a YouTube search results page to automatically sort by video upload date, if the sort order is not already present",
+    "url": "https://greasyfork.org/scripts/562698-youtube-2026-auto-sort-search-results-by-upload-date-sort-videos-by-upload-date",
+    "code_url": "https://update.greasyfork.org/scripts/562698/Youtube%202026%3A%20Auto-sort%20search%20results%20by%20upload%20date%20%28sort%20videos%20by%20upload%20date%29.user.js",
+    "code_size": 4312,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.28",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

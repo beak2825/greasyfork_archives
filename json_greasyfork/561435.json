@@ -1,0 +1,59 @@
+{
+  "id": 561435,
+  "daily_installs": 6,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-04T22:35:31.000Z",
+  "code_updated_at": "2026-01-06T15:19:08.000Z",
+  "namespace": "https://greasyfork.org/pt-BR/users/1556138-marcos-monteiro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1556138,
+      "name": "mcm",
+      "created_at": "2026-01-04T20:14:55.000Z",
+      "url": "https://greasyfork.org/users/1556138-mcm",
+      "scripts": [
+        {
+          "id": 561435,
+          "daily_installs": 6,
+          "total_installs": 80,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-04T22:35:31.000Z",
+          "code_updated_at": "2026-01-06T15:19:08.000Z",
+          "namespace": "https://greasyfork.org/pt-BR/users/1556138-marcos-monteiro",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Grok Favorites Batch Download",
+          "description": "Batch download videos and images from Grok 'imagine' collections, supporting history tracking to prevent duplicate downloads",
+          "url": "https://greasyfork.org/scripts/561435-grok-favorites-batch-download",
+          "code_url": "https://update.greasyfork.org/scripts/561435/Grok%20Favorites%20Batch%20Download.user.js",
+          "code_size": 38578,
+          "license": "MIT License",
+          "version": "2026.01.05.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Grok Favorites Batch Download",
+  "description": "Batch download videos and images from Grok 'imagine' collections, supporting history tracking to prevent duplicate downloads",
+  "url": "https://greasyfork.org/scripts/561435-grok-favorites-batch-download",
+  "code_url": "https://update.greasyfork.org/scripts/561435/Grok%20Favorites%20Batch%20Download.user.js",
+  "code_size": 38578,
+  "license": "MIT License",
+  "version": "2026.01.05.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

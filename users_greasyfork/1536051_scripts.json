@@ -30,6 +30,72 @@
     "version": "1.6",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555408,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T11:09:09.000Z",
+    "code_updated_at": "2025-11-20T08:46:17.000Z",
+    "namespace": "http://www.nodeseek.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536051,
+        "name": "r0ss",
+        "created_at": "2025-11-09T16:52:25.000Z",
+        "url": "https://greasyfork.org/users/1536051-r0ss"
+      }
+    ],
+    "name": "NodeSeek Enhance",
+    "description": "【NodeSeek增强脚本】全面增强 NodeSeek/DeepFlood 论坛体验。核心功能：自动签到（支持随机/固定鸡腿）、无缝翻页（帖子列表和评论自动加载）、快捷回复（浮动编辑器）、代码高亮（支持亮色/暗色主题）、图片滑动查看。内容管理：屏蔽用户/帖子/分类（支持关键词和正则）、帖子排序（按回复数/查看数/已访问置底）、隐藏元素（页脚/分类标签/帖子信息/推荐轮播/用户统计面板）。界面优化：紧凑模式（1-4列多栏布局，自定义间距/字体/头像大小）、自定义背景图（支持URL/本地上传）、Header/Frame透明度（支持模糊和饱和度）、字体排版自定义（标题/Tag/元数据/内容）、已访问链接标记（可隐藏/置底）、默认头像替换（自动识别系统头像）。增强功能：用户卡片扩展（显示@我/私信/回复通知）、等级标签显示（楼主等级和统计信息）、浏览历史记录（下拉菜单快速访问）、键盘快捷键（左右箭头翻页、Ctrl+Enter提交）、强制新标签页打开帖子、自动跳转外部链接、平滑滚动、即时页面预加载。设置管理：可视化设置面板（集成到导航栏）、设置导入导出、一键恢复默认样式。支持深色模式自动适配。",
+    "url": "https://greasyfork.org/scripts/555408-nodeseek-enhance",
+    "code_url": "https://update.greasyfork.org/scripts/555408/NodeSeek%20Enhance.user.js",
+    "code_size": 296905,
+    "license": "GPL-3.0 License",
+    "version": "1.3",
+    "locale": "et",
+    "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555321,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T16:55:38.000Z",
+    "code_updated_at": "2025-11-09T16:55:38.000Z",
+    "namespace": "https://github.com/Cinvin/myuserscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536051,
+        "name": "r0ss",
+        "created_at": "2025-11-09T16:52:25.000Z",
+        "url": "https://greasyfork.org/users/1536051-r0ss"
+      }
+    ],
+    "name": "网易云音乐:歌曲下载&转存云盘|云盘快传|云盘匹配纠正|高音质试听",
+    "description": "歌曲下载&转存云盘(可批量)、无需文件云盘快传歌曲、云盘匹配纠正、高音质试听、完整歌单列表、评论区显示IP属地、使用指定的IP地址发送评论、歌单歌曲排序(时间、红心数、评论数)、云盘音质提升、本地文件添加音乐元数据等功能。",
+    "url": "https://greasyfork.org/scripts/555321-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90-%E6%AD%8C%E6%9B%B2%E4%B8%8B%E8%BD%BD-%E8%BD%AC%E5%AD%98%E4%BA%91%E7%9B%98-%E4%BA%91%E7%9B%98%E5%BF%AB%E4%BC%A0-%E4%BA%91%E7%9B%98%E5%8C%B9%E9%85%8D%E7%BA%A0%E6%AD%A3-%E9%AB%98%E9%9F%B3%E8%B4%A8%E8%AF%95%E5%90%AC",
+    "code_url": "https://update.greasyfork.org/scripts/555321/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%3A%E6%AD%8C%E6%9B%B2%E4%B8%8B%E8%BD%BD%E8%BD%AC%E5%AD%98%E4%BA%91%E7%9B%98%7C%E4%BA%91%E7%9B%98%E5%BF%AB%E4%BC%A0%7C%E4%BA%91%E7%9B%98%E5%8C%B9%E9%85%8D%E7%BA%A0%E6%AD%A3%7C%E9%AB%98%E9%9F%B3%E8%B4%A8%E8%AF%95%E5%90%AC.user.js",
+    "code_size": 337626,
+    "license": "MIT License",
+    "version": "4.3.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

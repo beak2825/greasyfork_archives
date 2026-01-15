@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553286,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-21T12:26:53.000Z",
+    "code_updated_at": "2025-10-21T12:34:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529226,
+        "name": "executed",
+        "created_at": "2025-10-21T11:47:42.000Z",
+        "url": "https://greasyfork.org/users/1529226-executed"
+      }
+    ],
+    "name": "Focus on First Task in Vikunja Table view",
+    "description": "Focus on First Task in Vikunja Table view. Focuses on the first <a> element in the first <td> of the specified table when it becomes available. You have to change the match parameter below to your website URL.",
+    "url": "https://greasyfork.org/scripts/553286-focus-on-first-task-in-vikunja-table-view",
+    "code_url": "https://update.greasyfork.org/scripts/553286/Focus%20on%20First%20Task%20in%20Vikunja%20Table%20view.user.js",
+    "code_size": 2011,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

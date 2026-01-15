@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560641,
+    "daily_installs": 4,
+    "total_installs": 121,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-29T14:23:47.000Z",
+    "code_updated_at": "2026-01-01T05:50:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 947774,
+        "name": "cxary",
+        "created_at": "2022-08-18T10:07:49.000Z",
+        "url": "https://greasyfork.org/users/947774-cxary"
+      }
+    ],
+    "name": "YouTube 网速单位转换器",
+    "description": "在YouTube的\"详细统计信息\"中，将连接速度(Connection Speed)从Kbps实时转换为MB/s并显示。支持手机端(m.youtube.com)和中文界面。",
+    "url": "https://greasyfork.org/scripts/560641-youtube-%E7%BD%91%E9%80%9F%E5%8D%95%E4%BD%8D%E8%BD%AC%E6%8D%A2%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/560641/YouTube%20%E7%BD%91%E9%80%9F%E5%8D%95%E4%BD%8D%E8%BD%AC%E6%8D%A2%E5%99%A8.user.js",
+    "code_size": 7527,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

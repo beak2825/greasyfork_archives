@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562630,
+    "daily_installs": 6,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T10:44:24.000Z",
+    "code_updated_at": "2026-01-14T10:55:06.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/562630",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560231,
+        "name": "edwan",
+        "created_at": "2026-01-14T10:30:53.000Z",
+        "url": "https://greasyfork.org/users/1560231-edwan"
+      }
+    ],
+    "name": "国家中小学智慧教育平台教材PDF下载 修改版",
+    "description": "教材列表页与预览页添加了PDF按钮，免登录查看或下载电子课本与课外书籍，可批量下载，支持新课标教材",
+    "url": "https://greasyfork.org/scripts/562630-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E6%95%99%E6%9D%90pdf%E4%B8%8B%E8%BD%BD-%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/562630/%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E6%95%99%E6%9D%90PDF%E4%B8%8B%E8%BD%BD%20%E4%BF%AE%E6%94%B9%E7%89%88.user.js",
+    "code_size": 45223,
+    "license": "MIT License",
+    "version": "4.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

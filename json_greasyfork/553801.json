@@ -1,0 +1,33 @@
+{
+  "id": 553801,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-26T23:59:40.000Z",
+  "code_updated_at": "2025-11-28T05:58:30.000Z",
+  "namespace": "https://git.gay/valkyrie1248/Neopets-Userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1531000,
+      "name": "valkyrie1248",
+      "created_at": "2025-10-26T23:07:42.000Z",
+      "url": "https://greasyfork.org/users/1531000-valkyrie1248"
+    }
+  ],
+  "name": "Neopets: Better Book Highlighter V5.0 (Documented)",
+  "description": "Identifies and highlights read books across Neopets.",
+  "url": "https://greasyfork.org/scripts/553801-neopets-better-book-highlighter-v5-0-documented",
+  "code_url": "https://update.greasyfork.org/scripts/553801/Neopets%3A%20Better%20Book%20Highlighter%20V50%20%28Documented%29.user.js",
+  "code_size": 23093,
+  "license": "MIT License",
+  "version": "5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 557776,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-03T10:47:42.000Z",
+  "code_updated_at": "2025-12-03T10:47:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1544181,
+      "name": "xuehao wang",
+      "created_at": "2025-12-03T10:34:47.000Z",
+      "url": "https://greasyfork.org/users/1544181-xuehao-wang"
+    }
+  ],
+  "name": "通用视频控制 (左右箭头快进/空格暂停)",
+  "description": "键盘左右箭头控制快进快退，空格键控制暂停播放，并在右上角显示提示",
+  "url": "https://greasyfork.org/scripts/557776-%E9%80%9A%E7%94%A8%E8%A7%86%E9%A2%91%E6%8E%A7%E5%88%B6-%E5%B7%A6%E5%8F%B3%E7%AE%AD%E5%A4%B4%E5%BF%AB%E8%BF%9B-%E7%A9%BA%E6%A0%BC%E6%9A%82%E5%81%9C",
+  "code_url": "https://update.greasyfork.org/scripts/557776/%E9%80%9A%E7%94%A8%E8%A7%86%E9%A2%91%E6%8E%A7%E5%88%B6%20%28%E5%B7%A6%E5%8F%B3%E7%AE%AD%E5%A4%B4%E5%BF%AB%E8%BF%9B%E7%A9%BA%E6%A0%BC%E6%9A%82%E5%81%9C%29.user.js",
+  "code_size": 3635,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

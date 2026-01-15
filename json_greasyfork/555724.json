@@ -1,0 +1,59 @@
+{
+  "id": 555724,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-13T14:28:26.000Z",
+  "code_updated_at": "2025-12-15T08:44:20.000Z",
+  "namespace": "https://github.com/1zero224",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537442,
+      "name": "1zero",
+      "created_at": "2025-11-13T14:21:23.000Z",
+      "url": "https://greasyfork.org/users/1537442-1zero",
+      "scripts": [
+        {
+          "id": 555724,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-13T14:28:26.000Z",
+          "code_updated_at": "2025-12-15T08:44:20.000Z",
+          "namespace": "https://github.com/1zero224",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitter/X Emoji Fix",
+          "description": "Replace Twitter web's image emoji with native emoji for easier tweet content copying",
+          "url": "https://greasyfork.org/scripts/555724-twitter-x-emoji-fix",
+          "code_url": "https://update.greasyfork.org/scripts/555724/TwitterX%20Emoji%20Fix.user.js",
+          "code_size": 4450,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitter/X Emoji Fix",
+  "description": "Replace Twitter web's image emoji with native emoji for easier tweet content copying",
+  "url": "https://greasyfork.org/scripts/555724-twitter-x-emoji-fix",
+  "code_url": "https://update.greasyfork.org/scripts/555724/TwitterX%20Emoji%20Fix.user.js",
+  "code_size": 4450,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

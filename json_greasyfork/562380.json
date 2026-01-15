@@ -1,0 +1,59 @@
+{
+  "id": 562380,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-12T10:35:41.000Z",
+  "code_updated_at": "2026-01-12T10:35:40.000Z",
+  "namespace": "http://gota.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1559466,
+      "name": "MAYA __IDK",
+      "created_at": "2026-01-12T10:29:07.000Z",
+      "url": "https://greasyfork.org/users/1559466-maya-idk",
+      "scripts": [
+        {
+          "id": 562380,
+          "daily_installs": 1,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-12T10:35:41.000Z",
+          "code_updated_at": "2026-01-12T10:35:40.000Z",
+          "namespace": "http://gota.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gota.io God Mode V15 (Live Sync & Fixes)",
+          "description": "V15: Reads inputs directly (WYSIWYG) and syncs settings across tabs instantly.",
+          "url": "https://greasyfork.org/scripts/562380-gota-io-god-mode-v15-live-sync-fixes",
+          "code_url": "https://update.greasyfork.org/scripts/562380/Gotaio%20God%20Mode%20V15%20%28Live%20Sync%20%20Fixes%29.user.js",
+          "code_size": 10999,
+          "license": null,
+          "version": "15.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gota.io God Mode V15 (Live Sync & Fixes)",
+  "description": "V15: Reads inputs directly (WYSIWYG) and syncs settings across tabs instantly.",
+  "url": "https://greasyfork.org/scripts/562380-gota-io-god-mode-v15-live-sync-fixes",
+  "code_url": "https://update.greasyfork.org/scripts/562380/Gotaio%20God%20Mode%20V15%20%28Live%20Sync%20%20Fixes%29.user.js",
+  "code_size": 10999,
+  "license": null,
+  "version": "15.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

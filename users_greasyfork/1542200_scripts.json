@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557091,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T13:11:17.000Z",
+    "code_updated_at": "2025-11-27T13:11:17.000Z",
+    "namespace": "https://greasyfork.org/users/1542200",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1542200,
+        "name": "o9zs",
+        "created_at": "2025-11-27T13:09:28.000Z",
+        "url": "https://greasyfork.org/users/1542200-o9zs"
+      }
+    ],
+    "name": "Stepik Unit Spoofer",
+    "description": "Spoofs units as completed",
+    "url": "https://greasyfork.org/scripts/557091-stepik-unit-spoofer",
+    "code_url": "https://update.greasyfork.org/scripts/557091/Stepik%20Unit%20Spoofer.user.js",
+    "code_size": 1419,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

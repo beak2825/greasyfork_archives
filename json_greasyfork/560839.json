@@ -1,0 +1,59 @@
+{
+  "id": 560839,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-31T00:13:07.000Z",
+  "code_updated_at": "2025-12-31T00:13:07.000Z",
+  "namespace": "soyjak-thread-watcher",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1554379,
+      "name": "anon13950135",
+      "created_at": "2025-12-31T00:09:47.000Z",
+      "url": "https://greasyfork.org/users/1554379-anon13950135",
+      "scripts": [
+        {
+          "id": 560839,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-31T00:13:07.000Z",
+          "code_updated_at": "2025-12-31T00:13:07.000Z",
+          "namespace": "soyjak-thread-watcher",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Soyjak Party thread watcher",
+          "description": "thread watcher for soyjak.st",
+          "url": "https://greasyfork.org/scripts/560839-soyjak-party-thread-watcher",
+          "code_url": "https://update.greasyfork.org/scripts/560839/Soyjak%20Party%20thread%20watcher.user.js",
+          "code_size": 11469,
+          "license": null,
+          "version": "1.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Soyjak Party thread watcher",
+  "description": "thread watcher for soyjak.st",
+  "url": "https://greasyfork.org/scripts/560839-soyjak-party-thread-watcher",
+  "code_url": "https://update.greasyfork.org/scripts/560839/Soyjak%20Party%20thread%20watcher.user.js",
+  "code_size": 11469,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

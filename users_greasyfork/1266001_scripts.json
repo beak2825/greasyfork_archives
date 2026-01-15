@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554583,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T01:24:57.000Z",
+    "code_updated_at": "2025-11-03T01:49:55.000Z",
+    "namespace": "https://example.local/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1266001,
+        "name": "無価値ぼっと",
+        "created_at": "2024-02-23T15:19:31.000Z",
+        "url": "https://greasyfork.org/users/1266001-%E7%84%A1%E4%BE%A1%E5%80%A4%E3%81%BC%E3%81%A3%E3%81%A8"
+      }
+    ],
+    "name": "YouTubeのボタン欄に再生速度コントロールボタンを追加",
+    "description": "YouTubeのグッドボタンの並びに一体化した再生速度ボタンを追加。　”「”キーで減速”」”キーで倍速する機能も搭載。",
+    "url": "https://greasyfork.org/scripts/554583-youtube%E3%81%AE%E3%83%9C%E3%82%BF%E3%83%B3%E6%AC%84%E3%81%AB%E5%86%8D%E7%94%9F%E9%80%9F%E5%BA%A6%E3%82%B3%E3%83%B3%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0",
+    "code_url": "https://update.greasyfork.org/scripts/554583/YouTube%E3%81%AE%E3%83%9C%E3%82%BF%E3%83%B3%E6%AC%84%E3%81%AB%E5%86%8D%E7%94%9F%E9%80%9F%E5%BA%A6%E3%82%B3%E3%83%B3%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0.user.js",
+    "code_size": 11651,
+    "license": null,
+    "version": "1.１",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

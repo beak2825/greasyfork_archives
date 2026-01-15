@@ -1,0 +1,59 @@
+{
+  "id": 555187,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T11:10:51.000Z",
+  "code_updated_at": "2025-11-08T11:12:18.000Z",
+  "namespace": "https://github.com/FairlyIncognito/DailyBoatsGalleryFix",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535599,
+      "name": "FairlyIncognito",
+      "created_at": "2025-11-08T10:46:26.000Z",
+      "url": "https://greasyfork.org/users/1535599-fairlyincognito",
+      "scripts": [
+        {
+          "id": 555187,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-08T11:10:51.000Z",
+          "code_updated_at": "2025-11-08T11:12:18.000Z",
+          "namespace": "https://github.com/FairlyIncognito/DailyBoatsGalleryFix",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DailyBoats Gallery Fix (Lightbox)",
+          "description": "Replaces \"open image in same tab\" with a proper lightbox gallery (keyboard + touch + captions + preload).",
+          "url": "https://greasyfork.org/scripts/555187-dailyboats-gallery-fix-lightbox",
+          "code_url": "https://update.greasyfork.org/scripts/555187/DailyBoats%20Gallery%20Fix%20%28Lightbox%29.user.js",
+          "code_size": 8773,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DailyBoats Gallery Fix (Lightbox)",
+  "description": "Replaces \"open image in same tab\" with a proper lightbox gallery (keyboard + touch + captions + preload).",
+  "url": "https://greasyfork.org/scripts/555187-dailyboats-gallery-fix-lightbox",
+  "code_url": "https://update.greasyfork.org/scripts/555187/DailyBoats%20Gallery%20Fix%20%28Lightbox%29.user.js",
+  "code_size": 8773,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

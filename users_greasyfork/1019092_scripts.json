@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553682,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T18:20:09.000Z",
+    "code_updated_at": "2026-01-12T13:44:46.000Z",
+    "namespace": "https://github.com/wverri/autods",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019092,
+        "name": "Willian Verri",
+        "created_at": "2023-01-30T19:20:41.000Z",
+        "url": "https://greasyfork.org/users/1019092-willian-verri"
+      }
+    ],
+    "name": "DemonicScans Unified Automator",
+    "description": "Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.",
+    "url": "https://greasyfork.org/scripts/553682-demonicscans-unified-automator",
+    "code_url": "https://update.greasyfork.org/scripts/553682/DemonicScans%20Unified%20Automator.user.js",
+    "code_size": 1015719,
+    "license": "MIT License",
+    "version": "0.9.8-alpha",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

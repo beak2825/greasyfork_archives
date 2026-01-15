@@ -1,0 +1,33 @@
+{
+  "id": 551879,
+  "daily_installs": 2,
+  "total_installs": 137,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-07T17:25:47.000Z",
+  "code_updated_at": "2025-10-07T17:57:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1523399,
+      "name": "Bunkrtools",
+      "created_at": "2025-10-07T17:21:48.000Z",
+      "url": "https://greasyfork.org/users/1523399-bunkrtools"
+    }
+  ],
+  "name": "Bunkr .ts File Player",
+  "description": "Adds a video player to Bunkr for .ts files, allowing you to stream them without needing to download first.",
+  "url": "https://greasyfork.org/scripts/551879-bunkr-ts-file-player",
+  "code_url": "https://update.greasyfork.org/scripts/551879/Bunkr%20ts%20File%20Player.user.js",
+  "code_size": 7527,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

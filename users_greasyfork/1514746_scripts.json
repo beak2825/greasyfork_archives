@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555808,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T06:57:47.000Z",
+    "code_updated_at": "2025-11-14T06:58:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514746,
+        "name": "Oracynx",
+        "created_at": "2025-09-14T01:13:35.000Z",
+        "url": "https://greasyfork.org/users/1514746-oracynx"
+      }
+    ],
+    "name": "OI 教练模拟器 - 开发者工具",
+    "description": "OI教练模拟器开发者工具，支持编辑学生属性、天赋、晋级状态、预算、声誉等",
+    "url": "https://greasyfork.org/scripts/555808-oi-%E6%95%99%E7%BB%83%E6%A8%A1%E6%8B%9F%E5%99%A8-%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/555808/OI%20%E6%95%99%E7%BB%83%E6%A8%A1%E6%8B%9F%E5%99%A8%20-%20%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 50501,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

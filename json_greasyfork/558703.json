@@ -17,33 +17,7 @@
       "id": 1517077,
       "name": "Bojan R",
       "created_at": "2025-09-19T17:44:51.000Z",
-      "url": "https://greasyfork.org/users/1517077-bojan-r",
-      "scripts": [
-        {
-          "id": 558703,
-          "daily_installs": 0,
-          "total_installs": 12,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-12T07:51:45.000Z",
-          "code_updated_at": "2025-12-14T08:21:01.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Pinpointing Live Challenges",
-          "description": "The script that makes pinpointing matter, even in Live Challenges.",
-          "url": "https://greasyfork.org/scripts/558703-pinpointing-live-challenges",
-          "code_url": "https://update.greasyfork.org/scripts/558703/Pinpointing%20Live%20Challenges.user.js",
-          "code_size": 30180,
-          "license": "MIT License",
-          "version": "0.55",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1517077-bojan-r"
     }
   ],
   "name": "Pinpointing Live Challenges",

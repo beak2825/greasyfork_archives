@@ -1,0 +1,33 @@
+{
+  "id": 551869,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-07T15:16:03.000Z",
+  "code_updated_at": "2025-10-07T15:20:26.000Z",
+  "namespace": "https://www.sooplive.co.kr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1523304,
+      "name": "Lmayo",
+      "created_at": "2025-10-07T14:31:08.000Z",
+      "url": "https://greasyfork.org/users/1523304-lmayo"
+    }
+  ],
+  "name": "SOOP 블랙리스트 내보내기 (아이디 전용, 최종 안정화)",
+  "description": "아이디, 등록(ID), 권한 추가일 정보만 수집하며, 등록(ID)는 괄호 안의 순수 ID만 수집하여 더 가볍고 빠르게 동작하는 최종 버전입니다.",
+  "url": "https://greasyfork.org/scripts/551869-soop-%EB%B8%94%EB%9E%99%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0-%EC%95%84%EC%9D%B4%EB%94%94-%EC%A0%84%EC%9A%A9-%EC%B5%9C%EC%A2%85-%EC%95%88%EC%A0%95%ED%99%94",
+  "code_url": "https://update.greasyfork.org/scripts/551869/SOOP%20%EB%B8%94%EB%9E%99%EB%A6%AC%EC%8A%A4%ED%8A%B8%20%EB%82%B4%EB%B3%B4%EB%82%B4%EA%B8%B0%20%28%EC%95%84%EC%9D%B4%EB%94%94%20%EC%A0%84%EC%9A%A9%2C%20%EC%B5%9C%EC%A2%85%20%EC%95%88%EC%A0%95%ED%99%94%29.user.js",
+  "code_size": 10377,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

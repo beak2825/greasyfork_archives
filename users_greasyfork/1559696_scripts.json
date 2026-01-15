@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562476,
+    "daily_installs": 14,
+    "total_installs": 30,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2026-01-13T02:59:50.000Z",
+    "code_updated_at": "2026-01-13T03:01:40.000Z",
+    "namespace": "https://greasyfork.org/users/Retired",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1559696,
+        "name": "Retired",
+        "created_at": "2026-01-13T02:40:15.000Z",
+        "url": "https://greasyfork.org/users/1559696-retired"
+      }
+    ],
+    "name": "Krunker.IO Aimbot & ESP",
+    "description": "Best Undectable Cheats Out There",
+    "url": "https://greasyfork.org/scripts/562476-krunker-io-aimbot-esp",
+    "code_url": "https://update.greasyfork.org/scripts/562476/KrunkerIO%20Aimbot%20%20ESP.user.js",
+    "code_size": 42403,
+    "license": "All Rights Reserved",
+    "version": "1.2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

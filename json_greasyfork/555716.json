@@ -1,0 +1,33 @@
+{
+  "id": 555716,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-13T12:54:39.000Z",
+  "code_updated_at": "2025-11-13T12:54:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537416,
+      "name": "Muhammed Humza",
+      "created_at": "2025-11-13T12:52:07.000Z",
+      "url": "https://greasyfork.org/users/1537416-muhammed-humza"
+    }
+  ],
+  "name": "Custom Key Remapper (F9 Menu + F8/F7 Toggle)",
+  "description": "Remap W, A, D, and Space to any other keys with live toggle and menu (F9=Menu, F8=Disable, F7=Enable)",
+  "url": "https://greasyfork.org/scripts/555716-custom-key-remapper-f9-menu-f8-f7-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/555716/Custom%20Key%20Remapper%20%28F9%20Menu%20%2B%20F8F7%20Toggle%29.user.js",
+  "code_size": 6120,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

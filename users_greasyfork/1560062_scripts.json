@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562599,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T03:53:21.000Z",
+    "code_updated_at": "2026-01-14T06:01:21.000Z",
+    "namespace": "https://2libra.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560062,
+        "name": "卢荟胶",
+        "created_at": "2026-01-14T01:43:06.000Z",
+        "url": "https://greasyfork.org/users/1560062-%E5%8D%A2%E8%8D%9F%E8%83%B6"
+      }
+    ],
+    "name": "2libra 自定义表情收藏",
+    "description": "在 2libra 评论编辑器中添加自定义表情收藏与插入面板，支持粘贴链接、右键收藏、快捷键等能力。",
+    "url": "https://greasyfork.org/scripts/562599-2libra-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E6%83%85%E6%94%B6%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/562599/2libra%20%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E6%83%85%E6%94%B6%E8%97%8F.user.js",
+    "code_size": 27352,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

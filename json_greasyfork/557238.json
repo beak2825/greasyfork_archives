@@ -1,0 +1,33 @@
+{
+  "id": 557238,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-28T15:43:27.000Z",
+  "code_updated_at": "2025-11-28T17:12:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537822,
+      "name": "konzo",
+      "created_at": "2025-11-14T14:15:42.000Z",
+      "url": "https://greasyfork.org/users/1537822-konzo"
+    }
+  ],
+  "name": "Pepper – filtr 48h/72h + licznik (zmiana lokacji panelu i licznika)",
+  "description": "Stabilny panel 48h/72h + licznik. Przyciski wstawiane obok paska filtrów (jeśli możliwe) lub pod headerem. Licznik w prawym górnym rogu headera (fallback fixed). Zapamiętywanie wyboru. Bez ingerencji w dropdown Pepper.",
+  "url": "https://greasyfork.org/scripts/557238-pepper-filtr-48h-72h-licznik-zmiana-lokacji-panelu-i-licznika",
+  "code_url": "https://update.greasyfork.org/scripts/557238/Pepper%20%E2%80%93%20filtr%2048h72h%20%2B%20licznik%20%28zmiana%20lokacji%20panelu%20i%20licznika%29.user.js",
+  "code_size": 12684,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

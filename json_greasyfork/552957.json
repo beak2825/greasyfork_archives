@@ -1,0 +1,33 @@
+{
+  "id": 552957,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-18T02:22:58.000Z",
+  "code_updated_at": "2025-10-18T12:08:19.000Z",
+  "namespace": "JVChatPremium",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1132021,
+      "name": "Atlantis-JS",
+      "created_at": "2023-07-21T05:20:47.000Z",
+      "url": "https://greasyfork.org/users/1132021-atlantis-js"
+    }
+  ],
+  "name": "JVChat Premium FORK by Rand0max",
+  "description": "Outil de discussion instantanée pour les forums de Jeuxvideo.com",
+  "url": "https://greasyfork.org/scripts/552957-jvchat-premium-fork-by-rand0max",
+  "code_url": "https://update.greasyfork.org/scripts/552957/JVChat%20Premium%20FORK%20by%20Rand0max.user.js",
+  "code_size": 141777,
+  "license": "MIT License",
+  "version": "0.1.127",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

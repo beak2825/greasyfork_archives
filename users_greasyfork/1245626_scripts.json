@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562368,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T08:57:24.000Z",
+    "code_updated_at": "2026-01-13T03:48:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245626,
+        "name": "ltxlong",
+        "created_at": "2024-01-09T14:53:49.000Z",
+        "url": "https://greasyfork.org/users/1245626-ltxlong"
+      }
+    ],
+    "name": "linux.do player helper",
+    "description": "观影助手",
+    "url": "https://greasyfork.org/scripts/562368-linux-do-player-helper",
+    "code_url": "https://update.greasyfork.org/scripts/562368/linuxdo%20player%20helper.user.js",
+    "code_size": 178680,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

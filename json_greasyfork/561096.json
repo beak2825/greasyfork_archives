@@ -1,0 +1,34 @@
+{
+  "id": 561096,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-02T02:05:43.000Z",
+  "code_updated_at": "2026-01-02T02:05:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555015,
+      "name": "Samuel Sun",
+      "created_at": "2026-01-02T02:03:37.000Z",
+      "url": "https://greasyfork.org/users/1555015-samuel-sun",
+      "scripts": []
+    }
+  ],
+  "name": "FF14 幻化网汉化大师",
+  "description": "自动汉化 Eorzea Collection 装备与染剂名，支持双染色，适配手机端与单页应用。",
+  "url": "https://greasyfork.org/scripts/561096-ff14-%E5%B9%BB%E5%8C%96%E7%BD%91%E6%B1%89%E5%8C%96%E5%A4%A7%E5%B8%88",
+  "code_url": "https://update.greasyfork.org/scripts/561096/FF14%20%E5%B9%BB%E5%8C%96%E7%BD%91%E6%B1%89%E5%8C%96%E5%A4%A7%E5%B8%88.user.js",
+  "code_size": 14715,
+  "license": null,
+  "version": "4.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

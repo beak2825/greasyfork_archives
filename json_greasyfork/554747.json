@@ -1,0 +1,34 @@
+{
+  "id": 554747,
+  "daily_installs": 0,
+  "total_installs": 72,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-04T13:05:16.000Z",
+  "code_updated_at": "2025-11-04T13:05:16.000Z",
+  "namespace": "mx",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1292814,
+      "name": "小李咯",
+      "created_at": "2024-04-25T05:01:29.000Z",
+      "url": "https://greasyfork.org/users/1292814-%E5%B0%8F%E6%9D%8E%E5%92%AF",
+      "scripts": []
+    }
+  ],
+  "name": "超强智慧树网课助手，完全免费，使用AI辅助，拥有超全题库，自动提交，支持视频，，可章节测试，自动挂机，防清进度，超高正确率",
+  "description": "自动挂机看知到MOOC，自动切换下一节，支持屏蔽弹窗题目，可调倍数播放，采用AI辅助答题，支持章节测试等，可以自动答题，可线路选择，默认静音等，解除各类功能限制，开放自定义参数，本脚本仅供个人研究学习使用，专注于为大学生减轻网课学习的操作负担，助力从繁琐的网课任务中高效脱身，让时间真正掌握在自己手中。同时，配备人性化操作界面，设计简洁直观，贴合用户使用习惯，让学习辅助过程更轻松便捷。请勿用于非法用途，产生一切法律责任用户自行承担。",
+  "url": "https://greasyfork.org/scripts/554747-%E8%B6%85%E5%BC%BA%E6%99%BA%E6%85%A7%E6%A0%91%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B-%E5%AE%8C%E5%85%A8%E5%85%8D%E8%B4%B9-%E4%BD%BF%E7%94%A8ai%E8%BE%85%E5%8A%A9-%E6%8B%A5%E6%9C%89%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93-%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4-%E6%94%AF%E6%8C%81%E8%A7%86%E9%A2%91-%E5%8F%AF%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA-%E9%98%B2%E6%B8%85%E8%BF%9B%E5%BA%A6-%E8%B6%85%E9%AB%98%E6%AD%A3%E7%A1%AE%E7%8E%87",
+  "code_url": "https://update.greasyfork.org/scripts/554747/%E8%B6%85%E5%BC%BA%E6%99%BA%E6%85%A7%E6%A0%91%E7%BD%91%E8%AF%BE%E5%8A%A9%E6%89%8B%EF%BC%8C%E5%AE%8C%E5%85%A8%E5%85%8D%E8%B4%B9%EF%BC%8C%E4%BD%BF%E7%94%A8AI%E8%BE%85%E5%8A%A9%EF%BC%8C%E6%8B%A5%E6%9C%89%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%EF%BC%8C%E6%94%AF%E6%8C%81%E8%A7%86%E9%A2%91%EF%BC%8C%EF%BC%8C%E5%8F%AF%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%8C%82%E6%9C%BA%EF%BC%8C%E9%98%B2%E6%B8%85%E8%BF%9B%E5%BA%A6%EF%BC%8C%E8%B6%85%E9%AB%98%E6%AD%A3%E7%A1%AE%E7%8E%87.user.js",
+  "code_size": 230817,
+  "license": "MIT License",
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

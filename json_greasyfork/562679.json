@@ -1,0 +1,59 @@
+{
+  "id": 562679,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-14T20:56:59.000Z",
+  "code_updated_at": "2026-01-14T21:02:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1560400,
+      "name": "Ikeda",
+      "created_at": "2026-01-14T19:58:40.000Z",
+      "url": "https://greasyfork.org/users/1560400-ikeda",
+      "scripts": [
+        {
+          "id": 562679,
+          "daily_installs": 1,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-14T20:56:59.000Z",
+          "code_updated_at": "2026-01-14T21:02:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Haxball Arrow Avatar Animation (Instant + Toggle T)",
+          "description": "Instantly animates your Haxball avatar based on movement keys( You can change this to your keys) Press T to toggle on/off. Zero delay, smooth animation",
+          "url": "https://greasyfork.org/scripts/562679-haxball-arrow-avatar-animation-instant-toggle-t",
+          "code_url": "https://update.greasyfork.org/scripts/562679/Haxball%20Arrow%20Avatar%20Animation%20%28Instant%20%2B%20Toggle%20T%29.user.js",
+          "code_size": 3060,
+          "license": "MIT License",
+          "version": "2026-01-15",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Haxball Arrow Avatar Animation (Instant + Toggle T)",
+  "description": "Instantly animates your Haxball avatar based on movement keys( You can change this to your keys) Press T to toggle on/off. Zero delay, smooth animation",
+  "url": "https://greasyfork.org/scripts/562679-haxball-arrow-avatar-animation-instant-toggle-t",
+  "code_url": "https://update.greasyfork.org/scripts/562679/Haxball%20Arrow%20Avatar%20Animation%20%28Instant%20%2B%20Toggle%20T%29.user.js",
+  "code_size": 3060,
+  "license": "MIT License",
+  "version": "2026-01-15",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

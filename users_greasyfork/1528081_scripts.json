@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552976,
+    "daily_installs": 0,
+    "total_installs": 155,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T07:25:39.000Z",
+    "code_updated_at": "2025-10-18T07:33:57.000Z",
+    "namespace": "unsafe-yt-userscript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528081,
+        "name": "lolisucc001",
+        "created_at": "2025-10-18T06:56:31.000Z",
+        "url": "https://greasyfork.org/users/1528081-lolisucc001"
+      }
+    ],
+    "name": "UnsafeYT-1.81",
+    "description": "Full port of UnsafeYT content script to Tampermonkey. Automatically toggles ON when a valid token is detected in the video description (first line starts with \"token:\"). Made By ChatGPT",
+    "url": "https://greasyfork.org/scripts/552976-unsafeyt-1-81",
+    "code_url": "https://update.greasyfork.org/scripts/552976/UnsafeYT-181.user.js",
+    "code_size": 49226,
+    "license": "MIT License",
+    "version": "1.81",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

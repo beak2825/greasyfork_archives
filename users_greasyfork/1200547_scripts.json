@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560032,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T03:18:18.000Z",
+    "code_updated_at": "2025-12-24T03:18:18.000Z",
+    "namespace": "hardy.ct.helper.enhanced",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1200547,
+        "name": "Kevin Ashton",
+        "created_at": "2023-10-20T17:57:17.000Z",
+        "url": "https://greasyfork.org/users/1200547-kevin-ashton"
+      }
+    ],
+    "name": "Christmas Town Helper [LOKaa Enhanced]",
+    "description": "Christmas Town Helper. Highlights Items, Chests, NPCs. Includes ESP Lines.",
+    "url": "https://greasyfork.org/scripts/560032-christmas-town-helper-lokaa-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/560032/Christmas%20Town%20Helper%20%5BLOKaa%20Enhanced%5D.user.js",
+    "code_size": 50955,
+    "license": null,
+    "version": "2.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

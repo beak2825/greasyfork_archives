@@ -1,7 +1,7 @@
 [
   {
     "id": 562106,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 1,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -127,6 +127,138 @@
     "code_size": 26524,
     "license": null,
     "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555199,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T15:33:57.000Z",
+    "code_updated_at": "2025-12-17T07:49:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445782,
+        "name": "pipiorange030",
+        "created_at": "2025-03-14T20:37:14.000Z",
+        "url": "https://greasyfork.org/users/1445782-pipiorange030"
+      }
+    ],
+    "name": "自动点击器",
+    "description": "修复布局问题和添加正则表达式支持的自动点击器，新增按钮锁定功能和导入导出整合",
+    "url": "https://greasyfork.org/scripts/555199-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/555199/%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E5%99%A8.user.js",
+    "code_size": 132283,
+    "license": null,
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554910,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T19:35:19.000Z",
+    "code_updated_at": "2025-11-05T20:04:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445782,
+        "name": "pipiorange030",
+        "created_at": "2025-03-14T20:37:14.000Z",
+        "url": "https://greasyfork.org/users/1445782-pipiorange030"
+      }
+    ],
+    "name": "精致元素隐藏工具",
+    "description": "精致浅紫色渐变的可视化元素隐藏工具",
+    "url": "https://greasyfork.org/scripts/554910-%E7%B2%BE%E8%87%B4%E5%85%83%E7%B4%A0%E9%9A%90%E8%97%8F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/554910/%E7%B2%BE%E8%87%B4%E5%85%83%E7%B4%A0%E9%9A%90%E8%97%8F%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 39825,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553184,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T08:46:45.000Z",
+    "code_updated_at": "2026-01-11T12:52:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445782,
+        "name": "pipiorange030",
+        "created_at": "2025-03-14T20:37:14.000Z",
+        "url": "https://greasyfork.org/users/1445782-pipiorange030"
+      }
+    ],
+    "name": "智能链接工具",
+    "description": "多功能浮动按钮工具：打开App + 复制链接 + 可视化搜索 + 阅读列表 + 链接净化，支持拖动和全局位置记忆",
+    "url": "https://greasyfork.org/scripts/553184-%E6%99%BA%E8%83%BD%E9%93%BE%E6%8E%A5%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/553184/%E6%99%BA%E8%83%BD%E9%93%BE%E6%8E%A5%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 582256,
+    "license": null,
+    "version": "6.2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553162,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T05:05:25.000Z",
+    "code_updated_at": "2025-10-20T05:05:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445782,
+        "name": "pipiorange030",
+        "created_at": "2025-03-14T20:37:14.000Z",
+        "url": "https://greasyfork.org/users/1445782-pipiorange030"
+      }
+    ],
+    "name": "复制当前链接",
+    "description": "20px完美渐变玫粉色按钮，拖动超跟手，点击效果惊艳",
+    "url": "https://greasyfork.org/scripts/553162-%E5%A4%8D%E5%88%B6%E5%BD%93%E5%89%8D%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/553162/%E5%A4%8D%E5%88%B6%E5%BD%93%E5%89%8D%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 7472,
+    "license": null,
+    "version": "1.5",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unknown"

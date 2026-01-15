@@ -1,0 +1,33 @@
+{
+  "id": 557739,
+  "daily_installs": 1,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-03T05:45:55.000Z",
+  "code_updated_at": "2025-12-03T05:57:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 242506,
+      "name": "os yeky",
+      "created_at": "2019-01-27T14:55:39.000Z",
+      "url": "https://greasyfork.org/users/242506-os-yeky"
+    }
+  ],
+  "name": "Twitter/X (推特) t.co 直连 & 完整链接还原",
+  "description": "将推特推文中的 t.co 链接替换为实际显示的完整 URL，同时修复被推特截断的站内链接显示（如 x.com/...）。",
+  "url": "https://greasyfork.org/scripts/557739-twitter-x-%E6%8E%A8%E7%89%B9-t-co-%E7%9B%B4%E8%BF%9E-%E5%AE%8C%E6%95%B4%E9%93%BE%E6%8E%A5%E8%BF%98%E5%8E%9F",
+  "code_url": "https://update.greasyfork.org/scripts/557739/TwitterX%20%28%E6%8E%A8%E7%89%B9%29%20tco%20%E7%9B%B4%E8%BF%9E%20%20%E5%AE%8C%E6%95%B4%E9%93%BE%E6%8E%A5%E8%BF%98%E5%8E%9F.user.js",
+  "code_size": 4527,
+  "license": "MIT License",
+  "version": "3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

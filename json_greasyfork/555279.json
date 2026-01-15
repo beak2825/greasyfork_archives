@@ -1,0 +1,34 @@
+{
+  "id": 555279,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-09T08:30:00.000Z",
+  "code_updated_at": "2025-11-09T08:37:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527707,
+      "name": "Dean Harper",
+      "created_at": "2025-10-17T08:03:45.000Z",
+      "url": "https://greasyfork.org/users/1527707-dean-harper",
+      "scripts": []
+    }
+  ],
+  "name": "Един Фиш само",
+  "description": "Замества съдържанието на div с клас egtd-s-h-100 на localhost със зададен HTML блок",
+  "url": "https://greasyfork.org/scripts/555279-%D0%B5%D0%B4%D0%B8%D0%BD-%D1%84%D0%B8%D1%88-%D1%81%D0%B0%D0%BC%D0%BE",
+  "code_url": "https://update.greasyfork.org/scripts/555279/%D0%95%D0%B4%D0%B8%D0%BD%20%D0%A4%D0%B8%D1%88%20%D1%81%D0%B0%D0%BC%D0%BE.user.js",
+  "code_size": 11231,
+  "license": null,
+  "version": "1.0",
+  "locale": "bg",
+  "deleted": false,
+  "visibility": "public"
+}

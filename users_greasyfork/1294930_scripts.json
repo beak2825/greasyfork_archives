@@ -1,0 +1,68 @@
+[
+  {
+    "id": 552070,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T16:33:44.000Z",
+    "code_updated_at": "2025-10-09T16:33:44.000Z",
+    "namespace": "https://greasyfork.org/users/573dave2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1294930,
+        "name": "David McCormick",
+        "created_at": "2024-04-29T23:25:55.000Z",
+        "url": "https://greasyfork.org/users/1294930-david-mccormick"
+      }
+    ],
+    "name": "Google Drive: Open Direct Image from /view",
+    "description": "Adds a floating “Open Image” button on Google Drive file preview pages (those ending in /view). Click it to open the full-size direct image URL in a new tab. Right-click and comments remain fully functional.",
+    "url": "https://greasyfork.org/scripts/552070-google-drive-open-direct-image-from-view",
+    "code_url": "https://update.greasyfork.org/scripts/552070/Google%20Drive%3A%20Open%20Direct%20Image%20from%20view.user.js",
+    "code_size": 4349,
+    "license": "MIT License",
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552066,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T16:20:01.000Z",
+    "code_updated_at": "2025-10-09T16:20:01.000Z",
+    "namespace": "https://greasyfork.org/users/1294930",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1294930,
+        "name": "David McCormick",
+        "created_at": "2024-04-29T23:25:55.000Z",
+        "url": "https://greasyfork.org/users/1294930-david-mccormick"
+      }
+    ],
+    "name": "Scribd Bypass (domain switch only)",
+    "description": "Adds a toolbar button that rewrites Scribd URL to scribd.vdownloaders.com and navigates there.",
+    "url": "https://greasyfork.org/scripts/552066-scribd-bypass-domain-switch-only",
+    "code_url": "https://update.greasyfork.org/scripts/552066/Scribd%20Bypass%20%28domain%20switch%20only%29.user.js",
+    "code_size": 3855,
+    "license": "MIT License",
+    "version": "2.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

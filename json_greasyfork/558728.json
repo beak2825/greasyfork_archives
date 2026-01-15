@@ -1,6 +1,6 @@
 {
   "id": 558728,
-  "daily_installs": 2,
+  "daily_installs": 0,
   "total_installs": 59,
   "fan_score": "5.0",
   "good_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1547200,
       "name": "Mupp3t",
       "created_at": "2025-12-12T08:55:28.000Z",
-      "url": "https://greasyfork.org/users/1547200-mupp3t",
-      "scripts": [
-        {
-          "id": 558728,
-          "daily_installs": 2,
-          "total_installs": 59,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-12T12:48:39.000Z",
-          "code_updated_at": "2025-12-15T09:52:34.000Z",
-          "namespace": "muppet.travelshopfix",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Torn Travel Shop – Profit Display",
-          "description": "Show estimated profit for travel shop items (no stock upload)",
-          "url": "https://greasyfork.org/scripts/558728-torn-travel-shop-profit-display",
-          "code_url": "https://update.greasyfork.org/scripts/558728/Torn%20Travel%20Shop%20%E2%80%93%20Profit%20Display.user.js",
-          "code_size": 4590,
-          "license": "MIT License",
-          "version": "0.7.1",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1547200-mupp3t"
     }
   ],
   "name": "Torn Travel Shop – Profit Display",

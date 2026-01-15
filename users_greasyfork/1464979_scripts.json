@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552630,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-15T03:43:31.000Z",
+    "code_updated_at": "2025-10-15T03:43:31.000Z",
+    "namespace": "adrian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464979,
+        "name": "a-gt",
+        "created_at": "2025-05-03T00:31:50.000Z",
+        "url": "https://greasyfork.org/users/1464979-a-gt"
+      }
+    ],
+    "name": "mechacomic.jp ripper",
+    "description": "no",
+    "url": "https://greasyfork.org/scripts/552630-mechacomic-jp-ripper",
+    "code_url": "https://update.greasyfork.org/scripts/552630/mechacomicjp%20ripper.user.js",
+    "code_size": 5375,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

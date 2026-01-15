@@ -1,0 +1,34 @@
+{
+  "id": 555207,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T16:37:43.000Z",
+  "code_updated_at": "2026-01-04T22:36:34.000Z",
+  "namespace": "TSFFBS",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 804555,
+      "name": "syntaxera",
+      "created_at": "2021-08-14T10:46:01.000Z",
+      "url": "https://greasyfork.org/users/804555-syntaxera",
+      "scripts": []
+    }
+  ],
+  "name": "TS FF BS",
+  "description": "TSFFBS",
+  "url": "https://greasyfork.org/scripts/555207-ts-ff-bs",
+  "code_url": "https://update.greasyfork.org/scripts/555207/TS%20FF%20BS.user.js",
+  "code_size": 2152,
+  "license": null,
+  "version": "2026-01-05",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

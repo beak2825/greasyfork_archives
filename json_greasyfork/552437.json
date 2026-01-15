@@ -1,0 +1,59 @@
+{
+  "id": 552437,
+  "daily_installs": 8,
+  "total_installs": 4944,
+  "fan_score": "64.6",
+  "good_ratings": 7,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-13T05:12:57.000Z",
+  "code_updated_at": "2025-11-29T16:10:50.000Z",
+  "namespace": "Aaron",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1485462,
+      "name": "solitudes",
+      "created_at": "2025-06-18T19:32:11.000Z",
+      "url": "https://greasyfork.org/users/1485462-solitudes",
+      "scripts": [
+        {
+          "id": 552437,
+          "daily_installs": 8,
+          "total_installs": 4944,
+          "fan_score": "64.6",
+          "good_ratings": 7,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-13T05:12:57.000Z",
+          "code_updated_at": "2025-11-29T16:10:50.000Z",
+          "namespace": "Aaron",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星学习通全能增强小帮手，自动化操作小帮手，题库查询，让学习更轻松高效",
+          "description": "💻提供超星/学习通多项功能支持，全面增强💻。通提供以下内容：1、章节视频 2、课程作业 3、章节测验 4、智能题库对接。🔥简单高效，持续更新。",
+          "url": "https://greasyfork.org/scripts/552437-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%83%BD%E5%A2%9E%E5%BC%BA%E5%B0%8F%E5%B8%AE%E6%89%8B-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%93%8D%E4%BD%9C%E5%B0%8F%E5%B8%AE%E6%89%8B-%E9%A2%98%E5%BA%93%E6%9F%A5%E8%AF%A2-%E8%AE%A9%E5%AD%A6%E4%B9%A0%E6%9B%B4%E8%BD%BB%E6%9D%BE%E9%AB%98%E6%95%88",
+          "code_url": "https://update.greasyfork.org/scripts/552437/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%83%BD%E5%A2%9E%E5%BC%BA%E5%B0%8F%E5%B8%AE%E6%89%8B%EF%BC%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E6%93%8D%E4%BD%9C%E5%B0%8F%E5%B8%AE%E6%89%8B%EF%BC%8C%E9%A2%98%E5%BA%93%E6%9F%A5%E8%AF%A2%EF%BC%8C%E8%AE%A9%E5%AD%A6%E4%B9%A0%E6%9B%B4%E8%BD%BB%E6%9D%BE%E9%AB%98%E6%95%88.user.js",
+          "code_size": 342764,
+          "license": null,
+          "version": "1.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星学习通全能增强小帮手，自动化操作小帮手，题库查询，让学习更轻松高效",
+  "description": "💻提供超星/学习通多项功能支持，全面增强💻。通提供以下内容：1、章节视频 2、课程作业 3、章节测验 4、智能题库对接。🔥简单高效，持续更新。",
+  "url": "https://greasyfork.org/scripts/552437-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%83%BD%E5%A2%9E%E5%BC%BA%E5%B0%8F%E5%B8%AE%E6%89%8B-%E8%87%AA%E5%8A%A8%E5%8C%96%E6%93%8D%E4%BD%9C%E5%B0%8F%E5%B8%AE%E6%89%8B-%E9%A2%98%E5%BA%93%E6%9F%A5%E8%AF%A2-%E8%AE%A9%E5%AD%A6%E4%B9%A0%E6%9B%B4%E8%BD%BB%E6%9D%BE%E9%AB%98%E6%95%88",
+  "code_url": "https://update.greasyfork.org/scripts/552437/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%85%A8%E8%83%BD%E5%A2%9E%E5%BC%BA%E5%B0%8F%E5%B8%AE%E6%89%8B%EF%BC%8C%E8%87%AA%E5%8A%A8%E5%8C%96%E6%93%8D%E4%BD%9C%E5%B0%8F%E5%B8%AE%E6%89%8B%EF%BC%8C%E9%A2%98%E5%BA%93%E6%9F%A5%E8%AF%A2%EF%BC%8C%E8%AE%A9%E5%AD%A6%E4%B9%A0%E6%9B%B4%E8%BD%BB%E6%9D%BE%E9%AB%98%E6%95%88.user.js",
+  "code_size": 342764,
+  "license": null,
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

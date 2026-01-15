@@ -1,0 +1,33 @@
+{
+  "id": 555652,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-12T19:17:04.000Z",
+  "code_updated_at": "2025-11-12T19:17:04.000Z",
+  "namespace": "hide-se-floating-material-menu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511650,
+      "name": "해인",
+      "created_at": "2025-09-04T04:34:25.000Z",
+      "url": "https://greasyfork.org/users/1511650-%ED%95%B4%EC%9D%B8"
+    }
+  ],
+  "name": "Naver Cafe 글쓰기 — \"글감\" 플로팅 메뉴 숨기기",
+  "description": "카페 글쓰기 페이지에서 에디터 하단의 \"글감\" 플로팅 메뉴(.se-floating-material-menu)를 감춤",
+  "url": "https://greasyfork.org/scripts/555652-naver-cafe-%EA%B8%80%EC%93%B0%EA%B8%B0-%EA%B8%80%EA%B0%90-%ED%94%8C%EB%A1%9C%ED%8C%85-%EB%A9%94%EB%89%B4-%EC%88%A8%EA%B8%B0%EA%B8%B0",
+  "code_url": "https://update.greasyfork.org/scripts/555652/Naver%20Cafe%20%EA%B8%80%EC%93%B0%EA%B8%B0%20%E2%80%94%20%22%EA%B8%80%EA%B0%90%22%20%ED%94%8C%EB%A1%9C%ED%8C%85%20%EB%A9%94%EB%89%B4%20%EC%88%A8%EA%B8%B0%EA%B8%B0.user.js",
+  "code_size": 2844,
+  "license": "All rights reserved",
+  "version": "2025-11-13",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

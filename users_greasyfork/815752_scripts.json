@@ -1,5 +1,38 @@
 [
   {
+    "id": 562587,
+    "daily_installs": 1,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T00:08:55.000Z",
+    "code_updated_at": "2026-01-14T00:12:02.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815752,
+        "name": "BillyBourbon",
+        "created_at": "2021-09-15T15:31:29.000Z",
+        "url": "https://greasyfork.org/users/815752-billybourbon"
+      }
+    ],
+    "name": "Walls Begone",
+    "description": "walls big. mobile people scroll long time. this fix",
+    "url": "https://greasyfork.org/scripts/562587-walls-begone",
+    "code_url": "https://update.greasyfork.org/scripts/562587/Walls%20Begone.user.js",
+    "code_size": 4932,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 557675,
     "daily_installs": 0,
     "total_installs": 5,

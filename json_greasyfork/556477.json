@@ -17,33 +17,7 @@
       "id": 1540085,
       "name": "Flymirai",
       "created_at": "2025-11-21T10:35:17.000Z",
-      "url": "https://greasyfork.org/users/1540085-flymirai",
-      "scripts": [
-        {
-          "id": 556477,
-          "daily_installs": 0,
-          "total_installs": 3,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-11-21T10:42:40.000Z",
-          "code_updated_at": "2025-11-21T10:42:40.000Z",
-          "namespace": "https://t.me/Flymirai",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "网页内容编辑开关（可隐藏）",
-          "description": "在右下角添加一个按钮，点击可切换网页编辑模式，关闭时按钮可隐藏并通过点击热区重新显示",
-          "url": "https://greasyfork.org/scripts/556477-%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E7%BC%96%E8%BE%91%E5%BC%80%E5%85%B3-%E5%8F%AF%E9%9A%90%E8%97%8F",
-          "code_url": "https://update.greasyfork.org/scripts/556477/%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E7%BC%96%E8%BE%91%E5%BC%80%E5%85%B3%EF%BC%88%E5%8F%AF%E9%9A%90%E8%97%8F%EF%BC%89.user.js",
-          "code_size": 2118,
-          "license": "MIT License",
-          "version": "2025-11-21",
-          "locale": "zh-CN",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1540085-flymirai"
     }
   ],
   "name": "网页内容编辑开关（可隐藏）",

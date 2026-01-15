@@ -17,7 +17,8 @@
       "id": 1544554,
       "name": "emeraldfriendly",
       "created_at": "2025-12-04T10:54:20.000Z",
-      "url": "https://greasyfork.org/users/1544554-emeraldfriendly"
+      "url": "https://greasyfork.org/users/1544554-emeraldfriendly",
+      "scripts": []
     }
   ],
   "name": "Browser Cache Optimizer & Latency Fix",

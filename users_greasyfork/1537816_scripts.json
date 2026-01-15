@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555841,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T13:57:44.000Z",
+    "code_updated_at": "2025-11-14T13:57:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537816,
+        "name": "nazmul11011",
+        "created_at": "2025-11-14T13:55:33.000Z",
+        "url": "https://greasyfork.org/users/1537816-nazmul11011"
+      }
+    ],
+    "name": "Land Tax Dashboard UI Changer",
+    "description": "Fix layout and apply Bangla font on Bangladesh government land tax portal",
+    "url": "https://greasyfork.org/scripts/555841-land-tax-dashboard-ui-changer",
+    "code_url": "https://update.greasyfork.org/scripts/555841/Land%20Tax%20Dashboard%20UI%20Changer.user.js",
+    "code_size": 9049,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

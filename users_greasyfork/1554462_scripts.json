@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560907,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-31T06:55:51.000Z",
+    "code_updated_at": "2025-12-31T06:55:51.000Z",
+    "namespace": "https://greasyfork.org/users/your-id",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1554462,
+        "name": "eastdog",
+        "created_at": "2025-12-31T06:35:32.000Z",
+        "url": "https://greasyfork.org/users/1554462-eastdog"
+      }
+    ],
+    "name": "YOUR_SCRIPT_NAME",
+    "description": "One-line description of what this script does.",
+    "url": "https://greasyfork.org/scripts/560907-your-script-name",
+    "code_url": "https://update.greasyfork.org/scripts/560907/YOUR_SCRIPT_NAME.user.js",
+    "code_size": 5862,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

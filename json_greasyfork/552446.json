@@ -1,0 +1,59 @@
+{
+  "id": 552446,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-13T08:52:27.000Z",
+  "code_updated_at": "2025-10-13T08:52:27.000Z",
+  "namespace": "https://github.com/zampierilucas",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1525964,
+      "name": "Lucas Zampieri",
+      "created_at": "2025-10-13T08:47:25.000Z",
+      "url": "https://greasyfork.org/users/1525964-lucas-zampieri",
+      "scripts": [
+        {
+          "id": 552446,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-13T08:52:27.000Z",
+          "code_updated_at": "2025-10-13T08:52:27.000Z",
+          "namespace": "https://github.com/zampierilucas",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Center Lore.kernel.org Content",
+          "description": "Centers the content on lore.kernel.org instead of left-alignment",
+          "url": "https://greasyfork.org/scripts/552446-center-lore-kernel-org-content",
+          "code_url": "https://update.greasyfork.org/scripts/552446/Center%20Lorekernelorg%20Content.user.js",
+          "code_size": 2097,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Center Lore.kernel.org Content",
+  "description": "Centers the content on lore.kernel.org instead of left-alignment",
+  "url": "https://greasyfork.org/scripts/552446-center-lore-kernel-org-content",
+  "code_url": "https://update.greasyfork.org/scripts/552446/Center%20Lorekernelorg%20Content.user.js",
+  "code_size": 2097,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

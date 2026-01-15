@@ -1,8 +1,8 @@
 [
   {
     "id": 557750,
-    "daily_installs": 2,
-    "total_installs": 427,
+    "daily_installs": 4,
+    "total_installs": 438,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -61,6 +61,39 @@
     "code_size": 6182,
     "license": "MIT License",
     "version": "1.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557748,
+    "daily_installs": 1,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T07:08:08.000Z",
+    "code_updated_at": "2025-12-04T06:46:46.000Z",
+    "namespace": "https://github.com/RiTian96/SurfHelper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 332142,
+        "name": "RiTian96",
+        "created_at": "2019-08-22T11:51:04.000Z",
+        "url": "https://greasyfork.org/users/332142-ritian96"
+      }
+    ],
+    "name": "COC阵型复制助手",
+    "description": "[核心] 绕过付费/次数限制，后台无感提取阵型链接；[辅助] 鼠标悬停显示高清巨型大图(自适应尺寸，智能避让鼠标)；[资源] 左侧悬浮背包记录历史阵型，支持二维码扫码直连。",
+    "url": "https://greasyfork.org/scripts/557748-coc%E9%98%B5%E5%9E%8B%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/557748/COC%E9%98%B5%E5%9E%8B%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 19083,
+    "license": "MIT License",
+    "version": "1.1.3",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"

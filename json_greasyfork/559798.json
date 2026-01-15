@@ -1,0 +1,33 @@
+{
+  "id": 559798,
+  "daily_installs": 1,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-22T09:37:37.000Z",
+  "code_updated_at": "2025-12-22T09:37:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1359280,
+      "name": "gymimc",
+      "created_at": "2024-08-28T11:39:51.000Z",
+      "url": "https://greasyfork.org/users/1359280-gymimc"
+    }
+  ],
+  "name": "Gemini Code Block Scroller (v1.2)",
+  "description": "强制 Gemini 代码块内部滚动。双击代码区域切换“折叠/展开”。",
+  "url": "https://greasyfork.org/scripts/559798-gemini-code-block-scroller-v1-2",
+  "code_url": "https://update.greasyfork.org/scripts/559798/Gemini%20Code%20Block%20Scroller%20%28v12%29.user.js",
+  "code_size": 4290,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

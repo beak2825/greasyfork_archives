@@ -1,0 +1,68 @@
+[
+  {
+    "id": 559944,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-23T13:20:57.000Z",
+    "code_updated_at": "2025-12-23T13:20:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495618,
+        "name": "Dolphin-QvQ",
+        "created_at": "2025-07-17T04:20:50.000Z",
+        "url": "https://greasyfork.org/users/1495618-dolphin-qvq"
+      }
+    ],
+    "name": "闲管家一键上架|闲鱼图片下载|闲鱼商品信息提取|导出闲鱼猜你喜欢(修复优化版)",
+    "description": "在商品页面复制商品信息，下载商品详情图片，并在闲鱼管家后台上架页面插入“一键填充”按钮。在闲鱼商详页导出猜你喜欢的数据到Excel，支持动态数据。",
+    "url": "https://greasyfork.org/scripts/559944-%E9%97%B2%E7%AE%A1%E5%AE%B6%E4%B8%80%E9%94%AE%E4%B8%8A%E6%9E%B6-%E9%97%B2%E9%B1%BC%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD-%E9%97%B2%E9%B1%BC%E5%95%86%E5%93%81%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96-%E5%AF%BC%E5%87%BA%E9%97%B2%E9%B1%BC%E7%8C%9C%E4%BD%A0%E5%96%9C%E6%AC%A2-%E4%BF%AE%E5%A4%8D%E4%BC%98%E5%8C%96%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559944/%E9%97%B2%E7%AE%A1%E5%AE%B6%E4%B8%80%E9%94%AE%E4%B8%8A%E6%9E%B6%7C%E9%97%B2%E9%B1%BC%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%7C%E9%97%B2%E9%B1%BC%E5%95%86%E5%93%81%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96%7C%E5%AF%BC%E5%87%BA%E9%97%B2%E9%B1%BC%E7%8C%9C%E4%BD%A0%E5%96%9C%E6%AC%A2%28%E4%BF%AE%E5%A4%8D%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+    "code_size": 21479,
+    "license": "GPL",
+    "version": "3.38",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555685,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T05:49:21.000Z",
+    "code_updated_at": "2025-11-13T05:49:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495618,
+        "name": "Dolphin-QvQ",
+        "created_at": "2025-07-17T04:20:50.000Z",
+        "url": "https://greasyfork.org/users/1495618-dolphin-qvq"
+      }
+    ],
+    "name": "启迪小说TXT下载器",
+    "description": "支持选择章节范围的小说下载器，优化性能警告",
+    "url": "https://greasyfork.org/scripts/555685-%E5%90%AF%E8%BF%AA%E5%B0%8F%E8%AF%B4txt%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/555685/%E5%90%AF%E8%BF%AA%E5%B0%8F%E8%AF%B4TXT%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 17328,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553860,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-27T13:17:22.000Z",
+    "code_updated_at": "2025-10-27T13:17:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510796,
+        "name": "자막",
+        "created_at": "2025-09-01T09:55:39.000Z",
+        "url": "https://greasyfork.org/users/1510796-%EC%9E%90%EB%A7%89"
+      }
+    ],
+    "name": "Weflab 후원 내역 Google Sheets 연동",
+    "description": "Tampermonkey 메뉴를 통해 URL을 설정하고, weflab 페이지의 룰렛 내역을 Google Sheets에 실시간으로 업데이트합니다.",
+    "url": "https://greasyfork.org/scripts/553860-weflab-%ED%9B%84%EC%9B%90-%EB%82%B4%EC%97%AD-google-sheets-%EC%97%B0%EB%8F%99",
+    "code_url": "https://update.greasyfork.org/scripts/553860/Weflab%20%ED%9B%84%EC%9B%90%20%EB%82%B4%EC%97%AD%20Google%20Sheets%20%EC%97%B0%EB%8F%99.user.js",
+    "code_size": 7088,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553846,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-27T10:29:30.000Z",
+    "code_updated_at": "2025-10-27T10:29:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510796,
+        "name": "자막",
+        "created_at": "2025-09-01T09:55:39.000Z",
+        "url": "https://greasyfork.org/users/1510796-%EC%9E%90%EB%A7%89"
+      }
+    ],
+    "name": "Weflab 후원 내역 CSV 추출기",
+    "description": "위플랩(Weflab) 룰렛 통계 모달의 닫기 버튼 옆에 버튼을 추가하여, 페이지의 전체 후원 내역을 CSV 파일로 추출합니다.",
+    "url": "https://greasyfork.org/scripts/553846-weflab-%ED%9B%84%EC%9B%90-%EB%82%B4%EC%97%AD-csv-%EC%B6%94%EC%B6%9C%EA%B8%B0",
+    "code_url": "https://update.greasyfork.org/scripts/553846/Weflab%20%ED%9B%84%EC%9B%90%20%EB%82%B4%EC%97%AD%20CSV%20%EC%B6%94%EC%B6%9C%EA%B8%B0.user.js",
+    "code_size": 4921,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

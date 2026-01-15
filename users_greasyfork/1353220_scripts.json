@@ -30,6 +30,72 @@
     "version": "1.2.3",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555887,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-15T04:12:29.000Z",
+    "code_updated_at": "2025-11-29T21:10:46.000Z",
+    "namespace": "https://torn.report/userscripts/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353220,
+        "name": "DEAD EDITZZ (D3AD3DiTZz)",
+        "created_at": "2024-08-17T07:44:53.000Z",
+        "url": "https://greasyfork.org/users/1353220-dead-editzz-d3ad3ditzz"
+      }
+    ],
+    "name": "Weapon & Armor UIDs — Armory + Items (Owner Lookup)",
+    "description": "Crawl armory pages and show owner name (from Google Sheet WebApp) beside items.",
+    "url": "https://greasyfork.org/scripts/555887-weapon-armor-uids-armory-items-owner-lookup",
+    "code_url": "https://update.greasyfork.org/scripts/555887/Weapon%20%20Armor%20UIDs%20%E2%80%94%20Armory%20%2B%20Items%20%28Owner%20Lookup%29.user.js",
+    "code_size": 26546,
+    "license": "GNU GPLv3",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554153,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T23:37:54.000Z",
+    "code_updated_at": "2025-10-29T23:37:54.000Z",
+    "namespace": "https://mayhemhub.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353220,
+        "name": "DEAD EDITZZ (D3AD3DiTZz)",
+        "created_at": "2024-08-17T07:44:53.000Z",
+        "url": "https://greasyfork.org/users/1353220-dead-editzz-d3ad3ditzz"
+      }
+    ],
+    "name": "Torn Bounties — Smart Group & Sort",
+    "description": "Reorders the bounties list: OKAY (by highest bounty), Hospital (by time left), Travelling/Abroad at bottom or hidden; live countdown that replaces 'Hospital' text.",
+    "url": "https://greasyfork.org/scripts/554153-torn-bounties-smart-group-sort",
+    "code_url": "https://update.greasyfork.org/scripts/554153/Torn%20Bounties%20%E2%80%94%20Smart%20Group%20%20Sort.user.js",
+    "code_size": 12112,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

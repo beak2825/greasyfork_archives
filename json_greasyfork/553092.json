@@ -1,0 +1,59 @@
+{
+  "id": 553092,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T12:15:47.000Z",
+  "code_updated_at": "2025-10-19T12:15:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1438102,
+      "name": "systoned",
+      "created_at": "2025-02-21T10:50:30.000Z",
+      "url": "https://greasyfork.org/users/1438102-systoned",
+      "scripts": [
+        {
+          "id": 558734,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-12T14:07:24.000Z",
+          "code_updated_at": "2026-01-04T03:13:26.000Z",
+          "namespace": "https://torn.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Chat Messages From Users (by XID)",
+          "description": "Hides chat messages from specific users by profile XID",
+          "url": "https://greasyfork.org/scripts/558734-hide-chat-messages-from-users-by-xid",
+          "code_url": "https://update.greasyfork.org/scripts/558734/Hide%20Chat%20Messages%20From%20Users%20%28by%20XID%29.user.js",
+          "code_size": 8358,
+          "license": null,
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn City - Faction Members Status Checker (Split Sections & Toggle)",
+  "description": "Retrieve all faction members and display them in sections (Hospital, Travelling, and Okay), sorted by remaining hospital time. The display toggles on each button press.",
+  "url": "https://greasyfork.org/scripts/553092-torn-city-faction-members-status-checker-split-sections-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/553092/Torn%20City%20-%20Faction%20Members%20Status%20Checker%20%28Split%20Sections%20%20Toggle%29.user.js",
+  "code_size": 9012,
+  "license": "MIT License",
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

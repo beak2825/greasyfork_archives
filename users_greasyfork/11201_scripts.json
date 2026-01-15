@@ -24,7 +24,7 @@
     "name": "Temporary-Script-Storage",
     "description": "Sets a maximum age (minimum one day) for script storage values, after which they are deleted",
     "url": "https://greasyfork.org/scripts/562172-temporary-script-storage",
-    "code_url": "https://update.greasyfork.org/scripts/562172/1732034/Temporary-Script-Storage.js",
+    "code_url": "https://update.greasyfork.org/scripts/562172/1733898/Temporary-Script-Storage.js",
     "code_size": 30024,
     "license": "MIT (https://mit-license.org/)",
     "version": "1.0.2",
@@ -90,12 +90,12 @@
     "name": "Denque-on-Greasy-Fork",
     "description": "(https://github.com/Salakar) Fast, well-tested double-ended queue implementation based on ring buffer",
     "url": "https://greasyfork.org/scripts/559642-denque-on-greasy-fork",
-    "code_url": "https://update.greasyfork.org/scripts/559642/1722326/Denque-on-Greasy-Fork.js",
+    "code_url": "https://update.greasyfork.org/scripts/559642/1733950/Denque-on-Greasy-Fork.js",
     "code_size": 30489,
     "license": "Apache License 2.0 (http://www.apache.org/licenses/LICENSE-2.0)",
     "version": "2.1.0h",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

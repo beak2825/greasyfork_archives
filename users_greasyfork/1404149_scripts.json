@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551961,
+    "daily_installs": 1,
+    "total_installs": 113,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-08T15:45:55.000Z",
+    "code_updated_at": "2025-10-08T15:45:55.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404149,
+        "name": "ilyax",
+        "created_at": "2024-11-29T14:07:20.000Z",
+        "url": "https://greasyfork.org/users/1404149-ilyax"
+      }
+    ],
+    "name": "Astral [LITE]",
+    "description": "This script was been writed by ilyax aka the real name liyaa basically this script was made for Nightmare who used to bully us thanks for waiting this script.",
+    "url": "https://greasyfork.org/scripts/551961-astral-lite",
+    "code_url": "https://update.greasyfork.org/scripts/551961/Astral%20%5BLITE%5D.user.js",
+    "code_size": 165660,
+    "license": null,
+    "version": "5.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551959,
+    "daily_installs": 2,
+    "total_installs": 166,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-08T15:40:49.000Z",
+    "code_updated_at": "2025-12-30T19:32:41.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404149,
+        "name": "ilyax",
+        "created_at": "2024-11-29T14:07:20.000Z",
+        "url": "https://greasyfork.org/users/1404149-ilyax"
+      }
+    ],
+    "name": "Astral [Without AI]",
+    "description": "This script was been writed by ilyax aka the real name liyaa basically this script was made for Nightmare who used to bully us thanks for waiting this script.",
+    "url": "https://greasyfork.org/scripts/551959-astral-without-ai",
+    "code_url": "https://update.greasyfork.org/scripts/551959/Astral%20%5BWithout%20AI%5D.user.js",
+    "code_size": 168818,
+    "license": null,
+    "version": "5.1.0:4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

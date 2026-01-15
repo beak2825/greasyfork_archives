@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 554423,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-01T14:54:45.000Z",
+    "code_updated_at": "2025-11-01T14:55:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483892,
+        "name": "marcopolo123",
+        "created_at": "2025-06-15T03:21:38.000Z",
+        "url": "https://greasyfork.org/users/1483892-marcopolo123"
+      }
+    ],
+    "name": "MTSlash 域名替换",
+    "description": "将所有 mtslash 旧域名替换为 www.mtslash.life，并修复论坛自动更正导致的双重域名路径问题（虽然可能性很低）。",
+    "url": "https://greasyfork.org/scripts/554423-mtslash-%E5%9F%9F%E5%90%8D%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/554423/MTSlash%20%E5%9F%9F%E5%90%8D%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 4824,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

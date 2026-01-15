@@ -1,0 +1,33 @@
+{
+  "id": 557928,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-04T17:20:40.000Z",
+  "code_updated_at": "2025-12-09T13:09:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1057781,
+      "name": "Micro soft",
+      "created_at": "2023-04-11T01:26:49.000Z",
+      "url": "https://greasyfork.org/users/1057781-micro-soft"
+    }
+  ],
+  "name": "粉笔快速练习答案布局优化与视频删除",
+  "description": "【底部边距修复版】分栏+自动修复+拖动调节+固定头部+强制展开+自定义宽度+修复底部遮挡。",
+  "url": "https://greasyfork.org/scripts/557928-%E7%B2%89%E7%AC%94%E5%BF%AB%E9%80%9F%E7%BB%83%E4%B9%A0%E7%AD%94%E6%A1%88%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96%E4%B8%8E%E8%A7%86%E9%A2%91%E5%88%A0%E9%99%A4",
+  "code_url": "https://update.greasyfork.org/scripts/557928/%E7%B2%89%E7%AC%94%E5%BF%AB%E9%80%9F%E7%BB%83%E4%B9%A0%E7%AD%94%E6%A1%88%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96%E4%B8%8E%E8%A7%86%E9%A2%91%E5%88%A0%E9%99%A4.user.js",
+  "code_size": 9477,
+  "license": "MIT License",
+  "version": "27.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

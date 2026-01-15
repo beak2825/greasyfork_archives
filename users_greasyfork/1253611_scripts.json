@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555823,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T09:08:02.000Z",
+    "code_updated_at": "2025-11-22T06:36:22.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1253611,
+        "name": "TallTacoTristan",
+        "created_at": "2024-01-26T17:28:24.000Z",
+        "url": "https://greasyfork.org/users/1253611-talltacotristan"
+      }
+    ],
+    "name": "Youtube to mp4 background 1080p downloader",
+    "description": "Reprogram the YouTube download button to automatically use yt2mp4 for 1080p downloads on left click, with a settings panel accessible via right click or Tampermonkey menu. Includes options to save popup position/size and block ad popups from the download service.",
+    "url": "https://greasyfork.org/scripts/555823-youtube-to-mp4-background-1080p-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/555823/Youtube%20to%20mp4%20background%201080p%20downloader.user.js",
+    "code_size": 16202,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

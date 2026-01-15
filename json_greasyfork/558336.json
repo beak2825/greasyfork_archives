@@ -1,0 +1,59 @@
+{
+  "id": 558336,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-08T16:54:55.000Z",
+  "code_updated_at": "2025-12-08T16:54:55.000Z",
+  "namespace": "https://www.zed.city/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1546005,
+      "name": "Macaria",
+      "created_at": "2025-12-08T16:35:45.000Z",
+      "url": "https://greasyfork.org/users/1546005-macaria",
+      "scripts": [
+        {
+          "id": 558336,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-08T16:54:55.000Z",
+          "code_updated_at": "2025-12-08T16:54:55.000Z",
+          "namespace": "https://www.zed.city/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ZedCity Vehicle Weight Display by Macaria v1.01",
+          "description": "Instant vehicle weight display, click-triggered updates, and toast notifications (toggle via script menu)",
+          "url": "https://greasyfork.org/scripts/558336-zedcity-vehicle-weight-display-by-macaria-v1-01",
+          "code_url": "https://update.greasyfork.org/scripts/558336/ZedCity%20Vehicle%20Weight%20Display%20by%20Macaria%20v101.user.js",
+          "code_size": 8230,
+          "license": null,
+          "version": "1.01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ZedCity Vehicle Weight Display by Macaria v1.01",
+  "description": "Instant vehicle weight display, click-triggered updates, and toast notifications (toggle via script menu)",
+  "url": "https://greasyfork.org/scripts/558336-zedcity-vehicle-weight-display-by-macaria-v1-01",
+  "code_url": "https://update.greasyfork.org/scripts/558336/ZedCity%20Vehicle%20Weight%20Display%20by%20Macaria%20v101.user.js",
+  "code_size": 8230,
+  "license": null,
+  "version": "1.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

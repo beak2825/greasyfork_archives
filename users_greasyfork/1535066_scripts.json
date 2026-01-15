@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555091,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-07T09:19:20.000Z",
+    "code_updated_at": "2025-11-07T09:19:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535066,
+        "name": "weian",
+        "created_at": "2025-11-07T09:16:13.000Z",
+        "url": "https://greasyfork.org/users/1535066-weian"
+      }
+    ],
+    "name": "invites导出帖子为 Markdown",
+    "description": "在 invites.fun 帖子页面添加一个按钮，将主楼内容导出为 Markdown (.md) 文件。",
+    "url": "https://greasyfork.org/scripts/555091-invites%E5%AF%BC%E5%87%BA%E5%B8%96%E5%AD%90%E4%B8%BA-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/555091/invites%E5%AF%BC%E5%87%BA%E5%B8%96%E5%AD%90%E4%B8%BA%20Markdown.user.js",
+    "code_size": 5053,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

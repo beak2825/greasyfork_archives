@@ -1,0 +1,33 @@
+{
+  "id": 552998,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-18T12:08:03.000Z",
+  "code_updated_at": "2025-10-18T12:12:01.000Z",
+  "namespace": "https://i.imgur.com/n084VLd.png",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 935180,
+      "name": "Kalzer Sumilihig (Daven)",
+      "created_at": "2022-07-13T06:27:09.000Z",
+      "url": "https://greasyfork.org/users/935180-kalzer-sumilihig-daven"
+    }
+  ],
+  "name": "7Placer+ USER",
+  "description": "Pixel place.io bot - an advanced bot that includes image botting, painting, and account management features. (Border drawing feature added)",
+  "url": "https://greasyfork.org/scripts/552998-7placer-user",
+  "code_url": "https://update.greasyfork.org/scripts/552998/1679788/7Placer%2B%20USER.js",
+  "code_size": 36762,
+  "license": null,
+  "version": "1.5.1b",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

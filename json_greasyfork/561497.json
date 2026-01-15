@@ -1,0 +1,34 @@
+{
+  "id": 561497,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-05T12:44:03.000Z",
+  "code_updated_at": "2026-01-05T12:44:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 714188,
+      "name": "s_____________",
+      "created_at": "2020-12-07T11:37:11.000Z",
+      "url": "https://greasyfork.org/users/714188-s",
+      "scripts": []
+    }
+  ],
+  "name": "白p斗鱼",
+  "description": "彻底删除紫色背景画，解锁视频高度，强制画面向下延伸。整合了大量广告、互动挂件和干扰元素屏蔽规则。2025.01.Final.Enhanced",
+  "url": "https://greasyfork.org/scripts/561497-%E7%99%BDp%E6%96%97%E9%B1%BC",
+  "code_url": "https://update.greasyfork.org/scripts/561497/%E7%99%BDp%E6%96%97%E9%B1%BC.user.js",
+  "code_size": 7210,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

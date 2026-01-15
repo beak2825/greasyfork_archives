@@ -1,0 +1,59 @@
+{
+  "id": 552122,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-10T07:18:58.000Z",
+  "code_updated_at": "2025-11-22T03:53:40.000Z",
+  "namespace": "https://github.com/Sanka1610/SearXNG-Gemini-Overview",
+  "support_url": "https://github.com/Sanka1610/SearXNG-Gemini-Overview/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1523874,
+      "name": "Sanka1610",
+      "created_at": "2025-10-08T08:19:33.000Z",
+      "url": "https://greasyfork.org/users/1523874-sanka1610",
+      "scripts": [
+        {
+          "id": 552122,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-10T07:18:58.000Z",
+          "code_updated_at": "2025-11-22T03:53:40.000Z",
+          "namespace": "https://github.com/Sanka1610/SearXNG-Gemini-Overview",
+          "support_url": "https://github.com/Sanka1610/SearXNG-Gemini-Overview/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SearXNG Gemini Overview",
+          "description": "SearXNGの検索結果にGeminiによる概要を表示します",
+          "url": "https://greasyfork.org/scripts/552122-searxng-gemini-overview",
+          "code_url": "https://update.greasyfork.org/scripts/552122/SearXNG%20Gemini%20Overview.user.js",
+          "code_size": 12012,
+          "license": "MIT License",
+          "version": "1.1.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SearXNG Gemini Overview",
+  "description": "SearXNGの検索結果にGeminiによる概要を表示します",
+  "url": "https://greasyfork.org/scripts/552122-searxng-gemini-overview",
+  "code_url": "https://update.greasyfork.org/scripts/552122/SearXNG%20Gemini%20Overview.user.js",
+  "code_size": 12012,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 556109,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-17T15:46:41.000Z",
+    "code_updated_at": "2025-12-01T05:51:13.000Z",
+    "namespace": "wiki.import.book.version",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337615,
+        "name": "omvjro",
+        "created_at": "2024-07-21T09:40:19.000Z",
+        "url": "https://greasyfork.org/users/1337615-omvjro"
+      }
+    ],
+    "name": "从引进出版社网站获取班固米书籍版本",
+    "description": "支持东立、长鸿、东贩、台角、青文、尖端、玉皇朝、豆瓣、当当、京东、天猫，暴露window.getBgmVersion(url)方法",
+    "url": "https://greasyfork.org/scripts/556109-%E4%BB%8E%E5%BC%95%E8%BF%9B%E5%87%BA%E7%89%88%E7%A4%BE%E7%BD%91%E7%AB%99%E8%8E%B7%E5%8F%96%E7%8F%AD%E5%9B%BA%E7%B1%B3%E4%B9%A6%E7%B1%8D%E7%89%88%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/556109/%E4%BB%8E%E5%BC%95%E8%BF%9B%E5%87%BA%E7%89%88%E7%A4%BE%E7%BD%91%E7%AB%99%E8%8E%B7%E5%8F%96%E7%8F%AD%E5%9B%BA%E7%B1%B3%E4%B9%A6%E7%B1%8D%E7%89%88%E6%9C%AC.user.js",
+    "code_size": 22228,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554524,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T14:36:13.000Z",
+    "code_updated_at": "2026-01-11T07:23:57.000Z",
+    "namespace": "bgm.wiki.rel.diff",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337615,
+        "name": "omvjro",
+        "created_at": "2024-07-21T09:40:19.000Z",
+        "url": "https://greasyfork.org/users/1337615-omvjro"
+      }
+    ],
+    "name": "维基关联历史对比差异",
+    "description": "比较条目-人物/角色、人物-条目关联项目的增删修改",
+    "url": "https://greasyfork.org/scripts/554524-%E7%BB%B4%E5%9F%BA%E5%85%B3%E8%81%94%E5%8E%86%E5%8F%B2%E5%AF%B9%E6%AF%94%E5%B7%AE%E5%BC%82",
+    "code_url": "https://update.greasyfork.org/scripts/554524/%E7%BB%B4%E5%9F%BA%E5%85%B3%E8%81%94%E5%8E%86%E5%8F%B2%E5%AF%B9%E6%AF%94%E5%B7%AE%E5%BC%82.user.js",
+    "code_size": 23699,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552759,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T08:26:32.000Z",
+    "code_updated_at": "2025-10-17T08:39:52.000Z",
+    "namespace": "https://bgm.tv/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337615,
+        "name": "omvjro",
+        "created_at": "2024-07-21T09:40:19.000Z",
+        "url": "https://greasyfork.org/users/1337615-omvjro"
+      }
+    ],
+    "name": "班固米人物别名本地 API",
+    "description": "从 wiki archive 自动生成，支持远程更新和本地 .json.gz 文件导入",
+    "url": "https://greasyfork.org/scripts/552759-%E7%8F%AD%E5%9B%BA%E7%B1%B3%E4%BA%BA%E7%89%A9%E5%88%AB%E5%90%8D%E6%9C%AC%E5%9C%B0-api",
+    "code_url": "https://update.greasyfork.org/scripts/552759/%E7%8F%AD%E5%9B%BA%E7%B1%B3%E4%BA%BA%E7%89%A9%E5%88%AB%E5%90%8D%E6%9C%AC%E5%9C%B0%20API.user.js",
+    "code_size": 18281,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552012,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T06:02:51.000Z",
+    "code_updated_at": "2025-10-09T06:02:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337615,
+        "name": "omvjro",
+        "created_at": "2024-07-21T09:40:19.000Z",
+        "url": "https://greasyfork.org/users/1337615-omvjro"
+      }
+    ],
+    "name": "NDL 添加条目到 bangumi",
+    "description": "在NDL搜索页添加同步链接，点击后自动填充数据到BGM.tv新条目页面",
+    "url": "https://greasyfork.org/scripts/552012-ndl-%E6%B7%BB%E5%8A%A0%E6%9D%A1%E7%9B%AE%E5%88%B0-bangumi",
+    "code_url": "https://update.greasyfork.org/scripts/552012/NDL%20%E6%B7%BB%E5%8A%A0%E6%9D%A1%E7%9B%AE%E5%88%B0%20bangumi.user.js",
+    "code_size": 10798,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

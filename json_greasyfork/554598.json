@@ -1,0 +1,34 @@
+{
+  "id": 554598,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-03T04:45:45.000Z",
+  "code_updated_at": "2025-12-09T15:29:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533494,
+      "name": "吴陈鑫",
+      "created_at": "2025-11-03T04:40:08.000Z",
+      "url": "https://greasyfork.org/users/1533494-%E5%90%B4%E9%99%88%E9%91%AB",
+      "scripts": []
+    }
+  ],
+  "name": "旺仔集团专用",
+  "description": "从 shg-crx-ant-popover SKU表格解析；支持轮询抓取；分级点选匹配SKU；标题含“泡泡玛特”则平铺；保留分组/导入导出/列宽拖动/日志开关。实时排序 + 拖拽不误排序 + UI必现",
+  "url": "https://greasyfork.org/scripts/554598-%E6%97%BA%E4%BB%94%E9%9B%86%E5%9B%A2%E4%B8%93%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/554598/%E6%97%BA%E4%BB%94%E9%9B%86%E5%9B%A2%E4%B8%93%E7%94%A8.user.js",
+  "code_size": 60246,
+  "license": "MIT License",
+  "version": "10.35.46",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

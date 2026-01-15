@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554673,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T21:11:11.000Z",
+    "code_updated_at": "2025-11-06T22:21:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533777,
+        "name": "Michał Foryś",
+        "created_at": "2025-11-03T21:09:52.000Z",
+        "url": "https://greasyfork.org/users/1533777-micha%C5%82-fory%C5%9B"
+      }
+    ],
+    "name": "Allegro Skan Ofert - Wersja Zintegrowana z Google Sheets",
+    "description": "Skanuje oferty Allegro z autoryzacją i limitem raportów przez Google Sheets API",
+    "url": "https://greasyfork.org/scripts/554673-allegro-skan-ofert-wersja-zintegrowana-z-google-sheets",
+    "code_url": "https://update.greasyfork.org/scripts/554673/Allegro%20Skan%20Ofert%20-%20Wersja%20Zintegrowana%20z%20Google%20Sheets.user.js",
+    "code_size": 370477,
+    "license": null,
+    "version": "3.5.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

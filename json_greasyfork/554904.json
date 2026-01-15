@@ -1,0 +1,59 @@
+{
+  "id": 554904,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-05T17:22:36.000Z",
+  "code_updated_at": "2025-11-10T05:28:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1412641,
+      "name": "zz6zz666",
+      "created_at": "2024-12-18T15:03:01.000Z",
+      "url": "https://greasyfork.org/users/1412641-zz6zz666",
+      "scripts": [
+        {
+          "id": 554904,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-05T17:22:36.000Z",
+          "code_updated_at": "2025-11-10T05:28:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SEU劳动教育课程推送助手",
+          "description": "东南大学劳动教育选课神器！实时监控新增课程并微信推送，移动端后台稳定运行，当然你也可以选择在电脑上安装",
+          "url": "https://greasyfork.org/scripts/554904-seu%E5%8A%B3%E5%8A%A8%E6%95%99%E8%82%B2%E8%AF%BE%E7%A8%8B%E6%8E%A8%E9%80%81%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/554904/SEU%E5%8A%B3%E5%8A%A8%E6%95%99%E8%82%B2%E8%AF%BE%E7%A8%8B%E6%8E%A8%E9%80%81%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 21190,
+          "license": "MIT License",
+          "version": "2.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SEU劳动教育课程推送助手",
+  "description": "东南大学劳动教育选课神器！实时监控新增课程并微信推送，移动端后台稳定运行，当然你也可以选择在电脑上安装",
+  "url": "https://greasyfork.org/scripts/554904-seu%E5%8A%B3%E5%8A%A8%E6%95%99%E8%82%B2%E8%AF%BE%E7%A8%8B%E6%8E%A8%E9%80%81%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/554904/SEU%E5%8A%B3%E5%8A%A8%E6%95%99%E8%82%B2%E8%AF%BE%E7%A8%8B%E6%8E%A8%E9%80%81%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 21190,
+  "license": "MIT License",
+  "version": "2.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

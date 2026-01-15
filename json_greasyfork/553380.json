@@ -1,0 +1,33 @@
+{
+  "id": 553380,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-22T14:38:41.000Z",
+  "code_updated_at": "2025-10-22T14:38:41.000Z",
+  "namespace": "hacker09",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 670188,
+      "name": "hacker09",
+      "created_at": "2020-07-25T20:51:35.000Z",
+      "url": "https://greasyfork.org/users/670188-hacker09"
+    }
+  ],
+  "name": "Canvas User Joined Date",
+  "description": "Fetch each user's profile page on Canvas roster, extract the \"Created\" date, and add a new \"Joined On\" column reliably.",
+  "url": "https://greasyfork.org/scripts/553380-canvas-user-joined-date",
+  "code_url": "https://update.greasyfork.org/scripts/553380/Canvas%20User%20Joined%20Date.user.js",
+  "code_size": 4638,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

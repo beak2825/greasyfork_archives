@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553753,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T11:21:49.000Z",
+    "code_updated_at": "2025-10-26T11:21:49.000Z",
+    "namespace": "https://github.com/cuitang/helper_of_huayi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530850,
+        "name": "cuitang",
+        "created_at": "2025-10-26T10:51:29.000Z",
+        "url": "https://greasyfork.org/users/1530850-cuitang"
+      }
+    ],
+    "name": "华医网小助手",
+    "description": "❌倍速播放✅视频助手✅屏蔽或者跳过课堂签到、提醒、疲劳✅考试助手（试错算法仅面向可多次提交的考试）✅双模选择：单刷视频or视频+考试。",
+    "url": "https://greasyfork.org/scripts/553753-%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%B0%8F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/553753/%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 53790,
+    "license": "AGPL License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

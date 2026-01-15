@@ -1,0 +1,68 @@
+[
+  {
+    "id": 562230,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T13:09:25.000Z",
+    "code_updated_at": "2026-01-11T13:25:42.000Z",
+    "namespace": "https://greasyfork.org/users/1535511",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535511,
+        "name": "Lancer07",
+        "created_at": "2025-11-08T06:47:31.000Z",
+        "url": "https://greasyfork.org/users/1535511-lancer07"
+      }
+    ],
+    "name": "RED Stats Since Last tmp",
+    "description": "Shows how your Upload, Download and Ratio on Redacted have changed since your last visit.",
+    "url": "https://greasyfork.org/scripts/562230-red-stats-since-last-tmp",
+    "code_url": "https://update.greasyfork.org/scripts/562230/RED%20Stats%20Since%20Last%20tmp.user.js",
+    "code_size": 9095,
+    "license": "All Rights Reserved",
+    "version": "1.4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555174,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T06:55:53.000Z",
+    "code_updated_at": "2025-11-08T17:09:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535511,
+        "name": "Lancer07",
+        "created_at": "2025-11-08T06:47:31.000Z",
+        "url": "https://greasyfork.org/users/1535511-lancer07"
+      }
+    ],
+    "name": "RED Editing Marker",
+    "description": "Improve workflow in RED Editing forum by marking threads with status icons.",
+    "url": "https://greasyfork.org/scripts/555174-red-editing-marker",
+    "code_url": "https://update.greasyfork.org/scripts/555174/RED%20Editing%20Marker.user.js",
+    "code_size": 6841,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

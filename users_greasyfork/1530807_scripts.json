@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553742,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T08:04:31.000Z",
+    "code_updated_at": "2025-10-26T08:04:31.000Z",
+    "namespace": "PixelGhost310",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530807,
+        "name": "PixelGhost",
+        "created_at": "2025-10-26T07:58:52.000Z",
+        "url": "https://greasyfork.org/users/1530807-pixelghost"
+      }
+    ],
+    "name": "[Torn]: Halloween Spooky User Scanner",
+    "description": "A simple script to navigate through user profiles with persistent storage of the last visited profile ID.",
+    "url": "https://greasyfork.org/scripts/553742-torn-halloween-spooky-user-scanner",
+    "code_url": "https://update.greasyfork.org/scripts/553742/%5BTorn%5D%3A%20Halloween%20Spooky%20User%20Scanner.user.js",
+    "code_size": 3878,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

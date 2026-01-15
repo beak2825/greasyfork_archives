@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553654,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T11:57:49.000Z",
+    "code_updated_at": "2025-10-25T11:57:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1215420,
+        "name": "Elline312",
+        "created_at": "2023-11-11T12:20:39.000Z",
+        "url": "https://greasyfork.org/users/1215420-elline312"
+      }
+    ],
+    "name": "YouTube Refresh on New Video (robust SPA)",
+    "description": "Refresh each newly opened YouTube video (SPA-aware). Refreshes each video once per session.",
+    "url": "https://greasyfork.org/scripts/553654-youtube-refresh-on-new-video-robust-spa",
+    "code_url": "https://update.greasyfork.org/scripts/553654/YouTube%20Refresh%20on%20New%20Video%20%28robust%20SPA%29.user.js",
+    "code_size": 4039,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

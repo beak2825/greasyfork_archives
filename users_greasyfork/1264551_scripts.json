@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554347,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-31T19:45:47.000Z",
+    "code_updated_at": "2025-10-31T20:26:25.000Z",
+    "namespace": "https://greasyfork.org/users/1264551",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264551,
+        "name": "wng-script",
+        "created_at": "2024-02-21T00:12:57.000Z",
+        "url": "https://greasyfork.org/users/1264551-wng-script"
+      }
+    ],
+    "name": "Wikimapia NG1 Script Export",
+    "description": "New Generation WUS",
+    "url": "https://greasyfork.org/scripts/554347-wikimapia-ng1-script-export",
+    "code_url": "https://update.greasyfork.org/scripts/554347/Wikimapia%20NG1%20Script%20Export.user.js",
+    "code_size": 192029,
+    "license": null,
+    "version": "5.5.5.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

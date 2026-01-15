@@ -30,6 +30,39 @@
     "version": "1.0",
     "locale": "ko",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555086,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-07T08:35:47.000Z",
+    "code_updated_at": "2025-11-07T08:35:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 467840,
+        "name": "refracta",
+        "created_at": "2020-03-23T20:04:56.000Z",
+        "url": "https://greasyfork.org/users/467840-refracta"
+      }
+    ],
+    "name": "Fetch & XHR Hook with Infinite Retry (5s Timeout)",
+    "description": "Hook fetch and XHR, retry infinitely every 5s if no response, log retries",
+    "url": "https://greasyfork.org/scripts/555086-fetch-xhr-hook-with-infinite-retry-5s-timeout",
+    "code_url": "https://update.greasyfork.org/scripts/555086/Fetch%20%20XHR%20Hook%20with%20Infinite%20Retry%20%285s%20Timeout%29.user.js",
+    "code_size": 4048,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555177,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T08:23:53.000Z",
+    "code_updated_at": "2025-11-08T08:23:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426113,
+        "name": "xjy666a",
+        "created_at": "2025-01-22T12:13:44.000Z",
+        "url": "https://greasyfork.org/users/1426113-xjy666a"
+      }
+    ],
+    "name": "更好的书签",
+    "description": "一个功能强大的书签管理工具，支持双栏显示、搜索等功能",
+    "url": "https://greasyfork.org/scripts/555177-%E6%9B%B4%E5%A5%BD%E7%9A%84%E4%B9%A6%E7%AD%BE",
+    "code_url": "https://update.greasyfork.org/scripts/555177/%E6%9B%B4%E5%A5%BD%E7%9A%84%E4%B9%A6%E7%AD%BE.user.js",
+    "code_size": 81482,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

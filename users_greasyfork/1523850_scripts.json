@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551918,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-08T07:56:04.000Z",
+    "code_updated_at": "2025-10-08T07:56:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1523850,
+        "name": "Farmate",
+        "created_at": "2025-10-08T07:49:51.000Z",
+        "url": "https://greasyfork.org/users/1523850-farmate"
+      }
+    ],
+    "name": "FUT.GG - Remove creator cards",
+    "description": "Removes the useless \"creator cards\" from the Trending view by deleting div elements in the grid if they lack data-item-id",
+    "url": "https://greasyfork.org/scripts/551918-fut-gg-remove-creator-cards",
+    "code_url": "https://update.greasyfork.org/scripts/551918/FUTGG%20-%20Remove%20creator%20cards.user.js",
+    "code_size": 821,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

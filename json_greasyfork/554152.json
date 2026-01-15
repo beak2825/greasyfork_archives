@@ -1,0 +1,33 @@
+{
+  "id": 554152,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-29T22:30:59.000Z",
+  "code_updated_at": "2026-01-06T11:51:27.000Z",
+  "namespace": "https://example.local/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1515123,
+      "name": "Antacid Tripod",
+      "created_at": "2025-09-14T17:23:50.000Z",
+      "url": "https://greasyfork.org/users/1515123-antacid-tripod"
+    }
+  ],
+  "name": "Torn — BMM ID Warning",
+  "description": "Show a warning banner when viewing a profile whose ID is in the supplied BMM list.",
+  "url": "https://greasyfork.org/scripts/554152-torn-bmm-id-warning",
+  "code_url": "https://update.greasyfork.org/scripts/554152/Torn%20%E2%80%94%20BMM%20ID%20Warning.user.js",
+  "code_size": 5133,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

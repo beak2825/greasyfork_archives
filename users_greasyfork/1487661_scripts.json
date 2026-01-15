@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553925,
+    "daily_installs": 1,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T05:37:23.000Z",
+    "code_updated_at": "2025-10-28T05:37:23.000Z",
+    "namespace": "https://ntstartrack.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487661,
+        "name": "Daymare",
+        "created_at": "2025-06-23T23:29:16.000Z",
+        "url": "https://greasyfork.org/users/1487661-daymare"
+      }
+    ],
+    "name": "Nitro Type Leaderboards (Startrack Embed)",
+    "description": "Adds a Leaderboards tab and loads ntstartrack.org/leaderboards inside Nitro Type’s layout",
+    "url": "https://greasyfork.org/scripts/553925-nitro-type-leaderboards-startrack-embed",
+    "code_url": "https://update.greasyfork.org/scripts/553925/Nitro%20Type%20Leaderboards%20%28Startrack%20Embed%29.user.js",
+    "code_size": 3060,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

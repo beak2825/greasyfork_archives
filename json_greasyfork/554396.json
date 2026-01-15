@@ -1,0 +1,34 @@
+{
+  "id": 554396,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-01T08:25:40.000Z",
+  "code_updated_at": "2025-11-01T08:25:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527707,
+      "name": "Dean Harper",
+      "created_at": "2025-10-17T08:03:45.000Z",
+      "url": "https://greasyfork.org/users/1527707-dean-harper",
+      "scripts": []
+    }
+  ],
+  "name": "Localhost — DOM patcher (no toggle, final clean version)",
+  "description": "Автоматично прилага всички текстови и HTML замени на localhost без бутон или интерфейс елементи.",
+  "url": "https://greasyfork.org/scripts/554396-localhost-dom-patcher-no-toggle-final-clean-version",
+  "code_url": "https://update.greasyfork.org/scripts/554396/Localhost%20%E2%80%94%20DOM%20patcher%20%28no%20toggle%2C%20final%20clean%20version%29.user.js",
+  "code_size": 9194,
+  "license": null,
+  "version": "1.4",
+  "locale": "mk",
+  "deleted": false,
+  "visibility": "public"
+}

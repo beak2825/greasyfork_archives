@@ -1,5 +1,71 @@
 [
   {
+    "id": 562582,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T22:05:45.000Z",
+    "code_updated_at": "2026-01-13T22:05:45.000Z",
+    "namespace": "torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "TORN Travel Stock prices",
+    "description": "Travel watchlist panel (reads TornTools stock/price + weav3r MV)",
+    "url": "https://greasyfork.org/scripts/562582-torn-travel-stock-prices",
+    "code_url": "https://update.greasyfork.org/scripts/562582/TORN%20Travel%20Stock%20prices.user.js",
+    "code_size": 21444,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562215,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T11:39:42.000Z",
+    "code_updated_at": "2026-01-11T11:42:24.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "FF Scouter V2 SG - column fix",
+    "description": "Shows the expected Fair Fight score against targets and faction war status",
+    "url": "https://greasyfork.org/scripts/562215-ff-scouter-v2-sg-column-fix",
+    "code_url": "https://update.greasyfork.org/scripts/562215/FF%20Scouter%20V2%20SG%20-%20column%20fix.user.js",
+    "code_size": 101231,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.71.5-BS-safe",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 562144,
     "daily_installs": 0,
     "total_installs": 0,
@@ -165,6 +231,72 @@
     "visibility": "unlisted"
   },
   {
+    "id": 560445,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-27T18:59:01.000Z",
+    "code_updated_at": "2025-12-27T18:59:01.000Z",
+    "namespace": "torn.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn Gym Energy Calculator",
+    "description": "gym unlock calculator. Uses LAST unlocked gym (not active) + auto detects Music Store job (30%).",
+    "url": "https://greasyfork.org/scripts/560445-torn-gym-energy-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/560445/Torn%20Gym%20Energy%20Calculator.user.js",
+    "code_size": 13779,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 560343,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T18:54:31.000Z",
+    "code_updated_at": "2025-12-29T17:36:46.000Z",
+    "namespace": "hardy.ct.helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Christmas Town Helper",
+    "description": "Christmas Town Helper. Highlights Items, Chests, NPCs. And Games Cheat",
+    "url": "https://greasyfork.org/scripts/560343-christmas-town-helper",
+    "code_url": "https://update.greasyfork.org/scripts/560343/Christmas%20Town%20Helper.user.js",
+    "code_size": 125801,
+    "license": null,
+    "version": "3.0.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 560253,
     "daily_installs": 0,
     "total_installs": 0,
@@ -200,7 +332,7 @@
   {
     "id": 559599,
     "daily_installs": 0,
-    "total_installs": 4,
+    "total_installs": 5,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -363,6 +495,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 556920,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T20:05:19.000Z",
+    "code_updated_at": "2025-11-25T20:25:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn Forums User Activity Panel",
+    "description": "Floating panel + useractivity personalstats on name line in Torn forums",
+    "url": "https://greasyfork.org/scripts/556920-torn-forums-user-activity-panel",
+    "code_url": "https://update.greasyfork.org/scripts/556920/Torn%20Forums%20User%20Activity%20Panel.user.js",
+    "code_size": 22622,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 556894,
     "daily_installs": 0,
     "total_installs": 0,
@@ -391,6 +556,39 @@
     "code_size": 21613,
     "license": "MIT License",
     "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556886,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-25T12:16:43.000Z",
+    "code_updated_at": "2026-01-14T00:03:43.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn Profile + Crimes Helper (Unified)",
+    "description": "Profile names clear + Crimes progress bar enhancer + CT-Chest helper tab + Chain watcher tab + Jewelry tab",
+    "url": "https://greasyfork.org/scripts/556886-torn-profile-crimes-helper-unified",
+    "code_url": "https://update.greasyfork.org/scripts/556886/Torn%20Profile%20%2B%20Crimes%20Helper%20%28Unified%29.user.js",
+    "code_size": 68691,
+    "license": "MIT License",
+    "version": "1.4",
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
@@ -457,6 +655,105 @@
     "code_size": 2812,
     "license": "MIT License",
     "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555608,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T10:24:34.000Z",
+    "code_updated_at": "2026-01-14T00:03:05.000Z",
+    "namespace": "user.tamper.scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "Torn Stocks — Color rows (robust, multi, GUI)",
+    "description": "Evidențiază rândurile pentru acțiunile selectate. Panou flotant configurabil + un singur GM toggle + culori săptămânale.",
+    "url": "https://greasyfork.org/scripts/555608-torn-stocks-color-rows-robust-multi-gui",
+    "code_url": "https://update.greasyfork.org/scripts/555608/Torn%20Stocks%20%E2%80%94%20Color%20rows%20%28robust%2C%20multi%2C%20GUI%29.user.js",
+    "code_size": 17701,
+    "license": "MIT License",
+    "version": "0.5.1",
+    "locale": "ro",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553458,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-23T09:15:03.000Z",
+    "code_updated_at": "2025-10-23T09:45:20.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "TORN Item Market Confirmation",
+    "description": "Fast Item Market buy.",
+    "url": "https://greasyfork.org/scripts/553458-torn-item-market-confirmation",
+    "code_url": "https://update.greasyfork.org/scripts/553458/TORN%20Item%20Market%20Confirmation.user.js",
+    "code_size": 3928,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552463,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-13T11:16:57.000Z",
+    "code_updated_at": "2025-10-13T18:15:31.000Z",
+    "namespace": "torn-itemmarket-sheet",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453712,
+        "name": "Ovidiu Vaduva",
+        "created_at": "2025-04-03T19:11:23.000Z",
+        "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva"
+      }
+    ],
+    "name": "RandomMan1 ItemMarket Updater",
+    "description": "Fetch RandomMan1 item market and push to Google Sheet via a GAS WebApp. Floating, hideable settings panel. Batching + retry.",
+    "url": "https://greasyfork.org/scripts/552463-randomman1-itemmarket-updater",
+    "code_url": "https://update.greasyfork.org/scripts/552463/RandomMan1%20ItemMarket%20Updater.user.js",
+    "code_size": 19375,
+    "license": "MIT License",
+    "version": "1.2.3",
     "locale": "en",
     "deleted": false,
     "visibility": "unknown"

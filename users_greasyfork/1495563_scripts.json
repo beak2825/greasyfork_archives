@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552190,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T20:07:19.000Z",
+    "code_updated_at": "2025-10-10T20:07:19.000Z",
+    "namespace": "https://greasyfork.org/en/users/1495563",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495563,
+        "name": "TZ Shuhag",
+        "created_at": "2025-07-16T22:26:06.000Z",
+        "url": "https://greasyfork.org/users/1495563-tz-shuhag"
+      }
+    ],
+    "name": "YT CPU Enhancer",
+    "description": "Remove no. of notifications, CSS tweaks",
+    "url": "https://greasyfork.org/scripts/552190-yt-cpu-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/552190/YT%20CPU%20Enhancer.user.js",
+    "code_size": 7868,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

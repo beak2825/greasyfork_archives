@@ -17,7 +17,8 @@
       "id": 1504479,
       "name": "张艺文",
       "created_at": "2025-08-13T05:24:21.000Z",
-      "url": "https://greasyfork.org/users/1504479-%E5%BC%A0%E8%89%BA%E6%96%87"
+      "url": "https://greasyfork.org/users/1504479-%E5%BC%A0%E8%89%BA%E6%96%87",
+      "scripts": []
     }
   ],
   "name": "MOBAN",
@@ -29,5 +30,5 @@
   "version": "3.12",
   "locale": "zh-CN",
   "deleted": false,
-  "visibility": "unknown"
+  "visibility": "public"
 }

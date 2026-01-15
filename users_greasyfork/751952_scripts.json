@@ -1,8 +1,8 @@
 [
   {
     "id": 559640,
-    "daily_installs": 0,
-    "total_installs": 27,
+    "daily_installs": 1,
+    "total_installs": 28,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -28,6 +28,39 @@
     "code_size": 33024,
     "license": "All Rights Reserved",
     "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558334,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-08T16:37:04.000Z",
+    "code_updated_at": "2025-12-21T18:45:23.000Z",
+    "namespace": "https://greasyfork.org/users/751952",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 751952,
+        "name": "会飞的蛋蛋面",
+        "created_at": "2021-03-27T09:24:33.000Z",
+        "url": "https://greasyfork.org/users/751952-%E4%BC%9A%E9%A3%9E%E7%9A%84%E8%9B%8B%E8%9B%8B%E9%9D%A2"
+      }
+    ],
+    "name": "bilibili - 查看IP和历史评论",
+    "description": "文明交流，人人有责。",
+    "url": "https://greasyfork.org/scripts/558334-bilibili-%E6%9F%A5%E7%9C%8Bip%E5%92%8C%E5%8E%86%E5%8F%B2%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/558334/bilibili%20-%20%E6%9F%A5%E7%9C%8BIP%E5%92%8C%E5%8E%86%E5%8F%B2%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 24348,
+    "license": "All Rights Reserved",
+    "version": "2.0.1",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"

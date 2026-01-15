@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553246,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T23:18:28.000Z",
+    "code_updated_at": "2025-10-20T23:18:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529010,
+        "name": "notbl00m",
+        "created_at": "2025-10-20T23:14:15.000Z",
+        "url": "https://greasyfork.org/users/1529010-notbl00m"
+      }
+    ],
+    "name": "Amazon Video Link Collector (Prime + Amazon.com)",
+    "description": "Collects all movie and series links from Amazon Prime Video and Amazon.com video",
+    "url": "https://greasyfork.org/scripts/553246-amazon-video-link-collector-prime-amazon-com",
+    "code_url": "https://update.greasyfork.org/scripts/553246/Amazon%20Video%20Link%20Collector%20%28Prime%20%2B%20Amazoncom%29.user.js",
+    "code_size": 15524,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

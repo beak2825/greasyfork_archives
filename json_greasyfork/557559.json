@@ -1,0 +1,33 @@
+{
+  "id": 557559,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-01T15:58:07.000Z",
+  "code_updated_at": "2025-12-01T16:36:16.000Z",
+  "namespace": "https://greasyfork.org/en/users/1535374-necroam",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535374,
+      "name": "necroam",
+      "created_at": "2025-11-07T17:36:31.000Z",
+      "url": "https://greasyfork.org/users/1535374-necroam"
+    }
+  ],
+  "name": "FV - Tinsel's Gift Catcher Mini-game",
+  "description": "Tinsel has been hard at work since the click hit midnight for December 1st! Visit Tinsel and see if they have a gift waiting for you! You have 20 seconds to pick and only your first pick of the day will count.",
+  "url": "https://greasyfork.org/scripts/557559-fv-tinsel-s-gift-catcher-mini-game",
+  "code_url": "https://update.greasyfork.org/scripts/557559/FV%20-%20Tinsel%27s%20Gift%20Catcher%20Mini-game.user.js",
+  "code_size": 16983,
+  "license": null,
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

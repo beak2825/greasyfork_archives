@@ -1,6 +1,6 @@
 {
   "id": 558292,
-  "daily_installs": 1,
+  "daily_installs": 0,
   "total_installs": 41,
   "fan_score": "5.0",
   "good_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 164260,
       "name": "Schweigen1213",
       "created_at": "2017-12-23T09:06:01.000Z",
-      "url": "https://greasyfork.org/users/164260-schweigen1213",
-      "scripts": [
-        {
-          "id": 558292,
-          "daily_installs": 1,
-          "total_installs": 41,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-08T07:16:02.000Z",
-          "code_updated_at": "2025-12-08T07:19:02.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "TFD先觉者卡片筛选器",
-          "description": "悬浮控制面板，支持卡片市场的智能筛选",
-          "url": "https://greasyfork.org/scripts/558292-tfd%E5%85%88%E8%A7%89%E8%80%85%E5%8D%A1%E7%89%87%E7%AD%9B%E9%80%89%E5%99%A8",
-          "code_url": "https://update.greasyfork.org/scripts/558292/TFD%E5%85%88%E8%A7%89%E8%80%85%E5%8D%A1%E7%89%87%E7%AD%9B%E9%80%89%E5%99%A8.user.js",
-          "code_size": 42363,
-          "license": "MIT License",
-          "version": "1.1",
-          "locale": "zh-CN",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/164260-schweigen1213"
     }
   ],
   "name": "TFD先觉者卡片筛选器",

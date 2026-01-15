@@ -66,6 +66,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 559752,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-21T23:10:39.000Z",
+    "code_updated_at": "2025-12-21T23:10:38.000Z",
+    "namespace": "lugburz.racing.save_custom_settings",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357696,
+        "name": "Baccyy",
+        "created_at": "2024-08-25T17:44:55.000Z",
+        "url": "https://greasyfork.org/users/1357696-baccyy"
+      }
+    ],
+    "name": "Torn: Racing: Save custom race settings",
+    "description": "Saves and automatically loads custom race settings.",
+    "url": "https://greasyfork.org/scripts/559752-torn-racing-save-custom-race-settings",
+    "code_url": "https://update.greasyfork.org/scripts/559752/Torn%3A%20Racing%3A%20Save%20custom%20race%20settings.user.js",
+    "code_size": 2963,
+    "license": null,
+    "version": "0.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 558923,
     "daily_installs": 0,
     "total_installs": 0,
@@ -133,8 +166,8 @@
   },
   {
     "id": 557508,
-    "daily_installs": 1,
-    "total_installs": 28,
+    "daily_installs": 0,
+    "total_installs": 30,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -163,5 +196,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 553571,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-24T12:17:24.000Z",
+    "code_updated_at": "2025-10-24T12:40:07.000Z",
+    "namespace": "https://torn.tools/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357696,
+        "name": "Baccyy",
+        "created_at": "2024-08-25T17:44:55.000Z",
+        "url": "https://greasyfork.org/users/1357696-baccyy"
+      }
+    ],
+    "name": "TornTools Stacking Mode",
+    "description": "Standalone Stacking Mode: blocks attacking/reviving/hunting/gym actions across Torn pages, replicating TornTools' stacking feature, with a toggle in the settings menu.",
+    "url": "https://greasyfork.org/scripts/553571-torntools-stacking-mode",
+    "code_url": "https://update.greasyfork.org/scripts/553571/TornTools%20Stacking%20Mode.user.js",
+    "code_size": 15670,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

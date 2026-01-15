@@ -30,6 +30,105 @@
     "version": "2.3",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554576,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T22:08:38.000Z",
+    "code_updated_at": "2025-11-02T22:08:38.000Z",
+    "namespace": "svvannak",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528331,
+        "name": "Van Suos",
+        "created_at": "2025-10-18T23:40:28.000Z",
+        "url": "https://greasyfork.org/users/1528331-van-suos"
+      }
+    ],
+    "name": "YMS Notes Tools Only",
+    "description": "Standalone Notes enhancements from YMS Superuser",
+    "url": "https://greasyfork.org/scripts/554576-yms-notes-tools-only",
+    "code_url": "https://update.greasyfork.org/scripts/554576/YMS%20Notes%20Tools%20Only.user.js",
+    "code_size": 6728,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554575,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T22:08:04.000Z",
+    "code_updated_at": "2025-11-02T22:08:04.000Z",
+    "namespace": "svvannak",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528331,
+        "name": "Van Suos",
+        "created_at": "2025-10-18T23:40:28.000Z",
+        "url": "https://greasyfork.org/users/1528331-van-suos"
+      }
+    ],
+    "name": "YMS Copy to Clipboard",
+    "description": "Adds copy-to-clipboard buttons next to vehicle IDs, license plates, modal trailer IDs, and ISA/VRID identifiers. Only the identifier value is copied (e.g. 740553172, 1116XLK9V).",
+    "url": "https://greasyfork.org/scripts/554575-yms-copy-to-clipboard",
+    "code_url": "https://update.greasyfork.org/scripts/554575/YMS%20Copy%20to%20Clipboard.user.js",
+    "code_size": 4197,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553055,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T23:43:17.000Z",
+    "code_updated_at": "2025-11-07T02:18:55.000Z",
+    "namespace": "https://phonetool.amazon.com/users/svvannak",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528331,
+        "name": "Van Suos",
+        "created_at": "2025-10-18T23:40:28.000Z",
+        "url": "https://greasyfork.org/users/1528331-van-suos"
+      }
+    ],
+    "name": "3P Owner/Operator Breakdown Viewer (Popup Button + Dynamic Resize)",
+    "description": "Opens a popup window with 3P empties grouped by SCAC, editable addresses, copy-to-clipboard (fixed using GM_setClipboard), and auto-resizing window",
+    "url": "https://greasyfork.org/scripts/553055-3p-owner-operator-breakdown-viewer-popup-button-dynamic-resize",
+    "code_url": "https://update.greasyfork.org/scripts/553055/3P%20OwnerOperator%20Breakdown%20Viewer%20%28Popup%20Button%20%2B%20Dynamic%20Resize%29.user.js",
+    "code_size": 11585,
+    "license": null,
+    "version": "1.3.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

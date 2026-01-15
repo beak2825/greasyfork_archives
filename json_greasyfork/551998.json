@@ -1,0 +1,33 @@
+{
+  "id": 551998,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-09T02:18:41.000Z",
+  "code_updated_at": "2025-10-09T03:05:50.000Z",
+  "namespace": "CompletePickpocketingOverhaul",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1442830,
+      "name": "Christopher Ebling (GNSC4)",
+      "created_at": "2025-03-06T07:07:59.000Z",
+      "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+    }
+  ],
+  "name": "Complete Pickpocketing Overhaul",
+  "description": "A comprehensive overhaul for the Torn City pickpocketing crime. Features advanced target highlighting, customizable filtering, audio/visual alerts, a draggable UI, and more to enhance decision-making and efficiency. Now uses data interception for maximum reliability.",
+  "url": "https://greasyfork.org/scripts/551998-complete-pickpocketing-overhaul",
+  "code_url": "https://update.greasyfork.org/scripts/551998/Complete%20Pickpocketing%20Overhaul.user.js",
+  "code_size": 43525,
+  "license": "MIT License",
+  "version": "1.4.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

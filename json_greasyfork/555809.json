@@ -1,0 +1,41 @@
+{
+  "id": 555809,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-14T07:00:31.000Z",
+  "code_updated_at": "2025-12-21T06:17:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1537653,
+      "name": "林侑辰（柳橙）",
+      "created_at": "2025-11-14T06:58:50.000Z",
+      "url": "https://greasyfork.org/users/1537653-%E6%9E%97%E4%BE%91%E8%BE%B0-%E6%9F%B3%E6%A9%99",
+      "scripts": []
+    },
+    {
+      "id": 1537685,
+      "name": "DragonL 龍 (紅夜)",
+      "created_at": "2025-11-14T08:33:32.000Z",
+      "url": "https://greasyfork.org/users/1537685-dragonl-%E9%BE%8D-%E7%B4%85%E5%A4%9C",
+      "scripts": []
+    }
+  ],
+  "name": "MWI Transmute Calculator Enhanced",
+  "description": "計算煉金轉化期望收益 - 整合玩家數據精確計算",
+  "url": "https://greasyfork.org/scripts/555809-mwi-transmute-calculator-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/555809/MWI%20Transmute%20Calculator%20Enhanced.user.js",
+  "code_size": 127073,
+  "license": "MIT License",
+  "version": "5.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

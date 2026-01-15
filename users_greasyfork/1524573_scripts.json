@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552083,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T20:15:26.000Z",
+    "code_updated_at": "2025-10-13T03:17:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1524573,
+        "name": "Fethery horse6",
+        "created_at": "2025-10-09T20:12:49.000Z",
+        "url": "https://greasyfork.org/users/1524573-fethery-horse6"
+      }
+    ],
+    "name": "Torn.com Bootlegging Collect Button Beep",
+    "description": "Plays a beep and shows a speaker icon when the Collect button on Torn.com Crimes 2.0 Bootlegging page is ready, and makes the Collect button larger",
+    "url": "https://greasyfork.org/scripts/552083-torn-com-bootlegging-collect-button-beep",
+    "code_url": "https://update.greasyfork.org/scripts/552083/Torncom%20Bootlegging%20Collect%20Button%20Beep.user.js",
+    "code_size": 10187,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

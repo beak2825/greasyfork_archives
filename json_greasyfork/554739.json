@@ -1,0 +1,59 @@
+{
+  "id": 554739,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-04T10:59:43.000Z",
+  "code_updated_at": "2025-11-04T10:59:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533963,
+      "name": "Maple_oWo",
+      "created_at": "2025-11-04T10:55:41.000Z",
+      "url": "https://greasyfork.org/users/1533963-maple-owo",
+      "scripts": [
+        {
+          "id": 554739,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-04T10:59:43.000Z",
+          "code_updated_at": "2025-11-04T10:59:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Linux.do 大召唤师",
+          "description": "进行一个呼朋唤友～",
+          "url": "https://greasyfork.org/scripts/554739-linux-do-%E5%A4%A7%E5%8F%AC%E5%94%A4%E5%B8%88",
+          "code_url": "https://update.greasyfork.org/scripts/554739/Linuxdo%20%E5%A4%A7%E5%8F%AC%E5%94%A4%E5%B8%88.user.js",
+          "code_size": 61089,
+          "license": "MIT License",
+          "version": "2.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Linux.do 大召唤师",
+  "description": "进行一个呼朋唤友～",
+  "url": "https://greasyfork.org/scripts/554739-linux-do-%E5%A4%A7%E5%8F%AC%E5%94%A4%E5%B8%88",
+  "code_url": "https://update.greasyfork.org/scripts/554739/Linuxdo%20%E5%A4%A7%E5%8F%AC%E5%94%A4%E5%B8%88.user.js",
+  "code_size": 61089,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

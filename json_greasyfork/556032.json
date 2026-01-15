@@ -1,0 +1,34 @@
+{
+  "id": 556032,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-16T19:54:21.000Z",
+  "code_updated_at": "2025-11-16T19:54:21.000Z",
+  "namespace": "yomama.cc/greasyfork",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1538526,
+      "name": "tuvo",
+      "created_at": "2025-11-16T19:51:42.000Z",
+      "url": "https://greasyfork.org/users/1538526-tuvo",
+      "scripts": []
+    }
+  ],
+  "name": "Zber",
+  "description": "skript na automaticke posielanie zberu",
+  "url": "https://greasyfork.org/scripts/556032-zber",
+  "code_url": "https://update.greasyfork.org/scripts/556032/Zber.user.js",
+  "code_size": 3730,
+  "license": "yo mama",
+  "version": "1",
+  "locale": "sk",
+  "deleted": false,
+  "visibility": "public"
+}

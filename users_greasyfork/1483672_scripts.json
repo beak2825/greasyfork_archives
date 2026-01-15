@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555939,
+    "daily_installs": 2,
+    "total_installs": 105,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-15T15:52:13.000Z",
+    "code_updated_at": "2025-11-17T14:25:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483672,
+        "name": "Heye Jones",
+        "created_at": "2025-06-14T12:25:31.000Z",
+        "url": "https://greasyfork.org/users/1483672-heye-jones"
+      }
+    ],
+    "name": "Gemini Hunter (UI Optimized)",
+    "description": "Gemini Hunter 自动辅助工具（界面优化版）：默认折叠配置项，支持自定义提问词、筛选关键词及图片开关。",
+    "url": "https://greasyfork.org/scripts/555939-gemini-hunter-ui-optimized",
+    "code_url": "https://update.greasyfork.org/scripts/555939/Gemini%20Hunter%20%28UI%20Optimized%29.user.js",
+    "code_size": 45135,
+    "license": "MIT License",
+    "version": "2.23.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

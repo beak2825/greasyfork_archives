@@ -1,0 +1,33 @@
+{
+  "id": 552060,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-09T15:24:48.000Z",
+  "code_updated_at": "2025-12-17T18:05:43.000Z",
+  "namespace": "https://github.com/nate-kean/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521635,
+      "name": "James River Data Team",
+      "created_at": "2025-10-02T14:59:09.000Z",
+      "url": "https://greasyfork.org/users/1521635-james-river-data-team"
+    }
+  ],
+  "name": "Relationship to JRC Date: add Today button",
+  "description": "Add a button to the Relationship to JRC Date field that sets it to today's date.",
+  "url": "https://greasyfork.org/scripts/552060-relationship-to-jrc-date-add-today-button",
+  "code_url": "https://update.greasyfork.org/scripts/552060/Relationship%20to%20JRC%20Date%3A%20add%20Today%20button.user.js",
+  "code_size": 1931,
+  "license": "MIT License",
+  "version": "20251217",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

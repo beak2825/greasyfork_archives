@@ -1,0 +1,59 @@
+{
+  "id": 555115,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T15:20:59.000Z",
+  "code_updated_at": "2025-11-07T15:20:59.000Z",
+  "namespace": "https://greasyfork.org/users/1535327",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1535327,
+      "name": "mesityl",
+      "created_at": "2025-11-07T15:03:55.000Z",
+      "url": "https://greasyfork.org/users/1535327-mesityl",
+      "scripts": [
+        {
+          "id": 555115,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-07T15:20:59.000Z",
+          "code_updated_at": "2025-11-07T15:20:59.000Z",
+          "namespace": "https://greasyfork.org/users/1535327",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Discord Server and Folder Hider",
+          "description": "Hide servers or folders on Discord web, with optional ping-based visibility",
+          "url": "https://greasyfork.org/scripts/555115-discord-server-and-folder-hider",
+          "code_url": "https://update.greasyfork.org/scripts/555115/Discord%20Server%20and%20Folder%20Hider.user.js",
+          "code_size": 22059,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Discord Server and Folder Hider",
+  "description": "Hide servers or folders on Discord web, with optional ping-based visibility",
+  "url": "https://greasyfork.org/scripts/555115-discord-server-and-folder-hider",
+  "code_url": "https://update.greasyfork.org/scripts/555115/Discord%20Server%20and%20Folder%20Hider.user.js",
+  "code_size": 22059,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

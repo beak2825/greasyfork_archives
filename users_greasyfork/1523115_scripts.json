@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552028,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T08:45:15.000Z",
+    "code_updated_at": "2025-10-09T08:45:15.000Z",
+    "namespace": "http://dobartek.hr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1523115,
+        "name": "Vedran Ivanišević",
+        "created_at": "2025-10-07T07:55:41.000Z",
+        "url": "https://greasyfork.org/users/1523115-vedran-ivani%C5%A1evi%C4%87"
+      }
+    ],
+    "name": "DobarTek Robot Price Injector",
+    "description": "Inject Robot prices into Ericsson Poljička menu",
+    "url": "https://greasyfork.org/scripts/552028-dobartek-robot-price-injector",
+    "code_url": "https://update.greasyfork.org/scripts/552028/DobarTek%20Robot%20Price%20Injector.user.js",
+    "code_size": 3163,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

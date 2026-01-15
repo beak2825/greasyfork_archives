@@ -1,0 +1,134 @@
+[
+  {
+    "id": 562591,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T01:29:27.000Z",
+    "code_updated_at": "2026-01-14T01:29:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305224,
+        "name": "Ghosty-Tongue",
+        "created_at": "2024-05-21T21:37:07.000Z",
+        "url": "https://greasyfork.org/users/1305224-ghosty-tongue"
+      }
+    ],
+    "name": "A Better Recent Threads for Lost Media Wiki Forums",
+    "description": "A clean, consolidated view of all recent threads with live search, sorting, and no-flash loading.",
+    "url": "https://greasyfork.org/scripts/562591-a-better-recent-threads-for-lost-media-wiki-forums",
+    "code_url": "https://update.greasyfork.org/scripts/562591/A%20Better%20Recent%20Threads%20for%20Lost%20Media%20Wiki%20Forums.user.js",
+    "code_size": 10473,
+    "license": "MIT License",
+    "version": "2.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554240,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T22:47:17.000Z",
+    "code_updated_at": "2025-11-01T07:12:15.000Z",
+    "namespace": "https://greasyfork.org/users/1305224",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305224,
+        "name": "Ghosty-Tongue",
+        "created_at": "2024-05-21T21:37:07.000Z",
+        "url": "https://greasyfork.org/users/1305224-ghosty-tongue"
+      }
+    ],
+    "name": "DiscordScraper",
+    "description": "Scrape all messages and timestamps in a Discord channel or DM and save to a JSON file (Latest to First)",
+    "url": "https://greasyfork.org/scripts/554240-discordscraper",
+    "code_url": "https://update.greasyfork.org/scripts/554240/DiscordScraper.user.js",
+    "code_size": 56737,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554229,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T20:11:03.000Z",
+    "code_updated_at": "2025-10-30T20:11:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305224,
+        "name": "Ghosty-Tongue",
+        "created_at": "2024-05-21T21:37:07.000Z",
+        "url": "https://greasyfork.org/users/1305224-ghosty-tongue"
+      }
+    ],
+    "name": "YouTube Archive Me Button",
+    "description": "Adds an \"Archive Me\" button to YouTube video action panels that redirects to PreserveTube.com with the current video URL.",
+    "url": "https://greasyfork.org/scripts/554229-youtube-archive-me-button",
+    "code_url": "https://update.greasyfork.org/scripts/554229/YouTube%20Archive%20Me%20Button.user.js",
+    "code_size": 3753,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554012,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T20:27:37.000Z",
+    "code_updated_at": "2025-10-28T20:57:38.000Z",
+    "namespace": "https://github.com/your-username",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1305224,
+        "name": "Ghosty-Tongue",
+        "created_at": "2024-05-21T21:37:07.000Z",
+        "url": "https://greasyfork.org/users/1305224-ghosty-tongue"
+      }
+    ],
+    "name": "Keymailer Code Enabler",
+    "description": "Enables vault code buttons on Keymailer for users in creator programs",
+    "url": "https://greasyfork.org/scripts/554012-keymailer-code-enabler",
+    "code_url": "https://update.greasyfork.org/scripts/554012/Keymailer%20Code%20Enabler.user.js",
+    "code_size": 8875,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

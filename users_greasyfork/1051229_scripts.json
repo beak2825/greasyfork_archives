@@ -1,0 +1,134 @@
+[
+  {
+    "id": 554981,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T12:47:50.000Z",
+    "code_updated_at": "2025-11-06T12:47:49.000Z",
+    "namespace": "https://github.com/stevessr/bug-v3",
+    "support_url": "https://github.com/stevessr/bug-v3/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051229,
+        "name": "stevessr",
+        "created_at": "2023-04-01T03:04:14.000Z",
+        "url": "https://greasyfork.org/users/1051229-stevessr"
+      }
+    ],
+    "name": "Discourse Customizable Quick Replies",
+    "description": "Adds customizable quick replies with a UI to Discourse forums, with enhanced UI theming.",
+    "url": "https://greasyfork.org/scripts/554981-discourse-customizable-quick-replies",
+    "code_url": "https://update.greasyfork.org/scripts/554981/Discourse%20Customizable%20Quick%20Replies.user.js",
+    "code_size": 16580,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554980,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T12:07:30.000Z",
+    "code_updated_at": "2025-11-10T23:32:28.000Z",
+    "namespace": "https://github.com/stevessr/bug-v3",
+    "support_url": "https://github.com/stevessr/bug-v3/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051229,
+        "name": "stevessr",
+        "created_at": "2023-04-01T03:04:14.000Z",
+        "url": "https://greasyfork.org/users/1051229-stevessr"
+      }
+    ],
+    "name": "Discourse 表情管理器 (Emoji Manager) mgr lite",
+    "description": "Discourse 论坛表情管理 - 设置、导入导出、分组编辑 (Emoji management for Discourse - Settings, import/export, group editor)",
+    "url": "https://greasyfork.org/scripts/554980-discourse-%E8%A1%A8%E6%83%85%E7%AE%A1%E7%90%86%E5%99%A8-emoji-manager-mgr-lite",
+    "code_url": "https://update.greasyfork.org/scripts/554980/Discourse%20%E8%A1%A8%E6%83%85%E7%AE%A1%E7%90%86%E5%99%A8%20%28Emoji%20Manager%29%20mgr%20lite.user.js",
+    "code_size": 137011,
+    "license": "MIT License",
+    "version": "1.2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554979,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T12:07:20.000Z",
+    "code_updated_at": "2025-11-10T23:32:14.000Z",
+    "namespace": "https://github.com/stevessr/bug-v3",
+    "support_url": "https://github.com/stevessr/bug-v3/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051229,
+        "name": "stevessr",
+        "created_at": "2023-04-01T03:04:14.000Z",
+        "url": "https://greasyfork.org/users/1051229-stevessr"
+      }
+    ],
+    "name": "Discourse 表情选择器 (Emoji Picker) core lite",
+    "description": "Discourse 论坛表情选择器 - 核心功能 (Emoji picker for Discourse - Core features only)",
+    "url": "https://greasyfork.org/scripts/554979-discourse-%E8%A1%A8%E6%83%85%E9%80%89%E6%8B%A9%E5%99%A8-emoji-picker-core-lite",
+    "code_url": "https://update.greasyfork.org/scripts/554979/Discourse%20%E8%A1%A8%E6%83%85%E9%80%89%E6%8B%A9%E5%99%A8%20%28Emoji%20Picker%29%20core%20lite.user.js",
+    "code_size": 107191,
+    "license": "MIT License",
+    "version": "1.2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 554977,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T11:54:02.000Z",
+    "code_updated_at": "2025-11-06T11:54:02.000Z",
+    "namespace": "https://github.com/stevessr/bug-v3",
+    "support_url": "https://github.com/stevessr/bug-v3/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051229,
+        "name": "stevessr",
+        "created_at": "2023-04-01T03:04:14.000Z",
+        "url": "https://greasyfork.org/users/1051229-stevessr"
+      }
+    ],
+    "name": "Discourse Callout 建议 (Callout Suggestions)",
+    "description": "为 Discourse 论坛添加 Markdown Callout 自动建议功能 (Add Markdown callout autocomplete to Discourse forums)",
+    "url": "https://greasyfork.org/scripts/554977-discourse-callout-%E5%BB%BA%E8%AE%AE-callout-suggestions",
+    "code_url": "https://update.greasyfork.org/scripts/554977/Discourse%20Callout%20%E5%BB%BA%E8%AE%AE%20%28Callout%20Suggestions%29.user.js",
+    "code_size": 32019,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

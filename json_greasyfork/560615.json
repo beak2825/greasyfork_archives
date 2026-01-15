@@ -17,7 +17,33 @@
       "id": 1553570,
       "name": "L10N",
       "created_at": "2025-12-28T17:03:18.000Z",
-      "url": "https://greasyfork.org/users/1553570-l10n"
+      "url": "https://greasyfork.org/users/1553570-l10n",
+      "scripts": [
+        {
+          "id": 560615,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-29T08:07:08.000Z",
+          "code_updated_at": "2026-01-07T15:19:34.000Z",
+          "namespace": "FF14-Universalis-CN-L10n",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FF14物价查询补充-Universalis+Wiki",
+          "description": "Universalis 新版本物品搜索补全；FF14 灰机Wiki 物品页增加物价链接。",
+          "url": "https://greasyfork.org/scripts/560615-ff14%E7%89%A9%E4%BB%B7%E6%9F%A5%E8%AF%A2%E8%A1%A5%E5%85%85-universalis-wiki",
+          "code_url": "https://update.greasyfork.org/scripts/560615/FF14%E7%89%A9%E4%BB%B7%E6%9F%A5%E8%AF%A2%E8%A1%A5%E5%85%85-Universalis%2BWiki.user.js",
+          "code_size": 16793,
+          "license": "MIT License",
+          "version": "1.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "FF14物价查询补充-Universalis+Wiki",

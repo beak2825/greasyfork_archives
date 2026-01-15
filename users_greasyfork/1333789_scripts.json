@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 552732,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T00:34:47.000Z",
+    "code_updated_at": "2025-10-16T00:34:47.000Z",
+    "namespace": "https://about.naixi.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1333789,
+        "name": "Nyarime Su",
+        "created_at": "2024-07-15T13:04:30.000Z",
+        "url": "https://greasyfork.org/users/1333789-nyarime-su"
+      }
+    ],
+    "name": "奶昔论坛屏蔽黑名单和匿名用户",
+    "description": "自动获取奶昔论坛的黑名单和匿名用户，并屏蔽相应帖子",
+    "url": "https://greasyfork.org/scripts/552732-%E5%A5%B6%E6%98%94%E8%AE%BA%E5%9D%9B%E5%B1%8F%E8%94%BD%E9%BB%91%E5%90%8D%E5%8D%95%E5%92%8C%E5%8C%BF%E5%90%8D%E7%94%A8%E6%88%B7",
+    "code_url": "https://update.greasyfork.org/scripts/552732/%E5%A5%B6%E6%98%94%E8%AE%BA%E5%9D%9B%E5%B1%8F%E8%94%BD%E9%BB%91%E5%90%8D%E5%8D%95%E5%92%8C%E5%8C%BF%E5%90%8D%E7%94%A8%E6%88%B7.user.js",
+    "code_size": 6440,
+    "license": "GPL",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

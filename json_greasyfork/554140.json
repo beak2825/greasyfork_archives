@@ -1,0 +1,59 @@
+{
+  "id": 554140,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-29T20:12:34.000Z",
+  "code_updated_at": "2025-10-29T20:12:34.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532063,
+      "name": "KutayX7",
+      "created_at": "2025-10-29T19:34:34.000Z",
+      "url": "https://greasyfork.org/users/1532063-kutayx7",
+      "scripts": [
+        {
+          "id": 554140,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-29T20:12:34.000Z",
+          "code_updated_at": "2025-10-29T20:12:34.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Block video subtitles for btkakademi",
+          "description": "This script automatically turns off the annoying on-by-default video subtitles.",
+          "url": "https://greasyfork.org/scripts/554140-block-video-subtitles-for-btkakademi",
+          "code_url": "https://update.greasyfork.org/scripts/554140/Block%20video%20subtitles%20for%20btkakademi.user.js",
+          "code_size": 825,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Block video subtitles for btkakademi",
+  "description": "This script automatically turns off the annoying on-by-default video subtitles.",
+  "url": "https://greasyfork.org/scripts/554140-block-video-subtitles-for-btkakademi",
+  "code_url": "https://update.greasyfork.org/scripts/554140/Block%20video%20subtitles%20for%20btkakademi.user.js",
+  "code_size": 825,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 552312,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T21:50:14.000Z",
+    "code_updated_at": "2025-10-11T21:50:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1032445,
+        "name": "Apollyon",
+        "created_at": "2023-02-24T16:16:28.000Z",
+        "url": "https://greasyfork.org/users/1032445-apollyon"
+      }
+    ],
+    "name": "Faction Warring",
+    "description": "Track faction members status, hide Abroad/Traveling, names link to attack pages, BSP link restored, with auto-update toggle",
+    "url": "https://greasyfork.org/scripts/552312-faction-warring",
+    "code_url": "https://update.greasyfork.org/scripts/552312/Faction%20Warring.user.js",
+    "code_size": 13773,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552311,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T21:32:12.000Z",
+    "code_updated_at": "2025-10-11T21:32:12.000Z",
+    "namespace": "walla.walla",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1032445,
+        "name": "Apollyon",
+        "created_at": "2023-02-24T16:16:28.000Z",
+        "url": "https://greasyfork.org/users/1032445-apollyon"
+      }
+    ],
+    "name": "Walla Walla",
+    "description": "Populate list of faction members and wall targets. Adds join attack to hosped player, adds join wall, adds quick ed + join wall",
+    "url": "https://greasyfork.org/scripts/552311-walla-walla",
+    "code_url": "https://update.greasyfork.org/scripts/552311/Walla%20Walla.user.js",
+    "code_size": 55946,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

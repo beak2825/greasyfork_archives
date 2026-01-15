@@ -1,0 +1,33 @@
+{
+  "id": 554239,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T22:44:06.000Z",
+  "code_updated_at": "2025-11-01T03:08:20.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 686815,
+      "name": "wish king",
+      "created_at": "2020-09-11T16:15:15.000Z",
+      "url": "https://greasyfork.org/users/686815-wish-king"
+    }
+  ],
+  "name": "WebDAVClient",
+  "description": "webdav简单客户端，支持创建文件，列目录，读取文件，写入文件，删除文件，移动/复制文件，判断文件是否存在等",
+  "url": "https://greasyfork.org/scripts/554239-webdavclient",
+  "code_url": "https://update.greasyfork.org/scripts/554239/1687285/WebDAVClient.js",
+  "code_size": 14586,
+  "license": null,
+  "version": "0.0.1.20251101030820",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

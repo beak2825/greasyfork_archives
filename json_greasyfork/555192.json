@@ -1,0 +1,33 @@
+{
+  "id": 555192,
+  "daily_installs": 0,
+  "total_installs": 102,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T12:40:01.000Z",
+  "code_updated_at": "2025-12-10T11:14:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 449556,
+      "name": "Ernm _",
+      "created_at": "2020-02-25T04:12:51.000Z",
+      "url": "https://greasyfork.org/users/449556-ernm"
+    }
+  ],
+  "name": "超星学习通期末周复习小助手",
+  "description": "这是一款面向学习场景的脚本工具，其集成了支持提示词定制的智能 AI 助手模块，通过 Web 自动化技术实现跨域提问（区别于传统模型 API 调用或题库检索方式）；同时提供答案动态显隐控制功能，适配多轮刷题需求；内置错题星级标记系统，基于错误频次实现重点内容优先级管理；搭载本地持久化存储的富文本笔记组件，支持知识点与解析的实时记录与安全留存；具备可配置化作业题目导出能力，支持得分、答案、解析等字段的自定义筛选，可快速生成结构化刷题集或背题手册；此外，工具还提供可视化控制面板作为配置入口，支持对上述全功能模块的参数与逻辑进行深度个性化定制，为高效学习与复习流程提供技术支撑。",
+  "url": "https://greasyfork.org/scripts/555192-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%9C%9F%E6%9C%AB%E5%91%A8%E5%A4%8D%E4%B9%A0%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/555192/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%9C%9F%E6%9C%AB%E5%91%A8%E5%A4%8D%E4%B9%A0%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 317810,
+  "license": "MIT License",
+  "version": "3.9.1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

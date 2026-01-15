@@ -1,0 +1,59 @@
+{
+  "id": 554527,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-02T14:54:51.000Z",
+  "code_updated_at": "2025-11-02T14:54:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1531342,
+      "name": "Sensimillia",
+      "created_at": "2025-10-27T19:01:56.000Z",
+      "url": "https://greasyfork.org/users/1531342-sensimillia",
+      "scripts": [
+        {
+          "id": 553889,
+          "daily_installs": 1,
+          "total_installs": 65,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-27T19:08:40.000Z",
+          "code_updated_at": "2025-11-03T19:59:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Quick-Travel (Radial Menu)",
+          "description": "Advanced radial navigation with modular search, API integration, mini-apps, and enhanced calibration",
+          "url": "https://greasyfork.org/scripts/553889-torn-quick-travel-radial-menu",
+          "code_url": "https://update.greasyfork.org/scripts/553889/Torn%20Quick-Travel%20%28Radial%20Menu%29.user.js",
+          "code_size": 165725,
+          "license": "MIT License",
+          "version": "1.6.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Radial Search Library",
+  "description": "Search functionality for Torn Radial Menu",
+  "url": "https://greasyfork.org/scripts/554527-torn-radial-search-library",
+  "code_url": "https://update.greasyfork.org/scripts/554527/1688152/Torn%20Radial%20Search%20Library.js",
+  "code_size": 6075,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

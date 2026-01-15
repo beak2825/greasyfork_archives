@@ -1,0 +1,59 @@
+{
+  "id": 562294,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-11T18:41:04.000Z",
+  "code_updated_at": "2026-01-11T18:41:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1547752,
+      "name": "403 Forbidden",
+      "created_at": "2025-12-13T18:11:20.000Z",
+      "url": "https://greasyfork.org/users/1547752-403-forbidden",
+      "scripts": [
+        {
+          "id": 562294,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-11T18:41:04.000Z",
+          "code_updated_at": "2026-01-11T18:41:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AVDBS ESC Scroll-up Disable",
+          "description": "Disable AVDBS ESC Scroll-up function",
+          "url": "https://greasyfork.org/scripts/562294-avdbs-esc-scroll-up-disable",
+          "code_url": "https://update.greasyfork.org/scripts/562294/AVDBS%20ESC%20Scroll-up%20Disable.user.js",
+          "code_size": 600,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AVDBS ESC Scroll-up Disable",
+  "description": "Disable AVDBS ESC Scroll-up function",
+  "url": "https://greasyfork.org/scripts/562294-avdbs-esc-scroll-up-disable",
+  "code_url": "https://update.greasyfork.org/scripts/562294/AVDBS%20ESC%20Scroll-up%20Disable.user.js",
+  "code_size": 600,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

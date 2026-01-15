@@ -1,5 +1,104 @@
 [
   {
+    "id": 562672,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T18:48:33.000Z",
+    "code_updated_at": "2026-01-14T18:48:32.000Z",
+    "namespace": "https://monster-nest.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1545607,
+        "name": "plumed-nebula",
+        "created_at": "2025-12-07T14:23:53.000Z",
+        "url": "https://greasyfork.org/users/1545607-plumed-nebula"
+      }
+    ],
+    "name": "mn-image-cache",
+    "description": "Monster Nest 图片缓存脚本",
+    "url": "https://greasyfork.org/scripts/562672-mn-image-cache",
+    "code_url": "https://update.greasyfork.org/scripts/562672/mn-image-cache.user.js",
+    "code_size": 24301,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562539,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T14:23:51.000Z",
+    "code_updated_at": "2026-01-13T16:03:52.000Z",
+    "namespace": "https://monster-nest.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1545607,
+        "name": "plumed-nebula",
+        "created_at": "2025-12-07T14:23:53.000Z",
+        "url": "https://greasyfork.org/users/1545607-plumed-nebula"
+      }
+    ],
+    "name": "mn-lord",
+    "description": "永远的太阳",
+    "url": "https://greasyfork.org/scripts/562539-mn-lord",
+    "code_url": "https://update.greasyfork.org/scripts/562539/mn-lord.user.js",
+    "code_size": 14795,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562518,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T11:26:34.000Z",
+    "code_updated_at": "2026-01-13T13:00:26.000Z",
+    "namespace": "mn-video",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1545607,
+        "name": "plumed-nebula",
+        "created_at": "2025-12-07T14:23:53.000Z",
+        "url": "https://greasyfork.org/users/1545607-plumed-nebula"
+      }
+    ],
+    "name": "mn-video",
+    "description": "Monster Nest 视频链接播放器增强脚本",
+    "url": "https://greasyfork.org/scripts/562518-mn-video",
+    "code_url": "https://update.greasyfork.org/scripts/562518/mn-video.user.js",
+    "code_size": 213180,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 561971,
     "daily_installs": 0,
     "total_installs": 0,
@@ -30,6 +129,6 @@
     "version": "0.1",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
   }
 ]

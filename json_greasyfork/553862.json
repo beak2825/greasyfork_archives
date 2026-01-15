@@ -1,0 +1,33 @@
+{
+  "id": 553862,
+  "daily_installs": 0,
+  "total_installs": 72,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-27T13:22:13.000Z",
+  "code_updated_at": "2025-12-15T17:12:37.000Z",
+  "namespace": "twitch-keep-tab-active",
+  "support_url": "https://github.com/Vikindor/twitch-keep-tab-active/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1501866,
+      "name": "Vikindor",
+      "created_at": "2025-08-05T13:20:24.000Z",
+      "url": "https://greasyfork.org/users/1501866-vikindor"
+    }
+  ],
+  "name": "Twitch - Keep Tab Active",
+  "description": "Prevents Twitch from auto-pausing or throttling video when the tab is inactive",
+  "url": "https://greasyfork.org/scripts/553862-twitch-keep-tab-active",
+  "code_url": "https://update.greasyfork.org/scripts/553862/Twitch%20-%20Keep%20Tab%20Active.user.js",
+  "code_size": 5524,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

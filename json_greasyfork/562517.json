@@ -1,0 +1,59 @@
+{
+  "id": 562517,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-13T11:21:52.000Z",
+  "code_updated_at": "2026-01-14T05:19:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1559842,
+      "name": "cyril_chi",
+      "created_at": "2026-01-13T11:07:36.000Z",
+      "url": "https://greasyfork.org/users/1559842-cyril-chi",
+      "scripts": [
+        {
+          "id": 562517,
+          "daily_installs": 1,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-13T11:21:52.000Z",
+          "code_updated_at": "2026-01-14T05:19:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "批量下载腾讯文档空间中文档（等待导出成功）",
+          "description": "点击“下载”后，先等\"Exporting\"出现（5秒），再等\"Export successful\"（5秒）。只要不是文件夹（无三角图标），就尝试下载。",
+          "url": "https://greasyfork.org/scripts/562517-%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E7%A9%BA%E9%97%B4%E4%B8%AD%E6%96%87%E6%A1%A3-%E7%AD%89%E5%BE%85%E5%AF%BC%E5%87%BA%E6%88%90%E5%8A%9F",
+          "code_url": "https://update.greasyfork.org/scripts/562517/%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E7%A9%BA%E9%97%B4%E4%B8%AD%E6%96%87%E6%A1%A3%EF%BC%88%E7%AD%89%E5%BE%85%E5%AF%BC%E5%87%BA%E6%88%90%E5%8A%9F%EF%BC%89.user.js",
+          "code_size": 13622,
+          "license": null,
+          "version": "2026-01-14-wait-export-success-v3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "批量下载腾讯文档空间中文档（等待导出成功）",
+  "description": "点击“下载”后，先等\"Exporting\"出现（5秒），再等\"Export successful\"（5秒）。只要不是文件夹（无三角图标），就尝试下载。",
+  "url": "https://greasyfork.org/scripts/562517-%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E7%A9%BA%E9%97%B4%E4%B8%AD%E6%96%87%E6%A1%A3-%E7%AD%89%E5%BE%85%E5%AF%BC%E5%87%BA%E6%88%90%E5%8A%9F",
+  "code_url": "https://update.greasyfork.org/scripts/562517/%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E8%85%BE%E8%AE%AF%E6%96%87%E6%A1%A3%E7%A9%BA%E9%97%B4%E4%B8%AD%E6%96%87%E6%A1%A3%EF%BC%88%E7%AD%89%E5%BE%85%E5%AF%BC%E5%87%BA%E6%88%90%E5%8A%9F%EF%BC%89.user.js",
+  "code_size": 13622,
+  "license": null,
+  "version": "2026-01-14-wait-export-success-v3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

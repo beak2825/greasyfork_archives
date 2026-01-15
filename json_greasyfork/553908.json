@@ -1,0 +1,33 @@
+{
+  "id": 553908,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-28T01:40:49.000Z",
+  "code_updated_at": "2025-10-29T22:49:28.000Z",
+  "namespace": "https://greasyfork.org/users/789838",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 789838,
+      "name": "Идзуми Сэна",
+      "created_at": "2021-07-03T06:19:05.000Z",
+      "url": "https://greasyfork.org/users/789838-%D0%B8%D0%B4%D0%B7%D1%83%D0%BC%D0%B8-%D1%81%D1%8D%D0%BD%D0%B0"
+    }
+  ],
+  "name": "Мои подписки: добавление скроллбар поведения",
+  "description": "Добавляет скроллбар, автоскролл (СКМ) и убирает \"длинные\" ссылки в блоке \"Мои подписки\"",
+  "url": "https://greasyfork.org/scripts/553908-%D0%BC%D0%BE%D0%B8-%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%BA%D0%B8-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D1%81%D0%BA%D1%80%D0%BE%D0%BB%D0%BB%D0%B1%D0%B0%D1%80-%D0%BF%D0%BE%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/553908/%D0%9C%D0%BE%D0%B8%20%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%BA%D0%B8%3A%20%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D0%BA%D1%80%D0%BE%D0%BB%D0%BB%D0%B1%D0%B0%D1%80%20%D0%BF%D0%BE%D0%B2%D0%B5%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F.user.js",
+  "code_size": 23347,
+  "license": null,
+  "version": "0.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -34,7 +34,7 @@
   },
   {
     "id": 562102,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 1,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -67,7 +67,7 @@
   },
   {
     "id": 562021,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 1,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -193,6 +193,39 @@
     "code_size": 3736,
     "license": "Do What The F*ck You Want To Public License",
     "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552289,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T17:42:32.000Z",
+    "code_updated_at": "2025-10-12T19:29:48.000Z",
+    "namespace": "https://marumori.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375759,
+        "name": "matskye",
+        "created_at": "2024-10-02T10:30:31.000Z",
+        "url": "https://greasyfork.org/users/1375759-matskye"
+      }
+    ],
+    "name": "Maru Companion Sidebar",
+    "description": "Sidebar companion with dark/light detection, per-goal scheduling, focused-time counter and automatic completion detection.",
+    "url": "https://greasyfork.org/scripts/552289-maru-companion-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/552289/Maru%20Companion%20Sidebar.user.js",
+    "code_size": 32702,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.3.0",
     "locale": "en",
     "deleted": false,
     "visibility": "unknown"

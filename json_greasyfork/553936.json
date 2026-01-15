@@ -1,0 +1,59 @@
+{
+  "id": 553936,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-10-28T07:56:16.000Z",
+  "code_updated_at": "2025-10-28T07:56:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/alezhu/youtube-scroll-to-top-on-press-logo/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1531501,
+      "name": "alezhu",
+      "created_at": "2025-10-28T07:52:07.000Z",
+      "url": "https://greasyfork.org/users/1531501-alezhu",
+      "scripts": [
+        {
+          "id": 553936,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-10-28T07:56:16.000Z",
+          "code_updated_at": "2025-10-28T07:56:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/alezhu/youtube-scroll-to-top-on-press-logo/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube scroll to top on home button",
+          "description": "Scroll page to top when press on YouTube logo!",
+          "url": "https://greasyfork.org/scripts/553936-youtube-scroll-to-top-on-home-button",
+          "code_url": "https://update.greasyfork.org/scripts/553936/YouTube%20scroll%20to%20top%20on%20home%20button.user.js",
+          "code_size": 1060,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube scroll to top on home button",
+  "description": "Scroll page to top when press on YouTube logo!",
+  "url": "https://greasyfork.org/scripts/553936-youtube-scroll-to-top-on-home-button",
+  "code_url": "https://update.greasyfork.org/scripts/553936/YouTube%20scroll%20to%20top%20on%20home%20button.user.js",
+  "code_size": 1060,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

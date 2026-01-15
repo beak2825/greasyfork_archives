@@ -8,7 +8,7 @@
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2025-11-23T14:51:04.000Z",
-    "code_updated_at": "2025-12-17T17:58:17.000Z",
+    "code_updated_at": "2026-01-12T05:37:33.000Z",
     "namespace": "https://forum.blackrussia.online",
     "support_url": null,
     "contribution_url": null,
@@ -27,7 +27,7 @@
     "code_url": "https://update.greasyfork.org/scripts/556681/KF%20FROG.user.js",
     "code_size": 17050,
     "license": "MIT License",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "locale": "en",
     "deleted": false,
     "visibility": "unknown"

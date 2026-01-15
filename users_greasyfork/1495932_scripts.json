@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552113,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T05:45:16.000Z",
+    "code_updated_at": "2025-11-05T05:33:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/jwq2011/TamperMonkey-Scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495932,
+        "name": "Stray Birds",
+        "created_at": "2025-07-18T02:26:34.000Z",
+        "url": "https://greasyfork.org/users/1495932-stray-birds"
+      }
+    ],
+    "name": "Jira Activity Module Fullscreen Toggle with AI Analysis",
+    "description": "Add fullscreen toggle and AI-powered analysis for Jira activity log module.",
+    "url": "https://greasyfork.org/scripts/552113-jira-activity-module-fullscreen-toggle-with-ai-analysis",
+    "code_url": "https://update.greasyfork.org/scripts/552113/Jira%20Activity%20Module%20Fullscreen%20Toggle%20with%20AI%20Analysis.user.js",
+    "code_size": 17103,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

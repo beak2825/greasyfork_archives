@@ -17,33 +17,7 @@
       "id": 1522516,
       "name": "Zac92",
       "created_at": "2025-10-05T14:18:20.000Z",
-      "url": "https://greasyfork.org/users/1522516-zac92",
-      "scripts": [
-        {
-          "id": 551673,
-          "daily_installs": 0,
-          "total_installs": 23,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-10-05T14:21:35.000Z",
-          "code_updated_at": "2025-10-05T17:35:49.000Z",
-          "namespace": "torn-search-helper",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Torn Search Helper",
-          "description": "Show hospital time live with attack button on user search page.",
-          "url": "https://greasyfork.org/scripts/551673-torn-search-helper",
-          "code_url": "https://update.greasyfork.org/scripts/551673/Torn%20Search%20Helper.user.js",
-          "code_size": 8980,
-          "license": "MIT License",
-          "version": "1.8",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1522516-zac92"
     }
   ],
   "name": "Elim Chat Name Changer (Torn + tornPDA)",

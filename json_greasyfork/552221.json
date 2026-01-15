@@ -1,0 +1,33 @@
+{
+  "id": 552221,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-11T03:55:14.000Z",
+  "code_updated_at": "2025-10-11T03:55:13.000Z",
+  "namespace": "www.leizingyiu.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 901648,
+      "name": "leizingyiu",
+      "created_at": "2022-04-13T10:05:53.000Z",
+      "url": "https://greasyfork.org/users/901648-leizingyiu"
+    }
+  ],
+  "name": "页面编辑功能",
+  "description": "alt + z : 编辑文本 ； alt + x : 结束编辑文本 ； alt + c : 编辑块 ； alt + z : 结束编辑块",
+  "url": "https://greasyfork.org/scripts/552221-%E9%A1%B5%E9%9D%A2%E7%BC%96%E8%BE%91%E5%8A%9F%E8%83%BD",
+  "code_url": "https://update.greasyfork.org/scripts/552221/%E9%A1%B5%E9%9D%A2%E7%BC%96%E8%BE%91%E5%8A%9F%E8%83%BD.user.js",
+  "code_size": 7034,
+  "license": "GNU AGPLv3",
+  "version": "20250812",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

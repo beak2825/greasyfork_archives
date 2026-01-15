@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557752,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-03T07:30:20.000Z",
+    "code_updated_at": "2025-12-03T07:30:20.000Z",
+    "namespace": "gptmd3zy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1201863,
+        "name": "WisteriaZy",
+        "created_at": "2023-10-22T08:43:51.000Z",
+        "url": "https://greasyfork.org/users/1201863-wisteriazy"
+      }
+    ],
+    "name": "ChatGPT 移动视图暗色紫罗兰MD3主题",
+    "description": "为 ChatGPT 移动端视图添加暗色紫罗兰 MD3 主题",
+    "url": "https://greasyfork.org/scripts/557752-chatgpt-%E7%A7%BB%E5%8A%A8%E8%A7%86%E5%9B%BE%E6%9A%97%E8%89%B2%E7%B4%AB%E7%BD%97%E5%85%B0md3%E4%B8%BB%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/557752/ChatGPT%20%E7%A7%BB%E5%8A%A8%E8%A7%86%E5%9B%BE%E6%9A%97%E8%89%B2%E7%B4%AB%E7%BD%97%E5%85%B0MD3%E4%B8%BB%E9%A2%98.user.js",
+    "code_size": 13137,
+    "license": "MIT License",
+    "version": "0.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

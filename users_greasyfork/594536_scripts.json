@@ -96,6 +96,204 @@
     "version": "1.22.11.25",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555710,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-13T12:17:14.000Z",
+    "code_updated_at": "2025-11-17T02:32:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "Market yandex - Darkmode  (no FOUC - no delay !!!)",
+    "description": "Market yandex - Darkmode// @author       gullampis810",
+    "url": "https://greasyfork.org/scripts/555710-market-yandex-darkmode-no-fouc-no-delay",
+    "code_url": "https://update.greasyfork.org/scripts/555710/Market%20yandex%20-%20Darkmode%20%20%28no%20FOUC%20-%20no%20delay%20%21%21%21%29.user.js",
+    "code_size": 7166,
+    "license": "MIT License",
+    "version": "2.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555437,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T17:24:31.000Z",
+    "code_updated_at": "2025-11-10T17:52:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "yandex.ru scroll Bar 2.1.1",
+    "description": "yandex.ru scroll Bar and dark theme",
+    "url": "https://greasyfork.org/scripts/555437-yandex-ru-scroll-bar-2-1-1",
+    "code_url": "https://update.greasyfork.org/scripts/555437/yandexru%20scroll%20Bar%20211.user.js",
+    "code_size": 5996,
+    "license": null,
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555305,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T13:58:08.000Z",
+    "code_updated_at": "2025-11-09T13:58:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "Replace FFz Color Picker",
+    "description": "replace FFz Color Picker",
+    "url": "https://greasyfork.org/scripts/555305-replace-ffz-color-picker",
+    "code_url": "https://update.greasyfork.org/scripts/555305/Replace%20FFz%20Color%20Picker.user.js",
+    "code_size": 12557,
+    "license": null,
+    "version": "2025-11-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 555203,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T15:59:26.000Z",
+    "code_updated_at": "2025-11-13T19:16:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "4PDA  Blue Dark Theme 1.0.2 (NO FOUC - NO DELAY !!!)",
+    "description": "Тёмная тема для 4PDA с гармоничной цветовой палитрой",
+    "url": "https://greasyfork.org/scripts/555203-4pda-blue-dark-theme-1-0-2-no-fouc-no-delay",
+    "code_url": "https://update.greasyfork.org/scripts/555203/4PDA%20%20Blue%20Dark%20Theme%20102%20%28NO%20FOUC%20-%20NO%20DELAY%20%21%21%21%29.user.js",
+    "code_size": 17084,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554581,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T00:28:09.000Z",
+    "code_updated_at": "2025-11-03T01:52:02.000Z",
+    "namespace": "https://greasyfork.org/users/594536",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "create Grok better Css",
+    "description": "better Css   Grok",
+    "url": "https://greasyfork.org/scripts/554581-create-grok-better-css",
+    "code_url": "https://update.greasyfork.org/scripts/554581/create%20Grok%20better%20Css.user.js",
+    "code_size": 38924,
+    "license": "MIT License",
+    "version": "3.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554369,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-01T02:06:45.000Z",
+    "code_updated_at": "2025-11-01T21:40:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 594536,
+        "name": "i9l121 ihr8f",
+        "created_at": "2020-06-16T02:43:00.000Z",
+        "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+      }
+    ],
+    "name": "Custom search and highlighting aka (Ctrl+F)",
+    "description": "search and highlight  tool",
+    "url": "https://greasyfork.org/scripts/554369-custom-search-and-highlighting-aka-ctrl-f",
+    "code_url": "https://update.greasyfork.org/scripts/554369/Custom%20search%20and%20highlighting%20aka%20%28Ctrl%2BF%29.user.js",
+    "code_size": 26447,
+    "license": "MIT License",
+    "version": "2025-10-31.1.33",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

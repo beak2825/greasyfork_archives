@@ -1,0 +1,33 @@
+{
+  "id": 554261,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-31T04:17:38.000Z",
+  "code_updated_at": "2025-10-31T04:17:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472250,
+      "name": "cloud67p",
+      "created_at": "2025-05-20T04:29:27.000Z",
+      "url": "https://greasyfork.org/users/1472250-cloud67p"
+    }
+  ],
+  "name": "Kone.gg 미리보기 좌우 팝업",
+  "description": "본문 미리보기 마우스 위치 따라 좌우 생성",
+  "url": "https://greasyfork.org/scripts/554261-kone-gg-%EB%AF%B8%EB%A6%AC%EB%B3%B4%EA%B8%B0-%EC%A2%8C%EC%9A%B0-%ED%8C%9D%EC%97%85",
+  "code_url": "https://update.greasyfork.org/scripts/554261/Konegg%20%EB%AF%B8%EB%A6%AC%EB%B3%B4%EA%B8%B0%20%EC%A2%8C%EC%9A%B0%20%ED%8C%9D%EC%97%85.user.js",
+  "code_size": 7011,
+  "license": null,
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

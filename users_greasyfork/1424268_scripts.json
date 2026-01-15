@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553585,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-24T15:15:30.000Z",
+    "code_updated_at": "2025-10-24T15:15:30.000Z",
+    "namespace": "athari",
+    "support_url": "https://github.com/Athari/AthariUserCSS/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1424268,
+        "name": "Athari",
+        "created_at": "2025-01-17T11:36:36.000Z",
+        "url": "https://greasyfork.org/users/1424268-athari"
+      }
+    ],
+    "name": "HeroesProfile.com – Dark Compact [Ath]",
+    "description": "Dark theme for Heroes Profile (HeroesProfile.com) with clean compact design and ad block.",
+    "url": "https://greasyfork.org/scripts/553585-heroesprofile-com-dark-compact-ath",
+    "code_url": "https://update.greasyfork.org/scripts/553585/HeroesProfilecom%20%E2%80%93%20Dark%20Compact%20%5BAth%5D.user.css",
+    "code_size": 1733,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552215,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T02:47:12.000Z",
+    "code_updated_at": "2025-10-17T06:24:09.000Z",
+    "namespace": "athari",
+    "support_url": "https://github.com/Athari/AthariUserCSS/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1424268,
+        "name": "Athari",
+        "created_at": "2025-01-17T11:36:36.000Z",
+        "url": "https://greasyfork.org/users/1424268-athari"
+      }
+    ],
+    "name": "Packagist.org – Dark Enhanced [Ath]",
+    "description": "Dark theme for Packagist (Packagist.com) with optional wide layout, accessibility improvements and configurable colors.",
+    "url": "https://greasyfork.org/scripts/552215-packagist-org-dark-enhanced-ath",
+    "code_url": "https://update.greasyfork.org/scripts/552215/Packagistorg%20%E2%80%93%20Dark%20Enhanced%20%5BAth%5D.user.css",
+    "code_size": 153153,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

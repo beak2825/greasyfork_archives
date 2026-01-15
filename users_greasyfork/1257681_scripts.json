@@ -30,6 +30,39 @@
     "version": "1.41",
     "locale": "hu",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 556111,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-17T16:46:12.000Z",
+    "code_updated_at": "2025-12-02T11:52:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257681,
+        "name": "Virág Attila",
+        "created_at": "2024-02-05T09:36:10.000Z",
+        "url": "https://greasyfork.org/users/1257681-vir%C3%A1g-attila"
+      }
+    ],
+    "name": "Hírstart admin - sortípus képek bekapcsolása",
+    "description": "Automatikusan kattintgatja a sorokat és aktiválja az input mezőket",
+    "url": "https://greasyfork.org/scripts/556111-h%C3%ADrstart-admin-sort%C3%ADpus-k%C3%A9pek-bekapcsol%C3%A1sa",
+    "code_url": "https://update.greasyfork.org/scripts/556111/H%C3%ADrstart%20admin%20-%20sort%C3%ADpus%20k%C3%A9pek%20bekapcsol%C3%A1sa.user.js",
+    "code_size": 17529,
+    "license": "hirstart.hu",
+    "version": "1.39",
+    "locale": "hu",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

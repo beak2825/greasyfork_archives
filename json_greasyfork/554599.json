@@ -1,0 +1,34 @@
+{
+  "id": 554599,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-03T05:29:22.000Z",
+  "code_updated_at": "2025-11-03T05:29:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527707,
+      "name": "Dean Harper",
+      "created_at": "2025-10-17T08:03:45.000Z",
+      "url": "https://greasyfork.org/users/1527707-dean-harper",
+      "scripts": []
+    }
+  ],
+  "name": "Localhost Bet List Cleaner & DOM Replacement",
+  "description": "Премахва последните два .bet-item__wrapper и прави множество DOM замени в локален тест (localhost / 127.0.0.1).",
+  "url": "https://greasyfork.org/scripts/554599-localhost-bet-list-cleaner-dom-replacement",
+  "code_url": "https://update.greasyfork.org/scripts/554599/Localhost%20Bet%20List%20Cleaner%20%20DOM%20Replacement.user.js",
+  "code_size": 10631,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

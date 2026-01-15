@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562273,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T14:40:48.000Z",
+    "code_updated_at": "2026-01-11T14:54:50.000Z",
+    "namespace": "https://bunpro.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1558441,
+        "name": "Reina1101",
+        "created_at": "2026-01-10T01:05:55.000Z",
+        "url": "https://greasyfork.org/users/1558441-reina1101"
+      }
+    ],
+    "name": "Bunpro Review Type Changer",
+    "description": "Dashboard modal to bulk-change review input types",
+    "url": "https://greasyfork.org/scripts/562273-bunpro-review-type-changer",
+    "code_url": "https://update.greasyfork.org/scripts/562273/Bunpro%20Review%20Type%20Changer.user.js",
+    "code_size": 11791,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

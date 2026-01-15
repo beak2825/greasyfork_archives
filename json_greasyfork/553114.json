@@ -1,0 +1,59 @@
+{
+  "id": 553114,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T14:58:08.000Z",
+  "code_updated_at": "2025-10-19T14:58:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 889780,
+      "name": "蓝色凝风",
+      "created_at": "2022-03-20T06:37:04.000Z",
+      "url": "https://greasyfork.org/users/889780-%E8%93%9D%E8%89%B2%E5%87%9D%E9%A3%8E",
+      "scripts": [
+        {
+          "id": 553114,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-19T14:58:08.000Z",
+          "code_updated_at": "2025-10-19T14:58:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Civitai Ads Blocker (Optimized CSS)",
+          "description": "Hide the \"Become a Member to turn off ads today\" boxes and other ad slots on Civitai search results.",
+          "url": "https://greasyfork.org/scripts/553114-civitai-ads-blocker-optimized-css",
+          "code_url": "https://update.greasyfork.org/scripts/553114/Civitai%20Ads%20Blocker%20%28Optimized%20CSS%29.user.js",
+          "code_size": 1997,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Civitai Ads Blocker (Optimized CSS)",
+  "description": "Hide the \"Become a Member to turn off ads today\" boxes and other ad slots on Civitai search results.",
+  "url": "https://greasyfork.org/scripts/553114-civitai-ads-blocker-optimized-css",
+  "code_url": "https://update.greasyfork.org/scripts/553114/Civitai%20Ads%20Blocker%20%28Optimized%20CSS%29.user.js",
+  "code_size": 1997,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

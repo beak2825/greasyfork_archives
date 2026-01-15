@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552841,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T21:40:21.000Z",
+    "code_updated_at": "2025-10-31T22:17:31.000Z",
+    "namespace": "https://shikimori.one/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363086,
+        "name": "LifeH",
+        "created_at": "2024-09-04T16:09:15.000Z",
+        "url": "https://greasyfork.org/users/1363086-lifeh"
+      }
+    ],
+    "name": "ShikiTreeLib",
+    "description": "Lib для графиков",
+    "url": "https://greasyfork.org/scripts/552841-shikitreelib",
+    "code_url": "https://update.greasyfork.org/scripts/552841/1687209/ShikiTreeLib.js",
+    "code_size": 26596,
+    "license": "MIT License",
+    "version": "2.0.0.0.0.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

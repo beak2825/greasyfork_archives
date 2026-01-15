@@ -1,0 +1,34 @@
+{
+  "id": 555108,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-07T13:26:20.000Z",
+  "code_updated_at": "2026-01-09T07:12:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533849,
+      "name": "Jaehyong Kim",
+      "created_at": "2025-11-04T04:29:39.000Z",
+      "url": "https://greasyfork.org/users/1533849-jaehyong-kim",
+      "scripts": []
+    }
+  ],
+  "name": "LIMS 레포트 자동 생성기",
+  "description": "LIMS JOB NO별 상세 페이지 병렬 오픈 및 레포트 자동 생성 도구 (팝업 차단 회피 및 절대 경로 지원)",
+  "url": "https://greasyfork.org/scripts/555108-lims-%EB%A0%88%ED%8F%AC%ED%8A%B8-%EC%9E%90%EB%8F%99-%EC%83%9D%EC%84%B1%EA%B8%B0",
+  "code_url": "https://update.greasyfork.org/scripts/555108/LIMS%20%EB%A0%88%ED%8F%AC%ED%8A%B8%20%EC%9E%90%EB%8F%99%20%EC%83%9D%EC%84%B1%EA%B8%B0.user.js",
+  "code_size": 78581,
+  "license": null,
+  "version": "1.6.5",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

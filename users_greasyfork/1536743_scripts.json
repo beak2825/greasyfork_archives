@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555526,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-11T14:31:39.000Z",
+    "code_updated_at": "2025-11-11T14:31:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://gist.github.com/concertypin/12173236c29020dfeb37cd3d0bf1fcc3",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536743,
+        "name": "concertypin",
+        "created_at": "2025-11-11T14:15:03.000Z",
+        "url": "https://greasyfork.org/users/1536743-concertypin"
+      }
+    ],
+    "name": "AIPI: AI Studio Prompt Injector",
+    "description": "Inject custom default system prompt into AI Studio requests. Local stored prompt which title ends with \"default\" will be used.",
+    "url": "https://greasyfork.org/scripts/555526-aipi-ai-studio-prompt-injector",
+    "code_url": "https://update.greasyfork.org/scripts/555526/AIPI%3A%20AI%20Studio%20Prompt%20Injector.user.js",
+    "code_size": 2803,
+    "license": "Apache License 2.0",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

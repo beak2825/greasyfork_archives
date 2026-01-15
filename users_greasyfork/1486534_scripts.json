@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553660,
+    "daily_installs": 1,
+    "total_installs": 86,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-10-25T13:10:53.000Z",
+    "code_updated_at": "2025-10-25T13:10:53.000Z",
+    "namespace": "https://bg0axe.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486534,
+        "name": "yh xxx",
+        "created_at": "2025-06-21T07:41:03.000Z",
+        "url": "https://greasyfork.org/users/1486534-yh-xxx"
+      }
+    ],
+    "name": "B站视频下载Ai助手（可选分辨率，仅限无版权内容）",
+    "description": "检测 bilibili 页面可下载的视频资源，提供分辨率选择与下载按钮。仅用于无版权或可下载内容。",
+    "url": "https://greasyfork.org/scripts/553660-b%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BDai%E5%8A%A9%E6%89%8B-%E5%8F%AF%E9%80%89%E5%88%86%E8%BE%A8%E7%8E%87-%E4%BB%85%E9%99%90%E6%97%A0%E7%89%88%E6%9D%83%E5%86%85%E5%AE%B9",
+    "code_url": "https://update.greasyfork.org/scripts/553660/B%E7%AB%99%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BDAi%E5%8A%A9%E6%89%8B%EF%BC%88%E5%8F%AF%E9%80%89%E5%88%86%E8%BE%A8%E7%8E%87%EF%BC%8C%E4%BB%85%E9%99%90%E6%97%A0%E7%89%88%E6%9D%83%E5%86%85%E5%AE%B9%EF%BC%89.user.js",
+    "code_size": 12462,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2.91",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

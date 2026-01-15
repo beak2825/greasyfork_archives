@@ -1,0 +1,34 @@
+{
+  "id": 555689,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-13T07:07:09.000Z",
+  "code_updated_at": "2025-11-13T07:07:09.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1526760,
+      "name": "Smyrfak",
+      "created_at": "2025-10-15T00:58:53.000Z",
+      "url": "https://greasyfork.org/users/1526760-smyrfak",
+      "scripts": []
+    }
+  ],
+  "name": "Скрипт фон forum BLACK RUSSIA (Рассвет на озере)",
+  "description": "Специально для Черной России BLACK RUSSIA",
+  "url": "https://greasyfork.org/scripts/555689-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D1%84%D0%BE%D0%BD-forum-black-russia-%D1%80%D0%B0%D1%81%D1%81%D0%B2%D0%B5%D1%82-%D0%BD%D0%B0-%D0%BE%D0%B7%D0%B5%D1%80%D0%B5",
+  "code_url": "https://update.greasyfork.org/scripts/555689/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D1%84%D0%BE%D0%BD%20forum%20BLACK%20RUSSIA%20%28%D0%A0%D0%B0%D1%81%D1%81%D0%B2%D0%B5%D1%82%20%D0%BD%D0%B0%20%D0%BE%D0%B7%D0%B5%D1%80%D0%B5%29.user.js",
+  "code_size": 15918,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

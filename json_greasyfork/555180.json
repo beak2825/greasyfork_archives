@@ -1,0 +1,59 @@
+{
+  "id": 555180,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-08T09:11:54.000Z",
+  "code_updated_at": "2025-11-08T09:11:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1527997,
+      "name": "XYbtBf",
+      "created_at": "2025-10-18T02:21:56.000Z",
+      "url": "https://greasyfork.org/users/1527997-xybtbf",
+      "scripts": [
+        {
+          "id": 555180,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-08T09:11:54.000Z",
+          "code_updated_at": "2025-11-08T09:11:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "speexx自动播放脚本",
+          "description": "speexx自动播放",
+          "url": "https://greasyfork.org/scripts/555180-speexx%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/555180/speexx%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 1309,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "speexx自动播放脚本",
+  "description": "speexx自动播放",
+  "url": "https://greasyfork.org/scripts/555180-speexx%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/555180/speexx%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 1309,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

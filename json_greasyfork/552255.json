@@ -1,0 +1,33 @@
+{
+  "id": 552255,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-11T11:10:38.000Z",
+  "code_updated_at": "2025-10-12T11:45:18.000Z",
+  "namespace": "https://greasyfork.org/en/users/15128-reaverxai",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 15128,
+      "name": "William Burden",
+      "created_at": "2015-09-10T07:11:07.000Z",
+      "url": "https://greasyfork.org/users/15128-william-burden"
+    }
+  ],
+  "name": "🪄 NoShorts YouTube UI Enhancer | Remove Shorts from Feed & Customize Layout",
+  "description": "A modified version of Michaelsoft's \"YouTube UI Enhancer\". Enhances YouTube by showing full video titles on hover, removing ad overlays, and adding quick-access \"Not Interested\" icons, with all features configurable from a settings menu. All credit for the original script goes to Michaelsoft.",
+  "url": "https://greasyfork.org/scripts/552255-noshorts-youtube-ui-enhancer-remove-shorts-from-feed-customize-layout",
+  "code_url": "https://update.greasyfork.org/scripts/552255/%F0%9F%AA%84%20NoShorts%20YouTube%20UI%20Enhancer%20%7C%20Remove%20Shorts%20from%20Feed%20%20Customize%20Layout.user.js",
+  "code_size": 21648,
+  "license": "MIT License",
+  "version": "2.2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

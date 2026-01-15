@@ -33,9 +33,42 @@
     "visibility": "public"
   },
   {
-    "id": 557302,
+    "id": 557303,
     "daily_installs": 0,
-    "total_installs": 4,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-29T08:14:29.000Z",
+    "code_updated_at": "2025-12-22T01:32:00.000Z",
+    "namespace": "https://github.com/Fenn3c401",
+    "support_url": "https://github.com/Fenn3c401/Trakt.tv-Userscript-Collection/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513667,
+        "name": "Fenn3c401",
+        "created_at": "2025-09-10T14:48:11.000Z",
+        "url": "https://greasyfork.org/users/1513667-fenn3c401"
+      }
+    ],
+    "name": "Trakt.tv | Custom Profile Image",
+    "description": "A custom profile image for free users. Like the vip feature, except this one only works locally. Uses the native set/reset buttons and changes the dashboard + settings background as well.",
+    "url": "https://greasyfork.org/scripts/557303-trakt-tv-custom-profile-image",
+    "code_url": "https://update.greasyfork.org/scripts/557303/Trakttv%20%7C%20Custom%20Profile%20Image.user.js",
+    "code_size": 8357,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 557302,
+    "daily_installs": 1,
+    "total_installs": 5,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

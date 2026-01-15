@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553599,
+    "daily_installs": 1,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-24T20:57:50.000Z",
+    "code_updated_at": "2025-12-09T15:33:58.000Z",
+    "namespace": "https://greasyfork.org/en/users/1528865-blati",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528865,
+        "name": "Blati",
+        "created_at": "2025-10-20T12:25:55.000Z",
+        "url": "https://greasyfork.org/users/1528865-blati"
+      }
+    ],
+    "name": "Quizlet Enhancer",
+    "description": "Download flashcards (JSON/CSV/TXT) • Remove blur on definitions • Hide upgrade buttons • Remove sign-up banners • Works with light & dark mode • Mobile optimized",
+    "url": "https://greasyfork.org/scripts/553599-quizlet-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/553599/Quizlet%20Enhancer.user.js",
+    "code_size": 24577,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553196,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T12:32:34.000Z",
+    "code_updated_at": "2025-10-21T19:11:28.000Z",
+    "namespace": "https://greasyfork.org/en/users/1528865-blati",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528865,
+        "name": "Blati",
+        "created_at": "2025-10-20T12:25:55.000Z",
+        "url": "https://greasyfork.org/users/1528865-blati"
+      }
+    ],
+    "name": "Remove Comet Ad from Perplexity",
+    "description": "Removes the Comet browser advertisement banner and download button from Perplexity AI",
+    "url": "https://greasyfork.org/scripts/553196-remove-comet-ad-from-perplexity",
+    "code_url": "https://update.greasyfork.org/scripts/553196/Remove%20Comet%20Ad%20from%20Perplexity.user.js",
+    "code_size": 4061,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

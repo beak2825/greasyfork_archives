@@ -1,0 +1,33 @@
+{
+  "id": 558707,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-12T08:22:13.000Z",
+  "code_updated_at": "2025-12-12T08:22:13.000Z",
+  "namespace": "rutracker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 10017,
+      "name": "cobr123",
+      "created_at": "2015-03-28T14:03:52.000Z",
+      "url": "https://greasyfork.org/users/10017-cobr123"
+    }
+  ],
+  "name": "rutracker: убираем повторы из списка тем",
+  "description": "Собирает темы с одинаковыми названиями фильмов в одну",
+  "url": "https://greasyfork.org/scripts/558707-rutracker-%D1%83%D0%B1%D0%B8%D1%80%D0%B0%D0%B5%D0%BC-%D0%BF%D0%BE%D0%B2%D1%82%D0%BE%D1%80%D1%8B-%D0%B8%D0%B7-%D1%81%D0%BF%D0%B8%D1%81%D0%BA%D0%B0-%D1%82%D0%B5%D0%BC",
+  "code_url": "https://update.greasyfork.org/scripts/558707/rutracker%3A%20%D1%83%D0%B1%D0%B8%D1%80%D0%B0%D0%B5%D0%BC%20%D0%BF%D0%BE%D0%B2%D1%82%D0%BE%D1%80%D1%8B%20%D0%B8%D0%B7%20%D1%81%D0%BF%D0%B8%D1%81%D0%BA%D0%B0%20%D1%82%D0%B5%D0%BC.user.js",
+  "code_size": 1215,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

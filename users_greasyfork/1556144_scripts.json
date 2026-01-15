@@ -1,5 +1,137 @@
 [
   {
+    "id": 562535,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T14:02:56.000Z",
+    "code_updated_at": "2026-01-14T13:03:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556144,
+        "name": "Dooky",
+        "created_at": "2026-01-04T20:35:39.000Z",
+        "url": "https://greasyfork.org/users/1556144-dooky"
+      }
+    ],
+    "name": "Aither Comps",
+    "description": "Add \"Create comp\" button next to copy button in description block",
+    "url": "https://greasyfork.org/scripts/562535-aither-comps",
+    "code_url": "https://update.greasyfork.org/scripts/562535/Aither%20Comps.user.js",
+    "code_size": 29062,
+    "license": "MIT License",
+    "version": "3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562520,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T11:35:25.000Z",
+    "code_updated_at": "2026-01-13T11:48:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556144,
+        "name": "Dooky",
+        "created_at": "2026-01-04T20:35:39.000Z",
+        "url": "https://greasyfork.org/users/1556144-dooky"
+      }
+    ],
+    "name": "Trump Buttons",
+    "description": "Adds programmable buttons to trump reports",
+    "url": "https://greasyfork.org/scripts/562520-trump-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/562520/Trump%20Buttons.user.js",
+    "code_size": 24678,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562462,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T22:48:05.000Z",
+    "code_updated_at": "2026-01-13T14:26:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556144,
+        "name": "Dooky",
+        "created_at": "2026-01-04T20:35:39.000Z",
+        "url": "https://greasyfork.org/users/1556144-dooky"
+      }
+    ],
+    "name": "Slow.pics Random Comparisons Link Generator",
+    "description": "Selects 10 random comparisons and generates links in [comparison=][/comparison] format",
+    "url": "https://greasyfork.org/scripts/562462-slow-pics-random-comparisons-link-generator",
+    "code_url": "https://update.greasyfork.org/scripts/562462/Slowpics%20Random%20Comparisons%20Link%20Generator.user.js",
+    "code_size": 14405,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562448,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T20:06:16.000Z",
+    "code_updated_at": "2026-01-12T20:06:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556144,
+        "name": "Dooky",
+        "created_at": "2026-01-04T20:35:39.000Z",
+        "url": "https://greasyfork.org/users/1556144-dooky"
+      }
+    ],
+    "name": "Torrent Mod Toolkit",
+    "description": "Common actions for torrent mods",
+    "url": "https://greasyfork.org/scripts/562448-torrent-mod-toolkit",
+    "code_url": "https://update.greasyfork.org/scripts/562448/Torrent%20Mod%20Toolkit.user.js",
+    "code_size": 208814,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 561654,
     "daily_installs": 0,
     "total_installs": 1,
@@ -30,6 +162,39 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 561425,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-04T20:42:17.000Z",
+    "code_updated_at": "2026-01-12T20:08:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1556144,
+        "name": "Dooky",
+        "created_at": "2026-01-04T20:35:39.000Z",
+        "url": "https://greasyfork.org/users/1556144-dooky"
+      }
+    ],
+    "name": "Torrent Mod Toolkit - Non stable",
+    "description": "Common actions for torrent mods",
+    "url": "https://greasyfork.org/scripts/561425-torrent-mod-toolkit-non-stable",
+    "code_url": "https://update.greasyfork.org/scripts/561425/Torrent%20Mod%20Toolkit%20-%20Non%20stable.user.js",
+    "code_size": 209011,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554212,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T13:21:15.000Z",
+    "code_updated_at": "2025-10-30T13:21:15.000Z",
+    "namespace": "https://greasyfork.org/users/1315976",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1315976,
+        "name": "yodaluca23",
+        "created_at": "2024-06-11T02:56:15.000Z",
+        "url": "https://greasyfork.org/users/1315976-yodaluca23"
+      }
+    ],
+    "name": "NationStates Results (mwq.dds.nl) No JS Fixer",
+    "description": "Fetch result pages, strip JS checks, and render clean HTML",
+    "url": "https://greasyfork.org/scripts/554212-nationstates-results-mwq-dds-nl-no-js-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/554212/NationStates%20Results%20%28mwqddsnl%29%20No%20JS%20Fixer.user.js",
+    "code_size": 1355,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

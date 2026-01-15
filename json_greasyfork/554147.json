@@ -1,0 +1,34 @@
+{
+  "id": 554147,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-29T21:15:32.000Z",
+  "code_updated_at": "2025-10-29T21:15:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532054,
+      "name": "Mr B",
+      "created_at": "2025-10-29T17:17:00.000Z",
+      "url": "https://greasyfork.org/users/1532054-mr-b",
+      "scripts": []
+    }
+  ],
+  "name": "Performance booster",
+  "description": "Bob's script",
+  "url": "https://greasyfork.org/scripts/554147-performance-booster",
+  "code_url": "https://update.greasyfork.org/scripts/554147/Performance%20booster.user.js",
+  "code_size": 10106,
+  "license": "MIT License",
+  "version": "2025-10-28",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

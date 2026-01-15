@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562290,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-11T18:24:23.000Z",
+    "code_updated_at": "2026-01-11T18:24:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1559220,
+        "name": "impendinganeurism",
+        "created_at": "2026-01-11T18:19:16.000Z",
+        "url": "https://greasyfork.org/users/1559220-impendinganeurism"
+      }
+    ],
+    "name": "Replace x with xcancel",
+    "description": "Hacky solution to replace all x.com links with xcancel.",
+    "url": "https://greasyfork.org/scripts/562290-replace-x-with-xcancel",
+    "code_url": "https://update.greasyfork.org/scripts/562290/Replace%20x%20with%20xcancel.user.js",
+    "code_size": 1624,
+    "license": "MIT License",
+    "version": "2026-01-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

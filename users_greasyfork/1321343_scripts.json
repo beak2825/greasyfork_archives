@@ -33,9 +33,42 @@
     "visibility": "public"
   },
   {
-    "id": 560494,
+    "id": 560697,
     "daily_installs": 0,
-    "total_installs": 2,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-30T03:15:45.000Z",
+    "code_updated_at": "2025-12-30T03:15:44.000Z",
+    "namespace": "https://github.com/lueluelue2006",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321343,
+        "name": "schweigen",
+        "created_at": "2024-06-21T01:43:42.000Z",
+        "url": "https://greasyfork.org/users/1321343-schweigen"
+      }
+    ],
+    "name": "Genspark Nano Banana Auto 2K",
+    "description": "Auto-select 2K image size on https://www.genspark.ai/agents?type=moa_generate_image",
+    "url": "https://greasyfork.org/scripts/560697-genspark-nano-banana-auto-2k",
+    "code_url": "https://update.greasyfork.org/scripts/560697/Genspark%20Nano%20Banana%20Auto%202K.user.js",
+    "code_size": 5897,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 560494,
+    "daily_installs": 1,
+    "total_installs": 4,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -165,6 +198,39 @@
     "visibility": "public"
   },
   {
+    "id": 558782,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-13T00:45:18.000Z",
+    "code_updated_at": "2026-01-09T17:38:55.000Z",
+    "namespace": "local.xhs.lock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321343,
+        "name": "schweigen",
+        "created_at": "2024-06-21T01:43:42.000Z",
+        "url": "https://greasyfork.org/users/1321343-schweigen"
+      }
+    ],
+    "name": "XHS Screen Lock (fake gate, Enter/Cmd+Enter unlock)",
+    "description": "Fullscreen fake gate for xiaohongshu.com. 4 button attempts show remaining 3/2/1/0 then disable; unlock only via Enter or ⌘+Enter. Uses masked text input (no password form) to reduce password-save prompts.",
+    "url": "https://greasyfork.org/scripts/558782-xhs-screen-lock-fake-gate-enter-cmd-enter-unlock",
+    "code_url": "https://update.greasyfork.org/scripts/558782/XHS%20Screen%20Lock%20%28fake%20gate%2C%20EnterCmd%2BEnter%20unlock%29.user.js",
+    "code_size": 10152,
+    "license": null,
+    "version": "0.3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 558764,
     "daily_installs": 0,
     "total_installs": 2,
@@ -231,9 +297,42 @@
     "visibility": "public"
   },
   {
+    "id": 558471,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-10T03:41:41.000Z",
+    "code_updated_at": "2025-12-10T03:41:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321343,
+        "name": "schweigen",
+        "created_at": "2024-06-21T01:43:42.000Z",
+        "url": "https://greasyfork.org/users/1321343-schweigen"
+      }
+    ],
+    "name": "ChatGPT TeX Copy & Quote 整合版",
+    "description": "让 ChatGPT 的“Ask ChatGPT”引用和普通复制，对包含 KaTeX 的选区优先返回原始 LaTeX（$...$ / $$...$$），不改动 DOM，不叠加多余文本，跨行选区也保持稳定；整合了 TexCopyer 的双击复制功能。",
+    "url": "https://greasyfork.org/scripts/558471-chatgpt-tex-copy-quote-%E6%95%B4%E5%90%88%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/558471/ChatGPT%20TeX%20Copy%20%20Quote%20%E6%95%B4%E5%90%88%E7%89%88.user.js",
+    "code_size": 9797,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 557022,
-    "daily_installs": 2,
-    "total_installs": 59,
+    "daily_installs": 1,
+    "total_installs": 63,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -266,7 +365,7 @@
   {
     "id": 556337,
     "daily_installs": 0,
-    "total_installs": 25,
+    "total_installs": 26,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
