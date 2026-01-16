@@ -165,6 +165,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 554424,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-01T15:04:41.000Z",
+    "code_updated_at": "2025-11-06T08:02:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527637,
+        "name": "Sarah Murray",
+        "created_at": "2025-10-17T04:25:17.000Z",
+        "url": "https://greasyfork.org/users/1527637-sarah-murray"
+      }
+    ],
+    "name": "Papanad Quick Links (Mobile Friendly)",
+    "description": "Adds persistent draggable navigation box to Torn.com (desktop & mobile) with neon red styling, toggle functionality, and position memory",
+    "url": "https://greasyfork.org/scripts/554424-papanad-quick-links-mobile-friendly",
+    "code_url": "https://update.greasyfork.org/scripts/554424/Papanad%20Quick%20Links%20%28Mobile%20Friendly%29.user.js",
+    "code_size": 11822,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
     "id": 554377,
     "daily_installs": 0,
     "total_installs": 1,

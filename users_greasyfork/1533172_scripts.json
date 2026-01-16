@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554481,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T05:18:15.000Z",
+    "code_updated_at": "2025-11-02T05:22:26.000Z",
+    "namespace": "https://open2ch.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1533172,
+        "name": "wakawakatnt",
+        "created_at": "2025-11-02T05:08:41.000Z",
+        "url": "https://greasyfork.org/users/1533172-wakawakatnt"
+      }
+    ],
+    "name": "おんJ広告削除",
+    "description": "おんJの広告を自動で削除しやす",
+    "url": "https://greasyfork.org/scripts/554481-%E3%81%8A%E3%82%93j%E5%BA%83%E5%91%8A%E5%89%8A%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/554481/%E3%81%8A%E3%82%93J%E5%BA%83%E5%91%8A%E5%89%8A%E9%99%A4.user.js",
+    "code_size": 1326,
+    "license": "Creative Commons Zero v1.0 Universal",
+    "version": "2.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 554455,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-01T21:37:34.000Z",
+  "code_updated_at": "2025-11-01T21:37:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1533085,
+      "name": "vfxturjo",
+      "created_at": "2025-11-01T21:32:35.000Z",
+      "url": "https://greasyfork.org/users/1533085-vfxturjo",
+      "scripts": [
+        {
+          "id": 554455,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-01T21:37:34.000Z",
+          "code_updated_at": "2025-11-01T21:37:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gemini - Last Prompt Replacer",
+          "description": "Streamlines replacing the last prompt in a Gemini conversation with robust short and long press support.",
+          "url": "https://greasyfork.org/scripts/554455-gemini-last-prompt-replacer",
+          "code_url": "https://update.greasyfork.org/scripts/554455/Gemini%20-%20Last%20Prompt%20Replacer.user.js",
+          "code_size": 5084,
+          "license": "MIT License",
+          "version": "0.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gemini - Last Prompt Replacer",
+  "description": "Streamlines replacing the last prompt in a Gemini conversation with robust short and long press support.",
+  "url": "https://greasyfork.org/scripts/554455-gemini-last-prompt-replacer",
+  "code_url": "https://update.greasyfork.org/scripts/554455/Gemini%20-%20Last%20Prompt%20Replacer.user.js",
+  "code_size": 5084,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}
